@@ -79,16 +79,21 @@ def JointPreCheckCalc(where, mbs, name, bodyNumbers, position, show, useGlobalFr
     return [p0, A0, p1, A1] 
 
 #internal function, which checks bodyList and bodyOrNodeList and returns appropriate bodyOrNodeList
-def ProcessBodyNodeLists(bodyList, bodyOrNodeList, localPosition0, localPosition1, where):
+def ProcessBodyNodeLists(bodyNumbers, bodyOrNodeList, localPosition0, localPosition1, where, bodyList):
     if not exudyn.__useExudynFast:
         if not isinstance(bodyList, list) or len(bodyList) != 2:
-            RaiseTypeError(where=where, argumentName='bodyList', received = bodyList, expectedType = 'list of 2 body or node numbers')
+            RaiseTypeError(where=where, argumentName='bodyList', received = bodyList, expectedType = 'list of 2 body numbers')
+        if not isinstance(bodyNumbers, list) or len(bodyNumbers) != 2:
+            RaiseTypeError(where=where, argumentName='bodyNumbers', received = bodyNumbers, expectedType = 'list of 2 body numbers')
 
     causingArgName = 'bodyOrNodeList'
-    if IsNotNone(bodyList[0]) or IsNotNone(bodyList[1]):
+    if IsNotNone(bodyNumbers[0]) or IsNotNone(bodyNumbers[1]):
+        bodyOrNodeList = [bodyNumbers[0],bodyNumbers[1]] #flat copy, but otherwise would lead to change of args (mutable args!)
+        causingArgName = 'bodyNumbers'
+    elif IsNotNone(bodyList[0]) or IsNotNone(bodyList[1]):
         bodyOrNodeList = [bodyList[0],bodyList[1]] #flat copy, but otherwise would lead to change of args (mutable args!)
         causingArgName = 'bodyList'
-        
+
     if not exudyn.__useExudynFast:
         if not isinstance(bodyOrNodeList, list) or len(bodyOrNodeList) != 2:
             RaiseTypeError(where=where, argumentName='bodyOrNodeList', received = bodyOrNodeList, expectedType = 'list of 2 body or node numbers')
@@ -297,7 +302,7 @@ def MainSystemCreateMassPoint(mbs,
 #  initialRotationMatrix: initial rotation provided as matrix (always a 3D matrix, no matter if 2D or 3D body); this rotation is superimposed to reference rotation [None: unused]
 #  inertia: an instance of class RigidBodyInertia, see rigidBodyUtilities; may also be from derived class (InertiaCuboid, InertiaMassPoint, InertiaCylinder, ...)
 #  gravity: gravity vevtor applied (always a 3D vector, no matter if 2D or 3D mass)
-#  graphicsDataList: list of GraphicsData for rigid body visualization; use graphicsDataUtilities function GraphicsData...(...)
+#  graphicsDataList: list of GraphicsData for rigid body visualization; use exudyn.graphics functions to create GraphicsData for basic solids
 #  graphicsDataUserFunction: a user function graphicsDataUserFunction(mbs, itemNumber)->BodyGraphicsData (list of GraphicsData), which can be used to draw user-defined graphics; this is much slower than regular GraphicsData
 #  drawSize: general drawing size of node
 #  color: color of node
@@ -515,7 +520,7 @@ def MainSystemCreateRigidBody(mbs,
 #**input: 
 #  mbs: the MainSystem where items are created
 #  name: name string for connector; markers get Marker0:name and Marker1:name
-#  bodyList: a list of two body numbers (ObjectIndex) to be connected
+#  bodyNumbers: a list of two body numbers (ObjectIndex) to be connected
 #  localPosition0: local position (as 3D list or numpy array) on body0, if not a node number
 #  localPosition1: local position (as 3D list or numpy array) on body1, if not a node number
 #  referenceLength: if None, length is computed from reference position of bodies or nodes; if not None, this scalar reference length is used for spring
@@ -524,7 +529,7 @@ def MainSystemCreateRigidBody(mbs,
 #  force: scalar additional force applied
 #  velocityOffset: scalar offset: if referenceLength is changed over time, the velocityOffset may be changed accordingly to emulate a reference motion
 #  springForceUserFunction: a user function springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL\_t, stiffness, damping, force)->float ; this function replaces the internal connector force compuation
-#  bodyOrNodeList: alternative to bodyList; a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types; to use this case, set bodyList = [None,None]
+#  bodyOrNodeList: alternative to bodyNumbers; a list of object numbers (with specific localPosition0/1) or node numbers; may alse be mixed types; to use this case, set bodyNumbers = [None,None]
 #  show: if True, connector visualization is drawn
 #  drawSize: general drawing size of connector
 #  color: color of connector
@@ -544,7 +549,7 @@ def MainSystemCreateRigidBody(mbs,
 # 
 # oGround = mbs.AddObject(ObjectGround())
 # #add vertical spring
-# oSD = mbs.CreateSpringDamper(bodyList=[oGround, b0],
+# oSD = mbs.CreateSpringDamper(bodyNumbers=[oGround, b0],
 #                              localPosition0=[2,1,0],
 #                              localPosition1=[0,0,0],
 #                              stiffness=1e4, damping=1e2,
@@ -558,7 +563,7 @@ def MainSystemCreateRigidBody(mbs,
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreateSpringDamper(mbs,
                                  name='',
-                                 bodyList=[None, None], 
+                                 bodyNumbers=[None, None], 
                                  localPosition0 = [0.,0.,0.],
                                  localPosition1 = [0.,0.,0.], 
                                  referenceLength = None, 
@@ -566,10 +571,11 @@ def MainSystemCreateSpringDamper(mbs,
                                  velocityOffset = 0., 
                                  springForceUserFunction = 0,
                                  bodyOrNodeList=[None, None], 
+                                 bodyList=[None, None],
                                  show=True, drawSize=-1, color=exudyn.graphics.color.default):
     #perform some checks:
     where='MainSystem.CreateSpringDamper(...)'
-    internBodyNodeList = ProcessBodyNodeLists(bodyList, bodyOrNodeList, localPosition0, localPosition1, where)
+    internBodyNodeList = ProcessBodyNodeLists(bodyNumbers, bodyOrNodeList, localPosition0, localPosition1, where, bodyList)
     
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):
@@ -650,14 +656,14 @@ def MainSystemCreateSpringDamper(mbs,
 #**input: 
 #  mbs: the MainSystem where items are created
 #  name: name string for connector; markers get Marker0:name and Marker1:name
-#  bodyList: a list of two body numbers (ObjectIndex) to be connected
+#  bodyNumbers: a list of two body numbers (ObjectIndex) to be connected
 #  localPosition0: local position (as 3D list or numpy array) on body0, if not a node number
 #  localPosition1: local position (as 3D list or numpy array) on body1, if not a node number
 #  stiffness: stiffness coefficients (as 3D list or numpy array)
 #  damping: damping coefficients (as 3D list or numpy array)
 #  offset: offset vector (as 3D list or numpy array)
 #  springForceUserFunction: a user function springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)->[float,float,float] ; this function replaces the internal connector force compuation
-#  bodyOrNodeList: alternative to bodyList; a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types; to use this case, set bodyList = [None,None]
+#  bodyOrNodeList: alternative to bodyNumbers; a list of object numbers (with specific localPosition0/1) or node numbers; may alse be mixed types; to use this case, set bodyNumbers = [None,None]
 #  show: if True, connector visualization is drawn
 #  drawSize: general drawing size of connector
 #  color: color of connector
@@ -676,7 +682,7 @@ def MainSystemCreateSpringDamper(mbs,
 # 
 # oGround = mbs.AddObject(ObjectGround())
 # 
-# oSD = mbs.CreateCartesianSpringDamper(bodyList=[oGround, b0],
+# oSD = mbs.CreateCartesianSpringDamper(bodyNumbers=[oGround, b0],
 #                               localPosition0=[7.5,1,0],
 #                               localPosition1=[0,0,0],
 #                               stiffness=[200,2000,0], damping=[2,20,0],
@@ -691,17 +697,18 @@ def MainSystemCreateSpringDamper(mbs,
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreateCartesianSpringDamper(mbs,
                                  name='',
-                                 bodyList=[None, None], 
+                                 bodyNumbers=[None, None], 
                                  localPosition0 = [0.,0.,0.],
                                  localPosition1 = [0.,0.,0.], 
                                  stiffness = [0.,0.,0.], damping = [0.,0.,0.], 
                                  offset = [0.,0.,0.],
                                  springForceUserFunction = 0,
-                                 bodyOrNodeList=[None, None], 
+                                 bodyOrNodeList=[None, None],
+                                 bodyList=[None, None],
                                  show=True, drawSize=-1, color=exudyn.graphics.color.default):
 
     where='MainSystem.CreateCartesianSpringDamper(...)'
-    internBodyNodeList = ProcessBodyNodeLists(bodyList, bodyOrNodeList, localPosition0, localPosition1, where)
+    internBodyNodeList = ProcessBodyNodeLists(bodyNumbers, bodyOrNodeList, localPosition0, localPosition1, where, bodyList)
 
     #perform some checks:
     if not exudyn.__useExudynFast:
@@ -758,7 +765,7 @@ def MainSystemCreateCartesianSpringDamper(mbs,
 #**input: 
 #  mbs: the MainSystem where items are created
 #  name: name string for connector; markers get Marker0:name and Marker1:name
-#  bodyList: a list of two body numbers (ObjectIndex) to be connected
+#  bodyNumbers: a list of two body numbers (ObjectIndex) to be connected
 #  localPosition0: local position (as 3D list or numpy array) on body0, if not a node number
 #  localPosition1: local position (as 3D list or numpy array) on body1, if not a node number
 #  stiffness: stiffness coefficients (as 6D matrix or numpy array)
@@ -769,7 +776,7 @@ def MainSystemCreateCartesianSpringDamper(mbs,
 #  intrinsicFormulation: if True, uses intrinsic formulation of Maserati and Morandini, which uses matrix logarithm and is independent of order of markers (preferred formulation); otherwise, Tait-Bryan angles are used for computation of torque, see documentation
 #  springForceTorqueUserFunction: a user function springForceTorqueUserFunction(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)->[float,float,float, float,float,float] ; this function replaces the internal connector force / torque compuation
 #  postNewtonStepUserFunction: a special user function postNewtonStepUserFunction(mbs, t, Index itemIndex, dataCoordinates, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)->[PNerror, recommendedStepSize, data[0], data[1], ...] ; for details, see RigidBodySpringDamper for full docu
-#  bodyOrNodeList: alternative to bodyList; a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types; to use this case, set bodyList = [None,None]
+#  bodyOrNodeList: alternative to bodyNumbers; a list of object numbers (with specific localPosition0/1) or node numbers; may alse be mixed types; to use this case, set bodyNumbers = [None,None]
 #  show: if True, connector visualization is drawn
 #  drawSize: general drawing size of connector
 #  color: color of connector
@@ -779,7 +786,7 @@ def MainSystemCreateCartesianSpringDamper(mbs,
 # #coming later
 def MainSystemCreateRigidBodySpringDamper(mbs,
                                  name='',
-                                 bodyList=[None, None], 
+                                 bodyNumbers=[None, None], 
                                  localPosition0 = [0.,0.,0.],
                                  localPosition1 = [0.,0.,0.], 
                                  stiffness = np.zeros((6,6)), 
@@ -791,10 +798,11 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
                                  springForceTorqueUserFunction=0,
                                  postNewtonStepUserFunction=0,
                                  bodyOrNodeList=[None, None],
+                                 bodyList=[None, None],
                                  show=True, drawSize=-1, color=exudyn.graphics.color.default):
 
     where='MainSystem.CreateRigidBodySpringDamper(...)'
-    internBodyNodeList = ProcessBodyNodeLists(bodyList, bodyOrNodeList, localPosition0, localPosition1, where)
+    internBodyNodeList = ProcessBodyNodeLists(bodyNumbers, bodyOrNodeList, localPosition0, localPosition1, where, bodyList)
 
     #perform some checks:
     if not exudyn.__useExudynFast:
@@ -1275,11 +1283,11 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
 #**input:
 #  mbs: the MainSystem where joint and markers shall be created
 #  name: name string for joint; markers get Marker0:name and Marker1:name
-#  bodyList: a list of two body numbers (ObjectIndex) to be constrained
+#  bodyNumbers: a list of two body numbers (ObjectIndex) to be constrained
 #  localPosition0: local position (as 3D list or numpy array) on body0, if not a node number
 #  localPosition1: local position (as 3D list or numpy array) on body1, if not a node number
 #  distance: if None, distance is computed from reference position of bodies or nodes; if not None, this distance is prescribed between the two positions; if distance = 0, it will create a SphericalJoint as this case is not possible with a DistanceConstraint
-#  bodyOrNodeList: alternative to bodyList; a list of object numbers (with specific localPosition0/1) or node numbers; may also be of mixed types; to use this case, set bodyList = [None,None]
+#  bodyOrNodeList: alternative to bodyNumbers; a list of object numbers (with specific localPosition0/1) or node numbers; may alse be mixed types; to use this case, set bodyNumbers = [None,None]
 #  show: if True, connector visualization is drawn
 #  drawSize: general drawing size of node
 #  color: color of connector
@@ -1303,7 +1311,7 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
 # n1 = mbs.GetObject(m1)['nodeNumber']
 #     
 # oGround = mbs.AddObject(ObjectGround())
-# mbs.CreateDistanceConstraint(bodyList=[oGround, b0], 
+# mbs.CreateDistanceConstraint(bodyNumbers=[oGround, b0], 
 #                              localPosition0 = [6.5,1,0],
 #                              localPosition1 = [0.5,0,0],
 #                              distance=None, #automatically computed
@@ -1322,15 +1330,16 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
 # 
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
 def MainSystemCreateDistanceConstraint(mbs, name='', 
-                                       bodyList=[None, None], 
+                                       bodyNumbers=[None, None], 
                                        localPosition0 = [0.,0.,0.],
                                        localPosition1 = [0.,0.,0.], 
                                        distance=None, 
                                        bodyOrNodeList=[None, None],
+                                       bodyList=[None, None],
                                        show=True, drawSize=-1., color=exudyn.graphics.color.default):
     
     where = 'MainSystem.CreateDistanceConstraint(...)'
-    internBodyNodeList = ProcessBodyNodeLists(bodyList, bodyOrNodeList, localPosition0, localPosition1, where)
+    internBodyNodeList = ProcessBodyNodeLists(bodyNumbers, bodyOrNodeList, localPosition0, localPosition1, where, bodyList)
         
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):

@@ -11,7 +11,7 @@ Many objects include a \ ``GraphicsData``\  dictionary structure for definition 
 Note that objects expect a list of \ ``GraphicsData``\ , which can be produced with \ ``exudyn.graphics. ...``\  functions (until Exudyn 1.8.33 with \ ``GraphicsData...(...)``\ , which are now deprecated). 
 Note that if reading out the \ ``GraphicsData``\  from the object again, it usually has a different structure sorted by types of \ ``GraphicsData``\ .
 Typically, you can use primitives (cube, sphere, ...) or \ :ref:`STL <STL>`\  data to define the objects appearance.
-\ ``GraphicsData``\  dictionaries can be created with functions provided in the utilities module \ ``exudyn.graphicsDataUtilities``\ , see Section :ref:`sec-module-graphicsdatautilities`\ .
+\ ``GraphicsData``\  dictionaries can be created with functions provided in the utility module \ ``exudyn.graphics``\ , see Section :ref:`sec-module-graphics`\ .
 
 \ ``GraphicsData``\  can be transformed into points and triangles (mesh) and can be used for contact computation, as well.
 \ **NOTE**\  that for correct rendering and correct contact computations, all triangle nodes must follow a strict local order and triangle normals -- if defined -- must point outwards, see \ :numref:`fig-trianglenormals`\ .
@@ -70,15 +70,24 @@ GraphicsData \ ``'type' = 'Line'``\  draws a polygonal line between all specifie
   #rectangle with side length 1:
   graphicsData = {'type':'Line', 
                   'color': [1,0,0,1], #red
-                  'data': data=[0,0,0, 
-                                1,0,0, 
-                                1,1,0, 
-                                0,1,0, 
-                                0,0,0]} 
+                  'data': [0,0,0, 
+                           1,0,0, 
+                           1,1,0, 
+                           0,1,0, 
+                           0,0,0]} 
 
   vGround=VObjectGround(graphicsData=[graphicsData])
   oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], 
                                    visualization=vGround))
+
+
+Certainly this can be done \ **much more elegant and shorter with**\  \ ``graphics.Lines``\ :
+
+.. code-block:: python
+
+  import exudyn.graphics as graphics
+  graphicsData = graphics.Lines([[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,0]], 
+                                color=graphics.color.red)
 
 
 
@@ -212,5 +221,5 @@ GraphicsData \ ``'type' = 'TriangleList'``\  draws a mesh with flat triangles fo
      - | [0,0,0,1]
      - | list of 4 floats to define RGB-color and transparency of edges
 
-Examples of \ ``GraphicsData``\  can be found in the Python examples and in the file \ ``graphicsDataUtilities.py``\ .
+Examples of \ ``GraphicsData``\  can be found in the Python examples and in the file \ ``graphics.py``\ , see Section  :ref:`sec-module-graphics`\ .
 

@@ -126,7 +126,7 @@ Many objects include a \texttt{GraphicsData} dictionary structure for definition
 Note that objects expect a list of \texttt{GraphicsData}, which can be produced with \texttt{exudyn.graphics. ...} functions (until \codeName 1.8.33 with \texttt{GraphicsData...(...)}, which are now deprecated). 
 Note that if reading out the \texttt{GraphicsData} from the object again, it usually has a different structure sorted by types of \texttt{GraphicsData}.
 Typically, you can use primitives (cube, sphere, ...) or \ac{STL} data to define the objects appearance.
-\texttt{GraphicsData} dictionaries can be created with functions provided in the utilities module \texttt{exudyn.graphicsDataUtilities}, see \refSection{sec:module:graphicsDataUtilities}.
+\texttt{GraphicsData} dictionaries can be created with functions provided in the utility module \texttt{exudyn.graphics}, see \refSection{sec:module:graphics}.
 
 \texttt{GraphicsData} can be transformed into points and triangles (mesh) and can be used for contact computation, as well.
 \mybold{NOTE} that for correct rendering and correct contact computations, all triangle nodes must follow a strict local order and triangle normals -- if defined -- must point outwards, see \fig{fig:triangleNormals}.
@@ -176,15 +176,21 @@ GraphicsData \texttt{'type' = 'Line'} draws a polygonal line between all specifi
   #rectangle with side length 1:
   graphicsData = {'type':'Line', 
                   'color': [1,0,0,1], #red
-                  'data': data=[0,0,0, 
-                                1,0,0, 
-                                1,1,0, 
-                                0,1,0, 
-                                0,0,0]} 
+                  'data': [0,0,0, 
+                           1,0,0, 
+                           1,1,0, 
+                           0,1,0, 
+                           0,0,0]} 
 
   vGround=VObjectGround(graphicsData=[graphicsData])
   oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], 
                                    visualization=vGround))
+\end{lstlisting}
+\noindent Certainly this can be done \mybold{much more elegant and shorter with} \texttt{graphics.Lines}:
+\pythonstyle\begin{lstlisting}
+  import exudyn.graphics as graphics
+  graphicsData = graphics.Lines([[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,0]], 
+                                color=graphics.color.red)
 \end{lstlisting}
 
 \mysubsubsection{GraphicsData: Lines}
@@ -236,7 +242,7 @@ GraphicsData \texttt{'type' = 'TriangleList'} draws a mesh with flat triangles f
 \rowTableFour{edges}{list}{[]}{list [L0point0, L0point1, L1point0, L1point1, ...] containing $n_{lines} \times 2$ integers to define point indices of edges drawn on triangle mesh}
 \rowTableFour{edgeColor}{list}{[0,0,0,1]}{list of 4 floats to define RGB-color and transparency of edges}
 \finishTable
-Examples of \texttt{GraphicsData} can be found in the Python examples and in the file \texttt{graphicsDataUtilities.py}.
+Examples of \texttt{GraphicsData} can be found in the Python examples and in the file \texttt{graphics.py}, see Section \ref{sec:module:graphics}.
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++

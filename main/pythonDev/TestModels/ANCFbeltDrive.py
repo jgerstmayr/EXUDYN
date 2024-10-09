@@ -281,7 +281,7 @@ simulationSettings.solutionSettings.writeSolutionToFile = True
 simulationSettings.solutionSettings.solutionWritePeriod = 0.005
 simulationSettings.solutionSettings.sensorsWritePeriod = 0.001
 #simulationSettings.displayComputationTime = True
-simulationSettings.parallel.numberOfThreads = 1 #use 4 to speed up for > 100 ANCF elements
+simulationSettings.parallel.numberOfThreads = 6 #use 4 to speed up for > 100 ANCF elements
 simulationSettings.displayStatistics = True
 
 doDynamic = True

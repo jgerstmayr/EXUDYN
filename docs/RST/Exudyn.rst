@@ -39,14 +39,14 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-Exudyn version = 1.8.52.dev1 (Jones)
+Exudyn version = 1.9.0 (Krall)
 
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
 If you like using Exudyn, please add a *star* on github and follow us on 
 `Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
 
-+  **Update on Exudyn V1.8.52**: newer examples use ``exudyn.graphics`` instead of ``GraphicsData`` functions. The old models are backwards-compatible, but the updated examples and test models require version 1.8.52 or newer! Install with ``pip install exudyn --pre -U``
++  **Update on Exudyn V1.9.0**: newer examples use ``exudyn.graphics`` instead of ``GraphicsData`` functions. The old models are backwards-compatible, but the new updated examples and test models require version 1.8.52 or newer! FEM now uses internally in mass and stiffness matrices the scipy sparse csr matrices, check also your models for that!
 
 +  **NOTE**: for pure installation, use **pip install exudyn** (see further description below)
 +  *free, open source* and with plenty of *documentation* and *examples*
@@ -73,7 +73,9 @@ If you like using Exudyn, please add a *star* on github and follow us on
    
 |pic1| |pic2| |pic3| |pic4| |pic5| |pic6|
 
-Johannes Gerstmayr. Exudyn -- A C++ based Python package for flexible multibody systems. Multibody System Dynamics, 2023. `https://doi.org/10.1007/s11044-023-09937-1 <https://doi.org/10.1007/s11044-023-09937-1>`_
+How to cite:
+
++ Johannes Gerstmayr. Exudyn -- A C++ based Python package for flexible multibody systems. Multibody System Dynamics, Vol. 60, pp. 533-561, 2024. `https://doi.org/10.1007/s11044-023-09937-1 <https://doi.org/10.1007/s11044-023-09937-1>`_
 
 Due to limitations for complex formulas, images and references in .rst files, some (small) details are only available in theDoc.pdf, see the `github page of Exudyn <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_! There may also be some conversion errors in the auto-generated html pages.
 

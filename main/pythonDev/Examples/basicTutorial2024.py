@@ -21,7 +21,7 @@ oMass = mbs.CreateMassPoint(name='HeavyMass',
                             drawSize=0.2,
                             color=graphics.color.red)
 
-oSD = mbs.CreateSpringDamper(bodyList=[oGround, oMass],
+oSD = mbs.CreateSpringDamper(bodyNumbers=[oGround, oMass],
                              stiffness=500,
                              damping=10,
                              drawSize=0.1)

@@ -54,9 +54,11 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/kinematicTreeConstraintTest
    TestModels/kinematicTreeTest
    TestModels/laserScannerTest
+   TestModels/linearFEMgenericODE2
    TestModels/LShapeGeomExactBeam2D
    TestModels/mainSystemExtensionsTests
    TestModels/manualExplicitIntegrator
+   TestModels/matrixContainerTest
    TestModels/mecanumWheelRollingDiscTest
    TestModels/objectFFRFreducedOrderAccelerations
    TestModels/objectFFRFreducedOrderTest
@@ -89,4 +91,6 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/superElementRigidJointTest
    TestModels/symbolicUserFunctionTest
    TestModels/symbolicModuleTest
+   TestModels/taskmanagerTest
+   TestModels/velocityVerletTest
 

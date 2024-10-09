@@ -186,6 +186,7 @@ mathjax3_config = {
             'tkappa': r'{\boldsymbol{\kappa}}',
             'tkappaDot': r'{\boldsymbol{\dot \kappa}}',
             'tphi': r'{\boldsymbol{\phi}}',
+            'boldVarPhi': r'{\boldsymbol{\varphi}}',
             'tPhi': r'{\boldsymbol{\Phi}}',
             'ttheta': r'{\boldsymbol{\theta}}',
             'tTheta': r'{\boldsymbol{\Theta}}',

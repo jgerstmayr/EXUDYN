@@ -186,18 +186,18 @@ You can view and download this file on Github: `stiffFlyballGovernor.py <https:/
    nodeNumberList = [-1]*nRigidBodyNodes
    bodyNumberList = [-1]*nRigidBodyNodes
    for i in range(nRigidBodyNodes):    
-       [n0,b0]=AddRigidBody(mainSys = mbs, 
-                            inertia = inertiaList[i], 
-                            nodeType = str(nodeType), 
-                            position = refPosList[i], 
-                            velocity = refVelList[i],
-                            rotationMatrix = [],#refRotMatList[i],
-                            rotationParameters = refRotParList[i],
-                            angularVelocity = refAngularVelList[i], 
-                            gravity = g, 
-                            graphicsDataList = [graphicsList[i]])
-       nodeNumberList[i] = n0
-       bodyNumberList[i] = b0
+       result0 = mbs.CreateRigidBody(referencePosition = refPosList[i],
+                                     initialVelocity = refVelList[i],
+                                     initialAngularVelocity = refAngularVelList[i],
+                                     inertia = inertiaList[i],
+                                     gravity = g,
+                                     nodeType = nodeType,
+                                     referenceRotationMatrix = refRotMatList[i],
+                                     graphicsDataList = [graphicsList[i]],
+                                     returnDict = True)
+       nodeNumberList[i] = result0['nodeNumber']
+       bodyNumberList[i] = result0['bodyNumber']
+       
        
    
    

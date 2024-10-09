@@ -1120,9 +1120,8 @@ def GetRigidBodyNode(nodeType,
 
     return nodeItem
 
-#soon: DEPRECATED (use MainSystem function instead): 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: adds a node (with str(exu.NodeType. ...)) and body for a given rigid body; all quantities (esp. velocity and angular velocity) are given in global coordinates!
+#**function: DEPRECATED: adds a node (with str(exu.NodeType. ...)) and body for a given rigid body; all quantities (esp. velocity and angular velocity) are given in global coordinates!
 #**input:
 #   inertia: an inertia object as created by class RigidBodyInertia; containing mass, COM and inertia
 #   nodeType: a node type according to exudyn.NodeType, or a string of it, e.g., 'NodeType.RotationEulerParameters' (fastest, but additional algebraic constraint equation), 'NodeType.RotationRxyz' (Tait-Bryan angles, singularity for second angle at +/- 90 degrees), 'NodeType.RotationRotationVector' (used for Lie group integration)
@@ -1134,6 +1133,7 @@ def GetRigidBodyNode(nodeType,
 #   gravity: if provided as list or numpy array with 3 components, it adds gravity force to the body at the COM, i.e., fAdd = m*gravity
 #   graphicsDataList: list of graphicsData objects to define appearance of body
 #**output: returns list containing node number and body number: [nodeNumber, bodyNumber]
+#**notes: DEPRECATED and will be removed; use MainSystem.CreateRigidBody(...) instead!
 def AddRigidBody(mainSys, inertia, 
                  nodeType = exu.NodeType.RotationEulerParameters, 
                  position=[0,0,0], velocity=[0,0,0], 
@@ -1206,6 +1206,7 @@ def AddRigidBody(mainSys, inertia,
 #  axis: a 3D vector as list or np.array containing the global rotation axis of the joint in reference configuration
 #  useGlobalFrame: if False, the point and axis vectors are defined in the local coordinate system of body0
 #**output: returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
+#**notes: DEPRECATED and will be removed; use MainSystem.CreateRevoluteJoint(...) instead!
 def AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame=True, 
                      showJoint=True, axisRadius=0.1, axisLength=0.4):
 
@@ -1287,6 +1288,7 @@ def AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame=True,
 #  axis: a 3D vector as list or np.array containing the global translation axis of the joint in reference configuration
 #  useGlobalFrame: if False, the point and axis vectors are defined in the local coordinate system of body0
 #**output: returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
+#**notes: DEPRECATED and will be removed; use MainSystem.CreatePrismaticJoint(...) instead!
 def AddPrismaticJoint(mbs, body0, body1, point, axis, useGlobalFrame=True, 
                      showJoint=True, axisRadius=0.1, axisLength=0.4):
         

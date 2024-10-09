@@ -85,6 +85,7 @@ class NewtonSettings:
 class GeneralizedAlphaSettings:
     computeInitialAccelerations: bool
     lieGroupAddTangentOperator: bool
+    lieGroupSimplifiedKinematicRelations: bool
     newmarkBeta: float
     newmarkGamma: float
     resetAccelerations: bool

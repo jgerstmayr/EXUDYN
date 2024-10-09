@@ -276,7 +276,6 @@ You can view and download this file on Github: `geometricallyExactBeamTest.py <h
        simulationSettings.timeIntegration.verboseMode = verbose
        simulationSettings.staticSolver.verboseMode = verbose
    
-       #simulationSettings.parallel.numberOfThreads = 4
        simulationSettings.timeIntegration.newton.useModifiedNewton = True
        #simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1e0
    
@@ -285,12 +284,6 @@ You can view and download this file on Github: `geometricallyExactBeamTest.py <h
    
        # simulationSettings.displayComputationTime = True
        simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-       # simulationSettings.parallel.numberOfThreads = 4
-   
-       #simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 5e-5
-       #simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2 = True
-       #simulationSettings.staticSolver.newton.relativeTolerance = 1e-6
-       # simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-4
    
        simulationSettings.staticSolver.numberOfLoadSteps = 5
        simulationSettings.staticSolver.adaptiveStep = True
@@ -299,8 +292,6 @@ You can view and download this file on Github: `geometricallyExactBeamTest.py <h
        if useGeometricallyExact:
            # simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2 = True
            # simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-5
-           # simulationSettings.staticSolver.newton.relativeTolerance = 1e-5
-           # simulationSettings.staticSolver.newton.absoluteTolerance = 1e-5
            if case == 0:
                simulationSettings.staticSolver.newton.relativeTolerance = 1e-4
                simulationSettings.staticSolver.newton.absoluteTolerance = 1e-5

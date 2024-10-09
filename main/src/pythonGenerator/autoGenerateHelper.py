@@ -1186,6 +1186,7 @@ class PyLatexRST:
         
         def ReplaceDefaultArgsLatex(s):
             sNew = copy.copy(s)
+            sNew = sNew.replace('EXUstd::InvalidIndex','invalid (-1)') 
             sNew = sNew.replace('true','True').replace('false','False')
             if sNew.find('Vector3D') != -1:
                 sNew = sNew.replace('(std::vector<Real>)Vector3D','')

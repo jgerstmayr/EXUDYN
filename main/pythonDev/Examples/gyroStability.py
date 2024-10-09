@@ -51,32 +51,30 @@ for i, p0 in enumerate(pList):
     iCylSum = iCyl1.Translated([0,0.5*L,0]) + iCyl0
     com = iCylSum.COM()
     iCylSum = iCylSum.Translated(-com)
-    
-    # print(iCyl0)
-    # print(iCyl1)
-    # print(iCylSum)
 
     #graphics for body
+    color = [graphics.color.red, graphics.color.lawngreen, graphics.color.steelblue][i]
     gCyl0 = graphics.SolidOfRevolution(pAxis=[0,0,0]-com, vAxis=[2*L,0,0], 
                                            contour = [[-L,-r],[L,-r],[L,-0.5*r],[-L,-0.5*r],], 
-                                           color= graphics.color.steelblue, nTiles= 32, smoothContour=False)
-    gCyl1 = graphics.Cylinder(pAxis=[-L,0,0]-com, vAxis=[2*L,0,0],radius=0.5*w, color=graphics.color.steelblue, nTiles=32)
-    gCyl2 = graphics.Cylinder(pAxis=[0,0,0]-com, vAxis=[0,L,0],radius=0.5*w, color=graphics.color.steelblue, nTiles=32)
+                                           color= color, nTiles= 32, smoothContour=False)
+    gCyl1 = graphics.Cylinder(pAxis=[-L,0,0]-com, vAxis=[2*L,0,0],radius=0.5*w, color=color, nTiles=32)
+    gCyl2 = graphics.Cylinder(pAxis=[0,0,0]-com, vAxis=[0,L,0],radius=0.5*w, color=color, nTiles=32)
     gCOM = graphics.Basis(origin=[0,0,0],length = 1.25*L)
     
     nodeType = exu.NodeType.RotationRotationVector
     if doImplicit:
         nodeType = exu.NodeType.RotationEulerParameters
         
-    [n0,b0]=AddRigidBody(mainSys = mbs,
-                         inertia = iCylSum, #includes COM
-                         nodeType = nodeType,
-                         position = p0,
-                         rotationMatrix = np.diag([1,1,1]),
-                         angularVelocity = omega0,
-                         gravity = g,
-                         graphicsDataList = [gCyl1, gCyl2, gCOM])
-
+    result0 = mbs.CreateRigidBody(
+        referencePosition = p0,
+        initialAngularVelocity = omega0,
+        inertia = iCylSum,
+        gravity = g,
+        nodeType = nodeType,
+        graphicsDataList = [gCyl1, gCyl2, gCOM],
+        returnDict = True
+    )
+    n0, b0 = result0['nodeNumber'], result0['bodyNumber']
     sAngVel = mbs.AddSensor(SensorNode(nodeNumber=n0, fileName='solution/gyroAngVel'+str(i)+'.txt',
                                        outputVariableType=exu.OutputVariableType.AngularVelocityLocal))
     sAngle = mbs.AddSensor(SensorNode(nodeNumber=n0, fileName='solution/gyroAngle'+str(i)+'.txt',

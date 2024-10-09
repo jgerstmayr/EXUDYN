@@ -39,7 +39,7 @@ import numpy as np
 #           oAxisList, mAxlesList; objects and marker of the axles  [a1, a2, a3, a4]
 #           nWheelsList, bWheelsList, oRollingDiscsList, mWheelsList; nodes, bodys, objects and markers of the four wheels [w1, w2, w3, w4]
 #**notes: for coordinate system, see Python function definition
-def mobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *args, **kwargs):
+def MobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *args, **kwargs):
     # platform setup:
     # ^Y
     # |    W3 +---------+ W1
@@ -134,15 +134,16 @@ def mobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *a
             print('stl not found, maybe wrong directory, use box instead')
             graphicsPlatformList += [graphics.Brick(centerPoint=[0,0,2.0],size=[lCar, wCar-1.1*wWheel, hCar], color=graphics.color.steelblue[0:3]+[0.2])]
 
-    [nPlatform,bPlatform] = AddRigidBody(mainSys = mbs, 
-                            inertia = inertiaPlatform, 
-                            nodeType = str(exu.NodeType.RotationEulerParameters), 
-                            position = p0Car, 
-                            rotationMatrix = HT2rotationMatrix(mobileRobot['platformInitialPose'])  ,
-                            angularVelocity =  mobileRobot['platformInitialOmega'],
-                            velocity=mobileRobot['platformInitialVelocity'],
-                            gravity = mobileRobot['gravity'], 
-                            graphicsDataList = graphicsPlatformList)
+    rb = mbs.CreateRigidBody(inertia=inertiaPlatform,
+                             referencePosition=p0Car,
+                             referenceRotationMatrix=HT2rotationMatrix(mobileRobot['platformInitialPose']),
+                             initialAngularVelocity=mobileRobot['platformInitialOmega'],
+                             initialVelocity=mobileRobot['platformInitialVelocity'],
+                             gravity=mobileRobot['gravity'],
+                             graphicsDataList=graphicsPlatformList,
+                             returnDict=True)
+    [nPlatform, bPlatform] = [rb['nodeNumber'], rb['bodyNumber']]
+    
     mbs.SetObjectParameter(bPlatform, 'name', 'Base')
     mbs.SetNodeParameter(nPlatform, 'name', 'BaseCenter')
     nPlatformList += [nPlatform]
@@ -232,30 +233,28 @@ def mobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *a
         pOff = [dx,dy,0-p0Car[2]]    #[dx,dy,0]
         poseWheel = VAdd(p0Car, HT2rotationMatrix(mobileRobot['platformInitialPose'])  @ VAdd(p0Wheel,pOff))
         #add a wheel body to the main platform body
-        [nWheeln,bWheeln]=AddRigidBody(mainSys = mbs, 
-                            inertia = inertiaWheel, 
-                            nodeType = str(exu.NodeType.RotationEulerParameters), 
-                            position = poseWheel, 
-                            rotationMatrix = HT2rotationMatrix(mobileRobot['platformInitialPose'])  @ initialRotation, 
-                            angularVelocity = omega0Wheel,
-                            velocity=v0Wheel,
-                            gravity = mobileRobot['gravity']  , 
-                            graphicsDataList = graphicsWheel)
-        nWheelsList += [nWheeln]
-        bWheelsList += [bWheeln]
+        dictWheeln = mbs.CreateRigidBody(referencePosition=poseWheel,  
+                                         referenceRotationMatrix=HT2rotationMatrix(mobileRobot['platformInitialPose']) @ initialRotation,  
+                                         initialVelocity=v0Wheel,  
+                                         initialAngularVelocity=omega0Wheel,  
+                                         inertia=inertiaWheel,  
+                                         gravity=mobileRobot['gravity'],  
+                                         graphicsDataList=graphicsWheel,  
+                                         returnDict=True)  
+        nWheelsList += [dictWheeln['nodeNumber']]
+        bWheelsList += [dictWheeln['bodyNumber']]
         #markers for rigid body:
-        mWheel = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bWheeln, localPosition=[0,0,0]))
+        mWheel = mbs.AddMarker(MarkerBodyRigid(bodyNumber=dictWheeln['bodyNumber'], localPosition=[0,0,0]))
         mWheelsList += [mWheel]
         mAxle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bPlatform, localPosition=VAdd(pOff,[0,0,p0Wheel[2]])))
         mAxlesList += [mAxle]
-        jointLink, mBody0, mBody1 = AddRevoluteJoint(mbs=mbs, 
-                                            body0=bPlatform, 
-                                            body1=bWheeln, 
-                                            point= pOff[0:2] + [pOff[2] + p0Wheel[2]],
-                                            axis=[0,1,0] ,
-                                            #axis=rotAxis, 
-                                            useGlobalFrame=False, 
-                                            showJoint=True, axisRadius=4e-3, axisLength=0.12)
+        [jointLink, mBody0, mBody1] = mbs.CreateRevoluteJoint(bodyNumbers=[bPlatform, dictWheeln['bodyNumber']], 
+                                                              position=pOff[0:2] + [pOff[2] + p0Wheel[2]], 
+                                                              axis=[0,1,0],
+                                                              useGlobalFrame=False, 
+                                                              show=True,
+                                                              axisRadius=wWheel*0.05, 
+                                                              axisLength=wWheel*1.2)
         mRevoluteBody0 += [mBody0]
         mRevoluteBody1 += [mBody1]
         oAxlesList +=[jointLink]  
@@ -349,7 +348,7 @@ class MobileKinematics:
     #**output: 
     #   w: wheel velocities w=[w0,w1,w2,w3]
     #**author: Peter Manzl
-    def getWheelVelocities(self, vDes):
+    def GetWheelVelocities(self, vDes):
         if len(vDes) == 3: 
             return self.Jacobian @ vDes
         else: 
@@ -373,7 +372,7 @@ class MobileKinematics:
     #  vy: platform translational velocity in local y direction
     #  omega: platform rotational velocity around local z axis
     #**author: Peter Manzl
-    def getCartesianVelocities(self, w): 
+    def GetCartesianVelocities(self, w): 
         if len(w) == 4: 
             return self.JacobianPInv @ w
         else: 

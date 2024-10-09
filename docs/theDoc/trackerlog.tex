@@ -9,15 +9,231 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.8.52.dev1, 
-  \item last change =  2024-06-04, 
-  \item Number of issues = 1854, 
-  \item Number of resolved issues = 1646 (52 in current version), 
+  \item Exudyn version = 1.9.0, 
+  \item last change =  2024-10-09, 
+  \item Number of issues = 1881, 
+  \item Number of resolved issues = 1676 (0 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.9.0}:  resolved Issue 1880: {\bf MatrixContainer}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: when initialized with lists of lists, it prints the lists}
+    \item   date resolved: {\bf 2024-10-09 11:06},
+date raised: 2024-10-09 
+  \ei
+  \item[] {\bf Version 1.8.81}:  resolved Issue 1879: {\bf MatrixContainer}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add feature to directly initialize with scipy sparse csr matrix; add new function Initialize to initialize MatrixContainer, and AddSparseMatrix for adding sparse matrices with factor}
+    \item   date resolved: {\bf 2024-10-09 09:39},
+date raised: 2024-10-09 
+  \ei
+  \item[] {\bf Version 1.8.80}:  resolved Issue 1878: {\bf robotics.mobile}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: correct camelcase writing of mobileRobot2MBS to MobileRobot2MBS, getWheelVelocities to GetWheelVelocities, and getCartesianVelocities to GetCartesianVelocities; adjust examples}
+    \item   date resolved: {\bf 2024-10-09 08:04},
+date raised: 2024-10-09 
+  \ei
+  \item[] {\bf Version 1.8.79}:  resolved Issue 1844: {\bf AddRigidBody}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add warning to this and related functions for deprecation}
+    \item   date resolved: {\bf 2024-10-09 07:40},
+date raised: 2024-05-28 
+  \ei
+  \item[] {\bf Version 1.8.78}:  resolved Issue 1455: {\bf MarkerSuperElementRigidBody}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: fix derivative of exponential map for velocity level}
+    \item {\bf notes: already resolved earlier}
+    \item   date resolved: {\bf 2024-10-09 07:37},
+date raised: 2023-03-05 
+  \ei
+  \item[] {\bf Version 1.8.77}:  resolved Issue 1341: {\bf MacOS multithreading}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: resolve compilation problems with NGsolve taskmanager on Apple MacOS}
+    \item {\bf notes: already resolved earlier}
+    \item   date resolved: {\bf 2024-10-09 07:36},
+date raised: 2022-12-26 
+  \ei
+  \item[] {\bf Version 1.8.76}:  resolved Issue 0496: {\bf controller}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add possibility to differentiate loads w.r.t. sensor?/object/node (use additional sensor numbers which provide dependencies); add optional dependence on sensors; integrateors using ODE1 or discrete implementation}
+    \item {\bf notes: already resolved in version 1.6.84; available via systemData.AddODE2LoadDependencies}
+    \item   date resolved: {\bf 2024-10-09 07:33},
+date raised: 2020-12-09 
+  \ei
+  \item[] {\bf Version 1.8.75}:  resolved Issue 1877: {\bf Create functions}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: CreateDistanceConstraint, CreateSpringDamper and similar create functions have bodyList instead of bodyNumbers, which is used for joints; use bodyNumbers and allow bodyList as deprecated option}
+    \item {\bf notes: kept compatibility with existing bodyList args, but will be removed in future versions}
+    \item   date resolved: {\bf 2024-10-08 23:04},
+date raised: 2024-10-08 
+  \ei
+  \item[] {\bf Version 1.8.74}:  resolved Issue 1862: {\bf CSR functionality in FEM}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change internal CSR format to scipy CSR format; add simple check for Scipy to be installed at start of FEM, set scipyInstalled=True, use CheckSciPyInstalled() function for unified errors}
+    \item   date resolved: {\bf 2024-10-08 17:29},
+date raised: 2024-10-02 
+  \ei
+  \item[] {\bf Version 1.8.73}:  resolved Issue 1870: {\bf FEMinterface}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: check all occurances of GetStiffnessMatrix and GetMassMatrix for sparse mode now using scipy sparse matrix}
+    \item {\bf notes: Make sure that using FEMinterface fem, fem.GetMassMatrix of fem.GetStiffnessMatrix now returns a SciPy sparse matrix, which can be converted into the previous form by using ScipySparseCSRtoCSR(fem.GetMassMatrix())}
+    \item   date resolved: {\bf 2024-10-08 17:28},
+date raised: 2024-10-07 
+  \ei
+  \item[] {\bf Version 1.8.72}:  resolved Issue 1876: {\bf FEMinterface}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: SaveToFile: used wrong default fileVersion=13, which should have been fileVersion=1; as we now shift to fileVersion=2, old files may be loaded with forceVersion=1}
+    \item   date resolved: {\bf 2024-10-08 17:26},
+date raised: 2024-10-08 
+  \ei
+  \item[] {\bf Version 1.8.71}:  resolved Issue 1871: {\bf MatrixContainer}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: fix compilation issues with pybind11 and scipy coo matrix}
+    \item   date resolved: {\bf 2024-10-08 17:26},
+date raised: 2024-10-07 
+  \ei
+  \item[] {\bf Version 1.8.70}:  resolved Issue 1875: {\bf FEMinterface}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: the mass and stiffness matrices in FEMinterface are either None or given in SciPy-sparse csr format; this gives also a a new load/save fileVersion of FEMinterface}
+    \item   date resolved: {\bf 2024-10-08 13:09},
+date raised: 2024-10-08 
+  \ei
+  \item[] {\bf Version 1.8.69}:  resolved Issue 1874: {\bf FEMinterface}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: SaveToFile: add version 2 which also pickles mass and stiffnessMatrix}
+    \item   date resolved: {\bf 2024-10-08 11:11},
+date raised: 2024-10-08 
+  \ei
+  \item[] {\bf Version 1.8.68}:  resolved Issue 1873: {\bf FEM module}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: replace print(...) with exu.Print(...) commands to better control output flow}
+    \item   date resolved: {\bf 2024-10-08 10:33},
+date raised: 2024-10-08 
+  \ei
+  \item[] {\bf Version 1.8.67}:  resolved Issue 1872: {\bf MatrixContainer}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: SetWithSparseMatrixCSR: mark as deprecated; instead add new function SetWithSparseMatrix with additional arg factor (default=1) to multply matrix values with factor before adding}
+    \item   date resolved: {\bf 2024-10-07 18:34},
+date raised: 2024-10-07 
+  \ei
+  \item[] {\bf Version 1.8.66}:  resolved Issue 1869: {\bf FEMinterface}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change default values of massMatrix and stiffnessMatrix to None instead of np.zeros((0,0))}
+    \item   date resolved: {\bf 2024-10-07 01:54},
+date raised: 2024-10-07 
+  \ei
+  \item[] {\bf Version 1.8.65}:  resolved Issue 1865: {\bf MatrixContainer}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add functionality to add Scipy csr matrix AddSparseMatrix(..., factor=1) with factor}
+    \item   date resolved: {\bf 2024-10-07 01:35},
+date raised: 2024-10-02 
+  \ei
+  \item[] {\bf Version 1.8.64}:  resolved Issue 0840: {\bf explicit solvers velocity verlet}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add velocity verlet integration scheme in particular for particle and contact simulation}
+    \item {\bf notes: added, but not yet tested for Lie group case!}
+    \item   date resolved: {\bf 2024-10-07 00:37},
+date raised: 2021-12-19 
+  \ei
+  \item[] {\bf Version 1.8.63}:  resolved Issue 1868: {\bf SetWithSparseMatrixCSR}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change default behavior to useDenseMatrix=False, using sparse mode by default}
+    \item   date resolved: {\bf 2024-10-06 22:03},
+date raised: 2024-10-06 
+  \ei
+  \item[] {\bf Version 1.8.62}:  resolved Issue 1867: {\bf graphicsDataUtilities}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: adapt documentation to replace graphicsDataUtilities with graphics}
+    \item   date resolved: {\bf 2024-10-06 17:24},
+date raised: 2024-10-06 
+  \ei
+  \item[] {\bf Version 1.8.61}:  resolved Issue 1866: {\bf DOCU GraphicsData: Line}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: Mistake in Line example; add hint to use graphics.Lines function}
+    \item   date resolved: {\bf 2024-10-06 17:06},
+date raised: 2024-10-06 
+  \ei
+  \item[] {\bf Version 1.8.60}:  resolved Issue 1854: {\bf figure}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: replace figure theoryRotationsTaitBryanAngles, which has been accidentially copied}
+    \item   date resolved: {\bf 2024-10-06 16:51},
+date raised: 2024-06-05 
+  \ei
+  \item[] {\bf Version 1.8.59}: {\bf \color{warningRed}  resolved BUG 1860}: {\bf ComputeODE2Eigenvalues}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: in case of computeComplexEigenvalues=True, the option convert2Frequencies=True computes wrong frequencies; this combination thus will be deactivated, as it makes little sense anyhow}
+    \item   date resolved: {\bf 2024-09-19 16:15},
+date raised: 2024-09-19 
+  \ei
+  \item[] {\bf Version 1.8.58}:  resolved Issue 1859: {\bf Frames}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: frame numbers not shown (e.g. for nodes)}
+    \item {\bf notes: fixed together with issue 1858}
+    \item   date resolved: {\bf 2024-08-07 17:26},
+date raised: 2024-08-07 
+  \ei
+  \item[] {\bf Version 1.8.57}:  resolved Issue 1858: {\bf KinematicTree}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: frame numbers not shown}
+    \item {\bf notes: changing default showFramesNumbers=False}
+    \item   date resolved: {\bf 2024-08-07 17:26},
+date raised: 2024-08-07 
+  \ei
+  \item[] {\bf Version 1.8.56}: {\bf \color{warningRed}  resolved BUG 1857}: {\bf KinematicTree}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: COM not correctly drawn (drawn at joint location)}
+    \item   date resolved: {\bf 2024-08-07 17:05},
+date raised: 2024-08-07 
+  \ei
+  \item[] {\bf Version 1.8.55}:  resolved Issue 1856: {\bf FromSTLfile}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: function does not work for A or p being different from []}
+    \item   date resolved: {\bf 2024-07-03 11:33},
+date raised: 2024-07-03 
+  \ei
+  \item[] {\bf Version 1.8.54}:  resolved Issue 1849: {\bf tutorial}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add FFRFreducedOrder with NGsolve tutorial}
+    \item   date resolved: {\bf 2024-06-23 16:59},
+date raised: 2024-06-02 
+  \ei
+  \item[] {\bf Version 1.8.53}:  resolved Issue 1855: {\bf lie group integrator}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add improved lie group integrator for generalized alpha, not using the simplified update and thus having higher accuracy}
+    \item   date resolved: {\bf 2024-06-15 13:42},
+date raised: 2024-06-15 
+  \ei
   \item[] {\bf Version 1.8.52}:  resolved Issue 1852: {\bf tutorials}
 (docu)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

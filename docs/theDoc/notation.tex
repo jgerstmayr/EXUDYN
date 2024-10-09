@@ -51,6 +51,7 @@ and they usually include some range or size check (e.g., \texttt{PReal} is check
   \item \texttt{PyFunctionGraphicsData} $\ldots$ a user function providing GraphicsData, see the user function description of the according object
   \item \texttt{PyFunctionMbsScalar...} $\ldots$ a user function for the according object; the name is chosen according to the interface (arguments containing scalars, vectors, etc.) and is only used internally for code generation; see the according user function description
 \ei
+Note that for integers, there is also the \texttt{exu.InvalidIndex()} which is used to uniquely mark invalid indices, e.g., for default values of node numbers in objects or for other functions, often marked as \texttt{invalid (-1)} in the documentation. Currently, the invalid index is set to -1, but it may change in the future!
 
 %
 \mysubsubsection{States and coordinate attributes}

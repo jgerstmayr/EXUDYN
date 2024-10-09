@@ -185,7 +185,8 @@ Settings for generalized-alpha, implicit trapezoidal or Newmark time integration
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     computeInitialAccelerations &     bool &      &     True &     True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations\\ \hline
-    lieGroupAddTangentOperator &     bool &      &     True &     True: for Lie group nodes, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)\\ \hline
+    lieGroupAddTangentOperator &     bool &      &     True &     True: for Lie group nodes, in case that lieGroupSimplifiedKinematicRelations=True, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)\\ \hline
+    lieGroupSimplifiedKinematicRelations &     \tabnewline bool &      &     True &     True: for Lie group nodes, the integrator uses the original kinematic relations of the Bruls and Cardona 2010 paper\\ \hline
     newmarkBeta &     UReal &      &     0.25 &     value beta for Newmark method; default value beta = $\frac 1 4$ corresponds to (undamped) trapezoidal rule\\ \hline
     newmarkGamma &     UReal &      &     0.5 &     value gamma for Newmark method; default value gamma = $\frac 1 2$ corresponds to (undamped) trapezoidal rule\\ \hline
     resetAccelerations &     bool &      &     False &     this flag only affects if computeInitialAccelerations=False: if resetAccelerations=True, accelerations are set zero in the solver function InitializeSolverInitialConditions; this may be unwanted in case of repeatedly called SolveSteps() and in cases where solutions shall be prolonged from previous computations\\ \hline
@@ -522,7 +523,7 @@ Visualization settings for kinematic trees.
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     frameSize &     float &      &     0.2 &     size of COM and joint frames\\ \hline
     showCOMframes &     bool &      &     False &     if True, a frame is attached to every center of mass\\ \hline
-    showFramesNumbers &     bool &      &     True &     if True, numbers are drawn for joint frames (O[i]J[j]) and COM frames (O[i]COM[j]) for object [i] and local joint [j]\\ \hline
+    showFramesNumbers &     bool &      &     False &     if True, numbers are drawn for joint frames (O[i]J[j]) and COM frames (O[i]COM[j]) for object [i] and local joint [j]\\ \hline
     showJointFrames &     bool &      &     True &     if True, a frame is attached to the origin of every joint frame\\ \hline
 	  \end{longtable}
 	\end{center}
@@ -545,7 +546,7 @@ Visualization settings for bodies.
     kinematicTree &     VSettingsKinematicTree &      &      &     visualization settings for kinematic tree\\ \hline
     defaultColor &     Float4 &     4 &     [0.3,0.3,1.,1.] &     \tabnewline default RGBA color for bodies; 4th value is \\ \hline
     defaultSize &     Float3 &     3 &     [1.,1.,1.] &     \tabnewline global body size of xyz-cube\\ \hline
-    deformationScaleFactor &     float &      &     1 &     global deformation scale factor; also applies to nodes, if drawn; used for scaled drawing of (linear) finite elements, beams, etc.\\ \hline
+    deformationScaleFactor &     float &      &     1 &     global deformation scale factor; also applies to nodes, if drawn; currently only used for scaled drawing of (linear) finite elements in FFRF and FFRFreducedOrder objects\\ \hline
     show &     bool &      &     True &     flag to decide, whether the bodies are shown\\ \hline
     showNumbers &     bool &      &     False &     flag to decide, whether the body(=object) number is shown\\ \hline
 	  \end{longtable}

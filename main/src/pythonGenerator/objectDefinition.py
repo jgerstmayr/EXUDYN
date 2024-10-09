@@ -1011,7 +1011,7 @@ equations =
     \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
     A user function, which is called by the visualization thread in order to draw user-defined objects.
     The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
-    Use \texttt{graphicsDataUtilities} functions, see Section \ref{sec:module:graphicsDataUtilities}, to create more complicated objects. 
+    Use \texttt{exudyn.graphics} functions, see Section \ref{sec:module:graphics}, to create more complicated objects. 
     Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
     inefficient and only designed to enable simpler tests, but not large scale problems.
     %
@@ -1631,7 +1631,7 @@ equations =
     \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
     A user function, which is called by the visualization thread in order to draw user-defined objects.
     The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
-    Use \texttt{graphicsDataUtilities} functions, see Section \ref{sec:module:graphicsDataUtilities}, to create more complicated objects. 
+    Use \texttt{exudyn.graphics} functions, see Section \ref{sec:module:graphics}, to create more complicated objects. 
     Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
     inefficient and only designed to enable simpler tests, but not large scale problems.
     
@@ -1753,7 +1753,7 @@ equations =
     \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
     A user function, which is called by the visualization thread in order to draw user-defined objects.
     The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
-    Use \texttt{graphicsDataUtilities} functions, see Section \ref{sec:module:graphicsDataUtilities}, to create more complicated objects. 
+    Use \texttt{exudyn.graphics} functions, see Section \ref{sec:module:graphics}, to create more complicated objects. 
     Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
     inefficient and only designed to enable simpler tests, but not large scale problems.
 
@@ -1883,6 +1883,8 @@ equations =
             -f_{ODE2}   \left(\frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \qv} \right) - 
              f_{ODE2_t} \left(\frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \dot \qv} \right)
     \ee
+    For clarification also see the \mybold{example} in \texttt{TestModels/linearFEMgenericODE2.py}.
+    
     CoordinateLoads are added for the respective \hac{ODE2} coordinate on the RHS of the latter equation.
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1936,7 +1938,7 @@ equations =
     \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
     A user function, which is called by the visualization thread in order to draw user-defined objects.
     The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
-    Use \texttt{graphicsDataUtilities} functions, see Section \ref{sec:module:graphicsDataUtilities}, to create more complicated objects. 
+    Use \texttt{exudyn.graphics} functions, see Section \ref{sec:module:graphics}, to create more complicated objects. 
     Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
     inefficient and only designed to enable simpler tests, but not large scale problems.
 
@@ -2135,7 +2137,7 @@ equations =
     %\userFunction{graphicsDataUserFunction(mbs, itemNumber)}
     %A user function, which is called by the visualization thread in order to draw user-defined objects.
     %The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
-    %Use \texttt{graphicsDataUtilities} functions, see Section \ref{sec:module:graphicsDataUtilities}, to create more complicated objects. 
+    %Use \texttt{exudyn.graphics} functions, see Section \ref{sec:module:graphics}, to create more complicated objects. 
     %Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
     %inefficient and only designed to enable simpler tests, but not large scale problems.
     %
@@ -5034,7 +5036,7 @@ mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
 pythonShortName = LinearSpringDamper
 addIncludesC = 'class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h\n'
-outputVariables = "{'DisplacementLocal':'$\Delta x$(scalar) relative displacement of the spring-damper', 'VelocityLocal':'$\Delta v$(scalar) relative velocity of spring-damper', 'ForceLocal':'$f$(scalar) spring-damper force'}"
+outputVariables = "{'DisplacementLocal':'$\Delta x$(scalar) relative displacement of the spring-damper', 'VelocityLocal':'$\Delta v$(scalar) relative velocity of spring-damper', 'ForceLocal':'$f_{SD}$(scalar) spring-damper force'}"
 classType = Object
 objectType = Connector
 equations =
@@ -5062,12 +5064,12 @@ equations =
     \be
       f_{SD} = k \left(\Delta x - x_\mathrm{off} \right) + d \left(\Delta v - v_\mathrm{off} \right) + f_c
     \ee
-    if \texttt{activeConnector = False}, $\tau_{SD}$ is set zero.
+    if \texttt{activeConnector = False}, $f_{SD}$ is set zero.
 
     If the springForceUserFunction $\mathrm{UF}$ is defined and \texttt{activeConnector = True}, 
-    $\tau_{SD}$ instead becomes ($t$ is current time)
+    $f_{SD}$ instead becomes ($t$ is current time)
     \be
-      \tau_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta x, \Delta v, \mathrm{stiffness}, \mathrm{damping}, \mathrm{offset})
+      f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta x, \Delta v, \mathrm{stiffness}, \mathrm{damping}, \mathrm{offset})
     \ee
     and \texttt{iN} represents the itemNumber (=objectNumber).
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -5216,7 +5218,7 @@ equations =
     \mysubsubsubsection{Connector forces}
     If \texttt{activeConnector = True}, the vector spring force is computed as
     \be
-      \tau_{SD} = k \left(\Delta\theta - v_\mathrm{off} \right) + d \left(\Delta\omega - \dot v_\mathrm{off} \right) + \tau_c
+      \tau_{SD} = k \left(\Delta\theta - \theta_\mathrm{off} \right) + d \left(\Delta\omega - \omega_\mathrm{off} \right) + \tau_c
     \ee
     if \texttt{activeConnector = False}, $\tau_{SD}$ is set zero.
 
@@ -5301,8 +5303,8 @@ V,      CP,     stiffness,                      ,               ,       Real,   
 V,      CP,     damping,                        ,               ,       Real,   "0.",       ,       I,      "$d$torsional damping [SI:Nm/(rad/s)]"
 V,      CP,     rotationMarker0,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "local rotation matrix for marker 0; transforms joint into marker coordinates"
 V,      CP,     rotationMarker1,                ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",       ,       I,      "local rotation matrix for marker 1; transforms joint into marker coordinates"
-V,      CP,     offset,                         ,               ,       Real,   "0.", ,   IO,     "$v_\mathrm{off}$rotational offset considered in the spring torque calculation (this can be used as rotation control input!)"
-V,      CP,     velocityOffset,                 ,               ,       Real,   "0.", ,   IO,     "$\dot v_\mathrm{off}$angular velocity offset considered in the damper torque calculation (this can be used as angular velocity control input!)"
+V,      CP,     offset,                         ,               ,       Real,   "0.", ,   IO,     "$\theta_\mathrm{off}$rotational offset considered in the spring torque calculation (this can be used as rotation control input!)"
+V,      CP,     velocityOffset,                 ,               ,       Real,   "0.", ,   IO,     "$\omega_\mathrm{off}$angular velocity offset considered in the damper torque calculation (this can be used as angular velocity control input!)"
 V,      CP,     torque,                         ,               ,       Real,   "0.", ,   IO,     "$\tau_c$additional constant torque [SI:Nm] added to spring-damper; this can be used to prescribe a torque between the two attached bodies (e.g., for actuation and control)"
 V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
 V,      CP,     springTorqueUserFunction,       ,               ,       PyFunctionMbsScalarIndexScalar5, 0, , IO,"$\mathrm{UF} \in \Rcal$A Python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below"

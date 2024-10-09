@@ -30,8 +30,6 @@
 //#define USETHREADFENCE
 //#define PRINTDEBUGINFORMATION
 
-//#define USE_FETCHADD //on surface i7, 4 threads slightly slower than MicroThreading with array of atomics
-
 //static objects
 namespace MicroThreading
 {
@@ -91,15 +89,10 @@ namespace MicroThreading
 #ifdef PRINTDEBUGINFORMATION
 		std::cout << "main thread: send starting sync\n";
 #endif
-#ifdef USE_FETCHADD
-		//syncEnd.store(0,MEMORY_ORDER_SYNCSTORE);
-		syncStart.store(ti.nthreads-1, MEMORY_ORDER_SYNCSTORE);
-#else
 		for (Index i = 1; i < sync.NumberOfItems(); i++)
 		{
 			sync[i]->store(0, MEMORY_ORDER_SYNCSTORE);//sync==0 means that job is ready to be computed
 		}
-#endif
 
 #ifdef PRINTDEBUGINFORMATION
 		std::cout << "main thread: compute job\n";
@@ -128,11 +121,6 @@ namespace MicroThreading
 #endif
 		//! wait until other threads are ready
 		//==> use loop from 1 .. nThreads-1
-#ifdef USE_FETCHADD
-		while (syncEnd.load(MEMORY_ORDER_SYNCLOAD) < ti.nthreads-1) { ; }
-		syncEnd.store(0, MEMORY_ORDER_SYNCSTORE); //on Surface i7 measured as 40ns
-		//syncStart = 0;
-#else
 		for (Index i = 1; i < sync.NumberOfItems(); i++)
 		{
 			while (!sync[i]->load(MEMORY_ORDER_SYNCLOAD)) { ; }//wait until sync is 1
@@ -140,7 +128,6 @@ namespace MicroThreading
 			std::cout << " main thread: task " << i << " signal finished\n";
 #endif
 		}
-#endif
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -195,10 +182,6 @@ namespace MicroThreading
 		sync.SetNumberOfItems(num_threads);
 		sync[0] = new std::atomic_int(0); //sync[0] in fact not needed!
 
-#ifdef USE_FETCHADD
-		syncStart = 0;
-		syncEnd = 0;
-#endif
 
 		//! start (num_threads-1) additional threads (+ main thread)
 		for (Index i = 1; i < num_threads; i++)
@@ -249,18 +232,10 @@ namespace MicroThreading
 		{
 			//wait for new job; HOT WAIT!:
 			//wait until main thread switches sync to 0, then job is available
-#ifdef USE_FETCHADD
-			while (!syncStart && !stop)
-#else
 			while (sync[thread_id]->load(MEMORY_ORDER_SYNCLOAD) && !stop)
-#endif
 			{
 				stop = !isRunning;// .load(std::memory_order_relaxed); //this is not urgent, as it is only performed at end of many computations
 			}
-#ifdef USE_FETCHADD
-			//int syncOld = syncStart.fetch_sub(1, MEMORY_ORDER_SYNCSTORE); //returns previous sync
-			--syncStart;
-#endif
 			if (stop)
 			{ 
 				break; 
@@ -288,13 +263,7 @@ namespace MicroThreading
 #ifdef PRINTDEBUGINFORMATION
 			std::cout << "  thread" << thread_id << ": send signal finished\n";
 #endif
-#ifdef USE_FETCHADD
-			while (syncStart.load(MEMORY_ORDER_SYNCLOAD) > 0) { ; }
-			//syncEnd.fetch_add(1, MEMORY_ORDER_SYNCSTORE);
-			++syncEnd; //noteably faster than fetch_add (~35 ns faster)
-#else
 			sync[thread_id]->store(1, MEMORY_ORDER_SYNCSTORE); // , memory_order_release); //main thread receives message that job is done!
-#endif
 		}
 
 		//finish loops!

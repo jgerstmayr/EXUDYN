@@ -67,7 +67,7 @@ DESCRIPTION of ObjectConnectorLinearSpringDamper
   | (scalar) relative displacement of the spring-damper
 * | ``VelocityLocal``\ : \ :math:`\Delta v`\ 
   | (scalar) relative velocity of spring-damper
-* | ``ForceLocal``\ : \ :math:`f`\ 
+* | ``ForceLocal``\ : \ :math:`f_{SD}`\ 
   | (scalar) spring-damper force
 
 
@@ -132,14 +132,14 @@ If \ ``activeConnector = True``\ , the vector spring force is computed as
    f_{SD} = k \left(\Delta x - x_\mathrm{off} \right) + d \left(\Delta v - v_\mathrm{off} \right) + f_c
 
 
-if \ ``activeConnector = False``\ , \ :math:`\tau_{SD}`\  is set zero.
+if \ ``activeConnector = False``\ , \ :math:`f_{SD}`\  is set zero.
 
 If the springForceUserFunction \ :math:`\mathrm{UF}`\  is defined and \ ``activeConnector = True``\ , 
-\ :math:`\tau_{SD}`\  instead becomes (\ :math:`t`\  is current time)
+\ :math:`f_{SD}`\  instead becomes (\ :math:`t`\  is current time)
 
 .. math::
 
-   \tau_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta x, \Delta v, \mathrm{stiffness}, \mathrm{damping}, \mathrm{offset})
+   f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta x, \Delta v, \mathrm{stiffness}, \mathrm{damping}, \mathrm{offset})
 
 
 and \ ``iN``\  represents the itemNumber (=objectNumber).

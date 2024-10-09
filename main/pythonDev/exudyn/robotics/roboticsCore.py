@@ -765,24 +765,19 @@ class Robot:
             
             #++++++++++++++++++++++++
             #now add body for link:
-            [nLink,bLink]=erb.AddRigidBody(mainSys = mbs, inertia=inertiaLink, 
-                                nodeType=rigidBodyNodeType, #'NodeType.RotationEulerParameters', 
-                                position=erb.HT2translation(Tcurrent), 
-                                rotationMatrix = erb.HT2rotationMatrix(Tcurrent),
-                                gravity=self.gravity, 
-                                graphicsDataList=graphicsList)
-            nodeList+=[nLink]
-            bodyList+=[bLink]
-            #print(mbs.GetObject(bLink))
+            dictLink = mbs.CreateRigidBody(referencePosition=erb.HT2translation(Tcurrent),  
+                                           referenceRotationMatrix=erb.HT2rotationMatrix(Tcurrent),  
+                                           inertia=inertiaLink,  
+                                           gravity=self.gravity,  
+                                           nodeType=rigidBodyNodeType,  
+                                           graphicsDataList=graphicsList,  
+                                           returnDict=True)  
+            nodeList+=[dictLink['nodeNumber']  ]
+            bodyList+=[dictLink['bodyNumber']]
         
             #++++++++++++++++++++++++
             #add markers and joints
-            mLink1 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=bLink, localPosition=pThis))
-            # markerPositionLink1next = [0,0,0] #not used in last link!
-            # if i < len(self.links)-1:
-            #     markerPositionLink1next = erb.HT2translation(self.links[i+1].preHT) #this is defined in the next link!
-            # mlink1next = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=bLink, 
-            #                                            localPosition=markerPositionLink1next))
+            mLink1 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=dictLink['bodyNumber'], localPosition=pThis))
 
             if i == 0:
                 lastMarkerRotation = erb.HT2rotationMatrix(link.preHT)@lastMarkerRotation #is rotationMarkerBase
@@ -1593,12 +1588,14 @@ class InverseKinematicsNumerical():
         
 #         #++++++++++++++++++++++++
 #         #now add body for link:
-#         [nLink,bLink]=erb.AddRigidBody(mainSys = mbs, inertia=inertiaLink, 
-#                             nodeType='NodeType.RotationEulerParameters', 
-#                             position=erb.HT2translation(Tcurrent), 
-#                             rotationMatrix = erb.HT2rotationMatrix(Tcurrent),
-#                             gravity=robot['gravity'], 
-#                             graphicsDataList=graphicsList)
+#         dictLink = mbs.CreateRigidBody(referencePosition=erb.HT2translation(Tcurrent),  
+#                                        referenceRotationMatrix=erb.HT2rotationMatrix(Tcurrent),  
+#                                        inertia=inertiaLink,  
+#                                        gravity=self.gravity,  
+#                                        graphicsDataList=graphicsList,  
+#                                        returnDict=True)  
+#         nLink = dictLink['nodeNumber']  
+#         bLink = dictLink['bodyNumber']
 #         nodeList+=[nLink]
 #         bodyList+=[bLink]
 #         #print(mbs.GetObject(bLink))

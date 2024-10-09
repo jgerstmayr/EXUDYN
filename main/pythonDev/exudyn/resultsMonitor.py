@@ -26,7 +26,7 @@ argList = sys.argv
 import matplotlib.pyplot as plt
 import numpy as np
 from exudyn.plot import ParseOutputFileHeader
-from exudyn.advancedUtilities import PlotLineCode
+from exudyn.advancedUtilities import PlotLineCode, IsEmptyList
 from exudyn.processing import SingleIndex2SubIndices
 
 listMarkerStyles = ['. ', '+', 'x ', 'v ', '^ ', '< ', '> ', '* ', 'd ', 'D', 's', 'X ', 'P', 'o', 'p ', 'h ', 'H ']
@@ -224,7 +224,7 @@ if runLoader:
             nVariations *= rangeI[2] #this is the number of variations
         # print('plot',nVariations,'variations')
         nPlots=nVariations
-        if variations == []:
+        if IsEmptyList(variations):
             variations = [0,nPlots]
         else:
             nPlots = variations[1]-variations[0]

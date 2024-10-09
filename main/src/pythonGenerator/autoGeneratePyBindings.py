@@ -40,6 +40,8 @@ vector6D = '[float,float,float,float,float,float]'#stub type for Vector6D
 matrix3D = 'NDArray[Shape2D[3,3], float]'#stub type for Matrix3D
 matrix6D = 'NDArray[Shape2D[6,6], float]'#stub type for Matrix6D
 
+sparseMatrixType = 'Any'#currently Any, but will be adapted
+
 #for objects with trivial or implemented copy constructor:
 pickleDictTemplate = """        .def(py::pickle(
             [](const {ClassName}& self) {
@@ -145,7 +147,7 @@ plrmain.AddDocuCodeBlock(code="""
 #import exudyn module:
 import exudyn as exu
 #  import utilities (includes itemInterface, basicUtilities, 
-#                  advancedUtilities, rigidBodyUtilities, graphicsDataUtilities):
+#                  advancedUtilities, rigidBodyUtilities, graphics):
 from exudyn.utilities import *
 #  create system container and store in SC:
 SC = exu.SystemContainer()
@@ -490,6 +492,7 @@ plr.AddEnumValue(pyClass, 'RK67',     "an explicit 7 stage 6th order Runge-Kutta
 plr.AddEnumValue(pyClass, 'ODE23',    'an explicit Runge Kutta method with automatic step size selection with 3rd order of accuracy and 2nd order error estimation, see Bogacki and Shampine, 1989; also known as ODE23 in MATLAB')
 plr.AddEnumValue(pyClass, 'DOPRI5',   "an explicit Runge Kutta method with automatic step size selection with 5th order of accuracy and 4th order error estimation, see  Dormand and Prince, 'A Family of Embedded Runge-Kutta Formulae.', J. Comp. Appl. Math. 6, 1980")
 plr.AddEnumValue(pyClass, 'DVERK6', '[NOT IMPLEMENTED YET] an explicit Runge Kutta solver of 6th order with 5th order error estimation; includes adaptive step selection')
+plr.AddEnumValue(pyClass, 'VelocityVerlet', "[TEST phase] a special explicit time integration scheme, the 'velocity Verlet' method (similar to leap frog method), with second order accuracy for conservative second order differential equations, often used for particle dynamics and contact; implementation uses Explicit Euler for ODE1 equations")
 
 plr.sPy +=	'		'+enumExportValues+';\n\n'
 plr.DefLatexFinishTable()
@@ -3325,59 +3328,93 @@ which are not described here as they are native to Pybind11, but can be passed a
 classStr = 'PyMatrixContainer'
 pyClassStr = 'MatrixContainer'
 
-plr.DefPyStartClass(classStr, pyClassStr, 'The MatrixContainer is a versatile representation for dense and sparse matrices.',
+plr.DefPyStartClass(classStr, pyClassStr, 'The MatrixContainer is a versatile representation for dense and sparse matrices. NOTE: if the MatrixContainer is constructed from a numpy array or a list of lists, both representing a dense matrix, it will go into dense mode; if it is initialized with a scipy sparse csr matrix, it will go into sparse mode',
                     subSection=True, 
                     labelName='sec:MatrixContainer') #section with this label was earlier in theory section
 
 plr.AddDocuCodeBlock(code="""
 #Create empty MatrixContainer:
+from scipy.sparse import csr_matrix
 from exudyn import MatrixContainer
-mc = MatrixContainer()
+mc = MatrixContainer() #empty matrix, dense mode
 
 #Create MatrixContainer with dense matrix:
-#matrix can be a list of lists or a numpy array, e.g.:
-matrix = np.eye(6)
-mc = MatrixContainer(matrix)
+#matrix can be initialized with a dense matrix, using list of lists or a numpy array, e.g.:
+matrix = np.eye(3)
+mcDense1 = MatrixContainer(matrix)
+mcDense2 = MatrixContainer([[1,2],[3,4]])
 
 #Set with dense pyArray (a numpy array): 
 pyArray = np.array(matrix)
 mc.SetWithDenseMatrix(pyArray, useDenseMatrix = True)
 
 #Set empty matrix:
-mc.SetWithDenseMatrix([]], bool useDenseMatrix = True)
+mc.SetWithDenseMatrix([[]], useDenseMatrix = True)
 
 #Set with list of lists, stored as sparse matrix:
-mc.SetWithDenseMatrix([[1,2],[3,4]], bool useDenseMatrix = False)
+mc.SetWithDenseMatrix([[1,2],[3,4]], useDenseMatrix = False)
 
-#Set with sparse CSR matrix:
-mc.SetWithSparseMatrixCSR(2,3,[[0,0,13.3],[1,1,4.2],[1,2,42.]], useDenseMatrix=True)
+#Set with sparse triplets (list of lists or numpy array):
+mc.SetWithSparseMatrix([[0,0,13.3],[1,1,4.2],[1,2,42.]], 
+                       numberOfRows=2, numberOfColumns=3, 
+                       useDenseMatrix=True)
 
 print(mc)
 #gives dense matrix:
 #[[13.3  0.   0. ]
 # [ 0.   4.2 42. ]]
+
+#Set with scipy matrix:
+#WARNING: only use csr_matrix
+#         csc_matrix would basically run, but gives the transposed!!!
+spmat = csr_matrix(matrix) 
+mc.SetWithSparseMatrix(spmat) #takes rows and column format automatically
+
+#initialize and add triplets later on
+mc.Initialize(3,3,useDenseMatrix=False)
+mc.AddSparseMatrix(spmat, factor=1)
+#can also add smaller matrix
+mc.AddSparseMatrix(csr_matrix(np.eye(2)), factor=0.5)
+print('mc8=',mc)
+
 """)
 
 plr.DefLatexStartTable(pyClassStr)
 
 plr.sPy += '        .def(py::init<const py::object&>(), py::arg("matrix"))\n' #constructor with numpy array or list of lists
 
+plr.DefPyFunctionAccess(cClass=classStr, pyName='Initialize', cName='Initialize', 
+                        argList=['numberOfRows', 'numberOfColumns', 'useDenseMatrix'],
+                        defaultArgs=['','','True'],
+                        description="initialize MatrixContainer with number of rows and columns and set dense/sparse mode",
+                        argTypes=['int','int','bool'],
+                        returnType='None',
+                        )
+                                              
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetWithDenseMatrix', cName='SetWithDenseMatrix', 
-                        argList=['pyArray','useDenseMatrix'],
-                        defaultArgs=['','False'],
-                        description="set MatrixContainer with dense numpy array of size (n x m); array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems)",
-                        argTypes=['ArrayLike',''],
+                        argList=['pyArray','useDenseMatrix','factor'],
+                        defaultArgs=['','False','1.'],
+                        description="set MatrixContainer with dense numpy array of size (n x m); array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems); pyArray is multiplied with given factor",
+                        argTypes=['ArrayLike','bool'],
                         returnType='None',
                         )
                                               
-plr.DefPyFunctionAccess(cClass=classStr, pyName='SetWithSparseMatrixCSR', cName='SetWithSparseMatrixCSR', 
-                        argList=['numberOfRowsInit', 'numberOfColumnsInit', 'pyArrayCSR','useDenseMatrix'],
-                        defaultArgs=['','','','True'],
-                        description="set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix",
-                        argTypes=['int','int','ArrayLike',''],
+plr.DefPyFunctionAccess(cClass=classStr, pyName='SetWithSparseMatrix', cName='SetWithSparseMatrix',
+                        argList=['sparseMatrix','numberOfRows', 'numberOfColumns', 'useDenseMatrix','factor'],
+                        defaultArgs=['','EXUstd::InvalidIndex','EXUstd::InvalidIndex','False','1.'],
+                        description="set with scipy sparse csr_matrix (NOT: csc_matrix!) or with internal sparse triplet format (denoted as CSR): 'sparseMatrix' either contains a scipy matrix create with csr_matrix or a list of lists of sparse triplets (row, col, value) or the list of lists converted into numpy array; numberOfRowsInit and numberOfColumnsInit denote the size of the matrices, which are ignored in case of a scipy sparse matrix; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix triplets; the values of sparseMatrix are multiplied with the given factor before storing",
+                        argTypes=[sparseMatrixType,'int','int','bool','float'],
                         returnType='None',
                         )
                                               
+plr.DefPyFunctionAccess(cClass=classStr, pyName='AddSparseMatrix', cName='AddSparseMatrix', 
+                        argList=['sparseMatrix','factor'],
+                        defaultArgs=['','1.'],
+                        description="add scipy sparse csr_matrix with factor to already initilized MatrixContainer; sparseMatrix must contain according scipy csr format, otherwise the behavior is undefined! This function allows to efficiently add submatrices to the MatrixContainer",
+                        argTypes=[sparseMatrixType,'float'],
+                        returnType='None',
+                        )
+                                                                                            
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetPythonObject', cName='GetPythonObject', 
                         description="convert MatrixContainer to numpy array (dense) or dictionary (sparse): containing nr. of rows, nr. of columns, numpy matrix with sparse triplets",
                         returnType='Union[dict,ArrayLike]',
@@ -3392,6 +3429,20 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='UseDenseMatrix', cName='UseDens
                         description="returns True if dense matrix is used, otherwise False",
                         returnType='bool',
                         )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='SetAllZero', cName='SetAllZero', 
+                        description="Set all values to zero; dense mode: set all matrix entries to zero (slow); sparse mode: set number of triplets to zero (fast)",
+                        returnType='None',
+                        )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='SetWithSparseMatrixCSR', cName='SetWithSparseMatrixCSR', 
+                        argList=['numberOfRowsInit', 'numberOfColumnsInit', 'pyArrayCSR', 'useDenseMatrix','factor'],
+                        defaultArgs=['','','','False','1.'],
+                        description="DEPRECATED: set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix; the values of pyArrayCSR are multiplied by the given factor",
+                        argTypes=['int','int',sparseMatrixType,'bool','float'],
+                        returnType='None',
+                        )
+                                              
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='__repr__', cName='[](const PyMatrixContainer &item) {\n            return EXUstd::ToString(item.GetPythonObject()); }', 
                         description="return the string representation of the MatrixContainer",

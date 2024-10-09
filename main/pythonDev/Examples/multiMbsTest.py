@@ -36,26 +36,16 @@ def CreateSystem(mbs, pOff, color0):
                                          axis0=[0,0,1], axis1=[0,0,0*1], radius=[0.05,0.05], 
                                          thickness = 0.1, width = [0.12,0.12], color=color0)
     
-    [n0,b0]=AddRigidBody(mainSys = mbs,
-                         inertia = iCube0,
-                         nodeType = str(exu.NodeType.RotationEulerParameters),
-                         position = pMid0,
-                         rotationMatrix = np.diag([1,1,1]),
-                         angularVelocity = [0,0,0],
-                         gravity = g,
-                         graphicsDataList = [graphicsBody0])
-    
+    b0 = mbs.CreateRigidBody(referencePosition = pMid0,
+                             inertia = iCube0,
+                             gravity = g,
+                             graphicsDataList = [graphicsBody0])
+
     #ground body and marker
-    oGround = mbs.AddObject(ObjectGround())
-    markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=p0))
-    
-    #markers for rigid body:
-    markerBody0J0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[-0.5*bodyDim[0],0,0]))
-    
-    #revolute joint (free z-axis)
-    mbs.AddObject(GenericJoint(markerNumbers=[markerGround, markerBody0J0], 
-                               constrainedAxes=[1,1,1,1,1,0],
-                               visualization=VObjectJointGeneric(axesRadius=0.01, axesLength=0.1)))
+    oGround = mbs.CreateGround()
+    mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], 
+                            position=p0, axis=[0,0,1],
+                            axisRadius=0.01, axisLength=0.1)
     mbs.Assemble()
 
 def Simulate(SC, mbs):

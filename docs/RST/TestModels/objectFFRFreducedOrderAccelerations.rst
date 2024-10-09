@@ -65,7 +65,6 @@ You can view and download this file on Github: `objectFFRFreducedOrderAccelerati
    #exu.Print("nodeNumberUnbalance =",nodeNumberUnbalance)
    unbalance = 0.1
    fem.AddNodeMass(nodeNumberUnbalance, unbalance)
-   #print(fem.GetMassMatrix()[8*3:11*3,:])
    
    nModes = 8
    fem.ComputeEigenmodes(nModes, excludeRigidBodyModes = 6, useSparseSolver = False)

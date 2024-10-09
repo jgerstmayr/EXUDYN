@@ -87,7 +87,6 @@ nodeNumberUnbalance = fem.GetNodeAtPoint(point=[0. , 0.19598444, 0.15])
 print("nodeNumberUnbalance =",nodeNumberUnbalance)
 unbalance = 0.1*100
 fem.AddNodeMass(nodeNumberUnbalance, unbalance)
-#print(fem.GetMassMatrix()[8*3:11*3,:])
 
 nModes = 8
 fem.ComputeEigenmodes(nModes, excludeRigidBodyModes = 6, useSparseSolver = True)

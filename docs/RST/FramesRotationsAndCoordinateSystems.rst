@@ -287,22 +287,22 @@ Linearized rotations
 ^^^^^^^^^^^^^^^^^^^^
 
 
-In this case we can interpret the small rotations as a constant angular velocity over small time \ :math:`\Delta t`\ , \ :math:`{\mathbf{t}}arphi = \Delta t \cdot \tomega`\ , which results in
+In this case we can interpret the small rotations as a constant angular velocity over small time \ :math:`\Delta t`\ , \ :math:`\boldVarPhi = \Delta t \cdot \tomega`\ , which results in
 
 .. math::
 
-   {\mathbf{r}}_1^\prime= {\mathbf{r}}_1 + \Delta t \cdot (\tomega \times {\mathbf{r}}_1) = ({\mathbf{I}} + \tilde {\mathbf{t}}arphi) {\mathbf{r}}_1
+   {\mathbf{r}}_1^\prime= {\mathbf{r}}_1 + \Delta t \cdot (\tomega \times {\mathbf{r}}_1) = ({\mathbf{I}} + \tilde \boldVarPhi) {\mathbf{r}}_1
 
 
 Leading to the linearized rotation matrix
 
 .. math::
 
-   \Rot_\mathrm{lin} = {\mathbf{I}} - \tilde {\mathbf{t}}arphi
+   \Rot_\mathrm{lin} = {\mathbf{I}} - \tilde \boldVarPhi
 
 
 
-Alternatively, using linearized rotations \ :math:`{\mathbf{t}}arphi = [\varphi_1,\;\varphi_2,\;\varphi_3]\tp`\ , with \ :math:`|{\mathbf{t}}arphi| \ll 1`\ , we can approximate \ :math:`\sin \varphi_1`\  as:
+Alternatively, using linearized rotations \ :math:`\boldVarPhi = [\varphi_1,\;\varphi_2,\;\varphi_3]\tp`\ , with \ :math:`|\boldVarPhi| \ll 1`\ , we can approximate \ :math:`\sin \varphi_1`\  as:
 
 .. math::
 

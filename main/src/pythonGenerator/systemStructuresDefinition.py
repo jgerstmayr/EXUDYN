@@ -196,7 +196,8 @@ V,  useNewmark,                         ,       , bool,                     fals
 V,  spectralRadius,                     ,       , UReal,                    0.9,        ,       P   , "spectral radius for Generalized-alpha solver; set this value to 1 for no damping or to 0 < spectralRadius < 1 for damping of high-frequency dynamics; for position-level constraints (index 3), spectralRadius must be < 1"
 V,  computeInitialAccelerations,        ,       , bool,                     true,       ,       P   , "True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations"
 V,  resetAccelerations,                 ,       , bool,                     false,      ,       P   , "this flag only affects if computeInitialAccelerations=False: if resetAccelerations=True, accelerations are set zero in the solver function InitializeSolverInitialConditions; this may be unwanted in case of repeatedly called SolveSteps() and in cases where solutions shall be prolonged from previous computations"
-V,  lieGroupAddTangentOperator,         ,       , bool,                     true,       ,       P   , "True: for Lie group nodes, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)"
+V,  lieGroupAddTangentOperator,         ,       , bool,                     true,       ,       P   , "True: for Lie group nodes, in case that lieGroupSimplifiedKinematicRelations=True, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)"
+V,  lieGroupSimplifiedKinematicRelations, ,     , bool,                     true,       ,       P   , "True: for Lie group nodes, the integrator uses the original kinematic relations of the Bruls and Cardona 2010 paper"
 #
 writeFile=SimulationSettings.h
 
@@ -207,7 +208,7 @@ writePybindIncludes = True
 typicalPaths = simulationSettings.timeIntegration
 classDescription = "Settings for explicit solvers, like Explicit Euler, RK44, ODE23, DOPRI5 and others. The settings may significantely influence performance."
 #V|F, pythonName,          cplusplusName,  size,   type,                    defaultValue,args,cFlags,   parameterDescription
-V,  dynamicSolverType,                  ,       , DynamicSolverType,"DynamicSolverType::DOPRI5",,P  , "selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, ...), for detailed description see DynamicSolverType, \refSection{sec:DynamicSolverType}, but only referring to explicit solvers."
+V,  dynamicSolverType,                  ,       , DynamicSolverType,"DynamicSolverType::DOPRI5",,P  , "selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, VelocityVerlet, ...), for detailed description see DynamicSolverType, \refSection{sec:DynamicSolverType}, but only referring to explicit solvers."
 V,  eliminateConstraints,               ,       , bool,                     true,       ,       P   , "True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!"
 V,  useLieGroupIntegration,             ,       , bool,                     true,       ,       P   , "True: use Lie group integration for rigid body nodes; must be turned on for Lie group nodes (without data coordinates) to work properly; does not work for nodes with data coordinates!"
 V,  computeEndOfStepAccelerations,      ,       , bool,                     true,       ,       P   , "accelerations are computed at stages of the explicit integration scheme; if the user needs accelerations at the end of a step, this flag needs to be activated; if True, this causes a second call to the RHS of the equations, which may DOUBLE COMPUTATIONAL COSTS for one-step-methods; if False, the accelerations are re-used from the last stage, being slightly different"
@@ -478,7 +479,7 @@ classDescription = "Visualization settings for kinematic trees."
 #V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,args,           cFlags, parameterDescription
 V,      showCOMframes,              ,                  ,     bool,          false,                    , P,       "if True, a frame is attached to every center of mass"
 V,      showJointFrames,            ,                  ,     bool,          true,                     , P,       "if True, a frame is attached to the origin of every joint frame"
-V,      showFramesNumbers,          ,                  ,     bool,          true,                     , P,       "if True, numbers are drawn for joint frames (O[i]J[j]) and COM frames (O[i]COM[j]) for object [i] and local joint [j]"
+V,      showFramesNumbers,          ,                  ,     bool,          false,                    , P,       "if True, numbers are drawn for joint frames (O[i]J[j]) and COM frames (O[i]COM[j]) for object [i] and local joint [j]"
 V,      frameSize,                  ,                  ,     float,         "0.2f",                   , P,       "size of COM and joint frames"
 #
 writeFile=VisualizationSettings.h
@@ -495,7 +496,7 @@ V,      show,                       ,                  ,     bool,         true,
 V,      showNumbers,                ,                  ,     bool,         false,                      , P,    "flag to decide, whether the body(=object) number is shown"
 V,      defaultSize,                ,                  3,    Float3,       "Float3({1.f,1.f,1.f})",    , P,    "global body size of xyz-cube"
 V,      defaultColor,               ,                  4,    Float4,       "Float4({0.3f,0.3f,1.f,1.f})",, P,  "default RGBA color for bodies; 4th value is "
-V,      deformationScaleFactor,     ,                  ,     float,        "1",                        , P,    "global deformation scale factor; also applies to nodes, if drawn; used for scaled drawing of (linear) finite elements, beams, etc."
+V,      deformationScaleFactor,     ,                  ,     float,        "1",                        , P,    "global deformation scale factor; also applies to nodes, if drawn; currently only used for scaled drawing of (linear) finite elements in FFRF and FFRFreducedOrder objects"
 V,      beams,                      ,                  ,     VSettingsBeams,   ,                       , PS,   "visualization settings for beams (e.g. ANCFCable or other beam elements)"
 V,      kinematicTree,              ,                  ,     VSettingsKinematicTree,   ,               , PS,   "visualization settings for kinematic tree"
 #

@@ -260,7 +260,7 @@ VSettingsKinematicTree has the following items:
 * | **showCOMframes** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.bodies.kinematicTree.showCOMframes``\ 
   | if True, a frame is attached to every center of mass
-* | **showFramesNumbers** [type = bool, default = True]:
+* | **showFramesNumbers** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.bodies.kinematicTree.showFramesNumbers``\ 
   | if True, numbers are drawn for joint frames (O[i]J[j]) and COM frames (O[i]COM[j]) for object [i] and local joint [j]
 * | **showJointFrames** [type = bool, default = True]:
@@ -292,7 +292,7 @@ VSettingsBodies has the following items:
   | global body size of xyz-cube
 * | **deformationScaleFactor** [type = float, default = 1]:
   | \ ``SC.visualizationSettings.bodies.deformationScaleFactor``\ 
-  | global deformation scale factor; also applies to nodes, if drawn; used for scaled drawing of (linear) finite elements, beams, etc.
+  | global deformation scale factor; also applies to nodes, if drawn; currently only used for scaled drawing of (linear) finite elements in FFRF and FFRFreducedOrder objects
 * | **show** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.bodies.show``\ 
   | flag to decide, whether the bodies are shown

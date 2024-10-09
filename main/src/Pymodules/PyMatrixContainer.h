@@ -33,17 +33,53 @@ public:
 	//?remove default constructor to enable conversion from py::object in constructor?
 	PyMatrixContainer():MatrixContainer() {}
 	
-	//! initialize container with py::array_t or with emtpy list (default value)
+	//! initialize container with dense matrix py::array_t, list of triplets, scipy-sparse matrix, or empty list (default value)
 	PyMatrixContainer(const py::object& matrix);
 	//PyMatrixContainer(const py::object& matrix = py::list());
 
-	//PyMatrixContainer(const py::array_t<Real>& pyArray);
+	//! reset matrix dense or sparse with given number of rows and columns
+	void Initialize(Index numberOfRows, Index numberOfColumns, bool useDenseMatrixInit = false)
+	{
+		useDenseMatrix = useDenseMatrixInit;
+		MatrixContainer::Reset();
+		if (useDenseMatrixInit)
+		{
+			denseMatrix.SetNumberOfRowsAndColumns(numberOfRows, numberOfColumns);
+			denseMatrix.SetAll(0.);
+		}
+		else
+		{
+			//sparseTripletMatrix.SetAllZero(); //empty matrix, but also rows and columns...
+			sparseTripletMatrix.Reset(); //empty matrix, but also rows and columns...
+			sparseTripletMatrix.SetNumberOfRowsAndColumns(numberOfRows, numberOfColumns);
+		}
+	}
+
+	//! internal function to uniquely detect scipy sparse matrix
+	bool IsScipySparseMatrix(const py::object& matrix) { return  (py::hasattr(matrix, "indptr") && py::hasattr(matrix, "indices")
+		&& py::hasattr(matrix, "shape") && py::hasattr(matrix, "data")); }
 
 	//! set with dense numpy array; array (=matrix) contains values and size information
-	void SetWithDenseMatrix(const py::array_t<Real>& pyArray, bool useDenseMatrixInit = true);
+	void SetWithDenseMatrix(const py::array_t<Real>& pyArray, bool useDenseMatrixInit = true, Real factor = 1.);
 
-	//! set with sparse CSR matrix format: numpy array contains in every row [row, col, value]; numberOfRows and numberOfColumns given extra
-	void SetWithSparseMatrixCSR(Index numberOfRowsInit, Index numberOfColumnsInit, const py::array_t<Real>& pyArray, bool useDenseMatrixInit = false);
+	//! DEPRECATED: set with sparse CSR matrix format: numpy array contains in every row [row, col, value]; numberOfRows and numberOfColumns given extra
+	void SetWithSparseMatrixCSR(Index numberOfRowsInit, Index numberOfColumnsInit, const py::object& pyArray, bool useDenseMatrixInit = false, Real factor = 1.);
+
+	//! set with scipy sparse or sparse triplet matrix format: if scipy matrix is used, columns and rows are detected automatically; numpy array contains in every row [row, col, value];
+	void SetWithSparseMatrix(const py::object& sparseMatrix, Index numberOfRowsInit = EXUstd::InvalidIndex, Index numberOfColumnsInit = EXUstd::InvalidIndex, bool useDenseMatrixInit = false, Real factor = 1.);
+
+	//! same as SetWithSparseMatrixCSR with option to initialize matrices, or to only add matrices;
+	//! if addMatrix=true, it will ignore numberOfRowsInit, numberOfColumnsInit, and useDenseMatrixInit
+	void SetOrAddSparseMatrixCSRBase(Index numberOfRowsInit, Index numberOfColumnsInit, const py::array_t<Real>& pyArray, bool useDenseMatrixInit = false, bool addMatrix = false, Real factor = 1.);
+
+	////! set with scipy sparse matrix format
+	//void SetWithSparseMatrix(Index numberOfRowsInit, Index numberOfColumnsInit, const py::object& sparseMatrix, bool useDenseMatrixInit = false);
+
+	//! add with sparse triplets or scipy sparse matrix multiplied with given factor; matrix must already be initialized
+	void AddSparseMatrix(const py::object& sparseMatrix, Real factor = 1.);
+
+	//! add (ONLY) scipy sparse matrix multiplied with given factor; matrix must already be initialized
+	void AddSparseMatrixBase(const py::object& sparseMatrix, Real factor = 1.);
 
 	//!convert MatrixContainer to numpy array (dense) or dictionary (sparse): containing #rows, #columns, numpy matrix with triplets
 	py::object GetPythonObject() const

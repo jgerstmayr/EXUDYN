@@ -258,6 +258,12 @@ def IsValidMarkerIndex(x):
         return True
     return False
 
+#**function: return True, if x is an empty list (or empty list converted from numpy array), otherwise return False
+def IsEmptyList(x):
+    if isinstance(x, list) or isinstance(x, np.ndarray):
+        return len(x) == 0
+    return False 
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: fill submatrix into given destinationMatrix; all matrices must be numpy arrays 

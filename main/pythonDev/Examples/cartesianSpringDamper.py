@@ -46,7 +46,7 @@ massPoint = mbs.CreateMassPoint(referencePosition=[L,0,0],
                     physicsMass=mass)
 
 ## create spring damper  between objectGround and massPoint
-mbs.CreateCartesianSpringDamper(bodyList=[objectGround, massPoint],
+mbs.CreateCartesianSpringDamper(bodyNumbers=[objectGround, massPoint],
                                 stiffness = [k,k,k], 
                                 damping   = [d,0,0], 
                                 offset    = [L,0,0])

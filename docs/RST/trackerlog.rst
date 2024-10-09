@@ -19,15 +19,118 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.8.52.dev1, 
-+  last change =  2024-06-04, 
-+  Number of issues = 1854, 
-+  Number of resolved issues = 1646 (52 in current version), 
++  Exudyn version = 1.9.0, 
++  last change =  2024-10-09, 
++  Number of issues = 1881, 
++  Number of resolved issues = 1676 (0 in current version), 
+
+***********
+Version 1.9
+***********
+
+ * Version 1.9.0: resolved Issue 1880: MatrixContainer (fix)
+    - description:  when initialized with lists of lists, it prints the lists
+    - date resolved: **2024-10-09 11:06**\ , date raised: 2024-10-09 
 
 ***********
 Version 1.8
 ***********
 
+ * Version 1.8.81: resolved Issue 1879: MatrixContainer (extension)
+    - description:  add feature to directly initialize with scipy sparse csr matrix; add new function Initialize to initialize MatrixContainer, and AddSparseMatrix for adding sparse matrices with factor
+    - date resolved: **2024-10-09 09:39**\ , date raised: 2024-10-09 
+ * Version 1.8.80: resolved Issue 1878: robotics.mobile (change)
+    - description:  correct camelcase writing of mobileRobot2MBS to MobileRobot2MBS, getWheelVelocities to GetWheelVelocities, and getCartesianVelocities to GetCartesianVelocities; adjust examples
+    - date resolved: **2024-10-09 08:04**\ , date raised: 2024-10-09 
+ * Version 1.8.79: resolved Issue 1844: AddRigidBody (change)
+    - description:  add warning to this and related functions for deprecation
+    - date resolved: **2024-10-09 07:40**\ , date raised: 2024-05-28 
+ * Version 1.8.78: resolved Issue 1455: MarkerSuperElementRigidBody (fix)
+    - description:  fix derivative of exponential map for velocity level
+    - **notes:** already resolved earlier
+    - date resolved: **2024-10-09 07:37**\ , date raised: 2023-03-05 
+ * Version 1.8.77: resolved Issue 1341: MacOS multithreading (fix)
+    - description:  resolve compilation problems with NGsolve taskmanager on Apple MacOS
+    - **notes:** already resolved earlier
+    - date resolved: **2024-10-09 07:36**\ , date raised: 2022-12-26 
+ * Version 1.8.76: resolved Issue 0496: controller (extension)
+    - description:  add possibility to differentiate loads w.r.t. sensor?/object/node (use additional sensor numbers which provide dependencies); add optional dependence on sensors; integrateors using ODE1 or discrete implementation
+    - **notes:** already resolved in version 1.6.84; available via systemData.AddODE2LoadDependencies
+    - date resolved: **2024-10-09 07:33**\ , date raised: 2020-12-09 
+ * Version 1.8.75: resolved Issue 1877: Create functions (change)
+    - description:  CreateDistanceConstraint, CreateSpringDamper and similar create functions have bodyList instead of bodyNumbers, which is used for joints; use bodyNumbers and allow bodyList as deprecated option
+    - **notes:** kept compatibility with existing bodyList args, but will be removed in future versions
+    - date resolved: **2024-10-08 23:04**\ , date raised: 2024-10-08 
+ * Version 1.8.74: resolved Issue 1862: CSR functionality in FEM (extension)
+    - description:  change internal CSR format to scipy CSR format; add simple check for Scipy to be installed at start of FEM, set scipyInstalled=True, use CheckSciPyInstalled() function for unified errors
+    - date resolved: **2024-10-08 17:29**\ , date raised: 2024-10-02 
+ * Version 1.8.73: resolved Issue 1870: FEMinterface (check)
+    - description:  check all occurances of GetStiffnessMatrix and GetMassMatrix for sparse mode now using scipy sparse matrix
+    - **notes:** Make sure that using FEMinterface fem, fem.GetMassMatrix of fem.GetStiffnessMatrix now returns a SciPy sparse matrix, which can be converted into the previous form by using ScipySparseCSRtoCSR(fem.GetMassMatrix())
+    - date resolved: **2024-10-08 17:28**\ , date raised: 2024-10-07 
+ * Version 1.8.72: resolved Issue 1876: FEMinterface (change)
+    - description:  SaveToFile: used wrong default fileVersion=13, which should have been fileVersion=1; as we now shift to fileVersion=2, old files may be loaded with forceVersion=1
+    - date resolved: **2024-10-08 17:26**\ , date raised: 2024-10-08 
+ * Version 1.8.71: resolved Issue 1871: MatrixContainer (fix)
+    - description:  fix compilation issues with pybind11 and scipy coo matrix
+    - date resolved: **2024-10-08 17:26**\ , date raised: 2024-10-07 
+ * Version 1.8.70: resolved Issue 1875: FEMinterface (change)
+    - description:  the mass and stiffness matrices in FEMinterface are either None or given in SciPy-sparse csr format; this gives also a a new load/save fileVersion of FEMinterface
+    - date resolved: **2024-10-08 13:09**\ , date raised: 2024-10-08 
+ * Version 1.8.69: resolved Issue 1874: FEMinterface (change)
+    - description:  SaveToFile: add version 2 which also pickles mass and stiffnessMatrix
+    - date resolved: **2024-10-08 11:11**\ , date raised: 2024-10-08 
+ * Version 1.8.68: resolved Issue 1873: FEM module (change)
+    - description:  replace print(...) with exu.Print(...) commands to better control output flow
+    - date resolved: **2024-10-08 10:33**\ , date raised: 2024-10-08 
+ * Version 1.8.67: resolved Issue 1872: MatrixContainer (extension)
+    - description:  SetWithSparseMatrixCSR: mark as deprecated; instead add new function SetWithSparseMatrix with additional arg factor (default=1) to multply matrix values with factor before adding
+    - date resolved: **2024-10-07 18:34**\ , date raised: 2024-10-07 
+ * Version 1.8.66: resolved Issue 1869: FEMinterface (change)
+    - description:  change default values of massMatrix and stiffnessMatrix to None instead of np.zeros((0,0))
+    - date resolved: **2024-10-07 01:54**\ , date raised: 2024-10-07 
+ * Version 1.8.65: resolved Issue 1865: MatrixContainer (extension)
+    - description:  add functionality to add Scipy csr matrix AddSparseMatrix(..., factor=1) with factor
+    - date resolved: **2024-10-07 01:35**\ , date raised: 2024-10-02 
+ * Version 1.8.64: resolved Issue 0840: explicit solvers velocity verlet (extension)
+    - description:  add velocity verlet integration scheme in particular for particle and contact simulation
+    - **notes:** added, but not yet tested for Lie group case!
+    - date resolved: **2024-10-07 00:37**\ , date raised: 2021-12-19 
+ * Version 1.8.63: resolved Issue 1868: SetWithSparseMatrixCSR (change)
+    - description:  change default behavior to useDenseMatrix=False, using sparse mode by default
+    - date resolved: **2024-10-06 22:03**\ , date raised: 2024-10-06 
+ * Version 1.8.62: resolved Issue 1867: graphicsDataUtilities (docu)
+    - description:  adapt documentation to replace graphicsDataUtilities with graphics
+    - date resolved: **2024-10-06 17:24**\ , date raised: 2024-10-06 
+ * Version 1.8.61: resolved Issue 1866: DOCU GraphicsData: Line (fix)
+    - description:  Mistake in Line example; add hint to use graphics.Lines function
+    - date resolved: **2024-10-06 17:06**\ , date raised: 2024-10-06 
+ * Version 1.8.60: resolved Issue 1854: figure (docu)
+    - description:  replace figure theoryRotationsTaitBryanAngles, which has been accidentially copied
+    - date resolved: **2024-10-06 16:51**\ , date raised: 2024-06-05 
+ * Version 1.8.59: :textred:`resolved BUG 1860` : ComputeODE2Eigenvalues 
+    - description:  in case of computeComplexEigenvalues=True, the option convert2Frequencies=True computes wrong frequencies; this combination thus will be deactivated, as it makes little sense anyhow
+    - date resolved: **2024-09-19 16:15**\ , date raised: 2024-09-19 
+ * Version 1.8.58: resolved Issue 1859: Frames (fix)
+    - description:  frame numbers not shown (e.g. for nodes)
+    - **notes:** fixed together with issue 1858
+    - date resolved: **2024-08-07 17:26**\ , date raised: 2024-08-07 
+ * Version 1.8.57: resolved Issue 1858: KinematicTree (fix)
+    - description:  frame numbers not shown
+    - **notes:** changing default showFramesNumbers=False
+    - date resolved: **2024-08-07 17:26**\ , date raised: 2024-08-07 
+ * Version 1.8.56: :textred:`resolved BUG 1857` : KinematicTree 
+    - description:  COM not correctly drawn (drawn at joint location)
+    - date resolved: **2024-08-07 17:05**\ , date raised: 2024-08-07 
+ * Version 1.8.55: resolved Issue 1856: FromSTLfile (fix)
+    - description:  function does not work for A or p being different from []
+    - date resolved: **2024-07-03 11:33**\ , date raised: 2024-07-03 
+ * Version 1.8.54: resolved Issue 1849: tutorial (docu)
+    - description:  add FFRFreducedOrder with NGsolve tutorial
+    - date resolved: **2024-06-23 16:59**\ , date raised: 2024-06-02 
+ * Version 1.8.53: resolved Issue 1855: lie group integrator (change)
+    - description:  add improved lie group integrator for generalized alpha, not using the simplified update and thus having higher accuracy
+    - date resolved: **2024-06-15 13:42**\ , date raised: 2024-06-15 
  * Version 1.8.52: resolved Issue 1852: tutorials (docu)
     - description:  adapt tutorials to new exudyn.graphics structure
     - date resolved: **2024-06-04 21:48**\ , date raised: 2024-06-04 
@@ -5356,9 +5459,17 @@ Version 0.1
 Open issues
 ***********
 
- * **open issue 1849:** tutorial            
-    - description:  add FFRFreducedOrder with NGsolve tutorial
-    - date raised: 2024-06-02 
+ * **open issue 1864:** MatrixContainer     
+    - description:  consider functionality to link to dense numpy matrix; possibly by using the allocatedSize in ResizableMatrix to indicate linking rather than allocation
+    - date raised: 2024-10-02 
+
+ * **open issue 1863:** MatrixContainer     
+    - description:  consider functionality to link to sparse CSR scipy matrix rather than using the current CSR format - as a minimal solution do copying on C++ level; Problem: scipy CSR uses other format than Exudyns Triplets
+    - date raised: 2024-10-02 
+
+ * **open issue 1861:** exceptions and ValueError
+    - description:  check all ValueError exceptions and change to appropriate error handling, like importerror, runtime error or value error!
+    - date raised: 2024-09-19 
 
  * **open issue 1848:** GeneralContact      
     - description:  Test and improve implicit SPHERE-TRIG contact
@@ -5371,10 +5482,6 @@ Open issues
  * **open issue 1845:** ComputePostProcessingModes
     - description:  numberOfThreads> 1 not working: conversion of vectorInput to np.array makes problems
     - date raised: 2024-05-29 
-
- * **open issue 1844:** AddRigidBody        
-    - description:  add warning to this and related functions for deprecation
-    - date raised: 2024-05-28 
 
  * **open issue 1822:** inverse dynamics    
     - description:  consider an inverse dynamics solver for constrained systems; this requires decouple constraints from Lagrange multipliers; add separate LTG list for Lagrange multipliers and objectLTGAE; separate CObject::GetAlgebraicEquationsSize from LagrangeMultiplier size; check markerDataStructure.GetLagrangeMultipliers; see CSystemData::ComputeMarkerDataStructure
@@ -5592,10 +5699,6 @@ Open issues
     - description:  both in Python and C++, fix range to 0..2\*pi, as large angles cause low accuracy
     - date raised: 2023-03-27 
 
- * **open issue 1455:** MarkerSuperElementRigidBody
-    - description:  fix derivative of exponential map for velocity level
-    - date raised: 2023-03-05 
-
  * :textred:`open issue 1450:` coordinatesSolution 
     - description:  add number of threads to solution files and more details on computer; check parameter variation and other files (e.g. numberOfThreads and final computation time)
     - date raised: 2023-02-25 
@@ -5619,10 +5722,6 @@ Open issues
  * **open issue 1395:** ComputeLinearizedSystem
     - description:  add test model
     - date raised: 2023-01-12 
-
- * :textorange:`open issue 1341:` MacOS multithreading
-    - description:  resolve compilation problems with NGsolve taskmanager on Apple MacOS
-    - date raised: 2022-12-26 
 
  * **open issue 1337:** Newton              
     - description:  C++: check if SysError(s) in CSolverBase::Newton() can be changed into regular failure and step reduction for adaptiveStep
@@ -5876,10 +5975,6 @@ Open issues
     - description:  extend regularized friction (Haff-Werner) to integrated form using either Cundall-Stack friction or breaking tangential springs
     - date raised: 2021-12-19 
 
- * **open issue 0840:** explicit solvers velocity verlet
-    - description:  add velocity verlet integration scheme in particular for particle and contact simulation
-    - date raised: 2021-12-19 
-
  * **open issue 0838:** GeneralContact jacobian
     - description:  add jacobian and PostNewton for cable-sphere (circle) contact
     - date raised: 2021-12-19 
@@ -6019,10 +6114,6 @@ Open issues
  * **open issue 0517:** item number textures
     - description:  add special textures for item numbers
     - date raised: 2020-12-22 
-
- * **open issue 0496:** controller          
-    - description:  add possibility to differentiate loads w.r.t. sensor?/object/node (use additional sensor numbers which provide dependencies); add optional dependence on sensors; integrateors using ODE1 or discrete implementation
-    - date raised: 2020-12-09 
 
  * **open issue 0452:** AVX objects         
     - description:  test AVX objects

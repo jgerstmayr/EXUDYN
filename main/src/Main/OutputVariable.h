@@ -671,7 +671,8 @@ enum class DynamicSolverType {
 	RK67 = 7,				//an explicit sixth order Runge-Kutta method
 	ODE23 = 8,				//an explicit Runge Kutta method of 3rd order with 2nd order error estimation; includes adaptive step selection
 	DOPRI5 = 9,				//an explicit Runge Kutta method of 5th order with 4th order error estimation; includes adaptive step selection
-	DVERK6 = 10				//an explicit Runge Kutta method of 6th order with 5th order error estimation; includes adaptive step selection
+	DVERK6 = 10,			//an explicit Runge Kutta method of 6th order with 5th order error estimation; includes adaptive step selection
+	VelocityVerlet = 11		//an explicit time integration scheme, the 'velocity Verlet' method (similar to leap frog method), with second order accuracy for second order differential equations, often used for particle dynamics and contact; uses Explicit Euler for ODE1 equations
 };
 
 //only used in Python and for explicit solver:
@@ -698,6 +699,7 @@ inline std::ostream& operator<<(std::ostream& os, DynamicSolverType value)
 	case DynamicSolverType::ODE23:				return os << "ODE23"; break;
 	case DynamicSolverType::DOPRI5:				return os << "DOPRI5"; break;
 	case DynamicSolverType::DVERK6:				return os << "DVERK6"; break;
+	case DynamicSolverType::VelocityVerlet:		return os << "VelocityVerlet"; break;
 	default: 		return os << "DynamicSolverType::invalid";
 	}
 }

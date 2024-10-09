@@ -191,7 +191,7 @@ def SimulationMobileRobot(funcStatMachine,myROSInterface, p0=[0,0], theta0=0, fl
                     }  
         
     #################### Build mobile robot and add it to existing mbs
-    mobileRobotBackDic = mobile.mobileRobot2MBS(mbs, mobileRobot, markerGround)
+    mobileRobotBackDic = mobile.MobileRobot2MBS(mbs, mobileRobot, markerGround)
     mbs.variables['mobileRobotBackDic'] = mobileRobotBackDic # to be able to use all variables in all functions (make it global useable)
     # add mbs.variable for ROS sensor
     mbs.variables['nodeNumber'] = mobileRobotBackDic['nPlatformList'][0] # just needed if nodeNumber is used for sensor information 
@@ -449,7 +449,7 @@ def SimulationMobileRobot(funcStatMachine,myROSInterface, p0=[0,0], theta0=0, fl
                 print('finished Statemachine. ')
             
             # platform kinematics calculation 
-            w = platformKinematics.getWheelVelocities(vel)
+            w = platformKinematics.GetWheelVelocities(vel)
 
             if TArm != None: 
                 lastTraj = mbs.variables['trajectory'][-1]

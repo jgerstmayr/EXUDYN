@@ -138,29 +138,13 @@ namespace MicroThreading {
 	};
 
 
-	//template <typename TFUNC>
-	//inline void ParallelFor(NGSsizeType n, TFUNC f, Index tasks_per_thread = 1, NGSsizeType costs = 1000)
-	//{
-	//	for (Index i = 0; i < n; i++)
-	//	{
-	//		f(i);
-	//	}
-	//}
-	//inline Index  EnterTaskManager() { return 1; };
-	//inline void ExitTaskManager(Index num_threads) {};
-
 	class TaskManager
 	{
-		//static const Index maxNumberOfThreads = 128; //limit by arrays
-		//static std::atomic<bool> isRunning; //this flag is used to stop all additional threads by isRunning=false
 		static bool isRunning; //atomic not needed; slightly faster for permanent checks of this variable; this flag is used to stop all additional threads by isRunning=false
 		std::atomic<Index> active_workers; //counts the additional threads running (excl. main thread!); used to wait until all threads started/stopped
-		//atomic<Index> workers_on_node[4];   // max nodes
 
 		std::atomic<bool> newJob; //this flag is used to initiate new job at all threads
 		std::atomic<bool> restartLoops; //this flag is used to restart waiting loop in all threads
-		//bool newJob; //this flag is used to initiate new job at all threads
-		//bool restartLoops; //this flag is used to restart waiting loop in all threads
 
 		static Index num_threads;
 		static Index max_threads;
@@ -169,23 +153,15 @@ namespace MicroThreading {
 		//this is written on CreateJob:
 		static const std::function<void(TaskInfo&)> * func;
 
-		//std::atomic<Index> ntasks; //number of tasks / equal to number of threads
-		//std::atomic<Index> completed_tasks;
 		Exception * ex;
 
 		ResizableArray<std::atomic_int*> sync; //is initialized when started up
-#ifdef USE_FETCHADD
-        std::atomic_int syncStart;
-		std::atomic_int syncEnd;
-#endif
 
 	public:
 
 		TaskManager()
 		{
 			//done during initialization:
-			//num_threads = 1; //already set before
-			//max_threads = std::thread::hardware_concurrency(); //this is the number provided by hardware
 			isRunning = true;
 			active_workers = 0;
 			newJob = false;

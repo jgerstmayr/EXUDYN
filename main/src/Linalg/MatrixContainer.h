@@ -102,6 +102,20 @@ namespace EXUmath {
 			else { sparseTripletMatrix.Reset(); }
 		};
 
+		//! set all entries to zero, but do not destroy memory or type of matrices
+		void SetAllZero()
+		{
+			if (useDenseMatrix)
+			{
+				denseMatrix.SetAll(0.);
+			}
+			else
+			{
+				sparseTripletMatrix.SetAllZero();
+			}
+		}
+
+
 		//! note that a switch to the other matrix may lead to undefined state ...
 		void SetUseDenseMatrix(bool useDenseMatrixInit = true) {
 			useDenseMatrix = useDenseMatrixInit;

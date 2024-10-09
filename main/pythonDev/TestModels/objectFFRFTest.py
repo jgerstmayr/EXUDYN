@@ -33,15 +33,7 @@ mbs = SC.AddSystem()
 
 import numpy as np
 
-#==> DO NOT USE THIS APPROACH, but use the FEMinterface as in ObjectFFRFreducedOrder !!!!
-
-#this function is replaced by a 0-based function in the new utilities lib
-def CompressedRowToDenseMatrix(sparseData):
-    n = int(np.max(sparseData[:,0])) #rows and columns are 1-based
-    m = np.zeros((n,n))
-    for row in sparseData:
-        m[int(row[0])-1,int(row[1])-1] = row[2] #convert 1-based to 0-based
-    return m
+#==> DO NOT USE THE APPROACH of this test, but use the FEMinterface; also use the more efficient ObjectFFRFreducedOrder !!!!
 
 nodeDrawSize = 0.0025
 

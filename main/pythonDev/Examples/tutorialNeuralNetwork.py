@@ -83,14 +83,14 @@ oRigid = mbs.CreateRigidBody(referencePosition=pInit,
                              graphicsDataList=gRigid)
 nRigid = mbs.GetObject(oRigid)['nodeNumber'] #used later
 
-oString0 = mbs.CreateSpringDamper(bodyList=[oGround, oRigid],
+oString0 = mbs.CreateSpringDamper(bodyNumbers=[oGround, oRigid],
                                   localPosition0=[0,H,0],
                                   localPosition1=localPosMass0,
                                   stiffness = k,
                                   damping = d,
                                   drawSize = 0, #draw as line
                                   )
-oString1 = mbs.CreateSpringDamper(bodyList=[oGround, oRigid],
+oString1 = mbs.CreateSpringDamper(bodyNumbers=[oGround, oRigid],
                                   localPosition0=[L,H,0],
                                   localPosition1=localPosMass1,
                                   stiffness = k,

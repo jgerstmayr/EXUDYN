@@ -140,69 +140,70 @@ if True:
                                           VObjectGround(graphicsDataUserFunction=UFgraphics)))
 #add rigid bodies
 #rear wheel
-[nR,bR]=AddRigidBody(mainSys = mbs, 
-                     inertia = inertiaR, 
-                     rotationMatrix = RotationMatrixZ(pi*0.5), #rotate 90° around z
-                     nodeType = exu.NodeType.RotationEulerParameters, 
-                     position = P1,
-                     velocity=[vX0,omegaX0*P1[2]*sZ,0],
-                     # velocity=[0,0,0],
-                     angularVelocity=[omegaX0,omegaRy0,0], #local rotation axis is now x
-                     gravity = g, 
-                     graphicsDataList = [graphicsR])
+resultR = mbs.CreateRigidBody(
+    referencePosition = P1,  
+    referenceRotationMatrix = RotationMatrixZ(np.pi*0.5),
+    initialVelocity = [vX0, omegaX0*P1[2]*sZ, 0],  
+    initialAngularVelocity = [omegaX0, omegaRy0, 0],
+    inertia = inertiaR,
+    gravity = g,
+    graphicsDataList = [graphicsR],
+    returnDict = True)
+
+nR, bR = resultR['nodeNumber'], resultR['bodyNumber']
 
 mbs.variables['nTrackNode'] = nR #node to be tracked
 
 #front wheel
-[nF,bF]=AddRigidBody(mainSys = mbs, 
-                     inertia = inertiaF, 
-                     rotationMatrix = RotationMatrixZ(pi*0.5),
-                     nodeType = exu.NodeType.RotationEulerParameters, 
-                     position = P3,
-                     velocity=[vX0,omegaX0*P3[2]*sZ,0],
-                     # velocity=[0,0,0],
-                     angularVelocity=[omegaX0 ,omegaFy0,0],
-                     gravity = g, 
-                     graphicsDataList = [graphicsF])
+resultF = mbs.CreateRigidBody(
+    referencePosition = P3,
+    referenceRotationMatrix = RotationMatrixZ(pi*0.5),
+    initialVelocity = [vX0, omegaX0*P3[2]*sZ, 0],
+    initialAngularVelocity = [omegaX0, omegaFy0, 0],
+    inertia = inertiaF,
+    gravity = g,
+    nodeType = exu.NodeType.RotationEulerParameters,
+    graphicsDataList = [graphicsF],
+    returnDict = True
+)
+nF, bF = resultF['nodeNumber'], resultF['bodyNumber']
 
 #read body
-[nB,bB]=AddRigidBody(mainSys = mbs, 
-                     inertia = inertiaB, 
-                     nodeType = exu.NodeType.RotationEulerParameters, 
-                     position = bCOM,
-                     velocity=[vX0,omegaX0*bCOM[2]*sZ,0],
-                     # velocity=[0,0,0],
-                     angularVelocity=[omegaX0,0,0],
-                     gravity = g, 
-                     graphicsDataList = [graphicsB,graphicsB2])
+resultB = mbs.CreateRigidBody(
+    referencePosition = bCOM,
+    initialVelocity = [vX0, omegaX0*bCOM[2]*sZ, 0],
+    initialAngularVelocity = [omegaX0, 0, 0],
+    inertia = inertiaB,
+    gravity = g,
+    nodeType = exu.NodeType.RotationEulerParameters,
+    graphicsDataList = [graphicsB, graphicsB2],
+    returnDict = True
+)
+nB, bB = resultB['nodeNumber'], resultB['bodyNumber']
 
 #handle
-[nH,bH]=AddRigidBody(mainSys = mbs, 
-                     inertia = inertiaH, 
-                     nodeType = exu.NodeType.RotationEulerParameters, 
-                     position = hCOM,
-                     velocity=[vX0,omegaX0*hCOM[2]*sZ,0],
-                     # velocity=[0,0,0],
-                     angularVelocity=[omegaX0,0,0],
-                     gravity = g, 
-                     graphicsDataList = [graphicsH])
+resultH = mbs.CreateRigidBody(
+    referencePosition = hCOM,
+    initialVelocity = [vX0, omegaX0*hCOM[2]*sZ, 0],
+    initialAngularVelocity = [omegaX0, 0, 0],
+    inertia = inertiaH,
+    gravity = g,
+    nodeType = exu.NodeType.RotationEulerParameters,
+    graphicsDataList = [graphicsH],
+    returnDict = True
+)
+nH, bH = resultH['nodeNumber'], resultH['bodyNumber']
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++
 #ground body and marker
-gGround = graphics.CheckerBoard(point=[0,0,0], size=200, nTiles=64)
-oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround])))
+gGround = graphics.CheckerBoard(point=[0,0,0], size=50, nTiles=64)
+oGround = mbs.CreateGround(graphicsDataList=[gGround])
 markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
 
 markerR = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bR, localPosition=[0,0,0]))
 markerF = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bF, localPosition=[0,0,0]))
-
 markerB1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bB, localPosition=P1-bCOM))
-markerB2 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bB, localPosition=P2-bCOM))
-
-markerH3 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bH, localPosition=P3-hCOM))
-markerH2 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bH, localPosition=P2-hCOM))
-
 
 sMarkerR = mbs.AddSensor(SensorMarker(markerNumber=markerR, outputVariableType=exu.OutputVariableType.Position))
 sMarkerB1= mbs.AddSensor(SensorMarker(markerNumber=markerB1,outputVariableType=exu.OutputVariableType.Position))
@@ -211,21 +212,14 @@ sMarkerB1= mbs.AddSensor(SensorMarker(markerNumber=markerB1,outputVariableType=e
 #add joints:
 useJoints = True
 if useJoints:
-    oJointRW = mbs.AddObject(GenericJoint(markerNumbers=[markerR, markerB1],
-                                          constrainedAxes=[1,1,1,1,0,1],
-                                          rotationMarker0=RotationMatrixZ(pi*0.5),
-                                          visualization=VGenericJoint(axesRadius=0.5*dY, axesLength=5*dY)))
-    
-    oJointFW = mbs.AddObject(GenericJoint(markerNumbers=[markerF, markerH3],
-                                          constrainedAxes=[1,1,1,1,0,1],
-                                          rotationMarker0=RotationMatrixZ(pi*0.5),
-                                          visualization=VGenericJoint(axesRadius=0.5*dY, axesLength=5*dY)))
-    
-    oJointSteer = mbs.AddObject(GenericJoint(markerNumbers=[markerB2, markerH2],
-                                          constrainedAxes=[1,1,1,1,1,0],
-                                          rotationMarker0=RotationMatrixY(-lam),
-                                          rotationMarker1=RotationMatrixY(-lam),
-                                          visualization=VGenericJoint(axesRadius=0.5*dY, axesLength=3*5*dY)))
+    oJointRW = mbs.CreateRevoluteJoint(bodyNumbers=[bR, bB], position=P1, axis=[0,1,0],
+                            axisRadius=0.5*dY, axisLength=5*dY)
+    oJointFW = mbs.CreateRevoluteJoint(bodyNumbers=[bF, bH], position=P3, axis=[0,1,0],
+                            axisRadius=0.5*dY, axisLength=5*dY)
+    oJointSteer = mbs.CreateRevoluteJoint(bodyNumbers=[bB, bH], 
+                                          position=P2-bCOM, useGlobalFrame=False,
+                                          axis=RotationMatrixY(-lam) @ [0,0,1],
+                                          axisRadius=0.5*dY, axisLength=5*dY)[0]
 #%%++++++++++++++++++++++++++++++++++++++++++++++++
 #add 'rolling disc' for wheels:
 cStiffness = 5e4*10 #spring stiffness: 50N==>F/k = u = 0.001m (penetration)
@@ -351,7 +345,7 @@ print("pR=",pR)
 print("pB1=",pB1)
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-tEnd = 5*4
+tEnd = 5
 h=0.001  #use small step size to detext contact switching
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)

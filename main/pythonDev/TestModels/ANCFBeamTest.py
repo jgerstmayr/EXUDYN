@@ -241,21 +241,12 @@ for case in caseList:
     simulationSettings.timeIntegration.verboseMode = verbose
     simulationSettings.staticSolver.verboseMode = verbose
 
-    #simulationSettings.parallel.numberOfThreads = 4
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
-    #simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1e0
 
     simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon = 1e-4
     simulationSettings.timeIntegration.newton.relativeTolerance = 1e-6
 
-    # simulationSettings.displayComputationTime = True
     simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-    # simulationSettings.parallel.numberOfThreads = 4
-
-    #simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 5e-5
-    #simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2 = True
-    #simulationSettings.staticSolver.newton.relativeTolerance = 1e-6
-    # simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-4
 
     if nElements > 32 and case==0: #change tolerance, because otherwise no convergence
         simulationSettings.staticSolver.newton.relativeTolerance = 1e-6

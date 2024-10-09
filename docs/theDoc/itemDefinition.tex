@@ -341,12 +341,12 @@ AngularAcceleration & $\LU{0}{\talpha}\cConfig = \LU{0}{[\alpha_0,\,\alpha_1,\,\
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3DFWBW.py}{\texttt{rigidRotor3DFWBW.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3Dnutation.py}{\texttt{rigidRotor3Dnutation.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidRotor3Drunup.py}{\texttt{rigidRotor3Drunup.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py}{\texttt{craneReevingSystem.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py}{\texttt{fourBarMechanism3D.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/gyroStability.py}{\texttt{gyroStability.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py}{\texttt{humanRobotInteraction.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/leggedRobot.py}{\texttt{leggedRobot.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mobileMecanumWheelRobotWithLidar.py}{\texttt{mobileMecanumWheelRobotWithLidar.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mouseInteractionExample.py}{\texttt{mouseInteractionExample.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorPythonTest.py}{\texttt{explicitLieGroupIntegratorPythonTest.py}} (TestModels/)
@@ -1250,6 +1250,7 @@ Coordinates\_t & $\dot \yv\cConfig = [\dot y_0,\,\ldots,\,\dot y_{nc}]\tp\cConfi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lugreFrictionTest.py}{\texttt{lugreFrictionTest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/hydraulicActuatorSimpleTest.py}{\texttt{hydraulicActuatorSimpleTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/solverExplicitODE1ODE2test.py}{\texttt{solverExplicitODE1ODE2test.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/taskmanagerTest.py}{\texttt{taskmanagerTest.py}} (TestModels/)
 
 \ei
 
@@ -1570,7 +1571,7 @@ RotationMatrix & $\LU{0b}{\Rot}$ & rotation matrix in vector form (stored in row
     \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
     A user function, which is called by the visualization thread in order to draw user-defined objects.
     The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
-    Use \texttt{graphicsDataUtilities} functions, see Section \ref{sec:module:graphicsDataUtilities}, to create more complicated objects. 
+    Use \texttt{exudyn.graphics} functions, see Section \ref{sec:module:graphics}, to create more complicated objects. 
     Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
     inefficient and only designed to enable simpler tests, but not large scale problems.
     %
@@ -2399,7 +2400,7 @@ AngularAccelerationLocal & $\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talp
     \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
     A user function, which is called by the visualization thread in order to draw user-defined objects.
     The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
-    Use \texttt{graphicsDataUtilities} functions, see Section \ref{sec:module:graphicsDataUtilities}, to create more complicated objects. 
+    Use \texttt{exudyn.graphics} functions, see Section \ref{sec:module:graphics}, to create more complicated objects. 
     Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
     inefficient and only designed to enable simpler tests, but not large scale problems.
     
@@ -2420,16 +2421,16 @@ AngularAccelerationLocal & $\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talp
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigid3Dexample.py}{\texttt{rigid3Dexample.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyIMUtest.py}{\texttt{rigidBodyIMUtest.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py}{\texttt{craneReevingSystem.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py}{\texttt{fourBarMechanism3D.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/gyroStability.py}{\texttt{gyroStability.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py}{\texttt{humanRobotInteraction.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/leggedRobot.py}{\texttt{leggedRobot.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mobileMecanumWheelRobotWithLidar.py}{\texttt{mobileMecanumWheelRobotWithLidar.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mouseInteractionExample.py}{\texttt{mouseInteractionExample.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/multiMbsTest.py}{\texttt{multiMbsTest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openVRengine.py}{\texttt{openVRengine.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py}{\texttt{particleClusters.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py}{\texttt{particlesSilo.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/plotSensorExamples.py}{\texttt{plotSensorExamples.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorPythonTest.py}{\texttt{explicitLieGroupIntegratorPythonTest.py}} (TestModels/)
@@ -2560,7 +2561,7 @@ AngularAccelerationLocal & $\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talp
     \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
     A user function, which is called by the visualization thread in order to draw user-defined objects.
     The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
-    Use \texttt{graphicsDataUtilities} functions, see Section \ref{sec:module:graphicsDataUtilities}, to create more complicated objects. 
+    Use \texttt{exudyn.graphics} functions, see Section \ref{sec:module:graphics}, to create more complicated objects. 
     Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
     inefficient and only designed to enable simpler tests, but not large scale problems.
 
@@ -2754,6 +2755,8 @@ Force &  & generalized forces for all coordinates (residual of all forces except
             -f_{ODE2}   \left(\frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \qv} \right) - 
              f_{ODE2_t} \left(\frac{\partial \fv_{user}(mbs, t, i_N,\qv,\dot \qv)}{\partial \dot \qv} \right)
     \ee
+    For clarification also see the \mybold{example} in \texttt{TestModels/linearFEMgenericODE2.py}.
+    
     CoordinateLoads are added for the respective \hac{ODE2} coordinate on the RHS of the latter equation.
     %
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2807,7 +2810,7 @@ Force &  & generalized forces for all coordinates (residual of all forces except
     \userFunction{graphicsDataUserFunction(mbs, itemNumber)}
     A user function, which is called by the visualization thread in order to draw user-defined objects.
     The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
-    Use \texttt{graphicsDataUtilities} functions, see Section \ref{sec:module:graphicsDataUtilities}, to create more complicated objects. 
+    Use \texttt{exudyn.graphics} functions, see Section \ref{sec:module:graphics}, to create more complicated objects. 
     Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
     inefficient and only designed to enable simpler tests, but not large scale problems.
 
@@ -2897,6 +2900,7 @@ Force &  & generalized forces for all coordinates (residual of all forces except
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateVectorConstraintGenericODE2.py}{\texttt{coordinateVectorConstraintGenericODE2.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericODE2test.py}{\texttt{genericODE2test.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/linearFEMgenericODE2.py}{\texttt{linearFEMgenericODE2.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py}{\texttt{objectFFRFTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectGenericODE2Test.py}{\texttt{objectGenericODE2Test.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyAsUserFunctionTest.py}{\texttt{rigidBodyAsUserFunctionTest.py}} (TestModels/)
@@ -5315,7 +5319,6 @@ TorqueLocal & $\LU{J0}{\mv}$ & joint torque in local $J0$ coordinates; depending
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py}{\texttt{ANCFrotatingCable2D.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beamTutorial.py}{\texttt{beamTutorial.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py}{\texttt{CMSexampleCourse.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py}{\texttt{craneReevingSystem.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py}{\texttt{fourBarMechanism3D.py}} (Examples/)
@@ -5323,8 +5326,9 @@ TorqueLocal & $\LU{J0}{\mv}$ & joint torque in local $J0$ coordinates; depending
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/leggedRobot.py}{\texttt{leggedRobot.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mobileMecanumWheelRobotWithLidar.py}{\texttt{mobileMecanumWheelRobotWithLidar.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mouseInteractionExample.py}{\texttt{mouseInteractionExample.py}} (Examples/)
-\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/multiMbsTest.py}{\texttt{multiMbsTest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py}{\texttt{netgenSTLtest.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py}{\texttt{NGsolveCMStutorial.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py}{\texttt{NGsolveCraigBampton.py}} (Examples/)
 \item  ...
 
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/driveTrainTest.py}{\texttt{driveTrainTest.py}} (TestModels/)
@@ -7354,7 +7358,7 @@ The item \mybold{ObjectConnectorLinearSpringDamper} with type = 'ConnectorLinear
 \bf output variable & \bf symbol & \bf description \\ \hline
 DisplacementLocal & $\Delta x$ & (scalar) relative displacement of the spring-damper\\ \hline
 VelocityLocal & $\Delta v$ & (scalar) relative velocity of spring-damper\\ \hline
-ForceLocal & $f$ & (scalar) spring-damper force\\ \hline
+ForceLocal & $f_{SD}$ & (scalar) spring-damper force\\ \hline
 \end{longtable}
 \end{center}
  \noindent
@@ -7382,12 +7386,12 @@ ForceLocal & $f$ & (scalar) spring-damper force\\ \hline
     \be
       f_{SD} = k \left(\Delta x - x_\mathrm{off} \right) + d \left(\Delta v - v_\mathrm{off} \right) + f_c
     \ee
-    if \texttt{activeConnector = False}, $\tau_{SD}$ is set zero.
+    if \texttt{activeConnector = False}, $f_{SD}$ is set zero.
 
     If the springForceUserFunction $\mathrm{UF}$ is defined and \texttt{activeConnector = True}, 
-    $\tau_{SD}$ instead becomes ($t$ is current time)
+    $f_{SD}$ instead becomes ($t$ is current time)
     \be
-      \tau_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta x, \Delta v, \mathrm{stiffness}, \mathrm{damping}, \mathrm{offset})
+      f_{SD} = \mathrm{UF}(mbs, t, i_N, \Delta x, \Delta v, \mathrm{stiffness}, \mathrm{damping}, \mathrm{offset})
     \ee
     and \texttt{iN} represents the itemNumber (=objectNumber).
     %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -7519,8 +7523,8 @@ The item \mybold{ObjectConnectorTorsionalSpringDamper} with type = 'ConnectorTor
 \rowTable{nodeNumber}{$n_d$}{}
 \rowTable{stiffness}{$k$}{}
 \rowTable{damping}{$d$}{}
-\rowTable{offset}{$v_\mathrm{off}$}{}
-\rowTable{velocityOffset}{$\dot v_\mathrm{off}$}{}
+\rowTable{offset}{$\theta_\mathrm{off}$}{}
+\rowTable{velocityOffset}{$\omega_\mathrm{off}$}{}
 \rowTable{torque}{$\tau_c$}{}
 \rowTable{springTorqueUserFunction}{$\mathrm{UF} \in \Rcal$}{}
 \finishTable
@@ -7558,7 +7562,7 @@ TorqueLocal & $\tau_{SD}$ & scalar spring-damper torque around the local joint0 
     \mysubsubsubsection{Connector forces}
     If \texttt{activeConnector = True}, the vector spring force is computed as
     \be
-      \tau_{SD} = k \left(\Delta\theta - v_\mathrm{off} \right) + d \left(\Delta\omega - \dot v_\mathrm{off} \right) + \tau_c
+      \tau_{SD} = k \left(\Delta\theta - \theta_\mathrm{off} \right) + d \left(\Delta\omega - \omega_\mathrm{off} \right) + \tau_c
     \ee
     if \texttt{activeConnector = False}, $\tau_{SD}$ is set zero.
 
@@ -10489,7 +10493,7 @@ Coordinates\_t &  & all \hac{ODE1} velocity coordinates\\ \hline
     %\userFunction{graphicsDataUserFunction(mbs, itemNumber)}
     %A user function, which is called by the visualization thread in order to draw user-defined objects.
     %The function can be used to generate any \texttt{BodyGraphicsData}, see Section \ref{sec:graphicsData}.
-    %Use \texttt{graphicsDataUtilities} functions, see Section \ref{sec:module:graphicsDataUtilities}, to create more complicated objects. 
+    %Use \texttt{exudyn.graphics} functions, see Section \ref{sec:module:graphics}, to create more complicated objects. 
     %Note that \texttt{graphicsDataUserFunction} needs to copy lots of data and is therefore
     %inefficient and only designed to enable simpler tests, but not large scale problems.
     %
@@ -10555,6 +10559,7 @@ Coordinates\_t &  & all \hac{ODE1} velocity coordinates\\ \hline
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lugreFrictionODE1.py}{\texttt{lugreFrictionODE1.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/lugreFrictionTest.py}{\texttt{lugreFrictionTest.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/solverExplicitODE1ODE2test.py}{\texttt{solverExplicitODE1ODE2test.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/taskmanagerTest.py}{\texttt{taskmanagerTest.py}} (TestModels/)
 
 \ei
 
@@ -11607,6 +11612,7 @@ The item \mybold{MarkerSuperElementRigid} with type = 'SuperElementRigid' has th
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py}{\texttt{serialRobotFlexible.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/abaqusImportTest.py}{\texttt{abaqusImportTest.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TestModels/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/linearFEMgenericODE2.py}{\texttt{linearFEMgenericODE2.py}} (TestModels/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/superElementRigidJointTest.py}{\texttt{superElementRigidJointTest.py}} (TestModels/)
 
 \ei
@@ -11708,6 +11714,7 @@ The item \mybold{MarkerKinematicTreeRigid} with type = 'KinematicTreeRigid' has 
 \noindent For examples on MarkerKinematicTreeRigid see Relevant Examples and TestModels with weblink:
 \bi
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py}{\texttt{humanRobotInteraction.py}} (Examples/)
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openAIgymNLinkAdvanced.py}{\texttt{openAIgymNLinkAdvanced.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reinforcementLearningRobot.py}{\texttt{reinforcementLearningRobot.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py}{\texttt{serialRobotKinematicTreeDigging.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernorKT.py}{\texttt{stiffFlyballGovernorKT.py}} (Examples/)
@@ -12646,6 +12653,7 @@ The item \mybold{SensorKinematicTree} with type = 'KinematicTree' has the follow
 %
 \noindent For examples on SensorKinematicTree see Relevant Examples and TestModels with weblink:
 \bi
+\item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openAIgymNLinkAdvanced.py}{\texttt{openAIgymNLinkAdvanced.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openAIgymNLinkContinuous.py}{\texttt{openAIgymNLinkContinuous.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reinforcementLearningRobot.py}{\texttt{reinforcementLearningRobot.py}} (Examples/)
 \item \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py}{\texttt{serialRobotInverseKinematics.py}} (Examples/)

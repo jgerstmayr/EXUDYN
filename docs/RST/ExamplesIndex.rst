@@ -85,6 +85,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/ObjectFFRFconvergenceTestHinge
    Examples/objectFFRFreducedOrderNetgen
    Examples/openAIgymInterfaceTest
+   Examples/openAIgymNLinkAdvanced
    Examples/openAIgymNLinkContinuous
    Examples/openAIgymTriplePendulum
    Examples/openVRengine
@@ -141,6 +142,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/springDamperTutorial
    Examples/springDamperTutorialNew
    Examples/springDamperUserFunctionNumbaJIT
+   Examples/springMassFriction
    Examples/springsDeactivateConnectors
    Examples/SpringWithConstraints
    Examples/stiffFlyballGovernor2

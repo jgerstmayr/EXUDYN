@@ -66,7 +66,7 @@ Understanding the usage of functions for python object \ ``SystemContainer``\  o
    #import exudyn module:
    import exudyn as exu
    #  import utilities (includes itemInterface, basicUtilities, 
-   #                  advancedUtilities, rigidBodyUtilities, graphicsDataUtilities):
+   #                  advancedUtilities, rigidBodyUtilities, graphics):
    from exudyn.utilities import *
    #  create system container and store in SC:
    SC = exu.SystemContainer()

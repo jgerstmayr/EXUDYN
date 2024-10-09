@@ -47,7 +47,7 @@ void CSolverExplicitTimeInt::PreInitializeSolverSpecific(CSystem& computationalS
 
 	nStages = ComputeButcherTableau(dynamicSolverType, rk); //compute coefficients, number of stages, stepSizeControl
 	CHECKandTHROW(rk.time[0] == 0, "SolverExplicit: c[0] in Butcher tableau must be zero");
-	
+
 	eliminateConstraints = timeint.explicitIntegration.eliminateConstraints;
 	useLieGroupIntegration = timeint.explicitIntegration.useLieGroupIntegration;
 	minStepSizeWarned = false;
@@ -153,6 +153,14 @@ void CSolverExplicitTimeInt::PostInitializeSolverSpecific(CSystem& computational
 	rk.startOfStepODE1.SetNumberOfItems(data.nODE1);
 
 	computationalSystem.GetSolverData().doPostNewtonIteration = false; //no PostNewton step necessary for explicit solver; do this directly in contact iteration
+
+	if (dynamicSolverType == DynamicSolverType::VelocityVerlet)
+	{
+		//pout << "************\nWARNING: VelocityVerlet: accelerations need to be initialized!!!\n************\n";
+		typedef ResizableVectorParallel CastVectorType;
+		CastVectorType& solutionODE2_tt = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_tt;
+		ComputeODE2Acceleration(computationalSystem, simulationSettings, data.tempODE2, solutionODE2_tt, data.systemMassMatrix);
+	}
 }
 
 //! initialize all data,it,conv; called from InitializeSolver()
@@ -168,8 +176,8 @@ void CSolverExplicitTimeInt::InitializeSolverData(CSystem& computationalSystem, 
 }
 
 
-
-
+//**delete when finished!
+bool warnedVelocityVerlet = false;
 
 
 //! this function computes one explicit step, overloading the Newton method
@@ -216,38 +224,168 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 		Verbose(2, "non-Lie coords = " + EXUstd::ToString(nonLieODE2Coordinates) + "\n");
 	}
 
-	//compute stage derivatives Ki:
-	for (Index i = 0; i < nStages; i++)
+	if (dynamicSolverType != DynamicSolverType::VelocityVerlet)
 	{
-		STARTTIMER(timer.integrationFormula);
-		//only computed for i > 0:
-		//g[i] = u + h*sum_j A[i,j] * K[j]
-		//write g[i] ==> currentState (solutionODE2, solutionODE2_t, solutionODE1)
-		for (Index j = 0; j < i; j++)
+		//compute stage derivatives Ki:
+		for (Index i = 0; i < nStages; i++)
 		{
-			if (rk.A(i, j) != 0.)
+			STARTTIMER(timer.integrationFormula);
+			//only computed for i > 0:
+			//g[i] = u + h*sum_j A[i,j] * K[j]
+			//write g[i] ==> currentState (solutionODE2, solutionODE2_t, solutionODE1)
+			for (Index j = 0; j < i; j++) //only relevant for methods with nStages > 1
+			{
+				if (rk.A(i, j) != 0.)
+				{
+					if (!useLieGroupIntegration)
+					{
+						solutionODE2.MultAdd(rk.A(i, j) * it.currentStepSize, rk.stageDerivODE2[j]);
+					}
+					solutionODE2_t.MultAdd(rk.A(i, j) * it.currentStepSize, rk.stageDerivODE2_t[j]);
+					solutionODE1.MultAdd(rk.A(i, j) * it.currentStepSize, rk.stageDerivODE1[j]); //solutionODE1=g[i+1], ...
+				}
+			}
+			if (useLieGroupIntegration)
+			{
+				if (i > 0)
+				{  //otherwise makes no sense ...
+					UpdateODE2StageCoordinatesLieGroup(computationalSystem, solutionODE2, it.currentStepSize, i);
+				}
+
+			}
+
+			//+++++++++++++++++++++++++++++++++++++++++++++++++
+			//update K-stage: K[i] = f(t+c[i], g[i]),
+			//update time for time-dependent loads or connectors:
+			computationalSystem.GetSystemData().GetCData().currentState.time = t0 + it.currentStepSize * rk.time[i];
+			STOPTIMER(timer.integrationFormula);
+
+			if (IsVerbose(2))
+			{
+				Verbose(2, "  sol ODE2  = " + EXUstd::ToString(solutionODE2) + "\n");
+				Verbose(2, "  sol ODE2_t= " + EXUstd::ToString(solutionODE2_t) + "\n");
+			}
+
+			if (data.nODE1 != 0)
+			{
+				STARTTIMER(timer.ODE1RHS);
+				computationalSystem.ComputeSystemODE1RHS(data.tempCompData, rk.stageDerivODE1[i]); //Ki=rk.stageDerivODE1[i]
+				STOPTIMER(timer.ODE1RHS);
+			}
+			ComputeODE2Acceleration(computationalSystem, simulationSettings, data.tempODE2, rk.stageDerivODE2_t[i], data.systemMassMatrix);
+			if (!useLieGroupIntegration)
+			{
+				rk.stageDerivODE2[i].CopyFrom(solutionODE2_t);
+			}
+			else
+			{
+				STARTTIMER(timer.integrationFormula);
+				LieGroupComputeKstage(computationalSystem, solutionODE2_t, rk.stageDerivODE2[i],
+					rk.stageDerivODE2[i], it.currentStepSize, i);  //stageDerivLieODE2 
+				STOPTIMER(timer.integrationFormula);
+			}
+			//+++++++++++++++++++++++++++++++++++++++++++++++++
+
+			//finally solutionODE1 = u(t) for next stage and for final step computation
+			solutionODE2.CopyFrom(rk.startOfStepODE2);		//solutionODE2=currentState.ODE2Coords must be updated during step computation
+			solutionODE2_t.CopyFrom(rk.startOfStepODE2_t);
+			solutionODE1.CopyFrom(rk.startOfStepODE1);
+
+		}
+
+		STARTTIMER(timer.integrationFormula);
+		//final evaluation step: (solutionODE2, solutionODE2_t and solutionODE1 have startOfStep configuration)
+		for (Index i = 0; i < nStages; i++)
+		{
+			if (rk.weight[i] != 0.)
 			{
 				if (!useLieGroupIntegration)
 				{
-					solutionODE2.MultAdd(rk.A(i, j)*it.currentStepSize, rk.stageDerivODE2[j]);
+					solutionODE2.MultAdd(rk.weight[i] * it.currentStepSize, rk.stageDerivODE2[i]);
 				}
-				solutionODE2_t.MultAdd(rk.A(i, j)*it.currentStepSize, rk.stageDerivODE2_t[j]);
-				solutionODE1.MultAdd(rk.A(i, j)*it.currentStepSize, rk.stageDerivODE1[j]); //solutionODE1=g[i+1], ...
+				solutionODE2_t.MultAdd(rk.weight[i] * it.currentStepSize, rk.stageDerivODE2_t[i]);
+				solutionODE1.MultAdd(rk.weight[i] * it.currentStepSize, rk.stageDerivODE1[i]);
 			}
 		}
+
 		if (useLieGroupIntegration)
 		{
-			if (i > 0)
-			{  //otherwise makes no sense ...
-				UpdateODE2StageCoordinatesLieGroup(computationalSystem, solutionODE2, it.currentStepSize, i);
-			}
-
+			LieGroupODE2StepEvaluation(computationalSystem, solutionODE2, it.currentStepSize, rk.weight);
 		}
 
+		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//eliminate constraints by setting coordinates to zero:
+		EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, solutionODE2);
+		EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, solutionODE2_t);
+		STOPTIMER(timer.integrationFormula);
+
 		//+++++++++++++++++++++++++++++++++++++++++++++++++
-		//update K-stage: K[i] = f(t+c[i], g[i]),
+		//compute final accelerations for ODE2 and final velocities for ODE1 (could be taken cheaper from beginning of next step ...):
+		//no special task for Lie group methods
+		computationalSystem.GetSystemData().GetCData().currentState.time = it.currentTime; //it.currentTime has step endTime
+		if (data.nODE1 != 0)
+		{
+			STARTTIMER(timer.ODE1RHS);
+			computationalSystem.ComputeSystemODE1RHS(data.tempCompData, solutionODE1_t); //Ki=rk.stageDerivODE1[i]
+			STOPTIMER(timer.ODE1RHS);
+		}
+		if (simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations &&
+			(dynamicSolverType != DynamicSolverType::VelocityVerlet)) //this is the correct acceleration at end of step
+		{
+			ComputeODE2Acceleration(computationalSystem, simulationSettings, data.tempODE2, solutionODE2_tt, data.systemMassMatrix);
+		}
+		else //use this as an approximation; this will lead to a delay in accelerations; usually accelerations are only used in sensors, 
+			//which shall be ok in most cases and it avoids a second call to the very expensive function ComputeODE2Acceleration(...)
+		{
+			solutionODE2_tt.CopyFrom(rk.stageDerivODE2_t[nStages - 1]);
+		}
+		//also eliminate accelerations for constrained coordinates:
+		EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, solutionODE2_tt);
+
+	}
+	else //VelocityVerlet - important for particle dynamics
+	{
+		//**************************************************************************************************************
+		//**************************************************************************************************************
+		if (!warnedVelocityVerlet)
+		{
+			pout << "************\nWARNING: VelocityVerlet: CHECK CONVERGENCE !!!\n************\n";
+			pout << "************\nWARNING: VelocityVerlet: ADD Lie group formulas !!!\n************\n";
+			warnedVelocityVerlet = true;
+		}
+		//compute stage derivatives Ki:
+		STARTTIMER(timer.integrationFormula);
+
+		//v(t+0.5h) = v(t) + 0.5*h*a(t)
+		solutionODE2_t.MultAdd(0.5 * it.currentStepSize, solutionODE2_tt);
+
+		//x(t+h) = x(t) + h*v(t+0.5*h)
+		//HERE we need a Lie-group update!!!
+		if (useLieGroupIntegration)
+		{
+			rk.stageDerivODE2[0].CopyFrom(solutionODE2_t); //LieGroupODE2StepEvaluation uses the rk.stageDerivODE2[0] !
+			LieGroupODE2StepEvaluation(computationalSystem, solutionODE2, it.currentStepSize, rk.weight);
+		}
+		else
+		{
+			solutionODE2.MultAdd(it.currentStepSize, solutionODE2_t);
+		}
+
+		//eliminate constraints by setting coordinates to zero; needed before we compute accelerations!
+		EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, solutionODE2);
+		EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, solutionODE2_t);
+
 		//update time for time-dependent loads or connectors:
-		computationalSystem.GetSystemData().GetCData().currentState.time = t0 + it.currentStepSize * rk.time[i];
+		computationalSystem.GetSystemData().GetCData().currentState.time = it.currentTime; //it.currentTime has already step endTime
+
+		STOPTIMER(timer.integrationFormula);
+		//evaluate accelerations at time t+h
+		ComputeODE2Acceleration(computationalSystem, simulationSettings, data.tempODE2, solutionODE2_tt, data.systemMassMatrix);
+		EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, solutionODE2_tt);
+		STARTTIMER(timer.integrationFormula);
+
+		//v(t+h) = v(t+0.5h) + 0.5*h*a(t+h)
+		solutionODE2_t.MultAdd(0.5 * it.currentStepSize, solutionODE2_tt); //as solutionODE2_tt fulfills constraints, no further action on constraints needed
 		STOPTIMER(timer.integrationFormula);
 
 		if (IsVerbose(2))
@@ -259,60 +397,17 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 		if (data.nODE1 != 0)
 		{
 			STARTTIMER(timer.ODE1RHS);
-			computationalSystem.ComputeSystemODE1RHS(data.tempCompData, rk.stageDerivODE1[i]); //Ki=rk.stageDerivODE1[i]
+			computationalSystem.ComputeSystemODE1RHS(data.tempCompData, solutionODE1_t);
 			STOPTIMER(timer.ODE1RHS);
 		}
-		ComputeODE2Acceleration(computationalSystem, simulationSettings, data.tempODE2, rk.stageDerivODE2_t[i], data.systemMassMatrix);
-		if (!useLieGroupIntegration)
-		{
-			rk.stageDerivODE2[i].CopyFrom(solutionODE2_t);
-		}
-		else
-		{
-			STARTTIMER(timer.integrationFormula);
-			LieGroupComputeKstage(computationalSystem, solutionODE2_t, rk.stageDerivODE2[i],
-				rk.stageDerivODE2[i], it.currentStepSize, i);  //stageDerivLieODE2 
-			//if (doDebug)
-			//{
-			//	pout << "k" << i << "   =" << rk.stageDerivODE2_t[i] << "\n";
-			//	pout << "K" << i << "   =" << rk.stageDerivODE2[i] << "\n";
-			//}
-			STOPTIMER(timer.integrationFormula);
-		}
-		//+++++++++++++++++++++++++++++++++++++++++++++++++
 
-		//finally solutionODE1 = u(t) for next stage and for final step computation
-		solutionODE2.CopyFrom(rk.startOfStepODE2);		//solutionODE2=currentState.ODE2Coords must be updated during step computation
-		solutionODE2_t.CopyFrom(rk.startOfStepODE2_t);
-		solutionODE1.CopyFrom(rk.startOfStepODE1);
+		STARTTIMER(timer.integrationFormula);
+		solutionODE1.MultAdd(1. * it.currentStepSize, solutionODE1_t); //explicit Euler for ODE1 coordinates!
+		STOPTIMER(timer.integrationFormula);
 
+		//**************************************************************************************************************
+		//**************************************************************************************************************
 	}
-
-	STARTTIMER(timer.integrationFormula);
-	//final evaluation step: (solutionODE2, solutionODE2_t and solutionODE1 have startOfStep configuration)
-	for (Index i = 0; i < nStages; i++)
-	{
-		if (rk.weight[i] != 0.)
-		{
-			if (!useLieGroupIntegration)
-			{
-				solutionODE2.MultAdd(rk.weight[i] * it.currentStepSize, rk.stageDerivODE2[i]);
-			}
-			solutionODE2_t.MultAdd(rk.weight[i] * it.currentStepSize, rk.stageDerivODE2_t[i]);
-			solutionODE1.MultAdd(rk.weight[i] * it.currentStepSize, rk.stageDerivODE1[i]);
-		}
-	}
-
-	if (useLieGroupIntegration)
-	{
-		LieGroupODE2StepEvaluation(computationalSystem, solutionODE2, it.currentStepSize, rk.weight);
-	}
-
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//eliminate constraints by setting coordinates to zero:
-	EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, solutionODE2);
-	EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, solutionODE2_t);
-	STOPTIMER(timer.integrationFormula);
 
 	//compute second approximation for automatic stepsize control
 	if (rk.hasStepSizeControl)
@@ -344,29 +439,6 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 		EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, rk.solutionSecondApproxODE2_t);
 		STOPTIMER(timer.errorEstimator);
 	}
-
-	//+++++++++++++++++++++++++++++++++++++++++++++++++
-	//compute final accelerations and velocities for ODE1 (could be taken cheaper from beginning of next step ...):
-	//no special task for Lie group methods
-	computationalSystem.GetSystemData().GetCData().currentState.time = it.currentTime; //it.currentTime has step endTime
-	if (data.nODE1 != 0)
-	{
-		STARTTIMER(timer.ODE1RHS);
-		computationalSystem.ComputeSystemODE1RHS(data.tempCompData, solutionODE1_t); //Ki=rk.stageDerivODE1[i]
-		STOPTIMER(timer.ODE1RHS);
-	}
-	if (simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations) //this is the correct acceleration at end of step
-	{
-		ComputeODE2Acceleration(computationalSystem, simulationSettings, data.tempODE2, solutionODE2_tt, data.systemMassMatrix);
-	}
-	else //use this as an approximation; this will lead to a delay in accelerations; usually accelerations are only used in sensors, 
-		//which shall be ok in most cases and it avoids a second call to the very expensive function ComputeODE2Acceleration(...)
-	{
-		solutionODE2_tt.CopyFrom(rk.stageDerivODE2_t[nStages-1]);
-	}
-
-	//also eliminate accelerations for constrained coordinates:
-	EliminateCoordinateConstraints(computationalSystem, constrainedODE2Coordinates, solutionODE2_tt);
 
 	bool stepRejected = false;
 	//+++++++++++++++++++++++++++++++++++++++++++++++++
@@ -440,39 +512,6 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 		}
 	}
 
-
-
-
-	//#K0 = np.zeros(nODE2)
-	//mainSys.systemData.SetTime(t0)
-	//k1 = h * ExplicitRKComputeSystemAcceleration(mainSolver, mainSys, nODE2)#velocities
-	//#K1 = LieGroupComputeKstage(mainSys, u0, v0, h, nODE2, K0, K0, 0.)      #displacements; K0 == k0;
-	//K1 = h * v0[0:nODE2]
-
-	//mainSys.systemData.SetTime(t0 + 0.5*h)
-	//LieGroupUpdateStageSystemCoordinates(mainSys, u0, v0, nODE2, K1, k1, 0.5)
-	//k2 = h * ExplicitRKComputeSystemAcceleration(mainSolver, mainSys, nODE2)
-	//K2 = LieGroupComputeKstage(mainSys, u0, v0, h, nODE2, K1, k1, 0.5)
-
-	//mainSys.systemData.SetTime(t0 + 0.5*h)
-	//LieGroupUpdateStageSystemCoordinates(mainSys, u0, v0, nODE2, K2, k2, 0.5)
-	//k3 = h * ExplicitRKComputeSystemAcceleration(mainSolver, mainSys, nODE2)
-	//K3 = LieGroupComputeKstage(mainSys, u0, v0, h, nODE2, K2, k2, 0.5)
-
-	//mainSys.systemData.SetTime(t0 + h) #this is also the step end time
-	//LieGroupUpdateStageSystemCoordinates(mainSys, u0, v0, nODE2, K3, k3, 1.)
-	//k4 = h * ExplicitRKComputeSystemAcceleration(mainSolver, mainSys, nODE2)
-	//K4 = LieGroupComputeKstage(mainSys, u0, v0, h, nODE2, K3, k3, 1.)
-
-	//#++++++++++++++++++
-	//mainSys.systemData.SetTime(tend)
-	//# compute update for end of step
-	//#global update for velocities(same for all velocities!)
-	//vStep = v0 + 1. / 6. * (k1 + 2 * k2 + 2 * k3 + k4)
-	//#incremental rotation vector, can be computed globally :
-	//deltaU = 1. / 6. * (K1 + 2 * K2 + 2 * K3 + K4) #contains displacement updates and incremental velocity vectors
-
-	//uStep = u0 + deltaU #standard update for non - LieGroup nodes
 
 	if (!conv.linearSolverFailed)
 	{
@@ -772,9 +811,19 @@ Index CSolverExplicitTimeInt::ComputeButcherTableau(DynamicSolverType dynamicSol
 			break;
 		}
 		//case DynamicSolverType::DOPRI853: //could be implemented similarly as in https://github.com/scipy/scipy/blob/v1.11.4/scipy/integrate/_ivp/rk.py#L405
+		case DynamicSolverType::VelocityVerlet:
+		{
+			//this scheme is not used! only weight is needed for Lie group update
+			rkData.A = Matrix(1, 1, { 0 });
+			rkData.time = Vector({ 0. }); //including zero time
+			rkData.weight = Vector({ 1. });  //for Lie group update: solutionODE2.MultAdd(rk.weight[0] * it.currentStepSize, solutionODE2_tt);
+			rkData.orderMethod = 2; //order of the method: HERE only for ODE2 components!
+			return rkData.time.NumberOfItems(); //nStages
+			break;
+		}
 		default:
 		{
-			PyError("SolverExplicit: invalid explicitIntegration.dynamicSolverType; must be explicit solver!", file.solverFile);
+			PyError("SolverExplicit: invalid explicitIntegration.dynamicSolverType (method misses implementation)!", file.solverFile);
 			return 0;
 		}
 	}

@@ -846,9 +846,9 @@ namespace EXUvis {
 			if (showNumber != EXUstd::InvalidIndex || preText != nullptr)
 			{
 				STDstring textStr;
-				if (showNumber != EXUstd::InvalidIndex) 
+				if (preText != nullptr) { textStr = preText; }
+				if (showNumber != EXUstd::InvalidIndex)
 				{ 
-					if (preText != nullptr) { textStr = preText; }
 					textStr += EXUstd::ToString(showNumber);
 				}
 				graphicsData.AddText(p + (length + radius * arrowSizeRelative * 3) * v, color, textStr, 0.f, 0.25f, 0.25f, itemID);

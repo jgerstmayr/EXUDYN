@@ -14,7 +14,7 @@
 
 import numpy as np #for loading
 import exudyn #for sensor index
-from exudyn.advancedUtilities import PlotLineCode, IsListOrArray
+from exudyn.advancedUtilities import PlotLineCode, IsListOrArray, IsEmptyList
 import copy
 import os
 
@@ -259,15 +259,15 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
         fontSize = __plotSensorDefaults.fontSize
 
     #the following code is not totally safe regarding mutable args, but works with this kind of default args
-    if colors == []:
+    if IsEmptyList(colors):
         colors = __plotSensorDefaults.colors
-    if lineStyles == []:
+    if IsEmptyList(lineStyles):
         lineStyles = __plotSensorDefaults.lineStyles
-    if lineWidths == []:
+    if IsEmptyList(lineWidths):
         lineWidths = __plotSensorDefaults.lineWidths
-    if markerStyles == []:
+    if IsEmptyList(markerStyles):
         markerStyles = __plotSensorDefaults.markerStyles
-    if markerSizes == []:
+    if IsEmptyList(markerSizes):
         markerSizes = __plotSensorDefaults.markerSizes
     if markerDensity == 0.08:
         markerDensity = __plotSensorDefaults.markerDensity
@@ -356,7 +356,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
         elif newFigure:
             fig = plt.figure()
         else:
-            if plt.get_fignums() == []:
+            if IsEmptyList(plt.get_fignums()):
                 print('WARNING: PlotSensor(...,newFigure=False):  no existing figure was found, creating new figure')
                 fig = plt.figure()
             else:

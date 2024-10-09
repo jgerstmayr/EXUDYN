@@ -18,7 +18,7 @@ import sys
 import time
 from copy import deepcopy #, copy 
 import os
-from exudyn.advancedUtilities import IsInteger
+from exudyn.advancedUtilities import IsInteger, IsEmptyList
 
 #%%+++++++++++++++++++++++++++++++++++++++++++
 #**function: internal function to return Exudyn version string, which allows to identify how results have been obtained
@@ -399,7 +399,7 @@ def ParameterVariation(parameterFunction, parameters,
         if numberOfThreads == None:
             numberOfThreads = cpu_count() #cpu_count in fact gives number of threads ...
         if debugMode:
-            if clusterHostNames == []:
+            if IsEmptyList(clusterHostNames):
                 print("using", numberOfThreads, "cpus")
             else:
                 print("using cluster")

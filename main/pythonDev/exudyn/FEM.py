@@ -2,16 +2,18 @@
 # This is an EXUDYN python utility library
 #
 # Details:  Support functions and helper classes for import of meshes, finite element models (ABAQUS, ANSYS, NETGEN) and for generation of FFRF (floating frame of reference) objects.
+#           Note that since exudyn version 1.8.69 the mass and stiffness matrices in FEMinterface are either None or given in SciPy-sparse csr format (leading also to a new load/save fileVersion of FEMinterface)
 #
 # Author:   Johannes Gerstmayr; Stefan Holzinger (Abaqus and Ansys import utilities); Joachim Sch\"oberl (support for Netgen and NGsolve \cite{Schoeberl1997,NGsolve2014,NGsolve2022} import and eigen computations)
 # Date:     2020-03-10 (created)
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
-# Notes:    internal CSR matrix storage format contains 3 float numbers per row: [row, column, value], can be converted to scipy csr sparse matrices with function CSRtoScipySparseCSR(...)
+# Notes:    OLD internal CSR matrix storage format contains 3 float numbers per row: [row, column, value], can be converted to scipy csr sparse matrices with function CSRtoScipySparseCSR(...); the NEW format uses scipy's internal sparse csr format! To switch to the old format, set exudyn.FEM.useOldCSRformat=True
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #constants and fixed structures:
+import exudyn as exu
 import exudyn.itemInterface as eii
 #from exudyn.utilities import 
 from exudyn.advancedUtilities import IsListOrArray, RoundMatrix, PlotLineCode
@@ -25,28 +27,50 @@ import numpy as np #LoadSolutionFile
 from enum import Enum #for class HCBstaticModeSelection
 import os
 
+#switch to old format for compatibility:
+useOldCSRformat = False
 
-#convert zero-based sparse matrix data to dense numpy matrix
-#DEPRECTAED!!!!!!!!!!!!!!!!
-def CompressedRowToDenseMatrix(sparseData):
-    print("\n**************************\nWARNING: CompressedRowToDenseMatrix is deprecated!\n**************************\n")
-    n = int(max(np.max(sparseData[:,0]),np.max(sparseData[:,1]))) #rows and columns are 1-based
-    m = np.zeros((n,n))
-    for row in sparseData:
-        m[int(row[0])-1,int(row[1])-1] += row[2] #convert 1-based to 0-based; += for double entries
-    return m
+#check if scipy is available:
+scipyInstalled = False
+try:
+    import scipy
+    scipyInstalled = True
+except:
+    pass
+
+def CheckForSciPyAndWarn():
+    global scipyInstalled
+    if not scipyInstalled:
+        exu.Print('WARNING: Sparse matrix functionality in exudyn.FEM requires SciPy')
+
+def CheckForSciPyAndError(stringWhere=''):
+    global scipyInstalled
+    if not scipyInstalled:
+        raise ValueError('in function ' + stringWhere + ': Sparse matrix functionality in exudyn.FEM requires SciPy')
+
+def CheckForSciPyMatrix(data, stringWhere):
+    global scipyInstalled
+    if not scipyInstalled:
+        raise ValueError('in function ' + stringWhere + ': Sparse matrix functionality in exudyn.FEM requires SciPy')
+    from scipy.sparse import isspmatrix
+    if not isspmatrix(data):
+        raise ValueError('in function ' + stringWhere+': function expects either a [[row,col,value]] data or a scipy sparse matrix')
 
 #**function: convert zero-based sparse matrix data to dense numpy matrix
 #**input: 
 #  sparseData: format (per row): [row, column, value] ==> converted into dense format
 #**output: a dense matrix as np.array
 def CompressedRowSparseToDenseMatrix(sparseData):
-    #does not work, if there are no entry in highest rows and columns
-    n = int(max(np.max(sparseData[:,0]),np.max(sparseData[:,1])))+1 #rows and columns indices are 0-based ==> add 1 for size!
-    m = np.zeros((n,n))
-    for row in sparseData:
-        m[int(row[0]),int(row[1])] += row[2]  #+= for double entries
-    return m
+    if IsListOrArray(sparseData):
+        #does not work, if there are no entry in highest rows and columns
+        n = int(max(np.max(sparseData[:,0]),np.max(sparseData[:,1])))+1 #rows and columns indices are 0-based ==> add 1 for size!
+        m = np.zeros((n,n))
+        for row in sparseData:
+            m[int(row[0]),int(row[1])] += row[2]  #+= for double entries
+        return m
+    else: #must be scipy sparse matrix:
+        CheckForSciPyMatrix(sparseData, 'CompressedRowSparseToDenseMatrix')
+        return sparseData.toarray()
 
 #**function: resort a sparse matrix (internal CSR format) with given sorting for rows and columns; changes matrix directly! used for ANSYS matrix import
 def MapSparseMatrixIndices(matrix, sorting):
@@ -74,34 +98,56 @@ def CyclicCompareReversed(list1, list2):
 #**function: add entry to compressedRowSparse matrix, avoiding duplicates
 #value is either added to existing entry (avoid duplicates) or a new entry is appended
 def AddEntryToCompressedRowSparseArray(sparseData, row, column, value):
-    n = len(sparseData[:,0])
-    #print("AddEntryToCompressedRowSparseArray:",row,column,value, ", n=", n)
-    for i in range(n):
-        if int(sparseData[i,0]) == row and int(sparseData[i,1]) == column:
-            sparseData[i,2] += value
-            #print("AddEntryToCompressedRowSparseArray, value added")
-            return sparseData
-#        if int(sparseData[i,0]) > row:
-#            np.insert(sparseData, i, np.array((row, column, value)), 0)
-#            print("AddEntryToCompressedRowSparseArray, row inserted, i=",i)
-#            return sparseData
-    #insert at end of matrix:
-    #print("AddEntryToCompressedRowSparseArray, row added at end")
-    np.insert(sparseData, n, np.array((row, column, value)), 0)
-    return sparseData
+    if IsListOrArray(sparseData):
+        n = len(sparseData[:,0])
+        #print("AddEntryToCompressedRowSparseArray:",row,column,value, ", n=", n)
+        for i in range(n):
+            if int(sparseData[i,0]) == row and int(sparseData[i,1]) == column:
+                sparseData[i,2] += value
+                #print("AddEntryToCompressedRowSparseArray, value added")
+                return sparseData
+    
+        #print("AddEntryToCompressedRowSparseArray, row added at end")
+        np.insert(sparseData, n, np.array((row, column, value)), 0)
+        return sparseData
+    else:
+        CheckForSciPyMatrix(sparseData, 'AddEntryToCompressedRowSparseArray')
+        from scipy.sparse import coo_matrix
+        new_entry = coo_matrix(([value], ([row], [column])), shape=sparseData.shape)
+
+        # Add the new entry to the existing matrix
+        return sparseData + new_entry.tocsr()
 
 #**function: compute rows and columns of a compressed sparse matrix and return as tuple: (rows,columns)
 def CSRtoRowsAndColumns(sparseMatrixCSR):
-    rows = sparseMatrixCSR[:,0].max()
-    columns = sparseMatrixCSR[:,1].max()
-    return (rows, columns)
+    if sparseMatrixCSR is None:
+        return (0, 0) #empty matrix
+    if IsListOrArray(sparseMatrixCSR):
+        rows = sparseMatrixCSR[:,0].max()
+        columns = sparseMatrixCSR[:,1].max()
+        return (rows, columns)
+    else:
+        CheckForSciPyMatrix(sparseMatrixCSR, 'CSRtoRowsAndColumns')
+        return sparseMatrixCSR.shape
 
+
+warnedCSRtoScipySparseCSR = False #add warning if this function is used with old format!
 #**function: convert internal compressed CSR to scipy.sparse csr matrix
 def CSRtoScipySparseCSR(sparseMatrixCSR):
-    from scipy.sparse import csr_matrix
-    X = csr_matrix((sparseMatrixCSR[:,2],(sparseMatrixCSR[:,0].astype(int),sparseMatrixCSR[:,1].astype(int))))
-    #X.sum_duplicates() 
-    return X
+    if IsListOrArray(sparseMatrixCSR):
+        global warnedCSRtoScipySparseCSR
+        if not useOldCSRformat and not warnedCSRtoScipySparseCSR:
+            exu.Print('WARNING: function CSRtoScipySparseCSR(...) is using the old internal CSR format; adjust your functionality and only use scipy sparse csr matrices!')
+            warnedCSRtoScipySparseCSR = True
+
+        from scipy.sparse import csr_matrix
+        X = csr_matrix((sparseMatrixCSR[:,2],(sparseMatrixCSR[:,0].astype(int),sparseMatrixCSR[:,1].astype(int))))
+        #X.sum_duplicates() 
+        return X
+    else:
+        #check if it is already a sparse matrix => do nothing
+        CheckForSciPyMatrix(sparseMatrixCSR, 'CSRtoScipySparseCSR')
+        return sparseMatrixCSR
 
 
 #**function: convert scipy.sparse csr matrix to internal compressed CSR 
@@ -125,10 +171,6 @@ def ResortIndicesOfCSRmatrix(mXXYYZZ, numberOfRows):
     mXXYYZZ[:,0] = r[mXXYYZZ[:,0].astype(int)]
     mXXYYZZ[:,1] = r[mXXYYZZ[:,1].astype(int)]
 
-    # nSparse = len(mXXYYZZ)
-    # for i in range(nSparse): #for loop is slow, but works ok for 100.000 DOF
-    #     mXXYYZZ[i,0] = r[int(mXXYYZZ[i,0])]
-    #     mXXYYZZ[i,1] = r[int(mXXYYZZ[i,1])]
     
 #**function: resort indices of given NGsolve vector in XXXYYYZZZ format to XYZXYZXYZ format
 def ResortIndicesOfNGvector(vXXYYZZ):
@@ -179,7 +221,7 @@ def ResortIndicesExudyn2NGvector(vXYZXYZ):
 #if exportElement=False: returns np.array(nodes) with nodal coordinates
 #if exportElements=True: returns a list [np.array(nodes), elementsDict, surfaceElementsDict] with information on types of elements
 def ReadNodesFromAbaqusInp(fileName, typeName='Part', name='Part-1', exportElements=False):
-    print("\n********************WARNING:\nFUNCTION ReadNodesFromAbaqusInp is deprecated; use FEMinterface!\n********************\n")
+    exu.Print("\n********************WARNING:\nFUNCTION ReadNodesFromAbaqusInp is deprecated; use FEMinterface!\n********************\n")
     fileLines = []
     try: #still close file if crashes
         file=open(fileName,'r') 
@@ -188,7 +230,7 @@ def ReadNodesFromAbaqusInp(fileName, typeName='Part', name='Part-1', exportEleme
         file.close()
         
         
-    print("read ", len(fileLines), "lines")
+    exu.Print("read ", len(fileLines), "lines")
     
     startPart = False
     startReadNodes = False
@@ -204,7 +246,7 @@ def ReadNodesFromAbaqusInp(fileName, typeName='Part', name='Part-1', exportEleme
     errorOccured = False
     lineCnt = 0
     for line in fileLines:
-        #print("line", lineCnt, "=", line)
+        #exu.Print("line", lineCnt, "=", line)
         lineCnt+=1
         if errorOccured:
             break
@@ -213,7 +255,7 @@ def ReadNodesFromAbaqusInp(fileName, typeName='Part', name='Part-1', exportEleme
             if line[0] != '*': #check if nodes section has finished
                 lineData = line.split(',') #split into values
                 if len(lineData) != 4:
-                    print("ERROR: Expected node number and 3 coordinates, line ", lineCnt)
+                    exu.Print("ERROR: Expected node number and 3 coordinates, line ", lineCnt)
                     errorOccured = True
                 else:
                     v = []
@@ -228,7 +270,7 @@ def ReadNodesFromAbaqusInp(fileName, typeName='Part', name='Part-1', exportEleme
             if line[0] != '*': #check if nodes section has finished
                 lineData = line.split(',') #split into values
                 if len(lineData) != 9:
-                    print("ERROR: Expected element number and 8 indices for C3D8R, line=", lineCnt)
+                    exu.Print("ERROR: Expected element number and 8 indices for C3D8R, line=", lineCnt)
                     errorOccured = True
                 else:
                     v = []
@@ -245,7 +287,7 @@ def ReadNodesFromAbaqusInp(fileName, typeName='Part', name='Part-1', exportEleme
                 startReadNodes = True
                 startPart = False
             else:
-                print("ERROR: Expected *Node after *Part, line=", lineCnt)
+                exu.Print("ERROR: Expected *Node after *Part, line=", lineCnt)
                 errorOccured = True
 
         if finishedReadNodes and exportElements and not startReadElements:
@@ -256,22 +298,22 @@ def ReadNodesFromAbaqusInp(fileName, typeName='Part', name='Part-1', exportEleme
             
         if line[0:len(typeName)+1] == '*'+typeName:
             if not startPart:
-                #print("ERROR: only one *Part section allowed, line=", lineCnt)
+                #exu.Print("ERROR: only one *Part section allowed, line=", lineCnt)
                 #errorOccured = True
                 
                 lineInfo = line.split(',')
-                #print(lineInfo)
+                #exu.Print(lineInfo)
                 if len(lineInfo) != 3:
-                    print("ERROR: invalid information for part/instance name, line=", lineCnt)
+                    exu.Print("ERROR: invalid information for part/instance name, line=", lineCnt)
                     errorOccured = True
                 else:
                     nameInfo = lineInfo[1].strip().split('=')
                     if nameInfo[0] != 'name':
-                        print("ERROR: expected 'name=' in line=", lineCnt)
+                        exu.Print("ERROR: expected 'name=' in line=", lineCnt)
                         errorOccured = True
                     else:
                         if nameInfo[1] != name:
-                            print("ERROR: expected name='" + name + "' in line=", lineCnt)
+                            exu.Print("ERROR: expected name='" + name + "' in line=", lineCnt)
                             errorOccured = True
                         else:
                             startPart = True
@@ -309,9 +351,14 @@ def ConvertTetToTrigs(nodeNumbers):
     return trigList
 
 
-
-#**function: convert numpy.array dense matrix to (internal) compressed row format
+warnedConvertDenseToCompressedRowMatrix = False #add warning if this function is used with old format!
+#**function: convert numpy.array dense matrix to OLD FEM internal compressed row sparse format; do not use!
 def ConvertDenseToCompressedRowMatrix(denseMatrix):
+    global warnedConvertDenseToCompressedRowMatrix
+    if not useOldCSRformat and not warnedConvertDenseToCompressedRowMatrix:
+        exu.Print('WARNING: function ConvertDenseToCompressedRowMatrix(...) should not be used any more! use scipy sparse csr matrices in FEM module!')
+        warnedConvertDenseToCompressedRowMatrix = True
+
     sparseMatrix = []
     (nRows,nColumns) = denseMatrix.shape
     for i in range(nRows):
@@ -360,7 +407,7 @@ def ConvertDenseToCompressedRowMatrix(denseMatrix):
 #   LUMPM, ON, , 0
 #   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 def ReadMatrixFromAnsysMMF(fileName, verbose=False):
-    if verbose: print("Start read matrix")
+    if verbose: exu.Print("Start read matrix")
     # read file
     fileLines = []
     file=open(fileName,'r') 
@@ -384,7 +431,7 @@ def ReadMatrixFromAnsysMMF(fileName, verbose=False):
     lineCnt = 0
     for line in fileLines:
         if lineCnt%500000 == 0 and lineCnt !=0: 
-            if verbose: print("parse line",lineCnt," / ", len(fileLines))
+            if verbose: exu.Print("parse line",lineCnt," / ", len(fileLines))
         if lineCnt>=offset:
             rowStr = line.rsplit()
             
@@ -393,8 +440,13 @@ def ReadMatrixFromAnsysMMF(fileName, verbose=False):
             if row[0] != row[1]: #Ansys only stores half of matrix==>add symmetric terms except diagonal terms!
                 dataList+=[[row[1],row[0],row[2]]]
         lineCnt+=1
-                    
+
+    # do not use scipy sparse format for now, as it needs to resort indices first!
+    # from scipy.sparse import csr_matrix
+    # dataList = np.array(dataList)
+    # return csr_matrix((dataList[:,2],(dataList[:,0].astype(int),dataList[:,1].astype(int))))
     return np.array(dataList)
+
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: read sorting vector for ANSYS mass and stiffness matrices and return sorting vector as np.array
@@ -484,7 +536,7 @@ def ReadNodalCoordinatesFromAnsysTxt(fileName, verbose=False):
     
     lineCtr = 0
     for line in fileLines:
-        #if lineCtr%10000 == 0: print("read node",lineCtr)
+        #if lineCtr%10000 == 0: exu.Print("read node",lineCtr)
         # remove '\n' from value at line end
         currentLine = line.rsplit()
             
@@ -554,7 +606,7 @@ def ReadElementsFromAnsysTxt(fileName, verbose=False):
     for i in range(len(fileLines)):
         line = fileLines[i]
         n = int(line.rsplit()[0])
-        #print("element:", n)
+        #exu.Print("element:", n)
         if n == i+1: 
             numberOfElements = n
         else:
@@ -568,8 +620,8 @@ def ReadElementsFromAnsysTxt(fileName, verbose=False):
     
     for lineCtr in range(numberOfElements):
         if lineCtr%10000 == 0 and lineCtr !=0: 
-            if verbose: print("read element",lineCtr," / ", numberOfElements)
-        #if lineCtr%10000 == 0: print("read element",lineCtr)
+            if verbose: exu.Print("read element",lineCtr," / ", numberOfElements)
+        #if lineCtr%10000 == 0: exu.Print("read element",lineCtr)
         line = fileLines[lineCtr]
         
         # split current line at \n
@@ -591,7 +643,7 @@ def ReadElementsFromAnsysTxt(fileName, verbose=False):
     #elementsDict = {'Name':'elements', 'Tet4':[], 'Hex8':elementConnectivityList}
     elementsDict = {'Name':'elements'}
 
-    if verbose: print("create element dictionaries...")
+    if verbose: exu.Print("create element dictionaries...")
     for lineCtr in range(numberOfElements):
         line = fileLines[lineCtr]
         if not(elementTypeList[lineCtr] in elementsDict):
@@ -874,7 +926,7 @@ class ObjectFFRFinterface:
 
     #**classFunction: optional forceUserFunction for ObjectFFRF (per default, this user function is ignored)
     def UFforce(self, exu, mbs, t, q, q_t):
-        print("UFforce: not tested and not integrated in to FFRFinterface!")
+        exu.Print("UFforce: not tested and not integrated in to FFRFinterface!")
 
         force = np.zeros(self.nODE2FFRF)
         Avec = mbs.GetNodeOutput(self.nRigidBody,  exu.OutputVariableType.RotationMatrix)
@@ -920,7 +972,7 @@ class ObjectFFRFinterface:
 
     #**classFunction: optional massMatrixUserFunction for ObjectFFRF (per default, this user function is ignored)
     def UFmassGenericODE2(self, exu, mbs, t, q, q_t):
-        print("UFmassGenericODE2: not tested and not integrated into FFRFinterface!")
+        exu.Print("UFmassGenericODE2: not tested and not integrated into FFRFinterface!")
         Avec = mbs.GetNodeOutput(self.nRigidBody,  exu.OutputVariableType.RotationMatrix)
         A = Avec.reshape((3,3))
         ep = q[self.dim3D:self.nODE2rigid] + eulerParameters0 #add reference values, q are only the change w.r.t. reference values!
@@ -959,7 +1011,6 @@ class ObjectFFRFinterface:
 #  nodeNumberList: list of mesh node numbers (from FEMinterface); if empty [], all nodes are used; otherwise, only given nodes are evaluated
 #**output: return value or list of values according to chosen norm as np.array
 def CMSObjectComputeNorm(mbs, objectNumber, outputVariableType, norm='max', nodeNumberList=[]):
-    import exudyn as exu
     #get generic node number containing current coordinates:
     nGeneric = mbs.GetObjectParameter(objectNumber,'nodeNumbers')[1]
     #problem with rigid body coordinates:
@@ -1167,7 +1218,7 @@ class ObjectFFRFreducedOrderInterface:
             self.stiffnessMatrixReduced = np.load(f)
 
             infoList = list(np.load(f))
-            #print('list=',infoList)
+            #exu.Print('list=',infoList)
             [self.nModes, self.nNodes, self.dim3D, self.nODE2rot, self.nODE2rigid, self.nODE2FFRFreduced] = infoList
 
             self.rigidBodyNodeType = StrNodeType2NodeType(np.load(f, allow_pickle=True))
@@ -1261,8 +1312,8 @@ class ObjectFFRFreducedOrderInterface:
             self.rotationParameters0 = nodeItem.referenceCoordinates[3:]
             self.rotationParameters_t0 = nodeItem.initialVelocities[3:]
 
-        #print("self.rotationParameters0 =",self.rotationParameters0 )
-        #print("self.rotationParameters_t0 =",self.rotationParameters_t0 )
+        #exu.Print("self.rotationParameters0 =",self.rotationParameters0 )
+        #exu.Print("self.rotationParameters_t0 =",self.rotationParameters_t0 )
 
         self.gravity = gravity
         self.loadGravity = None #only defined if LoadMassProportional is added
@@ -1395,8 +1446,8 @@ class ObjectFFRFreducedOrderInterface:
         zetaI = VectorDiadicUnitMatrix3D(qReduced[self.nODE2rigid:])
         #zeta_tI = VectorDiadicUnitMatrix3D(qReduced_t[self.nODE2rigid:]) #not needed
 
-        #print("Mtt=",self.massMatrixFFRFreduced[0:3,0:3])
-        #print("Mff=",self.massMatrixFFRFreduced[self.nODE2rigid:,self.nODE2rigid:])
+        #exu.Print("Mtt=",self.massMatrixFFRFreduced[0:3,0:3])
+        #exu.Print("Mff=",self.massMatrixFFRFreduced[self.nODE2rigid:,self.nODE2rigid:])
         #Mtt and Mff already filled into massMatrixFFRFreduced
         #Mtr:
         Mtr = -A @ (self.totalMass*self.chiUtilde + self.mPhitTPsiTilde @ zetaI) @ G
@@ -1418,10 +1469,10 @@ class ObjectFFRFreducedOrderInterface:
                                                                             zetaI.T @ self.mXRefTildePsiTilde.T + 
                                                                             zetaI.T @ self.mPsiTildePsiTilde @ zetaI)@G
 
-        #print("Mtr=",Mtr)
-        #print("Mtf=",Mtf)
-        #print("Mrf=",Mrf)
-        #print("Mrr=",self.massMatrixFFRFreduced[self.dim3D:self.nODE2rigid, self.dim3D:self.nODE2rigid])
+        #exu.Print("Mtr=",Mtr)
+        #exu.Print("Mtf=",Mtf)
+        #exu.Print("Mrf=",Mrf)
+        #exu.Print("Mrr=",self.massMatrixFFRFreduced[self.dim3D:self.nODE2rigid, self.dim3D:self.nODE2rigid])
 
         return self.massMatrixFFRFreduced
 
@@ -1436,7 +1487,7 @@ class ObjectFFRFreducedOrderInterface:
         #compute rotation parameters including reference values:
         rp = np.array(qReduced[self.dim3D:self.nODE2rigid]) + np.array(self.rotationParameters0) #add reference values, q are only the change w.r.t. reference values!
         # if len(ep) != 4: 
-        #     print("ERROR: equations only implemented for Euler parameters case (terms missing for other formulations)"); exit()
+        #     exu.Print("ERROR: equations only implemented for Euler parameters case (terms missing for other formulations)"); exit()
 
         if self.rigidBodyNodeType == exu.NodeType.RotationEulerParameters:
             G = EulerParameters2GLocal(rp)
@@ -1475,7 +1526,7 @@ class ObjectFFRFreducedOrderInterface:
                                    - self.stiffnessMatrixReduced @ qReducedFF  #stiffness term added to user function, for better distinguishing with internal FFRF
                                    - self.dampingMatrixReduced @ qReduced_tFF) #damping term added to user function, for better distinguishing with internal FFRF
 
-        #print("fQV=", force)
+        #exu.Print("fQV=", force)
         #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         #additional terms for Euler angles:
         if self.rigidBodyNodeType == exu.NodeType.RotationRxyz:
@@ -1516,7 +1567,6 @@ class ObjectFFRFreducedOrderInterface:
                                   massProportionalDamping = 0, stiffnessProportionalDamping = 0,
                                   gravity = [0,0,0],
                                   color=[0.1,0.9,0.1,1.]):
-        import exudyn as exu
         return self.AddObjectFFRFreducedOrderWithUserFunctions(exu=exu, mbs=mbs, 
                                                   positionRef=positionRef, initialVelocity=initialVelocity, rotationMatrixRef=rotationMatrixRef, 
                                                   initialAngularVelocity=initialAngularVelocity,
@@ -1553,8 +1603,8 @@ class FEMinterface:
     # #default values for member variables stored internally in FEMinterface fem and typical structure:
     # fem.nodes = {}                 # {'Position':[[x0,y0,z0],...], 'RigidBodyRxyz':[[x0,y0,z0],...],  },...]                     #dictionary of different node lists
     # fem.elements = []              # [{'Name':'identifier', 'Tet4':[[n0,n1,n2,n3],...], 'Hex8':[[n0,...,n7],...],  },...]        #there may be several element sets
-    # fem.massMatrix = np.zeros((0,0))    # np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
-    # fem.stiffnessMatrix=np.zeros((0,0)) # np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
+    # fem.massMatrix = None    # np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
+    # fem.stiffnessMatrix= None # np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
     # fem.surface = []               # [{'Name':'identifier', 'Trigs':[[n0,n1,n2],...], 'Quads':[[n0,...,n3],...],  },...]           #surface with faces
     # fem.nodeSets = []              # [{'Name':'identifier', 'NodeNumbers':[n_0,...,n_ns], 'NodeWeights':[w_0,...,w_ns]},...]     #for boundary conditions, etc.
     # fem.elementSets = []           # [{'Name':'identifier', 'ElementNumbers':[n_0,...,n_ns]},...]                                #for different volumes, etc.
@@ -1564,8 +1614,8 @@ class FEMinterface:
     def __init__(self):
         self.nodes = {}                 # {'Position':[[x0,y0,z0],...], 'RigidBodyRxyz':[[x0,y0,z0],...],  },...]                     #dictionary of different node lists
         self.elements = []              # [{'Name':'identifier', 'Tet4':[[n0,n1,n2,n3],...], 'Hex8':[[n0,...,n7],...],  },...]        #there may be several element sets
-        self.massMatrix = np.zeros((0,0))    # np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
-        self.stiffnessMatrix=np.zeros((0,0)) # np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
+        self.massMatrix = None          # scipy csr_matrix; OLD: np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
+        self.stiffnessMatrix = None     # scipy csr_matrix; OLD: np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
         # self.massMatrixReduced = np.zeros((0,0))    # np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
         # self.stiffnessMatrixReduced=np.zeros((0,0)) # np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
         self.surface = []               # [{'Name':'identifier', 'Trigs':[[n0,n1,n2],...], 'Quads':[[n0,...,n3],...],  },...]           #surface with faces
@@ -1575,7 +1625,6 @@ class FEMinterface:
         self.modeBasis = {}             # {'matrix':[[Psi_00,Psi_01, ..., Psi_0m],...,[Psi_n0,Psi_n1, ..., Psi_nm]],'type':'NormalModes'}
         self.eigenValues = []           # [ev0, ev1, ...]                                                                             #eigenvalues according to eigenvectors in mode basis
         self.postProcessingModes = {}   # {'matrix':<matrix containing stress components (xx,yy,zz,yz,xz,xy) in each column, rows are for every mesh node>,'outputVariableType':exudyn.OutputVariableType.StressLocal}
-        #self.massMatrix = {}           # {'Shape':[rows,columns], 'SparseCSR':[[r0,c0,value0],[r1,c1,value1], ... ],  }             #currently only in SparseCSR format allowed!
 
         #some additional information, needed for checks and easier operation
         self.coordinatesPerNodeType = {'Position':3, 'Position2D':2, 'RigidBodyRxyz':6, 'RigidBodyEP':7} #number of coordinates for a certain node type
@@ -1586,7 +1635,7 @@ class FEMinterface:
     #  fileName: string for path and file name without ending ==> ".npy" will be added
     #  fileVersion: FOR EXPERTS: this allows to store in older format, will be recovered when loading; must be integer; version must by > 0
     #**output: stores file
-    def SaveToFile(self, fileName, fileVersion = 13 ):
+    def SaveToFile(self, fileName, fileVersion = 2 ):
         fileExtension = ''
         if len(fileName) < 4 or fileName[-4:]!='.npy':
             fileExtension = '.npy'
@@ -1603,8 +1652,12 @@ class FEMinterface:
 
             np.save(f, self.nodes, allow_pickle=True) #allow_pickle=True for lists or dictionaries
             np.save(f, self.elements, allow_pickle=True)
-            np.save(f, self.massMatrix)
-            np.save(f, self.stiffnessMatrix)
+            if fileVersion >= 2: #now as list, allows to use None, numpy-array and scipy sparse matrix
+                np.save(f, {'massMatrix':self.massMatrix, 
+                            'stiffnessMatrix':self.stiffnessMatrix}, allow_pickle=True)
+            else:
+                np.save(f, ScipySparseCSRtoCSR(self.massMatrix) )
+                np.save(f, ScipySparseCSRtoCSR(self.stiffnessMatrix) )
             np.save(f, self.surface, allow_pickle=True)
             np.save(f, self.nodeSets, allow_pickle=True)
             np.save(f, self.elementSets, allow_pickle=True)
@@ -1632,16 +1685,21 @@ class FEMinterface:
             with open(fileName+fileExtension, 'rb') as f:
                 if forceVersion==None or forceVersion>0:
                     versionData = np.load(f)
-                    #print('LoadFromFile:file version:', versionData)
-                    if forceVersion != None:
+                    #exu.Print('LoadFromFile:file version:', versionData)
+                    if forceVersion == None:
                         fileVersion = int(versionData[0])
                 else:
-                    fileVersion=forceVersion
+                    fileVersion=forceVersion #should be 0
                     
                 self.nodes = np.load(f, allow_pickle=True).all()   #allow_pickle=True for lists or dictionaries; .all() for dictionaries
                 self.elements = list(np.load(f, allow_pickle=True))#list(...) to convert into list again!
-                self.massMatrix = np.load(f)
-                self.stiffnessMatrix = np.load(f)
+                if fileVersion >= 2:
+                    MK = np.load(f, allow_pickle=True).all()
+                    self.massMatrix = MK['massMatrix']
+                    self.stiffnessMatrix = MK['stiffnessMatrix']
+                else:
+                    self.massMatrix = CSRtoScipySparseCSR( np.load(f) )
+                    self.stiffnessMatrix = CSRtoScipySparseCSR( np.load(f) )
                 self.surface = list(np.load(f, allow_pickle=True))
                 self.nodeSets =  list(np.load(f, allow_pickle=True))
                 self.elementSets = list(np.load(f, allow_pickle=True))
@@ -1652,7 +1710,7 @@ class FEMinterface:
                 #     self.massMatrixReduced = np.load(f)
                 #     self.stiffnessMatrixReduced = np.load(f)
         except Exception as e:
-            print('\n\nFEMinterface.LoadFromFile(...) failed; check filename; if your data file is using old format, try with: LoadFromFile(self, fileName=..., forceVersion=0)\n')
+            exu.Print('\n\nFEMinterface.LoadFromFile(...) failed; check filename; if your data file is using old format, try with: LoadFromFile(self, fileName=..., forceVersion=0)\n')
             raise
         return fileVersion
 
@@ -1678,12 +1736,12 @@ class FEMinterface:
                                   createSurfaceTrigs=True, surfaceTrigsAll=False):
         #def ImportABAQUS(fileName, typeName, name, verbose = False):
         fileLines = []
-        if verbose: print("ImportFromAbaqusInputFile: read file name=", fileName)
+        if verbose: exu.Print("ImportFromAbaqusInputFile: read file name=", fileName)
         file=open(fileName,'r') 
         fileLines = file.readlines()
         file.close()
         
-        if verbose: print("read", len(fileLines), "lines")
+        if verbose: exu.Print("read", len(fileLines), "lines")
     
         lineCnt = 0          #current counter for lines, makes life simpler
         nLines = len(fileLines)
@@ -1697,7 +1755,7 @@ class FEMinterface:
             line = fileLines[lineCnt]
             if line[0:len(strTypeName)] == strTypeName:
                 typeNameFound = True
-                if verbose: print("found ", strTypeName, "in line", lineCnt)
+                if verbose: exu.Print("found ", strTypeName, "in line", lineCnt)
                 
             lineCnt += 1
     
@@ -1726,12 +1784,12 @@ class FEMinterface:
                     for i in range(3):
                         v+=[float(lineData[i+1])] 
                     nodes += [v] #add node data
-                    #if verbose: print("node=",v)
+                    #if verbose: exu.Print("node=",v)
                 lineCnt += 1#do not increase counter if * found
             else:
                 nodeReadFinished = True
 
-        if verbose: print("imported ", len(nodes), "nodes")
+        if verbose: exu.Print("imported ", len(nodes), "nodes")
     
         #+++++++++++++++++++++++++++++++++++++++++++++
         #read *Element keyword
@@ -1749,11 +1807,11 @@ class FEMinterface:
         elementTypeName = ''
         while lineCnt < nLines and not elementSectionFound:
             line = fileLines[lineCnt]
-            #print("now=", line)
+            #exu.Print("now=", line)
             if line[0:len('*Element')] == '*Element':
                 elementSectionFound = True
                 elementTypeName=line.split(',')[1].split('=')[1].strip()
-                if verbose: print("found *Element in line", lineCnt, 'element type=',elementTypeName)
+                if verbose: exu.Print("found *Element in line", lineCnt, 'element type=',elementTypeName)
                 
                 if not (elementTypeName in availableElementTypesNodes):
                     raise ValueError("ImportFromAbaqusInputFile: element type '"+elementTypeName+"' can not yet be imported")
@@ -1774,7 +1832,7 @@ class FEMinterface:
         elementCnt = 0
         while lineCnt < nLines and not elementReadFinished:
             line = fileLines[lineCnt]
-            #print("read element line:",line)
+            #exu.Print("read element line:",line)
         
             if line[0] != '*': #check if element section has finished
                 lineStr = line.strip() #cut spaces at end in order to detect ',' at end
@@ -1784,7 +1842,7 @@ class FEMinterface:
                     if line[0] == '*': 
                         raise ValueError("ImportFromAbaqusInputFile: while reading elements, got invalid format of line "+str(lineCnt+1))
                     lineStr += line
-                    #print("   extended line:",lineStr)
+                    #exu.Print("   extended line:",lineStr)
                     
                 lineData = lineStr.strip().split(',') #split into values
                 
@@ -1800,7 +1858,7 @@ class FEMinterface:
                 elementReadFinished = True
             lineCnt += 1
         
-        if verbose: print("imported ", elementCnt, "elements")
+        if verbose: exu.Print("imported ", elementCnt, "elements")
 
         #FEMinterface:
         self.elements += [elementsDict]
@@ -1813,7 +1871,7 @@ class FEMinterface:
                 self.VolumeToSurfaceElements(verbose) #create surface from imported elements
             else:
                 if verbose:
-                    print('create surface triangles for all elements; may be large number of triangles for visualization ...')
+                    exu.Print('create surface triangles for all elements; may be large number of triangles for visualization ...')
                 trigList = []
                 if 'Hex8' in elementsDict:
                     for element in elementsDict['Hex8']:
@@ -1847,6 +1905,9 @@ class FEMinterface:
         self.massMatrix = np.loadtxt(fileName)
         self.massMatrix[:,0] -= 1 #convert 1-based indices to 0-based indices
         self.massMatrix[:,1] -= 1
+        
+        if not useOldCSRformat:
+            self.massMatrix = CSRtoScipySparseCSR(self.massMatrix)
 
     #**classFunction: read stiffness matrix from compressed row text format (exported from Abaqus)
     def ReadStiffnessMatrixFromAbaqus(self, fileName, type='SparseRowColumnValue'):
@@ -1854,6 +1915,8 @@ class FEMinterface:
         self.stiffnessMatrix[:,0] -= 1 #convert 1-based indices to 0-based indices
         self.stiffnessMatrix[:,1] -= 1
 
+        if not useOldCSRformat:
+            self.stiffnessMatrix = CSRtoScipySparseCSR(self.stiffnessMatrix)
 
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1888,7 +1951,7 @@ class FEMinterface:
         if meshOrder == 2:
             mesh.ngmesh.SecondOrder()
 
-        if verbose: print("NGsolve create mechanics FE space ...")
+        if verbose: exu.Print("NGsolve create mechanics FE space ...")
         if meshOrder == 1:
             fes = ngs.VectorH1(mesh, order=meshOrder) #add interleaved = True to get xyzxyz sorting
         else:
@@ -1925,7 +1988,7 @@ class FEMinterface:
         if verbose: print ("NGsolve convert system matrices to scipy csr_matrix format")
         K = csr_matrix( bfK.mat.CSR(), copy=True )
         M = csr_matrix( bfM.mat.CSR(), copy=True )
-        if verbose: print("K.shape=",K.shape)
+        if verbose: exu.Print("K.shape=",K.shape)
 
         #convert csr_matrix in NGsolve to exudyn sparse CSR np.array:
         M1 = ScipySparseCSRtoCSR(M)
@@ -1943,16 +2006,16 @@ class FEMinterface:
         tetList=[]
         surfaceTriangleList=[] #for drawing
         NE = mesh.ne
-        if verbose: print("number of tets=", NE)
+        if verbose: exu.Print("number of tets=", NE)
 
         if meshOrder == 1:
             NP = len(mesh.vertices)
-            if verbose: print("number of points=", NP)
+            if verbose: exu.Print("number of points=", NP)
             for n in mesh.vertices: 
                 nodeList+=[list(n.point)]
         else:
             NP = len(mesh.ngmesh.Points())
-            if verbose: print("number of points=", NP)
+            if verbose: exu.Print("number of points=", NP)
     
             for n in mesh.ngmesh.Points(): 
                 nodeList+=[list(n)]
@@ -1968,7 +2031,7 @@ class FEMinterface:
                     tetIndices+=[int(i.nr)-1] #convert to 0-base
                 tetList += [tetIndices]
             else:
-                print("ERROR in ImportMeshFromNGsolve: invalid element in ngmesh, elementNr=", cnt, "linear tet elements required!")
+                exu.Print("ERROR in ImportMeshFromNGsolve: invalid element in ngmesh, elementNr=", cnt, "linear tet elements required!")
             cnt+=1
 
         #function to flip surface elements:
@@ -2004,13 +2067,13 @@ class FEMinterface:
 
         self.nodes = {'Position':nodes}
         self.elements = [{'Name':'NGsolve','Tet4':elements}]
-        self.massMatrix = M1 
-        self.stiffnessMatrix = K1 
+        self.massMatrix = CSRtoScipySparseCSR(M1)
+        self.stiffnessMatrix = CSRtoScipySparseCSR(K1)
         self.surface = [{'Name':'meshSurface','Trigs':trigList}]
 
         #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
         if computeEigenmodes:
-            print('**********\nWARNING!**********\nNGsolve eigenmode computation deprecated: USE FEM.ComputeEigenmodesNGsolve(...)')
+            exu.Print('**********\nWARNING!**********\nNGsolve eigenmode computation deprecated: USE FEM.ComputeEigenmodesNGsolve(...)')
             if verbose: print ("NGsolve: compute eigenmodes")
             excludeRigidBodyModes = 0
             if 'excludeRigidBodyModes' in kwargs:
@@ -2189,9 +2252,9 @@ class FEMinterface:
                 hv.data = proj * v
                 mvAll.Append(hv)
         
-        if verbose: print('solve...')
+        if verbose: exu.Print('solve...')
         KiiInv = K.Inverse(~bndDOFsAll,inverse='sparsecholesky')
-        if verbose: print('...ready')
+        if verbose: exu.Print('...ready')
 
         #compute static modes for all rigid body boundaries
         mvAll.data = mvAll - KiiInv @ K * mvAll
@@ -2204,7 +2267,7 @@ class FEMinterface:
         from ngsolve.eigenvalues import PINVIT
 
         if nEigenModes != 0:
-            if verbose: print('compute eigenvectors of inner nodes...')
+            if verbose: exu.Print('compute eigenvectors of inner nodes...')
             maxIt = maxEigensolveIterations
             with ngs.TaskManager():#pajetrace=10**8):
                 #with shift strategy, but not necessary for inner nodes (no rigid-body-modes)
@@ -2216,7 +2279,7 @@ class FEMinterface:
                              num=nEigenModes, maxit=maxIt, \
                              printrates=verbose, GramSchmidt=True)
     
-            if verbose: print('...ready')
+            if verbose: exu.Print('...ready')
     
             for i in range(nEigenModes):
                 modeBasis[:,i+nbRBE2] = ResortIndicesOfNGvector(np.array(res[1][i]))
@@ -2229,7 +2292,7 @@ class FEMinterface:
                          
         if verbose: 
             print ("eigenfrequencies (Hz) =",(0.5/np.pi)*np.sqrt(np.abs(self.eigenValues)))
-            print("HCB NGsolve modes needed %.3f seconds" % (time.time() - start_time))
+            exu.Print("HCB NGsolve modes needed %.3f seconds" % (time.time() - start_time))
 
 
 
@@ -2255,7 +2318,7 @@ class FEMinterface:
         def Strain2Strain(eps, mu, lam):
             return eps
         #++++++++++++++++++++++++++++++++++++
-        #print("t=",outputVariableType)
+        #exu.Print("t=",outputVariableType)
         if str(outputVariableType) == 'OutputVariableType.StressLocal':
             computeStrains = False
             StressFunction = Strain2Stress
@@ -2278,7 +2341,7 @@ class FEMinterface:
         stressModesMatrix = np.zeros((nNodes,6*nModeVectors))
     
         meshOrder = fes.components[0].globalorder
-        if verbose: print('ORDER of fes=',meshOrder)
+        if verbose: exu.Print('ORDER of fes=',meshOrder)
         # meshOrder = 2
         if meshOrder == 1:
             fesStress = ngs.MatrixValued(ngs.H1(fes.mesh, order=meshOrder), symmetric=True)
@@ -2294,7 +2357,7 @@ class FEMinterface:
     
         with ngs.TaskManager():
             for i in range(nModeVectors):
-                if verbose: print('compute stress mode ', i, 'of', nModeVectors)
+                if verbose: exu.Print('compute stress mode ', i, 'of', nModeVectors)
                 v = modeBasis[:,i]
                 gfu.vec.FV()[:] = ResortIndicesExudyn2NGvector(v)
                 #gfStress.Interpolate(StressFunction(ngs.Sym(ngs.Grad(gfu)), mu, lam).Compile())
@@ -2506,9 +2569,9 @@ class FEMinterface:
         totalArea = sum(localSurfaceAreas)
         sumWeights = sum(weights)
         if verboseMode: 
-            print('localSurfaceTrigs:', localSurfaceTrigs)
-            print('total area=', totalArea)
-            print('sum weights=', sumWeights)
+            exu.Print('localSurfaceTrigs:', localSurfaceTrigs)
+            exu.Print('total area=', totalArea)
+            exu.Print('sum weights=', sumWeights)
         
         if sumWeights == 0:
             raise ValueError('GetNodeWeightsFromSurfaces: no according triangle surfaces found!')
@@ -2530,7 +2593,7 @@ class FEMinterface:
     #stores the surface in self.surface
     #only works for one element list and only for element types 'Hex8', 'Hex20', 'Tet4' and 'Tet10'
     def VolumeToSurfaceElements(self, verbose=False):
-        if verbose: print("create surface from volume elements")
+        if verbose: exu.Print("create surface from volume elements")
 #        self.elements = []              # [{'Name':'identifier', 'Tet4':[[n0,n1,n2,n3],...], 'Hex8':[[n0,...,n7],...],  },...]        #there may be several element sets
 #        self.surface = []               # [{'Name':'identifier', 'Trigs':[[n0,n1,n2],...], 'Quads':[[n0,...,n3],...],  },...]           #surface with faces
         nNodes = self.NumberOfNodes()
@@ -2550,8 +2613,8 @@ class FEMinterface:
         nodes2elements = [[]]*nNodes #element to node list
 
         #first store all elements linked to a certain node
-        #print("build nodes to elements...")
-        #print("nodes2elements=",nodes2elements)
+        #exu.Print("build nodes to elements...")
+        #exu.Print("nodes2elements=",nodes2elements)
 
         #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         #preprocess and generate nodes2elements list
@@ -2561,14 +2624,14 @@ class FEMinterface:
                 if elementType in elementDict:   #only implemented for Hex8
                     elementList = elementDict[elementType]
                     for element in elementList:
-                        #print("  element",cnt,"=",element)
+                        #exu.Print("  element",cnt,"=",element)
                         for i in element:
-                            #print("    i=",i)
+                            #exu.Print("    i=",i)
                             #nodes2elements[int(i)].append(int(cnt))
                             alist=list(nodes2elements[i])
                             alist.append(cnt)
                             nodes2elements[i] = alist
-                            #print("nodes2elements[",i,"]=",nodes2elements[i])
+                            #exu.Print("nodes2elements[",i,"]=",nodes2elements[i])
                         cnt+=1
 
         
@@ -2586,14 +2649,14 @@ class FEMinterface:
                     #now run over all elements:
                     for element in elementList:
                         if verbose and elementCnt%10000 == 0 and elementCnt>0:
-                            print("process element ",elementCnt,"/",nElements)
+                            exu.Print("process element ",elementCnt,"/",nElements)
                         for surface in currentIndexList:
                             #test a surface with nodes
                             actSurface = []
                             for i in surface:
                                 actSurface += [element[i]]
                             lenSurface = len(actSurface) #3 or 4 nodes at surface
-                            #print("  actsurface=",actSurface)
+                            #exu.Print("  actsurface=",actSurface)
                             #find all potential candidates, which could be opposite
     
                             testElements = []
@@ -2602,40 +2665,40 @@ class FEMinterface:
                                     if not (elNum in testElements):
                                         testElements += [elNum]
                             
-                            #print("  testElements=",testElements)
+                            #exu.Print("  testElements=",testElements)
                             foundNeighbor = False
                             for el in testElements:
                                 if el != elementCnt: #do not compare with itself!!!
                                     testElement = elementList[el]
-                                    #print("    testElement=",testElement)
+                                    #exu.Print("    testElement=",testElement)
                                     for surface2 in currentIndexList:
                                         cnt2+=1
-                                        #print("      surface2=",surface2)
+                                        #exu.Print("      surface2=",surface2)
                                         #test a surface2 with nodes
                                         testSurface = []
                                         for j in surface2:
                                             testSurface += [testElement[j]]
-                                        #print("      testSurface=",testSurface)
+                                        #exu.Print("      testSurface=",testSurface)
                                         
                                         if len(set(testSurface).intersection(actSurface)) == lenSurface:
-                                            #print("        found!")
+                                            #exu.Print("        found!")
                                             foundNeighbor = True
                                             break;
                             
                             if not foundNeighbor:
-                                #print("      not found!")
+                                #exu.Print("      not found!")
                                 if lenSurface == 4:
                                     surfaceListQuads += [actSurface]
                                 else:
                                     surfaceListTrigs += [actSurface]
                         elementCnt += 1
         
-        if verbose: print("surfaceListQuad length=",len(surfaceListQuads))
+        if verbose: exu.Print("surfaceListQuad length=",len(surfaceListQuads))
         for quad in surfaceListQuads:
             surfaceListTrigs += [[quad[0],quad[1],quad[2]]]
             surfaceListTrigs += [[quad[0],quad[2],quad[3]]]
 
-        #print("surfaceListTrigs",surfaceListTrigs)
+        #exu.Print("surfaceListTrigs",surfaceListTrigs)
         #find if surface exists:
         surfaceExists = False
         for surf in self.surface:
@@ -2688,23 +2751,32 @@ class FEMinterface:
 
     #**classFunction: scale (=multiply) mass matrix with factor
     def ScaleMassMatrix(self, factor):
-        self.massMatrix[:,2] *= factor
+        if useOldCSRformat:
+            self.massMatrix[:,2] *= factor
+        else:
+            CheckForSciPyMatrix(self.massMatrix, 'FEMinterface.ScaleMassMatrix')
+            self.massMatrix *= factor
+
 
     #**classFunction: scale (=multiply) stiffness matrix with factor
     def ScaleStiffnessMatrix(self, factor):
-        self.stiffnessMatrix[:,2] *= factor
+        if useOldCSRformat:
+            self.stiffnessMatrix[:,2] *= factor
+        else:
+            CheckForSciPyMatrix(self.stiffnessMatrix, 'FEMinterface.ScaleStiffnessMatrix')
+            self.stiffnessMatrix *= factor
 
         
     #**classFunction: modify stiffness matrix to add elastic support (joint, etc.) to a node; nodeNumber zero based (as everywhere in the code...)
     #springStiffness must have length according to the node size
     def AddElasticSupportAtNode(self, nodeNumber, springStiffness=[1e8,1e8,1e8]):
         if len(self.nodes) != 1:
-            print("ERROR: AddElasticSupportAtNode: there must be exactly one list of nodes!")
+            exu.Print("ERROR: AddElasticSupportAtNode: there must be exactly one list of nodes!")
         #nodeList = self.nodes(list(self.nodes)[0])
         nodeTypeName = list(self.nodes)[0]
         nodeSize = self.coordinatesPerNodeType[nodeTypeName]
         nCoordinate = nodeNumber * nodeSize
-        #print("AddElasticSupportAtNode, nCoordinate=", nCoordinate)
+        #exu.Print("AddElasticSupportAtNode, nCoordinate=", nCoordinate)
         
         #supports = []
         for i in range(nodeSize):
@@ -2715,7 +2787,7 @@ class FEMinterface:
     #**classFunction: modify mass matrix by adding a mass to a certain node, modifying directly the mass matrix
     def AddNodeMass(self, nodeNumber, addedMass):
         if len(self.nodes) != 1:
-            print("ERROR: AddElasticSupportAtNode: there must be exactly one list of nodes!")
+            exu.Print("ERROR: AddElasticSupportAtNode: there must be exactly one list of nodes!")
 
         #nodeList = self.nodes(list(self.nodes)[0])
         nodeTypeName = list(self.nodes)[0]
@@ -2734,7 +2806,6 @@ class FEMinterface:
     #  mbs: multibody system to which the GenericODE2 is added
     #**output: return list [oGenericODE2, nodeList] containing object number of GenericODE2 as well as the list of mbs node numbers of all NodePoint nodes
     def CreateLinearFEMObjectGenericODE2(self, mbs, color=[0.9,0.4,0.4,1.]):
-        import exudyn as exu
         femNodes = self.GetNodePositionsAsArray()
         
         #add nodes:
@@ -2780,7 +2851,6 @@ class FEMinterface:
                                                    density, youngsModulus, poissonsRatio, 
                                                    meshOrder=1, color=[0.9,0.4,0.4,1.]):
         import ngsolve as ngs
-        import exudyn as exu
         from scipy.sparse import csr_matrix
         
         if meshOrder < 1 or meshOrder > 2:
@@ -2905,7 +2975,7 @@ class FEMinterface:
             #mMax = self.GetMassMatrix(sparse=True)[:,2].sum()/3 #take total mass
             #kMax = self.GetStiffnessMatrix(sparse=True)[:,2].max()   #assume only one node fixed
             #omegaMin = kMax/mMax*0.1 #factor 0.1 in order to make guess not too large
-            #print("min freq=", np.sqrt(omegaMin)/(2*np.pi))
+            #exu.Print("min freq=", np.sqrt(omegaMin)/(2*np.pi))
             #[eigVals, eigVecs] = eigsh(A=K, k=nModes+excludeRigidBodyModes, M=M, which='SM', sigma=omegaMin) #this gives omega^2 ... squared eigen frequencies (rad/s)
 
             #use "LM" (largest magnitude), but shift-inverted mode with sigma=0, to find the zero-eigenvalues:
@@ -2955,22 +3025,22 @@ class FEMinterface:
                 DOFstatic = np.arange(nb) #for final mapping of boundary coordinates
                 DOFeig = np.arange(nb,nb+nEigenModes) #for final mapping of eigenmode coordinates
                 
-                print("n=", n, ", nb=",nb, ", ni=", ni)
-                #print("DOFb=", DOFb)
-                #print("DOFi=", DOFi)
+                exu.Print("n=", n, ", nb=",nb, ", ni=", ni)
+                #exu.Print("DOFb=", DOFb)
+                #exu.Print("DOFi=", DOFi)
                 
                 #create mass and stiffness matrices with new indices:
                 Mii = M[np.ix_(DOFi,DOFi)]
                 Kii = K[np.ix_(DOFi,DOFi)]
                 Kib = K[np.ix_(DOFi,DOFb)]
     
-                print("solve eigenvalues...")
+                exu.Print("solve eigenvalues...")
                 [eigVals, eigVecs] = eigh(Kii,Mii) #this gives omega^2 ... squared eigen frequencies (rad/s)
     
-                print("solve static modes...")
+                exu.Print("solve static modes...")
                 KiiInvKib = -np.linalg.inv(Kii) @ Kib
     
-                print("assemble matrices ...")
+                exu.Print("assemble matrices ...")
                 if False:
                     modeBasis = np.zeros((n, nb+nEigenModes))
                     modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
@@ -2981,8 +3051,8 @@ class FEMinterface:
                     DOFeig = np.arange(nEigenModes) #for final mapping of eigenmode coordinates
                     modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
                 
-                #print(modeBasis.shape)
-                #print(modeBasis.round(2))
+                #exu.Print(modeBasis.shape)
+                #exu.Print(modeBasis.round(2))
                
                 self.modeBasis = {'matrix':modeBasis, 'type':'NormalModes'}
                 self.eigenValues = abs(eigVals)
@@ -3097,7 +3167,7 @@ class FEMinterface:
                 boundaryNodesMidPoints += [p]
     
             if verboseMode:
-                print('calculated boundary midpoints=', boundaryNodesMidPoints)
+                exu.Print('calculated boundary midpoints=', boundaryNodesMidPoints)
     
             #compute boundary and internal DOF numbers:
             DOFb = np.array(DOFb)
@@ -3128,14 +3198,14 @@ class FEMinterface:
         
             #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             if nEigenModes != 0 and computationMode != HCBstaticModeSelection.RBE3:
-                if verboseTimer: print("compute eigenvalues and eigenvectors... "); start_time = time.time()
+                if verboseTimer: exu.Print("compute eigenvalues and eigenvectors... "); start_time = time.time()
                 if useSparseSolver: 
                     #for details on solver settings, see selfComputeEigenmodes(...)
                     [eigVals, eigVecs] = eigsh(A=Kii, k=nEigenModes, M=Mii, 
                                                which='LM', sigma=0, mode='normal') #try modes 'normal','buckling' and 'cayley'
                 else:
                     [eigVals, eigVecs] = eigh(Kii,Mii) #this gives omega^2 ... squared eigen frequencies (rad/s)
-                if verboseTimer: print("   ... needed %.3f seconds" % (time.time() - start_time))
+                if verboseTimer: exu.Print("   ... needed %.3f seconds" % (time.time() - start_time))
     
             #for testing and for case where only one boundary exists, which is eliminated afterwards ...
             if computationMode == HCBstaticModeSelection.allBoundaryNodes: #quite inefficient, because it 
@@ -3146,13 +3216,13 @@ class FEMinterface:
                     modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
                 
                 modeBasis[np.ix_(DOFb,DOFstatic)] = np.eye(nb)
-                if verboseTimer: print("factorize Kii... "); start_time = time.time()
+                if verboseTimer: exu.Print("factorize Kii... "); start_time = time.time()
                 if useSparseSolver: 
                     invKii = factorized(Kii.tocsc()) #factorized expects csc format, otherwise warning
                     KiiInvKib = invKii(-Kib.toarray())
                 else:
                     KiiInvKib = -np.linalg.inv(Kii) @ Kib
-                if verboseTimer: print("   ... needed %.3f seconds" % (time.time() - start_time))
+                if verboseTimer: exu.Print("   ... needed %.3f seconds" % (time.time() - start_time))
                 modeBasis[np.ix_(DOFi,DOFstatic)] = KiiInvKib
     
             #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -3205,13 +3275,13 @@ class FEMinterface:
     
                 DOFstatic = np.arange(nbRBE) #for final mapping of boundary coordinates; 
                 modeBasis[np.ix_(DOFb,DOFstatic)] = Tall
-                if verboseTimer: print("factorize Kii... "); start_time = time.time()
+                if verboseTimer: exu.Print("factorize Kii... "); start_time = time.time()
                 if useSparseSolver: 
                     invKii = factorized(Kii.tocsc()) #factorized expects csc format, otherwise warning
                     KiiInvKibTall = invKii(-(Kib @ Tall)) #(Kib @ Tall) gives already dense matrix; may be huge ...!
                 else:
                     KiiInvKibTall = -np.linalg.inv(Kii) @ (Kib @ Tall)
-                if verboseTimer: print("   ... needed %.3f seconds" % (time.time() - start_time))
+                if verboseTimer: exu.Print("   ... needed %.3f seconds" % (time.time() - start_time))
     
                 modeBasis[np.ix_(DOFi,DOFstatic)] = KiiInvKibTall #KiiInvKib @ Tall
     
@@ -3239,8 +3309,8 @@ class FEMinterface:
                     bNodesCnt += len(boundaryNodes)
                     bNodesCntList += [bNodesCnt]
     
-                # print('boundaryNodesList =',boundaryNodesList )
-                # print('bNodesCntList =',bNodesCntList )
+                # exu.Print('boundaryNodesList =',boundaryNodesList )
+                # exu.Print('bNodesCntList =',bNodesCntList )
     
                 Cmat = np.zeros((nNodeLists*rbSize, n)) #Constraint matrix
                 unitForces = []
@@ -3248,7 +3318,7 @@ class FEMinterface:
                 ClocalList = []
                 
                 for k, boundaryNodes in enumerate(boundaryNodesList):
-                    # print('********\nboundary ',k,':\n********')
+                    # exu.Print('********\nboundary ',k,':\n********')
                     nPrev = bNodesCntList[k]
                     nn = len(boundaryNodes)
                     p0 = boundaryNodesMidPoints[k]
@@ -3275,8 +3345,8 @@ class FEMinterface:
                         
                         Clocal = WposRotInv @ Clocal
                         unitForces += [WposRotInv @ WposRot]
-                        #print('unit Forces=', unitForces)
-                        #print('W=', W)
+                        #exu.Print('unit Forces=', unitForces)
+                        #exu.Print('W=', W)
                         
     
                     else:
@@ -3290,15 +3360,15 @@ class FEMinterface:
     
                     
                 #==> now Cmat contains the constraint jacobian                
-                # print('Knew=',Knew.shape)
-                # print('Cmat=',Cmat.shape)
+                # exu.Print('Knew=',Knew.shape)
+                # exu.Print('Cmat=',Cmat.shape)
     
                 #stiffness matrix + constraints:
                 KC = sparse.bmat([[Knew,Cmat.T],[Cmat, None]])
-                #print('KC=',KC.shape)
-                if verboseTimer: print("factorize KC... "); start_time = time.time()
+                #exu.Print('KC=',KC.shape)
+                if verboseTimer: exu.Print("factorize KC... "); start_time = time.time()
                 invKC = factorized(KC.tocsc()) #factorized expects csc format, otherwise warning
-                if verboseTimer: print("   ... needed %.3f seconds" % (time.time() - start_time))
+                if verboseTimer: exu.Print("   ... needed %.3f seconds" % (time.time() - start_time))
                 
                 fUnit = np.zeros((n + nNodeLists*rbSize, rbSize)) #prescribed displacements
                         
@@ -3310,7 +3380,7 @@ class FEMinterface:
                     fUnit[n + k*rbSize:n + (k+1)*rbSize, :] = unitForces[k] #prescribed average unit displacemnets/rotations for boundary
                     modesWithC = invKC(fUnit) 
                     modes = modesWithC [:n,:]
-                    if verboseMode: print('max displacement=', np.amax(modes))
+                    if verboseMode: exu.Print('max displacement=', np.amax(modes))
     
                     maxDisplacement = np.amax(modes)
                     if maxDisplacement == 0: #should not occur
@@ -3320,7 +3390,7 @@ class FEMinterface:
                     
                                 
                 allModes = np.hstack(tuple(modesRBE3[int(excludeRigidBodyMotion):])) 
-                #print('allModes=',allModes.shape)
+                #exu.Print('allModes=',allModes.shape)
                 DOFstatic = np.arange(nbRBE) #for final mapping of boundary coordinates; 
     
                 modeBasis[np.ix_(DOFb,DOFstatic)] = allModes[0:nb,:]
@@ -3334,7 +3404,7 @@ class FEMinterface:
                     if rigidBoundaries:
                         [eigVals, eigVecs] = eigsh(A=Kii, k=nEigenModes, M=Mii, 
                                                    which='LM', sigma=0, mode='normal') #try modes 'normal','buckling' and 'cayley'
-                        # print('eigValues RBE2=', 0.5/pi*np.sqrt(eigVals))
+                        # exu.Print('eigValues RBE2=', 0.5/pi*np.sqrt(eigVals))
             
                         DOFeig = np.arange(nbRBE,nbRBE+nEigenModes) #for final mapping of eigenmode coordinates
                         modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
@@ -3350,20 +3420,20 @@ class FEMinterface:
                             VlocalList += [V[rbSize:,:]]
                         
                             if np.amin(s) / np.amax(s) < 1e-8:
-                                print('************\nWARNING: ComputeHurtyCraigBamptonModes: expected '+str(rowsC) +
+                                exu.Print('************\nWARNING: ComputeHurtyCraigBamptonModes: expected '+str(rowsC) +
                                       ' singular values, but some values are smaller than a threshold of 1e-8; check boundary nodes and mesh and \n************')
-                                #print('singular values=',s)
+                                #exu.Print('singular values=',s)
                         
                         V1 = block_diag(*VlocalList)
                                
-                        # print('rowsC=',rowsC)
-                        # print('nb=',nb)
-                        # print('nbReduced=',nbReduced)
-                        # print('Kbb=',Kbb.shape)
-                        # print('Kbi=',Kbi.shape)
-                        # print('V=',V.shape)
-                        # print('U=',U.shape)
-                        # print('V1=',V1.shape)
+                        # exu.Print('rowsC=',rowsC)
+                        # exu.Print('nb=',nb)
+                        # exu.Print('nbReduced=',nbReduced)
+                        # exu.Print('Kbb=',Kbb.shape)
+                        # exu.Print('Kbi=',Kbi.shape)
+                        # exu.Print('V=',V.shape)
+                        # exu.Print('U=',U.shape)
+                        # exu.Print('V1=',V1.shape)
                         
                         #compute reduced size matrices (just 6 columns/rows less per boundary/interface)
                         KbbV = V1 @ Kbb @ V1.T
@@ -3376,15 +3446,15 @@ class FEMinterface:
                         
                         Knew = sparse.bmat([[KbbV,KbiV],[KibV, Kii]])
                         Mnew = sparse.bmat([[MbbV,MbiV],[MibV, Mii]])
-                        # print('Knew=',Knew.shape)
-                        # print('Mnew=',Mnew.shape)
+                        # exu.Print('Knew=',Knew.shape)
+                        # exu.Print('Mnew=',Mnew.shape)
                         
                         [eigVals, eigVecs] = eigsh(A=Knew, k=nEigenModes, M=Mnew, 
                                                    which='LM', sigma=0, mode='normal') #try modes 'normal','buckling' and 'cayley'
-                        # print('eigValues RBE3=', 0.5/pi*np.sqrt(eigVals))
+                        # exu.Print('eigValues RBE3=', 0.5/pi*np.sqrt(eigVals))
                         eigVecsB = eigVecs[0:nbReduced,:] 
                         eigVecsI = eigVecs[nbReduced:,:] 
-                        # print('eigVecsB=',eigVecsB.shape)
+                        # exu.Print('eigVecsB=',eigVecsB.shape)
                         eigVecsB = V1.T @ eigVecsB #project into original unconstrained space ...
                         eigVecs = np.vstack((eigVecsB, eigVecsI))
             
@@ -3402,7 +3472,7 @@ class FEMinterface:
                 modeBasis[np.ix_(DOFi,DOFeig)] = eigVecs[:,:nEigenModes]
             
             if modeBasis.shape[1] == 0:
-                print('************\nWARNING: ComputeHurtyCraigBamptonModes computed 0 modes, check boundaryNodesList and settings\n************')
+                exu.Print('************\nWARNING: ComputeHurtyCraigBamptonModes computed 0 modes, check boundaryNodesList and settings\n************')
            
             self.modeBasis = {'matrix':modeBasis, 'type':'HCBmodes'}
             if nEigenModes != 0:
@@ -3464,7 +3534,7 @@ class FEMinterface:
             if elPerNode == 0:
                 if not nodeWarned:
                     nodeWarned = True
-                    print('********\nWARNING:\n********\n Compute stress/strain modes: averaging of stress/strain at nodes failed, because node not connected to elements; this function only works for linear elements!')
+                    exu.Print('********\nWARNING:\n********\n Compute stress/strain modes: averaging of stress/strain at nodes failed, because node not connected to elements; this function only works for linear elements!')
                 elPerNode = 1 #does not matter because no element attached, no stress computed
             stressModesMatrix[ind,:] *= 1/elPerNode
 
@@ -3482,7 +3552,6 @@ class FEMinterface:
     def ComputePostProcessingModes(self, material=0, 
                                    outputVariableType='OutputVariableType.StressLocal',
                                    numberOfThreads=1):
-        #import exudyn as exu #needed for outputVariableType
 
         if str(outputVariableType) == 'OutputVariableType.StressLocal':
             computeStrains = False
@@ -3513,7 +3582,7 @@ class FEMinterface:
         showProgress = False
         if nModes*nNodes > 10000:
             showProgress = True
-            #print("")
+            #exu.Print("")
 
         #create vectorized input data for ComputePostprocessingMode
         vectorInput = [[]]*nModes
@@ -3543,7 +3612,7 @@ class FEMinterface:
                         except:
                             pass
                         useTQDM = True
-                        print("useTQDM")
+                        exu.Print("useTQDM")
                     except:
                         pass
                 
@@ -3551,7 +3620,7 @@ class FEMinterface:
                     with Pool(processes=numberOfThreads) as p:
                         values = list(tqdm.tqdm(p.imap(self.InternalComputePostprocessingMode, vectorInput), 
                                                 total=nModes))
-                    print("", flush=True) #newline after tqdm progress bar output....
+                    exu.Print("", flush=True) #newline after tqdm progress bar output....
                 else:
                     # simpler approach without tqdm:
                     with Pool(processes=numberOfThreads) as p:
@@ -3568,10 +3637,10 @@ class FEMinterface:
                 stressModes[:,6*iMode:6*iMode+6] = stressModeMatrix
                 
                 if showProgress:
-                    print("\rComputePostProcessingModes: " + str(iMode/nModes*100) + str("%"),end='', flush=True)
+                    exu.Print("\rComputePostProcessingModes: " + str(iMode/nModes*100) + str("%"),end='', flush=True)
 
             if showProgress:
-                print("") #line break finally
+                exu.Print("") #line break finally
 
         #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -3610,7 +3679,7 @@ class FEMinterface:
 #        G=np.dot(xBlock,M)
         
         if self.NumberOfCoordinates() > 1000 and useSparseSolver == False:
-            print('WARNING: ComputeCampbellDiagram(...): system has more than 1000 coordinates, set useSparseSolver=True')
+            exu.Print('WARNING: ComputeCampbellDiagram(...): system has more than 1000 coordinates, set useSparseSolver=True')
             if self.NumberOfCoordinates() > 5000:
                 raise ValueError('ComputeCampbellDiagram(...): system has more than 5000 coordinates, MUST set useSparseSolver=True')
 
@@ -3637,7 +3706,7 @@ class FEMinterface:
                 
                 omega = val * terminalFrequency * 2*np.pi / frequencySteps
                 if verbose:
-                    print("compute Campbell for frequency =", round(omega/(2*np.pi),3), " / ", terminalFrequency, '(Hz)')
+                    exu.Print("compute Campbell for frequency =", round(omega/(2*np.pi),3), " / ", terminalFrequency, '(Hz)')
 
                 if True:
                     A = np.block([[factorGyro*omega * G, M                    ],
@@ -3653,7 +3722,7 @@ class FEMinterface:
                                      [              -Minv@K, -Minv@(factorGyro*omega * G)]])
                     
                 
-                #print("Amod =", Amod)
+                #exu.Print("Amod =", Amod)
                 [eigVals, eigVecs] = eig(Amod) #this gives omega^2 ... squared eigen frequencies (rad/s)
             
                 ev = np.sort(eigVals)
@@ -3666,7 +3735,7 @@ class FEMinterface:
     
                 listEigAbs = np.sort(listEigAbs)
                 if verbose == 2:
-                    print('  frequencies =',listEigAbs[0:nEigenfrequencies+1])
+                    exu.Print('  frequencies =',listEigAbs[0:nEigenfrequencies+1])
             
                 campbellFrequencies += [list(listEigAbs[0:nEigenfrequencies+1])] #+1 for rigid body mode 0
                 listFrequencies += [omega/(2*np.pi)]
@@ -3714,8 +3783,8 @@ class FEMinterface:
                 
                 omega = val * terminalFrequency * 2*np.pi / frequencySteps
                 if verbose:
-                    print("compute Campbell for frequency =", round(omega/(2*np.pi),3), " / ", terminalFrequency, '(Hz)')
-                # print('nEig:',nEigenfrequencies)
+                    exu.Print("compute Campbell for frequency =", round(omega/(2*np.pi),3), " / ", terminalFrequency, '(Hz)')
+                # exu.Print('nEig:',nEigenfrequencies)
                 # A = sparse.bmat([[None , sparse.eye(nODE)        ],
                 #                  [MinvK, (factorGyro*omega)*MinvG]]) #in fact negative sign included in MinvK and MinvG!!!
                 
@@ -3736,7 +3805,7 @@ class FEMinterface:
     
                 listEigAbs = np.sort(listEigAbs)
                 if verbose == 2:
-                    print('  frequencies =',listEigAbs[0:nEigenfrequencies+1])
+                    exu.Print('  frequencies =',listEigAbs[0:nEigenfrequencies+1])
             
                 minNumberOfEigenvalues = min(minNumberOfEigenvalues, len(listEigAbs))
                 campbellFrequencies += [list(listEigAbs[0:nEigenfrequencies+1])] #+1 for rigid body mode 0
@@ -3748,7 +3817,7 @@ class FEMinterface:
             for freq in campbellFrequencies:
                 cfClean += [freq[0:minNumberOfEigenvalues]]
             campbellFrequencies = cfClean
-            # print('minNumberOfEigenvalues=',minNumberOfEigenvalues)
+            # exu.Print('minNumberOfEigenvalues=',minNumberOfEigenvalues)
             #adjust in case that less results are available
             nEigenfrequencies = min(nEigenfrequencies,minNumberOfEigenvalues-1)
 
@@ -3762,7 +3831,7 @@ class FEMinterface:
             nPlotFrequencies = nEigenfrequencies
             if nEigenfrequencies > 27:
                 nPlotFrequencies = 27
-                print("only 27 eigenfrequencies can be plotted!")
+                exu.Print("only 27 eigenfrequencies can be plotted!")
             
             for i in range(nPlotFrequencies): #do not plot rigid body mode 0
                 plt.plot(listFrequencies, campbellFrequencies[:,i+1], PlotLineCode(i+1), label='freq '+str(i))
@@ -3785,20 +3854,17 @@ class FEMinterface:
     def CheckConsistency(self):
         nNodes = self.NumberOfNodes()
         #nNodes = len(self.nodes['Position']) #old
+        (rows,columns) = CSRtoRowsAndColumns(self.massMatrix)
+        if rows != nNodes*3:
+            exu.Print("ERROR: CheckConsistency: massMatrix rows different from nodes coordinates dimension")
+        if columns != nNodes*3:
+            exu.Print("ERROR: CheckConsistency: massMatrix columns different from nodes coordinates dimension")
 
-        if self.massMatrix.shape != (0,0):
-            (rows,columns) = CSRtoRowsAndColumns(self.massMatrix)
-            if rows != nNodes*3:
-                print("ERROR: CheckConsistency: massMatrix rows different from nodes coordinates dimension")
-            if columns != nNodes*3:
-                print("ERROR: CheckConsistency: massMatrix columns different from nodes coordinates dimension")
-
-        if self.stiffnessMatrix.shape != (0,0):
-            (rows,columns) = CSRtoRowsAndColumns(self.stiffnessMatrix)
-            if rows != nNodes*3:
-                print("ERROR: CheckConsistency: stiffnessMatrix rows different from nodes coordinates dimension")
-            if columns != nNodes*3:
-                print("ERROR: CheckConsistency: stiffnessMatrix columns different from nodes coordinates dimension")
+        (rows,columns) = CSRtoRowsAndColumns(self.stiffnessMatrix)
+        if rows != nNodes*3:
+            exu.Print("ERROR: CheckConsistency: stiffnessMatrix rows different from nodes coordinates dimension")
+        if columns != nNodes*3:
+            exu.Print("ERROR: CheckConsistency: stiffnessMatrix columns different from nodes coordinates dimension")
                 
 
     
@@ -3818,6 +3884,8 @@ class FEMinterface:
             raise ValueError("ReadMassMatrixFromAnsys: dofMappingVectorFile and matrix size do not fit")
 
         MapSparseMatrixIndices(self.massMatrix, sorting)
+        if not useOldCSRformat:
+            self.massMatrix = CSRtoScipySparseCSR(self.massMatrix)
 
     #**classFunction: read stiffness matrix from CSV format (exported from Ansys)
     def ReadStiffnessMatrixFromAnsys(self, fileName, dofMappingVectorFile, sparse=True, verbose=False):
@@ -3832,6 +3900,8 @@ class FEMinterface:
             raise ValueError("ReadStiffnessMatrixFromAnsys: dofMappingVectorFile and matrix size do not fit")
 
         MapSparseMatrixIndices(self.stiffnessMatrix, sorting)
+        if not useOldCSRformat:
+            self.stiffnessMatrix = CSRtoScipySparseCSR(self.stiffnessMatrix)
                     
     #**classFunction: read nodal coordinates (exported from Ansys as .txt-File)
     def ReadNodalCoordinatesFromAnsys(self, fileName, verbose=False):

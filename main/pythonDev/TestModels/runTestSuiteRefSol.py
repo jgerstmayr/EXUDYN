@@ -59,9 +59,11 @@ def TestExamplesReferenceSolution():
         'kinematicTreeConstraintTest.py':1.8135975384620484 ,
         'kinematicTreeTest.py':-1.309383960216414,
         'laserScannerTest.py':2.695064443768281 ,                   #new 2024-04-29
+        'linearFEMgenericODE2.py': 0.3876719712975609,              #new 2024-10-06 for jacobianUserFunction in GenericODE2
         'LShapeGeomExactBeam2D.py':-0.9181474511543884,             #new 2024-01-28
         'mainSystemExtensionsTests.py': 57.64639446941554,          #updated 2023-11-16; updated 2023-06-09; old: new 2023-05-19
         'manualExplicitIntegrator.py':2.059698629692295,
+        'matrixContainerTest.py':56.5,                              #new 2024-10-09
         'mecanumWheelRollingDiscTest.py':0.2714267238324343,
         'objectFFRFreducedOrderAccelerations.py':0.1000057024588858,#before 2022-07-22 (because often small fails); 0.5000285122944431,#before 2022-02-20 (accuracy of internal sensors is higher): 0.5000285122930983,
         'objectFFRFreducedOrderTest.py':0.0053552332680605694,      #until 2022-03-18 (div result by 5): 0.026776166340247865,
@@ -94,6 +96,8 @@ def TestExamplesReferenceSolution():
         'superElementRigidJointTest.py':0.015217208913989071,       #before 2022-02-20 (accuracy of internal sensors is higher): 0.015217208913983024,
         'symbolicUserFunctionTest.py':0.10039884426884882,          #2023-12-13
         'symbolicModuleTest.py':0.9484129575069745,                 #2023-12-14
+        'taskmanagerTest.py':-0.23406814272950335,                  #2024-10-08
+        'velocityVerletTest.py':4.365184132226787,                  #2024-10-07
         }
 
     if (sys.version_info.major == 3 and sys.version_info.minor == 6): #different solutions without AVX

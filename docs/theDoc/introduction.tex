@@ -72,7 +72,7 @@ Python parts, see \fig{fig_exudyn_CandPython}.
     \item[--] \texttt{exudyn.artificialIntelligence}: interface to stablebaselines, interface to pytorch training (coming soon)
     \item[--] \texttt{exudyn.basicUtilities}: contains basic helper classes, without importing numpy
     \item[--] \texttt{exudyn.beams}: helper functions for creation of beams along straight lines and curves, sliding joints, etc.
-    \item[--] \texttt{exudyn.graphicsDataUtilities}: provides some basic drawing utilities, definition of colors and basic drawing objects (including \acs{STL} import); rotation/translation of graphicsData objects
+    \item[--] \texttt{exudyn.graphics}: provides some basic drawing utilities, definition of colors and basic drawing objects (including \acs{STL} import); rotation/translation of graphicsData objects
     \item[--] \texttt{exudyn.interactive}: helper classes to create interactive models (e.g. for teaching or demos)
     \item[--] \texttt{exudyn.itemInterface}: contains the interface, which transfers Python classes (e.g., of a NodePoint) to dictionaries that can be understood by the C++ module
     \item[--] \texttt{exudyn.FEM}: everything related to finite element import and creation of model order reduction flexible bodies
@@ -85,7 +85,7 @@ Python parts, see \fig{fig_exudyn_CandPython}.
     \item[--] \texttt{exudyn.robotics}: submodule containing several helper modules related to manipulators (\texttt{robotics}, \texttt{robotics.models}), mobile robots (\texttt{robotics.mobile}), trajectory generation (\texttt{robotics.motion}), etc.
     \item[--] \texttt{exudyn.signalProcessing}: filters, FFT, etc.; interfaces to scipy and numpy methods
     \item[--] \texttt{exudyn.solver}: functions imported when loading \texttt{exudyn}, containing main solvers
-    \item[--] \texttt{exudyn.utilities}: constains helper classes in Python and includes \codeName modules \texttt{basicUtilities}, \texttt{rigidBodyUtilities}, \texttt{graphicsDataUtilities}, and \texttt{itemInterface}, which is recommended to be loaded at beginning of your model file
+    \item[--] \texttt{exudyn.utilities}: constains helper classes in Python and includes \codeName main modules \texttt{basicUtilities}, \texttt{rigidBodyUtilities}, \texttt{graphics}, and \texttt{itemInterface}, which is recommended to be loaded at beginning of your model file in order to have most necessary functionality at hand
   \ei
 \ei
 %

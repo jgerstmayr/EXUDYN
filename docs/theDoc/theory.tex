@@ -856,16 +856,16 @@ Finally, a rotation around $\ev_{z3}$ with angle $\varphi_3$ would give similarl
 %add link to linearized elementary rotations, off-diagonal components added
 %add link to Im + skew(phi1, phi2, phi3), resulting from phi = delta t*omega; r2= r1+ delta t*(omega x r1) = (I + tilde phi) r1
 
-In this case we can interpret the small rotations as a constant angular velocity over small time $\Delta t$, $\tvarphi = \Delta t \cdot \tomega$, which results in
+In this case we can interpret the small rotations as a constant angular velocity over small time $\Delta t$, $\boldVarPhi = \Delta t \cdot \tomega$, which results in
 \be
-  \rv_1^\prime= \rv_1 + \Delta t \cdot (\tomega \times \rv_1) = (\Im + \tilde \tvarphi) \rv_1
+  \rv_1^\prime= \rv_1 + \Delta t \cdot (\tomega \times \rv_1) = (\Im + \tilde \boldVarPhi) \rv_1
 \ee
 Leading to the linearized rotation matrix
 \be
-  \Rot_\mathrm{lin} = \Im - \tilde \tvarphi
+  \Rot_\mathrm{lin} = \Im - \tilde \boldVarPhi
 \ee
 
-Alternatively, using linearized rotations $\tvarphi = [\varphi_1,\;\varphi_2,\;\varphi_3]\tp$, with $|\tvarphi| \ll 1$, we can approximate $\sin \varphi_1$ as:
+Alternatively, using linearized rotations $\boldVarPhi = [\varphi_1,\;\varphi_2,\;\varphi_3]\tp$, with $|\boldVarPhi| \ll 1$, we can approximate $\sin \varphi_1$ as:
 \be
   \sin \varphi_1 = \varphi_1 - \frac{\varphi_1^3}{3!} + \frac{\varphi_1^5}{5!} - ... \approx \varphi_1
 \ee

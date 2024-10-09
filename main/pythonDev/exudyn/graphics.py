@@ -1,9 +1,11 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN python utility library
 #
-# Details:  This module newly introduces revised graphics functions, coherent with Exudyn terminology.
-#           It provides basic graphics elements like cuboid, cylinder, sphere, solid of revolution, etc. 
-#           Functions generate dictionaries which contain line, text or triangle primitives for drawing in Exudyn using OpenGL.
+# Details:  This module newly introduces revised graphics functions, coherent with Exudyn terminology;
+#           it provides basic graphics elements like cuboid, cylinder, sphere, solid of revolution, etc.;
+#           offers also some advanced functions for STL import and mesh manipulation; 
+#           for some advanced functions see graphicsDataUtilties;
+#           GraphicsData helper functions generate dictionaries which contain line, text or triangle primitives for drawing in Exudyn using OpenGL.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2024-05-10 (created)
@@ -17,6 +19,8 @@ import exudyn.basicUtilities as ebu
 from exudyn.rigidBodyUtilities import ComputeOrthonormalBasisVectors, HomogeneousTransformation, \
                                       HT2rotationMatrix, HT2translation
 import exudyn.graphicsDataUtilities as gdu
+
+from exudyn.advancedUtilities import IsEmptyList
 
 #constants and fixed structures:
 import numpy as np #LoadSolutionFile
@@ -1421,9 +1425,9 @@ def FromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, density=0., scale=
     p = copy.copy(pOff)
     A = copy.deepcopy(Aoff) #deepcopy for list of lists
     
-    if p != [] or A != []:
-        if p == []: p=[0,0,0]
-        if A == []: A=np.eye(3)
+    if not IsEmptyList(p) or not IsEmptyList(A):
+        if IsEmptyList(p): p=[0,0,0]
+        if IsEmptyList(A): A=np.eye(3)
         HT = HomogeneousTransformation(A, p)
         
         data.transform(HT)

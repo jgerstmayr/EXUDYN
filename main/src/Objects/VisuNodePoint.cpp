@@ -1311,31 +1311,31 @@ void VisualizationObjectKinematicTree::UpdateGraphics(const VisualizationSetting
 		if (visualizationSettings.bodies.kinematicTree.showJointFrames)
 		{
 			Index nn = EXUstd::InvalidIndex;
-			const Index siceChar = 48;
-			char preText[siceChar];
+			const Index sizeChar = 48;
+			char preText[sizeChar];
 			preText[0] = char(0);
 			if (visualizationSettings.bodies.kinematicTree.showFramesNumbers)
 			{
 				nn = itemNumber;
-				if (zeroCOMcase) { snprintf(preText, siceChar, "O%iJ%i,COM%i", nn, i, i); }
-				else { snprintf(preText, siceChar, "O%iJ%i", nn, i); }
+				if (zeroCOMcase) { snprintf(preText, sizeChar, "O%iJ%i,COM%i", nn, i, i); }
+				else { snprintf(preText, sizeChar, "O%iJ%i", nn, i); }
 			}
-			EXUvis::DrawOrthonormalBasis(pos3D, rot3D, frameSize, frameRadius, vSystem->graphicsData, itemID, 1.0f, true, 12, 2.5, -1, preText);
+			EXUvis::DrawOrthonormalBasis(pos3D, rot3D, frameSize, frameRadius, vSystem->graphicsData, itemID, 1.0f, true, 12, 2.5, EXUstd::InvalidIndex, preText);
 		}
 		if (visualizationSettings.bodies.kinematicTree.showCOMframes &&
 			!zeroCOMcase) //in this case, only show joint frame!
 		{
 			Index nn = EXUstd::InvalidIndex;
-			const Index siceChar = 24;
-			char preText[siceChar];
+			const Index sizeChar = 24;
+			char preText[sizeChar];
 			preText[0] = char(0);
 			if (visualizationSettings.bodies.kinematicTree.showFramesNumbers)
 			{
 				nn = itemNumber;
-				snprintf(preText, siceChar, "O%iCOM%i", nn, i);
+				snprintf(preText, sizeChar, "O%iCOM%i", nn, i);
 			}
 
-			EXUvis::DrawOrthonormalBasis(pos3D, rot3D, frameSize, frameRadius, vSystem->graphicsData, itemID, 1.0f, true, 12, 2.5, -1, preText);
+			EXUvis::DrawOrthonormalBasis(pos3D + rot3D * cObject->GetParameters().linkCOMs[i], rot3D, frameSize, frameRadius, vSystem->graphicsData, itemID, 1.0f, true, 12, 2.5, EXUstd::InvalidIndex, preText);
 		}
 
 		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2776,9 +2776,9 @@ void VisualizationObjectContactFrictionCircleCable2D::UpdateGraphics(const Visua
 						Real val = -force * visualizationSettings.contact.contactForcesFactor;
 						if (visualizationSettings.contact.showContactForcesValues && i == nSeg/2+1)
 						{
-							//const Index siceChar = 24;
-							//char temp[siceChar];
-							//snprintf(temp, siceChar, "%0.*g", visualizationSettings.general.rendererPrecision, force);
+							//const Index sizeChar = 24;
+							//char temp[sizeChar];
+							//snprintf(temp, sizeChar, "%0.*g", visualizationSettings.general.rendererPrecision, force);
 							vSystem->graphicsData.AddText(pMid + n * val*1.1, currentColor, 
 								EXUstd::Num2String(force, visualizationSettings.general.rendererPrecision), 0.f, 0.f, 0.f, itemID);
 						}

@@ -339,7 +339,7 @@ void CNodeRigidBodyRotVecLG::CompositionRule(const LinkedDataVector& currentPosi
 	newPosition += incrementalPosition;
 
 	Vector3D referenceOrientation({ parameters.referenceCoordinates[3], parameters.referenceCoordinates[4], parameters.referenceCoordinates[5] });
-	// rotation update (composition operaton for roitation vectors): rotVec0 o incRotVec 
+	// rotation update (composition operation for rotation vectors): rotVec0 o incRotVec 
 	newOrientation = EXUlie::CompositionRotationVector((Vector3D)currentOrientation+referenceOrientation, (Vector3D)incrementalRotation);
 	newOrientation -= referenceOrientation;
 }

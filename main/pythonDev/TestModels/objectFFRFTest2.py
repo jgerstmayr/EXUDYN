@@ -51,7 +51,6 @@ fem.ScaleStiffnessMatrix(1e-2) #for larger deformations, stiffness is reduced to
 nodeNumberUnbalance = 9  #on disc, max y-value
 unbalance = 0.1
 fem.AddNodeMass(nodeNumberUnbalance, unbalance)
-#print(fem.GetMassMatrix()[8*3:11*3,:])
 
 nModes = 8
 fem.ComputeEigenmodes(nModes, excludeRigidBodyModes = 6, useSparseSolver = True)

@@ -9,4 +9,6 @@ Tutorial
    MassSpringDamperTutorial
    RigidBodyAndJointsTutorial
    FlexibleBeamsTutorial
+   SymbolicUserFunctionTutorial
+   FlexibleBodyFFRFTutorial
 

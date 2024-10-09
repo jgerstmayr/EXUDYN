@@ -752,6 +752,9 @@ namespace EXUmath {
 		//! reset matrices and free memory
 		void Reset() { SetNumberOfRowsAndColumns(0, 0); sparseTriplets.SetMaxNumberOfItems(0); };
 
+		//! allocate according data to avoid re-allocation
+		void SetMaxNumberOfItems(Index maxNumberOfItems) { sparseTriplets.SetMaxNumberOfItems(maxNumberOfItems); };
+
 		//! multiply either triplets or matrix entries with factor
 		void MultiplyWithFactor(Real factor)
 		{
