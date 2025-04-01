@@ -113,7 +113,7 @@ Function: CSRtoScipySparseCSR
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `shapeOptimization.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/shapeOptimization.py>`_\  (Ex)
+    \ `shapeOptimization.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/shapeOptimization.py>`_\  (Ex), \ `linearFEMgenericODE2Test.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/linearFEMgenericODE2Test.py>`_\  (TM)
 
 
 
@@ -142,6 +142,10 @@ Function: ScipySparseCSRtoCSR
 
 - | \ *function description*\ :
   | convert scipy.sparse csr matrix to internal compressed CSR
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `linearFEMgenericODE2Test.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/linearFEMgenericODE2Test.py>`_\  (TM)
 
 
 
