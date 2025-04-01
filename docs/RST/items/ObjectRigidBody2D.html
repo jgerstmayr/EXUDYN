@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectRigidBody2D &mdash; Exudyn1.9.0 1.9.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
+  <title>ObjectRigidBody2D &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
@@ -16,8 +16,8 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=c4cb232b"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.0
+            Exudyn1.9.83.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -105,7 +105,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.0</a>
+          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -127,7 +127,7 @@
              
   <section id="objectrigidbody2d">
 <span id="sec-item-objectrigidbody2d"></span><h1>ObjectRigidBody2D<a class="headerlink" href="#objectrigidbody2d" title="Link to this heading"></a></h1>
-<p>A 2D rigid body which is attached to a rigid body 2D node. The body obtains coordinates, position, velocity, etc. from the underlying 2D node</p>
+<p>A 2D rigid body which is attached to a rigid body 2D node. The body obtains coordinates, position, velocity, etc. from the underlying 2D node.</p>
 <p><strong>Additional information for ObjectRigidBody2D</strong>:</p>
 <ul>
 <li><div class="line-block">
@@ -161,7 +161,12 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>physicsInertia</strong> [<span class="math notranslate nohighlight">\(J\)</span>, type = UReal, default = 0.]:</div>
-<div class="line">inertia [SI:kgm<span class="math notranslate nohighlight">\(^2\)</span>] of rigid body w.r.t. center of mass</div>
+<div class="line">inertia [SI:kgm<span class="math notranslate nohighlight">\(^2\)</span>] of rigid body w.r.t. reference point; this is equal to the center of mass, if physicsCenterOfMass = 0</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>physicsCenterOfMass</strong> [<span class="math notranslate nohighlight">\(\LU{b}{{\mathbf{b}}_{COM}}\)</span>, type = Vector2D, size = 2, default = [0.,0.]]:</div>
+<div class="line">local position of <a class="reference internal" href="../Abbreviations.html#com"><span class="std std-ref">COM</span></a> relative to the body’s reference point; if the vector of the <a class="reference internal" href="../Abbreviations.html#com"><span class="std std-ref">COM</span></a> is [0,0], the computation will not consider additional terms for the <a class="reference internal" href="../Abbreviations.html#com"><span class="std std-ref">COM</span></a> and it is faster</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -281,7 +286,7 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="line-block">
-<div class="line"><a class="reference internal" href="../Abbreviations.html#com"><span class="std std-ref">COM</span></a> position</div>
+<div class="line">reference position</div>
 </div>
 </td>
 <td><div class="line-block">
@@ -289,12 +294,12 @@
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">reference point, equal to the position of <a class="reference internal" href="../Abbreviations.html#com"><span class="std std-ref">COM</span></a>; provided by node <span class="math notranslate nohighlight">\(n_0\)</span> in any configuration (except reference)</div>
+<div class="line">reference point, only equal to the position of <a class="reference internal" href="../Abbreviations.html#com"><span class="std std-ref">COM</span></a> if <span class="math notranslate nohighlight">\(\LU{b}{{\mathbf{b}}_{COM}}=\Null\)</span>; provided by node <span class="math notranslate nohighlight">\(n_0\)</span> in any configuration (except reference)</div>
 </div>
 </td>
 </tr>
 <tr class="row-odd"><td><div class="line-block">
-<div class="line"><a class="reference internal" href="../Abbreviations.html#com"><span class="std std-ref">COM</span></a> displacement</div>
+<div class="line">reference point displacement</div>
 </div>
 </td>
 <td><div class="line-block">
@@ -302,12 +307,12 @@
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">displacement of center of mass which is provided by node <span class="math notranslate nohighlight">\(n_0\)</span> in any configuration; NOTE that for configurations other than reference, it is follows that <span class="math notranslate nohighlight">\(\pRefG\cRef - \pRefG\cConfig\)</span></div>
+<div class="line">displacement of reference point which is provided by node <span class="math notranslate nohighlight">\(n_0\)</span> in any configuration; NOTE that for configurations other than reference, it is follows that <span class="math notranslate nohighlight">\(\pRefG\cRef - \pRefG\cConfig\)</span></div>
 </div>
 </td>
 </tr>
 <tr class="row-even"><td><div class="line-block">
-<div class="line"><a class="reference internal" href="../Abbreviations.html#com"><span class="std std-ref">COM</span></a> velocity</div>
+<div class="line">reference point velocity</div>
 </div>
 </td>
 <td><div class="line-block">
@@ -315,7 +320,7 @@
 </div>
 </td>
 <td><div class="line-block">
-<div class="line">velocity of center of mass which is provided by node <span class="math notranslate nohighlight">\(n_0\)</span> in any configuration</div>
+<div class="line">velocity of reference point which is provided by node <span class="math notranslate nohighlight">\(n_0\)</span> in any configuration</div>
 </div>
 </td>
 </tr>
@@ -428,9 +433,15 @@
 </section>
 <section id="equations-of-motion">
 <h2>Equations of motion<a class="headerlink" href="#equations-of-motion" title="Link to this heading"></a></h2>
+<p>The equations of motion in case that <code class="docutils literal notranslate"><span class="pre">physicsCenterOfMass=\Null</span></code> read:</p>
 <div class="math notranslate nohighlight">
 \[\mr{m}{0}{0} {0}{m}{0} {0}{0}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{f_0}{f_1}{\tau_2} = {\mathbf{f}}.\]</div>
-<p>For example, a LoadCoordinate on coordinate 2 of the node would add a torque <span class="math notranslate nohighlight">\(\tau_2\)</span> on the RHS.</p>
+<p>if <code class="docutils literal notranslate"><span class="pre">physicsCenterOfMass</span></code> is nonzero, we resort to (not that <span class="math notranslate nohighlight">\(J\)</span> represents the moment of inertia related to the reference point!):</p>
+<div class="math notranslate nohighlight">
+\[\mr{m}{0}{G_x} {0}{m}{G_y} {G_x}{G_y}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{m \dot \psi_0^2 b_x }{m \dot \psi_0^2 b_y}{0} + \vr{f_0}{f_1}{\tau_2} = {\mathbf{f}}.\]</div>
+<p>where we use the relations caused by the non-zero center of mass</p>
+<div class="math notranslate nohighlight">
+\[\vp{G_x}{G_y} = m \vp{b_y}{-b_x} \quad \mathrm{and} \quad \vp{b_x}{b_y} = \LU{0}{{\mathbf{b}}_{COM}}\]</div>
 <p>Position-based markers can measure position <span class="math notranslate nohighlight">\({\mathbf{p}}\cConfig(\pLocB)\)</span> depending on the local position <span class="math notranslate nohighlight">\(\pLocB\)</span>.
 The <strong>position jacobian</strong> depends on the local position <span class="math notranslate nohighlight">\(\pLocB\)</span> and is defined as,</p>
 <div class="math notranslate nohighlight">
@@ -438,7 +449,8 @@ The <strong>position jacobian</strong> depends on the local position <span class
 <p>which transforms the action of global forces <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{f}}}\)</span> of position-based markers on the coordinates <span class="math notranslate nohighlight">\({\mathbf{c}}\)</span>,</p>
 <div class="math notranslate nohighlight">
 \[{\mathbf{Q}} = \LU{0}{{\mathbf{J}}_{pos}\tp} \LU{0}{{\mathbf{f}}}_a\]</div>
-<p>The <strong>rotation jacobian</strong>, which is computed from angular velocity, reads</p>
+<p>Note that a LoadCoordinate on coordinate 2 of the node would add a torque <span class="math notranslate nohighlight">\(\tau_2\)</span> on the RHS.
+The <strong>rotation jacobian</strong>, which is computed from angular velocity, reads</p>
 <div class="math notranslate nohighlight">
 \[\LU{0}{{\mathbf{J}}_{rot}} = \partial \LU{0}{\tomega}\cCur / \partial \dot {\mathbf{c}}\cCur = \mr{0}{0}{0} {0}{0}{0} {0}{0}{1}\]</div>
 <p>and transforms the action of global torques <span class="math notranslate nohighlight">\(\LU{0}{\ttau}\)</span> of orientation-based markers on the coordinates <span class="math notranslate nohighlight">\({\mathbf{c}}\)</span>,</p>

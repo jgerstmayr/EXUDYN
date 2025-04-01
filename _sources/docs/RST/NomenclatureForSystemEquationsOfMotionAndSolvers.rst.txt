@@ -14,7 +14,7 @@ Using the basic notation for coordinates in Section :ref:`sec-generalnotation`\ 
      - | \ **symbol**\ 
      - | \ **description**\  
    * - | number of \ :ref:`ODE2 <ODE2>`\  coordinates
-     - | \ :math:`n`\ 
+     - | \ :math:`n_q`\ 
      - | \ :ref:`ODE2 <ODE2>`\   
    * - | number of \ :ref:`ODE1 <ODE1>`\  coordinates
      - | \ :math:`n_\FO`\ 

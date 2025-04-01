@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectJointRevoluteZ &mdash; Exudyn1.9.0 1.9.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
+  <title>ObjectJointRevoluteZ &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
@@ -16,8 +16,8 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=c4cb232b"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.0
+            Exudyn1.9.83.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -107,7 +107,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.0</a>
+          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -523,9 +523,9 @@
 and they include the transformations by <span class="math notranslate nohighlight">\(\LU{m0,J0}{\Rot}\)</span> and <span class="math notranslate nohighlight">\(\LU{m1,J1}{\Rot}\)</span>.
 The index 3 constraint equations read</p>
 <div class="math notranslate nohighlight" id="equation-eq-objectjointrevolutez-index3">
-<span class="eqno">(84)<a class="headerlink" href="#equation-eq-objectjointrevolutez-index3" title="Link to this equation"></a></span>\[\begin{split}\LU{0}{{\mathbf{t}}}_{z0}\tp \LU{0}{{\mathbf{t}}}_{x1} &amp;=&amp; 0 \\
+<span class="eqno">(85)<a class="headerlink" href="#equation-eq-objectjointrevolutez-index3" title="Link to this equation"></a></span>\[\begin{split}\LU{0}{{\mathbf{t}}}_{z0}\tp \LU{0}{{\mathbf{t}}}_{x1} &amp;=&amp; 0 \\
 \LU{0}{{\mathbf{t}}}_{z0}\tp \LU{0}{{\mathbf{t}}}_{y1} &amp;=&amp; 0\end{split}\]</div>
-<p>The index 2 constraints follow from the derivative of Eq. <a class="reference internal" href="#equation-eq-objectjointrevolutez-index3">(84)</a> w.r.t.time, and are given in the C++ code.
+<p>The index 2 constraints follow from the derivative of Eq. <a class="reference internal" href="#equation-eq-objectjointrevolutez-index3">(85)</a> w.r.t.time, and are given in the C++ code.
 if <code class="docutils literal notranslate"><span class="pre">activeConnector</span> <span class="pre">=</span> <span class="pre">False</span></code>,</p>
 <div class="math notranslate nohighlight">
 \[{\mathbf{z}} = \Null\]</div>
@@ -555,7 +555,7 @@ if <code class="docutils literal notranslate"><span class="pre">activeConnector<
 </div>
 <p>Relevant Examples and TestModels with weblink:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py">addRevoluteJoint.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py">rigidBodyTutorial3withMarkers.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openVRengine.py">openVRengine.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stlFileImport.py">stlFileImport.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py">CMSexampleCourse.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/plotSensorTest.py">plotSensorTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/revoluteJointPrismaticJointTest.py">revoluteJointPrismaticJointTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/perf3DRigidBodies.py">perf3DRigidBodies.py</a> (TestModels/)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py">addRevoluteJoint.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3withMarkers.py">rigidBodyTutorial3withMarkers.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py">bicycleIftommBenchmark.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py">chatGPTupdate.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate2.py">chatGPTupdate2.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/multiMbsTest.py">multiMbsTest.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pistonEngine.py">pistonEngine.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigidBodyTutorial3.py">rigidBodyTutorial3.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solutionViewerTest.py">solutionViewerTest.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/universalJoint.py">universalJoint.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py">CMSexampleCourse.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/plotSensorTest.py">plotSensorTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/revoluteJointPrismaticJointTest.py">revoluteJointPrismaticJointTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py">bricardMechanism.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createRollingDiscPenaltyTest.py">createRollingDiscPenaltyTest.py</a> (TestModels/)</p>
 </div></blockquote>
 <p><strong>The web version may not be complete. For details, consider also the Exudyn PDF documentation</strong> : <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
 </section>

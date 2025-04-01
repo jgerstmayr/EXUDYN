@@ -57,13 +57,14 @@ The system equations of motion in Exudyn follow the notations of Section :ref:`s
 .. math::
    :label: eq-system-eom
 
-   {\mathbf{M}} \ddot {\mathbf{q}} + \frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}^\mathrm{T}} \tlambda & = &{\mathbf{f}}_\SO({\mathbf{q}}, \dot {\mathbf{q}}, t) \\
+   {\mathbf{M}} \ddot {\mathbf{q}} + \frac{\partial {\mathbf{g}}}{\partial {\mathbf{q}}^\mathrm{T}} \tlambda_q + \frac{\partial {\mathbf{g}}}{\partial \dot {\mathbf{q}}^\mathrm{T}} \tlambda_{\dot q} & = &{\mathbf{f}}_\SO({\mathbf{q}}, \dot {\mathbf{q}}, t) \\
    \dot {\mathbf{y}} + \frac{\partial {\mathbf{g}}}{\partial {\mathbf{y}}^\mathrm{T}} \tlambda & = &{\mathbf{f}}_\FO({\mathbf{y}}, t) \\
-   {\mathbf{g}}({\mathbf{q}}, \dot {\mathbf{q}}, {\mathbf{y}}, \tlambda, t) &=& 0
+   {\mathbf{g}}({\mathbf{q}}, \dot {\mathbf{q}}, {\mathbf{y}}, \tlambda, t) &=& 0 .
 
 
+Here, we introduce different Lagrange multipliers \ :math:`\tlambda_q`\  and \ :math:`\tlambda_{\dot q}`\  which have equal sizes as \ :math:`\tlambda`\ , while those \ :math:`\lambda_i`\  which belong to holonomic constraints, are included in \ :math:`\tlambda_q`\  and \ :math:`\tlambda_i`\  belonging to non-holonomic constraints, are included in \ :math:`\tlambda_{\dot q}`\ , whereas other components in \ :math:`\tlambda_q`\  or \ :math:`\tlambda_{\dot q}`\  are zero.
 
-It is important to note, that for linear mechanical the term \ :math:`{\mathbf{f}}_\SO`\  becomes
+It may help to know that for linear mechanical the term \ :math:`{\mathbf{f}}_\SO`\  becomes
 
 .. math::
 

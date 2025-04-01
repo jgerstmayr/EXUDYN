@@ -72,33 +72,41 @@ You can view and download this file on Github: `leggedRobot.py <https://github.c
    
    z0 = 0*0.1 #initial offset
    #foot, lower leg, femoral
-   [nFoot,bFoot]=AddRigidBody(mainSys = mbs, 
-                        inertia = inertiaFoot, 
-                        nodeType = exu.NodeType.RotationEulerParameters, 
-                        position = [0,0,rFoot+z0],
-                        gravity = g, 
-                        graphicsDataList = [graphicsFoot])
+   dictFoot = mbs.CreateRigidBody(
+                 inertia=inertiaFoot, 
+                 nodeType=exu.NodeType.RotationEulerParameters, 
+                 referencePosition=[0,0,rFoot+z0],
+                 gravity=g, 
+                 graphicsDataList=[graphicsFoot],
+                 returnDict=True)
+   [nFoot, bFoot] = [dictFoot['nodeNumber'], dictFoot['bodyNumber']]
    
-   [nLeg,bLeg]=AddRigidBody(mainSys = mbs, 
-                        inertia = inertiaLeg, 
-                        nodeType = exu.NodeType.RotationEulerParameters, 
-                        position = [0,0,0.5*lLeg+rFoot+z0], 
-                        gravity = g, 
-                        graphicsDataList = [graphicsLeg])
+   dictLeg = mbs.CreateRigidBody(
+                 inertia=inertiaLeg, 
+                 nodeType=exu.NodeType.RotationEulerParameters, 
+                 referencePosition=[0,0,0.5*lLeg+rFoot+z0], 
+                 gravity=g, 
+                 graphicsDataList=[graphicsLeg],
+                 returnDict=True)
+   [nLeg, bLeg] = [dictLeg['nodeNumber'], dictLeg['bodyNumber']]
    
-   [nFemoral,bFemoral]=AddRigidBody(mainSys = mbs, 
-                        inertia = inertiaFemoral, 
-                        nodeType = exu.NodeType.RotationEulerParameters, 
-                        position = [0,0,0.5*lFemoral + lLeg+rFoot+z0], 
-                        gravity = g, 
-                        graphicsDataList = [graphicsFemoral])
+   dictFemoral = mbs.CreateRigidBody(
+                 inertia=inertiaFemoral, 
+                 nodeType=exu.NodeType.RotationEulerParameters, 
+                 referencePosition=[0,0,0.5*lFemoral + lLeg+rFoot+z0], 
+                 gravity=g, 
+                 graphicsDataList=[graphicsFemoral],
+                 returnDict=True)
+   [nFemoral, bFemoral] = [dictFemoral['nodeNumber'], dictFemoral['bodyNumber']]
    
-   [nBody,bBody]=AddRigidBody(mainSys = mbs, 
-                        inertia = inertiaBody, 
-                        nodeType = exu.NodeType.RotationEulerParameters, 
-                        position = [0,0,0.5*dBody + lFemoral + lLeg+rFoot+z0], 
-                        gravity = g, 
-                        graphicsDataList = [graphicsBody])
+   dictBody = mbs.CreateRigidBody(
+                 inertia=inertiaBody, 
+                 nodeType=exu.NodeType.RotationEulerParameters, 
+                 referencePosition=[0,0,0.5*dBody + lFemoral + lLeg+rFoot+z0], 
+                 gravity=g, 
+                 graphicsDataList=[graphicsBody],
+                 returnDict=True)
+   [nBody, bBody] = [dictBody['nodeNumber'], dictBody['bodyNumber']]
    
    
    

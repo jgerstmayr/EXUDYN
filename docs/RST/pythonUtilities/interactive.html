@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: interactive &mdash; Exudyn1.9.0 1.9.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
+  <title>Module: interactive &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
@@ -16,8 +16,8 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=c4cb232b"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.0
+            Exudyn1.9.83.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -78,6 +78,8 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Module: interactive</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#function-animatemodes">Function: AnimateModes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-solutionviewer">Function: SolutionViewer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-convertimages2video">Function: ConvertImages2Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-interactiveimages2video">Function: InteractiveImages2Video</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-interactivedialog-in-module-interactive">CLASS InteractiveDialog (in module interactive)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-init">Class function: __init__</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#class-function-onquit">Class function: OnQuit</a></li>
@@ -94,6 +96,7 @@
 <li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mainSystemExtensions.html">Module: mainSystemExtensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particles.html">Module: particles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
@@ -128,7 +131,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.0</a>
+          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -160,7 +163,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">animate modes of ObjectFFRFreducedOrder, of nodal coordinates (changes periodically one nodal coordinate) or of a list of system modes provided as list of lists; for creating snapshots, press ‘Static’ and ‘Record animation’ and press ‘Run’ to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use ‘One Cycle’. Modes may be inverted by pressing according ‘+’ and ‘-’ buttons next to Amplitude.</div>
+<div class="line">animate modes of ObjectFFRFreducedOrder, of nodal coordinates (changes periodically one nodal coordinate) or of a list of system modes provided as list of lists; for creating snapshots, press ‘Static’ and ‘Record frames’ and press ‘Run’ to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use ‘One Cycle’. Modes may be inverted by pressing according ‘+’ and ‘-’ buttons next to Amplitude.</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -189,13 +192,13 @@
 <li><div class="line-block">
 <div class="line"><em>notes</em>:</div>
 <div class="line">Uses class InteractiveDialog in the background, which can be used to adjust animation creation. If meshes are large, animation artifacts may appear, which are resolved by using a larger update period.</div>
-<div class="line">Press ‘Run’ to start animation; Chose ‘Mode shape’, according component for contour plot; to record one cycle for animation, choose ‘One cycle’, run once to get the according range in the contour plot, press ‘Record animation’ and press ‘Run’, now images can be found in subfolder ‘images’ (for further info on animation creation see Section <a class="reference internal" href="../ExudynBasics.html#sec-overview-basics-animations"><span class="std std-ref">Generating animations</span></a>); now deactivate ‘Record animation’ by pressing ‘Off’ and chose another mode</div>
+<div class="line">Press ‘Run’ to start animation; Chose ‘Mode shape’, according component for contour plot; to record one cycle for animation, choose ‘One cycle’, run once to get the according range in the contour plot, press ‘Record frames’ and press ‘Run’, now images can be found in subfolder ‘images’ (for further info on animation creation see Section <a class="reference internal" href="../ExudynBasics.html#sec-overview-basics-animations"><span class="std std-ref">Generating animations</span></a>); now deactivate ‘Record frames’ by pressing ‘Off’ and chose another mode</div>
 </div>
 </li>
 </ul>
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py">CMSexampleCourse.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py">netgenSTLtest.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py">NGsolveCMStutorial.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py">NGsolveCraigBampton.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py">objectFFRFreducedOrderShowModes.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/runTestExamples.py">runTestExamples.py</a> (TM)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py">CMSexampleCourse.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py">netgenSTLtest.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py">NGsolveCMStutorial.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py">NGsolveCraigBampton.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveModalAnalysis.py">NGsolveModalAnalysis.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py">objectFFRFreducedOrderShowModes.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/runTestExamples.py">runTestExamples.py</a> (TM)</p>
 </div></blockquote>
 </section>
 <hr class="docutils" />
@@ -205,6 +208,57 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>NOTE</strong>: this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolutionViewer(…). For description of the interface, see the MainSystem Python extensions,  <a class="reference internal" href="../cInterface/MainSystem.html#sec-mainsystemextensions-solutionviewer"><span class="std std-ref">Function: SolutionViewer</span></a></div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-convertimages2video">
+<span id="sec-interactive-convertimages2video"></span><h2>Function: ConvertImages2Video<a class="headerlink" href="#function-convertimages2video" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L951">ConvertImages2Video</a>(<code class="docutils literal notranslate"><span class="pre">workingDir</span> <span class="pre">=</span> <span class="pre">'images'</span></code>, <code class="docutils literal notranslate"><span class="pre">inputPattern</span> <span class="pre">=</span> <span class="pre">'frame%05d.png'</span></code>, <code class="docutils literal notranslate"><span class="pre">outputFile</span> <span class="pre">=</span> <span class="pre">'animation.mp4'</span></code>, <code class="docutils literal notranslate"><span class="pre">inputFrameRate</span> <span class="pre">=</span> <span class="pre">25</span></code>, <code class="docutils literal notranslate"><span class="pre">outputFrameRate</span> <span class="pre">=</span> <span class="pre">25</span></code>, <code class="docutils literal notranslate"><span class="pre">compressionCRF</span> <span class="pre">=</span> <span class="pre">28</span></code>, <code class="docutils literal notranslate"><span class="pre">startNumber</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">totalFrames</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">function to call ffmpeg in the background and convert images to video; requires ffmpeg-python to be installed</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">workingDir</span></code>: directory where images are stored and where animation is written to</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">inputPattern</span></code>: pattern of images; ‘frame’ is the name used in visualizationSettings.exportImages.saveImageFileName; if saveImageFormat=PNG, then the ending is .png</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">outputFile</span></code>: filename and ending (.mp4 recommended) for generated video</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">inputFrameRate</span></code>: framerate for images relative to outputFrameRate: if inputFrameRate=50 and outputFrameRate=25, then only every second frame is used</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">outputFrameRate</span></code>: framerate for resulting video</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">compressionCRF</span></code>: compression rate of ffmpeg, where 0=uncompressed, 25 is medium compression, &gt;30 is very low quality</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">startNumber</span></code>: start index of first frame chosen for animation</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">totalFrames</span></code>: total number of frames (keep field empty to select all frames after startNumber)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">None; writes animation when finished</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#after successful simulation, call:</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span> <span class="c1">#click &quot;Stop&quot;, &quot;One Cycle&quot; and &quot;Record frames&quot; =&gt; close window</span>
+<span class="c1">#if images are in folder &#39;images&#39;, then call this to create animation:</span>
+<span class="nf">ConvertImages2Video</span><span class="p">(</span><span class="n">workingDir</span><span class="o">=</span><span class="s1">&#39;images&#39;</span><span class="p">,</span> <span class="n">outputFile</span><span class="o">=</span><span class="s1">&#39;test.mp4&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+</section>
+<section id="function-interactiveimages2video">
+<span id="sec-interactive-interactiveimages2video"></span><h2>Function: InteractiveImages2Video<a class="headerlink" href="#function-interactiveimages2video" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py#L987">InteractiveImages2Video</a>(<code class="docutils literal notranslate"><span class="pre">closeAfterCreation</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">fontSize</span> <span class="pre">=</span> <span class="pre">11</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">interactive dialog to convert generated images to videos using ffmpeg library; see also ConvertImages2Video() for meaning of values; requires ffmpeg-python to be installed</div>
 </div>
 </li>
 </ul>

@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GeneralContact &mdash; Exudyn1.9.0 1.9.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
+  <title>GeneralContact &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
@@ -16,8 +16,8 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=c4cb232b"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.0
+            Exudyn1.9.83.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -97,7 +97,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.0</a>
+          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -181,11 +181,6 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>frictionVelocityPenalty</strong>:</div>
-<div class="line">(default=1e3) regularization factor for friction [N/(m<span class="math notranslate nohighlight">\(^2 \cdot\)</span>m/s) ];<span class="math notranslate nohighlight">\(k_{\mu,reg}\)</span>, multiplied with tangential velocity to compute friciton force as long as it is smaller than <span class="math notranslate nohighlight">\(\mu\)</span> times contact force; large values cause oscillations in friction force</div>
-</div>
-</li>
-<li><div class="line-block">
 <div class="line"><strong>excludeOverlappingTrigSphereContacts</strong>:</div>
 <div class="line">(default=True) for consistent, closed meshes, we can exclude overlapping contact triangles (which would cause holes if mesh is overlapping and not consistent!!!)</div>
 </div>
@@ -193,6 +188,11 @@
 <li><div class="line-block">
 <div class="line"><strong>excludeDuplicatedTrigSphereContactPoints</strong>:</div>
 <div class="line">(default=False) run additional checks for double contacts at edges or vertices, being more accurate but can cause additional costs if many contacts</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>computeExactStaticTriangleBins</strong>:</div>
+<div class="line">if True, search tree bins are computed exactly for static triangles while if False, it uses the overall (=very inaccurate) AABB of each triangle in the search tree</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -260,8 +260,8 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>AddTrianglesRigidBodyBased</strong>(<em>rigidBodyMarkerIndex</em>, <em>contactStiffness</em>, <em>contactDamping</em>, <em>frictionMaterialIndex</em>, <em>pointList</em>, <em>triangleList</em>):</div>
-<div class="line">add contact object using a rigidBodyMarker (of a body), contact/friction parameters, a list of points (as 3D numpy arrays or lists; coordinates relative to rigidBodyMarker) and a list of triangles (3 indices as numpy array or list) according to a mesh attached to the rigidBodyMarker; returns starting local index of trigsRigidBodyBased at which the triangles are stored; mesh can be produced with GraphicsData2TrigsAndPoints(…); contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle; frictionMaterialIndex refers to frictionPairings in GeneralContact; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate); the triangle normal must point outwards, with the normal of a triangle given with local points (p0,p1,p2) defined as n=(p1-p0) x (p2-p0), see function ComputeTriangleNormal(…)</div>
+<div class="line"><strong>AddTrianglesRigidBodyBased</strong>(<em>rigidBodyMarkerIndex</em>, <em>contactStiffness</em>, <em>contactDamping</em>, <em>frictionMaterialIndex</em>, <em>pointList</em>, <em>triangleList</em>, <em>staticTriangles</em> = False):</div>
+<div class="line">add contact object using a rigidBodyMarker (of a body), contact/friction parameters, a list of points (as 3D numpy arrays or lists; coordinates relative to rigidBodyMarker) and a list of triangles (3 indices as numpy array or list) according to a mesh attached to the rigidBodyMarker; the flag staticTriangles=True can be used to inform the contact solver that these triangles are static (fixed in space); note that static triangles have to be added before dynamic triangles; function returns starting local index of trigsRigidBodyBased at which the triangles are stored; mesh can be produced with GraphicsData2TrigsAndPoints(…); contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle; frictionMaterialIndex refers to frictionPairings in GeneralContact; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate); the triangle normal must point outwards, with the normal of a triangle given with local points (p0,p1,p2) defined as n=(p1-p0) x (p2-p0), see function ComputeTriangleNormal(…)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -321,8 +321,8 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>GetSystemODE2RhsContactForces</strong>():</div>
-<div class="line">Get numpy array of system vector, containing contribution of contact forces to system ODE2 Rhs vector; contributions to single objects may be extracted by checking the according LTG-array of according objects (such as rigid bodies); the contact forces vector is computed in each contact iteration;</div>
+<div class="line"><strong>GetSystemODE2RhsContactForces</strong>(<em>copy</em> = False):</div>
+<div class="line">Get numpy array of system vector containing contribution of contact forces to system ODE2 Rhs vector; if copy=False, it will give direct (reference) access to the internal vector (note: modifications to this vector do not influence simulation!), however, which may cause problems if the system size changes or simulation is restarted; if copy=True, the vector is copied (time consuming); contributions to single objects may be extracted by checking the according LTG-array of according objects (such as rigid bodies); the contact forces vector is computed in each contact iteration;</div>
 </div>
 </li>
 <li><div class="line-block">

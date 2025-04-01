@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectANCFCable2D &mdash; Exudyn1.9.0 1.9.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
+  <title>ObjectANCFCable2D &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
@@ -16,8 +16,8 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=c4cb232b"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.0
+            Exudyn1.9.83.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -105,7 +105,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.0</a>
+          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -202,7 +202,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>useReducedOrderIntegration</strong> [type = Index, default = 0]:</div>
-<div class="line">0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments</div>
+<div class="line">0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/True: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments; 2: use mixed Lobatto/Gauss integration with exceptional quality of axial strain, however, spurious (hourglass) modes may occur!</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -981,7 +981,7 @@ Note that itemNumber represents the index of the object in mbs, which can be use
 <span class="n">EI</span> <span class="o">=</span>   <span class="mf">1e5</span>
 
 <span class="c1">#example of bending moment user function</span>
-<span class="k">def</span> <span class="nf">bendingMomentUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">,</span> <span class="n">axialPositionNormalized</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bendingMomentUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">,</span> <span class="n">axialPositionNormalized</span><span class="p">,</span>
            <span class="n">curvature</span><span class="p">,</span> <span class="n">curvature_t</span><span class="p">,</span> <span class="n">curvatureRef</span><span class="p">,</span> <span class="n">physicsBendingStiffness</span><span class="p">,</span>
            <span class="n">physicsBendingDamping</span><span class="p">,</span> <span class="n">axialStrain</span><span class="p">,</span> <span class="n">axialStrain_t</span><span class="p">,</span> <span class="n">axialStrainRef</span><span class="p">):</span>
     <span class="n">fact</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">t</span><span class="p">)</span> <span class="c1">#runs from 0 to 1</span>
@@ -989,7 +989,7 @@ Note that itemNumber represents the index of the object in mbs, which can be use
     <span class="n">kappa</span><span class="o">=</span><span class="p">(</span><span class="n">curvature</span><span class="o">-</span><span class="n">curvatureRef</span><span class="o">*</span><span class="n">fact</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">physicsBendingStiffness</span><span class="o">*</span><span class="p">(</span><span class="n">kappa</span><span class="p">)</span> <span class="o">+</span> <span class="n">physicsBendingDamping</span><span class="o">*</span><span class="n">curvature_t</span>
 
-<span class="k">def</span> <span class="nf">axialForceUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">,</span> <span class="n">axialPositionNormalized</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">axialForceUserFunction</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">,</span> <span class="n">axialPositionNormalized</span><span class="p">,</span>
            <span class="n">axialStrain</span><span class="p">,</span> <span class="n">axialStrain_t</span><span class="p">,</span> <span class="n">axialStrainRef</span><span class="p">,</span> <span class="n">physicsAxialStiffness</span><span class="p">,</span>
            <span class="n">physicsAxialDamping</span><span class="p">,</span> <span class="n">curvature</span><span class="p">,</span> <span class="n">curvature_t</span><span class="p">,</span> <span class="n">curvatureRef</span><span class="p">):</span>
     <span class="n">fact</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">t</span><span class="p">)</span> <span class="c1">#runs from 0 to 1</span>
@@ -1040,7 +1040,7 @@ Note that itemNumber represents the index of the object in mbs, which can be use
 </div>
 <p>Relevant Examples and TestModels with weblink:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/sliderCrank3DwithANCFbeltDrive2.py">sliderCrank3DwithANCFbeltDrive2.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCFpipe.py">ALEANCFpipe.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTest.py">ANCFcantileverTest.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTestDyn.py">ANCFcantileverTestDyn.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py">ANCFcontactCircle.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py">ANCFcontactCircle2.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFmovingRigidbody.py">ANCFmovingRigidbody.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py">ANCFrotatingCable2D.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py">ANCFslidingJoint2D.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2Drigid.py">ANCFslidingJoint2Drigid.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFswitchingSlidingJoint2D.py">ANCFswitchingSlidingJoint2D.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtestHalfcircle.py">ANCFtestHalfcircle.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py">ANCFcontactCircleTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py">ANCFcontactFrictionTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py">computeODE2EigenvaluesTest.py</a> (TestModels/)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ALEANCFpipe.py">ALEANCFpipe.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTest.py">ANCFcantileverTest.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcantileverTestDyn.py">ANCFcantileverTestDyn.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle.py">ANCFcontactCircle.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py">ANCFcontactCircle2.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFmovingRigidbody.py">ANCFmovingRigidbody.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py">ANCFrotatingCable2D.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2D.py">ANCFslidingJoint2D.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint2Drigid.py">ANCFslidingJoint2Drigid.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFswitchingSlidingJoint2D.py">ANCFswitchingSlidingJoint2D.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtestHalfcircle.py">ANCFtestHalfcircle.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFtests2.py">ANCFtests2.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactCircleTest.py">ANCFcontactCircleTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFcontactFrictionTest.py">ANCFcontactFrictionTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py">computeODE2EigenvaluesTest.py</a> (TestModels/)</p>
 </div></blockquote>
 <p><strong>The web version may not be complete. For details, consider also the Exudyn PDF documentation</strong> : <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
 </section>

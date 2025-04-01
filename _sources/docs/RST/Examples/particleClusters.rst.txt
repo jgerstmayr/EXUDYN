@@ -159,15 +159,16 @@ You can view and download this file on Github: `particleClusters.py <https://git
                        for iz in range(2):
                            gList += [graphics.Sphere(point=[ cubeX*(ix-0.5), cubeY*(iy-0.5), cubeZ*(iz-0.5) ], radius=radius, color= color4node, nTiles=8)]
    
-       [nMass, oMass] = AddRigidBody(mainSys=mbs, inertia=RBinertia, 
-                             #nodeType=exu.NodeType.RotationRxyz,
-                             nodeType=exu.NodeType.RotationRotationVector,
-                             position=pRef, velocity=v0,
-                             rotationMatrix=rot0,
-                             #angularVelocity=omega0, 
-                             #gravity=[0.,-9.81,0.],
-                             graphicsDataList=gList,
-                             )
+       dictMass = mbs.CreateRigidBody(
+                     inertia=RBinertia, 
+                     nodeType=exu.NodeType.RotationRotationVector,
+                     referencePosition=pRef, 
+                     initialVelocity=v0,
+                     referenceRotationMatrix=rot0,
+                     graphicsDataList=gList,
+                     returnDict=True)
+       [nMass, oMass] = [dictMass['nodeNumber'], dictMass['bodyNumber']]
+       
        mbs.SetNodeParameter(nMass, 'VdrawSize', radius*2)
        mbs.SetNodeParameter(nMass, 'Vcolor', color4node)
    

@@ -67,8 +67,10 @@ The OutputVariableType does not provide information about the size of the output
   | measure angular acceleration of node or object
 * | **AngularAccelerationLocal**:
   | measure angular acceleration of node or object in local coordinates
+* | **CoordinatesTotal**:
+  | measure the total coordinates (including reference configuration) of a node or object; otherwise the same as Coordinates
 * | **Coordinates**:
-  | measure the coordinates of a node or object; coordinates usually just contain displacements, but not the position values
+  | measure the coordinates of a node or object; coordinates just contain displacements, but not the reference (position or rotation) values - see also definition of respective nodes or objects
 * | **Coordinates\_t**:
   | measure the time derivative of coordinates (= velocity coordinates) of a node or object
 * | **Coordinates\_tt**:

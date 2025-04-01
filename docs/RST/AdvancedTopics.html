@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Advanced topics &mdash; Exudyn1.9.0 1.9.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
+  <title>Advanced topics &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
@@ -16,8 +16,8 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=c4cb232b"></script>
-      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
@@ -39,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.9.0
+            Exudyn1.9.83.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -98,7 +98,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.9.0</a>
+          <a href="../../index.html">Exudyn1.9.83.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -134,7 +134,7 @@ See also related options in <code class="docutils literal notranslate"><span cla
 To do so, the current render state (<code class="docutils literal notranslate"><span class="pre">SC.GetRenderState()</span></code>, <code class="docutils literal notranslate"><span class="pre">SC.SetRenderState(...)</span></code>) can be obtained and modified, in order to always follow a certain position.
 As this needs to be done during redraw of every frame, it is conveniently done in a graphicsUserFunction, e.g., within the ground body. This is shown in the following example, in which <code class="docutils literal notranslate"><span class="pre">mbs.variables['nTrackNode']</span></code> is a node number to be tracked:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#mbs.variables[&#39;nTrackNode&#39;] contains node number</span>
-<span class="k">def</span> <span class="nf">UFgraphics</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">objectNum</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">UFgraphics</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">objectNum</span><span class="p">):</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;nTrackNode&#39;</span><span class="p">]</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">GetNodeOutput</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Position</span><span class="p">,</span>
                           <span class="n">configuration</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">ConfigurationType</span><span class="o">.</span><span class="n">Visualization</span><span class="p">)</span>
@@ -204,7 +204,7 @@ The other way – calling Python from julia – is also possible, but it is left
 </pre></div>
 </div>
 <p>Ideally, you have a certain Python installation where Exudyn is already installed (and for the following examples, you also need <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>). Find the according Python path in any <strong>Python</strong> console:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">)</span>
 </pre></div>
 </div>

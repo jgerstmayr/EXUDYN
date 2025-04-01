@@ -89,9 +89,14 @@ They have a very weak influence on the system, because they are only evaluated a
 Reference coordinates and displacements
 ---------------------------------------
 
-Nodes usually have separated reference and initial quantities. Here, 
-\ ``referenceCoordinates``\  are the coordinates for which the system is defined upon creation. Reference coordinates are needed, e.g., for definition of joints and for the reference configuration of finite elements. In many cases it marks the undeformed configuration (e.g., with finite elements), but not, e.g., for \ ``ObjectConnectorSpringDamper``\ , which has its own reference length. 
+Nodes usually have separated reference and initial quantities. 
+Here, \ ``referenceCoordinates``\  are the coordinates for which the system is defined upon creation. 
+Reference coordinates are needed, e.g., for definition of joints and for the reference configuration of finite elements. In many cases it marks the undeformed configuration (e.g., with finite elements), but not, e.g., for \ ``ObjectConnectorSpringDamper``\ , which has its own reference length. 
 
 Initial displacement (or rotation) values are provided separately, in order to start a system from a configuration different from the reference configuration.
 As an example, the initial configuration of a \ ``NodePoint``\  is given by \ ``referenceCoordinates + initialCoordinates``\ , while the initial state of a dynamic system additionally needs \ ``initialVelocities``\ .
+See also Section :ref:`sec-referenceandcurrentcoordinates`\ !
+
+Note that commonly the \ ``OutputVariableType``\  \ ``Coordinates``\  returns coordinates without reference values, which are usually displacements (or changes in the rotation parameters), which is required if you are interested, e.g., in motion of finite element nodes.
+In contrast the \ ``OutputVariableType``\  \ ``CoordinatesTotal``\  returns (Since Exudyn1.9.25) the sum of reference and displacement (or rotation) coordinates for any configuration (e.g., current, initial or visualization).
 

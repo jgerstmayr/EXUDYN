@@ -29,10 +29,14 @@ The MatrixContainer is a versatile representation for dense and sparse matrices.
    mc = MatrixContainer() #empty matrix, dense mode
    
    #Create MatrixContainer with dense matrix:
-   #matrix can be initialized with a dense matrix, using list of lists or a numpy array, e.g.:
+   #container can be initialized with a dense matrix, using list of lists or a numpy array, e.g.:
    matrix = np.eye(3)
+   #stores matrices internally in dense mode:
    mcDense1 = MatrixContainer(matrix)
    mcDense2 = MatrixContainer([[1,2],[3,4]])
+   
+   #container can be initialized with a scipy csr sparse matrix, then being stored as sparse matrix
+   mcSparse = MatrixContainer(csr_matrix(matrix))
    
    #Set with dense pyArray (a numpy array): 
    pyArray = np.array(matrix)

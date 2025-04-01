@@ -67,6 +67,8 @@ The following subscripts are used to define configurations of a quantity, e.g., 
 +  \ :math:`{\mathbf{q}}\cVis \ldots`\  \ :math:`{\mathbf{q}}`\  in visualization configuration
 +  \ :math:`{\mathbf{q}}\cSOS \ldots`\  \ :math:`{\mathbf{q}}`\  in start of step configuration
 
+Note that the reference configuration is not included in other configurations, such that coordinates have to be usually understood relative to the reference configuration, see also Section :ref:`sec-overview-items-coordinates`\ .
+
 As written in the introduction, the coordinates are attributed to certain types of equations and therefore, the following attributes are used (usually as subscript, e.g., \ :math:`{\mathbf{q}}_{ODE2}`\ ):
 
 

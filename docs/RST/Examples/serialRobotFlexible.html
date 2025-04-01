@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>serialRobotFlexible.py &mdash; Exudyn1.9.0 1.9.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
+  <title>serialRobotFlexible.py &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
@@ -16,8 +16,8 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=c4cb232b"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.0
+            Exudyn1.9.83.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -97,6 +97,7 @@
 <li class="toctree-l2"><a class="reference internal" href="bungeeJump.html">bungeeJump.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cartesianSpringDamper.html">cartesianSpringDamper.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cartesianSpringDamperUserFunction.html">cartesianSpringDamperUserFunction.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chainDriveExample.html">chainDriveExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chatGPTupdate.html">chatGPTupdate.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chatGPTupdate2.html">chatGPTupdate2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="CMSexampleCourse.html">CMSexampleCourse.py</a></li>
@@ -133,10 +134,12 @@
 <li class="toctree-l2"><a class="reference internal" href="multiprocessingTest.html">multiprocessingTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="myFirstExample.html">myFirstExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="netgenSTLtest.html">netgenSTLtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="newtonsCradle.html">newtonsCradle.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveCMStutorial.html">NGsolveCMStutorial.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveCraigBampton.html">NGsolveCraigBampton.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveGeometry.html">NGsolveGeometry.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveLinearFEM.html">NGsolveLinearFEM.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveModalAnalysis.html">NGsolveModalAnalysis.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePistonEngine.html">NGsolvePistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePostProcessingStresses.html">NGsolvePostProcessingStresses.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nMassOscillator.html">nMassOscillator.py</a></li>
@@ -188,6 +191,7 @@
 <li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTree.html">serialRobotKinematicTree.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTreeDigging.html">serialRobotKinematicTreeDigging.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotTSD.html">serialRobotTSD.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialRobotURDF.html">serialRobotURDF.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="shapeOptimization.html">shapeOptimization.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simple4linkPendulumBing.html">simple4linkPendulumBing.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simulateInteractively.html">simulateInteractively.py</a></li>
@@ -233,7 +237,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.0</a>
+          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -269,21 +273,21 @@
 <span class="linenos"> 12</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos"> 13</span>
 <span class="linenos"> 14</span>
-<span class="linenos"> 15</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="linenos"> 16</span><span class="kn">from</span> <span class="nn">exudyn.itemInterface</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 17</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface and rigidBodyUtilities</span>
-<span class="linenos"> 18</span><span class="kn">import</span> <span class="nn">exudyn.graphics</span> <span class="k">as</span> <span class="nn">graphics</span> <span class="c1">#only import if it does not conflict</span>
-<span class="linenos"> 19</span><span class="kn">from</span> <span class="nn">exudyn.rigidBodyUtilities</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 20</span><span class="kn">from</span> <span class="nn">exudyn.graphicsDataUtilities</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 21</span><span class="kn">from</span> <span class="nn">exudyn.robotics</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 22</span><span class="kn">from</span> <span class="nn">exudyn.robotics.motion</span> <span class="kn">import</span> <span class="nc">Trajectory</span><span class="p">,</span> <span class="nc">ProfileConstantAcceleration</span><span class="p">,</span> <span class="nc">ProfilePTP</span>
-<span class="linenos"> 23</span><span class="kn">from</span> <span class="nn">exudyn.FEM</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 15</span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
+<span class="linenos"> 16</span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.itemInterface</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 17</span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface and rigidBodyUtilities</span>
+<span class="linenos"> 18</span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn.graphics</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">graphics</span> <span class="c1">#only import if it does not conflict</span>
+<span class="linenos"> 19</span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.rigidBodyUtilities</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 20</span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.graphicsDataUtilities</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 21</span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.robotics</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 22</span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.robotics.motion</span><span class="w"> </span><span class="kn">import</span> <span class="nc">Trajectory</span><span class="p">,</span> <span class="nc">ProfileConstantAcceleration</span><span class="p">,</span> <span class="nc">ProfilePTP</span>
+<span class="linenos"> 23</span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.FEM</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 <span class="linenos"> 24</span>
-<span class="linenos"> 25</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos"> 26</span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">linalg</span> <span class="k">as</span> <span class="n">LA</span>
-<span class="linenos"> 27</span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span>
-<span class="linenos"> 28</span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="linenos"> 29</span><span class="kn">import</span> <span class="nn">time</span>
+<span class="linenos"> 25</span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="linenos"> 26</span><span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">linalg</span> <span class="k">as</span> <span class="n">LA</span>
+<span class="linenos"> 27</span><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span>
+<span class="linenos"> 28</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="linenos"> 29</span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="linenos"> 30</span>
 <span class="linenos"> 31</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
 <span class="linenos"> 32</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
@@ -326,7 +330,7 @@
 <span class="linenos"> 69</span><span class="n">nFlexBodies</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">useFlexBody</span><span class="p">)</span>
 <span class="linenos"> 70</span><span class="n">femList</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span><span class="o">*</span><span class="n">nFlexBodies</span>
 <span class="linenos"> 71</span>
-<span class="linenos"> 72</span><span class="k">def</span> <span class="nf">GetCylinder</span><span class="p">(</span><span class="n">p0</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
+<span class="linenos"> 72</span><span class="k">def</span><span class="w"> </span><span class="nf">GetCylinder</span><span class="p">(</span><span class="n">p0</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
 <span class="linenos"> 73</span>    <span class="n">pnt0</span> <span class="o">=</span> <span class="n">Pnt</span><span class="p">(</span><span class="n">p0</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p0</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p0</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
 <span class="linenos"> 74</span>    <span class="n">pnt1</span> <span class="o">=</span> <span class="n">pnt0</span> <span class="o">+</span> <span class="n">Vec</span><span class="p">(</span><span class="n">axis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">length</span><span class="p">,</span> <span class="n">axis</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">length</span><span class="p">,</span> <span class="n">axis</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">length</span><span class="p">)</span>
 <span class="linenos"> 75</span>    <span class="n">cyl</span> <span class="o">=</span> <span class="nf">Cylinder</span><span class="p">(</span><span class="n">pnt0</span><span class="p">,</span> <span class="n">pnt1</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span>
@@ -344,17 +348,17 @@
 <span class="linenos"> 87</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos"> 88</span><span class="k">if</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">useFlexBody</span><span class="p">:</span> <span class="c1">#needs netgen/ngsolve to be installed to compute mesh, see e.g.: https://github.com/NGSolve/ngsolve/releases</span>
 <span class="linenos"> 89</span>    <span class="n">femList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nc">FEMinterface</span><span class="p">()</span>
-<span class="linenos"> 90</span>    <span class="kn">import</span> <span class="nn">sys</span>
+<span class="linenos"> 90</span>    <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="linenos"> 91</span>    <span class="c1">#adjust path to your ngsolve installation (if not added to global path)</span>
 <span class="linenos"> 92</span>    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;C:/ProgramData/ngsolve/lib/site-packages&#39;</span><span class="p">)</span>
 <span class="linenos"> 93</span>
-<span class="linenos"> 94</span>    <span class="kn">import</span> <span class="nn">ngsolve</span> <span class="k">as</span> <span class="nn">ngs</span>
-<span class="linenos"> 95</span>    <span class="kn">import</span> <span class="nn">netgen</span>
-<span class="linenos"> 96</span>    <span class="kn">from</span> <span class="nn">netgen.meshing</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 94</span>    <span class="kn">import</span><span class="w"> </span><span class="nn">ngsolve</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ngs</span>
+<span class="linenos"> 95</span>    <span class="kn">import</span><span class="w"> </span><span class="nn">netgen</span>
+<span class="linenos"> 96</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">netgen.meshing</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 <span class="linenos"> 97</span>
-<span class="linenos"> 98</span>    <span class="kn">from</span> <span class="nn">netgen.geom2d</span> <span class="kn">import</span> <span class="n">unit_square</span>
+<span class="linenos"> 98</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">netgen.geom2d</span><span class="w"> </span><span class="kn">import</span> <span class="n">unit_square</span>
 <span class="linenos"> 99</span>    <span class="c1">#import netgen.libngpy as libng</span>
-<span class="linenos">100</span>    <span class="kn">from</span> <span class="nn">netgen.csg</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos">100</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">netgen.csg</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 <span class="linenos">101</span>
 <span class="linenos">102</span>
 <span class="linenos">103</span>    <span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++</span>
@@ -373,7 +377,7 @@
 <span class="linenos">116</span>
 <span class="linenos">117</span>    <span class="k">if</span> <span class="kc">False</span><span class="p">:</span> <span class="c1">#set this to true, if you want to visualize the mesh inside netgen/ngsolve</span>
 <span class="linenos">118</span>        <span class="c1"># import netgen</span>
-<span class="linenos">119</span>        <span class="kn">import</span> <span class="nn">netgen.gui</span>
+<span class="linenos">119</span>        <span class="kn">import</span><span class="w"> </span><span class="nn">netgen.gui</span>
 <span class="linenos">120</span>        <span class="n">ngs</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
 <span class="linenos">121</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000000</span><span class="p">):</span>
 <span class="linenos">122</span>            <span class="n">netgen</span><span class="o">.</span><span class="n">Redraw</span><span class="p">()</span> <span class="c1">#this makes the window interactive</span>
@@ -456,7 +460,7 @@
 <span class="linenos">199</span>    <span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">200</span>    <span class="c1">#animate modes</span>
 <span class="linenos">201</span>    <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
-<span class="linenos">202</span>        <span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nf">AnimateModes</span>
+<span class="linenos">202</span>        <span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.interactive</span><span class="w"> </span><span class="kn">import</span> <span class="nf">AnimateModes</span>
 <span class="linenos">203</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
 <span class="linenos">204</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="linenos">205</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">showFaceEdges</span> <span class="o">=</span> <span class="kc">True</span>
@@ -472,7 +476,7 @@
 <span class="linenos">215</span>
 <span class="linenos">216</span>        <span class="n">nodeNumber</span> <span class="o">=</span> <span class="n">objFFRF</span><span class="p">[</span><span class="s1">&#39;nGenericODE2&#39;</span><span class="p">]</span> <span class="c1">#this is the node with the generalized coordinates</span>
 <span class="linenos">217</span>        <span class="nf">AnimateModes</span><span class="p">(</span><span class="n">SC</span><span class="p">,</span> <span class="n">mbs</span><span class="p">,</span> <span class="n">nodeNumber</span><span class="p">)</span>
-<span class="linenos">218</span>        <span class="kn">import</span> <span class="nn">sys</span>
+<span class="linenos">218</span>        <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="linenos">219</span>        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 <span class="linenos">220</span>
 <span class="linenos">221</span>
@@ -621,7 +625,7 @@
 <span class="linenos">364</span>
 <span class="linenos">365</span><span class="n">jointList</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">newRobot</span><span class="o">.</span><span class="nf">NumberOfLinks</span><span class="p">()</span> <span class="c1">#this list must be filled afterwards with the joint numbers in the mbs!</span>
 <span class="linenos">366</span>
-<span class="linenos">367</span><span class="k">def</span> <span class="nf">ComputeMBSstaticRobotTorques</span><span class="p">(</span><span class="n">newRobot</span><span class="p">):</span>
+<span class="linenos">367</span><span class="k">def</span><span class="w"> </span><span class="nf">ComputeMBSstaticRobotTorques</span><span class="p">(</span><span class="n">newRobot</span><span class="p">):</span>
 <span class="linenos">368</span>    <span class="n">q</span><span class="o">=</span><span class="p">[]</span>
 <span class="linenos">369</span>    <span class="k">for</span> <span class="n">joint</span> <span class="ow">in</span> <span class="n">jointList</span><span class="p">:</span>
 <span class="linenos">370</span>        <span class="n">q</span> <span class="o">+=</span> <span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetObjectOutput</span><span class="p">(</span><span class="n">joint</span><span class="p">,</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">Rotation</span><span class="p">)[</span><span class="mi">2</span><span class="p">]]</span> <span class="c1">#z-rotation</span>
@@ -657,7 +661,7 @@
 <span class="linenos">400</span><span class="n">torsionalSDlist</span> <span class="o">=</span> <span class="n">robotDict</span><span class="p">[</span><span class="s1">&#39;springDamperList&#39;</span><span class="p">]</span>
 <span class="linenos">401</span>
 <span class="linenos">402</span><span class="c1">#user function which is called only once per step, speeds up simulation drastically</span>
-<span class="linenos">403</span><span class="k">def</span> <span class="nf">PreStepUF</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<span class="linenos">403</span><span class="k">def</span><span class="w"> </span><span class="nf">PreStepUF</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
 <span class="linenos">404</span>    <span class="k">if</span> <span class="n">compensateStaticTorques</span><span class="p">:</span>
 <span class="linenos">405</span>        <span class="n">staticTorques</span> <span class="o">=</span> <span class="n">ComputeMBSstaticRobotTorques</span><span class="p">(</span><span class="n">newRobot</span><span class="p">)</span>
 <span class="linenos">406</span>    <span class="k">else</span><span class="p">:</span>
@@ -796,7 +800,7 @@
 <span class="linenos">539</span><span class="c1">#%%+++++++++++++++++++++</span>
 <span class="linenos">540</span><span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
 <span class="linenos">541</span>
-<span class="linenos">542</span>    <span class="kn">import</span> <span class="nn">exudyn.plot</span>
+<span class="linenos">542</span>    <span class="kn">import</span><span class="w"> </span><span class="nn">exudyn.plot</span>
 <span class="linenos">543</span>    <span class="n">exudyn</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="nf">PlotSensorDefaults</span><span class="p">()</span><span class="o">.</span><span class="n">fontSize</span> <span class="o">=</span> <span class="mi">12</span>
 <span class="linenos">544</span>
 <span class="linenos">545</span>    <span class="n">title</span> <span class="o">=</span> <span class="n">baseType</span> <span class="o">+</span> <span class="s1">&#39; base&#39;</span>

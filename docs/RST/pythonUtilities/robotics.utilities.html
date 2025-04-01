@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: robotics.utilities &mdash; Exudyn1.9.0 1.9.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
+  <title>Module: robotics.utilities &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
@@ -16,8 +16,8 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=c4cb232b"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.0
+            Exudyn1.9.83.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -77,6 +77,7 @@
 <li class="toctree-l2"><a class="reference internal" href="kinematicTree.html">Module: kinematicTree</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lieGroupBasics.html">Module: lieGroupBasics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mainSystemExtensions.html">Module: mainSystemExtensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particles.html">Module: particles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="physics.html">Module: physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot.html">Module: plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="processing.html">Module: processing</a></li>
@@ -90,6 +91,9 @@
 <li class="toctree-l2"><a class="reference internal" href="robotics.special.html">Module: robotics.special</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Module: robotics.utilities</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#function-addlidar">Function: AddLidar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-getroboticstoolboxinternalmodel">Function: GetRoboticsToolboxInternalModel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-loadurdfrobot">Function: LoadURDFrobot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-geturdfrobotdata">Function: GetURDFrobotData</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="signalProcessing.html">Module: signalProcessing</a></li>
@@ -114,7 +118,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.0</a>
+          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -141,7 +145,7 @@
 </ul>
 <section id="function-addlidar">
 <span id="sec-utilities-addlidar"></span><h2>Function: AddLidar<a class="headerlink" href="#function-addlidar" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/utilities.py#L40">AddLidar</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">generalContactIndex</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOrMarker</span></code>, <code class="docutils literal notranslate"><span class="pre">minDistance</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">maxDistance</span> <span class="pre">=</span> <span class="pre">1e7</span></code>, <code class="docutils literal notranslate"><span class="pre">cylinderRadius</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">lineLength</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfSensors</span> <span class="pre">=</span> <span class="pre">100</span></code>, <code class="docutils literal notranslate"><span class="pre">angleStart</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">angleEnd</span> <span class="pre">=</span> <span class="pre">2*np.pi</span></code>, <code class="docutils literal notranslate"><span class="pre">inclination</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">rotation</span> <span class="pre">=</span> <span class="pre">np.eye(3)</span></code>, <code class="docutils literal notranslate"><span class="pre">selectedTypeIndex</span> <span class="pre">=</span> <span class="pre">exudyn.ContactTypeIndex.IndexEndOfEnumList</span></code>, <code class="docutils literal notranslate"><span class="pre">storeInternal</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">measureVelocity</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addGraphicsObject</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">drawDisplaced</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[1.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">1.0]</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/utilities.py#L42">AddLidar</a>(<code class="docutils literal notranslate"><span class="pre">mbs</span></code>, <code class="docutils literal notranslate"><span class="pre">generalContactIndex</span></code>, <code class="docutils literal notranslate"><span class="pre">positionOrMarker</span></code>, <code class="docutils literal notranslate"><span class="pre">minDistance</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">maxDistance</span> <span class="pre">=</span> <span class="pre">1e7</span></code>, <code class="docutils literal notranslate"><span class="pre">cylinderRadius</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">lineLength</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">numberOfSensors</span> <span class="pre">=</span> <span class="pre">100</span></code>, <code class="docutils literal notranslate"><span class="pre">angleStart</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">angleEnd</span> <span class="pre">=</span> <span class="pre">2*np.pi</span></code>, <code class="docutils literal notranslate"><span class="pre">inclination</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">rotation</span> <span class="pre">=</span> <span class="pre">np.eye(3)</span></code>, <code class="docutils literal notranslate"><span class="pre">selectedTypeIndex</span> <span class="pre">=</span> <span class="pre">exudyn.ContactTypeIndex.IndexEndOfEnumList</span></code>, <code class="docutils literal notranslate"><span class="pre">storeInternal</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">measureVelocity</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addGraphicsObject</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">drawDisplaced</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[1.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0,</span> <span class="pre">1.0]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -184,6 +188,106 @@
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
 <div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mobileMecanumWheelRobotWithLidar.py">mobileMecanumWheelRobotWithLidar.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py">laserScannerTest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
+<section id="function-getroboticstoolboxinternalmodel">
+<span id="sec-utilities-getroboticstoolboxinternalmodel"></span><h2>Function: GetRoboticsToolboxInternalModel<a class="headerlink" href="#function-getroboticstoolboxinternalmodel" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/utilities.py#L85">GetRoboticsToolboxInternalModel</a>(<code class="docutils literal notranslate"><span class="pre">modelName</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">ignoreURDFerrors</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">Interface to roboticstoolbox (RTB) for loading internal robot models. Function retrieves internal model available from roboticstoolbox.models.URDF, usually stored in</div>
+<div class="line">site-packages/rtbdata/xacro/. See the github project of roboticstoolbox-python of P. Corke and J. Haviland for more details.</div>
+<div class="line">The model name is the short name used internally in the RTB. For available names, see the list roboticstoolbox.models.URDF.__all__ !</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">modelName</span></code>: string for model, such as UR5, Puma560, Panda or LBR</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">ignoreURDFerrors</span></code>: if set True, urdf errors are ignored and only the model is loaded</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns dictionary with ‘robot’ (RTB Robot class), ‘urdf’ which is the RTB representation of the URDF file for loading mesh files</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">requires installation (pip install) of roboticstoolbox-python; in our tests we had problems with installers on newer Python and therefore tested with Python 3.9! Note that some models doe not include mass and inertia and therefore will not run as dynamic models!</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotURDF.py">serialRobotURDF.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
+<section id="function-loadurdfrobot">
+<span id="sec-utilities-loadurdfrobot"></span><h2>Function: LoadURDFrobot<a class="headerlink" href="#function-loadurdfrobot" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/utilities.py#L155">LoadURDFrobot</a>(<code class="docutils literal notranslate"><span class="pre">urdfFilePath</span></code>, <code class="docutils literal notranslate"><span class="pre">urdfBasePath</span></code>, <code class="docutils literal notranslate"><span class="pre">gripperLinks</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">manufacturer</span> <span class="pre">=</span> <span class="pre">''</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland. Use this function for loading urdf/xacro files.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">urdfFilePath</span></code>: string relative to urdfBasePath, representing xacro or urdf file</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">urdfBasePath</span></code>: string representing the base path of the urdf or xacro directory for the respective robot; the urdfBasePath is used to load further files which are given internally in urdf files, such as collision or mesh files</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">gripperLinks</span></code>: list of link numbers representing gripper (as used internally in RTB Robot class)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns dictionary with ‘robot’ (RTB Robot class), ‘urdf’ which is the RTB representation of the URDF file for loading mesh files</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">requires installation (pip install) of roboticstoolbox-python; in our tests we had problems with installers on newer Python and therefore tested with Python 3.9! Note that some models doe not include mass and inertia and therefore will not run as dynamic models!</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-geturdfrobotdata">
+<span id="sec-utilities-geturdfrobotdata"></span><h2>Function: GetURDFrobotData<a class="headerlink" href="#function-geturdfrobotdata" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/utilities.py#L199">GetURDFrobotData</a>(<code class="docutils literal notranslate"><span class="pre">robot</span></code>, <code class="docutils literal notranslate"><span class="pre">urdf</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">linkColorList</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">staticJointValues</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">returnStaticGraphicsList</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">exportMesh</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">1</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland and Pymeshlab to import robot model and visualization into a struture readable by Exudyn. NOTE that this function is to be seen as a starting point for import, while some models have to be imported differently, in particular for joints that are not revolute or prismatic (in this case, copy function into local file and modify)!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">robot</span></code>: a RTB Robot (class) model, as returned e.g. by LoadURDFrobot</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">urdf</span></code>: a RTB URDF (class) representing the URDF data, as returned e.g. by LoadURDFrobot</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">linkColorList</span></code>: if not None, this can contain a list of RGBA color lists for each link to prescribe colors instead of using internally stored colors or general color information (.obj files); set linkColorList=[graphics.color.red]*8 to set 8 link colors red; links are counted as in the urdf file and may be different from the number of joints</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">staticJointValues</span></code>: if not None, has to be a list of joint angles (or displacements) for computing the static graphics list</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">returnStaticGraphicsList</span></code>: return a list of GraphicsData which can be put into a ground to check visualization for zero joints, using: mbs.CreateGround(graphicsDataList=staticGraphicsList)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">exportMesh</span></code>: if True, the returned dict also contains a meshSetList which refers to the MeshSet in pymeshlab, which can be used for debugging purposes</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">verbose</span></code>: 0 .. no output printed (only exceptions), 1 .. warnings, 2 .. further information</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns dictionary with items linkList, graphicsBaseList, graphicsToolList</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>notes</em>:</div>
+<div class="line">requires installation (pip install) of roboticstoolbox-python and pymeshlab; if pymeshlab is not installed, a warning is raised and graphics is ignored</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotURDF.py">serialRobotURDF.py</a> (Ex)</p>
 </div></blockquote>
 </section>
 </section>

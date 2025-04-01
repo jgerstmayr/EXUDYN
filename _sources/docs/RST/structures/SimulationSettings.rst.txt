@@ -158,6 +158,9 @@ DiscontinuousSettings has the following items:
 * | **maxIterations** [type = UInt, default = 5]:
   | \ ``simulationSettings.timeIntegration.discontinuous.maxIterations``\ , \ ``simulationSettings.staticSolver.discontinuous.maxIterations``\ 
   | maximum number of discontinuous (post Newton) iterations
+* | **useRecommendedStepSize** [type = bool, default = True]:
+  | \ ``simulationSettings.timeIntegration.discontinuous.useRecommendedStepSize``\ , \ ``simulationSettings.staticSolver.discontinuous.useRecommendedStepSize``\ 
+  | some objects (contact-related) provide a recommendedStepSize; if True, this recommendation is used, but may lead to very small step sizes and solver could fail if restrictions are too hard; set to False to ignore this recommendation
 
 
 
@@ -230,7 +233,7 @@ GeneralizedAlphaSettings has the following items:
 * | **lieGroupAddTangentOperator** [type = bool, default = True]:
   | \ ``simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator``\ 
   | True: for Lie group nodes, in case that lieGroupSimplifiedKinematicRelations=True, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)
-* | **lieGroupSimplifiedKinematicRelations** [type = bool, default = True]:
+* | **lieGroupSimplifiedKinematicRelations** [type = bool, default = False]:
   | \ ``simulationSettings.timeIntegration.generalizedAlpha.lieGroupSimplifiedKinematicRelations``\ 
   | True: for Lie group nodes, the integrator uses the original kinematic relations of the Bruls and Cardona 2010 paper
 * | **newmarkBeta** [type = UReal, default = 0.25]:
@@ -271,7 +274,7 @@ ExplicitIntegrationSettings has the following items:
   | If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded)
 * | **dynamicSolverType** [type = DynamicSolverType, default = DynamicSolverType::DOPRI5]:
   | \ ``simulationSettings.timeIntegration.explicitIntegration.dynamicSolverType``\ 
-  | selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, ...), for detailed description see DynamicSolverType, Section :ref:`sec-dynamicsolvertype`\ , but only referring to explicit solvers.
+  | selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, VelocityVerlet, ...), for detailed description see DynamicSolverType, Section :ref:`sec-dynamicsolvertype`\ , but only referring to explicit solvers.
 * | **eliminateConstraints** [type = bool, default = True]:
   | \ ``simulationSettings.timeIntegration.explicitIntegration.eliminateConstraints``\ 
   | True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!

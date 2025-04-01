@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pistonEngine.py &mdash; Exudyn1.9.0 1.9.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
+  <title>pistonEngine.py &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
@@ -16,8 +16,8 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=c4cb232b"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.0
+            Exudyn1.9.83.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -97,6 +97,7 @@
 <li class="toctree-l2"><a class="reference internal" href="bungeeJump.html">bungeeJump.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cartesianSpringDamper.html">cartesianSpringDamper.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cartesianSpringDamperUserFunction.html">cartesianSpringDamperUserFunction.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chainDriveExample.html">chainDriveExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chatGPTupdate.html">chatGPTupdate.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chatGPTupdate2.html">chatGPTupdate2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="CMSexampleCourse.html">CMSexampleCourse.py</a></li>
@@ -133,10 +134,12 @@
 <li class="toctree-l2"><a class="reference internal" href="multiprocessingTest.html">multiprocessingTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="myFirstExample.html">myFirstExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="netgenSTLtest.html">netgenSTLtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="newtonsCradle.html">newtonsCradle.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveCMStutorial.html">NGsolveCMStutorial.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveCraigBampton.html">NGsolveCraigBampton.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveGeometry.html">NGsolveGeometry.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveLinearFEM.html">NGsolveLinearFEM.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveModalAnalysis.html">NGsolveModalAnalysis.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePistonEngine.html">NGsolvePistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePostProcessingStresses.html">NGsolvePostProcessingStresses.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nMassOscillator.html">nMassOscillator.py</a></li>
@@ -188,6 +191,7 @@
 <li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTree.html">serialRobotKinematicTree.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTreeDigging.html">serialRobotKinematicTreeDigging.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotTSD.html">serialRobotTSD.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialRobotURDF.html">serialRobotURDF.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="shapeOptimization.html">shapeOptimization.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simple4linkPendulumBing.html">simple4linkPendulumBing.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simulateInteractively.html">simulateInteractively.py</a></li>
@@ -233,7 +237,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.0</a>
+          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -272,10 +276,10 @@
 <span class="linenos"> 15</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos"> 16</span>
 <span class="linenos"> 17</span><span class="c1">## import basic libaries</span>
-<span class="linenos"> 18</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="linenos"> 19</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface and rigidBodyUtilities</span>
-<span class="linenos"> 20</span><span class="kn">import</span> <span class="nn">exudyn.graphics</span> <span class="k">as</span> <span class="nn">graphics</span> <span class="c1">#only import if it does not conflict</span>
-<span class="linenos"> 21</span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="nf">sin</span><span class="p">,</span> <span class="nf">cos</span><span class="p">,</span> <span class="nf">asin</span><span class="p">,</span> <span class="nf">acos</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="nf">exp</span><span class="p">,</span> <span class="nf">log</span><span class="p">,</span> <span class="nf">tan</span><span class="p">,</span> <span class="nf">atan</span><span class="p">,</span> <span class="n">radians</span>
+<span class="linenos"> 18</span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
+<span class="linenos"> 19</span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface and rigidBodyUtilities</span>
+<span class="linenos"> 20</span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn.graphics</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">graphics</span> <span class="c1">#only import if it does not conflict</span>
+<span class="linenos"> 21</span><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="nf">sin</span><span class="p">,</span> <span class="nf">cos</span><span class="p">,</span> <span class="nf">asin</span><span class="p">,</span> <span class="nf">acos</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="nf">exp</span><span class="p">,</span> <span class="nf">log</span><span class="p">,</span> <span class="nf">tan</span><span class="p">,</span> <span class="nf">atan</span><span class="p">,</span> <span class="n">radians</span>
 <span class="linenos"> 22</span>
 <span class="linenos"> 23</span>
 <span class="linenos"> 24</span><span class="c1">## some simulation parameters for</span>
@@ -289,8 +293,8 @@
 <span class="linenos"> 32</span>
 <span class="linenos"> 33</span>
 <span class="linenos"> 34</span><span class="c1">## a class to store engine parameters and with geometric functions for piston engine</span>
-<span class="linenos"> 35</span><span class="k">class</span> <span class="nc">EngineParameters</span><span class="p">:</span>
-<span class="linenos"> 36</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crankAnglesDegrees</span><span class="o">=</span><span class="p">[],</span> <span class="n">pistonAnglesDegrees</span><span class="o">=</span><span class="p">[]):</span>
+<span class="linenos"> 35</span><span class="k">class</span><span class="w"> </span><span class="nc">EngineParameters</span><span class="p">:</span>
+<span class="linenos"> 36</span>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crankAnglesDegrees</span><span class="o">=</span><span class="p">[],</span> <span class="n">pistonAnglesDegrees</span><span class="o">=</span><span class="p">[]):</span>
 <span class="linenos"> 37</span>        <span class="c1">#parameters in m, s, kg, rad, ...</span>
 <span class="linenos"> 38</span>        <span class="bp">self</span><span class="o">.</span><span class="n">crankAnglesDegrees</span> <span class="o">=</span> <span class="n">crankAnglesDegrees</span>
 <span class="linenos"> 39</span>        <span class="k">if</span> <span class="n">pistonAnglesDegrees</span> <span class="o">==</span> <span class="p">[]:</span>
@@ -355,14 +359,14 @@
 <span class="linenos"> 98</span>        <span class="bp">self</span><span class="o">.</span><span class="n">inertiaPiston</span> <span class="o">=</span> <span class="nc">InertiaCylinder</span><span class="p">(</span><span class="n">densitySteel</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pistonLength</span><span class="p">,</span>
 <span class="linenos"> 99</span>                                             <span class="n">outerRadius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pistonRadius</span><span class="p">,</span> <span class="n">innerRadius</span><span class="o">=</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">pistonRadius</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="linenos">100</span>
-<span class="linenos">101</span>    <span class="k">def</span> <span class="nf">Length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos">101</span>    <span class="k">def</span><span class="w"> </span><span class="nf">Length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="linenos">102</span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pistonDistance</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">crankAngles</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">crankBearingWidth</span>
 <span class="linenos">103</span>
-<span class="linenos">104</span>    <span class="k">def</span> <span class="nf">MaxDimX</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos">104</span>    <span class="k">def</span><span class="w"> </span><span class="nf">MaxDimX</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="linenos">105</span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">crankArmLength</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">conrodLength</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pistonLength</span>
 <span class="linenos">106</span>
 <span class="linenos">107</span><span class="c1">## compute essential geometrical parameters for slider-crank with crank angle, piston angle, crank length l1 and conrod length l2</span>
-<span class="linenos">108</span><span class="k">def</span> <span class="nf">ComputeSliderCrank</span><span class="p">(</span><span class="n">angleCrank</span><span class="p">,</span> <span class="n">anglePiston</span><span class="p">,</span> <span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">):</span>
+<span class="linenos">108</span><span class="k">def</span><span class="w"> </span><span class="nf">ComputeSliderCrank</span><span class="p">(</span><span class="n">angleCrank</span><span class="p">,</span> <span class="n">anglePiston</span><span class="p">,</span> <span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">):</span>
 <span class="linenos">109</span>    <span class="n">phi1</span> <span class="o">=</span> <span class="n">angleCrank</span><span class="o">-</span><span class="n">anglePiston</span>
 <span class="linenos">110</span>    <span class="n">h</span> <span class="o">=</span> <span class="n">l1</span><span class="o">*</span><span class="nf">sin</span><span class="p">(</span><span class="n">phi1</span><span class="p">)</span> <span class="c1">#height of crank-conrod bearing</span>
 <span class="linenos">111</span>    <span class="n">phi2</span> <span class="o">=</span> <span class="nf">asin</span><span class="p">(</span><span class="n">h</span><span class="o">/</span><span class="n">l2</span><span class="p">)</span> <span class="c1">#angle of conrod in 2D slider-crank, corotated with piston rotation</span>
@@ -373,7 +377,7 @@
 <span class="linenos">116</span>
 <span class="linenos">117</span>
 <span class="linenos">118</span><span class="c1">## function to create multibody system for certain crank and piston configuration</span>
-<span class="linenos">119</span><span class="k">def</span> <span class="nf">CreateEngine</span><span class="p">(</span><span class="n">P</span><span class="p">):</span>
+<span class="linenos">119</span><span class="k">def</span><span class="w"> </span><span class="nf">CreateEngine</span><span class="p">(</span><span class="n">P</span><span class="p">):</span>
 <span class="linenos">120</span>
 <span class="linenos">121</span>    <span class="n">colorCrank</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">grey</span>
 <span class="linenos">122</span>    <span class="n">colorConrod</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">dodgerblue</span>
@@ -402,7 +406,7 @@
 <span class="linenos">145</span>    <span class="n">oEngineJoint</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGenericJoint</span><span class="p">(</span><span class="n">bodyNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">oEngine</span><span class="p">,</span> <span class="n">oGround</span><span class="p">],</span>
 <span class="linenos">146</span>                                          <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">147</span>                                          <span class="n">constrainedAxes</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
-<span class="linenos">148</span>                                          <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">148</span>                                          <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="linenos">149</span>
 <span class="linenos">150</span>    <span class="c1">## add sensors for</span>
 <span class="linenos">151</span>    <span class="n">sEngineForce</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddSensor</span><span class="p">(</span><span class="nc">SensorObject</span><span class="p">(</span><span class="n">objectNumber</span><span class="o">=</span><span class="n">oEngineJoint</span><span class="p">,</span> <span class="n">storeInternal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -492,12 +496,12 @@
 <span class="linenos">235</span>
 <span class="linenos">236</span>    <span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">237</span>    <span class="c1">## create revulute joint between engine and crankshaft</span>
-<span class="linenos">238</span>    <span class="p">[</span><span class="n">oJointCrank</span><span class="p">,</span> <span class="n">mBody0Crank</span><span class="p">,</span> <span class="n">mBody1Crank</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRevoluteJoint</span><span class="p">(</span><span class="n">bodyNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">oEngine</span><span class="p">,</span> <span class="n">bCrank</span><span class="p">],</span>
-<span class="linenos">239</span>                                                                      <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">eL</span><span class="p">],</span>
-<span class="linenos">240</span>                                                                      <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
-<span class="linenos">241</span>                                                                      <span class="n">show</span><span class="o">=</span><span class="n">showJoints</span><span class="p">,</span>
-<span class="linenos">242</span>                                                                      <span class="n">axisRadius</span><span class="o">=</span><span class="n">P</span><span class="o">.</span><span class="n">crankBearingRadius</span><span class="o">*</span><span class="mf">1.2</span><span class="p">,</span>
-<span class="linenos">243</span>                                                                      <span class="n">axisLength</span><span class="o">=</span><span class="n">P</span><span class="o">.</span><span class="n">crankBearingWidth</span><span class="o">*</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="linenos">238</span>    <span class="n">oJointCrank</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRevoluteJoint</span><span class="p">(</span><span class="n">bodyNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">oEngine</span><span class="p">,</span> <span class="n">bCrank</span><span class="p">],</span>
+<span class="linenos">239</span>                                          <span class="n">position</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">eL</span><span class="p">],</span>
+<span class="linenos">240</span>                                          <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+<span class="linenos">241</span>                                          <span class="n">show</span><span class="o">=</span><span class="n">showJoints</span><span class="p">,</span>
+<span class="linenos">242</span>                                          <span class="n">axisRadius</span><span class="o">=</span><span class="n">P</span><span class="o">.</span><span class="n">crankBearingRadius</span><span class="o">*</span><span class="mf">1.2</span><span class="p">,</span>
+<span class="linenos">243</span>                                          <span class="n">axisLength</span><span class="o">=</span><span class="n">P</span><span class="o">.</span><span class="n">crankBearingWidth</span><span class="o">*</span><span class="mf">0.8</span><span class="p">)</span>
 <span class="linenos">244</span>
 <span class="linenos">245</span>    <span class="c1">## loop over all slider cranks to create joints</span>
 <span class="linenos">246</span>    <span class="k">for</span> <span class="n">cnt</span><span class="p">,</span> <span class="n">angleCrank</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">P</span><span class="o">.</span><span class="n">crankAngles</span><span class="p">):</span>
@@ -510,21 +514,21 @@
 <span class="linenos">253</span>        <span class="c1">#zOff = 0</span>
 <span class="linenos">254</span>
 <span class="linenos">255</span>        <span class="c1">### create revolute joint between crankshaft and conrod</span>
-<span class="linenos">256</span>        <span class="p">[</span><span class="n">oJointCC</span><span class="p">,</span> <span class="n">mBody0CC</span><span class="p">,</span> <span class="n">mBody1CC</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRevoluteJoint</span><span class="p">(</span><span class="n">bodyNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">bCrank</span><span class="p">,</span> <span class="n">bConrodList</span><span class="p">[</span><span class="n">cnt</span><span class="p">]],</span>
-<span class="linenos">257</span>                                                          <span class="n">position</span><span class="o">=</span><span class="n">Ac</span><span class="o">@</span><span class="p">[</span><span class="n">P</span><span class="o">.</span><span class="n">crankArmLength</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">zOff</span> <span class="o">+</span> <span class="n">P</span><span class="o">.</span><span class="n">crankBearingWidth</span><span class="o">+</span><span class="n">P</span><span class="o">.</span><span class="n">crankArmWidth</span><span class="o">+</span><span class="mf">0.5</span><span class="o">*</span><span class="n">P</span><span class="o">.</span><span class="n">conrodCrankCylLength</span><span class="p">],</span>
-<span class="linenos">258</span>                                                          <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
-<span class="linenos">259</span>                                                          <span class="n">show</span> <span class="o">=</span> <span class="n">showJoints</span><span class="p">,</span>
-<span class="linenos">260</span>                                                          <span class="n">axisRadius</span><span class="o">=</span><span class="n">P</span><span class="o">.</span><span class="n">crankBearingRadius</span><span class="o">*</span><span class="mf">1.3</span><span class="p">,</span>
-<span class="linenos">261</span>                                                          <span class="n">axisLength</span><span class="o">=</span><span class="n">P</span><span class="o">.</span><span class="n">crankBearingWidth</span><span class="o">*</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="linenos">256</span>        <span class="n">oJointCC</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRevoluteJoint</span><span class="p">(</span><span class="n">bodyNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">bCrank</span><span class="p">,</span> <span class="n">bConrodList</span><span class="p">[</span><span class="n">cnt</span><span class="p">]],</span>
+<span class="linenos">257</span>                                           <span class="n">position</span><span class="o">=</span><span class="n">Ac</span><span class="o">@</span><span class="p">[</span><span class="n">P</span><span class="o">.</span><span class="n">crankArmLength</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">zOff</span> <span class="o">+</span> <span class="n">P</span><span class="o">.</span><span class="n">crankBearingWidth</span><span class="o">+</span><span class="n">P</span><span class="o">.</span><span class="n">crankArmWidth</span><span class="o">+</span><span class="mf">0.5</span><span class="o">*</span><span class="n">P</span><span class="o">.</span><span class="n">conrodCrankCylLength</span><span class="p">],</span>
+<span class="linenos">258</span>                                           <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+<span class="linenos">259</span>                                           <span class="n">show</span> <span class="o">=</span> <span class="n">showJoints</span><span class="p">,</span>
+<span class="linenos">260</span>                                           <span class="n">axisRadius</span><span class="o">=</span><span class="n">P</span><span class="o">.</span><span class="n">crankBearingRadius</span><span class="o">*</span><span class="mf">1.3</span><span class="p">,</span>
+<span class="linenos">261</span>                                           <span class="n">axisLength</span><span class="o">=</span><span class="n">P</span><span class="o">.</span><span class="n">crankBearingWidth</span><span class="o">*</span><span class="mf">0.8</span><span class="p">)</span>
 <span class="linenos">262</span>
 <span class="linenos">263</span>        <span class="c1">### create revolute joint between conrod and piston</span>
 <span class="linenos">264</span>        <span class="n">pPiston</span> <span class="o">=</span> <span class="n">Ap</span><span class="o">@</span><span class="p">[</span><span class="n">dp</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">zOff</span> <span class="o">+</span> <span class="n">P</span><span class="o">.</span><span class="n">crankBearingWidth</span><span class="o">+</span><span class="n">P</span><span class="o">.</span><span class="n">crankArmWidth</span><span class="o">+</span><span class="mf">0.5</span><span class="o">*</span><span class="n">P</span><span class="o">.</span><span class="n">conrodCrankCylLength</span><span class="p">]</span>
-<span class="linenos">265</span>        <span class="p">[</span><span class="n">oJointCP</span><span class="p">,</span> <span class="n">mBody0CP</span><span class="p">,</span> <span class="n">mBody1CP</span><span class="p">]</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRevoluteJoint</span><span class="p">(</span><span class="n">bodyNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">bConrodList</span><span class="p">[</span><span class="n">cnt</span><span class="p">],</span> <span class="n">bPistonList</span><span class="p">[</span><span class="n">cnt</span><span class="p">]],</span>
-<span class="linenos">266</span>                                                          <span class="n">position</span><span class="o">=</span><span class="n">pPiston</span><span class="p">,</span>
-<span class="linenos">267</span>                                                          <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
-<span class="linenos">268</span>                                                          <span class="n">show</span><span class="o">=</span><span class="n">showJoints</span><span class="p">,</span>
-<span class="linenos">269</span>                                                          <span class="n">axisRadius</span><span class="o">=</span><span class="n">P</span><span class="o">.</span><span class="n">crankBearingRadius</span><span class="o">*</span><span class="mf">1.3</span><span class="p">,</span>
-<span class="linenos">270</span>                                                          <span class="n">axisLength</span><span class="o">=</span><span class="n">P</span><span class="o">.</span><span class="n">crankBearingWidth</span><span class="o">*</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="linenos">265</span>        <span class="n">oJointCP</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRevoluteJoint</span><span class="p">(</span><span class="n">bodyNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">bConrodList</span><span class="p">[</span><span class="n">cnt</span><span class="p">],</span> <span class="n">bPistonList</span><span class="p">[</span><span class="n">cnt</span><span class="p">]],</span>
+<span class="linenos">266</span>                                           <span class="n">position</span><span class="o">=</span><span class="n">pPiston</span><span class="p">,</span>
+<span class="linenos">267</span>                                           <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+<span class="linenos">268</span>                                           <span class="n">show</span><span class="o">=</span><span class="n">showJoints</span><span class="p">,</span>
+<span class="linenos">269</span>                                           <span class="n">axisRadius</span><span class="o">=</span><span class="n">P</span><span class="o">.</span><span class="n">crankBearingRadius</span><span class="o">*</span><span class="mf">1.3</span><span class="p">,</span>
+<span class="linenos">270</span>                                           <span class="n">axisLength</span><span class="o">=</span><span class="n">P</span><span class="o">.</span><span class="n">crankBearingWidth</span><span class="o">*</span><span class="mf">0.8</span><span class="p">)</span>
 <span class="linenos">271</span>
 <span class="linenos">272</span>        <span class="c1">### create prismatic joint between piston and engine, using a generic joint</span>
 <span class="linenos">273</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGenericJoint</span><span class="p">(</span><span class="n">bodyNumbers</span><span class="o">=</span><span class="p">[</span><span class="n">bPistonList</span><span class="p">[</span><span class="n">cnt</span><span class="p">],</span> <span class="n">oEngine</span><span class="p">],</span>
@@ -537,11 +541,11 @@
 <span class="linenos">280</span>
 <span class="linenos">281</span>    <span class="c1">#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">282</span>    <span class="c1">## define user function for crankshaft angle (not used, because velocity level is used):</span>
-<span class="linenos">283</span>    <span class="k">def</span> <span class="nf">UFoffset</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">,</span> <span class="n">lOffset</span><span class="p">):</span>
+<span class="linenos">283</span>    <span class="k">def</span><span class="w"> </span><span class="nf">UFoffset</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">,</span> <span class="n">lOffset</span><span class="p">):</span>
 <span class="linenos">284</span>        <span class="k">return</span> <span class="mi">0</span>
 <span class="linenos">285</span>
 <span class="linenos">286</span>    <span class="c1">## define user function for crankshaft angular velocity:</span>
-<span class="linenos">287</span>    <span class="k">def</span> <span class="nf">UFoffset_t</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">,</span> <span class="n">lOffset</span><span class="p">):</span> <span class="c1">#time derivative of UFoffset</span>
+<span class="linenos">287</span>    <span class="k">def</span><span class="w"> </span><span class="nf">UFoffset_t</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemNumber</span><span class="p">,</span> <span class="n">lOffset</span><span class="p">):</span> <span class="c1">#time derivative of UFoffset</span>
 <span class="linenos">288</span>        <span class="k">return</span> <span class="nf">SmoothStep</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">omegaDrive</span><span class="p">)</span>
 <span class="linenos">289</span>
 <span class="linenos">290</span>    <span class="c1">## create coordinate constraint for crankshaft velocity</span>
@@ -578,7 +582,7 @@
 <span class="linenos">321</span> <span class="n">nCrank</span><span class="p">,</span> <span class="n">bCrank</span><span class="p">]</span> <span class="o">=</span> <span class="n">CreateEngine</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
 <span class="linenos">322</span>
 <span class="linenos">323</span><span class="c1">## add prestep user function to turn off drive in case fixedSpeed=False</span>
-<span class="linenos">324</span><span class="k">def</span> <span class="nf">PreStepUF</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+<span class="linenos">324</span><span class="k">def</span><span class="w"> </span><span class="nf">PreStepUF</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
 <span class="linenos">325</span>    <span class="n">u</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">()</span>
 <span class="linenos">326</span>
 <span class="linenos">327</span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">fixedSpeed</span> <span class="ow">and</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span> <span class="c1">#at this point, the mechanism runs freely</span>
@@ -647,7 +651,7 @@
 <span class="linenos">390</span>
 <span class="linenos">391</span>
 <span class="linenos">392</span><span class="c1">## import plot tools and plot some sensors</span>
-<span class="linenos">393</span><span class="kn">from</span> <span class="nn">exudyn.plot</span> <span class="kn">import</span> <span class="nf">PlotSensor</span><span class="p">,</span><span class="nf">PlotSensorDefaults</span>
+<span class="linenos">393</span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.plot</span><span class="w"> </span><span class="kn">import</span> <span class="nf">PlotSensor</span><span class="p">,</span><span class="nf">PlotSensorDefaults</span>
 <span class="linenos">394</span>
 <span class="linenos">395</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">closeAll</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="linenos">396</span><span class="nf">PlotSensor</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="p">[</span><span class="n">sCrankAngVel</span><span class="p">],</span> <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;crank speed&#39;</span><span class="p">,</span> <span class="n">sizeInches</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="mf">6.4</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="mf">4.8</span><span class="p">])</span>

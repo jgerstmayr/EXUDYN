@@ -39,6 +39,7 @@ You can view and download this file on Github: `generalContactFrictionTests.py <
            pass
        exudynTestGlobals = ExudynTestGlobals()
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   useGraphics = False
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
@@ -131,15 +132,18 @@ You can view and download this file on Github: `generalContactFrictionTests.py <
    omega0 = -4.*np.array([5,1.,0.])
    pRef = [-0.4*L,-0.4*L,r-0*m*gFact/k]
    RBinertia = InertiaSphere(m, r)
-   [nMass, oMass] = AddRigidBody(mainSys=mbs, inertia=RBinertia, 
+   dictMass = mbs.CreateRigidBody(
+                         inertia=RBinertia, 
                          nodeType=exu.NodeType.RotationRotationVector,
-                         position=pRef,
-                         velocity=-np.cross([0,0,r],omega0),
-                         rotationMatrix=RotationMatrixX(0.),
-                         angularVelocity=omega0, 
-                         #gravity=g,
+                         referencePosition=pRef,
+                         initialVelocity=-np.cross([0,0,r], omega0),
+                         referenceRotationMatrix=RotationMatrixX(0.),
+                         initialAngularVelocity=omega0,
+                         # gravity=g,
                          graphicsDataList=gList,
-                         )
+                         returnDict=True)
+   [nMass, oMass] = [dictMass['nodeNumber'], dictMass['bodyNumber']]
+   
    
    nNode0 = nMass
    mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nMass))
@@ -159,15 +163,17 @@ You can view and download this file on Github: `generalContactFrictionTests.py <
    omega0 = -1e-12*np.array([1,0.1,0.])
    pRef = [1e-15,-1e-14,r-2*m*gFact/k]
    RBinertia = InertiaSphere(m, r)
-   [nMass, oMass] = AddRigidBody(mainSys=mbs, inertia=RBinertia, 
+   dictMass = mbs.CreateRigidBody(
+                         inertia=RBinertia, 
                          nodeType=exu.NodeType.RotationRotationVector,
-                         position=pRef,
-                         velocity=-np.cross([0,0,r],omega0),
-                         rotationMatrix=RotationMatrixX(0.),
-                         angularVelocity=omega0, 
+                         referencePosition=pRef,
+                         initialVelocity=-np.cross([0,0,r], omega0),
+                         referenceRotationMatrix=RotationMatrixX(0.),
+                         initialAngularVelocity=omega0,
                          gravity=g,
                          graphicsDataList=gList,
-                         )
+                         returnDict=True)
+   [nMass, oMass] = [dictMass['nodeNumber'], dictMass['bodyNumber']]
    
    nNode1 = nMass
    mNode1 = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nMass))
@@ -193,13 +199,14 @@ You can view and download this file on Github: `generalContactFrictionTests.py <
    
    pRef = pf+[0,2*r,0] #[-0.4*L,-0.4*L,r-m*gFact/k]
    RBinertia = InertiaSphere(m, r)
-   [nMassF, oMassF] = AddRigidBody(mainSys=mbs, inertia=RBinertia, 
+   dictF = mbs.CreateRigidBody(
+                         inertia=RBinertia,  
                          nodeType=exu.NodeType.RotationRotationVector,
-                         position=pRef,
-                         rotationMatrix=RotationMatrixX(0.),
-                         #gravity=g,
+                         referencePosition=pRef,
+                         referenceRotationMatrix=RotationMatrixX(0.),
                          graphicsDataList=gList,
-                         )
+                         returnDict=True)
+   [nMassF, oMassF] = [dictF['nodeNumber'], dictF['bodyNumber']]
    
    mC = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nMassF, coordinate=0))
    mbs.AddObject(CoordinateConstraint(markerNumbers=[mGroundC, mC]))
@@ -228,14 +235,17 @@ You can view and download this file on Github: `generalContactFrictionTests.py <
    fRol = k*dRol
    exu.Print('force rolling=', fRol, ', torque=', fRol*mu*r)
    RBinertia = InertiaSphere(m, r)
-   [nMassR, oMassR] = AddRigidBody(mainSys=mbs, inertia=RBinertia, 
+   dictR = mbs.CreateRigidBody(
+                         inertia=RBinertia, 
                          nodeType=exu.NodeType.RotationRotationVector,
-                         position=pRef,
-                         rotationMatrix=RotationMatrixX(0.),
-                         #angularVelocity=[10,0,0],
-                         #gravity=g,
+                         referencePosition=pRef,
+                         referenceRotationMatrix=RotationMatrixX(0.),
                          graphicsDataList=gList,
-                         )
+                         returnDict=True)
+   [nMassR, oMassR] = [dictR['nodeNumber'], dictR['bodyNumber']]
+   
+   
+   
    
    mC = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nMassR, coordinate=0))
    mbs.AddObject(CoordinateConstraint(markerNumbers=[mGroundC, mC]))
@@ -271,15 +281,17 @@ You can view and download this file on Github: `generalContactFrictionTests.py <
    omega0 = np.array([-0.05,-5,0.])
    pRef = [0.5*L-1.45*bb, 0.5*L-1.20*bb, 3*bh+0.5*r-2*m*gFact/k] #[0.5*L-1.45*bb, 0.5*L-1.40*bb, ..] goes to edge
    RBinertia = InertiaSphere(m, 0.5*r)
-   [nMassStair, oMassStair] = AddRigidBody(mainSys=mbs, inertia=RBinertia, 
-                         nodeType=exu.NodeType.RotationRotationVector,
-                         position=pRef,
-                         velocity=-np.cross([0,0,0.5*r],omega0),
-                         rotationMatrix=RotationMatrixX(0.),
-                         angularVelocity=omega0, 
-                         gravity=g,
-                         graphicsDataList=gList,
-                         )
+   dictStair = mbs.CreateRigidBody(
+                 inertia=RBinertia, 
+                 nodeType=exu.NodeType.RotationRotationVector,
+                 referencePosition=pRef,
+                 initialVelocity=-np.cross([0,0,0.5*r], omega0),
+                 referenceRotationMatrix=RotationMatrixX(0.),
+                 initialAngularVelocity=omega0,
+                 gravity=g,
+                 graphicsDataList=gList,
+                 returnDict=True)
+   [nMassStair, oMassStair] = [dictStair['nodeNumber'], dictStair['bodyNumber']]
    
    nNode3 = nMassStair
    mNode3 = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nMassStair))
@@ -317,15 +329,16 @@ You can view and download this file on Github: `generalContactFrictionTests.py <
    pRef = [0.5*L-2*r, 0.25*L, 0.5*r+1.5*tTrig]
    v0 = np.array([-2,0,0])
    RBinertia = InertiaCuboid(density=m/(r*2*r*3*r), sideLengths=[3*r,2*r,r])
-   [nMassCube0, oMassCube0] = AddRigidBody(mainSys=mbs, inertia=RBinertia, 
-                         nodeType=exu.NodeType.RotationRotationVector,
-                         position=pRef,
-                         velocity=v0,
-                         #rotationMatrix=RotationMatrixZ(0.),
-                         angularVelocity=[0,0,0], 
-                         gravity=g,
-                         graphicsDataList=gList,
-                         )
+   dictCube0 = mbs.CreateRigidBody(
+                 inertia=RBinertia, 
+                 nodeType=exu.NodeType.RotationRotationVector,
+                 referencePosition=pRef,
+                 initialVelocity=v0,
+                 initialAngularVelocity=[0,0,0],
+                 gravity=g,
+                 graphicsDataList=gList,
+                 returnDict=True)
+   [nMassCube0, oMassCube0] = [dictCube0['nodeNumber'], dictCube0['bodyNumber']]
    
    nCube0 = nMassCube0
    mCube0 = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nMassCube0))

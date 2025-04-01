@@ -25,11 +25,24 @@ This is the data structure of a system which contains Objects (bodies/constraint
    mbs.Assemble()
    exu.SolveDynamic(mbs, exu.SimulationSettings())
    
-   #obtain current ODE2 system vector (e.g. after static simulation finished):
+   #obtain current ODE2 system vector including reference values:
+   uTotal = mbs.systemData.GetODE2CoordinatesTotal()
+   
+   #obtain current ODE2 system vector without reference values 
+   #  (e.g. after static simulation finished):
    u = mbs.systemData.GetODE2Coordinates()
-   #set initial ODE2 vector for next simulation:
+   #set initial ODE2 vector for next simulation (only coordinates!):
    mbs.systemData.SetODE2Coordinates(coordinates=u,
                   configuration=exu.ConfigurationType.Initial)
+   
+   #faster access with reference access (copy=False):
+   u3 = mbs.systemData.GetODE2Coordinates(copy=False)[3]
+   #we can also modify data, but this may be dangerous!
+   u3 += 1
+   #NOTE: reference access is possible throughout simulation and may
+   #      allow faster user functions, but is potentially dangerous
+   #      to erroneous behavior: for safety, compare with copy=True results!
+   
    #print detailed information on items:
    mbs.systemData.Info()
    #print LTG lists for objects and loads:
@@ -176,8 +189,18 @@ This section provides access functions to global coordinate vectors. Assigning i
 
 \ The class **MainSystemData** has the following **functions and structures** regarding **coordinate access**:
 
-* | **GetODE2Coordinates**\ (\ *configuration*\  = exu.ConfigurationType.Current): 
-  | get ODE2 system coordinates (displacements) for given configuration (default: exu.Configuration.Current)
+* | **GetODE2CoordinatesTotal**\ (\ *configuration*\  = exu.ConfigurationType.Current): 
+  | get ODE2 system coordinates (displacements/rotation) including reference values for given configuration (default: exu.Configuration.Current); in case of exu.ConfigurationType.Reference, it only includes reference values once and is identical to GetODE2Coordinates; note that faster access to coordinates is possibly with GetODE2Coordinates(copy=False), which is not possible with GetODE2CoordinatesTotal !
+  | *Example*:
+
+  .. code-block:: python
+
+     uTotal = mbs.systemData.GetODE2CoordinatesTotal()
+     #this is equivalent to:
+     uTotal=mbs.systemData.GetODE2Coordinates()+mbs.systemData.GetODE2Coordinates(exu.ConfigurationType.Reference)
+
+* | **GetODE2Coordinates**\ (\ *configuration*\  = exu.ConfigurationType.Current, \ *copy*\  = True): 
+  | get ODE2 system coordinates (displacements/rotations) for given configuration (default: exu.Configuration.Current)
   | *Example*:
 
   .. code-block:: python
@@ -185,14 +208,14 @@ This section provides access functions to global coordinate vectors. Assigning i
      uCurrent = mbs.systemData.GetODE2Coordinates()
 
 * | **SetODE2Coordinates**\ (\ *coordinates*\ , \ *configuration*\  = exu.ConfigurationType.Current): 
-  | set ODE2 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!
+  | set ODE2 system coordinates (displacements/rotations) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!
   | *Example*:
 
   .. code-block:: python
 
      mbs.systemData.SetODE2Coordinates(uCurrent)
 
-* | **GetODE2Coordinates\_t**\ (\ *configuration*\  = exu.ConfigurationType.Current): 
+* | **GetODE2Coordinates\_t**\ (\ *configuration*\  = exu.ConfigurationType.Current, \ *copy*\  = True): 
   | get ODE2 system coordinates (velocities) for given configuration (default: exu.Configuration.Current)
   | *Example*:
 
@@ -208,7 +231,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
      mbs.systemData.SetODE2Coordinates_t(vCurrent)
 
-* | **GetODE2Coordinates\_tt**\ (\ *configuration*\  = exu.ConfigurationType.Current): 
+* | **GetODE2Coordinates\_tt**\ (\ *configuration*\  = exu.ConfigurationType.Current, \ *copy*\  = True): 
   | get ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current)
   | *Example*:
 
@@ -224,7 +247,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
      mbs.systemData.SetODE2Coordinates_tt(aCurrent)
 
-* | **GetODE1Coordinates**\ (\ *configuration*\  = exu.ConfigurationType.Current): 
+* | **GetODE1Coordinates**\ (\ *configuration*\  = exu.ConfigurationType.Current, \ *copy*\  = True): 
   | get ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current)
   | *Example*:
 
@@ -240,7 +263,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
      mbs.systemData.SetODE1Coordinates_t(qCurrent)
 
-* | **GetODE1Coordinates\_t**\ (\ *configuration*\  = exu.ConfigurationType.Current): 
+* | **GetODE1Coordinates\_t**\ (\ *configuration*\  = exu.ConfigurationType.Current, \ *copy*\  = True): 
   | get ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current)
   | *Example*:
 
@@ -256,7 +279,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
      mbs.systemData.SetODE1Coordinates(qCurrent)
 
-* | **GetAECoordinates**\ (\ *configuration*\  = exu.ConfigurationType.Current): 
+* | **GetAECoordinates**\ (\ *configuration*\  = exu.ConfigurationType.Current, \ *copy*\  = True): 
   | get algebraic equations (AE) system coordinates for given configuration (default: exu.Configuration.Current)
   | *Example*:
 
@@ -272,7 +295,7 @@ This section provides access functions to global coordinate vectors. Assigning i
 
      mbs.systemData.SetAECoordinates(lambdaCurrent)
 
-* | **GetDataCoordinates**\ (\ *configuration*\  = exu.ConfigurationType.Current): 
+* | **GetDataCoordinates**\ (\ *configuration*\  = exu.ConfigurationType.Current, \ *copy*\  = True): 
   | get system data coordinates for given configuration (default: exu.Configuration.Current)
   | *Example*:
 
@@ -303,6 +326,14 @@ This section provides access functions to global coordinate vectors. Assigning i
   .. code-block:: python
 
      mbs.systemData.SetSystemState(sysStateList, configuration = exu.ConfigurationType.Initial)
+
+* | **GetSystemStateDict**\ (\ *configuration*\  = exu.ConfigurationType.Current, \ *reference*\  = False): 
+  | get dictionary with copies of (or references to) system states for given configuration (default: exu.Configuration.Current), with at least the following quantities: ODE1Coords, ODE1Coords_t, ODE2Coords, ODE2Coords_t, ODE2Coords_tt, AECoords, dataCoords; we can obtain copies OR references to vectors without copying, meaning that these vectors then have read-write properties and have to be treated carefully! The dictionary's contents are subject to changes in the future; if reference=False, data is copied
+  | *Example*:
+
+  .. code-block:: python
+
+     d = mbs.systemData.GetSystemStateDict()
 
 
 

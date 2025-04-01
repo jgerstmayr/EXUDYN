@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flexible body – FFRF tutorial &mdash; Exudyn1.9.0 1.9.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=82a976d7" />
+  <title>Flexible body – FFRF tutorial &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
@@ -16,8 +16,8 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=c4cb232b"></script>
-      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
@@ -39,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.9.0
+            Exudyn1.9.83.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -89,7 +89,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.9.0</a>
+          <a href="../../index.html">Exudyn1.9.83.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -121,15 +121,15 @@ The tutorial will set up a body with Hurty-Craig-Bampton modes, giving a simple 
 </figcaption>
 </figure>
 <p>We import the exudyn library, utilities, and other necessary modules:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span>  <span class="c1"># includes itemInterface and rigidBodyUtilities</span>
-<span class="kn">import</span> <span class="nn">exudyn.graphics</span> <span class="k">as</span> <span class="nn">graphics</span>  <span class="c1"># only import if it does not conflict</span>
-<span class="kn">from</span> <span class="nn">exudyn.FEM</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">ngsolve</span> <span class="k">as</span> <span class="nn">ngs</span>
-<span class="kn">from</span> <span class="nn">netgen.meshing</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">netgen.csg</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>  <span class="c1"># includes itemInterface and rigidBodyUtilities</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">exudyn.graphics</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">graphics</span>  <span class="c1"># only import if it does not conflict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.FEM</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ngsolve</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ngs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">netgen.meshing</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">netgen.csg</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 <p>Next, we need a <code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code>, which contains all computable systems and adds a new MainSystem <code class="docutils literal notranslate"><span class="pre">mbs</span></code>:</p>
@@ -163,7 +163,7 @@ The tutorial will set up a body with Hurty-Craig-Bampton modes, giving a simple 
 <p>When creating the geometry and mesh, we sometimes would like to verify that with Netgen’s GUI.
 In Jupyter, this works smoother with <code class="docutils literal notranslate"><span class="pre">webgui_jupyter_widgets</span></code> – see the Netgen documention. Here we use a simple loop, which has to set <code class="docutils literal notranslate"><span class="pre">True</span></code> if visualization shall run:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="kc">False</span><span class="p">:</span>  <span class="c1"># set this to true, if you want to visualize the mesh inside netgen/ngsolve</span>
-    <span class="kn">import</span> <span class="nn">netgen.gui</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">netgen.gui</span>
     <span class="n">ngs</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000000</span><span class="p">):</span>
         <span class="n">netgen</span><span class="o">.</span><span class="n">Redraw</span><span class="p">()</span>  <span class="c1"># this makes the window interactive</span>

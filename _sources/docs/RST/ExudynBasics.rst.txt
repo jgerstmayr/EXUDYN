@@ -431,6 +431,7 @@ The \ ``SolutionViewer``\  adds a \ ``tkinter``\  interactive dialog, which lets
 +  In the 'Static' mode, drag the slider 'Solution steps' to view the solution steps
 +  In the 'Continuous run' mode, the player runs in an infinite loop
 +  In the 'One cycle' mode, the player runs from the current position to the end; this is perfectly suited to record series of images for \ **creating animations**\ , see Section :ref:`sec-overview-basics-animations`\  and works together with the visualization settings dialog.
++  In the 'Record animation' mode, the player records frames that are shown in the render window; before pressing on 'Record animation', press 'Stop' and switch to 'One cycle'. Then put the solution steps slider to the first frame and press 'Record animation', which stores images in the current subfolder 'images' as 'frame00001.png' with increasing number, using PNG by default. The number is increased and can only be reset after new start of SolutionViewer.
 
 The solution should be loaded with
 \ ``LoadSolutionFile('coordinatesSolution.txt')``\ , where 'coordinatesSolution.txt' represents the stored solution file, 
@@ -442,18 +443,17 @@ You can call the \ ``SolutionViewer``\  either in the model, or at the command l
 
 .. code-block:: python
 
-  from exudyn.interactive import SolutionViewer
+  from exudyn.utilities import LoadSolutionFile
   sol = LoadSolutionFile('coordinatesSolution.txt')
-  SolutionViewer(mbs, sol)
+  mbs.SolutionViewer(solution=sol)
 
 
-\ **Alternatively**\ , if no solution is provided, \ ``SolutionViewer``\  tries to reload the solution of the previous simulation 
-that is referred to from \ ``mbs.sys\['simulationSettings'\]``\ :
+\ **Alternatively**\ , if no solution is provided, \ ``SolutionViewer``\  tries to reload the solution of the previous simulation that is referred to from \ ``mbs.sys['simulationSettings']``\ :
 
 .. code-block:: python
 
-  from exudyn.interactive import SolutionViewer
-  SolutionViewer(mbs)
+  #... mbs has been previously solved
+  mbs.SolutionViewer()
 
 
 An example for the \ ``SolutionViewer``\  is integrated into the \ ``Examples/``\  directory, see \ ``solutionViewerTest.py``\ . 
@@ -470,6 +470,8 @@ Generating animations
 In many dynamics simulations, it is very helpful to create animations in order to better understand the motion of bodies. Specifically, the animation can be used to visualize the model much slower or faster than the model is computed.
 
 Animations are created based on a series of images (frames, snapshots) taken during simulation. It is important, that the current view is used to record these images -- this means that the view should not be changed during the recording of images.
+The easiest way to create animations, is using the SolutionViewer with its integrated features, see Section :ref:`sec-overview-basics-solutionviewer`\ .
+
 To turn on recording of images during solving, set the following flag to a positive value
 
 +  \ ``simulationSettings.solutionSettings.recordImagesInterval = 0.01``\ 
@@ -584,6 +586,7 @@ However, in some cases there is a significant possibility for speeding up comput
 
 The following examples refer to \ ``simulationSettings = exu.SimulationSettings()``\ .
 In general, to see where CPU time is lost, use the option turn on \ ``simulationSettings.displayComputationTime = True``\  to see which parts of the solver need most of the time (deactivated in exudynFast versions!).
+In addition to Exudyn's internal time measurements, in Spyder (or IPython) you can use magic commands such as \ ``\%timeit -n10 mbs.SolveDynamic()``\  to evaluate the time spent for a specific command with number of repetitions given after \ ``-n``\ . This may be particularly interesting in Python user functions to see where time is lost.
 
 To activate the Exudyn C++ versions without range checks, which may be approx. 30 percent faster in some situations, use the following code snippet before first import of \ ``exudyn``\ :
 

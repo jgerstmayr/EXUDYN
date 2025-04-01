@@ -126,9 +126,9 @@ You can view and download this file on Github: `complexEigenvaluesTest.py <https
    
    
    #start solver:
-   mbs.SolveDynamic(simulationSettings)
    
    if useGraphics:
+       mbs.SolveDynamic(simulationSettings)
        mbs.PlotSensor(sPos, closeAll=True, title='linear mass-spring-damper')
    
    [eigenValues, eVectors] = mbs.ComputeODE2Eigenvalues(
@@ -227,8 +227,9 @@ You can view and download this file on Github: `complexEigenvaluesTest.py <https
    simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h) #must be integer
    simulationSettings.timeIntegration.endTime = tEnd
    
-   mbs.SolveDynamic(simulationSettings)
-   mbs.PlotSensor(sPos,components=[1],title='bar with spring at tip')
+   if useGraphics:
+       mbs.SolveDynamic(simulationSettings)
+       mbs.PlotSensor(sPos,components=[1],title='bar with spring at tip')
    
    #sys.exit()
    

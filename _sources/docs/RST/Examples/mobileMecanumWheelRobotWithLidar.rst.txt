@@ -123,15 +123,16 @@ You can view and download this file on Github: `mobileMecanumWheelRobotWithLidar
    graphicsCar += [graphics.Basis(headFactor = 4, length=2)]
    # graphicsCar += [graphics.Cylinder(pAxis=pLidar2, vAxis=[0,0,0.5*rLidar], radius=rLidar, clor=graphics.color.darkgrey)]
    
-   [nCar,bCar]=AddRigidBody(mainSys = mbs, 
-                            inertia = inertiaCar, 
-                            nodeType = str(exu.NodeType.RotationEulerParameters), 
-                            position = p0Car, 
-                            rotationMatrix = initialRotationCar,
-                            angularVelocity = omega0Car,
-                            velocity=v0Car,
-                            gravity = g, 
-                            graphicsDataList = graphicsCar)
+   dictCar = mbs.CreateRigidBody(
+                 inertia=inertiaCar, 
+                 referencePosition=p0Car, 
+                 referenceRotationMatrix=initialRotationCar,
+                 initialAngularVelocity=omega0Car,
+                 initialVelocity=v0Car,
+                 gravity=g, 
+                 graphicsDataList=graphicsCar,
+                 returnDict=True)
+   [nCar, bCar] = [dictCar['nodeNumber'], dictCar['bodyNumber']]
    
    markerCar = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bCar, localPosition=[0,0,hCar*0.5]))
    
@@ -258,15 +259,17 @@ You can view and download this file on Github: `mobileMecanumWheelRobotWithLidar
        pOff = [dx,dy,0]
    
        #add wheel body
-       [n0,b0]=AddRigidBody(mainSys = mbs, 
-                            inertia = inertiaWheel, 
-                            nodeType = str(exu.NodeType.RotationEulerParameters), 
-                            position = VAdd(p0Wheel,pOff), 
-                            rotationMatrix = initialRotation, #np.diag([1,1,1]),
-                            angularVelocity = omega0Wheel,
-                            velocity=v0Wheel,
-                            gravity = g, 
-                            graphicsDataList = graphicsWheel)
+   
+       dictWheel = mbs.CreateRigidBody(
+                     inertia=inertiaWheel, 
+                     referencePosition=VAdd(p0Wheel, pOff), 
+                     referenceRotationMatrix=initialRotation,
+                     initialAngularVelocity=omega0Wheel,
+                     initialVelocity=v0Wheel,
+                     gravity=g, 
+                     graphicsDataList=graphicsWheel,
+                     returnDict=True)
+       [n0, b0] = [dictWheel['nodeNumber'], dictWheel['bodyNumber']]
    
        #markers for rigid body:
        mWheel = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[0,0,0]))

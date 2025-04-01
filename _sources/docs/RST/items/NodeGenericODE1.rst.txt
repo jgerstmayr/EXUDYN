@@ -37,6 +37,8 @@ DESCRIPTION of NodeGenericODE1
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
+* | ``CoordinatesTotal``\ : 
+  | displacement plus reference coordinates of node
 * | ``Coordinates``\ : \ :math:`{\mathbf{y}}\cConfig = [y_0,\,\ldots,\,y_{nc}]\tp\cConfig`\ 
   | \ :ref:`ODE1 <ODE1>`\  coordinates vector of node
 * | ``Coordinates\_t``\ : \ :math:`\dot {\mathbf{y}}\cConfig = [\dot y_0,\,\ldots,\,\dot y_{nc}]\tp\cConfig`\ 

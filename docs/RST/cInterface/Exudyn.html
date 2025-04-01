@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn &mdash; Exudyn1.9.0 1.9.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
+  <title>Exudyn &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
@@ -16,8 +16,8 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=c4cb232b"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.0
+            Exudyn1.9.83.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -92,7 +92,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.0</a>
+          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -115,7 +115,7 @@
 <h1>Exudyn<a class="headerlink" href="#exudyn" title="Link to this heading"></a></h1>
 <p>These are the access functions to the Exudyn module. General usage is explained in Section <a class="reference internal" href="GeneralInformation.html#sec-generalpythoninterface"><span class="std std-ref">General information on Python-C++ interface</span></a> and examples are provided there. The C++ module <code class="docutils literal notranslate"><span class="pre">exudyn</span></code> is the root level object linked between Python and C++.In the installed site-packages, the according file is usually denoted as <code class="docutils literal notranslate"><span class="pre">exudynCPP.pyd</span></code> for the regular module, <code class="docutils literal notranslate"><span class="pre">exudynCPPfast.pyd</span></code> for the module without range checks and <code class="docutils literal notranslate"><span class="pre">exudynCPPnoAVX.pyd</span></code> for the module compiled without AVX vector extensions (may depend on your installation).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1">#import exudyn module:</span>
-<span class="linenos">2</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<span class="linenos">2</span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
 <span class="linenos">3</span><span class="c1">#create systemcontainer and mbs:</span>
 <span class="linenos">4</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
 <span class="linenos">5</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
@@ -193,8 +193,8 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetWriteToFile</strong>(<em>filename</em>, <em>flagWriteToFile</em> = True, <em>flagAppend</em> = False):</div>
-<div class="line">set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write <code class="docutils literal notranslate"><span class="pre">exu.SetWriteToFile('',</span> <span class="pre">False)</span></code> to close the output file</div>
+<div class="line"><strong>SetWriteToFile</strong>(<em>filename</em>, <em>flagWriteToFile</em> = True, <em>flagAppend</em> = False, <em>flagFlushAlways</em> = False):</div>
+<div class="line">set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write <code class="docutils literal notranslate"><span class="pre">exu.SetWriteToFile('',</span> <span class="pre">False)</span></code> to close the output file; in case of flagFlushAlways=True, file will be finalized immediately in every print command;</div>
 <div class="line"><em>Example</em>:</div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="nf">SetWriteToConsole</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span> <span class="c1">#no output to console</span>

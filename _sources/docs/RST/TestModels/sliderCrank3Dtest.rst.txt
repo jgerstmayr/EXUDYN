@@ -117,28 +117,45 @@ You can view and download this file on Github: `sliderCrank3Dtest.py <https://gi
                                       radius=[0.01,0.01], thickness = 0.01, 
                                       width = [0.02,0.02], color=graphics.color.steelblue)
    
-   [n0,b0]=AddRigidBody(mainSys = mbs, inertia=inertiaAB, nodeType=str(nodeType), 
-                       position=pA, angularVelocity=omega0, gravity=g, 
-                       graphicsDataList=[graphicsAB])
+   dict0 = mbs.CreateRigidBody(referencePosition=pA,  
+                               initialAngularVelocity=omega0,  
+                               inertia=inertiaAB,  
+                               gravity=g,  
+                               nodeType=nodeType,  
+                               graphicsDataList=[graphicsAB],  
+                               returnDict=True)  
+   [n0, b0] = [dict0['nodeNumber'], dict0['bodyNumber']]
+   
    
    ################ Body1: CONROD
    graphicsBC = graphics.RigidLink(p0=[-0.5*lBC,0,0],p1=[0.5*lBC,0,0], axis1=[0,0,0], 
                                       radius=[0.01,0.01], thickness = 0.01, 
                                       width = [0.02,0.02], color=graphics.color.lightred)
    pBC = ScalarMult(0.5,VAdd(pB,pC))
-   [n1,b1]=AddRigidBody(mainSys = mbs, inertia=inertiaBC, nodeType=str(nodeType), 
-                       position=pBC, velocity=v1Init, angularVelocity=omega1Init, 
-                       rotationMatrix=rotMatBC, gravity=g, graphicsDataList=[graphicsBC])
+   dict1 = mbs.CreateRigidBody(referencePosition=pBC,  
+                               referenceRotationMatrix=rotMatBC,  
+                               initialVelocity=v1Init,  
+                               initialAngularVelocity=omega1Init,  
+                               inertia=inertiaBC,  
+                               gravity=g,  
+                               nodeType=nodeType,  
+                               graphicsDataList=[graphicsBC],  
+                               returnDict=True)  
+   [n1, b1] = [dict1['nodeNumber'], dict1['bodyNumber']]
    
    ################ Body2: SLIDER
    d = 0.03
    graphicsSlider = graphics.BrickXYZ(-d/2,-d/2,-d/2, d/2,d/2, d/2, [0.5,0.5,0.5,0.5])
-   [n2,b2]=AddRigidBody(mainSys = mbs, inertia=inertiaSlider, nodeType=str(nodeType), 
-                       position=pC, velocity=v2Init, angularVelocity=[0,0,0], 
-                       graphicsDataList=[graphicsSlider])
+   dict2 = mbs.CreateRigidBody(referencePosition=pC,  
+                               initialVelocity=v2Init,  
+                               inertia=inertiaSlider,  
+                               nodeType=nodeType,  
+                               graphicsDataList=[graphicsSlider],  
+                               returnDict=True)  
+   [n2,b2] = [dict2['nodeNumber'], dict2['bodyNumber']]
    
    
-   oGround = mbs.AddObject(ObjectGround())
+   oGround = mbs.CreateGround()
    markerGroundA = mbs.AddMarker(MarkerBodyRigid(name='markerGroundA', bodyNumber=oGround, localPosition=pA))
    markerGroundD = mbs.AddMarker(MarkerBodyRigid(name='markerGroundD', bodyNumber=oGround, localPosition=[0,0,0]))
    
@@ -192,7 +209,7 @@ You can view and download this file on Github: `sliderCrank3Dtest.py <https://gi
    
    fact = 1000 #1000 for testing
    outputFact = 1000
-   simulationSettings.timeIntegration.numberOfSteps = 1*fact
+   simulationSettings.timeIntegration.numberOfSteps = 1000
    simulationSettings.timeIntegration.endTime = 0.2 #0.2 for testing
    simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/outputFact
    simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/outputFact
@@ -210,8 +227,8 @@ You can view and download this file on Github: `sliderCrank3Dtest.py <https://gi
    SC.visualizationSettings.connectors.jointAxesRadius = 0.002
    
    if useGraphics:
-   #    simulationSettings.timeIntegration.numberOfSteps = 4*5000
-   #    simulationSettings.timeIntegration.endTime = 5 #0.2 for testing
+       simulationSettings.timeIntegration.numberOfSteps = 20000
+       simulationSettings.timeIntegration.endTime = 5 #0.2 for testing
        
        exu.StartRenderer()
        mbs.WaitForUserToContinue()

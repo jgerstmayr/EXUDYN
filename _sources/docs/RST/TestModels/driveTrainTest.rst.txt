@@ -44,7 +44,6 @@ You can view and download this file on Github: `driveTrainTest.py <https://githu
            pass
        exudynTestGlobals = ExudynTestGlobals()
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   # useGraphics = False
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
@@ -295,7 +294,7 @@ You can view and download this file on Github: `driveTrainTest.py <https://githu
                             outputVariableType=exu.OutputVariableType.AngularVelocity))
    sFlyWheelAngle = mbs.AddSensor(SensorNode(nodeNumber=nDT4, #fileName="solution/sensorFlyWheelRotation.txt", 
                             storeInternal=True,
-                            outputVariableType=exu.OutputVariableType.Coordinates))
+                            outputVariableType=exu.OutputVariableType.CoordinatesTotal))
    
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #add torque (could also use LoadTorqueVector() on mDT0Rigid)
@@ -367,9 +366,9 @@ You can view and download this file on Github: `driveTrainTest.py <https://githu
    
        lastRenderState = SC.GetRenderState() #store model view for next simulation
    
-   mbs.PlotSensor(sensorNumbers=[sFlyWheelAngle], 
-              components=[0], closeAll=True, offsets=-phiCrankData,
-              labels=['crank angle - flywheel angle'])
+       mbs.PlotSensor(sensorNumbers=[sFlyWheelAngle], 
+                  components=[0], closeAll=True, offsets=-phiCrankData,
+                  labels=['crank angle - flywheel angle'])
    
    if useGraphics:
        mbs.PlotSensor(sensorNumbers=[sCrankPos, sCrankAngVel, sCrankAngle, sFlyWheelAngVel, sFlyWheelAngle], 

@@ -51,6 +51,8 @@ DESCRIPTION of ObjectGenericODE1
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
+* | ``CoordinatesTotal``\ : 
+  | all \ :ref:`ODE2 <ODE2>`\  displacement plus reference coordinates of object
 * | ``Coordinates``\ : 
   | all \ :ref:`ODE1 <ODE1>`\  coordinates
 * | ``Coordinates\_t``\ : 

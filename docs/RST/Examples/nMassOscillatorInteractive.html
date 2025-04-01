@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nMassOscillatorInteractive.py &mdash; Exudyn1.9.0 1.9.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
+  <title>nMassOscillatorInteractive.py &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
@@ -16,8 +16,8 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=c4cb232b"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.0
+            Exudyn1.9.83.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -97,6 +97,7 @@
 <li class="toctree-l2"><a class="reference internal" href="bungeeJump.html">bungeeJump.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cartesianSpringDamper.html">cartesianSpringDamper.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cartesianSpringDamperUserFunction.html">cartesianSpringDamperUserFunction.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chainDriveExample.html">chainDriveExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chatGPTupdate.html">chatGPTupdate.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chatGPTupdate2.html">chatGPTupdate2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="CMSexampleCourse.html">CMSexampleCourse.py</a></li>
@@ -133,10 +134,12 @@
 <li class="toctree-l2"><a class="reference internal" href="multiprocessingTest.html">multiprocessingTest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="myFirstExample.html">myFirstExample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="netgenSTLtest.html">netgenSTLtest.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="newtonsCradle.html">newtonsCradle.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveCMStutorial.html">NGsolveCMStutorial.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveCraigBampton.html">NGsolveCraigBampton.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveGeometry.html">NGsolveGeometry.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveLinearFEM.html">NGsolveLinearFEM.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveModalAnalysis.html">NGsolveModalAnalysis.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePistonEngine.html">NGsolvePistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePostProcessingStresses.html">NGsolvePostProcessingStresses.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nMassOscillator.html">nMassOscillator.py</a></li>
@@ -188,6 +191,7 @@
 <li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTree.html">serialRobotKinematicTree.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotKinematicTreeDigging.html">serialRobotKinematicTreeDigging.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="serialRobotTSD.html">serialRobotTSD.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serialRobotURDF.html">serialRobotURDF.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="shapeOptimization.html">shapeOptimization.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simple4linkPendulumBing.html">simple4linkPendulumBing.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simulateInteractively.html">simulateInteractively.py</a></li>
@@ -233,7 +237,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.0</a>
+          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -267,16 +271,16 @@
 <span class="linenos"> 10</span><span class="c1">#</span>
 <span class="linenos"> 11</span><span class="c1">#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos"> 12</span>
-<span class="linenos"> 13</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="linenos"> 14</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface and rigidBodyUtilities</span>
-<span class="linenos"> 15</span><span class="kn">import</span> <span class="nn">exudyn.graphics</span> <span class="k">as</span> <span class="nn">graphics</span> <span class="c1">#only import if it does not conflict</span>
-<span class="linenos"> 16</span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="linenos"> 17</span><span class="kn">from</span> <span class="nn">exudyn.interactive</span> <span class="kn">import</span> <span class="nc">InteractiveDialog</span>
+<span class="linenos"> 13</span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
+<span class="linenos"> 14</span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span> <span class="c1">#includes itemInterface and rigidBodyUtilities</span>
+<span class="linenos"> 15</span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn.graphics</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">graphics</span> <span class="c1">#only import if it does not conflict</span>
+<span class="linenos"> 16</span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="linenos"> 17</span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.interactive</span><span class="w"> </span><span class="kn">import</span> <span class="nc">InteractiveDialog</span>
 <span class="linenos"> 18</span>
-<span class="linenos"> 19</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="linenos"> 20</span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="nf">sin</span><span class="p">,</span> <span class="nf">cos</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="nf">sqrt</span>
+<span class="linenos"> 19</span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="linenos"> 20</span><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="nf">sin</span><span class="p">,</span> <span class="nf">cos</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="nf">sqrt</span>
 <span class="linenos"> 21</span>
-<span class="linenos"> 22</span><span class="kn">import</span> <span class="nn">time</span> <span class="c1">#for sleep()</span>
+<span class="linenos"> 22</span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span> <span class="c1">#for sleep()</span>
 <span class="linenos"> 23</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
 <span class="linenos"> 24</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
 <span class="linenos"> 25</span>
@@ -366,14 +370,14 @@
 <span class="linenos">109</span><span class="c1"># mode = 0 #0...forward, 1...backward</span>
 <span class="linenos">110</span>
 <span class="linenos">111</span><span class="c1">#user function for load</span>
-<span class="linenos">112</span><span class="k">def</span> <span class="nf">userLoad</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
+<span class="linenos">112</span><span class="k">def</span><span class="w"> </span><span class="nf">userLoad</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
 <span class="linenos">113</span>    <span class="n">f</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;forceAmplitude&#39;</span><span class="p">]</span>
 <span class="linenos">114</span>    <span class="n">fact</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="linenos">115</span>    <span class="k">if</span> <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;loadCase&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">caseHarmonic</span><span class="p">:</span>
 <span class="linenos">116</span>        <span class="n">fact</span> <span class="o">=</span> <span class="nf">sin</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="nf">GetSensorValues</span><span class="p">(</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;sensorPhi&#39;</span><span class="p">]))</span>
 <span class="linenos">117</span>    <span class="k">return</span> <span class="n">f</span><span class="o">*</span><span class="n">fact</span>
 <span class="linenos">118</span>
-<span class="linenos">119</span><span class="k">def</span> <span class="nf">userLoad3D</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span><span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
+<span class="linenos">119</span><span class="k">def</span><span class="w"> </span><span class="nf">userLoad3D</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span><span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
 <span class="linenos">120</span>    <span class="n">f</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;forceAmplitude&#39;</span><span class="p">]</span>
 <span class="linenos">121</span>    <span class="n">fact</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="linenos">122</span>    <span class="k">if</span> <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;loadCase&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">caseHarmonic</span><span class="p">:</span>
@@ -382,11 +386,11 @@
 <span class="linenos">125</span>    <span class="k">return</span> <span class="p">[</span><span class="n">f</span><span class="o">*</span><span class="n">fact</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
 <span class="linenos">126</span>
 <span class="linenos">127</span><span class="c1">#dummy user function for frequency</span>
-<span class="linenos">128</span><span class="k">def</span> <span class="nf">userFrequency</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
+<span class="linenos">128</span><span class="k">def</span><span class="w"> </span><span class="nf">userFrequency</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
 <span class="linenos">129</span>    <span class="k">return</span> <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;omega&#39;</span><span class="p">]</span>
 <span class="linenos">130</span>
 <span class="linenos">131</span><span class="c1">#user function used in GenericODE2 to integrate current omega</span>
-<span class="linenos">132</span><span class="k">def</span> <span class="nf">UFintegrateOmega</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemIndex</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">q_t</span><span class="p">):</span>
+<span class="linenos">132</span><span class="k">def</span><span class="w"> </span><span class="nf">UFintegrateOmega</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">itemIndex</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">q_t</span><span class="p">):</span>
 <span class="linenos">133</span>    <span class="k">return</span> <span class="p">[</span><span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;omega&#39;</span><span class="p">]]</span> <span class="c1">#current frequency*2*pi is integrated into phi, return vector!</span>
 <span class="linenos">134</span>
 <span class="linenos">135</span><span class="c1">#ground node</span>
@@ -485,7 +489,7 @@
 <span class="linenos">228</span>
 <span class="linenos">229</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
 <span class="linenos">230</span><span class="c1">#compute eigenvalues</span>
-<span class="linenos">231</span><span class="kn">from</span> <span class="nn">exudyn.solver</span> <span class="kn">import</span> <span class="nf">ComputeODE2Eigenvalues</span>
+<span class="linenos">231</span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.solver</span><span class="w"> </span><span class="kn">import</span> <span class="nf">ComputeODE2Eigenvalues</span>
 <span class="linenos">232</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
 <span class="linenos">233</span><span class="p">[</span><span class="n">values</span><span class="p">,</span> <span class="n">vectors</span><span class="p">]</span> <span class="o">=</span> <span class="nf">ComputeODE2Eigenvalues</span><span class="p">(</span><span class="n">mbs</span><span class="p">)</span>
 <span class="linenos">234</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;omegas (rad/s)=&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="nf">sqrt</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
@@ -546,7 +550,7 @@
 <span class="linenos">289</span><span class="c1">#set up interactive window</span>
 <span class="linenos">290</span>
 <span class="linenos">291</span><span class="c1">#interactive function</span>
-<span class="linenos">292</span><span class="k">def</span> <span class="nf">SimulationUF</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">dialog</span><span class="p">):</span>
+<span class="linenos">292</span><span class="k">def</span><span class="w"> </span><span class="nf">SimulationUF</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">dialog</span><span class="p">):</span>
 <span class="linenos">293</span>    <span class="k">if</span> <span class="n">mbs</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;resetMotion&#39;</span><span class="p">]:</span>
 <span class="linenos">294</span>        <span class="n">u</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">systemData</span><span class="o">.</span><span class="nf">GetODE2Coordinates</span><span class="p">()</span>
 <span class="linenos">295</span>        <span class="n">u</span> <span class="o">*=</span> <span class="mi">0</span>

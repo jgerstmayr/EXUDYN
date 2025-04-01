@@ -6,8 +6,8 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Symbolic &mdash; Exudyn1.9.0 1.9.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=82a976d7" />
+  <title>Symbolic &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
@@ -16,8 +16,8 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=c4cb232b"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.0
+            Exudyn1.9.83.dev1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -101,7 +101,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.0</a>
+          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -126,7 +126,7 @@
 <section id="symbolic-real">
 <h2>symbolic.Real<a class="headerlink" href="#symbolic-real" title="Link to this heading"></a></h2>
 <p>The symbolic Real type allows to replace Python’s float by a symbolic quantity. The <code class="docutils literal notranslate"><span class="pre">symbolic.Real</span></code> may be directly set to a float and be evaluated as float. However, turing on recording by using       exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
 <span class="linenos"> 2</span><span class="n">esym</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span>     <span class="c1">#abbreviation</span>
 <span class="linenos"> 3</span><span class="n">SymReal</span> <span class="o">=</span> <span class="n">esym</span><span class="o">.</span><span class="n">Real</span>     <span class="c1">#abbreviation</span>
 <span class="linenos"> 4</span>
@@ -157,6 +157,9 @@
 <span class="linenos">29</span><span class="n">esym</span><span class="o">.</span><span class="nf">SetRecording</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 <span class="linenos">30</span><span class="n">x</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span> <span class="c1">#now, only represents a value</span>
 <span class="linenos">31</span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">/</span><span class="mf">3.</span>       <span class="c1">#directly evaluates to 14</span>
+<span class="linenos">32</span>
+<span class="linenos">33</span><span class="c1">#back to default behavior, otherwise expr. only evaluated:</span>
+<span class="linenos">34</span><span class="n">esym</span><span class="o">.</span><span class="nf">SetRecording</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>To create a symbolic Real, use <code class="docutils literal notranslate"><span class="pre">aa=symbolic.Real(1.23)</span></code> to build a Python object aa with value 1.23. In order to use a named value, use <code class="docutils literal notranslate"><span class="pre">pi=symbolic.Real('pi',3.14)</span></code>. Note that in the following, we use the abbreviation <code class="docutils literal notranslate"><span class="pre">SymReal=exudyn.symbolic.Real</span></code>. Member functions of <code class="docutils literal notranslate"><span class="pre">SymReal</span></code>, which are <strong>not recorded</strong>, are:</p>
@@ -424,34 +427,35 @@
 <section id="symbolic-vector">
 <h2>symbolic.Vector<a class="headerlink" href="#symbolic-vector" title="Link to this heading"></a></h2>
 <p>A symbolic Vector type to replace Python’s (1D) numpy array in symbolic expressions. The <code class="docutils literal notranslate"><span class="pre">symbolic.Vector</span></code> may be directly set to a list of floats or (1D) numpy array and be evaluated as array. However, turing on recording by using   exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="linenos"> 2</span><span class="n">esym</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span>
-<span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="n">SymVector</span> <span class="o">=</span> <span class="n">esym</span><span class="o">.</span><span class="n">Vector</span>
-<span class="linenos"> 5</span><span class="n">SymReal</span> <span class="o">=</span> <span class="n">esym</span><span class="o">.</span><span class="n">Real</span>
-<span class="linenos"> 6</span>
-<span class="linenos"> 7</span><span class="n">a</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="mf">42.</span><span class="p">)</span>
-<span class="linenos"> 8</span><span class="n">b</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
-<span class="linenos"> 9</span><span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="o">-</span><span class="mi">3</span><span class="o">*</span><span class="n">b</span>
-<span class="linenos">10</span>
-<span class="linenos">11</span><span class="c1">#create from list:</span>
-<span class="linenos">12</span><span class="n">v1</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-<span class="linenos">13</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v1: &#39;</span><span class="p">,</span><span class="n">v1</span><span class="p">)</span>
-<span class="linenos">14</span>
-<span class="linenos">15</span><span class="c1">#create from numpy array:</span>
-<span class="linenos">16</span><span class="n">v2</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]))</span>
-<span class="linenos">17</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v2 initial: &#39;</span><span class="p">,</span><span class="n">v2</span><span class="p">)</span>
-<span class="linenos">18</span>
-<span class="linenos">19</span><span class="c1">#create from list, mixing symbolic expressions and numbers:</span>
-<span class="linenos">20</span><span class="n">v2</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="mi">42</span><span class="p">,</span><span class="n">c</span><span class="p">])</span>
-<span class="linenos">21</span>
-<span class="linenos">22</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v2 now: &#39;</span><span class="p">,</span><span class="n">v2</span><span class="p">,</span><span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="n">v2</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span>
-<span class="linenos">23</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v1+v2: &#39;</span><span class="p">,</span><span class="n">v1</span><span class="o">+</span><span class="n">v2</span><span class="p">,</span><span class="s2">&quot;=&quot;</span><span class="p">,(</span><span class="n">v1</span><span class="o">+</span><span class="n">v2</span><span class="p">)</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span> <span class="c1">#evaluate as vector</span>
-<span class="linenos">24</span>
-<span class="linenos">25</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v1*v2: &#39;</span><span class="p">,</span><span class="n">v1</span><span class="o">*</span><span class="n">v2</span><span class="p">,</span><span class="s2">&quot;=&quot;</span><span class="p">,(</span><span class="n">v1</span><span class="o">*</span><span class="n">v2</span><span class="p">)</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span> <span class="c1">#evaluate as Real</span>
-<span class="linenos">26</span>
-<span class="linenos">27</span><span class="c1">#access of vector component:</span>
-<span class="linenos">28</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v1[2]: &#39;</span><span class="p">,</span><span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span>   <span class="c1">#evaluate as Real</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
+<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="linenos"> 3</span><span class="n">esym</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="n">SymVector</span> <span class="o">=</span> <span class="n">esym</span><span class="o">.</span><span class="n">Vector</span>
+<span class="linenos"> 6</span><span class="n">SymReal</span> <span class="o">=</span> <span class="n">esym</span><span class="o">.</span><span class="n">Real</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="n">a</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="mf">42.</span><span class="p">)</span>
+<span class="linenos"> 9</span><span class="n">b</span> <span class="o">=</span> <span class="n">SymReal</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+<span class="linenos">10</span><span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="o">-</span><span class="mi">3</span><span class="o">*</span><span class="n">b</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="c1">#create from list:</span>
+<span class="linenos">13</span><span class="n">v1</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="linenos">14</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v1: &#39;</span><span class="p">,</span><span class="n">v1</span><span class="p">)</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="c1">#create from numpy array:</span>
+<span class="linenos">17</span><span class="n">v2</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]))</span>
+<span class="linenos">18</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v2 initial: &#39;</span><span class="p">,</span><span class="n">v2</span><span class="p">)</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="c1">#create from list, mixing symbolic expressions and numbers:</span>
+<span class="linenos">21</span><span class="n">v2</span> <span class="o">=</span> <span class="n">SymVector</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="mi">42</span><span class="p">,</span><span class="n">c</span><span class="p">])</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v2 now: &#39;</span><span class="p">,</span><span class="n">v2</span><span class="p">,</span><span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="n">v2</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span>
+<span class="linenos">24</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v1+v2: &#39;</span><span class="p">,</span><span class="n">v1</span><span class="o">+</span><span class="n">v2</span><span class="p">,</span><span class="s2">&quot;=&quot;</span><span class="p">,(</span><span class="n">v1</span><span class="o">+</span><span class="n">v2</span><span class="p">)</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span> <span class="c1">#evaluate as vector</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v1*v2: &#39;</span><span class="p">,</span><span class="n">v1</span><span class="o">*</span><span class="n">v2</span><span class="p">,</span><span class="s2">&quot;=&quot;</span><span class="p">,(</span><span class="n">v1</span><span class="o">*</span><span class="n">v2</span><span class="p">)</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span> <span class="c1">#evaluate as Real</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span><span class="c1">#access of vector component:</span>
+<span class="linenos">29</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;v1[2]: &#39;</span><span class="p">,</span><span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="nf">Evaluate</span><span class="p">())</span>   <span class="c1">#evaluate as Real</span>
 </pre></div>
 </div>
 <p>To create a symbolic Vector, use <code class="docutils literal notranslate"><span class="pre">aa=symbolic.Vector([3,4.2,5]</span></code> to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use <code class="docutils literal notranslate"><span class="pre">v=symbolic.Vector('myVec',[3,4.2,5])</span></code>. Vectors can be also created from mixed symbolic expressions and numbers, such as <code class="docutils literal notranslate"><span class="pre">v=symbolic.Vector([x,x**2,3.14])</span></code>, however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that ‘*’ represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator ‘==’ gives only True, if all components are equal, and the operator ‘!=’ gives True, if any component is unequal. Note that in the following, we use the abbreviation <code class="docutils literal notranslate"><span class="pre">SymVector=exudyn.symbolic.Vector</span></code>. Note that only functions are able to be recorded. Member functions of <code class="docutils literal notranslate"><span class="pre">SymVector</span></code> are:</p>
@@ -546,8 +550,8 @@
 <section id="symbolic-matrix">
 <h2>symbolic.Matrix<a class="headerlink" href="#symbolic-matrix" title="Link to this heading"></a></h2>
 <p>A symbolic Matrix type to replace Python’s (2D) numpy array in symbolic expressions. The <code class="docutils literal notranslate"><span class="pre">symbolic.Matrix</span></code> may be directly set to a list of list of floats or (2D) numpy array and be evaluated as array. However, turing on recording by using   exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
+<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="linenos"> 3</span><span class="n">esym</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span>
 <span class="linenos"> 4</span>
 <span class="linenos"> 5</span><span class="n">SymMatrix</span> <span class="o">=</span> <span class="n">esym</span><span class="o">.</span><span class="n">Matrix</span>
@@ -655,8 +659,8 @@
 <section id="symbolic-variableset">
 <h2>symbolic.VariableSet<a class="headerlink" href="#symbolic-variableset" title="Link to this heading"></a></h2>
 <p>A container for symbolic variables, in particular for exchange between user functions and the model. For details, see the following example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
-<span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">math</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
+<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="linenos"> 3</span><span class="n">SymReal</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">Real</span>
 <span class="linenos"> 4</span>
 <span class="linenos"> 5</span><span class="c1">#use global variable set:</span>
@@ -757,16 +761,16 @@
 <section id="symbolic-userfunction">
 <h2>symbolic.UserFunction<a class="headerlink" href="#symbolic-userfunction" title="Link to this heading"></a></h2>
 <p>A class for creating and handling symbolic user functions in C++. Use these functions for high performance extensions, e.g., of existing objects or loadsFor details, see the following example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">exudyn</span> <span class="k">as</span> <span class="nn">exu</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
 <span class="linenos"> 2</span><span class="n">esym</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span>
-<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">exudyn.utilities</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#advancedUtilities with user function utilities included</span>
+<span class="linenos"> 3</span><span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span> <span class="c1">#advancedUtilities with user function utilities included</span>
 <span class="linenos"> 4</span><span class="n">SymReal</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">Real</span>
 <span class="linenos"> 5</span>
 <span class="linenos"> 6</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
 <span class="linenos"> 7</span><span class="n">mbs</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">AddSystem</span><span class="p">()</span>
 <span class="linenos"> 8</span>
 <span class="linenos"> 9</span><span class="c1">#regular Python user function with esym math functions</span>
-<span class="linenos">10</span><span class="k">def</span> <span class="nf">UFload</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
+<span class="linenos">10</span><span class="k">def</span><span class="w"> </span><span class="nf">UFload</span><span class="p">(</span><span class="n">mbs</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">load</span><span class="p">):</span>
 <span class="linenos">11</span>    <span class="k">return</span> <span class="n">load</span><span class="o">*</span><span class="n">esym</span><span class="o">.</span><span class="nf">sin</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
 <span class="linenos">12</span>
 <span class="linenos">13</span><span class="c1">#create symbolic user function from Python user function:</span>

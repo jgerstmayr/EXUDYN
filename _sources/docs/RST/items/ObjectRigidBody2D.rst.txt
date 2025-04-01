@@ -5,7 +5,7 @@
 ObjectRigidBody2D
 =================
 
-A 2D rigid body which is attached to a rigid body 2D node. The body obtains coordinates, position, velocity, etc. from the underlying 2D node
+A 2D rigid body which is attached to a rigid body 2D node. The body obtains coordinates, position, velocity, etc. from the underlying 2D node.
 
 \ **Additional information for ObjectRigidBody2D**\ :
 
@@ -22,7 +22,9 @@ The item \ **ObjectRigidBody2D**\  with type = 'RigidBody2D' has the following p
 * | **physicsMass** [\ :math:`m`\ , type = UReal, default = 0.]:
   | mass [SI:kg] of rigid body
 * | **physicsInertia** [\ :math:`J`\ , type = UReal, default = 0.]:
-  | inertia [SI:kgm\ :math:`^2`\ ] of rigid body w.r.t. center of mass
+  | inertia [SI:kgm\ :math:`^2`\ ] of rigid body w.r.t. reference point; this is equal to the center of mass, if physicsCenterOfMass = 0
+* | **physicsCenterOfMass** [\ :math:`\LU{b}{{\mathbf{b}}_{COM}}`\ , type = Vector2D, size = 2, default = [0.,0.]]:
+  | local position of \ :ref:`COM <COM>`\  relative to the body's reference point; if the vector of the \ :ref:`COM <COM>`\  is [0,0], the computation will not consider additional terms for the \ :ref:`COM <COM>`\  and it is faster
 * | **nodeNumber** [\ :math:`n_0`\ , type = NodeIndex, default = invalid (-1)]:
   | node number (type NodeIndex) for 2D rigid body node
 * | **visualization** [type = VObjectRigidBody2D]:
@@ -87,15 +89,15 @@ Definition of quantities
    * - | intermediate variables
      - | symbol
      - | description
-   * - | \ :ref:`COM <COM>`\  position
+   * - | reference position
      - | \ :math:`\pRefG\cConfig + \pRefG\cRef = \LU{0}{{\mathbf{p}}}(n_0)\cConfig`\ 
-     - | reference point, equal to the position of \ :ref:`COM <COM>`\ ; provided by node \ :math:`n_0`\  in any configuration (except reference)
-   * - | \ :ref:`COM <COM>`\  displacement
+     - | reference point, only equal to the position of \ :ref:`COM <COM>`\  if \ :math:`\LU{b}{{\mathbf{b}}_{COM}}=\Null`\ ; provided by node \ :math:`n_0`\  in any configuration (except reference)
+   * - | reference point displacement
      - | \ :math:`\LU{0}{{\mathbf{u}}}\cConfig =\pRefG\cConfig = [q_0,\;q_1,\;0]\cConfig\tp = \LU{0}{{\mathbf{u}}}(n_0)\cConfig`\ 
-     - | displacement of center of mass which is provided by node \ :math:`n_0`\  in any configuration; NOTE that for configurations other than reference, it is follows that \ :math:`\pRefG\cRef - \pRefG\cConfig`\ 
-   * - | \ :ref:`COM <COM>`\  velocity
+     - | displacement of reference point which is provided by node \ :math:`n_0`\  in any configuration; NOTE that for configurations other than reference, it is follows that \ :math:`\pRefG\cRef - \pRefG\cConfig`\ 
+   * - | reference point velocity
      - | \ :math:`\LU{0}{{\mathbf{v}}}\cConfig = [\dot q_0,\;\dot q_1,\;0]\cConfig\tp = \LU{0}{{\mathbf{v}}}(n_0)\cConfig`\ 
-     - | velocity of center of mass which is provided by node \ :math:`n_0`\  in any configuration
+     - | velocity of reference point which is provided by node \ :math:`n_0`\  in any configuration
    * - | body rotation
      - | \ :math:`\LU{0}{\theta}_{0\mathrm{config}} = \theta_0(n_0)\cConfig = \psi_0(n_0)\cRef + \psi_0(n_0)\cConfig`\ 
      - | rotation of body as provided by node \ :math:`n_0`\  in any configuration
@@ -125,13 +127,27 @@ Definition of quantities
 Equations of motion
 -------------------
 
+The equations of motion in case that \ ``physicsCenterOfMass=\Null``\  read:
 
 .. math::
 
    \mr{m}{0}{0} {0}{m}{0} {0}{0}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{f_0}{f_1}{\tau_2} = {\mathbf{f}}.
 
 
-For example, a LoadCoordinate on coordinate 2 of the node would add a torque \ :math:`\tau_2`\  on the RHS.
+if \ ``physicsCenterOfMass``\  is nonzero, we resort to (not that \ :math:`J`\  represents the moment of inertia related to the reference point!):
+
+.. math::
+
+   \mr{m}{0}{G_x} {0}{m}{G_y} {G_x}{G_y}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{m \dot \psi_0^2 b_x }{m \dot \psi_0^2 b_y}{0} + \vr{f_0}{f_1}{\tau_2} = {\mathbf{f}}.
+
+
+where we use the relations caused by the non-zero center of mass
+
+.. math::
+
+   \vp{G_x}{G_y} = m \vp{b_y}{-b_x} \quad \mathrm{and} \quad \vp{b_x}{b_y} = \LU{0}{{\mathbf{b}}_{COM}}
+
+
 
 Position-based markers can measure position \ :math:`{\mathbf{p}}\cConfig(\pLocB)`\  depending on the local position \ :math:`\pLocB`\ . 
 The \ **position jacobian**\  depends on the local position \ :math:`\pLocB`\  and is defined as,
@@ -148,6 +164,7 @@ which transforms the action of global forces \ :math:`\LU{0}{{\mathbf{f}}}`\  of
    {\mathbf{Q}} = \LU{0}{{\mathbf{J}}_{pos}\tp} \LU{0}{{\mathbf{f}}}_a
 
 
+Note that a LoadCoordinate on coordinate 2 of the node would add a torque \ :math:`\tau_2`\  on the RHS.
 The \ **rotation jacobian**\ , which is computed from angular velocity, reads
 
 .. math::

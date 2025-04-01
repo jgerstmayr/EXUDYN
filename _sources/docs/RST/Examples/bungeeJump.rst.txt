@@ -183,7 +183,7 @@ You can view and download this file on Github: `bungeeJump.py <https://github.co
    mbs.systemData.SetODE2Coordinates(ode2, configuration=exu.ConfigurationType.Initial)
    
    #turn of constraint of jumper
-   mbs.SetObjectParameter(fixJumper[0], parameterName='activeConnector', value=False)
+   mbs.SetObjectParameter(fixJumper, parameterName='activeConnector', value=False)
    
    mbs.WaitForUserToContinue()
    

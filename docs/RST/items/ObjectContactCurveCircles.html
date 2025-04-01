@@ -1,0 +1,402 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ObjectContactCurveCircles &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e11081fd" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script src="../../../_static/js/rtd_search_config.js"></script>
+      <script src="../../../_static/js/rtd_sphinx_search.min.js"></script>
+      <script>window.MathJax = {"loader": {"load": ["[tex]/mathtools"]}, "tex": {"packages": {"[+]": ["mathtools"]}, "macros": {"vspace": ["{}", 1], "ra": "{\\rightarrow}", "Rcal": "{\\mathbb{R}}", "Ccal": "{\\mathbb{C}}", "Ncal": "{\\mathbb{N}}", "Rot": "{\\mathbf{A}}", "dd": "{\\mathrm{d}}", "ps": "{p_\\mathrm{s}}", "co": "{\\mathrm{c}}", "si": "{\\mathrm{s}}", "tp": "{^\\mathrm{T}}", "diag": "{\\mathrm{diag}}", "vec": "{\\mathrm{vec}}", "Null": "{\\mathbf{0}}", "varepsilonDot": "{\\boldsymbol{\\varepsilon}}", "talpha": "{\\boldsymbol{\\alpha}}", "tbeta": "{\\boldsymbol{\\beta}}", "tgamma": "{\\boldsymbol{\\gamma}}", "tchi": "{\\boldsymbol{\\chi}}", "tdelta": "{\\boldsymbol{\\delta}}", "teps": "{\\boldsymbol{\\varepsilon}}", "tepsDot": "{\\boldsymbol{\\dot \\varepsilon}}", "teta": "{\\boldsymbol{\\eta}}", "tkappa": "{\\boldsymbol{\\kappa}}", "tkappaDot": "{\\boldsymbol{\\dot \\kappa}}", "tphi": "{\\boldsymbol{\\phi}}", "boldVarPhi": "{\\boldsymbol{\\varphi}}", "tPhi": "{\\boldsymbol{\\Phi}}", "ttheta": "{\\boldsymbol{\\theta}}", "tTheta": "{\\boldsymbol{\\Theta}}", "tlambda": "{\\boldsymbol{\\lambda}}", "tnu": "{\\boldsymbol{\\nu}}", "tmu": "{\\boldsymbol{\\mu}}", "tpsi": "{\\boldsymbol{\\psi}}", "tPsi": "{\\boldsymbol{\\Psi}}", "ttau": "{\\boldsymbol{\\tau}}", "tsigma": "{\\boldsymbol{\\sigma}}", "txi": "{\\boldsymbol{\\xi}}", "tzeta": "{\\boldsymbol{\\zeta}}", "tomega": "{\\boldsymbol{\\omega}}", "tOmega": "{\\boldsymbol{\\Omega}}", "vareps": "{\\varepsilon}", "myoverline": ["\\overline{#1}", 1], "pluseq": "\\mathrel{+}=", "LU": ["{\\prescript{#1}{}{#2}\\,}", 2], "LUX": ["{\\prescript{#1}{}{#2}#3\\,}", 3], "LUR": ["{\\prescript{#1}{}{#2}_{#3}\\,}", 3], "LURU": ["{\\prescript{#1}{}{#2}_{#3}^{#4}\\,}", 4], "LLdot": ["{\\prescript{}{#1}{\\dot{#2}}_{#3}\\,}", 3], "vr": ["{\\left[ \\begin{array}{c} { #1}\\vspace{0.04cm} \\\\ { #2}\\vspace{0.04cm} \\\\ { #3} \\end{array} \\right]}", 3], "mr": ["{\\left[ \\begin{array}{ccc} #1 & #2 & #3 \\vspace{0.04cm}\\\\ #4 & #5 & #6 \\vspace{0.04cm}\\\\ #7 & #8 & #9  \\end{array} \\right]}", 9], "vp": ["{\\left[ \\begin{array}{c} { #1} \\vspace{0.04cm}\\\\ { #2} \\end{array} \\right]}", 2], "mp": ["{\\left[ \\begin{array}{cc} #1 & #2 \\vspace{0.04cm}\\\\ #3 & #4 \\end{array} \\right]}", 4], "mfour": ["{\\left[ \\begin{array}{cccc} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vfour": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\end{array} \\right]}", 4], "vrRow": ["{[#1,\\, #2,\\, #3]}", 3], "vsix": ["{\\left[ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} \\right]}", 6], "vsixb": ["{\\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "vsixs": ["{ \\begin{array}{c} { #1} \\\\ { #2} \\\\ { #3} \\\\ { #4} \\\\ { #5} \\\\ { #6} \\end{array} }", 6], "SO": "{q}", "FO": "{y}", "AE": "{\\lambda}", "SYS": "{s}", "SON": "{$2^\\mathrm{nd}$ order differential equations}", "FON": "{$1^\\mathrm{st}$ order differential equations}", "AEN": "{algebraic equations}", "SYSN": "{system equations}", "cIni": "{_\\mathrm{ini}}", "cRef": "{_\\mathrm{ref}}", "cCur": "{_\\mathrm{cur}}", "cVis": "{_\\mathrm{vis}}", "cSOS": "{_\\mathrm{start\\;of\\;step}}", "cConfig": "{_\\mathrm{config}}", "pLoc": "{\\mathbf{b}}", "pLocB": "{\\,^{b}{\\mathbf{v}}}", "pRef": "{\\mathbf{r}}", "pRefG": "{\\,^{0}{\\mathbf{r}}}", "indf": "{_\\mathrm{f}}", "indt": "{_\\mathrm{t}}", "indr": "{_\\mathrm{r}}", "indtt": "{_\\mathrm{tt}}", "indrr": "{_\\mathrm{rr}}", "indff": "{_\\mathrm{ff}}", "indtf": "{_\\mathrm{tf}}", "indrf": "{_\\mathrm{rf}}", "indtr": "{_\\mathrm{tr}}", "omegaBDtilde": "{\\LU{b}{\\tilde \\tomega_\\mathrm{bd}}}", "indrigid": "{_\\mathrm{rigid}}", "indred": "{_\\mathrm{red}}", "induser": "{_\\mathrm{user}}", "indu": "{_\\mathrm{u}}", "termA": ["{\\color{blue}{#1}}", 1], "termB": ["{\\color{red}{#1}}", 1], "termC": ["{\\color{green}{#1}}", 1], "acc": "{\\ddot \\mathbf{q}}", "GA": "{G\\alpha}", "aalg": "{\\mathbf{a}}", "vel": "{\\mathbf{v}}"}}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Object (Constraint)" href="objectConstraintIndex.html" />
+    <link rel="prev" title="ObjectContactSphereSphere" href="ObjectContactSphereSphere.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Exudyn1.9.83.dev1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Exudyn User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Exudyn.html">Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../InstallationAndGettingStartedIndex.html">Installation and Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OverviewOnExudynIndex.html">Overview on Exudyn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TutorialIndex.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GraphicsAndVisualizationIndex.html">Graphics and visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../NotationIndex.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TheoryAndFormulationsIndex.html">Theory and formulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../SolversIndex.html">Solvers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cInterface/CInterfaceIndex.html">Python-C++ command interface</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pythonUtilities/index.html">Python Utility Functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="itemsIndex.html">Items reference manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodeIndex.html">Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectBodyIndex.html">Object (Body)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectSuperElementIndex.html">Object (SuperElement)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectObjectIndex.html">Object (Object)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectFiniteElementIndex.html">Object (FiniteElement)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="objectConnectorIndex.html">Object (Connector)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorSpringDamper.html">ObjectConnectorSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorCartesianSpringDamper.html">ObjectConnectorCartesianSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorRigidBodySpringDamper.html">ObjectConnectorRigidBodySpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorLinearSpringDamper.html">ObjectConnectorLinearSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorTorsionalSpringDamper.html">ObjectConnectorTorsionalSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorCoordinateSpringDamper.html">ObjectConnectorCoordinateSpringDamper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorCoordinateSpringDamperExt.html">ObjectConnectorCoordinateSpringDamperExt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorGravity.html">ObjectConnectorGravity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorHydraulicActuatorSimple.html">ObjectConnectorHydraulicActuatorSimple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorReevingSystemSprings.html">ObjectConnectorReevingSystemSprings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectConnectorRollingDiscPenalty.html">ObjectConnectorRollingDiscPenalty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactConvexRoll.html">ObjectContactConvexRoll</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactCoordinate.html">ObjectContactCoordinate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactCircleCable2D.html">ObjectContactCircleCable2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactFrictionCircleCable2D.html">ObjectContactFrictionCircleCable2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactSphereSphere.html">ObjectContactSphereSphere</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ObjectContactCurveCircles</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="objectConstraintIndex.html">Object (Constraint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="objectJointIndex.html">Object (Joint)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markerIndex.html">Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadIndex.html">Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensorIndex.html">Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structures/StructuresAndSettingsIndex.html">Structures and Settings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Misc</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Abbreviations.html">List of Abbreviations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ExamplesIndex.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TestModelsIndex.html">TestModels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../trackerlog.html">Issue tracker</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="itemsIndex.html">Items reference manual</a></li>
+          <li class="breadcrumb-item"><a href="objectConnectorIndex.html">Object (Connector)</a></li>
+      <li class="breadcrumb-item active">ObjectContactCurveCircles</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/docs/RST/items/ObjectContactCurveCircles.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="objectcontactcurvecircles">
+<span id="sec-item-objectcontactcurvecircles"></span><h1>ObjectContactCurveCircles<a class="headerlink" href="#objectcontactcurvecircles" title="Link to this heading"></a></h1>
+<p>[UNDER CONSTRUCTION] A contact model between a curve defined by piecewise segments and a set of circles. The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. Note that there is a limit of 100 circle markes above which computation becomes slower as it requires memory allocation.</p>
+<p><strong>Additional information for ObjectContactCurveCircles</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line">This <code class="docutils literal notranslate"><span class="pre">Object</span></code> has/provides the following types = <code class="docutils literal notranslate"><span class="pre">Connector</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">Requested <code class="docutils literal notranslate"><span class="pre">Marker</span></code> type = <code class="docutils literal notranslate"><span class="pre">Position</span></code> + <code class="docutils literal notranslate"><span class="pre">Orientation</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">Requested <code class="docutils literal notranslate"><span class="pre">Node</span></code> type = <code class="docutils literal notranslate"><span class="pre">GenericData</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Short name</strong> for Python = <code class="docutils literal notranslate"><span class="pre">CamFollower</span></code></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Short name</strong> for Python visualization object = <code class="docutils literal notranslate"><span class="pre">VCamFollower</span></code></div>
+</div>
+</li>
+</ul>
+<p>The item <strong>ObjectContactCurveCircles</strong> with type = ‘ContactCurveCircles’ has the following parameters:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>name</strong> [type = String, default = ‘’]:</div>
+<div class="line">constraints’s unique name</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>markerNumbers</strong> [<span class="math notranslate nohighlight">\([m0,m_{c0},m_{c1},\ldots]\tp\)</span>, type = ArrayMarkerIndex, size =  2, default = [ invalid [-1], invalid [-1] ]]:</div>
+<div class="line">list of <span class="math notranslate nohighlight">\(n_c+1\)</span> markers; marker <span class="math notranslate nohighlight">\(m0\)</span> represents the marker carrying the curve; all other markers represent centers of <span class="math notranslate nohighlight">\(n_c\)</span> circles, used in connector</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>nodeNumber</strong> [<span class="math notranslate nohighlight">\(n_d\)</span>, type = NodeIndex, default = invalid (-1)]:</div>
+<div class="line">node number of a NodeGenericData with nDataVariablesPerSegment dataCoordinates per segment, needed for discontinuous iteration; data variables contain values from last PostNewton iteration: data[0+3*i] is the circle number, data[1+3*i] is the gap, data[2+3*i] is the tangential velocity (and thus contains information if it is stick or slip)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>circlesRadii</strong> [<span class="math notranslate nohighlight">\([r_{c0},r_{c1}, \ldots]\tp \in \Rcal^{n_c}\)</span>, type = NumpyVector, default = []]:</div>
+<div class="line">Vector containing radii of <span class="math notranslate nohighlight">\(n_c\)</span> circles [SI:m]; number according to size of markerNumbers-1</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>segmentsData</strong> [<span class="math notranslate nohighlight">\({\mathbf{D}} \in \Rcal^{n_s \times 4}\)</span>, type = PyMatrixContainer, default = PyMatrixContainer[]]:</div>
+<div class="line">matrix containing a set of two planar point coordinates in each row, representing segments attached to marker <span class="math notranslate nohighlight">\(m0\)</span> and undergoing contact with the circles; for segment <span class="math notranslate nohighlight">\(s0\)</span> row 0 reads <span class="math notranslate nohighlight">\([p_{0x,s0},\,p_{0y,s0},\,p_{1x,s0},\,p_{1y,s0}]\)</span>; note that the segments must be ordered such that going from <span class="math notranslate nohighlight">\({\mathbf{p}}_0\)</span> to <span class="math notranslate nohighlight">\({\mathbf{p}}_1\)</span>, the exterior lies on the right (positive) side. MatrixContainer has to be provided in dense mode!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>polynomialData</strong> [<span class="math notranslate nohighlight">\({\mathbf{P}} \in \Rcal^{n_s \times n_p}\)</span>, type = PyMatrixContainer, default = PyMatrixContainer[]]:</div>
+<div class="line">matrix containing coefficients for polynomial enhancements of the linear segments; each row contains polynomial coefficients for the according segment; the polynomial coefficients may contain quadratic, cubic, etc. coefficients, while constant and linear coefficients are automatically selected such that the end points of the polynomial match the segment’s endpoints; the local coordinate <span class="math notranslate nohighlight">\(x\)</span> of the polynomial runs from 0 to 1 and positive values represent concave geometries (enlarging the curve). MatrixContainer has to be provided in dense mode!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>rotationMarker0</strong> [type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:</div>
+<div class="line">local rotation matrix for marker 0; used to rotate marker coordinates such that the curve lies in the <span class="math notranslate nohighlight">\(x-y\)</span>-plane</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>dynamicFriction</strong> [<span class="math notranslate nohighlight">\(\mu_d\)</span>, type = UReal, default = 0.]:</div>
+<div class="line">dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, Section <a class="reference internal" href="../pythonUtilities/physics.html#sec-module-physics"><span class="std std-ref">Module: physics</span></a></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>frictionProportionalZone</strong> [<span class="math notranslate nohighlight">\(v_{reg}\)</span>, type = UReal, default = 1e-3]:</div>
+<div class="line">limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), Section <a class="reference internal" href="../pythonUtilities/physics.html#sec-module-physics"><span class="std std-ref">Module: physics</span></a></div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>contactStiffness</strong> [<span class="math notranslate nohighlight">\(k_c\)</span>, type = Real, default = 0.]:</div>
+<div class="line">normal contact stiffness [SI:N/m] (units in case that <span class="math notranslate nohighlight">\(n_\mathrm{exp}=1\)</span>)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>contactDamping</strong> [<span class="math notranslate nohighlight">\(d_c\)</span>, type = Real, default = 0.]:</div>
+<div class="line">linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is &lt; 1, as it changes its behavior.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>contactModel</strong> [<span class="math notranslate nohighlight">\(m_\mathrm{contact}\)</span>, type = UInt, default = 0]:</div>
+<div class="line">number of contact model: 0) linear model for stiffness and damping, only proportional to penetration; 1) model taking contact geometry, in particular curvature of circle and curve into account, giving nonlinear normal force model</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>activeConnector</strong> [type = Bool, default = True]:</div>
+<div class="line">flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>visualization</strong> [type = VObjectContactCurveCircles]:</div>
+<div class="line">parameters for visualization of item</div>
+</div>
+</li>
+</ul>
+<p>The item VObjectContactCurveCircles has the following parameters:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>show</strong> [type = Bool, default = True]:</div>
+<div class="line">set true, if item is shown in visualization and false if it is not shown; draws curve and circles with given radii; uses visualizationSettings circleTiling for circles and circleTiling/2 for tiling of non-straight segments</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>color</strong> [type = Float4, default = [-1.,-1.,-1.,-1.]]:</div>
+<div class="line">RGBA connector color; if R==-1, use default color</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+<section id="description-of-objectcontactcurvecircles">
+<span id="description-objectcontactcurvecircles"></span><h2>DESCRIPTION of ObjectContactCurveCircles<a class="headerlink" href="#description-of-objectcontactcurvecircles" title="Link to this heading"></a></h2>
+<p><strong>The following output variables are available as OutputVariableType in sensors, Get…Output() and other functions</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">DisplacementLocal</span></code>:</div>
+<div class="line">vector containing the minimum distance to segments per circle midpoint (&lt; 0 in case of contact, and -1 if not computed: if not in according vicinity in search tree)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">VelocityLocal</span></code>:</div>
+<div class="line">vector containing relative (normal) velocity per circle midpoint (or NaN if not computed)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">ForceLocal</span></code>:</div>
+<div class="line">pairs of normal and tangential forces per circle or (Nan,Nan) if not computed</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="definition-of-quantities">
+<h2>Definition of quantities<a class="headerlink" href="#definition-of-quantities" title="Link to this heading"></a></h2>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text"></span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><div class="line-block">
+<div class="line">intermediate variables</div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">symbol</div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">description</div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">marker m0 position</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{p}}}_{m0}\)</span></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">global position of sphere 0 center as provided by marker m0</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">marker m0 orientation</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><span class="math notranslate nohighlight">\(\LU{0,m0}{\Rot}\)</span></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">current rotation matrix provided by marker m0</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">marker m0 velocity</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{v}}}_{m0}\)</span></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">current global velocity which is provided by marker m0</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">marker m0 angular velocity</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><span class="math notranslate nohighlight">\(\LU{0}{\tomega}_{m0}\)</span></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">current angular velocity vector provided by marker m0</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">data coordinates</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><span class="math notranslate nohighlight">\({\mathbf{x}}=[x_0,\,x_1,\, \ldots]\tp\)</span></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">data coordinates per number of circle markers</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="geometric-relations">
+<h2>Geometric relations<a class="headerlink" href="#geometric-relations" title="Link to this heading"></a></h2>
+<p>tbd</p>
+<p>Relevant Examples and TestModels with weblink:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chainDriveExample.py">chainDriveExample.py</a> (Examples/)</p>
+</div></blockquote>
+<p><strong>The web version may not be complete. For details, consider also the Exudyn PDF documentation</strong> : <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ObjectContactSphereSphere.html" class="btn btn-neutral float-left" title="ObjectContactSphereSphere" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="objectConstraintIndex.html" class="btn btn-neutral float-right" title="Object (Constraint)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
