@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -162,7 +162,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -245,7 +245,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -266,6 +266,7 @@ public: // AUTO:
   bool ignoreMaxIterations;                       //!< AUTO: continue solver if maximum number of discontinuous (post Newton) iterations is reached (ignore tolerance)
   Real iterationTolerance;                        //!< AUTO: absolute tolerance for discontinuous (post Newton) iterations; the errors represent absolute residuals and can be quite high
   Index maxIterations;                            //!< AUTO: maximum number of discontinuous (post Newton) iterations
+  bool useRecommendedStepSize;                    //!< AUTO: some objects (contact-related) provide a recommendedStepSize; if True, this recommendation is used, but may lead to very small step sizes and solver could fail if restrictions are too hard; set to False to ignore this recommendation
 
 
 public: // AUTO: 
@@ -275,6 +276,7 @@ public: // AUTO:
     ignoreMaxIterations = true;
     iterationTolerance = 1;
     maxIterations = 5;
+    useRecommendedStepSize = true;
   };
 
   // AUTO: access functions
@@ -295,6 +297,7 @@ public: // AUTO:
     os << "  ignoreMaxIterations = " << ignoreMaxIterations << "\n";
     os << "  iterationTolerance = " << iterationTolerance << "\n";
     os << "  maxIterations = " << maxIterations << "\n";
+    os << "  useRecommendedStepSize = " << useRecommendedStepSize << "\n";
     os << "\n";
   }
 
@@ -313,7 +316,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -443,7 +446,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -478,7 +481,7 @@ public: // AUTO:
   {
     computeInitialAccelerations = true;
     lieGroupAddTangentOperator = true;
-    lieGroupSimplifiedKinematicRelations = true;
+    lieGroupSimplifiedKinematicRelations = false;
     newmarkBeta = 0.25;
     newmarkGamma = 0.5;
     resetAccelerations = false;
@@ -534,7 +537,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -554,7 +557,7 @@ class ExplicitIntegrationSettings // AUTO:
 public: // AUTO: 
   bool computeEndOfStepAccelerations;             //!< AUTO: accelerations are computed at stages of the explicit integration scheme; if the user needs accelerations at the end of a step, this flag needs to be activated; if True, this causes a second call to the RHS of the equations, which may DOUBLE COMPUTATIONAL COSTS for one-step-methods; if False, the accelerations are re-used from the last stage, being slightly different
   bool computeMassMatrixInversePerBody;           //!< AUTO: If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded)
-  DynamicSolverType dynamicSolverType;            //!< AUTO: selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, ...), for detailed description see DynamicSolverType, \refSection{sec:DynamicSolverType}, but only referring to explicit solvers.
+  DynamicSolverType dynamicSolverType;            //!< AUTO: selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, VelocityVerlet, ...), for detailed description see DynamicSolverType, \refSection{sec:DynamicSolverType}, but only referring to explicit solvers.
   bool eliminateConstraints;                      //!< AUTO: True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!
   bool useLieGroupIntegration;                    //!< AUTO: True: use Lie group integration for rigid body nodes; must be turned on for Lie group nodes (without data coordinates) to work properly; does not work for nodes with data coordinates!
 
@@ -598,7 +601,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -819,7 +822,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -991,7 +994,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1057,7 +1060,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1162,7 +1165,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

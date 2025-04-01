@@ -24,7 +24,7 @@ mutableArgsFunctionsChecked = [
     'AddObjectFFRFreducedOrder', 'AddElasticSupportAtNode', 'CreateLinearFEMObjectGenericODE2', 
     'CreateNonlinearFEMObjectGenericODE2NGsolve', 'ComputeHurtyCraigBamptonModes',  
     #graphics:
-    'Sphere','Line','Circle','Text','Cuboid','BrickXYZ','Brick','Cylinder','RigidLink','SolidOfRevolution',
+    'Sphere','Line','Lines','Circle','Text','Cuboid','BrickXYZ','Brick','Cylinder','RigidLink','SolidOfRevolution',
     'Arrow','Basis','Frame','Quad','CheckerBoard','SolidExtrusion','FromPointsAndTrigs','FromSTLfileASCII',
     'FromSTLfile','Brick','Brick','Brick','Brick',
     #graphicsDataUtilities:
@@ -42,8 +42,9 @@ mutableArgsFunctionsChecked = [
     'ForwardDynamicsCRB', 'ComputeMassMatrixAndForceTerms', 'AddExternalForces',
     #mainSystemExtensions:
     'MainSystemCreateGround','MainSystemCreateMassPoint','MainSystemCreateRigidBody','MainSystemCreateSpringDamper','MainSystemCreateCartesianSpringDamper',
-    'MainSystemCreateRigidBodySpringDamper', 'MainSystemCreateRevoluteJoint', 'MainSystemCreatePrismaticJoint',
-    'MainSystemCreateSphericalJoint', 'MainSystemCreateGenericJoint', 'MainSystemCreateDistanceConstraint',
+    'MainSystemCreateRigidBodySpringDamper', 'MainSystemCreateTorsionalSpringDamper', 'MainSystemCreateRevoluteJoint', 'MainSystemCreatePrismaticJoint',
+    'MainSystemCreateSphericalJoint', 'MainSystemCreateGenericJoint', 
+    'MainSystemCreateDistanceConstraint', 'MainSystemCreateRollingDiscPenalty', 'MainSystemCreateRollingDisc',
     'MainSystemCreateForce','MainSystemCreateTorque',
     #plot:
     'PlotSensor', 'DataArrayFromSensorList',
@@ -85,6 +86,7 @@ filesParsed=[
              'kinematicTree.py',
              'lieGroupBasics.py', #Stefan Holzinger
              'mainSystemExtensions.py', 
+             'particles.py',
              'physics.py',
              'plot.py',
              'processing.py',

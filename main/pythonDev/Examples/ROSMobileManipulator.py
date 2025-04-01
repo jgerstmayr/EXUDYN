@@ -388,29 +388,48 @@ def SimulationMobileRobot(funcStatMachine,myROSInterface, p0=[0,0], theta0=0, fl
         
         graphicsTarget = graphics.Cylinder(pAxis = [0,0,-hObj/2], vAxis = [0,0,hObj ], radius = 0.02, color=graphics.color.lightgreen)
         inertiaTarget = InertiaCylinder(500, hObj , 0.02, 2)
-        nObj, bObj = AddRigidBody(mainSys = mbs, 
-                    inertia = inertiaTarget, 
-                    nodeType = str(exu.NodeType.RotationEulerParameters), 
-                    position = PosObj, 
-                    rotationMatrix = np.eye(3),
-                    angularVelocity =  [0,0,0],
-                    velocity= [0,0,0],
-                    gravity = [0,0,0], 
-                    graphicsDataList = [graphicsTarget])
+        # old interface to rigid body:
+        # nObj, bObj = AddRigidBody (mainSys = mbs, 
+        #             inertia = inertiaTarget, 
+        #             nodeType = str(exu.NodeType.RotationEulerParameters), 
+        #             position = PosObj, 
+        #             rotationMatrix = np.eye(3),
+        #             angularVelocity =  [0,0,0],
+        #             velocity= [0,0,0],
+        #             gravity = [0,0,0], 
+        #             graphicsDataList = [graphicsTarget])
+        dictObj = mbs.CreateRigidBody(
+                      inertia=inertiaTarget, 
+                      referencePosition=PosObj, 
+                      referenceRotationMatrix=np.eye(3),
+                      gravity=[0, 0, 0], 
+                      graphicsDataList=[graphicsTarget],
+                      returnDict=True)
+        [nObj, bObj] = [dictObj['nodeNumber'], dictObj['bodyNumber']]
+        
         mObj = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bObj))
         cGrasp = mbs.AddObject(RigidBodySpringDamper(markerNumbers=[mEndeffektor, mObj], stiffness = np.eye(6)*1e3, damping = np.eye(6)*1e2, 
                                                     visualization={'show': False, 'drawSize': -1, 'color': [0]*4}, activeConnector=False))
         graphicsTable = graphics.Brick(centerPoint = [0,0,0], size = [xTable, yTable, hTable], color=graphics.color.darkgrey2)
         
-        nTable, bTable = AddRigidBody(mainSys = mbs, 
-                        inertia = inertiaTarget, 
-                        nodeType = str(exu.NodeType.RotationEulerParameters), 
-                        position = list(PosObj[0:2]) + [hTable/2], 
-                        rotationMatrix = np.eye(3),
-                        angularVelocity =  [0,0,0],
-                        velocity= [0,0,0],
-                        gravity = [0,0,0], 
-                        graphicsDataList = [graphicsTable])
+        # nTable, bTable = AddRigidBody (mainSys = mbs, 
+        #                 inertia = inertiaTarget, 
+        #                 nodeType = str(exu.NodeType.RotationEulerParameters), 
+        #                 position = list(PosObj[0:2]) + [hTable/2], 
+        #                 rotationMatrix = np.eye(3),
+        #                 angularVelocity =  [0,0,0],
+        #                 velocity= [0,0,0],
+        #                 gravity = [0,0,0], 
+        #                 graphicsDataList = [graphicsTable])
+        dictTable = mbs.CreateRigidBody(
+                      inertia=inertiaTarget, 
+                      referencePosition=list(PosObj[0:2]) + [hTable/2], 
+                      referenceRotationMatrix=np.eye(3),
+                      gravity=[0, 0, 0], 
+                      graphicsDataList=[graphicsTable],
+                      returnDict=True)
+        [nTable, bTable] = [dictTable['nodeNumber'], dictTable['bodyNumber']]
+
             
         mbs.variables['myDict'] = {}
         

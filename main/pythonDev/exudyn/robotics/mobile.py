@@ -248,15 +248,15 @@ def MobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *a
         mWheelsList += [mWheel]
         mAxle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bPlatform, localPosition=VAdd(pOff,[0,0,p0Wheel[2]])))
         mAxlesList += [mAxle]
-        [jointLink, mBody0, mBody1] = mbs.CreateRevoluteJoint(bodyNumbers=[bPlatform, dictWheeln['bodyNumber']], 
-                                                              position=pOff[0:2] + [pOff[2] + p0Wheel[2]], 
-                                                              axis=[0,1,0],
-                                                              useGlobalFrame=False, 
-                                                              show=True,
-                                                              axisRadius=wWheel*0.05, 
-                                                              axisLength=wWheel*1.2)
-        mRevoluteBody0 += [mBody0]
-        mRevoluteBody1 += [mBody1]
+        jointLink = mbs.CreateRevoluteJoint(bodyNumbers=[bPlatform, dictWheeln['bodyNumber']], 
+                                            position=pOff[0:2] + [pOff[2] + p0Wheel[2]], 
+                                            axis=[0,1,0],
+                                            useGlobalFrame=False, 
+                                            show=True,
+                                            axisRadius=wWheel*0.05, 
+                                            axisLength=wWheel*1.2)
+        mRevoluteBody0 += [mbs.GetObject(jointLink)['markerNumbers'][0]]
+        mRevoluteBody1 += [mbs.GetObject(jointLink)['markerNumbers'][1]]
         oAxlesList +=[jointLink]  
         nGeneric = mbs.AddNode(NodeGenericData(initialCoordinates=[0,0,0], numberOfDataCoordinates=3))
         dataGap = (poseWheel[-1] - mobileRobot['wheelRadius'])

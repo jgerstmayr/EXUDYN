@@ -569,7 +569,7 @@ class InteractiveDialog:
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: animate modes of ObjectFFRFreducedOrder, of nodal coordinates (changes periodically one nodal coordinate) or of a list of system modes provided as list of lists; for creating snapshots, press 'Static' and 'Record animation' and press 'Run' to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use 'One Cycle'. Modes may be inverted by pressing according '+' and '-' buttons next to Amplitude.
+#**function: animate modes of ObjectFFRFreducedOrder, of nodal coordinates (changes periodically one nodal coordinate) or of a list of system modes provided as list of lists; for creating snapshots, press 'Static' and 'Record frames' and press 'Run' to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use 'One Cycle'. Modes may be inverted by pressing according '+' and '-' buttons next to Amplitude.
 #**input:
 #    systemContainer: system container (usually SC) of your model, containing visualization settings
 #    mainSystem: system (usually mbs) containing your model
@@ -587,7 +587,7 @@ class InteractiveDialog:
 #    systemEigenVectors: may be a list of lists of system eigenvectors for ODE2 (and possibly ODE1) coordinates or a eigenvector matrix containing mode vectors in columns; if nodeNumber=None, these eigenvectors are then used to be animated
 #**output: opens interactive dialog with further settings
 #**notes: Uses class InteractiveDialog in the background, which can be used to adjust animation creation. If meshes are large, animation artifacts may appear, which are resolved by using a larger update period.
-#    Press 'Run' to start animation; Chose 'Mode shape', according component for contour plot; to record one cycle for animation, choose 'One cycle', run once to get the according range in the contour plot, press 'Record animation' and press 'Run', now images can be found in subfolder 'images' (for further info on animation creation see \refSection{sec:overview:basics:animations}); now deactivate 'Record animation' by pressing 'Off' and chose another mode
+#    Press 'Run' to start animation; Chose 'Mode shape', according component for contour plot; to record one cycle for animation, choose 'One cycle', run once to get the according range in the contour plot, press 'Record frames' and press 'Run', now images can be found in subfolder 'images' (for further info on animation creation see \refSection{sec:overview:basics:animations}); now deactivate 'Record frames' by pressing 'Off' and chose another mode
 def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPerPeriod = 30, showTime = True, 
                  renderWindowText = '', runOnStart = False, runMode=0, scaleAmplitude = 1, title='', fontSize = 12,
                  checkRenderEngineStopFlag = True, systemEigenVectors=None):
@@ -640,7 +640,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
                    {'type':'slider', 'range':(0.01, 2), 'value':0.04, 'steps':200, 'variable':'modeShapePeriod', 'grid':(6,1)},
                    {'type':'radio', 'textValueList':[('Continuous run',0), ('Static continuous',1), ('One cycle',2), ('Static once',3)],'value':runMode, 'variable':'modeShapeRunModus', 'grid': [(7,0),(7,1),(7,2),(7,3)]},
                    {'type':'radio', 'textValueList':[('Mesh+Faces',3), ('Faces only',1), ('Mesh only',2)],'value':3, 'variable':'modeShapeMesh', 'grid': [(8,0),(8,1),(8,2)]},
-                   {'type':'radio', 'textValueList':[('Record animation',0), ('No recording',1)],'value':1, 'variable':'modeShapeSaveImages', 'grid': [(9,0),(9,1)]},
+                   {'type':'radio', 'textValueList':[('Record frames',0), ('No recording',1)],'value':1, 'variable':'modeShapeSaveImages', 'grid': [(9,0),(9,1)]},
                    ]
 
     mbs.sys['modeShapePeriod'] = period
@@ -819,19 +819,28 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
     SC.visualizationSettings.general.graphicsUpdateInterval = 0.5*min(timeout, 2e-3) #avoid too small values to run multithreading properly
     mbs.SetRenderEngineStopFlag(False) #not to stop right at the beginning
 
-    # runLoop = False
-    # while runLoop and not mainSystem.GetRenderEngineStopFlag():
-    #     for i in range(0,nRows,rowIncrement):
-    #         if not(mainSystem.GetRenderEngineStopFlag()):
-    #             SetSolutionState(mainSystem, solution, i, exudyn.ConfigurationType.Visualization)
-    #             exudyn.DoRendererIdleTasks(timeout)
-
     SetSolutionState(mainSystem, solution, 0, exudyn.ConfigurationType.Visualization)
     exudyn.DoRendererIdleTasks(timeout)
 
     nSteps = int(nRows)              #only make these steps available in slider!
     maxNSteps = max(500,min(nSteps,1200))     #do not allow more steps, because dialog may be too large ...
     resolution = min(1.,maxNSteps/nSteps) #do not use values smaller than 1
+                
+    #+++++++++++++++++++++++++++++++++
+    #call other dialog, create video and get back
+    def UFmakeMP4():
+        try:
+            import ffmpeg
+        except:
+            messagebox.showinfo('Warning', 'FFMPEG is not installed, therefore mp4 files cannot be generated.\nUse: "pip install ffmpeg-python"')
+            return
+        
+        InteractiveImages2Video(closeAfterCreation=True) #goes back to SolutionViewer
+        # res=messagebox.askquestion('Leave SolutionViewer', 'Do you like to leave SolutionViewer and create an mp4 video?')
+        # if res == 'yes':
+        #     # dialog.OnQuit() #this does not work
+        #     InteractiveImages2Video()
+    #+++++++++++++++++++++++++++++++++
     
     dialogItems = [
                    {'type':'label', 'text':'Solution steps:', 'grid':(1,0)},
@@ -841,9 +850,9 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
                    {'type':'label', 'text':'update period:', 'grid':(3,0)},
                    {'type':'slider', 'range':(0.005, 1), 'value':timeout, 'steps':200, 'variable':'solutionViewerPeriod', 'grid':(3,1)},
                    {'type':'radio', 'textValueList':[('Continuous run',0), ('One cycle',1), ('Static',2)],'value':runMode, 'variable':'solutionViewerRunModus', 'grid': [(4,0),(4,1),(4,2)]},
-                   {'type':'radio', 'textValueList':[('Record animation',0), ('No recording',1)],'value':1, 'variable':'solutionViewerSaveImages', 'grid': [(5,0),(5,1)]},
+                   {'type':'radio', 'textValueList':[('Record frames',0), ('No recording',1)],'value':1, 'variable':'solutionViewerSaveImages', 'grid': [(5,0),(5,1)]},
+                   {'type':'button', 'text':'Make mp4', 'callFunction':UFmakeMP4, 'grid': (5,2)},
                    ]
-
 
     mbs.sys['solutionViewerRowIncrement'] = float(rowIncrement)
     mbs.sys['solutionViewerNSteps'] = nSteps
@@ -851,6 +860,9 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
     # mbs.sys['solutionViewerStep'] = 0
     # mbs.sys['solutionViewerPeriod'] = timeout
 
+    from tkinter import messagebox
+
+            
     def UFviewer(mbs, dialog):
         i = int(mbs.sys['solutionViewerStep'])
 
@@ -910,6 +922,7 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
                       useSysVariables=True, #use mbs.sys, not to bloat the mbs.variables of the user
                       )
 
+
     #SC.WaitForRenderEngineStopFlag() #not needed, Render window closes when dialog is quit
     exudyn.StopRenderer() #safely close rendering window!
 
@@ -917,6 +930,187 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
 
 
 
+#%%
+#**function: function to call ffmpeg in the background and convert images to video; requires ffmpeg-python to be installed
+#**input: 
+#  workingDir: directory where images are stored and where animation is written to
+#  inputPattern: pattern of images; 'frame' is the name used in visualizationSettings.exportImages.saveImageFileName; if saveImageFormat=PNG, then the ending is .png
+#  outputFile: filename and ending (.mp4 recommended) for generated video
+#  inputFrameRate: framerate for images relative to outputFrameRate: if inputFrameRate=50 and outputFrameRate=25, then only every second frame is used
+#  outputFrameRate: framerate for resulting video
+#  compressionCRF: compression rate of ffmpeg, where 0=uncompressed, 25 is medium compression, >30 is very low quality
+#  startNumber: start index of first frame chosen for animation
+#  totalFrames: total number of frames (keep field empty to select all frames after startNumber)
+#**output: None; writes animation when finished
+#**example:
+##after successful simulation, call:
+#mbs.SolutionViewer() #click "Stop", "One Cycle" and "Record frames" => close window
+#
+##if images are in folder 'images', then call this to create animation:
+#ConvertImages2Video(workingDir='images', outputFile='test.mp4')
+def ConvertImages2Video(workingDir='images', 
+                        inputPattern='frame%05d.png', 
+                        outputFile='animation.mp4', 
+                        inputFrameRate=25, 
+                        outputFrameRate=25, 
+                        compressionCRF=28,
+                        startNumber=0,
+                        totalFrames=None):
+    import os
+    try:
+        import ffmpeg
+    except:
+        raise ImportError('ConvertImages2Video: ffmpeg not found! install using "pip install ffmpeg-python"')
+    
+    print('fps=',inputFrameRate,', ofps=',outputFrameRate)
+    
+    kwargs = {}
+    if totalFrames is not None:
+        kwargs['vframes'] = totalFrames
+
+    if workingDir != '':
+        inputPattern = os.path.join(workingDir, inputPattern)
+        outputFile = os.path.join(workingDir, outputFile)
+
+    (
+        ffmpeg
+        .input(filename=inputPattern, framerate=inputFrameRate, start_number=startNumber)
+        .output(filename=outputFile,
+                vcodec='libx264',
+                crf=compressionCRF,
+                vf='fps='+str(outputFrameRate)+',format=yuv420p',
+                **kwargs)
+        .run(overwrite_output=True)
+    )
+
+#**function: interactive dialog to convert generated images to videos using ffmpeg library; see also ConvertImages2Video() for meaning of values; requires ffmpeg-python to be installed
+def InteractiveImages2Video(closeAfterCreation=False,fontSize=11):
+
+    try:
+        import tkinter
+        import tkinter.font as tkFont
+        from tkinter import filedialog
+        from tkinter import messagebox
+        #from exudyn.GUI import GetTkRootAndNewWindow
+    except:
+        raise ValueError('ERROR: InteractiveDialog: tkinter is not installed; InteractiveDialog or SolutionViewer are therefore not available')
+
+    # from tkinter import ttk
+    #import os
+    
+    try:
+        import ffmpeg #only to test before starting!
+    except:
+        raise ImportError('ConvertImages2Video: ffmpeg not found! install using "pip install ffmpeg-python"')
+
+    
+    def RunConversion():
+        try:
+            totalFrames = total_frames.get().strip()
+            if totalFrames == '': 
+                totalFrames=None
+            else:
+                totalFrames = int(totalFrames)
+            
+            ConvertImages2Video(
+                workingDir=dir_entry.get(),
+                outputFile=output_entry.get(),
+                inputPattern=input_pattern.get(),
+                inputFrameRate=input_frame_rate_slider.get(),
+                outputFrameRate=output_frame_rate_slider.get(),
+                compressionCRF=crf_slider.get(),
+                startNumber=int(start_frame.get()),
+                totalFrames=totalFrames,
+            )
+            messagebox.showinfo("Success", "Video conversion complete!")
+            if closeAfterCreation:
+                OnQuit()
+
+        except Exception as e:
+            messagebox.showerror("Error", f"Something went wrong:\n{e}")
+    
+    def BrowseDirectory():
+        dirname = filedialog.askdirectory()
+        if dirname:
+            dir_entry.delete(0, tkinter.END)
+            dir_entry.insert(0, dirname)
+
+    def OnQuit(event=None):
+        tkWindow.quit()
+        tkWindow.destroy()
+
+    #[root, tkWindow, tkRuns] = GetTkRootAndNewWindow()
+    
+
+    tkWindow = tkinter.Tk()
+    tkWindow.title("Image to Video Converter")
+    tkWindow.columnconfigure(1, weight=1)
+    tkWindow.rowconfigure(6, weight=1)
+    tkWindow.bind('<Escape>', OnQuit) #Escape causes immediate quit (no further checks)
+    tkWindow.bind('q', OnQuit) #Button 'Q' causes immediate quit (no further checks)
+
+    defaultFont = tkFont.Font(root=tkWindow, family = "TkDefaultFont")#,weight = "bold")
+    defaultFont.configure(size=int(fontSize))
+    #tkWindow.option_add("*Font", "TkDefaultFont") #all widgets should use TkDefaultFont; does not work
+
+    width = 60
+    rowcnt = 0    
+    tkinter.Label(tkWindow, text="Working directory", font=defaultFont).grid(row=rowcnt, column=0, sticky="w")
+    dir_entry = tkinter.Entry(tkWindow, width=width, font=defaultFont)
+    dir_entry.insert(0, "images")
+    dir_entry.grid(row=rowcnt, column=1, sticky="ew")
+    tkinter.Button(tkWindow, text="Browse", command=BrowseDirectory, font=defaultFont).grid(row=rowcnt, column=2, padx=10)
+    
+    rowcnt+=1
+    tkinter.Label(tkWindow, text="Output file name", font=defaultFont).grid(row=rowcnt, column=0, sticky="w")
+    output_entry = tkinter.Entry(tkWindow, width=width, font=defaultFont)
+    output_entry.insert(0, "animation.mp4")
+    output_entry.grid(row=rowcnt, column=1, sticky="ew")
+    
+    rowcnt+=1
+    tkinter.Label(tkWindow, text="Input pattern", font=defaultFont).grid(row=rowcnt, column=0, sticky="w")
+    input_pattern = tkinter.Entry(tkWindow, width=width, font=defaultFont)
+    input_pattern.insert(0, "frame%05d.png")
+    input_pattern.grid(row=rowcnt, column=1, sticky="ew")
+    
+    rowcnt+=1
+    tkinter.Label(tkWindow, text="Start frame", font=defaultFont).grid(row=rowcnt, column=0, sticky="w")
+    start_frame = tkinter.Entry(tkWindow, width=width, font=defaultFont)
+    start_frame.insert(0, "0")
+    start_frame.grid(row=rowcnt, column=1, sticky="ew")
+    
+    rowcnt+=1
+    tkinter.Label(tkWindow, text="Total frames", font=defaultFont).grid(row=rowcnt, column=0, sticky="w")
+    total_frames = tkinter.Entry(tkWindow, width=width, font=defaultFont)
+    total_frames.insert(0, "")
+    total_frames.grid(row=rowcnt, column=1, sticky="ew")
+    tkinter.Label(tkWindow, text="empty=all").grid(row=rowcnt, column=2, sticky="w")
+    
+    rowcnt+=1
+    tkinter.Label(tkWindow, text="Input frame rate (FPS)", font=defaultFont).grid(row=rowcnt, column=0, sticky="w",pady=10)
+    input_frame_rate_slider = tkinter.Scale(tkWindow, from_=1, to=200, orient=tkinter.HORIZONTAL, font=defaultFont)
+    input_frame_rate_slider.set(25)
+    input_frame_rate_slider.grid(row=rowcnt, column=1, sticky="ew")
+
+    rowcnt+=1
+    tkinter.Label(tkWindow, text="Output frame rate (FPS)", font=defaultFont).grid(row=rowcnt, column=0, sticky="w",pady=10)
+    output_frame_rate_slider = tkinter.Scale(tkWindow, from_=1, to=100, orient=tkinter.HORIZONTAL, font=defaultFont)
+    output_frame_rate_slider.set(25)
+    output_frame_rate_slider.grid(row=rowcnt, column=1, sticky="ew")
+    
+    rowcnt+=1
+    tkinter.Label(tkWindow, text="Compression (CRF)", font=defaultFont).grid(row=rowcnt, column=0, sticky="w")
+    crf_slider = tkinter.Scale(tkWindow, from_=0, to=51, orient=tkinter.HORIZONTAL, font=defaultFont)
+    crf_slider.set(28)
+    crf_slider.grid(row=rowcnt, column=1, sticky="ew")
+    tkinter.Label(tkWindow, text="<20=high qual.\n>30=low qual.").grid(row=rowcnt, column=2, sticky="s")
+    
+    rowcnt+=1
+    tkinter.Button(tkWindow, text="Convert images to video", command=RunConversion, bg="lightblue", font=defaultFont).grid(row=rowcnt, column=1, columnspan=1, pady=10, sticky="s")
+    tkinter.Button(tkWindow, text="Quit", command=OnQuit, bg="lightgrey", font=defaultFont).grid(row=rowcnt, column=2, columnspan=1, pady=10, sticky="s")
+
+    tkWindow.mainloop()
+    # tkinter.mainloop()
 
 
 

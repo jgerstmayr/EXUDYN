@@ -27,20 +27,18 @@ typedef unsigned char gchar; //unsigned char used for graphics module
 class BitmapFont
 {
 public:
+	bool toBeDeleted;					//!< set this flag such that delete operator deletes bitmap
 	guint nCharacters;			//!< number of characters in bitmap
-	guint fontSize;				//!< underlying font size
 	guint characterOffset;		//!< offset for first character (e.g., index 0 == char(32) ) 
+	guint fontSize;				//!< underlying font size
 	guint characterWidth;		//!< width of one character in pixel
 	guint characterHeight;		//!< height of one character in pixel
-	guint characterByteWidth;	//!< width in bytes
 	guint characterBytes;		//!< number of bytes per character
+	guint characterByteWidth;	//!< width in bytes
 	gchar* openGLBitmap;				//!< black/white bitmap stored for all characters; size=characterBytes*nCharacters; every byte stores 8 pixels
-	bool toBeDeleted;					//!< set this flag such that delete operator deletes bitmap
 
 public:
-	BitmapFont() {
-		toBeDeleted = false; nCharacters = 0; characterOffset = 0; fontSize = 1; characterWidth
-			= 1; characterHeight = 1; characterBytes = 0; characterByteWidth = 1; };
+	BitmapFont() : toBeDeleted(false), nCharacters(0), characterOffset(0), fontSize(1), characterWidth(1), characterHeight(1), characterBytes(0), characterByteWidth(1) { ; }
 	BitmapFont(guint fontSizeInit, guint nCharactersInit, guint characterOffsetInit,
 		guint characterWidthInit, guint characterHeightInit,
 		guint characterByteWidthInit, guint characterBytesInit, gchar* bitmap)

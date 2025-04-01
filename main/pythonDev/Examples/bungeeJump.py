@@ -171,7 +171,7 @@ ode2 = mbs.systemData.GetODE2Coordinates()
 mbs.systemData.SetODE2Coordinates(ode2, configuration=exu.ConfigurationType.Initial)
 
 #turn of constraint of jumper
-mbs.SetObjectParameter(fixJumper[0], parameterName='activeConnector', value=False)
+mbs.SetObjectParameter(fixJumper, parameterName='activeConnector', value=False)
 
 mbs.WaitForUserToContinue()
 

@@ -107,18 +107,23 @@ public:
 		(*globalTimersCounters)[counterIndex] += EXUstd::GetTimeInSeconds() - offsetSecondsPerCall;
 	}
 
-	//! print current timers into string
-	STDstring ToString() const 
+	//! print current timers into string; if total time is provided, it may also print times relative to total time
+	STDstring ToString(bool printRelative=false, Real totalTime=0) const 
 	{
 		if (!globalTimersCounters->size()) { return ""; }
 
 		std::ostringstream ostr;
-		ostr.precision(5); //reduced precision for nicer output...
 		for (Index i = 0; i < (Index)globalTimersCounters->size(); i++)
 		{
 			if ((*globalTimersCounters)[i] != 0.) //exclude timers that are exactly zero:
 			{
-				ostr << "  " << (*globalTimersCounterNames)[i] << " = " << (*globalTimersCounters)[i] << "s\n";
+				ostr.precision(5); //reduced precision for nicer output...
+				ostr << "  " << (*globalTimersCounterNames)[i] << " = " << (*globalTimersCounters)[i] << "s";
+				if (totalTime != 0 && printRelative) {
+					ostr.precision(3); //reduced precision for nicer output...
+					ostr << " (" << (*globalTimersCounters)[i] / totalTime * 100. << "%)";
+				}
+				ostr << "\n";
 			}
 		}
 		return ostr.str();

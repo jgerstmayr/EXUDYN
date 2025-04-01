@@ -41,6 +41,7 @@ matrix3D = 'NDArray[Shape2D[3,3], float]'#stub type for Matrix3D
 matrix6D = 'NDArray[Shape2D[6,6], float]'#stub type for Matrix6D
 
 sparseMatrixType = 'Any'#currently Any, but will be adapted
+matrixContainerType = 'Any'#currently Any, but will be adapted
 
 #for objects with trivial or implemented copy constructor:
 pickleDictTemplate = """        .def(py::pickle(
@@ -340,7 +341,8 @@ plr.AddEnumValue(pyClass, 'AngularVelocityLocal', 'measure local (body-fixed) an
 plr.AddEnumValue(pyClass, 'AngularAcceleration', 'measure angular acceleration of node or object')
 plr.AddEnumValue(pyClass, 'AngularAccelerationLocal', 'measure angular acceleration of node or object in local coordinates')
 
-plr.AddEnumValue(pyClass, 'Coordinates', 'measure the coordinates of a node or object; coordinates usually just contain displacements, but not the position values')
+plr.AddEnumValue(pyClass, 'CoordinatesTotal', 'measure the total coordinates (including reference configuration) of a node or object; otherwise the same as Coordinates')
+plr.AddEnumValue(pyClass, 'Coordinates', 'measure the coordinates of a node or object; coordinates just contain displacements, but not the reference (position or rotation) values - see also definition of respective nodes or objects')
 plr.AddEnumValue(pyClass, 'Coordinates_t', 'measure the time derivative of coordinates (= velocity coordinates) of a node or object')
 plr.AddEnumValue(pyClass, 'Coordinates_tt', 'measure the second time derivative of coordinates (= acceleration coordinates) of a node or object')
 
@@ -726,11 +728,11 @@ plr.DefPyFunctionAccess(cClass='', pyName='SetWriteToConsole', cName='PySetWrite
 print('complete stub file for exudyn module')
 
 plr.DefPyFunctionAccess(cClass='', pyName='SetWriteToFile', cName='PySetWriteToFile', 
-                            description="set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write \\texttt{exu.SetWriteToFile('', False)} to close the output file",
-                            argList=['filename', 'flagWriteToFile', 'flagAppend'],
-                            defaultArgs=['', 'True', 'False'],
+                            description="set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write \\texttt{exu.SetWriteToFile('', False)} to close the output file; in case of flagFlushAlways=True, file will be finalized immediately in every print command;",
+                            argList=['filename', 'flagWriteToFile', 'flagAppend', 'flagFlushAlways'],
+                            defaultArgs=['', 'True', 'False', 'False'],
                             example="exu.SetWriteToConsole(False) #no output to console\\\\exu.SetWriteToFile(filename='testOutput.log', flagWriteToFile=True, flagAppend=False)\\\\exu.Print('print this to file')\\\\exu.SetWriteToFile('', False) #terminate writing to file which closes the file",
-                            argTypes=['str','',''],
+                            argTypes=['str','','',''],
                             returnType='None',
                             )
 
@@ -1031,7 +1033,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetSystemContainer', cName='Get
                         )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='WaitForUserToContinue', cName='WaitForUserToContinue', 
-                        description="interrupt further computation until user input --> 'pause' function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as SC.WaitForRenderEngineStopFlagthis()",
+                        description="interrupt further computation until user input --> 'pause' function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as SC.WaitForRenderEngineStopFlag()",
                         argList=['printMessage'],
                         defaultArgs=['True'],
                         returnType='None',
@@ -1062,6 +1064,8 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='ActivateRendering', cName='Acti
                         returnType='None',
                         )
 
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#USER FUNCTIONS
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetPreStepUserFunction', cName='PySetPreStepUserFunction', 
                         description="Sets a user function PreStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step; set to 0 (integer) in order to erase user function. Note that the time returned is already the end of the step, which allows to compute forces consistently with trapezoidal integrators; for higher order Runge-Kutta methods, step time will be available only in object-user functions.",
                         example = 'def PreStepUserFunction(mbs, t):\\\\ \\TAB print(mbs.systemData.NumberOfNodes())\\\\ \\TAB if(t>1): \\\\ \\TAB  \\TAB return False \\\\ \\TAB return True \\\\mbs.SetPreStepUserFunction(PreStepUserFunction)',
@@ -1077,7 +1081,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetPreStepUserFunction', cName=
                         defaultArgs=['False'],
                         returnType='Callable[[MainSystem, float],bool]',
                         )
-                                                      
+
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetPostStepUserFunction', cName='PySetPostStepUserFunction', 
                         description="Sets a user function PostStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step; set to 0 (integer) in order to erase user function.",
                         example = 'def PostStepUserFunction(mbs, t):\\\\ \\TAB print(mbs.systemData.NumberOfNodes())\\\\ \\TAB if(t>1): \\\\ \\TAB  \\TAB return False \\\\ \\TAB return True \\\\mbs.SetPostStepUserFunction(PostStepUserFunction)',
@@ -1109,6 +1113,41 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetPostNewtonUserFunction', cNa
                         defaultArgs=['False'],
                         returnType='Callable[[MainSystem, float],bool]',
                         )
+
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='SetPreNewtonResidualUserFunction', cName='PySetPreNewtonResidualUserFunction', 
+                        description="Sets a user function PreNewtonResidualUserFunction(mbs, t, newtonIt, discontinuousIt) executed prior to computation of the Newton residual in implicit or static solvers. This function returns nothing. The arguments newtonIt and discontinuousIt may be used to distinguish if the call is done at the beginning of a discontinuous iteration (newtonIt=0) or during Newton iterations (newtonIt>0). The typical use case would be to modify objects or loads in every iteration. Note that this user function is not called during Jacobian computation. If needed, the jacobian can be modified with the user function set by SetSystemJacobianUserFunction.",
+                        example = 'def PreNewtonResidualUserFunction(mbs, t, newtonIt, discontinuousIt):\\\\ \\TAB print("t=",t,", newtonIt=",newtonIt,", discIt=",discontinuousIt)\\\\mbs.SetPreNewtonResidualUserFunction(PreNewtonResidualUserFunction)',
+                        argList=['value'],
+                        argTypes=['Callable[[MainSystem, float, int, int],None]'],
+                        returnType='None',
+                        )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='GetPreNewtonResidualUserFunction', cName='PyGetPreNewtonResidualUserFunction', 
+                        description="Returns the preNewtonResidualUserFunction.",
+                        argList=['asDict'],
+                        argTypes=['bool'],
+                        defaultArgs=['False'],
+                        returnType='Callable[[MainSystem, float, int, int],None]',
+                        )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='SetSystemJacobianUserFunction', cName='PySetSystemJacobianUserFunction', 
+                        description="Sets a user function SystemJacobianUserFunction(mbs, t, factorODE2, factorODE2_t, factorODE1) executed after computation of the Newton jacobian of a static solver or an implicit timeintegrator; The function shall return additional terms for the jacobian at RHS, e.g., related to dependencies that are added by the user in the PreNewtonResidualUserFunction; RHS means that for a spring with stiffness K, the jacobian would be -K as it is computed for the RHS, see the RHS-LHS convention. If you like to completely replace the jacobian, consider using the solver's user function SetUserFunctionComputeNewtonJacobian which can be used to replace the jacobian computation; the factors factorODE2, factorODE2_t, factorODE1 must be multiplied with quantities related to ODE2 coordinates (like stiffness terms), ODE2_t velocity coordinates (like damping terms) and ODE1 quantities. The functions returns a MatrixContainer, for which the sparse format is recommended for efficiency reasons.",
+                        example = 'def SystemJacobianUserFunction(mbs, t, factorODE2, factorODE2_t, factorODE1):\\\\ \\TAB return MatrixContainer([[factorODE2*10,0],[0,0]])\\\\mbs.SetSystemJacobianUserFunction(SystemJacobianUserFunction)',
+                        argList=['value'],
+                        argTypes=['Callable[[MainSystem, float, float, float, float],'+matrixContainerType+']'],
+                        returnType='None',
+                        )
+                                                      
+plr.DefPyFunctionAccess(cClass=classStr, pyName='GetSystemJacobianUserFunction', cName='PyGetSystemJacobianUserFunction', 
+                        description="Returns the systemJacobianUserFunction.",
+                        argList=['asDict'],
+                        argTypes=['bool'],
+                        defaultArgs=['False'],
+                        returnType='Callable[[MainSystem, float, float, float, float],'+matrixContainerType+']',
+                        )
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                                                       
 
 #contact:                                      
@@ -1801,11 +1840,24 @@ mbs.AddLoad(Force(markerNumber = mMP, loadVector=[2,0,5]))
 mbs.Assemble()
 exu.SolveDynamic(mbs, exu.SimulationSettings())
 
-#obtain current ODE2 system vector (e.g. after static simulation finished):
+#obtain current ODE2 system vector including reference values:
+uTotal = mbs.systemData.GetODE2CoordinatesTotal()
+
+#obtain current ODE2 system vector without reference values 
+#  (e.g. after static simulation finished):
 u = mbs.systemData.GetODE2Coordinates()
-#set initial ODE2 vector for next simulation:
+#set initial ODE2 vector for next simulation (only coordinates!):
 mbs.systemData.SetODE2Coordinates(coordinates=u,
                configuration=exu.ConfigurationType.Initial)
+
+#faster access with reference access (copy=False):
+u3 = mbs.systemData.GetODE2Coordinates(copy=False)[3]
+#we can also modify data, but this may be dangerous!
+u3 += 1
+#NOTE: reference access is possible throughout simulation and may
+#      allow faster user functions, but is potentially dangerous
+#      to erroneous behavior: for safety, compare with copy=True results!
+
 #print detailed information on items:
 mbs.systemData.Info()
 #print LTG lists for objects and loads:
@@ -1956,17 +2008,26 @@ plr.DefLatexStartTable(classStr+':coordinate access')
 #+++++++++++++++++++++++++++++++++
 #coordinate access functions:
 
-plr.DefPyFunctionAccess(cClass=classStr, pyName='GetODE2Coordinates', cName='GetODE2Coords', 
-                                description="get ODE2 system coordinates (displacements) for given configuration (default: exu.Configuration.Current)",
+plr.DefPyFunctionAccess(cClass=classStr, pyName='GetODE2CoordinatesTotal', cName='GetODE2CoordsTotal', 
+                                description="get ODE2 system coordinates (displacements/rotation) including reference values for given configuration (default: exu.Configuration.Current); in case of exu.ConfigurationType.Reference, it only includes reference values once and is identical to GetODE2Coordinates; note that faster access to coordinates is possibly with GetODE2Coordinates(copy=False), which is not possible with GetODE2CoordinatesTotal !",
                                 argList=['configuration'],
                                 argTypes=['ConfigurationType'],
                                 defaultArgs=['exu.ConfigurationType::Current'],
+                                example = "uTotal = mbs.systemData.GetODE2CoordinatesTotal()\\\\#this is equivalent to:\\\\uTotal=mbs.systemData.GetODE2Coordinates()+mbs.systemData.GetODE2Coordinates(exu.ConfigurationType.Reference)",
+                                returnType=returnedArray,
+                                )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='GetODE2Coordinates', cName='GetODE2Coords', 
+                                description="get ODE2 system coordinates (displacements/rotations) for given configuration (default: exu.Configuration.Current)",
+                                argList=['configuration', 'copy'],
+                                argTypes=['ConfigurationType', 'bool'],
+                                defaultArgs=['exu.ConfigurationType::Current', 'True'],
                                 example = "uCurrent = mbs.systemData.GetODE2Coordinates()",
                                 returnType=returnedArray,
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetODE2Coordinates', cName='SetODE2Coords', 
-                                description="set ODE2 system coordinates (displacements) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!",
+                                description="set ODE2 system coordinates (displacements/rotations) for given configuration (default: exu.Configuration.Current); invalid vector size may lead to system crash!",
                                 argList=['coordinates','configuration'],
                                 argTypes=[listOrArray,'ConfigurationType'],
                                 defaultArgs=['','exu.ConfigurationType::Current'],
@@ -1976,9 +2037,9 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SetODE2Coordinates', cName='Set
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetODE2Coordinates_t', cName='GetODE2Coords_t', 
                                 description="get ODE2 system coordinates (velocities) for given configuration (default: exu.Configuration.Current)",
-                                argList=['configuration'],
-                                argTypes=['ConfigurationType'],
-                                defaultArgs=['exu.ConfigurationType::Current'],
+                                argList=['configuration', 'copy'],
+                                argTypes=['ConfigurationType', 'bool'],
+                                defaultArgs=['exu.ConfigurationType::Current', 'True'],
                                 example = "vCurrent = mbs.systemData.GetODE2Coordinates_t()",
                                 returnType=returnedArray,
                                 )
@@ -1994,9 +2055,9 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SetODE2Coordinates_t', cName='S
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetODE2Coordinates_tt', cName='GetODE2Coords_tt', 
                                 description="get ODE2 system coordinates (accelerations) for given configuration (default: exu.Configuration.Current)",
-                                argList=['configuration'],
-                                argTypes=['ConfigurationType'],
-                                defaultArgs=['exu.ConfigurationType::Current'],
+                                argList=['configuration', 'copy'],
+                                argTypes=['ConfigurationType', 'bool'],
+                                defaultArgs=['exu.ConfigurationType::Current', 'True'],
                                 example = "vCurrent = mbs.systemData.GetODE2Coordinates_tt()",
                                 returnType=returnedArray,
                                 )
@@ -2012,9 +2073,9 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SetODE2Coordinates_tt', cName='
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetODE1Coordinates', cName='GetODE1Coords', 
                                 description="get ODE1 system coordinates (displacements) for given configuration (default: exu.Configuration.Current)",
-                                argList=['configuration'],
-                                argTypes=['ConfigurationType'],
-                                defaultArgs=['exu.ConfigurationType::Current'],
+                                argList=['configuration', 'copy'],
+                                argTypes=['ConfigurationType', 'bool'],
+                                defaultArgs=['exu.ConfigurationType::Current', 'True'],
                                 example = "qCurrent = mbs.systemData.GetODE1Coordinates()",
                                 returnType=returnedArray,
                                 )
@@ -2030,9 +2091,9 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SetODE1Coordinates', cName='Set
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetODE1Coordinates_t', cName='GetODE1Coords_t', 
                                 description="get ODE1 system coordinates (velocities) for given configuration (default: exu.Configuration.Current)",
-                                argList=['configuration'],
-                                argTypes=['ConfigurationType'],
-                                defaultArgs=['exu.ConfigurationType::Current'],
+                                argList=['configuration', 'copy'],
+                                argTypes=['ConfigurationType', 'bool'],
+                                defaultArgs=['exu.ConfigurationType::Current', 'True'],
                                 example = "qCurrent = mbs.systemData.GetODE1Coordinates_t()",
                                 returnType=returnedArray,
                                 )
@@ -2048,9 +2109,9 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SetODE1Coordinates_t', cName='S
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetAECoordinates', cName='GetAECoords', 
                                 description="get algebraic equations (AE) system coordinates for given configuration (default: exu.Configuration.Current)",
-                                argList=['configuration'],
-                                argTypes=['ConfigurationType'],
-                                defaultArgs=['exu.ConfigurationType::Current'],
+                                argList=['configuration', 'copy'],
+                                argTypes=['ConfigurationType', 'bool'],
+                                defaultArgs=['exu.ConfigurationType::Current', 'True'],
                                 example = "lambdaCurrent = mbs.systemData.GetAECoordinates()",
                                 returnType=returnedArray,
                                 )
@@ -2066,9 +2127,9 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SetAECoordinates', cName='SetAE
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetDataCoordinates', cName='GetDataCoords', 
                                 description="get system data coordinates for given configuration (default: exu.Configuration.Current)",
-                                argList=['configuration'],
-                                argTypes=['ConfigurationType'],
-                                defaultArgs=['exu.ConfigurationType::Current'],
+                                argList=['configuration', 'copy'],
+                                argTypes=['ConfigurationType', 'bool'],
+                                defaultArgs=['exu.ConfigurationType::Current', 'True'],
                                 example = "dataCurrent = mbs.systemData.GetDataCoordinates()",
                                 returnType=returnedArray,
                                 )
@@ -2098,6 +2159,15 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SetSystemState', cName='PySetSy
                                 defaultArgs=['','exu.ConfigurationType::Current'], #exu will be removed for binding
                                 example = "mbs.systemData.SetSystemState(sysStateList, configuration = exu.ConfigurationType.Initial)",
                                 returnType='None',
+                                )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='GetSystemStateDict', cName='PyGetSystemStateDict', 
+                                description="get dictionary with copies of (or references to) system states for given configuration (default: exu.Configuration.Current), with at least the following quantities: ODE1Coords, ODE1Coords_t, ODE2Coords, ODE2Coords_t, ODE2Coords_tt, AECoords, dataCoords; we can obtain copies OR references to vectors without copying, meaning that these vectors then have read-write properties and have to be treated carefully! The dictionary's contents are subject to changes in the future; if reference=False, data is copied",
+                                argList=['configuration','reference'],
+                                argTypes=['ConfigurationType','bool'],
+                                defaultArgs=['exu.ConfigurationType::Current','False'], #exu will be removed for binding
+                                example = "d = mbs.systemData.GetSystemStateDict()",
+                                returnType='Dict[List[float]]',
                                 )
 
 
@@ -2253,6 +2323,9 @@ print('f=',f.Evaluate(), ', diff=',f.Diff(x))
 esym.SetRecording(False)
 x = SymReal(42) #now, only represents a value
 y = x/3.       #directly evaluates to 14
+
+#back to default behavior, otherwise expr. only evaluated:
+esym.SetRecording(True)
 """)
 
 plrsym.AddDocu('To create a symbolic Real, use \\texttt{aa=symbolic.Real(1.23)} to build '+
@@ -2477,6 +2550,7 @@ plrsym.AddDocu("A symbolic Vector type to replace Python's (1D) numpy array in s
 
 plrsym.AddDocuCodeBlock(code="""
 import exudyn as exu
+import numpy as np
 esym = exu.symbolic
 
 SymVector = esym.Vector
@@ -3096,10 +3170,10 @@ plr.DefLatexDataAccess('frictionProportionalZone','(default=0.001) velocity $v_{
                        dataType='float',
                        )
 
-plr.sPy +=  '        .def_property("frictionVelocityPenalty", &PyGeneralContact::GetFrictionVelocityPenalty, &PyGeneralContact::SetFrictionVelocityPenalty)\n' 
-plr.DefLatexDataAccess('frictionVelocityPenalty','(default=1e3) regularization factor for friction [N/(m$^2 \cdot$m/s) ];$k_{\mu,reg}$, multiplied with tangential velocity to compute friciton force as long as it is smaller than $\mu$ times contact force; large values cause oscillations in friction force ',
-                       dataType='float',
-                       )
+# plr.sPy +=  '        .def_property("frictionVelocityPenalty", &PyGeneralContact::GetFrictionVelocityPenalty, &PyGeneralContact::SetFrictionVelocityPenalty)\n' 
+# plr.DefLatexDataAccess('frictionVelocityPenalty','(default=1e3) regularization factor for friction [N/(m$^2 \cdot$m/s) ];$k_{\mu,reg}$, multiplied with tangential velocity to compute friciton force as long as it is smaller than $\mu$ times contact force; large values cause oscillations in friction force ',
+#                        dataType='float',
+#                        )
 
 plr.sPy +=  '        .def_property("excludeOverlappingTrigSphereContacts", &PyGeneralContact::GetExcludeOverlappingTrigSphereContacts, &PyGeneralContact::SetExcludeOverlappingTrigSphereContacts)\n' 
 plr.DefLatexDataAccess('excludeOverlappingTrigSphereContacts','(default=True) for consistent, closed meshes, we can exclude overlapping contact triangles (which would cause holes if mesh is overlapping and not consistent!!!) ',
@@ -3108,6 +3182,10 @@ plr.DefLatexDataAccess('excludeOverlappingTrigSphereContacts','(default=True) fo
 
 plr.sPy +=  '        .def_property("excludeDuplicatedTrigSphereContactPoints", &PyGeneralContact::GetExcludeDuplicatedTrigSphereContactPoints, &PyGeneralContact::SetExcludeDuplicatedTrigSphereContactPoints)\n' 
 plr.DefLatexDataAccess('excludeDuplicatedTrigSphereContactPoints','(default=False) run additional checks for double contacts at edges or vertices, being more accurate but can cause additional costs if many contacts ',
+                       dataType='bool',
+                       )
+plr.sPy +=  '        .def_property("computeExactStaticTriangleBins", &PyGeneralContact::GetComputeExactStaticTriangleBins, &PyGeneralContact::SetComputeExactStaticTriangleBins)\n' 
+plr.DefLatexDataAccess('computeExactStaticTriangleBins','if True, search tree bins are computed exactly for static triangles while if False, it uses the overall (=very inaccurate) AABB of each triangle in the search tree',
                        dataType='bool',
                        )
 
@@ -3183,9 +3261,10 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='AddANCFCable', cName='AddANCFCa
                         )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='AddTrianglesRigidBodyBased', cName='PyAddTrianglesRigidBodyBased', 
-                        argList=['rigidBodyMarkerIndex','contactStiffness','contactDamping','frictionMaterialIndex','pointList','triangleList'],
-                        description="add contact object using a rigidBodyMarker (of a body), contact/friction parameters, a list of points (as 3D numpy arrays or lists; coordinates relative to rigidBodyMarker) and a list of triangles (3 indices as numpy array or list) according to a mesh attached to the rigidBodyMarker; returns starting local index of trigsRigidBodyBased at which the triangles are stored; mesh can be produced with GraphicsData2TrigsAndPoints(...); contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle; frictionMaterialIndex refers to frictionPairings in GeneralContact; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate); the triangle normal must point outwards, with the normal of a triangle given with local points (p0,p1,p2) defined as n=(p1-p0) x (p2-p0), see function ComputeTriangleNormal(...)",
-                        argTypes=['MarkerIndex','float','float','int','List[[float,float,float]]','List[[int,int,int]]'],
+                        argList=['rigidBodyMarkerIndex','contactStiffness','contactDamping','frictionMaterialIndex','pointList','triangleList','staticTriangles'],
+                        description="add contact object using a rigidBodyMarker (of a body), contact/friction parameters, a list of points (as 3D numpy arrays or lists; coordinates relative to rigidBodyMarker) and a list of triangles (3 indices as numpy array or list) according to a mesh attached to the rigidBodyMarker; the flag staticTriangles=True can be used to inform the contact solver that these triangles are static (fixed in space); note that static triangles have to be added before dynamic triangles; function returns starting local index of trigsRigidBodyBased at which the triangles are stored; mesh can be produced with GraphicsData2TrigsAndPoints(...); contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle; frictionMaterialIndex refers to frictionPairings in GeneralContact; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate); the triangle normal must point outwards, with the normal of a triangle given with local points (p0,p1,p2) defined as n=(p1-p0) x (p2-p0), see function ComputeTriangleNormal(...)",
+                        argTypes=['MarkerIndex','float','float','int','List[[float,float,float]]','List[[int,int,int]]','bool'],
+                        defaultArgs=['','','','','','','False'],
                         returnType='int',
                         )
 
@@ -3261,8 +3340,11 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetActiveContacts', cName='PyGe
                         )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetSystemODE2RhsContactForces', cName='PyGetSystemODE2RhsContactForces', 
-                        description="Get numpy array of system vector, containing contribution of contact forces to system ODE2 Rhs vector; contributions to single objects may be extracted by checking the according LTG-array of according objects (such as rigid bodies); the contact forces vector is computed in each contact iteration;",
-                        returnType='List[float]',
+                        argList=['copy'],
+                        description="Get numpy array of system vector containing contribution of contact forces to system ODE2 Rhs vector; if copy=False, it will give direct (reference) access to the internal vector (note: modifications to this vector do not influence simulation!), however, which may cause problems if the system size changes or simulation is restarted; if copy=True, the vector is copied (time consuming); contributions to single objects may be extracted by checking the according LTG-array of according objects (such as rigid bodies); the contact forces vector is computed in each contact iteration;",
+                        argTypes=['bool'],
+                        defaultArgs=['False'],
+                        returnType=returnedArray,
                         )
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -3339,10 +3421,14 @@ from exudyn import MatrixContainer
 mc = MatrixContainer() #empty matrix, dense mode
 
 #Create MatrixContainer with dense matrix:
-#matrix can be initialized with a dense matrix, using list of lists or a numpy array, e.g.:
+#container can be initialized with a dense matrix, using list of lists or a numpy array, e.g.:
 matrix = np.eye(3)
+#stores matrices internally in dense mode:
 mcDense1 = MatrixContainer(matrix)
 mcDense2 = MatrixContainer([[1,2],[3,4]])
+
+#container can be initialized with a scipy csr sparse matrix, then being stored as sparse matrix
+mcSparse = MatrixContainer(csr_matrix(matrix))
 
 #Set with dense pyArray (a numpy array): 
 pyArray = np.array(matrix)

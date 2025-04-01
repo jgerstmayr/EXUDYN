@@ -38,6 +38,15 @@ try:
 except:
     pass
 
+def WarnNumpy2():
+    if int(np.__version__.split('.')[0]) > 1:
+        exu.Print('*******************************')
+        exu.Print('WARNING: You have installed NumPy version '+np.__version__+
+                  ' which is > 1.x and may cause problems with some Exudyn functionality!')
+        exu.Print('*******************************')
+        return True
+    return False
+
 def CheckForSciPyAndWarn():
     global scipyInstalled
     if not scipyInstalled:
@@ -149,7 +158,7 @@ def CSRtoScipySparseCSR(sparseMatrixCSR):
         CheckForSciPyMatrix(sparseMatrixCSR, 'CSRtoScipySparseCSR')
         return sparseMatrixCSR
 
-#**function: convert list of sparse triplets (or numpy array with one sparse triplet per row) into scipy.sparse csr_matrix
+#**function: convert list of sparse triplets (or numpy array with one sparse triplet per row) into scipy.sparse csr\_matrix
 def SparseTripletsToScipySparseCSR(sparseTriplets):
     if IsListOrArray(sparseTriplets):
         if type(sparseTriplets) == list:
@@ -660,6 +669,10 @@ def ReadElementsFromAnsysTxt(fileName, verbose=False):
         if not(elementTypeList[lineCtr] in elementsDict):
             elementsDict[elementTypeList[lineCtr]] = []
         elementsDict[elementTypeList[lineCtr]] += [elementConnectivityList[lineCtr]]
+
+    #convert all element lists into np.arrays:
+    for key, value in elementsDict.items():
+        elementsDict[key] = np.array(value)
 
     return elementsDict
 
@@ -1173,6 +1186,7 @@ class ObjectFFRFreducedOrderInterface:
     #  fileVersion: FOR EXPERTS: this allows to store in older format, will be recovered when loading; must be integer; version must by > 0; the default value will change in future!
     #**output: stores file
     def SaveToFile(self, fileName, fileVersion = 1 ):
+        WarnNumpy2()
         fileExtension = ''
         if len(fileName) < 4 or fileName[-4:]!='.npy':
             fileExtension = '.npy'
@@ -1221,6 +1235,7 @@ class ObjectFFRFreducedOrderInterface:
     #  fileName: string for path and file name without ending ==> ".npy" will be added
     #**output: loads data into fem (note that existing values are not overwritten!)
     def LoadFromFile(self, fileName):
+        WarnNumpy2()
         fileExtension = ''
         fileVersion = None
         if len(fileName) < 4 or fileName[-4:]!='.npy':
@@ -1617,109 +1632,254 @@ class FEMinterface:
     #**example:
     # #**** this is not an example, just a description for internal variables ****
     # #default values for member variables stored internally in FEMinterface fem and typical structure:
-    # fem.nodes = {}                 # {'Position':[[x0,y0,z0],...], 'RigidBodyRxyz':[[x0,y0,z0],...],  },...]                     #dictionary of different node lists
-    # fem.elements = []              # [{'Name':'identifier', 'Tet4':[[n0,n1,n2,n3],...], 'Hex8':[[n0,...,n7],...],  },...]        #there may be several element sets
-    # fem.massMatrix = None    # np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
-    # fem.stiffnessMatrix= None # np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
-    # fem.surface = []               # [{'Name':'identifier', 'Trigs':[[n0,n1,n2],...], 'Quads':[[n0,...,n3],...],  },...]           #surface with faces
-    # fem.nodeSets = []              # [{'Name':'identifier', 'NodeNumbers':[n_0,...,n_ns], 'NodeWeights':[w_0,...,w_ns]},...]     #for boundary conditions, etc.
-    # fem.elementSets = []           # [{'Name':'identifier', 'ElementNumbers':[n_0,...,n_ns]},...]                                #for different volumes, etc.
-    # fem.modeBasis = {}             # {'matrix':[[Psi_00,Psi_01, ..., Psi_0m],...,[Psi_n0,Psi_n1, ..., Psi_nm]],'type':'NormalModes'} #'NormalModes' are eigenmodes, 'HCBmodes' are Craig-Bampton modes including static modes
-    # fem.eigenValues = []           # [ev0, ev1, ...]                                                                             #eigenvalues according to eigenvectors in mode basis
-    # fem.postProcessingModes = {}   # {'matrix':<matrix containing stress components (xx,yy,zz,yz,xz,xy) in each column, rows are for every mesh node>,'outputVariableType':exudyn.OutputVariableType.StressLocal}
+    # 
+    # dictionary of different node lists:
+    # fem.nodes = {}                 # {'Position':np.array([[x0,y0,z0],...]), 'RigidBodyRxyz':np.array([[x0,y0,z0,alpha0,beta0,gamma0],...]),  },...]
+    # list of elements (element connectivity):
+    # fem.elements = []              # [{'Name':'identifier', 'Tet4':np.array([[n0,n1,n2,n3],...]), 'Hex8':np.array([[n0,...,n7],...]),  },...]
+    # fem.massMatrix = None          # scipy csr_matrix
+    # fem.stiffnessMatrix= None      # scipy csr_matrix
+    # surface sets with faces, usually for drawing:
+    # fem.surface = []               # [{'Name':'identifier', 'Trigs':np.array([[n0,n1,n2],...]), 'Quads':np.array([[n0,...,n3],...]),  },...]
+    # node sets for boundary conditions, etc.
+    # fem.nodeSets = []              # [{'Name':'identifier', 'NodeNumbers':np.array([n_0,...,n_ns]), 'NodeWeights':np.array([w_0,...,w_ns])},...]
+    # element sets, e.g., for different domains, etc.
+    # fem.elementSets = []           # [{'Name':'identifier', 'ElementNumbers':np.array([n_0,...,n_ns])},...]
+    # mode basis: 'NormalModes' are eigenmodes, 'HCBmodes' are Craig-Bampton modes including static modes:
+    # fem.modeBasis = {}             # {'matrix':np.array([[Psi_00,Psi_01, ..., Psi_0m],...,[Psi_n0,Psi_n1, ..., Psi_nm]]),'type':'NormalModes'}
+    # eigenvalues related to eigenvectors in mode basis:
+    # fem.eigenValues = []           # np.array([ev0, ev1, ...])
+    # fem.postProcessingModes = {}   # {'matrix':<matrix (np.array) containing stress components (xx,yy,zz,yz,xz,xy) in each column, rows are for every mesh node>,'outputVariableType':exudyn.OutputVariableType.StressLocal}
     def __init__(self):
-        self.nodes = {}                 # {'Position':[[x0,y0,z0],...], 'RigidBodyRxyz':[[x0,y0,z0],...],  },...]                     #dictionary of different node lists
-        self.elements = []              # [{'Name':'identifier', 'Tet4':[[n0,n1,n2,n3],...], 'Hex8':[[n0,...,n7],...],  },...]        #there may be several element sets
+        self.nodes = {}                 # {'Position':np.array([[x0,y0,z0],...]), 'RigidBodyRxyz':np.array([[x0,y0,z0,alpha0,beta0,gamma0],...]),  },...]                     #dictionary of different node lists
+        self.elements = []              # [{'Name':'identifier', 'Tet4':np.array([[n0,n1,n2,n3],...]), 'Hex8':np.array([[n0,...,n7],...]),  },...]        #there may be several element sets
         self.massMatrix = None          # scipy csr_matrix; OLD: np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
         self.stiffnessMatrix = None     # scipy csr_matrix; OLD: np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
         # self.massMatrixReduced = np.zeros((0,0))    # np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
         # self.stiffnessMatrixReduced=np.zeros((0,0)) # np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
-        self.surface = []               # [{'Name':'identifier', 'Trigs':[[n0,n1,n2],...], 'Quads':[[n0,...,n3],...],  },...]           #surface with faces
-        self.nodeSets = []              # [{'Name':'identifier', 'NodeNumbers':[n_0,...,n_ns], 'NodeWeights':[w_0,...,w_ns]},...]     #for boundary conditions, etc.
-        self.elementSets = []           # [{'Name':'identifier', 'ElementNumbers':[n_0,...,n_ns]},...]                                #for different volumes, etc.
+        self.surface = []               # [{'Name':'identifier', 'Trigs':np.array([[n0,n1,n2],...]), 'Quads':np.array([[n0,...,n3],...]),  },...]           #surface with faces
+        self.nodeSets = []              # [{'Name':'identifier', 'NodeNumbers':np.array([n_0,...,n_ns]), 'NodeWeights':np.array([w_0,...,w_ns])},...]     #for boundary conditions, etc.
+        self.elementSets = []           # [{'Name':'identifier', 'ElementNumbers':np.array([n_0,...,n_ns])},...]                                #for different volumes, etc.
 
-        self.modeBasis = {}             # {'matrix':[[Psi_00,Psi_01, ..., Psi_0m],...,[Psi_n0,Psi_n1, ..., Psi_nm]],'type':'NormalModes'}
-        self.eigenValues = []           # [ev0, ev1, ...]                                                                             #eigenvalues according to eigenvectors in mode basis
-        self.postProcessingModes = {}   # {'matrix':<matrix containing stress components (xx,yy,zz,yz,xz,xy) in each column, rows are for every mesh node>,'outputVariableType':exudyn.OutputVariableType.StressLocal}
+        self.modeBasis = {}             # {'matrix':np.array([[Psi_00,Psi_01, ..., Psi_0m],...,[Psi_n0,Psi_n1, ..., Psi_nm]]),'type':'NormalModes'}
+        self.eigenValues = []           # np.array([ev0, ev1, ...])                                                                             #eigenvalues according to eigenvectors in mode basis
+        self.postProcessingModes = {}   # {'matrix':<matrix (np.array) containing stress components (xx,yy,zz,yz,xz,xy) in each column, rows are for every mesh node>,'outputVariableType':exudyn.OutputVariableType.StressLocal}
 
         #some additional information, needed for checks and easier operation
         self.coordinatesPerNodeType = {'Position':3, 'Position2D':2, 'RigidBodyRxyz':6, 'RigidBodyEP':7} #number of coordinates for a certain node type
 
 
-    #**classFunction: save all data (nodes, elements, ...) to a data filename; this function is much faster than the text-based import functions
-    #**input: 
-    #  fileName: string for path and file name without ending ==> ".npy" will be added
-    #  fileVersion: FOR EXPERTS: this allows to store in older format, will be recovered when loading; must be integer; version must by > 0
-    #**output: stores file
-    def SaveToFile(self, fileName, fileVersion = 2 ):
-        fileExtension = ''
-        if len(fileName) < 4 or fileName[-4:]!='.npy':
+    #internal function to convert elements lists of lists to Numpy arrays:
+    def ConvertElementsLists2Numpy(self):
+        #convert all element lists into np.arrays:
+        for dictItem in self.elements:
+            for key, value in dictItem.items():
+                if isinstance(value, list): #only for lists (or list of lists), not for strings, etc.
+                    dictItem[key] = np.array(value)
+
+    #internal function to convert surface lists of lists to Numpy arrays:
+    def ConvertSurfaceLists2Numpy(self):
+        for dictItem in self.surface:
+            for key, value in dictItem.items():
+                if isinstance(value, list): #only for lists (or list of lists), not for strings, etc.
+                    dictItem[key] = np.array(value)
+                
+    #internal function to convert numpy arrays to lists of lists:
+    def NumpyArray2ListOfLists(self, matrix):
+        if isinstance(matrix, np.ndarray):
+            matrix = matrix.tolist()
+
+        return matrix
+
+    #**classFunction: get dictionary containing current data of FEMinterface
+    def GetDictionary(self):
+        #convert surface to np.array to speed up saving with HDF5, etc.!
+        # import copy
+        # modSurface = copy.deepcopy(self.surface)
+        # for item in modSurface:
+        #     if 'Trigs' in item:
+        #         item['Trigs'] = np.array(item['Trigs'])
+        #     if 'Quads' in item:
+        #         item['Quads'] = np.array(item['Quads'])
+
+        data = {'nodes':self.nodes,
+                'elements':self.elements,
+                'massMatrix':self.massMatrix,
+                'stiffnessMatrix':self.stiffnessMatrix,
+                'surface':self.surface,
+                'nodeSets':self.nodeSets,
+                'elementSets':self.elementSets,
+                'modeBasis':self.modeBasis,
+                'eigenValues':self.eigenValues,
+                'postProcessingModes':self.postProcessingModes,
+                }
+        return data
+
+    #**classFunction: set dictionary containing current data for FEMinterface
+    def SetWithDictionary(self, dictData, warn=True):
+        # for item in dictData['surface']:
+        #     if 'Trigs' in item:
+        #         if isinstance(item['Trigs'], np.ndarray):
+        #             item['Trigs'] = item['Trigs'].tolist()
+        #     if 'Quads' in item:
+        #         if isinstance(item['Quads'], np.ndarray):
+        #             item['Quads'] = item['Quads'].tolist()
+
+        attrlist = ['nodes', 'elements', 'massMatrix', 'stiffnessMatrix',
+                    'surface', 'nodeSets', 'elementSets', 'modeBasis',
+                    'eigenValues', 'postProcessingModes']
+        for item in attrlist:
+            if item in dictData: 
+                self.__setattr__(item, dictData[item])
+            elif warn:
+                exu.Print('WARNING: FEMinterface.SetDictionary: key '+item+' not found in dictionary')
+        
+        self.ConvertElementsLists2Numpy() #if loading old format
+        self.ConvertSurfaceLists2Numpy()  #if loading old format
+        
+    #internal: convert to unique filename, extension and mode
+    def FileNameToMode(self, fileName, mode):
+        if fileName.lower().endswith('.npy'):
             fileExtension = '.npy'
+        elif fileName.lower().endswith('.hdf5'):
+            fileExtension = '.hdf5'
+        elif fileName.lower().endswith('.pkl'):
+            fileExtension = '.pkl'
+        else:
+            if mode == None: #default!
+                fileExtension = '.npy'
+                mode = 'NPY'
+            else:
+                fileExtension = '.'+mode.lower()
+        if mode is not None:
+            if fileExtension != '.'+mode.lower():
+                raise ValueError('FEMinterface: Load/Save: inconsistent file extension and mode!')
+        else:
+            mode = fileExtension[1:].upper()
+        if fileName.endswith(fileExtension):
+            fileName = fileName[:-len(fileExtension)]
+    
+        return [fileName, fileExtension, mode]
+        
+    #**classFunction: save all data (nodes, elements, ...) to a data filename; this function is much faster than the text-based import functions; note that HDF5 and PKL formats lead to smaller files
+    #**input: 
+    #  fileName: string for path and file name; if no ending is provided ==> ".npy" will be added and NumPy format will be used; alternatives: '.pkl' ending uses Python's pickle method (smaller files) and '.hdf5' uses the HDF5 file format, but requires the python package h5py to be installed!
+    #  fileVersion: FOR EXPERTS: this allows to store in older format, will be recovered when loading; must be integer; version must by > 0
+    #  mode: default: numpy format ('NPY'); alternatives: 'HDF5' (requires h5py package) and 'PKL' (pickle)
+    #**output: stores file
+    #**nodes: test with 10-node tets and 86154 nodes, 50752 elements and 20 modes (incl. stress modes) gives the timings for save+load: [NPY: 2.10s, PKL: 0.76s, HDF5: 0.69s] and file sizes [NPY: 1032MB, PKL: 580MB, HDF5: 581MB]
+    def SaveToFile(self, fileName, fileVersion = 3, mode=None):
+        if mode not in ['NPY','PKL','HDF5',None]:
+            raise ValueError('FEMinterface.SaveToFile: legal values for mode are "NPY", "PKL" and "HDF5"')
+
+        [fileName, fileExtension, mode] = self.FileNameToMode(fileName, mode)
+
+        if mode=='NPY':
+            if WarnNumpy2():
+                exu.Print('FEMinterface.SaveToFile(...) does not work properly with NumPy 2.x!')
                     
         try:
             os.makedirs(os.path.dirname(fileName+fileExtension), exist_ok=True)
         except:
             pass #makedirs may fail on some systems, but we keep going
 
-        with open(fileName+fileExtension, 'wb') as f:
-            if fileVersion>0:
-                dataVersion = np.array([int(fileVersion)])
-                np.save(f, dataVersion)
+        if mode == 'NPY':
+            with open(fileName+fileExtension, 'wb') as f:
+                if fileVersion>0:
+                    dataVersion = np.array([int(fileVersion)])
+                    np.save(f, dataVersion)
+    
+                np.save(f, self.nodes, allow_pickle=True) #allow_pickle=True for lists or dictionaries
+                np.save(f, self.elements, allow_pickle=True)
+                if fileVersion >= 2: #now as dict, allows to use None, numpy-array and scipy sparse matrix
+                    np.save(f, {'massMatrix':ScipySparseCSRtoCSR(self.massMatrix), 
+                                'stiffnessMatrix':ScipySparseCSRtoCSR(self.stiffnessMatrix),
+                                'type': 'sparseTriplets'}, 
+                            allow_pickle=True)
+                else:
+                    np.save(f, ScipySparseCSRtoCSR(self.massMatrix) )
+                    np.save(f, ScipySparseCSRtoCSR(self.stiffnessMatrix) )
+                np.save(f, self.surface, allow_pickle=True)
+                np.save(f, self.nodeSets, allow_pickle=True)
+                np.save(f, self.elementSets, allow_pickle=True)
+                np.save(f, self.modeBasis, allow_pickle=True)
+                np.save(f, self.eigenValues, allow_pickle=True)
+                np.save(f, self.postProcessingModes, allow_pickle=True)
+        else:
+            data = self.GetDictionary()
+            data['version'] = fileVersion
+            data['type']  = 'FEMinterface'
+            if mode == 'PKL':
+                import pickle
+                with open(fileName+fileExtension, 'wb') as f:
+                    pickle.dump(data, f) #not good: pickle.HIGHEST_PROTOCOL => switches always to newest protocol
+            else: # mode == 'HDF5':
+                from exudyn.advancedUtilities import SaveDictToHDF5
+                SaveDictToHDF5(fileName+fileExtension, data)
 
-            np.save(f, self.nodes, allow_pickle=True) #allow_pickle=True for lists or dictionaries
-            np.save(f, self.elements, allow_pickle=True)
-            if fileVersion >= 2: #now as dict, allows to use None, numpy-array and scipy sparse matrix
-                np.save(f, {'massMatrix':ScipySparseCSRtoCSR(self.massMatrix), 
-                            'stiffnessMatrix':ScipySparseCSRtoCSR(self.stiffnessMatrix),
-                            'type': 'sparseTriplets'}, 
-                        allow_pickle=True)
-            else:
-                np.save(f, ScipySparseCSRtoCSR(self.massMatrix) )
-                np.save(f, ScipySparseCSRtoCSR(self.stiffnessMatrix) )
-            np.save(f, self.surface, allow_pickle=True)
-            np.save(f, self.nodeSets, allow_pickle=True)
-            np.save(f, self.elementSets, allow_pickle=True)
-            np.save(f, self.modeBasis, allow_pickle=True)
-            np.save(f, self.eigenValues, allow_pickle=True)
-            np.save(f, self.postProcessingModes, allow_pickle=True)
 
+            
+                    
     #**classFunction: load all data (nodes, elements, ...) from a data filename previously stored with SaveToFile(...). 
     #this function is much faster than the text-based import functions
     #**input: 
-    #  fileName: string for path and file name without ending ==> ".npy" will be added
+    #  fileName: string for path and file name; if no ending is provided ==> ".npy" will be added and NumPy format will be assumed; alternatives: '.pkl' ending uses Python's pickle method and '.hdf5' uses the HDF5 file format, but requires the python package h5py to be installed!
     #  forceVersion: FOR EXPERTS: this allows to store in older format, will be recovered when loading; must be integer; for old files, use forceVersion=0
     #**output: loads data into fem (note that existing values are not overwritten!); returns file version or None if version is not available
-    def LoadFromFile(self, fileName, forceVersion=None):
-        fileExtension = ''
-        fileVersion = None
-        if len(fileName) < 4 or fileName[-4:]!='.npy':
-            fileExtension = '.npy'
+    def LoadFromFile(self, fileName, forceVersion=None, mode=None):
+        if mode not in ['NPY','PKL','HDF5',None]:
+            raise ValueError('FEMinterface.LoadFromFile: legal values for mode are "NPY", "PKL" and "HDF5"')
+
+        if mode not in ['NPY','PKL','HDF5',None]:
+            raise ValueError('FEMinterface.SaveToFile: legal values for mode are "NPY", "PKL" and "HDF5"')
+
+        [fileName, fileExtension, mode] = self.FileNameToMode(fileName, mode)
+
+        if mode=='NPY':
+            if WarnNumpy2():
+                exu.Print('FEMinterface.LoadFromFile(...) does not work properly with NumPy 2.x!')
+
             
+        fileVersion = None
         try:
-            with open(fileName+fileExtension, 'rb') as f:
-                if forceVersion==None or forceVersion>0:
-                    versionData = np.load(f)
-                    #exu.Print('LoadFromFile:file version:', versionData)
-                    if forceVersion == None:
-                        fileVersion = int(versionData[0])
-                else:
-                    fileVersion=forceVersion #should be 0
+            if mode == 'NPY':
+                with open(fileName+fileExtension, 'rb') as f:
+                    fileVersion=forceVersion
+                    if forceVersion==None or forceVersion>0:
+                        versionData = np.load(f)
+                        #exu.Print('LoadFromFile:file version:', versionData)
+                        if forceVersion == None:
+                            fileVersion = int(versionData[0])
+                        
+                    self.nodes = np.load(f, allow_pickle=True).all()   #allow_pickle=True for lists or dictionaries; .all() for dictionaries
+                    self.elements = list(np.load(f, allow_pickle=True))#list(...) to convert into list again!
+                    if fileVersion >= 2:
+                        MK = np.load(f, allow_pickle=True).all()
+                        self.massMatrix = SparseTripletsToScipySparseCSR(MK['massMatrix'])
+                        self.stiffnessMatrix = SparseTripletsToScipySparseCSR(MK['stiffnessMatrix'])
+                    else:
+                        self.massMatrix = SparseTripletsToScipySparseCSR( np.load(f) )
+                        self.stiffnessMatrix = SparseTripletsToScipySparseCSR( np.load(f) )
+                    self.surface = list(np.load(f, allow_pickle=True))
+                    self.nodeSets =  list(np.load(f, allow_pickle=True))
+                    self.elementSets = list(np.load(f, allow_pickle=True))
+                    self.modeBasis = np.load(f, allow_pickle=True).all()
+                    self.eigenValues = np.array(list(np.load(f, allow_pickle=True))) #load as numpy array!
+                    self.postProcessingModes = np.load(f, allow_pickle=True).all()
+            else:
+                if mode == 'PKL':
+                    import pickle
+                    with open(fileName+fileExtension, 'rb') as f:
+                        dictData = pickle.load(f)
+                    self.SetWithDictionary(dictData)
+                else: # mode == 'HDF5':
+                    from exudyn.advancedUtilities import LoadDictFromHDF5
+                    dictData = LoadDictFromHDF5(fileName+fileExtension)
+                    self.SetWithDictionary(dictData)
+
+            self.ConvertElementsLists2Numpy() #in case that old format is loaded
+            self.ConvertSurfaceLists2Numpy()  #in case that old format is loaded
                     
-                self.nodes = np.load(f, allow_pickle=True).all()   #allow_pickle=True for lists or dictionaries; .all() for dictionaries
-                self.elements = list(np.load(f, allow_pickle=True))#list(...) to convert into list again!
-                if fileVersion >= 2:
-                    MK = np.load(f, allow_pickle=True).all()
-                    self.massMatrix = SparseTripletsToScipySparseCSR(MK['massMatrix'])
-                    self.stiffnessMatrix = SparseTripletsToScipySparseCSR(MK['stiffnessMatrix'])
-                else:
-                    self.massMatrix = SparseTripletsToScipySparseCSR( np.load(f) )
-                    self.stiffnessMatrix = SparseTripletsToScipySparseCSR( np.load(f) )
-                self.surface = list(np.load(f, allow_pickle=True))
-                self.nodeSets =  list(np.load(f, allow_pickle=True))
-                self.elementSets = list(np.load(f, allow_pickle=True))
-                self.modeBasis = np.load(f, allow_pickle=True).all()
-                self.eigenValues = list(np.load(f, allow_pickle=True))
-                self.postProcessingModes = np.load(f, allow_pickle=True).all()
         except Exception as e:
             exu.Print('\n\nFEMinterface.LoadFromFile(...) failed; check filename; if your data file is using old format, try with: LoadFromFile(self, fileName=..., forceVersion=0)\n')
             raise
@@ -1875,7 +2035,6 @@ class FEMinterface:
         self.elements += [elementsDict]
         self.nodes['Position'] = np.array(nodes)
 
-
         #convert elements to triangles for drawing:
         if createSurfaceTrigs:
             if not surfaceTrigsAll:
@@ -1899,7 +2058,9 @@ class FEMinterface:
         
                 self.surface += [{'Name':'meshSurface', 'Trigs':trigList}]    # [{'Name':'identifier', 'Trigs':[[n0,n1,n2],...], 'Quads':[[n0,...,n3],...],  },...]           #surface with faces
 
-
+        self.ConvertElementsLists2Numpy() #avoid lists of lists
+        self.ConvertSurfaceLists2Numpy() #store in numpy fomat
+        
         return np.array(nodes)
         
         #return [np.array(nodes), elementsDict]
@@ -2081,6 +2242,7 @@ class FEMinterface:
         self.massMatrix = SparseTripletsToScipySparseCSR(M1)
         self.stiffnessMatrix = SparseTripletsToScipySparseCSR(K1)
         self.surface = [{'Name':'meshSurface','Trigs':trigList}]
+        self.ConvertSurfaceLists2Numpy() #avoid lists of lists
 
         #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
         if computeEigenmodes:
@@ -2597,7 +2759,7 @@ class FEMinterface:
         trigList = []
         for surface in self.surface:
             if 'Trigs' in surface:
-                trigList += surface['Trigs']
+                trigList += self.NumpyArray2ListOfLists(surface['Trigs'])
         return trigList
 
     #**classFunction: generate surface elements from volume elements
@@ -2720,7 +2882,8 @@ class FEMinterface:
         #otherwise add new surface
         if not surfaceExists:
             self.surface += [{'Name':'meshSurface', 'Trigs':surfaceListTrigs}]
-                 
+        
+        self.ConvertSurfaceLists2Numpy()
         
         
         
@@ -2917,11 +3080,11 @@ class FEMinterface:
         for node in femNodes:
             allNodeList += [mbs.AddNode(eii.NodePoint(referenceCoordinates=node))]
         
-        nRows = fem.NumberOfCoordinates()
+        #nRows = fem.NumberOfCoordinates()
         Mcsr = exu.MatrixContainer()
-        Mcsr.SetWithSparseMatrixCSR(nRows,nRows,fem.GetMassMatrix(sparse=True), useDenseMatrix=False)
-        Kcsr = exu.MatrixContainer()
-        Kcsr.SetWithDenseMatrix(fem.GetStiffnessMatrix(sparse=True), useDenseMatrix=False)
+        Mcsr.SetWithSparseMatrix(fem.GetMassMatrix())
+        # Kcsr = exu.MatrixContainer()
+        # Kcsr.SetWithDenseMatrix(fem.GetStiffnessMatrix())
         
         res = u.vec.CreateVector() #temporary vector
         
@@ -3921,7 +4084,7 @@ class FEMinterface:
         
     #**classFunction: read elements (exported from Ansys as .txt-File)
     def ReadElementsFromAnsys(self, fileName, verbose=False):
-        self.elements += [ReadElementsFromAnsysTxt(fileName, verbose)]
+        self.elements += [ReadElementsFromAnsysTxt(fileName, verbose)] #add dictionary to list of dicts
         self.VolumeToSurfaceElements() #generate surface elements
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

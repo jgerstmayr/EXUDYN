@@ -195,8 +195,7 @@ Due to the fact that the definition of markers for general joints is tedious, \ 
                           axis=[0,0,1], axisRadius=0.2*w, axisLength=1.4*w)
 
 
-Note that \ ``axis``\  and \ ``position``\  are defined in global coordinates, and local coordinates are computed according to the
-reference configuration of the bodies.
+Note that \ ``axis``\  and \ ``position``\  are defined in global coordinates, and local coordinates are computed according to the reference configuration of the bodies.
 There exist more arguments that may be specified, e.g., the axis and position can also be defined in the local frame of the first body.
 
 

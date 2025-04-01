@@ -50,6 +50,8 @@ DESCRIPTION of NodePointGround
   | zero 3D vector
 * | ``Velocity``\ : \ :math:`{\mathbf{v}}\cConfig = [0,\,0,\,0]\cConfig\tp`\ 
   | zero 3D vector
+* | ``CoordinatesTotal``\ : \ :math:`{\mathbf{c}}\cConfig =[]`\ 
+  | vector of length zero
 * | ``Coordinates``\ : \ :math:`{\mathbf{c}}\cConfig =[]`\ 
   | vector of length zero
 * | ``Coordinates\_t``\ : \ :math:`\dot{\mathbf{c}}\cConfig =[]`\ 

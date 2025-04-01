@@ -24,6 +24,23 @@ void CNodeGenericODE1::GetOutputVariable(OutputVariableType variableType, Config
 {
 	switch (variableType)
 	{
+		
+	case OutputVariableType::CoordinatesTotal:
+	{
+		if (IsValidConfiguration(configuration))
+		{
+			value = GetCoordinateVector(configuration);
+			if (configuration != ConfigurationType::Reference)
+			{
+				value += GetReferenceCoordinateVector();
+			}
+		}
+		else
+		{
+			PyError("CNodeGenericODE1::GetOutputVariable: invalid configuration");
+		}
+		break;
+	}
 	case OutputVariableType::Coordinates:
 	{
 		if (IsValidConfiguration(configuration))

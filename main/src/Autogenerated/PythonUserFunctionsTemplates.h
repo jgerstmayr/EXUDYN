@@ -25,4 +25,6 @@ template class PythonUserFunctionBase<std::function<StdVector6D(const MainSystem
 template class PythonUserFunctionBase<std::function<StdVector3D(const MainSystem&,Real,StdVector3D)>>;
 template class PythonUserFunctionBase<std::function<Real(const MainSystem&,Real,Real)>>;
 template class PythonUserFunctionBase<std::function<StdVector(const MainSystem&,Real,StdArrayIndex,StdVector,ConfigurationType)>>;
+template class PythonUserFunctionBase<std::function<void(const MainSystem&, Real, Index, Index)>>;
+template class PythonUserFunctionBase<std::function<PyMatrixContainer(const MainSystem&, Real, Real, Real, Real)>>;
 

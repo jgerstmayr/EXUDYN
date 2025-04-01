@@ -70,15 +70,16 @@ for i, pos in enumerate(posList):
     graphicsRoll = graphics.Cylinder(pAxis=[0,0,-0.5*t], vAxis=[0,0,t], nTiles=64, radius=r, color=graphics.color.dodgerblue, alternatingColor=graphics.color.darkgrey)
     
     inertiaRoll = InertiaCylinder(density=1000,length=t,outerRadius=r, axis=2)
-    #if i==1 or i==3: inertiaRoll.mass *= 2
     inertiaRoll = inertiaRoll.Translated([0,-r,0])
 
-    [nR,bR]=AddRigidBody(mainSys = mbs, 
-                         inertia = inertiaRoll, 
-                         nodeType = exu.NodeType.RotationEulerParameters, 
-                         position = pos,
-                         gravity = g, 
-                         graphicsDataList = [graphicsRoll, graphics.Basis(inertiaRoll.COM(), length=0.5) ])
+    dictR = mbs.CreateRigidBody(referencePosition=pos,  
+                                inertia=inertiaRoll,  
+                                gravity=g,  
+                                graphicsDataList=[graphicsRoll, graphics.Basis(inertiaRoll.COM(), length=0.5)],  
+                                returnDict=True)  
+    nR = dictR['nodeNumber']  
+    bR = dictR['bodyNumber']
+
     mR = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nR))
     nodeList += [nR]
     bodyList += [bR]

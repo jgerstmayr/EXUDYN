@@ -18,7 +18,8 @@
 
 //! compute joint frame, relative displacement, relative rotation, relative velocity and relative angular velocity
 void CObjectConnectorRigidBodySpringDamper::ComputeSpringForceTorque(const MarkerDataStructure& markerData, Index itemIndex,
-	Matrix3D& Ajoint, Vector3D& vLocPos, Vector3D& vLocVel, Vector3D& vLocRot, Vector3D& vLocAngVel, Vector6D& fLocVec6D) const
+	Matrix3D& Ajoint, Vector3D& vLocPos, Vector3D& vLocVel, Vector3D& vLocRot, Vector3D& vLocAngVel, Vector6D& fLocVec6D,
+	bool computeForceTorque) const
 {
 	//spring is measured relative to marker0:
 
@@ -69,23 +70,25 @@ void CObjectConnectorRigidBodySpringDamper::ComputeSpringForceTorque(const Marke
 		vLoc6D[i + 3] = vLocAngVel[i];
 	}
 
-
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//evaluate force-torque vector:
-	//compute resulting force vector:
-	if (!parameters.springForceTorqueUserFunction)
+	if (computeForceTorque)
 	{
-		uLoc6D -= parameters.offset;
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//evaluate force-torque vector:
+		//compute resulting force vector:
+		if (!parameters.springForceTorqueUserFunction)
+		{
+			uLoc6D -= parameters.offset;
 
-		EXUmath::MultMatrixVector(parameters.stiffness, uLoc6D, fLocVec6D);
+			EXUmath::MultMatrixVector(parameters.stiffness, uLoc6D, fLocVec6D);
 
-		Vector6D temp;
-		EXUmath::MultMatrixVector(parameters.damping, vLoc6D, temp);
-		fLocVec6D += temp;
-	}
-	else
-	{
-		EvaluateUserFunctionForce(fLocVec6D, cSystemData->GetMainSystemBacklink(), markerData.GetTime(), itemIndex, uLoc6D, vLoc6D);
+			Vector6D temp;
+			EXUmath::MultMatrixVector(parameters.damping, vLoc6D, temp);
+			fLocVec6D += temp;
+		}
+		else
+		{
+			EvaluateUserFunctionForce(fLocVec6D, cSystemData->GetMainSystemBacklink(), markerData.GetTime(), itemIndex, uLoc6D, vLoc6D);
+		}
 	}
 }
 
@@ -165,7 +168,9 @@ void CObjectConnectorRigidBodySpringDamper::GetOutputVariableConnector(OutputVar
 	Vector3D vLocAngVel;
 	Vector6D fLocVec6D;
 	Matrix3D Ajoint;
-	ComputeSpringForceTorque(markerData, itemIndex, Ajoint, vLocPos, vLocVel, vLocRot, vLocAngVel, fLocVec6D);
+	ComputeSpringForceTorque(markerData, itemIndex, Ajoint, vLocPos, vLocVel, vLocRot, vLocAngVel, fLocVec6D,
+		(variableType == OutputVariableType::ForceLocal ||
+		variableType == OutputVariableType::TorqueLocal));
 
 	LinkedDataVector fPosLoc(fLocVec6D, 0, 3);
 	LinkedDataVector fRotLoc(fLocVec6D, 3, 3);

@@ -409,7 +409,7 @@ if __name__ == '__main__': #this is only executed when file is direct called in 
         verbose = 1 #turn on without tensorboard
     
     # here the model is loaded (either for vectorized or scalar environment´using SAC or A2C).     
-    def getModel(flagContinuous, myEnv, modelType='SAC'): 
+    def GetModel(flagContinuous, myEnv, modelType='SAC'): 
 
         if flagContinuous : 
             if modelType=='SAC': 
@@ -450,7 +450,7 @@ if __name__ == '__main__': #this is only executed when file is direct called in 
             env.TestModel(numberOfSteps=2000, seed=42, sleepTime=0.02, useRenderer=True)
             sys.exit()
 
-        model = getModel(flagContinuous, env, modelType=modelType) 
+        model = GetModel(flagContinuous, env, modelType=modelType) 
 
         ts = -time.time()
         model.learn(total_timesteps=int(250e3), #min 250k steps required to start having success to stabilize double pendulum
@@ -464,7 +464,7 @@ if __name__ == '__main__': #this is only executed when file is direct called in 
         #save learned model
         
         model.save("solution/" + modelName)
-    else: #parallel; faster #set verbose=0 in getModel()!
+    else: #parallel; faster #set verbose=0 in GetModel()!
         import torch #stable-baselines3 is based on pytorch
         n_cores= max(1,int(os.cpu_count()/2)) #n_cores should be number of real cores (not threads)
         # n_cores = 2
@@ -478,7 +478,7 @@ if __name__ == '__main__': #this is only executed when file is direct called in 
     
         #main learning task;  with 20 cores 800 000 steps take in the continuous 
         # case approximatly 18 minutes (SAC), discrete (A2C) takes 2 minutes. 
-        model = getModel(flagContinuous, vecEnv, modelType=modelType)
+        model = GetModel(flagContinuous, vecEnv, modelType=modelType)
 
         ts = -time.time()
         print('start learning of agent with {}'.format(str(model.policy).split('(')[0]))

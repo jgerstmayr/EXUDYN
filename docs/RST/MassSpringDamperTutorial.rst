@@ -264,6 +264,8 @@ For reading the file containing commented lines (this does not work in binary mo
   plt.plot(data[:,0], data[:,1], 'b-', label='displacement (m); numerical solution') 
 
 
+Note that the coordinates do not include the reference position (which is 0.5 in this case). For information on displacement and reference coordinates, see Section :ref:`sec-overview-items-coordinates`\ .
+
 The sensor result can be loaded in the same way. The sensor output format contains time in the first column and sensor values in the remaining columns. The number of columns depends on the 
 sensor and the output quantity (scalar, vector, ...):
 

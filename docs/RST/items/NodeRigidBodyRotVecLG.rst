@@ -58,6 +58,8 @@ DESCRIPTION of NodeRigidBodyRotVecLG
   | global 3D velocity vector of node
 * | ``Acceleration``\ : \ :math:`\LU{0}{{\mathbf{a}}}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp`\ 
   | global 3D acceleration vector of node
+* | ``CoordinatesTotal``\ : 
+  | displacement/rotation coordinates of node including reference configuration
 * | ``Coordinates``\ : \ :math:`{\mathbf{c}}\cConfig = [q_0,\,q_1,\,q_2, \,\nu_0,\,\nu_1,\,\nu_2]\tp\cConfig`\ 
   | coordinate vector of node, having 3 displacement coordinates and 3 Euler angles
 * | ``Coordinates\_t``\ : \ :math:`\dot{\mathbf{c}}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cConfig`\ 
@@ -112,8 +114,8 @@ This node avoids typical singularities of rotations and is therefore perfectly s
 for arbitrary motion. Furthermore, nonlinearities are reduced, which may improve
 implicit time integration performance.
 
-For creating a \ ``NodeRigidBodyRotVecLG``\  together with a rigid body, there is a \ ``rigidBodyUtilities``\  function \ ``AddRigidBody``\ , 
-see Section :ref:`sec-rigidbodyutilities-addrigidbody`\ , which simplifies the setup of a rigid body significantely!
+For creating a \ ``NodeRigidBodyRotVecLG``\  together with a rigid body, there is a \ ``rigidBodyUtilities``\  function \ ``CreateRigidBody``\ , 
+see Section :ref:`sec-mainsystemextensions-createrigidbody`\ , which simplifies the setup of a rigid body significantely!
 
 
 Relevant Examples and TestModels with weblink:

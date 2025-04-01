@@ -70,7 +70,7 @@ class OpenAIGymInterfaceEnv(Env):
         self.SetupSpaces() #in future, there may be a more convenient way to do so!
 
         #THIS NEEDS TO BE CALLED AT THE END:
-        self.PreInitializeSolver()
+        self.PreInitializeSolver() #overwrite PreInitializeSolver() to use other solvers
         #++++++++++++++++++++++++++++
         #now system is ready to go!
         
@@ -180,10 +180,10 @@ class OpenAIGymInterfaceEnv(Env):
     #INTERNAL FUNCTIONS!
     #**classFunction: internal function which initializes dynamic solver; adapt in special cases; this function has some overhead and should not be called during reset() or step()
     def PreInitializeSolver(self):
-        self.SetSolver(exu.DynamicSolverType.GeneralizedAlpha)
-        # self.dynamicSolver = exu.MainSolverImplicitSecondOrder()
-        # self.dynamicSolver.InitializeSolver(self.mbs, self.simulationSettings)
-        # self.dynamicSolver.SolveSteps(self.mbs, self.simulationSettings) #to initialize all data
+        self.SetSolver(solverType=exu.DynamicSolverType.GeneralizedAlpha)
+
+        # #in derived class, you can also call explicit solver, e.g. using:
+        # self.SetSolver(solverType=exu.DynamicSolverType.ExplicitEuler)
 
     #**classFunction: internal function which is called to solve for one step
     def IntegrateStep(self):

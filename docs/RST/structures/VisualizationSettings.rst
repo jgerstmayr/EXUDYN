@@ -25,7 +25,7 @@ VSettingsGeneral has the following items:
   | automatically fit scene within startup after StartRenderer()
 * | **axesTiling** [type = PInt, default = 12]:
   | \ ``SC.visualizationSettings.general.axesTiling``\ 
-  | global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)
+  | global number of segments for drawing cylinders for axes and cones for arrows (reduce this number, e.g. to 4, if many axes are drawn)
 * | **backgroundColor** [type = Float4, default = [1.0,1.0,1.0,1.0], size = 4]:
   | \ ``SC.visualizationSettings.general.backgroundColor``\ 
   | red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])
@@ -392,6 +392,9 @@ VSettingsLoads has the following items:
 * | **drawSimplified** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.loads.drawSimplified``\ 
   | draw markers with simplified symbols
+* | **drawWithUserFunction** [type = bool, default = True]:
+  | \ ``SC.visualizationSettings.loads.drawWithUserFunction``\ 
+  | draw loads like force vectors time dependent; make sure that fixedLoadSize=false, while otherwise only the direction will change; user functions can only be drawn, if they are either symbolic or for Python user functions if useMultiThreadedRendering=False
 * | **fixedLoadSize** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.loads.fixedLoadSize``\ 
   | if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size
@@ -634,6 +637,12 @@ OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL fun
 
 VSettingsOpenGL has the following items:
 
+* | **clippingPlaneDistance** [type = float, default = 0.]:
+  | \ ``SC.visualizationSettings.openGL.clippingPlaneDistance``\ 
+  | distance of clipping plane on normal vector; see also clippingPlaneNormal
+* | **clippingPlaneNormal** [type = Float3, default = [0.,0.,0.], size = 3]:
+  | \ ``SC.visualizationSettings.openGL.clippingPlaneNormal``\ 
+  | normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance
 * | **drawFaceNormals** [type = bool, default = False, size = 1]:
   | \ ``SC.visualizationSettings.openGL.drawFaceNormals``\ 
   | draws triangle normals, e.g. at center of triangles; used for debugging of faces

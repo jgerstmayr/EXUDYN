@@ -46,7 +46,7 @@ public:
 	//! add contact object for Triangles attached to rigidBodyMarker
 	//! contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle!
 	Index PyAddTrianglesRigidBodyBased(Index rigidBodyMarkerIndexInit, Real contactStiffnessInit, Real contactDampingInit,
-		Index frictionMaterialIndexInit, const py::object& pointListInit, const py::object& triangleListInit)
+		Index frictionMaterialIndexInit, const py::object& pointListInit, const py::object& triangleListInit, bool staticTriangles=false)
 	{
 		ResizableArray<Vector3D> pointList;
 		ResizableArray<Index3> triangleList;
@@ -54,7 +54,7 @@ public:
 		EPyUtils::SetListOfArraysSafely<Vector3D, Real>(pointListInit, pointList);
 		EPyUtils::SetListOfArraysSafely<Index3, Index>(triangleListInit, triangleList);
 
-		return AddTrianglesRigidBodyBased(rigidBodyMarkerIndexInit, contactStiffnessInit, contactDampingInit, frictionMaterialIndexInit, pointList, triangleList);
+		return AddTrianglesRigidBodyBased(rigidBodyMarkerIndexInit, contactStiffnessInit, contactDampingInit, frictionMaterialIndexInit, pointList, triangleList, staticTriangles);
 	}
 
 	Index GetResetSearchTreeInterval() const { return settings.resetSearchTreeInterval; }
@@ -72,9 +72,6 @@ public:
 	Real GetFrictionProportionalZone() const { return settings.frictionProportionalZone; }
 	void SetFrictionProportionalZone(Real value) { settings.frictionProportionalZone = value; }
 
-	Real GetFrictionVelocityPenalty() const { return settings.frictionVelocityPenalty; }
-	void SetFrictionVelocityPenalty(Real value) { settings.frictionVelocityPenalty = value; }
-
 	//!< for consistent, closed meshes, we can exclude overlapping contact triangles (which would cause holes if mesh is overlapping and not consistent!!!)
 	bool GetExcludeOverlappingTrigSphereContacts() const { return settings.excludeOverlappingTrigSphereContacts; }
 	void SetExcludeOverlappingTrigSphereContacts(bool value) { settings.excludeOverlappingTrigSphereContacts = value; }
@@ -82,6 +79,10 @@ public:
 	//!< run additional checks for double contacts at edges or vertices, being more accurate but can cause additional costs if many contacts
 	bool GetExcludeDuplicatedTrigSphereContactPoints() const { return settings.excludeDuplicatedTrigSphereContactPoints; }
 	void SetExcludeDuplicatedTrigSphereContactPoints(bool value) { settings.excludeDuplicatedTrigSphereContactPoints = value; }
+
+	//!< if True, search tree bins are computed exactly for static triangles while if False, it uses the overall (=very inaccurate) AABB of each triangle in the search tree
+	bool GetComputeExactStaticTriangleBins() const { return settings.computeExactStaticTriangleBins; }
+	void SetComputeExactStaticTriangleBins(bool value) { settings.computeExactStaticTriangleBins = value; }
 
 	//!< compute contribution of contact forces to systemODE2Rhs
 	bool GetComputeContactForces() const { return settings.computeContactForces; }
@@ -319,10 +320,10 @@ public:
         return EPyUtils::ArrayIndex2NumPy(*activeContacts);
     }
 
-	//! get items in box; returns false if no items in box, otherwise dictionaries with local indices
-	py::array_t<Real> PyGetSystemODE2RhsContactForces()
+	//! return contact forces if flag settings.computeContactForces is true; if reference = true, it returns direct access to the current vector of forces
+	py::array_t<Real> PyGetSystemODE2RhsContactForces(bool copy=false)
 	{
-		return EPyUtils::Vector2NumPy(systemODE2RhsContactForces);
+		return EPyUtils::VectorRef2NumPy(systemODE2RhsContactForces, !copy);
 	}
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -359,6 +360,10 @@ public:
 		Index numberOfZeros;
 		Index maxFill;
 		Index numberOf10average;
+
+		d["trigsRigidBodyBasedDynamicStartIndex"] = trigsRigidBodyBasedDynamicStartIndex;
+		d["staticContactObjectsInitialized"] = staticContactObjectsInitialized;
+		d["computeExactStaticTriangleBins"] = settings.computeExactStaticTriangleBins;
 
 		searchTree.GetStatistics(numberOfTreeItems, averageFill, numberOfZeros, maxFill, numberOf10average);
 		auto dSearchTree = py::dict();

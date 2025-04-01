@@ -134,29 +134,29 @@ You can view and download this file on Github: `rollingDiscTangentialForces.py <
                                         thickness = 0.2, width = [0.2,0.2], color=graphics.color.lightred)
    
    #%%
-   [n0,b0]=AddRigidBody(mainSys = mbs, 
-                        inertia = iCube, 
-                        nodeType = str(exu.NodeType.RotationEulerParameters), 
-                        position = pMid0, 
-                        rotationMatrix = np.diag([1,1,1]),
-                        velocity = list(0.5*v0Vec),
-                        angularVelocity = [0,0,omegaZ], 
-                        #gravity = g, 
-                        graphicsDataList = [graphicsBody])
-   
+   dict0 = mbs.CreateRigidBody(name='',   
+                               referencePosition=pMid0,  
+                               referenceRotationMatrix=np.diag([1,1,1]),  
+                               initialVelocity=list(0.5 * v0Vec),  
+                               initialAngularVelocity=[0,0,omegaZ],  
+                               inertia=iCube,  
+                               nodeType=exu.NodeType.RotationEulerParameters,  
+                               graphicsDataList=[graphicsBody],  
+                               returnDict=True)  
+   [n0, b0] = [dict0['nodeNumber'], dict0['bodyNumber']]
    
    graphicsBodyWheel = graphics.Brick(centerPoint=[0,0,0],size=[w*2,1.4*r,1.4*r], color=graphics.color.lightred)
-   [n1,bWheel]=AddRigidBody(mainSys = mbs, 
-                        inertia = iWheel, 
-                        nodeType = str(exu.NodeType.RotationEulerParameters), 
-                        position = pMid1, 
-                        velocity = list(v0Vec),
-                        rotationMatrix = np.diag([1,1,1]),
-                        angularVelocity = [omegaX,0,omegaZ], 
-                        gravity = g, 
-                        graphicsDataList = [graphicsBodyWheel])
-   
-   
+   dict1 = mbs.CreateRigidBody(name='',   
+                               referencePosition=pMid1,  
+                               referenceRotationMatrix=np.diag([1,1,1]),  
+                               initialVelocity=list(v0Vec),  
+                               initialAngularVelocity=[omegaX,0,omegaZ],  
+                               inertia=iWheel,  
+                               gravity=g,  
+                               nodeType=exu.NodeType.RotationEulerParameters,  
+                               graphicsDataList=[graphicsBodyWheel],  
+                               returnDict=True)  
+   [n1, bWheel] = [dict1['nodeNumber'], dict1['bodyNumber']]
    
    #ground body and marker
    #graphicsPlane = graphics.Brick(centerPoint=[0,0,-0.1],size=[3*d,3*d,0.2], color=graphics.color.grey)

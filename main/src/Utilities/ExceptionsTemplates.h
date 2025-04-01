@@ -20,6 +20,20 @@
 namespace py = pybind11;            //! namespace 'py' used throughout in code
 
 //#undef __PYTHON_USERFUNCTION_CATCH__
+//ignore exceptions in visualization
+template <typename Tfunction>
+void VisualizationExceptionHandling(Tfunction&& f)
+{
+	try
+	{
+		f();
+	}
+	catch (...) //any other exception
+	{
+		;
+	}
+}
+
 
 template <typename Tfunction>
 //void UserFunctionExceptionHandling(Tfunction&& f, STDstring functionName)

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-04  22:08:13 (last modified)
+* @date         2025-02-05  08:32:02 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -39,7 +39,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectRigidBody2D
-* @brief        A 2D rigid body which is attached to a rigid body 2D node. The body obtains coordinates, position, velocity, etc. from the underlying 2D node
+* @brief        A 2D rigid body which is attached to a rigid body 2D node. The body obtains coordinates, position, velocity, etc. from the underlying 2D node.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -114,6 +114,7 @@ public: // AUTO:
     {
         cObjectRigidBody2D->GetParameters().physicsMass = py::cast<Real>(d["physicsMass"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectRigidBody2D->GetParameters().physicsInertia = py::cast<Real>(d["physicsInertia"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "physicsCenterOfMass")) { EPyUtils::SetSlimVectorTemplateSafely<Real, 2>(d, "physicsCenterOfMass", cObjectRigidBody2D->GetParameters().physicsCenterOfMass); /*! AUTO:  safely cast to C++ type*/} 
         cObjectRigidBody2D->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectRigidBody2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -129,6 +130,7 @@ public: // AUTO:
         d["objectType"] = (std::string)GetTypeName();
         d["physicsMass"] = (Real)cObjectRigidBody2D->GetParameters().physicsMass; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsInertia"] = (Real)cObjectRigidBody2D->GetParameters().physicsInertia; //! AUTO: cast variables into python (not needed for standard types) 
+        d["physicsCenterOfMass"] = EPyUtils::SlimVector2NumPy(cObjectRigidBody2D->GetParameters().physicsCenterOfMass); //! AUTO: cast variables into python (not needed for standard types) 
         d["nodeNumber"] = (NodeIndex)cObjectRigidBody2D->GetParameters().nodeNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectRigidBody2D->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -143,6 +145,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("physicsMass") == 0) { return py::cast((Real)cObjectRigidBody2D->GetParameters().physicsMass);} //! AUTO: get parameter
         else if (parameterName.compare("physicsInertia") == 0) { return py::cast((Real)cObjectRigidBody2D->GetParameters().physicsInertia);} //! AUTO: get parameter
+        else if (parameterName.compare("physicsCenterOfMass") == 0) { return EPyUtils::SlimVector2NumPy(cObjectRigidBody2D->GetParameters().physicsCenterOfMass);} //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectRigidBody2D->GetParameters().nodeNumber);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectRigidBody2D->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { return visualizationObjectRigidBody2D->GetGraphicsDataUserFunction().GetPythonDictionary();;} //! AUTO: get parameter
@@ -158,6 +161,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsMass") == 0) { cObjectRigidBody2D->GetParameters().physicsMass = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsInertia") == 0) { cObjectRigidBody2D->GetParameters().physicsInertia = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsCenterOfMass") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 2>(value, cObjectRigidBody2D->GetParameters().physicsCenterOfMass); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { cObjectRigidBody2D->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectRigidBody2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { visualizationObjectRigidBody2D->GetGraphicsDataUserFunction() = value; } //! AUTO: get parameter

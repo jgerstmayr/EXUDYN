@@ -26,7 +26,6 @@ mbs = SC.AddSystem()
 
 activateWithKeyPress = True #activate mouse drag with keypress 'D'
 
-nBodies = 2
 color = [0.1,0.1,0.8,1]
 
 sx = 0.25
@@ -75,14 +74,16 @@ for i in range(nBodies):
 
     oGraphics = graphics.BrickXYZ(-sx*0.5,-sy*0.5,-sz*0.5, sx*0.5, sy*0.5, sz*0.5, color)
  
-    [nRB, oRB] = AddRigidBody(mainSys=mbs, inertia=RBinertia, 
-                              #nodeType=exu.NodeType.RotationRxyz,
-                              nodeType=exu.NodeType.RotationEulerParameters,
-                              position=p0, velocity=v0,
-                              rotationParameters=RotationMatrix2EulerParameters(A), 
-                              angularVelocity=omega0, 
-                              gravity=[0.,0.,-9.81],
-                              graphicsDataList=[oGraphics])
+    dictRB = mbs.CreateRigidBody(
+                  inertia=RBinertia, 
+                  referencePosition=p0, 
+                  referenceRotationMatrix=A,
+                  initialVelocity=v0,
+                  initialAngularVelocity=omega0,
+                  gravity=[0., 0., -9.81],
+                  graphicsDataList=[oGraphics],
+                  returnDict=True)
+    [nRB, oRB] = [dictRB['nodeNumber'], dictRB['bodyNumber']]
 
     nodeList += [nRB]
     objectList += [oRB]
@@ -106,8 +107,6 @@ for i in range(nBodies):
                                                        visualization=VCartesianSpringDamper(show=False)))
     
     p0 = p0 + A@[0.5*sx,0,0]
-    # mbs.AddSensor(SensorNode(nodeNumber=nRB, fileName="solution/sensorPos.txt", 
-    #                          outputVariableType=exu.OutputVariableType.Coordinates))
 
 #activate by keypress 'D':
 mbs.variables['activateMouseDrag'] = True
@@ -174,7 +173,7 @@ simulationSettings.timeIntegration.newton.absoluteTolerance = 1e2 #if no force a
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #0.6 works well 
 
-simulationSettings.solutionSettings.solutionInformation = "mouse interaction example: press 'D' to (de-)activate mouse drag"
+simulationSettings.solutionSettings.solutionInformation = "mouse interaction example: press 'D' to (de-)activate mouse drag, F2 to switch key functionality"
 
 #+++++++++++++++++++++++++++++++++++
 #these options are not necessary:
@@ -193,10 +192,11 @@ SC.visualizationSettings.openGL.enableLight1 = True
 SC.visualizationSettings.openGL.lightModelTwoSide= True
 
 SC.visualizationSettings.general.drawWorldBasis= True
+SC.visualizationSettings.general.graphicsUpdateInterval = 0.01
 
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.lineWidth = 2
-
+SC.visualizationSettings.window.ignoreKeys = True #otherwise keyPressUserFunction not called!
 SC.visualizationSettings.general.useMultiThreadedRendering = True
 
 useGraphics = True
@@ -224,6 +224,7 @@ if useGraphics:
 #react on key press, in development state:
 #causes crash at termination of python code ...
 def UFkeyPress(key, action, mods):
+    #print('key:',key)
     if chr(key) == 'D' and action == 1: #use capital letters for comparison!!! action 1 == press
         mbs.variables['activateMouseDrag'] = not mbs.variables['activateMouseDrag']
     

@@ -35,8 +35,12 @@ You can view and download this file on Github: `NGsolvePistonEngine.py <https://
    
    import time
    
-   import mkl
-   mkl.set_num_threads(20)
+   try: #if installed, may help to improve performance (depending on solver)
+       import mkl
+       mklThreads = 8
+       mkl.set_num_threads(mklThreads)
+       exu.Print('using',mklThreads,'mkl threads ...')
+   except: pass
    
    from ngsolve import *
    from netgen.geom2d import unit_square
@@ -53,7 +57,7 @@ You can view and download this file on Github: `NGsolvePistonEngine.py <https://
    import timeit
    
    verbose = True
-   meshSize = 0.005*2*2 #fast: 0.005*2; standard:0.005; fine: 0.0011: memory limit (96GB) for NGsolve; < 0.0015 makes problems with scipy eigensolver
+   meshSize = 0.005*4 #fast: 0.005*4 with order 1; standard:0.005; h=0.004 with meshOrder 2 gives 258k unknowns; fine: 0.0011: memory limit (96GB) for NGsolve; < 0.0015 makes problems with scipy eigensolver
    meshOrder = 1 #2 for stresses!
    showStresses = True #may take very long for large number of modes/nodes
    

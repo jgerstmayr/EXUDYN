@@ -36,9 +36,6 @@ extern bool warnedComputeEigenValuesANCFcableCircleContact; //low-level warning 
 
 
 
-//#undef ANCFuseFrictionPenalty //switch to mode compatible with Pechstein paper, using regularization which is not proportional to contact force
-//#define ANCFuseFrictionPenalty 
-
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 namespace ContactHelper
@@ -53,6 +50,7 @@ namespace ContactHelper
 	{
 		relVel = deltaVtangent.GetL2Norm();
 
+		//BUG? in case that forceFrictionMode = True and frictionRegularizedRegion =False, it MUST always go to else branch!
 		if (relVel < frictionProportionalZone || (frictionRegularizedRegion && forceFrictionMode)) //would also work for frictionProportionalZone=0 ==> no proportional zone!
 		{
 			//as long as vVel < frictionProportionalZone, friction force shall linearly increase
@@ -502,31 +500,6 @@ namespace ContactHelper
 					//pout << "deltaVtang=" << deltaVtangent << ", deltaVnormal=" << deltaVnormal << ", dirForce=" << dirForce << "\n";
 					Vector2D frictionAdd;
 					//negative contactForce, because it is a pressure
-#ifdef ANCFuseFrictionPenalty
-					if (forceFrictionMode)
-					{
-						ComputeFrictionForcePenalty<Vector2D, true>(frictionAdd, deltaVtangent, -contactForce, dryFriction,
-							settings.frictionVelocityPenalty, relVel, maxRelFrictionVels[segCnt] < 1.);
-					}
-					else //compute friction from relative velocity
-					{
-						ComputeFrictionForcePenalty<Vector2D, false>(frictionAdd, deltaVtangent, -contactForce, dryFriction,
-							settings.frictionVelocityPenalty, relVel, true);
-
-						//store maximum; if it exceeds the dry friction, this is the way to go
-						Real relativeFrictionVel = 0;
-						Real fFriction = (fabs(contactForce)*dryFriction);
-						if (fFriction != 0.) 
-						{ 
-							relativeFrictionVel = relVel * settings.frictionVelocityPenalty / fFriction; 
-						}
-
-						if (relativeFrictionVel > maxRelFrictionVels[segCnt]) { maxRelFrictionVels[segCnt] = relativeFrictionVel; }
-
-
-					}
-					fContact += frictionAdd; //includes 
-#else
 					if (forceFrictionMode)
 					{
 						ComputeFrictionForce<Vector2D, Real, true>(frictionAdd, deltaVtangent, -contactForce, dryFriction,
@@ -543,7 +516,6 @@ namespace ContactHelper
 						if (fabs(relativeFrictionVel) > fabs(maxRelFrictionVels[segCnt])) { maxRelFrictionVels[segCnt] = relativeFrictionVel; }
 					}
 					fContact += frictionAdd;
-#endif
 
 					//pout << "I=" << i << ", fContact=" << fVec << ", Ffric=" << fVec - f0 << ", dP0=" << deltaP0 << ", vN=" << deltaVnormal << ", dV(I-J)=" << (vSphereI - vSphereJ) << ", deltaVtang=" << deltaVtangent << "\n";
 				}

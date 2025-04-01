@@ -40,6 +40,7 @@ You can view and download this file on Github: `coordinateSpringDamperExt.py <ht
        exudynTestGlobals = ExudynTestGlobals()
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #from exudyn.physics import StribeckFunction, RegularizedFriction
+   # useGraphics = False
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
@@ -236,9 +237,9 @@ You can view and download this file on Github: `coordinateSpringDamperExt.py <ht
                                   ))
    
        sensGearPos0 = mbs.AddSensor(SensorNode(nodeNumber=nG0, storeInternal=True,
-                                          outputVariableType=exu.OutputVariableType.Coordinates))
+                                          outputVariableType=exu.OutputVariableType.CoordinatesTotal)) #total includes reference; here no difference as reference=0
        sensGearPos1 = mbs.AddSensor(SensorNode(nodeNumber=nG1, storeInternal=True,
-                                          outputVariableType=exu.OutputVariableType.Coordinates))
+                                          outputVariableType=exu.OutputVariableType.CoordinatesTotal))
        sensGearVel0 = mbs.AddSensor(SensorNode(nodeNumber=nG0, storeInternal=True,
                                           outputVariableType=exu.OutputVariableType.Coordinates_t))
        sensGearVel1 = mbs.AddSensor(SensorNode(nodeNumber=nG1, storeInternal=True,

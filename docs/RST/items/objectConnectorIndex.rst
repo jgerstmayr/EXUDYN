@@ -22,4 +22,6 @@ A Connector is a special Object, which links two or more markers. A Connector wh
    ObjectContactCoordinate.rst
    ObjectContactCircleCable2D.rst
    ObjectContactFrictionCircleCable2D.rst
+   ObjectContactSphereSphere.rst
+   ObjectContactCurveCircles.rst
 

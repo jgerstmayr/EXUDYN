@@ -28,6 +28,7 @@
 #include "System/MainSensor.h"
 
 #include "Main/OutputVariable.h"
+#include "Pymodules/PybindUtilities.h"
 
 class MainSystemData //
 {
@@ -242,16 +243,54 @@ public: //
 		py::object pyObjectData = systemStateList[4];
 		const std::vector<Real>& vData = py::cast<std::vector<Real>>(pyObjectData);
 		SetDataCoords(vData, configurationType); //includes safety check
-
-
 	}
 
 	//+++++++++++++++++++++++++++++++++++
+	//! pybind read/write access to state vectors; data NOT COPIED
+	//! format of dict: {'ODE2Coords':ODE2Coords, ...}
+	py::dict PyGetSystemStateDict(ConfigurationType configurationType = ConfigurationType::Current,
+		bool reference = false) const
+	{
+		auto pyDict = py::dict();
+
+		pyDict["ODE1Coords"] = EPyUtils::VectorRef2NumPy<ResizableVectorParallel>(GetCSystemState(configurationType)->GetODE1Coords(), reference);
+		pyDict["ODE1Coords_t"] = EPyUtils::VectorRef2NumPy<ResizableVectorParallel>(GetCSystemState(configurationType)->GetODE1Coords_t(), reference);
+		pyDict["ODE2Coords"] = EPyUtils::VectorRef2NumPy<ResizableVectorParallel>(GetCSystemState(configurationType)->GetODE2Coords(), reference);
+		pyDict["ODE2Coords_t"] = EPyUtils::VectorRef2NumPy<ResizableVectorParallel>(GetCSystemState(configurationType)->GetODE2Coords_t(), reference);
+		pyDict["ODE2Coords_tt"] = EPyUtils::VectorRef2NumPy<ResizableVectorParallel>(GetCSystemState(configurationType)->GetODE2Coords_tt(), reference);
+		pyDict["AECoords"] = EPyUtils::VectorRef2NumPy<ResizableVectorParallel>(GetCSystemState(configurationType)->GetAECoords(), reference);
+		pyDict["dataCoords"] = EPyUtils::VectorRef2NumPy<ResizableVectorParallel>(GetCSystemState(configurationType)->GetDataCoords(), reference);
+
+		//DOES NOT WORK: return time as reference:
+		//would only work if reference to time is stored inside vector, then casted with VectorRef2NumPy
+		//pyDict["time"] = py::cast(std::ref(GetCSystemState(configurationType)->time), py::return_value_policy::reference_internal);
+		//pyDict["time"] = py::cast(&(GetCSystemState(configurationType)->time), py::return_value_policy::reference_internal);
+
+		return pyDict;
+	}
+
+
+
+	//+++++++++++++++++++++++++++++++++++
 	//! pybind read access to ODE2 coords
-	py::array_t<Real> GetODE2Coords(ConfigurationType configurationType = ConfigurationType::Current) const
+	py::array_t<Real> GetODE2CoordsTotal(ConfigurationType configurationType = ConfigurationType::Current) const
+	{
+		//up to 100 coords, this is done without memory allocation:
+		//this may be changed in future, if CData gets additionally ODE2CoordsTotal for at least current and visualization configuration!
+		ResizableConstVectorBase<Real, 100> v = GetCSystemState(configurationType)->GetODE2Coords();
+		if (configurationType != ConfigurationType::Reference)
+		{
+			v += GetCSystemState(ConfigurationType::Reference)->GetODE2Coords();
+		}
+		return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer());
+	}
+
+	//! pybind read access to ODE2 coords
+	py::array_t<Real> GetODE2Coords(ConfigurationType configurationType = ConfigurationType::Current, bool copy = true) const
 	{
 		const Vector& v = GetCSystemState(configurationType)->GetODE2Coords();
-		return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer());
+		return EPyUtils::VectorRef2NumPy(v, !copy);
+		//return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer());
 	}
 
 	//! pybind write access to ODE2 coords
@@ -263,10 +302,11 @@ public: //
 
 	//+++++++++++++++++++++++++++++++++++
 	//! pybind read access to ODE2_t coords
-	py::array_t<Real> GetODE2Coords_t(ConfigurationType configurationType = ConfigurationType::Current) const
+	py::array_t<Real> GetODE2Coords_t(ConfigurationType configurationType = ConfigurationType::Current, bool copy = true) const
 	{
 		const Vector& v = GetCSystemState(configurationType)->GetODE2Coords_t();
-		return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer());
+		return EPyUtils::VectorRef2NumPy(v, !copy);
+		//return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer());
 	}
 
 	//! pybind write access to ODE2_t coords
@@ -278,10 +318,11 @@ public: //
 
 	//+++++++++++++++++++++++++++++++++++
 	//! pybind read access to ODE2_t coords
-	py::array_t<Real> GetODE2Coords_tt(ConfigurationType configurationType = ConfigurationType::Current) const
+	py::array_t<Real> GetODE2Coords_tt(ConfigurationType configurationType = ConfigurationType::Current, bool copy = true) const
 	{
 		const Vector& v = GetCSystemState(configurationType)->GetODE2Coords_tt();
-		return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer());
+		return EPyUtils::VectorRef2NumPy(v, !copy);
+		//return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer());
 	}
 
 	//! pybind write access to ODE2_t coords
@@ -293,10 +334,11 @@ public: //
 
 	//+++++++++++++++++++++++++++++++++++
 	//! pybind read access to ODE1 coords
-	py::array_t<Real> GetODE1Coords(ConfigurationType configurationType = ConfigurationType::Current) const
+	py::array_t<Real> GetODE1Coords(ConfigurationType configurationType = ConfigurationType::Current, bool copy = true) const
 	{
 		const Vector& v = GetCSystemState(configurationType)->GetODE1Coords();
-		return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer());
+		return EPyUtils::VectorRef2NumPy(v, !copy);
+		//return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer());
 	}
 
 	//! pybind write access to ODE1 coords
@@ -308,10 +350,11 @@ public: //
 
 	//+++++++++++++++++++++++++++++++++++
 	//! pybind read access to ODE1_t coords
-	py::array_t<Real> GetODE1Coords_t(ConfigurationType configurationType = ConfigurationType::Current) const
+	py::array_t<Real> GetODE1Coords_t(ConfigurationType configurationType = ConfigurationType::Current, bool copy = true) const
 	{
 		const Vector& v = GetCSystemState(configurationType)->GetODE1Coords_t();
-		return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer());
+		return EPyUtils::VectorRef2NumPy(v, !copy);
+		//return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer());
 	}
 
 	//! pybind write access to ODE1_t coords
@@ -323,10 +366,11 @@ public: //
 
 	//+++++++++++++++++++++++++++++++++++
 	//! pybind read access to ODE2 coords
-	py::array_t<Real> GetAECoords(ConfigurationType configurationType = ConfigurationType::Current) const
+	py::array_t<Real> GetAECoords(ConfigurationType configurationType = ConfigurationType::Current, bool copy = true) const
 	{
 		const Vector& v = GetCSystemState(configurationType)->GetAECoords();
-		return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer());
+		return EPyUtils::VectorRef2NumPy(v, !copy);
+		//return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer());
 	}
 
 	//! pybind write access to AE coords
@@ -337,10 +381,11 @@ public: //
 	}
 	//+++++++++++++++++++++++++++++++++++
 	//! pybind read access to Data coords
-	py::array_t<Real> GetDataCoords(ConfigurationType configurationType = ConfigurationType::Current) const
+	py::array_t<Real> GetDataCoords(ConfigurationType configurationType = ConfigurationType::Current, bool copy = true) const
 	{
 		const Vector& v = GetCSystemState(configurationType)->GetDataCoords();
-		return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer());
+		return EPyUtils::VectorRef2NumPy(v, !copy);
+		//return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer());
 	}
 
 	//! pybind write access to AE coords

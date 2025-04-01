@@ -89,9 +89,21 @@ void CNodeRigidBody2D::GetOutputVariable(OutputVariableType variableType, Config
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
 	case OutputVariableType::Acceleration: value.CopyFrom(GetAcceleration(configuration)); break;
 	case OutputVariableType::AngularAcceleration: value.CopyFrom(GetAngularAcceleration(configuration)); break;
+	case OutputVariableType::CoordinatesTotal:
+	{
+		if (IsValidConfiguration(configuration))
+		{
+			GetODE2CoordinateVectorWithReference(value, configuration);
+		}
+		else
+		{
+			PyError("CNodeRigidBody2D::GetOutputVariable: invalid configuration");
+		}
+		break;
+	}
 	case OutputVariableType::Coordinates:
 	{
-		if (IsValidConfiguration(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
+		if (IsValidConfiguration(configuration))
 		{
 			value = GetCoordinateVector(configuration);
 		}
@@ -103,7 +115,7 @@ void CNodeRigidBody2D::GetOutputVariable(OutputVariableType variableType, Config
 	}
 	case OutputVariableType::Coordinates_t:
 	{
-		if (IsValidConfigurationButNotReference(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
+		if (IsValidConfigurationButNotReference(configuration))
 		{
 			value = GetCoordinateVector_t(configuration);
 		}

@@ -264,6 +264,8 @@ def RotationVector2RotationMatrix(rotationVector):
     if phi == 0.:
         R = np.eye(3)
     else:
+        if phi > 2*np.pi: 
+            phi = phi % (2 * np.pi)
         OmegaSkew = Skew(rotationVector)
         alpha = np.sin(phi)/phi
         beta = 2*(1-np.cos(phi))/phi**2 #the loss of digits in 1-np.cos(phi) is compensated by OmegaSkew@OmegaSkew
@@ -824,12 +826,30 @@ class RigidBodyInertia:
     #  mass: mass of rigid body (dimensions need to be consistent, should be in SI-units)
     #  inertiaTensor: tensor given w.r.t.\ reference point, NOT w.r.t.\ center of mass!
     #  com: center of mass relative to reference point, in same coordinate system as inertiaTensor
+    #  inertiaTensorAtCOM: bool flag: if False (default), the inertiaTensor has to be provided w.r.t. the reference point; if True, it has to be provided at the center of mass
     def __init__(self, mass=0, inertiaTensor=np.zeros([3,3]), com=np.zeros(3), inertiaTensorAtCOM = False):
         
+        if not isinstance(inertiaTensorAtCOM, bool) and not isinstance(inertiaTensorAtCOM, int): 
+            raise ValueError('RigidBodyInertia: inertiaTensorAtCOM must be bool or int (0/1), but received '+str(inertiaTensorAtCOM))
         if np.array(inertiaTensor).shape != (3,3): #shape is a tuple
             raise ValueError('RigidBodyInertia: inertiaTensor must have shape (3,3), but received '+str(inertiaTensor.shape))
         if np.array(com).shape != (3,): #shape is a tuple
             raise ValueError('RigidBodyInertia: com must have 3 components, but received '+str(np.array(inertiaTensor).shape))
+        
+        #further checks if inertia tensor makes sense...
+        Ix = inertiaTensor[0,0]
+        Iy = inertiaTensor[1,1]
+        Iz = inertiaTensor[2,2]
+        if (Ix + Iy < Iz) or (Ix + Iz < Iy) or (Iy + Iz < Ix):
+            exu.Print('WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangule inequality! This may lead to unphysical and numerically unstable results!')
+        if (Ix + Iy < Iz) or (Ix + Iz < Iy) or (Iy + Iz < Ix):
+            exu.Print('WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangule inequality! This may lead to unphysical and numerically unstable results!')
+
+        norm = np.linalg.norm(inertiaTensor)
+        if norm != 0: #in case of mass point, this shall be possible
+            if np.linalg.norm(inertiaTensor - inertiaTensor.T)/norm > 1e-14:
+                exu.Print('WARNING: RigidBodyInertia: inertiaTensor seems to be unsymmetric; This may lead to unphysical and numerically unstable results!')
+            
         self.mass = mass
         self.inertiaTensor = np.array(inertiaTensor)
         self.com = np.array(com)
@@ -928,7 +948,7 @@ class RigidBodyInertia:
                                 inertiaTensor=inertiaCOM,
                                 com=newCOM)
 
-    #**classFunction: get vector with 6 inertia components (Jxx, Jyy, Jzz, Jyz, Jxz, Jxy) as needed in ObjectRigidBody
+    #**classFunction: get vector with 6 inertia components (Jxx, Jyy, Jzz, Jyz, Jxz, Jxy) w.r.t. to reference point (not necessarily the COM), as needed in ObjectRigidBody
     def GetInertia6D(self):
         return InertiaTensor2Inertia6D(self.inertiaTensor)
         # J = self.inertiaTensor

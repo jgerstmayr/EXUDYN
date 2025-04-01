@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-04-29  08:41:26 (last modified)
+* @date         2025-03-05  22:19:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,7 +28,7 @@ class CObjectJointRollingDiscParameters // AUTO:
 {
 public: // AUTO: 
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector; \f$m0\f$ represents the ground and \f$m1\f$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point
-    ArrayIndex constrainedAxes;                   //!< AUTO: flag, which determines which constraints are active, in which \f$j_0,j_1\f$ represent the tangential motion and \f$j_2\f$ represents the normal (contact) direction
+    ArrayIndex constrainedAxes;                   //!< AUTO: flags, which determine which constraints are active, in which \f$j_0\f$ represents lateral motion, \f$j_1\f$ longitudinal (forward/backward) motion and \f$j_2\f$ represents the normal (contact) direction
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     Real discRadius;                              //!< AUTO: defines the disc radius
     Vector3D discAxis;                            //!< AUTO: axis of disc defined in marker \f$m1\f$ frame

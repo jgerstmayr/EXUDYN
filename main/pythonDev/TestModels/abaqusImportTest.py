@@ -54,11 +54,16 @@ for element in elements:
     fem.ReadStiffnessMatrixFromAbaqus(inputFileName+'_STIF1.mtx')
     if True:
         fn = 'solution/testFEM'
-        fem.SaveToFile(fn)
-
+        #test save and import
         if np.__version__ <= '2.0': #load save does not work yet!
+            fem.SaveToFile(fn)
             fem = FEMinterface()
             fem.LoadFromFile(fn)
+        else: #for newer numpy version, use pickle (PKL) or HDF5
+            fem.SaveToFile(fn,mode='PKL')
+            fem = FEMinterface()
+            fem.LoadFromFile(fn,mode='PKL')
+            
 
         if False:
             exu.Print('size of nodes:', sys.getsizeof(np.array(fem.nodes['Position'])) )

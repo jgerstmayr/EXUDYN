@@ -215,11 +215,11 @@ typedef ResizableVectorBase<float> ResizableVectorF; //always float, used for gr
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! special vector, which will use internal memory up to maxLocalSize
-template<typename T>
+template<typename T, Index maxLocalSize = 7>
 class ResizableConstVectorBase : public ResizableVectorBase<T>
 {
 private:
-	static constexpr Index maxLocalSize = 7; //max size for which it is using local memory
+	//static constexpr Index maxLocalSize = 7; //max size for which it is using local memory
 	T localData[maxLocalSize];
 public:
 

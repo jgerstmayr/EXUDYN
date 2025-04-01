@@ -1411,7 +1411,7 @@ TimerStructureRegistrator TSRcomputeAlgebraicEquations("computeAlgebraicEquation
 
 
 Index TScomputeGeneralContact;
-TimerStructureRegistrator TSRcomputeGeneralContact("Contact:overall", TScomputeGeneralContact, globalTimers);
+TimerStructureRegistrator TSRcomputeGeneralContact("Contact:Overall", TScomputeGeneralContact, globalTimers, true); //add always overall contact timer
 //Index TScomputeMarkerDataODE2;
 //TimerStructureRegistrator TSRcomputeMarkerDataODE2("computeMarkerDataODE2", TScomputeMarkerDataODE2, globalTimers);
 
@@ -1541,10 +1541,9 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationDataArray& tempArray, Vec
 	//this part is anyway done in parallel:
 	for (GeneralContact* gc : generalContacts) //usually only 1
 	{
-		STARTGLOBALTIMER(TScomputeGeneralContact);
-		//gc->ComputeContactDataAndBoundingBoxes(*this, tempArray); //done in compute ODE2RHS ...
+		STARTGLOBALTIMERmain(TScomputeGeneralContact);
 		gc->ComputeODE2RHS(*this, tempArray, systemODE2Rhs);
-		STOPGLOBALTIMER(TScomputeGeneralContact);
+		STOPGLOBALTIMERmain(TScomputeGeneralContact);
 	}
 
 	//STARTGLOBALTIMER(TScomputeLoads);

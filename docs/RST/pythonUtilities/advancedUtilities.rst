@@ -37,7 +37,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: FindObjectIndex
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`FindObjectIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L47>`__\ (\ ``i``\ , \ ``globalVariables``\ )
+`FindObjectIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L54>`__\ (\ ``i``\ , \ ``globalVariables``\ )
 
 - | \ *function description*\ :
   | simple function to find object index i within the local or global scope of variables
@@ -60,7 +60,7 @@ Function: FindObjectIndex
 
 Function: FindNodeIndex
 ^^^^^^^^^^^^^^^^^^^^^^^
-`FindNodeIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L63>`__\ (\ ``i``\ , \ ``globalVariables``\ )
+`FindNodeIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L70>`__\ (\ ``i``\ , \ ``globalVariables``\ )
 
 - | \ *function description*\ :
   | simple function to find node index i within the local or global scope of variables
@@ -83,7 +83,7 @@ Function: FindNodeIndex
 
 Function: IsListOrArray
 ^^^^^^^^^^^^^^^^^^^^^^^
-`IsListOrArray <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L79>`__\ (\ ``data``\ , \ ``checkIfNoneEmpty = False``\ )
+`IsListOrArray <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L86>`__\ (\ ``data``\ , \ ``checkIfNoneEmpty = False``\ )
 
 - | \ *function description*\ :
   | checks, if data is of type list or np.array; used in functions to check input data
@@ -102,7 +102,7 @@ Function: IsListOrArray
 
 Function: RaiseTypeError
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`RaiseTypeError <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L112>`__\ (\ ``where = ''``\ , \ ``argumentName = ''``\ , \ ``received = None``\ , \ ``expectedType = None``\ , \ ``dim = None``\ , \ ``cols = None``\ )
+`RaiseTypeError <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L119>`__\ (\ ``where = ''``\ , \ ``argumentName = ''``\ , \ ``received = None``\ , \ ``expectedType = None``\ , \ ``dim = None``\ , \ ``cols = None``\ )
 
 - | \ *function description*\ :
   | internal function which is used to raise common errors in case of wrong types; dim is used for vectors and square matrices, cols is used for non-square matrices
@@ -116,7 +116,7 @@ Function: RaiseTypeError
 
 Function: IsNone
 ^^^^^^^^^^^^^^^^
-`IsNone <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L145>`__\ (\ ``x``\ )
+`IsNone <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L152>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | return True, if x is None; works also for numpy arrays or structures
@@ -130,7 +130,7 @@ Function: IsNone
 
 Function: IsNotNone
 ^^^^^^^^^^^^^^^^^^^
-`IsNotNone <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L149>`__\ (\ ``x``\ )
+`IsNotNone <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L156>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | return True, if x is not None; works also for numpy arrays or structures
@@ -144,7 +144,7 @@ Function: IsNotNone
 
 Function: IsValidBool
 ^^^^^^^^^^^^^^^^^^^^^
-`IsValidBool <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L153>`__\ (\ ``x``\ )
+`IsValidBool <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L160>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | return True, if x is int, float, np.double, np.integer or similar types that can be automatically casted to pybind11
@@ -158,7 +158,7 @@ Function: IsValidBool
 
 Function: IsValidRealInt
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`IsValidRealInt <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L162>`__\ (\ ``x``\ )
+`IsValidRealInt <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L169>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | return True, if x is int, float, np.double, np.integer or similar types that can be automatically casted to pybind11
@@ -172,7 +172,7 @@ Function: IsValidRealInt
 
 Function: IsValidPRealInt
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`IsValidPRealInt <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L172>`__\ (\ ``x``\ )
+`IsValidPRealInt <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L179>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | return True, if x is valid Real/Int and positive
@@ -186,7 +186,7 @@ Function: IsValidPRealInt
 
 Function: IsValidURealInt
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`IsValidURealInt <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L178>`__\ (\ ``x``\ )
+`IsValidURealInt <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L185>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | return True, if x is valid Real/Int and unsigned (non-negative)
@@ -200,7 +200,7 @@ Function: IsValidURealInt
 
 Function: IsReal
 ^^^^^^^^^^^^^^^^
-`IsReal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L184>`__\ (\ ``x``\ )
+`IsReal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L191>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | return True, if x is any python or numpy float type; could also be called IsFloat(), but Real has special meaning in Exudyn
@@ -214,7 +214,7 @@ Function: IsReal
 
 Function: IsInteger
 ^^^^^^^^^^^^^^^^^^^
-`IsInteger <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L191>`__\ (\ ``x``\ )
+`IsInteger <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L198>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | return True, if x is any python or numpy float type
@@ -228,7 +228,7 @@ Function: IsInteger
 
 Function: IsVector
 ^^^^^^^^^^^^^^^^^^
-`IsVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L198>`__\ (\ ``v``\ , \ ``expectedSize = None``\ )
+`IsVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L205>`__\ (\ ``v``\ , \ ``expectedSize = None``\ )
 
 - | \ *function description*\ :
   | check if v is a valid vector with floats or ints; if expectedSize!=None, the length is also checked
@@ -242,7 +242,7 @@ Function: IsVector
 
 Function: IsIntVector
 ^^^^^^^^^^^^^^^^^^^^^
-`IsIntVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L212>`__\ (\ ``v``\ , \ ``expectedSize = None``\ )
+`IsIntVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L219>`__\ (\ ``v``\ , \ ``expectedSize = None``\ )
 
 - | \ *function description*\ :
   | check if v is a valid vector with floats or ints; if expectedSize!=None, the length is also checked
@@ -256,7 +256,7 @@ Function: IsIntVector
 
 Function: IsSquareMatrix
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`IsSquareMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L227>`__\ (\ ``m``\ , \ ``expectedSize = None``\ )
+`IsSquareMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L234>`__\ (\ ``m``\ , \ ``expectedSize = None``\ )
 
 - | \ *function description*\ :
   | check if v is a valid vector with floats or ints; if expectedSize!=None, the length is also checked
@@ -270,7 +270,7 @@ Function: IsSquareMatrix
 
 Function: IsValidObjectIndex
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`IsValidObjectIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L244>`__\ (\ ``x``\ )
+`IsValidObjectIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L251>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | return True, if x is valid exudyn object index
@@ -284,7 +284,7 @@ Function: IsValidObjectIndex
 
 Function: IsValidNodeIndex
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`IsValidNodeIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L250>`__\ (\ ``x``\ )
+`IsValidNodeIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L257>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | return True, if x is valid exudyn node index
@@ -298,7 +298,7 @@ Function: IsValidNodeIndex
 
 Function: IsValidMarkerIndex
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`IsValidMarkerIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L256>`__\ (\ ``x``\ )
+`IsValidMarkerIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L263>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | return True, if x is valid exudyn marker index
@@ -312,7 +312,7 @@ Function: IsValidMarkerIndex
 
 Function: IsEmptyList
 ^^^^^^^^^^^^^^^^^^^^^
-`IsEmptyList <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L262>`__\ (\ ``x``\ )
+`IsEmptyList <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L269>`__\ (\ ``x``\ )
 
 - | \ *function description*\ :
   | return True, if x is an empty list (or empty list converted from numpy array), otherwise return False
@@ -326,7 +326,7 @@ Function: IsEmptyList
 
 Function: FillInSubMatrix
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`FillInSubMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L277>`__\ (\ ``subMatrix``\ , \ ``destinationMatrix``\ , \ ``destRow``\ , \ ``destColumn``\ )
+`FillInSubMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L284>`__\ (\ ``subMatrix``\ , \ ``destinationMatrix``\ , \ ``destRow``\ , \ ``destColumn``\ )
 
 - | \ *function description*\ :
   | fill submatrix into given destinationMatrix; all matrices must be numpy arrays
@@ -353,7 +353,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: SweepSin
 ^^^^^^^^^^^^^^^^^^
-`SweepSin <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L296>`__\ (\ ``t``\ , \ ``t1``\ , \ ``f0``\ , \ ``f1``\ )
+`SweepSin <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L303>`__\ (\ ``t``\ , \ ``t1``\ , \ ``f0``\ , \ ``f1``\ )
 
 - | \ *function description*\ :
   | compute sin sweep at given time t
@@ -378,7 +378,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: SweepCos
 ^^^^^^^^^^^^^^^^^^
-`SweepCos <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L307>`__\ (\ ``t``\ , \ ``t1``\ , \ ``f0``\ , \ ``f1``\ )
+`SweepCos <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L314>`__\ (\ ``t``\ , \ ``t1``\ , \ ``f0``\ , \ ``f1``\ )
 
 - | \ *function description*\ :
   | compute cos sweep at given time t
@@ -403,7 +403,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: FrequencySweep
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`FrequencySweep <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L318>`__\ (\ ``t``\ , \ ``t1``\ , \ ``f0``\ , \ ``f1``\ )
+`FrequencySweep <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L325>`__\ (\ ``t``\ , \ ``t1``\ , \ ``f0``\ , \ ``f1``\ )
 
 - | \ *function description*\ :
   | frequency according to given sweep functions SweepSin, SweepCos
@@ -428,7 +428,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: SmoothStep
 ^^^^^^^^^^^^^^^^^^^^
-`SmoothStep <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L329>`__\ (\ ``x``\ , \ ``x0``\ , \ ``x1``\ , \ ``value0``\ , \ ``value1``\ )
+`SmoothStep <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L336>`__\ (\ ``x``\ , \ ``x0``\ , \ ``x1``\ , \ ``value0``\ , \ ``value1``\ )
 
 - | \ *function description*\ :
   | step function with smooth transition from value0 to value1; transition is computed with cos function
@@ -443,7 +443,7 @@ Function: SmoothStep
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `beamTutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beamTutorial.py>`_\  (Ex), \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `craneReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py>`_\  (Ex), \ `leggedRobot.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/leggedRobot.py>`_\  (Ex)
+    \ `beamTutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beamTutorial.py>`_\  (Ex), \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `chainDriveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chainDriveExample.py>`_\  (Ex), \ `craneReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/craneReevingSystem.py>`_\  (Ex)
 
 
 
@@ -454,7 +454,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: SmoothStepDerivative
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`SmoothStepDerivative <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L348>`__\ (\ ``x``\ , \ ``x0``\ , \ ``x1``\ , \ ``value0``\ , \ ``value1``\ )
+`SmoothStepDerivative <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L355>`__\ (\ ``x``\ , \ ``x0``\ , \ ``x1``\ , \ ``value0``\ , \ ``value1``\ )
 
 - | \ *function description*\ :
   | derivative of SmoothStep using same arguments
@@ -480,7 +480,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: IndexFromValue
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`IndexFromValue <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L364>`__\ (\ ``data``\ , \ ``value``\ , \ ``tolerance = 1e-7``\ , \ ``assumeConstantSampleRate = False``\ , \ ``rangeWarning = True``\ )
+`IndexFromValue <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L371>`__\ (\ ``data``\ , \ ``value``\ , \ ``tolerance = 1e-7``\ , \ ``assumeConstantSampleRate = False``\ , \ ``rangeWarning = True``\ )
 
 - | \ *function description*\ :
   | get index from value in given data vector (numpy array); usually used to get specific index of time vector; this function is slow (linear search), if sampling rate is non-constant; otherwise set assumeConstantSampleRate=True!
@@ -503,7 +503,7 @@ Function: IndexFromValue
 
 Function: RoundMatrix
 ^^^^^^^^^^^^^^^^^^^^^
-`RoundMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L396>`__\ (\ ``matrix``\ , \ ``treshold = 1e-14``\ )
+`RoundMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L403>`__\ (\ ``matrix``\ , \ ``treshold = 1e-14``\ )
 
 - | \ *function description*\ :
   | set all entries in matrix to zero which are smaller than given treshold; operates directly on matrix
@@ -517,11 +517,85 @@ Function: RoundMatrix
 ----
 
 
+.. _sec-advancedutilities-convertscipysparsetodict:
+
+Function: ConvertScipySparseToDict
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ConvertScipySparseToDict <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L413>`__\ (\ ``sparseMatrix``\ )
+
+- | \ *function description*\ :
+  | Function to convert a scipy sparse matrix to a dictionary
+
+
+
+----
+
+
+.. _sec-advancedutilities-convertdicttoscipysparse:
+
+Function: ConvertDictToScipySparse
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ConvertDictToScipySparse <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L427>`__\ (\ ``sparseDict``\ )
+
+- | \ *function description*\ :
+  | Function to convert a dictionary back to a scipy sparse matrix
+
+
+
+----
+
+
+.. _sec-advancedutilities-savedicttohdf5:
+
+Function: SaveDictToHDF5
+^^^^^^^^^^^^^^^^^^^^^^^^
+`SaveDictToHDF5 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L437>`__\ (\ ``fileName``\ , \ ``dataDict``\ )
+
+- | \ *function description*\ :
+  | recursively saves a hierarchical dictionary dataDict to a HDF5 file with given fileName; limitations for certain types and Python or symbolic user functions
+- | \ *input*\ :
+  | \ ``fileName``\ : file name (possibly including path) for HDF5 file, including file ending
+  | \ ``dataDict``\ : the dictionary containing the hierarchical data to be saved; the data may contain the following data types in hierarchical form: int, bool, float, str (utf-8), list, dict, numpy array, scipy csr_matrix, Python function
+- | \ *output*\ :
+  | None
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `serialRobotURDF.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotURDF.py>`_\  (Ex), \ `pickleCopyMbs.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/pickleCopyMbs.py>`_\  (TM)
+
+
+
+----
+
+
+.. _sec-advancedutilities-loaddictfromhdf5:
+
+Function: LoadDictFromHDF5
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+`LoadDictFromHDF5 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L546>`__\ (\ ``fileName``\ , \ ``callerGlobals = None``\ )
+
+- | \ *function description*\ :
+  | recursively loads a hierarchical dictionary from a HDF5 file with given fileName
+- | \ *input*\ :
+  | \ ``fileName``\ : file name (possibly including path) for HDF5 file, including file ending
+  | \ ``callerGlobals``\ : optional: if your data contains functions, the callerGlobals must contain, e.g., globals() of the caller, where the Python functions are defined at which the HDF5 function refers to
+- | \ *output*\ :
+  | dict which contains loaded data
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `serialRobotURDF.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotURDF.py>`_\  (Ex), \ `pickleCopyMbs.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/pickleCopyMbs.py>`_\  (TM)
+
+
+
+----
+
+
 .. _sec-advancedutilities-convertfunctiontosymbolic:
 
 Function: ConvertFunctionToSymbolic
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ConvertFunctionToSymbolic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L416>`__\ (\ ``mbs``\ , \ ``function``\ , \ ``userFunctionName``\ , \ ``itemIndex = None``\ , \ ``itemTypeName = None``\ , \ ``verbose = 0``\ )
+`ConvertFunctionToSymbolic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L663>`__\ (\ ``mbs``\ , \ ``function``\ , \ ``userFunctionName``\ , \ ``itemIndex = None``\ , \ ``itemTypeName = None``\ , \ ``verbose = 0``\ )
 
 - | \ *function description*\ :
   | Internal function to convert a Python user function into a dictionary containing the symbolic representation;
@@ -546,7 +620,7 @@ Function: ConvertFunctionToSymbolic
 
 Function: CreateSymbolicUserFunction
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateSymbolicUserFunction <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L556>`__\ (\ ``mbs``\ , \ ``function``\ , \ ``userFunctionName``\ , \ ``itemIndex = None``\ , \ ``itemTypeName = None``\ , \ ``verbose = 0``\ )
+`CreateSymbolicUserFunction <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L803>`__\ (\ ``mbs``\ , \ ``function``\ , \ ``userFunctionName``\ , \ ``itemIndex = None``\ , \ ``itemTypeName = None``\ , \ ``verbose = 0``\ )
 
 - | \ *function description*\ :
   | Helper function to convert a Python user function into a symbolic user function;
@@ -582,7 +656,7 @@ Function: CreateSymbolicUserFunction
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `cartesianSpringDamperUserFunction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamperUserFunction.py>`_\  (Ex), \ `SpringDamperMassUserFunction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/SpringDamperMassUserFunction.py>`_\  (Ex), \ `symbolicUserFunctionMasses.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/symbolicUserFunctionMasses.py>`_\  (Ex), \ `symbolicUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/symbolicUserFunctionTest.py>`_\  (TM)
+    \ `cartesianSpringDamperUserFunction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamperUserFunction.py>`_\  (Ex), \ `SpringDamperMassUserFunction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/SpringDamperMassUserFunction.py>`_\  (Ex), \ `symbolicUserFunctionMasses.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/symbolicUserFunctionMasses.py>`_\  (Ex), \ `loadUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/loadUserFunctionTest.py>`_\  (TM), \ `symbolicUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/symbolicUserFunctionTest.py>`_\  (TM)
 
 
 .. _sec-module-advancedutilities-class-expectedtype(enum):

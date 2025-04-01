@@ -30,9 +30,9 @@ The item \ **ObjectKinematicTree**\  with type = 'KinematicTree' has the followi
 * | **linkParents** [\ :math:`{\mathbf{i}}_p = [p_0,\, p_1,\, \ldots] \in \Ncal^{n}`\ , type = ArrayIndex, default = []]:
   | index of parent joint/link; if no parent exists, the value is \ :math:`-1`\ ; by default, \ :math:`p_0=-1`\  because the \ :math:`i`\ th parent index must always fulfill \ :math:`p_i<i`\ ; must be always set
 * | **jointTransformations** [\ :math:`{\mathbf{T}} = [\LU{p_0,j_0}{{\mathbf{T}}_0},\, \LU{p_1,j_1}{{\mathbf{T}}_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]`\ , type = Matrix3DList, default = []]:
-  | list of constant joint transformations from parent joint coordinates \ :math:`p_0`\  to this joint coordinates \ :math:`j_0`\ ; if no parent exists (\ :math:`-1`\ ), the base coordinate system \ :math:`0`\  is used; must be always set
+  | list of constant joint transformations from parent joint coordinates \ :math:`p_0`\  to this joint coordinates \ :math:`j_0`\ ; this allows to adjust the orientation of the joint axes (but it does not affect the joint offset); if no parent exists (\ :math:`-1`\ ), the base coordinate system \ :math:`0`\  is used; must be always set
 * | **jointOffsets** [\ :math:`{\mathbf{V}} = [\LU{p_0}{o_0},\, \LU{p_1}{o_1},\, \ldots ] \in [\Rcal^{3}, ...]`\ , type = Vector3DList, default = []]:
-  | list of constant joint offsets from parent joint to this joint; \ :math:`p_0`\ , \ :math:`p_1`\ , \ :math:`\ldots`\  denote the parent coordinate systems; if no parent exists (\ :math:`-1`\ ), the base coordinate system \ :math:`0`\  is used; must be always set
+  | list of constant joint offsets from parent joint to this joint; \ :math:`p_0`\ , \ :math:`p_1`\ , \ :math:`\ldots`\  denote the parent coordinate systems; this means that the joint offset is added prior to performing the joint transformation; if no parent exists (\ :math:`-1`\ ), the base coordinate system \ :math:`0`\  is used; must be always set
 * | **linkInertiasCOM** [\ :math:`{\mathbf{J}}_{COM} = [\LU{j_0}{{\mathbf{J}}_0},\, \LU{j_1}{{\mathbf{J}}_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]`\ , type = Matrix3DList, default = []]:
   | list of link inertia tensors w.r.t.\ \ :ref:`COM <COM>`\  in joint/link \ :math:`j_i`\  coordinates; must be always set
 * | **linkCOMs** [\ :math:`{\mathbf{C}} = [\LU{j_0}{{\mathbf{c}}_0},\, \LU{j_1}{{\mathbf{c}}_1},\, \ldots ] \in [\Rcal^{3}, ...]`\ , type = Vector3DList, default = []]:
@@ -84,7 +84,7 @@ DESCRIPTION of ObjectKinematicTree
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
 * | ``Coordinates``\ : 
-  | all \ :ref:`ODE2 <ODE2>`\  joint coordinates, including reference values; these are the minimal coordinates of the object
+  | all \ :ref:`ODE2 <ODE2>`\  joint coordinates, including reference values (which is slightly inconsistent with CoordinatesTotal used in nodes); if you need values without reference part, read out the node; these are the minimal coordinates of the object
 * | ``Coordinates\_t``\ : 
   | all \ :ref:`ODE2 <ODE2>`\  velocity coordinates
 * | ``Coordinates\_tt``\ : 

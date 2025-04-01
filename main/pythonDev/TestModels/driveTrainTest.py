@@ -32,7 +32,6 @@ except:
         pass
     exudynTestGlobals = ExudynTestGlobals()
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# useGraphics = False
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -283,7 +282,7 @@ sFlyWheelAngVel = mbs.AddSensor(SensorBody(bodyNumber=oDT4, #fileName="solution/
                          outputVariableType=exu.OutputVariableType.AngularVelocity))
 sFlyWheelAngle = mbs.AddSensor(SensorNode(nodeNumber=nDT4, #fileName="solution/sensorFlyWheelRotation.txt", 
                          storeInternal=True,
-                         outputVariableType=exu.OutputVariableType.Coordinates))
+                         outputVariableType=exu.OutputVariableType.CoordinatesTotal))
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #add torque (could also use LoadTorqueVector() on mDT0Rigid)
@@ -355,9 +354,9 @@ if useGraphics:
 
     lastRenderState = SC.GetRenderState() #store model view for next simulation
 
-mbs.PlotSensor(sensorNumbers=[sFlyWheelAngle], 
-           components=[0], closeAll=True, offsets=-phiCrankData,
-           labels=['crank angle - flywheel angle'])
+    mbs.PlotSensor(sensorNumbers=[sFlyWheelAngle], 
+               components=[0], closeAll=True, offsets=-phiCrankData,
+               labels=['crank angle - flywheel angle'])
 
 if useGraphics:
     mbs.PlotSensor(sensorNumbers=[sCrankPos, sCrankAngVel, sCrankAngle, sFlyWheelAngVel, sFlyWheelAngle], 

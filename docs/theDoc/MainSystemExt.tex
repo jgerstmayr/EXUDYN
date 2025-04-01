@@ -164,8 +164,8 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L154}{SolveStatic}{}}}\label{sec:mainsystemextensions:SolveStatic}
-({\it simulationSettings}= exudyn.SimulationSettings(), {\it updateInitialValues}= False, {\it storeSolver}= True, {\it showHints}= False, {\it showCausingItems}= True)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L157}{SolveStatic}{}}}\label{sec:mainsystemextensions:SolveStatic}
+({\it simulationSettings}= exudyn.SimulationSettings(), {\it updateInitialValues}= False, {\it storeSolver}= True, {\it showHints}= False, {\it showCausingItems}= True, {\it autoAssemble}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -183,6 +183,9 @@
 \item[]{\it simulationSettings}: specific simulation settings out of exu.SimulationSettings(), as described in \refSection{sec:SolutionSettings}; use options for newton, discontinuous settings, etc., from staticSolver sub-items
 \item[]{\it updateInitialValues}: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation
 \item[]{\it storeSolver}: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
+\item[]{\it showHints}: show additional hints, if solver fails
+\item[]{\it showCausingItems}: if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
+\item[]{\it autoAssemble}: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 \end{itemize}
 \item[--]
 {\bf output}: bool; returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
@@ -230,8 +233,8 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L219}{SolveDynamic}{}}}\label{sec:mainsystemextensions:SolveDynamic}
-({\it simulationSettings}= exudyn.SimulationSettings(), {\it solverType}= exudyn.DynamicSolverType.GeneralizedAlpha, {\it updateInitialValues}= False, {\it storeSolver}= True, {\it showHints}= False, {\it showCausingItems}= True)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L224}{SolveDynamic}{}}}\label{sec:mainsystemextensions:SolveDynamic}
+({\it simulationSettings}= exudyn.SimulationSettings(), {\it solverType}= exudyn.DynamicSolverType.GeneralizedAlpha, {\it updateInitialValues}= False, {\it storeSolver}= True, {\it showHints}= False, {\it showCausingItems}= True, {\it autoAssemble}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -252,6 +255,7 @@
 \item[]{\it storeSolver}: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
 \item[]{\it showHints}: show additional hints, if solver fails
 \item[]{\it showCausingItems}: if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
+\item[]{\it autoAssemble}: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 \end{itemize}
 \item[--]
 {\bf output}: bool; returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
@@ -300,8 +304,8 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L370}{ComputeLinearizedSystem}{}}}\label{sec:mainsystemextensions:ComputeLinearizedSystem}
-({\it simulationSettings}= exudyn.SimulationSettings(), {\it projectIntoConstraintNullspace}= False, {\it singularValuesTolerance}= 1e-12, {\it returnConstraintJacobian}= False, {\it returnConstraintNullspace}= False)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L377}{ComputeLinearizedSystem}{}}}\label{sec:mainsystemextensions:ComputeLinearizedSystem}
+({\it simulationSettings}= exudyn.SimulationSettings(), {\it projectIntoConstraintNullspace}= False, {\it singularValuesTolerance}= 1e-12, {\it returnConstraintJacobian}= False, {\it returnConstraintNullspace}= False, {\it autoAssemble}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -321,6 +325,7 @@
 \item[]{\it singularValuesTolerance}: tolerance used to distinguish between zero and nonzero singular values for algebraic constraints projection
 \item[]{\it returnConstraintJacobian}: if True, the returned list contains [M, K, D, C, N] where C is the constraint jacobian and N is the nullspace matrix (may be empty)
 \item[]{\it returnConstraintNullspace}: if True, the returned list contains [M, K, D, C, N] where C is the constraint jacobian (may be empty) and N is the nullspace matrix
+\item[]{\it autoAssemble}: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 \end{itemize}
 \item[--]
 {\bf output}: [ArrayLike, ArrayLike, ArrayLike]; [M, K, D]; list containing numpy mass matrix M, stiffness matrix K and damping matrix D; for constraints, see options with arguments above, return values may change to [M, K, D, C, N]
@@ -364,8 +369,8 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L503}{ComputeODE2Eigenvalues}{}}}\label{sec:mainsystemextensions:ComputeODE2Eigenvalues}
-({\it simulationSettings}= exudyn.SimulationSettings(), {\it useSparseSolver}= False, {\it numberOfEigenvalues}= 0, {\it constrainedCoordinates}= [], {\it convert2Frequencies}= False, {\it useAbsoluteValues}= True, {\it computeComplexEigenvalues}= False, {\it ignoreAlgebraicEquations}= False, {\it singularValuesTolerance}= 1e-12)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L515}{ComputeODE2Eigenvalues}{}}}\label{sec:mainsystemextensions:ComputeODE2Eigenvalues}
+({\it simulationSettings}= exudyn.SimulationSettings(), {\it useSparseSolver}= False, {\it numberOfEigenvalues}= 0, {\it constrainedCoordinates}= [], {\it convert2Frequencies}= False, {\it useAbsoluteValues}= True, {\it computeComplexEigenvalues}= False, {\it ignoreAlgebraicEquations}= False, {\it singularValuesTolerance}= 1e-12, {\it autoAssemble}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -389,6 +394,7 @@
 \item[]{\it computeComplexEigenvalues}: if True, the system is converted into a system of first order differential equations, including damping terms; returned eigenvalues are complex and contain the 'damping' (=real) part and the eigenfrequency (=complex) part; for this case, set useAbsoluteValues=False (otherwise you will not get the complex values; values are unsorted, however!); also, convert2Frequencies must be False in this case! only implemented for dense solver
 \item[]{\it ignoreAlgebraicEquations}: if True, algebraic equations (and constraint jacobian) are not considered for eigenvalue computation; otherwise, the solver tries to automatically project the system into the nullspace kernel of the constraint jacobian using a SVD; this gives eigenvalues of the constrained system; eigenvectors are not computed
 \item[]{\it singularValuesTolerance}: tolerance used to distinguish between zero and nonzero singular values for algebraic constraints projection
+\item[]{\it autoAssemble}: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 \end{itemize}
 \item[--]
 {\bf output}: [ArrayLike, ArrayLike]; [eigenValues, eigenVectors]; eigenValues being a numpy array of eigen values ($\omega_i^2$, being the squared eigen frequencies in ($\omega_i$ in rad/s)!), eigenVectors a numpy array containing the eigenvectors in every column
@@ -447,8 +453,8 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L723}{ComputeSystemDegreeOfFreedom}{}}}\label{sec:mainsystemextensions:ComputeSystemDegreeOfFreedom}
-({\it simulationSettings}= exudyn.SimulationSettings(), {\it threshold}= 1e-12, {\it verbose}= False, {\it useSVD}= False)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L741}{ComputeSystemDegreeOfFreedom}{}}}\label{sec:mainsystemextensions:ComputeSystemDegreeOfFreedom}
+({\it simulationSettings}= exudyn.SimulationSettings(), {\it threshold}= 1e-12, {\it verbose}= False, {\it useSVD}= False, {\it autoAssemble}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -467,6 +473,7 @@
 \item[]{\it threshold}: threshold factor for singular values which estimate the redundant constraints
 \item[]{\it useSVD}: use singular value decomposition directly, also showing SVD values if verbose=True
 \item[]{\it verbose}: if True, it will show the singular values and one may decide if the threshold shall be adapted
+\item[]{\it autoAssemble}: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 \end{itemize}
 \item[--]
 {\bf output}: dict; returns dictionary with key words 'degreeOfFreedom', 'redundantConstraints', 'nODE2', 'nODE1', 'nAE', 'nPureAE', where: degreeOfFreedom = the system degree of freedom computed numerically, redundantConstraints=the number of redundant constraints, nODE2=number of ODE2 coordinates, nODE1=number of ODE1 coordinates, nAE=total number of constraints, nPureAE=number of constraints on algebraic variables (e.g., lambda=0) that are not coupled to ODE2 coordinates

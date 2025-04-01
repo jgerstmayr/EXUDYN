@@ -97,7 +97,7 @@ sLoad=mbs.AddSensor(SensorLoad(loadNumber=loadC, writeToFile = writeSensorFile,
                          ))
 #mbs.AddSensor(SensorNode(nodeNumber=n1, writeToFile = writeSensorFile, fileName="solution/userFunctionNode.txt"))
 sCoords=mbs.AddSensor(SensorNode(nodeNumber=n1, writeToFile = writeSensorFile, 
-                         outputVariableType=exu.OutputVariableType.Coordinates, 
+                         outputVariableType=exu.OutputVariableType.CoordinatesTotal, 
                          storeInternal=True,#fileName="solution/userFunctionNode.txt"
                          ))
     
@@ -117,18 +117,20 @@ simulationSettings.timeIntegration.verboseMode = 1
 #exu.StartRenderer()              #start graphics visualization
 #mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
 
-#start solver:
+#start solver:q
 mbs.SolveDynamic(simulationSettings)
 
 #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
 #exu.StopRenderer()               #safely close rendering window!
 
 #evaluate final (=current) output values
-u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
-exu.Print('displacement=',u[0])
+# u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
+# exu.Print('u     =',u)
+uTotal = mbs.GetNodeOutput(n1, exu.OutputVariableType.CoordinatesTotal)
+exu.Print('uTotal=',uTotal[0])
 
-exudynTestGlobals.testError = u[0] - (0.5062872273010898) #2019-12-18: 0.5062872273010898; #2019-12-15: 0.5062872272996835; 2019-12-13:0.5062872273014417; 2019-12-01: 0.5152217339585201
-exudynTestGlobals.testResult = u[0]
+exudynTestGlobals.testError = uTotal[0] - (0.5062872273010898) #2019-12-18: 0.5062872273010898; #2019-12-15: 0.5062872272996835; 2019-12-13:0.5062872273014417; 2019-12-01: 0.5152217339585201
+exudynTestGlobals.testResult = uTotal[0]
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++
 

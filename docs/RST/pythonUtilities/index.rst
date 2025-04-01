@@ -18,6 +18,7 @@ Python Utility Functions
    kinematicTree
    lieGroupBasics
    mainSystemExtensions
+   particles
    physics
    plot
    processing

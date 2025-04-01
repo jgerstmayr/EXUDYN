@@ -231,7 +231,7 @@ You can view and download this file on Github: `bicycleIftommBenchmark.py <https
        oJointSteer = mbs.CreateRevoluteJoint(bodyNumbers=[bB, bH], 
                                              position=P2-bCOM, useGlobalFrame=False,
                                              axis=RotationMatrixY(-lam) @ [0,0,1],
-                                             axisRadius=0.5*dY, axisLength=5*dY)[0]
+                                             axisRadius=0.5*dY, axisLength=5*dY)
    #%%++++++++++++++++++++++++++++++++++++++++++++++++
    #add 'rolling disc' for wheels:
    cStiffness = 5e4*10 #spring stiffness: 50N==>F/k = u = 0.001m (penetration)

@@ -200,7 +200,7 @@ if runTestExamples:
     for file in testFileList:
         name = file #.split('.')[0] #without '.py'
         exu.Print('\n\n******************************************')
-        exu.Print('  START EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '"):')
+        exu.Print('  START TESTMODEL ' + str(testExamplesCnt) + ' ("' + file + '"):')
         exu.Print('******************************************')
         SC.Reset()
         exudynTestGlobals.testError = -1 #default value !=-1, if there is an error in the calculation
@@ -208,8 +208,8 @@ if runTestExamples:
         try:
             exec(open(file).read(), globals())
         except Exception as e:
-            exu.Print('EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))
-            print('EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e), flush=True)
+            exu.Print('TESTMODEL ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))
+            print('TESTMODEL ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e), flush=True)
         finally:
             examplesTestErrorList[name] = exudynTestGlobals.testError
             examplesTestSolList[name] = exudynTestGlobals.testResult
@@ -233,13 +233,13 @@ if runTestExamples:
     
             if abs(exudynTestGlobals.testError) < testTolerance*testTolFact:
                 exu.Print('******************************************')
-                exu.Print('  EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
+                exu.Print('  TESTMODEL ' + str(testExamplesCnt) + ' ("' + file + '") FINISHED SUCCESSFUL')
                 exu.Print('  RESULT = ' + str(exudynTestGlobals.testResult))
                 exu.Print('  ERROR = ' + str(exudynTestGlobals.testError))
                 exu.Print('******************************************')
             else:
                 exu.Print('******************************************')
-                exu.Print('  EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") *FAILED*')
+                exu.Print('  TESTMODEL ' + str(testExamplesCnt) + ' ("' + file + '") *FAILED*')
                 exu.Print('  RESULT = ' + str(exudynTestGlobals.testResult))
                 exu.Print('  ERROR = ' + str(exudynTestGlobals.testError))
                 exu.Print('******************************************')

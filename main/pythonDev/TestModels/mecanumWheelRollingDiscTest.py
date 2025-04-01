@@ -68,17 +68,19 @@ inertiaWheel = InertiaCylinder(density=rhoWheel, length=wWheel, outerRadius=rWhe
 inertiaCar = InertiaCuboid(density=mCar/(lCar*wCar*hCar),sideLengths=[wCar, lCar, hCar])
 #exu.Print(inertiaCar)
 
+
 graphicsCar = graphics.Brick(centerPoint=[0,0,0],size=[wCar-1.1*wWheel, lCar, hCar], 
                                          color=graphics.color.steelblue)
-[nCar,bCar]=AddRigidBody(mainSys = mbs, 
-                         inertia = inertiaCar, 
-                         nodeType = str(exu.NodeType.RotationEulerParameters), 
-                         position = p0Car, 
-                         rotationMatrix = initialRotationCar,
-                         angularVelocity = omega0Car,
-                         velocity=v0Car,
-                         gravity = g, 
-                         graphicsDataList = [graphicsCar])
+#create car body:
+dictCar = mbs.CreateRigidBody(referencePosition=p0Car,  
+                              referenceRotationMatrix=initialRotationCar,  
+                              initialVelocity=v0Car,  
+                              initialAngularVelocity=omega0Car,  
+                              inertia=inertiaCar,  
+                              gravity=g,  
+                              graphicsDataList=[graphicsCar],  
+                              returnDict=True)  
+[nCar, bCar] = [dictCar['nodeNumber'], dictCar['bodyNumber']]
 
 nWheels = 4
 markerWheels=[]
@@ -146,15 +148,15 @@ for iWheel in range(nWheels):
 
 
     #add wheel body
-    [n0,b0]=AddRigidBody(mainSys = mbs, 
-                         inertia = inertiaWheel, 
-                         nodeType = str(exu.NodeType.RotationEulerParameters), 
-                         position = VAdd(p0Wheel,pOff), 
-                         rotationMatrix = initialRotation, #np.diag([1,1,1]),
-                         angularVelocity = omega0Wheel,
-                         velocity=v0Wheel,
-                         gravity = g, 
-                         graphicsDataList = graphicsWheel)
+    dict0 = mbs.CreateRigidBody(referencePosition=VAdd(p0Wheel,pOff),  
+                                referenceRotationMatrix=initialRotation,  
+                                initialVelocity=v0Wheel,  
+                                initialAngularVelocity=omega0Wheel,  
+                                inertia=inertiaWheel,  
+                                gravity=g,  
+                                graphicsDataList=graphicsWheel,  
+                                returnDict=True)  
+    [n0, b0] = [dict0['nodeNumber'], dict0['bodyNumber']]
 
     #markers for rigid body:
     mWheel = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[0,0,0]))

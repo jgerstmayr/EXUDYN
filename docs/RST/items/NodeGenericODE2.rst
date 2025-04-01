@@ -44,6 +44,8 @@ DESCRIPTION of NodeGenericODE2
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
+* | ``CoordinatesTotal``\ : 
+  | displacement plus reference coordinates of node
 * | ``Coordinates``\ : \ :math:`{\mathbf{q}}\cConfig = [q_0,\,\ldots,\,q_{nc}]\tp\cConfig`\ 
   | coordinates vector of node
 * | ``Coordinates\_t``\ : \ :math:`\dot {\mathbf{q}}\cConfig = [\dot q_0,\,\ldots,\,\dot q_{nc}]\tp\cConfig`\ 

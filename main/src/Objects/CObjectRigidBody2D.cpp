@@ -18,28 +18,59 @@
 //! Computational function: compute mass matrix
 void CObjectRigidBody2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
-	massMatrixC.SetUseDenseMatrix(false);
-	SparseTripletVector& triplets = massMatrixC.GetInternalSparseTripletMatrix().GetTriplets();
-	
 	Real m = parameters.physicsMass;
 	Real J = parameters.physicsInertia;
 
-	if (computeInverse)
+	if (parameters.physicsCenterOfMass == 0.) //component-wise compare
 	{
-		CHECKandTHROW(m != 0., "CObjectRigidBody2D::ComputeMassMatrix: physicsMass may not be 0 in case of computeMassMatrixInversePerBody=True");
-		CHECKandTHROW(J != 0., "CObjectRigidBody2D::ComputeMassMatrix: physicsInertia may not be 0 in case of computeMassMatrixInversePerBody=True");
-		m = 1. / m;
-		J = 1. / J;
+		massMatrixC.SetUseDenseMatrix(false);
+		SparseTripletVector& triplets = massMatrixC.GetInternalSparseTripletMatrix().GetTriplets();
+
+		if (computeInverse)
+		{
+			CHECKandTHROW(m != 0., "CObjectRigidBody2D::ComputeMassMatrix: physicsMass may not be 0 in case of computeMassMatrixInversePerBody=True");
+			CHECKandTHROW(J != 0., "CObjectRigidBody2D::ComputeMassMatrix: physicsInertia may not be 0 in case of computeMassMatrixInversePerBody=True");
+			m = 1. / m;
+			J = 1. / J;
+		}
+		if (parameters.physicsMass != 0.)
+		{
+			triplets.AppendPure(EXUmath::Triplet(ltg[0], ltg[0], m));
+			triplets.AppendPure(EXUmath::Triplet(ltg[1], ltg[1], m));
+		}
+		if (parameters.physicsInertia != 0.)
+		{
+			triplets.AppendPure(EXUmath::Triplet(ltg[2], ltg[2], J));
+		}
 	}
-	if (parameters.physicsMass != 0.)
+	else
 	{
-		triplets.AppendPure(EXUmath::Triplet(ltg[0], ltg[0], m));
-		triplets.AppendPure(EXUmath::Triplet(ltg[1], ltg[1], m));
+		//in this case, due to computeInverse and 7 filled components, we should use dense mode
+		Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
+
+		Vector2D com = parameters.physicsCenterOfMass;
+
+		//–m * A * \tilde \bar u_{ COM } \bar G
+		Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
+		Real sinPhi = sin(phi);
+		Real cosPhi = cos(phi);
+		Matrix2D A(2, 2, { cosPhi, -sinPhi, sinPhi, cosPhi });
+
+		Vector2D mAuTildeTG = m * (A * Vector2D({ -com.Y(), com.X() }));
+
+		massMatrix.SetMatrix(3, 3, { m,0,mAuTildeTG[0], 0,m,mAuTildeTG[1], mAuTildeTG[0],mAuTildeTG[1],J });
+
+		if (computeInverse)
+		{
+
+			Index rv = massMatrix.InvertWithMaxSize<3>();
+			if (rv != -1)
+			{
+				CHECKandTHROWstring("CObjectRigidBody2D::ComputeMassMatrix: inverse failed; check if node type fits, if mass parameters are non-zero or set computeMassMatrixInversePerBody=False");
+			}
+		}
 	}
-	if (parameters.physicsInertia != 0.)
-	{
-		triplets.AppendPure(EXUmath::Triplet(ltg[2], ltg[2], J));
-	}
+
 
 }
 
@@ -48,6 +79,23 @@ void CObjectRigidBody2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) con
 {
 	ode2Lhs.SetNumberOfItems(nODE2coordinates);
 	ode2Lhs.SetAll(0.);
+
+	Vector2D com = parameters.physicsCenterOfMass;
+	if (!(com == 0.)) //component-wise compare
+	{
+		//–m * A * \tilde \bar u_{ COM } \bar G
+		Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
+		Real sinPhi = sin(phi);
+		Real cosPhi = cos(phi);
+		Matrix2D A(2, 2, { cosPhi, -sinPhi, sinPhi, cosPhi });
+
+		Real omegaSquared = EXUstd::Square( ((CNodeODE2*)GetCNode(0))->GetCurrentCoordinate_t(2) );
+		Vector2D term = -(parameters.physicsMass * omegaSquared) * (A * com);
+
+		ode2Lhs[0] = term[0];
+		ode2Lhs[1] = term[1];
+	}
+
 }
 
 //! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
@@ -89,9 +137,6 @@ void CObjectRigidBody2D::GetAccessFunctionBody(AccessFunctionType accessType, co
 		//this function relates a 3D translatory velocity to the time derivative of all coordinates: v_trans = Jac*q_dot
 		Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
 
-		//Real dAvxdphi = -sin(phi) * localPosition[0] - cos(phi) * localPosition[1];   //d(Av)x/dphi
-		//Real dAvydphi = cos(phi) * localPosition[0] - sin(phi) * localPosition[1];   //d(Av)x/dphi
-
 		//jacT = 
 		//  1., 0., 0.,
 		//	0., 1., 0.,
@@ -113,7 +158,38 @@ void CObjectRigidBody2D::GetAccessFunctionBody(AccessFunctionType accessType, co
 	}
 	case AccessFunctionType::DisplacementMassIntegral_q:
 	{
-		value.SetMatrix(3, 3, { parameters.physicsMass,0.,0., 0.,parameters.physicsMass,0., 0.,0.,0. }); //a 3D Vector (e.g. 3D ForceVector) acts on three coordinates (x,y,phi)
+
+		Real m = parameters.physicsMass;
+
+		if (parameters.physicsCenterOfMass == 0.)
+		{
+			value.SetMatrix(3, 3, { m,0.,0., 0.,m,0., 0.,0.,0. }); //a 3D Vector (e.g. 3D ForceVector) acts on three coordinates (x,y,phi)
+			//value.SetNumberOfRowsAndColumns(3, 3);
+			//value.SetAll(0.);
+			//value(0, 0) = m; value(1, 1) = m;
+		}
+		else
+		{
+			Vector2D com = parameters.physicsCenterOfMass;
+			value.SetNumberOfRowsAndColumns(3, 3);
+			CHECKandTHROW(com[0] == localPosition[0] && com[1] == localPosition[1], "CObjectRigidBody2D::GetAccessFunctionBody: inconsistent localPosition");
+
+			Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
+			Real sinPhi = sin(phi);
+			Real cosPhi = cos(phi);
+			Matrix2D A(2, 2, { cosPhi, -sinPhi, sinPhi, cosPhi });
+
+			//A*(-m*uLocalTilde)*Glocal, see ObjectRigidBody
+			Vector2D mAuTildeTG = m * (A * Vector2D({ -com.Y(), com.X() }));
+
+			//Force due to body-load is bodyLoad^T * value => no action due to F_Z
+			value(0, 0) = m; value(0, 1) = 0.; value(0, 2) = mAuTildeTG[0];
+			value(1, 0) = 0.; value(1, 1) = m; value(1, 2) = mAuTildeTG[1];
+			value(2, 0) = 0.; value(2, 1) = 0.; value(2, 2) = 0.;
+
+		}
+
+
 		break;
 	}
 	default:

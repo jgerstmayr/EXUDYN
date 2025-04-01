@@ -56,6 +56,8 @@ DESCRIPTION of NodeRigidBodyRxyz
   | global 3D velocity vector of node
 * | ``Acceleration``\ : \ :math:`\LU{0}{{\mathbf{a}}}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp`\ 
   | global 3D acceleration vector of node
+* | ``CoordinatesTotal``\ : 
+  | displacement/rotation coordinates of node including reference configuration
 * | ``Coordinates``\ : \ :math:`{\mathbf{c}}\cConfig = [q_0,\,q_1,\,q_2, \,\psi_0,\,\psi_1,\,\psi_2]\tp\cConfig`\ 
   | coordinate vector of node, having 3 displacement coordinates and 3 Euler angles
 * | ``Coordinates\_t``\ : \ :math:`\dot{\mathbf{c}}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2]\tp\cConfig`\ 
@@ -111,8 +113,8 @@ The derivatives of the angular velocity vectors w.r.t.\ the rotation velocity co
 
 
 
-For creating a \ ``NodeRigidBodyRxyz``\  together with a rigid body, there is a \ ``rigidBodyUtilities``\  function \ ``AddRigidBody``\ , 
-see Section :ref:`sec-rigidbodyutilities-addrigidbody`\ , which simplifies the setup of a rigid body significantely!
+For creating a \ ``NodeRigidBodyRxyz``\  together with a rigid body, there is a \ ``rigidBodyUtilities``\  function \ ``CreateRigidBody``\ , 
+see Section :ref:`sec-mainsystemextensions-createrigidbody`\ , which simplifies the setup of a rigid body significantely!
 
 
 Relevant Examples and TestModels with weblink:

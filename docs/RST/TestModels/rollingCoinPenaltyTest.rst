@@ -68,15 +68,15 @@ You can view and download this file on Github: `rollingCoinPenaltyTest.py <https
    #additional graphics for visualization of rotation:
    graphicsBody = graphics.Brick(centerPoint=[0,0,0],size=[w*1.1,0.7*r,0.7*r], color=graphics.color.lightred)
    
-   [n0,b0]=AddRigidBody(mainSys = mbs, 
-                        inertia = inertiaRing, 
-                        nodeType = str(exu.NodeType.RotationEulerParameters), 
-                        position = p0, 
-                        rotationMatrix = initialRotation, #np.diag([1,1,1]),
-                        angularVelocity = omega0,
-                        velocity=v0,
-                        gravity = g, 
-                        graphicsDataList = [graphicsBody])
+   dict0 = mbs.CreateRigidBody(referencePosition=p0,  
+                               referenceRotationMatrix=initialRotation,  
+                               initialVelocity=v0,  
+                               initialAngularVelocity=omega0,  
+                               inertia=inertiaRing,  
+                               gravity=g,  
+                               graphicsDataList=[graphicsBody],  
+                               returnDict=True)  
+   [n0, b0] = [dict0['nodeNumber'], dict0['bodyNumber']]
    
    #ground body and marker
    gGround = graphics.Brick(centerPoint=[0,0,-0.001],size=[0.3,0.3,0.002], color=graphics.color.lightgrey)

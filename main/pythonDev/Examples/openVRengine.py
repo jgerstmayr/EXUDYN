@@ -136,13 +136,14 @@ def CreateEngine(P):
                                           color=[0.6,0.6,0.6,0.1], addEdges=True, 
                                           edgeColor = [0.8,0.8,0.8,0.3], addFaces=False)]
     gEngine = [] #no block
-    #oEngine=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= gEngine)))
-    [nEngine, oEngine] = AddRigidBody(mbs, InertiaCuboid(1000, sideLengths=[1,1,1]), #dummy engine inertia
-                                      nodeType = nodeType,
-                                      position=[0,0,zOffAdd],
-                                      graphicsDataList = gEngine
-                                      )
-    
+    dictEngine = mbs.CreateRigidBody(
+                  inertia=InertiaCuboid(1000, sideLengths=[1, 1, 1]),  # dummy engine inertia
+                  nodeType=nodeType,
+                  referencePosition=[0, 0, zOffAdd],
+                  graphicsDataList=gEngine,
+                  returnDict=True)
+    [nEngine, oEngine] = [dictEngine['nodeNumber'], dictEngine['bodyNumber']]
+
     mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
     mEngine = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oEngine))
     sEngineForce = 0
@@ -195,41 +196,39 @@ def CreateEngine(P):
                                            radius= [P.conrodRadius]*2, 
                                            thickness= P.conrodHeight, width=[P.conrodWidth]*2, color= colorConrod, nTiles= 16)]
 
-        [nConrod, bConrod] = AddRigidBody(mbs, P.inertiaConrod,
-                                          nodeType = nodeType,
-                                        position=Ac@[P.crankArmLength,0,0] + Acr@[0.5*P.conrodLength,0,
-                                                  zOff+P.crankArmWidth+P.crankBearingWidth+0.5*P.conrodCrankCylLength],
-                                        # angularVelocity=[0,0,0],
-                                        rotationMatrix=Acr,
-                                        gravity = gravity,
-                                        graphicsDataList = gConrod
-                                        )
+        bConrod = mbs.CreateRigidBody(
+                        inertia=P.inertiaConrod,
+                        nodeType=nodeType,
+                        referencePosition=Ac @ [P.crankArmLength, 0, 0] + Acr @ [0.5 * P.conrodLength, 0,
+                                          zOff + P.crankArmWidth + P.crankBearingWidth + 0.5 * P.conrodCrankCylLength],
+                        referenceRotationMatrix=Acr,
+                        gravity=gravity,
+                        graphicsDataList=gConrod)
         bConrodList += [bConrod]
-        #++++++++++++++++++++++++++++++++++++++            
-        #piston
-        gPiston = [graphics.Cylinder(pAxis=[-P.conrodRadius*0.5,0,0],
-                                         vAxis=[P.pistonLength,0,0], radius=P.pistonRadius, color=colorPiston)]
         
-        [nPiston, bPiston] = AddRigidBody(mbs, P.inertiaPiston,
-                                          nodeType = nodeType,
-                                        # position=Ap@[P.crankArmLength + P.conrodLength,0,
-                                        #           zOff+P.crankArmWidth+P.crankBearingWidth+0.5*P.conrodCrankCylLength],
-                                        position=Ap@[dp,0,
-                                                  zOff+P.crankArmWidth+P.crankBearingWidth+0.5*P.conrodCrankCylLength],
-                                        # angularVelocity=[0,0,0],
-                                        rotationMatrix=Ap,
-                                        gravity = gravity,
-                                        graphicsDataList = gPiston
-                                        )
+        #++++++++++++++++++++++++++++++++++++++            
+        #gPiston setup
+        gPiston = [graphics.Cylinder(pAxis=[-P.conrodRadius*0.5, 0, 0],
+                                     vAxis=[P.pistonLength, 0, 0], radius=P.pistonRadius, color=colorPiston)]
+        
+        bPiston = mbs.CreateRigidBody(
+                        inertia=P.inertiaPiston,
+                        nodeType=nodeType,
+                        referencePosition=Ap @ [dp, 0,
+                                          zOff + P.crankArmWidth + P.crankBearingWidth + 0.5 * P.conrodCrankCylLength],
+                        referenceRotationMatrix=Ap,
+                        gravity=gravity,
+                        graphicsDataList=gPiston)
         bPistonList += [bPiston]
-    
-    [nCrank, bCrank] = AddRigidBody(mbs, P.inertiaCrank,
-                                    nodeType = nodeType,
-                                    position=[0,0,0],
-                                    #angularVelocity=[0,0,omega0],
-                                    gravity = gravity,
-                                    graphicsDataList = gCrank
-                                    )
+        
+    dictCrank = mbs.CreateRigidBody(
+                    inertia=P.inertiaCrank,
+                    nodeType=nodeType,
+                    referencePosition=[0, 0, 0],
+                    gravity=gravity,
+                    graphicsDataList=gCrank,
+                    returnDict=True)
+    [nCrank, bCrank] = [dictCrank['nodeNumber'], dictCrank['bodyNumber']]
 
     sCrankAngVel = mbs.AddSensor(SensorNode(nodeNumber=nCrank, storeInternal=True,
                                               outputVariableType=exu.OutputVariableType.AngularVelocity))

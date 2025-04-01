@@ -42,7 +42,7 @@ You can view and download this file on Github: `reevingSystem.py <https://github
    useGraphics= True
    useContact = True
    tEnd = 20 #end time of dynamic simulation
-   h = 1e-3 #step size
+   stepSize = 2e-3 #step size
    useFriction = True
    dryFriction = 0.5
    contactStiffness = 2e5
@@ -58,7 +58,6 @@ You can view and download this file on Github: `reevingSystem.py <https://github
    #create circles
    #complicated shape:
    nANCFnodes = 200
-   h = 0.25e-3
    preStretch=-0.001
    circleList = [[[0,0],0.3,'L'],
                  [[1,0],0.3,'R'],
@@ -235,7 +234,7 @@ You can view and download this file on Github: `reevingSystem.py <https://github
    simulationSettings.displayStatistics = True
    
    simulationSettings.timeIntegration.endTime = tEnd
-   simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
+   simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
    simulationSettings.timeIntegration.stepInformation= 3+128+256
    
    simulationSettings.timeIntegration.verboseMode = 1
@@ -250,7 +249,7 @@ You can view and download this file on Github: `reevingSystem.py <https://github
    SC.visualizationSettings.nodes.defaultSize = 0.01
    SC.visualizationSettings.openGL.multiSampling = 4
    
-   exu.SetWriteToConsole(False)
+   #exu.SetWriteToConsole(False)
    
    if False:
        SC.visualizationSettings.contour.outputVariableComponent=0

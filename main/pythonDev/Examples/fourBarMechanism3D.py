@@ -67,35 +67,37 @@ for case in cases:
     graphicsBody2 = graphics.RigidLink(p0=[-0.5*L,0,0],p1=[0.5*L,0,0], 
                                          axis0=[0,0,1], axis1=[0,0,1], radius=[0.5*w,0.5*w], 
                                          thickness = w, width = [1.2*w,1.2*w], color=graphics.color.steelblue)
-
-    [n0,b0]=AddRigidBody(mainSys = mbs,
-                         inertia = iCube0, #includes COM
-                         nodeType = exu.NodeType.RotationEulerParameters,
-                         position = pMid0,
-                         rotationMatrix = RotationMatrixZ( 0.5*pi),
-                         gravity = g,
-                         graphicsDataList = [graphicsBody0])
-
+    dictCube0 = mbs.CreateRigidBody(
+                  inertia=iCube0, # includes COM
+                  referencePosition=pMid0,
+                  referenceRotationMatrix=RotationMatrixZ(0.5*pi),
+                  gravity=g,
+                  graphicsDataList=[graphicsBody0],
+                  returnDict=True)
+    [n0, b0] = [dictCube0['nodeNumber'], dictCube0['bodyNumber']]
+    
     markerBody0J0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[-0.5*L,0,0]))
-    markerBody0J1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[ 0.5*L,0,0]))
-
-    [n1,b1]=AddRigidBody(mainSys = mbs,
-                         inertia = iCube0, #includes COM
-                         nodeType = exu.NodeType.RotationEulerParameters,
-                         position = pMid1,
-                         rotationMatrix = RotationMatrixZ(0.),
-                         gravity = g,
-                         graphicsDataList = [graphicsBody1])
+    markerBody0J1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[0.5*L,0,0]))
+    
+    dictCube1 = mbs.CreateRigidBody(
+                  inertia=iCube0, # includes COM
+                  referencePosition=pMid1,
+                  gravity=g,
+                  graphicsDataList=[graphicsBody1],
+                  returnDict=True)
+    [n1, b1] = [dictCube1['nodeNumber'], dictCube1['bodyNumber']]
+    
     markerBody1J0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b1, localPosition=[-0.5*L,0,0]))
-    markerBody1J1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b1, localPosition=[ 0.5*L,0,0]))
-
-    [n2,b2]=AddRigidBody(mainSys = mbs,
-                         inertia = iCube0, #includes COM
-                         nodeType = exu.NodeType.RotationEulerParameters,
-                         position = pMid2,
-                         rotationMatrix = RotationMatrixZ(-0.5*pi),
-                         gravity = g,
-                         graphicsDataList = [graphicsBody2])
+    markerBody1J1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b1, localPosition=[0.5*L,0,0]))
+    
+    dictCube2 = mbs.CreateRigidBody(
+                  inertia=iCube0, # includes COM
+                  referencePosition=pMid2,
+                  referenceRotationMatrix=RotationMatrixZ(-0.5*pi),
+                  gravity=g,
+                  graphicsDataList=[graphicsBody2],
+                  returnDict=True)
+    [n2, b2] = [dictCube2['nodeNumber'], dictCube2['bodyNumber']]
 
     markerBody2J0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b2, localPosition=[-0.5*L,0,0]))
     markerBody2J1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b2, localPosition=[ 0.5*L,0,0]))

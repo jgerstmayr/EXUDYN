@@ -104,15 +104,24 @@ def main():
     inertiaSphere = InertiaSphere(mass=mass,radius=r)
 
     # user interaction point
-    [nUIP, bUIP]=AddRigidBody(mainSys = mbs, 
-                                inertia = inertiaSphere, 
-                                nodeType = str(exu.NodeType.RotationEulerParameters), 
-                                position = [origin[0], origin[1], origin[2]], 
-                                rotationMatrix = np.eye(3), 
-                                angularVelocity = np.zeros(3),
-                                velocity= [0,0,0],
-                                gravity = [0, 0, 0], 
-                                graphicsDataList = [graphicsSphere])
+    # old rigid body call:
+    # [nUIP, bUIP]=AddRigidBody (mainSys = mbs, 
+    #                             inertia = inertiaSphere, 
+    #                             nodeType = str(exu.NodeType.RotationEulerParameters), 
+    #                             position = [origin[0], origin[1], origin[2]], 
+    #                             rotationMatrix = np.eye(3), 
+    #                             angularVelocity = np.zeros(3),
+    #                             velocity= [0,0,0],
+    #                             gravity = [0, 0, 0], 
+    #                             graphicsDataList = [graphicsSphere])
+    dictUIP = mbs.CreateRigidBody(
+                  inertia=inertiaSphere, 
+                  referencePosition=[origin[0], origin[1], origin[2]], 
+                  referenceRotationMatrix=np.eye(3), 
+                  gravity=[0, 0, 0], 
+                  graphicsDataList=[graphicsSphere],
+                  returnDict=True)
+    [nUIP, bUIP] = [dictUIP['nodeNumber'], dictUIP['bodyNumber']]
 
     # create markers:
     mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bGround, localPosition=[0, 0, 0.]))

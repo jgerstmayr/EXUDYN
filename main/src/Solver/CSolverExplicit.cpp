@@ -349,8 +349,9 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 		//**************************************************************************************************************
 		if (!warnedVelocityVerlet)
 		{
-			pout << "************\nWARNING: VelocityVerlet: CHECK CONVERGENCE !!!\n************\n";
-			pout << "************\nWARNING: VelocityVerlet: ADD Lie group formulas !!!\n************\n";
+			pout << "WARNING: VelocityVerlet: still under development\n";
+			//pout << "************\nWARNING: VelocityVerlet: CHECK CONVERGENCE !!!\n************\n";
+			//pout << "************\nWARNING: VelocityVerlet: ADD Lie group formulas !!!\n************\n";
 			warnedVelocityVerlet = true;
 		}
 		//compute stage derivatives Ki:

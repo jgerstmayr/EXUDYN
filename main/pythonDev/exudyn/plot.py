@@ -281,12 +281,12 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
 
 
             
-    if isinstance(sensorNumbers,list):
+    if IsListOrArray(sensorNumbers):
         sensorList = list(sensorNumbers)
     else:
         sensorList = [sensorNumbers]
 
-    if isinstance(components,list):
+    if IsListOrArray(components):
         componentList = components
     else:
         componentList = [components]
@@ -304,7 +304,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
 
     componentsXnew = copy.copy(componentsX)
     if componentsXnew != []:
-        if not isinstance(components,list):
+        if not IsListOrArray(components):
             componentsXnew = [componentsXnew]*nSensors
         elif len(componentsXnew) != nSensors:
             raise ValueError('PlotSensor: size of componentsX and size of sensors or components must be agree; componentsX='+str(componentsXnew))
@@ -641,12 +641,12 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
             plt.title(title)
 
         if rangeX!=[]:
-            if type(rangeX)!=list or len(rangeX)!=2:
+            if not IsListOrArray(rangeX) or len(rangeX)!=2:
                 raise ValueError('PlotSensor: rangeX must be list of length 2 with minimum and maximum x-values')
             plt.xlim(rangeX)
             
         if rangeY!=[]:
-            if type(rangeY)!=list or len(rangeY)!=2:
+            if not IsListOrArray(rangeY) or len(rangeY)!=2:
                 raise ValueError('PlotSensor: rangeY must be list of length 2 with minimum and maximum y-values')
             plt.ylim(rangeY)
 
@@ -660,7 +660,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
         
         handle.legend() #show labels as legend
         handle.tight_layout()
-        if matplotlib.get_backend() != 'agg': #this is used to avoid showing the figures, if they are just saved
+        if matplotlib.get_backend().lower() != 'agg': #this is used to avoid showing the figures, if they are just saved
             handle.show() 
         
         if fileName != '':

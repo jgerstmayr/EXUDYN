@@ -17,6 +17,7 @@
 #define PYTHONUSERFUNCTIONS__H
 
 class MainSystem;
+class PyMatrixContainer;
 
 //+++++++++++++++++++++++++++++++++++++++++++++
 //capsule for Python function + conversion to std::function
@@ -159,13 +160,12 @@ class PythonUserFunctions
 public:
 	MainSystem* mainSystem; //!< stored for call to preStepFunction
 
-	//std::function<bool(const MainSystem& mainSystem, Real t)> preStepFunction;	//!< function called prior to the computation of a single step
-	//std::function<bool(const MainSystem& mainSystem, Real t)> postStepFunction;	//!< function called at end of computation step, just before writing results
-	//std::function<StdVector2D(const MainSystem& mainSystem, Real t)> postNewtonFunction;//!< function called after Newton method
-
 	PythonUserFunctionBase< std::function<bool(const MainSystem& mainSystem, Real t)> > preStepFunction;
 	PythonUserFunctionBase< std::function<bool(const MainSystem& mainSystem, Real t)> > postStepFunction;
 	PythonUserFunctionBase< std::function<StdVector2D(const MainSystem& mainSystem, Real t)> > postNewtonFunction;
+
+	PythonUserFunctionBase< std::function<void(const MainSystem& mainSystem, Real t, Index newtonIt, Index discontinuousIt)> > preNewtonResidualFunction;
+	PythonUserFunctionBase< std::function<PyMatrixContainer(const MainSystem& mainSystem, Real t, Real factorODE2, Real factorODE2_t, Real factorODE1)> > systemJacobianFunction;
 
 	PythonUserFunctions()
 	{
@@ -174,12 +174,12 @@ public:
 	void Reset()
 	{
 		mainSystem = nullptr;
-		//preStepFunction = 0;
-		//postStepFunction = 0;
-		//postNewtonFunction = 0;
 		preStepFunction.Reset();
 		postStepFunction.Reset();
 		postNewtonFunction.Reset();
+
+		preNewtonResidualFunction.Reset();
+		systemJacobianFunction.Reset();
 	}
 };
 

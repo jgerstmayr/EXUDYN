@@ -117,9 +117,9 @@ Index GetInvalidIndex() { return EXUstd::InvalidIndex; }
 void PySetWriteToConsole(bool flag) { outputBuffer.SetWriteToConsole(flag); }
 
 //! set flag to write (true) or not write to console; default = false
-void PySetWriteToFile(STDstring filename, bool flagWriteToFile, bool flagAppend)
+void PySetWriteToFile(STDstring filename, bool flagWriteToFile, bool flagAppend, bool flagFlushAlways)
 {
-	outputBuffer.SetWriteToFile(filename, flagWriteToFile, flagAppend);
+	outputBuffer.SetWriteToFile(filename, flagWriteToFile, flagAppend, flagFlushAlways);
 }
 
 extern bool suppressWarnings; //!< global flag to suppress warnings

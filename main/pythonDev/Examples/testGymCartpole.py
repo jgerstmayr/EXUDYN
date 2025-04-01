@@ -7,6 +7,7 @@
 #
 # Author:   Johannes Gerstmayr, Grzegorz Orzechowski
 # Date:     2022-05-17
+# Update:   2024-12-03 (adapted to stable-baselines3 > 2.0)
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
@@ -71,13 +72,14 @@ if True: #do some reinforcement learning with exudyn model
     if useGraphics:
         env = CartPoleEnv(10)#test with larger threshold
         env.useRenderer = True
-        obs = env.reset()
-        for i in range(100):
+        obs, info = env.reset()
+
+        for i in range(200):
             action, _state = model.predict(obs, deterministic=True)
-            obs, reward, done, info = env.step(action)
+            obs, reward, done, info = env.step(action)[:4]
             env.render()
             if done:
-              obs = env.reset()
+              obs, info = env.reset()
             time.sleep(0.05) #to see results ...
             
         env.close()

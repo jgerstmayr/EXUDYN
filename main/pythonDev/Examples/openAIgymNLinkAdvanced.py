@@ -79,7 +79,7 @@ class RewardLoggingCallback(BaseCallback):
         self.bestRewardSumPrint = 0
 
     #log mean values at rollout end
-    def _on_rollout_end(self) -> bool:
+    def _on_rollout_end(self) -> None:
         rewardSum = -1
         if 'infos' in self.locals:
             info = self.locals['infos'][-1]

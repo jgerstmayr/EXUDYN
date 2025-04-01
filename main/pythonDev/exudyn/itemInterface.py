@@ -847,10 +847,11 @@ class VObjectRigidBody2D:
     def __repr__(self):
         return str(dict(self))
 class ObjectRigidBody2D:
-    def __init__(self, name = '', physicsMass = 0., physicsInertia = 0., nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
+    def __init__(self, name = '', physicsMass = 0., physicsInertia = 0., physicsCenterOfMass = [0.,0.], nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
         self.name = name
         self.physicsMass = CheckForValidUReal(physicsMass,"physicsMass","ObjectRigidBody2D")
         self.physicsInertia = CheckForValidUReal(physicsInertia,"physicsInertia","ObjectRigidBody2D")
+        self.physicsCenterOfMass = np.array(physicsCenterOfMass)
         self.nodeNumber = nodeNumber
         self.visualization = CopyDictLevel1(visualization)
 
@@ -859,6 +860,7 @@ class ObjectRigidBody2D:
         yield 'name', self.name
         yield 'physicsMass', self.physicsMass
         yield 'physicsInertia', self.physicsInertia
+        yield 'physicsCenterOfMass', self.physicsCenterOfMass
         yield 'nodeNumber', self.nodeNumber
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
@@ -2413,6 +2415,114 @@ class ObjectContactFrictionCircleCable2D:
 
     def __repr__(self):
         return str(dict(self))
+class VObjectContactSphereSphere:
+    def __init__(self, show = False, color = [0.7,0.7,0.7,1.]):
+        self.show = show
+        self.color = np.array(color)
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+class ObjectContactSphereSphere:
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), spheresRadii = [-1.,-1.], dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., constantPullOffForce = 0., contactPlasticityRatio = 0., adhesionCoefficient = 0., adhesionExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, activeConnector = True, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+        self.name = name
+        self.markerNumbers = copy.copy(markerNumbers)
+        self.nodeNumber = nodeNumber
+        self.spheresRadii = np.array(spheresRadii)
+        self.dynamicFriction = CheckForValidUReal(dynamicFriction,"dynamicFriction","ObjectContactSphereSphere")
+        self.frictionProportionalZone = CheckForValidUReal(frictionProportionalZone,"frictionProportionalZone","ObjectContactSphereSphere")
+        self.contactStiffness = CheckForValidUReal(contactStiffness,"contactStiffness","ObjectContactSphereSphere")
+        self.contactDamping = CheckForValidUReal(contactDamping,"contactDamping","ObjectContactSphereSphere")
+        self.contactStiffnessExponent = CheckForValidPReal(contactStiffnessExponent,"contactStiffnessExponent","ObjectContactSphereSphere")
+        self.constantPullOffForce = CheckForValidUReal(constantPullOffForce,"constantPullOffForce","ObjectContactSphereSphere")
+        self.contactPlasticityRatio = CheckForValidUReal(contactPlasticityRatio,"contactPlasticityRatio","ObjectContactSphereSphere")
+        self.adhesionCoefficient = CheckForValidUReal(adhesionCoefficient,"adhesionCoefficient","ObjectContactSphereSphere")
+        self.adhesionExponent = CheckForValidUReal(adhesionExponent,"adhesionExponent","ObjectContactSphereSphere")
+        self.restitutionCoefficient = CheckForValidPReal(restitutionCoefficient,"restitutionCoefficient","ObjectContactSphereSphere")
+        self.minimumImpactVelocity = CheckForValidUReal(minimumImpactVelocity,"minimumImpactVelocity","ObjectContactSphereSphere")
+        self.impactModel = CheckForValidUInt(impactModel,"impactModel","ObjectContactSphereSphere")
+        self.activeConnector = activeConnector
+        self.visualization = CopyDictLevel1(visualization)
+
+    def __iter__(self):
+        yield 'objectType', 'ContactSphereSphere'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'nodeNumber', self.nodeNumber
+        yield 'spheresRadii', self.spheresRadii
+        yield 'dynamicFriction', self.dynamicFriction
+        yield 'frictionProportionalZone', self.frictionProportionalZone
+        yield 'contactStiffness', self.contactStiffness
+        yield 'contactDamping', self.contactDamping
+        yield 'contactStiffnessExponent', self.contactStiffnessExponent
+        yield 'constantPullOffForce', self.constantPullOffForce
+        yield 'contactPlasticityRatio', self.contactPlasticityRatio
+        yield 'adhesionCoefficient', self.adhesionCoefficient
+        yield 'adhesionExponent', self.adhesionExponent
+        yield 'restitutionCoefficient', self.restitutionCoefficient
+        yield 'minimumImpactVelocity', self.minimumImpactVelocity
+        yield 'impactModel', self.impactModel
+        yield 'activeConnector', self.activeConnector
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+class VObjectContactCurveCircles:
+    def __init__(self, show = True, color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.color = np.array(color)
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+class ObjectContactCurveCircles:
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), circlesRadii = [], segmentsData = None, polynomialData = None, rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffness = 0., contactDamping = 0., contactModel = 0, activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = copy.copy(markerNumbers)
+        self.nodeNumber = nodeNumber
+        self.circlesRadii = np.array(circlesRadii)
+        self.segmentsData = segmentsData
+        self.polynomialData = polynomialData
+        self.rotationMarker0 = np.array(rotationMarker0)
+        self.dynamicFriction = CheckForValidUReal(dynamicFriction,"dynamicFriction","ObjectContactCurveCircles")
+        self.frictionProportionalZone = CheckForValidUReal(frictionProportionalZone,"frictionProportionalZone","ObjectContactCurveCircles")
+        self.contactStiffness = contactStiffness
+        self.contactDamping = contactDamping
+        self.contactModel = CheckForValidUInt(contactModel,"contactModel","ObjectContactCurveCircles")
+        self.activeConnector = activeConnector
+        self.visualization = CopyDictLevel1(visualization)
+
+    def __iter__(self):
+        yield 'objectType', 'ContactCurveCircles'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'nodeNumber', self.nodeNumber
+        yield 'circlesRadii', self.circlesRadii
+        yield 'segmentsData', self.segmentsData
+        yield 'polynomialData', self.polynomialData
+        yield 'rotationMarker0', self.rotationMarker0
+        yield 'dynamicFriction', self.dynamicFriction
+        yield 'frictionProportionalZone', self.frictionProportionalZone
+        yield 'contactStiffness', self.contactStiffness
+        yield 'contactDamping', self.contactDamping
+        yield 'contactModel', self.contactModel
+        yield 'activeConnector', self.activeConnector
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+#add typedef for short usage:
+CamFollower = ObjectContactCurveCircles
+VCamFollower = VObjectContactCurveCircles
+
 class VObjectJointGeneric:
     def __init__(self, show = True, axesRadius = 0.1, axesLength = 0.4, color = [-1.,-1.,-1.,-1.]):
         self.show = show

@@ -58,6 +58,8 @@ DESCRIPTION of NodeRigidBody2D
   | global 3D acceleration vector of node
 * | ``AngularVelocity``\ : \ :math:`\LU{0}{\tomega}\cConfig = \LU{0}{[0,\,0,\,\dot \psi_0]}\cConfig\tp`\ 
   | global 3D angular velocity vector of node
+* | ``CoordinatesTotal``\ : 
+  | displacement/rotation coordinates of node including reference configuration
 * | ``Coordinates``\ : \ :math:`{\mathbf{c}}\cConfig = [q_0,\,q_1,\,\psi_0]\tp\cConfig`\ 
   | coordinate vector of node, having 2 displacement coordinates and 1 angle
 * | ``Coordinates\_t``\ : \ :math:`\dot{\mathbf{c}}\cConfig = [\dot q_0,\,\dot q_1,\,\dot \psi_0]\tp\cConfig`\ 

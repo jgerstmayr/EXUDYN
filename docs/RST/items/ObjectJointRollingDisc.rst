@@ -22,7 +22,7 @@ The item \ **ObjectJointRollingDisc**\  with type = 'JointRollingDisc' has the f
 * | **markerNumbers** [\ :math:`[m0,m1]\tp`\ , type = ArrayMarkerIndex, size =  2, default = [ invalid [-1], invalid [-1] ]]:
   | list of markers used in connector; \ :math:`m0`\  represents the ground and \ :math:`m1`\  represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point
 * | **constrainedAxes** [\ :math:`{\mathbf{j}}=[j_0,\,\ldots,\,j_2]`\ , type = ArrayIndex, size = 3, default = [1,1,1]]:
-  | flag, which determines which constraints are active, in which \ :math:`j_0,j_1`\  represent the tangential motion and \ :math:`j_2`\  represents the normal (contact) direction
+  | flags, which determine which constraints are active, in which \ :math:`j_0`\  represents lateral motion, \ :math:`j_1`\  longitudinal (forward/backward) motion and \ :math:`j_2`\  represents the normal (contact) direction
 * | **activeConnector** [type = Bool, default = True]:
   | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
 * | **discRadius** [type = PReal, default = 0]:

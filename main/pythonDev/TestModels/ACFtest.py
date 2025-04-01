@@ -13,7 +13,7 @@
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics #only import if it does not conflict
-ClearWorkspace()
+# ClearWorkspace() #does not work with Marker definition
 
 from exudyn.FEM import *
 from exudyn.graphicsDataUtilities import *
@@ -155,15 +155,14 @@ nodePositionsFlat = nodePositions.flatten()
 nRows = fem.NumberOfCoordinates()
 nNodes = fem.NumberOfNodes()
 Mcsr = exu.MatrixContainer()
-Mcsr.SetWithSparseMatrixCSR(nRows,nRows,fem.GetMassMatrix(sparse=True), useDenseMatrix=False)
+Mcsr.SetWithSparseMatrix(fem.GetMassMatrix(sparse=True), useDenseMatrix=False)
 # Mcsr.SetWithDenseMatrix(fem.GetMassMatrix(sparse=False), useDenseMatrix=True)
 Kcsr = exu.MatrixContainer()
-Kcsr.SetWithSparseMatrixCSR(nRows,nRows,fem.GetStiffnessMatrix(sparse=True), useDenseMatrix=False)
+Kcsr.SetWithSparseMatrix(fem.GetStiffnessMatrix(sparse=True), useDenseMatrix=False)
 # Kcsr.SetWithDenseMatrix(fem.GetStiffnessMatrix(sparse=False), useDenseMatrix=True)
 
 #create csr scipy sparse matrix
-Kfem = CSRtoScipySparseCSR(fem.GetStiffnessMatrix(sparse=True))
-Mfem = CSRtoScipySparseCSR(fem.GetMassMatrix(sparse=True))
+Kfem = fem.GetStiffnessMatrix()
 
         
 #%%++++++++++++++++++++++++++++++++++++++++

@@ -131,7 +131,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: SolveStatic
 ^^^^^^^^^^^^^^^^^^^^^
-`SolveStatic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L154>`__\ (\ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``updateInitialValues = False``\ , \ ``storeSolver = True``\ , \ ``showHints = False``\ , \ ``showCausingItems = True``\ )
+`SolveStatic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L157>`__\ (\ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``updateInitialValues = False``\ , \ ``storeSolver = True``\ , \ ``showHints = False``\ , \ ``showCausingItems = True``\ , \ ``autoAssemble = True``\ )
 
 - | \ *function description*\ :
   | solves the static mbs problem using simulationSettings; check theDoc.pdf for MainSolverStatic for further details of the static solver; this function is also available in exudyn (using exudyn.SolveStatic(...))
@@ -140,6 +140,9 @@ Function: SolveStatic
   | \ ``simulationSettings``\ : specific simulation settings out of exu.SimulationSettings(), as described in Section :ref:`sec-solutionsettings`\ ; use options for newton, discontinuous settings, etc., from staticSolver sub-items
   | \ ``updateInitialValues``\ : if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation
   | \ ``storeSolver``\ : if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
+  | \ ``showHints``\ : show additional hints, if solver fails
+  | \ ``showCausingItems``\ : if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
+  | \ ``autoAssemble``\ : if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 - | \ *output*\ :
   | bool; returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf Section :ref:`sec-solversubstructures`\  and the items described in Section :ref:`sec-mainsolverstatic`\ )
 - | \ *example*\ :
@@ -178,7 +181,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: SolveDynamic
 ^^^^^^^^^^^^^^^^^^^^^^
-`SolveDynamic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L219>`__\ (\ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``solverType = exudyn.DynamicSolverType.GeneralizedAlpha``\ , \ ``updateInitialValues = False``\ , \ ``storeSolver = True``\ , \ ``showHints = False``\ , \ ``showCausingItems = True``\ )
+`SolveDynamic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L224>`__\ (\ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``solverType = exudyn.DynamicSolverType.GeneralizedAlpha``\ , \ ``updateInitialValues = False``\ , \ ``storeSolver = True``\ , \ ``showHints = False``\ , \ ``showCausingItems = True``\ , \ ``autoAssemble = True``\ )
 
 - | \ *function description*\ :
   | solves the dynamic mbs problem using simulationSettings and solver type; check theDoc.pdf for MainSolverImplicitSecondOrder for further details of the dynamic solver; this function is also available in exudyn (using exudyn.SolveDynamic(...))
@@ -190,6 +193,7 @@ Function: SolveDynamic
   | \ ``storeSolver``\ : if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
   | \ ``showHints``\ : show additional hints, if solver fails
   | \ ``showCausingItems``\ : if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
+  | \ ``autoAssemble``\ : if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 - | \ *output*\ :
   | bool; returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf Section :ref:`sec-solversubstructures`\  and the items described in Section :ref:`sec-mainsolverstatic`\ )
 - | \ *example*\ :
@@ -229,7 +233,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeLinearizedSystem
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeLinearizedSystem <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L370>`__\ (\ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``projectIntoConstraintNullspace = False``\ , \ ``singularValuesTolerance = 1e-12``\ , \ ``returnConstraintJacobian = False``\ , \ ``returnConstraintNullspace = False``\ )
+`ComputeLinearizedSystem <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L377>`__\ (\ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``projectIntoConstraintNullspace = False``\ , \ ``singularValuesTolerance = 1e-12``\ , \ ``returnConstraintJacobian = False``\ , \ ``returnConstraintNullspace = False``\ , \ ``autoAssemble = True``\ )
 
 - | \ *function description*\ :
   | compute linearized system of equations for ODE2 part of mbs, not considering the effects of algebraic constraints; for computation of eigenvalues and advanced computation with constrained systems, see ComputeODE2Eigenvalues; the current implementation is also able to project into the constrained space, however, this currently does not generally work with non-holonomic systems
@@ -240,6 +244,7 @@ Function: ComputeLinearizedSystem
   | \ ``singularValuesTolerance``\ : tolerance used to distinguish between zero and nonzero singular values for algebraic constraints projection
   | \ ``returnConstraintJacobian``\ : if True, the returned list contains [M, K, D, C, N] where C is the constraint jacobian and N is the nullspace matrix (may be empty)
   | \ ``returnConstraintNullspace``\ : if True, the returned list contains [M, K, D, C, N] where C is the constraint jacobian (may be empty) and N is the nullspace matrix
+  | \ ``autoAssemble``\ : if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 - | \ *output*\ :
   | [ArrayLike, ArrayLike, ArrayLike]; [M, K, D]; list containing numpy mass matrix M, stiffness matrix K and damping matrix D; for constraints, see options with arguments above, return values may change to [M, K, D, C, N]
 - | \ *notes*\ :
@@ -282,7 +287,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeODE2Eigenvalues
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeODE2Eigenvalues <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L503>`__\ (\ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``useSparseSolver = False``\ , \ ``numberOfEigenvalues = 0``\ , \ ``constrainedCoordinates = []``\ , \ ``convert2Frequencies = False``\ , \ ``useAbsoluteValues = True``\ , \ ``computeComplexEigenvalues = False``\ , \ ``ignoreAlgebraicEquations = False``\ , \ ``singularValuesTolerance = 1e-12``\ )
+`ComputeODE2Eigenvalues <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L515>`__\ (\ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``useSparseSolver = False``\ , \ ``numberOfEigenvalues = 0``\ , \ ``constrainedCoordinates = []``\ , \ ``convert2Frequencies = False``\ , \ ``useAbsoluteValues = True``\ , \ ``computeComplexEigenvalues = False``\ , \ ``ignoreAlgebraicEquations = False``\ , \ ``singularValuesTolerance = 1e-12``\ , \ ``autoAssemble = True``\ )
 
 - | \ *function description*\ :
   | compute eigenvalues for unconstrained ODE2 part of mbs, which represent the square of the eigenfrequencies (in radiant) of the undamped system; the computation may include constraints in case that ignoreAlgebraicEquations=False (however, this currently does not generally work with non-holonomic systems); for algebraic constraints, however, a dense singular value decomposition of the constraint jacobian is used for the nullspace projection; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState, SetSystemState, see Section :ref:`sec-mbs-systemdata`\ ); note that mass and stiffness matrices are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.
@@ -297,6 +302,7 @@ Function: ComputeODE2Eigenvalues
   | \ ``computeComplexEigenvalues``\ : if True, the system is converted into a system of first order differential equations, including damping terms; returned eigenvalues are complex and contain the 'damping' (=real) part and the eigenfrequency (=complex) part; for this case, set useAbsoluteValues=False (otherwise you will not get the complex values; values are unsorted, however!); also, convert2Frequencies must be False in this case! only implemented for dense solver
   | \ ``ignoreAlgebraicEquations``\ : if True, algebraic equations (and constraint jacobian) are not considered for eigenvalue computation; otherwise, the solver tries to automatically project the system into the nullspace kernel of the constraint jacobian using a SVD; this gives eigenvalues of the constrained system; eigenvectors are not computed
   | \ ``singularValuesTolerance``\ : tolerance used to distinguish between zero and nonzero singular values for algebraic constraints projection
+  | \ ``autoAssemble``\ : if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 - | \ *output*\ :
   | [ArrayLike, ArrayLike]; [eigenValues, eigenVectors]; eigenValues being a numpy array of eigen values (\ :math:`\omega_i^2`\ , being the squared eigen frequencies in (\ :math:`\omega_i`\  in rad/s)!), eigenVectors a numpy array containing the eigenvectors in every column
 - | \ *author*\ :
@@ -348,7 +354,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeSystemDegreeOfFreedom
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeSystemDegreeOfFreedom <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L723>`__\ (\ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``threshold = 1e-12``\ , \ ``verbose = False``\ , \ ``useSVD = False``\ )
+`ComputeSystemDegreeOfFreedom <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L741>`__\ (\ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``threshold = 1e-12``\ , \ ``verbose = False``\ , \ ``useSVD = False``\ , \ ``autoAssemble = True``\ )
 
 - | \ *function description*\ :
   | compute system DOF numerically, considering Grübler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True)
@@ -358,6 +364,7 @@ Function: ComputeSystemDegreeOfFreedom
   | \ ``threshold``\ : threshold factor for singular values which estimate the redundant constraints
   | \ ``useSVD``\ : use singular value decomposition directly, also showing SVD values if verbose=True
   | \ ``verbose``\ : if True, it will show the singular values and one may decide if the threshold shall be adapted
+  | \ ``autoAssemble``\ : if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 - | \ *output*\ :
   | dict; returns dictionary with key words 'degreeOfFreedom', 'redundantConstraints', 'nODE2', 'nODE1', 'nAE', 'nPureAE', where: degreeOfFreedom = the system degree of freedom computed numerically, redundantConstraints=the number of redundant constraints, nODE2=number of ODE2 coordinates, nODE1=number of ODE1 coordinates, nAE=total number of constraints, nPureAE=number of constraints on algebraic variables (e.g., lambda=0) that are not coupled to ODE2 coordinates
 - | \ *notes*\ :

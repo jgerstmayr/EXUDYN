@@ -374,8 +374,10 @@ if not config["minimalCppFiles"]:
             'src/Objects/CObjectContactCircleCable2D.cpp',
             'src/Objects/CObjectContactConvexRoll.cpp',
             'src/Objects/CObjectContactCoordinate.cpp',
+            'src/Objects/CObjectContactCurveCircles.cpp',
             'src/Objects/CObjectContactFrictionCircleCable2D.cpp',
             'src/Objects/CObjectContactFrictionCircleCable2DOld.cpp',
+            'src/Objects/CObjectContactSphereSphere.cpp',
             'src/Objects/CObjectFFRF.cpp',
             'src/Objects/CObjectFFRFreducedOrder.cpp',
             'src/Objects/CObjectGenericODE1.cpp',
@@ -422,11 +424,8 @@ ext_modules = [
 ]
 
 if config['compileExudynFast']:
-    if not (#pyVersionString == '3.7' or
-            #pyVersionString == '3.8' or
-            #pyVersionString == '3.9' or
-            pyVersionString == '3.10'
-       ) and isDevelopmentVersion: config['compileExudynFast'] = False
+    if not (pyVersionString == '3.10') and isDevelopmentVersion: 
+        config['compileExudynFast'] = False
 
 if config['compileExudynFast']:
     print('***  preparing C++ module also for __FAST_EXUDYN_LINALG  ***')
@@ -443,7 +442,7 @@ if config['compileExudynFast']:
         ),
         ]
 
-if useAVX and not isDevelopmentVersion:
+if useAVX and (not isDevelopmentVersion or pyVersionString == '3.10'):
     print('***  preparing additional C++ module without AVX in release mode ***')
     ext_modules += [
         Extension(
@@ -825,11 +824,12 @@ setup(
         "Programming Language :: Python :: 3",
         # "Programming Language :: Python :: 3.6",
         # "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
+        # "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: BSD License",
         "Operating System :: Microsoft :: Windows", #allow Windows 11

@@ -67,6 +67,8 @@ namespace py = pybind11;
 #include "Linalg/SymbolicMatrix.h"
 #include "Linalg/SymbolicUtilities.h"
 
+#include "Pymodules/PyMatrixContainer.h" //for Python user functions
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -202,14 +204,19 @@ PyUFobject PythonUserFunctionBase<UFT>::GetPythonDictionary() const
 		return py::cast((Index)0); //must be 0
 	}
 	case UserFunctionType::Python: //same as symbolic
-	case UserFunctionType::Symbolic:
 	{
 		auto d = py::dict();
 		d["function"] = py::cast<py::function>(*pyObject);
 		d["type"] = py::cast((STDstring)GetUserFunctionTypeString(ufType));
 		return d;
 	};
-	//case UserFunctionType::Symbolic: return "Symbolic";
+	case UserFunctionType::Symbolic:
+	{
+		auto d = py::dict();
+		d["function"] = *pyObject;
+		d["type"] = py::cast((STDstring)GetUserFunctionTypeString(ufType));
+		return d;
+	};
 	//case UserFunctionType::InternalCpp: return "InternalCpp";
 	//case UserFunctionType::Jit: return "Jit";
 

@@ -47,12 +47,12 @@ You can view and download this file on Github: `rigidPendulum.py <https://github
                                       visualization=VObjectRigidBody2D(graphicsData= [graphicsCube, graphicsJoint])))
    
    mR1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid, localPosition=[-0.5*L,0.,0.])) #support point
-   mR2 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid, localPosition=[ 0.,0.,0.])) #end point
+   mRcom = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid, localPosition=[ 0.,0.,0.])) #COM point
    
    mG0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[-L,L,0.]))
    mbs.AddObject(RevoluteJoint2D(markerNumbers=[mG0,mR1]))
    
-   mbs.AddLoad(Force(markerNumber = mR2, loadVector = [0, -massRigid*g, 0]))
+   mbs.AddLoad(Force(markerNumber = mRcom, loadVector = [0, -massRigid*g, 0]))
    
    mbs.Assemble()
    print(mbs)
@@ -78,7 +78,6 @@ You can view and download this file on Github: `rigidPendulum.py <https://github
    SC.visualizationSettings.openGL.lineWidth = 2
    
    exu.StartRenderer()
-   
    
    mbs.SolveDynamic(simulationSettings)
    

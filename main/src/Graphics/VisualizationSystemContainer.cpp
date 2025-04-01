@@ -487,7 +487,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 {
 	if (eraseData) { data.FlushData(); }
 
-	if (py::isinstance<py::list>(object)) //must be a list of graphicsData dictionaries
+	if (EPyUtils::IsPyTypeListOrArray(object)) //must be a list of graphicsData dictionaries
 	{
 		py::list list = (py::list)(object);
 
@@ -517,7 +517,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 							if (gDict.contains("color"))
 							{
 								py::object gColor = gDict["color"]; //this is necessary to make isinstance work
-								if (py::isinstance<py::list>(gColor)) //must be a list of graphicsData dictionaries
+								if (EPyUtils::IsPyTypeListOrArray(gColor)) 
 								{
 									py::list colorList = (py::list)(gColor);
 									std::vector<float> stdColorList = py::cast<std::vector<float>>(colorList); //! # read out dictionary and cast to C++ type
@@ -526,14 +526,14 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 									{
 										line.color1 = line.color2 = Float4(stdColorList);
 									}
-									else { PyError("GraphicsData Line: color must be a float vector with 4 components"); return false; }
+									else { PyError("GraphicsData Line: color must be a float list or numpy array with 4 components"); return false; }
 								}
-								else { PyError("GraphicsData Line: color must be a float vector with 4 components"); return false; }
+								else { PyError("GraphicsData Line: color must be a float list or numpy array with 4 components"); return false; }
 							}
 							if (gDict.contains("data"))
 							{
 								py::object gData = gDict["data"]; //this is necessary to make isinstance work
-								if (py::isinstance<py::list>(gData)) //must be a list of graphicsData dictionaries
+								if (EPyUtils::IsPyTypeListOrArray(gData)) 
 								{
 									py::list dataList = (py::list)(gData);
 									std::vector<float> gd = py::cast<std::vector<float>>(dataList); //! # read out dictionary and cast to C++ type
@@ -541,7 +541,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 									Index n = (Index)gd.size() / 3;
 									if (n * 3 != (Index)gd.size() || n < 2)
 									{
-										PyError("GraphicsData Line: data must be a float vector with exactly 3*n components and n > 1"); return false;
+										PyError("GraphicsData Line: data must be a float list or numpy array with exactly 3*n components and n > 1"); return false;
 									}
 
 									for (Index k = 1; k < n; k++)
@@ -551,7 +551,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 										data.glLines.Append(line);
 									}
 								}
-								else { PyError("GraphicsData Line: data must be a float vector with 3*n components"); return false; }
+								else { PyError("GraphicsData Line: data must be a float list or numpy array with 3*n components"); return false; }
 
 							}
 							else { PyError("GraphicsData Line: must contain 'data' with (x1,y1,z1,...) line coordinates "); return false; }
@@ -567,7 +567,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 							if (gDict.contains("points"))
 							{
 								py::object gData = gDict["points"]; //this is necessary to make isinstance work
-								if (py::isinstance<py::list>(gData)) //must be a list of graphicsData dictionaries
+								if (EPyUtils::IsPyTypeListOrArray(gData)) 
 								{
 									py::list dataList = (py::list)(gData);
 									stdPointsList = py::cast<std::vector<float>>(dataList); //! # read out dictionary and cast to C++ type
@@ -575,17 +575,17 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 									nLines = (Index)stdPointsList.size() / 6;
 									if (nLines * 6 != (Index)stdPointsList.size() || nLines < 1)
 									{
-										PyError("GraphicsData Lines: for n lines, points must be a float vector with exactly 6*n components and n > 1"); return false;
+										PyError("GraphicsData Lines: for n lines, points must be a float list or numpy array with exactly 6*n components and n > 1"); return false;
 									}
 								}
-								else { PyError("GraphicsData Lines: for n lines, points must be a float vector with 6*n floats, 3 floats per point"); return false; }
+								else { PyError("GraphicsData Lines: for n lines, points must be a float list or numpy array with 6*n floats, 3 floats per point"); return false; }
 							}
 							else { PyError("GraphicsData Lines: must contain 'points' with (x1,y1,z1,...) line coordinates "); return false; }
 
 							if (gDict.contains("colors"))
 							{
 								py::object gColor = gDict["colors"]; //this is necessary to make isinstance work
-								if (py::isinstance<py::list>(gColor)) //must be a list of graphicsData dictionaries
+								if (EPyUtils::IsPyTypeListOrArray(gColor)) 
 								{
 									py::list colorList = (py::list)(gColor);
 									stdColorsList = py::cast<std::vector<float>>(colorList); //! # read out dictionary and cast to C++ type
@@ -616,7 +616,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 							if (gDict.contains("color"))
 							{
 								py::object gColor = gDict["color"]; //this is necessary to make isinstance work
-								if (py::isinstance<py::list>(gColor)) //must be a list of graphicsData dictionaries
+								if (EPyUtils::IsPyTypeListOrArray(gColor)) 
 								{
 									py::list colorList = (py::list)(gColor);
 									std::vector<float> stdColorList = py::cast<std::vector<float>>(colorList); //! # read out dictionary and cast to C++ type
@@ -625,9 +625,9 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 									{
 										circle.color = Float4(stdColorList);
 									}
-									else { PyError("GraphicsData Circle: color must be a float vector with 4 components"); return false; }
+									else { PyError("GraphicsData Circle: color must be a float list or numpy array with 4 components"); return false; }
 								}
-								else { PyError("GraphicsData Circle: color must be a float vector with 4 components"); return false; }
+								else { PyError("GraphicsData Circle: color must be a float list or numpy array with 4 components"); return false; }
 							}
 
 							if (gDict.contains("radius"))
@@ -645,19 +645,19 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 							if (gDict.contains("position"))
 							{
 								py::object gData = gDict["position"]; //this is necessary to make isinstance work
-								if (py::isinstance<py::list>(gData))  //must be a list of 3 coordinates
+								if (EPyUtils::IsPyTypeListOrArray(gData))  //must be a list of 3 coordinates
 								{
 									py::list dataList = (py::list)(gData);
 									std::vector<float> gd = py::cast<std::vector<float>>(dataList); //! # read out dictionary and cast to C++ type
 
 									if (gd.size() != 3)
 									{
-										PyError("GraphicsData Circle: position must be a float vector with 3 components"); return false;
+										PyError("GraphicsData Circle: position must be a float list or numpy array with 3 components"); return false;
 									}
 
 									circle.point = Float3(gd);
 								}
-								else { PyError("GraphicsData Circle: position must be a float vector with 3 components"); return false; }
+								else { PyError("GraphicsData Circle: position must be a float list or numpy array with 3 components"); return false; }
 
 							}
 							else { PyError("GraphicsData Circle: must contain 'position'"); return false; }
@@ -677,7 +677,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 							if (gDict.contains("color"))
 							{
 								py::object gColor = gDict["color"]; //this is necessary to make isinstance work
-								if (py::isinstance<py::list>(gColor)) //must be a list of graphicsData dictionaries
+								if (EPyUtils::IsPyTypeListOrArray(gColor)) 
 								{
 									py::list colorList = (py::list)(gColor);
 									std::vector<float> stdColorList = py::cast<std::vector<float>>(colorList); //! # read out dictionary and cast to C++ type
@@ -686,28 +686,28 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 									{
 										text.color = Float4(stdColorList);
 									}
-									else { PyError("GraphicsData Text: color must be a float vector with 4 components"); return false; }
+									else { PyError("GraphicsData Text: color must be a float list or numpy array with 4 components"); return false; }
 								}
-								else { PyError("GraphicsData Text: color must be a float vector with 4 components"); return false; }
+								else { PyError("GraphicsData Text: color must be a float list or numpy array with 4 components"); return false; }
 							}
 
 							if (gDict.contains("position"))
 							{
 								py::object gData = gDict["position"]; //this is necessary to make isinstance work
-								if (py::isinstance<py::list>(gData))  //must be a list of 3 coordinates
+								if (EPyUtils::IsPyTypeListOrArray(gData))  //must be a list of 3 coordinates
 								{
 									py::list dataList = (py::list)(gData);
 									std::vector<float> gd = py::cast<std::vector<float>>(dataList); //! # read out dictionary and cast to C++ type
 
 									if (gd.size() != 3)
 									{
-										PyError("GraphicsData Text: position must be a float vector with 3 components"); return false;
+										PyError("GraphicsData Text: position must be a float list or numpy array with 3 components"); return false;
 									}
 
 									text.point = Float3(gd);
 
 								}
-								else { PyError("GraphicsData Text: position must be a float vector with 3 components"); return false; }
+								else { PyError("GraphicsData Text: position must be a float list or numpy array with 3 components"); return false; }
 							}
 							else { PyError("GraphicsData Text: must contain 'position'"); return false; }
 
@@ -745,7 +745,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 							if (gDict.contains("points"))
 							{
 								py::object gDictList = gDict["points"]; //this is necessary to make isinstance work
-								if (py::isinstance<py::list>(gDictList)) //must be a list of graphicsData dictionaries
+								if (EPyUtils::IsPyTypeListOrArray(gDictList)) 
 								{
 									py::list gList = (py::list)(gDictList);
 									std::vector<float> stdGList = py::cast<std::vector<float>>(gList); //! # read out dictionary and cast to C++ type
@@ -760,19 +760,19 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 											//pout << "p" << i << " = " << points[i] << "\n";
 										}
 									}
-									else { PyError("GraphicsData::TriangleList::points must be a float list with 3*n components, n being the number of points"); return false; }
+									else { PyError("GraphicsData::TriangleList::points must be a float list or numpy array with 3*n components, n being the number of points"); return false; }
 								}
-								else { PyError("GraphicsData::TriangleList::points must be a float list"); return false; }
+								else { PyError("GraphicsData::TriangleList::points must be a float list or numpy array"); return false; }
 							}
 							else
 							{
-								PyError("GraphicsData::TriangleList must contain 'points' being a float list with n*(x,y,z)-components, n being the number of points");
+								PyError("GraphicsData::TriangleList must contain 'points' being a float list or numpy array with n*(x,y,z)-components, n being the number of points");
 							}
 
 							if (gDict.contains("colors"))
 							{
 								py::object gDictList = gDict["colors"]; //this is necessary to make isinstance work
-								if (py::isinstance<py::list>(gDictList)) //must be a list of graphicsData dictionaries
+								if (EPyUtils::IsPyTypeListOrArray(gDictList)) 
 								{
 									py::list gList = (py::list)(gDictList);
 									std::vector<float> stdGList = py::cast<std::vector<float>>(gList); //! # read out dictionary and cast to C++ type
@@ -786,9 +786,9 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 											colors[i] = Float4({ stdGList[i * 4], stdGList[i * 4 + 1], stdGList[i * 4 + 2], stdGList[i * 4 + 3] });
 										}
 									}
-									else { PyError("GraphicsData::TriangleList::colors must be a float list with 4*n components (R,G,B,A), n being the identical to the number of points"); return false; }
+									else { PyError("GraphicsData::TriangleList::colors must be a float list or numpy array with 4*n components (R,G,B,A), n being the identical to the number of points"); return false; }
 								}
-								else { PyError("GraphicsData::TriangleList::colors must be a float list"); return false; }
+								else { PyError("GraphicsData::TriangleList::colors must be a float list or numpy array"); return false; }
 							}
 							else
 							{   //set default color
@@ -800,7 +800,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 							if (gDict.contains("normals"))
 							{
 								py::object gDictList = gDict["normals"]; //this is necessary to make isinstance work
-								if (py::isinstance<py::list>(gDictList)) //must be a list of graphicsData dictionaries
+								if (EPyUtils::IsPyTypeListOrArray(gDictList)) 
 								{
 									py::list gList = (py::list)(gDictList);
 									std::vector<float> stdGList = py::cast<std::vector<float>>(gList); //! # read out dictionary and cast to C++ type
@@ -814,9 +814,9 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 											normals[i] = Float3({ stdGList[i * 3],stdGList[i * 3 + 1],stdGList[i * 3 + 2] });
 										}
 									}
-									else { PyError("GraphicsData::TriangleList::normals must be a float list with 3*n components (nx,ny,nz), n being the identical to the number of points"); return false; }
+									else { PyError("GraphicsData::TriangleList::normals must be a float list or numpy array with 3*n components (nx,ny,nz), n being the identical to the number of points"); return false; }
 								}
-								else { PyError("GraphicsData::TriangleList::normals must be a float list"); return false; }
+								else { PyError("GraphicsData::TriangleList::normals must be a float list or numpy array"); return false; }
 							}
 							else
 							{   //set default normal
@@ -828,7 +828,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 							if (gDict.contains("triangles"))
 							{
 								py::object gDictList = gDict["triangles"]; //this is necessary to make isinstance work
-								if (py::isinstance<py::list>(gDictList)) //must be a list of graphicsData dictionaries
+								if (EPyUtils::IsPyTypeListOrArray(gDictList)) 
 								{
 									py::list gList = (py::list)(gDictList);
 									std::vector<Index> stdGList = py::cast<std::vector<Index>>(gList); //! # read out dictionary and cast to C++ type
@@ -872,13 +872,13 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 											//pout << "trig" << i << " = " << trig.points[0] << "," << trig.points[0] << "," << trig.points[0] << "\n";
 										}
 									}
-									else { PyError("GraphicsData::TriangleList::triangles must be a float list with 3*n components, n being the number of triangles"); return false; }
+									else { PyError("GraphicsData::TriangleList::triangles must be a float list or numpy array with 3*n components, n being the number of triangles"); return false; }
 								}
-								else { PyError("GraphicsData::TriangleList::triangles must be a float list"); return false; }
+								else { PyError("GraphicsData::TriangleList::triangles must be a float list or numpy array"); return false; }
 							}
 							else
 							{
-								PyError("GraphicsData::TriangleList must contain 'triangles' being a float list with n*(point0,point1,point2)-components, n being the number of triangles; point0, point1, point2 ... point indices of one triangle");
+								PyError("GraphicsData::TriangleList must contain 'triangles' being a float list or numpy array with n*(point0,point1,point2)-components, n being the number of triangles; point0, point1, point2 ... point indices of one triangle");
 							}
 
 							//++++++++++++++++++++++++++++++++++++++++
@@ -887,7 +887,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 							if (gDict.contains("edgeColor"))
 							{
 								py::object gColor = gDict["edgeColor"]; //this is necessary to make isinstance work
-								if (py::isinstance<py::list>(gColor)) //must be a list of graphicsData dictionaries
+								if (EPyUtils::IsPyTypeListOrArray(gColor)) 
 								{
 									py::list colorList = (py::list)(gColor);
 									std::vector<float> stdColorList = py::cast<std::vector<float>>(colorList); //! # read out dictionary and cast to C++ type
@@ -896,9 +896,9 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 									{
 										edgeColor = Float4(stdColorList);
 									}
-									else { PyError("GraphicsData TriangleList: edgeColor must be a float vector with 4 components"); return false; }
+									else { PyError("GraphicsData TriangleList: edgeColor must be a float list or numpy array with 4 components"); return false; }
 								}
-								else { PyError("GraphicsData TriangleList: edgeColor must be a float vector with 4 components"); return false; }
+								else { PyError("GraphicsData TriangleList: edgeColor must be a float list or numpy array with 4 components"); return false; }
 							}
 
 							if (gDict.contains("edges"))
@@ -906,7 +906,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								std::vector<int> stdEdgesList;
 								Index nEdges = 0;
 								py::object gData = gDict["edges"]; //this is necessary to make isinstance work
-								if (py::isinstance<py::list>(gData)) //must be a list of graphicsData dictionaries
+								if (EPyUtils::IsPyTypeListOrArray(gData)) 
 								{
 									py::list dataList = (py::list)(gData);
 									stdEdgesList = py::cast<std::vector<int>>(dataList); //! # read out dictionary and cast to C++ type
@@ -959,15 +959,30 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 	return true;
 }
 
+////Note 2024-11-10: (std::vector<float>)v replaced by py::array_t<float>
+//template<typename TVector>
+//auto FloatVector2NumPy(const TVector& v)
+//{
+//	return (std::vector<float>)v;
+//}
+
+//! uniquely return color, point, etc. information
+template<typename TVector>
+py::array_t<float> FloatVector2NumPy(const TVector& v)
+{
+	return py::array_t<float>(v.NumberOfItems(), v.GetDataPointer()); //copy
+};
+
+template<typename TVector>
+py::array_t<int> IntVector2NumPy(const TVector& v)
+{
+	return py::array_t<int>(v.NumberOfItems(), v.GetDataPointer()); //copy
+};
+
 //! python function to write BodyGraphicsData to dictionary, e.g. for testing; 
 py::list PyGetBodyGraphicsDataList(const BodyGraphicsData& data, bool addGraphicsData)
 {
 	auto list = py::list();
-	//d["type"] = std::string("Line");
-	//ResizableArray<GLLine> glLines;				//!< lines to be displayed
-	//ResizableArray<GLCircleXY> glCirclesXY;		//!< circles to be displayed
-	//ResizableArray<GLText> glTexts;				//!< texts to be displayed
-	//ResizableArray<GLTriangle> glTriangles;	//!< triangles to be displayed
 
 	if (!addGraphicsData)
 	{
@@ -978,23 +993,23 @@ py::list PyGetBodyGraphicsDataList(const BodyGraphicsData& data, bool addGraphic
 	else
 	{
 		//CHECKandTHROWstring("PyGetBodyGraphicsDataDictionary: to be implemented");
-		for (auto item : data.glCirclesXY)
+		for (const auto& item : data.glCirclesXY)
 		{
 			auto d = py::dict();
 			d["type"] = std::string("Circle");
 			d["radius"] = item.radius;
-			d["color"] = (std::vector<float>)item.color;
-			d["position"] = (std::vector<float>)item.point;
+			d["color"] = FloatVector2NumPy(item.color);
+			d["position"] = FloatVector2NumPy(item.point);
 			list.append(d);
 		}
 
-		for (auto item : data.glTexts)
+		for (const auto& item : data.glTexts)
 		{
 			auto d = py::dict();
 			d["type"] = std::string("Text");
 			d["text"] = std::string(item.text);
-			d["color"] = (std::vector<float>)item.color;
-			d["position"] = (std::vector<float>)item.point;
+			d["color"] = FloatVector2NumPy(item.color);
+			d["position"] = FloatVector2NumPy(item.point);
 			list.append(d);
 		}
 
@@ -1003,18 +1018,19 @@ py::list PyGetBodyGraphicsDataList(const BodyGraphicsData& data, bool addGraphic
 		{
 			auto d = py::dict();
 			d["type"] = std::string("Lines");
-			std::vector<float> colors; colors.reserve((size_t)(nLines * 8));
-			std::vector<float> points; points.reserve((size_t)(nLines * 6));
 
-			for (auto item : data.glLines)
+			ResizableArray<float> colors(nLines * 8);
+			ResizableArray<float> points(nLines * 6);
+
+			for (const auto& item : data.glLines)
 			{
-				for (Index i = 0; i < 4; i++) { colors.push_back(item.color1[i]); }
-				for (Index i = 0; i < 4; i++) { colors.push_back(item.color2[i]); }
-				for (Index i = 0; i < 3; i++) { points.push_back(item.point1[i]); }
-				for (Index i = 0; i < 3; i++) { points.push_back(item.point2[i]); }
+				for (Index i = 0; i < 4; i++) { colors.Append(item.color1[i]); }
+				for (Index i = 0; i < 4; i++) { colors.Append(item.color2[i]); }
+				for (Index i = 0; i < 3; i++) { points.Append(item.point1[i]); }
+				for (Index i = 0; i < 3; i++) { points.Append(item.point2[i]); }
 			}
-			d["colors"] = colors;
-			d["points"] = points;
+			d["colors"] = FloatVector2NumPy(colors);
+			d["points"] = FloatVector2NumPy(points);
 			list.append(d);
 		}
 
@@ -1023,26 +1039,26 @@ py::list PyGetBodyGraphicsDataList(const BodyGraphicsData& data, bool addGraphic
 		{
 			auto d = py::dict();
 			d["type"] = std::string("TriangleList");
-			std::vector<float> points; points.reserve((size_t)(nTrigs * 3 * 3));
-			std::vector<float> colors; colors.reserve((size_t)(nTrigs * 4 * 3));
-			std::vector<float> normals; normals.reserve((size_t)(nTrigs * 3 * 3));
-			std::vector<int> triangles; triangles.reserve((size_t)(nTrigs * 3));
+			ResizableArray<float>  points(nTrigs * 3 * 3);
+			ResizableArray<float>  colors(nTrigs * 4 * 3);
+			ResizableArray<float> normals(nTrigs * 3 * 3);
+			ResizableArray<int> triangles(nTrigs * 3);
 
 			Index cnt = 0; //counts points
-			for (auto item : data.glTriangles)
+			for (const auto& item : data.glTriangles)
 			{
-				for (Index i = 0; i < 3; i++) { triangles.push_back(cnt++); } //local indices of points
+				for (Index i = 0; i < 3; i++) { triangles.Append(cnt++); } //local indices of points
 				for (Index j = 0; j < 3; j++)
 				{
-					for (Index i = 0; i < 4; i++) { colors.push_back(item.colors[j][i]); }
-					for (Index i = 0; i < 3; i++) { points.push_back(item.points[j][i]); }
-					for (Index i = 0; i < 3; i++) { normals.push_back(item.normals[j][i]); }
+					for (Index i = 0; i < 4; i++) { colors.Append(item.colors[j][i]); }
+					for (Index i = 0; i < 3; i++) { points.Append(item.points[j][i]); }
+					for (Index i = 0; i < 3; i++) { normals.Append(item.normals[j][i]); }
 				}
 			}
-			d["points"] = points;
-			d["colors"] = colors;
-			d["normals"] = normals;
-			d["triangles"] = triangles;
+			d["points"] = FloatVector2NumPy(points);
+			d["colors"] = FloatVector2NumPy(colors);
+			d["normals"] = FloatVector2NumPy(normals);
+			d["triangles"] = IntVector2NumPy(triangles);
 			list.append(d);
 		}
 	}

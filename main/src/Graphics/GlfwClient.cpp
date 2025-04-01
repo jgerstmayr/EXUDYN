@@ -2907,8 +2907,15 @@ void GlfwRenderer::RenderSensorTraces()
 
 void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 {
+
 	if (graphicsDataList)
 	{
+		bool useClipping = !(visSettings->openGL.clippingPlaneNormal == 0);
+		if (useClipping && fabs(visSettings->openGL.clippingPlaneNormal.GetL2Norm() - 1.f) > 1e-5)
+		{   //add some warning to show user that this normal vector does not work
+			ShowMessage("RenderGraphicsData: clipping plane normal not normalized; clipping deactivated", 5);
+			useClipping = false;
+		}
 		//use this to draw coplanar lines in front polygons
 		//this seems to be affected by zoom size: glPolygonOffset(visSettings->openGL.polygonOffset * state->maxSceneSize, visSettings->openGL.polygonOffset * state->maxSceneSize); //
 		float factOffset = 1.f*state->maxSceneSize;
@@ -2993,6 +3000,8 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 			{
 				if (selectionMode) { if (item.itemID != lastItemID) { glLoadName(item.itemID); lastItemID = item.itemID; } }
 
+				if (useClipping) { if (IsClipped(item.point)) { continue; } }
+
 				if (!visSettings->openGL.showFaces || item.resolution < 1 || item.radius <= 0.f)
 				{
 					glBegin(GL_LINES);
@@ -3057,6 +3066,11 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 						if ((visSettings->openGL.showFaces && !trig.isFiniteElement)
 							|| (visSettings->openGL.showMeshFaces && trig.isFiniteElement))
 						{
+							if (useClipping) 
+							{ 
+								if (IsClipped(trig.points[0]) && IsClipped(trig.points[1]) && IsClipped(trig.points[2])) { continue; }
+							}
+
 							glBegin(GL_TRIANGLES);
 							for (Index i = 0; i < 3; i++)
 							{
@@ -3077,6 +3091,10 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 						if ((visSettings->openGL.showFaces && !trig.isFiniteElement)
 							|| (visSettings->openGL.showMeshFaces && trig.isFiniteElement))
 						{
+							if (useClipping)
+							{
+								if (IsClipped(trig.points[0]) && IsClipped(trig.points[1]) && IsClipped(trig.points[2])) { continue; }
+							}
 							glBegin(GL_TRIANGLES);
 							for (Index i = 0; i < 3; i++)
 							{
@@ -3101,6 +3119,10 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 						if ((visSettings->openGL.showFaces && !trig.isFiniteElement)
 							|| (visSettings->openGL.showMeshFaces && trig.isFiniteElement))
 						{
+							if (useClipping)
+							{
+								if (IsClipped(trig.points[0]) && IsClipped(trig.points[1]) && IsClipped(trig.points[2])) { continue; }
+							}
 							glBegin(GL_TRIANGLES);
 							for (Index i = 0; i < 3; i++)
 							{
@@ -3127,7 +3149,12 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 			//draw a circle in xy-plane
 			for (const GLCircleXY& item : data->glCirclesXY)
 			{
+				if (useClipping)
+				{
+					if (IsClipped(item.point)) { continue; }
+				}
 				if (selectionMode) { if (item.itemID != lastItemID) { glLoadName(item.itemID); lastItemID = item.itemID; } }
+
 				glBegin(GL_LINE_STRIP); //list of single points to define lines
 				if (!highlight)
 				{
@@ -3161,6 +3188,10 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 				float len = visSettings->openGL.drawNormalsLength;
 				for (const GLTriangle& trig : data->glTriangles)
 				{
+					if (useClipping)
+					{
+						if (IsClipped(trig.points[0]) && IsClipped(trig.points[1]) && IsClipped(trig.points[2])) { continue; }
+					}
 					if (selectionMode) { if (trig.itemID != lastItemID) { glLoadName(trig.itemID); lastItemID = trig.itemID; } }
 					Float3 midPoint = { 0,0,0 };
 					for (Index i = 0; i < 3; i++)
@@ -3206,6 +3237,10 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 				{
 					for (const GLLine& item : data->glLines)
 					{
+						if (useClipping)
+						{
+							if (IsClipped(item.point1) && IsClipped(item.point2)) { continue; }
+						}
 						if (selectionMode) { if (item.itemID != lastItemID) { glLoadName(item.itemID); lastItemID = item.itemID; } }
 						glBegin(GL_LINES);
 						glColor4f(item.color1[0], item.color1[1], item.color1[2], item.color1[3]);
@@ -3219,6 +3254,10 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 				{
 					for (const GLLine& item : data->glLines)
 					{
+						if (useClipping)
+						{
+							if (IsClipped(item.point1) || IsClipped(item.point2)) { continue; }
+						}
 						if (selectionMode) { if (item.itemID != lastItemID) { glLoadName(item.itemID); lastItemID = item.itemID; } }
 						glBegin(GL_LINES);
 						if (item.itemID != highlightID) { glColor4fv(otherColor2.GetDataPointer()); }
@@ -3252,6 +3291,10 @@ void GlfwRenderer::RenderGraphicsData(bool selectionMode)
 					if ((visSettings->openGL.showFaceEdges && !trig.isFiniteElement)
 						|| (visSettings->openGL.showMeshEdges && trig.isFiniteElement))
 					{
+						if (useClipping)
+						{
+							if (IsClipped(trig.points[0]) && IsClipped(trig.points[1]) && IsClipped(trig.points[2])) { continue; }
+						}
 						if (!highlight)
 						{
 							glColor4f(edgeColor[0], edgeColor[1], edgeColor[2], edgeColor[3]);
@@ -3388,20 +3431,20 @@ void GlfwRenderer::DrawTrianglesWithShadow(GraphicsData* data)
 	float maxDist = state->maxSceneSize*1.5f; 
 	float shadow = EXUstd::Minimum(visSettings->openGL.shadow, 1.f);
 
-	if (false)
-	{
-		//test to show shadow volumes
-		glColor4f(0.6f, 0.3f, 0.3f, 1);
-		for (const GLTriangle& trig : data->glTriangles)
-		{ //draw faces
-			if ((visSettings->openGL.showFaces && !trig.isFiniteElement)
-				|| (visSettings->openGL.showMeshFaces && trig.isFiniteElement))
-			{
-				RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow);
-			}
-		}
-	}
-	else
+	//if (false)
+	//{
+	//	//test to show shadow volumes
+	//	glColor4f(0.6f, 0.3f, 0.3f, 1);
+	//	for (const GLTriangle& trig : data->glTriangles)
+	//	{ //draw faces
+	//		if ((visSettings->openGL.showFaces && !trig.isFiniteElement)
+	//			|| (visSettings->openGL.showMeshFaces && trig.isFiniteElement))
+	//		{
+	//			RenderTriangleShadowVolume(trig, lightPos, maxDist, shadow);
+	//		}
+	//	}
+	//}
+	//else
 	{
 		//add shadow now:
 

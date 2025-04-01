@@ -295,14 +295,14 @@ You can view and download this file on Github: `humanRobotInteraction.py <https:
            
            body[0] = graphics.Move(body[0], -body[1]['COM'], np.eye(3))
            
-           [nUAL,bUAL]=AddRigidBody(mainSys = mbs,
-                                inertia = RigidBodyInertia(mass=body[1]['mass'], inertiaTensor=body[1]['inertia'], com=[0,0,0]),
-                                nodeType = exu.NodeType.RotationEulerParameters,
-                                position = body[1]['COM'],
-                                rotationMatrix = np.eye(3),
-                                angularVelocity = [0,2*0,0],
-                                gravity = gravity,
-                                graphicsDataList = [body[0]])
+           dictUAL1 = mbs.CreateRigidBody(
+                         inertia=RigidBodyInertia(mass=body[1]['mass'], inertiaTensor=body[1]['inertia'], com=[0,0,0]),
+                         referencePosition=body[1]['COM'],
+                         referenceRotationMatrix=np.eye(3),
+                         gravity=gravity,
+                         graphicsDataList=[body[0]],
+                         returnDict=True)
+           [nUAL, bUAL] = [dictUAL1['nodeNumber'], dictUAL1['bodyNumber']]
            
            #markers for ground and rigid body (not needed for option 3):
            markerGroundUAL = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=leftShoulder))
@@ -319,14 +319,14 @@ You can view and download this file on Github: `humanRobotInteraction.py <https:
            
            body[0] = graphics.Move(body[0], -body[1]['COM'], np.eye(3))
            
-           [nUAL,bUAL]=AddRigidBody(mainSys = mbs,
-                                inertia = RigidBodyInertia(mass=body[1]['mass'], inertiaTensor=body[1]['inertia'], com=[0,0,0]),
-                                nodeType = exu.NodeType.RotationEulerParameters,
-                                position = body[1]['COM'],
-                                rotationMatrix = np.eye(3),
-                                angularVelocity = [0,2*0,0],
-                                gravity = gravity,
-                                graphicsDataList = [body[0]])
+           dictUAL2 = mbs.CreateRigidBody(
+                         inertia=RigidBodyInertia(mass=body[1]['mass'], inertiaTensor=body[1]['inertia'], com=[0,0,0]),
+                         referencePosition=body[1]['COM'],
+                         referenceRotationMatrix=np.eye(3),
+                         gravity=gravity,
+                         graphicsDataList=[body[0]],
+                         returnDict=True)
+           [nUAL, bUAL] = [dictUAL2['nodeNumber'], dictUAL2['bodyNumber']]
            
            #markers for ground and rigid body (not needed for option 3):
            markerLAL0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bUAL, localPosition=leftElbow-body[1]['COM']))

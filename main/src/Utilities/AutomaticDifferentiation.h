@@ -449,6 +449,39 @@ namespace EXUmath
 		return res;
 	}
 
+	using std::pow;
+	template <int nDiff, typename TReal, typename SCAL2>
+	inline AutoDiff<nDiff, TReal> pow(AutoDiff<nDiff, TReal> x, SCAL2 exponent)
+	{
+		AutoDiff<nDiff, TReal> res;
+		res.Value() = pow(x.Value(), exponent);
+		TReal base_pow_exponent_minus_one = std::pow(x.Value(), exponent - 1);
+
+		for (int k = 0; k < nDiff; ++k)
+			res.DValue(k) = exponent * base_pow_exponent_minus_one * x.DValue(k);
+
+		return res;
+	}
+
+	using std::pow;
+	template <int nDiff, typename TReal>
+	inline AutoDiff<nDiff, TReal> pow(const AutoDiff<nDiff, TReal>& x, const AutoDiff<nDiff, TReal>& y)
+	{
+		CHECKandTHROW(x.Value() > 0, "AutoDiff::pow: Base x must be positive for general exponent y.");
+
+		AutoDiff<nDiff, TReal> res;
+		res.Value() = pow(x.Value(), y.Value());
+
+		TReal x_pow_y_minus_one = pow(x.Value(), y.Value() - 1);
+		TReal x_pow_y_ln_x = res.Value() * std::log(x.Value());
+
+		for (int i = 0; i < nDiff; ++i) {
+			res.DValue(i) = y.DValue(i) * x_pow_y_ln_x + y.Value() * x_pow_y_minus_one * x.DValue(i);
+		}
+
+		return res;
+	}
+
 	using std::sin;
 	template <int nDiff, typename TReal>
 	inline AutoDiff<nDiff, TReal> sin(AutoDiff<nDiff, TReal> x)

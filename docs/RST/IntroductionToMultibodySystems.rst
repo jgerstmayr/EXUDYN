@@ -334,7 +334,7 @@ The \ **generalized (Lagrangian) coordinates**\ , which are employed in Lagrange
 
 Reference and current coordinates
 ---------------------------------
-
+\label{sec:referenceAndCurrentCoordinates}
 An important fact on the coordinates used in Exudyn is upon the \ **additive**\ \ (This additive splitting is also used for rotations: therefore, only the sum of reference and current (or visualization) coordinates has a geometrical meaning, while the parts are only used within the solver for incrementing.) splitting of quantities (e.g. position, rotation parameters, etc.) into \ **reference**\  and \ **current**\  (initial/visualization/...) coordinates.
 The current position vector of a point node is computed from the reference position plus the current displacement, reading
 
@@ -354,5 +354,5 @@ which are based on reference quantities plus displacements or changes. Note that
 The necessity for reference coordinates originates from finite elements, which usually split nodal position into displacements and reference position.
 However, we also use the reference position here in order to define joints, e.g., using the utility function \ ``CreateRevoluteJoint(...)``\ .
 
-Note that this splitting is only employed for position coordinates, but not for displacements or velocities!
+Note that this splitting is only employed for position coordinates, but not for velocities, accelerations or special coordinates. See also Section :ref:`sec-overview-items-coordinates`\ .
 

@@ -1656,6 +1656,10 @@ def CreateStringSymbolicUserFunctionSet(pySymbolicUserFunction):
 	}
 
 """    
+    sTemplateInstantiation += 'template class PythonUserFunctionBase<std::function<void(const MainSystem&, Real, Index, Index)>>;\n'
+    sTemplateInstantiation += 'template class PythonUserFunctionBase<std::function<PyMatrixContainer(const MainSystem&, Real, Real, Real, Real)>>;\n'
+
+
     s = stdFunctionMember + s
     s+= sSTDfunction + sSTDfunctionEnd
     # print(s)
@@ -2082,7 +2086,9 @@ try: #still close file if crashes
 #    sLatexItemList += '\\end{itemize}\n'
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #write include files (.h) for user functions
-    incFiles = [[CreateStringSymbolicUserFunctionTransfer(symbolicUserFunctionSet), 'PySymbolicUserFunctionTransfer']]
+    incFiles = []    
+    # incFiles += [[CreateStringSymbolicUserFunctionTransfer(symbolicUserFunctionSet), 
+    #              'PySymbolicUserFunctionTransfer']]
     incFiles += CreateStringSymbolicUserFunctionSet(symbolicUserFunctionSet)
     for [pyStr, name] in incFiles:
         fileUserFunction = directoryString + name+'.h'

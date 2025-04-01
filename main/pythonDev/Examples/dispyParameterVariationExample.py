@@ -190,6 +190,9 @@ if __name__ == '__main__':
     
 #%% post processing of all computed variations
     if True:
+        import exudyn as exu
+        SC = exu.SystemContainer()
+        mbs = SC.AddSystem() #dummy mbs for PlotSensor (and in order to skip PlotSensor in test suite)
         
         #extract solution from return values
         valuesPlot = []
@@ -198,7 +201,6 @@ if __name__ == '__main__':
         
         #plot first 8 results:
         for i in range(len(values)):
-            from exudyn.plot import PlotSensor
-            PlotSensor(0, sensorNumbers=values[i][1], labels='result'+str(i), newFigure=(i==0),
+            mbs.PlotSensor(sensorNumbers=[values[i][1]], labels='result'+str(i), newFigure=(i==0),
                        colorCodeOffset=i, fontSize=12, closeAll=(i==0))
         

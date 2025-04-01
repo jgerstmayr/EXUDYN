@@ -153,6 +153,7 @@ classDescription = "Settings for discontinuous iterations, as in contact, fricti
 V,  ignoreMaxIterations,                ,       , bool,                     true,       ,       P   , "continue solver if maximum number of discontinuous (post Newton) iterations is reached (ignore tolerance)"
 V,  iterationTolerance,                 ,       , UReal,                    1,          ,       P   , "absolute tolerance for discontinuous (post Newton) iterations; the errors represent absolute residuals and can be quite high"
 V,  maxIterations,                      ,       , UInt,                     5,          ,       P   , "maximum number of discontinuous (post Newton) iterations"
+V,  useRecommendedStepSize,             ,       , bool,                     true,       ,       P   , "some objects (contact-related) provide a recommendedStepSize; if True, this recommendation is used, but may lead to very small step sizes and solver could fail if restrictions are too hard; set to False to ignore this recommendation"
 #
 writeFile=SimulationSettings.h
 
@@ -197,7 +198,7 @@ V,  spectralRadius,                     ,       , UReal,                    0.9,
 V,  computeInitialAccelerations,        ,       , bool,                     true,       ,       P   , "True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations"
 V,  resetAccelerations,                 ,       , bool,                     false,      ,       P   , "this flag only affects if computeInitialAccelerations=False: if resetAccelerations=True, accelerations are set zero in the solver function InitializeSolverInitialConditions; this may be unwanted in case of repeatedly called SolveSteps() and in cases where solutions shall be prolonged from previous computations"
 V,  lieGroupAddTangentOperator,         ,       , bool,                     true,       ,       P   , "True: for Lie group nodes, in case that lieGroupSimplifiedKinematicRelations=True, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)"
-V,  lieGroupSimplifiedKinematicRelations, ,     , bool,                     true,       ,       P   , "True: for Lie group nodes, the integrator uses the original kinematic relations of the Bruls and Cardona 2010 paper"
+V,  lieGroupSimplifiedKinematicRelations, ,     , bool,                     false,      ,       P   , "True: for Lie group nodes, the integrator uses the original kinematic relations of the Bruls and Cardona 2010 paper"
 #
 writeFile=SimulationSettings.h
 
@@ -402,7 +403,7 @@ V,      pointSize,                      ,                  ,     float,        "
 V,      circleTiling,                   ,                  ,     PInt,         "16",                   , P,      "global number of segments for circles; if smaller than 2, 2 segments are used (flat)"
 V,      cylinderTiling,                 ,                  ,     PInt,         "16",                   , P,      "global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)"
 V,      sphereTiling,                   ,                  ,     PInt,         "6",                    , P,      "global number of segments for spheres; if smaller than 2, 2 segments are used (flat)"
-V,      axesTiling,                     ,                  ,     PInt,         "12",                   , P,      "global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)"
+V,      axesTiling,                     ,                  ,     PInt,         "12",                   , P,      "global number of segments for drawing cylinders for axes and cones for arrows (reduce this number, e.g. to 4, if many axes are drawn)"
 V,      threadSafeGraphicsUpdate,       ,                  ,     bool,         true,                   , P,      "true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations; may be improved in future by adding a safe visualizationUpdate state"
 V,      useMultiThreadedRendering,      ,                  ,     bool,         true,                   , P,      "true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); set this parameter before call to exudyn.StartRenderer(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW"
 #
@@ -553,6 +554,7 @@ V,      defaultRadius,              ,                  ,     float,        "0.00
 V,      fixedLoadSize,              ,                  ,     bool,         true,                       , P,    "if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size"
 V,      drawSimplified,             ,                  ,     bool,         true,                       , P,    "draw markers with simplified symbols"
 V,      loadSizeFactor,             ,                  ,     float,        "0.1f",                     , P,    "if fixedLoadSize=false, then this scaling factor is used to draw the load vector"
+V,      drawWithUserFunction,       ,                  ,     bool,         true,                       , P,    "draw loads like force vectors time dependent; make sure that fixedLoadSize=false, while otherwise only the direction will change; user functions can only be drawn, if they are either symbolic or for Python user functions if useMultiThreadedRendering=False"
 V,      defaultColor,               ,                  4,    Float4,       "Float4({0.7f,0.1f,0.1f,1.f})",, P,    "default RGBA color for loads; 4th value is alpha-transparency"
 #
 writeFile=VisualizationSettings.h
@@ -683,6 +685,9 @@ V,      initialCenterPoint,             ,                  3,    Float3,       "
 V,      initialZoom,                    ,                  ,     UFloat,       "1.f",                  , P,      "initial zoom of scene; overwritten/ignored if autoFitScene = True"
 V,      initialMaxSceneSize,            ,                  ,     PFloat,       "1.f",                  , P,      "initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True"
 V,      initialModelRotation,           ,                  3x3,    StdArray33F,    "EXUmath::Matrix3DFToStdArray33(Matrix3DF(3,3,{1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f}))",      , P,      "initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]"
+#
+V,      clippingPlaneNormal,            ,                  3,    Float3,       "Float3({0.f,0.f,0.f})",, P,      "normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance"
+V,      clippingPlaneDistance,          ,                  ,     float,        "0.f",                  , P,      "distance of clipping plane on normal vector; see also clippingPlaneNormal"
 #
 V,      perspective,                    ,                  ,     UFloat,       "0.f",                  , P,      "parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 0.5 (large amount of perspective); mouse coordinates will not work with perspective"
 V,      shadow,                         ,                  ,     UFloat,       "0.f",                  , P,      "parameter $\in [0 ... 1]$ prescribes amount of shadow for light0 (using light0position, etc.); if this parameter is different from 1, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows"

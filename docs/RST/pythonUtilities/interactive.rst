@@ -17,7 +17,7 @@ Function: AnimateModes
 `AnimateModes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L591>`__\ (\ ``systemContainer``\ , \ ``mainSystem``\ , \ ``nodeNumber``\ , \ ``period = 0.04``\ , \ ``stepsPerPeriod = 30``\ , \ ``showTime = True``\ , \ ``renderWindowText = ''``\ , \ ``runOnStart = False``\ , \ ``runMode = 0``\ , \ ``scaleAmplitude = 1``\ , \ ``title = ''``\ , \ ``fontSize = 12``\ , \ ``checkRenderEngineStopFlag = True``\ , \ ``systemEigenVectors = None``\ )
 
 - | \ *function description*\ :
-  | animate modes of ObjectFFRFreducedOrder, of nodal coordinates (changes periodically one nodal coordinate) or of a list of system modes provided as list of lists; for creating snapshots, press 'Static' and 'Record animation' and press 'Run' to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use 'One Cycle'. Modes may be inverted by pressing according '+' and '-' buttons next to Amplitude.
+  | animate modes of ObjectFFRFreducedOrder, of nodal coordinates (changes periodically one nodal coordinate) or of a list of system modes provided as list of lists; for creating snapshots, press 'Static' and 'Record frames' and press 'Run' to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use 'One Cycle'. Modes may be inverted by pressing according '+' and '-' buttons next to Amplitude.
 - | \ *input*\ :
   | \ ``systemContainer``\ : system container (usually SC) of your model, containing visualization settings
   | \ ``mainSystem``\ : system (usually mbs) containing your model
@@ -37,11 +37,11 @@ Function: AnimateModes
   | opens interactive dialog with further settings
 - | \ *notes*\ :
   | Uses class InteractiveDialog in the background, which can be used to adjust animation creation. If meshes are large, animation artifacts may appear, which are resolved by using a larger update period.
-  | Press 'Run' to start animation; Chose 'Mode shape', according component for contour plot; to record one cycle for animation, choose 'One cycle', run once to get the according range in the contour plot, press 'Record animation' and press 'Run', now images can be found in subfolder 'images' (for further info on animation creation see Section :ref:`sec-overview-basics-animations`\ ); now deactivate 'Record animation' by pressing 'Off' and chose another mode
+  | Press 'Run' to start animation; Chose 'Mode shape', according component for contour plot; to record one cycle for animation, choose 'One cycle', run once to get the according range in the contour plot, press 'Record frames' and press 'Run', now images can be found in subfolder 'images' (for further info on animation creation see Section :ref:`sec-overview-basics-animations`\ ); now deactivate 'Record frames' by pressing 'Off' and chose another mode
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `CMSexampleCourse.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py>`_\  (Ex), \ `netgenSTLtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py>`_\  (Ex), \ `NGsolveCMStutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py>`_\  (Ex), \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex), \ `objectFFRFreducedOrderShowModes.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py>`_\  (TM), \ `runTestExamples.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/runTestExamples.py>`_\  (TM)
+    \ `CMSexampleCourse.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py>`_\  (Ex), \ `netgenSTLtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py>`_\  (Ex), \ `NGsolveCMStutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py>`_\  (Ex), \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolveModalAnalysis.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveModalAnalysis.py>`_\  (Ex), \ `objectFFRFreducedOrderShowModes.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py>`_\  (TM), \ `runTestExamples.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/runTestExamples.py>`_\  (TM)
 
 
 
@@ -53,6 +53,54 @@ Function: SolutionViewer
 
 
 - | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolutionViewer(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-solutionviewer`\ 
+
+
+
+----
+
+
+.. _sec-interactive-convertimages2video:
+
+Function: ConvertImages2Video
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`ConvertImages2Video <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L951>`__\ (\ ``workingDir = 'images'``\ , \ ``inputPattern = 'frame%05d.png'``\ , \ ``outputFile = 'animation.mp4'``\ , \ ``inputFrameRate = 25``\ , \ ``outputFrameRate = 25``\ , \ ``compressionCRF = 28``\ , \ ``startNumber = 0``\ , \ ``totalFrames = None``\ )
+
+- | \ *function description*\ :
+  | function to call ffmpeg in the background and convert images to video; requires ffmpeg-python to be installed
+- | \ *input*\ :
+  | \ ``workingDir``\ : directory where images are stored and where animation is written to
+  | \ ``inputPattern``\ : pattern of images; 'frame' is the name used in visualizationSettings.exportImages.saveImageFileName; if saveImageFormat=PNG, then the ending is .png
+  | \ ``outputFile``\ : filename and ending (.mp4 recommended) for generated video
+  | \ ``inputFrameRate``\ : framerate for images relative to outputFrameRate: if inputFrameRate=50 and outputFrameRate=25, then only every second frame is used
+  | \ ``outputFrameRate``\ : framerate for resulting video
+  | \ ``compressionCRF``\ : compression rate of ffmpeg, where 0=uncompressed, 25 is medium compression, >30 is very low quality
+  | \ ``startNumber``\ : start index of first frame chosen for animation
+  | \ ``totalFrames``\ : total number of frames (keep field empty to select all frames after startNumber)
+- | \ *output*\ :
+  | None; writes animation when finished
+- | \ *example*\ :
+
+.. code-block:: python
+
+  #after successful simulation, call:
+  mbs.SolutionViewer() #click "Stop", "One Cycle" and "Record frames" => close window
+  #if images are in folder 'images', then call this to create animation:
+  ConvertImages2Video(workingDir='images', outputFile='test.mp4')
+
+
+
+
+----
+
+
+.. _sec-interactive-interactiveimages2video:
+
+Function: InteractiveImages2Video
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`InteractiveImages2Video <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L987>`__\ (\ ``closeAfterCreation = False``\ , \ ``fontSize = 11``\ )
+
+- | \ *function description*\ :
+  | interactive dialog to convert generated images to videos using ffmpeg library; see also ConvertImages2Video() for meaning of values; requires ffmpeg-python to be installed
 
 
 .. _sec-module-interactive-class-interactivedialog:

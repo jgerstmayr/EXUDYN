@@ -64,6 +64,8 @@ The following subscripts are used to define configurations of a quantity, e.g., 
   \item $\qv\cVis \ldots$ $\qv$ in visualization configuration
   \item $\qv\cSOS \ldots$ $\qv$ in start of step configuration
 \ei
+Note that the reference configuration is not included in other configurations, such that coordinates have to be usually understood relative to the reference configuration, see also \refSection{sec:overview:items:coordinates}.
+
 As written in the introduction, the coordinates are attributed to certain types of equations and therefore, the following attributes are used (usually as subscript, e.g., $\qv_{ODE2}$):
 \ignoreRST{
 \bi
@@ -231,7 +233,7 @@ Using the basic notation for coordinates in \refSection{sec:generalnotation}, we
 %
 \startGenericTable{| p{5cm} | p{5cm} | p{6cm} |}
 \rowTableThree{\mybold{quantity}}{\mybold{symbol}}{\mybold{description} }
-\rowTableThree{number of \hac{ODE2} coordinates}{$n$}{\acf{ODE2} } % = \SON
+\rowTableThree{number of \hac{ODE2} coordinates}{$n_q$}{\acf{ODE2} } % = \SON
 \rowTableThree{number of \hac{ODE1} coordinates}{$n_\FO$}{\acf{ODE1} } % = \FON
 \rowTableThree{number of \hac{AE} coordinates}{$m$}{\acf{AE} } % = \AEN
 \rowTableThree{number of system coordinates}{$n_{\SYS}$}{\SYSN }

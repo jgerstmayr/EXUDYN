@@ -136,6 +136,7 @@ Settings for discontinuous iterations, as in contact, friction, plasticity and g
     ignoreMaxIterations &     bool &      &     True &     continue solver if maximum number of discontinuous (post Newton) iterations is reached (ignore tolerance)\\ \hline
     iterationTolerance &     UReal &      &     1 &     absolute tolerance for discontinuous (post Newton) iterations; the errors represent absolute residuals and can be quite high\\ \hline
     maxIterations &     UInt &      &     5 &     maximum number of discontinuous (post Newton) iterations\\ \hline
+    useRecommendedStepSize &     bool &      &     True &     some objects (contact-related) provide a recommendedStepSize; if True, this recommendation is used, but may lead to very small step sizes and solver could fail if restrictions are too hard; set to False to ignore this recommendation\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -186,7 +187,7 @@ Settings for generalized-alpha, implicit trapezoidal or Newmark time integration
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     computeInitialAccelerations &     bool &      &     True &     True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations\\ \hline
     lieGroupAddTangentOperator &     bool &      &     True &     True: for Lie group nodes, in case that lieGroupSimplifiedKinematicRelations=True, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)\\ \hline
-    lieGroupSimplifiedKinematicRelations &     \tabnewline bool &      &     True &     True: for Lie group nodes, the integrator uses the original kinematic relations of the Bruls and Cardona 2010 paper\\ \hline
+    lieGroupSimplifiedKinematicRelations &     \tabnewline bool &      &     False &     True: for Lie group nodes, the integrator uses the original kinematic relations of the Bruls and Cardona 2010 paper\\ \hline
     newmarkBeta &     UReal &      &     0.25 &     value beta for Newmark method; default value beta = $\frac 1 4$ corresponds to (undamped) trapezoidal rule\\ \hline
     newmarkGamma &     UReal &      &     0.5 &     value gamma for Newmark method; default value gamma = $\frac 1 2$ corresponds to (undamped) trapezoidal rule\\ \hline
     resetAccelerations &     bool &      &     False &     this flag only affects if computeInitialAccelerations=False: if resetAccelerations=True, accelerations are set zero in the solver function InitializeSolverInitialConditions; this may be unwanted in case of repeatedly called SolveSteps() and in cases where solutions shall be prolonged from previous computations\\ \hline
@@ -212,7 +213,7 @@ Settings for explicit solvers, like Explicit Euler, RK44, ODE23, DOPRI5 and othe
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     computeEndOfStepAccelerations &     \tabnewline bool &      &     True &     accelerations are computed at stages of the explicit integration scheme; if the user needs accelerations at the end of a step, this flag needs to be activated; if True, this causes a second call to the RHS of the equations, which may DOUBLE COMPUTATIONAL COSTS for one-step-methods; if False, the accelerations are re-used from the last stage, being slightly different\\ \hline
     computeMassMatrixInversePerBody &     \tabnewline bool &      &     False &     If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded)\\ \hline
-    dynamicSolverType &     DynamicSolverType &      &     DynamicSolverType::DOPRI5 &     \tabnewline selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, ...), for detailed description see DynamicSolverType, \refSection{sec:DynamicSolverType}, but only referring to explicit solvers.\\ \hline
+    dynamicSolverType &     DynamicSolverType &      &     DynamicSolverType::DOPRI5 &     \tabnewline selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, VelocityVerlet, ...), for detailed description see DynamicSolverType, \refSection{sec:DynamicSolverType}, but only referring to explicit solvers.\\ \hline
     eliminateConstraints &     bool &      &     True &     True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!\\ \hline
     useLieGroupIntegration &     bool &      &     True &     True: use Lie group integration for rigid body nodes; must be turned on for Lie group nodes (without data coordinates) to work properly; does not work for nodes with data coordinates!\\ \hline
 	  \end{longtable}
@@ -392,7 +393,7 @@ General settings for visualization.
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     autoFitScene &     bool &      &     True &     automatically fit scene within startup after StartRenderer()\\ \hline
-    axesTiling &     PInt &      &     12 &     global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)\\ \hline
+    axesTiling &     PInt &      &     12 &     global number of segments for drawing cylinders for axes and cones for arrows (reduce this number, e.g. to 4, if many axes are drawn)\\ \hline
     backgroundColor &     Float4 &     4 &     [1.0,1.0,1.0,1.0] &     \tabnewline red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])\\ \hline
     backgroundColorBottom &     Float4 &     4 &     [0.8,0.8,1.0,1.0] &     \tabnewline red, green, blue and alpha values for bottom background color in case that useGradientBackground = True\\ \hline
     circleTiling &     PInt &      &     16 &     global number of segments for circles; if smaller than 2, 2 segments are used (flat)\\ \hline
@@ -619,6 +620,7 @@ Visualization settings for loads.
     defaultRadius &     float &      &     0.005 &     global radius of load axis if drawn in 3D\\ \hline
     defaultSize &     float &      &     0.2 &     global load size; if -1.f, load size is relative to maxSceneSize\\ \hline
     drawSimplified &     bool &      &     True &     draw markers with simplified symbols\\ \hline
+    drawWithUserFunction &     bool &      &     True &     draw loads like force vectors time dependent; make sure that fixedLoadSize=false, while otherwise only the direction will change; user functions can only be drawn, if they are either symbolic or for Python user functions if useMultiThreadedRendering=False\\ \hline
     fixedLoadSize &     bool &      &     True &     if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size\\ \hline
     loadSizeFactor &     float &      &     0.1 &     if fixedLoadSize=false, then this scaling factor is used to draw the load vector\\ \hline
     show &     bool &      &     True &     flag to decide, whether the loads are shown\\ \hline
@@ -778,6 +780,8 @@ OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL fun
   \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    clippingPlaneDistance &     float &      &     0. &     distance of clipping plane on normal vector; see also clippingPlaneNormal\\ \hline
+    clippingPlaneNormal &     Float3 &     3 &     [0.,0.,0.] &     \tabnewline normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance\\ \hline
     drawFaceNormals &     bool &     1 &     False &     draws triangle normals, e.g. at center of triangles; used for debugging of faces\\ \hline
     drawNormalsLength &     PFloat &     1 &     0.1 &     length of normals; used for debugging\\ \hline
     drawVertexNormals &     bool &     1 &     False &     draws vertex normals; used for debugging\\ \hline

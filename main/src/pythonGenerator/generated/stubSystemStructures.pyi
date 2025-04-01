@@ -63,6 +63,7 @@ class DiscontinuousSettings:
     ignoreMaxIterations: bool
     iterationTolerance: float
     maxIterations: int
+    useRecommendedStepSize: bool
 
 #information for NewtonSettings
 class NewtonSettings:
@@ -304,6 +305,7 @@ class VSettingsLoads:
     defaultRadius: float
     defaultSize: float
     drawSimplified: bool
+    drawWithUserFunction: bool
     fixedLoadSize: bool
     loadSizeFactor: float
     show: bool
@@ -380,6 +382,8 @@ class VSettingsDialogs:
 
 #information for VSettingsOpenGL
 class VSettingsOpenGL:
+    clippingPlaneDistance: float
+    clippingPlaneNormal: Tuple[float,float,float]
     drawFaceNormals: bool
     drawNormalsLength: float
     drawVertexNormals: bool

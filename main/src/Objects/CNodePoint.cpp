@@ -62,20 +62,32 @@ void CNodePoint::GetOutputVariable(OutputVariableType variableType, Configuratio
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
 	//case OutputVariableType::Acceleration: value.CopyFrom(GetCoordinateVector_tt(configuration)); break;
 	case OutputVariableType::Acceleration: value.CopyFrom(GetAcceleration(configuration)); break;
-	case OutputVariableType::Coordinates:
+	case OutputVariableType::CoordinatesTotal:
 	{
-		if (IsValidConfiguration(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
+		if (IsValidConfiguration(configuration))
 		{
-			value = GetCoordinateVector(configuration);
+			GetODE2CoordinateVectorWithReference(value, configuration);
 		} else
 		{ 
 			PyError("CNodePoint::GetOutputVariable: invalid configuration"); 
 		}
 		break;
 	}
-	case OutputVariableType::Coordinates_t: 
+	case OutputVariableType::Coordinates:
 	{
-		if (IsValidConfigurationButNotReference(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
+		if (IsValidConfiguration(configuration))
+		{
+			value = GetCoordinateVector(configuration);
+		}
+		else
+		{
+			PyError("CNodePoint::GetOutputVariable: invalid configuration");
+		}
+		break;
+	}
+	case OutputVariableType::Coordinates_t:
+	{
+		if (IsValidConfigurationButNotReference(configuration)) 
 		{
 			value = GetCoordinateVector_t(configuration);
 		}
@@ -88,7 +100,7 @@ void CNodePoint::GetOutputVariable(OutputVariableType variableType, Configuratio
 	}
 	case OutputVariableType::Coordinates_tt:
 	{
-		if (IsValidConfigurationButNotReference(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
+		if (IsValidConfigurationButNotReference(configuration)) 
 		{
 			value = GetCoordinateVector_tt(configuration);
 		}

@@ -83,12 +83,15 @@ The function \texttt{exudyn.SolveDynamic(...)} sets the according variables inte
 \mysubsubsection{System equations of motion}
 The system equations of motion in \codeName\ follow the notations of \refSection{sec:nomenclatureEOM} and are represented as 
 \bea \label{eq_system_EOM}
-  \Mm \ddot \qv + \frac{\partial \gv}{\partial \qv^\mathrm{T}} \tlambda & = &\fv_\SO(\qv, \dot \qv, t) \\
+  \Mm \ddot \qv + \frac{\partial \gv}{\partial \qv^\mathrm{T}} \tlambda_q + 
+                  \frac{\partial \gv}{\partial \dot \qv^\mathrm{T}} \tlambda_{\dot q}
+                  & = &\fv_\SO(\qv, \dot \qv, t) \\
   \dot \yv + \frac{\partial \gv}{\partial \yv^\mathrm{T}} \tlambda & = &\fv_\FO(\yv, t) \\
-  \gv(\qv, \dot \qv, \yv, \tlambda, t) &=& 0
+  \gv(\qv, \dot \qv, \yv, \tlambda, t) &=& 0 \eqDot
 \eea
+Here, we introduce different Lagrange multipliers $\tlambda_q$ and $\tlambda_{\dot q}$ which have equal sizes as $\tlambda$, while those $\lambda_i$ which belong to holonomic constraints, are included in $\tlambda_q$ and $\tlambda_i$ belonging to non-holonomic constraints, are included in $\tlambda_{\dot q}$, whereas other components in $\tlambda_q$ or $\tlambda_{\dot q}$ are zero.
 
-It is important to note, that for linear mechanical the term $\fv_\SO$ becomes
+It may help to know that for linear mechanical the term $\fv_\SO$ becomes
 \be
   \fv^{lin}_\SO = \fv_a - \Km \qv - \Dm \dot \qv
 \ee
@@ -674,7 +677,7 @@ The remaining terms in the Jacobian are currently (or by default settings) evalu
   \Jm_{\AE\AE}&=&\frac{\partial \rv^\GA_\AE}{\partial \tlambda}
                = \frac{\partial \gv}{\partial \tlambda}
 \eea
-Note that some parts of the Jacobian are \mybold{neglected}, such as mass matrix and constraint Jacobian terms in $\Jm_{\SO\SO}$, which are usually of minor influence. Furthermore, Jacobians for state-dependent loads are neglected except for system-wide numerical Jacobians.
+Note that some parts of the Jacobian are \mybold{neglected}, such as mass matrix and constraint Jacobian terms in $\Jm_{\SO\SO}$, which are usually of minor influence. Furthermore, Jacobians for state-dependent loads are neglected except for system-wide numerical Jacobians or if \texttt{computeLoadsJacobian} in static or time integration solvers is set True.
 
 Once an update $\qv^\mathrm{Newton}_{k+1}$ has been computed, the interpolation formulas \eqref{eq_Newmark_interpolation} need to be evaluated before the next residual and Jacobian can be computed.
 %

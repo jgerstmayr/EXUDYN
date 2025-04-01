@@ -167,6 +167,9 @@ public:
 	//! +++++ TO BE IMPLEMENTED IN DERIVED CLASS +++++
 	virtual Real ComputeNewtonResidual(CSystem& computationalSystem, const SimulationSettings& simulationSettings) { CHECKandTHROWstring("CSolverBase::illegal call to ComputeNewtonResidual"); return 0; }
 
+	//! user function, should be added prior to ComputeNewtonResidual
+	virtual void ComputeNewtonResidualUserFunction(CSystem& computationalSystem, const SimulationSettings& simulationSettings, Index newtonIt, Index discontinuousIt);
+
 	//! compute update for currentState from newtonSolution (decrement from residual and jacobian); for initial=true, this is the initial update with data.newtonSolution=0
 	//! +++++ TO BE IMPLEMENTED IN DERIVED CLASS +++++
 	virtual void ComputeNewtonUpdate(CSystem& computationalSystem, const SimulationSettings& simulationSettings, bool initial = false) { CHECKandTHROWstring("CSolverBase::illegal call to ComputeNewtonUpdate"); }

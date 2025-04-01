@@ -32,6 +32,7 @@ gList += [graphics.Basis(origin=[-2,-1,-1], length=0.5)]
 gList += [graphics.Cylinder(pAxis=[-2,0,-1], vAxis=[0,0,2], radius=0.3, addEdges=4, color=graphics.color.white, nTiles=32)]
 gList += [graphics.Sphere(point=[-2,1,0], radius=0.5, color=graphics.color.white, nTiles=16,
                                        addEdges=6, addFaces=True)]
+gList += [graphics.Brick(centerPoint=[-2,-3,-1], size=[0.4,0.5,0.6], color=graphics.color.dodgerblue)]
 
 #for hollow solid, use closed contour list:
 contour=[[0,0.],[0,0.1],[0.4,0.1],[0.4,0.2],[0.8,0.3],[1.2,0.]] #if wrong orientation (check normals): contour.reverse()

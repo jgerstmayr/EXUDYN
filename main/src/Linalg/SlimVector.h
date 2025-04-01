@@ -22,10 +22,20 @@
 * *** Example code ***
 *
 * @code{.cpp}
-* SlimVectorBase<T, 3> v1({1.1, 2.7, 3.0}); //create a vector with 3 Real
+* SlimVectorBase<Real, 3> v1({1.1, 2.7, 3.0}); //create a vector with 3 Real
 * v2 = v1;                           //assign v1 to v2
 * v1 += v2;                          //add v2 to v1
 * cout << v1 << "\n";                //write "[1.1, 2.7, 3.0]" to cout
+* //examples for Vector3D which is a typedef for SlimVectorBase<Real, 3> 
+* Vector3D u1({1.,2.,5.});
+* Vector3D u2({1.,-2.,0.});
+* Vector3D w1 = 1.5*u1+u2;
+* Vector3D w2 = u1-u2;
+* Real r = u1*u2;
+* Real n = u1.GetL2Norm(); //=length of u1
+* Vector3D w3 = u1.CrossProduct(u2)
+* Real u1x = u1[0]; //get first component
+* 
 * @endcode
 ************************************************************************************************ */
 #ifndef SLIMVECTORBASE__H

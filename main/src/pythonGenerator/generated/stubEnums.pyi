@@ -15,6 +15,7 @@ class OutputVariableType(Enum):
     AngularVelocityLocal = int
     AngularAcceleration = int
     AngularAccelerationLocal = int
+    CoordinatesTotal = int
     Coordinates = int
     Coordinates_t = int
     Coordinates_tt = int

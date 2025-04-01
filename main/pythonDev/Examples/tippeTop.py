@@ -72,17 +72,17 @@ for i in range(n):
 
     RBinertia = InertiaCuboid(m/(2*r*2*r*height), [2*r,2*r,height])
 
-    [nMass, oMass] = AddRigidBody(mainSys=mbs, inertia=RBinertia, 
-                            #nodeType=exu.NodeType.RotationRxyz,
-                            nodeType=exu.NodeType.RotationRotationVector,
-                            position=pRef, velocity=v0,
-                            rotationMatrix=rot0,
-                            angularVelocity=omega0, 
-                            gravity=[0., 0.,-9.81],
-                            graphicsDataList=gList,
-                            )
-    #mbs.SetNodeParameter(nMass, 'VdrawSize', r*2)
-    #mbs.SetNodeParameter(nMass, 'Vcolor', color4node)
+    dictMass = mbs.CreateRigidBody(
+                  inertia=RBinertia, 
+                  nodeType=exu.NodeType.RotationRotationVector,
+                  referencePosition=pRef, 
+                  initialVelocity=v0,
+                  referenceRotationMatrix=rot0,
+                  initialAngularVelocity=omega0,
+                  gravity=[0., 0., -9.81],
+                  graphicsDataList=gList,
+                  returnDict=True)
+    [nMass, oMass] = [dictMass['nodeNumber'], dictMass['bodyNumber']]
 
 
 

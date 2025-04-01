@@ -61,8 +61,8 @@ mRotNode1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n1, coordinate=2))
 #load user function, first joint:
 def UFtorque1(mbs, t, load):
     omega = 0.5
-    phi0 = mbs.GetMarkerOutput(mRotNode0, exu.OutputVariableType.Coordinates)[0]
-    deltaPhi = mbs.GetMarkerOutput(mRotNode1, exu.OutputVariableType.Coordinates)[0] - phi0
+    phi0 = mbs.GetMarkerOutput(mRotNode0, exu.OutputVariableType.CoordinatesTotal)[0]
+    deltaPhi = mbs.GetMarkerOutput(mRotNode1, exu.OutputVariableType.CoordinatesTotal)[0] - phi0
 
     phi0_t = mbs.GetMarkerOutput(mRotNode0, exu.OutputVariableType.Coordinates_t)[0]
     deltaPhi_t = mbs.GetMarkerOutput(mRotNode1, exu.OutputVariableType.Coordinates_t)[0] - phi0_t

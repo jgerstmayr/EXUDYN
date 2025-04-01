@@ -97,12 +97,13 @@ inertiaTower = InertiaCuboid(2000/Vtower, [Dtower,H,Dtower])
 ## model tower as body, which may be moved as well ...
 graphicsTower = [graphics.Brick([0,0,0],[Dtower,H,Dtower],color=graphics.color.grey, addEdges = True)]
 graphicsTower += [graphics.Cylinder([0,0.5*H-Darm*0.5,0],[0,0.5*Darm,0],radius=1.1*Darm, color=graphics.color.grey)]
-[nTower,bTower]=AddRigidBody(mainSys = mbs, 
-                      inertia = inertiaTower, 
-                      nodeType = exu.NodeType.RotationEulerParameters, 
-                      position = posTower,
-                      gravity = g, 
-                      graphicsDataList = graphicsTower)
+dictTower = mbs.CreateRigidBody(
+              inertia=inertiaTower, 
+              referencePosition=posTower,
+              gravity=g, 
+              graphicsDataList=graphicsTower,
+              returnDict=True)
+[nTower, bTower] = [dictTower['nodeNumber'], dictTower['bodyNumber']]
 
 ## add joint for tower
 markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
@@ -135,14 +136,13 @@ for p in pRollCarr:
 graphicsCarr += [graphics.Brick([0,0,0],[1.2*Lcarr,0.2*Dcarr,1.2*Dcarr],color=graphics.color.grey[0:3]+[0.5], addEdges = True)]
 
 ### add rigid body for carriage
-[nCarr,bCarr]=AddRigidBody(mainSys = mbs, 
-                      inertia = inertiaCarr, 
-                      nodeType = exu.NodeType.RotationEulerParameters, 
-                      position = posCarr, 
-                      angularVelocity=[0,0,0],
-                      gravity = g, 
-                      graphicsDataList = graphicsCarr)
-
+dictCarr = mbs.CreateRigidBody(
+              inertia=inertiaCarr, 
+              referencePosition=posCarr, 
+              gravity=g, 
+              graphicsDataList=graphicsCarr,
+              returnDict=True)
+[nCarr, bCarr] = [dictCarr['nodeNumber'], dictCarr['bodyNumber']]
 
 #++++++++++++++++++++++++++++
 ## set up arm
@@ -161,13 +161,13 @@ for i,p in enumerate(pRollArm):
     graphicsArm += [graphics.Cylinder(p-0.5*zRoll,zRoll,radius=max(0.1*rCarr,rRollArm[i]), color=colorRolls, addEdges=True)]
 
 graphicsArm += [graphics.Brick([-0.1*L,0,0],[L*1.2,Darm,Darm],color=[0.3,0.3,0.9,0.5], addEdges = True)]
-[nArm,bArm]=AddRigidBody(mainSys = mbs, 
-                      inertia = inertiaArm, 
-                      nodeType = exu.NodeType.RotationEulerParameters, 
-                      position = posArm, 
-                      angularVelocity=[0,0.1*0,0],
-                      gravity = g, 
-                      graphicsDataList = graphicsArm)
+dictArm = mbs.CreateRigidBody(
+              inertia=inertiaArm, 
+              referencePosition=posArm, 
+              gravity=g, 
+              graphicsDataList=graphicsArm,
+              returnDict=True)
+[nArm, bArm] = [dictArm['nodeNumber'], dictArm['bodyNumber']]
 
 ## create revolute joint between tower and arm
 markerTowerArm = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bTower, localPosition=[0,0.5*H,0]))
@@ -253,13 +253,14 @@ graphicsHook += [graphics.Brick([0,0,0],[Lhook,0.2*Dhook,Dhook],color=graphics.c
 graphicsHook += [graphics.Brick([0,-Dhook,0],[4*Lhook,2*Dhook,2*Dhook],color=graphics.color.grey[0:3]+[0.5], addEdges = True)]
 
 ## add rigid body for hook
-[nHook,bHook]=AddRigidBody(mainSys = mbs, 
-                      inertia = inertiaHook, 
-                      nodeType = exu.NodeType.RotationEulerParameters, 
-                      position = posHook, 
-                      angularVelocity=[0,0,0],
-                      gravity = g, 
-                      graphicsDataList = graphicsHook)
+dictHook = mbs.CreateRigidBody(
+              inertia=inertiaHook, 
+              referencePosition=posHook, 
+              initialAngularVelocity=[0,0,0],
+              gravity=g, 
+              graphicsDataList=graphicsHook,
+              returnDict=True)
+[nHook, bHook] = [dictHook['nodeNumber'], dictHook['bodyNumber']]
 
 
 ## create list of markers for hook-reeving system

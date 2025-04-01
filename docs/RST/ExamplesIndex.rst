@@ -36,6 +36,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/bungeeJump
    Examples/cartesianSpringDamper
    Examples/cartesianSpringDamperUserFunction
+   Examples/chainDriveExample
    Examples/chatGPTupdate
    Examples/chatGPTupdate2
    Examples/CMSexampleCourse
@@ -72,10 +73,12 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/multiprocessingTest
    Examples/myFirstExample
    Examples/netgenSTLtest
+   Examples/newtonsCradle
    Examples/NGsolveCMStutorial
    Examples/NGsolveCraigBampton
    Examples/NGsolveGeometry
    Examples/NGsolveLinearFEM
+   Examples/NGsolveModalAnalysis
    Examples/NGsolvePistonEngine
    Examples/NGsolvePostProcessingStresses
    Examples/nMassOscillator
@@ -127,6 +130,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/serialRobotKinematicTree
    Examples/serialRobotKinematicTreeDigging
    Examples/serialRobotTSD
+   Examples/serialRobotURDF
    Examples/shapeOptimization
    Examples/simple4linkPendulumBing
    Examples/simulateInteractively

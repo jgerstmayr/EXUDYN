@@ -23,6 +23,8 @@
 #define USE_GENERAL_CONTACT
 #ifdef USE_GENERAL_CONTACT
 
+#define USE_STATICDYNAMIC_SEARCHTREE //for higher performance
+
 #include "Linalg/BasicLinalg.h"		//includes basic classes, all basic arrays and vectors
 #include "Linalg/SearchTree.h"
 #include "Main/TemporaryComputationData.h"
@@ -34,6 +36,12 @@
 #define DANCFshapeCoordinates 8
 #define DANCFcirclePolynomialDegree 6
 #define DANCFselectedSegmentsLength 16 //min 3 for exact method
+
+#ifdef USE_STATICDYNAMIC_SEARCHTREE 
+typedef StaticDynamicSearchTree ContactSearchTree;
+#else
+typedef SearchTree ContactSearchTree;
+#endif
 
 
 class CSystem;
@@ -231,10 +239,10 @@ public:
 	bool sphereSphereContact;						//!< if false, contact between spheres is deactivated
 	bool sphereSphereFrictionRecycle;				//!< if true, static friction force is recycled from previous PostNewton step, which greatly improves convergence but may behave unphysically
 	Real frictionProportionalZone;					//!< regularization for friction (m/s); global for all contacts
-	Real frictionVelocityPenalty;					//!< regularization for friction (N/(m^2*m/s) ); global for all contacts
 	Real minRelDistanceSpheresTriangles;			//!< minimum relative distance between spheres and triangles, below that there is no contact computation
 	bool excludeOverlappingTrigSphereContacts;		//!< for consistent, closed meshes, we can exclude duplicate contacts
 	bool excludeDuplicatedTrigSphereContactPoints;  //!< run additional checks for double contacts at edges or vertices, being more accurate but can cause additional costs if many contacts
+	bool computeExactStaticTriangleBins;			//!< if True, search tree bins are computed exactly for static triangles while if False, it uses the overall (=very inaccurate) AABB of each triangle in the search tree
 
 	bool computeContactForces;						//!< if true, contribution of contact forces to system vector is evaluated
 
@@ -260,11 +268,11 @@ public:
 		sphereSphereContact = true;
 		sphereSphereFrictionRecycle = false;
 		frictionProportionalZone = 0.001;
-		frictionVelocityPenalty = 1e3;
 
 		minRelDistanceSpheresTriangles = 1e-10;
 		excludeOverlappingTrigSphereContacts = true;
 		excludeDuplicatedTrigSphereContactPoints = false; //cheaper method using reduction of stiffness preferred
+		computeExactStaticTriangleBins = true;
 
 		computeContactForces = false;
 
@@ -309,6 +317,9 @@ protected:
 	ResizableArray<ContactSpheresMarkerBased> spheresMarkerBased;		//!< these are spheres (circles) with center point [and orientation] defined by Marker; this allows to attach contact to mass points, rigid bodies and deformable bodies
 	ResizableArray<ContactANCFCable2D> ancfCable2D;						//!< these are ANCFCable2D splines [undergoing contact with spheres (circles)]
 	ResizableArray<ContactTriangleRigidBodyBased> trigsRigidBodyBased;	//!< these are triangles attached to rigid body [undergoing contact with spheres (circles)]
+	Index trigsRigidBodyBasedDynamicStartIndex;							//!< start index at which dynamic triangles start (others are not changing)
+	bool staticContactObjectsInitialized;								//!< flag to determine if static objects have been initialized for search tree, etc.
+
 
 	//this is only a base list, not directly evaluated for contacts
 	ResizableArray<ContactRigidBodyMarkerBased> rigidBodyMarkerBased;	//!< these are rigid bodies, underlying the triangles
@@ -338,7 +349,8 @@ protected:
 	//++++++++++++++++++++++++++++++++++++++++++++++++
 	//! updated at every contact computation:
 	//! bounding boxes, created prior to contact search:
-	SearchTree searchTree;											//!< search tree containing all contact objects
+	ContactSearchTree searchTree;									//!< search tree containing all contact objects
+
 	Index searchTreeUpdateCounter;									//!< number of search tree updates; used to reset tree after specific number of updates
 
 	ArrayIndex globalContactIndexOffsets;							//!< offsets corresponding to contact lists (allBoundingBoxes;allActiveContacts)
@@ -383,7 +395,7 @@ public:
 	//! reset all contact arrays, free memory if requested
 	void Reset(bool freeMemory = true);
 
-	const SearchTree& GetSearchTree() const { return searchTree; }
+	const ContactSearchTree& GetSearchTree() const { return searchTree; }
 	const ResizableArray<Box3D>& GetAllBoundingBoxes() const { return allBoundingBoxes; }
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -442,9 +454,10 @@ public:
 	Index AddANCFCable(Index objectIndex, Real halfHeight, Real contactStiffness, Real contactDamping, Index frictionMaterialIndex);
 
 	//! add contact object for Triangles attached to rigidBodyMarker; return starting index of trigsRigidBodyBased
-	//contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle!
+	//! contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle!
+	//! staticTriangles can be used to put triangles only to a static searchtree which is not updated during computation
 	Index AddTrianglesRigidBodyBased(Index rigidBodyMarkerIndex, Real contactStiffness, Real contactDamping, 
-		Index frictionMaterialIndex, ResizableArray<Vector3D> pointList, ResizableArray<Index3> triangleList);
+		Index frictionMaterialIndex, ResizableArray<Vector3D> pointList, ResizableArray<Index3> triangleList, bool staticTriangles = false);
 
 	//! set up necessary parameters for contact: friction, SearchTree, etc.; automatically done in mbs.Assemble()
 	//! at this point, it will also be checked if something is wrong (illegal pairings or frictionMaterial coeffs, etc.)

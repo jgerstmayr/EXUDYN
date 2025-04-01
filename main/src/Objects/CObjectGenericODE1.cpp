@@ -115,8 +115,22 @@ void CObjectGenericODE1::GetOutputVariable(OutputVariableType variableType, Vect
 
 	switch (variableType)
 	{
-	case OutputVariableType::Coordinates:	value.CopyFrom(tempCoordinates);	break;
-	case OutputVariableType::Coordinates_t: value.CopyFrom(tempCoordinates_t);	break;
+	case OutputVariableType::CoordinatesTotal:
+	{
+		ComputeObjectCoordinates(value, ConfigurationType::Reference);
+		value += tempCoordinates;
+		break;
+	}
+	case OutputVariableType::Coordinates:
+	{
+		value.CopyFrom(tempCoordinates);
+		break;
+	}
+	case OutputVariableType::Coordinates_t:
+	{
+		value.CopyFrom(tempCoordinates_t);	
+		break;
+	}
 	default:
 		SysError("CObjectGenericODE1::GetOutputVariable failed"); //error should not occur, because types are checked!
 	}

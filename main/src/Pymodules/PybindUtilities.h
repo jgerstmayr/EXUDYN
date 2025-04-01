@@ -72,9 +72,14 @@ namespace EPyUtils {
 			py::isinstance<py::int_>(pyObject);
 	}
 
+	//! return true if is list or numpy array
+	inline bool IsPyTypeListOrArray(const py::object& pyObject)
+	{
+		return (py::isinstance<py::list>(pyObject) || py::isinstance<py::array>(pyObject));
+	}
+
 	//! check if py::object is list (list of lists) or numpy array
 	//! if yes, return true; columns=0 means vector (list or 1D numpy array); otherwise it is a matrix
-	//! FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX 
 	inline bool GetPyArrayOrListDimensions(const py::object& obj, int& rows, int& columns) 
 	{
 		rows = 0;
@@ -786,25 +791,45 @@ namespace EPyUtils {
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//!convert Vector to numpy vector
+	template<typename TVector>
+	inline py::array_t<Real> VectorRef2NumPy(const TVector& v, bool reference)
+	{
+		if (reference)
+		{
+			return py::array_t<Real>(
+				{ v.NumberOfItems() },	//shape of the array (1D array with 'len' elements)
+				{ sizeof(double) },		//stride (size of one element)
+				v.GetDataPointer(),		//pointer to the data
+				py::none()				//none(): pybind11 does not own the memory
+			);
+		} 
+		else
+		{
+			//copy data using this constructor:
+			return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer());
+		}
+	}
+
+	//!convert Vector to numpy vector; COPY
 	inline py::array_t<Real> Vector2NumPy(const Vector& v)
 	{
 		return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer()); //copy array (could also be referenced!)
 	}
 
-	//!convert SlimVector to numpy vector
+	//!convert SlimVector to numpy vector; COPY
 	template<Index dataSize>
 	inline py::array_t<Real> SlimVector2NumPy(const SlimVector<dataSize>& v)
 	{
 		return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer()); 
 	}
 
-	//!convert ArrayIndex to numpy vector
+	//!convert ArrayIndex to numpy vector; COPY
 	inline py::array_t<Index> ArrayIndex2NumPy(const ArrayIndex& v)
 	{
 		return py::array_t<Index>(v.NumberOfItems(), v.GetDataPointer()); 
 	}
 
-	//!convert SlimVector to numpy vector
+	//!convert SlimVector to numpy vector; COPY
 	template<Index dataSize>
 	inline py::array_t<Index> SlimArrayIndex2NumPy(const SlimArray<Index, dataSize>& v)
 	{
@@ -812,22 +837,14 @@ namespace EPyUtils {
 	}
 
 
-	//!convert general SlimVector to numpy vector
-	//unused, therefore commented
-	//template<class T, Index size>
-	//inline py::array_t<T> SlimVector2NumPyTemplate(const SlimVectorBase<T, size>& v)
-	//{
-	//	return py::array_t<Real>(v.NumberOfItems(), v.GetDataPointer()); //copy array (could also be referenced!)
-	//}
-
-	//!convert Matrix to numpy matrix
+	//!convert Matrix to numpy matrix; COPY
 	template<class TMatrix>
 	py::array_t<Real> Matrix2NumPyTemplate(const TMatrix& matrix)
 	{
 		return py::array_t<Real>(std::vector<std::ptrdiff_t>{(int)matrix.NumberOfRows(), (int)matrix.NumberOfColumns()}, matrix.GetDataPointer());
 	}
 
-	//!convert Matrix to numpy matrix
+	//!convert Matrix to numpy matrix; COPY
 	template<class TMatrix>
 	py::array_t<float> MatrixF2NumPyTemplate(const TMatrix& matrix)
 	{
@@ -835,26 +852,26 @@ namespace EPyUtils {
 	}
 
 
-	//!convert Matrix to numpy matrix
+	//!convert Matrix to numpy matrix; COPY
 	inline py::array_t<Real> Matrix2NumPy(const Matrix& matrix)
 	{
 		return py::array_t<Real>(std::vector<std::ptrdiff_t>{(int)matrix.NumberOfRows(), (int)matrix.NumberOfColumns()}, matrix.GetDataPointer());
 	}
 
-	//!convert MatrixI to numpy matrix
+	//!convert MatrixI to numpy matrix; COPY
 	inline py::array_t<Index> MatrixI2NumPy(const MatrixI& matrix)
 	{
 		return py::array_t<Index>(std::vector<std::ptrdiff_t>{(int)matrix.NumberOfRows(), (int)matrix.NumberOfColumns()}, matrix.GetDataPointer());
 	}
 
-	//!convert MatrixF to numpy matrix
+	//!convert MatrixF to numpy matrix; COPY
 	inline py::array_t<float> MatrixF2NumPy(const MatrixF& matrix)
 	{
 		return py::array_t<float>(std::vector<std::ptrdiff_t>{(int)matrix.NumberOfRows(), (int)matrix.NumberOfColumns()}, matrix.GetDataPointer());
 	}
 
 
-	//!convert numpy matrix to Matrix
+	//!convert numpy matrix to Matrix; COPY
 	template<typename T, class TMatrix>
 	inline void NumPy2Matrix(const py::array_t<T>& pyArray, TMatrix& m)
 	{

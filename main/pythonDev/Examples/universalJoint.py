@@ -93,13 +93,15 @@ graphicsBodyRight += [graphics.Brick(centerPoint=[0,-r2*0.875,-l/2+0.5*d2], size
 #add rigid bodies
 #left rigid shaft
 #create simple rigid body
-[n0,b0]=AddRigidBody(mainSys = mbs, 
-                     inertia = inertiaLeftShaft, 
-                     nodeType = exu.NodeType.RotationRxyz, 
-                     position = pMid0, 
-                     angularVelocity = [0,0,omega], 
-                     gravity = g,
-                     graphicsDataList = graphicsBodyLeft) 
+dictLeftShaft = mbs.CreateRigidBody(
+                  inertia=inertiaLeftShaft, 
+                  nodeType=exu.NodeType.RotationRxyz, 
+                  referencePosition=pMid0, 
+                  initialAngularVelocity=[0,0,omega], 
+                  gravity=g,
+                  graphicsDataList=graphicsBodyLeft,
+                  returnDict=True)
+[n0, b0] = [dictLeftShaft['nodeNumber'], dictLeftShaft['bodyNumber']]
 
 #cross shaft
 #create simple rigid body

@@ -51,9 +51,21 @@ void CNode1D::GetOutputVariable(OutputVariableType variableType, ConfigurationTy
 	//case OutputVariableType::Position: value.CopyFrom(GetPosition(configuration)); break;
 	//case OutputVariableType::Displacement: value.CopyFrom(GetPosition(configuration) - GetPosition(ConfigurationType::Reference)); break;
 	//case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
+	case OutputVariableType::CoordinatesTotal:
+	{
+		if (IsValidConfiguration(configuration)) 
+		{
+			GetODE2CoordinateVectorWithReference(value, configuration);
+		}
+		else
+		{
+			PyError("CNode1D::GetOutputVariable: invalid configuration");
+		}
+		break;
+	}
 	case OutputVariableType::Coordinates:
 	{
-		if (IsValidConfiguration(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
+		if (IsValidConfiguration(configuration)) 
 		{
 			value = GetCoordinateVector(configuration);
 		}
@@ -65,7 +77,7 @@ void CNode1D::GetOutputVariable(OutputVariableType variableType, ConfigurationTy
 	}
 	case OutputVariableType::Coordinates_t:
 	{
-		if (IsValidConfigurationButNotReference(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
+		if (IsValidConfigurationButNotReference(configuration)) 
 		{
 			value = GetCoordinateVector_t(configuration);
 		}

@@ -1788,19 +1788,31 @@ def GenerateLatexStrKeywordExamples(itemType, itemName, itemShortName, useLatex 
 
     if itemType != 'UtilityFunction':
         keywords = ['mbs.Add'+itemType+'('+itemName+'(']
-        if itemName == 'ObjectRigidBody' or itemName == 'NodeRigidBodyEP':
-            keywords += ['AddRigidBody('] #additional keyword
-    
         if itemName == 'ObjectFFRF':
             keywords += ['AddObjectFFRF('] #additional keyword
-    
         if itemName == 'ObjectFFRFreducedOrder':
             keywords += ['AddObjectFFRFreducedOrderWithUserFunctions('] #additional keyword
 
+        # if itemName == 'ObjectGround':
+            # keywords += ['CreateGround('] #additional keyword
+        # if itemName == 'ObjectMassPoint':
+            # keywords += ['CreateMassPoint('] #additional keyword
+
+        if itemName == 'ObjectRigidBody' or itemName == 'NodeRigidBodyEP':
+            keywords += ['CreateRigidBody('] #additional keyword
+
         if itemName == 'ObjectJointRevoluteZ':
-            keywords += ['AddRevoluteJoint('] #additional keyword
+            keywords += ['CreateRevoluteJoint('] #additional keyword
         if itemName == 'ObjectPrismaticJointX':
-            keywords += ['AddPrismaticJoint('] #additional keyword
+            keywords += ['CreatePrismaticJoint('] #additional keyword
+        if itemName == 'ObjectJointGeneric':
+            keywords += ['CreateGenericJoint('] #additional keyword
+        if itemName == 'ObjectConnectorSpringDamper':
+            keywords += ['CreateSpringDamper('] #additional keyword
+        if itemName == 'ObjectConnectorCartesianSpringDamper':
+            keywords += ['CreateCartesianSpringDamper('] #additional keyword
+        if itemName == 'ObjectConnectorRigidBodySpringDamper':
+            keywords += ['CreateRigidBodySpringDamper('] #additional keyword
 
     else:
         testModelString = ' (TM)'

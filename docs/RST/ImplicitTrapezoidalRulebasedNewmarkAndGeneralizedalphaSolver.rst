@@ -170,7 +170,7 @@ The remaining terms in the Jacobian are currently (or by default settings) evalu
    {\mathbf{J}}_{\AE\AE}&=&\frac{\partial {\mathbf{r}}^\GA_\AE}{\partial \tlambda} = \frac{\partial {\mathbf{g}}}{\partial \tlambda}
 
 
-Note that some parts of the Jacobian are \ **neglected**\ , such as mass matrix and constraint Jacobian terms in \ :math:`{\mathbf{J}}_{\SO\SO}`\ , which are usually of minor influence. Furthermore, Jacobians for state-dependent loads are neglected except for system-wide numerical Jacobians.
+Note that some parts of the Jacobian are \ **neglected**\ , such as mass matrix and constraint Jacobian terms in \ :math:`{\mathbf{J}}_{\SO\SO}`\ , which are usually of minor influence. Furthermore, Jacobians for state-dependent loads are neglected except for system-wide numerical Jacobians or if \ ``computeLoadsJacobian``\  in static or time integration solvers is set True.
 
 Once an update \ :math:`{\mathbf{q}}^\mathrm{Newton}_{k+1}`\  has been computed, the interpolation formulas \ :eq:`eq-newmark-interpolation`\  need to be evaluated before the next residual and Jacobian can be computed.
 

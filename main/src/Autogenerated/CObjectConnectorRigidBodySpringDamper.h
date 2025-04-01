@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-02  20:40:00 (last modified)
+* @date         2024-10-10  23:36:08 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -170,7 +170,7 @@ public: // AUTO:
     }
 
     //! AUTO:  compute spring damper force-torque helper function
-    void ComputeSpringForceTorque(const MarkerDataStructure& markerData, Index itemIndex, Matrix3D& Ajoint, Vector3D& vLocPos, Vector3D& vLocVel, Vector3D& vLocRot, Vector3D& vLocAngVel, Vector6D& fLocVec6D) const;
+    void ComputeSpringForceTorque(const MarkerDataStructure& markerData, Index itemIndex, Matrix3D& Ajoint, Vector3D& vLocPos, Vector3D& vLocVel, Vector3D& vLocRot, Vector3D& vLocAngVel, Vector6D& fLocVec6D, bool computeForceTorque=true) const;
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
     void EvaluateUserFunctionForce(Vector6D& fLocVec6D, const MainSystemBase& mainSystem, Real t, Index itemIndex, Vector6D& uLoc6D, Vector6D& vLoc6D) const;

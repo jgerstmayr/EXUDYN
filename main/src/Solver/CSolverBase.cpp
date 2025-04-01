@@ -574,13 +574,13 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 		}, "CSolverBase::SolveSteps");
 	}
 	timer.total += EXUstd::GetTimeInSeconds();
+	output.finishedSuccessfully = success;
 
 	SolverExceptionHandling([&]
 	{
 		FinalizeSolver(computationalSystem, simulationSettings);
 	}, "CSolverBase::FinalizeSolver");
 
-	output.finishedSuccessfully = success;
 
 	return success;
 }
@@ -626,8 +626,9 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 		}
 		else
 		{
+			STDstring successString = output.finishedSuccessfully ? "Solver terminated successfully " : "Solver terminated unsuccessfully ";
 			//if (simulationSettings.displayComputationTime) { VerboseWrite(1, STDstring("solver finished after ") + EXUstd::ToString(timer.total) + " seconds.\n"); }
-			VerboseWrite(1, STDstring("solver finished after ") + EXUstd::ToString(timer.total) + " seconds.\n");
+			VerboseWrite(1, successString+("after ") + EXUstd::ToString(timer.total) + " seconds.\n");
 		}
 
 		if (simulationSettings.displayComputationTime) //computation statistics
@@ -636,7 +637,7 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 			if (simulationSettings.displayGlobalTimers) //contact, etc.
 			{
 				STDstring sGlobal;
-				sGlobal = globalTimers.ToString();
+				sGlobal = globalTimers.ToString(true, timer.Sum()); //true=print relative timings
 				if (sGlobal.size())
 				{
 					sGlobal = "special timers:\n" + sGlobal + "\n";
@@ -875,7 +876,6 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 }
 
 
-bool cSolverBaseInitializeStepPreStepFunctionWarned = false;
 
 //! initialize static step / time step: do some outputs, checks, etc.
 void CSolverBase::InitializeStep(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
@@ -904,10 +904,6 @@ void CSolverBase::InitializeStep(CSystem& computationalSystem, const SimulationS
 
 		Verbose(2, str);
 	}
-	//if (!IsStaticSolver())
-	//{
-	//	it.endTime = simulationSettings.timeIntegration.endTime; //update time, which may be updated for long integration time
-	//}
 
 	if (computationalSystem.GetPythonUserFunctions().preStepFunction.IsValid())
 	{
@@ -917,7 +913,7 @@ void CSolverBase::InitializeStep(CSystem& computationalSystem, const SimulationS
 		{
 			rvPreStep = computationalSystem.GetPythonUserFunctions().preStepFunction.userFunction(*(computationalSystem.GetPythonUserFunctions().mainSystem),
 				it.currentTime);
-		}, "CSolverBase::InitializeStep: PythonPreStepUserFunction failed (check code; check return value)");
+		}, "CSolverBase::InitializeStep: MainSystem::PreStepUserFunction failed (check code; check return value)");
 		if (!rvPreStep)
 		{
 			if (IsVerbose(1)) { Verbose(1, STDstring("\n++++++++++++++++++++++++++++++\nPreStepUserFunction returned False; simulation is stopped after current step\n\n")); }
@@ -1056,7 +1052,7 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 			{
 				rvPostStep = computationalSystem.GetPythonUserFunctions().postStepFunction.userFunction(*(computationalSystem.GetPythonUserFunctions().mainSystem),
 				it.currentTime);
-			}, "CSolverBase::InitializeStep: PythonPostStepUserFunction failed (check code; check return value)");
+			}, "CSolverBase::InitializeStep: MainSystem::PostStepUserFunction failed (check code; check return value)");
 		if (!rvPostStep)
 		{
 			if (IsVerbose(1)) { Verbose(1, STDstring("\n++++++++++++++++++++++++++++++\nPostStepUserFunction returned False; simulation is stopped after current step\n\n")); }
@@ -1276,6 +1272,8 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 	//solutionODE2_tt must contain initial accelerations!
 	ComputeNewtonUpdate(computationalSystem, simulationSettings, true); //for initial computations; better initial guess for Newton for old solver
 
+	it.newtonSteps = 0; //current number of steps
+	if (computationalSystem.GetPythonUserFunctions().preNewtonResidualFunction.IsValid()) { ComputeNewtonResidualUserFunction(computationalSystem, simulationSettings, it.newtonSteps, it.discontinuousIteration); }
 	initialResidual = ComputeNewtonResidual(computationalSystem, simulationSettings);
 
 	if (newton.newtonResidualMode == 1) { //coordinate update as residual
@@ -1291,8 +1289,6 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 		"; goals: relTol=" + EXUstd::ToString(newton.relativeTolerance) +
 		", absTol=" + EXUstd::ToString(newton.absoluteTolerance) + "\n"); }
 
-
-	it.newtonSteps = 0; //current number of steps
 	conv.residual = initialResidual;				//current residual
 	conv.lastResidual = initialResidual;			//to determine contractivity
 	conv.contractivity = 0;							//contractivity = geometric decay of error in every step
@@ -1379,7 +1375,8 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 
 			//++++++++++++++++++++++++++++++++++++++++++
 			//compute residual from static step increment or from integration formula:
-			conv.residual = ComputeNewtonResidual(computationalSystem, simulationSettings); 
+			if (computationalSystem.GetPythonUserFunctions().preNewtonResidualFunction.IsValid()) { ComputeNewtonResidualUserFunction(computationalSystem, simulationSettings, it.newtonSteps, it.discontinuousIteration); }
+			conv.residual = ComputeNewtonResidual(computationalSystem, simulationSettings);
 
 			if (newton.newtonResidualMode == 1) //special case, not treated in ComputeNewtonResidual
 			{
@@ -1541,6 +1538,7 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 						//compute residual (for beginning of step, which means that delta_acc=0, lambda=0):
 						data.newtonSolution.SetAll(0.); //no update yet
 						ComputeNewtonUpdate(computationalSystem, simulationSettings, true); //better initial guess for Newton
+						if (computationalSystem.GetPythonUserFunctions().preNewtonResidualFunction.IsValid()) { ComputeNewtonResidualUserFunction(computationalSystem, simulationSettings, it.newtonSteps, it.discontinuousIteration); }
 						ComputeNewtonResidual(computationalSystem, simulationSettings);
 
 						addRestartNewtonStep = true; //request additional Newton step after restart (request update of jacobian or switch to full Newton)
@@ -1574,6 +1572,18 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 	return !(conv.stopNewton || !conv.newtonConverged); //return success (true) or fail (false)
 }
 
+void CSolverBase::ComputeNewtonResidualUserFunction(CSystem& computationalSystem, const SimulationSettings& simulationSettings, Index newtonIt, Index discontinuousIt)
+{
+	STARTTIMER(timer.python);
+	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
+		{
+			computationalSystem.GetPythonUserFunctions().preNewtonResidualFunction.userFunction(*(computationalSystem.GetPythonUserFunctions().mainSystem),
+			it.currentTime, newtonIt, discontinuousIt);
+		}, "CSolverBase::InitializeStep: MainSystem::PreNewtonResidualUserFunction failed (check code; check return value)");
+	STOPTIMER(timer.python);
+}
+
+
 
 Real CSolverBase::PostNewton(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
@@ -1599,6 +1609,10 @@ Real CSolverBase::PostNewton(CSystem& computationalSystem, const SimulationSetti
 	}
 
 	discontinuousError += computationalSystem.PostNewtonStep(data.tempCompDataArray, it.recommendedStepSize);
+	if (!simulationSettings.timeIntegration.discontinuous.useRecommendedStepSize)
+	{
+		it.recommendedStepSize = -1;
+	}
 
 	return discontinuousError;
 }

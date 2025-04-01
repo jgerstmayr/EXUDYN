@@ -228,6 +228,8 @@ For reading the file containing commented lines (this does not work in binary mo
   data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
   plt.plot(data[:,0], data[:,1], 'b-', label='displacement (m); numerical solution') 
 \end{lstlisting}
+Note that the coordinates do not include the reference position (which is 0.5 in this case). For information on displacement and reference coordinates, see \refSection{sec:overview:items:coordinates}.
+
 The sensor result can be loaded in the same way. The sensor output format contains time in the first column and sensor values in the remaining columns. The number of columns depends on the 
 sensor and the output quantity (scalar, vector, ...):
 \pythonstyle\begin{lstlisting}
@@ -423,8 +425,7 @@ The latter approach is very general and will also work for any kind of flexible 
   mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[0,0,0], 
                           axis=[0,0,1], axisRadius=0.2*w, axisLength=1.4*w)
 \end{lstlisting}
-Note that \texttt{axis} and \texttt{position} are defined in global coordinates, and local coordinates are computed according to the
-reference configuration of the bodies.
+Note that \texttt{axis} and \texttt{position} are defined in global coordinates, and local coordinates are computed according to the reference configuration of the bodies.
 There exist more arguments that may be specified, e.g., the axis and position can also be defined in the local frame of the first body.
 
 \horizontalRuler\\

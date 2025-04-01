@@ -28,10 +28,14 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/connectorGravityTest
    TestModels/connectorRigidBodySpringDamperTest
    TestModels/contactCoordinateTest
+   TestModels/contactSphereSphereTest
+   TestModels/contactSphereSphereTestEAPM
    TestModels/ConvexContactTest
    TestModels/coordinateSpringDamperExt
    TestModels/coordinateVectorConstraint
    TestModels/coordinateVectorConstraintGenericODE2
+   TestModels/createRollingDiscPenaltyTest
+   TestModels/createRollingDiscTest
    TestModels/distanceSensor
    TestModels/driveTrainTest
    TestModels/explicitLieGroupIntegratorPythonTest
@@ -55,11 +59,14 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/kinematicTreeTest
    TestModels/laserScannerTest
    TestModels/linearFEMgenericODE2
+   TestModels/loadUserFunctionTest
    TestModels/LShapeGeomExactBeam2D
    TestModels/mainSystemExtensionsTests
+   TestModels/mainSystemUserFunctionsTest
    TestModels/manualExplicitIntegrator
    TestModels/matrixContainerTest
    TestModels/mecanumWheelRollingDiscTest
+   TestModels/NGsolveCMStest
    TestModels/objectFFRFreducedOrderAccelerations
    TestModels/objectFFRFreducedOrderTest
    TestModels/objectFFRFTest
@@ -71,6 +78,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/postNewtonStepContactTest
    TestModels/reevingSystemSpringsTest
    TestModels/revoluteJointPrismaticJointTest
+   TestModels/rigidBody2Dtest
    TestModels/rigidBodyAsUserFunctionTest
    TestModels/rigidBodyCOMtest
    TestModels/rigidBodySpringDamperIntrinsic

@@ -19,15 +19,284 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.9.0, 
-+  last change =  2024-10-09, 
-+  Number of issues = 1881, 
-+  Number of resolved issues = 1676 (0 in current version), 
++  Exudyn version = 1.9.83.dev1, 
++  last change =  2025-04-01, 
++  Number of issues = 1983, 
++  Number of resolved issues = 1759 (83 in current version), 
 
 ***********
 Version 1.9
 ***********
 
+ * Version 1.9.83: resolved Issue 1982: SolutionViewer (extension)
+    - description:  add option Make mp4 to create videos with python ffmpeg lib
+    - date resolved: **2025-04-01 08:51**\ , date raised: 2025-04-01 
+ * Version 1.9.82: resolved Issue 1981: Images2Video (extension)
+    - description:  add function ConvertImages2Video and dialog InteractiveImages2Video to convert images to videos directly in Python
+    - date resolved: **2025-04-01 02:20**\ , date raised: 2025-04-01 
+ * Version 1.9.81: resolved Issue 1980: PlotSensor (change)
+    - description:  change to matplotlib.get_backend().lower() when comparing with matplotlib agg render mode; this shall avoid warnings in case of plots with agg in background
+    - date resolved: **2025-03-31 23:03**\ , date raised: 2025-03-31 
+ * Version 1.9.80: resolved Issue 1972: artificialIntelligence (fix)
+    - description:  PreInitializeSolver always uses Generalized alpha solver, but should go in line with SetSolver
+    - **notes:** this issue was erratic and is ignored; PreInitializeSolver shall be replaced by derived class calling SetSolver with the desired solverType; added remarks in artificialIntelligence.py
+    - date resolved: **2025-03-31 22:42**\ , date raised: 2025-03-06 
+ * Version 1.9.79: resolved Issue 1976: mbs.Assemble() (change)
+    - description:  check if assembled in SolveStatic and SolveDynamic and automatically call mbs.Assemble() prior to solver; only raise warning
+    - date resolved: **2025-03-31 22:15**\ , date raised: 2025-03-30 
+ * Version 1.9.78: resolved Issue 1979: ComputeSystemDegreeOfFreedom (change)
+    - description:  change print to exudyn.Print for workflow consistency
+    - **notes:** also fixed other print commands in solver.py
+    - date resolved: **2025-03-31 21:52**\ , date raised: 2025-03-31 
+ * Version 1.9.77: resolved Issue 1978: SetWriteToFile (extension)
+    - description:  add flushAlways (default:False) option for immediate writing to file
+    - date resolved: **2025-03-31 21:48**\ , date raised: 2025-03-31 
+ * Version 1.9.76: resolved Issue 1975: CreateTorsionalSpringDamper (fix)
+    - description:  does not work for unlimitedRotations=True due to additional comma
+    - date resolved: **2025-03-12 15:08**\ , date raised: 2025-03-12 
+ * Version 1.9.75: resolved Issue 1974: CreateSphericalJoint (change)
+    - description:  Make it work for bodies that do not offer a rotation matrix (mass points)
+    - date resolved: **2025-03-12 14:35**\ , date raised: 2025-03-12 
+ * Version 1.9.74: resolved Issue 1973: GeneralContact (change)
+    - description:  remove frictionVelocityPenalty as it is not used; also remove macro ANCFuseFrictionPenalty
+    - date resolved: **2025-03-07 17:00**\ , date raised: 2025-03-07 
+ * Version 1.9.73: resolved Issue 1970: CreateRollingDisc (extension)
+    - description:  create test model
+    - date resolved: **2025-03-05 22:36**\ , date raised: 2025-03-05 
+ * Version 1.9.72: resolved Issue 1969: CreateRollingDisc (extension)
+    - description:  add create function to MainSystem
+    - date resolved: **2025-03-05 22:17**\ , date raised: 2025-03-05 
+ * Version 1.9.71: resolved Issue 1968: GeneralContact (extension)
+    - description:  add option to only use dynamic search tree with no duplicated search bins
+    - **notes:** in case of no static triangles, static searchtree is only created once and no additional operations are performed
+    - date resolved: **2025-03-05 21:11**\ , date raised: 2025-03-03 
+ * Version 1.9.70: resolved Issue 1967: Create functions (change)
+    - description:  change return values of all mbs.Create functions with joints (CreateRevoluteJoint, CreateSphericalJoint, CreatePrismaticJoint, CreateGenericJoint, CreateDistanceConstraints, ...) to the object index instead of lists
+    - date resolved: **2025-03-03 22:04**\ , date raised: 2025-03-03 
+ * Version 1.9.69: resolved Issue 1949: RollingDiscPenalty (extension)
+    - description:  add create function to MainSystem
+    - **notes:** already done with issue 1957
+    - date resolved: **2025-03-03 20:41**\ , date raised: 2025-02-04 
+ * Version 1.9.68: resolved Issue 1966: GeneralContact (extension)
+    - description:  SearchTree: add option to perform more accurate test for triangles: add simple check to see if bin is fully on one side of the triangle
+    - date resolved: **2025-03-02 18:50**\ , date raised: 2025-03-02 
+ * Version 1.9.67: resolved Issue 1895: GeneralContact (extension)
+    - description:  add option to add static objects to GeneralContact and to SearchTree
+    - date resolved: **2025-03-02 15:42**\ , date raised: 2024-10-16 
+ * Version 1.9.66: resolved Issue 1965: GeneralContact (change)
+    - description:  ODE2RHS timer removed and replaced with CSystem Contact:Overall timer (which includes PostNewtonStep)
+    - date resolved: **2025-03-02 11:46**\ , date raised: 2025-03-02 
+ * Version 1.9.65: resolved Issue 1962: CuttingPlane (extension)
+    - description:  add simple option for cutting plane (point, normal vector, flag) to exclude triangles and other objects from graphics
+    - **notes:** added options openGL.clippingPlaneNormal and openGL.clippingPlaneDistance to enable simple clipping
+    - date resolved: **2025-02-28 21:30**\ , date raised: 2025-02-27 
+    - resolved by: EXTENSION
+ * Version 1.9.64: resolved Issue 1964: Cable2D (extension)
+    - description:  add setting useReducedOrderIntegration=2 to interface docu
+    - date resolved: **2025-02-28 20:57**\ , date raised: 2025-02-28 
+ * Version 1.9.63: resolved Issue 1963: CreateRollingDiscPenalty (testing)
+    - description:  create test model
+    - date resolved: **2025-02-28 00:22**\ , date raised: 2025-02-27 
+ * Version 1.9.62: resolved Issue 1957: RollingDiscPenalty (testing)
+    - description:  add test example
+    - date resolved: **2025-02-27 16:50**\ , date raised: 2025-02-09 
+ * Version 1.9.61: resolved Issue 1951: RigidBody2D (testing)
+    - description:  add test for physicsCenterOfMass != 0
+    - date resolved: **2025-02-05 15:08**\ , date raised: 2025-02-05 
+ * Version 1.9.60: resolved Issue 1955: FEM (fix)
+    - description:  WarnNumpy2 contains error, as it tries to compare int with str
+    - date resolved: **2025-02-05 15:04**\ , date raised: 2025-02-05 
+ * Version 1.9.59: resolved Issue 1950: RigidBody2D (extension)
+    - description:  add parameter physicsCenterOfMass, similar to RigidBody
+    - date resolved: **2025-02-05 14:53**\ , date raised: 2025-02-05 
+ * Version 1.9.58: resolved Issue 1581: mainSystemExtensions (extension)
+    - description:  add LinearSpringDamper and TorsionalSpringDamper
+    - **notes:** transferred to issues 1948 and 1953
+    - date resolved: **2025-02-05 08:44**\ , date raised: 2023-05-21 
+ * Version 1.9.57: resolved Issue 1948: CreateTorsionalSpringDamper (extension)
+    - description:  add create function to MainSystem
+    - date resolved: **2025-02-04 13:44**\ , date raised: 2025-02-04 
+ * Version 1.9.56: :textred:`resolved BUG 1946` : SphereSphereContact 
+    - description:  error in PostNewtonStep: always uses data variables
+    - date resolved: **2025-02-03 15:40**\ , date raised: 2025-02-03 
+ * Version 1.9.55: resolved Issue 1945: lieGroupSimplifiedKinematicRelations (change)
+    - description:  lieGroupSimplifiedKinematicRelations used to test more accurate Lie group solver; for now, default value set to false in order to have test suite running
+    - date resolved: **2025-01-28 11:53**\ , date raised: 2025-01-28 
+ * Version 1.9.54: resolved Issue 1944: solver (fix)
+    - description:  always writes 'Solver terminated unsuccessfully' independently of success.
+    - date resolved: **2025-01-05 18:00**\ , date raised: 2025-01-05 
+ * Version 1.9.53: resolved Issue 1479: RotationVector2RotationMatrix (fix)
+    - description:  both in Python and C++, fix range to 0..2\*pi, as large angles cause low accuracy
+    - date resolved: **2024-12-01 19:13**\ , date raised: 2023-03-27 
+ * Version 1.9.52: resolved Issue 1651: Python 3.11 (extension)
+    - description:  added Python 3.11 workflows for Windows, Linux and MacOS builds (note: problems with Rosetta x86 on MacOS)
+    - **notes:** resolved earlier also for 3.12 and 3.13
+    - date resolved: **2024-12-01 12:31**\ , date raised: 2023-07-20 
+ * Version 1.9.51: resolved Issue 1483: PUMA560 (fix)
+    - description:  COM frames of KinematicTree drawn wrong: serialRobotInverseKinematics; check COM setting
+    - **notes:** resolved already with issue 1857
+    - date resolved: **2024-12-01 12:29**\ , date raised: 2023-03-29 
+ * Version 1.9.50: :textred:`resolved BUG 1943` : FEMinterface 
+    - description:  CreateNonlinearFEMObjectGenericODE2NGsolve does not work due to change in internal FEM stiffness and mass matrices, stored as scipy sparse matrices now
+    - date resolved: **2024-11-27 21:24**\ , date raised: 2024-11-27 
+ * Version 1.9.49: resolved Issue 1942: System equations of motion (docu)
+    - description:  add missing term partial g/partial qDot in ODE2 part, in particular for non-holonomic constriants; this part was already implemented in a generic way since the very beginning, but missed to find the way into the documentation.
+    - date resolved: **2024-11-18 19:15**\ , date raised: 2024-11-18 
+ * Version 1.9.48: resolved Issue 1940: NumPy2 (extension)
+    - description:  Add warning in FEM for some functions that do not work properly with NumPy 2.x
+    - date resolved: **2024-11-10 19:57**\ , date raised: 2024-11-10 
+ * Version 1.9.47: resolved Issue 1939: HDF5 load/save (extension)
+    - description:  extend to None type (but excluding numpy arrays containing None!
+    - date resolved: **2024-11-10 18:43**\ , date raised: 2024-11-10 
+ * Version 1.9.46: resolved Issue 1935: GraphicsData functions (change)
+    - description:  adjust graphics.Sphere, graphics.Brick, etc. to create numpy arrays for improved efficiency
+    - date resolved: **2024-11-10 17:24**\ , date raised: 2024-11-10 
+ * Version 1.9.45: resolved Issue 1936: GraphicsData functions (change)
+    - description:  adjust graphics conversion functions (graphics.Move, etc.) to handle numpy arrays as well
+    - date resolved: **2024-11-10 16:37**\ , date raised: 2024-11-10 
+ * Version 1.9.44: resolved Issue 1938: graphics.Sphere (fix)
+    - description:  only works if addEdges <=1; add condition for number of edges
+    - date resolved: **2024-11-10 16:09**\ , date raised: 2024-11-10 
+ * Version 1.9.43: resolved Issue 1937: graphics.color (fix)
+    - description:  type completion not working
+    - date resolved: **2024-11-10 15:32**\ , date raised: 2024-11-10 
+ * Version 1.9.42: resolved Issue 1934: GraphicsData write (change)
+    - description:  GetObject now returns GraphicsData as numpy arrays to be consistent with issue 1934
+    - date resolved: **2024-11-10 14:26**\ , date raised: 2024-11-10 
+ * Version 1.9.41: resolved Issue 1933: GraphicsData read (change)
+    - description:  allow that all colors, positions, triangles, points, normals, edges, ... are either lists or numpy.arrays (but flatten to 1D)
+    - date resolved: **2024-11-10 14:26**\ , date raised: 2024-11-10 
+ * Version 1.9.40: resolved Issue 1929: GraphicsData (extension)
+    - description:  extend import/export function of GraphicsData for numpy arrays; speeds up load/safe significantly
+    - date resolved: **2024-11-10 14:26**\ , date raised: 2024-11-08 
+ * Version 1.9.39: resolved Issue 1908: StaticSolver (fix)
+    - description:  does not write appropriate error message, but only writes: ValueError: SolveStatic terminated due to errors
+    - **notes:** together with 1931
+    - date resolved: **2024-11-09 17:33**\ , date raised: 2024-10-24 
+ * Version 1.9.38: resolved Issue 1930: Solver (change)
+    - description:  change message when solver finishes, distinguishing between solver success and failure: 'Solver terminated unsuccessfully' or 'Solver terminated unsuccessfully'
+    - date resolved: **2024-11-09 17:32**\ , date raised: 2024-11-09 
+ * Version 1.9.37: resolved Issue 1928: URDF (chekc)
+    - description:  check import from roboticstoolbox-python and pymeshlab
+    - date resolved: **2024-11-08 22:31**\ , date raised: 2024-11-08 
+ * Version 1.9.36: resolved Issue 1927: SaveDictToHDF5 (extension)
+    - description:  extend for saving int32, int64, float32 and float64
+    - date resolved: **2024-11-08 22:30**\ , date raised: 2024-11-08 
+ * Version 1.9.35: resolved Issue 1923: ContactCurveCircles (extension)
+    - description:  add special contact element between curve defined by segments in contact with circles; 2D curves and circle co-move with rigid body marker at which curve is attached; enables Cam-follower mechanism, chain-sprocket contact, etc.
+    - date resolved: **2024-11-04 23:36**\ , date raised: 2024-11-04 
+ * Version 1.9.34: resolved Issue 1921: ContactSphereSphere (extension)
+    - description:  add option to use restitution coefficient
+    - date resolved: **2024-11-04 23:32**\ , date raised: 2024-11-02 
+ * Version 1.9.33: resolved Issue 1919: ContactSphereSphere (extension)
+    - description:  extend for nonlinear contact model
+    - date resolved: **2024-11-04 23:32**\ , date raised: 2024-11-02 
+ * Version 1.9.32: resolved Issue 1918: ContactSphereSphere (extension)
+    - description:  add basic contact object for sphere-sphere contact, with options for linear and nonlinear contact models as well as adhesion
+    - date resolved: **2024-11-02 11:49**\ , date raised: 2024-11-02 
+ * Version 1.9.31: resolved Issue 1917: useRecommendedStepSize (extension)
+    - description:  add option in timeIntegration.discontinuous to turn on/off step size recommendations for contact and other discontinuous phenomena
+    - date resolved: **2024-11-02 11:46**\ , date raised: 2024-11-02 
+ * Version 1.9.30: resolved Issue 1916: KinematicTree (docu)
+    - description:  add clarification for order to application of joint offset and joint transformation (rotation)
+    - date resolved: **2024-10-30 10:56**\ , date raised: 2024-10-30 
+ * Version 1.9.29: resolved Issue 1915: RigidBodyInertia (extension)
+    - description:  add warning in case of unphysical inertia parameters
+    - date resolved: **2024-10-29 22:26**\ , date raised: 2024-10-29 
+ * Version 1.9.28: resolved Issue 1914: GeneralContact (change)
+    - description:  GetSystemODE2RhsContactForces: change argument reference to copy to make it more consistent with other reference access and avoid confusion with reference configuration; default behavior unchanged
+    - date resolved: **2024-10-27 10:13**\ , date raised: 2024-10-27 
+ * Version 1.9.27: resolved Issue 1913: MainSystem.systemData (extension)
+    - description:  add function GetODE2CoordinatesTotal which includes reference values added to coordinates
+    - date resolved: **2024-10-27 10:00**\ , date raised: 2024-10-27 
+ * Version 1.9.26: resolved Issue 1911: OutputVariableType (change)
+    - description:  change order of types, leading to different numerical values behind OutputVariableType enum (should not affect normal codes)
+    - **notes:** affected by issue 1909
+    - date resolved: **2024-10-26 19:30**\ , date raised: 2024-10-26 
+ * Version 1.9.25: resolved Issue 1909: OutputVariableType (extension)
+    - description:  Add CoordinatesTotal which includes the reference configuration for output variables, used in sensors, or object and node outputs
+    - date resolved: **2024-10-26 19:26**\ , date raised: 2024-10-26 
+ * Version 1.9.24: resolved Issue 1505: reference coordinates (extension)
+    - description:  add option to get total coordinates, being reference + current coordinates; gives 4 new configurations; use harmonized interface functions
+    - date resolved: **2024-10-26 19:26**\ , date raised: 2023-04-08 
+ * Version 1.9.23: resolved Issue 1897: particles (extension)
+    - description:  Add particles module with functionality for creating densly packed particles in a box with proper regular initialization
+    - date resolved: **2024-10-19 20:57**\ , date raised: 2024-10-16 
+ * Version 1.9.22: resolved Issue 1903: GeneralContact (extension)
+    - description:  GetSystemODE2RhsContactForces(...): add additional arg reference in order to allow linking to contact forces and thus allowing faster access (writing to this vector has no effect!)
+    - date resolved: **2024-10-19 18:59**\ , date raised: 2024-10-19 
+ * Version 1.9.21: resolved Issue 1902: FEMinterface (change)
+    - description:  store elements as consistently as np.array instead of list of lists; check that all large arrays are np.arrays; do this also for surface list of lists
+    - **notes:** now all previous list of lists in FEMinterface are defined to be numpy arrays for speed up of load/save; check your interfaces! GetSurfaceTriangles still returns list of lists
+    - date resolved: **2024-10-19 18:48**\ , date raised: 2024-10-19 
+ * Version 1.9.20: resolved Issue 1629: GetSystemState (extension)
+    - description:  extend behavior for returning a dictionary with all data incl. accelerations and possibly alg. accelerations for generalized-alpha solver; check also option to link coords, as in issue 1504
+    - **notes:** added mbs.systemData.GetSystemStateDict(...) with option to return a reference (link) to system vectors, which do not require copying and allow modifications directly
+    - date resolved: **2024-10-19 18:45**\ , date raised: 2023-06-23 
+ * Version 1.9.19: resolved Issue 1504: Reference/link (extension)
+    - description:  extend mbs and systemData functions for reference, e.g., GetODE2Coordinates; use different function with "Link" extension, e.g., GetODE2CoordinatesLink
+    - **notes:** added systemData function GetSystemStateDict which allows to obtain writeable references
+    - date resolved: **2024-10-19 01:28**\ , date raised: 2023-04-08 
+ * Version 1.9.18: :textred:`resolved BUG 1901` : FEM LoadFromFile 
+    - description:  does not work correctly for forceVersion>0.
+    - date resolved: **2024-10-18 14:58**\ , date raised: 2024-10-18 
+ * Version 1.9.17: resolved Issue 1900: MainSystem UserFunctions (testing)
+    - description:  Add TestModel for all kinds of PreStep, PostStep, reNewtonResidual, etc. functions
+    - date resolved: **2024-10-17 23:09**\ , date raised: 2024-10-16 
+ * Version 1.9.16: resolved Issue 1899: SystemJacobianUserFunction (extension)
+    - description:  add a MainSystem user function with SetSystemJacobianUserFunction(...) which adds terms to the system jacobian; this is valuable as it may modify only few terms and add appropriate (experimental) terms in extension with the PreNewtonResidualUserFunction which otherwise would lead to bad convergence if important couplings are not added; as mentioned in the description, the solver's user functions are more general and should be also considered
+    - date resolved: **2024-10-17 23:09**\ , date raised: 2024-10-16 
+ * Version 1.9.15: resolved Issue 1882: preNewtonResidualUserFunction (extension)
+    - description:  add user function called in every iteration of Newton solver in static or implicit dynamic computations
+    - **notes:** function SetPreNewtonResidualUserFunction added to MainSystem, see description at MainSystem
+    - date resolved: **2024-10-16 23:27**\ , date raised: 2024-10-10 
+ * Version 1.9.14: resolved Issue 0838: GeneralContact jacobian (extension)
+    - description:  add jacobian and PostNewton for cable-sphere (circle) contact
+    - **notes:** already done earlier for ANCF beam elements
+    - date resolved: **2024-10-16 16:52**\ , date raised: 2021-12-19 
+ * Version 1.9.13: :textred:`resolved BUG 1893` : keyPressUserFunction 
+    - description:  not working any more!
+    - **notes:** works, but needs to activate window.ignoreKeys in order to call user function
+    - date resolved: **2024-10-15 23:21**\ , date raised: 2024-10-15 
+ * Version 1.9.12: resolved Issue 1717: Symbolic (example)
+    - description:  add examples to testsuite; modify existing examples
+    - **notes:** exu.symbolic used in 5 tests and examples
+    - date resolved: **2024-10-15 23:08**\ , date raised: 2023-12-08 
+ * Version 1.9.11: resolved Issue 1718: Mainsystem extensions (example)
+    - description:  modify some examples for .Create...(...) functions
+    - **notes:** new functions usually only using CreateGenericJoint, CreateRevoluteJoint, etc.; still keeping old workflows with markers for LLM trainings
+    - date resolved: **2024-10-15 23:06**\ , date raised: 2023-12-08 
+ * Version 1.9.10: resolved Issue 1721: Mainsystem extensions (change)
+    - description:  in extension to issue 1718, change all AddRigidBody(...) functions to CreateRigidBody functionality
+    - date resolved: **2024-10-15 23:05**\ , date raised: 2023-12-08 
+ * Version 1.9.9: resolved Issue 1885: pickleCopyMBS (testing)
+    - description:  add TestModel for copying and pickling (load/save) of MainSystem mbs
+    - date resolved: **2024-10-13 22:52**\ , date raised: 2024-10-11 
+ * Version 1.9.8: resolved Issue 1891: load/save mbs (extension)
+    - description:  improve functionalities to load and save mbs, using GetDictionary / SetDictionary; see example pickleCopyMbs.py using pickle and HDF5 files
+    - date resolved: **2024-10-13 19:16**\ , date raised: 2024-10-13 
+ * Version 1.9.7: resolved Issue 1890: LoadSaveHDF5 (extension)
+    - description:  enable option to load/save Python user functions
+    - date resolved: **2024-10-11 22:49**\ , date raised: 2024-10-11 
+ * Version 1.9.6: resolved Issue 1886: NGsolve CMS test (testing)
+    - description:  add test model for whole CMS functionality but loading from stored data; test all 3 new file formats for storing FEM data
+    - date resolved: **2024-10-11 09:00**\ , date raised: 2024-10-11 
+ * Version 1.9.5: resolved Issue 1887: HDF5 (extension)
+    - description:  add functions to advancedUtilities to load/save hierarchical dictionary data
+    - date resolved: **2024-10-11 01:00**\ , date raised: 2024-10-11 
+ * Version 1.9.4: resolved Issue 1884: FEMinterface (extension)
+    - description:  extend LoadFromFile and SaveToFile for HDF5 and PKL (pickle) file formats
+    - date resolved: **2024-10-11 01:00**\ , date raised: 2024-10-11 
+ * Version 1.9.3: resolved Issue 1883: RigidBodySpringDamper (change)
+    - description:  C++: change computation of outputvariables such that springForceTorqueUserFunction is not called for computation of displacement, rotation, etc., but only for forces and torques
+    - date resolved: **2024-10-11 00:03**\ , date raised: 2024-10-11 
+ * Version 1.9.2: resolved Issue 1881: Loads visualization (check)
+    - description:  consider an option to show time-dependent loads, in particular in case of symbolic user functions
+    - **notes:** added flag  visualizationSettings.loads.drawWithUserFunction and test model loadUserFunctionTest.py
+    - date resolved: **2024-10-10 10:48**\ , date raised: 2024-10-09 
+ * Version 1.9.1: resolved Issue 1723: Symbolic (extension)
+    - description:  SymbolicRealVector: add EvaluateItem(i) in operators wherever possible to efficiently evaluate single components instead of all vector components
+    - date resolved: **2024-10-09 22:23**\ , date raised: 2023-12-09 
  * Version 1.9.0: resolved Issue 1880: MatrixContainer (fix)
     - description:  when initialized with lists of lists, it prints the lists
     - date resolved: **2024-10-09 11:06**\ , date raised: 2024-10-09 
@@ -5459,6 +5728,126 @@ Version 0.1
 Open issues
 ***********
 
+ * **open issue 1977:** solver              
+    - description:  check if solver can raise full solver error message in exception, in order to alleviate tracing during automated code evaluation in SolveStatic and SolveDynamic
+    - date raised: 2025-03-30 
+
+ * **open issue 1971:** Create functions    
+    - description:  add general test model
+    - date raised: 2025-03-05 
+
+ * **open issue 1961:** CreateSphereQuadContact
+    - description:  add create function, which uses 2 CreateSphereTriangleContact elements; should be practical for simple robots, etc.
+    - date raised: 2025-02-24 
+
+ * **open issue 1960:** ObjectContactSphereTriangle
+    - description:  add contact similar to GeneralContact and to ObjectContactSphereSphere, but being able to be computed implicitly; add option to exclude certain edges to be able to also correctly handle meshes
+    - date raised: 2025-02-24 
+
+ * **open issue 1959:** SphereSphereContact 
+    - description:  check that position marker works without friction
+    - date raised: 2025-02-24 
+
+ * **open issue 1958:** CreateSphereSphereContact
+    - description:  add Create function, including data node; similar to spring-damper; add checks that in case of friction, a rigid body marker is required
+    - date raised: 2025-02-24 
+
+ * **open issue 1956:** items docu          
+    - description:  add representative figure to each item
+    - date raised: 2025-02-09 
+
+ * **open issue 1954:** CreateLinearSpringDamper
+    - description:  add test example
+    - date raised: 2025-02-05 
+
+ * **open issue 1953:** CreateLinearSpringDamper
+    - description:  add create function to MainSystem
+    - date raised: 2025-02-05 
+
+ * **open issue 1952:** CreateTorsionalSpringDamper
+    - description:  add test example
+    - date raised: 2025-02-05 
+
+ * **open issue 1947:** GeneralContact      
+    - description:  check difference of friction force computation of SphereSphereContact (see notes in .cpp file) and GeneralContact
+    - date raised: 2025-02-03 
+
+ * **open issue 1941:** URDF                
+    - description:  include parent names and create correct parent indices in URDF files by using link name lists; store list of base link names as well and do reordering
+    - date raised: 2024-11-12 
+
+ * **open issue 1932:** URDF import         
+    - description:  GetURDFrobotData: add tool transformations accordingly (currently shown with no consecutive transformations)
+    - date raised: 2024-11-10 
+
+ * **open issue 1931:** URDF import         
+    - description:  GetURDFrobotData: check for import of other scene information than mesh; check for import of collision
+    - date raised: 2024-11-10 
+
+ * **open issue 1926:** ContactCurveCircles 
+    - description:  add simple test model
+    - date raised: 2024-11-04 
+
+ * **open issue 1925:** ContactCurveCircles 
+    - description:  add example of chain drive
+    - date raised: 2024-11-04 
+
+ * **open issue 1924:** ContactCurveCircles 
+    - description:  extend to frictional contact
+    - date raised: 2024-11-04 
+
+ * **open issue 1922:** ContactSphereSphere 
+    - description:  add test model with various contact models
+    - date raised: 2024-11-02 
+
+ * **open issue 1920:** ContactSphereSphere 
+    - description:  add autodiff Jacobian
+    - date raised: 2024-11-02 
+
+ * **open issue 1912:** co-simulation       
+    - description:  add simple model of two mass-spring-dampers to show simulator coupling of two implicit-explicit mbs, similar to issue 1905
+    - date raised: 2024-10-26 
+
+ * **open issue 1910:** total coordinates   
+    - description:  consider a solver option which continuously provides total coordinates during iterations which could be used in user functions or globally and also be linked instead of copied; add an exception if the respective option is not switched on; by default, only add an empty Vector currentState.ODE2CoordsTotal
+    - date raised: 2024-10-26 
+
+ * **open issue 1907:** particles           
+    - description:  add improved functions to create densly packed particles in box using simulation
+    - date raised: 2024-10-19 
+
+ * **open issue 1906:** particles           
+    - description:  add improved functions to create more densly packed particles using advanced geometrical considerations for randomized radius spherical particles
+    - date raised: 2024-10-19 
+
+ * **open issue 1905:** simulator coupling  
+    - description:  add test model for simulator coupling using mbs0 with joints and implicit integrator coupled to mbs1 with explicit integration
+    - date raised: 2024-10-19 
+
+ * **open issue 1904:** Reference/link data 
+    - description:  evaluate further options to link to internal data, such as objects, nodes, etc.; possibly with GetObjectParameter(...) and similar functions possibly automated; this would highly speed up user functions as it reduces the number of exudyn function calls
+    - date raised: 2024-10-19 
+
+ * **open issue 1898:** particles           
+    - description:  Add Python functionality for periodic walls, using pairs of walls at which particles are duplicated to the (-) side of a wall as soon as they transverse a periodic wall at the (+) side
+    - date raised: 2024-10-16 
+
+ * **open issue 1896:** GeneralContact      
+    - description:  add option to completely freeze searchTree bins if all velocities are below a certain threshold; mark these contact objects as inactive by checking activity from time to time; reactivate bins only if item at boundary exceeds velocity limit at active boundary
+    - date raised: 2024-10-16 
+
+ * **open issue 1894:** GeneralContact      
+    - description:  add n\*max(velocity)\*stepSize safety for bounding box, in order to update some objects less frequently (when max dist is reached)
+    - date raised: 2024-10-16 
+
+ * **open issue 1892:** Load/Save HDF5      
+    - description:  Add Data structures like MatrixContainer, Vector3DList, etc.
+    - date raised: 2024-10-13 
+
+ * **open issue 1888:** mbs.GetDictionary   
+    - description:  does not work for symbolic userfunctions
+    - date raised: 2024-10-11 
+
  * **open issue 1864:** MatrixContainer     
     - description:  consider functionality to link to dense numpy matrix; possibly by using the allocatedSize in ResizableMatrix to indicate linking rather than allocation
     - date raised: 2024-10-02 
@@ -5531,17 +5920,9 @@ Open issues
     - description:  check examples in Docu for consistency
     - date raised: 2023-12-19 
 
- * **open issue 1723:** Symbolic            
-    - description:  SymbolicRealVector: add EvaluateItem(i) in operators wherever possible to efficiently evaluate single components instead of all vector components
-    - date raised: 2023-12-09 
-
  * **open issue 1722:** Parameter type      
     - description:  add exudyn.Parameter for all parameters occuring in items, such as referencePosition, physicsMass, etc.; this helps to avoid strings in user functions to access parameter and may allow to use  more efficient case/switch in GetObjectParameter(...)
     - date raised: 2023-12-09 
-
- * **open issue 1721:** Mainsystem extensions
-    - description:  in extension to issue 1718, change all AddRigidBody(...) functions to CreateRigidBody functionality
-    - date raised: 2023-12-08 
 
  * **open issue 1720:** Mainsystem extensions
     - description:  change create2D functions into separate Create functions
@@ -5549,14 +5930,6 @@ Open issues
 
  * **open issue 1719:** generated examples  
     - description:  add set of generically generated examples, generated examples
-    - date raised: 2023-12-08 
-
- * **open issue 1718:** Mainsystem extensions
-    - description:  modify some examples for .Create...(...) functions
-    - date raised: 2023-12-08 
-
- * **open issue 1717:** Symbolic            
-    - description:  add examples to testsuite; modify existing examples
     - date raised: 2023-12-08 
 
  * **open issue 1695:** taskmanager         
@@ -5607,10 +5980,6 @@ Open issues
     - description:  reconsider name: ANCFBeamStructural, not to have too many cases; use this for 2/3 node, different number of slopes except for 1 slope, which is ANCFCable, the 3D version of ANCFCable2D
     - date raised: 2023-08-16 
 
- * **open issue 1651:** Python 3.11         
-    - description:  added Python 3.11 workflows for Windows, Linux and MacOS builds (note: problems with Rosetta x86 on MacOS)
-    - date raised: 2023-07-20 
-
  * **open issue 1650:** MacOS Rosetta       
     - description:  importing numpy gives Intel MKL Warning: Support of Intel Streaming SIMD Extensions 4.2 ... has been deprecated. Intel oneAPI Math Kernel Library 2025.0 will require AVX instructions
     - date raised: 2023-07-20 
@@ -5623,17 +5992,9 @@ Open issues
     - description:  consider settings instead of putting all variables globally into module
     - date raised: 2023-06-23 
 
- * **open issue 1629:** GetSystemState      
-    - description:  extend behavior for returning a dictionary with all data incl. accelerations and possibly alg. accelerations for generalized-alpha solver; check also option to link coords, as in issue 1504
-    - date raised: 2023-06-23 
-
  * **open issue 1614:** static members      
     - description:  LinearSolver GeneralMatrixEXUdense::FactorizeNew has static ResizableMatrix m, which should be turned into class members; add reset method to free memory at solver finalization
     - date raised: 2023-06-11 
-
- * **open issue 1581:** mainSystemExtensions
-    - description:  add LinearSpringDamper and TorsionalSpringDamper
-    - date raised: 2023-05-21 
 
  * **open issue 1565:** utilities InitializeFromRestartFile
     - description:  finalize C++ functionality and Python function
@@ -5659,14 +6020,6 @@ Open issues
     - description:  check return value policy of GeneralContact (as example for further decisions); see if reference in ALL access functions makes no problems if object is deleted on Python side
     - date raised: 2023-04-13 
 
- * **open issue 1505:** reference coordinates
-    - description:  add option to get total coordinates, being reference + current coordinates; gives 4 new configurations; use harmonized interface functions
-    - date raised: 2023-04-08 
-
- * :textorange:`open issue 1504:` Reference/link      
-    - description:  extend mbs and systemData functions for reference, e.g., GetODE2Coordinates; use different function with "Link" extension, e.g., GetODE2CoordinatesLink
-    - date raised: 2023-04-08 
-
  * :textorange:`open issue 1500:` ANCFBeam            
     - description:  check for advanced right-angle frame
     - date raised: 2023-04-08 
@@ -5690,14 +6043,6 @@ Open issues
  * **open issue 1484:** Joint description   
     - description:  add general description for joint constraints
     - date raised: 2023-04-01 
-
- * :textorange:`open issue 1483:` PUMA560             
-    - description:  COM frames of KinematicTree drawn wrong: serialRobotInverseKinematics; check COM setting
-    - date raised: 2023-03-29 
-
- * **open issue 1479:** RotationVector2RotationMatrix
-    - description:  both in Python and C++, fix range to 0..2\*pi, as large angles cause low accuracy
-    - date raised: 2023-03-27 
 
  * :textred:`open issue 1450:` coordinatesSolution 
     - description:  add number of threads to solution files and more details on computer; check parameter variation and other files (e.g. numberOfThreads and final computation time)
@@ -5824,7 +6169,7 @@ Open issues
     - date raised: 2022-03-26 
 
  * :textred:`open issue 0990:` MarkerNodeCoordinate
-    - description:  add option includeReferenceValue=False to include reference value in coordinate
+    - description:  add option addReferenceCoordinates=False to include reference value in coordinate
     - date raised: 2022-03-16 
 
  * **open issue 0988:** ComputeConstraintJacobianDerivative
@@ -5973,10 +6318,6 @@ Open issues
 
  * **open issue 0841:** GeneralContact regularized friction
     - description:  extend regularized friction (Haff-Werner) to integrated form using either Cundall-Stack friction or breaking tangential springs
-    - date raised: 2021-12-19 
-
- * **open issue 0838:** GeneralContact jacobian
-    - description:  add jacobian and PostNewton for cable-sphere (circle) contact
     - date raised: 2021-12-19 
 
  * **open issue 0836:** GeneralContact add cone
@@ -6254,6 +6595,10 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 1889:` symbolic            
+    - description:  GetLoad and similar functions do not work with symbolic user functions and raise TypeError: Object of type 'exudyn.exudynCPP.symbolic.UserFunction' is not an instance of 'function'; see also issue with mbs.GetDictionary()
+    - date raised: 2024-10-11 
 
  * :textred:`open BUG 1772:` item.GetDictionary  
     - description:  item.GetDictionary not working for new user function interface with symbolic user function

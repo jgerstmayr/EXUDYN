@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -27,7 +27,7 @@ class VSettingsGeneral // AUTO:
 {
 public: // AUTO: 
   bool autoFitScene;                              //!< AUTO: automatically fit scene within startup after StartRenderer()
-  Index axesTiling;                               //!< AUTO: global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)
+  Index axesTiling;                               //!< AUTO: global number of segments for drawing cylinders for axes and cones for arrows (reduce this number, e.g. to 4, if many axes are drawn)
   Float4 backgroundColor;                         //!< AUTO: red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])
   Float4 backgroundColorBottom;                   //!< AUTO: red, green, blue and alpha values for bottom background color in case that useGradientBackground = True
   Index circleTiling;                             //!< AUTO: global number of segments for circles; if smaller than 2, 2 segments are used (flat)
@@ -98,9 +98,9 @@ public: // AUTO:
   };
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)
+  //! AUTO: Set function (needed in pybind) for: global number of segments for drawing cylinders for axes and cones for arrows (reduce this number, e.g. to 4, if many axes are drawn)
   void PySetAxesTiling(const Index& axesTilingInit) { axesTiling = EXUstd::GetSafelyPInt(axesTilingInit,"axesTiling"); }
-  //! AUTO: Read (Copy) access to: global number of segments for drawing axes cylinders and cones (reduce this number, e.g. to 4, if many axes are drawn)
+  //! AUTO: Read (Copy) access to: global number of segments for drawing cylinders for axes and cones for arrows (reduce this number, e.g. to 4, if many axes are drawn)
   Index PyGetAxesTiling() const { return Index(axesTiling); }
 
   //! AUTO: Set function (needed in pybind) for: red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])
@@ -207,7 +207,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -299,7 +299,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -390,7 +390,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -484,7 +484,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -545,7 +545,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -623,7 +623,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -712,7 +712,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -781,7 +781,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -803,6 +803,7 @@ public: // AUTO:
   float defaultRadius;                            //!< AUTO: global radius of load axis if drawn in 3D
   float defaultSize;                              //!< AUTO: global load size; if -1.f, load size is relative to maxSceneSize
   bool drawSimplified;                            //!< AUTO: draw markers with simplified symbols
+  bool drawWithUserFunction;                      //!< AUTO: draw loads like force vectors time dependent; make sure that fixedLoadSize=false, while otherwise only the direction will change; user functions can only be drawn, if they are either symbolic or for Python user functions if useMultiThreadedRendering=False
   bool fixedLoadSize;                             //!< AUTO: if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size
   float loadSizeFactor;                           //!< AUTO: if fixedLoadSize=false, then this scaling factor is used to draw the load vector
   bool show;                                      //!< AUTO: flag to decide, whether the loads are shown
@@ -817,6 +818,7 @@ public: // AUTO:
     defaultRadius = 0.005f;
     defaultSize = 0.2f;
     drawSimplified = true;
+    drawWithUserFunction = true;
     fixedLoadSize = true;
     loadSizeFactor = 0.1f;
     show = true;
@@ -837,6 +839,7 @@ public: // AUTO:
     os << "  defaultRadius = " << defaultRadius << "\n";
     os << "  defaultSize = " << defaultSize << "\n";
     os << "  drawSimplified = " << drawSimplified << "\n";
+    os << "  drawWithUserFunction = " << drawWithUserFunction << "\n";
     os << "  fixedLoadSize = " << fixedLoadSize << "\n";
     os << "  loadSizeFactor = " << loadSizeFactor << "\n";
     os << "  show = " << show << "\n";
@@ -859,7 +862,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -999,7 +1002,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1070,7 +1073,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1186,7 +1189,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1284,7 +1287,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1358,7 +1361,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1376,6 +1379,8 @@ public: // AUTO:
 class VSettingsOpenGL // AUTO: 
 {
 public: // AUTO: 
+  float clippingPlaneDistance;                    //!< AUTO: distance of clipping plane on normal vector; see also clippingPlaneNormal
+  Float3 clippingPlaneNormal;                     //!< AUTO: normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance
   bool drawFaceNormals;                           //!< AUTO: draws triangle normals, e.g. at center of triangles; used for debugging of faces
   float drawNormalsLength;                        //!< AUTO: length of normals; used for debugging
   bool drawVertexNormals;                         //!< AUTO: draws vertex normals; used for debugging
@@ -1429,6 +1434,8 @@ public: // AUTO:
   //! AUTO: default constructor with parameter initialization
   VSettingsOpenGL()
   {
+    clippingPlaneDistance = 0.f;
+    clippingPlaneNormal = Float3({0.f,0.f,0.f});
     drawFaceNormals = false;
     drawNormalsLength = 0.1f;
     drawVertexNormals = false;
@@ -1479,6 +1486,11 @@ public: // AUTO:
   };
 
   // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance
+  void PySetClippingPlaneNormal(const std::array<float,3>& clippingPlaneNormalInit) { clippingPlaneNormal = clippingPlaneNormalInit; }
+  //! AUTO: Read (Copy) access to: normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance
+  std::array<float,3> PyGetClippingPlaneNormal() const { return std::array<float,3>(clippingPlaneNormal); }
+
   //! AUTO: Set function (needed in pybind) for: length of normals; used for debugging
   void PySetDrawNormalsLength(const float& drawNormalsLengthInit) { drawNormalsLength = EXUstd::GetSafelyPFloat(drawNormalsLengthInit,"drawNormalsLength"); }
   //! AUTO: Read (Copy) access to: length of normals; used for debugging
@@ -1563,6 +1575,8 @@ public: // AUTO:
   virtual void Print(std::ostream& os) const
   {
     os << "VSettingsOpenGL" << ":\n";
+    os << "  clippingPlaneDistance = " << clippingPlaneDistance << "\n";
+    os << "  clippingPlaneNormal = " << clippingPlaneNormal << "\n";
     os << "  drawFaceNormals = " << drawFaceNormals << "\n";
     os << "  drawNormalsLength = " << drawNormalsLength << "\n";
     os << "  drawVertexNormals = " << drawVertexNormals << "\n";
@@ -1630,7 +1644,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1732,7 +1746,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1793,7 +1807,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1935,7 +1949,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2024-08-07 (last modfied)
+* @date         AUTO: 2025-02-28 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

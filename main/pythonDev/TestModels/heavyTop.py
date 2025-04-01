@@ -146,15 +146,14 @@ if useGraphics:
     SC.WaitForRenderEngineStopFlag()
     exu.StopRenderer() #safely close rendering window!
 
-sol = mbs.systemData.GetODE2Coordinates(); 
-solref = mbs.systemData.GetODE2Coordinates(configuration=exu.ConfigurationType.Reference); 
-#exu.Print('sol=',sol)
+solTotal = mbs.systemData.GetODE2CoordinatesTotal()
 u = 0
 for i in range(4):
-    u += abs(sol[3+i]+solref[3+i]); #Euler parameters
-
+    u += abs(solTotal[3+i]); #Euler parameters
 for i in range(3):
-    u += abs(sol[7+3+i]+solref[7+3+i]); #Euler angles Rxyz
+    u += abs(solTotal[7+3+i]); #Euler angles Rxyz
+
+exu.Print('sol=',solTotal)
 
 exu.Print('solution of heavy top =',u)
 # EP ref solution MATLAB: at t=0.2
@@ -164,7 +163,7 @@ exu.Print('solution of heavy top =',u)
 
 #RotXYZ solution EXUDYN:           29.86975964,-0.7683481513,-1.002841906
 
-exudynTestGlobals.testError = u - (33.423125751773306) #2020-02-04 added RigidRxyz: (33.423125751773306) 2020-02-03: (1.7821760506326125)
+exudynTestGlobals.testError = u - (33.42312575174431) #2020-02-04 added RigidRxyz: (33.423125751773306) 2020-02-03: (1.7821760506326125)
 exudynTestGlobals.testResult = u
 
 
@@ -183,54 +182,7 @@ if useGraphics:
     mbs.PlotSensor(sAngVel[0], components=[0,1,2], labels=['omega X','omega Y','omega Z'])
     mbs.PlotSensor(sPos[0], components=[0,1,2])
 
-    # if False:
-    #     import matplotlib.pyplot as plt
-    #     import matplotlib.ticker as ticker
-    #     plt.close("all")
-        
-    #     [fig1, ax1] = plt.subplots()
-    #     [fig2, ax2] = plt.subplots()
-    #     [fig3, ax3] = plt.subplots()
-    #     data1 = np.loadtxt('solution/sensorCoordinates.txt', comments='#', delimiter=',')
-    #     ax1.plot(data1[:,0], data1[:,1+3]+1, 'r-', label='theta 0')  #1, because coordinates to not include ref. values
-    #     ax1.plot(data1[:,0], data1[:,2+3], 'g-', label='theta 1') 
-    #     ax1.plot(data1[:,0], data1[:,3+3], 'b-', label='theta 2') 
-    #     ax1.plot(data1[:,0], data1[:,4+3], 'k-', label='theta 3') 
-        
-    #     data1 = np.loadtxt('../../../docs/verification/HeavyTopSolution/HeavyTop_TimeEulerParameter_RK4.txt', comments='#', delimiter=',')
-    #     ax1.plot(data1[:,0], data1[:,1], 'r:', label='theta 0 ref')  #1, because coordinates to not include ref. values
-    #     ax1.plot(data1[:,0], data1[:,2], 'g:', label='theta 1 ref') 
-    #     ax1.plot(data1[:,0], data1[:,3], 'b:', label='theta 2 ref') 
-    #     ax1.plot(data1[:,0], data1[:,4], 'k:', label='theta 3 ref') 
-    #     ax1.set_ylabel("Euler parameter")
-        
-    #     data2 = np.loadtxt('solution/sensorAngVel.txt', comments='#', delimiter=',')
-    #     ax2.plot(data2[:,0], data2[:,1], 'r-', label='omega X') 
-    #     ax2.plot(data2[:,0], data2[:,2], 'g-', label='omega Y') 
-    #     ax2.plot(data2[:,0], data2[:,3], 'b-', label='omega Z') 
-        
-    #     data3 = np.loadtxt('solution/sensorPosition.txt', comments='#', delimiter=',')
-    #     ax3.plot(data3[:,0], data3[:,1], 'r-', label='position X') 
-    #     ax3.plot(data3[:,0], data3[:,2], 'g-', label='position Y') 
-    #     ax3.plot(data3[:,0], data3[:,3], 'b-', label='position Z') 
-        
-    #     axList=[ax1,ax2,ax3]
-    #     figList=[fig1, fig2, fig3]
-        
-    #     for ax in axList:
-    #         ax.grid(True, 'major', 'both')
-    #         ax.xaxis.set_major_locator(ticker.MaxNLocator(10)) 
-    #         ax.yaxis.set_major_locator(ticker.MaxNLocator(10)) 
-    #         ax.set_xlabel("time (s)")
-    #         ax.legend()
-            
-    #     ax2.set_ylabel("angular velocity (rad/s)")
-    #     ax3.set_ylabel("coordinate (m)")
-        
-    #     for f in figList:
-    #         f.tight_layout()
-    #         f.show() #bring to front
-    
+
 
 
 

@@ -203,6 +203,15 @@ public:
 	void PySetPostNewtonUserFunction(const py::object& value);
 	py::object PyGetPostNewtonUserFunction(bool asDict = false);
 
+	//! set user function to be called at Newton Residual computation
+	void PySetPreNewtonResidualUserFunction(const py::object& value);
+	py::object PyGetPreNewtonResidualUserFunction(bool asDict = false);
+
+	//! set user function which can be used to add values to system jacobian
+	void PySetSystemJacobianUserFunction(const py::object& value);
+	py::object PyGetSystemJacobianUserFunction(bool asDict = false);
+
+
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//   NODES
 	//! this is the hook to the object factory, handling all kinds of objects, nodes, ...

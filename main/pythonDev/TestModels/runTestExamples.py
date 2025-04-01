@@ -218,6 +218,7 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
             or 'massSpringFrictionInteractive' in exampleFileName #cannot work, interactive
             or 'nMassOscillatorInteractive' in exampleFileName    #cannot work, interactive
             or 'performanceMultiThreadingNG' in exampleFileName
+            or 'URDF' in exampleFileName
             or 'rospy' in fileString                #not possible without ros installed
             or 'TCPIP' in fileString                #not possible without MATLAB client
             #or 'testData/' in fileString           #numpy file

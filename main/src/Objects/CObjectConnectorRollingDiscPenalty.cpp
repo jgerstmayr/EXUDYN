@@ -304,7 +304,6 @@ Real CObjectConnectorRollingDiscPenalty::PostNewtonStep(const MarkerDataStructur
 	ComputeContactForces(markerDataCurrent, parameters, true, pC, vC, wLateral, w2, n0, w3, fContact, localSlipVelocity);
 	Real currentGap = pC * n0; //includes offset p0 correctly with normal n0
 
-	//delete: Real previousState = currentState;
 	if ((currentGap > 0 && dataGapState <= 0) || (currentGap <= 0 && dataGapState > 0)) //action: state1=dataGapState, error = |currentGap*k|
 	{
 		discontinuousError += fabs(currentGap * parameters.contactStiffness);
@@ -321,7 +320,7 @@ Real CObjectConnectorRollingDiscPenalty::PostNewtonStep(const MarkerDataStructur
 		Vector2D dataSlipForce = ComputeSlipForce(parameters, localSlipVelocity, dataLocalSlipVelocity, fContact[2]);
 		Vector2D slipForce = ComputeSlipForce(parameters, localSlipVelocity, localSlipVelocity, fContact[2]);
 
-		discontinuousError += (slipForce - dataSlipForce).GetL2Norm(); //always there is an error because slip direction is updated slowly
+		discontinuousError += (slipForce - dataSlipForce).GetL2Norm(); //there is always an error because slip direction is updated slowly
 		
 		//if ((slipForce - dataSlipForce).GetL2Norm() != 0)
 		//{

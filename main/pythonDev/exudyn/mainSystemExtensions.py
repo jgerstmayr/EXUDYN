@@ -29,7 +29,7 @@ from exudyn.rigidBodyUtilities import GetRigidBodyNode, ComputeOrthonormalBasis,
     RotationMatrix2RotationVector
 
 import exudyn.itemInterface as eii 
-from exudyn.advancedUtilities import RaiseTypeError, IsVector, ExpectedType, IsValidObjectIndex, IsValidNodeIndex, \
+from exudyn.advancedUtilities import RaiseTypeError, IsVector, IsReal, ExpectedType, IsValidObjectIndex, IsValidNodeIndex, \
                                     IsValidRealInt, IsValidPRealInt, IsValidURealInt, IsIntVector, \
                                     IsValidBool, IsSquareMatrix, IsNone, IsNotNone
 
@@ -44,7 +44,7 @@ import copy
 #add helpful Python extensions for MainSystem, regarding creation of bodies, point masses, connectors and joints
 
 #internal function: do some pre-checks and calculations for joint
-def JointPreCheckCalc(where, mbs, name, bodyNumbers, position, show, useGlobalFrame):
+def JointPreCheckCalc(where, mbs, name, bodyNumbers, position, show, useGlobalFrame, requireRotMat=True):
     #perform some checks:
     if not exudyn.__useExudynFast:
         if not isinstance(bodyNumbers, list) or len(bodyNumbers) != 2:
@@ -66,15 +66,26 @@ def JointPreCheckCalc(where, mbs, name, bodyNumbers, position, show, useGlobalFr
     p0 = mbs.GetObjectOutputBody(bodyNumbers[0],exudyn.OutputVariableType.Position,
                                  localPosition=[0,0,0],
                                  configuration=exudyn.ConfigurationType.Reference)
-    A0 = mbs.GetObjectOutputBody(bodyNumbers[0],exudyn.OutputVariableType.RotationMatrix,
-                                 localPosition=[0,0,0],
-                                 configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
+    try:
+        A0 = mbs.GetObjectOutputBody(bodyNumbers[0],exudyn.OutputVariableType.RotationMatrix,
+                                     localPosition=[0,0,0],
+                                     configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
+    except: #probably caused as object does not have rotation matrix (acceptable for some cases)
+        if requireRotMat:
+            raise #reraise exception
+        A0 = np.eye(3) #if it has no rotation, identity is ok
+            
     p1 = mbs.GetObjectOutputBody(bodyNumbers[1],exudyn.OutputVariableType.Position,
                                  localPosition=[0,0,0],
                                  configuration=exudyn.ConfigurationType.Reference)
-    A1 = mbs.GetObjectOutputBody(bodyNumbers[1],exudyn.OutputVariableType.RotationMatrix,
-                                 localPosition=[0,0,0],
-                                 configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
+    try:
+        A1 = mbs.GetObjectOutputBody(bodyNumbers[1],exudyn.OutputVariableType.RotationMatrix,
+                                     localPosition=[0,0,0],
+                                     configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
+    except: #probably caused as object does not have rotation matrix (acceptable for some cases)
+        if requireRotMat:
+            raise #reraise exception
+        A1 = np.eye(3)
 
     return [p0, A0, p1, A1] 
 
@@ -528,7 +539,7 @@ def MainSystemCreateRigidBody(mbs,
 #  damping: scalar damping coefficient
 #  force: scalar additional force applied
 #  velocityOffset: scalar offset: if referenceLength is changed over time, the velocityOffset may be changed accordingly to emulate a reference motion
-#  springForceUserFunction: a user function springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL\_t, stiffness, damping, force)->float ; this function replaces the internal connector force compuation
+#  springForceUserFunction: a user function springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL\_t, stiffness, damping, force)->float ; this function replaces the internal connector force computation
 #  bodyOrNodeList: alternative to bodyNumbers; a list of object numbers (with specific localPosition0/1) or node numbers; may alse be mixed types; to use this case, set bodyNumbers = [None,None]
 #  show: if True, connector visualization is drawn
 #  drawSize: general drawing size of connector
@@ -662,7 +673,7 @@ def MainSystemCreateSpringDamper(mbs,
 #  stiffness: stiffness coefficients (as 3D list or numpy array)
 #  damping: damping coefficients (as 3D list or numpy array)
 #  offset: offset vector (as 3D list or numpy array)
-#  springForceUserFunction: a user function springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)->[float,float,float] ; this function replaces the internal connector force compuation
+#  springForceUserFunction: a user function springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)->[float,float,float] ; this function replaces the internal connector force computation
 #  bodyOrNodeList: alternative to bodyNumbers; a list of object numbers (with specific localPosition0/1) or node numbers; may alse be mixed types; to use this case, set bodyNumbers = [None,None]
 #  show: if True, connector visualization is drawn
 #  drawSize: general drawing size of connector
@@ -774,7 +785,7 @@ def MainSystemCreateCartesianSpringDamper(mbs,
 #  rotationMatrixJoint: additional rotation matrix; in case  useGlobalFrame=False, it transforms body0/node0 local frame to joint frame; if useGlobalFrame=True, it transforms global frame to joint frame
 #  useGlobalFrame: if False, the rotationMatrixJoint is defined in the local coordinate system of body0
 #  intrinsicFormulation: if True, uses intrinsic formulation of Maserati and Morandini, which uses matrix logarithm and is independent of order of markers (preferred formulation); otherwise, Tait-Bryan angles are used for computation of torque, see documentation
-#  springForceTorqueUserFunction: a user function springForceTorqueUserFunction(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)->[float,float,float, float,float,float] ; this function replaces the internal connector force / torque compuation
+#  springForceTorqueUserFunction: a user function springForceTorqueUserFunction(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)->[float,float,float, float,float,float] ; this function replaces the internal connector force / torque computation
 #  postNewtonStepUserFunction: a special user function postNewtonStepUserFunction(mbs, t, Index itemIndex, dataCoordinates, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)->[PNerror, recommendedStepSize, data[0], data[1], ...] ; for details, see RigidBodySpringDamper for full docu
 #  bodyOrNodeList: alternative to bodyNumbers; a list of object numbers (with specific localPosition0/1) or node numbers; may alse be mixed types; to use this case, set bodyNumbers = [None,None]
 #  show: if True, connector visualization is drawn
@@ -892,6 +903,151 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
 
 
 
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: helper function to create TorsionalSpringDamper connector, using arguments from ObjectConnectorTorsionalSpringDamper, see there for the full documentation
+#**input: 
+#  mbs: the MainSystem where items are created
+#  name: name string for connector; markers get Marker0:name and Marker1:name
+#  bodyNumbers: a list of two body numbers (ObjectIndex) to be connected
+#  position: a 3D vector as list or np.array: if useGlobalFrame=True it describes the global position of the joint in reference configuration; else: local position in body0
+#  axis: a 3D vector as list or np.array containing the axis around which the spring acts, either in local body0 coordinates (useGlobalFrame=False), or in global reference configuration (useGlobalFrame=True)
+#  stiffness: scalar stiffness of spring
+#  damping: scalar damping added to spring
+#  offset: scalar offset, which can be used to realize a P-controlled actuator
+#  velocityOffset: scalar velocity offset, which can be used to realize a D-controlled actuator
+#  torque: additional constant torque added to spring-damper, acting between the two bodies
+#  useGlobalFrame: if False, the position and axis vectors are defined in the local coordinate system of body0, otherwise in global (reference) coordinates
+#  springTorqueUserFunction : a user function springTorqueUserFunction(mbs, t, itemNumber, rotation, angularVelocity, stiffness, damping, offset)->float ; this function replaces the internal connector torque computation
+#  unlimitedRotations: if True, an additional generic data node is added to enable measurement of rotations beyond +/- pi; this also allows the spring to cope with multiple turns.
+#  show: if True, connector visualization is drawn
+#  drawSize: general drawing size of connector
+#  color: color of connector
+#**output: ObjectIndex; returns index of newly created object
+#**belongsTo: MainSystem
+#**example:
+# #coming later
+def MainSystemCreateTorsionalSpringDamper(mbs,
+                                          name='',
+                                          bodyNumbers=[None, None], 
+                                          position = [0.,0.,0.],
+                                          axis = [0.,0.,0.],
+                                          stiffness = 0., 
+                                          damping = 0., 
+                                          offset = 0.,
+                                          velocityOffset = 0.,
+                                          torque = 0.,
+                                          useGlobalFrame=True,
+                                          springTorqueUserFunction=0,
+                                          unlimitedRotations = True,
+                                          show=True, drawSize=-1, color=exudyn.graphics.color.default):
+
+    where='MainSystem.CreateTorsionalSpringDamper(...)'
+    internBodyNodeList = bodyNumbers
+
+    #perform some checks:
+    if not exudyn.__useExudynFast:
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
+                
+        if not IsVector(position, 3):
+            RaiseTypeError(where=where, argumentName='position', received = position, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(axis, 3):
+            RaiseTypeError(where=where, argumentName='axis', received = axis, expectedType = ExpectedType.Vector, dim=3)
+    
+        if not IsValidURealInt(stiffness):
+            RaiseTypeError(where=where, argumentName='stiffness', received = stiffness, expectedType = ExpectedType.UReal)
+        if not IsValidURealInt(damping):
+            RaiseTypeError(where=where, argumentName='damping', received = damping, expectedType = ExpectedType.UReal)
+        if not IsValidURealInt(offset):
+            RaiseTypeError(where=where, argumentName='offset', received = offset, expectedType = ExpectedType.UReal)
+        if not IsValidURealInt(velocityOffset):
+            RaiseTypeError(where=where, argumentName='velocityOffset', received = velocityOffset, expectedType = ExpectedType.UReal)
+        if not IsValidURealInt(torque):
+            RaiseTypeError(where=where, argumentName='torque', received = torque, expectedType = ExpectedType.UReal)
+
+
+        if not IsValidBool(unlimitedRotations):
+            RaiseTypeError(where=where, argumentName='unlimitedRotations', received = unlimitedRotations, expectedType = ExpectedType.Bool)
+
+        if not IsValidBool(show):
+            RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
+
+
+        if not IsValidRealInt(drawSize):
+            RaiseTypeError(where=where, argumentName='drawSize', received = drawSize, expectedType = ExpectedType.Real)
+
+        if not IsValidBool(show):
+            RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
+
+        if not IsVector(color, 4):
+            RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+
+
+    #similar to RevoluteJoint!
+    [p0, A0, p1, A1] = JointPreCheckCalc(where, mbs, name, bodyNumbers, position, show, useGlobalFrame)
+        
+    if useGlobalFrame:
+        pJoint = copy.copy(position)
+        vAxis = copy.copy(axis)
+    else: #transform into global coordinates, then everything works same
+        pJoint = A0 @ position + p0
+        vAxis = A0 @ axis
+
+    #compute joint frame (not unique, only rotation axis must coincide)
+    B = ComputeOrthonormalBasis(vAxis) #axis = x-axis
+
+    #interchange z and x axis (needs sign change, otherwise det(A)=-1)
+    AJ = np.eye(3)
+    AJ[:,0]=-B[:,2]
+    AJ[:,1]= B[:,1]
+    AJ[:,2]= B[:,0] #axis ==> rotation axis z for revolute joint ... 
+    #print(AJ)
+    
+    #compute joint position and axis in bodyNumber0 / 1 coordinates:
+    pJ0 = A0.T @ (np.array(pJoint) - p0)
+    pJ1 = A1.T @ (np.array(pJoint) - p1)
+
+    #compute joint marker orientations:
+    MR0 = A0.T @ AJ  
+    MR1 = A1.T @ AJ  
+    
+    mName0 = ''
+    mName1 = ''
+    if name != '':
+        mName0 = 'Marker0:'+name
+        mName1 = 'Marker1:'+name
+
+    mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=bodyNumbers[0], localPosition=pJ0))
+    mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localPosition=pJ1))
+
+    if unlimitedRotations:
+        nGeneric = mbs.AddNode(eii.NodeGenericData(initialCoordinates=[0], 
+                                             numberOfDataCoordinates=1)) #for infinite rotations
+    else:
+        nGeneric = exudyn.InvalidIndex()
+
+    oConnector = mbs.AddObject(eii.ObjectConnectorTorsionalSpringDamper(name=name,
+                                                                        markerNumbers = [mBody0,mBody1],
+                                                                        nodeNumber = nGeneric,
+                                                                        stiffness = stiffness, 
+                                                                        damping = damping, 
+                                                                        offset = offset,
+                                                                        velocityOffset = velocityOffset,
+                                                                        torque = torque,
+                                                                        rotationMarker0=MR0, 
+                                                                        rotationMarker1=MR1,
+                                                                        springTorqueUserFunction=springTorqueUserFunction, 
+                                                                        visualization=eii.VTorsionalSpringDamper(show=show, 
+                                                                                      drawSize=drawSize, color=color)
+                                                                      ))
+
+    
+    return oConnector
+
+
+
+
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: Create revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
 #**input:
@@ -905,7 +1061,7 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
 #  axisRadius: radius of axis for connector graphical representation
 #  axisLength: length of axis for connector graphical representation
 #  color: color of connector
-#**output: [ObjectIndex, MarkerIndex, MarkerIndex]; returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
+#**output: ObjectIndex; returns index of created joint
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
@@ -989,7 +1145,7 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
                                                 rotationMarker1=MR1,
              visualization=eii.VRevoluteJointZ(show=show, axisRadius=axisRadius, axisLength=axisLength, color=color) ))
 
-    return [oJoint, mBody0, mBody1]
+    return oJoint
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1005,7 +1161,7 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
 #  axisRadius: radius of axis for connector graphical representation
 #  axisLength: length of axis for connector graphical representation
 #  color: color of connector
-#**output: [ObjectIndex, MarkerIndex, MarkerIndex]; returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
+#**output: ObjectIndex; returns index of created joint
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
@@ -1086,7 +1242,8 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
                                                 rotationMarker1=MR1,
              visualization=eii.VPrismaticJointX(show=show, axisRadius=axisRadius, axisLength=axisLength, color=color) ))
 
-    return [oJoint, mBody0, mBody1]
+    return oJoint
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: Create spherical joint between two bodies; definition of joint position in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers are automatically computed
@@ -1100,7 +1257,7 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
 #  show: if True, connector visualization is drawn
 #  jointRadius: radius of sphere for connector graphical representation
 #  color: color of connector
-#**output: [ObjectIndex, MarkerIndex, MarkerIndex]; returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
+#**output: ObjectIndex; returns index of created joint
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
@@ -1142,7 +1299,7 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
         if not IsVector(color, 4):
             RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
-    [p0, A0, p1, A1] = JointPreCheckCalc(where, mbs, name, bodyNumbers, position, show, useGlobalFrame)
+    [p0, A0, p1, A1] = JointPreCheckCalc(where, mbs, name, bodyNumbers, position, show, useGlobalFrame, requireRotMat=False)
 
     if useGlobalFrame:
         pJoint = copy.copy(position)
@@ -1167,7 +1324,7 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
                                                     constrainedAxes=constrainedAxes,
              visualization=eii.VObjectJointSpherical(show=show, jointRadius=jointRadius, color=color) ))
 
-    return [oJoint, mBody0, mBody1]
+    return oJoint
 
 
 
@@ -1188,7 +1345,7 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
 #  axesRadius: radius of axes for connector graphical representation
 #  axesLength: length of axes for connector graphical representation
 #  color: color of connector
-#**output: [ObjectIndex, MarkerIndex, MarkerIndex]; returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
+#**output: ObjectIndex; returns index of created joint
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
@@ -1276,7 +1433,8 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
                                                   offsetUserFunction_t=offsetUserFunction_t,
              visualization=eii.VObjectJointGeneric(show=show, axesRadius=axesRadius, axesLength=axesLength, color=color) ))
 
-    return [oJoint, mBody0, mBody1]
+    return oJoint
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: Create distance joint between two bodies; definition of joint positions in local coordinates of bodies or nodes; if distance=None, it is computed automatically from reference length; all markers are automatically computed
@@ -1291,7 +1449,7 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
 #  show: if True, connector visualization is drawn
 #  drawSize: general drawing size of node
 #  color: color of connector
-#**output: [ObjectIndex, MarkerIndex, MarkerIndex]; returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
+#**output: ObjectIndex; returns index of created joint
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
@@ -1411,8 +1569,237 @@ def MainSystemCreateDistanceConstraint(mbs, name='',
                                                   visualization=eii.VSphericalJoint(show=show, jointRadius=0.5*drawSize, color=color) ))
         
 
-    return [oJoint, mBody0, mBody1]
+    return oJoint
 
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: Create an ideal rolling disc joint between wheel rigid body and ground; the disc is infinitely thin and the ground is a perfectly flat plane; the wheel may lift off; definition of joint position and axis in global coordinates (alternatively in wheel (body1) local coordinates) for reference configuration of bodies; all markers and other quantities are automatically computed; some constraint conditions may be deactivated, e.g. to resolve redundancy of constraints for multi-wheel vehicles
+#**input:
+#  mbs: the MainSystem where joint and markers shall be created
+#  name: name string for joint; markers get Marker0:name and Marker1:name
+#  bodyNumbers: a list of object numbers for body0=ground and body1=wheel; must be rigid body or ground object
+#  axisPosition: a 3D vector as list or np.array: position of wheel axis in local body1=wheel coordinates
+#  axisVector: a 3D vector as list or np.array containing the joint (=wheel) axis in local body1=wheel coordinates
+#  discRadius: radius of the disc
+#  planePosition: any 3D position vector of plane in ground object; given as local coordinates in ground object
+#  planeNormal: 3D normal vector of the rolling (contact) plane on ground; given as local coordinates in ground object
+#  constrainedAxes: [j0,j1,j2] flags, which determine which constraints are active, in which j0 represents the constraint for lateral motion, j1 longitudinal (forward/backward) motion and j2 represents the normal (contact) direction
+#  show: if True, connector visualization is drawn
+#  discWidth: disc with, only used for drawing
+#  color: color of connector
+#**output: ObjectIndex; returns index of created joint
+#**belongsTo: MainSystem
+#**example:
+# import exudyn as exu
+# from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+# import numpy as np
+# SC = exu.SystemContainer()
+# mbs = SC.AddSystem()
+#
+# r = 0.2
+# oDisc = mbs.CreateRigidBody(inertia = InertiaCylinder(density=5000, length=0.1, outerRadius=r, axis=0),
+#                           referencePosition = [1,0,r],
+#                           initialAngularVelocity = [-3*2*pi,0,0],
+#                           initialVelocity = [0,r*3*2*pi,0],
+#                           gravity = [0,0,-9.81],
+#                           graphicsDataList = [exu.graphics.Cylinder(pAxis = [-0.05,0,0], vAxis = [0.1,0,0], radius = r*0.99,
+#                                                                     color=exu.graphics.color.blue),
+#                                               exu.graphics.Basis(length=2*r)])
+# oGround = mbs.CreateGround(graphicsDataList=[exu.graphics.CheckerBoard(size=4)])
+#
+# mbs.CreateRollingDisc(bodyNumbers=[oGround, oDisc], 
+#                       axisPosition=[0,0,0], axisVector=[1,0,0], #on local wheel frame
+#                       planePosition = [0,0,0], planeNormal = [0,0,1],  #in ground frame
+#                       discRadius = r, 
+#                       discWidth=0.01, color=exu.graphics.color.steelblue)
+# mbs.Assemble()
+# simulationSettings = exu.SimulationSettings()
+# simulationSettings.timeIntegration.numberOfSteps = 1000
+# simulationSettings.timeIntegration.endTime = 2
+#
+# mbs.SolveDynamic(simulationSettings = simulationSettings)
+def MainSystemCreateRollingDisc(mbs, name='', bodyNumbers=[None, None], 
+                                axisPosition=[], axisVector = [1,0,0],
+                                discRadius = 0., planePosition = [0,0,0], planeNormal = [0,0,1], 
+                                constrainedAxes = [1,1,1],
+                                show=True, discWidth=0.1, color=exudyn.graphics.color.default):
+    
+    where = 'MainSystem.CreateRollingDisc(...)'
+    if not exudyn.__useExudynFast:
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
+
+        if not IsVector(axisPosition, 3):
+            RaiseTypeError(where=where, argumentName='axisPosition', received = axisPosition, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(axisVector, 3):
+            RaiseTypeError(where=where, argumentName='axisVector', received = axisVector, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(planePosition, 3):
+            RaiseTypeError(where=where, argumentName='planePosition', received = planePosition, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(planeNormal, 3):
+            RaiseTypeError(where=where, argumentName='planeNormal', received = planeNormal, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(constrainedAxes, 3):
+            RaiseTypeError(where=where, argumentName='constrainedAxes', received = constrainedAxes, expectedType = ExpectedType.IntVector, dim=3)
+    
+        if not IsValidRealInt(discRadius):
+            RaiseTypeError(where=where, argumentName='discRadius', received = discRadius, expectedType = ExpectedType.Real)
+        if not IsValidRealInt(discWidth):
+            RaiseTypeError(where=where, argumentName='discWidth', received = discWidth, expectedType = ExpectedType.Real)
+
+        if not IsVector(color, 4):
+            RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+
+        if not IsValidBool(show):
+            RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
+
+    
+    mName0 = ''
+    mName1 = ''
+    if name != '':
+        mName0 = 'Marker0:'+name
+        mName1 = 'Marker1:'+name
+
+    mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=bodyNumbers[0], localPosition=planePosition)) #ground
+    mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localPosition=axisPosition)) #wheel
+
+    oJoint = mbs.AddObject(eii.ObjectJointRollingDisc(name=name,markerNumbers=[mBody0,mBody1],
+                                                      constrainedAxes=constrainedAxes, discRadius = discRadius, 
+                                                      discAxis = axisVector, planeNormal = planeNormal, 
+                                                      activeConnector = True, 
+                                                      visualization = eii.VObjectJointRollingDisc(show=show, 
+                                                                                                  discWidth=discWidth, 
+                                                                                                  color=color) ))
+
+    return oJoint
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: Create penalty-based rolling disc joint between wheel rigid body and ground; the disc is infinitely thin and the ground is a perfectly flat plane; the wheel may lift off; definition of joint position and axis in global coordinates (alternatively in wheel (body1) local coordinates) for reference configuration of bodies; all markers and other quantities are automatically computed
+#**input:
+#  mbs: the MainSystem where joint and markers shall be created
+#  name: name string for joint; markers get Marker0:name and Marker1:name
+#  bodyNumbers: a list of object numbers for body0=ground and body1=wheel; must be rigid body or ground object
+#  axisPosition: a 3D vector as list or np.array: position of wheel axis in local body1=wheel coordinates
+#  axisVector: a 3D vector as list or np.array containing the joint (=wheel) axis in local body1=wheel coordinates
+#  discRadius: radius of the disc
+#  planePosition: any 3D position vector of plane in ground object; given as local coordinates in ground object
+#  planeNormal: 3D normal vector of the rolling (contact) plane on ground; given as local coordinates in ground object
+#  dryFrictionAngle: angle (radiant) which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle
+#  contactStiffness: normal contact stiffness
+#  contactDamping: normal contact damping
+#  dryFriction: 2D list of friction parameters; dry friction coefficients in local wheel coordinates, where for dryFrictionAngle=0, the first parameter refers to forward direction and the second parameter to lateral direction
+#  viscousFriction: 2D list of viscous friction coefficients [SI:1/(m/s)] in local wheel coordinates; proportional to slipping velocity, leading to increasing slipping friction force for increasing slipping velocity; directions are same as in dryFriction
+#  dryFrictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)
+#  rollingFrictionViscous: rolling friction [SI:1], which acts against the velocity of the trail on ground and leads to a force proportional to the contact normal force; 
+#  useLinearProportionalZone: if True, a linear proportional zone is used; the linear zone performs better in implicit time integration as the Jacobian has a constant tangent in the sticking case
+#  show: if True, connector visualization is drawn
+#  discWidth: disc with, only used for drawing
+#  color: color of connector
+#**output: ObjectIndex; returns index of created joint
+#**belongsTo: MainSystem
+#**example:
+# import exudyn as exu
+# from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+# import numpy as np
+# SC = exu.SystemContainer()
+# mbs = SC.AddSystem()
+
+# r = 0.2
+# oDisc = mbs.CreateRigidBody(inertia = InertiaCylinder(density=5000, length=0.1, outerRadius=r, axis=0),
+#                           referencePosition = [1,0,r],
+#                           initialAngularVelocity = [-3*2*pi,0,0],
+#                           initialVelocity = [0,r*3*2*pi,0],
+#                           gravity = [0,0,-9.81],
+#                           graphicsDataList = [exu.graphics.Cylinder(pAxis = [-0.05,0,0], vAxis = [0.1,0,0], radius = r*0.99,
+#                                                                     color=exu.graphics.color.blue),
+#                                               exu.graphics.Basis(length=2*r)])
+# oGround = mbs.CreateGround(graphicsDataList=[exu.graphics.CheckerBoard(size=4)])
+
+# mbs.CreateRollingDiscPenalty(bodyNumbers=[oGround, oDisc], axisPosition=[0,0,0], axisVector=[1,0,0],
+#                               discRadius = r, planePosition = [0,0,0], planeNormal = [0,0,1], 
+#                               dryFriction = [0.2,0.2],
+#                               contactStiffness = 1e5, contactDamping = 2e3, 
+#                               discWidth=0.01, color=exu.graphics.color.steelblue)
+
+# mbs.Assemble()
+# simulationSettings = exu.SimulationSettings()
+# simulationSettings.timeIntegration.numberOfSteps = 1000
+# simulationSettings.timeIntegration.endTime = 2
+
+# mbs.SolveDynamic(simulationSettings = simulationSettings)
+def MainSystemCreateRollingDiscPenalty(mbs, name='', bodyNumbers=[None, None], 
+                                  axisPosition=[], axisVector = [1,0,0],
+                                  discRadius = 0., planePosition = [0,0,0], planeNormal = [0,0,1], 
+                                  contactStiffness = 0., contactDamping = 0., 
+                                  dryFriction = [0,0], dryFrictionAngle = 0., 
+                                  dryFrictionProportionalZone = 0., viscousFriction = [0,0], 
+                                  rollingFrictionViscous = 0., useLinearProportionalZone = False, 
+                                  #activeConnector = True, 
+                                  show=True, discWidth=0.1, color=exudyn.graphics.color.default):
+    
+    where = 'MainSystem.CreateRollingDiscPenalty(...)'
+    if not exudyn.__useExudynFast:
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
+
+        if not IsVector(axisPosition, 3):
+            RaiseTypeError(where=where, argumentName='axisPosition', received = axisPosition, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(axisVector, 3):
+            RaiseTypeError(where=where, argumentName='axisVector', received = axisVector, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(planePosition, 3):
+            RaiseTypeError(where=where, argumentName='planePosition', received = planePosition, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(planeNormal, 3):
+            RaiseTypeError(where=where, argumentName='planeNormal', received = planeNormal, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(dryFriction, 2):
+            RaiseTypeError(where=where, argumentName='dryFriction', received = dryFriction, expectedType = ExpectedType.Vector, dim=2)
+        if not IsVector(viscousFriction, 2):
+            RaiseTypeError(where=where, argumentName='viscousFriction', received = viscousFriction, expectedType = ExpectedType.Vector, dim=2)
+    
+        if not IsValidRealInt(discRadius):
+            RaiseTypeError(where=where, argumentName='discRadius', received = discRadius, expectedType = ExpectedType.Real)
+        if not IsValidRealInt(contactStiffness):
+            RaiseTypeError(where=where, argumentName='contactStiffness', received = contactStiffness, expectedType = ExpectedType.Real)
+        if not IsValidRealInt(contactDamping):
+            RaiseTypeError(where=where, argumentName='contactDamping', received = contactDamping, expectedType = ExpectedType.Real)
+        if not IsValidRealInt(dryFrictionAngle):
+            RaiseTypeError(where=where, argumentName='dryFrictionAngle', received = dryFrictionAngle, expectedType = ExpectedType.Real)
+        if not IsValidRealInt(dryFrictionProportionalZone):
+            RaiseTypeError(where=where, argumentName='dryFrictionProportionalZone', received = dryFrictionProportionalZone, expectedType = ExpectedType.Real)
+        if not IsValidRealInt(rollingFrictionViscous):
+            RaiseTypeError(where=where, argumentName='rollingFrictionViscous', received = rollingFrictionViscous, expectedType = ExpectedType.Real)
+        if not IsValidRealInt(useLinearProportionalZone):
+            RaiseTypeError(where=where, argumentName='useLinearProportionalZone', received = useLinearProportionalZone, expectedType = ExpectedType.Real)
+        if not IsValidRealInt(discWidth):
+            RaiseTypeError(where=where, argumentName='discWidth', received = discWidth, expectedType = ExpectedType.Real)
+
+        if not IsVector(color, 4):
+            RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+
+        if not IsValidBool(show):
+            RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
+
+    
+    mName0 = ''
+    mName1 = ''
+    if name != '':
+        mName0 = 'Marker0:'+name
+        mName1 = 'Marker1:'+name
+
+    mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=bodyNumbers[0], localPosition=planePosition)) #ground
+    mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localPosition=axisPosition)) #wheel
+    nGeneric = mbs.AddNode(eii.NodeGenericData(initialCoordinates=[0,0,0], numberOfDataCoordinates=3) )
+    
+    oJoint = mbs.AddObject(eii.ObjectConnectorRollingDiscPenalty(name=name,markerNumbers=[mBody0,mBody1],
+                                                                 nodeNumber = nGeneric, 
+                                                                 discRadius = discRadius, discAxis = axisVector, planeNormal = planeNormal, 
+                                                                 contactStiffness = contactStiffness, contactDamping = contactDamping, 
+                                                                 dryFriction = dryFriction, dryFrictionAngle = dryFrictionAngle, 
+                                                                 dryFrictionProportionalZone = dryFrictionProportionalZone, viscousFriction = viscousFriction, 
+                                                                 rollingFrictionViscous = rollingFrictionViscous, useLinearProportionalZone = useLinearProportionalZone, 
+                                                                 activeConnector = True, 
+                                                                 visualization = eii.VObjectConnectorRollingDiscPenalty(show=show, discWidth=discWidth, 
+                                                                                                                        color=color) ))
+                           
+    return oJoint
 
 
 
@@ -1578,9 +1965,9 @@ def MainSystemCreateTorque(mbs,
 # exudyn.MainSystem.CreateGenericJoint = MainSystemCreateGenericJoint
 
 #missing:
-#RigidBodySpringDamper
 #LinearSpringDamper
 #TorsionalSpringDamper
+#RollingDiscPenalty
 #2x rolling disc
 #CreateBeamsStraight[2D](...) #ANCF, GE with types?
 #CreateBeamsCurved[2D](...)   #ANCF, GE
@@ -1589,15 +1976,7 @@ def MainSystemCreateTorque(mbs,
 # #FUTURE:
 # #def InitializeFromRestartFile(mbs, simulationSettings, restartFileName, verbose=True):
 
-    
-# #needs some extensions; really needed?
-# # def AnimateModes(self, *args, **kwargs):
-# #     SC = self.GetSystemContainer()
-# #     return exudyn.interactive.AnimateModes(SC, self, *args, **kwargs)
-# #makes no sense, as it is a class:
-# # def InteractiveDialog(self, *args, **kwargs):
-# #     return exudyn.interactive.InteractiveDialog(self, *args, **kwargs)
- 
+     
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #AUTO AUTO AUTO AUTO AUTO AUTO AUTO AUTO AUTO AUTO AUTO AUTO 
@@ -1633,6 +2012,10 @@ exu.MainSystem.CreateRigidBodySpringDamper=MainSystemCreateRigidBodySpringDamper
 
 
 #link MainSystem function to Python function:
+exu.MainSystem.CreateTorsionalSpringDamper=MainSystemCreateTorsionalSpringDamper
+
+
+#link MainSystem function to Python function:
 exu.MainSystem.CreateRevoluteJoint=MainSystemCreateRevoluteJoint
 
 
@@ -1650,6 +2033,14 @@ exu.MainSystem.CreateGenericJoint=MainSystemCreateGenericJoint
 
 #link MainSystem function to Python function:
 exu.MainSystem.CreateDistanceConstraint=MainSystemCreateDistanceConstraint
+
+
+#link MainSystem function to Python function:
+exu.MainSystem.CreateRollingDisc=MainSystemCreateRollingDisc
+
+
+#link MainSystem function to Python function:
+exu.MainSystem.CreateRollingDiscPenalty=MainSystemCreateRollingDiscPenalty
 
 
 #link MainSystem function to Python function:

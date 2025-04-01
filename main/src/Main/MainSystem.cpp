@@ -132,18 +132,9 @@ py::dict MainSystem::GetDictionary() const
 	userFunctions["preStepFunction"] = cSystem.GetPythonUserFunctions().preStepFunction.GetPythonDictionary();
 	userFunctions["postStepFunction"] = cSystem.GetPythonUserFunctions().postStepFunction.GetPythonDictionary();
 	userFunctions["postNewtonFunction"] = cSystem.GetPythonUserFunctions().postNewtonFunction.GetPythonDictionary();
+	userFunctions["preNewtonResidualFunction"] = cSystem.GetPythonUserFunctions().preNewtonResidualFunction.GetPythonDictionary();
+	userFunctions["systemJacobianFunction"] = cSystem.GetPythonUserFunctions().systemJacobianFunction.GetPythonDictionary();
 	d["userFunctions"] = userFunctions;
-
-	//if (pySpecial.exceptions.dictionaryNonCopyable)
-	//{
-	//	if (cSystem.GetPythonUserFunctions().preStepFunction.userFunction != 0
-	//		|| cSystem.GetPythonUserFunctions().postStepFunction.userFunction != 0
-	//		|| cSystem.GetPythonUserFunctions().postNewtonFunction.userFunction != 0)
-	//	{
-	//		PyError(STDstring("GetDictionary (pickle/copy): MainSystem contains preStep / postStep / postNewton user function which cannot be copied!"));
-	//	}
-	//}
-
 
 	auto settings = py::dict();
 	settings["interactiveMode"] = interactiveMode;
@@ -187,6 +178,8 @@ void MainSystem::SetDictionary(const py::dict& d)
 	cSystem.GetPythonUserFunctions().preStepFunction.SetPythonObject(d["userFunctions"]["preStepFunction"]);
 	cSystem.GetPythonUserFunctions().postStepFunction.SetPythonObject(d["userFunctions"]["postStepFunction"]);
 	cSystem.GetPythonUserFunctions().postNewtonFunction.SetPythonObject(d["userFunctions"]["postNewtonFunction"]);
+	cSystem.GetPythonUserFunctions().preNewtonResidualFunction.SetPythonObject(d["userFunctions"]["preNewtonResidualFunction"]);
+	cSystem.GetPythonUserFunctions().systemJacobianFunction.SetPythonObject(d["userFunctions"]["systemJacobianFunction"]);
 
 	interactiveMode = py::cast<bool>(d["settings"]["interactiveMode"]);
 
@@ -218,7 +211,6 @@ void MainSystem::PySetPreStepUserFunction(const py::object& value)
 {
     GenericExceptionHandling([&]
     {
-		//cSystem.GetPythonUserFunctions().preStepFunction.userFunction = EPyUtils::GetSTDfunction< std::function<bool(const MainSystem&, Real)>>(value, "MainSystem::SetPreStepUserFunction");
 		cSystem.GetPythonUserFunctions().preStepFunction.SetPythonUserFunction(value);
 
 		cSystem.GetPythonUserFunctions().mainSystem = this;
@@ -229,8 +221,6 @@ void MainSystem::PySetPreStepUserFunction(const py::object& value)
 py::object MainSystem::PyGetPreStepUserFunction(bool asDict)
 {
 	return cSystem.GetPythonUserFunctions().preStepFunction.GetPythonDictionary();
-	//return preStepFunctionPython; //in future, but added to PythonUserFunctions
-	//.def("GetPreStepUserFunction", &MainSystem::PyGetPreStepUserFunction, "...")
 }
 
 //! set user function to be called by solvers at end of step, just before writing results (static or dynamic step)
@@ -238,7 +228,6 @@ void MainSystem::PySetPostStepUserFunction(const py::object& value)
 {
 	GenericExceptionHandling([&]
 		{
-			//cSystem.GetPythonUserFunctions().postStepFunction.userFunction = EPyUtils::GetSTDfunction< std::function<bool(const MainSystem & mainSystem, Real t)>>(value, "MainSystem::SetPostStepUserFunction");
 			cSystem.GetPythonUserFunctions().postStepFunction.SetPythonUserFunction(value);
 
 			cSystem.GetPythonUserFunctions().mainSystem = this;
@@ -249,8 +238,6 @@ void MainSystem::PySetPostStepUserFunction(const py::object& value)
 py::object MainSystem::PyGetPostStepUserFunction(bool asDict)
 {
 	return cSystem.GetPythonUserFunctions().postStepFunction.GetPythonDictionary();
-	//return postStepFunctionPython; //in future, but added to PythonUserFunctions
-	//.def("GetPostStepUserFunction", &MainSystem::PyGetPostStepUserFunction, "...")
 }
 
 //! set user function to be called immediately after Newton (after an update of the solution has been computed, but before discontinuous iteration)
@@ -269,6 +256,43 @@ py::object MainSystem::PyGetPostNewtonUserFunction(bool asDict)
 {
 	return cSystem.GetPythonUserFunctions().postNewtonFunction.GetPythonDictionary();
 }
+
+//! set user function to be called by solvers at beginning of step (static or dynamic step)
+void MainSystem::PySetPreNewtonResidualUserFunction(const py::object& value)
+{
+	GenericExceptionHandling([&]
+		{
+			cSystem.GetPythonUserFunctions().preNewtonResidualFunction.SetPythonUserFunction(value);
+
+			cSystem.GetPythonUserFunctions().mainSystem = this;
+		}, "MainSystem::SetPreStepUserFunction: argument must be Python function or 0");
+}
+
+//! set user function to be called by solvers at beginning of step (static or dynamic step)
+py::object MainSystem::PyGetPreNewtonResidualUserFunction(bool asDict)
+{
+	return cSystem.GetPythonUserFunctions().preNewtonResidualFunction.GetPythonDictionary();
+}
+
+//! set user function to be called by solvers at beginning of step (static or dynamic step)
+void MainSystem::PySetSystemJacobianUserFunction(const py::object& value)
+{
+	GenericExceptionHandling([&]
+		{
+			cSystem.GetPythonUserFunctions().systemJacobianFunction.SetPythonUserFunction(value);
+
+			cSystem.GetPythonUserFunctions().mainSystem = this;
+		}, "MainSystem::SetPreStepUserFunction: argument must be Python function or 0");
+}
+
+//! set user function to be called by solvers at beginning of step (static or dynamic step)
+py::object MainSystem::PyGetSystemJacobianUserFunction(bool asDict)
+{
+	return cSystem.GetPythonUserFunctions().systemJacobianFunction.GetPythonDictionary();
+	return py::object();
+}
+
+
 
 //create a new general contact and add to system
 PyGeneralContact& MainSystem::AddGeneralContact()

@@ -272,9 +272,21 @@ void CNodePointSlope12::GetOutputVariable(OutputVariableType variableType, Confi
         value.SetVector(3, rot.GetDataPointer());
         break;
     }
-    case OutputVariableType::Coordinates:
+	case OutputVariableType::CoordinatesTotal:
 	{
-		if (IsValidConfiguration(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
+		if (IsValidConfiguration(configuration))
+		{
+			GetODE2CoordinateVectorWithReference(value, configuration);
+		}
+		else
+		{
+			PyError("CNodePointSlope12::GetOutputVariable: invalid configuration");
+		}
+		break;
+	}
+	case OutputVariableType::Coordinates:
+	{
+		if (IsValidConfiguration(configuration))
 		{
 			value = GetCoordinateVector(configuration);
 		}

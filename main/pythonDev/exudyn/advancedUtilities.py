@@ -34,6 +34,13 @@ def PlotLineCode(index):
     else:
         return 'k:' #black line
 
+#Types that can be converted to int; for load/save functions that can be loaded/saved
+specialExudynTypes = (exudyn.ObjectIndex, exudyn.NodeIndex, exudyn.LoadIndex, 
+               exudyn.MarkerIndex, exudyn.SensorIndex, 
+               exudyn.OutputVariableType, exudyn.ConfigurationType, 
+               exudyn.ItemType, exudyn.NodeType, exudyn.JointType, exudyn.DynamicSolverType,
+               exudyn.CrossSectionType, exudyn.LinearSolverType, exudyn.ContactTypeIndex
+               ) #must be tuple!
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #INSPECTION, needs numpy and exudyn:
@@ -399,6 +406,246 @@ def RoundMatrix(matrix, treshold = 1e-14):
         for j in range(cols):
             if abs(matrix[i,j]) < treshold:
                 matrix[i,j]=0
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function:  Function to convert a scipy sparse matrix to a dictionary
+def ConvertScipySparseToDict(sparseMatrix):
+    from scipy.sparse import csr_matrix
+    if not isinstance(sparseMatrix, csr_matrix):
+        try:
+            sparseMatrix = sparseMatrix.tocsr()
+        except:
+            raise ValueError(f"ConvertScipySparseToDict: Unsupported sparse matrix type: {type(sparseMatrix)}")
+        
+    return {'data': sparseMatrix.data,
+            'indices': sparseMatrix.indices,
+            'indptr': sparseMatrix.indptr,
+            'shape': sparseMatrix.shape}
+
+#**function:  Function to convert a dictionary back to a scipy sparse matrix
+def ConvertDictToScipySparse(sparseDict):
+    from scipy.sparse import csr_matrix
+    return csr_matrix((sparseDict['data'], sparseDict['indices'], sparseDict['indptr']),
+                      shape=sparseDict['shape'])
+
+#**function: recursively saves a hierarchical dictionary dataDict to a HDF5 file with given fileName; limitations for certain types and Python or symbolic user functions
+#**input: 
+#  fileName: file name (possibly including path) for HDF5 file, including file ending
+#  dataDict: the dictionary containing the hierarchical data to be saved; the data may contain the following data types in hierarchical form: int, bool, float, str (utf-8), list, dict, numpy array, scipy csr\_matrix, Python function
+#**output: None
+def SaveDictToHDF5(fileName, dataDict):
+    try:
+        import h5py
+        from scipy.sparse import csr_matrix
+    except:
+        raise ImportError('SaveDictToHDF5 only works if scipy and h5py are installed')        
+    
+    def IsExudynUserFunction(fDict):
+        if isinstance(fDict, dict):
+            if 'function' in fDict and 'type' in fDict:
+                if fDict['type'] == 'Python':
+                    if callable(fDict['function']):
+                        return True
+                elif fDict['type'] == 'Symbolic':
+                    raise ValueError('SaveDictToHDF5: not possible with symbolic user functions: {fDict}')
+        return False
+    
+    def HandleSaveDict(hdf5group, key, item):
+        if (IsExudynUserFunction(item)):
+            #print('SaveHDF5:dict key=',key,'is user function:',item)
+            newItem = {'functionName':item['function'].__name__,
+                       'functionVarNames':str(item['function'].__code__.co_varnames),
+                       'type':item['type']}
+            subgroup = hdf5group.create_group(key)
+            subgroup.attrs['datatype'] = 'exuFunction'
+            RecursivelySaveDictToHDF5(subgroup, newItem)
+        else:
+            # Recursively save nested dictionary
+            subgroup = hdf5group.create_group(key)
+            subgroup.attrs['datatype'] = 'dict'
+            RecursivelySaveDictToHDF5(subgroup, item)
+            
+    def RecursivelySaveDictToHDF5(hdf5group, dataDict):
+        for key, item in dataDict.items():
+            if isinstance(item, dict):
+                HandleSaveDict(hdf5group, key, item)
+            elif isinstance(item, csr_matrix):
+                # Save sparse matrix by storing its components and setting type attribute
+                subgroup = hdf5group.create_group(key)
+                subgroup.attrs['datatype'] = 'csr_matrix'
+                sparseDict = ConvertScipySparseToDict(item)
+                for k, v in sparseDict.items():
+                    subgroup.create_dataset(k, data=v)
+            elif isinstance(item, list):
+                # Save lists by recursively saving each item in the list
+                subgroup = hdf5group.create_group(key)
+                subgroup.attrs['datatype'] = 'list'
+                for idx, subItem in enumerate(item):
+                    subKey = f"item_{idx}"
+                    if isinstance(subItem, specialExudynTypes):
+                        # Save basic types with the corresponding datatype
+                        subgroup.create_dataset(subKey, data=int(subItem))
+                        subgroup[subKey].attrs['datatype'] = type(subItem).__name__
+                    elif isinstance(subItem, (bool, int, float, np.int32, np.int64, np.float32, np.float64)) or subItem is None:
+                        # Save basic types with the corresponding datatype
+                        if subItem is not None:
+                            subgroup.create_dataset(subKey, data=subItem)
+                        else:
+                            subgroup.create_dataset(subKey, data=0)
+                        subgroup[subKey].attrs['datatype'] = type(subItem).__name__
+                    elif isinstance(subItem, str):
+                        dt = h5py.string_dtype(encoding='utf-8')
+                        subgroup.create_dataset(subKey, data=subItem, dtype=dt)
+                        subgroup[subKey].attrs['datatype'] = 'str'
+                    elif isinstance(subItem, dict):
+                        # Handle dictionaries inside lists
+                        # dict_group = subgroup.create_group(subKey)
+                        # dict_group.attrs['datatype'] = 'dict'
+                        # RecursivelySaveDictToHDF5(dict_group, subItem)
+                        HandleSaveDict(subgroup, subKey, subItem)
+                    elif isinstance(subItem, list):
+                        # Handle nested lists recursively
+                        nested_group = subgroup.create_group(subKey)
+                        nested_group.attrs['datatype'] = 'list'
+                        RecursivelySaveDictToHDF5(nested_group, {f"item_{i}": subItem[i] for i in range(len(subItem))})
+                    else:
+                        raise ValueError(f"SaveDictToHDF5: unsupported type in list: {item} / {subItem}")
+                        #RecursivelySaveDictToHDF5(subgroup.create_group(subKey), {'item': subItem})
+            elif isinstance(item, np.ndarray): #stored directly
+                hdf5group.create_dataset(key, data=item)
+                hdf5group[key].attrs['datatype'] = 'ndarray'
+            elif isinstance(item, (bool, int, float, np.int32, np.int64, np.float32, np.float64)) or item is None:
+                # Save numbers directly with their type in the attributes
+                if item is not None:
+                    hdf5group.create_dataset(key, data=item)
+                else:
+                    hdf5group.create_dataset(key, data=0)
+                hdf5group[key].attrs['datatype'] = type(item).__name__
+            elif isinstance(item, specialExudynTypes):
+                # Save numbers directly with their type in the attributes
+                hdf5group.create_dataset(key, data=int(item))
+                hdf5group[key].attrs['datatype'] = type(item).__name__
+            elif isinstance(item, str):
+                # Handle strings with datatype attribute
+                dt = h5py.string_dtype(encoding='utf-8')
+                hdf5group.create_dataset(key, data=item, dtype=dt)
+                hdf5group[key].attrs['datatype'] = 'str'
+            else:
+                raise ValueError(f"SaveDictToHDF5: unsupported type: {item}")
+
+    with h5py.File(fileName, 'w') as h5file:
+        RecursivelySaveDictToHDF5(h5file, dataDict)
+
+
+#**function: recursively loads a hierarchical dictionary from a HDF5 file with given fileName
+#**input: 
+#  fileName: file name (possibly including path) for HDF5 file, including file ending
+#  callerGlobals: optional: if your data contains functions, the callerGlobals must contain, e.g., globals() of the caller, where the Python functions are defined at which the HDF5 function refers to 
+#**output: dict which contains loaded data
+def LoadDictFromHDF5(fileName, callerGlobals=None):
+    try:
+        import h5py
+        from scipy.sparse import csr_matrix
+    except:
+        raise ImportError('LoadDictFromHDF5 only works if scipy and h5py are installed')        
+    import inspect #for determining globals() of caller
+    NoneCast = lambda x: None #returns none
+    
+    regularTypes = [bool, int, float] + list(specialExudynTypes)
+    regularTypeStrings = [item.__name__ for item in regularTypes]
+    regularTypeStrings += ['float64']; regularTypes += [float]
+    regularTypeStrings += ['float32']; regularTypes += [float]
+    regularTypeStrings += ['int64']; regularTypes += [int] #may be data loss!
+    regularTypeStrings += ['int32']; regularTypes += [int]
+    regularTypeStrings += ['ndarray']; regularTypes += [np.array]
+    regularTypeStrings += ['NoneType']; regularTypes += [NoneCast]
+
+    def RecursivelyLoadDictFromHDF5(hdf5group):
+        result = {}
+        for key, item in hdf5group.items():
+            datatype = item.attrs.get('datatype', None)  # Get the 'datatype' attribute
+            #print('key:',key)
+
+            if isinstance(item, h5py.Group):
+                if datatype == 'csr_matrix':
+                    # Reconstruct the sparse matrix
+                    sparseDict = {k: item[k][:] for k in item.keys()}
+                    result[key] = ConvertDictToScipySparse(sparseDict)
+                elif datatype == 'list':
+                    # Reconstruct the list
+                    listItems = []
+                    for i in range(len(item)):
+                        subKey = f"item_{i}"
+                        if 'datatype' in item[subKey].attrs:
+                            subDatatype = item[subKey].attrs['datatype']
+                            if subDatatype == 'dict':
+                                # Recursively handle a dictionary inside a list
+                                listItems.append(RecursivelyLoadDictFromHDF5(item[subKey]))
+                            elif subDatatype == 'csr_matrix':
+                                # Recursively handle a sparse matrix inside a list
+                                sparseDict = {k: item[subKey][k][:] for k in item[subKey].keys()}
+                                listItems.append(ConvertDictToScipySparse(sparseDict))
+                            elif subDatatype == 'list':
+                                # Recursively handle a list inside a list
+                                listItems.append(RecursivelyLoadDictFromHDF5(item[subKey]))
+                            elif subDatatype in regularTypeStrings:
+                                index = regularTypeStrings.index(subDatatype)
+                                listItems.append( regularTypes[index](item[subKey][()]) )
+                            elif subDatatype == 'str':
+                                listItems.append(item[subKey][()].decode('utf-8'))
+                            else:
+                                raise ValueError(f"Unsupported datatype {subDatatype} in list")
+                        else:
+                            raise ValueError(f"Missing datatype attribute in list for {subKey} in {key} / {item}")
+                    result[key] = listItems
+                elif datatype == 'dict':
+                    # Recursively load the dictionary
+                    result[key] = RecursivelyLoadDictFromHDF5(item)
+                elif datatype == 'exuFunction':
+                    if callerGlobals is None:
+                        raise ValueError('LoadDictFromHDF5: data contains functions: requires callerGlobals to be specified!')
+                    # Recursively load the dictionary
+                    functionDict = RecursivelyLoadDictFromHDF5(item)
+                    if functionDict['type'] != 'Python': 
+                        raise ValueError('LoadDictFromHDF5: illegal function type: '+functionDict['type'])
+                    name = functionDict['functionName']
+                    if name not in callerGlobals:
+                        raise ValueError('LoadDictFromHDF5: trying to load function "'+name+'", but did not find it in globals() of function caller. Functions must be available in global scope at which LoadDictFromHDF5 is defined!')
+                    func = callerGlobals[name]
+                    if functionDict['functionVarNames'] != str(func.__code__.co_varnames):
+                        raise ValueError('LoadDictFromHDF5: trying to load function "'+name+'": loaded function and function available in global scope have different argument lists: loaded='+functionDict['functionVarNames'] +', scope='+str(func.__code__.co_varnames))
+                    funcDict = {'function': func, 'type': 'Python'}
+                    result[key] = funcDict
+                else:
+                    raise ValueError(f"Unsupported datatype {datatype} for group {key}")
+            elif isinstance(item, h5py.Dataset):
+                # Reconstruct basic types
+                # if datatype == 'int':
+                #     result[key] = int(item[()])
+                if datatype == 'str':
+                    result[key] = item[()].decode('utf-8')  # Strings are stored as byte arrays, so decode them
+                elif datatype in regularTypeStrings:
+                    index = regularTypeStrings.index(datatype)
+                    result[key] = regularTypes[index](item[()])
+                else:
+                    raise ValueError(f"Unsupported datatype {datatype} for dataset {key}")
+        return result
+
+    with h5py.File(fileName, 'r') as h5file:
+        return RecursivelyLoadDictFromHDF5(h5file)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

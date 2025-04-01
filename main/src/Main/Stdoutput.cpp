@@ -197,6 +197,19 @@ int OutputBuffer::overflow(int c)
 			{
 				//file << buf << "\n"; //add "\n" as compared to py::print, which already adds end line command
 				file << buf;
+				if (writeFlushAlways)        //now open file with new file name
+				{
+					file.flush();
+					//file.close();
+					//if (writeAppend)
+					//{
+					//	file.open(writeFilename, std::ofstream::app);
+					//}
+					//else
+					//{
+					//	file.open(writeFilename, std::ofstream::out);
+					//}
+				}
 			}
 			buf.clear();
 		}
@@ -218,8 +231,13 @@ void OutputBuffer::WriteVisualization(const STDstring& string)
 	EXUstd::ReleaseSemaphore(outputBufferAtomicFlag); //clear outputBuffer
 }
 
-void OutputBuffer::SetWriteToFile(STDstring filename, bool flagWriteToFile, bool flagAppend)
+void OutputBuffer::SetWriteToFile(STDstring filename, bool flagWriteToFile, bool flagAppend, bool flagFlushAlways)
 {
+	writeToFile = flagWriteToFile;
+	writeAppend = flagAppend;
+	writeFlushAlways = flagFlushAlways;
+	writeFilename = filename;
+
 	if (writeToFile) //if file is already open, close it!
 	{
 		file.close();
@@ -228,16 +246,15 @@ void OutputBuffer::SetWriteToFile(STDstring filename, bool flagWriteToFile, bool
 	{
 		CheckPathAndCreateDirectories(filename);
 
-		if (flagAppend) 
+		if (writeAppend)
 		{ 
-			file.open(filename, std::ofstream::app); 
+			file.open(writeFilename, std::ofstream::app);
 		}
 		else 
 		{ 
-			file.open(filename, std::ofstream::out); 
+			file.open(writeFilename, std::ofstream::out);
 		}
 	}
-	writeToFile = flagWriteToFile;
 }
 
 

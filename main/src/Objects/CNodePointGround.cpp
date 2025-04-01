@@ -31,9 +31,21 @@ void CNodePointGround::GetOutputVariable(OutputVariableType variableType, Config
 	case OutputVariableType::Position: value.CopyFrom(GetPosition(configuration)); break;
 	case OutputVariableType::Displacement: value.CopyFrom(Vector3D(0.)); break;
 	case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
+	case OutputVariableType::CoordinatesTotal:
+	{
+		if (IsValidConfiguration(configuration))
+		{
+			value = Vector();
+		}
+		else
+		{
+			PyError("CNodePointGround::GetOutputVariable: invalid configuration");
+		}
+		break;
+	}
 	case OutputVariableType::Coordinates:
 	{
-		if (IsValidConfiguration(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
+		if (IsValidConfiguration(configuration))
 		{
 			value = Vector();
 		}
@@ -45,7 +57,7 @@ void CNodePointGround::GetOutputVariable(OutputVariableType variableType, Config
 	}
 	case OutputVariableType::Coordinates_t:
 	{
-		if (IsValidConfigurationButNotReference(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
+		if (IsValidConfigurationButNotReference(configuration))
 		{
 			value = Vector();
 		}

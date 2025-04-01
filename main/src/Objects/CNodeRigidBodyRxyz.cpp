@@ -319,9 +319,22 @@ void CNodeRigidBodyRxyz::GetOutputVariable(OutputVariableType variableType, Conf
 		value.CopyFrom(GetRotationParameters(configuration));
 		break;
 	}
+
+	case OutputVariableType::CoordinatesTotal:
+	{
+		if (IsValidConfiguration(configuration))
+		{
+			GetODE2CoordinateVectorWithReference(value, configuration);
+		}
+		else
+		{
+			PyError("CNodeRigidBodyRxyz::GetOutputVariable: invalid configuration");
+		}
+		break;
+	}
 	case OutputVariableType::Coordinates:
 	{
-		if (IsValidConfiguration(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
+		if (IsValidConfiguration(configuration))
 		{
 			value = GetCoordinateVector(configuration);
 		}
@@ -333,7 +346,7 @@ void CNodeRigidBodyRxyz::GetOutputVariable(OutputVariableType variableType, Conf
 	}
 	case OutputVariableType::Coordinates_t:
 	{
-		if (IsValidConfigurationButNotReference(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Visualization))
+		if (IsValidConfigurationButNotReference(configuration))
 		{
 			value = GetCoordinateVector_t(configuration);
 		}

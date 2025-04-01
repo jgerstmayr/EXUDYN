@@ -610,6 +610,28 @@ bool MainObjectContactFrictionCircleCable2DIsRegistered = ClassFactoryItemsSyste
 		return object;
 	});
 
+bool MainObjectContactSphereSphereIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ContactSphereSphere", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectContactSphereSphere();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectContactSphereSphere(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectContactSphereSphere* vObject = new VisualizationObjectContactSphereSphere();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
+bool MainObjectContactCurveCirclesIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ContactCurveCircles", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectContactCurveCircles();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectContactCurveCircles(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectContactCurveCircles* vObject = new VisualizationObjectContactCurveCircles();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
 bool MainObjectJointGenericIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("JointGeneric", [](CSystemData* cSystemData)
 	{ //AUTO: 
 		CObject* cObject = new CObjectJointGeneric();

@@ -324,7 +324,7 @@ public:
 
 	//! move assignement operator
 	//  move assignment operator originally not allowed; troubles with ownership of data? ==> use class LinkedDataArray
-	ResizableArray<T> & operator= (ResizableArray<T> && other)
+	ResizableArray<T> & operator= (ResizableArray<T> && other) noexcept
 	{
 		if (this != &other)
 		{

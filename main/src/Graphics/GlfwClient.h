@@ -434,6 +434,13 @@ private: //to be called internally only!
 	//!works if model view is initialized with 	glMatrixMode(GL_MODELVIEW);glLoadIdentity();
 	static Float2 PixelToVertexCoordinates(float x, float y);
 
+	//! check whether a point is clipped (not visible due to clipping plane
+	//! function assumes that valid index is already checked before!
+	static bool IsClipped(const Float3& p)
+	{
+		return (p * visSettings->openGL.clippingPlaneNormal) > visSettings->openGL.clippingPlaneDistance;
+	}
+
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//FONTS

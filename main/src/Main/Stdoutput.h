@@ -32,8 +32,11 @@ private:
 	std::string visualizationBuffer;     //this buffer is used in visualization thread => does not call Python functions!
 	bool suspendWriting; //this flag is used to suspend writing via Python, e.g., during parallel computation
 	bool writeToFile;    //redirect all output to file
+	bool writeFlushAlways; //flush immediately after write; used to simplify readout
+	bool writeAppend;    //append to file
 	bool writeToConsole; //redirect all output to console
-	std::ofstream file;  //this is the filename for redirecting all output
+	std::string writeFilename;//filename for re-open during flush
+	std::ofstream file;  //this is the file for redirecting all output
 	Index waitMilliSeconds; //wait this amount of milliseconds in order that spyder can print messages
 public:
 	OutputBuffer() 
@@ -43,6 +46,8 @@ public:
 		writeToFile = false;
 		writeToConsole = true;
 		waitMilliSeconds = 0;
+		writeFlushAlways = false;
+		writeAppend = false;
 	} 
 	//! virtual int sync(); //this solution does not work!
 	virtual int overflow(int c = EOF);
@@ -57,7 +62,7 @@ public:
 	virtual void SetWriteToConsole(bool flag) { writeToConsole = flag; }
 
 	//! activate/deactivate writing to file
-	virtual void SetWriteToFile(STDstring filename, bool flagWriteToFile = true, bool flagAppend = false);
+	virtual void SetWriteToFile(STDstring filename, bool flagWriteToFile = true, bool flagAppend = false, bool flagFlushAlways = false);
 
 	//! suspend writing to console/file with flag=true; needs to be set to false, otherwise writing to console is fully stopped
 	virtual void SetSuspendWriting(bool flag) { suspendWriting = flag; }

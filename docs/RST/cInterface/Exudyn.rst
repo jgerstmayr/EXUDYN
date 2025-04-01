@@ -51,8 +51,8 @@ These are the access functions to the Exudyn module. General usage is explained 
   | True: use Python format for output of vectors and matrices; False: use matlab format
 * | **SetWriteToConsole**\ (\ *flag*\ ): 
   | set flag to write (True) or not write to console; default = True
-* | **SetWriteToFile**\ (\ *filename*\ , \ *flagWriteToFile*\  = True, \ *flagAppend*\  = False): 
-  | set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write \ ``exu.SetWriteToFile('', False)``\  to close the output file
+* | **SetWriteToFile**\ (\ *filename*\ , \ *flagWriteToFile*\  = True, \ *flagAppend*\  = False, \ *flagFlushAlways*\  = False): 
+  | set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write \ ``exu.SetWriteToFile('', False)``\  to close the output file; in case of flagFlushAlways=True, file will be finalized immediately in every print command;
   | *Example*:
 
   .. code-block:: python

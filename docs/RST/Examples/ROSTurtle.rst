@@ -178,15 +178,26 @@ You can view and download this file on Github: `ROSTurtle.py <https://github.com
            graphicsTurtleList += [graphicsCube]
    
        # user interaction point
-       [nUIP, bUIP]=AddRigidBody(mainSys = mbs,
-                                   inertia = inertiaCube, 
-                                   nodeType = str(exu.NodeType.RotationEulerParameters), 
-                                   position = [origin[0], origin[1], origin[2]], 
-                                   rotationMatrix = np.eye(3), 
-                                   angularVelocity = np.array([0,0,0]),
-                                   velocity= [0,0,0],
-                                   gravity = [0, 0, 0], 
-                                   graphicsDataList = graphicsTurtleList)
+       # old interface:
+       # [nUIP, bUIP]=AddRigidBody (mainSys = mbs,
+       #                             inertia = inertiaCube, 
+       #                             nodeType = str(exu.NodeType.RotationEulerParameters), 
+       #                             position = [origin[0], origin[1], origin[2]], 
+       #                             rotationMatrix = np.eye(3), 
+       #                             angularVelocity = np.array([0,0,0]),
+       #                             velocity= [0,0,0],
+       #                             gravity = [0, 0, 0], 
+       #                             graphicsDataList = graphicsTurtleList)
+       dictUIP = mbs.CreateRigidBody(
+                     inertia=inertiaCube, 
+                     referencePosition=[origin[0], origin[1], origin[2]], 
+                     referenceRotationMatrix=np.eye(3), 
+                     initialAngularVelocity=np.array([0, 0, 0]),
+                     initialVelocity=[0, 0, 0],
+                     gravity=[0, 0, 0], 
+                     graphicsDataList=graphicsTurtleList,
+                     returnDict=True)
+       [nUIP, bUIP] = [dictUIP['nodeNumber'], dictUIP['bodyNumber']]
    
    
        # create markers:

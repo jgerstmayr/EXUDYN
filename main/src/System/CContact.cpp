@@ -124,7 +124,7 @@ void VisuGeneralContact::DrawContacts(const GeneralContact& gContact, const Visu
 	}
 	if (visualizationSettings.contact.showSearchTreeCells)
 	{
-		const SearchTree& ST = gContact.GetSearchTree();
+		const ContactSearchTree& ST = gContact.GetSearchTree();
 		Float4 color = 0.5*(visualizationSettings.contact.colorSearchTree + Float4({0.7f,0.7f,0.7f,1.f}));
 		Float4 colorFilled = 0.5*(visualizationSettings.contact.colorSearchTree + Float4({ 0.9f,0.1f,0.1f,1.f }));
 
@@ -132,7 +132,7 @@ void VisuGeneralContact::DrawContacts(const GeneralContact& gContact, const Visu
 		Real sx = box.SizeX() / (Real)ST.SizeX();
 		Real sy = box.SizeY() / (Real)ST.SizeY();
 		Real sz = box.SizeZ() / (Real)ST.SizeZ();
-		ArrayIndex items;
+		//ArrayIndex items; //DELETE
 
 		for (Index ix = 0; ix < ST.SizeX(); ix++)
 		{
@@ -144,8 +144,8 @@ void VisuGeneralContact::DrawContacts(const GeneralContact& gContact, const Visu
 				{
 					Real z = iz * sz + box.PMinZ();
 					Index boxIndex = ST.GlobalIndex(ix, iy, iz);
-					ST.GetItemsOfBox(boxIndex, items);
-					if (items.NumberOfItems() != 0)
+					Index nItemsInBox = ST.NumberOfItemsInBox(boxIndex);
+					if (nItemsInBox != 0)
 					{
 						//draws used box with smaller size and alternative color
 						EXUvis::DrawOrthoCube(Vector3D({ x + 0.5*sx,y + 0.5*sy,z + 0.5*sz }), Vector3D({ 0.8*sx,0.8*sy,0.8*sz }),
@@ -226,6 +226,10 @@ void GeneralContact::Reset(bool freeMemory)
 
 	contactIsFinalized = false;
 
+	trigsRigidBodyBasedDynamicStartIndex = 0;
+	staticContactObjectsInitialized = false;
+	maxFrictionMaterialIndex = 0;
+
 	if (freeMemory)
 	{
 
@@ -233,7 +237,12 @@ void GeneralContact::Reset(bool freeMemory)
 		allBoundingBoxes.Flush();
 		globalContactIndexOffsets.Flush();
 
+		//spheresMarkerBased.Flush(); //all done with CallOnAllContacts
+		//ancfCable2D.Flush();
+		//trigsRigidBodyBased.Flush();
+		//rigidBodyMarkerBased.Flush();
 		CallOnAllContacts(Flush, EXU_NOARG, EXU_NOARG);
+
 		for (Index i = 0; i < allActiveContacts.NumberOfItems(); i++)
 		{
 			if (allActiveContacts[i] != nullptr)
@@ -279,7 +288,7 @@ void GeneralContact::Reset(bool freeMemory)
 		allActiveContacts.SetNumberOfItems(0);
 		allActiveContactsVector.SetNumberOfItems(0);
 		allBoundingBoxes.SetNumberOfItems(0);
-		searchTree.ClearItems();
+		searchTree.ClearItems(true);
 		globalContactIndexOffsets.SetNumberOfItems(0);
 
 		CallOnAllContacts(SetNumberOfItems, 0, EXU_NOARG);
@@ -293,8 +302,8 @@ TimerStructureRegistrator TSRboundingBoxes("Contact:BoundingBoxes", TSboundingBo
 Index TSsearchTree;
 TimerStructureRegistrator TSRsearchTree("Contact:SearchTree", TSsearchTree, globalTimers, true);
 
-Index TScontactODE2RHS;
-TimerStructureRegistrator TSRcontactODE2RHS("Contact:ODE2RHS", TScontactODE2RHS, globalTimers, true);
+//Index TScontactODE2RHS;
+//TimerStructureRegistrator TSRcontactODE2RHS("Contact:ODE2RHS", TScontactODE2RHS, globalTimers, true);
 
 Index TScontactJacobian;
 TimerStructureRegistrator TSRcontactJacobian("Contact:Jacobian", TScontactJacobian, globalTimers, true);
@@ -365,9 +374,17 @@ Index GeneralContact::AddANCFCable(Index objectIndex, Real halfHeight, Real cont
 //! add contact object for ANCFCable element; currently only possible for ANCFCable2D elements
 //contact is possible between sphere (circle) and ANCFCable2D
 Index GeneralContact::AddTrianglesRigidBodyBased(Index rigidBodyMarkerIndex, Real contactStiffness, Real contactDamping,
-	Index frictionMaterialIndex, ResizableArray<Vector3D> pointList, ResizableArray<Index3> triangleList)
+	Index frictionMaterialIndex, ResizableArray<Vector3D> pointList, ResizableArray<Index3> triangleList, bool staticTriangles)
 {
 	contactIsFinalized = false;
+	Index startIndex = trigsRigidBodyBased.NumberOfItems();
+	
+	if (staticTriangles && trigsRigidBodyBasedDynamicStartIndex != startIndex)
+	{
+		//pout << "trigsRigidBodyBasedDynamicStartIndex=" << trigsRigidBodyBasedDynamicStartIndex << ", startIndex=" << startIndex << "\n";
+		PyError("GeneralConact: AddTrianglesRigidBodyBased(...): static triangles may only be added at the beginning; add dynamic triangles after ALL static triangles");
+	}
+
 
 	ContactRigidBodyMarkerBased itemRB;
 
@@ -383,7 +400,6 @@ Index GeneralContact::AddTrianglesRigidBodyBased(Index rigidBodyMarkerIndex, Rea
 			EXUstd::ToString(rigidBodyMarkerIndex) + ")");
 	}
 
-	Index startIndex = trigsRigidBodyBased.NumberOfItems();
 	//now add triangles as single items
 	ContactTriangleRigidBodyBased itemTrig;
 	itemTrig.contactRigidBodyIndex = contactRigidBodyIndex; //always same ...
@@ -403,6 +419,9 @@ Index GeneralContact::AddTrianglesRigidBodyBased(Index rigidBodyMarkerIndex, Rea
 		trigsRigidBodyBased.Append(itemTrig); //only add points; in future also add weight ...?
 		cnt++;
 	}
+
+	if (staticTriangles) { trigsRigidBodyBasedDynamicStartIndex = trigsRigidBodyBased.NumberOfItems(); }
+
 	return startIndex;
 }
 
@@ -414,6 +433,7 @@ Index GeneralContact::AddTrianglesRigidBodyBased(Index rigidBodyMarkerIndex, Rea
 void GeneralContact::FinalizeContact(const CSystem& cSystem)//, Index3 searchTreeSize, const Matrix& frictionPairingsInit, Vector3D searchTreeBoxMin, Vector3D searchTreeBoxMax)
 {
 	initializeData = true; //will be set false after first call to ComputeContactDataAndBoundingBoxes
+
 	//check if frictionPairings matrix is large enough:
 	maxFrictionMaterialIndex = 0;
 	//**ICI individual contact implementation; order irrelevant
@@ -601,6 +621,9 @@ void GeneralContact::FinalizeContact(const CSystem& cSystem)//, Index3 searchTre
 	}
 	if (verboseMode >= 2) { pout << "FinalizeContact: reset searchtree\n"; }
 	searchTree.ResetSearchTree(settings.searchTreeSizeInit[0], settings.searchTreeSizeInit[1], settings.searchTreeSizeInit[2], searchTreeBox);
+
+	staticContactObjectsInitialized = false;
+
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	Real recommendedStepSize = 1; //not used
 	//if (verboseMode >= 2) { pout << "FinalizeContact: call PostNewtonStep\n"; }
@@ -863,16 +886,16 @@ inline void AddJacobianTerms(TemporaryComputationData& tempArrayThreadID,
 
 
 //! compute temporary data and bounding boxes
-void GeneralContact::ComputeContactDataAndBoundingBoxes(const CSystem& cSystem, TemporaryComputationDataArray& tempArray, 
+void GeneralContact::ComputeContactDataAndBoundingBoxes(const CSystem& cSystem, TemporaryComputationDataArray& tempArray,
 	bool updateBoundingBoxes, bool addToSearchTree)
 {
 	STARTGLOBALTIMERmain(TSboundingBoxes);
 
 	if (verboseMode >= 2) pout << "  **update Data, BB=" << updateBoundingBoxes << ", ST=" << addToSearchTree << "\n";
 	Index nThreads = exuThreading::TaskManager::GetNumThreads(); //must agree with tempArray
-    tempArray.SetNumberOfItems(nThreads);
-    SetNumberOfThreads(nThreads);
-    //CHECKandTHROW(tempArray.NumberOfItems() == nThreads, "GeneralContact::ComputeContactDataAndBoundingBoxes: inconsistent tempArray and number of threads; try to restart kernel!");
+	tempArray.SetNumberOfItems(nThreads);
+	SetNumberOfThreads(nThreads);
+	//CHECKandTHROW(tempArray.NumberOfItems() == nThreads, "GeneralContact::ComputeContactDataAndBoundingBoxes: inconsistent tempArray and number of threads; try to restart kernel!");
 
 
 	ComputeDataAndBBmarkerBasedSpheres(cSystem.GetSystemData(), tempArray, nThreads, updateBoundingBoxes);
@@ -890,12 +913,61 @@ void GeneralContact::ComputeContactDataAndBoundingBoxes(const CSystem& cSystem, 
 			searchTree.FlushCells(); //keeps search tree in general, but flushes sub-cell memory
 			searchTreeUpdateCounter = 0;
 		}
+
 		searchTree.ClearItems();
+
+#ifdef USE_STATICDYNAMIC_SEARCHTREE 
+
+		//spheres and ANCF
+		for (Index gi = 0; gi < globalJacobianIndexOffsets[trigsRigidBodyBasedIndex]; gi++)
+		{
+			searchTree.AddItem(allBoundingBoxes[gi], gi);
+		}
+		//static trigs
+		if (!staticContactObjectsInitialized)
+		{
+			staticContactObjectsInitialized = true; //now 
+
+			if (!settings.computeExactStaticTriangleBins)
+			{
+				for (Index gi = globalJacobianIndexOffsets[trigsRigidBodyBasedIndex];
+					gi < globalJacobianIndexOffsets[trigsRigidBodyBasedIndex] + trigsRigidBodyBasedDynamicStartIndex; gi++)
+				{
+					searchTree.AddItem(allBoundingBoxes[gi], gi, false); //false=static search tree
+				}
+			}
+			else
+			{
+				//! directly add triangles to search tree (this is non-parallelized, but avoids overly many boxes filled for 45° triangles):
+				Index offset = globalJacobianIndexOffsets[trigsRigidBodyBasedIndex];
+				for (Index j = 0;
+					j < trigsRigidBodyBasedDynamicStartIndex; j++)
+				{
+					Index gi = j + globalJacobianIndexOffsets[trigsRigidBodyBasedIndex];
+					const ContactTriangleRigidBodyBased& item = trigsRigidBodyBased[(Index)(j)];
+					const ContactRigidBodyMarkerBased& rigidMarker = rigidBodyMarkerBased[item.contactRigidBodyIndex];
+
+					Vector3D v0 = rigidMarker.orientation * item.points[0] + rigidMarker.position;
+					Vector3D v1 = rigidMarker.orientation * item.points[1] + rigidMarker.position;
+					Vector3D v2 = rigidMarker.orientation * item.points[2] + rigidMarker.position;
+
+					searchTree.AddItemTriangle(allBoundingBoxes[gi], gi, v0, v1, v2, false); //false=static search tree
+				}
+			}
+		}
+		//dynamic trigs
+		for (Index gi = globalJacobianIndexOffsets[trigsRigidBodyBasedIndex] + trigsRigidBodyBasedDynamicStartIndex;
+			gi < allBoundingBoxes.NumberOfItems(); gi++)
+		{
+			searchTree.AddItem(allBoundingBoxes[gi], gi);
+		}
+#else
 		Index gi = 0;
 		for (const auto& box : allBoundingBoxes)
 		{
 			searchTree.AddItem(box, gi++);
 		}
+#endif
 		if (verboseMode >= 2)
 		{
 			Index gi = 0;
@@ -1068,14 +1140,23 @@ void GeneralContact::ComputeDataAndBBtrigsRigidBodyBased(const CSystemData& syst
 	if (updateBoundingBoxes)
 	{
 		NGSsizeType nItems = (NGSsizeType)trigsRigidBodyBased.NumberOfItems();
+		
+		NGSsizeType itemsOffset = 0;
+		if (staticContactObjectsInitialized) //static objects not recomputed
+		{   
+			itemsOffset += trigsRigidBodyBasedDynamicStartIndex;
+			nItems -= trigsRigidBodyBasedDynamicStartIndex;
+			//staticContactObjectsInitialized will be set when static search trees are initialized
+		}
+
 		Index taskSplit = nThreads; //shall be multiple of number of treads (Default=nThreads), but better 8*nThreads or larger for large problems
 		if ((Index)nItems > 400 * nThreads) { taskSplit = 100 * nThreads; }
 
-		exuThreading::ParallelFor(nItems, [this, &systemData, &tempArray, &updateBoundingBoxes, &nItems](NGSsizeType j) //(NGSsizeType j)
+		exuThreading::ParallelFor(nItems, [this, &systemData, &tempArray, &updateBoundingBoxes, &itemsOffset, &nItems](NGSsizeType j) 
 		{
-			const ContactTriangleRigidBodyBased& item = trigsRigidBodyBased[(Index)j];
+			const ContactTriangleRigidBodyBased& item = trigsRigidBodyBased[(Index)(itemsOffset+j)];
 			//Index threadID = exuThreading::TaskManager::GetThreadId();
-			Index gi = (Index)j + globalJacobianIndexOffsets[trigsRigidBodyBasedIndex]; //
+			Index gi = (Index)(j+itemsOffset) + globalJacobianIndexOffsets[trigsRigidBodyBasedIndex]; //
 
 			const ContactRigidBodyMarkerBased& rigidMarker = rigidBodyMarkerBased[item.contactRigidBodyIndex];
 
@@ -1915,7 +1996,7 @@ void GeneralContact::ComputeODE2RHS(const CSystem& cSystem, TemporaryComputation
 	if (!isActive) { return; }
 	//pout << "t=" << cSystem.GetSystemData().GetCData().GetCurrent().GetTime() << "\n";
 
-	STARTGLOBALTIMERmain(TScontactODE2RHS);
+	//STARTGLOBALTIMERmain(TScontactODE2RHS);
 	//pout << "doPostNewton=" << cSystem.GetSolverData().doPostNewtonIteration << "\n";
 	if (cSystem.GetSolverData().doPostNewtonIteration)
 	{
@@ -1927,7 +2008,7 @@ void GeneralContact::ComputeODE2RHS(const CSystem& cSystem, TemporaryComputation
 		ComputeContact<CCode2rhsFull>(cSystem, tempArray, systemODE2Rhs);
 		if (verboseMode >= 2) pout << "  systemODE2RhsFull=" << systemODE2Rhs << ", c=" << cSystem.GetSystemData().GetCData().currentState.GetODE2Coords() << "\n";
 	}
-	STOPGLOBALTIMERmain(TScontactODE2RHS);
+	//STOPGLOBALTIMERmain(TScontactODE2RHS);
 
 
 }
@@ -2452,9 +2533,7 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 			//fContact += frictionAdd;
 			//pout << "I=" << i << ", fContact=" << fVec << ", Ffric=" << fVec - f0 << ", dP0=" << n0 << ", vN=" << deltaVnormal << ", dV(I-J)=" << (vSphereI - vSphereJ) << ", deltaVtang=" << deltaVtangent << "\n";
 
-#ifndef ANCFuseFrictionPenalty
 			if (settings.frictionProportionalZone != 0) 
-#endif
 			{
 				computeFrictionTerms = frictionRegularizedRegion;
 			}
@@ -2471,12 +2550,10 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 		Matrix3D JacFcPos; //this is the position-Jacobian (or velocity, but not rotation!)
 		//JacFc.SetWithDiadicProduct(factNormal*d0, d0);
 		Vector3D d0mu = d0;
-#ifndef ANCFuseFrictionPenalty
 		if (computeFrictionTerms) //second check not necessary, but used for safety!
 		{
 			d0mu -= dryFriction / settings.frictionProportionalZone * Vector3D({ deltaVtangent[0],deltaVtangent[1], 0. });
 		}
-#endif
 		JacFcPos.SetWithDiadicProduct(factNormal*d0mu, d0);
 
 
@@ -2488,12 +2565,7 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 		Real factRegularizedFriction = 0.; //only non-zero in case of friction-regularized
 		if (computeFrictionTerms) //second check not necessary, but used for safety!
 		{
-
-#ifndef ANCFuseFrictionPenalty
 			factRegularizedFriction = intFact*factorODE2_t * contactForce * dryFriction / settings.frictionProportionalZone;
-#else
-			factRegularizedFriction = -1.*intFact * factorODE2_t * settings.frictionVelocityPenalty; //negative sign, because contactForce not included!
-#endif
 			JacFcPos += (-factRegularizedFriction)*IsubDD;
 		}
 
@@ -2761,7 +2833,7 @@ bool GeneralContact::ShortestDistanceAlongLine(const Vector3D& pStart, const Vec
 
 	Index startIndex = searchTree.IndexOfReal(startAxis, searchAxis);
 	Index endIndex = searchTree.IndexOfReal(endAxis, searchAxis);
-	Index numCells = searchTree.SizeCellsXYZ()[searchAxis];
+	Index numCells = searchTree.NumberOfCellsXYZ()[searchAxis];
 	Real stepSize = fabs(sizeAxis / (dAxis*(Real)numCells));
 	//Index incr = 1;
 	Index nSteps = endIndex - startIndex;
@@ -2807,11 +2879,7 @@ bool GeneralContact::ShortestDistanceAlongLine(const Vector3D& pStart, const Vec
 		
 		//pout << "dir0=" << dir0 << "\n";
 		searchTree.GetItemsInBox(box, itemsFound); //may contain duplicates!
-		//{
-		//	Index6 bi; searchTree.GetBoxIndizes(box, bi);
-		//	pout << "box=" << box << ", index0=" << bi[0] << "," << bi[1] << "," << bi[2] << "," << bi[3] << "," << bi[4] << "," << bi[5] << "\n";
-		//  pout << "itemsFound=" << itemsFound << "\n";
-		//}
+
 
 		Index localIndex;
 		Contact::TypeIndex typeIndex;

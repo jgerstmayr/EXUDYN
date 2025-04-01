@@ -203,6 +203,27 @@ namespace EXUmath {
 		return n;
 	}
 
+	//! Check for overlap along an axis, following SAT (Separating axis theorem / Hyperplane separation theorem) from computer graphics
+	//! v0, v1, v2 define the vertices of the triangle and normAxis is the normalized axis for the check
+	//! the box is having the dimension 2*boxHalfSize and is assumed to be located at (0,0,0)
+	inline bool TriangleOverlapOnAxis(const Vector3D& normAxis, const Vector3D& v0, const Vector3D& v1, const Vector3D& v2, const Vector3D& boxHalfSize)
+	{
+		// Project triangle onto the axis
+		Real p0 = v0 * normAxis;
+		Real p1 = v1 * normAxis;
+		Real p2 = v2 * normAxis;
+		Real triMin = EXUstd::Minimum(EXUstd::Minimum(p0, p1), p2);
+		Real triMax = EXUstd::Maximum(EXUstd::Maximum(p0, p1), p2);
+
+		// Project AABB onto the axis
+		Real r = std::fabs(boxHalfSize[0] * normAxis[0]) +
+			std::fabs(boxHalfSize[1] * normAxis[1]) +
+			std::fabs(boxHalfSize[2] * normAxis[2]);
+
+		// Check for overlap
+		return !(triMax < -r || triMin > r);
+	}
+
 	//! Project normal into normal plane of vector (Gram-Schmidt orthogonalization); works for any vector type having scalar*vector and vector*vector operator
 	template<class TVector>
 	inline void GramSchmidtOrthogonalization(const TVector& vector, TVector& normal)

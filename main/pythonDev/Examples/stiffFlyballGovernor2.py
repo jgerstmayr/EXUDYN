@@ -167,16 +167,17 @@ elif nodeType == exu.NodeType.RotationRotationVector:
 nodeNumberList = [-1]*nRigidBodyNodes
 bodyNumberList = [-1]*nRigidBodyNodes
 for i in range(nRigidBodyNodes):    
-    [n0,b0]=AddRigidBody(mainSys = mbs, 
-                         inertia = inertiaList[i], 
-                         nodeType = str(nodeType), 
-                         position = refPosList[i], 
-                         velocity = refVelList[i],
-                         rotationMatrix = [],#refRotMatList[i],
-                         rotationParameters = refRotParList[i],
-                         angularVelocity = refAngularVelList[i], 
-                         gravity = g, 
-                         graphicsDataList = [graphicsList[i]])
+    dictBody = mbs.CreateRigidBody(
+                  inertia=inertiaList[i], 
+                  nodeType=nodeType, 
+                  referencePosition=refPosList[i], 
+                  referenceRotationMatrix=refRotMatList[i],
+                  initialVelocity=refVelList[i],
+                  initialAngularVelocity=refAngularVelList[i], 
+                  gravity=g,
+                  graphicsDataList=[graphicsList[i]],
+                  returnDict=True)
+    [n0, b0] = [dictBody['nodeNumber'], dictBody['bodyNumber']]
     nodeNumberList[i] = n0
     bodyNumberList[i] = b0
     

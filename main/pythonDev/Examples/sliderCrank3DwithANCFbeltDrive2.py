@@ -3,12 +3,13 @@
 #
 # Details:  Create slider-crank mechanism with belt drive modeled with ANCF cable elements
 #
-# Authors: Martin Knapp and Lukas March
+# Authors: Martin Knapp and Lukas March; edited by Johannes Gerstmayr, in particular adapted to functionality of beams module and fixed initialization problems (2024-10-15)
 # Date: Created on Thu May  19 12:22:52 2020
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 # Notes: PROJECT Exercise:  Drive System + Crank System; VU Industrielle Mechatronik 2 - Robotics and Simulation
+#        The performance could be significantly improved, if GeneralContact would be used instead of ObjectContactFrictionCircleCable2D
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -45,12 +46,14 @@ from exudyn.itemInterface import (MarkerNodeRotationCoordinate, ObjectConnectorC
                            LoadTorqueVector, VObjectJointPrismatic2D, ObjectJointPrismatic2D, Torque, 
                            MassPoint2D, RigidBody2D, NodePoint2D, RevoluteJoint2D, CoordinateConstraint, 
                            ObjectGround, ObjectContactFrictionCircleCable2D, NodeGenericData, 
-                           MarkerBodyCable2DShape, NodePoint2DSlope1, ObjectANCFCable2D, MarkerBodyPosition, 
+                           MarkerBodyCable2DShape, NodePoint2DSlope1, ObjectANCFCable2D, VObjectANCFCable2D, MarkerBodyPosition, 
                            VObjectJointRevolute2D, VObjectRigidBody2D, NodePointGround, MarkerNodePosition, 
                            MarkerNodeCoordinate, Force, SensorBody, NodeRigidBody2D, ObjectRigidBody2D, 
                            MarkerBodyRigid, ObjectJointRevolute2D, SensorLoad)
 from exudyn.utilities import AddRigidBody, RigidBodyInertia, ObjectConnectorCoordinate, InertiaCuboid
 import exudyn.graphics as graphics #only import if it does not conflict
+from exudyn.beams import *
+
 #import visHelper
 #visHelper.init()
 
@@ -131,25 +134,6 @@ def plotCrankPos():
     plt.show()
     fig.savefig(PLOTS_PATH + 'crank_pos.pdf', format='pdf')
 
-def plotBelt():
-    belt = np.loadtxt("belt.txt", comments='#', delimiter=',')
-    belt_slope = np.loadtxt("belt_slope.txt", comments='#', delimiter=',')
-    
-    fig = plt.figure(figsize=[13,5])
-    plt.plot(belt[:,0], belt[:,1], 'r-', label='Belt')
-    scale = 100 # scale arrow length
-    for i in range(belt_slope.shape[0]-1):
-        plt.arrow(belt_slope[i,0], belt_slope[i,2], 
-                  belt_slope[i,1] / scale, belt_slope[i,3] / scale, zorder=10)
-    set_axis(plt, True)
-    ax=plt.gca()
-    ax.set_xlabel('$x [m]$', fontsize=fontSize)
-    ax.set_ylabel('$y [m]$', fontsize=fontSize)
-    ax.grid(True, 'major', 'both')
-    plt.legend()
-    plt.tight_layout()
-    plt.show()
-    fig.savefig(PLOTS_PATH + 'belt.pdf', format='pdf')
 
 def vishelperInit():
     plt.close('all')
@@ -157,7 +141,6 @@ def vishelperInit():
         os.mkdir(PLOTS_PATH)
     
 def visHelperPlot_all():
-    plotBelt()
     plotOmegaDisk0()
     plotOmegaDisk1()
     plotTorque()
@@ -195,11 +178,10 @@ if export_images:
         os.mkdir(PLOTS_PATH)
 
 # belt-drive-system 
-test_belt_function = True    # Draws the belt curve and the tangential vectors
 enable_force = True          # Enable Preload Force in the belt
 enable_disk_friction = True  # When True the disks will have contact to the belt else the belt is free floating
 enable_controller = True     # If True the disk0 will get a torque regulated by a P-controller else a fixed torque
-n = 50                       # Belt element count
+nElements = 1*50             # Belt element count
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -225,7 +207,7 @@ E_belt = 2e9            #E modulus [N/m^2]
 rho_belt = 1e3          #density [kg/m^3]
 F_p = 1e4               #preload force[N]
 
-contactStiffness=1e5    #contactStiffness between the belt and the disks ->
+contactStiffness=1e5*10    #contactStiffness between the belt and the disks ->
                         #holds the belt around disks
 contactDamping=200      #damping between the belt and the disks
 mu = 0.9                #friction coefficent between the belt and the disks
@@ -272,8 +254,8 @@ inertia_slider = InertiaCuboid(density=(m_slider/h_S**3),
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #bearing parameters
-k = 4e4                 #stiffness of bearing [N/m]
-d = 8e2                 #damping of bearing [N/ms]
+kBearing = 50e3                 #stiffness of bearing [N/m]
+dBearing =  1e3                 #damping of bearing [N/ms]
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #load parameters
 M = 0.1                             #torque [Nm]
@@ -383,116 +365,7 @@ if sys_set == 0 or sys_set > 2:
         len_belt = 2*b_belt+al_dr_belt+al_dl_belt   #belt length
         return [alpha, b_belt, al_dl_belt, al_dr_belt, len_belt]
     
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #curve parameterization of belt curve
-    def belt_function(p, L_0, r_l, r_r):
-        """
-        Calcultes the x,y-Position and the tangential Vectors of the belt 
-        curve at the length parameter p [0-1] given.
-        p = 0 is on up on the left disk where the belt leaves the disk.
-        """
-        [alpha, b_belt, al_dl_belt, al_dr_belt, len_belt] = belt_get_lengths(L_0, r_l, r_r)
         
-        # scale [0-1] to [0 - len_belt]
-        p = p * len_belt
-        
-        if p < 0.0 or p > len_belt:
-            return False;
-        elif p < b_belt:
-            element_type = "s_u" #straight up
-            # straight branch up
-            p_element = p
-            
-            # calculate start point (p = 0):
-            x_offset = r_l*np.sin(alpha)
-            y_offset = r_l*np.cos(alpha)
-            
-            x_slopex = np.cos(alpha)
-            y_slopex = -np.sin(alpha)
-            
-            x_pos = x_offset + p_element * x_slopex
-            y_pos = y_offset + p_element * y_slopex
-        elif p < (b_belt + al_dr_belt):
-            element_type = "d_r" #disk right
-            # arc at right disk:
-            p_element = p - b_belt
-            
-            alpha_element = p_element / r_r
-            
-            # calculate start point at arc:
-            alpha_offset = alpha
-            
-            alpha_i = alpha_offset + alpha_element
-            x_pos = L_0 + r_r*np.sin(alpha_i)
-            y_pos = r_r*np.cos(alpha_i)
-            x_slopex = np.cos(alpha_i)
-            y_slopex = -np.sin(alpha_i)
-            
-        elif p <= (2 * b_belt + al_dr_belt):
-            element_type = "s_d" #straight down
-            # straight branch down
-            p_element = p - (b_belt + al_dr_belt)
-            
-            # calculate start point (p = 0):
-            x_offset = L_0 + r_r*np.sin(alpha)
-            y_offset = -r_r*np.cos(alpha)
-            
-            x_slopex = -np.cos(alpha)
-            y_slopex = -np.sin(alpha)
-            
-            x_pos = x_offset + p_element * x_slopex
-            y_pos = y_offset + p_element * y_slopex
-            
-        elif p <= len_belt:
-            element_type = "d_l" #disk left
-            # arc at left disk:
-            p_element = p - (2 * b_belt + al_dr_belt)
-            
-            alpha_element = p_element / r_l
-            
-            # calculate start point at arc:q
-            alpha_offset = 2*np.pi - alpha
-            
-            alpha_i = alpha_offset + alpha_element
-            x_pos = -r_l*np.sin(alpha_i)
-            y_pos = -r_l*np.cos(alpha_i)
-            x_slopex = -np.cos(alpha_i)
-            y_slopex = np.sin(alpha_i)
-            
-        return [x_pos, y_pos, x_slopex, y_slopex, element_type]
-        
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #Test belt_function
-    if test_belt_function:
-        x = []
-        y = []
-        for pi in range(0,1001):
-            # calculate position
-            p = pi / 1000.0
-            [xi, yi, sxi, syi, el_typei] = belt_function(p, L_0, r_1, r_0)
-            x.append(xi)
-            y.append(yi)
-        np.savetxt("belt.txt", np.array([x,y]).T, delimiter=',')
-        
-        slope_x = []
-        slope_y = []
-        for pi in range(n):
-            # calculate position
-            p = pi / n
-            [xi, yi, sxi, syi, el_typei] = belt_function(p, L_0, r_1, r_0)
-            slope_x.append([xi, sxi])
-            slope_y.append([yi, syi])
-        np.savetxt("belt_slope.txt", np.hstack((slope_x,slope_y)),delimiter=',')
-        
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #belt nodes 
-    nNP2DS = []
-    for i in range(n):
-        p = i / n
-        [xi, yi, sxi, syi, el_typei] = belt_function(p, L_0, r_1, r_0)
-        nNP2DS.append(mbs.AddNode(NodePoint2DSlope1(name=el_typei+"_"+str(i), 
-                                                    referenceCoordinates = [xi,yi,sxi,syi])))
-    
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #belt cable elements
     [alpha, b_belt, al_dl_belt, al_dr_belt, len_belt] = belt_get_lengths(L_0, r_1, r_0)
@@ -502,27 +375,53 @@ if sys_set == 0 or sys_set > 2:
     
     print("Belt length: ", len_belt, " and after preload force: ", len_belt_p)
     
-    el_len = len_belt / len(nNP2DS)
-    oANCFC2D_b = []
     
-    if not enable_force:
-        epsilon_belt = 0.0  # Without preload force
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #new functionality with beams module:
+    circleList = [[[L_0,0],r_0,'R'],
+                  [[0,0],r_1,'R'],
+                  [[L_0,0],r_0,'R'],
+                  [[0,0],r_1,'R'],
+                  ]
+
+    reevingDict = CreateReevingCurve(circleList, drawingLinesPerCircle = 64,
+                                     removeLastLine=True,
+                                     numberOfANCFnodes=nElements, graphicsNodeSize= 0.01)
     
-    print("epsilon: ", epsilon_belt)
+    del circleList[-1] #remove circles not needed for contact/visualization
+    del circleList[-1] #remove circles not needed for contact/visualization
     
-    #ANCF cable objects
-    b_len = 0.0
-    for i in range(len(nNP2DS)):
-        b_len += el_len # Sum all elements -> after loop len_belt must be equal to this sum
-        oANCFC2D_b.append(mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[nNP2DS[i], nNP2DS[(i+1)%len(nNP2DS)]], 
-                                                          physicsLength=el_len, 
-                                                          physicsBendingStiffness=bendStiffness_belt,
-                                                          physicsMassPerLength=MassPerLength_belt, 
-                                                          physicsAxialStiffness=axialStiffness_belt, 
-                                                          physicsReferenceAxialStrain=epsilon_belt)))
+    gList=[]
+    if False: #visualize reeving curve, without simulation
+        gList = reevingDict['graphicsDataLines'] + reevingDict['graphicsDataCircles']
         
-    print("Belt length from element length sum: ", b_len)
+    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #create ANCF elements:
     
+    # dimZ = b #z.dimension
+    hDraw = 0.002
+    cableTemplate = ObjectANCFCable2D(
+                            physicsBendingStiffness=bendStiffness_belt*0.1,
+                            physicsMassPerLength=MassPerLength_belt, 
+                            physicsAxialStiffness=axialStiffness_belt, 
+                            useReducedOrderIntegration=2,  
+                            physicsReferenceAxialStrain=epsilon_belt,
+                            physicsBendingDamping = 0.005*bendStiffness_belt,
+                            physicsAxialDamping = 0.02*axialStiffness_belt,
+                            visualization=VObjectANCFCable2D(drawHeight=hDraw),
+                            )
+    
+    ancf = PointsAndSlopes2ANCFCable2D(mbs, reevingDict['ancfPointsSlopes'], reevingDict['elementLengths'], 
+                                       cableTemplate, 
+                                       #massProportionalLoad=gVec,
+                                       firstNodeIsLastNode=True, graphicsSizeConstraints=0.01)
+
+    nNP2DS = ancf[0]
+    oANCFC2D_b = ancf[1]
+
+
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #contact friction belt
     
@@ -536,11 +435,12 @@ if sys_set == 0 or sys_set > 2:
         
         for i in range(0,len(oANCFC2D_b)):
             nCS = 8
+            initGap = 0.001 #positive gap gives fast initial settling of contact
             #NodeGenericData disk0
-            nCableGenData_disk0.append(mbs.AddNode(NodeGenericData(initialCoordinates = [0,0,0]*nCS, 
+            nCableGenData_disk0.append(mbs.AddNode(NodeGenericData(initialCoordinates = [initGap]*nCS+[-2]*nCS+[0]*nCS, 
                                                                    numberOfDataCoordinates=3*nCS)))
             #NodeGenericData disk1
-            nCableGenData_disk1.append(mbs.AddNode(NodeGenericData(initialCoordinates = [0,0,0]*nCS, 
+            nCableGenData_disk1.append(mbs.AddNode(NodeGenericData(initialCoordinates = [initGap]*nCS+[-2]*nCS+[0]*nCS, 
                                                                    numberOfDataCoordinates=3*nCS)))
             #MarkerBodyCable2DShape on cable
             mCableShape.append(mbs.AddMarker(MarkerBodyCable2DShape(bodyNumber=oANCFC2D_b[i], 
@@ -719,8 +619,6 @@ if sys_set == 1 or sys_set == 3:
 #CRANK DRIVE SYSTEM 3D
 if sys_set == 2 or sys_set == 4:
         
-    nodeType=exu.NodeType.RotationEulerParameters
-    
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #ground
     oG_Left = mbs.AddObject(ObjectGround())
@@ -739,30 +637,41 @@ if sys_set == 2 or sys_set == 4:
                                        thickness = h_A, color=[0.8,0.8,0.8,1])
     graphics_crank_5 = graphics.RigidLink(p0=[0,0,b_a1],p1=[0,0,b_a1+b_a2],axis1=[0,0,1], radius=[h_A/2,h_A/1.3], 
                                        thickness = h_A, width=[0,h_A/2], color=[0.8,0.8,0.8,1])
-    [nRG_crank,oRB_crank]=AddRigidBody(mainSys = mbs, inertia=inertia_crank, nodeType=str(nodeType), 
-                                           position=[0,0,b_a0], angularVelocity=[0,0,0],
-                                           gravity=g, graphicsDataList=[graphics_crank_1,
-                                           graphics_crank_2,graphics_crank_3, graphics_crank_4,graphics_crank_5])
+
+    dictCrank = mbs.CreateRigidBody(
+                  inertia=inertia_crank,
+                  referencePosition=[0, 0, b_a0],
+                  gravity=g,
+                  graphicsDataList=[graphics_crank_1, graphics_crank_2, graphics_crank_3, graphics_crank_4, graphics_crank_5],
+                  returnDict=True)
+    [nRG_crank, oRB_crank] = [dictCrank['nodeNumber'], dictCrank['bodyNumber']]
     
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #connecting rod
-    graphics_conrod = graphics.RigidLink(p0=[L_B/2,0,0],p1=[-L_B/2,0,0], axis0=[0,0,1], axis1=[0,0,1], radius=[h_B/1.5,h_B/2], 
-                                       thickness = h_B, width=[h_B,h_B], color=[0.5,0.5,0.5,1])
-    [nRG_conrod,oRB_conrod]=AddRigidBody(mainSys = mbs, inertia=inertia_conrod, nodeType=str(nodeType), angularVelocity=[0,0,0],
-                                          position=[-L_A-L_B/2,0,b_a0+b_a1/2], gravity=g, graphicsDataList=[graphics_conrod])
+    graphics_conrod = graphics.RigidLink(p0=[L_B/2, 0, 0], p1=[-L_B/2, 0, 0], axis0=[0, 0, 1], axis1=[0, 0, 1], 
+                                         radius=[h_B/1.5, h_B/2], thickness=h_B, width=[h_B, h_B], color=[0.5, 0.5, 0.5, 1])
+    dictConrod = mbs.CreateRigidBody(
+                  inertia=inertia_conrod,
+                  referencePosition=[-L_A - L_B/2, 0, b_a0 + b_a1/2],
+                  gravity=g,
+                  graphicsDataList=[graphics_conrod],
+                  returnDict=True)
+    [nRG_conrod, oRB_conrod] = [dictConrod['nodeNumber'], dictConrod['bodyNumber']]
     
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #slider
-    d=0.07
-    graphics_slider = graphics.BrickXYZ(-d/2,-d/2,-d-h_B/2,d/2,d/2,-h_B/2, 
-                                            color=[0.2,0.2,0.2,0.9])
-    [nRB_slider,oRB_slider]=AddRigidBody(mainSys = mbs, 
-                                         inertia=inertia_slider, 
-                                         nodeType=str(nodeType), 
-                                         angularVelocity=[0,0,0],
-                                         position=[-(L_A+L_B),0,b_a0+b_a1/2], 
-                                         gravity=g, 
-                                         graphicsDataList=[graphics_slider])
+    d = 0.07
+    graphics_slider = graphics.BrickXYZ(-d/2, -d/2, -d - h_B/2, d/2, d/2, -h_B/2, 
+                                        color=[0.2, 0.2, 0.2, 0.9])
+    dictSlider = mbs.CreateRigidBody(
+                   inertia=inertia_slider,
+                   initialAngularVelocity=[0, 0, 0],
+                   referencePosition=[-(L_A + L_B), 0, b_a0 + b_a1/2],
+                   gravity=g,
+                   graphicsDataList=[graphics_slider],
+                   returnDict=True)
+    [nRB_slider, oRB_slider] = [dictSlider['nodeNumber'], dictSlider['bodyNumber']]
+
     
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #marker for joints
@@ -790,9 +699,9 @@ if sys_set == 2 or sys_set == 4:
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++q
     #joints
     oGJ_crank_Left = mbs.AddObject(ObjectConnectorCartesianSpringDamper(markerNumbers=[mG_Left, mBR_crank_Left], 
-                                                                        stiffness=[k]*3, damping=[d]*3))
+                                                                        stiffness=[kBearing]*3, damping=[dBearing]*3))
     oGJ_crank_Right = mbs.AddObject(ObjectConnectorCartesianSpringDamper(markerNumbers=[mG_Right, mBR_crank_Right], 
-                                                                         stiffness=[k]*3, damping=[d]*3))
+                                                                         stiffness=[kBearing]*3, damping=[dBearing]*3))
     oRJ2D_crank_conrod = mbs.AddObject(RevoluteJoint2D(markerNumbers=[mBR_crank_conrod,mBR_conrod_crank],
                                                        visualization=VObjectJointRevolute2D(drawSize=0.05)))
     oRJ2D_conrod_slider = mbs.AddObject(RevoluteJoint2D(markerNumbers=[mBR_conrod_slider,mBR_slider_conrod],
@@ -838,58 +747,45 @@ print(mbs)
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #simulation
 
-if sys_set == 0:
-    tEnd = 1              #end time of the simulation
-    steps = 1000          #number of steps
-elif sys_set > 0:
-    tEnd = 2              #end time of the simulation
-    steps = 1000          #number of steps
+tEnd = 1              #end time of the simulation
+stepSize = 2.5e-5
 
 sims = exu.SimulationSettings()               
-sims.timeIntegration.generalizedAlpha.spectralRadius=1
-if export_images:
-    sims.solutionSettings.recordImagesInterval = 0.001
-    if not os.path.isdir("images"):
-        os.mkdir("images")
-else:
-    sims.solutionSettings.recordImagesInterval = -1
+sims.timeIntegration.generalizedAlpha.spectralRadius=0.8
 sims.pauseAfterEachStep = False     
 sims.displayStatistics = True             
 sims.displayComputationTime = True             
-sims.timeIntegration.numberOfSteps = steps                       
+sims.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 sims.timeIntegration.endTime = tEnd
+sims.timeIntegration.newton.absoluteTolerance = 1e-7
+sims.timeIntegration.newton.relativeTolerance = 1e-7
+sims.timeIntegration.newton.useModifiedNewton = True
+sims.timeIntegration.discontinuous.iterationTolerance = 0.1
+sims.timeIntegration.discontinuous.maxIterations = 3
 sims.solutionSettings.sensorsWritePeriod = 0.001
+sims.solutionSettings.solutionWritePeriod = stepSize*4*5
+sims.parallel.numberOfThreads = 1
+sims.timeIntegration.verboseMode = 1
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #visualizaion
 SC.visualizationSettings.general.circleTiling=128
 dSize = 0.02
-SC.visualizationSettings.nodes.defaultSize = dSize
-SC.visualizationSettings.markers.defaultSize = dSize
+SC.visualizationSettings.nodes.defaultSize = dSize*0.25
+SC.visualizationSettings.markers.defaultSize = dSize*0.25
 SC.visualizationSettings.bodies.defaultSize = [dSize, dSize, dSize]
 SC.visualizationSettings.connectors.defaultSize = dSize
 SC.visualizationSettings.nodes.show=True
-SC.visualizationSettings.loads.show=True
+SC.visualizationSettings.loads.show=False
+SC.visualizationSettings.loads.drawSimplified = False
+SC.visualizationSettings.loads.defaultSize = 0.1
 SC.visualizationSettings.markers.show=True
 SC.visualizationSettings.sensors.show=True
 SC.visualizationSettings.general.autoFitScene=False
-if sys_set == 0:
-    SC.visualizationSettings.openGL.initialCenterPoint = [L_0/2,0,0]
-    SC.visualizationSettings.openGL.initialZoom = 0.5
-elif sys_set == 1:
-    SC.visualizationSettings.openGL.initialCenterPoint = [-L_A,0,0]
-    SC.visualizationSettings.openGL.initialZoom = 0.4
-elif sys_set == 2:
-    SC.visualizationSettings.openGL.initialCenterPoint = [-0.1,0,0]
-    SC.visualizationSettings.openGL.initialZoom = 0.3
-elif sys_set == 3:
-    SC.visualizationSettings.openGL.initialCenterPoint = [0,0,0]
-    SC.visualizationSettings.openGL.initialZoom = 0.5
-elif sys_set == 4:
-    SC.visualizationSettings.openGL.initialCenterPoint = [0,0,0]
-    SC.visualizationSettings.openGL.initialZoom = 0.5
-SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Force
+SC.visualizationSettings.openGL.initialCenterPoint = [0,0,0]
+SC.visualizationSettings.openGL.initialZoom = 0.5
+SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.ForceLocal
 
 if sys_set == 0:
     rot_alpha=0
@@ -920,6 +816,7 @@ SC.visualizationSettings.openGL.initialModelRotation = [[IMR[0,0],IMR[0,1],IMR[0
 #Rendering
 exu.StartRenderer()                 #start graphics visualization
 mbs.WaitForUserToContinue()         #wait for pressing SPACE bar to continue
+# mbs.SolveStatic(sims)
 mbs.SolveDynamic(sims)
 SC.WaitForRenderEngineStopFlag()    #wait for pressing 'Q' to quit
 exu.StopRenderer()                  #safely close rendering window!

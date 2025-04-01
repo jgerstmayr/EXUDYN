@@ -165,9 +165,21 @@ void CNodePoint2DSlope1::GetOutputVariable(OutputVariableType variableType, Conf
 	case OutputVariableType::Displacement: value.CopyFrom(GetPosition(configuration) - GetPosition(ConfigurationType::Reference)); break;
     case OutputVariableType::Velocity: value.CopyFrom(GetVelocity(configuration)); break;
     case OutputVariableType::Acceleration: value.CopyFrom(GetAcceleration(configuration)); break;
-    case OutputVariableType::Coordinates:
+	case OutputVariableType::CoordinatesTotal:
 	{
-		if (IsValidConfiguration(configuration)) //((Index)configuration & ((Index)ConfigurationType::Current + (Index)ConfigurationType::Initial + (Index)ConfigurationType::Reference + (Index)ConfigurationType::Visualization))
+		if (IsValidConfiguration(configuration))
+		{
+			GetODE2CoordinateVectorWithReference(value, configuration);
+		}
+		else
+		{
+			PyError("CNodePoint2DSlope1::GetOutputVariable: invalid configuration");
+		}
+		break;
+	}
+	case OutputVariableType::Coordinates:
+	{
+		if (IsValidConfiguration(configuration))
 		{
 			value = GetCoordinateVector(configuration);
 		}

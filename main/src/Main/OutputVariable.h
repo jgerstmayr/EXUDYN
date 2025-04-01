@@ -223,30 +223,31 @@ enum class OutputVariableType {
 	AngularAcceleration = 1 << 11,	//!< angular acceleration vector, e.g. rigid body; scalar quantity in 2D-elements
 	AngularAccelerationLocal = 1 << 12,	//!< angular acceleration vector, e.g. rigid body; scalar quantity in 2D-elements
 	Rotation = 1 << 13,				//!< angle, e.g. joint angle; rotation parameters; scalar rotation in 2D rigid body
-	Coordinates = 1 << 14,			//!< single object or node coordinate(s) as output
-	Coordinates_t = 1 << 15,		//!< single object or node velocity coordinate(s) as output
-	Coordinates_tt = 1 << 16,		//!< single object or node velocity coordinate(s) as output
-	SlidingCoordinate = 1 << 17,	//!< scalar coordinate in sliding joint
-	Director1 = 1 << 18,			//!< direction or (axial) slope vector 1 (in 2D-elements)
-	Director2 = 1 << 19,			//!< direction or (normal1) slope vector 2 (in 2D-elements or shells)
-	Director3 = 1 << 20,			//!< direction or (normal2) slope vector 3 (in 3D-elements or shells)
+	CoordinatesTotal = 1 << 14,		//!< coordinates (such as ODE2 coordinates with additional reference coordinates)
+	Coordinates = 1 << 15,			//!< single object or node coordinate(s) as output
+	Coordinates_t = 1 << 16,		//!< single object or node velocity coordinate(s) as output
+	Coordinates_tt = 1 << 17,		//!< single object or node velocity coordinate(s) as output
+	SlidingCoordinate = 1 << 18,	//!< scalar coordinate in sliding joint
+	Director1 = 1 << 19,			//!< direction or (axial) slope vector 1 (in 2D-elements)
+	Director2 = 1 << 20,			//!< direction or (normal1) slope vector 2 (in 2D-elements or shells)
+	Director3 = 1 << 21,			//!< direction or (normal2) slope vector 3 (in 3D-elements or shells)
 //
-	Force = 1 << 21,				//!< force e.g. in connector/constraint or section force in beam in global coordinates
-	ForceLocal = 1 << 22,			//!< local force e.g. in connector/constraint or section force in beam
-	Torque = 1 << 23,				//!< torque e.g. in connector/constraint or section moment/torque in beam in global coordinates
-	TorqueLocal = 1 << 24,			//!< local torque e.g. in connector/constraint or section moment/torque in beam
+	Force = 1 << 22,				//!< force e.g. in connector/constraint or section force in beam in global coordinates
+	ForceLocal = 1 << 23,			//!< local force e.g. in connector/constraint or section force in beam
+	Torque = 1 << 24,				//!< torque e.g. in connector/constraint or section moment/torque in beam in global coordinates
+	TorqueLocal = 1 << 25,			//!< local torque e.g. in connector/constraint or section moment/torque in beam
 
 //  unused for now, maybe later on in finite elements, fluid, etc.:
-	//Strain = 1 << 25,				//!< strain components (global/ Almansi)
-	//Stress = 1 << 26,				//!< stress components (global / Cauchy)
+	//Strain = 1 << 26,				//!< strain components (global/ Almansi)
+	//Stress = 1 << 27,				//!< stress components (global / Cauchy)
 	//Curvature,					//!< global curvature not expected to be needed in future
 
 // use this for beam-quantities as they are local:
-	StrainLocal = 1 << 27,			//!< local strain components (e.g. axial strain and shear strain in beam, or engineering strain components in finite element)
-	StressLocal = 1 << 28,			//!< local stress components (e.g. axial stress and shear stress in beam, or engineering stress components in finite element)
-	CurvatureLocal = 1 << 29,		//!< local curvature (components) in beam or shell
+	StrainLocal = 1 << 28,			//!< local strain components (e.g. axial strain and shear strain in beam, or engineering strain components in finite element)
+	StressLocal = 1 << 29,			//!< local stress components (e.g. axial stress and shear stress in beam, or engineering stress components in finite element)
+	CurvatureLocal = 1 << 30,		//!< local curvature (components) in beam or shell
 //
-	ConstraintEquation = 1 << 30,	//!< evaluates constraint equation (=current deviation or drift of constraint equation)
+	ConstraintEquation = 1 << 31,	//!< evaluates constraint equation (=current deviation or drift of constraint equation)
 
 	//Curvature = 1 << xx,			//!< global curvature (components) in beam or shell
 	//keep this list synchronized with function GetOutputVariableTypeString(...) !!!

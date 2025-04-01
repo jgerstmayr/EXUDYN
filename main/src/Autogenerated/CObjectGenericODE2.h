@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-03-11  14:52:04 (last modified)
+* @date         2024-11-03  17:23:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -24,10 +24,10 @@
 
 #include <functional> //! AUTO: needed for std::function
 #include "Pymodules/PythonUserFunctions.h" //! AUTO: needed for user functions, without pybind11
-#include <pybind11/numpy.h>//for NumpyMatrix
-#include <pybind11/stl.h>//for NumpyMatrix
-#include <pybind11/pybind11.h>
-typedef py::array_t<Real> NumpyMatrix; 
+//#include <pybind11/numpy.h>//for NumpyMatrix
+//#include <pybind11/stl.h>//for NumpyMatrix
+//#include <pybind11/pybind11.h>
+//typedef py::array_t<Real> NumpyMatrix; 
 #include "Pymodules/PyMatrixContainer.h"//for some \hac{FFRF} matrices
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
@@ -206,8 +206,11 @@ public: // AUTO:
         return parameters.coordinateIndexPerNode[localNode];
     }
 
-    //! AUTO:  compute object coordinates composed from all nodal coordinates; does not include reference coordinates
+    //! AUTO:  compute displacement and velocity object coordinates composed from all nodal coordinates; does not include reference coordinates
     void ComputeObjectCoordinates(Vector& coordinates, Vector& coordinates_t, ConfigurationType configuration = ConfigurationType::Current) const;
+
+    //! AUTO:  compute single object coordinates composed from all nodal coordinates; does not include reference coordinates
+    void ComputeObjectCoordinates(Vector& coordinates, ConfigurationType configuration = ConfigurationType::Current) const;
 
     //! AUTO:  compute object acceleration coordinates composed from all nodal coordinates
     void ComputeObjectCoordinates_tt(Vector& coordinates_tt, ConfigurationType configuration = ConfigurationType::Current) const;
@@ -263,6 +266,7 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
+            (Index)OutputVariableType::CoordinatesTotal +
             (Index)OutputVariableType::Coordinates +
             (Index)OutputVariableType::Coordinates_t +
             (Index)OutputVariableType::Coordinates_tt +

@@ -35,38 +35,37 @@ graphicsDataSwitchTriangleOrder = False #this is the old ordering of triangles i
 #colors ...
 
 #this is a pure structure with default values; user will see this similar as a sub-module: graphics.color.red
-class color: pass
-
-color.red = exudyn.graphicsDataUtilities.color4red
-color.green = exudyn.graphicsDataUtilities.color4green
-color.blue = exudyn.graphicsDataUtilities.color4blue
-
-color.cyan = exudyn.graphicsDataUtilities.color4cyan
-color.magenta = exudyn.graphicsDataUtilities.color4magenta
-color.yellow = exudyn.graphicsDataUtilities.color4yellow
-
-color.orange = exudyn.graphicsDataUtilities.color4orange
-color.pink = exudyn.graphicsDataUtilities.color4pink
-color.lawngreen = exudyn.graphicsDataUtilities.color4lawngreen
-
-color.springgreen = exudyn.graphicsDataUtilities.color4springgreen
-color.violet = exudyn.graphicsDataUtilities.color4violet
-color.dodgerblue = exudyn.graphicsDataUtilities.color4dodgerblue
-
-color.lightred = exudyn.graphicsDataUtilities.color4lightred
-color.lightgreen = exudyn.graphicsDataUtilities.color4lightgreen
-color.steelblue = exudyn.graphicsDataUtilities.color4steelblue
-color.brown = exudyn.graphicsDataUtilities.color4brown
-
-color.black = exudyn.graphicsDataUtilities.color4black
-color.darkgrey = exudyn.graphicsDataUtilities.color4darkgrey
-color.darkgrey2 = exudyn.graphicsDataUtilities.color4darkgrey2
-color.grey = exudyn.graphicsDataUtilities.color4grey
-color.lightgrey = exudyn.graphicsDataUtilities.color4lightgrey
-color.lightgrey2 = exudyn.graphicsDataUtilities.color4lightgrey2
-color.white = exudyn.graphicsDataUtilities.color4white
-
-color.default = exudyn.graphicsDataUtilities.color4default
+class color:
+    red = exudyn.graphicsDataUtilities.color4red
+    green = exudyn.graphicsDataUtilities.color4green
+    blue = exudyn.graphicsDataUtilities.color4blue
+    
+    cyan = exudyn.graphicsDataUtilities.color4cyan
+    magenta = exudyn.graphicsDataUtilities.color4magenta
+    yellow = exudyn.graphicsDataUtilities.color4yellow
+    
+    orange = exudyn.graphicsDataUtilities.color4orange
+    pink = exudyn.graphicsDataUtilities.color4pink
+    lawngreen = exudyn.graphicsDataUtilities.color4lawngreen
+    
+    springgreen = exudyn.graphicsDataUtilities.color4springgreen
+    violet = exudyn.graphicsDataUtilities.color4violet
+    dodgerblue = exudyn.graphicsDataUtilities.color4dodgerblue
+    
+    lightred = exudyn.graphicsDataUtilities.color4lightred
+    lightgreen = exudyn.graphicsDataUtilities.color4lightgreen
+    steelblue = exudyn.graphicsDataUtilities.color4steelblue
+    brown = exudyn.graphicsDataUtilities.color4brown
+    
+    black = exudyn.graphicsDataUtilities.color4black
+    darkgrey = exudyn.graphicsDataUtilities.color4darkgrey
+    darkgrey2 = exudyn.graphicsDataUtilities.color4darkgrey2
+    grey = exudyn.graphicsDataUtilities.color4grey
+    lightgrey = exudyn.graphicsDataUtilities.color4lightgrey
+    lightgrey2 = exudyn.graphicsDataUtilities.color4lightgrey2
+    white = exudyn.graphicsDataUtilities.color4white
+    
+    default = exudyn.graphicsDataUtilities.color4default
 
 #a convenient list for creating automatic coloring of objects
 colorList = exudyn.graphicsDataUtilities.color4list
@@ -121,7 +120,9 @@ colorList = exudyn.graphicsDataUtilities.color4list
 def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8, 
            addEdges = False, edgeColor=color.black, addFaces=True):
     if nTiles < 3: print("WARNING: Sphere: nTiles < 3: set nTiles=3")
-    
+    if nTiles < 1: 
+        raise ValueError('Sphere: nTiles must be at least 1')
+        
     p = np.array(point)
     r = radius
     #orthonormal basis:
@@ -170,16 +171,16 @@ def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
                 else:
                     triangles += [p0,p1,p3, p0,p3,p2]
             
-    data = {'type':'TriangleList', 'colors':colors, 
-            'normals':normals, 
-            'points':points, 
-            'triangles':triangles}
+    data = {'type':'TriangleList', 'colors':np.array(colors), 
+            'normals':np.array(normals), 
+            'points':np.array(points), 
+            'triangles':np.array(triangles)}
     
     if type(addEdges) == bool and addEdges == True:
         addEdges = 3
 
     if addEdges > 0:
-        data['edgeColor'] = list(edgeColor)
+        data['edgeColor'] = np.array(edgeColor)
 
         edges = []
         hEdges = [] #edges at half of iphi
@@ -190,11 +191,14 @@ def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
             nt = 8
         for j in range(nt):
             hEdges += [[]]
+        if nt > nTiles: #otherwise does not work!
+            nt = max(2,int(nTiles/2)*2)
+            
         hTiles = int(nTiles/nt)
         # hLast = [None]*nt
         # hFirst = [None]*nt
         sTiles = max(addEdges-1,1) #non-negative
-        nStep = int(nTiles/sTiles)
+        nStep = max(int(nTiles/sTiles),1)
         
         for i0 in range(nTiles):
             for iphi in range(nTiles):
@@ -212,12 +216,7 @@ def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
                         j = int(iphi/hTiles)
                         if j < nt:
                             hEdges[j] += [p0,p1]
-                            # if hLast[j] == None:
-                            #     hLast[j] = p0
-                            #     hFirst[j] = p0
-                            # else:
-                            #     hEdges[j] += [hLast[j], p0]
-                            #     hLast[j] = p0
+
         
         for j in range(nt):
             #print('j=',j, hEdges[j], ', hFirst=',hFirst)
@@ -226,7 +225,7 @@ def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
                 
             edges += hEdges[j]
 
-        data['edges'] = edges
+        data['edges'] = np.array(edges)
     
     return data
             
@@ -242,10 +241,10 @@ def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
 ##create simple 3-point lines
 #gLine=graphics.Lines([[0,0,0],[1,0,0],[2,0.5,0]], color=color.red)
 def Lines(pList, color=[0.,0.,0.,1.]): 
-    data = [0]*(len(pList)*3)
+    data = np.zeros(len(pList)*3)
     for i, p in enumerate(pList):
-        data[i*3:i*3+3] = list(p)
-    dataRect = {'type':'Line', 'color': list(color), 'data':data}
+        data[i*3:i*3+3] = p
+    dataRect = {'type':'Line', 'color': np.array(color), 'data':data}
 
     return dataRect
 
@@ -259,7 +258,7 @@ def Lines(pList, color=[0.,0.,0.,1.]):
 #**notes: the tiling (number of segments to draw circle) can be adjusted by visualizationSettings.general.circleTiling
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def Circle(point=[0,0,0], radius=1, color=[0.,0.,0.,1.]): 
-    return {'type':'Circle', 'color': list(color), 'radius': radius, 'position':list(point)}
+    return {'type':'Circle', 'color': np.array(color), 'radius': radius, 'position':np.array(point)}
 
 
 #************************************************
@@ -271,7 +270,7 @@ def Circle(point=[0,0,0], radius=1, color=[0.,0.,0.,1.]):
 #**nodes: text size can be adjusted with visualizationSettings.general.textSize, which affects the text size (=font size) globally
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def Text(point=[0,0,0], text='', color=[0.,0.,0.,1.]): 
-    return {'type':'Text', 'color': list(color), 'text':text, 'position':list(point)}
+    return {'type':'Text', 'color': np.array(color), 'text':text, 'position':np.array(point)}
 
 
 #**function: generate graphics data for general block with endpoints, according to given vertex definition
@@ -285,33 +284,33 @@ def Text(point=[0,0,0], text='', color=[0.,0.,0.,1.]):
 #  addFaces: if False, no faces are added (only edges)
 #**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
 def Cuboid(pList, color=[0.,0.,0.,1.], faces=[1,1,1,1,1,1], addNormals=False, addEdges=False, edgeColor=color.black, addFaces=True): 
-# bottom: (z goes upwards from node 0 to node 4)
-# ^y
-# |
-# 3---2
-# |   |
-# |   |
-# 0---1-->x
-#
-# top:
-# ^y
-# |
-# 7---6
-# |   |
-# |   |
-# 4---5-->x
-#
-# faces: bottom, top, sideface0, sideface1, sideface2, sideface3 (sideface0 has nodes 0,1,4,5)
+    # bottom: (z goes upwards from node 0 to node 4)
+    # ^y
+    # |
+    # 3---2
+    # |   |
+    # |   |
+    # 0---1-->x
+    #
+    # top:
+    # ^y
+    # |
+    # 7---6
+    # |   |
+    # |   |
+    # 4---5-->x
+    #
+    # faces: bottom, top, sideface0, sideface1, sideface2, sideface3 (sideface0 has nodes 0,1,4,5)
 
-    colors=[]
-    for i in range(8):
-        colors=colors+color
+    # colors=[]
+    # for i in range(8):
+    #     colors=colors+color
+    colors = np.tile(color,8)
+    if len(pList) != 8: raise ValueError('graphics.Cuboid: expects a pList with 8 points')
 
-    points = []
-    for p in pList:
-        points += p
-#    points = [xMin,yMin,zMin, xMax,yMin,zMin, xMax,yMax,zMin, xMin,yMax,zMin,
-#              xMin,yMin,zMax, xMax,yMin,zMax, xMax,yMax,zMax, xMin,yMax,zMax]
+    points = np.zeros(24)
+    for i, p in enumerate(pList):
+        points[3*i:3*i+3] = p
 
     #1-based ... triangles = [1,3,2, 1,4,3, 5,6,7, 5,7,8, 1,2,5, 2,6,5, 2,3,6, 3,7,6, 3,4,7, 4,8,7, 4,1,8, 1,5,8 ]
     #triangles = [0,2,1, 0,3,2, 6,4,5, 6,7,4, 0,1,4, 1,5,4, 1,2,5, 2,6,5, 2,3,6, 3,7,6, 3,0,7, 0,4,7]
@@ -330,7 +329,7 @@ def Cuboid(pList, color=[0.,0.,0.,1.], faces=[1,1,1,1,1,1], addNormals=False, ad
                 for j in range(2):
                     if addFaces:
                         triangles += trigList[i*2+j]
-        data = {'type':'TriangleList', 'colors': colors, 'points':points, 'triangles':triangles}
+        data = {'type':'TriangleList', 'colors': colors, 'points':points, 'triangles':np.array(triangles)}
     else:
         normals = []
         points2 = []
@@ -348,15 +347,16 @@ def Cuboid(pList, color=[0.,0.,0.,1.], faces=[1,1,1,1,1,1], addNormals=False, ad
                         points2 += list(pList[trig[k]])
                         cnt+=1
         
-        data = {'type':'TriangleList', 'colors': color*cnt, 'normals':normals, 'points':points2, 'triangles':triangles}
+        data = {'type':'TriangleList', 'colors': np.tile(color,cnt), 'normals':np.array(normals), 
+                'points':np.array(points2), 'triangles':np.array(triangles)}
 
     if addEdges:
         edges = [0,1, 1,2, 2,3, 3,0,
                  4,5, 5,6, 6,7, 7,4,
                  0,4, 1,5, 2,6, 3,7 ]
         
-        data['edges'] = edges
-        data['edgeColor'] = list(edgeColor)
+        data['edges'] = np.array(edges)
+        data['edgeColor'] = np.array(edgeColor)
         
     return data
 
@@ -375,7 +375,8 @@ def BrickXYZ(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.], addNormals
     
     pList = [[xMin,yMin,zMin], [xMax,yMin,zMin], [xMax,yMax,zMin], [xMin,yMax,zMin],
              [xMin,yMin,zMax], [xMax,yMin,zMax], [xMax,yMax,zMax], [xMin,yMax,zMax]]
-    return Cuboid(pList, list(color), addNormals=addNormals, addEdges=addEdges, edgeColor=edgeColor, addFaces=addFaces)
+    return Cuboid(pList, color, addNormals=addNormals, addEdges=addEdges, 
+                  edgeColor=edgeColor, addFaces=addFaces)
 
 
 #**function: generate graphics data forfor orthogonal 3D block with center point and size
@@ -398,11 +399,10 @@ def Brick(centerPoint=[0,0,0], size=[0.1,0.1,0.1], color=[0.,0.,0.,1.], addNorma
     zMax = centerPoint[2] + 0.5*size[2]
 
     gCube = BrickXYZ(xMin, yMin, zMin, xMax, yMax, zMax, color, 
-                                  addNormals=addNormals, addEdges=addEdges, edgeColor=edgeColor, addFaces=addFaces)
+                     addNormals=addNormals, addEdges=addEdges, edgeColor=edgeColor, addFaces=addFaces)
     if addEdges:
-        gCube['edgeColor'] = list(edgeColor)
-        gCube['edges'] = [0,1, 1,2, 2,3, 3,0,  0,4, 1,5, 2,6, 3,7,  4,5, 5,6, 6,7, 7,4]
-        #print('new2')
+        gCube['edgeColor'] = np.array(edgeColor)
+        gCube['edges'] = np.array([0,1, 1,2, 2,3, 3,0,  0,4, 1,5, 2,6, 3,7,  4,5, 5,6, 6,7, 7,4])
     return gCube
 
 
@@ -490,17 +490,17 @@ def Cylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,0.,1.], nTil
     n = nTiles+1 #number of points of one ring+midpoint
     color2 = list(color) #alternating color
     if 'alternatingColor' in kwargs:
-        color2 = kwargs['alternatingColor']
+        color2 = list(kwargs['alternatingColor'])
 
     colors=[]
     #for i in range(2*n+2*nTiles):
     #    colors += color
     n2 = int(nTiles/2)    
     for i in range(2):
-        colors += color
+        colors += list(color)
     for j in range(4):
         for i in range(n2):
-            colors += color
+            colors += list(color)
         for i in range(nTiles-n2):
             colors += color2
 
@@ -551,7 +551,7 @@ def Cylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,0.,1.], nTil
         p3 = points3[0:3]
         p4 = points2[len(points2)-3:len(points2)]
         p5 = points3[len(points3)-3:len(points3)]
-        points0 += pAxis + pAxis1 + p2 + p3 + pAxis + pAxis1 + p4 + p5
+        points0 += list(pAxis) + pAxis1 + p2 + p3 + list(pAxis) + pAxis1 + p4 + p5
         n1=np.cross(ebu.VSub(pAxis,pAxis1),ebu.VSub(p3,pAxis))
         n1=list(ebu.Normalize(-nf*n1))
         n2=np.cross(ebu.VSub(pAxis1,pAxis),ebu.VSub(p4,pAxis))
@@ -573,12 +573,12 @@ def Cylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,0.,1.], nTil
         triangles = []
 
     #triangle normals point inwards to object ...
-    data = {'type':'TriangleList', 'colors':colors, 
-            'normals':normals0, 
-            'points':points0, 'triangles':triangles}
+    data = {'type':'TriangleList', 'colors':np.array(colors), 
+            'normals':np.array(normals0), 
+            'points':np.array(points0), 'triangles':np.array(triangles)}
 
     if addEdges:
-        data['edgeColor'] = list(edgeColor)
+        data['edgeColor'] = np.array(edgeColor)
         
         faceEdges = 0
         if type(addEdges) != bool:
@@ -604,7 +604,7 @@ def Cylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,0.,1.], nTil
                 pLast0 += nStep
                 pLast1 += nStep
         
-        data['edges'] = edges
+        data['edges'] = np.array(edges)
 
     return data
 
@@ -653,19 +653,19 @@ def RigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1],
     triangles = data0['triangles']
     trigs1 = np.array(data1['triangles'])
     trigs1 += np0
-    triangles += list(trigs1)
+    triangles = np.append(triangles,trigs1)
     
     trigs2 = np.array(data2['triangles'])
     trigs2 += np1
-    triangles += list(trigs2)
+    triangles = np.append(triangles,trigs2)
     
-    points = data0['points'] + data1['points'] + data2['points']
-    normals = data0['normals'] + data1['normals'] + data2['normals']
-    colors = data0['colors'] + data1['colors'] + data2['colors']
+    points = np.concatenate((data0['points'], data1['points'], data2['points']))
+    normals = np.concatenate((data0['normals'], data1['normals'], data2['normals']))
+    colors = np.concatenate((data0['colors'], data1['colors'], data2['colors']))
     
-    data = {'type':'TriangleList', 'colors':colors, 
-            'normals':normals, 
-            'points':points, 'triangles':triangles}
+    data = {'type':'TriangleList', 'colors':colors,
+            'normals':normals,
+            'points':points, 'triangles':np.array(triangles)}
     return data
 
 
@@ -795,13 +795,13 @@ def SolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nTiles = 16, s
                     triangles += [i+k,k,n+k]
 
     #triangle normals point inwards to object ...
-    data = {'type':'TriangleList', 'colors':colors, 
-            'normals':normals, 
-            'points':points, 'triangles':triangles}
+    data = {'type':'TriangleList', 'colors':np.array(colors),
+            'normals':np.array(normals),
+            'points':np.array(points), 'triangles':np.array(triangles)}
 
 
     if addEdges > 0:
-        data['edgeColor'] = list(edgeColor)
+        data['edgeColor'] = np.array(edgeColor)
         edges = []
 
         cntEdges = 0        
@@ -826,7 +826,7 @@ def SolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nTiles = 16, s
         for j in range(cntEdges):
             edges += hEdges[j]
 
-        data['edges'] = edges
+        data['edges'] = np.array(edges)
 
     return data
 
@@ -964,7 +964,8 @@ def Quad(pList, color=[0.,0.,0.,1.], **kwargs):
                 c = color2
             colors=colors+c+c+c+c #4 colors for one sub-quad
 
-    data = {'type':'TriangleList', 'colors': colors, 'points':points, 'triangles':triangles}
+    data = {'type':'TriangleList', 'colors': np.array(colors), 
+            'points':np.array(points), 'triangles':np.array(triangles)}
     #print(data)
     return data
 
@@ -1001,8 +1002,8 @@ def CheckerBoard(point=[0,0,0], normal=[0,0,1], size = 1,
               list(p0+0.5*size*n1+0.5*size2*n2),
               list(p0-0.5*size*n1+0.5*size2*n2)]
 
-    return Quad(points, color=list(color), alternatingColor=alternatingColor, 
-                            nTiles=nTiles, nTilesY=nTiles2)
+    return Quad(points, color=color, alternatingColor=alternatingColor, 
+                nTiles=nTiles, nTilesY=nTiles2)
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: create graphicsData for solid extrusion based on 2D points and segments; by default, the extrusion is performed in z-direction;
@@ -1122,13 +1123,14 @@ def SolidExtrusion(vertices, segments, height, rot = np.diag([1,1,1]), pOff = [0
         for t in trigList:
             triangles += t
    
-    data = {'type':'TriangleList', 'colors': colors, 'points':pointsTransformed, 'triangles':triangles}
+    data = {'type':'TriangleList', 'colors': np.array(colors), 'points':np.array(pointsTransformed),
+            'triangles':np.array(triangles)}
     if addEdges:
-        data['edgeColor'] = list(edgeColor)
-        data['edges'] = edges
+        data['edgeColor'] = np.array(edgeColor)
+        data['edges'] = np.array(edges)
 
     if smoothNormals:
-        data['normals'] = list(pointNormals.flatten())
+        data['normals'] = np.array(pointNormals.flatten())
 
     return data
 
@@ -1143,20 +1145,26 @@ def SolidExtrusion(vertices, segments, height, rot = np.diag([1,1,1]), pOff = [0
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-#**function: convert triangles and points as returned from graphics.ToPointsAndTrigs(...) 
+#**function: convert triangles and points as returned from graphics.ToPointsAndTrigs(...) to GraphicsData; additionally, normals and color(s) can be provided
 #**input: 
-#  points: list of np.array with 3 floats per point 
-#  triangles: list of np.array with 3 int per triangle (0-based indices to triangles)
-#  color: provided as list of 4 RGBA values or single list of (number of points)*[4 RGBA values]
+#  points: list or np.array with np rows of 3 columns (floats) per point (with np points)
+#  triangles: list or np.array with 3 int per triangle (0-based indices to triangles), giving a matrix with nt rows and 3 columns (with nt triangles)
+#  color: provided as list of 4 RGBA values or single list of (np)*[4 RGBA values]
+#  normals: if not None, they have to be provided per point (as matrix with nPand will be added to returned GraphicsData
 #**output: returns GraphicsData with type TriangleList
-def FromPointsAndTrigs(points, triangles, color=[0.,0.,0.,1.]):
-    pointList = list(np.array(points).flatten())
-    triangleList = list(np.array(triangles).flatten())
+def FromPointsAndTrigs(points, triangles, color=[0.,0.,0.,1.], normals=None):
+    pointList = np.array(points).flatten()
+    triangleList = np.array(triangles).flatten()
     nPoints = int(len(pointList)/3)
-    if len(color) == 4*nPoints:
-        colorList = list(color) #without list() potential problem with mutable default value
+    if isinstance(color,np.ndarray):
+        if color.shape[0] == nPoints and color.shape[1] == 4:
+            colorList = np.array(color).flatten() #without list() potential problem with mutable default value
+        else:
+            raise ValueError('FromPointsAndTrigs: invalid numpy array for color (check size and dimensions or provide as list)')
+    elif len(color) == 4*nPoints:
+        colorList = np.array(color)
     elif len(color) == 4:
-        colorList = list(color)*nPoints
+        colorList = np.tile(color, nPoints)
     else:
         print('number of points=', nPoints)
         print('number of trigs=', len(triangleList)/3)
@@ -1166,6 +1174,8 @@ def FromPointsAndTrigs(points, triangles, color=[0.,0.,0.,1.]):
             'colors': colorList, 
             'points':pointList, 
             'triangles':triangleList}
+    if normals is not None: 
+        data['normals'] = np.array(normals).flatten()
     return data
 
 
@@ -1196,60 +1206,52 @@ def ToPointsAndTrigs(g):
 #**input:
 #  g: graphicsData to be transformed
 #  pOff: 3D offset as list or numpy.array added to rotated points
-#  Aoff: 3D rotation matrix as list of lists or numpy.array with shape (3,3); if A is scaled by factor, e.g. using 0.001*np.eye(3), you can also scale the coordinates!!!
+#  Aoff: 3D rotation matrix as list of lists or numpy.array with shape (3,3); if A is scaled by factor, e.g. using 0.001*np.eye(3), you can also scale the coordinates; if Aoff=None, no rotation is performed
 #**output: returns new graphcsData object to be used for drawing in objects
 #**notes: transformation corresponds to HomogeneousTransformation(Aoff, pOff), transforming original coordinates v into vNew = pOff + Aoff @ v
-def Move(g, pOff, Aoff):
+def Move(g, pOff, Aoff=None):
     p0 = np.array(pOff)
-    A0 = np.array(Aoff)
+    if Aoff is  None:
+        A0 = np.eye(3)
+    else:
+        A0 = np.array(Aoff)
     
     if g['type'] == 'TriangleList': 
         gNew = {'type':'TriangleList'}
-        gNew['colors'] = copy.copy(g['colors'])
-        gNew['triangles'] = copy.copy(g['triangles'])
+        gNew['colors'] = np.array(g['colors'])
+        gNew['triangles'] = np.array(g['triangles'])
         if 'edges' in g:
-            gNew['edges'] = copy.copy(g['edges'])
+            gNew['edges'] = np.array(g['edges'])
         if 'edgeColor' in g:
-            gNew['edgeColor'] = copy.copy(g['edgeColor'])
+            gNew['edgeColor'] = np.array(g['edgeColor'])
 
         n=int(len(g['points'])/3)
         v0 = np.array(g['points'])
         v = np.kron(np.ones(n),p0) + (A0 @ v0.reshape((n,3)).T).T.flatten()
         
-        gNew['points'] = list(v)
+        gNew['points'] = v
         if 'normals' in g:
             n0 = np.array(g['normals'])
-            gNew['normals'] = list((A0 @ n0.reshape((n,3)).T).T.flatten() )
+            gNew['normals'] = (A0 @ n0.reshape((n,3)).T).T.flatten()
         
-        # #original, slow:
-        # for i in range(n):
-        #     v = gNew['points'][i*3:i*3+3]
-        #     v = p0 + A0 @ v
-        #     gNew['points'][i*3:i*3+3] = list(v)
-        # if 'normals' in gNew:
-        #     n=int(len(g['normals'])/3)
-        #     for i in range(n):
-        #         v = gNew['normals'][i*3:i*3+3]
-        #         v = A0 @ v
-        #         gNew['normals'][i*3:i*3+3] = list(v)
     elif g['type'] == 'Line':
         gNew = copy.deepcopy(g)
         n=int(len(g['data'])/3)
         for i in range(n):
             v = gNew['data'][i*3:i*3+3]
             v = p0 + A0 @ v
-            gNew['data'][i*3:i*3+3] = list(v)
+            gNew['data'][i*3:i*3+3] = v
     elif g['type'] == 'Text':
         gNew = copy.deepcopy(g)
         v = p0 + A0 @ gNew['position']
-        gNew['position'] = list(v)
+        gNew['position'] = v
     elif g['type'] == 'Circle':
         gNew = copy.deepcopy(g)
         v = p0 + A0 @ gNew['position']
-        gNew['position'] = list(v)
+        gNew['position'] = v
         if 'normal' in gNew:
             v = A0 @ gNew['normal']
-            gNew['normal'] = list(v)
+            gNew['normal'] = v
     else:
         raise ValueError('Move: unsupported graphics data type')
     return gNew
@@ -1259,47 +1261,48 @@ def Move(g, pOff, Aoff):
 #**input: graphicsData dictionaries g1 and g2 obtained from GraphicsData functions
 #**output: one graphicsData dictionary with single triangle lists and compatible points and normals, to be used in visualization of EXUDYN objects; edges are merged; edgeColor is taken from graphicsData g1
 def MergeTriangleLists(g1,g2):
-    np = int(len(g1['points'])/3) #number of points
+    nPoints = int(len(g1['points'])/3) #number of points in g1
     useNormals = False
     if 'normals' in g1 and 'normals' in g2:
         useNormals = True
 
-    if np*4 != len(g1['colors']):
+    if nPoints*4 != len(g1['colors']):
         raise ValueError('MergeTriangleLists: incompatible colors and points in lists')
 
     if useNormals:
-        if np*3 != len(g1['normals']):
+        if nPoints*3 != len(g1['normals']):
             raise ValueError('MergeTriangleLists: incompatible normals and points in lists')
-        data = {'type':'TriangleList', 'colors':copy.copy(g1['colors']), 'normals':copy.copy(g1['normals']), 
-                'points': copy.copy(g1['points']), 'triangles': copy.copy(g1['triangles'])}
+        data = {'type':'TriangleList', 'colors':np.array(g1['colors']), 'normals':np.array(g1['normals']), 
+                'points': np.array(g1['points']), 'triangles': np.array(g1['triangles'])}
 
-        data['normals'] += g2['normals']
+        data['normals'] = np.append(data['normals'],g2['normals'])
     else:
-        data = {'type':'TriangleList', 'colors':copy.copy(g1['colors']),
-                'points': copy.copy(g1['points']), 'triangles': copy.copy(g1['triangles'])}
+        data = {'type':'TriangleList', 'colors':np.array(g1['colors']),
+                'points': np.array(g1['points']), 'triangles': np.array(g1['triangles'])}
     
-    data['colors'] += g2['colors']
-    data['points'] += g2['points']
+    data['colors'] = np.append(data['colors'], g2['colors'])
+    data['points'] = np.append(data['points'], g2['points'])
+
+    # for p in g2['triangles']:
+    #     data['triangles'] += [int(p + nPoints)] 
+    data['triangles'] = np.append(data['triangles'], np.array(g2['triangles'])+nPoints ) #add nPoints offset to g2 for correct connectivity
 
     #copy and merge edges; edges can be available only in one triangle list
     if 'edges' in g1:
-        data['edges'] = copy.copy(g1['edges'])
+        data['edges'] = np.array(g1['edges'])
     if 'edges' in g2:
-        edges2 = copy.copy(g2['edges'])
+        edges2 = np.array(g2['edges'])
         if 'edges' not in data:
             data['edges'] = []
         else:
-            for i in range(len(edges2)):
-                edges2[i] += np #add point offset
+            edges2 += nPoints #add offset
         
-        data['edges'] += edges2
+        data['edges'] = np.append(data['edges'], edges2)
     if 'edgeColor' in g1:
-        data['edgeColor'] = copy.copy(g1['edgeColor']) #only taken from g1
+        data['edgeColor'] = np.array(g1['edgeColor']) #only taken from g1, as there is only a single color
     elif 'edgeColor' in g2:
-        data['edgeColor'] = copy.copy(g2['edgeColor']) #only taken from g1
+        data['edgeColor'] = np.array(g2['edgeColor']) #only taken from g2
 
-    for p in g2['triangles']:
-        data['triangles'] += [int(p + np)] #add point offset for correct connectivity
 
     return data
 
@@ -1452,19 +1455,18 @@ def FromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, density=0., scale=
         print('  center of mass =', list(COM))
         print('  inertia =', list(inertia))
     
-    # print('STL points3=', nPoints3)
-    
-    colors = color*nPoints
-    #triangles = list(np.arange(0,nPoints))#wrong orientation ==> reverse
-    if invertTriangles:
-        triangles = list(np.arange(nPoints-1,-1,-1))#inverted sorting
-    else:
-        triangles = list(np.arange(0,nPoints))      #unmodified sorting of indices
-    points = list(data.points.flatten())
-    nf = 1.-2.*int(invertNormals) #+1 or -1 (inverted)
-    normals = list(np.kron([nf,nf,nf],data.normals).flatten()) #normals must be per point
+    colors = np.tile(color, nPoints)
 
-    dictGraphics = {'type':'TriangleList', 'colors':colors, 'normals':normals, 'points':points, 'triangles':triangles}
+    if invertTriangles:
+        triangles = np.arange(nPoints-1,-1,-1)              #inverted sorting
+    else:
+        triangles = np.arange(0,nPoints)                    #unmodified sorting of indices
+    points = data.points.flatten()
+    nf = 1.-2.*int(invertNormals)                           #+1 or -1 (inverted)
+    normals = np.kron([nf,nf,nf],data.normals).flatten()    #normals must be per point
+
+    dictGraphics = {'type':'TriangleList', 'colors':colors, 'normals':normals, 
+                    'points':points, 'triangles':triangles}
     if density == 0:
         return dictGraphics 
     else:
@@ -1630,11 +1632,11 @@ def AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color.black, edgeAngle 
     
     graphicsData2 = FromPointsAndTrigs(newPoints, finalTrigs, list(np.array(newColors).flatten()))
     if addEdges:
-        graphicsData2['edges'] = edges
-        graphicsData2['edgeColor'] = list(edgeColor)
+        graphicsData2['edges'] = np.array(edges)
+        graphicsData2['edgeColor'] = np.array(edgeColor)
 
     if smoothNormals:
-        graphicsData2['normals'] = list(np.array(pointNormals).flatten())
+        graphicsData2['normals'] = np.array(pointNormals).flatten()
     
     return graphicsData2
 

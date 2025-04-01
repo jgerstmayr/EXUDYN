@@ -585,6 +585,12 @@ namespace RigidBodyMath {
 		}
 		else
 		{
+			const double twoPi = 2.0 * EXUstd::pi;
+			if (angle > twoPi)
+			{
+				angle = std::fmod(angle, twoPi);
+			}
+
 			Matrix3D mat(EXUmath::unitMatrix3D);
 			Matrix3D vTilde(Vector2SkewMatrix(v));
 

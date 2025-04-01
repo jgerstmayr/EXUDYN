@@ -14,3 +14,5 @@
 
 #virtual environments untested
 
+#inspect .pyd (versions, etc.) file:
+& 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\bin\Hostx64\x64\dumpbin' /version exudynCPP.cp311-win_amd64.pyd

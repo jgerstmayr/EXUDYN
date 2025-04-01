@@ -37,11 +37,12 @@ nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
 #add rigid body for sensor tests:
 iCube0 = InertiaCuboid(density=5000, sideLengths=[0.2,0.1,0.5])
 iCube0 = iCube0.Translated([0.1,0.2,0.3])
-[n0,b0]=AddRigidBody(mainSys = mbs,
-                     inertia = iCube0, #includes COM
-                     nodeType = exu.NodeType.RotationRxyz,
-                     angularVelocity = [4,0.1,0.1],
-                     )
+dictCube0 = mbs.CreateRigidBody(
+              inertia=iCube0,  # includes COM
+              nodeType=exu.NodeType.RotationRxyz,
+              initialAngularVelocity=[4, 0.1, 0.1],
+              returnDict=True)
+[n0, b0] = [dictCube0['nodeNumber'], dictCube0['bodyNumber']]
 
 #add spring damper system
 n1=mbs.AddNode(NodePoint(referenceCoordinates = [L,0,0], 

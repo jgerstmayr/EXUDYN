@@ -93,7 +93,7 @@ public:
 		const ResizableVectorParallel& currentODE2, const ResizableVectorParallel& incrementODE2, ResizableVectorParallel& compositionODE2);
 
 	//! set Lie group data coordinates 0, set Lie group previous Newton increment 0
-	virtual void ResetCoordinatesLieGroupNodes(CSystem& computationalSystem, ResizableVectorParallel& solutionODE2, ResizableVectorParallel& previousNewtonSolution);
+	virtual void ResetCoordinatesLieGroupNodes(CSystem& computationalSystem, ResizableVectorParallel& previousNewtonSolution);
 
 	//! set solutionODE2 coordinates of Lie group direct update nodes to previous Newton solution
 	virtual void SetPreviousNewtonSolutionLieGroupDirectUpdateNodes(CSystem& computationalSystem, 

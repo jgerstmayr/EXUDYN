@@ -54,13 +54,14 @@ graphicsBody0 = AddEdgesAndSmoothenNormals(graphicsBody0, edgeAngle = 0.25*pi, a
 
 graphicsCOM0 = graphics.Basis(origin=iCube0.com, length=2*w)
 
-[n0,b0]=AddRigidBody(mainSys = mbs,
-                     inertia = iCube0, #includes COM
-                     nodeType = exu.NodeType.RotationEulerParameters,
-                     position = pMid0,
-                     rotationMatrix = np.diag([1,1,1]),
-                     gravity = g,
-                     graphicsDataList = [graphicsCOM0, graphicsBody0])
+dictCube0 = mbs.CreateRigidBody(
+              inertia=iCube0, 
+              referencePosition=pMid0,
+              referenceRotationMatrix=np.diag([1,1,1]),
+              gravity=g,
+              graphicsDataList=[graphicsCOM0, graphicsBody0],
+              returnDict=True)
+[n0, b0] = [dictCube0['nodeNumber'], dictCube0['bodyNumber']]
 
 
 #%%++++++++++++++++++++++++++

@@ -50,6 +50,9 @@ The symbolic Real type allows to replace Python's float by a symbolic quantity. 
    esym.SetRecording(False)
    x = SymReal(42) #now, only represents a value
    y = x/3.       #directly evaluates to 14
+   
+   #back to default behavior, otherwise expr. only evaluated:
+   esym.SetRecording(True)
 
 To create a symbolic Real, use \ ``aa=symbolic.Real(1.23)``\  to build a Python object aa with value 1.23. In order to use a named value, use \ ``pi=symbolic.Real('pi',3.14)``\ . Note that in the following, we use the abbreviation \ ``SymReal=exudyn.symbolic.Real``\ . Member functions of \ ``SymReal``\ , which are \ **not recorded**\ , are:
 
@@ -229,6 +232,7 @@ A symbolic Vector type to replace Python's (1D) numpy array in symbolic expressi
    :linenos:
    
    import exudyn as exu
+   import numpy as np
    esym = exu.symbolic
    
    SymVector = esym.Vector

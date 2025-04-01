@@ -56,6 +56,8 @@ DESCRIPTION of NodePoint
   | global 3D velocity vector of node
 * | ``Acceleration``\ : \ :math:`{\mathbf{a}}\cConfig = \ddot {\mathbf{q}}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp`\ 
   | global 3D acceleration vector of node
+* | ``CoordinatesTotal``\ : \ :math:`{\mathbf{c}}\cConfig = {\mathbf{u}}\cConfig + {\mathbf{p}}\cRef`\ 
+  | displacement plus reference coordinates of node
 * | ``Coordinates``\ : \ :math:`{\mathbf{c}}\cConfig = {\mathbf{u}}\cConfig = [q_0,\,q_1,\,q_2]\tp\cConfig`\ 
   | coordinate vector of node
 * | ``Coordinates\_t``\ : \ :math:`\dot{\mathbf{c}}\cConfig = {\mathbf{v}}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\tp\cConfig`\ 
