@@ -15,7 +15,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         # python-version: ['10']
-        python-version: ['8','9','10','11','12']
+        python-version: ['9','10','11','12','13']
 
     steps:
       - uses: actions/checkout@v4
