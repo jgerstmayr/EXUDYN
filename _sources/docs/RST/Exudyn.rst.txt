@@ -46,10 +46,7 @@ Exudyn version = 1.9.83.dev1 (Krall)
 If you like using Exudyn, please add a *star* on github and follow us on 
 `Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
 
-**Update on Exudyn V1.9.0**: newer examples use ``exudyn.graphics`` instead of ``GraphicsData`` functions. The old models are backwards-compatible, but the new updated examples and test models require version 1.8.52 or newer! FEM now uses internally in mass and stiffness matrices the scipy sparse csr matrices, check also your models for that! Load/save in FEM does not work with NumPy 2.x versions!
-
-**NOTE**: **NumPy** switched to version 2.x which causes problems with packages that are not adapted to NumPy 2.x. 
-The current version of Exudyn is already compatible with NumPy 2.x AND 1.x, however, some external packages (SciPy, robotics tools, etc.) cause problems. Therefore, use NumPy<2.0 which should keep you safe for the moment (2024-12). Usual error messages are: ``A module that was compiled using NumPy 1.x cannot be run in NumPy 2.1.2 as it may crash. To support both 1.x and 2.x versions of NumPy, modules must be compiled with NumPy 2.0. Some module may need to rebuild instead e.g. with 'pybind11>=2.12'``
+**Update on Exudyn V1.9.0**: newer examples use ``exudyn.graphics`` instead of ``GraphicsData`` functions. FEM now uses internally in mass and stiffness matrices the scipy sparse csr matrices.
 
 +  **Exudyn** is *free, open source* and with plenty of *documentation* and *examples*
 +  **pre-built** for Python 3.8 - 3.12 under **Windows** , **Linux** and **MacOS** available ( **NEW** : now with manylinux2014 compatibility and PEP518 build); build wheels yourself, see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
@@ -88,6 +85,9 @@ In addition to the tutorial in the documentation, many ( **250+** ) examples can
 Note that **ChatGPT** and other large language models know Exudyn quite well. They are able to build parts of your code or even full models, see `https://doi.org/10.1007/s11044-023-09962-0 <https://doi.org/10.1007/s11044-023-09962-0>`_
 
 Tutorial videos ( **new Feb 2024** )can be found in the `youtube channel of Exudyn <https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx>`_ !
+
+**NOTE**: **NumPy** switched to version 2.x which causes problems with packages that are not adapted to NumPy 2.x. 
+The current version of Exudyn is already compatible with NumPy 2.x AND 1.x, however, some external packages (SciPy, robotics tools, etc.) cause problems.
 
 Enjoy the Python library for multibody dynamics modeling, simulation, creating large scale systems, parameterized systems, component mode synthesis, optimization, ...
 
