@@ -130,7 +130,7 @@ You can view and download this file on Github: `finiteSegmentMethod.py <https://
    
    simulationSettings.solutionSettings.solutionInformation = "Finite segment method"
    
-   exu.StartRenderer()
+   SC.renderer.Start()
    
    if mode == "Trap":
        mbs.SolveDynamic(simulationSettings, 
@@ -139,9 +139,9 @@ You can view and download this file on Github: `finiteSegmentMethod.py <https://
        mbs.SolveDynamic(simulationSettings)
        
    
-   SC.WaitForRenderEngineStopFlag()
-   #SC.WaitForRenderEngineStopFlag()
-   exu.StopRenderer() #safely close rendering window!
+   SC.renderer.DoIdleTasks()
+   #SC.renderer.DoIdleTasks()
+   SC.renderer.Stop() #safely close rendering window!
    
    
    if True and useANCF:

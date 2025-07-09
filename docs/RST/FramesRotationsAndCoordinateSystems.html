@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Frames, rotations and coordinate systems &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>Frames, rotations and coordinate systems &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -100,7 +100,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -182,7 +182,7 @@ An arbitrary vector <span class="math notranslate nohighlight">\(\LU{i}{{\mathbf
 <span id="fig-theory-ht-changeofframe"></span><a class="reference internal image-reference" href="../../_images/theoryRotationsHTchangeOfFrame.png"><img alt="../../_images/theoryRotationsHTchangeOfFrame.png" src="../../_images/theoryRotationsHTchangeOfFrame.png" style="width: 320px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 18 </span><span class="caption-text">Homogeneous transformation from <span class="math notranslate nohighlight">\(\mathcal{F}_i\)</span> to <span class="math notranslate nohighlight">\(\mathcal{F}_j\)</span> using the relation <span class="math notranslate nohighlight">\(\LU{j}{\hat{\mathbf{r}} } = \LU{ji}{{\mathbf{T}}} \LU{i}{\hat{\mathbf{r}} }\)</span></span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 19 </span><span class="caption-text">Homogeneous transformation from <span class="math notranslate nohighlight">\(\mathcal{F}_i\)</span> to <span class="math notranslate nohighlight">\(\mathcal{F}_j\)</span> using the relation <span class="math notranslate nohighlight">\(\LU{j}{\hat{\mathbf{r}} } = \LU{ji}{{\mathbf{T}}} \LU{i}{\hat{\mathbf{r}} }\)</span></span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>All homogeneous transformations form the <strong>Special Euclidean Group SE(3)</strong> – the motion group – for describing rigid body movements in 3D. Therefore, homogeneous transformations also meet the criteria for groups (closure, associativity, existence of neutral and inverse elements).</p>
@@ -245,7 +245,7 @@ and that the rows can be identified as the unit vectors <span class="math notran
 <section id="elementary-rotations">
 <h3>Elementary rotations<a class="headerlink" href="#elementary-rotations" title="Link to this heading"></a></h3>
 <p>Elementary rotations are rotations about a single axis, using one of the orthogonal basis vectors.
-Consider basis <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x1},\,{\mathbf{e}}_{y1},\,{\mathbf{e}}_{z1})\)</span> and a rotation around axis <span class="math notranslate nohighlight">\({\mathbf{e}}_{x1}\)</span> with angle <span class="math notranslate nohighlight">\(\varphi_1\)</span> in positive rotation sense, obtaining a rotated frame <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x2},\,{\mathbf{e}}_{y2},\,{\mathbf{e}}_{z2})\)</span>, see <a class="reference internal" href="#fig-theory-rotations-elementaryx"><span class="std std-numref">Fig. 19</span></a>.
+Consider basis <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x1},\,{\mathbf{e}}_{y1},\,{\mathbf{e}}_{z1})\)</span> and a rotation around axis <span class="math notranslate nohighlight">\({\mathbf{e}}_{x1}\)</span> with angle <span class="math notranslate nohighlight">\(\varphi_1\)</span> in positive rotation sense, obtaining a rotated frame <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x2},\,{\mathbf{e}}_{y2},\,{\mathbf{e}}_{z2})\)</span>, see <a class="reference internal" href="#fig-theory-rotations-elementaryx"><span class="std std-numref">Fig. 20</span></a>.
 The rotation matrix for this case reads:</p>
 <div class="math notranslate nohighlight">
 \[\LU{12}{\Rot} = \left[ \LUR{1}{{\mathbf{e}}}{x2} \;\; \LUR{1}{{\mathbf{e}}}{y2} \;\; \LUR{1}{{\mathbf{e}}}{z2} \right] = \mr{1}{0}{0}{0}{c \varphi_1}{-s \varphi_1}{0}{s \varphi_1}{c \varphi_1}.\]</div>
@@ -256,10 +256,10 @@ The rotation matrix for this case reads:</p>
 <span id="fig-theory-rotations-elementaryx"></span><a class="reference internal image-reference" href="../../_images/elementaryRotationX.png"><img alt="../../_images/elementaryRotationX.png" src="../../_images/elementaryRotationX.png" style="width: 320px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 19 </span><span class="caption-text">Elementary rotation around axis <span class="math notranslate nohighlight">\(\mathbf{ x}_1\)</span>.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 20 </span><span class="caption-text">Elementary rotation around axis <span class="math notranslate nohighlight">\(\mathbf{ x}_1\)</span>.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
 </figcaption>
 </figure>
-<p>In a second example, a rotation with angle <span class="math notranslate nohighlight">\(\varphi_2\)</span> around <span class="math notranslate nohighlight">\({\mathbf{e}}_{y2}\)</span> is performed to transform from basis <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x2},\,{\mathbf{e}}_{y2},\,{\mathbf{e}}_{z2})\)</span> into <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x3},\,{\mathbf{e}}_{y3},\,{\mathbf{e}}_{z3})\)</span>, see <a class="reference internal" href="#fig-theory-rotations-elementaryy"><span class="std std-numref">Fig. 20</span></a>.
+<p>In a second example, a rotation with angle <span class="math notranslate nohighlight">\(\varphi_2\)</span> around <span class="math notranslate nohighlight">\({\mathbf{e}}_{y2}\)</span> is performed to transform from basis <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x2},\,{\mathbf{e}}_{y2},\,{\mathbf{e}}_{z2})\)</span> into <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x3},\,{\mathbf{e}}_{y3},\,{\mathbf{e}}_{z3})\)</span>, see <a class="reference internal" href="#fig-theory-rotations-elementaryy"><span class="std std-numref">Fig. 21</span></a>.
 The rotation matrix for this case reads:</p>
 <div class="math notranslate nohighlight">
 \[\LU{23}{\Rot} = \left[ \LUR{2}{{\mathbf{e}}}{x3} \;\; \LUR{2}{{\mathbf{e}}}{y3} \;\; \LUR{2}{{\mathbf{e}}}{z3} \right] = \mr{c \varphi_2}{0}{s \varphi_2}{0}{1}{0}{-s \varphi_2}{0}{c \varphi_2}.\]</div>
@@ -267,7 +267,7 @@ The rotation matrix for this case reads:</p>
 <span id="fig-theory-rotations-elementaryy"></span><a class="reference internal image-reference" href="../../_images/elementaryRotationY.png"><img alt="../../_images/elementaryRotationY.png" src="../../_images/elementaryRotationY.png" style="width: 320px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 20 </span><span class="caption-text">Elementary rotation around axis <span class="math notranslate nohighlight">\(\mathbf{ y}_2\)</span>.</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 21 </span><span class="caption-text">Elementary rotation around axis <span class="math notranslate nohighlight">\(\mathbf{ y}_2\)</span>.</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>Finally, a rotation around <span class="math notranslate nohighlight">\({\mathbf{e}}_{z3}\)</span> with angle <span class="math notranslate nohighlight">\(\varphi_3\)</span> would give similarly,</p>
@@ -317,10 +317,10 @@ Specifically, we see that for successive rotations, the following must be consid
 <span id="fig-theory-rotations-successive"></span><a class="reference internal image-reference" href="../../_images/RotationsSequences.png"><img alt="../../_images/RotationsSequences.png" src="../../_images/RotationsSequences.png" style="width: 500px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 21 </span><span class="caption-text">Successive rotations are not commutative.</span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 22 </span><span class="caption-text">Successive rotations are not commutative.</span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
 </figcaption>
 </figure>
-<p>In <a class="reference internal" href="#fig-theory-rotations-successive"><span class="std std-numref">Fig. 21</span></a>a, the block shown is first rotated 90° about the <span class="math notranslate nohighlight">\(\mathbf{e}_2\)</span> axis and then 90° about the <span class="math notranslate nohighlight">\(\mathbf{e}_3\)</span> axis. In Figure  <a class="reference internal" href="#fig-theory-rotations-successive"><span class="std std-ref">Successive rotations are not commutative.</span></a>b, the same rotations are applied in reverse order, i.e., the block is first rotated 90° about the <span class="math notranslate nohighlight">\(\mathbf{e}_3\)</span> axis and then 90° about the <span class="math notranslate nohighlight">\(\mathbf{e}_2\)</span> axis. It is immediately apparent that the resulting orientation of the block is different in both cases.</p>
+<p>In <a class="reference internal" href="#fig-theory-rotations-successive"><span class="std std-numref">Fig. 22</span></a>a, the block shown is first rotated 90° about the <span class="math notranslate nohighlight">\(\mathbf{e}_2\)</span> axis and then 90° about the <span class="math notranslate nohighlight">\(\mathbf{e}_3\)</span> axis. In Figure  <a class="reference internal" href="#fig-theory-rotations-successive"><span class="std std-ref">Successive rotations are not commutative.</span></a>b, the same rotations are applied in reverse order, i.e., the block is first rotated 90° about the <span class="math notranslate nohighlight">\(\mathbf{e}_3\)</span> axis and then 90° about the <span class="math notranslate nohighlight">\(\mathbf{e}_2\)</span> axis. It is immediately apparent that the resulting orientation of the block is different in both cases.</p>
 <p>Finally, it should be noted that there are two different types of successive rotations.
 In the first variant, also known as the <strong>single-frame method</strong>, the same reference frame is chosen for each rotation. This variant is best understood in the active rotation of vectors, where these rotations always take place, for example, in the global reference system.</p>
 <p>In the second variant, also known as the <strong>multi-frame method</strong>, a new reference frame created by the preceding rotation is used for each rotation. This variant can be illustrated by applications in robotics (e.g., articulated arm robots), where (passive) rotations of the reference systems of the robot’s respective arms occur, with each rotation taking place in the reference system of the preceding arm.</p>
@@ -344,18 +344,18 @@ We may therefore conclude</p>
 <span id="fig-theory-rotations-angleaxis"></span><a class="reference internal image-reference" href="../../_images/RotationAxisAngle.png"><img alt="../../_images/RotationAxisAngle.png" src="../../_images/RotationAxisAngle.png" style="width: 260px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 22 </span><span class="caption-text">Rotation of a vector <span class="math notranslate nohighlight">\(\mathbf{ r}_0\)</span> by means of the angle-axis tuple <span class="math notranslate nohighlight">\((\mathbf{ u}(t), \, \varphi(t))\)</span>.</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 23 </span><span class="caption-text">Rotation of a vector <span class="math notranslate nohighlight">\(\mathbf{ r}_0\)</span> by means of the angle-axis tuple <span class="math notranslate nohighlight">\((\mathbf{ u}(t), \, \varphi(t))\)</span>.</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
 </figcaption>
 </figure>
-<p>Using <a class="reference internal" href="#fig-theory-rotations-angleaxis"><span class="std std-numref">Fig. 22</span></a>, we may now consider relations of the two frames <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x0},\,{\mathbf{e}}_{y0},\,{\mathbf{e}}_{z0})\)</span> and <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x1},\,{\mathbf{e}}_{y1},\,{\mathbf{e}}_{z1})\)</span>, solely defined by the angle-axis <span class="math notranslate nohighlight">\(({\mathbf{u}}(t), \, \varphi(t))\)</span> relation.</p>
+<p>Using <a class="reference internal" href="#fig-theory-rotations-angleaxis"><span class="std std-numref">Fig. 23</span></a>, we may now consider relations of the two frames <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x0},\,{\mathbf{e}}_{y0},\,{\mathbf{e}}_{z0})\)</span> and <span class="math notranslate nohighlight">\(({\mathbf{e}}_{x1},\,{\mathbf{e}}_{y1},\,{\mathbf{e}}_{z1})\)</span>, solely defined by the angle-axis <span class="math notranslate nohighlight">\(({\mathbf{u}}(t), \, \varphi(t))\)</span> relation.</p>
 <figure class="align-default" id="id6">
 <span id="fig-theory-rotations-axisanglederivation"></span><a class="reference internal image-reference" href="../../_images/RotationAxisAngleDerivation.png"><img alt="../../_images/RotationAxisAngleDerivation.png" src="../../_images/RotationAxisAngleDerivation.png" style="width: 320px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 23 </span><span class="caption-text">Relations for derivation of rotation tensor and Rodrigues’ formula.</span><a class="headerlink" href="#id6" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 24 </span><span class="caption-text">Relations for derivation of rotation tensor and Rodrigues’ formula.</span><a class="headerlink" href="#id6" title="Link to this image"></a></p>
 </figcaption>
 </figure>
-<p>According to <a class="reference internal" href="#fig-theory-rotations-axisanglederivation"><span class="std std-numref">Fig. 23</span></a>, we may split the vector <span class="math notranslate nohighlight">\({\mathbf{r}}\)</span>, which has the length <span class="math notranslate nohighlight">\(r = \vert {\mathbf{r}} \vert\)</span>, into</p>
+<p>According to <a class="reference internal" href="#fig-theory-rotations-axisanglederivation"><span class="std std-numref">Fig. 24</span></a>, we may split the vector <span class="math notranslate nohighlight">\({\mathbf{r}}\)</span>, which has the length <span class="math notranslate nohighlight">\(r = \vert {\mathbf{r}} \vert\)</span>, into</p>
 <div class="math notranslate nohighlight">
 \[{\mathbf{r}}= c_1 {\mathbf{e}}_1 + c_2 {\mathbf{e}}_2 + c_3 {\mathbf{e}}_3\]</div>
 <p>with the unit vectors given as</p>
@@ -412,7 +412,7 @@ The output variable <code class="docutils literal notranslate"><span class="pre"
 <span id="fig-theory-rotations-taitbryanangles"></span><a class="reference internal image-reference" href="../../_images/theoryRotationsTaitBryanAngles.png"><img alt="../../_images/theoryRotationsTaitBryanAngles.png" src="../../_images/theoryRotationsTaitBryanAngles.png" style="width: 240px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 24 </span><span class="caption-text">Definition of Tait-Bryan angles.</span><a class="headerlink" href="#id7" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 25 </span><span class="caption-text">Definition of Tait-Bryan angles.</span><a class="headerlink" href="#id7" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>The transformation given by Tait-Bryan angles <span class="math notranslate nohighlight">\((\alpha,\beta,\gamma)\)</span> follows from three successive rotations,</p>

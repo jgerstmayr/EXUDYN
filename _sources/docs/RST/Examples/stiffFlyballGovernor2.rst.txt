@@ -298,8 +298,8 @@ You can view and download this file on Github: `stiffFlyballGovernor2.py <https:
    
    useGraphics=True
    if useGraphics: #only start graphics once, but after background is set
-       exu.StartRenderer()
-       #mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       #SC.renderer.DoIdleTasks()
        
    # dynamicSolver = exu.MainSolverImplicitSecondOrder()
    
@@ -339,7 +339,7 @@ You can view and download this file on Github: `stiffFlyballGovernor2.py <https:
    
    
    if useGraphics: #only start graphics once, but after background is set
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.Stop() #safely close rendering window!
    
    
    for i in range(4):

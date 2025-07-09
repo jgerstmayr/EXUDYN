@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation instructions &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>Installation instructions &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -61,9 +61,9 @@
 <li class="toctree-l3"><a class="reference internal" href="#requirements-for-exudyn">Requirements for Exudyn ?</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#install-exudyn-with-pip-installer-pypi-org">Install Exudyn with PIP INSTALLER (pypi.org)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#install-from-specific-wheel-ubuntu-and-windows">Install from specific Wheel (Ubuntu and Windows)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#build-and-install-exudyn-under-windows-10">Build and install Exudyn under Windows 10?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#build-and-install-exudyn-under-mac-os-x">Build and install Exudyn under Mac OS X?</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#build-and-install-exudyn-under-ubuntu">Build and install Exudyn under Ubuntu?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-and-install-exudyn-under-windows-10">Build and install Exudyn under Windows 10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-and-install-exudyn-under-mac-os-x">Build and install Exudyn under Mac OS X</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-and-install-exudyn-under-ubuntu">Build and install Exudyn under Ubuntu</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#uninstall-exudyn">Uninstall Exudyn</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#how-to-install-exudyn-and-use-the-c-source-code-advanced">How to install Exudyn and use the C++ source code (advanced)?</a></li>
 </ul>
@@ -101,7 +101,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -125,17 +125,17 @@
 <section id="requirements-for-exudyn">
 <span id="sec-install-installinstructions-requirements"></span><h2>Requirements for Exudyn ?<a class="headerlink" href="#requirements-for-exudyn" title="Link to this heading"></a></h2>
 <p>Exudyn only works with Python. Thus, you need an appropriate Python installation.
-So far (2021-07), we tested</p>
+So far (2025-07), we thoroughly tested</p>
 <ul class="simple">
+<li><p>Currently (2025-07), we support Python 3.9 - Python 3.13 <strong>conda environments</strong> on Windows, Linux and MacOS (please report configurations that do not work on GitHub/issues); the upgrades to newer Python versions will usually be done in line with new Python releases (every October).</p></li>
+<li><p><strong>Anaconda 2025-06, 64bit, Python 3.12</strong> with Spyder 6.0</p></li>
 <li><p><strong>Anaconda 2023-07, 64bit, Python 3.11</strong> with Spyder 5.4</p></li>
 <li><p><strong>Anaconda 2021-11, 64bit, Python 3.9</strong>(older Anaconda3 versions can be downloaded via the repository archive <code class="docutils literal notranslate"><span class="pre">https://repo.anaconda.com/archive/</span></code>)</p></li>
-<li><p>Currently, we support Python 3.8 - Python 3.12 <strong>conda environments</strong> on Windows, Linux and MacOS (please report configurations that do not work on GitHub/issues).</p></li>
 <li><p><strong>Spyder 5.1.5</strong> (with Python 3.9.7, 64bit) and <strong>Spyder 4.1.3</strong> (with Python 3.7.7, 64bit), which is included in the Anaconda installation(Note that it is important that Spyder, Python and Exudyn  are <strong>either</strong> 32bit <strong>or</strong> 64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit – then you should follow the recommendations of paths as suggested by Anaconda installer.); Spyder works with all virtual environments</p></li>
 </ul>
 <p>Many alternative options exist:</p>
 <ul class="simple">
-<li><p>Users report successful use of Exudyn with <strong>Visual Studio Code</strong>. <strong>Jupyter</strong> has been tested with some examples; both environments should work with default settings.</p></li>
-<li><p>Anaconda 2020-11 with <strong>Python 3.8</strong> and Spyder 4.1.5: no problems except some regular crashes of Spyder, TestSuite runs without problems since Exudyn version 1.0.182.</p></li>
+<li><p>Many users report successful use of Exudyn with <strong>Visual Studio Code</strong>. <strong>Jupyter</strong> has been tested with some examples; both environments should work with default settings.</p></li>
 <li><p>Alternative option with more stable Spyder (as compared to Spyder 4.1.3): Anaconda, 64bit, Python 3.6.5)(Anaconda 64bit with Python3.6 can be downloaded via the repository archive <code class="docutils literal notranslate"><span class="pre">https://repo.anaconda.com/archive/</span></code> choosing <code class="docutils literal notranslate"><span class="pre">Anaconda3-5.2.0-Windows-x86_64.exe</span></code> for 64bit.)</p></li>
 </ul>
 <p>If you plan to extend the C++ code, we recommend to use Microsoft Visual Studio (VS2022) and previously VS2017(Note: VS2019 has problems with the library ‘Eigen’ and therefore leads to erroneous results with the sparse solver.) to compile your code, which offers Python 3.x compatibility.
@@ -183,11 +183,11 @@ NOTE: as there is only <code class="docutils literal notranslate"><span class="p
 <div><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">exudyn</span> <span class="pre">--pre</span> <span class="pre">-U</span></code></p>
 </div></blockquote>
 <p>The <code class="docutils literal notranslate"><span class="pre">-U</span></code> (identical to <code class="docutils literal notranslate"><span class="pre">--upgrade</span></code>) flag ensures that the current installed version is also updated in case of a change of the micro version (e.g., from version 1.6.119 to version 1.6.164), otherwise, it will only update if you switch to a newer minor version.</p>
-<p>In some cases (e.g. for AppleM1 or special Linux versions), your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the ‘Build and install’ sections, Section <a class="reference internal" href="#sec-install-installinstructions-buildwindows"><span class="std std-ref">Build and install Exudyn under Windows 10?</span></a>.</p>
+<p>In some cases (e.g. for AppleM1 or special Linux versions), your pre-built binary will not work due to some incompatibilities. Then you need to build from source as described in the ‘Build and install’ sections, Section <a class="reference internal" href="#sec-install-installinstructions-buildwindows"><span class="std std-ref">Build and install Exudyn under Windows 10</span></a>.</p>
 <section id="troubleshooting-pip-install">
 <h3>Troubleshooting pip install<a class="headerlink" href="#troubleshooting-pip-install" title="Link to this heading"></a></h3>
 <p>Pip install may fail, if your linux version does not support the current manylinux version.
-This was known for Red Hat, CentOS, Rocky Linux or simlilar systems which usually support manylinux2014. In this case, you had to build Exudyn from source, see Section <a class="reference internal" href="#sec-install-installinstructions-buildubuntu"><span class="std std-ref">Build and install Exudyn under Ubuntu?</span></a>. Since version 1.7.116, the manylinux2014 version is supported and according problems should be solved.</p>
+This was known for Red Hat, CentOS, Rocky Linux or simlilar systems which usually support manylinux2014. In this case, you had to build Exudyn from source, see Section <a class="reference internal" href="#sec-install-installinstructions-buildubuntu"><span class="std std-ref">Build and install Exudyn under Ubuntu</span></a>. Since version 1.7.116, the manylinux2014 version is supported and according problems should be solved.</p>
 <p>Sometimes, you install exudyn, but when running python, the <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">exudyn</span></code> fails.
 In case of several environments, check where your installation goes. To guarantee that the pip install goes to the python call, use:</p>
 <blockquote>
@@ -203,7 +203,7 @@ In case of several environments, check where your installation goes. To guarante
 <section id="install-from-specific-wheel-ubuntu-and-windows">
 <span id="sec-install-installinstructions-wheel"></span><h2>Install from specific Wheel (Ubuntu and Windows)<a class="headerlink" href="#install-from-specific-wheel-ubuntu-and-windows" title="Link to this heading"></a></h2>
 <p>A way to install the Python package Exudyn is to use the so-called ‘wheels’ (file ending <code class="docutils literal notranslate"><span class="pre">.whl</span></code>).
-NOTE that this approach usually is not required; just use the pip installer of the previous section!</p>
+NOTE that this approach usually is not required; usually, just use the pip installer of the previous section!</p>
 <p><strong>Ubuntu</strong>:</p>
 <p>Wheels can be downloaded directly from <a class="reference external" href="https://pypi.org/project/exudyn/#files">https://pypi.org/project/exudyn/#files</a>, for many Python versions and architectures.</p>
 <p>For Ubuntu 18.04 (which by default uses Python 3.6) this may read (version number 1.0.20 may be different):</p>
@@ -214,12 +214,13 @@ NOTE that this approach usually is not required; just use the pip installer of t
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.8,</span> <span class="pre">64bit</span></code>: pip3 install dist<span class="math notranslate nohighlight">\(\backslash\)</span>exudyn-1.0.20-cp38-cp38-linux_x86_64.whl</p></li>
 </ul>
-<p>NOTE that your installation may have environments with different Python versions, so install that Exudyn version appropriately!
-If the wheel installation does not work on Ubuntu, it is highly recommended to build Exudyn for your specific system as given in Section <a class="reference internal" href="#sec-install-installinstructions-buildubuntu"><span class="std std-ref">Build and install Exudyn under Ubuntu?</span></a>.</p>
+<p>We regularly upgrade to newer Ubuntu versions (like 24.04) and we did not observe any issues.
+NOTE that your installation may have environments with different Python versions, so install that Exudyn version appropriately!
+If the wheel installation does not work on Ubuntu, it is highly recommended to build Exudyn for your specific system as given in Section <a class="reference internal" href="#sec-install-installinstructions-buildubuntu"><span class="std std-ref">Build and install Exudyn under Ubuntu</span></a>.</p>
 <p><strong>Windows</strong>:</p>
 <p>First, open an Anaconda prompt:</p>
 <ul>
-<li><p>EITHER calling: START-&gt;Anaconda-&gt;… OR go to anaconda/Scripts folder and call activate.bat</p></li>
+<li><p>EITHER calling the Anaconda prompt directly using: START-&gt;Anaconda-&gt;… OR go to anaconda/Scripts folder and call activate.bat</p></li>
 <li><p>You can check your Python version then, by running <code class="docutils literal notranslate"><span class="pre">python</span></code>(<code class="docutils literal notranslate"><span class="pre">python3</span></code> under Ubuntu 18.04), the output reads like:</p>
 <p><code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">3.6.5</span> <span class="pre">|</span> <span class="pre">Anaconda,</span> <span class="pre">Inc.|</span> <span class="pre">(default,</span> <span class="pre">Mar</span> <span class="pre">29</span> <span class="pre">2018,</span> <span class="pre">13:32:41)</span> <span class="pre">[</span> <span class="pre">MSC</span> <span class="pre">v.1900</span> <span class="pre">64</span> <span class="pre">bit</span> <span class="pre">(AMD64)]</span> <span class="pre">on</span> <span class="pre">win32</span></code>…</p>
 </li>
@@ -233,7 +234,7 @@ If the wheel installation does not work on Ubuntu, it is highly recommended to b
 </ul>
 </section>
 <section id="build-and-install-exudyn-under-windows-10">
-<span id="sec-install-installinstructions-buildwindows"></span><h2>Build and install Exudyn under Windows 10?<a class="headerlink" href="#build-and-install-exudyn-under-windows-10" title="Link to this heading"></a></h2>
+<span id="sec-install-installinstructions-buildwindows"></span><h2>Build and install Exudyn under Windows 10<a class="headerlink" href="#build-and-install-exudyn-under-windows-10" title="Link to this heading"></a></h2>
 <p>Note that there are a couple of pre-requisites, depending on your system and installed libraries. For Windows 10, the following steps proved to work:</p>
 <ul class="simple">
 <li><p>you need an appropriate compiler (tested with Microsoft Visual Studio; recommended: VS2017)</p></li>
@@ -256,7 +257,7 @@ If the wheel installation does not work on Ubuntu, it is highly recommended to b
 <p>This will add a wheel in the <code class="docutils literal notranslate"><span class="pre">dist</span></code> folder.</p>
 </section>
 <section id="build-and-install-exudyn-under-mac-os-x">
-<span id="sec-install-installinstructions-buildmacos"></span><h2>Build and install Exudyn under Mac OS X?<a class="headerlink" href="#build-and-install-exudyn-under-mac-os-x" title="Link to this heading"></a></h2>
+<span id="sec-install-installinstructions-buildmacos"></span><h2>Build and install Exudyn under Mac OS X<a class="headerlink" href="#build-and-install-exudyn-under-mac-os-x" title="Link to this heading"></a></h2>
 <p>Installation and building on Mac OS X is less frequently tested, but successful compilation including GLFW has been achieved.
 Requirements are an according Anaconda (or Miniconda) installation.</p>
 <p><strong>Tested configurations</strong>:</p>
@@ -298,14 +299,14 @@ Requirements are an according Anaconda (or Miniconda) installation.</p>
 </div></blockquote>
 <p>If there are other issues, we are happy to receive your detailed bug reports.</p>
 <p>Note that you need to run</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exudyn</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
-<span class="n">exudyn</span><span class="o">.</span><span class="nf">DoRendererIdleTasks</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">Start</span><span class="p">()</span>
+<span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">DoIdleTasks</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>in order to interact with the render window, as there is only a single-threaded version available for Mac OS.</p>
 </section>
 <section id="build-and-install-exudyn-under-ubuntu">
-<span id="sec-install-installinstructions-buildubuntu"></span><h2>Build and install Exudyn under Ubuntu?<a class="headerlink" href="#build-and-install-exudyn-under-ubuntu" title="Link to this heading"></a></h2>
+<span id="sec-install-installinstructions-buildubuntu"></span><h2>Build and install Exudyn under Ubuntu<a class="headerlink" href="#build-and-install-exudyn-under-ubuntu" title="Link to this heading"></a></h2>
 <p>Having a new Ubuntu 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python <strong>3.6</strong> is already installed on Ubuntu 18.04, otherwise use <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">python3</span></code>)(see also the youtube video: <a class="reference external" href="https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx">https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx</a>):</p>
 <p>First update …</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>

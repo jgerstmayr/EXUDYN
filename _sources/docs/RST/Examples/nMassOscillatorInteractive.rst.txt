@@ -278,7 +278,7 @@ You can view and download this file on Github: `nMassOscillatorInteractive.py <h
    SC.visualizationSettings.loads.defaultRadius=0.01
    
    SC.visualizationSettings.general.autoFitScene = True #otherwise, renderState not accepted for zoom
-   exu.StartRenderer()
+   SC.renderer.Start()
    
    #++++++++++++++++++++++++++++++++++++++++
    #setup simulation settings and run interactive dialog:
@@ -370,7 +370,7 @@ You can view and download this file on Github: `nMassOscillatorInteractive.py <h
                      fontSize=12)
    
    # #stop solver and close render window
-   exu.StopRenderer() #safely close rendering window!
+   SC.renderer.Stop() #safely close rendering window!
    
    
    

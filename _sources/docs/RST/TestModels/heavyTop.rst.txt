@@ -44,7 +44,7 @@ You can view and download this file on Github: `heavyTop.py <https://github.com/
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
-   #exu.Print('EXUDYN version='+exu.GetVersionString())
+   #exu.Print('EXUDYN version='+exu.config.Version())
    
    #background
    #rect = [-0.1,-0.1,0.1,0.1] #xmin,ymin,xmax,ymax
@@ -149,14 +149,14 @@ You can view and download this file on Github: `heavyTop.py <https://github.com/
    #simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
    
    if useGraphics:
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
    
    mbs.SolveDynamic(simulationSettings)
    
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    solTotal = mbs.systemData.GetODE2CoordinatesTotal()
    u = 0

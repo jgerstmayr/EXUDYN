@@ -27,6 +27,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/ANCFswitchingSlidingJoint2D
    Examples/ANCFtestHalfcircle
    Examples/ANCFtests2
+   Examples/ballBearningModel
    Examples/basicTutorial2024
    Examples/beamTutorial
    Examples/beltDriveALE
@@ -34,6 +35,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/beltDrivesComparison
    Examples/bicycleIftommBenchmark
    Examples/bungeeJump
+   Examples/camFollowerExample
    Examples/cartesianSpringDamper
    Examples/cartesianSpringDamperUserFunction
    Examples/chainDriveExample
@@ -41,6 +43,8 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/chatGPTupdate2
    Examples/CMSexampleCourse
    Examples/ComputeSensitivitiesExample
+   Examples/contactCurvePolynomial
+   Examples/contactCurveWithLongCurve
    Examples/coordinateSpringDamper
    Examples/craneReevingSystem
    Examples/dispyParameterVariationExample
@@ -58,6 +62,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/HydraulicsUserFunction
    Examples/interactiveTutorial
    Examples/InverseKinematicsNumericalExample
+   Examples/involuteGearGraphics
    Examples/kinematicTreeAndMBS
    Examples/kinematicTreePendulum
    Examples/lavalRotor2Dtest
@@ -76,9 +81,11 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/newtonsCradle
    Examples/NGsolveCMStutorial
    Examples/NGsolveCraigBampton
+   Examples/NGsolveFFRF
    Examples/NGsolveGeometry
    Examples/NGsolveLinearFEM
    Examples/NGsolveModalAnalysis
+   Examples/NGsolveOCCgeometry
    Examples/NGsolvePistonEngine
    Examples/NGsolvePostProcessingStresses
    Examples/nMassOscillator
@@ -121,6 +128,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/rigidRotor3DFWBW
    Examples/rigidRotor3Dnutation
    Examples/rigidRotor3Drunup
+   Examples/rollerBearningModel
    Examples/ROSMassPoint
    Examples/ROSMobileManipulator
    Examples/ROSTurtle
@@ -161,7 +169,9 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/testGymCartpoleEnv
    Examples/testGymDoublePendulum
    Examples/testGymDoublePendulumEnv
+   Examples/testHDF5loadSave
    Examples/tippeTop
    Examples/tutorialNeuralNetwork
    Examples/universalJoint
+   Examples/xExudynConfigSpecial
 

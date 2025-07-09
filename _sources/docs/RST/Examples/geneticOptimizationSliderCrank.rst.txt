@@ -64,6 +64,10 @@ You can view and download this file on Github: `geneticOptimizationSliderCrank.p
        for key,value in parameterSet.items():
            setattr(P,key,value)
    
+       globalSettings = parameterSet['functionData'] 
+       stiffness = globalSettings['stiffness']
+       computationIndex = parameterSet['computationIndex']  #could be used for temporary variables when using multithreading
+   
        #++++++++++++++++++++++++++++++++++++++++++++++
        #++++++++++++++++++++++++++++++++++++++++++++++
        #START HERE: create parameterized model
@@ -92,7 +96,7 @@ You can view and download this file on Github: `geneticOptimizationSliderCrank.p
            mRB2 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nFloating, coordinate=2))
    
            #add spring dampers for reference frame:        
-           k=5000 #stiffness of floating body
+           k=stiffness #stiffness of floating body
            d=k*0.01
            mbs.AddObject(CoordinateSpringDamper(markerNumbers=[mGround,mRB0], stiffness=k, damping=d))
            mbs.AddObject(CoordinateSpringDamper(markerNumbers=[mGround,mRB1], stiffness=k, damping=d))
@@ -229,7 +233,7 @@ You can view and download this file on Github: `geneticOptimizationSliderCrank.p
        SC.visualizationSettings.bodies.defaultSize = [dSize, dSize, dSize]
        SC.visualizationSettings.connectors.defaultSize = dSize
        
-       #data obtained from SC.GetRenderState(); use np.round(d['modelRotation'],4)
+       #data obtained from SC.renderer.GetState(); use np.round(d['modelRotation'],4)
        SC.visualizationSettings.openGL.initialModelRotation = [[ 0.87758,  0.04786, -0.47703],
                                                                [ 0.     ,  0.995  ,  0.09983],
                                                                [ 0.47943, -0.08761,  0.8732]]
@@ -237,16 +241,16 @@ You can view and download this file on Github: `geneticOptimizationSliderCrank.p
        SC.visualizationSettings.openGL.initialCenterPoint = [0.192, -0.0039,-0.075]
        SC.visualizationSettings.openGL.initialMaxSceneSize = 0.4
        SC.visualizationSettings.general.autoFitScene = False
-       #mbs.WaitForUserToContinue()
+       #SC.renderer.DoIdleTasks()
        
        if useGraphics: 
-           exu.StartRenderer()
+           SC.renderer.Start()
       
        mbs.SolveDynamic(simulationSettings)
            
        if useGraphics: 
-           SC.WaitForRenderEngineStopFlag()
-           exu.StopRenderer() #safely close rendering window!
+           SC.renderer.DoIdleTasks()
+           SC.renderer.Stop() #safely close rendering window!
        
        #++++++++++++++++++++++++++++++++++++++++++
        #evaluate error:
@@ -275,11 +279,15 @@ You can view and download this file on Github: `geneticOptimizationSliderCrank.p
        if doOptimize:
            import time
        
+           #some data which shall not be optimized, but passed to objectiveFunction (e.g. in variation calculations)
+           functionData = {'stiffness':5000}
+           
            #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
            #GeneticOptimization    
            start_time = time.time()
            [pOpt, vOpt, pList, values] = GeneticOptimization(objectiveFunction = ParameterFunction, 
                                                 parameters = {'s1':(-L1,L1), 's2':(-L2,L2)}, #parameters provide search range
+                                                parameterFunctionData = functionData,
                                                 numberOfGenerations = 30,
                                                 populationSize = 50,
                                                 elitistRatio = 0.1,

@@ -9,7 +9,7 @@ Most of the solvers are implemented inside the C++ core.
 
 - Author:    Johannes Gerstmayr  
 - Date:      2020-12-02 
-- Notes:     Solver functions are included directly in exudyn and can be used with exu.SolveStatic(...) 
+- Notes:     Solver functions are included directly in exudyn and can be used with mbs.SolveStatic(...) 
 
 
 .. _sec-solver-solvererrormessage:
@@ -69,8 +69,8 @@ Function: SolverSuccess
       mbs.SolveDynamic(simulationSettings)
   except:
       [success, msg] = exu.SolverSuccess(mbs.sys['dynamicSolver'])
-      print('success=',success)
-      print('error message=',msg)
+      exu.Print('success=',success)
+      exu.Print('error message=',msg)
   #alternative:
   solver=exu.MainSolverImplicitSecondOrder()
   ...
@@ -125,5 +125,5 @@ Function: CheckSolverInfoStatistics
   | helper function for solvers to check e.g. if high number of memory allocations happened during simulation
   | This can happen, if large amount of sensors are attached and output is written in every time step
 - | \ *input*\ :
-  | stat=exudyn.InfoStat() from previous step, numberOfEvaluations is a counter which is proportional to number of RHS evaluations in method
+  | stat=exudyn.special.InfoStat() from previous step, numberOfEvaluations is a counter which is proportional to number of RHS evaluations in method
 

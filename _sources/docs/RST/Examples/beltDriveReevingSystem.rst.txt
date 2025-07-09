@@ -537,8 +537,8 @@ You can view and download this file on Github: `beltDriveReevingSystem.py <https
        SC.visualizationSettings.contact.showBoundingBoxes = True
    
    if useGraphics: 
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
    
    #simulationSettings.staticSolver.newton.absoluteTolerance = 1e-10
    simulationSettings.staticSolver.adaptiveStep = False
@@ -594,8 +594,8 @@ You can view and download this file on Github: `beltDriveReevingSystem.py <https
    
    
    if useGraphics: 
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    
    #%%++++++++++++++++++++++++++++++++++++++++

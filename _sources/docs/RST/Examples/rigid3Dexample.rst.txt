@@ -30,7 +30,7 @@ You can view and download this file on Github: `rigid3Dexample.py <https://githu
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
-   print('EXUDYN version='+exu.GetVersionString())
+   print('EXUDYN version='+exu.config.Version())
    
    #%%+++++++++++++++++++++++++++++++++++
    #background
@@ -108,12 +108,12 @@ You can view and download this file on Github: `rigid3Dexample.py <https://githu
    # SC.visualizationSettings.openGL.shadow = 0.5
    # SC.visualizationSettings.openGL.light0position = [4,4,10,0]
    
-   exu.StartRenderer()
-   mbs.WaitForUserToContinue()
+   SC.renderer.Start()
+   SC.renderer.DoIdleTasks()
    
    mbs.SolveDynamic(simulationSettings)
    
-   SC.WaitForRenderEngineStopFlag()
-   exu.StopRenderer() #safely close rendering window!
+   SC.renderer.DoIdleTasks()
+   SC.renderer.Stop() #safely close rendering window!
 
 

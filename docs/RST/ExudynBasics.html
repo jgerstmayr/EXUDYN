@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn Basics &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>Exudyn Basics &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -68,6 +68,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#visualization-settings-dialog">Visualization settings dialog</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#execute-command-and-help">Execute Command and Help</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#graphics-pipeline">Graphics pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#raytracing">Raytracing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#storing-the-model-view">Storing the model view</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#graphics-user-functions-via-python">Graphics user functions via Python</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#color-rgba-and-alpha-transparency">Color, RGBA and alpha-transparency</a></li>
@@ -109,7 +110,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -197,11 +198,11 @@ Using <code class="docutils literal notranslate"><span class="pre">mbs.Reset()</
 position, forces or joint data. For viewing sensor results, use the <code class="docutils literal notranslate"><span class="pre">PlotSensor</span></code> function of the
 <code class="docutils literal notranslate"><span class="pre">exudyn.plot</span></code> tool, see the rigid body and joints tutorial.
 Finally, the render window allows to show traces (trajectories) of position sensors, sensor vector quantities (e.g., velocity vectors),
-or triads given by rotation matrices. For further information, see the <code class="docutils literal notranslate"><span class="pre">sensors.traces</span></code> structure of <code class="docutils literal notranslate"><span class="pre">VisualizationSettings</span></code>, Section <a class="reference internal" href="structures/VisualizationSettings.html#sec-vsettingssensortraces"><span class="std std-ref">VSettingsSensorTraces</span></a>.</p>
+or triads given by rotation matrices. For further information, see the <code class="docutils literal notranslate"><span class="pre">sensors.traces</span></code> structure of <code class="docutils literal notranslate"><span class="pre">VisualizationSettings</span></code>, Section <a class="reference internal" href="structures/VisualizationSettings.html#sec-vsettingstraces"><span class="std std-ref">VSettingsTraces</span></a>.</p>
 </section>
 <section id="renderer-and-3d-graphics">
 <span id="sec-overview-basics-renderer"></span><h2>Renderer and 3D graphics<a class="headerlink" href="#renderer-and-3d-graphics" title="Link to this heading"></a></h2>
-<p>A 3D renderer is attached to the simulation. Visualization is started with  <code class="docutils literal notranslate"><span class="pre">exu.StartRenderer()</span></code>, see the examples and tutorials.
+<p>A 3D renderer is attached to the simulation. Visualization is started with  <code class="docutils literal notranslate"><span class="pre">SC.renderer.Start()</span></code>, see the examples and tutorials.
 In order to show your model in the render window, you have to provide 3D graphics data to the bodies. Flexible bodies (e.g., FFRF-like) can visualize their meshes. Further items (nodes, markers, …) can be visualized with default settings, however, often you have to turn on drawing or enlarge default sizes to make items visible. Item number can also be shown.
 Finally, since version 1.6.188, sensor traces (trajectories) can be shown in the render window, see the <code class="docutils literal notranslate"><span class="pre">VisualizationSettings</span></code> in  Section <a class="reference internal" href="structures/VisualizationSettings.html#sec-visualizationsettingsmain"><span class="std std-ref">Visualization settings</span></a>.</p>
 <p>The renderer uses an OpenGL window of a library called GLFW, which is platform-independent.
@@ -213,7 +214,7 @@ The renderer is set up in a minimalistic way, just to ensure that you can check 
 <li><p>Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.</p></li>
 <li><p>After <code class="docutils literal notranslate"><span class="pre">visualizationSettings.window.reallyQuitTimeLimit</span></code> seconds a ‘do you really want to quit’ dialog opens for safety on pressing ‘Q’; if no tkinter is available, you just have to press ‘Q’ twice. For closing the window, you need to click a second time on the close button of the window after <code class="docutils literal notranslate"><span class="pre">reallyQuitTimeLimit</span></code> seconds (usually 900 seconds).</p></li>
 </ul>
-<p>There are some main features in the renderer, using keyboard and mouse, for details see Section <a class="reference internal" href="GraphicsAndVisualization.html#sec-graphicsvisualization"><span class="std std-ref">Graphics and visualization</span></a>:</p>
+<p>Here are the <strong>main features of the renderer</strong>, using keyboard and mouse, for details see Section <a class="reference internal" href="GraphicsAndVisualization.html#sec-graphicsvisualization"><span class="std std-ref">Graphics and visualization</span></a>:</p>
 <ul class="simple">
 <li><p>press key H to show help in renderer</p></li>
 <li><p>move model by pressing left mouse button and drag</p></li>
@@ -226,12 +227,13 @@ The renderer is set up in a minimalistic way, just to ensure that you can check 
 <li><p>show item number: click on graphics element with left mouse button</p></li>
 <li><p>show item dictionary: click on graphics element with right mouse button</p></li>
 <li><p>for further keys, see Section <a class="reference internal" href="KeyboardInput.html#sec-gui-sec-keyboardinput"><span class="std std-ref">Keyboard input</span></a> or press H in renderer</p></li>
+<li><p>raytracing mode, see Section <a class="reference internal" href="#sec-overview-basics-raytracing"><span class="std std-ref">Raytracing</span></a></p></li>
 </ul>
-<p>Depending on your model (size, place, …), you may need to adjust the following visualization and <code class="docutils literal notranslate"><span class="pre">openGL</span></code> parameters in <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code>, see Section <a class="reference internal" href="structures/VisualizationSettings.html#sec-visualizationsettingsmain"><span class="std std-ref">Visualization settings</span></a>:</p>
+<p>Depending on your model (size, place, …), you <strong>may need to adjust the following general visualization</strong> and <code class="docutils literal notranslate"><span class="pre">openGL</span></code> <strong>parameters</strong> in <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code>, see Section <a class="reference internal" href="structures/VisualizationSettings.html#sec-visualizationsettingsmain"><span class="std std-ref">Visualization settings</span></a>:</p>
 <ul class="simple">
 <li><p>change window size</p></li>
-<li><p>light and light position</p></li>
-<li><p>shadow (turned off by using 0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card</p></li>
+<li><p>light and light position; switch <code class="docutils literal notranslate"><span class="pre">openGL.lightPositionsInCameraFrame</span></code> to switch between model-fixed or camera-fixed lights</p></li>
+<li><p>shadow (turned off by using shadow=0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card</p></li>
 <li><p>visibility of nodes, markers, etc. in according bodies, nodes, markers, …, <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code></p></li>
 <li><p>move camera with a selected marker: adjust <code class="docutils literal notranslate"><span class="pre">trackMarker</span></code> in <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive</span></code></p></li>
 </ul>
@@ -246,8 +248,7 @@ which is why it is strongly recommended to:</p>
 <section id="visualization-settings-dialog">
 <span id="sec-overview-basics-visualizationsettings"></span><h2>Visualization settings dialog<a class="headerlink" href="#visualization-settings-dialog" title="Link to this heading"></a></h2>
 <p>Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance – e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.</p>
-<p>Details on visualization settings and its substructures are provided in Section <a class="reference internal" href="structures/VisualizationSettings.html#sec-visualizationsettingsmain"><span class="std std-ref">Visualization settings</span></a>. These settings may also be edited by pressing ‘V’ in the active render window (does not work, if there is no active render loop using, e.g., <code class="docutils literal notranslate"><span class="pre">SC.WaitForRenderEngineStopFlag()</span></code> or
-<code class="docutils literal notranslate"><span class="pre">mbs.WaitForUserToContinue()</span></code> ).
+<p>Details on visualization settings and its substructures are provided in Section <a class="reference internal" href="structures/VisualizationSettings.html#sec-visualizationsettingsmain"><span class="std std-ref">Visualization settings</span></a>. These settings may also be edited by pressing ‘V’ in the active render window (does not work, if there is no active render loop using, e.g., <code class="docutils literal notranslate"><span class="pre">SC.renderer.DoIdleTasks()</span></code> ).
 The visualization settings dialog is shown exemplarily in <a class="reference internal" href="#fig-visualizationsettings"><span class="std std-numref">Fig. 5</span></a>.
 Note that this dialog is automatically created and uses Python’s <code class="docutils literal notranslate"><span class="pre">tkinter</span></code>, which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for Exudyn.</p>
 <p>The appearance of visualization settings dialogs may be adjusted by directly modifying <code class="docutils literal notranslate"><span class="pre">exudyn.GUI</span></code> variables (this may change in the future). For example write in your code before opening the render window(treeEdit and treeview both mean the settings dialog currently used for visualization settings and partially for right-mouse-click):</p>
@@ -275,7 +276,7 @@ Note that this dialog is automatically created and uses Python’s <code class="
 <p>The visualization settings structure can be accessed in the system container <code class="docutils literal notranslate"><span class="pre">SC</span></code> (access per reference, no copying!), accessing every value or structure directly, e.g.,</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="mf">0.001</span>      <span class="c1">#draw nodes very small</span>
 
-<span class="c1">#change openGL parameters; current values can be obtained from SC.GetRenderState()</span>
+<span class="c1">#change openGL parameters; current values can be obtained from SC.renderer.GetState()</span>
 <span class="c1">#change zoom factor:</span>
 <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">initialZoom</span> <span class="o">=</span> <span class="mf">0.2</span>
 <span class="c1">#set the center point of the scene (can be attached to moving object):</span>
@@ -325,8 +326,8 @@ To print values, always use <code class="docutils literal notranslate"><span cla
 </pre></div>
 </div>
 <p>Note that you could also change <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code> in this way, but the Visualization settings dialog is much more convenient.
-Changing <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code> within the execute command is dangerous and must be treated with care.
-Some parameters, such as <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.endTime</span></code> are copied into the internal solver’s <code class="docutils literal notranslate"><span class="pre">mbs.sys['dynamicSolver'].it</span></code> structure.</p>
+Changing <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code> within the execute command is dangerous and must be treated with care.</p>
+<p>Some parameters, such as <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.endTime</span></code> are copied into the internal solver’s <code class="docutils literal notranslate"><span class="pre">mbs.sys['dynamicSolver'].it</span></code> structure.</p>
 <p>Thus, changing <code class="docutils literal notranslate"><span class="pre">simulationSettings.timeIntegration.endTime</span></code> has no effect during simulation.
 As a rule of thumb, all variables that are not stored inside the solvers structures may be adjusted by the <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code> passed to the solver (which are then not copied internally); see the C++ code for details. However, behavior may change in future and unexpected behavior or and changing <code class="docutils literal notranslate"><span class="pre">simulationSettings</span></code> will likely cause crashes if you do not know exactly the behavior, e.g., changing output format from text to binary … !
 Specifically, <code class="docutils literal notranslate"><span class="pre">newton</span></code> and <code class="docutils literal notranslate"><span class="pre">discontinuous</span></code> settings cannot be changed on the fly as they are copied internally.</p>
@@ -351,28 +352,90 @@ The solver runs a loop:</p>
 <li><p>check if new visualization data is available and the time since last update is larger than a presribed value, the graphicsData structure is updated with the new visualization state</p></li>
 </ul>
 </section>
+<section id="raytracing">
+<span id="sec-overview-basics-raytracing"></span><h2>Raytracing<a class="headerlink" href="#raytracing" title="Link to this heading"></a></h2>
+<p>In order to compensate the limited functionality (but high compatibility) of OpenGL 1.3, an option for CPU-based software rendering (raytracing) has been added.
+This allows to include shadows and transparency correctly, with additional support for relections, refraction, emission, fog and materials.
+In the future, textures may be added as well.</p>
+<figure class="align-default" id="id2">
+<span id="fig-raytracerdemo"></span><a class="reference internal image-reference" href="../../_images/raytracerDemo.jpg"><img alt="../../_images/raytracerDemo.jpg" src="../../_images/raytracerDemo.jpg" style="width: 400px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 6 </span><span class="caption-text">Example image of raytraced renderer view.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The basic things to know are:</p>
+<ul class="simple">
+<li><p>Raytracing settings are collected in <code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer</span></code> (in the following, we omit ‘SC.visualizationSettings’).</p></li>
+<li><p>Raytracing is activated by setting <code class="docutils literal notranslate"><span class="pre">raytracer.enable=True</span></code>. Please make sure that you start with small render window sizes / complexity first.</p></li>
+<li><p>The render window size is adjusted by <code class="docutils literal notranslate"><span class="pre">window.renderWindowSize</span></code>. Be careful with this settings.</p></li>
+<li><p>Adjust the <code class="docutils literal notranslate"><span class="pre">raytracer.numberOfThreads</span></code> for optimal performance, use <code class="docutils literal notranslate"><span class="pre">raytracer.verbose</span></code> to see render times for different settings. For testing, use <code class="docutils literal notranslate"><span class="pre">raytracer.imageSizeFactor&gt;1</span></code> to decrease the raytracer’s resolution (with same image size), while <code class="docutils literal notranslate"><span class="pre">openGL.multiSampling</span></code> will increase the resolution (anti-aliasing). Note that switching from <code class="docutils literal notranslate"><span class="pre">openGL.multiSampling=1</span></code> and <code class="docutils literal notranslate"><span class="pre">raytracer.imageSizeFactor=4</span></code> to <code class="docutils literal notranslate"><span class="pre">openGL.multiSampling=3</span></code> and <code class="docutils literal notranslate"><span class="pre">raytracer.imageSizeFactor=1</span></code> increases computational costs by a factor <span class="math notranslate nohighlight">\(4\times 4\times 3\times 3 = 144\)</span>. Use only one light, if sufficient (set <code class="docutils literal notranslate"><span class="pre">openGL.enableLight1=False</span></code>).</p></li>
+<li><p>Scene, lights, shadow, clipping plane, etc. settings are taken form OpenGL settings and directly used in the software renderer, like <code class="docutils literal notranslate"><span class="pre">openGL.light0position</span></code>, <code class="docutils literal notranslate"><span class="pre">openGL.shadow</span></code>, <code class="docutils literal notranslate"><span class="pre">openGL.perspective</span></code>, <code class="docutils literal notranslate"><span class="pre">openGL.clippingPlaneNormal</span></code>, <code class="docutils literal notranslate"><span class="pre">openGL.showLines</span></code>, etc.;</p></li>
+<li><p>some settings are in general, like <code class="docutils literal notranslate"><span class="pre">general.backgroundColor</span></code> or <code class="docutils literal notranslate"><span class="pre">general.drawWorldBasis</span></code>;</p></li>
+<li><p>In order to see the advantages of the software renderer, materials have to be used, see below.</p></li>
+</ul>
+<p><strong>Materials</strong>:</p>
+<ul class="simple">
+<li><p>Materials have the type <code class="docutils literal notranslate"><span class="pre">VSettingsMaterial</span></code>, see description in Section <a class="reference internal" href="structures/VisualizationSettings.html#sec-vsettingsmaterial"><span class="std std-ref">VSettingsMaterial</span></a>, for adjusting color, reflectivity, shininess, alpha-transparency, etc.;</p></li>
+<li><p>Materials can only be used within triangulated geometries (GraphicsData <code class="docutils literal notranslate"><span class="pre">TriangleList</span></code>) using a material-flag in the color, like <code class="docutils literal notranslate"><span class="pre">graphics.Sphere(...,</span> <span class="pre">color=graphics.material.chrome)</span></code>. In the RGBA color, the alpha-channel is replaced by a material index which starts at 1000 (where 1000 represents material index 0). Note that in the regular OpenGL-rendering, alpha<span class="math notranslate nohighlight">\(&gt;\)</span>1 is equivalent to alpha<span class="math notranslate nohighlight">\(=\)</span>1. The first 10 materials are linked to <code class="docutils literal notranslate"><span class="pre">raytracer.material0</span> <span class="pre">...</span> <span class="pre">raytracer.material9</span></code>.</p></li>
+<li><p>The material’s <code class="docutils literal notranslate"><span class="pre">baseColor</span></code> is used if the color red-channel is set to <span class="math notranslate nohighlight">\(-1\)</span>. Note that this allows to globally change the color of objects by changing <code class="docutils literal notranslate"><span class="pre">baseColor</span></code> in the material settings in <code class="docutils literal notranslate"><span class="pre">visualizationSettings</span></code>. Summarizing, using <code class="docutils literal notranslate"><span class="pre">color=[1,0,0,graphics.material.indexSteel]</span></code> chooses red color with steel material settings, while <code class="docutils literal notranslate"><span class="pre">color=[-1,-1,-1,graphics.material.indexSteel]</span></code> will use the color of steel (but will be black for OpenGL renderer), identical with <code class="docutils literal notranslate"><span class="pre">color=graphics.material.steel</span></code>.</p></li>
+<li><p>The setting <code class="docutils literal notranslate"><span class="pre">backgroundColorReflections</span></code> can be used to represent the background which is used for rendering, while the background is independently set to black or white. Otherwise, black background leads to black regions on highly reflective objects or very light regions for white backgrounds.</p></li>
+<li><p>System text messages (solver, version, etc.) are overlayed over raytracing and can be turned off using the settings in <code class="docutils literal notranslate"><span class="pre">general.showComputationInfo</span></code> and similar. However, note that <strong>item texts are currently not shown</strong> in raytracer, affecting node numbers, etc.!</p></li>
+</ul>
+<p><strong>Limitations and risks</strong>:</p>
+<ul class="simple">
+<li><p>Raytracing is CPU-based and therefore slow. Do not use very high resolution (4K) together with multisampling <span class="math notranslate nohighlight">\(&gt;1\)</span>. Start with small render window sizes (e.g. 600 <span class="math notranslate nohighlight">\(\times\)</span> 400)</p></li>
+<li><p>Raytracing usually uses multithreading with speedups <span class="math notranslate nohighlight">\(&gt;10\)</span> on 16 cores. However, this cannot be combined with multithreaded simulations. It is therefore recommended to use raytracing in the solution viewer, not during simulation.</p></li>
+<li><p>If software rendering of a single frame gets to long (&gt;4 seconds), timeouts become active and it may occasionally not work. There are some options to compensate, see above.</p></li>
+<li><p>In general, it is <strong>recommended to start with default settings and experiment</strong> with changes using the visualization settings dialog.</p></li>
+</ul>
+<p>To add raytracing to your project, do like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="c1">#sphere with chrome</span>
+<span class="n">graphics</span><span class="o">.</span><span class="nf">Sphere</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">dodgerblue</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="p">[</span><span class="n">graphics</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">indexChrome</span><span class="p">],</span>
+                <span class="n">nTiles</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+<span class="n">ground</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGround</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                          <span class="n">graphicsDataList</span><span class="o">=</span><span class="p">[</span><span class="n">gSphere</span><span class="p">])</span>
+
+<span class="c1">#add mbs components</span>
+<span class="c1">#assemble</span>
+<span class="c1">#solve</span>
+<span class="o">...</span>
+<span class="c1">#after computation, switch to raytracing</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="c1">#SC.visualizationSettings.openGL.imageSizeFactor = 4 #reduce resolution for first tests!</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">enableLight1</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">raytracer</span><span class="o">.</span><span class="n">numberOfThreads</span> <span class="o">=</span> <span class="mi">16</span> <span class="c1">#adjust to your n-threads</span>
+<span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">raytracer</span><span class="o">.</span><span class="n">enable</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Have fun!</p>
+</section>
 <section id="storing-the-model-view">
 <span id="sec-overview-basics-storingmodelview"></span><h2>Storing the model view<a class="headerlink" href="#storing-the-model-view" title="Link to this heading"></a></h2>
-<p>There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using <code class="docutils literal notranslate"><span class="pre">SC.GetRenderState()</span></code> and <code class="docutils literal notranslate"><span class="pre">SC.SetRenderState()</span></code>,
+<p>There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using <code class="docutils literal notranslate"><span class="pre">SC.renderer.GetState()</span></code> and <code class="docutils literal notranslate"><span class="pre">SC.renderer.SetState()</span></code>,
 see also Section <a class="reference internal" href="RenderState.html#sec-renderstate"><span class="std std-ref">Render state</span></a>.
 A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation(
 note that <code class="docutils literal notranslate"><span class="pre">visualizationSettings.general.autoFitScene</span></code> should be set False if you want to use the stored zoom factor):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
 <span class="n">SC</span><span class="o">=</span><span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
 <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#prevent from autozoom</span>
-<span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">Start</span><span class="p">()</span>
 <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span>
-    <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span>
+    <span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">SetState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span>
 <span class="c1">#+++++++++++++++</span>
 <span class="c1">#do simulation here and adjust model view settings with mouse</span>
 <span class="c1">#+++++++++++++++</span>
 
 <span class="c1">#store model view for next run:</span>
-<span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#stores render state in exu.sys[&#39;renderState&#39;]</span>
+<span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">Stop</span><span class="p">()</span> <span class="c1">#stores render state in exu.sys[&#39;renderState&#39;]</span>
 </pre></div>
 </div>
 <p>Alternatively, you can obtain the current model view from the console after a simulation, e.g.,</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:</span> <span class="n">SC</span><span class="o">.</span><span class="nf">GetRenderState</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:</span> <span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">GetState</span><span class="p">()</span>
 <span class="n">Out</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
 <span class="p">{</span><span class="s1">&#39;centerPoint&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
  <span class="s1">&#39;maxSceneSize&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
@@ -384,9 +447,9 @@ note that <code class="docutils literal notranslate"><span class="pre">visualiza
 </pre></div>
 </div>
 <p>which contains the last state of the renderer.
-Now copy the output and set this with <code class="docutils literal notranslate"><span class="pre">SC.SetRenderState</span></code> in your Python code to have a fixed model view in every simulation (<code class="docutils literal notranslate"><span class="pre">SC.SetRenderState</span></code> AFTER <code class="docutils literal notranslate"><span class="pre">exu.StartRenderer()</span></code>):</p>
+Now copy the output and set this with <code class="docutils literal notranslate"><span class="pre">SC.renderer.SetState</span></code> in your Python code to have a fixed model view in every simulation (<code class="docutils literal notranslate"><span class="pre">SC.renderer.SetState</span></code> AFTER <code class="docutils literal notranslate"><span class="pre">SC.renderer.Start()</span></code>):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">autoFitScene</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#prevent from autozoom</span>
-<span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">Start</span><span class="p">()</span>
 <span class="n">renderState</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;centerPoint&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
              <span class="s1">&#39;maxSceneSize&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
              <span class="s1">&#39;zoom&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
@@ -394,11 +457,11 @@ Now copy the output and set this with <code class="docutils literal notranslate"
              <span class="s1">&#39;modelRotation&#39;</span><span class="p">:</span>     <span class="p">[[</span> <span class="mf">0.34202015</span><span class="p">,</span>  <span class="mf">0.</span>        <span class="p">,</span>  <span class="mf">0.9396926</span> <span class="p">],</span>
                                   <span class="p">[</span><span class="o">-</span><span class="mf">0.60402274</span><span class="p">,</span>  <span class="mf">0.76604444</span><span class="p">,</span>  <span class="mf">0.21984631</span><span class="p">],</span>
                                   <span class="p">[</span><span class="o">-</span><span class="mf">0.7198463</span> <span class="p">,</span> <span class="o">-</span><span class="mf">0.6427876</span> <span class="p">,</span>  <span class="mf">0.26200265</span><span class="p">]])</span>
-<span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">renderState</span><span class="p">)</span>
+<span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">SetState</span><span class="p">(</span><span class="n">renderState</span><span class="p">)</span>
 <span class="c1">#.... further code for simulation here</span>
 </pre></div>
 </div>
-<p>Note that in the current version of Exudyn there is more data stored in render state, which is not used in <code class="docutils literal notranslate"><span class="pre">SC.SetRenderState</span></code>,
+<p>Note that in the current version of Exudyn there is more data stored in render state, which is not used in <code class="docutils literal notranslate"><span class="pre">SC.renderer.SetState</span></code>,
 see also Section <a class="reference internal" href="RenderState.html#sec-renderstate"><span class="std std-ref">Render state</span></a>.</p>
 </section>
 <section id="graphics-user-functions-via-python">
@@ -433,12 +496,12 @@ For this, you can use</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">interactive.SolutionViewer</span></code>, see  <a class="reference internal" href="cInterface/MainSystem.html#sec-mainsystemextensions-solutionviewer"><span class="std std-ref">Section</span></a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">interactive.AnimateModes</span></code>, lets you view the animation of computed modes, see  <a class="reference internal" href="pythonUtilities/interactive.html#sec-interactive-animatemodes"><span class="std std-ref">Section</span></a></p></li>
 </ul>
-<p>shown exemplary in <a class="reference internal" href="#fig-solutionviewer"><span class="std std-numref">Fig. 6</span></a>.</p>
-<figure class="align-default" id="id2">
+<p>shown exemplary in <a class="reference internal" href="#fig-solutionviewer"><span class="std std-numref">Fig. 7</span></a>.</p>
+<figure class="align-default" id="id3">
 <span id="fig-solutionviewer"></span><a class="reference internal image-reference" href="../../_images/solutionViewer.png"><img alt="../../_images/solutionViewer.png" src="../../_images/solutionViewer.png" style="width: 800px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 6 </span><span class="caption-text">View of <code class="docutils literal notranslate"><span class="pre">SolutionViewer</span></code> (as of Exudyn 1.5.42.dev1)</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 7 </span><span class="caption-text">View of <code class="docutils literal notranslate"><span class="pre">SolutionViewer</span></code> (as of Exudyn 1.5.42.dev1)</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>The <code class="docutils literal notranslate"><span class="pre">SolutionViewer</span></code> adds a <code class="docutils literal notranslate"><span class="pre">tkinter</span></code> interactive dialog, which lets you interact with the model, with the following features:</p>
@@ -450,6 +513,7 @@ For this, you can use</p>
 <li><p>In the ‘Continuous run’ mode, the player runs in an infinite loop</p></li>
 <li><p>In the ‘One cycle’ mode, the player runs from the current position to the end; this is perfectly suited to record series of images for <strong>creating animations</strong>, see Section <a class="reference internal" href="#sec-overview-basics-animations"><span class="std std-ref">Generating animations</span></a> and works together with the visualization settings dialog.</p></li>
 <li><p>In the ‘Record animation’ mode, the player records frames that are shown in the render window; before pressing on ‘Record animation’, press ‘Stop’ and switch to ‘One cycle’. Then put the solution steps slider to the first frame and press ‘Record animation’, which stores images in the current subfolder ‘images’ as ‘frame00001.png’ with increasing number, using PNG by default. The number is increased and can only be reset after new start of SolutionViewer.</p></li>
+<li><p>Since Exudyn V1.9.83, the button ‘Make mp4’ allows to directly generate animation files, see next section.</p></li>
 </ul>
 <p>The solution should be loaded with
 <code class="docutils literal notranslate"><span class="pre">LoadSolutionFile('coordinatesSolution.txt')</span></code>, where ‘coordinatesSolution.txt’ represents the stored solution file,
@@ -463,13 +527,12 @@ see</p>
 <span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">(</span><span class="n">solution</span><span class="o">=</span><span class="n">sol</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>Alternatively</strong>, if no solution is provided, <code class="docutils literal notranslate"><span class="pre">SolutionViewer</span></code> tries to reload the solution of the previous simulation that is referred to from <code class="docutils literal notranslate"><span class="pre">mbs.sys['simulationSettings']</span></code>:</p>
+<p><strong>By default and as a recommended way</strong>, if no solution is provided, <code class="docutils literal notranslate"><span class="pre">SolutionViewer</span></code> tries to reload the solution of the previous simulation that is referred to from <code class="docutils literal notranslate"><span class="pre">mbs.sys['simulationSettings']</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#... mbs has been previously solved</span>
 <span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>An example for the <code class="docutils literal notranslate"><span class="pre">SolutionViewer</span></code> is integrated into the <code class="docutils literal notranslate"><span class="pre">Examples/</span></code> directory, see <code class="docutils literal notranslate"><span class="pre">solutionViewerTest.py</span></code>.</p>
-<p><strong>Note</strong>: The previous function <code class="docutils literal notranslate"><span class="pre">AnimateSolution</span></code> in <code class="docutils literal notranslate"><span class="pre">exudyn.utilities</span></code> allows to directly visualize the stored solution for according stored time frames without <code class="docutils literal notranslate"><span class="pre">tkinter</span></code> (useful for MacOS).</p>
 </section>
 <section id="generating-animations">
 <span id="sec-overview-basics-animations"></span><h2>Generating animations<a class="headerlink" href="#generating-animations" title="Link to this heading"></a></h2>
@@ -485,7 +548,8 @@ The easiest way to create animations, is using the SolutionViewer with its integ
 <li><p><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.exportImages.saveImageFileName</span> <span class="pre">=</span> <span class="pre">&quot;myFolder/frame&quot;</span></code></p></li>
 </ul>
 <p>By default, a consecutive numbering is generated for the image, e.g., ‘frame0000.png, frame0001.png,…’. Note that the standard file format PNG with ending ‘.png’ uses compression libraries included in glfw, while the alternative TGA format produces ‘.tga’ files which contain raw image data and therefore can become very large.</p>
-<p>To create animation files, an external tool FFMPEG is used to efficiently convert a series of images into an animation.
+<p>To create animation files, an external tool FFMPEG is used to efficiently convert a series of images into an animation. Since Exudyn V1.9.83, ffmpeg is integrated into the solution viewer (button ‘Make mp4’), which requires prior installation using <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">ffmpeg-python</span></code> .
+Note that you may also need to install ffmpeg itself, depending on your platform.
 <span class="math notranslate nohighlight">\(\ra\)</span> see theDoc.pdf !</p>
 </section>
 <section id="examples-test-models-and-test-suite">

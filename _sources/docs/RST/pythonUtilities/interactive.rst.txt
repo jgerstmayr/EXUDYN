@@ -41,7 +41,7 @@ Function: AnimateModes
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `CMSexampleCourse.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py>`_\  (Ex), \ `netgenSTLtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py>`_\  (Ex), \ `NGsolveCMStutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py>`_\  (Ex), \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolveModalAnalysis.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveModalAnalysis.py>`_\  (Ex), \ `objectFFRFreducedOrderShowModes.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py>`_\  (TM), \ `runTestExamples.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/runTestExamples.py>`_\  (TM)
+    \ `CMSexampleCourse.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py>`_\  (Ex), \ `netgenSTLtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py>`_\  (Ex), \ `NGsolveCMStutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py>`_\  (Ex), \ `NGsolveCraigBampton.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py>`_\  (Ex), \ `NGsolveFFRF.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveFFRF.py>`_\  (Ex), \ `objectFFRFreducedOrderShowModes.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFreducedOrderShowModes.py>`_\  (TM), \ `runTestExamples.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/runTestExamples.py>`_\  (TM)
 
 
 
@@ -49,7 +49,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: SolutionViewer
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`SolutionViewer <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L786>`__\ (\ ``mainSystem``\ , \ ``solution = None``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``runOnStart = True``\ , \ ``runMode = 2``\ , \ ``fontSize = 12``\ , \ ``title = ''``\ , \ ``checkRenderEngineStopFlag = True``\ )
+`SolutionViewer <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L785>`__\ (\ ``mainSystem``\ , \ ``solution = None``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``runOnStart = True``\ , \ ``runMode = 2``\ , \ ``fontSize = 12``\ , \ ``title = ''``\ , \ ``checkRenderEngineStopFlag = True``\ )
 
 
 - | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolutionViewer(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-solutionviewer`\ 
@@ -63,7 +63,7 @@ Function: SolutionViewer
 
 Function: ConvertImages2Video
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ConvertImages2Video <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L951>`__\ (\ ``workingDir = 'images'``\ , \ ``inputPattern = 'frame%05d.png'``\ , \ ``outputFile = 'animation.mp4'``\ , \ ``inputFrameRate = 25``\ , \ ``outputFrameRate = 25``\ , \ ``compressionCRF = 28``\ , \ ``startNumber = 0``\ , \ ``totalFrames = None``\ )
+`ConvertImages2Video <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L950>`__\ (\ ``workingDir = 'images'``\ , \ ``inputPattern = 'frame%05d.png'``\ , \ ``outputFile = 'animation.mp4'``\ , \ ``inputFrameRate = 25``\ , \ ``outputFrameRate = 25``\ , \ ``compressionCRF = 28``\ , \ ``startNumber = 0``\ , \ ``totalFrames = None``\ )
 
 - | \ *function description*\ :
   | function to call ffmpeg in the background and convert images to video; requires ffmpeg-python to be installed
@@ -97,7 +97,7 @@ Function: ConvertImages2Video
 
 Function: InteractiveImages2Video
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`InteractiveImages2Video <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L987>`__\ (\ ``closeAfterCreation = False``\ , \ ``fontSize = 11``\ )
+`InteractiveImages2Video <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L988>`__\ (\ ``closeAfterCreation = False``\ , \ ``fontSize = 11``\ )
 
 - | \ *function description*\ :
   | interactive dialog to convert generated images to videos using ffmpeg library; see also ConvertImages2Video() for meaning of values; requires ffmpeg-python to be installed

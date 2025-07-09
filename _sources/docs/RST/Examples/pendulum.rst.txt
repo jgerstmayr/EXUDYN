@@ -78,7 +78,7 @@ You can view and download this file on Github: `pendulum.py <https://github.com/
    print(mbs)
    
    mbs.Assemble()
-   exu.StartRenderer()
+   SC.renderer.Start()
    
    #time.sleep(10)
    
@@ -107,10 +107,10 @@ You can view and download this file on Github: `pendulum.py <https://github.com/
        #mbs.visualizationSettings.connectors.showNumbers = True
        SC.visualizationSettings.nodes.defaultSize = 0.05
    
-       exu.InfoStat()
+       exu.special.InfoStat() #check if excessive memory allocation occurs
        mbs.SolveDynamic(simulationSettings, 
                         solverType=exu.DynamicSolverType.TrapezoidalIndex2)
-       exu.InfoStat()
+       exu.special.InfoStat()
    
    else:
        simulationSettings.solutionSettings.coordinatesSolutionFileName = "staticSolution.txt"
@@ -130,8 +130,8 @@ You can view and download this file on Github: `pendulum.py <https://github.com/
    
    #time.sleep(0.5)
    
-   SC.WaitForRenderEngineStopFlag()
-   exu.StopRenderer() #safely close rendering window!
+   SC.renderer.DoIdleTasks()
+   SC.renderer.Stop() #safely close rendering window!
    
 
 

@@ -230,10 +230,10 @@ You can view and download this file on Github: `generalContactSpheresTest.py <ht
    
    if useGraphics:
        SC.visualizationSettings.general.autoFitScene = False
-       exu.StartRenderer()
+       SC.renderer.Start()
        if 'renderState' in exu.sys:
-           SC.SetRenderState(exu.sys['renderState'])
-       mbs.WaitForUserToContinue()
+           SC.renderer.SetState(exu.sys['renderState'])
+       SC.renderer.DoIdleTasks()
    
    simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
    simulationSettings.timeIntegration.endTime = tEnd
@@ -256,8 +256,8 @@ You can view and download this file on Github: `generalContactSpheresTest.py <ht
    
    
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    if useGraphics:
        

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mass-Spring-Damper tutorial &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>Mass-Spring-Damper tutorial &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -39,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -89,7 +89,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -142,7 +142,7 @@ Per default, you always should name your system ‘mbs’ (multibody system), in
 The version shown is in line with the issue tracker and marks the number of open/closed issues added to Exudyn .
 Adding <code class="docutils literal notranslate"><span class="pre">True</span></code> as argument will also print platform-specific information, which is helpful
 in case of reporting some compatibility issues:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;EXUDYN version=&#39;</span><span class="o">+</span><span class="n">exu</span><span class="o">.</span><span class="nf">GetVersionString</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;EXUDYN version=&#39;</span><span class="o">+</span><span class="n">exu</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">Version</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>Using the powerful Python language, we can define some variables for our problem, which will also be used for the analytical solution:</p>
@@ -224,7 +224,7 @@ As our system is fully set, we can print the overall information and assemble th
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">simulationSettings</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SimulationSettings</span><span class="p">()</span>
 <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">solutionWritePeriod</span> <span class="o">=</span> <span class="mf">5e-3</span> <span class="c1">#output interval general</span>
 <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">sensorsWritePeriod</span> <span class="o">=</span> <span class="mf">5e-3</span>  <span class="c1">#output interval of sensors</span>
-<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tEnd</span><span class="o">/</span><span class="n">h</span><span class="p">)</span> <span class="c1">#must be integer</span>
+<span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">numberOfSteps</span> <span class="o">=</span> <span class="n">tEnd</span><span class="o">/</span><span class="n">h</span>
 <span class="n">simulationSettings</span><span class="o">.</span><span class="n">timeIntegration</span><span class="o">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="n">tEnd</span>
 <span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>               <span class="c1">#show how fast</span>
 </pre></div>
@@ -240,8 +240,8 @@ Furthermore, we can show information on computation time (which may cost some ov
 </pre></div>
 </div>
 <p>In order to visualize the results online, a renderer can be started. As our computation will be very fast, it is a good idea to wait for the user to press SPACE, before starting the simulation (uncomment second line):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>              <span class="c1">#start graphics visualization</span>
-<span class="c1">#mbs.WaitForUserToContinue()     #wait for SPACE bar or &#39;Q&#39; to continue (in render window!)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">Start</span><span class="p">()</span>              <span class="c1">#start graphics visualization</span>
+<span class="c1">#SC.renderer.DoIdleTasks()       #wait for SPACE bar or &#39;Q&#39; to continue (in render window!)</span>
 </pre></div>
 </div>
 <p>As the simulation is still very fast, we will not see the motion of our node. Using a very small step size of, e.g., <code class="docutils literal notranslate"><span class="pre">h=1e-7</span></code> in the lines above allows us to visualize the resulting oscillations in realtime.</p>
@@ -251,8 +251,8 @@ Furthermore, we can show information on computation time (which may cost some ov
 </div>
 <p>After simulation, our renderer needs to be stopped (otherwise it will stop unsafely as soon as the Python kernel is stopped or restarted).
 Sometimes you would like to wait until closing the render window, using <code class="docutils literal notranslate"><span class="pre">WaitForRenderEngineStopFlag()</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#SC.WaitForRenderEngineStopFlag()#wait for pressing &#39;Q&#39; to quit</span>
-<span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span>               <span class="c1">#safely close rendering window!</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#SC.renderer.DoIdleTasks()       #wait for pressing &#39;Q&#39; to quit</span>
+<span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">Stop</span><span class="p">()</span>               <span class="c1">#safely close rendering window!</span>
 </pre></div>
 </div>
 <p>If you run this code, e.g. in Spyder or Visual Studio Code, it may take a 1-2 seconds to complete. However, the time spent is only related to some overhead in the Python environment and for the visualization. The simulation itself will only take around 3-10 milliseconds, in which a large overhead is due to file writing.</p>
@@ -307,12 +307,12 @@ sensor and the output quantity (scalar, vector, …):</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>The matplotlib output should look as shown in <a class="reference internal" href="#fig-tutorial-springdamper"><span class="std std-numref">Fig. 8</span></a>.</p>
+<p>The matplotlib output should look as shown in <a class="reference internal" href="#fig-tutorial-springdamper"><span class="std std-numref">Fig. 9</span></a>.</p>
 <figure class="align-default" id="id1">
 <span id="fig-tutorial-springdamper"></span><a class="reference internal image-reference" href="../../_images/plotSpringDamper.png"><img alt="../../_images/plotSpringDamper.png" src="../../_images/plotSpringDamper.png" style="width: 400px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 8 </span><span class="caption-text">Output of spring-damper tutorial.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 9 </span><span class="caption-text">Output of spring-damper tutorial.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 </section>

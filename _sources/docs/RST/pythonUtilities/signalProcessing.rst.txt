@@ -15,7 +15,7 @@ and for filtering result data.
 
 Function: FilterSensorOutput
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`FilterSensorOutput <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L27>`__\ (\ ``signal``\ , \ ``filterWindow = 5``\ , \ ``polyOrder = 3``\ , \ ``derivative = 0``\ , \ ``centralDifferentiate = True``\ )
+`FilterSensorOutput <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/signalProcessing.py\#L28>`__\ (\ ``signal``\ , \ ``filterWindow = 5``\ , \ ``polyOrder = 3``\ , \ ``derivative = 0``\ , \ ``centralDifferentiate = True``\ )
 
 - | \ *function description*\ :
   | filter output of sensors (using numpy savgol filter) as well as numerical differentiation to compute derivative of signal

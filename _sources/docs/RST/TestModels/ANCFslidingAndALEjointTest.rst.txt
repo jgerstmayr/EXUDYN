@@ -229,7 +229,7 @@ You can view and download this file on Github: `ANCFslidingAndALEjointTest.py <h
    
    
    if useGraphics: 
-       exu.StartRenderer()
+       SC.renderer.Start()
    
    #get initial velocities
    vInit = mbs.systemData.GetODE2Coordinates_t(configuration = exu.ConfigurationType.Initial)
@@ -294,8 +294,8 @@ You can view and download this file on Github: `ANCFslidingAndALEjointTest.py <h
        mbs.SolveDynamic(simulationSettings)
        
    if useGraphics: 
-       #SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       #SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    
    sol = mbs.systemData.GetODE2Coordinates(); 

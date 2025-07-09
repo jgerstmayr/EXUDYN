@@ -419,7 +419,7 @@ We can start the 3D visualization (Renderer) now:
 
 .. code-block:: python
 
-  exu.StartRenderer()
+  SC.renderer.Start()
 
 
 
@@ -428,9 +428,9 @@ In order to reload the model view of the last simulation (if there is any), we c
 .. code-block:: python
 
   if 'renderState' in exu.sys: #reload old view
-      SC.SetRenderState(exu.sys['renderState'])
+      SC.renderer.SetState(exu.sys['renderState'])
 
-  mbs.WaitForUserToContinue() #stop before simulating
+  SC.renderer.DoIdleTasks()    #stop before simulating
 
 
 the function \ ``WaitForUserToContinue()``\  waits with simulation until we press SPACE bar. This allows us to make some pre-checks.
@@ -458,12 +458,12 @@ After simulation, the library would immediately exit (and jump back to iPython o
 
 .. code-block:: python
 
-  SC.WaitForRenderEngineStopFlag() #stop before closing
-  exu.StopRenderer() #safely close rendering window!
+  SC.renderer.DoIdleTasks()   #stop before closing
+  SC.renderer.Stop()          #safely close rendering window!
 
 
 If you entered everything correctly, the render window should show a nice animation of the 3D double pendulum after pressing the SPACE key. 
-If we do not stop the renderer (\ ``StopRenderer()``\ ), it will stay open for further simulations. However, it is safer to always close the renderer at the end.
+If we do not stop the renderer (\ ``SC.renderer.Stop()``\ ), it will stay open for further simulations. However, it is safer to always close the renderer at the end.
 
 As the simulation will run very fast, if you did not set \ ``simulateInRealtime``\  to true. However, you can reload the stored solution and view the stored steps interactively:
 

@@ -58,7 +58,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: SmartRound2String
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`SmartRound2String <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L86>`__\ (\ ``x``\ , \ ``prec = 3``\ )
+`SmartRound2String <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L83>`__\ (\ ``x``\ , \ ``prec = 3``\ )
 
 - | \ *function description*\ :
   | round to max number of digits; may give more digits if this is shorter; using in general the format() with '.g' option, but keeping decimal point and using exponent where necessary
@@ -72,7 +72,7 @@ Function: SmartRound2String
 
 Function: DiagonalMatrix
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`DiagonalMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L101>`__\ (\ ``rowsColumns``\ , \ ``value = 1``\ )
+`DiagonalMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L98>`__\ (\ ``rowsColumns``\ , \ ``value = 1``\ )
 
 - | \ *function description*\ :
   | create a diagonal or identity matrix; used for interface.py, avoiding the need for numpy
@@ -91,7 +91,7 @@ Function: DiagonalMatrix
 
 Function: NormL2
 ^^^^^^^^^^^^^^^^
-`NormL2 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L115>`__\ (\ ``vector``\ )
+`NormL2 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L112>`__\ (\ ``vector``\ )
 
 - | \ *function description*\ :
   | compute L2 norm for vectors without switching to numpy or math module
@@ -113,7 +113,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: VSum
 ^^^^^^^^^^^^^^
-`VSum <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L124>`__\ (\ ``vector``\ )
+`VSum <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L121>`__\ (\ ``vector``\ )
 
 - | \ *function description*\ :
   | compute sum of all values of vector
@@ -135,7 +135,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: VAdd
 ^^^^^^^^^^^^^^
-`VAdd <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L133>`__\ (\ ``v0``\ , \ ``v1``\ )
+`VAdd <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L130>`__\ (\ ``v0``\ , \ ``v1``\ )
 
 - | \ *function description*\ :
   | add two vectors instead using numpy
@@ -157,7 +157,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: VSub
 ^^^^^^^^^^^^^^
-`VSub <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L144>`__\ (\ ``v0``\ , \ ``v1``\ )
+`VSub <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L141>`__\ (\ ``v0``\ , \ ``v1``\ )
 
 - | \ *function description*\ :
   | subtract two vectors instead using numpy: result = v0-v1
@@ -179,7 +179,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: VMult
 ^^^^^^^^^^^^^^^
-`VMult <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L155>`__\ (\ ``v0``\ , \ ``v1``\ )
+`VMult <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L152>`__\ (\ ``v0``\ , \ ``v1``\ )
 
 - | \ *function description*\ :
   | scalar multiplication of two vectors instead using numpy: result = v0' \* v1
@@ -197,7 +197,7 @@ Function: VMult
 
 Function: ScalarMult
 ^^^^^^^^^^^^^^^^^^^^
-`ScalarMult <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L165>`__\ (\ ``scalar``\ , \ ``v``\ )
+`ScalarMult <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L162>`__\ (\ ``scalar``\ , \ ``v``\ )
 
 - | \ *function description*\ :
   | multiplication vectors with scalar: result = scalar \* v
@@ -219,7 +219,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Normalize
 ^^^^^^^^^^^^^^^^^^^
-`Normalize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L174>`__\ (\ ``v``\ )
+`Normalize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L171>`__\ (\ ``v``\ )
 
 - | \ *function description*\ :
   | take a 3D vector and return a normalized 3D vector (L2Norm=1)
@@ -230,7 +230,7 @@ Function: Normalize
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `NGsolveCMStutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py>`_\  (Ex), \ `NGsolveGeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveGeometry.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex), \ `ObjectFFRFconvergenceTestHinge.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ObjectFFRFconvergenceTestHinge.py>`_\  (Ex), \ `NGsolveCrankShaftTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py>`_\  (TM)
+    \ `contactCurveWithLongCurve.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/contactCurveWithLongCurve.py>`_\  (Ex), \ `NGsolveCMStutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py>`_\  (Ex), \ `NGsolveGeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveGeometry.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex), \ `ObjectFFRFconvergenceTestHinge.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ObjectFFRFconvergenceTestHinge.py>`_\  (Ex), \ `NGsolveCrankShaftTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCrankShaftTest.py>`_\  (TM)
 
 
 
@@ -241,7 +241,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Vec2Tilde
 ^^^^^^^^^^^^^^^^^^^
-`Vec2Tilde <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L190>`__\ (\ ``v``\ )
+`Vec2Tilde <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L187>`__\ (\ ``v``\ )
 
 - | \ *function description*\ :
   | apply tilde operator (skew) to 3D-vector and return skew matrix
@@ -264,7 +264,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Tilde2Vec
 ^^^^^^^^^^^^^^^^^^^
-`Tilde2Vec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L197>`__\ (\ ``m``\ )
+`Tilde2Vec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L194>`__\ (\ ``m``\ )
 
 - | \ *function description*\ :
   | take skew symmetric matrix and return vector (inverse of Skew(...))
@@ -282,7 +282,7 @@ Function: Tilde2Vec
 
 Function: GaussIntegrate
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`GaussIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L224>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
+`GaussIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L221>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
 
 - | \ *function description*\ :
   | compute numerical integration of functionOfX in interval [a,b] using Gaussian integration
@@ -303,7 +303,7 @@ Function: GaussIntegrate
 
 Function: LobattoIntegrate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`LobattoIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L260>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
+`LobattoIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L257>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
 
 - | \ *function description*\ :
   | compute numerical integration of functionOfX in interval [a,b] using Lobatto integration

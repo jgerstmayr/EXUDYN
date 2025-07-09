@@ -184,8 +184,8 @@ You can view and download this file on Github: `coordinateVectorConstraint.py <h
    SC.visualizationSettings.nodes.showBasis=True
    
    if useGraphics:
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
    
    mbs.SolveDynamic(simulationSettings)
    
@@ -200,8 +200,8 @@ You can view and download this file on Github: `coordinateVectorConstraint.py <h
    
    
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
        
        if doublePendulum:
            mbs.PlotSensor([sPos0,sPos0,sPos1,sPos1], components=[0,1,0,1], closeAll=True)

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectFFRF &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>ObjectFFRF &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -102,7 +102,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -626,7 +626,7 @@ matrices defined in the body frame.</p>
 <p>with <span class="math notranslate nohighlight">\({\mathbf{M}} = \LU{b}{{\mathbf{M}}}\)</span> and <span class="math notranslate nohighlight">\(\hat {\mathbf{K}}\)</span> becoming obvious in Eq. <a class="reference internal" href="#equation-eq-objectffrf-eom">(62)</a>.
 Note that Eq. <a class="reference internal" href="#equation-eq-objectffrf-leq">(61)</a> is given in global coordinates for the translational part, in terms of rotation parameters
 for the rotation part and in body-fixed coordinates for the flexible part of the equations.</p>
-<p>In case that <code class="docutils literal notranslate"><span class="pre">computeFFRFterms</span> <span class="pre">=</span> <span class="pre">True</span></code>, the equations  <span class="xref std std-ref">eq-objectffrf-leq</span> can be transformed into the equations of motion,</p>
+<p>In case that <code class="docutils literal notranslate"><span class="pre">computeFFRFterms</span> <span class="pre">=</span> <span class="pre">True</span></code>, Eqs. <a class="reference internal" href="#equation-eq-objectffrf-leq">(61)</a> can be transformed into the equations of motion,</p>
 <div class="math notranslate nohighlight" id="equation-eq-objectffrf-eom">
 <span class="eqno">(62)<a class="headerlink" href="#equation-eq-objectffrf-eom" title="Link to this equation"></a></span>\[\left({\mathbf{M}}_{user}(mbs, t, i_N, {\mathbf{q}},\dot {\mathbf{q}}) + \mr{{\mathbf{M}}\indtt}{{\mathbf{M}}\indtr}{{\mathbf{M}}\indtf} {}{{\mathbf{M}}\indrr}{{\mathbf{M}}\indrf} {\mathrm{sym.}}{}{\LU{b}{{\mathbf{M}}}} \right) \ddot {\mathbf{q}} + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\LU{b}{{\mathbf{D}}}} \dot {\mathbf{q}} + \mr{0}{0}{0} {0}{0}{0} {0}{0}{\LU{b}{{\mathbf{K}}}} {\mathbf{q}} = {\mathbf{f}}_{v}({\mathbf{q}},\dot {\mathbf{q}}) + \vp{{\mathbf{f}}\indr}{\LURU{0b}{{\mathbf{A}}}{bd}{\mathrm{T}} {\mathbf{f}}\indf} + {\mathbf{f}}_{user}(mbs, t, i_N, {\mathbf{q}}, \dot {\mathbf{q}})\]</div>
 <p>in which <code class="docutils literal notranslate"><span class="pre">iN</span></code> represents the itemNumber (=objectNumber of ObjectFFRF in mbs) in the user function.

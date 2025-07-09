@@ -196,9 +196,9 @@ You can view and download this file on Github: `ANCFcontactCircleTest.py <https:
        simulationSettings.staticSolver.verboseModeFile = 0 #otherwise, load steps are shown ...
        simulationSettings.displayStatistics = True
        
-       exu.StartRenderer()
+       SC.renderer.Start()
    
-   #mbs.WaitForUserToContinue()
+   #SC.renderer.DoIdleTasks()
    mbs.SolveStatic(simulationSettings) #183 Newton iterations, 0.114 seconds
    
    sol = mbs.systemData.GetODE2Coordinates()
@@ -206,8 +206,8 @@ You can view and download this file on Github: `ANCFcontactCircleTest.py <https:
    exu.Print('tip displacement: x='+str(sol[n-4])+', y='+str(sol[n-3])) 
    
    if useGraphics: 
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    exudynTestGlobals.testError = sol[n-3] - (-0.4842698420787613) #-0.4842698420787613 ; 2021-05-07 (deactivated StaticSolveOldSolver):-0.4842656133238705  #2019-12-17(relTol=1e-7 / up to 7 digits accurate): -0.4842656547442095;  2019-11-22: (-0.4844812763485709) (with relTol=1e-5);  y-displacement
    exudynTestGlobals.testResult = sol[n-3]

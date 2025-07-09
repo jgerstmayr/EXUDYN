@@ -11,6 +11,7 @@ Python-C++ command interface
    GeneralInformation
    Exudyn
    SystemContainer
+   Renderer
    MainSystem
    SystemData
    Symbolic

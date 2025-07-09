@@ -220,10 +220,10 @@ You can view and download this file on Github: `particlesTest3D.py <https://gith
    if simulate:
        if useGraphics:
            SC.visualizationSettings.general.autoFitScene = False
-           exu.StartRenderer()
+           SC.renderer.Start()
            if 'renderState' in exu.sys:
-               SC.SetRenderState(exu.sys['renderState'])
-           mbs.WaitForUserToContinue()
+               SC.renderer.SetState(exu.sys['renderState'])
+           SC.renderer.DoIdleTasks()
    
        #initial gContact statistics
        #simulationSettings.timeIntegration.numberOfSteps = 1
@@ -241,8 +241,8 @@ You can view and download this file on Github: `particlesTest3D.py <https://gith
        print(gContact)
    
        if useGraphics:
-           SC.WaitForRenderEngineStopFlag()
-           exu.StopRenderer() #safely close rendering window!
+           SC.renderer.DoIdleTasks()
+           SC.renderer.Stop() #safely close rendering window!
    else:
        SC.visualizationSettings.general.autoFitScene = False
        SC.visualizationSettings.general.graphicsUpdateInterval=0.5

@@ -10,6 +10,7 @@ Python Utility Functions
    artificialIntelligence
    basicUtilities
    beams
+   demos
    FEM
    graphics
    graphicsDataUtilities

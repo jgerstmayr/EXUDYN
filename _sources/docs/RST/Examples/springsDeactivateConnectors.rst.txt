@@ -86,7 +86,7 @@ You can view and download this file on Github: `springsDeactivateConnectors.py <
    mbs.Assemble()
    
    if useGraphics: 
-    exu.StartRenderer()
+    SC.renderer.Start()
    
    simulationSettings = exu.SimulationSettings()
    simulationSettings.timeIntegration.numberOfSteps = 20
@@ -131,8 +131,8 @@ You can view and download this file on Github: `springsDeactivateConnectors.py <
    print('dynamic tip displacement (y)=', u[1])
    
    if useGraphics: 
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() 
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() 
    
 
 

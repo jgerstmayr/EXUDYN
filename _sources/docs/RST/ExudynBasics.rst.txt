@@ -100,7 +100,7 @@ Furthermore, you can use sensors to record particular information, e.g., the dis
 position, forces or joint data. For viewing sensor results, use the \ ``PlotSensor``\  function of the 
 \ ``exudyn.plot``\  tool, see the rigid body and joints tutorial.
 Finally, the render window allows to show traces (trajectories) of position sensors, sensor vector quantities (e.g., velocity vectors),
-or triads given by rotation matrices. For further information, see the \ ``sensors.traces``\  structure of \ ``VisualizationSettings``\ , Section :ref:`sec-vsettingssensortraces`\ .
+or triads given by rotation matrices. For further information, see the \ ``sensors.traces``\  structure of \ ``VisualizationSettings``\ , Section :ref:`sec-vsettingstraces`\ .
 
 
 .. _sec-overview-basics-renderer:
@@ -109,7 +109,7 @@ or triads given by rotation matrices. For further information, see the \ ``senso
 Renderer and 3D graphics
 ------------------------
 
-A 3D renderer is attached to the simulation. Visualization is started with  \ ``exu.StartRenderer()``\ , see the examples and tutorials.
+A 3D renderer is attached to the simulation. Visualization is started with  \ ``SC.renderer.Start()``\ , see the examples and tutorials.
 In order to show your model in the render window, you have to provide 3D graphics data to the bodies. Flexible bodies (e.g., FFRF-like) can visualize their meshes. Further items (nodes, markers, ...) can be visualized with default settings, however, often you have to turn on drawing or enlarge default sizes to make items visible. Item number can also be shown.
 Finally, since version 1.6.188, sensor traces (trajectories) can be shown in the render window, see the \ ``VisualizationSettings``\  in  Section :ref:`sec-visualizationsettingsmain`\ .
 
@@ -124,7 +124,7 @@ The renderer is set up in a minimalistic way, just to ensure that you can check 
 +  After \ ``visualizationSettings.window.reallyQuitTimeLimit``\  seconds a 'do you really want to quit' dialog opens for safety on pressing 'Q'; if no tkinter is available, you just have to press 'Q' twice. For closing the window, you need to click a second time on the close button of the window after \ ``reallyQuitTimeLimit``\  seconds (usually 900 seconds).
 
  
-There are some main features in the renderer, using keyboard and mouse, for details see Section :ref:`sec-graphicsvisualization`\ :
+Here are the \ **main features of the renderer**\ , using keyboard and mouse, for details see Section :ref:`sec-graphicsvisualization`\ :
 
 +  press key H to show help in renderer
 +  move model by pressing left mouse button and drag
@@ -137,12 +137,13 @@ There are some main features in the renderer, using keyboard and mouse, for deta
 +  show item number: click on graphics element with left mouse button
 +  show item dictionary: click on graphics element with right mouse button  
 +  for further keys, see Section :ref:`sec-gui-sec-keyboardinput`\  or press H in renderer
++  raytracing mode, see Section :ref:`sec-overview-basics-raytracing`\  
 
-Depending on your model (size, place, ...), you may need to adjust the following visualization and \ ``openGL``\  parameters in \ ``visualizationSettings``\ , see Section :ref:`sec-visualizationsettingsmain`\ :
+Depending on your model (size, place, ...), you \ **may need to adjust the following general visualization**\  and \ ``openGL``\  \ **parameters**\  in \ ``visualizationSettings``\ , see Section :ref:`sec-visualizationsettingsmain`\ :
 
 +  change window size
-+  light and light position 
-+  shadow (turned off by using 0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card
++  light and light position; switch \ ``openGL.lightPositionsInCameraFrame``\  to switch between model-fixed or camera-fixed lights
++  shadow (turned off by using shadow=0; turned on by using, e.g., a value of 0.3) and shadow polygon offset; shadow slows down graphics performance by a factor of 2-3, depending on your graphics card
 +  visibility of nodes, markers, etc. in according bodies, nodes, markers, ..., \ ``visualizationSettings``\ 
 +  move camera with a selected marker: adjust \ ``trackMarker``\  in \ ``visualizationSettings.interactive``\ 
 
@@ -163,8 +164,7 @@ Visualization settings dialog
 
 Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance -- e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.
 
-Details on visualization settings and its substructures are provided in Section :ref:`sec-visualizationsettingsmain`\ . These settings may also be edited by pressing 'V' in the active render window (does not work, if there is no active render loop using, e.g., \ ``SC.WaitForRenderEngineStopFlag()``\  or 
-\ ``mbs.WaitForUserToContinue()``\  ).
+Details on visualization settings and its substructures are provided in Section :ref:`sec-visualizationsettingsmain`\ . These settings may also be edited by pressing 'V' in the active render window (does not work, if there is no active render loop using, e.g., \ ``SC.renderer.DoIdleTasks()``\  ).
 The visualization settings dialog is shown exemplarily in \ :numref:`fig-visualizationsettings`\ .
 Note that this dialog is automatically created and uses Python's \ ``tkinter``\ , which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for Exudyn.
 
@@ -204,7 +204,7 @@ The visualization settings structure can be accessed in the system container \ `
 
   SC.visualizationSettings.nodes.defaultSize = 0.001      #draw nodes very small
 
-  #change openGL parameters; current values can be obtained from SC.GetRenderState()
+  #change openGL parameters; current values can be obtained from SC.renderer.GetState()
   #change zoom factor:
   SC.visualizationSettings.openGL.initialZoom = 0.2       
   #set the center point of the scene (can be attached to moving object):
@@ -270,6 +270,7 @@ You can also do quite fancy things during simulation, e.g., to deactivate joints
 
 Note that you could also change \ ``visualizationSettings``\  in this way, but the Visualization settings dialog is much more convenient.
 Changing \ ``simulationSettings``\  within the execute command is dangerous and must be treated with care.
+
 Some parameters, such as \ ``simulationSettings.timeIntegration.endTime``\  are copied into the internal solver's \ ``mbs.sys['dynamicSolver'].it``\  structure.
 
 Thus, changing \ ``simulationSettings.timeIntegration.endTime``\  has no effect during simulation. 
@@ -302,13 +303,92 @@ The openGL graphics thread (=separate thread) runs the following loop:
 
 
 
+.. _sec-overview-basics-raytracing:
+
+
+Raytracing
+----------
+
+In order to compensate the limited functionality (but high compatibility) of OpenGL 1.3, an option for CPU-based software rendering (raytracing) has been added.
+This allows to include shadows and transparency correctly, with additional support for relections, refraction, emission, fog and materials.
+In the future, textures may be added as well.
+
+
+
+.. _fig-raytracerdemo:
+.. figure:: ../theDoc/figures/raytracerDemo.jpg
+   :width: 400
+
+   Example image of raytraced renderer view.
+
+
+
+The basic things to know are:
+
++  Raytracing settings are collected in \ ``SC.visualizationSettings.raytracer``\  (in the following, we omit 'SC.visualizationSettings').
++  Raytracing is activated by setting \ ``raytracer.enable=True``\ . Please make sure that you start with small render window sizes / complexity first.
++  The render window size is adjusted by \ ``window.renderWindowSize``\ . Be careful with this settings.
++  Adjust the \ ``raytracer.numberOfThreads``\  for optimal performance, use \ ``raytracer.verbose``\  to see render times for different settings. For testing, use \ ``raytracer.imageSizeFactor>1``\  to decrease the raytracer's resolution (with same image size), while \ ``openGL.multiSampling``\  will increase the resolution (anti-aliasing). Note that switching from \ ``openGL.multiSampling=1``\  and \ ``raytracer.imageSizeFactor=4``\  to \ ``openGL.multiSampling=3``\  and \ ``raytracer.imageSizeFactor=1``\  increases computational costs by a factor \ :math:`4\times 4\times 3\times 3 = 144`\ . Use only one light, if sufficient (set \ ``openGL.enableLight1=False``\ ).
++  Scene, lights, shadow, clipping plane, etc. settings are taken form OpenGL settings and directly used in the software renderer, like \ ``openGL.light0position``\ , \ ``openGL.shadow``\ , \ ``openGL.perspective``\ , \ ``openGL.clippingPlaneNormal``\ , \ ``openGL.showLines``\ , etc.; 
++  some settings are in general, like \ ``general.backgroundColor``\  or \ ``general.drawWorldBasis``\ ;
++  In order to see the advantages of the software renderer, materials have to be used, see below.
+
+
+\ **Materials**\ :
+
++  Materials have the type \ ``VSettingsMaterial``\ , see description in Section :ref:`sec-vsettingsmaterial`\ , for adjusting color, reflectivity, shininess, alpha-transparency, etc.; 
++  Materials can only be used within triangulated geometries (GraphicsData \ ``TriangleList``\ ) using a material-flag in the color, like \ ``graphics.Sphere(..., color=graphics.material.chrome)``\ . In the RGBA color, the alpha-channel is replaced by a material index which starts at 1000 (where 1000 represents material index 0). Note that in the regular OpenGL-rendering, alpha\ :math:`>`\ 1 is equivalent to alpha\ :math:`=`\ 1. The first 10 materials are linked to \ ``raytracer.material0 ... raytracer.material9``\ .
++  The material's \ ``baseColor``\  is used if the color red-channel is set to \ :math:`-1`\ . Note that this allows to globally change the color of objects by changing \ ``baseColor``\  in the material settings in \ ``visualizationSettings``\ . Summarizing, using \ ``color=[1,0,0,graphics.material.indexSteel]``\  chooses red color with steel material settings, while \ ``color=[-1,-1,-1,graphics.material.indexSteel]``\  will use the color of steel (but will be black for OpenGL renderer), identical with \ ``color=graphics.material.steel``\ .
++  The setting \ ``backgroundColorReflections``\  can be used to represent the background which is used for rendering, while the background is independently set to black or white. Otherwise, black background leads to black regions on highly reflective objects or very light regions for white backgrounds.
++  System text messages (solver, version, etc.) are overlayed over raytracing and can be turned off using the settings in \ ``general.showComputationInfo``\  and similar. However, note that \ **item texts are currently not shown**\  in raytracer, affecting node numbers, etc.!
+
+
+\ **Limitations and risks**\ :
+
++  Raytracing is CPU-based and therefore slow. Do not use very high resolution (4K) together with multisampling \ :math:`>1`\ . Start with small render window sizes (e.g. 600 \ :math:`\times`\  400)
++  Raytracing usually uses multithreading with speedups \ :math:`>10`\  on 16 cores. However, this cannot be combined with multithreaded simulations. It is therefore recommended to use raytracing in the solution viewer, not during simulation.
++  If software rendering of a single frame gets to long (>4 seconds), timeouts become active and it may occasionally not work. There are some options to compensate, see above.
++  In general, it is \ **recommended to start with default settings and experiment**\  with changes using the visualization settings dialog.
+
+
+To add raytracing to your project, do like this:
+
+.. code-block:: python
+
+  ...
+  #sphere with chrome
+  graphics.Sphere(radius=radius, 
+                  color=graphics.color.dodgerblue[0:3]+[graphics.material.indexChrome], 
+                  nTiles=32)
+  ground = mbs.CreateGround(referencePosition=[0,0,0],
+                            graphicsDataList=[gSphere])
+
+  #add mbs components
+  #assemble
+  #solve
+  ...
+  #after computation, switch to raytracing
+  SC.visualizationSettings.openGL.multiSampling = 1
+  #SC.visualizationSettings.openGL.imageSizeFactor = 4 #reduce resolution for first tests!
+  SC.visualizationSettings.openGL.enableLight1 = False
+  SC.visualizationSettings.raytracer.numberOfThreads = 16 #adjust to your n-threads
+  SC.visualizationSettings.raytracer.enable = True
+  
+  mbs.SolutionViewer()
+
+
+
+Have fun!
+
+
+
 .. _sec-overview-basics-storingmodelview:
 
 
 Storing the model view
 ----------------------
 
-There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using \ ``SC.GetRenderState()``\  and \ ``SC.SetRenderState()``\ ,
+There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using \ ``SC.renderer.GetState()``\  and \ ``SC.renderer.SetState()``\ ,
 see also Section :ref:`sec-renderstate`\ .
 A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation\ (
 note that \ ``visualizationSettings.general.autoFitScene``\  should be set False if you want to use the stored zoom factor):
@@ -318,15 +398,15 @@ note that \ ``visualizationSettings.general.autoFitScene``\  should be set False
   import exudyn as exu
   SC=exu.SystemContainer()
   SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
-  exu.StartRenderer()
+  SC.renderer.Start()
   if 'renderState' in exu.sys:
-      SC.SetRenderState(exu.sys['renderState']) 
+      SC.renderer.SetState(exu.sys['renderState']) 
   #+++++++++++++++
   #do simulation here and adjust model view settings with mouse
   #+++++++++++++++
 
   #store model view for next run:
-  StopRenderer() #stores render state in exu.sys['renderState']
+  SC.renderer.Stop() #stores render state in exu.sys['renderState']
 
 
  
@@ -335,7 +415,7 @@ Alternatively, you can obtain the current model view from the console after a si
 
 .. code-block:: python
 
-  In[1] : SC.GetRenderState()
+  In[1] : SC.renderer.GetState()
   Out[1]: 
   {'centerPoint': [1.0, 0.0, 0.0],
    'maxSceneSize': 2.0,
@@ -347,12 +427,12 @@ Alternatively, you can obtain the current model view from the console after a si
 
 
 which contains the last state of the renderer.
-Now copy the output and set this with \ ``SC.SetRenderState``\  in your Python code to have a fixed model view in every simulation (\ ``SC.SetRenderState``\  AFTER \ ``exu.StartRenderer()``\ ):
+Now copy the output and set this with \ ``SC.renderer.SetState``\  in your Python code to have a fixed model view in every simulation (\ ``SC.renderer.SetState``\  AFTER \ ``SC.renderer.Start()``\ ):
 
 .. code-block:: python
 
   SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
-  exu.StartRenderer()
+  SC.renderer.Start()
   renderState={'centerPoint': [1.0, 0.0, 0.0],
                'maxSceneSize': 2.0,
                'zoom': 1.0,
@@ -360,11 +440,11 @@ Now copy the output and set this with \ ``SC.SetRenderState``\  in your Python c
                'modelRotation':     [[ 0.34202015,  0.        ,  0.9396926 ],
                                     [-0.60402274,  0.76604444,  0.21984631],
                                     [-0.7198463 , -0.6427876 ,  0.26200265]])
-  SC.SetRenderState(renderState)
+  SC.renderer.SetState(renderState)
   #.... further code for simulation here
 
 
-Note that in the current version of Exudyn there is more data stored in render state, which is not used in \ ``SC.SetRenderState``\ ,
+Note that in the current version of Exudyn there is more data stored in render state, which is not used in \ ``SC.renderer.SetState``\ ,
 see also Section :ref:`sec-renderstate`\ .
 
 
@@ -432,6 +512,7 @@ The \ ``SolutionViewer``\  adds a \ ``tkinter``\  interactive dialog, which lets
 +  In the 'Continuous run' mode, the player runs in an infinite loop
 +  In the 'One cycle' mode, the player runs from the current position to the end; this is perfectly suited to record series of images for \ **creating animations**\ , see Section :ref:`sec-overview-basics-animations`\  and works together with the visualization settings dialog.
 +  In the 'Record animation' mode, the player records frames that are shown in the render window; before pressing on 'Record animation', press 'Stop' and switch to 'One cycle'. Then put the solution steps slider to the first frame and press 'Record animation', which stores images in the current subfolder 'images' as 'frame00001.png' with increasing number, using PNG by default. The number is increased and can only be reset after new start of SolutionViewer.
++  Since Exudyn V1.9.83, the button 'Make mp4' allows to directly generate animation files, see next section.
 
 The solution should be loaded with
 \ ``LoadSolutionFile('coordinatesSolution.txt')``\ , where 'coordinatesSolution.txt' represents the stored solution file, 
@@ -448,7 +529,7 @@ You can call the \ ``SolutionViewer``\  either in the model, or at the command l
   mbs.SolutionViewer(solution=sol)
 
 
-\ **Alternatively**\ , if no solution is provided, \ ``SolutionViewer``\  tries to reload the solution of the previous simulation that is referred to from \ ``mbs.sys['simulationSettings']``\ :
+\ **By default and as a recommended way**\ , if no solution is provided, \ ``SolutionViewer``\  tries to reload the solution of the previous simulation that is referred to from \ ``mbs.sys['simulationSettings']``\ :
 
 .. code-block:: python
 
@@ -458,7 +539,6 @@ You can call the \ ``SolutionViewer``\  either in the model, or at the command l
 
 An example for the \ ``SolutionViewer``\  is integrated into the \ ``Examples/``\  directory, see \ ``solutionViewerTest.py``\ . 
 
-\ **Note**\ : The previous function \ ``AnimateSolution``\  in \ ``exudyn.utilities``\  allows to directly visualize the stored solution for according stored time frames without \ ``tkinter``\  (useful for MacOS).
 
 
 .. _sec-overview-basics-animations:
@@ -482,7 +562,8 @@ which means, that after every 0.01 seconds of simulation time, an image of the c
 
 By default, a consecutive numbering is generated for the image, e.g., 'frame0000.png, frame0001.png,...'. Note that the standard file format PNG with ending '.png' uses compression libraries included in glfw, while the alternative TGA format produces '.tga' files which contain raw image data and therefore can become very large.
 
-To create animation files, an external tool FFMPEG is used to efficiently convert a series of images into an animation.
+To create animation files, an external tool FFMPEG is used to efficiently convert a series of images into an animation. Since Exudyn V1.9.83, ffmpeg is integrated into the solution viewer (button 'Make mp4'), which requires prior installation using \ ``pip install ffmpeg-python``\  . 
+Note that you may also need to install ffmpeg itself, depending on your platform.
 \ :math:`\ra`\  see theDoc.pdf !
 
 

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SystemContainer &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>SystemContainer &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -26,7 +26,7 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="MainSystem" href="MainSystem.html" />
+    <link rel="next" title="Renderer" href="Renderer.html" />
     <link rel="prev" title="Exudyn" href="Exudyn.html" /> 
 </head>
 
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -63,6 +63,7 @@
 <li class="toctree-l2"><a class="reference internal" href="GeneralInformation.html">General information on Python-C++ interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">SystemContainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Renderer.html">Renderer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="MainSystem.html">MainSystem</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SystemData.html">SystemData</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Symbolic.html">Symbolic</a></li>
@@ -92,7 +93,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -113,7 +114,7 @@
              
   <section id="systemcontainer">
 <h1>SystemContainer<a class="headerlink" href="#systemcontainer" title="Link to this heading"></a></h1>
-<p>The SystemContainer is the top level of structures in Exudyn. The container holds all (multibody) systems, solvers and all other data structures for computation. A SystemContainer is created by <code class="docutils literal notranslate"><span class="pre">SC</span> <span class="pre">=</span> <span class="pre">exu.SystemContainer()</span></code>, understanding <code class="docutils literal notranslate"><span class="pre">exu.SystemContainer</span></code> as a class like Python’s internal list class, creating a list instance with <code class="docutils literal notranslate"><span class="pre">x=list()</span></code>. Currently, only one container shall be used. In future, multiple containers might be usable at the same time. Regarding the <strong>(basic) module access</strong>, functions are related to the <code class="docutils literal notranslate"><span class="pre">exudyn</span> <span class="pre">=</span> <span class="pre">exu</span></code> module, see also the introduction of this chapter and this example:</p>
+<p>The SystemContainer is the top level of structures in Exudyn. The container holds all (multibody) systems, solvers and all other data structures for computation and it is the hub for the OpenGL renderer. A SystemContainer is created by <code class="docutils literal notranslate"><span class="pre">SC</span> <span class="pre">=</span> <span class="pre">exu.SystemContainer()</span></code>, understanding <code class="docutils literal notranslate"><span class="pre">exu.SystemContainer</span></code> as a class like Python’s internal list class, creating a list instance with <code class="docutils literal notranslate"><span class="pre">x=list()</span></code>. Currently, only one container shall be used, while multiple containers are possible – e.g. for reasons of different behavior. The SystemContainer contains visualizationSettings, see Section <a class="reference internal" href="../structures/VisualizationSettings.html#sec-visualizationsettingsmain"><span class="std std-ref">Visualization settings</span></a>, which can be edited when pressing the key V in the render window and it holds the renderer substructure to start and stop the renderer, and to interact with the renderer. Regarding the <strong>(basic) module access</strong>, functions are related to the <code class="docutils literal notranslate"><span class="pre">exudyn</span> <span class="pre">=</span> <span class="pre">exu</span></code> module, see also the introduction of this chapter and this example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exu</span>
 <span class="linenos">2</span><span class="c1">#create system container and store by reference in SC:</span>
 <span class="linenos">3</span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
@@ -125,7 +126,7 @@
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>Reset</strong>():</div>
-<div class="line">delete all multibody systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.AttachToRenderEngine() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )</div>
+<div class="line">delete all multibody systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.renderer.Attach() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -167,59 +168,13 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>GetRenderState</strong>():</div>
-<div class="line">Get dictionary with current render state (openGL zoom, modelview, etc.); will have no effect if GLFW_GRAPHICS is deactivated</div>
-<div class="line"><em>Example</em>:</div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
-<span class="n">renderState</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="nf">GetRenderState</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">renderState</span><span class="p">[</span><span class="s1">&#39;zoom&#39;</span><span class="p">])</span>
-</pre></div>
+<div class="line"><strong>renderer</strong>:</div>
+<div class="line">The substructure in SystemContainer responsible for rendering (except visualizationSettings)</div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetRenderState</strong>(<em>renderState</em>):</div>
-<div class="line">Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState; will have no effect if GLFW_GRAPHICS is deactivated</div>
-<div class="line"><em>Example</em>:</div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">SystemContainer</span><span class="p">()</span>
-<span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">renderState</span><span class="p">)</span>
-</pre></div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>RedrawAndSaveImage</strong>():</div>
-<div class="line">Redraw openGL scene and save image (command waits until process is finished)</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>WaitForRenderEngineStopFlag</strong>():</div>
-<div class="line">Wait for user to stop render engine (Press ‘Q’ or Escape-key); this command is used to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as mbs.WaitForUserToContinue()</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>RenderEngineZoomAll</strong>():</div>
-<div class="line">Send zoom all signal, which will perform zoom all at next redraw request</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>AttachToRenderEngine</strong>():</div>
-<div class="line">Links the SystemContainer to the render engine, such that the changes in the graphics structure drawn upon updates, etc.; done automatically on creation of SystemContainer; return False, if no renderer exists (e.g., compiled without GLFW) or cannot be linked (if other SystemContainer already linked)</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>DetachFromRenderEngine</strong>():</div>
-<div class="line">Releases the SystemContainer from the render engine; return True if successfully released, False if no GLFW available or detaching failed</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>SendRedrawSignal</strong>():</div>
-<div class="line">This function is used to send a signal to the renderer that all MainSystems (mbs) shall be redrawn</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>GetCurrentMouseCoordinates</strong>(<em>useOpenGLcoordinates</em> = False):</div>
-<div class="line">Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(useOpenGLcoordinates=True) to obtain OpenGLcoordinates of projected plane</div>
+<div class="line"><strong>visualizationSettings</strong>:</div>
+<div class="line">Structure representing the settings for renderer; for details of visualizationSettings see Section Structures and Settings</div>
 </div>
 </li>
 </ul>
@@ -230,7 +185,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="Exudyn.html" class="btn btn-neutral float-left" title="Exudyn" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="MainSystem.html" class="btn btn-neutral float-right" title="MainSystem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="Renderer.html" class="btn btn-neutral float-right" title="Renderer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

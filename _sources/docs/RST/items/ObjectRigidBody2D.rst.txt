@@ -127,7 +127,7 @@ Definition of quantities
 Equations of motion
 -------------------
 
-The equations of motion in case that \ ``physicsCenterOfMass=\Null``\  read:
+The equations of motion in case that \ ``physicsCenterOfMass``\ =\ :math:`\Null`\  read:
 
 .. math::
 

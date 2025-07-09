@@ -87,7 +87,7 @@ You can view and download this file on Github: `sparseMatrixSpringDamperTest.py 
    
    #useGraphics = True
    if useGraphics: 
-       exu.StartRenderer()
+       SC.renderer.Start()
    
    simulationSettings = exu.SimulationSettings()
    #simulationSettings.displayStatistics = True
@@ -126,8 +126,8 @@ You can view and download this file on Github: `sparseMatrixSpringDamperTest.py 
    exudynTestGlobals.testResult = 1e-2*u[1]
    
    if useGraphics: 
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() 
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() 
    
    
    

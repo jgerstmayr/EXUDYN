@@ -182,9 +182,9 @@ You can view and download this file on Github: `simulateInteractively.py <https:
    
    
    SC.visualizationSettings.general.autoFitScene = False #otherwise, renderState not accepted for zoom
-   exu.StartRenderer()
+   SC.renderer.Start()
    
-   SC.SetRenderState({'centerPoint': [0.500249445438385, -0.02912527695298195, 0.0],
+   SC.renderer.SetState({'centerPoint': [0.500249445438385, -0.02912527695298195, 0.0],
     'maxSceneSize': 0.5,
     'zoom': 0.428807526826858,
     'currentWindowSize': [1400, 1200],
@@ -244,7 +244,7 @@ You can view and download this file on Github: `simulateInteractively.py <https:
                      plots=plots, fontSize=12)
    
    # #stop solver and close render window
-   exu.StopRenderer() #safely close rendering window!
+   SC.renderer.Stop() #safely close rendering window!
    
    
    

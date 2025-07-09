@@ -212,10 +212,10 @@ You can view and download this file on Github: `objectFFRFreducedOrderNetgen.py 
    
        if True:
            if useGraphics:
-               exu.StartRenderer()
-               if 'renderState' in exu.sys: SC.SetRenderState(exu.sys['renderState']) #load last model view
+               SC.renderer.Start()
+               if 'renderState' in exu.sys: SC.renderer.SetState(exu.sys['renderState']) #load last model view
            
-               mbs.WaitForUserToContinue() #press space to continue
+               SC.renderer.DoIdleTasks() #press space to continue
            
            mbs.SolveDynamic(solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
                             simulationSettings=simulationSettings)
@@ -223,9 +223,9 @@ You can view and download this file on Github: `objectFFRFreducedOrderNetgen.py 
            
                
            if useGraphics:
-               SC.WaitForRenderEngineStopFlag()
-               exu.StopRenderer() #safely close rendering window!
-               lastRenderState = SC.GetRenderState() #store model view for next simulation
+               SC.renderer.DoIdleTasks()
+               SC.renderer.Stop() #safely close rendering window!
+               lastRenderState = SC.renderer.GetState() #store model view for next simulation
        
    
 

@@ -95,7 +95,7 @@ You can view and download this file on Github: `serialRobotInverseKinematics.py 
                                    #jointStiffness=1e4
                                    ) #, useAlternativeConstraints=True)
    SC = exu.SystemContainer() 
-   SC.AttachToRenderEngine()
+   SC.renderer.Attach()
    mbs = SC.AddSystem()
    # the system container holds one or several systems; the inverse kinematics uses a second system container without visualization
    # in the mbs the mainsystem (multibody system) is stored; in the SC more than one mbs can be created but they do not interact with each other. 
@@ -268,10 +268,10 @@ You can view and download this file on Github: `serialRobotInverseKinematics.py 
    
    if useGraphics:
        # start graphics
-       exu.StartRenderer()
+       SC.renderer.Start()
        if 'renderState' in exu.sys:
-           SC.SetRenderState(exu.sys['renderState'])
-       mbs.WaitForUserToContinue()
+           SC.renderer.SetState(exu.sys['renderState'])
+       SC.renderer.DoIdleTasks()
        
    # hte the simulation with the set up simulationsettings is started 
    mbs.SolveDynamic(simulationSettings, 
@@ -281,7 +281,7 @@ You can view and download this file on Github: `serialRobotInverseKinematics.py 
    
    if useGraphics: # when graphics are deactivated the renderer does not need to be stopped
        SC.visualizationSettings.general.autoFitScene = False
-       exu.StopRenderer()
+       SC.renderer.Stop()
    
    #%%++++++++++++++++++++++++++++++++++++++++++++
    if True:

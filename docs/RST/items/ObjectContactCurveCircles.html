@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectContactCurveCircles &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>ObjectContactCurveCircles &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -29,7 +29,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Object (Constraint)" href="objectConstraintIndex.html" />
-    <link rel="prev" title="ObjectContactSphereSphere" href="ObjectContactSphereSphere.html" /> 
+    <link rel="prev" title="ObjectContactSphereTriangle" href="ObjectContactSphereTriangle.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -89,6 +89,8 @@
 <li class="toctree-l3"><a class="reference internal" href="ObjectContactCircleCable2D.html">ObjectContactCircleCable2D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ObjectContactFrictionCircleCable2D.html">ObjectContactFrictionCircleCable2D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ObjectContactSphereSphere.html">ObjectContactSphereSphere</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactSphereTorus.html">ObjectContactSphereTorus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactSphereTriangle.html">ObjectContactSphereTriangle</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">ObjectContactCurveCircles</a></li>
 </ul>
 </li>
@@ -115,7 +117,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -137,7 +139,7 @@
              
   <section id="objectcontactcurvecircles">
 <span id="sec-item-objectcontactcurvecircles"></span><h1>ObjectContactCurveCircles<a class="headerlink" href="#objectcontactcurvecircles" title="Link to this heading"></a></h1>
-<p>[UNDER CONSTRUCTION] A contact model between a curve defined by piecewise segments and a set of circles. The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. Note that there is a limit of 100 circle markes above which computation becomes slower as it requires memory allocation.</p>
+<p>A contact model between a curve defined by piecewise segments and a set of circles. The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. [REQUIRES FURTHER TESTING; friction not yet available]</p>
 <p><strong>Additional information for ObjectContactCurveCircles</strong>:</p>
 <ul>
 <li><div class="line-block">
@@ -153,11 +155,11 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>Short name</strong> for Python = <code class="docutils literal notranslate"><span class="pre">CamFollower</span></code></div>
+<div class="line"><strong>Short name</strong> for Python = <code class="docutils literal notranslate"><span class="pre">CamFollowerContactPlanar</span></code></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>Short name</strong> for Python visualization object = <code class="docutils literal notranslate"><span class="pre">VCamFollower</span></code></div>
+<div class="line"><strong>Short name</strong> for Python visualization object = <code class="docutils literal notranslate"><span class="pre">VCamFollowerContactPlanar</span></code></div>
 </div>
 </li>
 </ul>
@@ -190,7 +192,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>polynomialData</strong> [<span class="math notranslate nohighlight">\({\mathbf{P}} \in \Rcal^{n_s \times n_p}\)</span>, type = PyMatrixContainer, default = PyMatrixContainer[]]:</div>
-<div class="line">matrix containing coefficients for polynomial enhancements of the linear segments; each row contains polynomial coefficients for the according segment; the polynomial coefficients may contain quadratic, cubic, etc. coefficients, while constant and linear coefficients are automatically selected such that the end points of the polynomial match the segment’s endpoints; the local coordinate <span class="math notranslate nohighlight">\(x\)</span> of the polynomial runs from 0 to 1 and positive values represent concave geometries (enlarging the curve). MatrixContainer has to be provided in dense mode!</div>
+<div class="line">matrix containing coefficients for special polynomial enhancements of the linear segments; each row contains coefficients for polynomials for the according segment, prescribing slopes at beginning and end of segment as well as curvature at beginning and end of segment; slopes and curvatures are defined in a local x/y coordinate system where x is the segment axis (start: x=0; x-axis points towards end point) and the segment normal is in y-direction; MatrixContainer has to be provided in dense mode!</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -210,22 +212,42 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>contactStiffness</strong> [<span class="math notranslate nohighlight">\(k_c\)</span>, type = Real, default = 0.]:</div>
-<div class="line">normal contact stiffness [SI:N/m] (units in case that <span class="math notranslate nohighlight">\(n_\mathrm{exp}=1\)</span>)</div>
+<div class="line">normal contact stiffness [SI:N/(m*m)]</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>contactDamping</strong> [<span class="math notranslate nohighlight">\(d_c\)</span>, type = Real, default = 0.]:</div>
-<div class="line">linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is &lt; 1, as it changes its behavior.</div>
+<div class="line">linear normal contact damping [SI:N/(m s)]; this damping is a simplification of real contact dissipation and should be used with care.</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>contactModel</strong> [<span class="math notranslate nohighlight">\(m_\mathrm{contact}\)</span>, type = UInt, default = 0]:</div>
-<div class="line">number of contact model: 0) linear model for stiffness and damping, only proportional to penetration; 1) model taking contact geometry, in particular curvature of circle and curve into account, giving nonlinear normal force model</div>
+<div class="line">number of contact model: 0) linear model for stiffness and damping, only proportional to penetration; contact force is computed from <span class="math notranslate nohighlight">\(l_\mathrm{seg}\left(p \cdot  \cdot k_c + \dot p \cdot d_c \right)\)</span> as long as <span class="math notranslate nohighlight">\(p&gt;0\)</span>; while this is numerically more stable, it gives jumps in forces when sliding over contact geometry 1) contact force proportional to integral over penetration area of circle with segments, giving a smoother contact force when sliding over geometry;</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>activeConnector</strong> [type = Bool, default = True]:</div>
 <div class="line">flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>gapPerSegment</strong> [type = NumpyVector, default = []]:</div>
+<div class="line">temporary vector for computed gap</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>gapPerSegment_t</strong> [type = NumpyVector, default = []]:</div>
+<div class="line">temporary vector for computed gap velocity</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>segmentsForceLocalX</strong> [type = NumpyVector, default = []]:</div>
+<div class="line">temporary vector for contact force per segment in local X-direction</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>segmentsForceLocalY</strong> [type = NumpyVector, default = []]:</div>
+<div class="line">temporary vector for contact force per segment in local Y-direction</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -362,7 +384,7 @@
 <p>tbd</p>
 <p>Relevant Examples and TestModels with weblink:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chainDriveExample.py">chainDriveExample.py</a> (Examples/)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/camFollowerExample.py">camFollowerExample.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chainDriveExample.py">chainDriveExample.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/contactCurvePolynomial.py">contactCurvePolynomial.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/contactCurveWithLongCurve.py">contactCurveWithLongCurve.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCurveExample.py">contactCurveExample.py</a> (TestModels/)</p>
 </div></blockquote>
 <p><strong>The web version may not be complete. For details, consider also the Exudyn PDF documentation</strong> : <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
 </section>
@@ -372,7 +394,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ObjectContactSphereSphere.html" class="btn btn-neutral float-left" title="ObjectContactSphereSphere" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ObjectContactSphereTriangle.html" class="btn btn-neutral float-left" title="ObjectContactSphereTriangle" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="objectConstraintIndex.html" class="btn btn-neutral float-right" title="Object (Constraint)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

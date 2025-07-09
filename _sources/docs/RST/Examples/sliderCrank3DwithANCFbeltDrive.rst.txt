@@ -34,7 +34,7 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive.p
    
    
    #Print EXUDYN version
-   print('EXUDYN version='+exu.GetVersionString())
+   print('EXUDYN version='+exu.config.Version())
    
    
    #Paramters
@@ -478,17 +478,17 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive.p
        SC.visualizationSettings.openGL.multiSampling = 4
    
    
-   exu.StartRenderer()
+   SC.renderer.Start()
    if 'lastRenderState' in vars():
-       SC.SetRenderState(lastRenderState) #load last model view
-   mbs.WaitForUserToContinue()
+       SC.renderer.SetState(lastRenderState) #load last model view
+   SC.renderer.DoIdleTasks()
    
    mbs.SolveDynamic(simulationSettings)
    
    
-   SC.WaitForRenderEngineStopFlag()
-   exu.StopRenderer() #safely close rendering window!
-   lastRenderState = SC.GetRenderState() #store model view for next simulation
+   SC.renderer.DoIdleTasks()
+   SC.renderer.Stop() #safely close rendering window!
+   lastRenderState = SC.renderer.GetState() #store model view for next simulation
    
    
    

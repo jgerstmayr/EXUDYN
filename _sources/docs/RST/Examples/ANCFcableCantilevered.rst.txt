@@ -100,13 +100,13 @@ You can view and download this file on Github: `ANCFcableCantilevered.py <https:
    SC.visualizationSettings.connectors.show = False
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
-   exu.StartRenderer()
-   #mbs.WaitForUserToContinue()
+   SC.renderer.Start()
+   #SC.renderer.DoIdleTasks()
    
    mbs.SolveDynamic(simulationSettings)
    
-   SC.WaitForRenderEngineStopFlag()
-   exu.StopRenderer() #safely close rendering window!
+   SC.renderer.DoIdleTasks()
+   SC.renderer.Stop() #safely close rendering window!
    
    #mbs.SolutionViewer()
 

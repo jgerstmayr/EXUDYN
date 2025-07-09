@@ -1,7 +1,7 @@
 General solver structure
 ========================
 
-The description of solvers in this section follows the nomenclature given in Section :ref:`sec:generalnotation`\ .
+The description of solvers in this section follows the nomenclature given in Section :ref:`sec-generalnotation`\ .
 Both in the static as well as in the dynamic case, the solvers run in a loop to solve a nonlinear system of (differential and/or algebraic) equations over a given time or load interval. Explicit solvers only perform a factorization of the mass matrix, but the \ ``Newton``\  loop, see \ :numref:`fig-solver-newton-iteration`\ , is replaced by an explicit computation of the time step according to a given Runge-Kutta tableau.
 
 In case of an implicit time integration, \ :numref:`fig-solver-time-integration`\  shows the basic loops for the solution process. The inner loops are shown in \ :numref:`fig-solver-solve-steps`\  and\ :numref:`fig-solver-discontinuous-iteration`\ .

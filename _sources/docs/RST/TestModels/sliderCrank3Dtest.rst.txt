@@ -230,8 +230,8 @@ You can view and download this file on Github: `sliderCrank3Dtest.py <https://gi
        simulationSettings.timeIntegration.numberOfSteps = 20000
        simulationSettings.timeIntegration.endTime = 5 #0.2 for testing
        
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
    
    mbs.SolveDynamic(simulationSettings)
    
@@ -266,8 +266,8 @@ You can view and download this file on Github: `sliderCrank3Dtest.py <https://gi
    
    
    if useGraphics:
-       #SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       #SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    if useGraphics:
        import matplotlib.pyplot as plt

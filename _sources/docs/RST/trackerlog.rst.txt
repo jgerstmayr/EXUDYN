@@ -19,15 +19,511 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.9.83.dev1, 
-+  last change =  2025-04-01, 
-+  Number of issues = 1983, 
-+  Number of resolved issues = 1759 (83 in current version), 
++  Exudyn version = 1.10.0, 
++  last change =  2025-07-09, 
++  Number of issues = 2139, 
++  Number of resolved issues = 1912 (0 in current version), 
+
+************
+Version 1.10
+************
+
+ * Version 1.10.0: resolved Issue 2123: Mechanisms (extension)
+    - description:  Add example for gear and toothed rack mounted on body, using relative translation/rotation marker
+    - **notes:** see Example involuteGearGraphics.py
+    - date resolved: **2025-07-09 18:43**\ , date raised: 2025-07-02 
 
 ***********
 Version 1.9
 ***********
 
+ * Version 1.9.235: resolved Issue 1959: SphereSphereContact (check)
+    - description:  check that position marker works without friction
+    - **notes:** not needed any more as mass points and point nodes include rotation matrix and angular velocity
+    - date resolved: **2025-07-09 18:12**\ , date raised: 2025-02-24 
+ * Version 1.9.234: resolved Issue 2122: Mechanisms (extension)
+    - description:  Add example for two gears mounted on a body with revolute joints, using CoordinateSpringDamperExt
+    - **notes:** see Example involuteGearGraphics.py
+    - date resolved: **2025-07-09 18:10**\ , date raised: 2025-07-02 
+ * Version 1.9.233: resolved Issue 2137: general open source (docu)
+    - description:  add some warnings at beginning of docu regarding open source and potential errors
+    - date resolved: **2025-07-09 18:07**\ , date raised: 2025-07-05 
+ * Version 1.9.232: resolved Issue 2138: RST, latex (docu)
+    - description:  fill issues with references in RST and latex files
+    - date resolved: **2025-07-05 18:29**\ , date raised: 2025-07-05 
+ * Version 1.9.231: resolved Issue 2135: TestSuite (fix)
+    - description:  put all variables into static TestSuite class, to avoid unintentionally changing variables in the testsuite scope by models
+    - date resolved: **2025-07-05 15:07**\ , date raised: 2025-07-05 
+ * Version 1.9.230: resolved Issue 2136: trackerlog (change)
+    - description:  change to utf-8 format; this may cause problems when loading old (backup) files, which shall be manually changed to utf-8
+    - date resolved: **2025-07-05 14:54**\ , date raised: 2025-07-05 
+ * Version 1.9.229: resolved Issue 2134: ContactSphereTriangle (testing)
+    - description:  add test example using CreateSphereQuadContact with two contacting bodies to check momentum conservation
+    - date resolved: **2025-07-05 12:10**\ , date raised: 2025-07-05 
+ * Version 1.9.228: resolved Issue 2133: ContactSphereTriangle (fix)
+    - description:  marker transformation missing for contact computation
+    - date resolved: **2025-07-05 11:10**\ , date raised: 2025-07-05 
+ * Version 1.9.227: resolved Issue 2132: nodes (change)
+    - description:  letter N for basis only shown in case that nodes.showNumbers=True
+    - date resolved: **2025-07-05 10:46**\ , date raised: 2025-07-05 
+ * Version 1.9.226: resolved Issue 2129: MarkerBodiesRelativeRotationCoordinate (fix)
+    - description:  does not work without nodeNumber provided
+    - date resolved: **2025-07-03 22:21**\ , date raised: 2025-07-03 
+ * Version 1.9.225: resolved Issue 2121: Involute gear (extension)
+    - description:  add function to generate graphics for toothed rack
+    - date resolved: **2025-07-03 18:33**\ , date raised: 2025-07-02 
+ * Version 1.9.224: resolved Issue 2128: SolidExtrusion (extension)
+    - description:  add relative rotation and relative offset for second surface of extrusion; used e.g. for helical gears
+    - date resolved: **2025-07-03 16:48**\ , date raised: 2025-07-03 
+ * Version 1.9.223: resolved Issue 2126: Involute gear (extension)
+    - description:  add function to create involute gear graphics
+    - date resolved: **2025-07-03 15:37**\ , date raised: 2025-07-03 
+ * Version 1.9.222: resolved Issue 2125: BallBearing (extension)
+    - description:  add function to create ball bearing into machines; similar to issue 2031
+    - date resolved: **2025-07-03 14:57**\ , date raised: 2025-07-03 
+ * Version 1.9.221: resolved Issue 2118: Involute gear (extension)
+    - description:  add function to create involute gear profile
+    - date resolved: **2025-07-03 12:57**\ , date raised: 2025-07-02 
+ * Version 1.9.220: resolved Issue 2031: BallBearing (extension)
+    - description:  put function into machines module; function shalll take two markers (for outer and inner ring), which represent the interface to other bodies; add simple test model
+    - date resolved: **2025-07-03 09:20**\ , date raised: 2025-05-18 
+ * Version 1.9.219: resolved Issue 2124: BallBearing (extension)
+    - description:  add graphics function to create rings of ball bearings
+    - date resolved: **2025-07-03 09:19**\ , date raised: 2025-07-03 
+ * Version 1.9.218: resolved Issue 2119: Involute gear (extension)
+    - description:  add function to generate graphics for involute gear
+    - date resolved: **2025-07-02 09:40**\ , date raised: 2025-07-02 
+ * Version 1.9.217: resolved Issue 2117: MarkerRelative (extension)
+    - description:  add offset to MarkerBodiesRelativeRotationCoordinate
+    - date resolved: **2025-07-01 23:00**\ , date raised: 2025-07-01 
+ * Version 1.9.216: resolved Issue 2112: MarkerRelativeRotation (extension)
+    - description:  Consider marker MarkerBodiesRelativeRotationCoordinate which measures scalar relative rotation, in particular rotation relative between two bodies; action is realized as torques on two bodies, using body-fixed coordinates of body0
+    - date resolved: **2025-07-01 20:09**\ , date raised: 2025-06-25 
+ * Version 1.9.215: resolved Issue 2116: Raytracer (extension)
+    - description:  add line color
+    - date resolved: **2025-07-01 14:22**\ , date raised: 2025-07-01 
+ * Version 1.9.214: resolved Issue 2115: Raytracer (extension)
+    - description:  make raytracer compatible with facesTransparent, showFaces, showFaceEdges
+    - date resolved: **2025-07-01 14:22**\ , date raised: 2025-07-01 
+ * Version 1.9.213: resolved Issue 2114: FEM (extension)
+    - description:  add function GetRigidBodyInertia to return RigidBodyInertia of nodal position-based FEM models
+    - date resolved: **2025-06-30 14:30**\ , date raised: 2025-06-30 
+    - resolved by: S. Weyrer
+ * Version 1.9.212: resolved Issue 2111: MarkerRelativeTranslation (extension)
+    - description:  Consider marker MarkerBodiesRelativeTranslationCoordinate which measures scalar relative translation, in particular relative displacement between two bodies; action is realized as forces on two bodies, using body-fixed coordinates of body0
+    - date resolved: **2025-06-29 23:16**\ , date raised: 2025-06-25 
+ * Version 1.9.211: resolved Issue 1961: CreateSphereQuadContact (extension)
+    - description:  add create function, which uses 2 CreateSphereTriangleContact elements; should be practical for simple robots, etc.
+    - date resolved: **2025-06-29 12:01**\ , date raised: 2025-02-24 
+ * Version 1.9.210: resolved Issue 1958: CreateSphereSphereContact (extension)
+    - description:  add Create function, including data node; similar to spring-damper; add checks that in case of friction, a rigid body marker is required
+    - date resolved: **2025-06-29 11:06**\ , date raised: 2025-02-24 
+ * Version 1.9.209: resolved Issue 2113: ExportSTL (fix)
+    - description:  invertNormals and invertTriangles not used
+    - date resolved: **2025-06-25 17:18**\ , date raised: 2025-06-25 
+ * Version 1.9.208: resolved Issue 2050: parallel (fix)
+    - description:  check global counters in parallelized computations which cause huge cache issues
+    - **notes:** current issues seem to be related to fetch_add (use task stealing?) and cache-polution between different PARALLEL_FOR loops
+    - date resolved: **2025-06-24 23:32**\ , date raised: 2025-05-26 
+ * Version 1.9.207: resolved Issue 2108: ContactSphereTriangle (testing)
+    - description:  test with explicit integration
+    - date resolved: **2025-06-22 16:54**\ , date raised: 2025-06-21 
+ * Version 1.9.206: resolved Issue 2107: ContactSphereSphere (testing)
+    - description:  test with explicit integration
+    - date resolved: **2025-06-22 16:54**\ , date raised: 2025-06-21 
+ * Version 1.9.205: resolved Issue 2105: Examples and TestModels (fix)
+    - description:  remove uncommitted test files from Examples and TestModels as they are included as examples in theDoc
+    - date resolved: **2025-06-21 22:48**\ , date raised: 2025-06-19 
+ * Version 1.9.204: resolved Issue 2102: automatic code (change)
+    - description:  avoid writing dates to systemstrutures files and others
+    - date resolved: **2025-06-19 00:22**\ , date raised: 2025-06-18 
+ * Version 1.9.203: resolved Issue 2018: docu (docu)
+    - description:  when searching for keywords in examples, exclude matches (like MassMatrix) where the character before or after the keyword is a letter (a-zA-Z) to avoid wrong matches!
+    - date resolved: **2025-06-18 22:22**\ , date raised: 2025-05-15 
+ * Version 1.9.202: resolved Issue 2104: FEMinterface (fix)
+    - description:  add try except to automatic nodeSet creation in case that there are no boundaries computable
+    - date resolved: **2025-06-18 18:17**\ , date raised: 2025-06-18 
+ * Version 1.9.201: resolved Issue 2103: Item selection (extension)
+    - description:  write currently selected item (+type, etc.) into renderer.state
+    - date resolved: **2025-06-18 17:00**\ , date raised: 2025-06-18 
+ * Version 1.9.200: resolved Issue 2101: parallel (extension)
+    - description:  add simulationSettings.parallel.useLoadBalancing to switch two multithreading modes
+    - date resolved: **2025-06-18 12:00**\ , date raised: 2025-06-18 
+ * Version 1.9.199: resolved Issue 1695: taskmanager (change)
+    - description:  extend microthreading for taskmanager-based load management; remove taskmanager from repo and create pure BSD license
+    - **notes:** in C++ ExuThreading being now the only mode; optionally use exu.special.solver.multiThreadingLoadBalancing to switch load balancing on/off
+    - date resolved: **2025-06-18 10:00**\ , date raised: 2023-11-19 
+ * Version 1.9.198: resolved Issue 2100: Command window (fix)
+    - description:  does not show edit dialog
+    - date resolved: **2025-06-16 14:52**\ , date raised: 2025-06-16 
+ * Version 1.9.197: resolved Issue 2099: contour (extension)
+    - description:  add alpha channel visualizationSettings option for contour colors
+    - date resolved: **2025-06-16 11:28**\ , date raised: 2025-06-16 
+ * Version 1.9.196: resolved Issue 2098: graphics.CheckerBoard (extension)
+    - description:  add arg materialIndex for graphics material of both colors
+    - date resolved: **2025-06-16 11:03**\ , date raised: 2025-06-16 
+ * Version 1.9.195: resolved Issue 2096: ContactSphereTriangle (testing)
+    - description:  add test model sphereTriangleTest.py
+    - date resolved: **2025-06-15 19:56**\ , date raised: 2025-06-15 
+ * Version 1.9.194: resolved Issue 2095: CreateKinematicTree (testing)
+    - description:  add test model
+    - **notes:** add test model createKinematicTreeTest.py
+    - date resolved: **2025-06-15 19:55**\ , date raised: 2025-06-15 
+ * Version 1.9.193: resolved Issue 1960: ObjectContactSphereTriangle (extension)
+    - description:  add contact similar to GeneralContact and to ObjectContactSphereSphere, but being able to be computed implicitly; add option to exclude certain edges to be able to also correctly handle meshes
+    - date resolved: **2025-06-15 11:50**\ , date raised: 2025-02-24 
+ * Version 1.9.192: :textred:`resolved BUG 2094` : ContactSphereSphere 
+    - description:  ContactSphereSphere and ContactSphereTorus set frictionRegularizedRegion wrong in case of computeFromData
+    - **notes:** now leads to improved convergence
+    - date resolved: **2025-06-15 09:37**\ , date raised: 2025-06-15 
+ * Version 1.9.191: resolved Issue 2092: FEMinterface (extension)
+    - description:  ComputePostProcessingModesNGsolve: extend for multi-material coefficient function, using materials dict; 
+    - date resolved: **2025-06-14 10:40**\ , date raised: 2025-06-13 
+ * Version 1.9.190: resolved Issue 2090: FEMinterface (extension)
+    - description:  extend ImportMeshFromNGsolve to include several materials given as dict of materials
+    - date resolved: **2025-06-14 10:31**\ , date raised: 2025-06-13 
+ * Version 1.9.189: resolved Issue 2089: FEMinterface (extension)
+    - description:  add function to compute nodeSets from NGsolve boundary names: CreateNGsolveBoundaryNodeSets 
+    - date resolved: **2025-06-14 10:31**\ , date raised: 2025-06-13 
+ * Version 1.9.188: resolved Issue 2088: FEMinterface (extension)
+    - description:  add internal function to get node numbers of NGsolve boundary condition: GetNodesOfNGsolveBoundary
+    - date resolved: **2025-06-14 10:31**\ , date raised: 2025-06-13 
+ * Version 1.9.187: resolved Issue 2093: FEMinterface (extension)
+    - description:  adapt class KirchhoffMaterial for multi-domain materials
+    - date resolved: **2025-06-14 10:30**\ , date raised: 2025-06-14 
+ * Version 1.9.186: resolved Issue 2091: FEMinterface (change)
+    - description:  remove deprecated arg computeEigenmodes from ImportMeshFromNGsolve
+    - date resolved: **2025-06-13 22:16**\ , date raised: 2025-06-13 
+ * Version 1.9.185: resolved Issue 2087: GetOtherMarker (change)
+    - description:  return MarkerBodyRigid as body anyway must provide position and orientation
+    - date resolved: **2025-06-13 22:13**\ , date raised: 2025-06-13 
+ * Version 1.9.184: resolved Issue 2067: CreateKinematicTree (extension)
+    - description:  add Create function for KinematicTree, using list of TreeLink; add special class TreeLink to itemInterface
+    - date resolved: **2025-06-10 08:52**\ , date raised: 2025-05-29 
+ * Version 1.9.183: resolved Issue 2083: SolidOfRevolution (extension)
+    - description:  add check to graphics.SolidOfRevolution that order of list is correct (leads to correct inside-outside relations)
+    - date resolved: **2025-06-10 01:02**\ , date raised: 2025-06-09 
+ * Version 1.9.182: resolved Issue 2086: RigidBodyInertia (extension)
+    - description:  Add GetGraphics for combined inertia and graphics generation
+    - date resolved: **2025-06-09 12:31**\ , date raised: 2025-06-09 
+ * Version 1.9.181: resolved Issue 2056: graphics (fix)
+    - description:  Renderer raises warning that some objects contain inconsistencies between computed triangle normals and vertex normals
+    - **notes:** mainly due to SolidOfRevolution
+    - date resolved: **2025-06-09 01:14**\ , date raised: 2025-05-28 
+ * Version 1.9.180: resolved Issue 2085: SolidOfRevolution (change)
+    - description:  switch triangle order in SolidOfRevolution to have consistent normals and triangles
+    - date resolved: **2025-06-09 01:06**\ , date raised: 2025-06-09 
+ * Version 1.9.179: resolved Issue 2084: drawFaceNormals (change)
+    - description:  openGL.drawFaceNormals shall draw the computed normal from the triangle points, thus showing the correct orientation of triangles
+    - date resolved: **2025-06-09 00:48**\ , date raised: 2025-06-09 
+ * Version 1.9.178: resolved Issue 2082: shadow (fix)
+    - description:  add lightPositionsInCameraFrame flag to shadow computation to consistently draw shadow and lights in openGL
+    - date resolved: **2025-06-08 18:11**\ , date raised: 2025-06-08 
+ * Version 1.9.177: resolved Issue 2080: HDF5 (testing)
+    - description:  Add test with all data types
+    - **notes:** added example testHDF5loadSave.py
+    - date resolved: **2025-06-08 18:11**\ , date raised: 2025-06-08 
+ * Version 1.9.176: :textred:`resolved BUG 2079` : LoadDictFromHDF5 
+    - description:  does not correctly convert np.array inside list
+    - date resolved: **2025-06-08 18:11**\ , date raised: 2025-06-07 
+ * Version 1.9.175: resolved Issue 2081: GL_LIGHT (extension)
+    - description:  add option to switch between local and global lights, to be compatible with Raytracer
+    - **notes:** added option openGL.lightPositionsInCameraFrame to switch behavior; in raytracer, this setting is always True
+    - date resolved: **2025-06-08 15:44**\ , date raised: 2025-06-08 
+ * Version 1.9.174: resolved Issue 2078: netgen (extension)
+    - description:  add option to convert netgen / ngsolve mesh into points, triangles and normals including smooth geometries
+    - date resolved: **2025-06-07 19:12**\ , date raised: 2025-06-07 
+ * Version 1.9.173: resolved Issue 2077: Raytracer (extension)
+    - description:  light radius receives circular variation normal to ray, giving an effient and good effect of spherical lights; use lightRadius and lightRadiusVariations
+    - date resolved: **2025-06-05 21:03**\ , date raised: 2025-06-05 
+ * Version 1.9.172: resolved Issue 2076: Raytracer (extension)
+    - description:  add option for spherical lights with radius and random sampling
+    - **notes:** added lightRadius
+    - date resolved: **2025-06-04 17:52**\ , date raised: 2025-06-04 
+ * Version 1.9.171: resolved Issue 2059: Raytracer (docu)
+    - description:  add short docu part
+    - **notes:** example available in Examples/newtonsCradle.py
+    - date resolved: **2025-06-04 10:58**\ , date raised: 2025-05-28 
+ * Version 1.9.170: resolved Issue 2074: invert triangles (extension)
+    - description:  Add function to invert triangles and normals of graphicsData, e.g., for inverted sphere or brick
+    - **notes:** added graphics.InvertTriangles and ConsistentTriangleList
+    - date resolved: **2025-06-04 01:37**\ , date raised: 2025-06-02 
+ * Version 1.9.169: resolved Issue 2061: Raytracer (extension)
+    - description:  add materials interface via SystemContainer: renderer.SetMaterial(index, dict), dict=GetMaterial(index)
+    - **notes:** can do read [] access, Set(), New(), etc.
+    - date resolved: **2025-06-03 16:06**\ , date raised: 2025-05-28 
+ * Version 1.9.168: resolved Issue 2063: Raytracer (extension)
+    - description:  make first 10 materials in renderer accessible via visualization systems dialog
+    - date resolved: **2025-06-03 16:05**\ , date raised: 2025-05-28 
+ * Version 1.9.167: resolved Issue 2060: Raytracer (extension)
+    - description:  adjust minZ and line offset to scene dimension
+    - date resolved: **2025-06-02 17:45**\ , date raised: 2025-05-28 
+ * Version 1.9.166: resolved Issue 2058: Raytracer (extension)
+    - description:  add separate visualization options; keep lights
+    - date resolved: **2025-06-02 17:45**\ , date raised: 2025-05-28 
+ * Version 1.9.165: resolved Issue 2070: Renderer timeout (check)
+    - description:  check whether calling glfwWaitEventsTimeout, glfwPollEvents or glfwSwapBuffers fixes problems with redraw timeouts with Raytracing
+    - **notes:** can be done with option raytracer.keepWindowActive
+    - date resolved: **2025-06-02 17:44**\ , date raised: 2025-05-31 
+ * Version 1.9.164: resolved Issue 2069: Raytracer (extension)
+    - description:  add global fog and material fog
+    - **notes:** only global fog added
+    - date resolved: **2025-06-02 17:44**\ , date raised: 2025-05-29 
+ * Version 1.9.163: resolved Issue 2068: Raytracer (extension)
+    - description:  activate cutting plane for raytracer; include in function IntersectRayWithTriangles, which shall first check for cutting plane and only takes then objects behind cutting plane (if hit); color is then taken from triangle behind cutting plane-without reflections and shadows
+    - date resolved: **2025-06-02 17:44**\ , date raised: 2025-05-29 
+ * Version 1.9.162: resolved Issue 2073: font bitmaps (extension)
+    - description:  Add smoothing at pixel level for base text fonts (at grey scale) to obtain smoother fonts
+    - date resolved: **2025-06-01 22:53**\ , date raised: 2025-06-01 
+ * Version 1.9.161: resolved Issue 2072: renderer (change)
+    - description:  exu.StartRenderer() and exu.StopRenderer() are changed into SC.renderer.Start() and SC.renderer.Stop(), having a SystemContainer SC
+    - **notes:** NOTE that this affects your existing models a lot!
+    - date resolved: **2025-06-01 19:13**\ , date raised: 2025-06-01 
+ * Version 1.9.160: resolved Issue 2071: Raytracer (extension)
+    - description:  draw system message texts as overlay of render image
+    - date resolved: **2025-06-01 18:00**\ , date raised: 2025-06-01 
+ * Version 1.9.159: resolved Issue 2036: renderer (change)
+    - description:  put renderer-related functions into SystemContainer; preserve compatibility; consider substructure renderer in SC to collect rendering-related functionality
+    - date resolved: **2025-06-01 02:36**\ , date raised: 2025-05-21 
+ * Version 1.9.158: resolved Issue 2037: renderer (change)
+    - description:  homogenize WaitForUserToContinue, DoRendererIdleTasks, DoIdleOperations and WaitForRenderEngineStopFlag as they are widely identical; homogenize functionality; note that DoRendererIdleTasks() with default args has to be replaced by renderer.DoIdleTasks(0)
+    - **notes:** merged into SC.renderer.DoIdleTasks(); NOTE that this change affects your existing models a lot!
+    - date resolved: **2025-06-01 02:35**\ , date raised: 2025-05-21 
+ * Version 1.9.157: resolved Issue 2062: renderer (extension)
+    - description:  add renderer substructure to SystemContainer (with backlink to MainSystemContainer)
+    - **notes:** all examples, test models, teaching models and exudyn submodules adapted; old functionality preserved so far with warnings
+    - date resolved: **2025-06-01 02:34**\ , date raised: 2025-05-28 
+    - resolved by: CHANGE
+ * Version 1.9.156: resolved Issue 2045: visualization (extension)
+    - description:  use templated function to have only one single function for triangle drawing
+    - date resolved: **2025-05-30 01:01**\ , date raised: 2025-05-22 
+ * Version 1.9.155: resolved Issue 2066: graphics (extension)
+    - description:  add option for special shape of graphics.Brick with rounded edges, offering a transition to an ellipsoid
+    - date resolved: **2025-05-30 00:59**\ , date raised: 2025-05-29 
+ * Version 1.9.154: resolved Issue 2049: SetRenderState (fix)
+    - description:  seems to ignore autoFitScene = False and therefore does not reload zoom factor
+    - **notes:** SetRenderState is extended by a flag which by default waits until the renderer is fully started or redrawn; this can impede performance, which is why this should be set to False in such cases
+    - date resolved: **2025-05-29 16:22**\ , date raised: 2025-05-26 
+ * Version 1.9.153: resolved Issue 2065: SimulationSettings (change)
+    - description:  timeIntegration.numberOfSteps: change type to Real in order to accept steps as Python float; add warning in solver if numberOfSteps deviates significantely from integer number
+    - date resolved: **2025-05-29 15:33**\ , date raised: 2025-05-29 
+ * Version 1.9.152: resolved Issue 2064: exudyn.config (change)
+    - description:  move further options to config: SetWriteToConsole, flush always, etc.
+    - date resolved: **2025-05-29 14:47**\ , date raised: 2025-05-29 
+ * Version 1.9.151: resolved Issue 2057: PrintDelayed (fix)
+    - description:  printing from visualiuation thread: buffer is never emptied; use idle tasks to do so
+    - date resolved: **2025-05-28 01:12**\ , date raised: 2025-05-28 
+ * Version 1.9.150: resolved Issue 2055: exudyn.Print (change)
+    - description:  replace print commands in exudyn modules by exudyn.Print(...) in order to have common handling of file writing, etc.
+    - date resolved: **2025-05-28 00:08**\ , date raised: 2025-05-28 
+ * Version 1.9.149: :textred:`resolved BUG 2054` : GeneticOptimization 
+    - description:  computationIndex and parameterFunctionData do not work except for first generation
+    - date resolved: **2025-05-27 23:39**\ , date raised: 2025-05-27 
+ * Version 1.9.148: resolved Issue 2052: exudyn.Print (extension)
+    - description:  function shall accept kwargs end, flush and sep in order to be more compatible with original Python print
+    - date resolved: **2025-05-27 22:39**\ , date raised: 2025-05-27 
+ * Version 1.9.147: resolved Issue 2053: FEM (fix)
+    - description:  ComputePostProcessingModes raises error for larger problems due to print command
+    - date resolved: **2025-05-27 22:16**\ , date raised: 2025-05-27 
+ * Version 1.9.146: resolved Issue 2051: Raytracer (fix)
+    - description:  resolve parallelization issue by removing global hit count
+    - date resolved: **2025-05-26 18:58**\ , date raised: 2025-05-26 
+ * Version 1.9.145: resolved Issue 2048: Raytracer (extension)
+    - description:  add Raytracer as option; map options from openGL to Raytracer (lights, material, multiSampling, shadow, perspective, etc.)
+    - date resolved: **2025-05-26 10:51**\ , date raised: 2025-05-26 
+ * Version 1.9.144: resolved Issue 2047: graphics.Quad (extension)
+    - description:  add normals; also affects graphics.CheckerBoard; normals are not needed, but may be modified in transformations
+    - date resolved: **2025-05-25 15:40**\ , date raised: 2025-05-25 
+ * Version 1.9.143: resolved Issue 2046: Raytracer (extension)
+    - description:  add CPU-based software renderer / raytracer als option to render images for animations
+    - **notes:** note that this is experimental; image resolution shall be small (start with 400x300) as long render times may lead to problems
+    - date resolved: **2025-05-25 12:32**\ , date raised: 2025-05-25 
+ * Version 1.9.142: resolved Issue 2044: visualization (extension)
+    - description:  add option to sort transparent triangles to improve quality of transparent objects; use simple depth sort for triangle midpoints
+    - **notes:** added option openGL.depthSorting which sorts triangles by their depth for improved transparency view (but requires triangles to be small enough)
+    - date resolved: **2025-05-22 16:35**\ , date raised: 2025-05-22 
+ * Version 1.9.141: resolved Issue 2043: pyi / stub files (fix)
+    - description:  revise section for exudyn stubs in order to enable completion of exudyn.config and other exudyn functions
+    - **notes:** seems that removing erroneous info like "special." was sufficient to work
+    - date resolved: **2025-05-22 11:00**\ , date raised: 2025-05-22 
+ * Version 1.9.140: resolved Issue 2033: InertiaSphere (extension)
+    - description:  use density and radius to initialize as alternative option
+    - date resolved: **2025-05-22 10:32**\ , date raised: 2025-05-20 
+ * Version 1.9.139: resolved Issue 2042: exudyn (change)
+    - description:  move exudyn.SetLinalgOutputFormatPython(), exudyn.SetOutputPrecision(), exudyn.SetPrintDelayMilliSeconds(), exudyn.SuppressWarnings(), exudyn.InfoStat(), exudyn.GetVersionString() to according variables and functions in exudyn.config, see current docu
+    - date resolved: **2025-05-22 09:30**\ , date raised: 2025-05-22 
+ * Version 1.9.138: resolved Issue 2041: exudyn.Solve (change)
+    - description:  remove exudyn.SolveStatic exudyn.SolveDynamic and exudyn.ComputeODE2Eigenvalues from exudyn, being only available in MainSystem as mbs.SolveDynamic, etc.
+    - date resolved: **2025-05-22 08:35**\ , date raised: 2025-05-22 
+ * Version 1.9.137: resolved Issue 2040: exudyn.Demo1() (change)
+    - description:  and exudyn.Demo2() only available as exudyn.demos.Demo1() or .Demo2()
+    - date resolved: **2025-05-22 07:56**\ , date raised: 2025-05-22 
+ * Version 1.9.136: resolved Issue 2039: exudyn.Go() (change)
+    - description:  remove function Go() which is not intended to be used
+    - date resolved: **2025-05-22 07:44**\ , date raised: 2025-05-22 
+ * Version 1.9.135: resolved Issue 2038: exudyn.SetOutputPrecision (change)
+    - description:  moved to exudyn.config.outputPrecision
+    - date resolved: **2025-05-22 07:21**\ , date raised: 2025-05-22 
+ * Version 1.9.134: resolved Issue 1630: exudyn module (extension)
+    - description:  consider settings instead of putting all variables globally into module
+    - date resolved: **2025-05-22 07:20**\ , date raised: 2023-06-23 
+ * Version 1.9.133: resolved Issue 2035: exudyn.config (change)
+    - description:  collect specific settings into config structure, see also issue 1630
+    - date resolved: **2025-05-22 07:19**\ , date raised: 2025-05-21 
+ * Version 1.9.132: resolved Issue 2034: Sensors.traces (extension)
+    - description:  add trace time span for past and future traces, to limit length of traces
+    - date resolved: **2025-05-20 08:19**\ , date raised: 2025-05-20 
+ * Version 1.9.131: resolved Issue 2032: sensor traces (fix)
+    - description:  wrong description using visualizationSettings.sensorTraces in docu
+    - date resolved: **2025-05-20 08:19**\ , date raised: 2025-05-20 
+ * Version 1.9.130: resolved Issue 2028: OutputVariables (extension)
+    - description:  add outputvariables to ContactSphereTorus
+    - date resolved: **2025-05-19 20:18**\ , date raised: 2025-05-18 
+ * Version 1.9.129: resolved Issue 2024: ObjectContactFrictionCircleCable2DOld (change)
+    - description:  remove outdated object
+    - date resolved: **2025-05-18 23:35**\ , date raised: 2025-05-17 
+ * Version 1.9.128: resolved Issue 2030: SolidOfRevolution (extension)
+    - description:  add smoothingAngle for contour below which smoothing is applied
+    - date resolved: **2025-05-18 15:35**\ , date raised: 2025-05-18 
+ * Version 1.9.127: resolved Issue 2029: graphics (extension)
+    - description:  add start and end angle for minor radius of torus
+    - date resolved: **2025-05-18 11:24**\ , date raised: 2025-05-18 
+ * Version 1.9.126: resolved Issue 2022: ContactTorusSphere (extension)
+    - description:  add basic contact element; typically used for ball bearings; similar to ContactSphereSphere
+    - date resolved: **2025-05-18 00:03**\ , date raised: 2025-05-16 
+ * Version 1.9.125: resolved Issue 2027: CreateRigidBody (change)
+    - description:  if graphicsDataList is provided, node shall still be shown, but drawsize gets 0; this allows to easily show the node basis
+    - **notes:** also done for CreateMassPoint
+    - date resolved: **2025-05-17 23:30**\ , date raised: 2025-05-17 
+ * Version 1.9.124: resolved Issue 2026: graphics Tube (extension)
+    - description:  add function graphics.Tube which generates graphicsData for a tube along a line of points with axis vectors
+    - date resolved: **2025-05-17 21:48**\ , date raised: 2025-05-17 
+ * Version 1.9.123: resolved Issue 2025: Torus (extension)
+    - description:  add graphics function for torus
+    - **notes:** using graphics.Tube function
+    - date resolved: **2025-05-17 21:48**\ , date raised: 2025-05-17 
+ * Version 1.9.122: resolved Issue 1922: ContactSphereSphere (testint)
+    - description:  add test model with various contact models
+    - date resolved: **2025-05-17 00:15**\ , date raised: 2024-11-02 
+ * Version 1.9.121: resolved Issue 2023: graphics.Cylinder (extension)
+    - description:  add option to draw hollow cylinder
+    - date resolved: **2025-05-17 00:05**\ , date raised: 2025-05-17 
+ * Version 1.9.120: resolved Issue 2021: ContactSphereSphere (extension)
+    - description:  add option to include hollow sphere - sphere contact
+    - date resolved: **2025-05-16 18:10**\ , date raised: 2025-05-16 
+ * Version 1.9.119: resolved Issue 2020: version files (change)
+    - description:  remove different version files and use only a single file for .tex and .cpp
+    - date resolved: **2025-05-15 21:25**\ , date raised: 2025-05-15 
+ * Version 1.9.118: resolved Issue 2019: Numpy2.0 (fix)
+    - description:  Since Numpy2.0 __cpu_features__ are not available any more, therefore we need to find another way to automatically detect AVX2 features
+    - date resolved: **2025-05-15 20:20**\ , date raised: 2025-05-15 
+ * Version 1.9.117: resolved Issue 2012: CObjectContactCurveCircles (fix)
+    - description:  complete CheckPreAssembleConsistency
+    - date resolved: **2025-05-15 08:50**\ , date raised: 2025-05-11 
+ * Version 1.9.116: resolved Issue 2014: ContactCurveCircles (extension)
+    - description:  check damping mechanism and check negative contact forces
+    - date resolved: **2025-05-13 15:12**\ , date raised: 2025-05-11 
+ * Version 1.9.115: resolved Issue 1926: ContactCurveCircles (testing)
+    - description:  add simple test model
+    - date resolved: **2025-05-11 22:53**\ , date raised: 2024-11-04 
+ * Version 1.9.114: resolved Issue 2013: ContactCurveCircles (extension)
+    - description:  add visualization for contact circles
+    - date resolved: **2025-05-11 22:07**\ , date raised: 2025-05-11 
+ * Version 1.9.113: resolved Issue 2015: ContactSphereSphere (fix)
+    - description:  radius unused in visualization
+    - date resolved: **2025-05-11 21:44**\ , date raised: 2025-05-11 
+ * Version 1.9.112: resolved Issue 2010: ContactCurveCircles (extension)
+    - description:  change dynamic arrays to local temp arrays in CObject, similar to FFRF object
+    - date resolved: **2025-05-11 15:36**\ , date raised: 2025-05-11 
+ * Version 1.9.111: resolved Issue 2009: ContactCurveCircles (extension)
+    - description:  draw active contact segments
+    - date resolved: **2025-05-11 12:02**\ , date raised: 2025-05-11 
+ * Version 1.9.110: resolved Issue 2008: ContactCurveCircles (extension)
+    - description:  draw contact segments
+    - date resolved: **2025-05-11 12:02**\ , date raised: 2025-05-11 
+ * Version 1.9.109: :textred:`resolved BUG 2011` : ContactCurveCircles 
+    - description:  force computation not correct regarding simultaneous contact with several segments
+    - date resolved: **2025-05-11 12:01**\ , date raised: 2025-05-11 
+ * Version 1.9.108: resolved Issue 1925: ContactCurveCircles (example)
+    - description:  add example of chain drive
+    - date resolved: **2025-05-11 12:01**\ , date raised: 2024-11-04 
+ * Version 1.9.107: resolved Issue 1952: CreateTorsionalSpringDamper (testing)
+    - description:  add test example
+    - **notes:** included in createFunctionsTest
+    - date resolved: **2025-05-10 23:23**\ , date raised: 2025-02-05 
+ * Version 1.9.106: resolved Issue 2005: realtime (extension)
+    - description:  measure realtime reserve in special timers
+    - date resolved: **2025-05-10 23:18**\ , date raised: 2025-05-10 
+ * Version 1.9.105: resolved Issue 2001: Create functions (extension)
+    - description:  add automatism to create geometry from inertia objects by default (cylinder, sphere, brick, ...); using default colors
+    - date resolved: **2025-05-10 23:07**\ , date raised: 2025-05-08 
+ * Version 1.9.104: resolved Issue 2006: RigidBodyInertia (extension)
+    - description:  add self.data dictionary which stores data of special inertia classes, such as radius of cylinder, etc.; this allows to obtain geometry information
+    - date resolved: **2025-05-10 20:39**\ , date raised: 2025-05-10 
+ * Version 1.9.103: resolved Issue 1971: Create functions (extension)
+    - description:  add general test model
+    - date resolved: **2025-05-10 19:56**\ , date raised: 2025-03-05 
+ * Version 1.9.102: resolved Issue 1987: CreateCoordinateConstraint (extension)
+    - description:  add option to constrain coordinate of object via its nodes; add option to constrain single coordinates or even a list of coordinates
+    - date resolved: **2025-05-10 19:37**\ , date raised: 2025-04-08 
+ * Version 1.9.101: resolved Issue 0657: Delete item (extension)
+    - description:  add functionality to delete items, adding specific features to re-index nodes in objects/markers, etc. if a node, object or marker is deleted; add MaxItemNumber() function to systemData which returns unique name for items even after deletion
+    - **notes:** resolved by reordering dependent items; no maxItem used
+    - date resolved: **2025-05-10 01:31**\ , date raised: 2021-05-01 
+ * Version 1.9.100: resolved Issue 2004: GetJointArgs (extension)
+    - description:  add a utility function, which takes an existing marker and rotationMarker and another body to compute a new marker and rotationMarker for the other body; can be directly used as joint arguments like in revolute, prismatic or generic joints
+    - date resolved: **2025-05-09 23:59**\ , date raised: 2025-05-09 
+ * Version 1.9.99: resolved Issue 2003: GetOtherMarker (extension)
+    - description:  add a utility function, which the computes a new marker from the reference position of an existing marker and another body; for easier setup of markers
+    - date resolved: **2025-05-09 15:34**\ , date raised: 2025-05-09 
+ * Version 1.9.98: resolved Issue 1999: delete (extension)
+    - description:  add option to delete dependent markers when deleting loads
+    - date resolved: **2025-05-09 08:08**\ , date raised: 2025-05-08 
+ * Version 1.9.97: resolved Issue 1998: delete (extension)
+    - description:  add option to delete dependent markers in connectors/joints when deleting objects
+    - date resolved: **2025-05-09 08:08**\ , date raised: 2025-05-07 
+ * Version 1.9.96: resolved Issue 2000: delete (extension)
+    - description:  consistently delete loads and sensors
+    - date resolved: **2025-05-08 20:57**\ , date raised: 2025-05-08 
+ * Version 1.9.95: resolved Issue 2002: BasicTraits.h (change)
+    - description:  remove and add new AdvancedStuff.h and put there sort, atomics operations, iterators, etc. which are not needed everywhere
+    - date resolved: **2025-05-08 20:39**\ , date raised: 2025-05-08 
+ * Version 1.9.94: resolved Issue 1997: delete (extension)
+    - description:  consistently delete nodes and markers in MainSystem
+    - date resolved: **2025-05-08 13:35**\ , date raised: 2025-05-06 
+ * Version 1.9.93: resolved Issue 1985: CreateFunctions (extension)
+    - description:  check pyi files and workflows to enable code completion and navigation in Spyder with Create functions
+    - **notes:** shall be resolved with issue 1996, as it natively derives from C++ class
+    - date resolved: **2025-05-06 22:20**\ , date raised: 2025-04-02 
+ * Version 1.9.92: resolved Issue 1986: ObjectMassPoint (extension)
+    - description:  add outputvariables rotation matrix and angular velocity (also to NodePoint) in order to allow spherical joint to be attached.
+    - date resolved: **2025-05-06 22:12**\ , date raised: 2025-04-08 
+ * Version 1.9.91: :textred:`resolved BUG 1995` : Sensor 
+    - description:  case SensorType::KinematicTree missing in GetTypeDependentIndex
+    - date resolved: **2025-05-06 17:13**\ , date raised: 2025-05-06 
+ * Version 1.9.90: resolved Issue 1994: pybind11 (fix)
+    - description:  local files using pybind11 2.6, not suitable for Numpy >= 2.0
+    - date resolved: **2025-05-06 16:44**\ , date raised: 2025-05-06 
+ * Version 1.9.89: resolved Issue 1993: MSVC (fix)
+    - description:  compilation/execution of Exudyn in MSVC and python differ considerably
+    - date resolved: **2025-05-06 16:00**\ , date raised: 2025-05-06 
+ * Version 1.9.88: resolved Issue 1992: CSystem (fix)
+    - description:  systemIsConsistent used instead of systemIsInteger in CheckSystemIntegrity
+    - date resolved: **2025-05-06 12:07**\ , date raised: 2025-05-06 
+ * Version 1.9.87: resolved Issue 1991: MainSystem (fix)
+    - description:  Node, Object, Marker, ... functions have wrong internal range check (not including invalid index)
+    - date resolved: **2025-05-05 22:43**\ , date raised: 2025-05-05 
+ * Version 1.9.86: resolved Issue 1990: delete object (extension)
+    - description:  first step to fulfill issue 657; reorder markers and sensors and assign invalid object number if object is used; add assemble check function for invalid indices
+    - date resolved: **2025-05-05 22:18**\ , date raised: 2025-05-05 
+ * Version 1.9.85: resolved Issue 1984: FEM (extension)
+    - description:  Load/Save of FEM and FFRF data: default value NPY switched to NPZ due to Numpy2.x conflicts; for compatibility set mode to NPY
+    - **notes:** all load/save functions should work with npy, npz, pkl and hdf5
+    - date resolved: **2025-04-01 19:21**\ , date raised: 2025-04-01 
+ * Version 1.9.84: resolved Issue 1983: FEM (change)
+    - description:  adjust Load/Save functions to by-default support hdf5 or pkl as npy does not work with numpy 2.0
+    - **notes:** changed ObjectFFRFreducedOrderInterface and FEM class to by default use numpy NPZ format
+    - date resolved: **2025-04-01 16:44**\ , date raised: 2025-04-01 
  * Version 1.9.83: resolved Issue 1982: SolutionViewer (extension)
     - description:  add option Make mp4 to create videos with python ffmpeg lib
     - date resolved: **2025-04-01 08:51**\ , date raised: 2025-04-01 
@@ -189,8 +685,9 @@ Version 1.9
     - description:  add option to use restitution coefficient
     - date resolved: **2024-11-04 23:32**\ , date raised: 2024-11-02 
  * Version 1.9.33: resolved Issue 1919: ContactSphereSphere (extension)
-    - description:  extend for nonlinear contact model
+    - description:  extend for nonlinear contact models; in particular restitution coefficient and adhesive elasto-plastic contact model
     - date resolved: **2024-11-04 23:32**\ , date raised: 2024-11-02 
+    - resolved by: S. Weyrer
  * Version 1.9.32: resolved Issue 1918: ContactSphereSphere (extension)
     - description:  add basic contact object for sphere-sphere contact, with options for linear and nonlinear contact models as well as adhesion
     - date resolved: **2024-11-02 11:49**\ , date raised: 2024-11-02 
@@ -1188,7 +1685,7 @@ Version 1.6
     - date resolved: **2023-06-03 17:01**\ , date raised: 2023-06-03 
  * Version 1.6.129: resolved Issue 1356: CHECK (extension)
     - description:  Add security question on quit/escape if computation Renderer runs longer than 15 minutes
-    - **notes:** added message in render window to click twice on exit window icon (X) after 15 seconds; key Q and escape get tkinter message box
+    - **notes:** added message in render window to click twice on exit window icon (X) after 15 minutes; key Q and escape get tkinter message box
     - date resolved: **2023-06-03 16:00**\ , date raised: 2023-01-01 
  * Version 1.6.128: resolved Issue 1592: SolverBase it.endTime (fix)
     - description:  in dynamic solver it.endTime is overwritten with simulationSettings.timeIntegration.endTime; this is against the description and does not allow to change it.endTime in command window; remove overwritting to be consistent with description of Execute Command and Help section in EXUDYN Basics
@@ -5728,29 +6225,65 @@ Version 0.1
 Open issues
 ***********
 
+ * **open issue 2131:** ObjectContact       
+    - description:  add rolling resistance
+    - date raised: 2025-07-05 
+
+ * **open issue 2130:** ObjectContact       
+    - description:  consider changing contact objects like SphereSphere, SphereTriangle, etc. to switch in PostNewtonStep based on force sign rather than gap sign; possibly use global switch
+    - date raised: 2025-07-05 
+
+ * **open issue 2120:** Screw graphics      
+    - description:  add function to generate graphics for screw
+    - date raised: 2025-07-02 
+
+ * **open issue 2110:** solver              
+    - description:  add flag for local frame implicit solver, computing jacobians in local frame and using specific step updates
+    - date raised: 2025-06-24 
+
+ * **open issue 2109:** DOPRI5              
+    - description:  DOPRI5 automatic step size not working well with discontinuities (ContactSphereSphere, etc.)
+    - date raised: 2025-06-22 
+
+ * **open issue 2106:** Chain drive         
+    - description:  add function to create chain gears as well as geometry from chain drive; calculate length similar to reeving system, but with two chains (and kinck) to compensate length
+    - date raised: 2025-06-21 
+
+ * **open issue 2097:** ContactSphereTriangle
+    - description:  add frictionStiffness similar to bristle model in ANCF contact
+    - date raised: 2025-06-15 
+
+ * **open issue 2075:** GetDictionary       
+    - description:  add read/write dict access for new structures SC.renderer and exudyn.config
+    - date raised: 2025-06-02 
+
+ * **open issue 2017:** ContactCurveCircles 
+    - description:  implement polynomial enhancements
+    - date raised: 2025-05-13 
+
+ * **open issue 2016:** ContactCurveCircles 
+    - description:  add output variables
+    - date raised: 2025-05-11 
+
+ * **open issue 2007:** solver timers       
+    - description:  add special timer for Python user functions, as solver timer for python does not include user functions
+    - date raised: 2025-05-10 
+
+ * **open issue 1996:** MainSystemExtensions
+    - description:  expose MainSystem as MainSystemBase into python; derive Python class MainSystem from MainSystemBase in MainSystemExtensions; this should increase visibility of Python code!
+    - date raised: 2025-05-06 
+
+ * **open issue 1989:** Body force sensor   
+    - description:  add force sensor option for single-noded bodies and bodies which do not share nodes (mass points, rigid bodies, ffrf); for rigid bodies, obtains force and torque; for FFRF, it is generalized force; implement in a way that the contributions of loads are computed like in GeneralContact - based on a flag -, as soon as a BodySensor measures a force or torque
+    - date raised: 2025-04-15 
+
+ * **open issue 1988:** exceptions          
+    - description:  change 'except:' to 'except Exception as e:' as this passes through the keyboard interrupts, which is better for parameter variation and other long-running codes
+    - date raised: 2025-04-10 
+
  * **open issue 1977:** solver              
     - description:  check if solver can raise full solver error message in exception, in order to alleviate tracing during automated code evaluation in SolveStatic and SolveDynamic
     - date raised: 2025-03-30 
-
- * **open issue 1971:** Create functions    
-    - description:  add general test model
-    - date raised: 2025-03-05 
-
- * **open issue 1961:** CreateSphereQuadContact
-    - description:  add create function, which uses 2 CreateSphereTriangleContact elements; should be practical for simple robots, etc.
-    - date raised: 2025-02-24 
-
- * **open issue 1960:** ObjectContactSphereTriangle
-    - description:  add contact similar to GeneralContact and to ObjectContactSphereSphere, but being able to be computed implicitly; add option to exclude certain edges to be able to also correctly handle meshes
-    - date raised: 2025-02-24 
-
- * **open issue 1959:** SphereSphereContact 
-    - description:  check that position marker works without friction
-    - date raised: 2025-02-24 
-
- * **open issue 1958:** CreateSphereSphereContact
-    - description:  add Create function, including data node; similar to spring-damper; add checks that in case of friction, a rigid body marker is required
-    - date raised: 2025-02-24 
 
  * **open issue 1956:** items docu          
     - description:  add representative figure to each item
@@ -5762,10 +6295,6 @@ Open issues
 
  * **open issue 1953:** CreateLinearSpringDamper
     - description:  add create function to MainSystem
-    - date raised: 2025-02-05 
-
- * **open issue 1952:** CreateTorsionalSpringDamper
-    - description:  add test example
     - date raised: 2025-02-05 
 
  * **open issue 1947:** GeneralContact      
@@ -5784,21 +6313,9 @@ Open issues
     - description:  GetURDFrobotData: check for import of other scene information than mesh; check for import of collision
     - date raised: 2024-11-10 
 
- * **open issue 1926:** ContactCurveCircles 
-    - description:  add simple test model
-    - date raised: 2024-11-04 
-
- * **open issue 1925:** ContactCurveCircles 
-    - description:  add example of chain drive
-    - date raised: 2024-11-04 
-
  * **open issue 1924:** ContactCurveCircles 
     - description:  extend to frictional contact
     - date raised: 2024-11-04 
-
- * **open issue 1922:** ContactSphereSphere 
-    - description:  add test model with various contact models
-    - date raised: 2024-11-02 
 
  * **open issue 1920:** ContactSphereSphere 
     - description:  add autodiff Jacobian
@@ -5932,10 +6449,6 @@ Open issues
     - description:  add set of generically generated examples, generated examples
     - date raised: 2023-12-08 
 
- * **open issue 1695:** taskmanager         
-    - description:  extend microthreading for taskmanager-based load management; remove taskmanager from repo and create pure BSD license
-    - date raised: 2023-11-19 
-
  * **open issue 1684:** ObjectIndex         
     - description:  consider functionality such as ComputeMassMatrix; ComputeODE2RHS, etc.; would require some default simulation settings (store in mainsystem?)
     - date raised: 2023-10-29 
@@ -5987,10 +6500,6 @@ Open issues
  * **open issue 1631:** velocityOffset      
     - description:  add to CartesianSpringDamper, RigidBodySpringDamper
     - date raised: 2023-06-26 
-
- * **open issue 1630:** exudyn module       
-    - description:  consider settings instead of putting all variables globally into module
-    - date raised: 2023-06-23 
 
  * **open issue 1614:** static members      
     - description:  LinearSolver GeneralMatrixEXUdense::FactorizeNew has static ResizableMatrix m, which should be turned into class members; add reset method to free memory at solver finalization
@@ -6388,10 +6897,6 @@ Open issues
     - description:  check JacobianAE: jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_ODE2_t ... if _t is correctly used
     - date raised: 2021-06-28 
 
- * **open issue 0657:** Delete item         
-    - description:  add functionality to delete items, adding specific features to re-index nodes in objects/markers, etc. if a node, object or marker is deleted; add MaxItemNumber() function to systemData which returns unique name for items even after deletion
-    - date raised: 2021-05-01 
-
  * **open issue 0648:** solver tutorial     
     - description:  create video with frequent solver errors and FAQ
     - date raised: 2021-05-01 
@@ -6595,6 +7100,10 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2127:` ContactSphereTorus  
+    - description:  check torques on both bodies, as there seems to be momentum conservation issues in ball bearings
+    - date raised: 2025-07-03 
 
  * :textred:`open BUG 1889:` symbolic            
     - description:  GetLoad and similar functions do not work with symbolic user functions and raise TypeError: Object of type 'exudyn.exudynCPP.symbolic.UserFunction' is not an instance of 'function'; see also issue with mbs.GetDictionary()

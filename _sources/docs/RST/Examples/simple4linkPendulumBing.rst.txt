@@ -82,8 +82,8 @@ You can view and download this file on Github: `simple4linkPendulumBing.py <http
    simulationSettings.solutionSettings.writeSolutionToFile = True
    simulationSettings.solutionSettings.solutionWritePeriod = 0.01
    
-   exu.StartRenderer()
-   mbs.WaitForUserToContinue()
+   SC.renderer.Start()
+   SC.renderer.DoIdleTasks()
    mbs.SolveDynamic(simulationSettings)
-   exu.StopRenderer()
+   SC.renderer.Stop()
 

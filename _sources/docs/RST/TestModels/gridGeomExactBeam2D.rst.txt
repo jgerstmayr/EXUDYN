@@ -172,16 +172,16 @@ You can view and download this file on Github: `gridGeomExactBeam2D.py <https://
    
    ## start graphics
    if useGraphics:
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
    
    ## start dynamic solver
    mbs.SolveDynamic(simulationSettings)
    
    ## stop graphics        
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    ## read and print solution
    uLast = mbs.GetNodeOutput(nodeIndices[-1,-1], exu.OutputVariableType.Coordinates)

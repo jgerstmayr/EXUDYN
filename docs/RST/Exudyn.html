@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>Exudyn &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -39,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -81,7 +81,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -104,16 +104,14 @@
 <section id="exudyn">
 <h1>Exudyn<a class="headerlink" href="#exudyn" title="Link to this heading"></a></h1>
 <p><strong>A flexible multibody dynamics systems simulation code with Python and C++</strong></p>
-<p>Exudyn version = 1.9.83.dev1 (Krall)</p>
 <ul class="simple">
+<li><p>Exudyn version = 1.10.0 (Lagrene)</p></li>
 <li><p><strong>University of Innsbruck</strong>, Department of Mechatronics, Innsbruck, Austria</p></li>
 </ul>
-<p>If you like using Exudyn, please add a <em>star</em> on github and follow us on
-<a class="reference external" href="https://twitter.com/RExudyn">Twitter &#64;RExudyn</a> !</p>
 <p><strong>Update on Exudyn V1.9.0</strong>: newer examples use <code class="docutils literal notranslate"><span class="pre">exudyn.graphics</span></code> instead of <code class="docutils literal notranslate"><span class="pre">GraphicsData</span></code> functions. FEM now uses internally in mass and stiffness matrices the scipy sparse csr matrices.</p>
 <ul class="simple">
-<li><p><strong>Exudyn</strong> is <em>free, open source</em> and with plenty of <em>documentation</em> and <em>examples</em></p></li>
-<li><p><strong>pre-built</strong> for Python 3.8 - 3.12 under <strong>Windows</strong> , <strong>Linux</strong> and <strong>MacOS</strong> available ( <strong>NEW</strong> : now with manylinux2014 compatibility and PEP518 build); build wheels yourself, see <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a> )</p></li>
+<li><p><strong>Exudyn</strong> is <em>free, open source</em> and with plenty of <em>documentation</em>, <em>examples</em>, and <em>test models</em></p></li>
+<li><p><strong>pre-built</strong> for Python 3.9 - 3.13 under <strong>Windows</strong> , <strong>Linux</strong> and <strong>MacOS</strong> available ( older versions available for Python &gt;= 3.6); build wheels yourself, see <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a> )</p></li>
 <li><p>Exudyn can be linked to any other Python package, but we explicitly mention: <a class="reference external" href="https://github.com/NGSolve/ngsolve">NGsolve</a>, <a class="reference external" href="https://github.com/openai">OpenAI</a>, <a class="reference external" href="https://github.com/openai/gym">OpenAI gym</a>, <a class="reference external" href="https://github.com/petercorke/robotics-toolbox-python">Robotics Toolbox (Peter Corke)</a>, <a class="reference external" href="https://github.com/pybind/pybind11">Pybind11</a></p></li>
 </ul>
 <p><a class="reference internal" href="../../_images/pistonEngine.gif"><img alt="pic1" src="../../_images/pistonEngine.gif" style="width: 200px;" /></a> <a class="reference internal" href="../../_images/hydraulic2arm.gif"><img alt="pic2" src="../../_images/hydraulic2arm.gif" style="width: 200px;" /></a> <a class="reference internal" href="../../_images/particles2M.gif"><img alt="pic3" src="../../_images/particles2M.gif" style="width: 120px;" /></a> <a class="reference internal" href="../../_images/shaftGear.png"><img alt="pic4" src="../../_images/shaftGear.png" style="width: 160px;" /></a> <a class="reference internal" href="../../_images/rotor_runup_plot3.png"><img alt="pic5" src="../../_images/rotor_runup_plot3.png" style="width: 190px;" /></a> <a class="reference internal" href="../../_images/DrawSystemGraphExample.png"><img alt="pic6" src="../../_images/DrawSystemGraphExample.png" style="width: 240px;" /></a></p>
@@ -123,11 +121,14 @@
 </ul>
 <p>Due to limitations for complex formulas, images and references in .rst files, some (small) details are only available in theDoc.pdf, see the <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">github page of Exudyn</a>! There may also be some conversion errors in the auto-generated html pages.</p>
 <p>For license, see LICENSE.txt in the root github folder on github!</p>
-<p>In addition to the tutorial in the documentation, many ( <strong>250+</strong> ) examples can be downloaded on github under main/pythonDev/Examples and main/pythonDev/TestModels . They are also on ReadTheDocs.</p>
+<p>If you like using Exudyn, please add a <em>star</em> on github and follow us on
+<a class="reference external" href="https://twitter.com/RExudyn">Twitter &#64;RExudyn</a> !</p>
+<p>In addition to the tutorials in the documentation, many ( <strong>250+</strong> ) examples can be downloaded on github under main/pythonDev/Examples and main/pythonDev/TestModels . They are also on ReadTheDocs.</p>
 <p>Note that <strong>ChatGPT</strong> and other large language models know Exudyn quite well. They are able to build parts of your code or even full models, see <a class="reference external" href="https://doi.org/10.1007/s11044-023-09962-0">https://doi.org/10.1007/s11044-023-09962-0</a></p>
-<p>Tutorial videos ( <strong>new Feb 2024</strong> )can be found in the <a class="reference external" href="https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx">youtube channel of Exudyn</a> !</p>
+<p>Tutorial videos can be found in the <a class="reference external" href="https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx">YouTube channel of Exudyn</a> !</p>
 <p><strong>NOTE</strong>: <strong>NumPy</strong> switched to version 2.x which causes problems with packages that are not adapted to NumPy 2.x.
-The current version of Exudyn is already compatible with NumPy 2.x AND 1.x, however, some external packages (SciPy, robotics tools, etc.) cause problems.</p>
+The current version of Exudyn is already compatible with NumPy 2.x AND 1.x, however, some external packages (SciPy, robotics tools, etc.) may cause problems, therefore you could still use Numpy 1.26 (not available for Python &gt;= 3.13).</p>
+<p><strong>NOTE</strong>: We finally like to emphasize that this is an open source library; we receive no specific money and most developements are done during free (=night) time; some models are simplifications that work for our needs, but may not be appropriate in your case; some models are under development (usually stated in theDoc) or may have bugs, therefore do not fully rely on all elements of the library!</p>
 <p>Enjoy the Python library for multibody dynamics modeling, simulation, creating large scale systems, parameterized systems, component mode synthesis, optimization, …</p>
 <p>Changes can be tracked in the <a class="reference internal" href="trackerlog.html#sec-issuetracker"><span class="std std-ref">Issue tracker</span></a></p>
 <p>For searching on Read the Docs (especially with the search preview), add * or ~1 / ~2 / … to your search to search more general, e.g., FEMinter* to search for FEMinterface, or objetfrf~3 to find ObjectFFRF. Your search preview usually finds less results than the search when pressing Enter. See also <a class="reference external" href="https://docs.readthedocs.io/en/stable/server-side-search/syntax.html#special-queries">Read the Docs documentation</a></p>

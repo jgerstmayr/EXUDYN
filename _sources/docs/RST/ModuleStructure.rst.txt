@@ -37,11 +37,14 @@ Python parts, see \ :numref:`fig-exudyn-candpython`\ .
 +  \ **C++ parts**\ , see \ :numref:`fig-exudyn-cpp`\  and \ :numref:`fig-system-overview`\ :
   
  -  \ ``exudyn``\ :
-    on this level, there are just very few functions: \ ``SystemContainer()``\ , \ ``StartRenderer()``\ , \ ``StopRenderer()``\ , \ ``GetVersionString()``\ , \ ``SolveStatic(...)``\ , \ ``SolveDynamic(...)``\ , ... as well as system and user variable dictionaries \ ``exudyn.variables``\  and \ ``exudyn.sys``\ 
+    on this level, there are just very few functions: \ ``SystemContainer()``\ , \ ``SC.renderer.Start()``\ , \ ``SC.renderer.Stop()``\ , \ ``SolveStatic(...)``\ , \ ``SolveDynamic(...)``\ , ... as well as system and user variable dictionaries \ ``exudyn.variables``\  and \ ``exudyn.sys``\ 
+ -  \ ``config``\ , \ ``special``\ : substructures for configuration (global settings) and special settings; use e.g. \ ``exudyn.config.outputPrecision=4``\ 
+ -  \ ``symbolic``\ : tools for symbolic computation in user functions (speedup!)
  -  \ ``SystemContainer``\ : contains the systems (most important), solvers (static, dynamics, ...), visualization settings
- -  \ ``mbs``\ : \ :ref:`mbs <mbs>`\  created with \ ``mbs = SC.AddSystem()``\ , this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
+ -  \ ``MainSystem``\  \ ``mbs``\ : \ :ref:`mbs <mbs>`\  created with \ ``mbs = SC.AddSystem()``\ , this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers, 
     loads can added to the system, see Section :ref:`sec-item-reference-manual`\ ;
  -  \ ``mbs.systemData``\ : contains the initial, current, visualization, ... states of the system and holds the items, see \ :numref:`fig-system-overview`\ 
+ -  \ ``SimulationSettings``\ : contains the systems (most important), solvers (static, dynamics, ...), visualization settings
   
 +  \ **Python parts**\  (this list is continuously extended, see Section :ref:`sec-pythonutilityfunctions`\ ):
   

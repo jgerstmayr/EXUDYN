@@ -64,6 +64,14 @@ DESCRIPTION of NodePoint
   | velocity coordinates vector of node
 * | ``Coordinates\_tt``\ : \ :math:`\ddot{\mathbf{c}}\cConfig = {\mathbf{a}}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\tp\cConfig`\ 
   | acceleration coordinates vector of node
+* | ``RotationMatrix``\ : 
+  | identity matrix (only for completeness)
+* | ``Rotation``\ : \ :math:`[0,0,0]`\ 
+  | (only for completeness)
+* | ``AngularVelocity``\ : \ :math:`[0,0,0]`\ 
+  | (only for completeness)
+* | ``AngularVelocityLocal``\ : \ :math:`[0,0,0]`\ 
+  | (only for completeness)
 
 
 

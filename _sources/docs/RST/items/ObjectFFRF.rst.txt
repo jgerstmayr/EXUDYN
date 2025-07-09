@@ -323,7 +323,7 @@ with \ :math:`{\mathbf{M}} = \LU{b}{{\mathbf{M}}}`\  and \ :math:`\hat {\mathbf{
 Note that Eq. :eq:`eq-objectffrf-leq`\  is given in global coordinates for the translational part, in terms of rotation parameters
 for the rotation part and in body-fixed coordinates for the flexible part of the equations.
 
-In case that \ ``computeFFRFterms = True``\ , the equations  :ref:`eq-objectffrf-leq`\  can be transformed into the equations of motion,
+In case that \ ``computeFFRFterms = True``\ , Eqs. :eq:`eq-objectffrf-leq`\  can be transformed into the equations of motion,
 
 .. math::
    :label: eq-objectffrf-eom

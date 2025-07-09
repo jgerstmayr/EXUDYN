@@ -53,6 +53,14 @@ DESCRIPTION of ObjectMassPoint
   | global velocity vector of mass point
 * | ``Acceleration``\ : \ :math:`\LU{0}{{\mathbf{a}}}\cConfig = \LU{0}{\ddot{\mathbf{u}}}\cConfig = [\ddot q_0,\;\ddot q_1,\;\ddot q_2]\cConfig\tp`\ 
   | global acceleration vector of mass point
+* | ``RotationMatrix``\ : 
+  | identity matrix (only for completeness)
+* | ``Rotation``\ : \ :math:`[0,0,0]`\ 
+  | (only for completeness)
+* | ``AngularVelocity``\ : \ :math:`[0,0,0]`\ 
+  | (only for completeness)
+* | ``AngularVelocityLocal``\ : \ :math:`[0,0,0]`\ 
+  | (only for completeness)
 
 
 

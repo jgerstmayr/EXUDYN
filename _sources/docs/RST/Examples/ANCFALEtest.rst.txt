@@ -172,8 +172,8 @@ You can view and download this file on Github: `ANCFALEtest.py <https://github.c
    SC.visualizationSettings.loads.show = False
          
    if useGraphics:
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
    
    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #static step
@@ -199,7 +199,7 @@ You can view and download this file on Github: `ANCFALEtest.py <https://github.c
                                         configuration = exudyn.ConfigurationType.Initial)
    
    if useGraphics:
-       mbs.WaitForUserToContinue()
+       SC.renderer.DoIdleTasks()
    
    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #finally: solve dynamic problem under self weight
@@ -217,8 +217,8 @@ You can view and download this file on Github: `ANCFALEtest.py <https://github.c
                               )
    
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!        
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!        
    
        plt.close('all')
        if True:

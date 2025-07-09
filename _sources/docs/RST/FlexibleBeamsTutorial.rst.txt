@@ -174,9 +174,9 @@ because simulation may be faster than you can follow:
 
 .. code-block:: python
 
-  exu.StartRenderer()
+  SC.renderer.Start()
   mbs.SolveDynamic(simulationSettings)
-  exu.StopRenderer()
+  SC.renderer.Stop()
 
   ## visualize computed solution:
   mbs.SolutionViewer()

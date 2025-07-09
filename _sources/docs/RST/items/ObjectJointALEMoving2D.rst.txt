@@ -26,8 +26,8 @@ The item \ **ObjectJointALEMoving2D**\  with type = 'JointALEMoving2D' has the f
   | a list of sn (global) marker numbers which are are used to update marker1
 * | **slidingMarkerOffsets** [\ :math:`[d_{s0}, \ldots, d_{sn}]`\ , type = Vector, default = []]:
   | this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker0: offset=0, marker1: offset=Length(cable0), marker2: offset=Length(cable0)+Length(cable1), ...
-* | **slidingOffset** [\ :math:`s_{off}`\ , type = Real, default = 0.]:
-  | sliding offset list [SI:m]: a list of sn scalar offsets, which represent the (reference arc) length of all previous sliding cable elements
+* | **slidingOffset** [\ :math:`s_\mathrm{off}`\ , type = Real, default = 0.]:
+  | sliding offset [SI:m]: a scalar offset, which represents the (reference arc) length of all previous sliding cable elements
 * | **nodeNumbers** [\ :math:`[n_{GD}, n_{ALE}]`\ , type = ArrayNodeIndex, default = [ invalid [-1], invalid [-1] ]]:
   | node number of NodeGenericData (GD) with one data coordinate and of NodeGenericODE2 (ALE) with one \ :ref:`ODE2 <ODE2>`\  coordinate
 * | **usePenaltyFormulation** [type = Bool, default = False]:
@@ -64,7 +64,7 @@ DESCRIPTION of ObjectJointALEMoving2D
   | current global position of position marker \ :math:`m0`\ 
 * | ``Velocity``\ : \ :math:`\LU{0}{{\mathbf{v}}}_{m0}`\ 
   | current global velocity of position marker \ :math:`m0`\ 
-* | ``SlidingCoordinate``\ : \ :math:`s_g = q_{ALE} + s_{off}`\ 
+* | ``SlidingCoordinate``\ : \ :math:`s_g = q_{ALE} + s_\mathrm{off}`\ 
   | current value of the global sliding ALE coordinate, including offset; note that reference coordinate of \ :math:`q_{ALE}`\  is ignored!
 * | ``Coordinates``\ : \ :math:`[x_{data0},\,q_{ALE}]\tp`\ 
   | provides two values: [0] = current sliding marker index, [1] = ALE sliding coordinate
@@ -132,7 +132,7 @@ The element sliding coordinate (in the local coordinates of the current sliding 
 
 .. math::
 
-   s_{el} = q_{ALE} + s_{off} - d_{m1} = s_g - d_{m1}.
+   s_{el} = q_{ALE} + s_\mathrm{off} - d_{m1} = s_g - d_{m1}.
 
 
 For the description of the according quantities, see the description above. The distance \ :math:`d_{m1}`\  is obtained from the \ ``slidingMarkerOffsets``\  list, using the current (local) index \ :math:`x_{data0}`\ .

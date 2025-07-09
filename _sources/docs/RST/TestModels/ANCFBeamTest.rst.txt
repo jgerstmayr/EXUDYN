@@ -283,34 +283,8 @@ You can view and download this file on Github: `ANCFBeamTest.py <https://github.
        # exu.Print('M=',M.round(1))
    
        if useGraphics:
-           exu.StartRenderer()
-           mbs.WaitForUserToContinue()
-   
-       # if computeEigenmodes:
-       #     nModes = 3*(1+int(compute3D))
-       #     nRigidModes = 3*(1+int(compute3D))
-       #     if compute2D:
-       #         constrainedCoordinates=[0,1,mbs.systemData.ODE2Size()-2]
-       #     else:
-       #         constrainedCoordinates=[0,1,2,5,mbs.systemData.ODE2Size()-8,mbs.systemData.ODE2Size()-7]
-       
-       #     # constrainedCoordinates=[]
-           
-       #     compeig=mbs.ComputeODE2Eigenvalues(simulationSettings, useSparseSolver=False, 
-       #                                 numberOfEigenvalues= nRigidModes+nModes, 
-       #                                 constrainedCoordinates=constrainedCoordinates,
-       #                                 convert2Frequencies= False)
-       
-       #     exu.Print('eigvalues=',np.sqrt(compeig[0][nRigidModes:]))
-           
-       #     if False: #show modes:
-       #         for i in range(nModes):
-       #             iMode = nRigidModes+i
-       #             mbs.systemData.SetODE2Coordinates(5*compeig[1][:,iMode], exudyn.ConfigurationType.Visualization)
-       #             mbs.systemData.SetTime(np.sqrt(compeig[0][iMode]), exudyn.ConfigurationType.Visualization)
-       #             mbs.SendRedrawSignal()
-           
-       #             mbs.WaitForUserToContinue()
+           SC.renderer.Start()
+           SC.renderer.DoIdleTasks()
    
        # else:
        mbs.SolveStatic(simulationSettings)
@@ -319,8 +293,8 @@ You can view and download this file on Github: `ANCFBeamTest.py <https://github.
        
    
        if useGraphics:
-           SC.WaitForRenderEngineStopFlag()
-           exu.StopRenderer() #safely close rendering window!
+           SC.renderer.DoIdleTasks()
+           SC.renderer.Stop() #safely close rendering window!
        
        ##evaluate final (=current) output values
        uTip = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacement)

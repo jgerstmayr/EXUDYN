@@ -30,7 +30,7 @@ You can view and download this file on Github: `ANCFswitchingSlidingJoint2D.py <
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
-   print('EXUDYN version='+exu.GetVersionString())
+   print('EXUDYN version='+exu.config.Version())
    
    #testInterface = TestInterface(exudyn = exu, systemContainer = SC, useGraphics=False)
    #RunAllModelUnitTests(mbs, testInterface)
@@ -237,7 +237,7 @@ You can view and download this file on Github: `ANCFswitchingSlidingJoint2D.py <
    mbs.SetPreStepUserFunction(UFgondulaReset)
    
    
-   exu.StartRenderer()
+   SC.renderer.Start()
    mbs.SolveDynamic(simulationSettings)
    
    if False:
@@ -280,7 +280,7 @@ You can view and download this file on Github: `ANCFswitchingSlidingJoint2D.py <
                coordsData[LTGdata[0]] = 0 #initial sliding marker index
                coordsData[LTGdata[1]] = 0 #initial (start of step) sliding coordinate
                mbs.systemData.SetDataCoordinates(coordsData,configuration = exu.ConfigurationType.Current) #is used as startOfStep for next step
-               #mbs.WaitForUserToContinue()
+               #SC.renderer.DoIdleTasks()
            
            
            
@@ -290,8 +290,8 @@ You can view and download this file on Github: `ANCFswitchingSlidingJoint2D.py <
            mbs.systemData.SetAECoordinates(coordsAE,configuration = exu.ConfigurationType.Initial)
    
    
-   SC.WaitForRenderEngineStopFlag()
-   exu.StopRenderer() #safely close rendering window!
+   SC.renderer.DoIdleTasks()
+   SC.renderer.Stop() #safely close rendering window!
    
 
 

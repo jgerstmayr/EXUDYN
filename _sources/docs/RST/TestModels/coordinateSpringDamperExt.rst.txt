@@ -249,7 +249,6 @@ You can view and download this file on Github: `coordinateSpringDamperExt.py <ht
    
    
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   #print(mbs)
    mbs.Assemble()
    
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -277,14 +276,14 @@ You can view and download this file on Github: `coordinateSpringDamperExt.py <ht
    SC.visualizationSettings.general.autoFitScene = False #otherwise, renderState not accepted for zoom
    
    if useGraphics: 
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
    
    mbs.SolveDynamic(simulationSettings)
    
    if useGraphics: 
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    sol = mbs.systemData.GetODE2Coordinates()
    exudynTestGlobals.testResult = np.sum(abs(sol))

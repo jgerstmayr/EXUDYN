@@ -22,7 +22,7 @@ VSettingsGeneral has the following items:
 
 * | **autoFitScene** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.general.autoFitScene``\ 
-  | automatically fit scene within startup after StartRenderer()
+  | automatically fit scene within startup after SC.renderer.Start()
 * | **axesTiling** [type = PInt, default = 12]:
   | \ ``SC.visualizationSettings.general.axesTiling``\ 
   | global number of segments for drawing cylinders for axes and cones for arrows (reduce this number, e.g. to 4, if many axes are drawn)
@@ -109,7 +109,7 @@ VSettingsGeneral has the following items:
   | true = use vertical gradient for background; 
 * | **useMultiThreadedRendering** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.general.useMultiThreadedRendering``\ 
-  | true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); set this parameter before call to exudyn.StartRenderer(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW
+  | true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); set this parameter before call to SC.renderer.Start(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW
 * | **useWindowsDisplayScaleFactor** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.general.useWindowsDisplayScaleFactor``\ 
   | the Windows display scaling (monitor scaling; content scaling) factor is used for increased visibility of texts on high resolution displays; based on GLFW glfwGetWindowContentScale; deactivated on linux compilation as it leads to crashes (adjust textSize manually!)
@@ -128,6 +128,9 @@ Settings for contour plots; use these options to visualize field data, such as d
 
 VSettingsContour has the following items:
 
+* | **alphaTransparency** [type = float, default = 1, size = 1]:
+  | \ ``SC.visualizationSettings.contour.alphaTransparency``\ 
+  | default value for contour alpha transparency (RGB color computed from contour value)
 * | **automaticRange** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.contour.automaticRange``\ 
   | if true, the contour plot value range is chosen automatically to the maximum range
@@ -286,7 +289,7 @@ VSettingsBodies has the following items:
   | visualization settings for kinematic tree
 * | **defaultColor** [type = Float4, default = [0.3,0.3,1.,1.], size = 4]:
   | \ ``SC.visualizationSettings.bodies.defaultColor``\ 
-  | default RGBA color for bodies; 4th value is 
+  | default RGBA color for bodies; 4th value is alpha-transparency
 * | **defaultSize** [type = Float3, default = [1.,1.,1.], size = 3]:
   | \ ``SC.visualizationSettings.bodies.defaultSize``\ 
   | global body size of xyz-cube
@@ -331,7 +334,7 @@ VSettingsConnectors has the following items:
   | flag to decide, whether the connectors are shown
 * | **showContact** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.connectors.showContact``\ 
-  | flag to decide, whether contact points, lines, etc. are shown
+  | flag to decide, whether contact points, lines, etc. are shown for special cable-circle contacts; for spheres, triangles, tori, see visualizationSettings.contact
 * | **showJointAxes** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.connectors.showJointAxes``\ 
   | flag to decide, whether contact joint axes of 3D joints are shown
@@ -410,65 +413,68 @@ VSettingsLoads has the following items:
 
 
 
-.. _sec-vsettingssensortraces:
+.. _sec-vsettingstraces:
 
-VSettingsSensorTraces
----------------------
+VSettingsTraces
+---------------
 
 Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solutionSettings.sensorsWritePeriod) may lead to slow graphics.
 
-VSettingsSensorTraces has the following items:
+VSettingsTraces has the following items:
 
 * | **lineWidth** [type = UFloat, default = 2.]:
-  | \ ``SC.visualizationSettings.sensorTraces.lineWidth``\ 
+  | \ ``SC.visualizationSettings.sensors.traces.lineWidth``\ 
   | line width for traces
 * | **listOfPositionSensors** [type = ArrayIndex, default = [], size = -1]:
-  | \ ``SC.visualizationSettings.sensorTraces.listOfPositionSensors``\ 
+  | \ ``SC.visualizationSettings.sensors.traces.listOfPositionSensors``\ 
   | list of position sensors which can be shown as trace inside render window if sensors have storeInternal=True; if this list is empty and showPositionTrace=True, then all available sensors are shown
 * | **listOfTriadSensors** [type = ArrayIndex, default = [], size = -1]:
-  | \ ``SC.visualizationSettings.sensorTraces.listOfTriadSensors``\ 
+  | \ ``SC.visualizationSettings.sensors.traces.listOfTriadSensors``\ 
   | list of sensors of with OutputVariableType RotationMatrix; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showTriads=True; the triad is drawn at the related position
 * | **listOfVectorSensors** [type = ArrayIndex, default = [], size = -1]:
-  | \ ``SC.visualizationSettings.sensorTraces.listOfVectorSensors``\ 
+  | \ ``SC.visualizationSettings.sensors.traces.listOfVectorSensors``\ 
   | list of sensors with 3D vector quantities; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showVectors=True; the vector quantity is drawn relative to the related position
 * | **positionsShowEvery** [type = PInt, default = 1]:
-  | \ ``SC.visualizationSettings.sensorTraces.positionsShowEvery``\ 
+  | \ ``SC.visualizationSettings.sensors.traces.positionsShowEvery``\ 
   | integer value i; out of available sensor data, show every i-th position
 * | **sensorsMbsNumber** [type = Index, default = 0]:
-  | \ ``SC.visualizationSettings.sensorTraces.sensorsMbsNumber``\ 
+  | \ ``SC.visualizationSettings.sensors.traces.sensorsMbsNumber``\ 
   | number of main system which is used to for sensor lists; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number
 * | **showCurrent** [type = bool, default = True]:
-  | \ ``SC.visualizationSettings.sensorTraces.showCurrent``\ 
+  | \ ``SC.visualizationSettings.sensors.traces.showCurrent``\ 
   | show current trace position (and especially vector quantity) related to current visualization state; this only works in solution viewer if sensor values are stored at time grid points of the solution file (up to a precision of 1e-10) and may therefore be temporarily unavailable
 * | **showFuture** [type = bool, default = False]:
-  | \ ``SC.visualizationSettings.sensorTraces.showFuture``\ 
+  | \ ``SC.visualizationSettings.sensors.traces.showFuture``\ 
   | show trace future to current visualization state if already computed (e.g. in SolutionViewer)
 * | **showPast** [type = bool, default = True]:
-  | \ ``SC.visualizationSettings.sensorTraces.showPast``\ 
+  | \ ``SC.visualizationSettings.sensors.traces.showPast``\ 
   | show trace previous to current visualization state
 * | **showPositionTrace** [type = bool, default = False]:
-  | \ ``SC.visualizationSettings.sensorTraces.showPositionTrace``\ 
+  | \ ``SC.visualizationSettings.sensors.traces.showPositionTrace``\ 
   | show position trace of all position sensors if listOfPositionSensors=[] or of specified sensors; sensors need to activate storeInternal=True
 * | **showTriads** [type = bool, default = False]:
-  | \ ``SC.visualizationSettings.sensorTraces.showTriads``\ 
+  | \ ``SC.visualizationSettings.sensors.traces.showTriads``\ 
   | if True, show basis vectors from rotation matrices provided by sensors
 * | **showVectors** [type = bool, default = False]:
-  | \ ``SC.visualizationSettings.sensorTraces.showVectors``\ 
+  | \ ``SC.visualizationSettings.sensors.traces.showVectors``\ 
   | if True, show vector quantities according to description in showPositionTrace
+* | **timeSpan** [type = UReal, default = 0]:
+  | \ ``SC.visualizationSettings.sensors.traces.timeSpan``\ 
+  | maximum trace time span of past or future trace; given in seconds of simulation time; if zero, it is unused
 * | **traceColors** [type = ArrayFloat, default = [0.2,0.2,0.2,1., 0.8,0.2,0.2,1., 0.2,0.8,0.2,1., 0.2,0.2,0.8,1., 0.2,0.8,0.8,1., 0.8,0.2,0.8,1., 0.8,0.4,0.1,1.], size = -1]:
-  | \ ``SC.visualizationSettings.sensorTraces.traceColors``\ 
+  | \ ``SC.visualizationSettings.sensors.traces.traceColors``\ 
   | RGBA float values for traces in one array; using 6x4 values gives different colors for 6 traces; in case of triads, the 0/1/2-axes are drawn in red, green, and blue
 * | **triadSize** [type = float, default = 0.1 ]:
-  | \ ``SC.visualizationSettings.sensorTraces.triadSize``\ 
+  | \ ``SC.visualizationSettings.sensors.traces.triadSize``\ 
   | length of triad axes if shown
 * | **triadsShowEvery** [type = PInt, default = 1]:
-  | \ ``SC.visualizationSettings.sensorTraces.triadsShowEvery``\ 
+  | \ ``SC.visualizationSettings.sensors.traces.triadsShowEvery``\ 
   | integer value i; out of available sensor data, show every i-th triad
 * | **vectorScaling** [type = float, default = 0.01]:
-  | \ ``SC.visualizationSettings.sensorTraces.vectorScaling``\ 
+  | \ ``SC.visualizationSettings.sensors.traces.vectorScaling``\ 
   | scaling of vector quantities; if, e.g., loads, this factor has to be adjusted significantly
 * | **vectorsShowEvery** [type = PInt, default = 1]:
-  | \ ``SC.visualizationSettings.sensorTraces.vectorsShowEvery``\ 
+  | \ ``SC.visualizationSettings.sensors.traces.vectorsShowEvery``\ 
   | integer value i; out of available sensor data, show every i-th vector
 
 
@@ -482,9 +488,9 @@ Visualization settings for sensors.
 
 VSettingsSensors has the following items:
 
-* | **traces** [type = VSettingsSensorTraces]:
+* | **traces** [type = VSettingsTraces]:
   | \ ``SC.visualizationSettings.sensors.traces``\ 
-  | settings for showing (position) sensor traces and vector plots in the render window
+  | settings for showing (position/triad) sensor traces and vector plots in the render window
 * | **defaultColor** [type = Float4, default = [0.6,0.6,0.1,1.], size = 4]:
   | \ ``SC.visualizationSettings.sensors.defaultColor``\ 
   | default RGBA color for sensors; 4th value is alpha-transparency
@@ -508,7 +514,7 @@ VSettingsSensors has the following items:
 VSettingsContact
 ----------------
 
-Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization. 
+Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization; also used for contact objects, such as ObjectContactSphereSphere or ObjectContactSphereTriangle. 
 
 VSettingsContact has the following items:
 
@@ -518,9 +524,12 @@ VSettingsContact has the following items:
 * | **colorSearchTree** [type = Float4, default = [0.1,0.1,0.9,1.], size = 4]:
   | \ ``SC.visualizationSettings.contact.colorSearchTree``\ 
   | RGBA color for search tree, see showSearchTree
-* | **colorSpheres** [type = Float4, default = [0.8,0.8,0.2,1.], size = 4]:
+* | **colorSpheres** [type = Float4, default = [0.8,0.5,0.2,1.], size = 4]:
   | \ ``SC.visualizationSettings.contact.colorSpheres``\ 
   | RGBA color for contact spheres, see showSpheres
+* | **colorTori** [type = Float4, default = [0.8,0.2,0.8,1.], size = 4]:
+  | \ ``SC.visualizationSettings.contact.colorTori``\ 
+  | RGBA color for contact tori, see showTori
 * | **colorTriangles** [type = Float4, default = [0.5,0.5,0.5,1.], size = 4]:
   | \ ``SC.visualizationSettings.contact.colorTriangles``\ 
   | RGBA color for contact triangles, see showTriangles
@@ -548,9 +557,15 @@ VSettingsContact has the following items:
 * | **showSpheres** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.contact.showSpheres``\ 
   | show contact spheres (SpheresWithMarker, ...)
+* | **showTori** [type = bool, default = False]:
+  | \ ``SC.visualizationSettings.contact.showTori``\ 
+  | show each contact torus
 * | **showTriangles** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.contact.showTriangles``\ 
   | show contact triangles (TrianglesRigidBodyBased, ...)
+* | **tilingCurves** [type = PInt, default = 8]:
+  | \ ``SC.visualizationSettings.contact.tilingCurves``\ 
+  | tiling for nonlinear/polynomial curves; higher values give smoother curves
 * | **tilingSpheres** [type = PInt, default = 4]:
   | \ ``SC.visualizationSettings.contact.tilingSpheres``\ 
   | tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates
@@ -628,6 +643,135 @@ VSettingsDialogs has the following items:
 
 
 
+.. _sec-vsettingsmaterial:
+
+VSettingsMaterial
+-----------------
+
+Settings for rendering materials, in particular for the Raytracer (may be available also in the OpenGL renderer in the future). This material (widely follows Phong model) can be either accessed via SC.renderer.materials or directly in visualizationSettings.raytracer.material0, material1, etc.; note that the default values shown in the documentation only reflect material0 but not all 10 default materials.
+
+VSettingsMaterial has the following items:
+
+* | **alpha** [type = UFloat, default = 1.]:
+  | \ ``SC.visualizationSettings.raytracer.material.alpha``\ 
+  | alpha-transparency, same as in alpha channel in RGBA colors; 1=opaque, 0=fully transparent; leads to extra rendering costs per transparent pixel
+* | **baseColor** [type = Float3, default = [0.5,0.5,0.5], size = 3]:
+  | \ ``SC.visualizationSettings.raytracer.material.baseColor``\ 
+  | RGB default material color if face color has R-color channel -1
+* | **emission** [type = Float3, default = [0.,0.,0.], size = 3]:
+  | \ ``SC.visualizationSettings.raytracer.material.emission``\ 
+  | RGB emissive material color (enlightened material)
+* | **ior** [type = UFloat, default = 1.]:
+  | \ ``SC.visualizationSettings.raytracer.material.ior``\ 
+  | index of refraction for transparent materials (1=no refraction), >1 represents refraction
+* | **name** [type = String, default = 'undefined']:
+  | \ ``SC.visualizationSettings.raytracer.material.name``\ 
+  | material name for easier handling
+* | **reflectivity** [type = UFloat, default = 0.]:
+  | \ ``SC.visualizationSettings.raytracer.material.reflectivity``\ 
+  | controls reflectivity of material; 0=no reflections (rough, e.g. rubber), 1=fully reflective (mirror); this leads to large extra rendering costs per visible reflective pixel
+* | **shininess** [type = UFloat, default = 32.]:
+  | \ ``SC.visualizationSettings.raytracer.material.shininess``\ 
+  | controls shininess of specular component of lights; values < 5 is not very shiny, while > 50 is very shiny
+* | **specular** [type = Float3, default = [0.5,0.5,0.5], size = 3]:
+  | \ ``SC.visualizationSettings.raytracer.material.specular``\ 
+  | RGB specular material color
+
+
+
+.. _sec-vsettingsraytracer:
+
+VSettingsRaytracer
+------------------
+
+Settings for raytracer (software renderer) which can be used as alternative to classic OpenGL rendering; this option may be erased in future in favor of a modern GPU rendering. To activate the raytracer, simply switch the enable flag to True. The raytracer uses CPU-based rendering and is therefore comparably slow (may take seconds to render one frame). Thus, take care with the window dimension (start with small window size like 400 x 300) and use openGL.multiSampling=1. Note that many parameters are used from openGL settings, like backgroundColor, lineWidth, multiSampling, shadow (only on/off), and lights. See the options to improve appearance and performance.
+
+VSettingsRaytracer has the following items:
+
+* | **material0** [type = VSettingsMaterial]:
+  | \ ``SC.visualizationSettings.raytracer.material0``\ 
+  | settings for material0
+* | **material1** [type = VSettingsMaterial]:
+  | \ ``SC.visualizationSettings.raytracer.material1``\ 
+  | settings for material1
+* | **material2** [type = VSettingsMaterial]:
+  | \ ``SC.visualizationSettings.raytracer.material2``\ 
+  | settings for material2
+* | **material3** [type = VSettingsMaterial]:
+  | \ ``SC.visualizationSettings.raytracer.material3``\ 
+  | settings for material3
+* | **material4** [type = VSettingsMaterial]:
+  | \ ``SC.visualizationSettings.raytracer.material4``\ 
+  | settings for material4
+* | **material5** [type = VSettingsMaterial]:
+  | \ ``SC.visualizationSettings.raytracer.material5``\ 
+  | settings for material5
+* | **material6** [type = VSettingsMaterial]:
+  | \ ``SC.visualizationSettings.raytracer.material6``\ 
+  | settings for material6
+* | **material7** [type = VSettingsMaterial]:
+  | \ ``SC.visualizationSettings.raytracer.material7``\ 
+  | settings for material7
+* | **material8** [type = VSettingsMaterial]:
+  | \ ``SC.visualizationSettings.raytracer.material8``\ 
+  | settings for material8
+* | **material9** [type = VSettingsMaterial]:
+  | \ ``SC.visualizationSettings.raytracer.material9``\ 
+  | settings for material9
+* | **ambientLightColor** [type = Float4, default = [0.6,0.6,0.6,1.], size = 4]:
+  | \ ``SC.visualizationSettings.raytracer.ambientLightColor``\ 
+  | scene RGBA color for ambient light effect (min. light for regions in shadow); same as openGL.materialAmbientAndDiffuse in OpenGL renderer
+* | **backgroundColorReflections** [type = Float4, default = [0.4,0.4,0.4,1.], size = 4]:
+  | \ ``SC.visualizationSettings.raytracer.backgroundColorReflections``\ 
+  | scene RGBA color for background that is hit by reflection; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; important, if scene is not inside a room.
+* | **enable** [type = bool, default = False]:
+  | \ ``SC.visualizationSettings.raytracer.enable``\ 
+  | True: use (software) raytracer; False: use standard OpenGL renderer
+* | **globalFogColor** [type = Float4, default = [0.5,0.5,0.5,1.], size = 4]:
+  | \ ``SC.visualizationSettings.raytracer.globalFogColor``\ 
+  | scene RGBA fog color
+* | **globalFogDensity** [type = Real, default = 0.]:
+  | \ ``SC.visualizationSettings.raytracer.globalFogDensity``\ 
+  | global fog density; fog is deactivated if fogDensity=0, otherwise it is a density relative to scene max size; as it is relative, the factor has to be relatively high to be visible (usually >1)
+* | **imageSizeFactor** [type = PInt, default = 1]:
+  | \ ``SC.visualizationSettings.raytracer.imageSizeFactor``\ 
+  | Special size factor (1-16) to allow drawing with smaller resolution (faster); use this for long rendering times for adjustments, etc.
+* | **keepWindowActive** [type = bool, default = False]:
+  | \ ``SC.visualizationSettings.raytracer.keepWindowActive``\ 
+  | Special flag, handle with care; True: sends some glfw functions to keep window reactive for long render times (>2 seconds); otherwise, the rendering may not finish due to timeout
+* | **lightRadius** [type = float, default = 0.1, size = 1]:
+  | \ ``SC.visualizationSettings.raytracer.lightRadius``\ 
+  | if lightRadiusVariations>1, it uses the given radius for all lights, to convert point lights into distributed lights (slower)
+* | **lightRadiusVariations** [type = PInt, default = 1, size = 1]:
+  | \ ``SC.visualizationSettings.raytracer.lightRadiusVariations``\ 
+  | if lightRadiusVariations>1, this defines the number of positions that are used to compute the effect of distributed lights (larger is slower but better quality); range=1..64
+* | **maxReflectionDepth** [type = UInt, default = 2]:
+  | \ ``SC.visualizationSettings.raytracer.maxReflectionDepth``\ 
+  | Maximum number of reflections computed for one ray (note that for each transparent face passed, the reflection depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)
+* | **maxTransparencyDepth** [type = UInt, default = 2]:
+  | \ ``SC.visualizationSettings.raytracer.maxTransparencyDepth``\ 
+  | Maximum number of transparent faces that can be passed (note that for each reflection, the transparency depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)
+* | **numberOfThreads** [type = PInt, default = 8]:
+  | \ ``SC.visualizationSettings.raytracer.numberOfThreads``\ 
+  | Number of CPU-threads (max: 256) used for software rendering (should be approx. the number of available threads)
+* | **searchTreeFactor** [type = PInt, default = 1]:
+  | \ ``SC.visualizationSettings.raytracer.searchTreeFactor``\ 
+  | This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128
+* | **tilesPerThread** [type = PInt, default = 12]:
+  | \ ``SC.visualizationSettings.raytracer.tilesPerThread``\ 
+  | Total number of sub-tiles per thread, used to evenly distribute rendering load to threads
+* | **verbose** [type = bool, default = False]:
+  | \ ``SC.visualizationSettings.raytracer.verbose``\ 
+  | True: print out some debug information on rendering, in particular rendering timings and counter
+* | **zBiasLines** [type = Real, default = 1e-3]:
+  | \ ``SC.visualizationSettings.raytracer.zBiasLines``\ 
+  | offset for lines to draw in front of faces; relative to scene radius
+* | **zOffsetCamera** [type = Real, default = -0.01]:
+  | \ ``SC.visualizationSettings.raytracer.zOffsetCamera``\ 
+  | offset for for camera towards the scene; use positive factor put camera inside, e.g. of brick (like a room) or sphere; use (slightly) negative value to make whole scene visible
+
+
+
 .. _sec-vsettingsopengl:
 
 VSettingsOpenGL
@@ -637,12 +781,18 @@ OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL fun
 
 VSettingsOpenGL has the following items:
 
+* | **clippingPlaneColor** [type = Float4, default = [0.7,0.5,0.5,0.], size = 4]:
+  | \ ``SC.visualizationSettings.openGL.clippingPlaneColor``\ 
+  | RGBA color for clipping plane; if alpha-channel is 0, the cutting plane is not drawn; if alpha-channel is 1, the clippingPlaneColor is used; if alpha-channel is 2, the color of the object interior is used as clipping plane color (which may look strange in case of object-in-object)
 * | **clippingPlaneDistance** [type = float, default = 0.]:
   | \ ``SC.visualizationSettings.openGL.clippingPlaneDistance``\ 
   | distance of clipping plane on normal vector; see also clippingPlaneNormal
 * | **clippingPlaneNormal** [type = Float3, default = [0.,0.,0.], size = 3]:
   | \ ``SC.visualizationSettings.openGL.clippingPlaneNormal``\ 
-  | normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance
+  | normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; the clipped half-space is in direction of the normal; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance
+* | **depthSorting** [type = bool, default = False, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.depthSorting``\ 
+  | True (slower): sort triangles by Z-depth to remove transparency artifacts: only works if triangles do not intersect or come close (you may like to refine triangle meshes); False: no depth-sort (faster)
 * | **drawFaceNormals** [type = bool, default = False, size = 1]:
   | \ ``SC.visualizationSettings.openGL.drawFaceNormals``\ 
   | draws triangle normals, e.g. at center of triangles; used for debugging of faces
@@ -667,6 +817,9 @@ VSettingsOpenGL has the following items:
 * | **facesTransparent** [type = bool, default = False, size = 1]:
   | \ ``SC.visualizationSettings.openGL.facesTransparent``\ 
   | True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers
+* | **faceTransparencyGlobal** [type = UFloat, default = 0.4, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.faceTransparencyGlobal``\ 
+  | in case that facesTransparent=True this represents the max alpha-transparency
 * | **initialCenterPoint** [type = Float3, default = [0.,0.,0.], size = 3]:
   | \ ``SC.visualizationSettings.openGL.initialCenterPoint``\ 
   | centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True
@@ -693,7 +846,7 @@ VSettingsOpenGL has the following items:
   | linear attenuation coefficient of GL_LIGHT0, this is a linear factor for attenuation of the light source with distance
 * | **light0position** [type = Float4, default = [0.2,0.2,10.,0.], size = 4]:
   | \ ``SC.visualizationSettings.openGL.light0position``\ 
-  | 4f position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position; see opengl manuals
+  | 4D position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position; see opengl manuals
 * | **light0quadraticAttenuation** [type = float, default = 0.0, size = 1]:
   | \ ``SC.visualizationSettings.openGL.light0quadraticAttenuation``\ 
   | quadratic attenuation coefficient of GL_LIGHT0, this is a quadratic factor for attenuation of the light source with distance
@@ -714,7 +867,7 @@ VSettingsOpenGL has the following items:
   | linear attenuation coefficient of GL_LIGHT1, this is a linear factor for attenuation of the light source with distance
 * | **light1position** [type = Float4, default = [1.,1.,-10.,0.], size = 4]:
   | \ ``SC.visualizationSettings.openGL.light1position``\ 
-  | 4f position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals
+  | 4D position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals
 * | **light1quadraticAttenuation** [type = float, default = 0.0, size = 1]:
   | \ ``SC.visualizationSettings.openGL.light1quadraticAttenuation``\ 
   | quadratic attenuation coefficient of GL_LIGHT1, this is a quadratic factor for attenuation of the light source with distance
@@ -730,6 +883,9 @@ VSettingsOpenGL has the following items:
 * | **lightModelTwoSide** [type = bool, default = False, size = 1]:
   | \ ``SC.visualizationSettings.openGL.lightModelTwoSide``\ 
   | enlighten also backside of object; may cause problems on some graphics cards and lead to slower performance; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,...)
+* | **lightPositionsInCameraFrame** [type = bool, default = False, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.lightPositionsInCameraFrame``\ 
+  | set False to set light positions and directions relative to model frame; True: lights are in global (camera) frame; this is always False for raytracer; this was True up to Exudyn 1.9.174
 * | **lineSmooth** [type = bool, default = True, size = 1]:
   | \ ``SC.visualizationSettings.openGL.lineSmooth``\ 
   | draw lines smooth
@@ -738,13 +894,13 @@ VSettingsOpenGL has the following items:
   | width of lines used for representation of lines, circles, points, etc.
 * | **materialAmbientAndDiffuse** [type = Float4, default = [0.6,0.6,0.6,1.], size = 4]:
   | \ ``SC.visualizationSettings.openGL.materialAmbientAndDiffuse``\ 
-  | 4f ambient color of material
+  | RGBA ambient color of material
 * | **materialShininess** [type = float, default = 32., size = 1]:
   | \ ``SC.visualizationSettings.openGL.materialShininess``\ 
   | shininess of material
 * | **materialSpecular** [type = Float4, default = [0.6,0.6,0.6,1.], size = 4]:
   | \ ``SC.visualizationSettings.openGL.materialSpecular``\ 
-  | 4f specular color of material
+  | RGBA specular color of material
 * | **multiSampling** [type = PInt, default = 1, size = 1]:
   | \ ``SC.visualizationSettings.openGL.multiSampling``\ 
   | NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
@@ -759,7 +915,7 @@ VSettingsOpenGL has the following items:
   | True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces
 * | **shadow** [type = UFloat, default = 0.]:
   | \ ``SC.visualizationSettings.openGL.shadow``\ 
-  | parameter \ :math:`\in [0 ... 1]`\  prescribes amount of shadow for light0 (using light0position, etc.); if this parameter is different from 1, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows
+  | parameter \ :math:`\in [0 ... 1]`\  prescribes amount of shadow for light0 (using light0position, etc.) in OpenGL renderer; if this parameter is different from 1, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for all lights if shadow>0
 * | **shadowPolygonOffset** [type = PFloat, default = 0.1]:
   | \ ``SC.visualizationSettings.openGL.shadowPolygonOffset``\ 
   | some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies
@@ -910,6 +1066,9 @@ VSettingsInteractive has the following items:
 * | **selectionLeftMouse** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.interactive.selectionLeftMouse``\ 
   | True: left mouse click on items and show basic information
+* | **selectionLeftMouseItemTypes** [type = Index, default = 31]:
+  | \ ``SC.visualizationSettings.interactive.selectionLeftMouseItemTypes``\ 
+  | binary flags (1,2,4,8,16) for (Node,Object,Marker,Load,Sensor) that are identified with left mouse click selection
 * | **selectionRightMouse** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.interactive.selectionRightMouse``\ 
   | True: right mouse click on items and show dictionary (read only!)
@@ -982,6 +1141,9 @@ VisualizationSettings has the following items:
 * | **openGL** [type = VSettingsOpenGL]:
   | \ ``.visualizationSettings.openGL``\ 
   | OpenGL rendering settings
+* | **raytracer** [type = VSettingsRaytracer]:
+  | \ ``.visualizationSettings.raytracer``\ 
+  | Raytracer settings (builds on OpenGL rendering settings)
 * | **sensors** [type = VSettingsSensors]:
   | \ ``.visualizationSettings.sensors``\ 
   | sensor visualization settings

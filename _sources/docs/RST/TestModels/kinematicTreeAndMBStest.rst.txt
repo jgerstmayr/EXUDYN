@@ -321,10 +321,10 @@ You can view and download this file on Github: `kinematicTreeAndMBStest.py <http
        SC.visualizationSettings.nodes.showBasis = True
        SC.visualizationSettings.nodes.basisSize = 0.5
        if useGraphics:
-           exu.StartRenderer()
-           if 'renderState' in exu.sys: SC.SetRenderState(exu.sys['renderState']) #load last model view
+           SC.renderer.Start()
+           if 'renderState' in exu.sys: SC.renderer.SetState(exu.sys['renderState']) #load last model view
        
-           mbs.WaitForUserToContinue() #press space to continue
+           SC.renderer.DoIdleTasks() #press space to continue
    
        # mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
        mbs.SolveDynamic(simulationSettings)
@@ -335,8 +335,8 @@ You can view and download this file on Github: `kinematicTreeAndMBStest.py <http
            mbs.SolutionViewer() #can also be entered in IPython ...
        
        if useGraphics:
-           SC.WaitForRenderEngineStopFlag()
-           exu.StopRenderer() #safely close rendering window!
+           SC.renderer.DoIdleTasks()
+           SC.renderer.Stop() #safely close rendering window!
        
        
        if len(sMBS) == len(sKT):
@@ -470,10 +470,10 @@ You can view and download this file on Github: `kinematicTreeAndMBStest.py <http
        SC.visualizationSettings.nodes.basisSize = 0.5
        if useGraphics:
    
-           exu.StartRenderer()
-           if 'renderState' in exu.sys: SC.SetRenderState(exu.sys['renderState']) #load last model view
+           SC.renderer.Start()
+           if 'renderState' in exu.sys: SC.renderer.SetState(exu.sys['renderState']) #load last model view
        
-           mbs.WaitForUserToContinue() #press space to continue
+           SC.renderer.DoIdleTasks() #press space to continue
    
        # mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
        mbs.SolveDynamic(simulationSettings)
@@ -484,8 +484,8 @@ You can view and download this file on Github: `kinematicTreeAndMBStest.py <http
            mbs.SolutionViewer() #can also be entered in IPython ...
        
        if useGraphics:
-           SC.WaitForRenderEngineStopFlag()
-           exu.StopRenderer() #safely close rendering window!
+           SC.renderer.DoIdleTasks()
+           SC.renderer.Stop() #safely close rendering window!
        else:
            #check results for test suite:
            u = 0.
@@ -628,10 +628,10 @@ You can view and download this file on Github: `kinematicTreeAndMBStest.py <http
        SC.visualizationSettings.nodes.basisSize = 0.5
        if useGraphics:
    
-           exu.StartRenderer()
-           if 'renderState' in exu.sys: SC.SetRenderState(exu.sys['renderState']) #load last model view
+           SC.renderer.Start()
+           if 'renderState' in exu.sys: SC.renderer.SetState(exu.sys['renderState']) #load last model view
        
-           mbs.WaitForUserToContinue() #press space to continue
+           SC.renderer.DoIdleTasks() #press space to continue
    
        # mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.ExplicitMidpoint)
        mbs.SolveDynamic(simulationSettings)
@@ -642,8 +642,8 @@ You can view and download this file on Github: `kinematicTreeAndMBStest.py <http
            mbs.SolutionViewer() #can also be entered in IPython ...
        
        if useGraphics:
-           SC.WaitForRenderEngineStopFlag()
-           exu.StopRenderer() #safely close rendering window!
+           SC.renderer.DoIdleTasks()
+           SC.renderer.Stop() #safely close rendering window!
        else:
            #check results for test suite:
            u = 0.

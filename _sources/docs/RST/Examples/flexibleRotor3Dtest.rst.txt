@@ -33,7 +33,7 @@ You can view and download this file on Github: `flexibleRotor3Dtest.py <https://
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
-   print('EXUDYN version='+exu.GetVersionString())
+   print('EXUDYN version='+exu.config.Version())
    
    useGraphics = True
    
@@ -168,15 +168,15 @@ You can view and download this file on Github: `flexibleRotor3Dtest.py <https://
    SC.visualizationSettings.general.useMultiThreadedRendering = False
    
    if useGraphics:
-       exu.StartRenderer()              #start graphics visualization
-       mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
+       SC.renderer.Start()              #start graphics visualization
+       SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
    
    #start solver:
    mbs.SolveDynamic(simulationSettings)
    
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
-       exu.StopRenderer()               #safely close rendering window!
+       SC.renderer.DoIdleTasks()#wait for pressing 'Q' to quit
+       SC.renderer.Stop()               #safely close rendering window!
    
    #evaluate final (=current) output values
    u = mbs.GetNodeOutput(n1, exu.OutputVariableType.AngularVelocity)

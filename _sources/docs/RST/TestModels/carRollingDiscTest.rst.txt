@@ -58,7 +58,7 @@ You can view and download this file on Github: `carRollingDiscTest.py <https://g
    omega0Wheel = [v0/rWheel,0,0]                   #initial angular velocity around z-axis
    
    #v0 = [0,0,0]                                   #initial translational velocity
-   #print("v0Car=",v0)
+   #exu.Print("v0Car=",v0)
    
    #%%++++++++++++++++++++++++++++++
    #car parameters and inertia:
@@ -225,8 +225,8 @@ You can view and download this file on Github: `carRollingDiscTest.py <https://g
    
    if useGraphics:
        tEnd = 4
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
    
    simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
    simulationSettings.timeIntegration.endTime = tEnd
@@ -244,8 +244,8 @@ You can view and download this file on Github: `carRollingDiscTest.py <https://g
    mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
    
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    c=mbs.GetNodeOutput(n0, variableType=exu.OutputVariableType.Coordinates)
    u=sum(c)

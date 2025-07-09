@@ -183,10 +183,10 @@ You can view and download this file on Github: `abaqusImportTest.py <https://git
        simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD work with 0.9 as well
        
        if useGraphics:
-           exu.StartRenderer()
-           if 'renderState' in exu.sys: SC.SetRenderState(exu.sys['renderState']) #load last model view
+           SC.renderer.Start()
+           if 'renderState' in exu.sys: SC.renderer.SetState(exu.sys['renderState']) #load last model view
        
-           mbs.WaitForUserToContinue() #press space to continue
+           SC.renderer.DoIdleTasks() #press space to continue
        
        mbs.SolveDynamic(simulationSettings)
            
@@ -196,9 +196,9 @@ You can view and download this file on Github: `abaqusImportTest.py <https://git
        result += abs(data[-1,1:]).sum()
        
        if useGraphics:
-           SC.WaitForRenderEngineStopFlag()
-           exu.StopRenderer() #safely close rendering window!
-           lastRenderState = SC.GetRenderState() #store model view for next simulation
+           SC.renderer.DoIdleTasks()
+           SC.renderer.Stop() #safely close rendering window!
+           lastRenderState = SC.renderer.GetState() #store model view for next simulation
    
    exu.Print('solution of abaqusImportTest=',result)
    

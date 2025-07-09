@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: graphics &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>Module: graphics &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -69,6 +69,7 @@
 <li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demos.html">Module: demos</a></li>
 <li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Module: graphics</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#function-sphere">Function: Sphere</a></li>
@@ -79,6 +80,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#function-brickxyz">Function: BrickXYZ</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-brick">Function: Brick</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-cylinder">Function: Cylinder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-tube">Function: Tube</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-torus">Function: Torus</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-rigidlink">Function: RigidLink</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-solidofrevolution">Function: SolidOfRevolution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-arrow">Function: Arrow</a></li>
@@ -87,10 +90,16 @@
 <li class="toctree-l3"><a class="reference internal" href="#function-quad">Function: Quad</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-checkerboard">Function: CheckerBoard</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-solidextrusion">Function: SolidExtrusion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-ballbearingrings">Function: BallBearingRings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-involutegear">Function: InvoluteGear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-toothedrack">Function: ToothedRack</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-frompointsandtrigs">Function: FromPointsAndTrigs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-topointsandtrigs">Function: ToPointsAndTrigs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-move">Function: Move</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-mergetrianglelists">Function: MergeTriangleLists</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-inverttriangles">Function: InvertTriangles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-inconsistenttriangles">Function: InconsistentTriangles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-ngsolvemesh2pointsandtrigs">Function: NGsolveMesh2PointsAndTrigs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-fromstlfileascii">Function: FromSTLfileASCII</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-fromstlfile">Function: FromSTLfile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-addedgesandsmoothennormals">Function: AddEdgesAndSmoothenNormals</a></li>
@@ -138,7 +147,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -170,7 +179,7 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </ul>
 <section id="function-sphere">
 <span id="sec-graphics-sphere"></span><h2>Function: Sphere<a class="headerlink" href="#function-sphere" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L120">Sphere</a>(<code class="docutils literal notranslate"><span class="pre">point</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">8</span></code>, <code class="docutils literal notranslate"><span class="pre">addEdges</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeColor</span> <span class="pre">=</span> <span class="pre">color.black</span></code>, <code class="docutils literal notranslate"><span class="pre">addFaces</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L148">Sphere</a>(<code class="docutils literal notranslate"><span class="pre">point</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">8</span></code>, <code class="docutils literal notranslate"><span class="pre">addEdges</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeColor</span> <span class="pre">=</span> <span class="pre">color.black</span></code>, <code class="docutils literal notranslate"><span class="pre">addFaces</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -196,13 +205,13 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </ul>
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py">bicycleIftommBenchmark.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bungeeJump.py">bungeeJump.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py">chatGPTupdate.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py">graphicsDataExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorGravityTest.py">connectorGravityTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCoordinateTest.py">contactCoordinateTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactSphereSphereTest.py">contactSphereSphereTest.py</a> (TM)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py">bicycleIftommBenchmark.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bungeeJump.py">bungeeJump.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py">chatGPTupdate.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/contactCurvePolynomial.py">contactCurvePolynomial.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py">graphicsDataExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorGravityTest.py">connectorGravityTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCoordinateTest.py">contactCoordinateTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCurveExample.py">contactCurveExample.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
 </section>
 <section id="function-lines">
 <span id="sec-graphics-lines"></span><h2>Function: Lines<a class="headerlink" href="#function-lines" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L243">Lines</a>(<code class="docutils literal notranslate"><span class="pre">pList</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L269">Lines</a>(<code class="docutils literal notranslate"><span class="pre">pList</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -231,13 +240,13 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </div>
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py">ANCFcontactCircle2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/doublePendulum2D.py">doublePendulum2D.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rigid3Dexample.py">rigid3Dexample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simple4linkPendulumBing.py">simple4linkPendulumBing.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/doublePendulum2DControl.py">doublePendulum2DControl.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/genericJointUserFunctionTest.py">genericJointUserFunctionTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py">rigidBodyCOMtest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sphericalJointTest.py">sphericalJointTest.py</a> (TM)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py">ANCFcontactCircle2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/doublePendulum2D.py">doublePendulum2D.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simple4linkPendulumBing.py">simple4linkPendulumBing.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/doublePendulum2DControl.py">doublePendulum2DControl.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
 </section>
 <section id="function-circle">
 <span id="sec-graphics-circle"></span><h2>Function: Circle<a class="headerlink" href="#function-circle" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L260">Circle</a>(<code class="docutils literal notranslate"><span class="pre">point</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L286">Circle</a>(<code class="docutils literal notranslate"><span class="pre">point</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -264,13 +273,13 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </ul>
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py">ANCFcontactCircle2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py">ANCFcontactCircle2.py</a> (Ex)</p>
 </div></blockquote>
 <hr class="docutils" />
 </section>
 <section id="function-text">
 <span id="sec-graphics-text"></span><h2>Function: Text<a class="headerlink" href="#function-text" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L272">Text</a>(<code class="docutils literal notranslate"><span class="pre">point</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">text</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L298">Text</a>(<code class="docutils literal notranslate"><span class="pre">point</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">text</span> <span class="pre">=</span> <span class="pre">''</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -299,7 +308,7 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </section>
 <section id="function-cuboid">
 <span id="sec-graphics-cuboid"></span><h2>Function: Cuboid<a class="headerlink" href="#function-cuboid" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L286">Cuboid</a>(<code class="docutils literal notranslate"><span class="pre">pList</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">faces</span> <span class="pre">=</span> <span class="pre">[1,1,1,1,1,1]</span></code>, <code class="docutils literal notranslate"><span class="pre">addNormals</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addEdges</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeColor</span> <span class="pre">=</span> <span class="pre">color.black</span></code>, <code class="docutils literal notranslate"><span class="pre">addFaces</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L312">Cuboid</a>(<code class="docutils literal notranslate"><span class="pre">pList</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">faces</span> <span class="pre">=</span> <span class="pre">[1,1,1,1,1,1]</span></code>, <code class="docutils literal notranslate"><span class="pre">addNormals</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addEdges</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeColor</span> <span class="pre">=</span> <span class="pre">color.black</span></code>, <code class="docutils literal notranslate"><span class="pre">addFaces</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -323,15 +332,11 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </div>
 </li>
 </ul>
-<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
-<blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py">addPrismaticJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py">addRevoluteJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py">ANCFrotatingCable2D.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bungeeJump.py">bungeeJump.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chainDriveExample.py">chainDriveExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py">bricardMechanism.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py">carRollingDiscTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/complexEigenvaluesTest.py">complexEigenvaluesTest.py</a> (TM)</p>
-</div></blockquote>
 <hr class="docutils" />
 </section>
 <section id="function-brickxyz">
 <span id="sec-graphics-brickxyz"></span><h2>Function: BrickXYZ<a class="headerlink" href="#function-brickxyz" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L374">BrickXYZ</a>(<code class="docutils literal notranslate"><span class="pre">xMin</span></code>, <code class="docutils literal notranslate"><span class="pre">yMin</span></code>, <code class="docutils literal notranslate"><span class="pre">zMin</span></code>, <code class="docutils literal notranslate"><span class="pre">xMax</span></code>, <code class="docutils literal notranslate"><span class="pre">yMax</span></code>, <code class="docutils literal notranslate"><span class="pre">zMax</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">addNormals</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addEdges</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeColor</span> <span class="pre">=</span> <span class="pre">color.black</span></code>, <code class="docutils literal notranslate"><span class="pre">addFaces</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L407">BrickXYZ</a>(<code class="docutils literal notranslate"><span class="pre">xMin</span></code>, <code class="docutils literal notranslate"><span class="pre">yMin</span></code>, <code class="docutils literal notranslate"><span class="pre">zMin</span></code>, <code class="docutils literal notranslate"><span class="pre">xMax</span></code>, <code class="docutils literal notranslate"><span class="pre">yMax</span></code>, <code class="docutils literal notranslate"><span class="pre">zMax</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">addNormals</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addEdges</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeColor</span> <span class="pre">=</span> <span class="pre">color.black</span></code>, <code class="docutils literal notranslate"><span class="pre">addFaces</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -367,22 +372,24 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </section>
 <section id="function-brick">
 <span id="sec-graphics-brick"></span><h2>Function: Brick<a class="headerlink" href="#function-brick" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L392">Brick</a>(<code class="docutils literal notranslate"><span class="pre">centerPoint</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">=</span> <span class="pre">[0.1,0.1,0.1]</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">addNormals</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addEdges</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeColor</span> <span class="pre">=</span> <span class="pre">color.black</span></code>, <code class="docutils literal notranslate"><span class="pre">addFaces</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L427">Brick</a>(<code class="docutils literal notranslate"><span class="pre">centerPoint</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">=</span> <span class="pre">[0.1,0.1,0.1]</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">addNormals</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addEdges</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeColor</span> <span class="pre">=</span> <span class="pre">color.black</span></code>, <code class="docutils literal notranslate"><span class="pre">addFaces</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">roundness</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">12</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
-<div class="line">generate graphics data forfor orthogonal 3D block with center point and size</div>
+<div class="line">generate graphics data for orthogonal 3D box with center point and size; using roundness=1, it draws an ellipsoid inside the box and in case 0 &lt; roundness &lt; 1, it draws a body blended between box and ellipsoid</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><em>input</em>:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">centerPoint</span></code>: center of cube as 3D list or np.array</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">centerPoint</span></code>: center of box as 3D list or np.array</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">size</span></code>: size as 3D list or np.array</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">color</span></code>: list of 4 RGBA values</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">addNormals</span></code>: add face normals to triangle information</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">addEdges</span></code>: if True, edges are added in TriangleList of GraphicsData</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">edgeColor</span></code>: optional color for edges</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">addFaces</span></code>: if False, no faces are added (only edges)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">roundness</span></code>: if &gt; 0, it draws an ellipsoid, using nTiles for drawing; edges are not available if roundness &gt; 0</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">nTiles</span></code>: only apply if roundness &gt; 0; discretization of whole ellipsoid; should be multiple of 4 to avoid artifacts</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -393,13 +400,13 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </ul>
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py">addPrismaticJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py">addRevoluteJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py">ANCFrotatingCable2D.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py">beltDrivesComparison.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py">bicycleIftommBenchmark.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py">bricardMechanism.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py">carRollingDiscTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/complexEigenvaluesTest.py">complexEigenvaluesTest.py</a> (TM)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py">addPrismaticJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py">addRevoluteJoint.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py">ANCFrotatingCable2D.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py">ballBearningModel.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py">beltDrivesComparison.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ballBearingTest.py">ballBearingTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py">bricardMechanism.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py">carRollingDiscTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
 </section>
 <section id="function-cylinder">
 <span id="sec-graphics-cylinder"></span><h2>Function: Cylinder<a class="headerlink" href="#function-cylinder" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L424">Cylinder</a>(<code class="docutils literal notranslate"><span class="pre">pAxis</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">vAxis</span> <span class="pre">=</span> <span class="pre">[0,0,1]</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">16</span></code>, <code class="docutils literal notranslate"><span class="pre">angleRange</span> <span class="pre">=</span> <span class="pre">[0,2*pi]</span></code>, <code class="docutils literal notranslate"><span class="pre">lastFace</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">cutPlain</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">addEdges</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeColor</span> <span class="pre">=</span> <span class="pre">color.black</span></code>, <code class="docutils literal notranslate"><span class="pre">addFaces</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L544">Cylinder</a>(<code class="docutils literal notranslate"><span class="pre">pAxis</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">vAxis</span> <span class="pre">=</span> <span class="pre">[0,0,1]</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">16</span></code>, <code class="docutils literal notranslate"><span class="pre">radiusInner</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">angleRange</span> <span class="pre">=</span> <span class="pre">[0,2*pi]</span></code>, <code class="docutils literal notranslate"><span class="pre">lastFace</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">cutPlain</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">addEdges</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeColor</span> <span class="pre">=</span> <span class="pre">color.black</span></code>, <code class="docutils literal notranslate"><span class="pre">addFaces</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -413,6 +420,7 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 <div class="line"><code class="docutils literal notranslate"><span class="pre">radius</span></code>: positive value representing radius of cylinder</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">color</span></code>: provided as list of 4 RGBA values</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">nTiles</span></code>: used to determine resolution of cylinder &gt;=3; use larger values for finer resolution</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">radiusInner</span></code>: if not equal 0, this represents the inner radius of a hollow cylinder; some options like angleRange, lastFace, etc. do not work in this case</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">angleRange</span></code>: given in rad, to draw only part of cylinder (halfcylinder, etc.); for full range use [0..2 * pi]</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">lastFace</span></code>: if angleRange != [0,2*pi], then the faces of the open cylinder are shown with lastFace = True</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">cutPlain</span></code>: only used for angleRange != [0,2*pi]; if True, a plane is cut through the part of the cylinder; if False, the cylinder becomes a cake shape …</div>
@@ -430,13 +438,71 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </ul>
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py">beltDriveALE.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py">beltDriveReevingSystem.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py">beltDrivesComparison.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py">bicycleIftommBenchmark.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chainDriveExample.py">chainDriveExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py">ANCFbeltDrive.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py">ANCFgeneralContactCircle.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py">carRollingDiscTest.py</a> (TM)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py">beltDriveALE.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py">beltDriveReevingSystem.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py">beltDrivesComparison.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py">bicycleIftommBenchmark.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chainDriveExample.py">chainDriveExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py">ANCFbeltDrive.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py">ANCFgeneralContactCircle.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateSpringDamperExt.py">coordinateSpringDamperExt.py</a> (TM)</p>
 </div></blockquote>
+<hr class="docutils" />
+</section>
+<section id="function-tube">
+<span id="sec-graphics-tube"></span><h2>Function: Tube<a class="headerlink" href="#function-tube" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L748">Tube</a>(<code class="docutils literal notranslate"><span class="pre">points</span></code>, <code class="docutils literal notranslate"><span class="pre">axes</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">16</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">generate graphics data for a tube with given list of points and axes, radius and color; nTiles gives the number of tiles (minimum=3)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">points</span></code>: list of 3D vectors (or numpy arrays) representing the center points of the tube line</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">axes</span></code>: list of 3D vectors (or numpy arrays) representing the axis according to the points</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">radius</span></code>: positive value representing radius of tube</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">color</span></code>: provided as list of 4 RGBA values</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">nTiles</span></code>: used to determine resolution of cylinder &gt;=3; use larger values for finer resolution</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">graphicsData dictionary, to be used in visualization of EXUDYN objects</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-torus">
+<span id="sec-graphics-torus"></span><h2>Function: Torus<a class="headerlink" href="#function-torus" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L848">Torus</a>(<code class="docutils literal notranslate"><span class="pre">point</span></code>, <code class="docutils literal notranslate"><span class="pre">axis</span></code>, <code class="docutils literal notranslate"><span class="pre">radiusMajor</span> <span class="pre">=</span> <span class="pre">0.5</span></code>, <code class="docutils literal notranslate"><span class="pre">radiusMinor</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">nTilesMajor</span> <span class="pre">=</span> <span class="pre">24</span></code>, <code class="docutils literal notranslate"><span class="pre">nTilesMinor</span> <span class="pre">=</span> <span class="pre">12</span></code>, <code class="docutils literal notranslate"><span class="pre">minorAngleStart</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">minorAngleEnd</span> <span class="pre">=</span> <span class="pre">2*np.pi</span></code>, <code class="docutils literal notranslate"><span class="pre">smoothNormals</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">invert</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">generate graphics data for a torus with given major and minor radius, center point and axis</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">point</span></code>: 3D vector (or numpy array) representing the center point of the torus</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">axis</span></code>: 3D vector (or numpy array) representing the axis of revolution of the torus</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">radiusMajor</span></code>: major radius of torus</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">radiusMinor</span></code>: minor radius of torus</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">color</span></code>: provided as list of 4 RGBA values</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">nTilesMajor</span></code>: used to for resolution of tube with major radius; use larger values for finer resolution</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">nTilesMinor</span></code>: used to for resolution of circle with minor radius; use larger values for finer resolution</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">minorAngleStart</span></code>: starting angle for minor radius; 0 is the angle at outmost radius of torus, pi is at inside</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">minorAngleEnd</span></code>: end angle for minor radius; use -0.5*pi / 0.5*pi to draw only the outer half of the torus</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">smoothNormals</span></code>: if True, the normals are added to create a smooth contour, otherwise triangles are flat</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">invert</span></code>: if False, the outside faces are visible; if invert=True, the inside faces are visible (influences reflections, light, etc.)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">graphicsData dictionary, to be used in visualization of EXUDYN objects</div>
+</div>
+</li>
+</ul>
 <hr class="docutils" />
 </section>
 <section id="function-rigidlink">
 <span id="sec-graphics-rigidlink"></span><h2>Function: RigidLink<a class="headerlink" href="#function-rigidlink" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L623">RigidLink</a>(<code class="docutils literal notranslate"><span class="pre">p0</span></code>, <code class="docutils literal notranslate"><span class="pre">p1</span></code>, <code class="docutils literal notranslate"><span class="pre">axis0</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">axis1</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span> <span class="pre">=</span> <span class="pre">[0.1,0.1]</span></code>, <code class="docutils literal notranslate"><span class="pre">thickness</span> <span class="pre">=</span> <span class="pre">0.05</span></code>, <code class="docutils literal notranslate"><span class="pre">width</span> <span class="pre">=</span> <span class="pre">[0.05,0.05]</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">16</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L940">RigidLink</a>(<code class="docutils literal notranslate"><span class="pre">p0</span></code>, <code class="docutils literal notranslate"><span class="pre">p1</span></code>, <code class="docutils literal notranslate"><span class="pre">axis0</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">axis1</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span> <span class="pre">=</span> <span class="pre">[0.1,0.1]</span></code>, <code class="docutils literal notranslate"><span class="pre">thickness</span> <span class="pre">=</span> <span class="pre">0.05</span></code>, <code class="docutils literal notranslate"><span class="pre">width</span> <span class="pre">=</span> <span class="pre">[0.05,0.05]</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">16</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -470,7 +536,7 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </section>
 <section id="function-solidofrevolution">
 <span id="sec-graphics-solidofrevolution"></span><h2>Function: SolidOfRevolution<a class="headerlink" href="#function-solidofrevolution" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L705">SolidOfRevolution</a>(<code class="docutils literal notranslate"><span class="pre">pAxis</span></code>, <code class="docutils literal notranslate"><span class="pre">vAxis</span></code>, <code class="docutils literal notranslate"><span class="pre">contour</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">16</span></code>, <code class="docutils literal notranslate"><span class="pre">smoothContour</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addEdges</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeColor</span> <span class="pre">=</span> <span class="pre">color.black</span></code>, <code class="docutils literal notranslate"><span class="pre">addFaces</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1022">SolidOfRevolution</a>(<code class="docutils literal notranslate"><span class="pre">pAxis</span></code>, <code class="docutils literal notranslate"><span class="pre">vAxis</span></code>, <code class="docutils literal notranslate"><span class="pre">contour</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">16</span></code>, <code class="docutils literal notranslate"><span class="pre">smoothContour</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addEdges</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeColor</span> <span class="pre">=</span> <span class="pre">color.black</span></code>, <code class="docutils literal notranslate"><span class="pre">addFaces</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">smoothingAngle</span> <span class="pre">=</span> <span class="pre">2*np.pi</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -488,6 +554,7 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 <div class="line"><code class="docutils literal notranslate"><span class="pre">addEdges</span></code>: True or number of edges along revolution mantle; for optimal drawing, nTiles shall be multiple addEdges</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">edgeColor</span></code>: optional color for edges</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">addFaces</span></code>: if False, no faces are added (only edges)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">smoothingAngle</span></code>: if angle between two edges is smaller than smoothingAngle, smoothing is applied</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">alternatingColor</span></code>: add a second color, which enables to see the rotation of the solid</div>
 </div>
 </li>
@@ -521,13 +588,13 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </div>
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py">graphicsDataExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/gyroStability.py">gyroStability.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py">particlesSilo.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py">serialRobotKinematicTreeDigging.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ConvexContactTest.py">ConvexContactTest.py</a> (TM)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py">ballBearningModel.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py">graphicsDataExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/gyroStability.py">gyroStability.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/involuteGearGraphics.py">involuteGearGraphics.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py">particlesSilo.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ballBearingTest.py">ballBearingTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ConvexContactTest.py">ConvexContactTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
 </section>
 <section id="function-arrow">
 <span id="sec-graphics-arrow"></span><h2>Function: Arrow<a class="headerlink" href="#function-arrow" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L844">Arrow</a>(<code class="docutils literal notranslate"><span class="pre">pAxis</span></code>, <code class="docutils literal notranslate"><span class="pre">vAxis</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">headFactor</span> <span class="pre">=</span> <span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">headStretch</span> <span class="pre">=</span> <span class="pre">4</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">12</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1174">Arrow</a>(<code class="docutils literal notranslate"><span class="pre">pAxis</span></code>, <code class="docutils literal notranslate"><span class="pre">vAxis</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">headFactor</span> <span class="pre">=</span> <span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">headStretch</span> <span class="pre">=</span> <span class="pre">4</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">12</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -559,7 +626,7 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </section>
 <section id="function-basis">
 <span id="sec-graphics-basis"></span><h2>Function: Basis<a class="headerlink" href="#function-basis" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L862">Basis</a>(<code class="docutils literal notranslate"><span class="pre">origin</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMatrix</span> <span class="pre">=</span> <span class="pre">np.eye(3)</span></code>, <code class="docutils literal notranslate"><span class="pre">length</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">colors</span> <span class="pre">=</span> <span class="pre">[color.red,</span> <span class="pre">color.green,</span> <span class="pre">color.blue]</span></code>, <code class="docutils literal notranslate"><span class="pre">headFactor</span> <span class="pre">=</span> <span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">headStretch</span> <span class="pre">=</span> <span class="pre">4</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">12</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1192">Basis</a>(<code class="docutils literal notranslate"><span class="pre">origin</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMatrix</span> <span class="pre">=</span> <span class="pre">np.eye(3)</span></code>, <code class="docutils literal notranslate"><span class="pre">length</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">colors</span> <span class="pre">=</span> <span class="pre">[color.red,</span> <span class="pre">color.green,</span> <span class="pre">color.blue]</span></code>, <code class="docutils literal notranslate"><span class="pre">headFactor</span> <span class="pre">=</span> <span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">headStretch</span> <span class="pre">=</span> <span class="pre">4</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">12</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -586,13 +653,13 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </ul>
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py">fourBarMechanism3D.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py">graphicsDataExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/gyroStability.py">gyroStability.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/InverseKinematicsNumericalExample.py">InverseKinematicsNumericalExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mobileMecanumWheelRobotWithLidar.py">mobileMecanumWheelRobotWithLidar.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py">bricardMechanism.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createRollingDiscTest.py">createRollingDiscTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py">distanceSensor.py</a> (TM)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py">ballBearningModel.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/camFollowerExample.py">camFollowerExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py">fourBarMechanism3D.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py">graphicsDataExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/gyroStability.py">gyroStability.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ballBearingTest.py">ballBearingTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py">bricardMechanism.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCurveExample.py">contactCurveExample.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
 </section>
 <section id="function-frame">
 <span id="sec-graphics-frame"></span><h2>Function: Frame<a class="headerlink" href="#function-frame" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L885">Frame</a>(<code class="docutils literal notranslate"><span class="pre">HT</span> <span class="pre">=</span> <span class="pre">np.eye(4)</span></code>, <code class="docutils literal notranslate"><span class="pre">length</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">colors</span> <span class="pre">=</span> <span class="pre">[color.red,</span> <span class="pre">color.green,</span> <span class="pre">color.blue]</span></code>, <code class="docutils literal notranslate"><span class="pre">headFactor</span> <span class="pre">=</span> <span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">headStretch</span> <span class="pre">=</span> <span class="pre">4</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">12</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1215">Frame</a>(<code class="docutils literal notranslate"><span class="pre">HT</span> <span class="pre">=</span> <span class="pre">np.eye(4)</span></code>, <code class="docutils literal notranslate"><span class="pre">length</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">colors</span> <span class="pre">=</span> <span class="pre">[color.red,</span> <span class="pre">color.green,</span> <span class="pre">color.blue]</span></code>, <code class="docutils literal notranslate"><span class="pre">headFactor</span> <span class="pre">=</span> <span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">headStretch</span> <span class="pre">=</span> <span class="pre">4</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">12</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -618,13 +685,13 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </ul>
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py">serialRobotInverseKinematics.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py">ACFtest.py</a> (TM)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py">serialRobotInverseKinematics.py</a> (Ex)</p>
 </div></blockquote>
 <hr class="docutils" />
 </section>
 <section id="function-quad">
 <span id="sec-graphics-quad"></span><h2>Function: Quad<a class="headerlink" href="#function-quad" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L917">Quad</a>(<code class="docutils literal notranslate"><span class="pre">pList</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1247">Quad</a>(<code class="docutils literal notranslate"><span class="pre">pList</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -660,13 +727,13 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </div>
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py">massSpringFrictionInteractive.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillator.py">nMassOscillator.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorEigenmodes.py">nMassOscillatorEigenmodes.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py">nMassOscillatorInteractive.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simulateInteractively.py">simulateInteractively.py</a> (Ex)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py">massSpringFrictionInteractive.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillator.py">nMassOscillator.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorEigenmodes.py">nMassOscillatorEigenmodes.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py">nMassOscillatorInteractive.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simulateInteractively.py">simulateInteractively.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sphereTriangleTest.py">sphereTriangleTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
 </section>
 <section id="function-checkerboard">
 <span id="sec-graphics-checkerboard"></span><h2>Function: CheckerBoard<a class="headerlink" href="#function-checkerboard" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L989">CheckerBoard</a>(<code class="docutils literal notranslate"><span class="pre">point</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">normal</span> <span class="pre">=</span> <span class="pre">[0,0,1]</span></code>, <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">color.lightgrey</span></code>, <code class="docutils literal notranslate"><span class="pre">alternatingColor</span> <span class="pre">=</span> <span class="pre">color.lightgrey2</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">10</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1323">CheckerBoard</a>(<code class="docutils literal notranslate"><span class="pre">point</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">normal</span> <span class="pre">=</span> <span class="pre">[0,0,1]</span></code>, <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">color.lightgrey</span></code>, <code class="docutils literal notranslate"><span class="pre">alternatingColor</span> <span class="pre">=</span> <span class="pre">color.lightgrey2</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">10</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -684,6 +751,7 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 <div class="line"><code class="docutils literal notranslate"><span class="pre">alternatingColor</span></code>: second color; if defined, a checkerboard pattern (default: 10x10) is drawn with color and alternatingColor</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">nTiles</span></code>: number of tiles for checkerboard pattern in first direction</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">nTiles2</span></code>: number of tiles for checkerboard pattern in second direction; default: nTiles</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">materialIndex</span></code>: use special graphics material for both colors</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -703,13 +771,13 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </div>
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py">ANCFrotatingCable2D.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py">bicycleIftommBenchmark.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chainDriveExample.py">chainDriveExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py">chatGPTupdate.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate2.py">chatGPTupdate2.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFoutputTest.py">ANCFoutputTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py">bricardMechanism.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorGravityTest.py">connectorGravityTest.py</a> (TM)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py">ANCFrotatingCable2D.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py">ballBearningModel.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py">bicycleIftommBenchmark.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/camFollowerExample.py">camFollowerExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chainDriveExample.py">chainDriveExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFoutputTest.py">ANCFoutputTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ballBearingTest.py">ballBearingTest.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py">bricardMechanism.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
 </section>
 <section id="function-solidextrusion">
 <span id="sec-graphics-solidextrusion"></span><h2>Function: SolidExtrusion<a class="headerlink" href="#function-solidextrusion" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1023">SolidExtrusion</a>(<code class="docutils literal notranslate"><span class="pre">vertices</span></code>, <code class="docutils literal notranslate"><span class="pre">segments</span></code>, <code class="docutils literal notranslate"><span class="pre">height</span></code>, <code class="docutils literal notranslate"><span class="pre">rot</span> <span class="pre">=</span> <span class="pre">np.diag([1,1,1])</span></code>, <code class="docutils literal notranslate"><span class="pre">pOff</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0,0,0,1]</span></code>, <code class="docutils literal notranslate"><span class="pre">smoothNormals</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addEdges</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeColor</span> <span class="pre">=</span> <span class="pre">color.black</span></code>, <code class="docutils literal notranslate"><span class="pre">addFaces</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1366">SolidExtrusion</a>(<code class="docutils literal notranslate"><span class="pre">vertices</span></code>, <code class="docutils literal notranslate"><span class="pre">segments</span></code>, <code class="docutils literal notranslate"><span class="pre">height</span></code>, <code class="docutils literal notranslate"><span class="pre">rot</span> <span class="pre">=</span> <span class="pre">np.diag([1,1,1])</span></code>, <code class="docutils literal notranslate"><span class="pre">pOff</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">relRot</span> <span class="pre">=</span> <span class="pre">np.diag([1,1,1])</span></code>, <code class="docutils literal notranslate"><span class="pre">relOff</span> <span class="pre">=</span> <span class="pre">[0,0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0,0,0,1]</span></code>, <code class="docutils literal notranslate"><span class="pre">smoothNormals</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addEdges</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeColor</span> <span class="pre">=</span> <span class="pre">color.black</span></code>, <code class="docutils literal notranslate"><span class="pre">addFaces</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -723,8 +791,11 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 <div class="line"><code class="docutils literal notranslate"><span class="pre">segments</span></code>: list of segments, which are pairs of node numbers [i,j], defining the boundary of the mesh;</div>
 <div class="line">the ordering of the nodes is such that left triangle = inside, right triangle = outside; see ComputeTriangularMesh(…)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">height</span></code>:   height of extruded object</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">rot</span></code>:      rotation matrix, which the extruded object point coordinates are multiplied with before adding offset</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">pOff</span></code>:     3D offset vector added to extruded coordinates; the z-coordinate of the extrusion object obtains 0 for the base plane, z=height for the top plane</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rot</span></code>:      rotation matrix, which the whole extruded object point coordinates are multiplied with before adding offset</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">pOff</span></code>:     3D offset vector added to all extruded coordinates (both planes); the z-coordinate of the extrusion object obtains 0 for the base plane, z=height for the top plane</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">relRot</span></code>: rotation matrix for transformation of top (second) plane of extrusion object</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">relOff</span></code>: 3D offset vector added top (second) plane of extrusion object; the z-coordinate is added to height, which is the base z-value</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">color</span></code>: provided as list of 4 RGBA values</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">smoothNormals</span></code>: if True, algorithm tries to smoothen normals at vertices and normals are added; creates more points; if False, triangle normals are used internally</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">addEdges</span></code>: if True or 1, edges at bottom/top are included in the GraphicsData dictionary; if 2, also mantle edges are included</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">edgeColor</span></code>: optional color for edges</div>
@@ -743,9 +814,128 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </div></blockquote>
 <hr class="docutils" />
 </section>
+<section id="function-ballbearingrings">
+<span id="sec-graphics-ballbearingrings"></span><h2>Function: BallBearingRings<a class="headerlink" href="#function-ballbearingrings" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1501">BallBearingRings</a>(<code class="docutils literal notranslate"><span class="pre">axis</span></code>, <code class="docutils literal notranslate"><span class="pre">outsideDiameter</span></code>, <code class="docutils literal notranslate"><span class="pre">boreDiameter</span></code>, <code class="docutils literal notranslate"><span class="pre">width</span></code>, <code class="docutils literal notranslate"><span class="pre">radiusCage</span></code>, <code class="docutils literal notranslate"><span class="pre">innerRingShoulderRadius</span></code>, <code class="docutils literal notranslate"><span class="pre">outerRingShoulderRadius</span></code>, <code class="docutils literal notranslate"><span class="pre">widthCage</span></code>, <code class="docutils literal notranslate"><span class="pre">heightCage</span></code>, <code class="docutils literal notranslate"><span class="pre">innerEdgeChamfer</span></code>, <code class="docutils literal notranslate"><span class="pre">outerEdgeChamfer</span></code>, <code class="docutils literal notranslate"><span class="pre">innerGrooveRadius</span></code>, <code class="docutils literal notranslate"><span class="pre">outerGrooveRadius</span></code>, <code class="docutils literal notranslate"><span class="pre">innerGrooveTorusRadius</span></code>, <code class="docutils literal notranslate"><span class="pre">outerGrooveTorusRadius</span></code>, <code class="docutils literal notranslate"><span class="pre">nTilesRings</span> <span class="pre">=</span> <span class="pre">32</span></code>, <code class="docutils literal notranslate"><span class="pre">nTilesGrooves</span> <span class="pre">=</span> <span class="pre">12</span></code>, <code class="docutils literal notranslate"><span class="pre">colorCage</span> <span class="pre">=</span> <span class="pre">[0.6,0.5,0.5,0.4]</span></code>, <code class="docutils literal notranslate"><span class="pre">colorInnerRing</span> <span class="pre">=</span> <span class="pre">[0.5,0.5,0.5,0.5]</span></code>, <code class="docutils literal notranslate"><span class="pre">colorOuterRing</span> <span class="pre">=</span> <span class="pre">[0.5,0.5,0.5,0.5]</span></code>, <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">generate graphics for ball bearing rings, in particular for inner and outer rings; note that base parameters are identical as in function GetBallBearingData, assuming that the dictionary of the latter function is used as input for BallBearingRings</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">innerGrooveTorusRadius</span></code>: major radius of torus for inner groove</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">outerGrooveTorusRadius</span></code>: major radius of torus for outer groove</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">nTilesRings</span></code>: circumferential tiling of rings</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">nTilesGrooves</span></code>: tiling of grooves</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">colorCage</span></code>: cage RGBA color</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">colorInnerRing</span></code>: inner ring RGBA color</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">colorOuterRing</span></code>: outer ring RGBA color</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">dictionary of graphics data containing ‘innerRingGraphics’, ‘outerRingGraphics’ and ‘cageGraphics’; Note: graphics data is in the local bearing coordinate system, which should align with inner ring, outer ring and cage bodies!</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">exudyn.graphics</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">graphics</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">machines</span><span class="w"> </span><span class="kn">import</span> <span class="n">GetBallBearingData</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">GetBallBearingData</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">outsideDiameter</span><span class="o">=</span><span class="mf">0.080</span><span class="p">,</span>
+                          <span class="n">boreDiameter</span><span class="o">=</span><span class="mf">0.050</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.010</span><span class="p">,</span> <span class="n">nBalls</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">graphicsData</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">BallBearingRings</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span>
+<span class="c1">#... graphicsData now contains graphics of rings</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py">ballBearningModel.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ballBearingTest.py">ballBearingTest.py</a> (TM)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
+<section id="function-involutegear">
+<span id="sec-graphics-involutegear"></span><h2>Function: InvoluteGear<a class="headerlink" href="#function-involutegear" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1593">InvoluteGear</a>(<code class="docutils literal notranslate"><span class="pre">involuteGear</span></code>, <code class="docutils literal notranslate"><span class="pre">width</span></code>, <code class="docutils literal notranslate"><span class="pre">centerPoint</span> <span class="pre">=</span> <span class="pre">np.zeros(3)</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMatrix</span> <span class="pre">=</span> <span class="pre">np.eye(3)</span></code>, <code class="docutils literal notranslate"><span class="pre">helixAngleDeg</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">relativeAngleOffset</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0,0,0,1]</span></code>, <code class="docutils literal notranslate"><span class="pre">nTilesCylinder</span> <span class="pre">=</span> <span class="pre">32</span></code>, <code class="docutils literal notranslate"><span class="pre">smoothNormals</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">addEdges</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeColor</span> <span class="pre">=</span> <span class="pre">color.black</span></code>, <code class="docutils literal notranslate"><span class="pre">addFaces</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">create graphics for involute gear, using data from machines.InvoluteGear</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">involuteGear</span></code>: an instance of the class machines.InvoluteGear, containing gear data</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">width</span></code>: width of gear</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">centerPoint</span></code>: used to shift the center point of the gear; if 0, the center is in the middle of the gear</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rotationMatrix</span></code>: the gear is constructed in the x-y plane, with the gear axis [0,0,1]; to get any other axis, provide the rotation matrix</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">helixAngleDeg</span></code>: optional angle for helix gears in degree; note that this is only an approximation to real helical gear geometry!</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">radius</span></code>: in case of internal gear, this is the outer radius; for regular gear, this is the bore radius</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">relativeAngleOffset</span></code>: angular offset (about gear wheel axis) relative to the angle of one tooth and gap; 0.5 means that the tooth goes to the position of the gap</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">color</span></code>: provided as list of 4 RGBA values</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">smoothNormals</span></code>: if True, algorithm tries to smoothen normals at vertices and normals are added; creates more points; if False, triangle normals are used internally</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">addEdges</span></code>: if True or 1, edges at bottom/top are included in the GraphicsData dictionary; if 2, also mantle edges are included</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">edgeColor</span></code>: optional color for edges</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">addFaces</span></code>: if False, no faces are added (only edges)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">single graphics data for gear</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/involuteGearGraphics.py">involuteGearGraphics.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
+<section id="function-toothedrack">
+<span id="sec-graphics-toothedrack"></span><h2>Function: ToothedRack<a class="headerlink" href="#function-toothedrack" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1652">ToothedRack</a>(<code class="docutils literal notranslate"><span class="pre">module</span></code>, <code class="docutils literal notranslate"><span class="pre">nTeeth</span></code>, <code class="docutils literal notranslate"><span class="pre">width</span></code>, <code class="docutils literal notranslate"><span class="pre">toothHeight</span></code>, <code class="docutils literal notranslate"><span class="pre">rackBaseHeight</span></code>, <code class="docutils literal notranslate"><span class="pre">pressureAngleDeg</span> <span class="pre">=</span> <span class="pre">20</span></code>, <code class="docutils literal notranslate"><span class="pre">centerPoint</span> <span class="pre">=</span> <span class="pre">np.zeros(3)</span></code>, <code class="docutils literal notranslate"><span class="pre">rotationMatrix</span> <span class="pre">=</span> <span class="pre">np.eye(3)</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0,0,0,1]</span></code>, <code class="docutils literal notranslate"><span class="pre">nTilesCylinder</span> <span class="pre">=</span> <span class="pre">32</span></code>, <code class="docutils literal notranslate"><span class="pre">addEdges</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeColor</span> <span class="pre">=</span> <span class="pre">color.black</span></code>, <code class="docutils literal notranslate"><span class="pre">addFaces</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">create graphics for toothed rack</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">module</span></code>: the module in m; thus, m*pi represents the mid-distance of one tooth to the next one</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">width</span></code>: width of gear</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">nTeeth</span></code>: number of teeth used; this gives the length; if this is a float number, only part of the last root or tooth are drawn accordingly</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">toothHeight</span></code>: height of tooth from root to head</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rackBaseHeight</span></code>: height of rack below root</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">pressureAngleDeg</span></code>: pressure angle in degree for tooth shape</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">centerPoint</span></code>: used to shift the center point of the gear; if 0, the center is at the start point of the generated toothed rack (x=0,y=0), z=0 is in the middle of the rack</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">rotationMatrix</span></code>: the gear is constructed in the x-y plane, with width along z-axis</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">color</span></code>: provided as list of 4 RGBA values</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">smoothNormals</span></code>: if True, algorithm tries to smoothen normals at vertices and normals are added; creates more points; if False, triangle normals are used internally</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">addEdges</span></code>: if True or 1, edges at bottom/top are included in the GraphicsData dictionary; if 2, also mantle edges are included</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">edgeColor</span></code>: optional color for edges</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">addFaces</span></code>: if False, no faces are added (only edges)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">single graphics data for gear</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/involuteGearGraphics.py">involuteGearGraphics.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
 <section id="function-frompointsandtrigs">
 <span id="sec-graphics-frompointsandtrigs"></span><h2>Function: FromPointsAndTrigs<a class="headerlink" href="#function-frompointsandtrigs" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1155">FromPointsAndTrigs</a>(<code class="docutils literal notranslate"><span class="pre">points</span></code>, <code class="docutils literal notranslate"><span class="pre">triangles</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">normals</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1709">FromPointsAndTrigs</a>(<code class="docutils literal notranslate"><span class="pre">points</span></code>, <code class="docutils literal notranslate"><span class="pre">triangles</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">normals</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -757,7 +947,7 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 <div class="line"><code class="docutils literal notranslate"><span class="pre">points</span></code>: list or np.array with np rows of 3 columns (floats) per point (with np points)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">triangles</span></code>: list or np.array with 3 int per triangle (0-based indices to triangles), giving a matrix with nt rows and 3 columns (with nt triangles)</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">color</span></code>: provided as list of 4 RGBA values or single list of (np)*[4 RGBA values]</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">normals</span></code>: if not None, they have to be provided per point (as matrix with nPand will be added to returned GraphicsData</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">normals</span></code>: if not None, they have to be provided per point (as matrix, list of lists or flattened) and will be added to returned GraphicsData</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -768,13 +958,13 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </ul>
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveGeometry.py">NGsolveGeometry.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py">particlesSilo.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py">distanceSensor.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py">generalContactFrictionTests.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactImplicit1.py">generalContactImplicit1.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactImplicit2.py">generalContactImplicit2.py</a> (TM)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveGeometry.py">NGsolveGeometry.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveOCCgeometry.py">NGsolveOCCgeometry.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py">particlesSilo.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py">distanceSensor.py</a> (TM), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py">generalContactFrictionTests.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
 </section>
 <section id="function-topointsandtrigs">
 <span id="sec-graphics-topointsandtrigs"></span><h2>Function: ToPointsAndTrigs<a class="headerlink" href="#function-topointsandtrigs" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1187">ToPointsAndTrigs</a>(<code class="docutils literal notranslate"><span class="pre">g</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1741">ToPointsAndTrigs</a>(<code class="docutils literal notranslate"><span class="pre">g</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -800,7 +990,7 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </section>
 <section id="function-move">
 <span id="sec-graphics-move"></span><h2>Function: Move<a class="headerlink" href="#function-move" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1212">Move</a>(<code class="docutils literal notranslate"><span class="pre">g</span></code>, <code class="docutils literal notranslate"><span class="pre">pOff</span></code>, <code class="docutils literal notranslate"><span class="pre">Aoff</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1766">Move</a>(<code class="docutils literal notranslate"><span class="pre">g</span></code>, <code class="docutils literal notranslate"><span class="pre">pOff</span></code>, <code class="docutils literal notranslate"><span class="pre">Aoff</span> <span class="pre">=</span> <span class="pre">None</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -827,13 +1017,13 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </ul>
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py">graphicsDataExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openVRengine.py">openVRengine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pistonEngine.py">pistonEngine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyAsUserFunctionTest.py">rigidBodyAsUserFunctionTest.py</a> (TM)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py">ballBearningModel.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py">graphicsDataExample.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py">kinematicTreeAndMBS.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openVRengine.py">openVRengine.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyAsUserFunctionTest.py">rigidBodyAsUserFunctionTest.py</a> (TM)</p>
 </div></blockquote>
 <hr class="docutils" />
 </section>
 <section id="function-mergetrianglelists">
 <span id="sec-graphics-mergetrianglelists"></span><h2>Function: MergeTriangleLists<a class="headerlink" href="#function-mergetrianglelists" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1263">MergeTriangleLists</a>(<code class="docutils literal notranslate"><span class="pre">g1</span></code>, <code class="docutils literal notranslate"><span class="pre">g2</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1817">MergeTriangleLists</a>(<code class="docutils literal notranslate"><span class="pre">g1</span></code>, <code class="docutils literal notranslate"><span class="pre">g2</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -857,9 +1047,106 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </div></blockquote>
 <hr class="docutils" />
 </section>
+<section id="function-inverttriangles">
+<span id="sec-graphics-inverttriangles"></span><h2>Function: InvertTriangles<a class="headerlink" href="#function-inverttriangles" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1870">InvertTriangles</a>(<code class="docutils literal notranslate"><span class="pre">graphicsData</span></code>, <code class="docutils literal notranslate"><span class="pre">invertTriangles</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">invertVertexNormals</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">invert triangle orientation and triangle normals (or only one of these tasks); can also check consistency of normals</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">graphicsData</span></code>: graphicsData as returned e.g. from graphics.Sphere</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">invertTriangles</span></code>: if True, it inverts the triangle orientation (changing vertex index 0 and 1)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">invertVertexNormals</span></code>: if True, the direction of normal is flipped</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns new graphicsData (copy) with modified triangles and normals</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="function-inconsistenttriangles">
+<span id="sec-graphics-inconsistenttriangles"></span><h2>Function: InconsistentTriangles<a class="headerlink" href="#function-inconsistenttriangles" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1915">InconsistentTriangles</a>(<code class="docutils literal notranslate"><span class="pre">graphicsData</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">check consistency of orientation of triangles and vertex (point) normals</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line">graphicsData: graphicsData as returned e.g. from graphics.Sphere</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns number of cases in which triangle normals and vertex normals are inconsistent (scalar product is negative)</div>
+</div>
+</li>
+</ul>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py">graphicsDataExample.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
+<section id="function-ngsolvemesh2pointsandtrigs">
+<span id="sec-graphics-ngsolvemesh2pointsandtrigs"></span><h2>Function: NGsolveMesh2PointsAndTrigs<a class="headerlink" href="#function-ngsolvemesh2pointsandtrigs" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1958">NGsolveMesh2PointsAndTrigs</a>(<code class="docutils literal notranslate"><span class="pre">mesh</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">ngMesh</span> <span class="pre">=</span> <span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">meshOrder</span> <span class="pre">=</span> <span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">scale</span> <span class="pre">=</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">addNormals</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">convert NGsolve (surface) mesh into (surface) points and triangles; clearly, it requires to have ngsolve installed</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>input</em>:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">mesh</span></code>: a ngsolve mesh; having a geometry geo = OCCGeometry(…), mesh is returned from ngsolve.Mesh(geo.GenerateMesh(…))</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">ngMesh</span></code>: a netgen mesh; having a geometry geo = OCCGeometry(…), ngMesh is returned from geo.GenerateMesh(…)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">meshOrder</span></code>: either 1 (linear, flat triangles) or 2 (quadratic, smooth triangles)</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">scale</span></code>: additional scaling factor for geometry, as it is recommended to define netgen geometries in mm due to tolerances</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">addNormals</span></code>: if True, it computes and adds normals</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">verbose</span></code>: print debug information</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">[points, triangles] or if addNormals=True, [points, triangles, normals] for further usage in graphics.FromPointsAndTrigs(…)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>example</em>:</div>
+</div>
+</li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#assume having already a body of netgen OCCGeometry</span>
+<span class="n">geo</span> <span class="o">=</span> <span class="n">OCCGeometry</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+<span class="n">ngMesh</span> <span class="o">=</span> <span class="n">geo</span><span class="o">.</span><span class="n">GenerateMesh</span><span class="p">(</span><span class="n">maxh</span><span class="o">=</span><span class="n">maxh</span><span class="p">)</span>
+<span class="c1">#convert mesh into points, triangles and normals (with second-order elements!)</span>
+<span class="p">[</span><span class="n">points</span><span class="p">,</span> <span class="n">triangles</span><span class="p">,</span> <span class="n">normals</span><span class="p">]</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">NGsolveMesh2PointsAndTrigs</span><span class="p">(</span><span class="n">mesh</span><span class="o">=</span><span class="n">ngMesh</span><span class="p">)</span>
+<span class="c1">#convert into graphicsData</span>
+<span class="n">gMesh</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">FromPointsAndTrigs</span><span class="p">(</span> <span class="n">points</span><span class="p">,</span> <span class="n">triangles</span><span class="p">,</span> <span class="n">normals</span><span class="o">=</span><span class="n">normals</span><span class="p">,</span>
+                                    <span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">red</span><span class="p">)</span>
+<span class="c1">#use the mesh on a ground object</span>
+<span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGround</span><span class="p">(</span><span class="n">graphicsDataList</span><span class="o">=</span><span class="p">[</span><span class="n">gMesh</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveOCCgeometry.py">NGsolveOCCgeometry.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py">NGsolvePistonEngine.py</a> (Ex)</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
 <section id="function-fromstlfileascii">
 <span id="sec-graphics-fromstlfileascii"></span><h2>Function: FromSTLfileASCII<a class="headerlink" href="#function-fromstlfileascii" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1318">FromSTLfileASCII</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">invertNormals</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">invertTriangles</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L2068">FromSTLfileASCII</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">invertNormals</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">invertTriangles</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -883,13 +1170,13 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </ul>
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stlFileImport.py">stlFileImport.py</a> (Ex)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveOCCgeometry.py">NGsolveOCCgeometry.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stlFileImport.py">stlFileImport.py</a> (Ex)</p>
 </div></blockquote>
 <hr class="docutils" />
 </section>
 <section id="function-fromstlfile">
 <span id="sec-graphics-fromstlfile"></span><h2>Function: FromSTLfile<a class="headerlink" href="#function-fromstlfile" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1415">FromSTLfile</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">density</span> <span class="pre">=</span> <span class="pre">0.</span></code>, <code class="docutils literal notranslate"><span class="pre">scale</span> <span class="pre">=</span> <span class="pre">1.</span></code>, <code class="docutils literal notranslate"><span class="pre">Aoff</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">pOff</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">invertNormals</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">invertTriangles</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L2165">FromSTLfile</a>(<code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>, <code class="docutils literal notranslate"><span class="pre">verbose</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">density</span> <span class="pre">=</span> <span class="pre">0.</span></code>, <code class="docutils literal notranslate"><span class="pre">scale</span> <span class="pre">=</span> <span class="pre">1.</span></code>, <code class="docutils literal notranslate"><span class="pre">Aoff</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">pOff</span> <span class="pre">=</span> <span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">invertNormals</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">invertTriangles</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -926,7 +1213,7 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </section>
 <section id="function-addedgesandsmoothennormals">
 <span id="sec-graphics-addedgesandsmoothennormals"></span><h2>Function: AddEdgesAndSmoothenNormals<a class="headerlink" href="#function-addedgesandsmoothennormals" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1486">AddEdgesAndSmoothenNormals</a>(<code class="docutils literal notranslate"><span class="pre">graphicsData</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeColor</span> <span class="pre">=</span> <span class="pre">color.black</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeAngle</span> <span class="pre">=</span> <span class="pre">0.25*pi</span></code>, <code class="docutils literal notranslate"><span class="pre">pointTolerance</span> <span class="pre">=</span> <span class="pre">5</span></code>, <code class="docutils literal notranslate"><span class="pre">addEdges</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">smoothNormals</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">roundDigits</span> <span class="pre">=</span> <span class="pre">5</span></code>, <code class="docutils literal notranslate"><span class="pre">triangleColor</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L2236">AddEdgesAndSmoothenNormals</a>(<code class="docutils literal notranslate"><span class="pre">graphicsData</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeColor</span> <span class="pre">=</span> <span class="pre">color.black</span></code>, <code class="docutils literal notranslate"><span class="pre">edgeAngle</span> <span class="pre">=</span> <span class="pre">0.25*pi</span></code>, <code class="docutils literal notranslate"><span class="pre">pointTolerance</span> <span class="pre">=</span> <span class="pre">5</span></code>, <code class="docutils literal notranslate"><span class="pre">addEdges</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">smoothNormals</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">roundDigits</span> <span class="pre">=</span> <span class="pre">5</span></code>, <code class="docutils literal notranslate"><span class="pre">triangleColor</span> <span class="pre">=</span> <span class="pre">[]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -953,13 +1240,13 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </ul>
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveGeometry.py">NGsolveGeometry.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stlFileImport.py">stlFileImport.py</a> (Ex)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py">humanRobotInteraction.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveGeometry.py">NGsolveGeometry.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveOCCgeometry.py">NGsolveOCCgeometry.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stlFileImport.py">stlFileImport.py</a> (Ex)</p>
 </div></blockquote>
 <hr class="docutils" />
 </section>
 <section id="function-exportstl">
 <span id="sec-graphics-exportstl"></span><h2>Function: ExportSTL<a class="headerlink" href="#function-exportstl" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L1650">ExportSTL</a>(<code class="docutils literal notranslate"><span class="pre">graphicsData</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">solidName</span> <span class="pre">=</span> <span class="pre">'ExudynSolid'</span></code>, <code class="docutils literal notranslate"><span class="pre">invertNormals</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">invertTriangles</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py#L2398">ExportSTL</a>(<code class="docutils literal notranslate"><span class="pre">graphicsData</span></code>, <code class="docutils literal notranslate"><span class="pre">fileName</span></code>, <code class="docutils literal notranslate"><span class="pre">solidName</span> <span class="pre">=</span> <span class="pre">'ExudynSolid'</span></code>, <code class="docutils literal notranslate"><span class="pre">invertNormals</span> <span class="pre">=</span> <span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">invertTriangles</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -978,7 +1265,7 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 </ul>
 <p>Relevant Examples (Ex) and TestModels (TM) with weblink to github:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stlFileImport.py">stlFileImport.py</a> (Ex)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveOCCgeometry.py">NGsolveOCCgeometry.py</a> (Ex), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stlFileImport.py">stlFileImport.py</a> (Ex)</p>
 </div></blockquote>
 </section>
 </section>

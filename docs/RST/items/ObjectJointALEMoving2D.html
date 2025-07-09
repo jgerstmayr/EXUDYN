@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectJointALEMoving2D &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>ObjectJointALEMoving2D &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -107,7 +107,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -176,8 +176,8 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>slidingOffset</strong> [<span class="math notranslate nohighlight">\(s_{off}\)</span>, type = Real, default = 0.]:</div>
-<div class="line">sliding offset list [SI:m]: a list of sn scalar offsets, which represent the (reference arc) length of all previous sliding cable elements</div>
+<div class="line"><strong>slidingOffset</strong> [<span class="math notranslate nohighlight">\(s_\mathrm{off}\)</span>, type = Real, default = 0.]:</div>
+<div class="line">sliding offset [SI:m]: a scalar offset, which represents the (reference arc) length of all previous sliding cable elements</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -240,7 +240,7 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SlidingCoordinate</span></code>: <span class="math notranslate nohighlight">\(s_g = q_{ALE} + s_{off}\)</span></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SlidingCoordinate</span></code>: <span class="math notranslate nohighlight">\(s_g = q_{ALE} + s_\mathrm{off}\)</span></div>
 <div class="line">current value of the global sliding ALE coordinate, including offset; note that reference coordinate of <span class="math notranslate nohighlight">\(q_{ALE}\)</span> is ignored!</div>
 </div>
 </li>
@@ -444,7 +444,7 @@
 <h2>Geometric relations<a class="headerlink" href="#geometric-relations" title="Link to this heading"></a></h2>
 <p>The element sliding coordinate (in the local coordinates of the current sliding element) is computed from the ALE coordinate</p>
 <div class="math notranslate nohighlight">
-\[s_{el} = q_{ALE} + s_{off} - d_{m1} = s_g - d_{m1}.\]</div>
+\[s_{el} = q_{ALE} + s_\mathrm{off} - d_{m1} = s_g - d_{m1}.\]</div>
 <p>For the description of the according quantities, see the description above. The distance <span class="math notranslate nohighlight">\(d_{m1}\)</span> is obtained from the <code class="docutils literal notranslate"><span class="pre">slidingMarkerOffsets</span></code> list, using the current (local) index <span class="math notranslate nohighlight">\(x_{data0}\)</span>.
 The vector (=difference; error) between the marker <span class="math notranslate nohighlight">\(m0\)</span> and the marker <span class="math notranslate nohighlight">\(m1\)</span> (=<span class="math notranslate nohighlight">\({\mathbf{r}}_{ANCF}\)</span>) positions reads</p>
 <div class="math notranslate nohighlight">

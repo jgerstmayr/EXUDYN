@@ -45,7 +45,7 @@ You can view and download this file on Github: `NGsolvePistonEngine.py <https://
    from ngsolve import *
    from netgen.geom2d import unit_square
    
-   import netgen.libngpy as libng
+   #import netgen.libngpy as libng
    
    netgenDrawing = False #set true, to show geometry and mesh in NETGEN
    #if netgenDrawing, uncomment the following line and execute in external terminal, not in spyder (see preferences "Run"):
@@ -60,6 +60,7 @@ You can view and download this file on Github: `NGsolvePistonEngine.py <https://
    meshSize = 0.005*4 #fast: 0.005*4 with order 1; standard:0.005; h=0.004 with meshOrder 2 gives 258k unknowns; fine: 0.0011: memory limit (96GB) for NGsolve; < 0.0015 makes problems with scipy eigensolver
    meshOrder = 1 #2 for stresses!
    showStresses = True #may take very long for large number of modes/nodes
+   saveMesh = False
    
    #++++++++++++++++++++++++++++++++++++
    #helper functions (copied from EXUDYN):
@@ -362,7 +363,8 @@ You can view and download this file on Github: `NGsolvePistonEngine.py <https://
    if verbose: print("Generate meshes ...")
    #do meshing, if geometry is successful
    if True:
-       meshCrank = Mesh( geoCrank.GenerateMesh(maxh=meshSize))
+       ngMeshCrank = geoCrank.GenerateMesh(maxh=meshSize)
+       meshCrank = Mesh(ngMeshCrank)
        meshCrank.Curve(1)
        if netgenDrawing: 
            Draw(meshCrank)
@@ -372,7 +374,8 @@ You can view and download this file on Github: `NGsolvePistonEngine.py <https://
            meshCrank.ngmesh.Export('testData/crankshaft.mesh','Neutral Format')
    
    if True:
-       meshConrod = Mesh( geoConrod.GenerateMesh(maxh=meshSize)) #in videos 0.003
+       ngMeshConrod = geoConrod.GenerateMesh(maxh=meshSize) #in videos 0.003
+       meshConrod = Mesh(ngMeshConrod)
        meshConrod.Curve(1)
        if netgenDrawing: 
            Draw(meshConrod)
@@ -381,7 +384,8 @@ You can view and download this file on Github: `NGsolvePistonEngine.py <https://
        #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    if True:
-       meshPiston = Mesh( geoPiston.GenerateMesh(maxh=meshSize+0.001*0))
+       ngMeshPiston = geoPiston.GenerateMesh(maxh=meshSize+0.001*0)
+       meshPiston = Mesh(ngMeshPiston)
        meshPiston.Curve(1)
        if netgenDrawing: 
            Draw(meshPiston)
@@ -450,20 +454,11 @@ You can view and download this file on Github: `NGsolvePistonEngine.py <https://
        #print("Create CMS object and matrices ....")
        cmsCrank = ObjectFFRFreducedOrderInterface(femCrank)
        
-       #user functions should be defined outside of class:
-       def UFmassFFRFreducedOrderCrank(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsCrank.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       
-       def UFforceFFRFreducedOrderCrank(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsCrank.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       
        objFFRFcrank = cmsCrank.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, 
                                                    positionRef=[0,0,0], 
                                                    eulerParametersRef=eulerParameters0, 
                                                    initialVelocity=[0,0,0], initialAngularVelocity=[0,0,1*fRotorStart*2*pi],
                                                    gravity = [0,-0*9.81,0],
-                                                   #UFforce=UFforceFFRFreducedOrderCrank, 
-                                                   #UFmassMatrix=UFmassFFRFreducedOrderCrank,
                                                    color=[0.1,0.9,0.1,1.])
        mbs.SetObjectParameter(objFFRFcrank['oFFRFreducedOrder'],'VshowNodes',False)
    
@@ -543,75 +538,13 @@ You can view and download this file on Github: `NGsolvePistonEngine.py <https://
        #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
        #import multiple conrods and pistons
    
-       #user functions should be defined outside of class:
-       def UFmassFFRFreducedOrderConrod0(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsConrodList[0].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFmassFFRFreducedOrderConrod1(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsConrodList[1].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFmassFFRFreducedOrderConrod2(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsConrodList[2].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFmassFFRFreducedOrderConrod3(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsConrodList[3].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFmassFFRFreducedOrderConrod4(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsConrodList[4].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFmassFFRFreducedOrderConrod5(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsConrodList[5].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       
-       def UFforceFFRFreducedOrderConrod0(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsConrodList[0].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFforceFFRFreducedOrderConrod1(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsConrodList[1].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFforceFFRFreducedOrderConrod2(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsConrodList[2].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFforceFFRFreducedOrderConrod3(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsConrodList[3].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFforceFFRFreducedOrderConrod4(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsConrodList[4].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFforceFFRFreducedOrderConrod5(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsConrodList[5].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
+       conrodsRotList = []
+       conrodsPosList = []
+       pistonsRotList = []
+       pistonsPosList = []
    
-       #user functions should be defined outside of class:
-       def UFmassFFRFreducedOrderPiston0(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsPistonList[0].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFmassFFRFreducedOrderPiston1(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsPistonList[1].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFmassFFRFreducedOrderPiston2(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsPistonList[2].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFmassFFRFreducedOrderPiston3(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsPistonList[3].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFmassFFRFreducedOrderPiston4(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsPistonList[4].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFmassFFRFreducedOrderPiston5(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsPistonList[5].UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       
-       def UFforceFFRFreducedOrderPiston0(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsPistonList[0].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFforceFFRFreducedOrderPiston1(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsPistonList[1].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFforceFFRFreducedOrderPiston2(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsPistonList[2].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFforceFFRFreducedOrderPiston3(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsPistonList[3].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFforceFFRFreducedOrderPiston4(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsPistonList[4].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       def UFforceFFRFreducedOrderPiston5(mbs, t, itemIndex, qReduced, qReduced_t):
-           return cmsPistonList[5].UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-       
-       #lists for multiple objects in conrods and pistons:
-       UFmassFFRFreducedOrderConrodList=[UFmassFFRFreducedOrderConrod0,UFmassFFRFreducedOrderConrod1,
-                                         UFmassFFRFreducedOrderConrod2,UFmassFFRFreducedOrderConrod3,
-                                         UFmassFFRFreducedOrderConrod4,UFmassFFRFreducedOrderConrod5]
-       UFforceFFRFreducedOrderConrodList=[UFforceFFRFreducedOrderConrod0,UFforceFFRFreducedOrderConrod1,
-                                          UFforceFFRFreducedOrderConrod2,UFforceFFRFreducedOrderConrod3,
-                                          UFforceFFRFreducedOrderConrod4,UFforceFFRFreducedOrderConrod5]
        objFFRFconrodList=[]
        cmsConrodList=[]
-       UFmassFFRFreducedOrderPistonList=[UFmassFFRFreducedOrderPiston0,UFmassFFRFreducedOrderPiston1,
-                                         UFmassFFRFreducedOrderPiston2,UFmassFFRFreducedOrderPiston3,
-                                         UFmassFFRFreducedOrderPiston4,UFmassFFRFreducedOrderPiston5]
-       UFforceFFRFreducedOrderPistonList=[UFforceFFRFreducedOrderPiston0,UFforceFFRFreducedOrderPiston1,
-                                          UFforceFFRFreducedOrderPiston2,UFforceFFRFreducedOrderPiston3,
-                                          UFforceFFRFreducedOrderPiston4,UFforceFFRFreducedOrderPiston5]
        objFFRFpistonList=[]
        cmsPistonList=[]
        pkList = []
@@ -637,7 +570,9 @@ You can view and download this file on Github: `NGsolvePistonEngine.py <https://
            eulerParametersInit = RotationMatrix2EulerParameters(RotationMatrixZ(-alpha))
            #pRef = [lk+0.5*lc,0,zOffset+0.5*b1] #0-degree
            pRef = pC + [0,0,zOffset+0.5*b1]
-                       
+           conrodsRotList.append(RotationMatrixZ(-alpha).tolist())
+           conrodsPosList.append(pRef.tolist())
+           
            #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
            #import conrod CMS
            cmsConrod = ObjectFFRFreducedOrderInterface(femConrod)
@@ -648,8 +583,6 @@ You can view and download this file on Github: `NGsolvePistonEngine.py <https://
                                                        initialVelocity=[0,0,0], 
                                                        initialAngularVelocity=[0,0,0*fRotorStart*2*pi],
                                                        gravity = [0,-0*9.81,0],
-                                                       #UFforce=UFforceFFRFreducedOrderConrodList[iCrank], 
-                                                       #UFmassMatrix=UFmassFFRFreducedOrderConrodList[iCrank],
                                                        color=[0.1,0.9,0.1,1.])
            mbs.SetObjectParameter(objFFRFconrod['oFFRFreducedOrder'],'VshowNodes',False)
            objFFRFconrodList.append(objFFRFconrod)
@@ -658,14 +591,17 @@ You can view and download this file on Github: `NGsolvePistonEngine.py <https://
            #import piston CMS
            cmsPiston = ObjectFFRFreducedOrderInterface(femPiston)
            cmsPistonList.append(cmsPiston)
-    
+   
+           pRefPiston = pP+[0,0,zOffset+0.5*b1]
+   
+           pistonsRotList.append(RotationMatrixZ(0).tolist())
+           pistonsPosList.append(pRefPiston.tolist())
+   
            objFFRFpiston = cmsPiston.AddObjectFFRFreducedOrderWithUserFunctions(exu, mbs, 
-                                                       positionRef=pP+[0,0,zOffset+0.5*b1], 
+                                                       positionRef=pRefPiston, 
                                                        eulerParametersRef=eulerParameters0, 
                                                        initialVelocity=[0,0,0], initialAngularVelocity=[0,0,0*fRotorStart*2*pi],
                                                        gravity = [0,-0*9.81,0],
-                                                       #UFforce=UFforceFFRFreducedOrderPistonList[iCrank], 
-                                                       #UFmassMatrix=UFmassFFRFreducedOrderPistonList[iCrank],
                                                        color=[0.1,0.9,0.1,1.])
            mbs.SetObjectParameter(objFFRFpiston['oFFRFreducedOrder'],'VshowNodes',False)
            objFFRFpistonList.append(objFFRFpiston)
@@ -750,7 +686,25 @@ You can view and download this file on Github: `NGsolvePistonEngine.py <https://
        print("\ntotal elapsed time=", stopTotal-startTotal)
        mbs.Assemble()
    
-       #now simulate model in exudyn:
+       if saveMesh:
+           #%%%
+           dictMesh = {}
+           [points, triangles, normals] = graphics.NGsolveMesh2PointsAndTrigs( ngMesh=ngMeshCrank)
+           dictMesh['ngMeshCrank'] = {'points':points, 'triangles':triangles, 'normals':normals}
+           [points, triangles, normals] = graphics.NGsolveMesh2PointsAndTrigs( ngMesh=ngMeshConrod)
+           dictMesh['ngMeshConrod'] = {'points':points, 'triangles':triangles, 'normals':normals}
+           [points, triangles, normals] = graphics.NGsolveMesh2PointsAndTrigs( ngMesh=ngMeshPiston)
+           dictMesh['ngMeshPiston'] = {'points':points, 'triangles':triangles, 'normals':normals}
+           dictMesh['conrodsRotList'] = conrodsRotList
+           dictMesh['conrodsPosList'] = conrodsPosList
+           dictMesh['pistonsRotList'] = pistonsRotList
+           dictMesh['pistonsPosList'] = pistonsPosList
+   
+           fileName = 'testData/pistonEngineNGmesh.hdf5'
+           SaveDictToHDF5(fileName, dictMesh)
+   
+   
+       #%%now simulate model in exudyn:
        #%%+++++++++++++++++++++
        if True:
            print("totalFEcoordinates=",totalFEcoordinates)
@@ -820,10 +774,10 @@ You can view and download this file on Github: `NGsolvePistonEngine.py <https://
                SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
                SC.visualizationSettings.window.renderWindowSize=[1920,1080]
    
-           exu.StartRenderer()
-           if 'renderState' in exu.sys: SC.SetRenderState(exu.sys['renderState']) #load last model view
+           SC.renderer.Start()
+           if 'renderState' in exu.sys: SC.renderer.SetState(exu.sys['renderState']) #load last model view
    
-           mbs.WaitForUserToContinue() #press space to continue
+           SC.renderer.DoIdleTasks() #press space to continue
            
            simulate = True #set false to show last stored solution
            if simulate:
@@ -842,7 +796,7 @@ You can view and download this file on Github: `NGsolvePistonEngine.py <https://
            if False: #draw with matplotlib, export as pdf
                SC.visualizationSettings.exportImages.saveImageFormat = "TXT"
                SC.visualizationSettings.exportImages.saveImageAsTextTriangles=True
-               SC.RedrawAndSaveImage() #uses default filename
+               SC.renderer.RedrawAndSaveImage() #uses default filename
                
                from exudyn.plot import LoadImage, PlotImage
    
@@ -857,9 +811,9 @@ You can view and download this file on Github: `NGsolvePistonEngine.py <https://
                          lineWidths=0.5, lineStyles='-', triangleEdgeColors='black', triangleEdgeWidths=0.25, title='', closeAll=True, plot3D=True,
                          fileName='images/test3D.pdf')
                        
-           SC.WaitForRenderEngineStopFlag()
-           exu.StopRenderer() #safely close rendering window!
-           lastRenderState = SC.GetRenderState() #store model view for next simulation
+           SC.renderer.DoIdleTasks()
+           SC.renderer.Stop() #safely close rendering window!
+           lastRenderState = SC.renderer.GetState() #store model view for next simulation
        
    
    

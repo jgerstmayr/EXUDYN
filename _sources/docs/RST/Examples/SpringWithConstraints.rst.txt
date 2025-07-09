@@ -92,19 +92,17 @@ You can view and download this file on Github: `SpringWithConstraints.py <https:
    
    simulationSettings.solutionSettings.solutionInformation = "Planar four-bar-mechanism with initial angular velocity and gravity"
    
-   #exu.StartRenderer()
-   ##exu.InfoStat()
+   #SC.renderer.Start()
    #mbs.SolveDynamic(simulationSettings)
-   ##exu.InfoStat()
-   #SC.WaitForRenderEngineStopFlag()
-   #exu.StopRenderer() #safely close rendering window!
+   #SC.renderer.DoIdleTasks()
+   #SC.renderer.Stop() #safely close rendering window!
    
    simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 0.1
    simulationSettings.staticSolver.verboseMode = 3
-   exu.StartRenderer()
+   SC.renderer.Start()
    mbs.SolveStatic(simulationSettings)
-   SC.WaitForRenderEngineStopFlag()
-   exu.StopRenderer() #safely close rendering window!
+   SC.renderer.DoIdleTasks()
+   SC.renderer.Stop() #safely close rendering window!
    
    
 

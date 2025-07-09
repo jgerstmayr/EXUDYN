@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Render state &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>Render state &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -91,7 +91,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -112,9 +112,9 @@
              
   <section id="render-state">
 <span id="sec-renderstate"></span><h1>Render state<a class="headerlink" href="#render-state" title="Link to this heading"></a></h1>
-<p>The system container function <code class="docutils literal notranslate"><span class="pre">SC.GetRenderState()</span></code> returns a dictionary with current information on the renderer.
+<p>The system container function <code class="docutils literal notranslate"><span class="pre">SC.renderer.GetState()</span></code> returns a dictionary with current information on the renderer.
 This information is updated whenever the renderer performs redrawing or when according changes in the renderer are performed.</p>
-<p>When starting with an empty <code class="docutils literal notranslate"><span class="pre">mbs</span></code> and calling <code class="docutils literal notranslate"><span class="pre">exu.StartRenderer()</span></code>, the <code class="docutils literal notranslate"><span class="pre">SC.GetRenderState()</span></code> will return a dictionary similar to:</p>
+<p>When starting with an empty <code class="docutils literal notranslate"><span class="pre">mbs</span></code> and calling <code class="docutils literal notranslate"><span class="pre">SC.renderer.Start()</span></code>, the <code class="docutils literal notranslate"><span class="pre">SC.renderer.GetState()</span></code> will return a dictionary similar to:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;centerPoint&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
 <span class="s1">&#39;maxSceneSize&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
 <span class="s1">&#39;zoom&#39;</span><span class="p">:</span> <span class="mf">0.4000000059604645</span><span class="p">,</span>
@@ -130,8 +130,8 @@ This information is updated whenever the renderer performs redrawing or when acc
 </div>
 <p>Note that in case that you compiled with OpenVR, there will be a separate key <code class="docutils literal notranslate"><span class="pre">openVRstate</span></code>, containing details on OpenVR, e.g., HMD pose, eye projections and controller poses.
 Most entries in <code class="docutils literal notranslate"><span class="pre">renderState</span></code> are having single precision due to compatibility with values entered in OpenGL.
-The most typical scenario for using <code class="docutils literal notranslate"><span class="pre">SC.SetRenderState(...)</span></code> is to restore a previous view or to start a simulation with a specific view, projection or similar. Furthermore, mouse and joystick values can be used for interactive models.</p>
-<p>There is a set of variables, which can be actively changed by calling  <code class="docutils literal notranslate"><span class="pre">SC.SetRenderState(renderState)</span></code> with <code class="docutils literal notranslate"><span class="pre">renderState</span></code>containing a modified dictionary:</p>
+The most typical scenario for using <code class="docutils literal notranslate"><span class="pre">SC.renderer.SetState(...)</span></code> is to restore a previous view or to start a simulation with a specific view, projection or similar. Furthermore, mouse and joystick values can be used for interactive models.</p>
+<p>There is a set of variables, which can be actively changed by calling  <code class="docutils literal notranslate"><span class="pre">SC.renderer.SetState(renderState)</span></code> with <code class="docutils literal notranslate"><span class="pre">renderState</span></code>containing a modified dictionary:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">centerPoint</span></code>: this is a 3D vector (list/numpy-array) containing the center point for the current view; modifying this vector allows to track objects in you simulation, <strong>however</strong>, it is highly recommended to use <code class="docutils literal notranslate"><span class="pre">trackMarker</span></code> in <code class="docutils literal notranslate"><span class="pre">visualizationSettings.interactive</span></code> for tracking of objects!</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">rotationCenterPoint</span></code>: the centerpoint for rotation with mouse (pressing right button)</p></li>
@@ -140,7 +140,7 @@ The most typical scenario for using <code class="docutils literal notranslate"><
 <li><p><code class="docutils literal notranslate"><span class="pre">modelRotation</span></code>: this is the <span class="math notranslate nohighlight">\(3 \times 3\)</span> rotation matrix used for model rotation; changing this matrix allows to rotate the model in the view; overwriting modelRotation, centerPoint and zoom with stored values allows to reset to a certain (default) view</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">projectionMatrix</span></code>: the <span class="math notranslate nohighlight">\(4 \times 4\)</span> matrix for camera projection (as a homogeneous transformation, according to classical OpenGL standard)</p></li>
 </ul>
-<p>Note that other items in renderState are ignored when calling <code class="docutils literal notranslate"><span class="pre">SC.SetRenderState(renderState)</span></code>. The read only variables in <code class="docutils literal notranslate"><span class="pre">SC.GetRenderState()</span></code> are:</p>
+<p>Note that other items in renderState are ignored when calling <code class="docutils literal notranslate"><span class="pre">SC.renderer.SetState(renderState)</span></code>. The read only variables in <code class="docutils literal notranslate"><span class="pre">SC.renderer.GetState()</span></code> are:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">currentWindowSize</span></code>: contains current window size, which is different from default values in visualizationSettings, if window is scaled by user</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">displayScaling</span></code>: contains display scaling (monitor scaling; content scaling) as returned by GLFW and Windows (always 1 on Linux); used internally in renderer to scale fonts</p></li>

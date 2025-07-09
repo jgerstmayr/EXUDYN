@@ -332,9 +332,12 @@ In Exudyn, position, orientation and deformation coordinates (of bodies) are den
 The \ **generalized (Lagrangian) coordinates**\ , which are employed in Lagrange's equations of motion, are another set of well known coordinates used for mechanisms. As known from Lagrange's formalism, coordinates may be defined relative to each other.
 
 
+.. _sec-referenceandcurrentcoordinates:
+
+
 Reference and current coordinates
 ---------------------------------
-\label{sec:referenceAndCurrentCoordinates}
+
 An important fact on the coordinates used in Exudyn is upon the \ **additive**\ \ (This additive splitting is also used for rotations: therefore, only the sum of reference and current (or visualization) coordinates has a geometrical meaning, while the parts are only used within the solver for incrementing.) splitting of quantities (e.g. position, rotation parameters, etc.) into \ **reference**\  and \ **current**\  (initial/visualization/...) coordinates.
 The current position vector of a point node is computed from the reference position plus the current displacement, reading
 

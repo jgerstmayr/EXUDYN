@@ -40,9 +40,6 @@ You can view and download this file on Github: `createRollingDiscTest.py <https:
        exudynTestGlobals = ExudynTestGlobals()
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
-   import exudyn as exu
-   from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-   import numpy as np
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
@@ -86,8 +83,8 @@ You can view and download this file on Github: `createRollingDiscTest.py <https:
    SC.visualizationSettings.openGL.multiSampling=4
    
    if useGraphics:
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
    
    mbs.SolveDynamic(simulationSettings)
    
@@ -101,8 +98,8 @@ You can view and download this file on Github: `createRollingDiscTest.py <https:
    
    
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    # mbs.SolutionViewer()
 

@@ -240,16 +240,16 @@ You can view and download this file on Github: `rollingDiscTangentialForces.py <
    SC.visualizationSettings.openGL.multiSampling = 4
    
    if useGraphics:
-       exu.StartRenderer()
+       SC.renderer.Start()
        if 'renderState' in exu.sys:
-           SC.SetRenderState(exu.sys['renderState'])
-       mbs.WaitForUserToContinue()
+           SC.renderer.SetState(exu.sys['renderState'])
+       SC.renderer.DoIdleTasks()
    
-   exu.SolveDynamic(mbs, simulationSettings)
+   mbs.SolveDynamic(simulationSettings)
    
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    force = mbs.GetSensorValues(sForce)
    u = 1e-3*(abs(force[0]) + abs(force[1]) + abs(force[2]))

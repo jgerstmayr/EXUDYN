@@ -105,8 +105,8 @@ You can view and download this file on Github: `solutionViewerMultipleSimulation
    
    useGraphics=False
    if useGraphics:
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
    
    nLoadSteps = 25 #this is the number of individual computations; could also be done with staticSolver.numberOfLoadSteps
                    #  but here, we want to show how to do multiple steps merged into one solution file
@@ -134,8 +134,8 @@ You can view and download this file on Github: `solutionViewerMultipleSimulation
        print('load=',loadValue, ', tip: x='+str(sol[n-4])+', y='+str(sol[n-3])) 
    
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    if True:
        #%%

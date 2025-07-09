@@ -98,15 +98,87 @@ The MatrixContainer is a versatile representation for dense and sparse matrices.
 
 
 
+.. _sec-graphicsmateriallist:
+
+
+GraphicsMaterialList
+====================
+
+The GraphicsMaterialList contains the list of materials (material properties) for visualization; currently, only the raytracer uses materials. Materials can be accessed via the variable materials in renderer of SystemContainer.
+
+.. code-block:: python
+   :linenos:
+   
+   #access material 0:
+   mat0 = SC.renderer.materials[0]
+   #convert into dictionary for easier processing:
+   matDict = mat0.GetDictionary()
+   matDict['alpha'] = 0.5
+   #change material (e.g. using a data base):
+   mat0.SetDictionary(matDict)
+   #or directly update material
+   mat0.name = 'new name'
+   mat0.emission = [0.8,0.6,0.]
+   
+   #update material in renderer:
+   SC.renderer.materials.Set(0,mat0)
+   #update material directly with dictionary:
+   SC.renderer.materials.Set(0,matDict)
+   
+   #create new material:
+   mat10 = SC.renderer.materials.New()
+   mat10.reflectivity = 0.8
+   SC.renderer.materials.Append(mat10) #returns index of mat10
+   
+   #10 default graphics materials in Exudyn
+   #listed here with default color and some properties:
+   #note the increased computational costs for reflection & transparency
+   #the material names are as follows:
+   SC.renderer.materials[0].name == "default"    #steel blue
+   SC.renderer.materials[1].name == "matt"       #green
+   SC.renderer.materials[2].name == "steel"      #grey (reflection)
+   SC.renderer.materials[3].name == "plastic"    #red (reflection)
+   SC.renderer.materials[4].name == "chrome"     #light grey (reflection)
+   SC.renderer.materials[5].name == "shiny"      #orange (reflection)
+   SC.renderer.materials[6].name == "transparent"#(transparency,slight refraction)
+   SC.renderer.materials[7].name == "glass"      #light grey (reflection,transparency,refraction)
+   SC.renderer.materials[8].name == "mirror"     #light grey (reflection)
+   SC.renderer.materials[9].name == "emission"   #light yellow
+   
+
+\ The class **GraphicsMaterialList** has the following **functions and structures**:
+
+* | **Reset**\ (): 
+  | reset materials to 10 default materials
+* | **Append**\ (\ *material*\ ): 
+  | add single material as dict or VSettingsMaterial to list; returns index of newly added material
+* | **New**\ (): 
+  | Get new default material, which can be modified or appended to materials list
+* | **Set**\ (\ *indexOrName*\ , \ *material*\ ): 
+  | set material with index 'materialIndex' as dict or VSettingsMaterial
+* | **Get**\ (\ *indexOrName*\ ): 
+  | get material with index 'materialIndex' as VSettingsMaterial
+* | **GetDict**\ (\ *indexOrName*\ ): 
+  | get material with index 'materialIndex' as dict
+* | **len(data)**\ : 
+  | return length of the Vector3DList, using len(data) where data is the Vector3DList
+* | **... = data[index]**\ : 
+  | get reference access of material with 'index' as VSettingsMaterial
+* | **\_\_repr\_\_()**\ : 
+  | return the string representation of the GraphicsMaterialList
+
+
+
+
 Vector3DList
 ============
 
 The Vector3DList is used to represent lists of 3D vectors. This is used to transfer such lists from Python to C++. 
 
-Usage: 
+Usage:
+
 +  Create empty \ ``Vector3DList``\  with \ ``x = Vector3DList()``\  
-+  Create \ ``Vector3DList``\  with list of numpy arrays:
-\ ``x = Vector3DList([ numpy.array([1.,2.,3.]), numpy.array([4.,5.,6.]) ])``\ 
++  Create \ ``Vector3DList``\  with list of numpy arrays:\ ``x = Vector3DList([ numpy.array([1.,2.,3.]), numpy.array([4.,5.,6.]) ])``\ 
 +  Create \ ``Vector3DList``\  with list of lists \ ``x = Vector3DList([[1.,2.,3.], [4.,5.,6.]])``\ 
 +  Append item: \ ``x.Append([0.,2.,4.])``\ 
 +  Convert into list of numpy arrays: \ ``x.GetPythonObject()``\ 

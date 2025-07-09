@@ -23,7 +23,7 @@ This is the data structure of a system which contains Objects (bodies/constraint
    mMP = mbs.AddMarker(MarkerNodePosition(nodeNumber = nMP))
    mbs.AddLoad(Force(markerNumber = mMP, loadVector=[2,0,5]))
    mbs.Assemble()
-   exu.SolveDynamic(mbs, exu.SimulationSettings())
+   mbs.SolveDynamic(exu.SimulationSettings())
    
    #obtain current ODE2 system vector including reference values:
    uTotal = mbs.systemData.GetODE2CoordinatesTotal()

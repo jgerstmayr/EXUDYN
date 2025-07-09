@@ -203,12 +203,12 @@ You can view and download this file on Github: `ANCFcontactCircle2.py <https://g
    
    solveDynamic = False
    if solveDynamic: 
-       exu.StartRenderer()
+       SC.renderer.Start()
    
        mbs.SolveDynamic(simulationSettings)
    
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    else:
        simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-10*100 #can be quite small; WHY?
@@ -227,18 +227,17 @@ You can view and download this file on Github: `ANCFcontactCircle2.py <https://g
        simulationSettings.pauseAfterEachStep = False
        simulationSettings.staticSolver.stabilizerODE2term = 50 
    
-       exu.StartRenderer()
+       SC.renderer.Start()
    
-       mbs.WaitForUserToContinue()
+       SC.renderer.DoIdleTasks()
        mbs.SolveStatic(simulationSettings)
    
        #sol = mbs.systemData.GetODE2Coordinates()
        #n = len(sol)
        #print('tip displacement: x='+str(sol[n-4])+', y='+str(sol[n-3])) 
    
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
-   # exu.InfoStat();
 
 

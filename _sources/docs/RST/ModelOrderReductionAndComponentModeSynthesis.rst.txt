@@ -82,7 +82,7 @@ As an example, we consider a part denoted as 'hinge' in the following, see \ :nu
 
 After import of mass and stiffness matrix, eigenmodes and eigenfrequencies can be computed using \ ``fem.ComputeEigenFrequencies(...)``\ , 
 which computes the quantities \ ``fem.modeBasis``\  and \ ``fem.eigenValues``\ .
-The eigenvalues in Hz can be retrieved also with the function \ ``fem.GetEigenFrequenciesHz()``\ .
+The eigenvalues in Hz can be retrieved with \ ``fem.GetEigenFrequenciesHz()``\ .
 The function \ ``fem.ComputeEigenFrequencies(...)``\  is available for dense and sparse matrices, and uses \ ``scipy.linalg``\  to compute eigenvalues of the linear, undamped mechanical system
 
 .. math::

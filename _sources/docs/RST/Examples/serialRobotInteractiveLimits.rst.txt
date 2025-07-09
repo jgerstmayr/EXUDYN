@@ -214,7 +214,7 @@ You can view and download this file on Github: `serialRobotInteractiveLimits.py 
    #         return [0,0,0]
    #     else:
    #         p = SC.GetCurrentMouseCoordinates(True) #True=OpenGL coordinates; 2D
-   #         A = np.array(SC.GetRenderState()['modelRotation'])
+   #         A = np.array(SC.renderer.GetState()['modelRotation'])
    #         # print('p=',p)
    #         # print('u=',displacement)
    #         p3D = A@np.array([p[0],p[1],0.])
@@ -300,7 +300,7 @@ You can view and download this file on Github: `serialRobotInteractiveLimits.py 
        #additional static torque compensation; P and D control in TSD:
        if not mbs.variables['controlActive']:
            p = SC.GetCurrentMouseCoordinates(True) #True=OpenGL coordinates; 2D
-           A = np.array(SC.GetRenderState()['modelRotation'])
+           A = np.array(SC.renderer.GetState()['modelRotation'])
            p3D = A@np.array([p[0],p[1],0.])
            
            offset = p3D
@@ -441,7 +441,7 @@ You can view and download this file on Github: `serialRobotInteractiveLimits.py 
    tEnd = 1.25
    h = 0.0005
    
-   #mbs.WaitForUserToContinue()
+   #SC.renderer.DoIdleTasks()
    simulationSettings = exu.SimulationSettings() #takes currently set values or default values
    
    simulationSettings.solutionSettings.solutionInformation = 'Hanging Robot Interactive Example'
@@ -498,9 +498,9 @@ You can view and download this file on Github: `serialRobotInteractiveLimits.py 
        #print(q)
        
    SC.visualizationSettings.general.autoFitScene = False #use loaded render state
-   exu.StartRenderer()
+   SC.renderer.Start()
    if 'renderState' in exu.sys:
-       SC.SetRenderState(exu.sys[ 'renderState' ])
+       SC.renderer.SetState(exu.sys[ 'renderState' ])
    
    InteractiveDialog(mbs=mbs, simulationSettings=simulationSettings,
                      simulationFunction=SimulationUF, 
@@ -511,26 +511,26 @@ You can view and download this file on Github: `serialRobotInteractiveLimits.py 
                      #addSliderVariables=True
                      )
    
-   exu.StopRenderer()
+   SC.renderer.Stop()
    
    if 0: 
        if useGraphics:
-           exu.StartRenderer()
+           SC.renderer.Start()
            if 'renderState' in exu.sys:
-               SC.SetRenderState(exu.sys['renderState'])
-           mbs.WaitForUserToContinue()
+               SC.renderer.SetState(exu.sys['renderState'])
+           SC.renderer.DoIdleTasks()
            
        mbs.SolveDynamic(simulationSettings, showHints=True)
        
        
        if useGraphics:
            SC.visualizationSettings.general.autoFitScene = False
-           exu.StopRenderer()
+           SC.renderer.Stop()
        
        
        mbs.SolutionViewer()
        
-       lastRenderState = SC.GetRenderState() #store model view
+       lastRenderState = SC.renderer.GetState() #store model view
        
        #compute final torques:
        measuredTorques=[]

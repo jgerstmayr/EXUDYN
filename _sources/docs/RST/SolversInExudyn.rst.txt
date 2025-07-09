@@ -34,7 +34,7 @@ The advanced methods are build upon the basic solvers and essentially run single
 
 The basic solvers need a \ ``MainSystem``\ , usually denoted as \ ``mbs``\ , to be solved. Furthermore, a couple of options are usually to be given, which are explained shortly:
 
-+  \ ``simulationSettings``\ : This is a big structure, containing all solver options; note that only the according options for \ ``staticSolver``\  or \ ``timeIntegration``\  are used. Look at the detailed description of these options in Section :ref:`sec-settingsstructures`\ . These settings influence the output rate and output quantity of the solution, solver reporting, accuracy, solver type, etc. Specifically, the \ ``verboseMode``\  may be increased (2-4) to see the behavior of the solver and intermediate quantities.
++  \ ``simulationSettings``\ : This is a big structure, containing all solver options; note that only the according options for \ ``staticSolver``\  or \ ``timeIntegration``\  are used. Look at the detailed description of these options in Section :ref:`sec-simulationsettingsmain`\ . These settings influence the output rate and output quantity of the solution, solver reporting, accuracy, solver type, etc. Specifically, the \ ``verboseMode``\  may be increased (2-4) to see the behavior of the solver and intermediate quantities.
 +  \ ``solverType``\ : Only for \ ``exudyn.SolveDynamic(...)``\ : This is a simpler access to the solverType given in the internal structure of 
   
    \ ``timeIntegration.generalizedAlpha``\  and 

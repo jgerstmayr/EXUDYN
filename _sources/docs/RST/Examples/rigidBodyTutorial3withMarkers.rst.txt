@@ -139,17 +139,17 @@ You can view and download this file on Github: `rigidBodyTutorial3withMarkers.py
    SC.visualizationSettings.nodes.showBasis=True
    
    # uncomment to start visualization during simulation
-   # exu.StartRenderer()
+   # SC.renderer.Start()
    # if 'renderState' in exu.sys: #reload old view
-   #     SC.SetRenderState(exu.sys['renderState'])
+   #     SC.renderer.SetState(exu.sys['renderState'])
    
-   #mbs.WaitForUserToContinue() #stop before simulating
+   #SC.renderer.DoIdleTasks() #stop before simulating
    
    mbs.SolveDynamic(simulationSettings = simulationSettings,
                     solverType=exu.DynamicSolverType.TrapezoidalIndex2)
    
-   # SC.WaitForRenderEngineStopFlag() #stop before closing
-   # exu.StopRenderer() #safely close rendering window!
+   # SC.renderer.DoIdleTasks() #stop before closing
+   # SC.renderer.Stop() #safely close rendering window!
    
    #start post processing
    mbs.SolutionViewer()

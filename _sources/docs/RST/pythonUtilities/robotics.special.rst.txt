@@ -16,7 +16,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 
 Function: VelocityManipulability
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`VelocityManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L31>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``mode``\ )
+`VelocityManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L32>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``mode``\ )
 
 - | \ *function description*\ :
   | compute velocity manipulability measure for given pose (homogeneous  transformation)
@@ -40,7 +40,7 @@ Function: VelocityManipulability
 
 Function: ForceManipulability
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ForceManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L61>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``mode``\ , \ ``singularWeight = 100``\ )
+`ForceManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L62>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``mode``\ , \ ``singularWeight = 100``\ )
 
 - | \ *function description*\ :
   | compute force manipulability measure for given pose (homogeneous  transformation)
@@ -65,7 +65,7 @@ Function: ForceManipulability
 
 Function: StiffnessManipulability
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`StiffnessManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L105>`__\ (\ ``robot``\ , \ ``JointStiffness``\ , \ ``HT``\ , \ ``mode``\ , \ ``singularWeight = 1000``\ )
+`StiffnessManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L106>`__\ (\ ``robot``\ , \ ``JointStiffness``\ , \ ``HT``\ , \ ``mode``\ , \ ``singularWeight = 1000``\ )
 
 - | \ *function description*\ :
   | compute cartesian stiffness measure for given pose (homogeneous transformation)
@@ -94,7 +94,7 @@ Function: StiffnessManipulability
 
 Function: JointJacobian
 ^^^^^^^^^^^^^^^^^^^^^^^
-`JointJacobian <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L148>`__\ (\ ``robot``\ , \ ``HTJoint``\ , \ ``HTLink``\ )
+`JointJacobian <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L149>`__\ (\ ``robot``\ , \ ``HTJoint``\ , \ ``HTLink``\ )
 
 - | \ *function description*\ :
   | compute joint jacobian for each frame for given pose (homogeneous transformation)
@@ -117,7 +117,7 @@ Function: JointJacobian
 
 Function: MassMatrix
 ^^^^^^^^^^^^^^^^^^^^
-`MassMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L211>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``jointJacobian``\ )
+`MassMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L209>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``jointJacobian``\ )
 
 - | \ *function description*\ :
   | compute mass matrix from jointJacobian
@@ -134,10 +134,6 @@ Function: MassMatrix
   | \*\*       Dynamic equations in minimal coordinates as described in MehrkÃ¶rpersysteme by Woernle, , p206, eq6.90.
   | \*\*       Caclulations in link coordinate system at the end of each link
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-
-    \ `shapeOptimization.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/shapeOptimization.py>`_\  (Ex), \ `solverFunctionsTestEigenvalues.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/solverFunctionsTestEigenvalues.py>`_\  (Ex), \ `ACFtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py>`_\  (TM), \ `linearFEMgenericODE2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/linearFEMgenericODE2.py>`_\  (TM), \ `linearFEMgenericODE2Test.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/linearFEMgenericODE2Test.py>`_\  (TM), \ `manualExplicitIntegrator.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/manualExplicitIntegrator.py>`_\  (TM), \ `objectFFRFTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectFFRFTest.py>`_\  (TM), \ `objectGenericODE2Test.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/objectGenericODE2Test.py>`_\  (TM)
-
 
 
 ----
@@ -147,7 +143,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: DynamicManipulability
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`DynamicManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L245>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``MassMatrix``\ , \ ``Tmax``\ , \ ``mode``\ , \ ``singularWeight = 1000``\ )
+`DynamicManipulability <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L243>`__\ (\ ``robot``\ , \ ``HT``\ , \ ``MassMatrix``\ , \ ``Tmax``\ , \ ``mode``\ , \ ``singularWeight = 1000``\ )
 
 - | \ *function description*\ :
   | compute dynamic manipulability measure for given pose (homogeneous transformation)
@@ -177,7 +173,7 @@ Function: DynamicManipulability
 
 Function: CalculateAllMeasures
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CalculateAllMeasures <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L292>`__\ (\ ``robot``\ , \ ``robotDic``\ , \ ``q``\ , \ ``mode``\ , \ ``flag = [0,0,0,0]``\ )
+`CalculateAllMeasures <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L290>`__\ (\ ``robot``\ , \ ``robotDic``\ , \ ``q``\ , \ ``mode``\ , \ ``flag = [0,0,0,0]``\ )
 
 - | \ *function description*\ :
   | calculation of 4 different manipulability measures using a certain serial robot

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MarkerSuperElementRigid &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>MarkerSuperElementRigid &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -85,6 +85,8 @@
 <li class="toctree-l3"><a class="reference internal" href="MarkerNodeCoordinates.html">MarkerNodeCoordinates</a></li>
 <li class="toctree-l3"><a class="reference internal" href="MarkerNodeODE1Coordinate.html">MarkerNodeODE1Coordinate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="MarkerNodeRotationCoordinate.html">MarkerNodeRotationCoordinate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="MarkerBodiesRelativeTranslationCoordinate.html">MarkerBodiesRelativeTranslationCoordinate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="MarkerBodiesRelativeRotationCoordinate.html">MarkerBodiesRelativeRotationCoordinate</a></li>
 <li class="toctree-l3"><a class="reference internal" href="MarkerSuperElementPosition.html">MarkerSuperElementPosition</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">MarkerSuperElementRigid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="MarkerKinematicTreeRigid.html">MarkerKinematicTreeRigid</a></li>
@@ -113,7 +115,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -296,7 +298,7 @@
 </td>
 <td><div class="line-block">
 <div class="line">midpoint reference position of marker; averaged local reference positions of all mesh nodes <span class="math notranslate nohighlight">\(k_i\)</span>,
-using weighting for averaging; may not coincide with center point of your idealized joint surface (e.g., midpoint of cylinder), see <a class="reference internal" href="#fig-markersuperelementrigid-sketch"><span class="std std-numref">Fig. 47</span></a></div>
+using weighting for averaging; may not coincide with center point of your idealized joint surface (e.g., midpoint of cylinder), see <a class="reference internal" href="#fig-markersuperelementrigid-sketch"><span class="std std-numref">Fig. 48</span></a></div>
 </div>
 </td>
 </tr>
@@ -451,12 +453,12 @@ using weighting for averaging; may not coincide with center point of your ideali
 <p>The marker allows to realize a multi-point constraint (assuming that the marker is used in a joint constraint),
 connecting to averaged nodal displacements and rotations (also known as RBE3 in NASTRAN), see e.g..
 However, using Craig-Bampton RBE2 modes, will create RBE2 multi-point constraints for <code class="docutils literal notranslate"><span class="pre">ObjectFFRFreducedOrder</span></code> objects.</p>
-<p>For more information on the various quantities and their coordinate systems, see table above and <a class="reference internal" href="#fig-markersuperelementrigid-sketch"><span class="std std-numref">Fig. 47</span></a>.</p>
+<p>For more information on the various quantities and their coordinate systems, see table above and <a class="reference internal" href="#fig-markersuperelementrigid-sketch"><span class="std std-numref">Fig. 48</span></a>.</p>
 <figure class="align-default" id="id2">
 <span id="fig-markersuperelementrigid-sketch"></span><a class="reference internal image-reference" href="../../../_images/MarkerSuperElementRigid.png"><img alt="../../../_images/MarkerSuperElementRigid.png" src="../../../_images/MarkerSuperElementRigid.png" style="width: 400px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 47 </span><span class="caption-text">Sketch of marker nodes, exemplary node <span class="math notranslate nohighlight">\(i\)</span>, reference coordinates and marker coordinate system; note the difference of the center of the marker ‘surface’ (rectangle) marked with the red cross, and the averaged of the averaged local reference position.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 48 </span><span class="caption-text">Sketch of marker nodes, exemplary node <span class="math notranslate nohighlight">\(i\)</span>, reference coordinates and marker coordinate system; note the difference of the center of the marker ‘surface’ (rectangle) marked with the red cross, and the averaged of the averaged local reference position.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 </section>
@@ -526,7 +528,7 @@ In such an interpretation, the ‘local angular momentum’ w.r.t.the marker (av
 <p>Furthermore, we need to introduce the averaged velocity of the marker averaged reference position, using <span class="math notranslate nohighlight">\(\LU{r}{\dot {\mathbf{u}}^{(i)}} = \LU{r}{{\mathbf{v}}^{(i)}}\)</span>, which is defined as</p>
 <div class="math notranslate nohighlight">
 \[\LU{r}{{\mathbf{v}}^\mathrm{avg}} = \sum_i  w_i \LU{r}{{\mathbf{v}}^{(i)}} ,\]</div>
-<p>similar to the averaged local reference position <span class="math notranslate nohighlight">\(\LU{r}{{\mathbf{x}}^\mathrm{avg}\cRef}\)</span> given in the table above, see also <a class="reference internal" href="#fig-markersuperelementrigid-sketch"><span class="std std-numref">Fig. 47</span></a>.</p>
+<p>similar to the averaged local reference position <span class="math notranslate nohighlight">\(\LU{r}{{\mathbf{x}}^\mathrm{avg}\cRef}\)</span> given in the table above, see also <a class="reference internal" href="#fig-markersuperelementrigid-sketch"><span class="std std-numref">Fig. 48</span></a>.</p>
 <p>In the alternative approach, thus the marker local rotations read</p>
 <div class="math notranslate nohighlight">
 \[\LU{r}{\ttheta}_{m,alt} = {\mathbf{W}}^{-1} \sum_i w_i \LU{r}{\tilde {\mathbf{p}}_{ref}^{(i)}} \left( \LU{r}{{\mathbf{u}}^{(i)}} - \LU{r}{{\mathbf{x}}^\mathrm{avg}\cRef} \right) ,\]</div>
@@ -548,7 +550,7 @@ This could even lead to spurious rotations or angular velocities in pure transla
 <p>For detailed examples, see <code class="docutils literal notranslate"><span class="pre">TestModels</span></code>.</p>
 <p>Relevant Examples and TestModels with weblink:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py">CMSexampleCourse.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py">netgenSTLtest.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py">NGsolveCMStutorial.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py">NGsolveCraigBampton.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveLinearFEM.py">NGsolveLinearFEM.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveModalAnalysis.py">NGsolveModalAnalysis.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ObjectFFRFconvergenceTestBeam.py">ObjectFFRFconvergenceTestBeam.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ObjectFFRFconvergenceTestHinge.py">ObjectFFRFconvergenceTestHinge.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pendulumVerify.py">pendulumVerify.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/abaqusImportTest.py">abaqusImportTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py">ACFtest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/linearFEMgenericODE2.py">linearFEMgenericODE2.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/linearFEMgenericODE2Test.py">linearFEMgenericODE2Test.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCMStest.py">NGsolveCMStest.py</a> (TestModels/)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/CMSexampleCourse.py">CMSexampleCourse.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/netgenSTLtest.py">netgenSTLtest.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py">NGsolveCMStutorial.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCraigBampton.py">NGsolveCraigBampton.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveFFRF.py">NGsolveFFRF.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveLinearFEM.py">NGsolveLinearFEM.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveModalAnalysis.py">NGsolveModalAnalysis.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ObjectFFRFconvergenceTestBeam.py">ObjectFFRFconvergenceTestBeam.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ObjectFFRFconvergenceTestHinge.py">ObjectFFRFconvergenceTestHinge.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pendulumVerify.py">pendulumVerify.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py">serialRobotFlexible.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/abaqusImportTest.py">abaqusImportTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py">ACFtest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/linearFEMgenericODE2.py">linearFEMgenericODE2.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/NGsolveCMStest.py">NGsolveCMStest.py</a> (TestModels/)</p>
 </div></blockquote>
 <p><strong>The web version may not be complete. For details, consider also the Exudyn PDF documentation</strong> : <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
 </section>

@@ -32,7 +32,7 @@ You can view and download this file on Github: `SpringDamperMasspointSystem.py <
    
    import numpy as np
    
-   print('EXUDYN version='+exu.GetVersionString())
+   print('EXUDYN version='+exu.config.Version())
    
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    # Modelling of MBS starts here
@@ -328,10 +328,10 @@ You can view and download this file on Github: `SpringDamperMasspointSystem.py <
        #print(mbs)
        
        
-       exu.StartRenderer()
+       SC.renderer.Start()
        mbs.SolveDynamic(simulationSettings, solverType =  exudyn.DynamicSolverType.ODE23)
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    
 

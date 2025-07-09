@@ -6,7 +6,7 @@ This section will show:
 +  What is Exudyn ?
 +  Who is developing Exudyn ?
 +  How to install Exudyn 
-+  How to link Exudyn and Python
++  How to use Exudyn in Python
 +  Goals of Exudyn
 +  Run a simple example in Python
 +  FAQ -- Frequently asked questions
@@ -27,10 +27,10 @@ Exudyn is designed to easily set up complex multibody models, consisting of rigi
 The multibody formulation is mainly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, ...) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
 For details on the interaction of nodes, objects, markers and loads see Section :ref:`sec-overview-items`\ . For a non-redundant formulation, see \ ``ObjectKinematicTree``\  -- this allows to create tree-structures with minimal coordinates in Exudyn.
 
-There are several journal papers of the developers which were using Exudyn (list may be incomplete):
+There are several journal papers of the developers which were using Exudyn (list is incomplete -- see google scholar):
 
 +  J. Gerstmayr. Exudyn -- a C++-based Python package for flexible multibody systems. Multibody System Dynamics (2023). \ `https://doi.org/10.1007/s11044-023-09937-1 <https://doi.org/10.1007/s11044-023-09937-1>`_\  
-+  J. Gerstmayr, P. Manzl, M. Pieber. Multibody Models Generated from Natural Language, Preprint, Research Square, 2023. \ `https://doi.org/10.21203/rs.3.rs-3552291/v1 <https://doi.org/10.21203/rs.3.rs-3552291/v1>`_\  
++  J. Gerstmayr, P. Manzl, M. Pieber. Multibody Models Generated from Natural Language, Multibody System Dynamics (2024). \ `https://doi.org/10.1007/s11044-023-09962-0 <https://doi.org/10.1007/s11044-023-09962-0>`_\  
 +  P. Manzl, O. Rogov, J. Gerstmayr, A. Mikkola, G. Orzechowski. Reliability Evaluation of Reinforcement Learning Methods for Mechanical Systems with Increasing Complexity.  Preprint, Research Square, 2023.  \ `https://doi.org/10.21203/rs.3.rs-3066420/v1 <https://doi.org/10.21203/rs.3.rs-3066420/v1>`_\ 
 +  S. Holzinger, M. Arnold, J. Gerstmayr. Evaluation and Implementation of Lie Group Integration Methods for Rigid Multibody Systems. Preprint, Research Square, 2023.  \ `https://doi.org/10.21203/rs.3.rs-2715112/v1 <https://doi.org/10.21203/rs.3.rs-2715112/v1>`_\  
 +  M. Sereinig, P. Manzl, and J. Gerstmayr. Task Dependent Comfort Zone, a Base Placement Strategy for Autonomous Mobile Manipulators using Manipulability Measures, Robotics and Autonomous Systems, submitted. 
@@ -48,7 +48,7 @@ Developers of Exudyn and thanks
 -------------------------------
 
 Exudyn is currently  developed at the University of Innsbruck.
-In the first phase most of the core code is written by Johannes Gerstmayr, implementing ideas that followed out of the project HOTINT . 15 years of development led to a lot of lessons learned and after 20 years, a code must be re-designed.
+In general, most of the Exudyn is written by Johannes Gerstmayr, implementing ideas that followed from the project HOTINT , but also creating many new concepts and approaches. 15 years of development of HOTINT led to a lot of lessons learned and after 20 years, a code must be re-designed.
 
 Some important tests for the coupling between C++ and Python have been written by Stefan Holzinger. Stefan also helped to set up the previous upload to GitLab and to test parallelization features.
 For the interoperability between C++ and Python, we extensively use \ **Pybind11**\ , originally written by Jakob Wenzel, see \ ``https://github.com/pybind/pybind11``\ . Without Pybind11 we couldn't have made this project -- Thanks a lot!
@@ -59,20 +59,22 @@ The cooperation and funding within the EU H2020-MSCA-ITN project 'Joint Training
 
 The following people have contributed to Python and C++ library implementations, testing, examples or theory:
 
-+  Joachim Schöberl, TU Vienna (Providing specialized NGsolve  core library with \ ``taskmanager``\  for \ **multi-threaded parallelization**\ ; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
++  Joachim Schöberl, TU Vienna (Providing specialized NGsolve  core library with \ ``taskmanager``\  for \ **multi-threaded parallelization**\ , which is now replaced by a simplified internal version but closely following the original implementation; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)
 +  Stefan Holzinger, University of Innsbruck (Lie group module and solvers in Python, Lie group node; helped with Lie group solvers, geometrically exact beam; testing)
-+  Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation; revised artificialIntelligence, ParameterVariation, robotics and MPI parallelization; providing many figures for theDoc; pip install on linux, wsl with graphics)
++  Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation; revised artificialIntelligence, ParameterVariation, robotics and MPI parallelization; providing many figures for theDoc; pip install on linux, wsl with graphics; several other fixes; examples)
 +  Andreas Zwölfer, Technical University Munich (theory and examples for FFRF, CMS formulation and ANCF 2D cable prototypes in MATLAB)
++  Michael Pieber, University of Innsbruck (helped in several Python libraries; ComputeODE2Eigenvalues with constraints, FEM and CMS testing; Abaqus import and test files; ANCFCable2D+ALE theory improvements and equations check; examples); Exudyn graphical user interface
 +  Martin Sereinig, University of Innsbruck (special robotics functionality, mobile robots, manipulability measures, robot models)
-+  Michael Pieber, University of Innsbruck (helped in several Python libraries; ComputeODE2Eigenvalues with constraints, FEM and CMS testing; Abaqus import and test files; ANCFCable2D+ALE theory improvements and equations check)
++  Sebastian Weyrer, University of Innsbruck (ObjectContactSphereSphere; FEM RigidBodyInertia; some fixes; examples)
 +  Grzegorz Orzechowski, Lappeenranta University of Technology (coupling with openAI gym and running machine learning algorithms)
++  Zhaowei Zhang, Chinese Academy of Sciences (ANCFThinPlate; found several issues and bugs)
 +  Aaron Bacher, University of Innsbruck (helped to integrated OpenVR, connection with Franka Emika Panda)
 +  Martin Arnold, Martin-Luther-University of Halle-Wittenberg (support for explicit and implicit Lie group solvers, especially to theory / jacobians and automatic step size)
 +  Konstantina Ntarladima, University of Innsbruck (ANCFCable2D+ALE theory improvements and equations check)
 +  Alexander Humer, Johannes Kepler University Linz (initial discussions on structure and C++ code)
 +  Qasim Khadim, University of Oulu (suggestion for improved model of HydraulicsActuatorSimple with effective bulk modulus)
 +  Michael Gerbl, University of Innsbruck (figures in the documentation, taken from lecture notes)
-+  examples provided by: Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Simon Scheiber
++  further examples provided by: Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Simon Scheiber and other Master students
 
 -- thanks a lot! --
 

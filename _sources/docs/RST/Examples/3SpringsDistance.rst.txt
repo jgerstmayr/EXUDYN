@@ -94,7 +94,7 @@ You can view and download this file on Github: `3SpringsDistance.py <https://git
    print(mbs)
    
    mbs.Assemble()
-   exu.StartRenderer()
+   SC.renderer.Start()
    
    simulationSettings = exu.SimulationSettings()
    
@@ -132,8 +132,8 @@ You can view and download this file on Github: `3SpringsDistance.py <https://git
    
        mbs.SolveStatic(simulationSettings)
    
-   SC.WaitForRenderEngineStopFlag()
-   exu.StopRenderer() #safely close rendering window!
+   SC.renderer.DoIdleTasks()
+   SC.renderer.Stop() #safely close rendering window!
    
 
 

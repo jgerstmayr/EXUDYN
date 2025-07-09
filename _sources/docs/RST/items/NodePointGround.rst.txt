@@ -56,6 +56,14 @@ DESCRIPTION of NodePointGround
   | vector of length zero
 * | ``Coordinates\_t``\ : \ :math:`\dot{\mathbf{c}}\cConfig =[]`\ 
   | vector of length zero
+* | ``RotationMatrix``\ : 
+  | identity matrix (only for completeness)
+* | ``Rotation``\ : \ :math:`[0,0,0]`\ 
+  | (only for completeness)
+* | ``AngularVelocity``\ : \ :math:`[0,0,0]`\ 
+  | (only for completeness)
+* | ``AngularVelocityLocal``\ : \ :math:`[0,0,0]`\ 
+  | (only for completeness)
 
 
 

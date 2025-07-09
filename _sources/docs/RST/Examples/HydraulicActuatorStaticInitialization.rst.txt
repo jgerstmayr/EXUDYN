@@ -170,12 +170,12 @@ You can view and download this file on Github: `HydraulicActuatorStaticInitializ
    SC.visualizationSettings.openGL.lineWidth = 2
    
    if useGraphics:
-       exu.StartRenderer()
-       # mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       # SC.renderer.DoIdleTasks()
    
    simulationSettings.staticSolver.constrainODE1coordinates = True #True: set pressures to initial values
    if staticInitialization:
-       exu.SolveStatic(mbs, simulationSettings, updateInitialValues=True) #results are new initial values
+       mbs.SolveStatic(simulationSettings, updateInitialValues=True) #results are new initial values
        force = mbs.GetObjectOutput(oDC, variableType=exu.OutputVariableType.Force)
        print('initial force=', force)
    
@@ -202,11 +202,11 @@ You can view and download this file on Github: `HydraulicActuatorStaticInitializ
        
        #mbs.SetObjectParameter(oHA, '')
        mbs.SetPreStepUserFunction(PreStepUserFunction)
-       exu.SolveDynamic(mbs, simulationSettings, showHints=False)
+       mbs.SolveDynamic(simulationSettings, showHints=False)
    
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    if useHydraulics:
        exu.Print('hydraulics C++:')

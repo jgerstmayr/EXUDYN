@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>revoluteJointPrismaticJointTest.py &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>revoluteJointPrismaticJointTest.py &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -37,7 +37,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -79,7 +79,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -255,10 +255,10 @@
 <span class="linenos">153</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
 <span class="linenos">154</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayComputationTime</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="linenos">155</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">displayStatistics</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">156</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<span class="linenos">156</span>    <span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">Start</span><span class="p">()</span>
 <span class="linenos">157</span>    <span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span>
-<span class="linenos">158</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span> <span class="s1">&#39;renderState&#39;</span> <span class="p">])</span>
-<span class="linenos">159</span>    <span class="c1">#mbs.WaitForUserToContinue()</span>
+<span class="linenos">158</span>        <span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">SetState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span> <span class="s1">&#39;renderState&#39;</span> <span class="p">])</span>
+<span class="linenos">159</span>    <span class="c1">#SC.renderer.DoIdleTasks()</span>
 <span class="linenos">160</span><span class="k">else</span><span class="p">:</span>
 <span class="linenos">161</span>    <span class="n">simulationSettings</span><span class="o">.</span><span class="n">solutionSettings</span><span class="o">.</span><span class="n">writeSolutionToFile</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="linenos">162</span>
@@ -285,8 +285,8 @@
 <span class="linenos">183</span>
 <span class="linenos">184</span><span class="c1">#%%+++++++++++++++++++++++++++++</span>
 <span class="linenos">185</span><span class="k">if</span> <span class="n">useGraphics</span><span class="p">:</span>
-<span class="linenos">186</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span>
-<span class="linenos">187</span>    <span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+<span class="linenos">186</span>    <span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">DoIdleTasks</span><span class="p">()</span>
+<span class="linenos">187</span>    <span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">Stop</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
 </pre></div>
 </div>
 </section>

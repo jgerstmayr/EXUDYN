@@ -98,15 +98,15 @@ You can view and download this file on Github: `switchingConstraintsPendulum.py 
    
    SC.visualizationSettings.openGL.multiSampling = 1
    
-   exu.StartRenderer()
+   SC.renderer.Start()
    
    mbs.SolveDynamic(simulationSettings)
    print('end time =',mbs.systemData.GetTime()) #time after time integration ...
    #print('solution =',mbs.systemData.GetODE2Coordinates()) #solution coordinates after time integration ...
    
    
-   SC.WaitForRenderEngineStopFlag()
-   exu.StopRenderer() #safely close rendering window!
+   SC.renderer.DoIdleTasks()
+   SC.renderer.Stop() #safely close rendering window!
    
    mbs.SolutionViewer()
    

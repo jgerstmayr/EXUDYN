@@ -53,6 +53,8 @@ CSolverTimer has the following items:
   | time spent for Python functions
 * | **reactionForces** [type = Real, default = 0.]:
   | CqT * lambda
+* | **realtimeIdleCPU** [type = Real, default = 0.]:
+  | time waited for next frame to compute and draw if simulateInRealtime is True
 * | **Reset(useSolverTimer)** [return type = void]:
   | reset solver timings to initial state by assigning default values; useSolverTimer sets the useTimer flag
 * | **StartTimer(value)** [return type = void]:
@@ -209,7 +211,7 @@ SolverOutputData has the following items:
 * | **lastVerboseStepIndex** [type = Index, default = 0]:
   | step index when last time written to console (or file)
 * | **multiThreadingMode** [type = Index, default = 0]:
-  | multithreading mode that has been used: 0=None (serial), 1=NGsolve taskmanager, 2=MicroThreading (Exudyn)
+  | multithreading mode that has been used: 0=None (serial), 1=multithreading, 2=multithreading with load balancing; (modes new since 2025-06, V1.9.198)
 * | **numberOfThreadsUsed** [type = Index, default = 1]:
   | number of threads that have been used in simulation
 * | **stepInformation** [type = Index, default = 0]:

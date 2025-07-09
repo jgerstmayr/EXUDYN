@@ -165,14 +165,14 @@ You can view and download this file on Github: `hydraulicActuatorSimpleTest.py <
    SC.visualizationSettings.openGL.lineWidth = 2
    
    if useGraphics:
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
    
    mbs.SolveDynamic(simulationSettings, showHints=False)
    
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    exu.Print('hydraulics C++:')
    exu.Print('pressures=', mbs.GetSensorValues(sPressures))

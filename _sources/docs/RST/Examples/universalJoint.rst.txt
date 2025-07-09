@@ -269,15 +269,15 @@ You can view and download this file on Github: `universalJoint.py <https://githu
    
    
    if simulation:
-       exu.StartRenderer()
+       SC.renderer.Start()
        if 'renderState' in exu.sys:
-           SC.SetRenderState(exu.sys['renderState'])
-       mbs.WaitForUserToContinue()
+           SC.renderer.SetState(exu.sys['renderState'])
+       SC.renderer.DoIdleTasks()
        
-       exu.SolveDynamic(mbs, simulationSettings)
+       mbs.SolveDynamic(simulationSettings)
        
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    
        if solutionViewer:

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data structures &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>Data structures &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -63,12 +63,14 @@
 <li class="toctree-l2"><a class="reference internal" href="GeneralInformation.html">General information on Python-C++ interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Exudyn.html">Exudyn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SystemContainer.html">SystemContainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Renderer.html">Renderer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="MainSystem.html">MainSystem</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SystemData.html">SystemData</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Symbolic.html">Symbolic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GeneralContact.html">GeneralContact</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Data structures</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#matrixcontainer">MatrixContainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#graphicsmateriallist">GraphicsMaterialList</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vector3dlist">Vector3DList</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vector2dlist">Vector2DList</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vector6dlist">Vector6DList</a></li>
@@ -100,7 +102,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -231,12 +233,106 @@ which are not described here as they are native to Pybind11, but can be passed a
 </li>
 </ul>
 </section>
+<section id="graphicsmateriallist">
+<span id="sec-graphicsmateriallist"></span><h2>GraphicsMaterialList<a class="headerlink" href="#graphicsmateriallist" title="Link to this heading"></a></h2>
+<p>The GraphicsMaterialList contains the list of materials (material properties) for visualization; currently, only the raytracer uses materials. Materials can be accessed via the variable materials in renderer of SystemContainer.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">#access material 0:</span>
+<span class="linenos"> 2</span><span class="n">mat0</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos"> 3</span><span class="c1">#convert into dictionary for easier processing:</span>
+<span class="linenos"> 4</span><span class="n">matDict</span> <span class="o">=</span> <span class="n">mat0</span><span class="o">.</span><span class="nf">GetDictionary</span><span class="p">()</span>
+<span class="linenos"> 5</span><span class="n">matDict</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="linenos"> 6</span><span class="c1">#change material (e.g. using a data base):</span>
+<span class="linenos"> 7</span><span class="n">mat0</span><span class="o">.</span><span class="nf">SetDictionary</span><span class="p">(</span><span class="n">matDict</span><span class="p">)</span>
+<span class="linenos"> 8</span><span class="c1">#or directly update material</span>
+<span class="linenos"> 9</span><span class="n">mat0</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;new name&#39;</span>
+<span class="linenos">10</span><span class="n">mat0</span><span class="o">.</span><span class="n">emission</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.</span><span class="p">]</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="c1">#update material in renderer:</span>
+<span class="linenos">13</span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="nf">Set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">mat0</span><span class="p">)</span>
+<span class="linenos">14</span><span class="c1">#update material directly with dictionary:</span>
+<span class="linenos">15</span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="nf">Set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">matDict</span><span class="p">)</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="c1">#create new material:</span>
+<span class="linenos">18</span><span class="n">mat10</span> <span class="o">=</span> <span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="nf">New</span><span class="p">()</span>
+<span class="linenos">19</span><span class="n">mat10</span><span class="o">.</span><span class="n">reflectivity</span> <span class="o">=</span> <span class="mf">0.8</span>
+<span class="linenos">20</span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="nf">Append</span><span class="p">(</span><span class="n">mat10</span><span class="p">)</span> <span class="c1">#returns index of mat10</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span><span class="c1">#10 default graphics materials in Exudyn</span>
+<span class="linenos">23</span><span class="c1">#listed here with default color and some properties:</span>
+<span class="linenos">24</span><span class="c1">#note the increased computational costs for reflection &amp; transparency</span>
+<span class="linenos">25</span><span class="c1">#the material names are as follows:</span>
+<span class="linenos">26</span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span>    <span class="c1">#steel blue</span>
+<span class="linenos">27</span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;matt&quot;</span>       <span class="c1">#green</span>
+<span class="linenos">28</span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;steel&quot;</span>      <span class="c1">#grey (reflection)</span>
+<span class="linenos">29</span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;plastic&quot;</span>    <span class="c1">#red (reflection)</span>
+<span class="linenos">30</span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;chrome&quot;</span>     <span class="c1">#light grey (reflection)</span>
+<span class="linenos">31</span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;shiny&quot;</span>      <span class="c1">#orange (reflection)</span>
+<span class="linenos">32</span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;transparent&quot;</span><span class="c1">#(transparency,slight refraction)</span>
+<span class="linenos">33</span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;glass&quot;</span>      <span class="c1">#light grey (reflection,transparency,refraction)</span>
+<span class="linenos">34</span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;mirror&quot;</span>     <span class="c1">#light grey (reflection)</span>
+<span class="linenos">35</span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">materials</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;emission&quot;</span>   <span class="c1">#light yellow</span>
+</pre></div>
+</div>
+<p>The class <strong>GraphicsMaterialList</strong> has the following <strong>functions and structures</strong>:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>Reset</strong>():</div>
+<div class="line">reset materials to 10 default materials</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Append</strong>(<em>material</em>):</div>
+<div class="line">add single material as dict or VSettingsMaterial to list; returns index of newly added material</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>New</strong>():</div>
+<div class="line">Get new default material, which can be modified or appended to materials list</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Set</strong>(<em>indexOrName</em>, <em>material</em>):</div>
+<div class="line">set material with index ‘materialIndex’ as dict or VSettingsMaterial</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>Get</strong>(<em>indexOrName</em>):</div>
+<div class="line">get material with index ‘materialIndex’ as VSettingsMaterial</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>GetDict</strong>(<em>indexOrName</em>):</div>
+<div class="line">get material with index ‘materialIndex’ as dict</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>len(data)</strong>:</div>
+<div class="line">return length of the Vector3DList, using len(data) where data is the Vector3DList</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>… = data[index]</strong>:</div>
+<div class="line">get reference access of material with ‘index’ as VSettingsMaterial</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>__repr__()</strong>:</div>
+<div class="line">return the string representation of the GraphicsMaterialList</div>
+</div>
+</li>
+</ul>
+</section>
 <section id="vector3dlist">
 <h2>Vector3DList<a class="headerlink" href="#vector3dlist" title="Link to this heading"></a></h2>
 <p>The Vector3DList is used to represent lists of 3D vectors. This is used to transfer such lists from Python to C++.</p>
-<p>Usage:
-+  Create empty <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList()</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with list of numpy arrays:
-<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList([</span> <span class="pre">numpy.array([1.,2.,3.]),</span> <span class="pre">numpy.array([4.,5.,6.])</span> <span class="pre">])</span></code>+  Create <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with list of lists <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList([[1.,2.,3.],</span> <span class="pre">[4.,5.,6.]])</span></code>+  Append item: <code class="docutils literal notranslate"><span class="pre">x.Append([0.,2.,4.])</span></code>+  Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code></p>
+<p>Usage:</p>
+<ul class="simple">
+<li><p>Create empty <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList()</span></code></p></li>
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with list of numpy arrays:<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList([</span> <span class="pre">numpy.array([1.,2.,3.]),</span> <span class="pre">numpy.array([4.,5.,6.])</span> <span class="pre">])</span></code></p></li>
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">Vector3DList</span></code> with list of lists <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">Vector3DList([[1.,2.,3.],</span> <span class="pre">[4.,5.,6.]])</span></code></p></li>
+<li><p>Append item: <code class="docutils literal notranslate"><span class="pre">x.Append([0.,2.,4.])</span></code></p></li>
+<li><p>Convert into list of numpy arrays: <code class="docutils literal notranslate"><span class="pre">x.GetPythonObject()</span></code></p></li>
+</ul>
 <p>The class <strong>Vector3DList</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">

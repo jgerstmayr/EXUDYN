@@ -118,9 +118,9 @@ Finally, start the renderer and solver, then evaluate the solution:
 
 .. code-block:: python
 
-  exu.StartRenderer()
+  SC.renderer.Start()
   mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitMidpoint)
-  exu.StopRenderer()  # safely close rendering window!
+  SC.renderer.Stop()  # safely close rendering window!
   n1 = mbs.GetObject(massPoint)['nodeNumber']
   u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
   print('u=', u)

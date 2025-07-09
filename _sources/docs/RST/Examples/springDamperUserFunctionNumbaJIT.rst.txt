@@ -65,7 +65,7 @@ You can view and download this file on Github: `springDamperUserFunctionNumbaJIT
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
-   exu.Print('EXUDYN version='+exu.GetVersionString())
+   exu.Print('EXUDYN version='+exu.config.Version())
    
    L=0.5
    mass = 1.6          #mass in kg

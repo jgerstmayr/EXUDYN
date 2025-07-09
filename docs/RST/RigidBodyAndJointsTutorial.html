@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rigid body and joints tutorial &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>Rigid body and joints tutorial &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -91,7 +91,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -122,12 +122,12 @@
 </div></blockquote>
 <p><strong>NOTE</strong> that the youtube video uses a slightly older way of creating graphics using <code class="docutils literal notranslate"><span class="pre">GraphicsData...</span></code> functions, which
 can be easily replaced by the newer <code class="docutils literal notranslate"><span class="pre">graphics.</span> <span class="pre">...</span></code> commands shown here. Their interface is identical.</p>
-<p>This tutorial will set up a multibody system containing a ground, two rigid bodies and two revolute joints driven by gravity, compare a 3D view of the example in <a class="reference internal" href="#fig-rigidbodytutorialview"><span class="std std-numref">Fig. 9</span></a>.</p>
+<p>This tutorial will set up a multibody system containing a ground, two rigid bodies and two revolute joints driven by gravity, compare a 3D view of the example in <a class="reference internal" href="#fig-rigidbodytutorialview"><span class="std std-numref">Fig. 10</span></a>.</p>
 <figure class="align-default" id="id1">
 <span id="fig-rigidbodytutorialview"></span><a class="reference internal image-reference" href="../../_images/TutorialRigidBody1desc.png"><img alt="../../_images/TutorialRigidBody1desc.png" src="../../_images/TutorialRigidBody1desc.png" style="width: 400px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 9 </span><span class="caption-text">Render view of rigid body tutorial, showing objects, nodes (N0, N1), and loads.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 10 </span><span class="caption-text">Render view of rigid body tutorial, showing objects, nodes (N0, N1), and loads.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>We first import the exudyn library and the interface for all nodes, objects, markers, loads and sensors:</p>
@@ -356,14 +356,14 @@ redundant constraints, which are not solvable or at least cause solver problems.
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">DrawSystemGraph</span><span class="p">(</span><span class="n">useItemTypes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#draw nice graph of system</span>
 </pre></div>
 </div>
-<p>For the output see <a class="reference internal" href="#fig-drawsystemgraphexample"><span class="std std-numref">Fig. 10</span></a>.
+<p>For the output see <a class="reference internal" href="#fig-drawsystemgraphexample"><span class="std std-numref">Fig. 11</span></a>.
 Note that obviously, markers are always needed to connect objects (or nodes) as well as loads. We can also see, that 2 markers MarkerBodyRigid1 and MarkerBodyRigid2 are unused, which is no further problem for the model and also does not require additional computational resources (except for some bytes of memory). Having isolated nodes or joints that are not connected (or having too many connections) may indicate that you did something wrong in setting up your model.
 Furthermore, it can be seen that the function <code class="docutils literal notranslate"><span class="pre">CreateRigidBody</span></code> added a body <code class="docutils literal notranslate"><span class="pre">ObjectRigidBody</span></code>, a node <code class="docutils literal notranslate"><span class="pre">NodeRigidBodyEP</span></code>, a <code class="docutils literal notranslate"><span class="pre">LoadMassProportional</span></code> for gravity load with a <code class="docutils literal notranslate"><span class="pre">MarkerBodyMass</span></code>, and the function <code class="docutils literal notranslate"><span class="pre">CreateRevoluteJoint</span></code> created two <code class="docutils literal notranslate"><span class="pre">MarkerBodyRigid</span></code> and a <code class="docutils literal notranslate"><span class="pre">ObjectJointRevoluteZ</span></code> which represents a revolute joint about a Z-axis in the joint coordinate system. For further information, consult the respective pages in the Items reference manual.</p>
 <figure class="align-default" id="id2">
 <span id="fig-drawsystemgraphexample"></span><a class="reference internal image-reference" href="../../_images/DrawSystemGraphExample.png"><img alt="../../_images/DrawSystemGraphExample.png" src="../../_images/DrawSystemGraphExample.png" style="width: 600px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 10 </span><span class="caption-text">System graph for rigid body tutorial (with option 3 for the first revolute joint). Numbers are always related to the node number, object number, etc.; note that colors are used to distinguish nodes, objects, markers, loads and sensors</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 11 </span><span class="caption-text">System graph for rigid body tutorial (with option 3 for the first revolute joint). Numbers are always related to the node number, object number, etc.; note that colors are used to distinguish nodes, objects, markers, loads and sensors</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>Before starting our simulation, we should adjust the solver parameters, especially the end time and the step size (no automatic step size for implicit solvers available!):</p>
@@ -395,14 +395,14 @@ which may lead to very large files and may slow down simulation, but is used in 
 </div>
 <p>The option <code class="docutils literal notranslate"><span class="pre">autoFitScene</span></code> is used in order to avoid zooming while loading the last saved render state, see below.</p>
 <p>We can start the 3D visualization (Renderer) now:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="nf">StartRenderer</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">Start</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>In order to reload the model view of the last simulation (if there is any), we can use the following commands:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="s1">&#39;renderState&#39;</span> <span class="ow">in</span> <span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">:</span> <span class="c1">#reload old view</span>
-    <span class="n">SC</span><span class="o">.</span><span class="nf">SetRenderState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span>
+    <span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">SetState</span><span class="p">(</span><span class="n">exu</span><span class="o">.</span><span class="n">sys</span><span class="p">[</span><span class="s1">&#39;renderState&#39;</span><span class="p">])</span>
 
-<span class="n">mbs</span><span class="o">.</span><span class="nf">WaitForUserToContinue</span><span class="p">()</span> <span class="c1">#stop before simulating</span>
+<span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">DoIdleTasks</span><span class="p">()</span>    <span class="c1">#stop before simulating</span>
 </pre></div>
 </div>
 <p>the function <code class="docutils literal notranslate"><span class="pre">WaitForUserToContinue()</span></code> waits with simulation until we press SPACE bar. This allows us to make some pre-checks.</p>
@@ -418,12 +418,12 @@ which may lead to very large files and may slow down simulation, but is used in 
 </div>
 <p>Note that the <strong>generalized-:math:`alpha` method</strong> includes numerical damping (adjusted with the spectral radius) for stabilization of index 3 constraints. This leads to effects every time the integrator is (re-)started, e.g., when adapting time step sizes. For fixed step sizes, this is <strong>the recommended integrator</strong>.</p>
 <p>After simulation, the library would immediately exit (and jump back to iPython or close the terminal window). In order to avoid this, we can use <code class="docutils literal notranslate"><span class="pre">WaitForRenderEngineStopFlag()</span></code> to wait until we press key ‘Q’.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="nf">WaitForRenderEngineStopFlag</span><span class="p">()</span> <span class="c1">#stop before closing</span>
-<span class="n">exu</span><span class="o">.</span><span class="nf">StopRenderer</span><span class="p">()</span> <span class="c1">#safely close rendering window!</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">DoIdleTasks</span><span class="p">()</span>   <span class="c1">#stop before closing</span>
+<span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">Stop</span><span class="p">()</span>          <span class="c1">#safely close rendering window!</span>
 </pre></div>
 </div>
 <p>If you entered everything correctly, the render window should show a nice animation of the 3D double pendulum after pressing the SPACE key.
-If we do not stop the renderer (<code class="docutils literal notranslate"><span class="pre">StopRenderer()</span></code>), it will stay open for further simulations. However, it is safer to always close the renderer at the end.</p>
+If we do not stop the renderer (<code class="docutils literal notranslate"><span class="pre">SC.renderer.Stop()</span></code>), it will stay open for further simulations. However, it is safer to always close the renderer at the end.</p>
 <p>As the simulation will run very fast, if you did not set <code class="docutils literal notranslate"><span class="pre">simulateInRealtime</span></code> to true. However, you can reload the stored solution and view the stored steps interactively:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolutionViewer</span><span class="p">()</span>
 <span class="c1">#alternatively, we could load solution from a file:</span>

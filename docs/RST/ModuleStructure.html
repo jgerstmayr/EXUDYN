@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module structure &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>Module structure &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -96,7 +96,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -142,11 +142,14 @@ Python parts, see <a class="reference internal" href="#fig-exudyn-candpython"><s
 <blockquote>
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">exudyn</span></code>:
-on this level, there are just very few functions: <code class="docutils literal notranslate"><span class="pre">SystemContainer()</span></code>, <code class="docutils literal notranslate"><span class="pre">StartRenderer()</span></code>, <code class="docutils literal notranslate"><span class="pre">StopRenderer()</span></code>, <code class="docutils literal notranslate"><span class="pre">GetVersionString()</span></code>, <code class="docutils literal notranslate"><span class="pre">SolveStatic(...)</span></code>, <code class="docutils literal notranslate"><span class="pre">SolveDynamic(...)</span></code>, … as well as system and user variable dictionaries <code class="docutils literal notranslate"><span class="pre">exudyn.variables</span></code> and <code class="docutils literal notranslate"><span class="pre">exudyn.sys</span></code></p></li>
+on this level, there are just very few functions: <code class="docutils literal notranslate"><span class="pre">SystemContainer()</span></code>, <code class="docutils literal notranslate"><span class="pre">SC.renderer.Start()</span></code>, <code class="docutils literal notranslate"><span class="pre">SC.renderer.Stop()</span></code>, <code class="docutils literal notranslate"><span class="pre">SolveStatic(...)</span></code>, <code class="docutils literal notranslate"><span class="pre">SolveDynamic(...)</span></code>, … as well as system and user variable dictionaries <code class="docutils literal notranslate"><span class="pre">exudyn.variables</span></code> and <code class="docutils literal notranslate"><span class="pre">exudyn.sys</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">config</span></code>, <code class="docutils literal notranslate"><span class="pre">special</span></code>: substructures for configuration (global settings) and special settings; use e.g. <code class="docutils literal notranslate"><span class="pre">exudyn.config.outputPrecision=4</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">symbolic</span></code>: tools for symbolic computation in user functions (speedup!)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">SystemContainer</span></code>: contains the systems (most important), solvers (static, dynamics, …), visualization settings</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mbs</span></code>: <a class="reference internal" href="Abbreviations.html#mbs"><span class="std std-ref">mbs</span></a> created with <code class="docutils literal notranslate"><span class="pre">mbs</span> <span class="pre">=</span> <span class="pre">SC.AddSystem()</span></code>, this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers,
+<li><p><code class="docutils literal notranslate"><span class="pre">MainSystem</span></code> <code class="docutils literal notranslate"><span class="pre">mbs</span></code>: <a class="reference internal" href="Abbreviations.html#mbs"><span class="std std-ref">mbs</span></a> created with <code class="docutils literal notranslate"><span class="pre">mbs</span> <span class="pre">=</span> <span class="pre">SC.AddSystem()</span></code>, this structure contains everything that defines a solvable multibody system; a large set of nodes, objects, markers,
 loads can added to the system, see Section <a class="reference internal" href="items/itemsIndex.html#sec-item-reference-manual"><span class="std std-ref">Items reference manual</span></a>;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">mbs.systemData</span></code>: contains the initial, current, visualization, … states of the system and holds the items, see <a class="reference internal" href="#fig-system-overview"><span class="std std-numref">Fig. 3</span></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SimulationSettings</span></code>: contains the systems (most important), solvers (static, dynamics, …), visualization settings</p></li>
 </ul>
 </div></blockquote>
 <ul class="simple">

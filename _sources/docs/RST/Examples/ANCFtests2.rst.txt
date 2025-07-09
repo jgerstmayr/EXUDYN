@@ -149,7 +149,7 @@ You can view and download this file on Github: `ANCFtests2.py <https://github.co
    
    solveDynamic = True
    if solveDynamic: 
-       exu.StartRenderer()
+       SC.renderer.Start()
        
        def UFchangeLoad(mbs, t):
            tt=t
@@ -167,15 +167,15 @@ You can view and download this file on Github: `ANCFtests2.py <https://github.co
    
        mbs.SolveDynamic(simulationSettings)
    
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    else:
        simulationSettings.staticSolver.verboseMode = 1
        #simulationSettings.staticSolver.loadStepGeometric = True;
        #.staticSolver.loadStepGeometricRange = 1e2;
        
-       exu.StartRenderer()
+       SC.renderer.Start()
    
        #manual load stepping
        doLoadStepping = False
@@ -219,8 +219,8 @@ You can view and download this file on Github: `ANCFtests2.py <https://github.co
            mbs.SolveStatic(simulationSettings)
    
    
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    
 

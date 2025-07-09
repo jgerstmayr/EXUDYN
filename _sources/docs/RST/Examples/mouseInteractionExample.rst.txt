@@ -129,7 +129,7 @@ You can view and download this file on Github: `mouseInteractionExample.py <http
        if not mbs.variables['activateMouseDrag'] == True:
            return 0
        p = SC.GetCurrentMouseCoordinates(True)
-       p = SC.GetRenderState()['openGLcoordinates']
+       p = SC.renderer.GetState()['openGLcoordinates']
        #print("u=",u)
        return k*(Ltot-0.5*sx+u-p[0]) + d*v
    
@@ -213,9 +213,9 @@ You can view and download this file on Github: `mouseInteractionExample.py <http
    
    useGraphics = True
    if useGraphics:
-       exu.StartRenderer()
+       SC.renderer.Start()
        if 'renderState' in exu.sys:
-           SC.SetRenderState(exu.sys['renderState'])
+           SC.renderer.SetState(exu.sys['renderState'])
        else:
            renderState = {'centerPoint': [-0.33064934611320496,
                             -0.5762133598327637,
@@ -228,9 +228,9 @@ You can view and download this file on Github: `mouseInteractionExample.py <http
                             [0.0, 1.0, -4.371138828673793e-08]],
                            'mouseCoordinates': [713.0, 379.0],
                            'openGLcoordinates': [1.7853742130100727, -0.5235759578645229]}
-           SC.SetRenderState(renderState)
-           SC.SetRenderState(renderState)
-       mbs.WaitForUserToContinue()
+           SC.renderer.SetState(renderState)
+           SC.renderer.SetState(renderState)
+       SC.renderer.DoIdleTasks()
    
    #+++++++++++++++++++++++++++++++++++
    #react on key press, in development state:
@@ -248,7 +248,7 @@ You can view and download this file on Github: `mouseInteractionExample.py <http
    SC.visualizationSettings.window.ResetKeyPressUserFunction()
    
    if useGraphics:
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.Stop() #safely close rendering window!
    
    
    

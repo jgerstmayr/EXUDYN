@@ -31,7 +31,7 @@ Function: ParseOutputFileHeader
 
 Function: PlotSensorDefaults
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PlotSensorDefaults <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L154>`__\ ()
+`PlotSensorDefaults <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L151>`__\ ()
 
 - | \ *function description*\ :
   | returns structure with default values for PlotSensor which can be modified once to be set for all later calls of PlotSensor
@@ -45,7 +45,7 @@ Function: PlotSensorDefaults
   #==>now PlotSensor(..., fontSize=10) will use fontSize=10
   #==>BUT PlotSensor(..., fontSize=16) will use fontSize=12, BECAUSE 16 is the original default value!!!
   #see which parameters are available:
-  print(PlotSensorDefaults())
+  exudyn.Print(PlotSensorDefaults())
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
@@ -58,7 +58,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: PlotSensor
 ^^^^^^^^^^^^^^^^^^^^
-`PlotSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L230>`__\ (\ ``mbs``\ , \ ``sensorNumbers = []``\ , \ ``components = 0``\ , \ ``xLabel = 'time (s)'``\ , \ ``yLabel = None``\ , \ ``labels = []``\ , \ ``colorCodeOffset = 0``\ , \ ``newFigure = True``\ , \ ``closeAll = False``\ , \ ``componentsX = []``\ , \ ``title = ''``\ , \ ``figureName = ''``\ , \ ``fontSize = 16``\ , \ ``colors = []``\ , \ ``lineStyles = []``\ , \ ``lineWidths = []``\ , \ ``markerStyles = []``\ , \ ``markerSizes = []``\ , \ ``markerDensity = 0.08``\ , \ ``rangeX = []``\ , \ ``rangeY = []``\ , \ ``majorTicksX = 10``\ , \ ``majorTicksY = 10``\ , \ ``offsets = []``\ , \ ``factors = []``\ , \ ``subPlot = []``\ , \ ``sizeInches = [6.4,4.8]``\ , \ ``fileName = ''``\ , \ ``useXYZcomponents = True``\ , \ ``**kwargs``\ )
+`PlotSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L227>`__\ (\ ``mbs``\ , \ ``sensorNumbers = []``\ , \ ``components = 0``\ , \ ``xLabel = 'time (s)'``\ , \ ``yLabel = None``\ , \ ``labels = []``\ , \ ``colorCodeOffset = 0``\ , \ ``newFigure = True``\ , \ ``closeAll = False``\ , \ ``componentsX = []``\ , \ ``title = ''``\ , \ ``figureName = ''``\ , \ ``fontSize = 16``\ , \ ``colors = []``\ , \ ``lineStyles = []``\ , \ ``lineWidths = []``\ , \ ``markerStyles = []``\ , \ ``markerSizes = []``\ , \ ``markerDensity = 0.08``\ , \ ``rangeX = []``\ , \ ``rangeY = []``\ , \ ``majorTicksX = 10``\ , \ ``majorTicksY = 10``\ , \ ``offsets = []``\ , \ ``factors = []``\ , \ ``subPlot = []``\ , \ ``sizeInches = [6.4,4.8]``\ , \ ``fileName = ''``\ , \ ``useXYZcomponents = True``\ , \ ``**kwargs``\ )
 
 
 - | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.PlotSensor(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-plotsensor`\ 
@@ -72,7 +72,7 @@ Function: PlotSensor
 
 Function: PlotFFT
 ^^^^^^^^^^^^^^^^^
-`PlotFFT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L690>`__\ (\ ``frequency``\ , \ ``data``\ , \ ``xLabel = 'frequency'``\ , \ ``yLabel = 'magnitude'``\ , \ ``label = ''``\ , \ ``freqStart = 0``\ , \ ``freqEnd = -1``\ , \ ``logScaleX = True``\ , \ ``logScaleY = True``\ , \ ``majorGrid = True``\ , \ ``minorGrid = True``\ )
+`PlotFFT <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L685>`__\ (\ ``frequency``\ , \ ``data``\ , \ ``xLabel = 'frequency'``\ , \ ``yLabel = 'magnitude'``\ , \ ``label = ''``\ , \ ``freqStart = 0``\ , \ ``freqEnd = -1``\ , \ ``logScaleX = True``\ , \ ``logScaleY = True``\ , \ ``majorGrid = True``\ , \ ``minorGrid = True``\ )
 
 - | \ *function description*\ :
   | plot fft spectrum of signal
@@ -104,7 +104,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: FileStripSpaces
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`FileStripSpaces <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L740>`__\ (\ ``filename``\ , \ ``outputFilename``\ , \ ``fileCommentChar = ''``\ , \ ``removeDoubleChars = ''``\ )
+`FileStripSpaces <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L734>`__\ (\ ``filename``\ , \ ``outputFilename``\ , \ ``fileCommentChar = ''``\ , \ ``removeDoubleChars = ''``\ )
 
 - | \ *function description*\ :
   | strip spaces at beginning / end of lines; this may be sometimes necessary when reading solutions from files that are space-separated
@@ -125,7 +125,7 @@ Function: FileStripSpaces
 
 Function: DataArrayFromSensorList
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`DataArrayFromSensorList <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L767>`__\ (\ ``mbs``\ , \ ``sensorNumbers``\ , \ ``positionList = []``\ , \ ``time = ''``\ )
+`DataArrayFromSensorList <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L761>`__\ (\ ``mbs``\ , \ ``sensorNumbers``\ , \ ``positionList = []``\ , \ ``time = ''``\ )
 
 - | \ *function description*\ :
   | helper function to create data array from outputs defined by sensorNumbers list [+optional positionList which must have, e.g., local arc-length of beam according to sensor numbers]; if time=='', current sensor values will be used; if time!=[], evaluation will be based on loading values from file or sensor internal data and evaluate at that time
@@ -150,10 +150,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: LoadImage
 ^^^^^^^^^^^^^^^^^^^
-`LoadImage <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L794>`__\ (\ ``fileName``\ , \ ``trianglesAsLines = True``\ , \ ``verbose = False``\ )
+`LoadImage <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L788>`__\ (\ ``fileName``\ , \ ``trianglesAsLines = True``\ , \ ``verbose = False``\ )
 
 - | \ *function description*\ :
-  | import image text file as exported from RedrawAndSaveImage() with exportImages.saveImageFormat='TXT'; triangles are converted to lines
+  | import image text file as exported from renderer.RedrawAndSaveImage() with exportImages.saveImageFormat='TXT'; triangles are converted to lines
 - | \ *input*\ :
   | fileName includes directory
 - | \ *output*\ :
@@ -172,7 +172,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: PlotImage
 ^^^^^^^^^^^^^^^^^^^
-`PlotImage <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L867>`__\ (\ ``imageData``\ , \ ``HT = np.eye(4)``\ , \ ``axesEqual = True``\ , \ ``plot3D = False``\ , \ ``lineWidths = 1``\ , \ ``lineStyles = '-'``\ , \ ``triangleEdgeColors = 'black'``\ , \ ``triangleEdgeWidths = 0.5``\ , \ ``removeAxes = True``\ , \ ``orthogonalProjection = True``\ , \ ``title = ''``\ , \ ``figureName = ''``\ , \ ``fileName = ''``\ , \ ``fontSize = 16``\ , \ ``closeAll = False``\ , \ ``azim = 0.``\ , \ ``elev = 0.``\ )
+`PlotImage <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L859>`__\ (\ ``imageData``\ , \ ``HT = np.eye(4)``\ , \ ``axesEqual = True``\ , \ ``plot3D = False``\ , \ ``lineWidths = 1``\ , \ ``lineStyles = '-'``\ , \ ``triangleEdgeColors = 'black'``\ , \ ``triangleEdgeWidths = 0.5``\ , \ ``removeAxes = True``\ , \ ``orthogonalProjection = True``\ , \ ``title = ''``\ , \ ``figureName = ''``\ , \ ``fileName = ''``\ , \ ``fontSize = 16``\ , \ ``closeAll = False``\ , \ ``azim = 0.``\ , \ ``elev = 0.``\ )
 
 - | \ *function description*\ :
   | plot 2D or 3D vector image data as provided by LoadImage(...) using matplotlib

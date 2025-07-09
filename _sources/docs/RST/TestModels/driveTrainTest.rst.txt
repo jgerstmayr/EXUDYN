@@ -340,10 +340,10 @@ You can view and download this file on Github: `driveTrainTest.py <https://githu
    SC.visualizationSettings.openGL.multiSampling = 4
    
    if useGraphics:
-       exu.StartRenderer()
+       SC.renderer.Start()
        if 'lastRenderState' in vars():
-           SC.SetRenderState(lastRenderState) #load last model view
-       mbs.WaitForUserToContinue()
+           SC.renderer.SetState(lastRenderState) #load last model view
+       SC.renderer.DoIdleTasks()
    
    mbs.SolveDynamic(simulationSettings)
    
@@ -361,10 +361,10 @@ You can view and download this file on Github: `driveTrainTest.py <https://githu
    exudynTestGlobals.testResult = u
    
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
-       lastRenderState = SC.GetRenderState() #store model view for next simulation
+       lastRenderState = SC.renderer.GetState() #store model view for next simulation
    
        mbs.PlotSensor(sensorNumbers=[sFlyWheelAngle], 
                   components=[0], closeAll=True, offsets=-phiCrankData,

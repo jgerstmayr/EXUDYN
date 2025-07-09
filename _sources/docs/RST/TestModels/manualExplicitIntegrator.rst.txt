@@ -41,7 +41,7 @@ You can view and download this file on Github: `manualExplicitIntegrator.py <htt
    mbs = SC.AddSystem()
    
    
-   exu.Print("\n\n++++++++++++++++++++++++++\nStart EXUDYN version "+exu.GetVersionString()+"\n")
+   exu.Print("\n\n++++++++++++++++++++++++++\nStart EXUDYN version "+exu.config.Version()+"\n")
    
    #background
    rect = [-2,-2,2,2] #xmin,ymin,xmax,ymax
@@ -124,7 +124,7 @@ You can view and download this file on Github: `manualExplicitIntegrator.py <htt
    simulationSettings.staticSolver.newton.maxIterations = 20 #50 for bending into circle
        
    if useGraphics: #only start graphics once, but after background is set
-       exu.StartRenderer()
+       SC.renderer.Start()
    
    simulationSettings.staticSolver.numberOfLoadSteps = 10
    simulationSettings.staticSolver.adaptiveStep = True
@@ -221,8 +221,8 @@ You can view and download this file on Github: `manualExplicitIntegrator.py <htt
    exudynTestGlobals.testResult = testRefVal + uy
    
    if useGraphics: #only start graphics once, but after background is set
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    
    

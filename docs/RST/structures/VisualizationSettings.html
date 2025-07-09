@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Visualization settings &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>Visualization settings &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -79,11 +79,13 @@
 <li class="toctree-l3"><a class="reference internal" href="#vsettingsconnectors">VSettingsConnectors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vsettingsmarkers">VSettingsMarkers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vsettingsloads">VSettingsLoads</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#vsettingssensortraces">VSettingsSensorTraces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingstraces">VSettingsTraces</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vsettingssensors">VSettingsSensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vsettingscontact">VSettingsContact</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vsettingswindow">VSettingsWindow</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vsettingsdialogs">VSettingsDialogs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingsmaterial">VSettingsMaterial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vsettingsraytracer">VSettingsRaytracer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vsettingsopengl">VSettingsOpenGL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vsettingsexportimages">VSettingsExportImages</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#vsettingsopenvr">VSettingsOpenVR</a></li>
@@ -114,7 +116,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -144,7 +146,7 @@
 <li><div class="line-block">
 <div class="line"><strong>autoFitScene</strong> [type = bool, default = True]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.general.autoFitScene</span></code></div>
-<div class="line">automatically fit scene within startup after StartRenderer()</div>
+<div class="line">automatically fit scene within startup after SC.renderer.Start()</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -318,7 +320,7 @@
 <li><div class="line-block">
 <div class="line"><strong>useMultiThreadedRendering</strong> [type = bool, default = True]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.general.useMultiThreadedRendering</span></code></div>
-<div class="line">true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); set this parameter before call to exudyn.StartRenderer(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW</div>
+<div class="line">true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); set this parameter before call to SC.renderer.Start(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -340,6 +342,12 @@
 <p>Settings for contour plots; use these options to visualize field data, such as displacements, stresses, strains, etc. for bodies, nodes and finite elements.</p>
 <p>VSettingsContour has the following items:</p>
 <ul>
+<li><div class="line-block">
+<div class="line"><strong>alphaTransparency</strong> [type = float, default = 1, size = 1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contour.alphaTransparency</span></code></div>
+<div class="line">default value for contour alpha transparency (RGB color computed from contour value)</div>
+</div>
+</li>
 <li><div class="line-block">
 <div class="line"><strong>automaticRange</strong> [type = bool, default = True]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contour.automaticRange</span></code></div>
@@ -587,7 +595,7 @@
 <li><div class="line-block">
 <div class="line"><strong>defaultColor</strong> [type = Float4, default = [0.3,0.3,1.,1.], size = 4]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.bodies.defaultColor</span></code></div>
-<div class="line">default RGBA color for bodies; 4th value is</div>
+<div class="line">default RGBA color for bodies; 4th value is alpha-transparency</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -660,7 +668,7 @@
 <li><div class="line-block">
 <div class="line"><strong>showContact</strong> [type = bool, default = False]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.connectors.showContact</span></code></div>
-<div class="line">flag to decide, whether contact points, lines, etc. are shown</div>
+<div class="line">flag to decide, whether contact points, lines, etc. are shown for special cable-circle contacts; for spheres, triangles, tori, see visualizationSettings.contact</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -781,110 +789,116 @@
 </li>
 </ul>
 </section>
-<section id="vsettingssensortraces">
-<span id="sec-vsettingssensortraces"></span><h2>VSettingsSensorTraces<a class="headerlink" href="#vsettingssensortraces" title="Link to this heading"></a></h2>
+<section id="vsettingstraces">
+<span id="sec-vsettingstraces"></span><h2>VSettingsTraces<a class="headerlink" href="#vsettingstraces" title="Link to this heading"></a></h2>
 <p>Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solutionSettings.sensorsWritePeriod) may lead to slow graphics.</p>
-<p>VSettingsSensorTraces has the following items:</p>
+<p>VSettingsTraces has the following items:</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><strong>lineWidth</strong> [type = UFloat, default = 2.]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.lineWidth</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces.lineWidth</span></code></div>
 <div class="line">line width for traces</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>listOfPositionSensors</strong> [type = ArrayIndex, default = [], size = -1]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.listOfPositionSensors</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces.listOfPositionSensors</span></code></div>
 <div class="line">list of position sensors which can be shown as trace inside render window if sensors have storeInternal=True; if this list is empty and showPositionTrace=True, then all available sensors are shown</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>listOfTriadSensors</strong> [type = ArrayIndex, default = [], size = -1]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.listOfTriadSensors</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces.listOfTriadSensors</span></code></div>
 <div class="line">list of sensors of with OutputVariableType RotationMatrix; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showTriads=True; the triad is drawn at the related position</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>listOfVectorSensors</strong> [type = ArrayIndex, default = [], size = -1]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.listOfVectorSensors</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces.listOfVectorSensors</span></code></div>
 <div class="line">list of sensors with 3D vector quantities; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showVectors=True; the vector quantity is drawn relative to the related position</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>positionsShowEvery</strong> [type = PInt, default = 1]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.positionsShowEvery</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces.positionsShowEvery</span></code></div>
 <div class="line">integer value i; out of available sensor data, show every i-th position</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>sensorsMbsNumber</strong> [type = Index, default = 0]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.sensorsMbsNumber</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces.sensorsMbsNumber</span></code></div>
 <div class="line">number of main system which is used to for sensor lists; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>showCurrent</strong> [type = bool, default = True]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.showCurrent</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces.showCurrent</span></code></div>
 <div class="line">show current trace position (and especially vector quantity) related to current visualization state; this only works in solution viewer if sensor values are stored at time grid points of the solution file (up to a precision of 1e-10) and may therefore be temporarily unavailable</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>showFuture</strong> [type = bool, default = False]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.showFuture</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces.showFuture</span></code></div>
 <div class="line">show trace future to current visualization state if already computed (e.g. in SolutionViewer)</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>showPast</strong> [type = bool, default = True]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.showPast</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces.showPast</span></code></div>
 <div class="line">show trace previous to current visualization state</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>showPositionTrace</strong> [type = bool, default = False]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.showPositionTrace</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces.showPositionTrace</span></code></div>
 <div class="line">show position trace of all position sensors if listOfPositionSensors=[] or of specified sensors; sensors need to activate storeInternal=True</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>showTriads</strong> [type = bool, default = False]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.showTriads</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces.showTriads</span></code></div>
 <div class="line">if True, show basis vectors from rotation matrices provided by sensors</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>showVectors</strong> [type = bool, default = False]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.showVectors</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces.showVectors</span></code></div>
 <div class="line">if True, show vector quantities according to description in showPositionTrace</div>
 </div>
 </li>
 <li><div class="line-block">
+<div class="line"><strong>timeSpan</strong> [type = UReal, default = 0]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces.timeSpan</span></code></div>
+<div class="line">maximum trace time span of past or future trace; given in seconds of simulation time; if zero, it is unused</div>
+</div>
+</li>
+<li><div class="line-block">
 <div class="line"><strong>traceColors</strong> [type = ArrayFloat, default = [0.2,0.2,0.2,1., 0.8,0.2,0.2,1., 0.2,0.8,0.2,1., 0.2,0.2,0.8,1., 0.2,0.8,0.8,1., 0.8,0.2,0.8,1., 0.8,0.4,0.1,1.], size = -1]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.traceColors</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces.traceColors</span></code></div>
 <div class="line">RGBA float values for traces in one array; using 6x4 values gives different colors for 6 traces; in case of triads, the 0/1/2-axes are drawn in red, green, and blue</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>triadSize</strong> [type = float, default = 0.1 ]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.triadSize</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces.triadSize</span></code></div>
 <div class="line">length of triad axes if shown</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>triadsShowEvery</strong> [type = PInt, default = 1]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.triadsShowEvery</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces.triadsShowEvery</span></code></div>
 <div class="line">integer value i; out of available sensor data, show every i-th triad</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>vectorScaling</strong> [type = float, default = 0.01]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.vectorScaling</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces.vectorScaling</span></code></div>
 <div class="line">scaling of vector quantities; if, e.g., loads, this factor has to be adjusted significantly</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>vectorsShowEvery</strong> [type = PInt, default = 1]:</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensorTraces.vectorsShowEvery</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces.vectorsShowEvery</span></code></div>
 <div class="line">integer value i; out of available sensor data, show every i-th vector</div>
 </div>
 </li>
@@ -896,9 +910,9 @@
 <p>VSettingsSensors has the following items:</p>
 <ul>
 <li><div class="line-block">
-<div class="line"><strong>traces</strong> [type = VSettingsSensorTraces]:</div>
+<div class="line"><strong>traces</strong> [type = VSettingsTraces]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.sensors.traces</span></code></div>
-<div class="line">settings for showing (position) sensor traces and vector plots in the render window</div>
+<div class="line">settings for showing (position/triad) sensor traces and vector plots in the render window</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -935,7 +949,7 @@
 </section>
 <section id="vsettingscontact">
 <span id="sec-vsettingscontact"></span><h2>VSettingsContact<a class="headerlink" href="#vsettingscontact" title="Link to this heading"></a></h2>
-<p>Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization.</p>
+<p>Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization; also used for contact objects, such as ObjectContactSphereSphere or ObjectContactSphereTriangle.</p>
 <p>VSettingsContact has the following items:</p>
 <ul>
 <li><div class="line-block">
@@ -951,9 +965,15 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>colorSpheres</strong> [type = Float4, default = [0.8,0.8,0.2,1.], size = 4]:</div>
+<div class="line"><strong>colorSpheres</strong> [type = Float4, default = [0.8,0.5,0.2,1.], size = 4]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contact.colorSpheres</span></code></div>
 <div class="line">RGBA color for contact spheres, see showSpheres</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>colorTori</strong> [type = Float4, default = [0.8,0.2,0.8,1.], size = 4]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contact.colorTori</span></code></div>
+<div class="line">RGBA color for contact tori, see showTori</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -1011,9 +1031,21 @@
 </div>
 </li>
 <li><div class="line-block">
+<div class="line"><strong>showTori</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contact.showTori</span></code></div>
+<div class="line">show each contact torus</div>
+</div>
+</li>
+<li><div class="line-block">
 <div class="line"><strong>showTriangles</strong> [type = bool, default = False]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contact.showTriangles</span></code></div>
 <div class="line">show contact triangles (TrianglesRigidBodyBased, …)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>tilingCurves</strong> [type = PInt, default = 8]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.contact.tilingCurves</span></code></div>
+<div class="line">tiling for nonlinear/polynomial curves; higher values give smoother curves</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -1133,11 +1165,241 @@
 </li>
 </ul>
 </section>
+<section id="vsettingsmaterial">
+<span id="sec-vsettingsmaterial"></span><h2>VSettingsMaterial<a class="headerlink" href="#vsettingsmaterial" title="Link to this heading"></a></h2>
+<p>Settings for rendering materials, in particular for the Raytracer (may be available also in the OpenGL renderer in the future). This material (widely follows Phong model) can be either accessed via SC.renderer.materials or directly in visualizationSettings.raytracer.material0, material1, etc.; note that the default values shown in the documentation only reflect material0 but not all 10 default materials.</p>
+<p>VSettingsMaterial has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>alpha</strong> [type = UFloat, default = 1.]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material.alpha</span></code></div>
+<div class="line">alpha-transparency, same as in alpha channel in RGBA colors; 1=opaque, 0=fully transparent; leads to extra rendering costs per transparent pixel</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>baseColor</strong> [type = Float3, default = [0.5,0.5,0.5], size = 3]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material.baseColor</span></code></div>
+<div class="line">RGB default material color if face color has R-color channel -1</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>emission</strong> [type = Float3, default = [0.,0.,0.], size = 3]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material.emission</span></code></div>
+<div class="line">RGB emissive material color (enlightened material)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ior</strong> [type = UFloat, default = 1.]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material.ior</span></code></div>
+<div class="line">index of refraction for transparent materials (1=no refraction), &gt;1 represents refraction</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>name</strong> [type = String, default = ‘undefined’]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material.name</span></code></div>
+<div class="line">material name for easier handling</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>reflectivity</strong> [type = UFloat, default = 0.]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material.reflectivity</span></code></div>
+<div class="line">controls reflectivity of material; 0=no reflections (rough, e.g. rubber), 1=fully reflective (mirror); this leads to large extra rendering costs per visible reflective pixel</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>shininess</strong> [type = UFloat, default = 32.]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material.shininess</span></code></div>
+<div class="line">controls shininess of specular component of lights; values &lt; 5 is not very shiny, while &gt; 50 is very shiny</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>specular</strong> [type = Float3, default = [0.5,0.5,0.5], size = 3]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material.specular</span></code></div>
+<div class="line">RGB specular material color</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="vsettingsraytracer">
+<span id="sec-vsettingsraytracer"></span><h2>VSettingsRaytracer<a class="headerlink" href="#vsettingsraytracer" title="Link to this heading"></a></h2>
+<p>Settings for raytracer (software renderer) which can be used as alternative to classic OpenGL rendering; this option may be erased in future in favor of a modern GPU rendering. To activate the raytracer, simply switch the enable flag to True. The raytracer uses CPU-based rendering and is therefore comparably slow (may take seconds to render one frame). Thus, take care with the window dimension (start with small window size like 400 x 300) and use openGL.multiSampling=1. Note that many parameters are used from openGL settings, like backgroundColor, lineWidth, multiSampling, shadow (only on/off), and lights. See the options to improve appearance and performance.</p>
+<p>VSettingsRaytracer has the following items:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><strong>material0</strong> [type = VSettingsMaterial]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material0</span></code></div>
+<div class="line">settings for material0</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>material1</strong> [type = VSettingsMaterial]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material1</span></code></div>
+<div class="line">settings for material1</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>material2</strong> [type = VSettingsMaterial]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material2</span></code></div>
+<div class="line">settings for material2</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>material3</strong> [type = VSettingsMaterial]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material3</span></code></div>
+<div class="line">settings for material3</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>material4</strong> [type = VSettingsMaterial]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material4</span></code></div>
+<div class="line">settings for material4</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>material5</strong> [type = VSettingsMaterial]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material5</span></code></div>
+<div class="line">settings for material5</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>material6</strong> [type = VSettingsMaterial]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material6</span></code></div>
+<div class="line">settings for material6</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>material7</strong> [type = VSettingsMaterial]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material7</span></code></div>
+<div class="line">settings for material7</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>material8</strong> [type = VSettingsMaterial]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material8</span></code></div>
+<div class="line">settings for material8</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>material9</strong> [type = VSettingsMaterial]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.material9</span></code></div>
+<div class="line">settings for material9</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>ambientLightColor</strong> [type = Float4, default = [0.6,0.6,0.6,1.], size = 4]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.ambientLightColor</span></code></div>
+<div class="line">scene RGBA color for ambient light effect (min. light for regions in shadow); same as openGL.materialAmbientAndDiffuse in OpenGL renderer</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>backgroundColorReflections</strong> [type = Float4, default = [0.4,0.4,0.4,1.], size = 4]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.backgroundColorReflections</span></code></div>
+<div class="line">scene RGBA color for background that is hit by reflection; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; important, if scene is not inside a room.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>enable</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.enable</span></code></div>
+<div class="line">True: use (software) raytracer; False: use standard OpenGL renderer</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>globalFogColor</strong> [type = Float4, default = [0.5,0.5,0.5,1.], size = 4]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.globalFogColor</span></code></div>
+<div class="line">scene RGBA fog color</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>globalFogDensity</strong> [type = Real, default = 0.]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.globalFogDensity</span></code></div>
+<div class="line">global fog density; fog is deactivated if fogDensity=0, otherwise it is a density relative to scene max size; as it is relative, the factor has to be relatively high to be visible (usually &gt;1)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>imageSizeFactor</strong> [type = PInt, default = 1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.imageSizeFactor</span></code></div>
+<div class="line">Special size factor (1-16) to allow drawing with smaller resolution (faster); use this for long rendering times for adjustments, etc.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>keepWindowActive</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.keepWindowActive</span></code></div>
+<div class="line">Special flag, handle with care; True: sends some glfw functions to keep window reactive for long render times (&gt;2 seconds); otherwise, the rendering may not finish due to timeout</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>lightRadius</strong> [type = float, default = 0.1, size = 1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.lightRadius</span></code></div>
+<div class="line">if lightRadiusVariations&gt;1, it uses the given radius for all lights, to convert point lights into distributed lights (slower)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>lightRadiusVariations</strong> [type = PInt, default = 1, size = 1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.lightRadiusVariations</span></code></div>
+<div class="line">if lightRadiusVariations&gt;1, this defines the number of positions that are used to compute the effect of distributed lights (larger is slower but better quality); range=1..64</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>maxReflectionDepth</strong> [type = UInt, default = 2]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.maxReflectionDepth</span></code></div>
+<div class="line">Maximum number of reflections computed for one ray (note that for each transparent face passed, the reflection depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>maxTransparencyDepth</strong> [type = UInt, default = 2]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.maxTransparencyDepth</span></code></div>
+<div class="line">Maximum number of transparent faces that can be passed (note that for each reflection, the transparency depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>numberOfThreads</strong> [type = PInt, default = 8]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.numberOfThreads</span></code></div>
+<div class="line">Number of CPU-threads (max: 256) used for software rendering (should be approx. the number of available threads)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>searchTreeFactor</strong> [type = PInt, default = 1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.searchTreeFactor</span></code></div>
+<div class="line">This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>tilesPerThread</strong> [type = PInt, default = 12]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.tilesPerThread</span></code></div>
+<div class="line">Total number of sub-tiles per thread, used to evenly distribute rendering load to threads</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>verbose</strong> [type = bool, default = False]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.verbose</span></code></div>
+<div class="line">True: print out some debug information on rendering, in particular rendering timings and counter</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>zBiasLines</strong> [type = Real, default = 1e-3]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.zBiasLines</span></code></div>
+<div class="line">offset for lines to draw in front of faces; relative to scene radius</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>zOffsetCamera</strong> [type = Real, default = -0.01]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.raytracer.zOffsetCamera</span></code></div>
+<div class="line">offset for for camera towards the scene; use positive factor put camera inside, e.g. of brick (like a room) or sphere; use (slightly) negative value to make whole scene visible</div>
+</div>
+</li>
+</ul>
+</section>
 <section id="vsettingsopengl">
 <span id="sec-vsettingsopengl"></span><h2>VSettingsOpenGL<a class="headerlink" href="#vsettingsopengl" title="Link to this heading"></a></h2>
 <p>OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL functionality.</p>
 <p>VSettingsOpenGL has the following items:</p>
 <ul>
+<li><div class="line-block">
+<div class="line"><strong>clippingPlaneColor</strong> [type = Float4, default = [0.7,0.5,0.5,0.], size = 4]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.openGL.clippingPlaneColor</span></code></div>
+<div class="line">RGBA color for clipping plane; if alpha-channel is 0, the cutting plane is not drawn; if alpha-channel is 1, the clippingPlaneColor is used; if alpha-channel is 2, the color of the object interior is used as clipping plane color (which may look strange in case of object-in-object)</div>
+</div>
+</li>
 <li><div class="line-block">
 <div class="line"><strong>clippingPlaneDistance</strong> [type = float, default = 0.]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.openGL.clippingPlaneDistance</span></code></div>
@@ -1147,7 +1409,13 @@
 <li><div class="line-block">
 <div class="line"><strong>clippingPlaneNormal</strong> [type = Float3, default = [0.,0.,0.], size = 3]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.openGL.clippingPlaneNormal</span></code></div>
-<div class="line">normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance</div>
+<div class="line">normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; the clipped half-space is in direction of the normal; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>depthSorting</strong> [type = bool, default = False, size = 1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.openGL.depthSorting</span></code></div>
+<div class="line">True (slower): sort triangles by Z-depth to remove transparency artifacts: only works if triangles do not intersect or come close (you may like to refine triangle meshes); False: no depth-sort (faster)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -1196,6 +1464,12 @@
 <div class="line"><strong>facesTransparent</strong> [type = bool, default = False, size = 1]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.openGL.facesTransparent</span></code></div>
 <div class="line">True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>faceTransparencyGlobal</strong> [type = UFloat, default = 0.4, size = 1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.openGL.faceTransparencyGlobal</span></code></div>
+<div class="line">in case that facesTransparent=True this represents the max alpha-transparency</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -1249,7 +1523,7 @@
 <li><div class="line-block">
 <div class="line"><strong>light0position</strong> [type = Float4, default = [0.2,0.2,10.,0.], size = 4]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.openGL.light0position</span></code></div>
-<div class="line">4f position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position; see opengl manuals</div>
+<div class="line">4D position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position; see opengl manuals</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -1291,7 +1565,7 @@
 <li><div class="line-block">
 <div class="line"><strong>light1position</strong> [type = Float4, default = [1.,1.,-10.,0.], size = 4]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.openGL.light1position</span></code></div>
-<div class="line">4f position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals</div>
+<div class="line">4D position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -1325,6 +1599,12 @@
 </div>
 </li>
 <li><div class="line-block">
+<div class="line"><strong>lightPositionsInCameraFrame</strong> [type = bool, default = False, size = 1]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.openGL.lightPositionsInCameraFrame</span></code></div>
+<div class="line">set False to set light positions and directions relative to model frame; True: lights are in global (camera) frame; this is always False for raytracer; this was True up to Exudyn 1.9.174</div>
+</div>
+</li>
+<li><div class="line-block">
 <div class="line"><strong>lineSmooth</strong> [type = bool, default = True, size = 1]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.openGL.lineSmooth</span></code></div>
 <div class="line">draw lines smooth</div>
@@ -1339,7 +1619,7 @@
 <li><div class="line-block">
 <div class="line"><strong>materialAmbientAndDiffuse</strong> [type = Float4, default = [0.6,0.6,0.6,1.], size = 4]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.openGL.materialAmbientAndDiffuse</span></code></div>
-<div class="line">4f ambient color of material</div>
+<div class="line">RGBA ambient color of material</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -1351,7 +1631,7 @@
 <li><div class="line-block">
 <div class="line"><strong>materialSpecular</strong> [type = Float4, default = [0.6,0.6,0.6,1.], size = 4]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.openGL.materialSpecular</span></code></div>
-<div class="line">4f specular color of material</div>
+<div class="line">RGBA specular color of material</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -1381,7 +1661,7 @@
 <li><div class="line-block">
 <div class="line"><strong>shadow</strong> [type = UFloat, default = 0.]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.openGL.shadow</span></code></div>
-<div class="line">parameter <span class="math notranslate nohighlight">\(\in [0 ... 1]\)</span> prescribes amount of shadow for light0 (using light0position, etc.); if this parameter is different from 1, rendering of triangles becomes approx.5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows</div>
+<div class="line">parameter <span class="math notranslate nohighlight">\(\in [0 ... 1]\)</span> prescribes amount of shadow for light0 (using light0position, etc.) in OpenGL renderer; if this parameter is different from 1, rendering of triangles becomes approx.5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for all lights if shadow&gt;0</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -1634,6 +1914,12 @@
 </div>
 </li>
 <li><div class="line-block">
+<div class="line"><strong>selectionLeftMouseItemTypes</strong> [type = Index, default = 31]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.interactive.selectionLeftMouseItemTypes</span></code></div>
+<div class="line">binary flags (1,2,4,8,16) for (Node,Object,Marker,Load,Sensor) that are identified with left mouse click selection</div>
+</div>
+</li>
+<li><div class="line-block">
 <div class="line"><strong>selectionRightMouse</strong> [type = bool, default = True]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">SC.visualizationSettings.interactive.selectionRightMouse</span></code></div>
 <div class="line">True: right mouse click on items and show dictionary (read only!)</div>
@@ -1758,6 +2044,12 @@
 <div class="line"><strong>openGL</strong> [type = VSettingsOpenGL]:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">.visualizationSettings.openGL</span></code></div>
 <div class="line">OpenGL rendering settings</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>raytracer</strong> [type = VSettingsRaytracer]:</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">.visualizationSettings.raytracer</span></code></div>
+<div class="line">Raytracer settings (builds on OpenGL rendering settings)</div>
 </div>
 </li>
 <li><div class="line-block">

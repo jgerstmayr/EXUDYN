@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Introduction to multibody systems &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>Introduction to multibody systems &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -41,7 +41,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -104,7 +104,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -241,14 +241,14 @@ However, with advancements in the field of rigid and flexible multibody dynamics
 <p>A series of interconnected links forms a kinematic chain. In most mechanisms, except for those designed for flight, at least one link is stationary, serving as a reference point or frame for the system. This stationary link is typically referred to as the ground or frame. Mechanisms can be classified based on the motion of their links: if all links move within a single plane, the mechanism is called a planar mechanism; otherwise, it is known as a spatial mechanism.</p>
 <p>It is also crucial to differentiate between open-loop and closed-loop mechanisms. An open-loop mechanism is characterized by a configuration where traversing through the links in sequence does not lead back to the starting point. In the general case, such an open-loop system is represented by a kinematic tree, which has a root link, and every link can have arbitrary many joints – as long as it leads to no single closed loop.
 Conversely, a closed-loop mechanism features a configuration where at least one path forms a loop, including the ground link, allowing for the possibility of returning to the starting link through the sequence of connections.</p>
-<p><a class="reference internal" href="#fig-open-closed-loop"><span class="std std-numref">Fig. 14</span></a>a shows a double pendulum, which is an example of an open-loop mechanism.
-A closed-loop mechanism is shown in <a class="reference internal" href="#fig-open-closed-loop"><span class="std std-numref">Fig. 14</span></a>b, which is a four-bar linkage.
+<p><a class="reference internal" href="#fig-open-closed-loop"><span class="std std-numref">Fig. 15</span></a>a shows a double pendulum, which is an example of an open-loop mechanism.
+A closed-loop mechanism is shown in <a class="reference internal" href="#fig-open-closed-loop"><span class="std std-numref">Fig. 15</span></a>b, which is a four-bar linkage.
 As mentioned before, the fourth link is the ground link.</p>
 <figure class="align-default" id="id1">
 <span id="fig-open-closed-loop"></span><a class="reference internal image-reference" href="../../_images/open_closed_loop.png"><img alt="../../_images/open_closed_loop.png" src="../../_images/open_closed_loop.png" style="width: 400px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 14 </span><span class="caption-text">a.) Open loop mechanism (double pendulum), b.) Closed loops mechanism (four-bar linkage).</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 15 </span><span class="caption-text">a.) Open loop mechanism (double pendulum), b.) Closed loops mechanism (four-bar linkage).</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 </section>
@@ -287,9 +287,9 @@ Here, the components of the transformation matrix are given as a function of tim
 <h2>Degree of freedom – <a class="reference internal" href="Abbreviations.html#dof"><span class="std std-ref">DOF</span></a><a class="headerlink" href="#degree-of-freedom-dof" title="Link to this heading"></a></h2>
 <p>According to Nikravesh, “The minimum number of coordinates required to fully describe the configuration of a system
 is called the number of degrees of freedom of the system”.
-We may consider two examples given in <a class="reference internal" href="#fig-degrees-of-freedom"><span class="std std-numref">Fig. 15</span></a>, to understand the <a class="reference internal" href="Abbreviations.html#dof"><span class="std std-ref">DOF</span></a>.
+We may consider two examples given in <a class="reference internal" href="#fig-degrees-of-freedom"><span class="std std-numref">Fig. 16</span></a>, to understand the <a class="reference internal" href="Abbreviations.html#dof"><span class="std std-ref">DOF</span></a>.
 A double pendulum is shown, which can be described with no less than two independent angles <span class="math notranslate nohighlight">\(\phi_1\)</span> and <span class="math notranslate nohighlight">\(\phi_2\)</span>, thus the system has two degrees of freedom.</p>
-<p>As a second example, a four-bar mechanism is shown, see <a class="reference internal" href="#fig-degrees-of-freedom"><span class="std std-numref">Fig. 15</span></a>b.
+<p>As a second example, a four-bar mechanism is shown, see <a class="reference internal" href="#fig-degrees-of-freedom"><span class="std std-numref">Fig. 16</span></a>b.
 There are three angles <span class="math notranslate nohighlight">\(\phi_a\)</span>, <span class="math notranslate nohighlight">\(\phi_b\)</span> and <span class="math notranslate nohighlight">\(\phi_c\)</span> related with the current configuration of the system.
 However, there are two algebraic relations (constraint conditions) between these three angles, given as</p>
 <div class="math notranslate nohighlight">
@@ -302,7 +302,7 @@ Regarding the four-bar mechanism, there exist some configurations, which can lea
 <span id="fig-degrees-of-freedom"></span><a class="reference internal image-reference" href="../../_images/degrees_of_freedom.png"><img alt="../../_images/degrees_of_freedom.png" src="../../_images/degrees_of_freedom.png" style="width: 500px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 15 </span><span class="caption-text">Examples of mechanisms with different degrees of freedom.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 16 </span><span class="caption-text">Examples of mechanisms with different degrees of freedom.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 </section>
@@ -329,9 +329,9 @@ It is important, that the constraint equations are (linearly) independent, becau
 <p>In the case of planar mechanisms, a body obtains only three degrees of freedom. Therefore the Chebychev-Grübler-Kutzbach criterion reads</p>
 <div class="math notranslate nohighlight">
 \[DOF_\mathrm{planar} = 3 \cdot n_b - n_c\]</div>
-<p>As a spatial example, consider again the double pendulum <a class="reference internal" href="#fig-degrees-of-freedom"><span class="std std-numref">Fig. 15</span></a>a as a spatial mechanism.
+<p>As a spatial example, consider again the double pendulum <a class="reference internal" href="#fig-degrees-of-freedom"><span class="std std-numref">Fig. 16</span></a>a as a spatial mechanism.
 In this case, there are two bodies, <span class="math notranslate nohighlight">\(n_b=2\)</span> and two revolute joints with 5 constraints each, giving <span class="math notranslate nohighlight">\(n_c=10\)</span>. Thus, the Chebychev-Grübler-Kutzbach criterion gives <span class="math notranslate nohighlight">\(n_\mathrm{DOF} = 12 - 10 = 2\)</span>, which we expect.</p>
-<p>As another example, consider a spatial four-bar mechanism according to <a class="reference internal" href="#fig-degrees-of-freedom"><span class="std std-numref">Fig. 15</span></a>b.
+<p>As another example, consider a spatial four-bar mechanism according to <a class="reference internal" href="#fig-degrees-of-freedom"><span class="std std-numref">Fig. 16</span></a>b.
 In this case, there are four bodies, <span class="math notranslate nohighlight">\(n_b=4\)</span>, four revolute joints with 5 constraints each and a ground joints with 6 constraints, totalling at <span class="math notranslate nohighlight">\(n_c=4\cdot 5 + 6 = 26\)</span>. Thus, Eq. <a class="reference internal" href="#equation-eq-chebychev-grubler-kutzbach">(2)</a> gives</p>
 <div class="math notranslate nohighlight">
 \[n_\mathrm{DOF} = 24 - 26 = -2.\]</div>
@@ -364,9 +364,8 @@ In Exudyn, position, orientation and deformation coordinates (of bodies) are den
 <p>The <strong>generalized (Lagrangian) coordinates</strong>, which are employed in Lagrange’s equations of motion, are another set of well known coordinates used for mechanisms. As known from Lagrange’s formalism, coordinates may be defined relative to each other.</p>
 </section>
 <section id="reference-and-current-coordinates">
-<h2>Reference and current coordinates<a class="headerlink" href="#reference-and-current-coordinates" title="Link to this heading"></a></h2>
-<p>label{sec:referenceAndCurrentCoordinates}
-An important fact on the coordinates used in Exudyn is upon the <strong>additive</strong>(This additive splitting is also used for rotations: therefore, only the sum of reference and current (or visualization) coordinates has a geometrical meaning, while the parts are only used within the solver for incrementing.) splitting of quantities (e.g. position, rotation parameters, etc.) into <strong>reference</strong> and <strong>current</strong> (initial/visualization/…) coordinates.
+<span id="sec-referenceandcurrentcoordinates"></span><h2>Reference and current coordinates<a class="headerlink" href="#reference-and-current-coordinates" title="Link to this heading"></a></h2>
+<p>An important fact on the coordinates used in Exudyn is upon the <strong>additive</strong>(This additive splitting is also used for rotations: therefore, only the sum of reference and current (or visualization) coordinates has a geometrical meaning, while the parts are only used within the solver for incrementing.) splitting of quantities (e.g. position, rotation parameters, etc.) into <strong>reference</strong> and <strong>current</strong> (initial/visualization/…) coordinates.
 The current position vector of a point node is computed from the reference position plus the current displacement, reading</p>
 <div class="math notranslate nohighlight">
 \[{\mathbf{p}}\cCur = {\mathbf{p}}\cRef + {\mathbf{u}}\cCur\]</div>

@@ -176,10 +176,10 @@ You can view and download this file on Github: `tippeTop.py <https://github.com/
    if simulate:
        useGraphics = True
        if useGraphics:
-           exu.StartRenderer()
+           SC.renderer.Start()
            if 'renderState' in exu.sys:
-               SC.SetRenderState(exu.sys['renderState'])
-           mbs.WaitForUserToContinue()
+               SC.renderer.SetState(exu.sys['renderState'])
+           SC.renderer.DoIdleTasks()
    
    
        simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
@@ -189,8 +189,8 @@ You can view and download this file on Github: `tippeTop.py <https://github.com/
        #mbs.SolveDynamic(simulationSettings)
    
        if useGraphics:
-           SC.WaitForRenderEngineStopFlag()
-           exu.StopRenderer() #safely close rendering window!
+           SC.renderer.DoIdleTasks()
+           SC.renderer.Stop() #safely close rendering window!
    
    if not simulate or True:
        SC.visualizationSettings.general.autoFitScene = False

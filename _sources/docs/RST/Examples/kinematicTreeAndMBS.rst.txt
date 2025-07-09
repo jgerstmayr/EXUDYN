@@ -345,10 +345,10 @@ You can view and download this file on Github: `kinematicTreeAndMBS.py <https://
        SC.visualizationSettings.nodes.basisSize = 0.5
        if useGraphics:
    
-           exu.StartRenderer()
-           if 'renderState' in exu.sys: SC.SetRenderState(exu.sys['renderState']) #load last model view
+           SC.renderer.Start()
+           if 'renderState' in exu.sys: SC.renderer.SetState(exu.sys['renderState']) #load last model view
        
-           mbs.WaitForUserToContinue() #press space to continue
+           SC.renderer.DoIdleTasks() #press space to continue
    
        mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.ExplicitEuler)
        # mbs.SolveDynamic(simulationSettings)
@@ -365,8 +365,8 @@ You can view and download this file on Github: `kinematicTreeAndMBS.py <https://
        mbs.SolutionViewer() #can also be entered in IPython ...
    
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    
    if False:

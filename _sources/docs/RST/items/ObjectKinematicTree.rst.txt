@@ -26,7 +26,7 @@ The item \ **ObjectKinematicTree**\  with type = 'KinematicTree' has the followi
 * | **baseOffset** [\ :math:`\LU{0}{{\mathbf{p}}_b} \in \Rcal^{3}`\ , type = Vector3D, default = [0.,0.,0.]]:
   | offset vector for base, in global coordinates
 * | **jointTypes** [\ :math:`{\mathbf{j}}_T \in \Ncal^{n}`\ , type = JointTypeList, default = []]:
-  | joint types of kinematic Tree joints; must be always set
+  | joint types of kinematic Tree joints, using exu.JointType, like exu.JointType.RevoluteZ; must be always set
 * | **linkParents** [\ :math:`{\mathbf{i}}_p = [p_0,\, p_1,\, \ldots] \in \Ncal^{n}`\ , type = ArrayIndex, default = []]:
   | index of parent joint/link; if no parent exists, the value is \ :math:`-1`\ ; by default, \ :math:`p_0=-1`\  because the \ :math:`i`\ th parent index must always fulfill \ :math:`p_i<i`\ ; must be always set
 * | **jointTransformations** [\ :math:`{\mathbf{T}} = [\LU{p_0,j_0}{{\mathbf{T}}_0},\, \LU{p_1,j_1}{{\mathbf{T}}_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]`\ , type = Matrix3DList, default = []]:
@@ -71,7 +71,7 @@ The item VObjectKinematicTree has the following parameters:
 * | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used
 * | **graphicsDataList** [type = BodyGraphicsDataList]:
-  | Structure contains data for link/joint visualization; data is defined as list of BodyGraphicdData where every BodyGraphicdData corresponds to one link/joint; must either be emtpy list or length must agree with number of links
+  | Structure contains data for link/joint visualization; data is defined as list of BodyGraphicsData where every BodyGraphicsData corresponds to one link/joint; must either be emtpy list or length must agree with number of links
 
 
 ----------
@@ -405,7 +405,7 @@ MINI EXAMPLE for ObjectKinematicTree
 
 Relevant Examples and TestModels with weblink:
 
-    \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Examples/), \ `reinforcementLearningRobot.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reinforcementLearningRobot.py>`_\  (Examples/), \ `stiffFlyballGovernorKT.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernorKT.py>`_\  (Examples/), \ `kinematicTreeTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeTest.py>`_\  (TestModels/)
+    \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Examples/), \ `reinforcementLearningRobot.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reinforcementLearningRobot.py>`_\  (Examples/), \ `stiffFlyballGovernorKT.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stiffFlyballGovernorKT.py>`_\  (Examples/), \ `kinematicTreeTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/kinematicTreeTest.py>`_\  (TestModels/), \ `createKinematicTreeTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createKinematicTreeTest.py>`_\  (TestModels/)
 
 
 

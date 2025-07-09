@@ -99,10 +99,10 @@ You can view and download this file on Github: `scissorPrismaticRevolute2D.py <h
    
    
    if useGraphics: #only start graphics once, but after background is set
-   #    SC.visualizationSettings.window.alwaysOnTop = True #must be done before exu.StartRenderer() called
+   #    SC.visualizationSettings.window.alwaysOnTop = True #must be done before SC.renderer.Start() called
    #    SC.visualizationSettings.window.maximize = True
    #    SC.visualizationSettings.window.showWindow = False
-       exu.StartRenderer()
+       SC.renderer.Start()
    
    
    
@@ -201,25 +201,23 @@ You can view and download this file on Github: `scissorPrismaticRevolute2D.py <h
    
        #exu.Print(mbs)
        mbs.Assemble()
-       SC.RenderEngineZoomAll()
+       SC.renderer.ZoomAll()
        
        if useGraphics:
-           mbs.WaitForUserToContinue()
+           SC.renderer.DoIdleTasks()
        #solve
-       #exu.InfoStat()
        solver = exu.MainSolverImplicitSecondOrder()
        solver.SolveSystem(mbs, simulationSettings)
        #exu.Print("jac=",solver.GetSystemJacobian())
        #exu.Print(solver.conv)
        #exu.Print(solver.it)
-       #exu.InfoStat()
        uy=mbs.GetNodeOutput(nMeasure,exu.OutputVariableType.Position)[1] #y-coordinate of node point
        exu.Print("uy=",uy)
        nit = solver.it.newtonStepsCount
        exu.Print("solver.it.newtonStepsCount=",nit)
        resUy += uy #add up displacements of selected node
        resIt += nit #total iterations
-   #    mbs.WaitForUserToContinue()
+   #    SC.renderer.DoIdleTasks()
        
        #alternative solver command
        #mbs.SolveDynamic(simulationSettings)
@@ -228,8 +226,8 @@ You can view and download this file on Github: `scissorPrismaticRevolute2D.py <h
    
    #stop 3D visualization
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    #factor 1e-2: 32bit version shows larger differences ...
    exudynTestGlobals.testError = 1e-2*(resUy + resIt - (1.131033204186729+1.1246157002409096 + 1501+1217)) #2020-01-16: (1.131033204186729+1.1246157002409096 + 1501+1217)

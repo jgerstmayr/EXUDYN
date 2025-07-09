@@ -89,11 +89,11 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive2.
        ang_vel = np.loadtxt("angular_velocity_disk0.txt", comments='#', delimiter=',')
        
        fig = plt.figure(figsize=[13,5])
-       plt.plot(ang_vel[:,0], ang_vel[:,3], 'r-', label='$\omega_{disk0}$')
+       plt.plot(ang_vel[:,0], ang_vel[:,3], 'r-', label='$\\omega_{disk0}$')
        set_axis(plt)
        ax=plt.gca()
        ax.set_xlabel('$t [s]$', fontsize=fontSize)
-       ax.set_ylabel('$\omega_{disk0} [rad/s]$', fontsize=fontSize)
+       ax.set_ylabel('$\\omega_{disk0} [rad/s]$', fontsize=fontSize)
        ax.grid(True, 'major', 'both')
        plt.legend()
        plt.tight_layout()
@@ -104,11 +104,11 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive2.
        ang_vel = np.loadtxt("angular_velocity_disk1.txt", comments='#', delimiter=',')
        
        fig = plt.figure(figsize=[13,5])
-       plt.plot(ang_vel[:,0], ang_vel[:,3], 'r-', label='$\omega_{disk1}$')
+       plt.plot(ang_vel[:,0], ang_vel[:,3], 'r-', label='$\\omega_{disk1}$')
        set_axis(plt)
        ax=plt.gca()
        ax.set_xlabel('$t [s]$', fontsize=fontSize)
-       ax.set_ylabel('$\omega_{disk1} [rad/s]$', fontsize=fontSize)
+       ax.set_ylabel('$\\omega_{disk1} [rad/s]$', fontsize=fontSize)
        ax.grid(True, 'major', 'both')
        plt.legend()
        plt.tight_layout()
@@ -167,7 +167,7 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive2.
    
    
    
-   print("Exudyn used:", exu.GetVersionString())
+   print("Exudyn used:", exu.config.Version())
    
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -826,12 +826,12 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive2.
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #Rendering
-   exu.StartRenderer()                 #start graphics visualization
-   mbs.WaitForUserToContinue()         #wait for pressing SPACE bar to continue
+   SC.renderer.Start()                 #start graphics visualization
+   SC.renderer.DoIdleTasks()         #wait for pressing SPACE bar to continue
    # mbs.SolveStatic(sims)
    mbs.SolveDynamic(sims)
-   SC.WaitForRenderEngineStopFlag()    #wait for pressing 'Q' to quit
-   exu.StopRenderer()                  #safely close rendering window!
+   SC.renderer.DoIdleTasks()    #wait for pressing 'Q' to quit
+   SC.renderer.Stop()                  #safely close rendering window!
    
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

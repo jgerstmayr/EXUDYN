@@ -12,11 +12,87 @@ This library requires numpy (as well as time and copy)
 - Date:      2019-07-26 (created) 
 
 
+.. _sec-utilities-getothermarker:
+
+Function: GetOtherMarker
+^^^^^^^^^^^^^^^^^^^^^^^^
+`GetOtherMarker <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L85>`__\ (\ ``mbs``\ , \ ``bodyNumber``\ , \ ``existingMarker``\ , \ ``show = True``\ )
+
+- | \ *function description*\ :
+  | creates a new marker for body with bodyNumber using another marker existingMarker, such that the new marker has the same reference position as the existing marker, working for MarkerBodyPosition (no rotations included); this alleviates creation of markers and calculation of localPosition
+- | \ *input*\ :
+  | \ ``mbs``\ : multibody system where new marker is added to
+  | \ ``bodyNumber``\ : body where new marker shall be attached to
+  | \ ``existingMarker``\ : marker number which serves as a reference
+  | \ ``show``\ : if True, marker is shown
+- | \ *output*\ :
+  | returns marker number of new marker
+- | \ *example*\ :
+
+.. code-block:: python
+
+  #oBody0 = mbs.CreateRigidBody(...)
+  #oBody1 = mbs.CreateRigidBody(...)
+  marker0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oBody0,localPosition=[1,0,0]))
+  #create joint from one marker (with rotation) and other body
+  mbs.AddObject(SphericalJoint(markerNumbers=[marker0, GetOtherMarker(mbs, oBody1, marker0)]))
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `NGsolveFFRF.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveFFRF.py>`_\  (Ex)
+
+
+
+----
+
+
+.. _sec-utilities-getjointargs:
+
+Function: GetJointArgs
+^^^^^^^^^^^^^^^^^^^^^^
+`GetJointArgs <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L127>`__\ (\ ``mbs``\ , \ ``markerNumber0 = None``\ , \ ``markerNumber1 = None``\ , \ ``rotationMarker0 = None``\ , \ ``rotationMarker1 = None``\ , \ ``bodyNumber0 = None``\ , \ ``bodyNumber1 = None``\ )
+
+- | \ *function description*\ :
+  | creates input args for joints, based on an exiting marker (markerNumber, may be rigid or flex body), with optional existing rotationMarker and uses another rigid body (given as bodyNumber) to create a new MarkerBodyRigid and rotationMarker; this alleviates creation of joint args, see the example; inputs are either markerNumber0 [, rotationMarker0], bodyNumber1 OR markerNumber1 [, rotationMarker1], bodyNumber0
+- | \ *input*\ :
+  | \ ``mbs``\ : multibody system where new marker is added to
+  | \ ``markerNumber0``\ : markerNumber of existing rigid body marker
+  | \ ``markerNumber1``\ : markerNumber of existing rigid body marker
+  | \ ``rotationMarker0``\ : joint marker rotation matrix for markerNumber0 (must be MarkerBodyRigid)
+  | \ ``rotationMarker1``\ : joint marker rotation matrix for markerNumber1 (must be MarkerBodyRigid)
+  | \ ``bodyNumber0``\ : existing body used to create new marker
+  | \ ``bodyNumber1``\ : existing body used to create new marker
+- | \ *output*\ :
+  | returns dict with 'markerNumbers' list, 'rotationMarker0' and 'rotationMarker1', ready to be used as args
+- | \ *example*\ :
+
+.. code-block:: python
+
+  #oBody0 = mbs.CreateRigidBody(...)
+  #oBody1 = mbs.CreateRigidBody(...)
+  marker0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oBody0,localPosition=[1,0,0]))
+  rotM0 = RotationMatrixX(0.5*pi)
+  #create joint from one marker (with rotation) and other body
+  mbs.AddObject(RevoluteJointZ(**GetJointArgs(mbs, markerNumber0=marker0,
+                                              rotationMarker0=rotM0,
+                                              bodyNumber1=oBody1)
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `jointArgsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/jointArgsTest.py>`_\  (TM)
+
+
+
+----
+
+
 .. _sec-utilities-showonlyobjects:
 
 Function: ShowOnlyObjects
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`ShowOnlyObjects <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L76>`__\ (\ ``mbs``\ , \ ``objectNumbers = []``\ , \ ``showOthers = False``\ )
+`ShowOnlyObjects <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L186>`__\ (\ ``mbs``\ , \ ``objectNumbers = []``\ , \ ``showOthers = False``\ )
 
 - | \ *function description*\ :
   | function to hide all objects in mbs except for those listed in objectNumbers
@@ -36,7 +112,7 @@ Function: ShowOnlyObjects
 
 Function: HighlightItem
 ^^^^^^^^^^^^^^^^^^^^^^^
-`HighlightItem <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L98>`__\ (\ ``SC``\ , \ ``mbs``\ , \ ``itemNumber``\ , \ ``itemType = exudyn.ItemType.Object``\ , \ ``showNumbers = True``\ )
+`HighlightItem <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L209>`__\ (\ ``SC``\ , \ ``mbs``\ , \ ``itemNumber``\ , \ ``itemType = exudyn.ItemType.Object``\ , \ ``showNumbers = True``\ )
 
 - | \ *function description*\ :
   | highlight a certain item with number itemNumber; set itemNumber to -1 to show again all objects
@@ -55,7 +131,7 @@ Function: HighlightItem
 
 Function: __UFsensorDistance
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`__UFsensorDistance <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L137>`__\ (\ ``mbs``\ , \ ``t``\ , \ ``sensorNumbers``\ , \ ``factors``\ , \ ``configuration``\ )
+`__UFsensorDistance <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L248>`__\ (\ ``mbs``\ , \ ``t``\ , \ ``sensorNumbers``\ , \ ``factors``\ , \ ``configuration``\ )
 
 - | \ *function description*\ :
   | internal function used for CreateDistanceSensor
@@ -66,7 +142,7 @@ Function: __UFsensorDistance
 
 Function: CreateDistanceSensorGeometry
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateDistanceSensorGeometry <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L195>`__\ (\ ``mbs``\ , \ ``meshPoints``\ , \ ``meshTrigs``\ , \ ``rigidBodyMarkerIndex``\ , \ ``searchTreeCellSize = [8,8,8]``\ )
+`CreateDistanceSensorGeometry <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L306>`__\ (\ ``mbs``\ , \ ``meshPoints``\ , \ ``meshTrigs``\ , \ ``rigidBodyMarkerIndex``\ , \ ``searchTreeCellSize = [8,8,8]``\ )
 
 
 - | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.CreateDistanceSensorGeometry(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-createdistancesensorgeometry`\ 
@@ -77,7 +153,7 @@ Function: CreateDistanceSensorGeometry
 
 Function: CreateDistanceSensor
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateDistanceSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L228>`__\ (\ ``mbs``\ , \ ``generalContactIndex``\ , \ ``positionOrMarker``\ , \ ``dirSensor``\ , \ ``minDistance = -1e7``\ , \ ``maxDistance = 1e7``\ , \ ``cylinderRadius = 0``\ , \ ``selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList``\ , \ ``storeInternal = False``\ , \ ``fileName = ''``\ , \ ``measureVelocity = False``\ , \ ``addGraphicsObject = False``\ , \ ``drawDisplaced = True``\ , \ ``color = exudyn.graphics.color.red``\ )
+`CreateDistanceSensor <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L339>`__\ (\ ``mbs``\ , \ ``generalContactIndex``\ , \ ``positionOrMarker``\ , \ ``dirSensor``\ , \ ``minDistance = -1e7``\ , \ ``maxDistance = 1e7``\ , \ ``cylinderRadius = 0``\ , \ ``selectedTypeIndex = exudyn.ContactTypeIndex.IndexEndOfEnumList``\ , \ ``storeInternal = False``\ , \ ``fileName = ''``\ , \ ``measureVelocity = False``\ , \ ``addGraphicsObject = False``\ , \ ``drawDisplaced = True``\ , \ ``color = exudyn.graphics.color.red``\ )
 
 
 - | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.CreateDistanceSensor(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-createdistancesensor`\ 
@@ -91,7 +167,7 @@ Function: CreateDistanceSensor
 
 Function: UFsensorRecord
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`UFsensorRecord <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L277>`__\ (\ ``mbs``\ , \ ``t``\ , \ ``sensorNumbers``\ , \ ``factors``\ , \ ``configuration``\ )
+`UFsensorRecord <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L388>`__\ (\ ``mbs``\ , \ ``t``\ , \ ``sensorNumbers``\ , \ ``factors``\ , \ ``configuration``\ )
 
 - | \ *function description*\ :
   | DEPRECATED: Internal SensorUserFunction, used in function AddSensorRecorder
@@ -107,7 +183,7 @@ Function: UFsensorRecord
 
 Function: AddSensorRecorder
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`AddSensorRecorder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L298>`__\ (\ ``mbs``\ , \ ``sensorNumber``\ , \ ``endTime``\ , \ ``sensorsWritePeriod``\ , \ ``sensorOutputSize = 3``\ )
+`AddSensorRecorder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L409>`__\ (\ ``mbs``\ , \ ``sensorNumber``\ , \ ``endTime``\ , \ ``sensorsWritePeriod``\ , \ ``sensorOutputSize = 3``\ )
 
 - | \ *function description*\ :
   | DEPRECATED: Add a SensorUserFunction object in order to record sensor output internally; this avoids creation of files for sensors, which can speedup and simplify evaluation in ParameterVariation and GeneticOptimization; values are stored internally in mbs.variables['sensorRecord'+str(sensorNumber)] where sensorNumber is the mbs sensor number
@@ -135,7 +211,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: LoadSolutionFile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`LoadSolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L325>`__\ (\ ``fileName``\ , \ ``safeMode = False``\ , \ ``maxRows = -1``\ , \ ``verbose = True``\ , \ ``hasHeader = True``\ )
+`LoadSolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L436>`__\ (\ ``fileName``\ , \ ``safeMode = False``\ , \ ``maxRows = -1``\ , \ ``verbose = True``\ , \ ``hasHeader = True``\ )
 
 - | \ *function description*\ :
   | read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary:
@@ -161,7 +237,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: NumpyInt8ArrayToString
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`NumpyInt8ArrayToString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L456>`__\ (\ ``npArray``\ )
+`NumpyInt8ArrayToString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L567>`__\ (\ ``npArray``\ )
 
 - | \ *function description*\ :
   | simple conversion of int8 arrays into strings (not highly efficient, so use only for short strings)
@@ -175,7 +251,7 @@ Function: NumpyInt8ArrayToString
 
 Function: BinaryReadIndex
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`BinaryReadIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L463>`__\ (\ ``file``\ , \ ``intType``\ )
+`BinaryReadIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L574>`__\ (\ ``file``\ , \ ``intType``\ )
 
 - | \ *function description*\ :
   | read single Index from current file position in binary solution file
@@ -189,7 +265,7 @@ Function: BinaryReadIndex
 
 Function: BinaryReadReal
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`BinaryReadReal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L469>`__\ (\ ``file``\ , \ ``realType``\ )
+`BinaryReadReal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L580>`__\ (\ ``file``\ , \ ``realType``\ )
 
 - | \ *function description*\ :
   | read single Real from current file position in binary solution file
@@ -203,7 +279,7 @@ Function: BinaryReadReal
 
 Function: BinaryReadString
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`BinaryReadString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L475>`__\ (\ ``file``\ , \ ``intType``\ )
+`BinaryReadString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L586>`__\ (\ ``file``\ , \ ``intType``\ )
 
 - | \ *function description*\ :
   | read string from current file position in binary solution file
@@ -217,7 +293,7 @@ Function: BinaryReadString
 
 Function: BinaryReadArrayIndex
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`BinaryReadArrayIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L481>`__\ (\ ``file``\ , \ ``intType``\ )
+`BinaryReadArrayIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L592>`__\ (\ ``file``\ , \ ``intType``\ )
 
 - | \ *function description*\ :
   | read Index array from current file position in binary solution file
@@ -231,7 +307,7 @@ Function: BinaryReadArrayIndex
 
 Function: BinaryReadRealVector
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`BinaryReadRealVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L488>`__\ (\ ``file``\ , \ ``intType``\ , \ ``realType``\ )
+`BinaryReadRealVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L599>`__\ (\ ``file``\ , \ ``intType``\ , \ ``realType``\ )
 
 - | \ *function description*\ :
   | read Real vector from current file position in binary solution file
@@ -247,7 +323,7 @@ Function: BinaryReadRealVector
 
 Function: LoadBinarySolutionFile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`LoadBinarySolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L504>`__\ (\ ``fileName``\ , \ ``maxRows = -1``\ , \ ``verbose = True``\ )
+`LoadBinarySolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L615>`__\ (\ ``fileName``\ , \ ``maxRows = -1``\ , \ ``verbose = True``\ )
 
 - | \ *function description*\ :
   | read BINARY coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary
@@ -267,7 +343,7 @@ Function: LoadBinarySolutionFile
 
 Function: RecoverSolutionFile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RecoverSolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L690>`__\ (\ ``fileName``\ , \ ``newFileName``\ , \ ``verbose = 0``\ )
+`RecoverSolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L800>`__\ (\ ``fileName``\ , \ ``newFileName``\ , \ ``verbose = 0``\ )
 
 - | \ *function description*\ :
   | recover solution file with last row not completely written (e.g., if crashed, interrupted or no flush file option set)
@@ -287,7 +363,7 @@ Function: RecoverSolutionFile
 
 Function: InitializeFromRestartFile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`InitializeFromRestartFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L746>`__\ (\ ``mbs``\ , \ ``simulationSettings``\ , \ ``restartFileName``\ , \ ``verbose = True``\ )
+`InitializeFromRestartFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L856>`__\ (\ ``mbs``\ , \ ``simulationSettings``\ , \ ``restartFileName``\ , \ ``verbose = True``\ )
 
 - | \ *function description*\ :
   | recover initial coordinates, time, etc. from given restart file
@@ -308,7 +384,7 @@ Function: InitializeFromRestartFile
 
 Function: SetSolutionState
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`SetSolutionState <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L807>`__\ (\ ``mbs``\ , \ ``solution``\ , \ ``row``\ , \ ``configuration = exudyn.ConfigurationType.Current``\ , \ ``sendRedrawSignal = True``\ )
+`SetSolutionState <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L918>`__\ (\ ``mbs``\ , \ ``solution``\ , \ ``row``\ , \ ``configuration = exudyn.ConfigurationType.Current``\ , \ ``sendRedrawSignal = True``\ )
 
 - | \ *function description*\ :
   | load selected row of solution dictionary (previously loaded with LoadSolutionFile) into specific state; flag sendRedrawSignal is only used if configuration = exudyn.ConfigurationType.Visualization
@@ -322,7 +398,7 @@ Function: SetSolutionState
 
 Function: AnimateSolution
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`AnimateSolution <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L839>`__\ (\ ``mbs``\ , \ ``solution``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``createImages = False``\ , \ ``runLoop = False``\ )
+`AnimateSolution <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L951>`__\ (\ ``mbs``\ , \ ``solution``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``createImages = False``\ , \ ``runLoop = False``\ )
 
 - | \ *function description*\ :
   | This function is not further maintaned and should only be used if you do not have tkinter (like on some MacOS versions); use exudyn.interactive.SolutionViewer() instead! AnimateSolution consecutively load the rows of a solution file and visualize the result
@@ -346,7 +422,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: DrawSystemGraph
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`DrawSystemGraph <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L883>`__\ (\ ``mbs``\ , \ ``showLoads = True``\ , \ ``showSensors = True``\ , \ ``useItemNames = False``\ , \ ``useItemTypes = False``\ , \ ``addItemTypeNames = True``\ , \ ``multiLine = True``\ , \ ``fontSizeFactor = 1.``\ , \ ``layoutDistanceFactor = 3.``\ , \ ``layoutIterations = 100``\ , \ ``showLegend = True``\ , \ ``tightLayout = True``\ )
+`DrawSystemGraph <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L995>`__\ (\ ``mbs``\ , \ ``showLoads = True``\ , \ ``showSensors = True``\ , \ ``useItemNames = False``\ , \ ``useItemTypes = False``\ , \ ``addItemTypeNames = True``\ , \ ``multiLine = True``\ , \ ``fontSizeFactor = 1.``\ , \ ``layoutDistanceFactor = 3.``\ , \ ``layoutIterations = 100``\ , \ ``showLegend = True``\ , \ ``tightLayout = True``\ )
 
 
 - | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.DrawSystemGraph(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-drawsystemgraph`\ 
@@ -360,7 +436,7 @@ Function: DrawSystemGraph
 
 Function: CreateTCPIPconnection
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateTCPIPconnection <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1283>`__\ (\ ``sendSize``\ , \ ``receiveSize``\ , \ ``IPaddress = '127.0.0.1'``\ , \ ``port = 52421``\ , \ ``bigEndian = False``\ , \ ``verbose = False``\ )
+`CreateTCPIPconnection <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1394>`__\ (\ ``sendSize``\ , \ ``receiveSize``\ , \ ``IPaddress = '127.0.0.1'``\ , \ ``port = 52421``\ , \ ``bigEndian = False``\ , \ ``verbose = False``\ )
 
 - | \ *function description*\ :
   | function which has to be called before simulation to setup TCP/IP socket (server) for
@@ -388,7 +464,7 @@ Function: CreateTCPIPconnection
           tcp = mbs.sys['TCPIPobject']
           y = TCPIPsendReceive(tcp, np.array([t, np.sin(t), np.cos(t)])) #time, torque
           tau = y[1]
-          print('tau=',tau)
+          exudyn.Print('tau=',tau)
       return True
   try:
       mbs.SetPreStepUserFunction(PreStepUserFunction)
@@ -425,7 +501,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: TCPIPsendReceive
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`TCPIPsendReceive <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1316>`__\ (\ ``TCPIPobject``\ , \ ``sendData``\ )
+`TCPIPsendReceive <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1427>`__\ (\ ``TCPIPobject``\ , \ ``sendData``\ )
 
 - | \ *function description*\ :
   | call this function at every simulation step at which you intend to communicate with
@@ -441,7 +517,7 @@ Function: TCPIPsendReceive
 
   mbs.sys['TCPIPobject']=CreateTCPIPconnection(sendSize=2, receiveSize=1, IPaddress='127.0.0.1')
   y = TCPIPsendReceive(mbs.sys['TCPIPobject'], np.array([1.,2.]))
-  print(y)
+  exudyn.Print(y)
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
@@ -457,7 +533,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CloseTCPIPconnection
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CloseTCPIPconnection <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1329>`__\ (\ ``TCPIPobject``\ )
+`CloseTCPIPconnection <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1440>`__\ (\ ``TCPIPobject``\ )
 
 - | \ *function description*\ :
   | close a previously created TCPIP connection

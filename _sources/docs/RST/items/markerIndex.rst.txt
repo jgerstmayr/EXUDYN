@@ -16,6 +16,8 @@ A Marker provides an interface BETWEEN a large variety of Nodes / Bodies / Objec
    MarkerNodeCoordinates.rst
    MarkerNodeODE1Coordinate.rst
    MarkerNodeRotationCoordinate.rst
+   MarkerBodiesRelativeTranslationCoordinate.rst
+   MarkerBodiesRelativeRotationCoordinate.rst
    MarkerSuperElementPosition.rst
    MarkerSuperElementRigid.rst
    MarkerKinematicTreeRigid.rst

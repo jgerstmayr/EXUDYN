@@ -185,7 +185,7 @@ You can view and download this file on Github: `rigidBodyAsUserFunctionTest.py <
    SC.visualizationSettings.nodes.showBasis=True
    
    if useGraphics:
-       exu.StartRenderer()
+       SC.renderer.Start()
    
    mbs.SolveDynamic(simulationSettings)
    
@@ -205,8 +205,8 @@ You can view and download this file on Github: `rigidBodyAsUserFunctionTest.py <
    exudynTestGlobals.testResult = result
    
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
 
 

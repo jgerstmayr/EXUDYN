@@ -113,8 +113,8 @@ You can view and download this file on Github: `symbolicUserFunctionTest.py <htt
    simulationSettings.timeIntegration.newton.useModifiedNewton = True
    
    if useGraphics:
-       exu.StartRenderer()
-       # mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       # SC.renderer.DoIdleTasks()
    
    import time
    ts = time.time()
@@ -123,7 +123,7 @@ You can view and download this file on Github: `symbolicUserFunctionTest.py <htt
    exu.Print('finished: ', time.time()-ts, 'seconds')
    
    if useGraphics:
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.Stop() #safely close rendering window!
    
    n = mbs.GetObject(oMassPoint)['nodeNumber']
    p = mbs.GetNodeOutput(n, exu.OutputVariableType.Position)

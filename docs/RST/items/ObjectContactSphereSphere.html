@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ObjectContactSphereSphere &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>ObjectContactSphereSphere &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -28,7 +28,7 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="ObjectContactCurveCircles" href="ObjectContactCurveCircles.html" />
+    <link rel="next" title="ObjectContactSphereTorus" href="ObjectContactSphereTorus.html" />
     <link rel="prev" title="ObjectContactFrictionCircleCable2D" href="ObjectContactFrictionCircleCable2D.html" /> 
 </head>
 
@@ -41,7 +41,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -89,6 +89,8 @@
 <li class="toctree-l3"><a class="reference internal" href="ObjectContactCircleCable2D.html">ObjectContactCircleCable2D</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ObjectContactFrictionCircleCable2D.html">ObjectContactFrictionCircleCable2D</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">ObjectContactSphereSphere</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactSphereTorus.html">ObjectContactSphereTorus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ObjectContactSphereTriangle.html">ObjectContactSphereTriangle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ObjectContactCurveCircles.html">ObjectContactCurveCircles</a></li>
 </ul>
 </li>
@@ -115,7 +117,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -137,7 +139,7 @@
              
   <section id="objectcontactspheresphere">
 <span id="sec-item-objectcontactspheresphere"></span><h1>ObjectContactSphereSphere<a class="headerlink" href="#objectcontactspheresphere" title="Link to this heading"></a></h1>
-<p>[UNDER CONSTRUCTION] A simple contact connector between two spheres. The connector implements at least the same functionality as in GeneralContact and is intended for simple setups and for testing, while GeneralContact is much more efficient due to parallelization approaches and efficient contact search.</p>
+<p>A simple contact connector between two spheres, using various contact models and the option for contact of sphere inside hollow sphere (marker1). The connector implements at least the same functionality as in GeneralContact and is intended for simple setups and for testing, while GeneralContact is much more efficient due to parallelization approaches and efficient contact search.</p>
 <p>Authors: Gerstmayr Johannes, Weyrer Sebastian</p>
 <p><strong>Additional information for ObjectContactSphereSphere</strong>:</p>
 <ul>
@@ -173,7 +175,12 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>spheresRadii</strong> [<span class="math notranslate nohighlight">\([r_0,r_1]\tp\)</span>, type = Vector2D, size = 2, default = [-1.,-1.]]:</div>
-<div class="line">Vector containing radius of sphere 0 and radius of sphere 1 [SI:m]</div>
+<div class="line">list containing radius of sphere 0 and radius of sphere 1 [SI:m].</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>isHollowSphere1</strong> [type = Bool, default = False]:</div>
+<div class="line">flag, which determines, if sphere attached to marker 1 (radius 1) is a hollow sphere.</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -233,7 +240,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>impactModel</strong> [<span class="math notranslate nohighlight">\(m_\mathrm{impact}\)</span>, type = UInt, default = 0]:</div>
-<div class="line">number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping still added, if not set to zero!</div>
+<div class="line">number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -266,8 +273,8 @@
 <p><strong>The following output variables are available as OutputVariableType in sensors, Get…Output() and other functions</strong>:</p>
 <ul>
 <li><div class="line-block">
-<div class="line"><code class="docutils literal notranslate"><span class="pre">Director3</span></code>:</div>
-<div class="line">contains normalized vector from marker 0 to marker 1</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Position</span></code>:</div>
+<div class="line">contact center point (also given for positive gap, when no contact occurs)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -277,7 +284,7 @@
 </li>
 <li><div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">DisplacementLocal</span></code>:</div>
-<div class="line">3D Vector, containing only gap (Z-component)</div>
+<div class="line">1D Vector, containing only gap</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -288,6 +295,11 @@
 <li><div class="line-block">
 <div class="line"><code class="docutils literal notranslate"><span class="pre">Force</span></code>:</div>
 <div class="line">global contact force vector</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Director1</span></code>:</div>
+<div class="line">contains normalized vector from marker 0 to marker 1</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -448,15 +460,20 @@
 <span id="fig-objectspherespherecontact-mesh"></span><a class="reference internal image-reference" href="../../../_images/SphereSphereContact.png"><img alt="../../../_images/SphereSphereContact.png" src="../../../_images/SphereSphereContact.png" style="width: 400px;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Fig. 46 </span><span class="caption-text">Two spheres that are in contact, showing a force on marker 1 in normal direction due to overlap; forces on marker 0 act in opposite direction.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 47 </span><span class="caption-text">Two spheres that are in contact, showing a force on marker 1 in normal direction due to overlap; forces on marker 0 act in opposite direction.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
 </figcaption>
 </figure>
+<p>Calculations reflect the case for outer contact of two spheres using <span class="math notranslate nohighlight">\(h_1=1\)</span>.
+In case that isHollowSphere1=True, we set <span class="math notranslate nohighlight">\(h_1=-1\)</span> while the remaining formulas remain unchanged.</p>
 <p>For the following, the gap <span class="math notranslate nohighlight">\(g\)</span> between the two spheres is computed as</p>
 <div class="math notranslate nohighlight">
-\[g = || \LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0} || - (r_0 + r_1)\]</div>
-<p>and the overlap <span class="math notranslate nohighlight">\(\delta\)</span> is the negated gap: <span class="math notranslate nohighlight">\(\delta=-g\)</span>. In the contact case, the overlap <span class="math notranslate nohighlight">\(\delta\)</span> is positive. The normal vector <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{n}}}\)</span> points from marker 0 to marker 1 and is computed with</p>
+\[g = h_1 || \LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0} || - (r_0 + h_1 r_1)\]</div>
+<p>and the overlap <span class="math notranslate nohighlight">\(\delta\)</span> is the negated gap: <span class="math notranslate nohighlight">\(\delta=-g\)</span>. In the contact case, the overlap <span class="math notranslate nohighlight">\(\delta\)</span> is positive.
+The normal vector <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{n}}}\)</span> points from marker 0 to the contact point,</p>
 <div class="math notranslate nohighlight">
-\[\LU{0}{{\mathbf{n}}} = \frac{\LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0}}{|| \LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0} ||} .\]</div>
+\[\LU{0}{{\mathbf{n}}} = h_1 \frac{\LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0}}{|| \LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0} ||} .\]</div>
+<p>which in case of sphere-sphere contact, <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{n}}}\)</span> points from marker 0 to marker 1, and
+in case of sphere-hollowsphere contact, <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{n}}}\)</span> points from marker 1 to marker 0.</p>
 <p>The scalar normal (gap) velocity <span class="math notranslate nohighlight">\(v_\mathrm{\delta,n}\)</span> is computed with the velocities <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{v}}}_{m0}=\LU{0}{\dot{{\mathbf{p}}}}_{m0}\)</span> and <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{v}}}_{m1}=\LU{0}{\dot{{\mathbf{p}}}}_{m1}\)</span></p>
 <div class="math notranslate nohighlight">
 \[v_\mathrm{\delta,n} = \left(\LU{0}{{\mathbf{v}}}_{m1} - \LU{0}{{\mathbf{v}}}_{m0}\right)\cdot \LU{0}{{\mathbf{n}}}\]</div>
@@ -465,7 +482,7 @@
 <span class="eqno">(84)<a class="headerlink" href="#equation-eq-ossctangentialvelocity" title="Link to this equation"></a></span>\[\LU{0}{{\mathbf{v}}}_\mathrm{\delta,t} = \left(\LU{0}{{\mathbf{v}}}_{a1} - \LU{0}{{\mathbf{v}}}_{a0}\right) - v_\mathrm{\delta,n} \cdot \LU{0}{{\mathbf{n}}}, \qquad v_\mathrm{rel} = || \LU{0}{{\mathbf{v}}}_\mathrm{\delta,t} || .\]</div>
 <p>To take the angular velocity of the spheres into account, the velocities <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{v}}}_{a0}\)</span> and <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{v}}}_{a1}\)</span> at the contact point are computed using Euler’s theorem for kinematics:</p>
 <div class="math notranslate nohighlight">
-\[\LU{0}{{\mathbf{v}}}_{a0} = \LU{0}{{\mathbf{v}}}_{m0} + \LU{0}{\tomega}_{m0} \times \left(\LU{0}{{\mathbf{n}}}\cdot \left(r_0-\frac{\delta}{2}\right)\right) , \qquad \LU{0}{{\mathbf{v}}}_{a1} = \LU{0}{{\mathbf{v}}}_{m1} + \LU{0}{\tomega}_{m1} \times \left(-\LU{0}{{\mathbf{n}}}\cdot \left(r_1-\frac{\delta}{2}\right)\right) .\]</div>
+\[\LU{0}{{\mathbf{v}}}_{a0} = \LU{0}{{\mathbf{v}}}_{m0} + \LU{0}{\tomega}_{m0} \times \left(\LU{0}{{\mathbf{n}}}\cdot \left(r_0-\frac{\delta}{2}\right)\right) , \qquad \LU{0}{{\mathbf{v}}}_{a1} = \LU{0}{{\mathbf{v}}}_{m1} + h_1 \LU{0}{\tomega}_{m1} \times \left(-\LU{0}{{\mathbf{n}}}\cdot \left(r_1-h_1 \frac{\delta}{2}\right)\right) .\]</div>
 <p>The normal force acting on marker 1 is generally written as</p>
 <div class="math notranslate nohighlight">
 \[\LU{0}{{\mathbf{f}}}_\mathrm{1,n} = \underbrace{(f_c + f_d)}_{f_\mathrm{1,n}} \cdot \LU{0}{{\mathbf{n}}} ,\]</div>
@@ -473,32 +490,26 @@
 <div class="math notranslate nohighlight">
 \[f_d = - d_c v_\mathrm{\delta,n} .\]</div>
 <p>The negative sign is because of the damping acting against the gap velocity: in the case of a positive normal (gap) velocity, the damping acts against <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{n}}}\)</span> for marker 1. The elastic force <span class="math notranslate nohighlight">\(f_c\)</span> is computed depending on the chosen impact model.</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(m_\mathrm{impact}=0\)</span>: the Adhesive Elasto-Plastic model described in  is used. This model captures the key bulk behavior of cohesive powders and granular soils. For the impact model, the plastic overlap <span class="math notranslate nohighlight">\(\delta_p\)</span> is needed. It is computed with</p></li>
-</ul>
+<p>CASE <span class="math notranslate nohighlight">\(m_\mathrm{impact}=0\)</span>: the Adhesive Elasto-Plastic model described in  is used. This model captures the key bulk behavior of cohesive powders and granular soils. For the impact model, the plastic overlap <span class="math notranslate nohighlight">\(\delta_p\)</span> is needed. It is computed with</p>
 <div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned} \delta_p=\lambda_\mathrm{p}^{\frac{1}{n_\mathrm{exp}}}\delta .\\
-The Adhesive Elasto-Plastic model distinguishes three different cases, modeling the loading and unloading behavior of the spheres:\end{aligned}\end{align} \]</div>
+\[\delta_p=\lambda_\mathrm{p}^{\frac{1}{n_\mathrm{exp}}}\delta .\]</div>
+<p>The Adhesive Elasto-Plastic model distinguishes three different cases, modeling the loading and unloading behavior of the spheres:</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}f_c= \begin{cases} -f_\mathrm{adh} + k_c \delta^{n_\mathrm{exp}} &amp; \text{if } k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right) \geq k_c\delta^{n_\mathrm{exp}} \\ -f_\mathrm{adh} + k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right) &amp; \text{if } k_c\delta^{n_\mathrm{exp}} &gt; k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}}\right) &gt; -k_\mathrm{adh}\delta^{n_\mathrm{adh}} \\ -f_\mathrm{adh}-k_\mathrm{adh}\delta^{n_\mathrm{adh}} &amp; \text{if } -k_\mathrm{adh}\delta^{n_\mathrm{adh}} &gt; k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right) \end{cases} .\end{split}\]</div>
+\[\begin{split}f_c= \begin{cases} -f_\mathrm{adh} + k_c \delta^{n_\mathrm{exp}} &amp; \text{if } k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right) \geq k_c\delta^{n_\mathrm{exp}} \\ -f_\mathrm{adh} + k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right) &amp; \text{if } k_c\delta^{n_\mathrm{exp}} &gt; k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}}\right) &gt; -k_\mathrm{adh}\delta^{n_\mathrm{adh}} \\ -f_\mathrm{adh}-k_\mathrm{adh}\delta^{n_\mathrm{adh}} &amp; \text{if } -k_\mathrm{adh}\delta^{n_\mathrm{adh}} &gt; k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right) \end{cases}.\end{split}\]</div>
 <p>Note that <span class="math notranslate nohighlight">\(k_2\)</span> is computed with <span class="math notranslate nohighlight">\(k_2 = k_c/(1-\lambda_\mathrm{P})\)</span>. The terms with the stiffness <span class="math notranslate nohighlight">\(k_c\)</span> and <span class="math notranslate nohighlight">\(k_2\)</span> have a positive sign, since they act in the direction of <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{n}}}\)</span> for marker 1. The constant adhesion force <span class="math notranslate nohighlight">\(f_\mathrm{adh}\)</span> and the stiffness <span class="math notranslate nohighlight">\(k_\mathrm{adh}\)</span> act against <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{n}}}\)</span>, which corresponds to a force sticking the spheres together.</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(m_\mathrm{impact}=1\)</span>: the restitution model proposed by Hunt and Crossley in  is used to simulate the energy loss of the spheres during contact:</p></li>
-</ul>
+<p>CASE <span class="math notranslate nohighlight">\(m_\mathrm{impact}=1\)</span>: the restitution model proposed by Hunt and Crossley in  is used to simulate the energy loss of the spheres during contact:</p>
 <div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned} f_c=k_c \delta^{n_\mathrm{exp}} + \lambda \delta^{n_\mathrm{exp}} v_\mathrm{\delta,n}\\
-with\end{aligned}\end{align} \]</div>
+\[f_c=k_c \delta^{n_\mathrm{exp}} + \lambda \delta^{n_\mathrm{exp}} v_\mathrm{\delta,n}\]</div>
+<p>with</p>
 <div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned} \lambda = \frac{k_c}{\dot\delta_\mathrm{-}}\frac{3}{2}(e_\mathrm{res}-1) .\\
-The restitution coefficient \ :math:`e_\mathrm{res}`\  describes the ration of the normal (gap) velocity before and after the impact of the spheres. In the case of \ :math:`e_\mathrm{res}&lt;1`\ , the impact has a plastic portion, resulting in a force acting against \ :math:`\LU{0}{{\mathbf{n}}}`\  for marker 1, which is why \ :math:`\lambda`\  must be negative in that case. \ :math:`\dot\delta_\mathrm{-}`\  is the initial relative velocity, which is either the minimum impact velocity or the normal (negated gap) velocity:\end{aligned}\end{align} \]</div>
+\[\lambda = \frac{k_c}{\dot\delta_\mathrm{-}}\frac{3}{2}(e_\mathrm{res}-1) .\]</div>
+<p>The restitution coefficient <span class="math notranslate nohighlight">\(e_\mathrm{res}\)</span> describes the ration of the normal (gap) velocity before and after the impact of the spheres. In the case of <span class="math notranslate nohighlight">\(e_\mathrm{res}&lt;1\)</span>, the impact has a plastic portion, resulting in a force acting against <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{n}}}\)</span> for marker 1, which is why <span class="math notranslate nohighlight">\(\lambda\)</span> must be negative in that case. <span class="math notranslate nohighlight">\(\dot\delta_\mathrm{-}\)</span> is the initial relative velocity, which is either the minimum impact velocity or the normal (negated gap) velocity:</p>
 <div class="math notranslate nohighlight">
 \[\dot\delta_\mathrm{-} = \max{\left(\dot\delta_\mathrm{-,min}; -v_\mathrm{\delta,n} \right)}\]</div>
 <p>Note that the Hunt-Crossley restitution is valid for a very small energy loss (<span class="math notranslate nohighlight">\(e_\mathrm{res}\approx1\)</span>) .</p>
-<ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(m_\mathrm{impact}=2\)</span>: a generalization of the Hunt-Crossley restitution proposed by Carvalho and Martins in  is used for <span class="math notranslate nohighlight">\(e_\mathrm{res} &gt; \frac{1}{3}\)</span> and a model proposed by Gonthier et al. in  is used for impacts with a high plastic proportion, <span class="math notranslate nohighlight">\(e_\mathrm{res} &lt; \frac{1}{3}\)</span>. Note that the two models are identical at <span class="math notranslate nohighlight">\(e_\mathrm{res} = \frac{1}{3}\)</span>. <span class="math notranslate nohighlight">\(\lambda\)</span> is therefore computed as follows:</p></li>
-</ul>
+<p>CASE <span class="math notranslate nohighlight">\(m_\mathrm{impact}=2\)</span>: a generalization of the Hunt-Crossley restitution proposed by Carvalho and Martins in  is used for <span class="math notranslate nohighlight">\(e_\mathrm{res} &gt; \frac{1}{3}\)</span> and a model proposed by Gonthier et al. in  is used for impacts with a high plastic proportion, <span class="math notranslate nohighlight">\(e_\mathrm{res} &lt; \frac{1}{3}\)</span>. Note that the two models are identical at <span class="math notranslate nohighlight">\(e_\mathrm{res} = \frac{1}{3}\)</span>. <span class="math notranslate nohighlight">\(\lambda\)</span> is therefore computed as follows:</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\lambda= \begin{cases} \frac{k_c}{\dot\delta_\mathrm{-}}\frac{3}{2}(e_\mathrm{res}-1)\frac{11-e_\mathrm{res}}{1+9e_\mathrm{res}} &amp; \text{if } e_\mathrm{res} &gt; \frac{1}{3} \\ \frac{k_c}{\dot\delta_\mathrm{-}}\frac{e_\mathrm{rep}^2-1}{e_\mathrm{rep}} &amp; \text{if } e_\mathrm{res} &gt; 0 \\ \end{cases} .\end{split}\]</div>
+\[\begin{split}\lambda= \begin{cases} \frac{k_c}{\dot\delta_\mathrm{-}}\frac{3}{2}(e_\mathrm{res}-1)\frac{11-e_\mathrm{res}}{1+9e_\mathrm{res}} &amp; \text{if } e_\mathrm{res} &gt; \frac{1}{3} \\ \frac{k_c}{\dot\delta_\mathrm{-}}\frac{e_\mathrm{rep}^2-1}{e_\mathrm{rep}} &amp; \text{if } e_\mathrm{res} &gt; 0 \\ \end{cases}.\end{split}\]</div>
 <p>The tangential force acting on marker 1 due to the friction model acts against the tangential velocity <span class="math notranslate nohighlight">\({\mathbf{v}}_\mathrm{\delta,t}\)</span>, see the computation of <span class="math notranslate nohighlight">\({\mathbf{v}}_\mathrm{\delta,t}\)</span> in Equation <a class="reference internal" href="#equation-eq-ossctangentialvelocity">(84)</a>. Thus, the tangential force for marker 1 is computed as</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\LU{0}{{\mathbf{f}}}_\mathrm{1,t} = -\LU{0}{{\mathbf{v}}}_\mathrm{\delta,t} \cdot \begin{cases} \frac{\mu_d f_\mathrm{1,n}}{v_{reg}} &amp; \text{if } v_{rel} &lt; v_{reg} \\ \frac{\mu_d f_\mathrm{1,n}}{v_{rel}} &amp; \text{else}\\ \end{cases} .\end{split}\]</div>
@@ -507,14 +518,14 @@ The restitution coefficient \ :math:`e_\mathrm{res}`\  describes the ration of t
 \[\LU{0}{{\mathbf{f}}}_{m1}=\LU{0}{{\mathbf{f}}}_\mathrm{1,n}+\LU{0}{{\mathbf{f}}}_\mathrm{1,t} ,\]</div>
 <p>the force acting on marker 0 is <span class="math notranslate nohighlight">\(\LU{0}{{\mathbf{f}}}_{m0}=-\LU{0}{{\mathbf{f}}}_{m1}\)</span>. The global torque <span class="math notranslate nohighlight">\(\LU{0}{\ttau}_{m1}\)</span> acting on marker 1 due to the connector is computed as</p>
 <div class="math notranslate nohighlight">
-\[\LU{0}{\ttau}_{m1}=-\LU{0}{{\mathbf{n}}}\left( r_1-\frac{1}{2}\delta \right) \times \LU{0}{{\mathbf{f}}}_{m1} ,\]</div>
+\[\LU{0}{\ttau}_{m1}=-h_1 \LU{0}{{\mathbf{n}}}\left( r_1-h_1 \frac{1}{2}\delta \right) \times \LU{0}{{\mathbf{f}}}_{m1} ,\]</div>
 <p>and on marker 0 as</p>
 <div class="math notranslate nohighlight">
-\[\LU{0}{\ttau}_{m0}=\LU{0}{{\mathbf{n}}} \left(r_0-\frac{1}{2}\delta \right) \times \LU{0}{{\mathbf{f}}}_{m0}= \LU{0}{{\mathbf{n}}}\left( r_0-\frac{1}{2}\delta \right) \times -\LU{0}{{\mathbf{f}}}_{m1} .\]</div>
+\[\LU{0}{\ttau}_{m0}=\LU{0}{{\mathbf{n}}} \left(r_0-\frac{1}{2}\delta \right) \times \LU{0}{{\mathbf{f}}}_{m0}= \LU{0}{{\mathbf{n}}}\left( r_0-\frac{1}{2}\delta \right) \times \left( -\LU{0}{{\mathbf{f}}}_{m1} \right) .\]</div>
 <p>It can be seen that the torque due to the connector is the same for both spheres, if <span class="math notranslate nohighlight">\(r_0=r_1\)</span> applies.</p>
 <p>Relevant Examples and TestModels with weblink:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/newtonsCradle.py">newtonsCradle.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactSphereSphereTest.py">contactSphereSphereTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactSphereSphereTestEAPM.py">contactSphereSphereTestEAPM.py</a> (TestModels/)</p>
+<div><p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/newtonsCradle.py">newtonsCradle.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rollerBearningModel.py">rollerBearningModel.py</a> (Examples/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactSphereSphereTest.py">contactSphereSphereTest.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactSphereSphereTestEAPM.py">contactSphereSphereTestEAPM.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createSphereQuadContact.py">createSphereQuadContact.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createSphereTriangleContact.py">createSphereTriangleContact.py</a> (TestModels/), <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sphereTriangleTest2.py">sphereTriangleTest2.py</a> (TestModels/)</p>
 </div></blockquote>
 <p><strong>The web version may not be complete. For details, consider also the Exudyn PDF documentation</strong> : <a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf">theDoc.pdf</a></p>
 </section>
@@ -525,7 +536,7 @@ The restitution coefficient \ :math:`e_\mathrm{res}`\  describes the ration of t
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ObjectContactFrictionCircleCable2D.html" class="btn btn-neutral float-left" title="ObjectContactFrictionCircleCable2D" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ObjectContactCurveCircles.html" class="btn btn-neutral float-right" title="ObjectContactCurveCircles" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ObjectContactSphereTorus.html" class="btn btn-neutral float-right" title="ObjectContactSphereTorus" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

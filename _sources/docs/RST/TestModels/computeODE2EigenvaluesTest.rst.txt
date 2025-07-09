@@ -100,7 +100,7 @@ You can view and download this file on Github: `computeODE2EigenvaluesTest.py <h
    #find roots beta:
    #from mpmath import *
    #mp.dps = 16 #digits
-   #for i in range(10): print(findroot(lambda x: cosh(x) * cos(x) - 1, 3*i+4.7))
+   #for i in range(10): exu.Print(findroot(lambda x: cosh(x) * cos(x) - 1, 3*i+4.7))
    beta = [4.730040744862704, 7.853204624095838, 10.99560783800167, 14.13716549125746, 17.27875965739948, 20.42035224562606, 23.56194490204046, 26.70353755550819, 29.84513020910325]
    omega = np.zeros(nEig)
    for i in range(nEig):

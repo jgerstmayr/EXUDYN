@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Getting started &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>Getting started &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -39,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -93,7 +93,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -119,7 +119,7 @@
 <li><p>What is Exudyn ?</p></li>
 <li><p>Who is developing Exudyn ?</p></li>
 <li><p>How to install Exudyn</p></li>
-<li><p>How to link Exudyn and Python</p></li>
+<li><p>How to use Exudyn in Python</p></li>
 <li><p>Goals of Exudyn</p></li>
 <li><p>Run a simple example in Python</p></li>
 <li><p>FAQ – Frequently asked questions</p></li>
@@ -133,14 +133,14 @@ It seemed that the previous code HOTINT reached limits of further (efficient) de
 <p>Exudyn is designed to easily set up complex multibody models, consisting of rigid and flexible bodies with joints, loads and other components. It shall enable automatized model setup and parameter variations, which are often necessary for system design but also for analysis of technical problems. The broad usability of Python allows to couple a multibody simulation with environments such as optimization, statistics, data analysis, machine learning and others.</p>
 <p>The multibody formulation is mainly based on redundant coordinates. This means that computational objects (rigid bodies, flexible bodies, …) are added as independent bodies to the system. Hereafter, connectors (e.g., springs or constraints) are used to interconnect the bodies. The connectors are using Markers on the bodies as interfaces, in order to transfer forces and displacements.
 For details on the interaction of nodes, objects, markers and loads see Section <a class="reference internal" href="ItemsNodesObjectsLoadsMarkersSensors.html#sec-overview-items"><span class="std std-ref">Items: Nodes, Objects, Loads, Markers, Sensors, …</span></a>. For a non-redundant formulation, see <code class="docutils literal notranslate"><span class="pre">ObjectKinematicTree</span></code> – this allows to create tree-structures with minimal coordinates in Exudyn.</p>
-<p>There are several journal papers of the developers which were using Exudyn (list may be incomplete):</p>
+<p>There are several journal papers of the developers which were using Exudyn (list is incomplete – see google scholar):</p>
 <ul class="simple">
 <li><ol class="upperalpha simple" start="10">
 <li><p>Gerstmayr. Exudyn – a C++-based Python package for flexible multibody systems. Multibody System Dynamics (2023). <a class="reference external" href="https://doi.org/10.1007/s11044-023-09937-1">https://doi.org/10.1007/s11044-023-09937-1</a></p></li>
 </ol>
 </li>
 <li><ol class="upperalpha simple" start="10">
-<li><p>Gerstmayr, P. Manzl, M. Pieber. Multibody Models Generated from Natural Language, Preprint, Research Square, 2023. <a class="reference external" href="https://doi.org/10.21203/rs.3.rs-3552291/v1">https://doi.org/10.21203/rs.3.rs-3552291/v1</a></p></li>
+<li><p>Gerstmayr, P. Manzl, M. Pieber. Multibody Models Generated from Natural Language, Multibody System Dynamics (2024). <a class="reference external" href="https://doi.org/10.1007/s11044-023-09962-0">https://doi.org/10.1007/s11044-023-09962-0</a></p></li>
 </ol>
 </li>
 <li><ol class="upperalpha simple" start="16">
@@ -188,27 +188,29 @@ For details on the interaction of nodes, objects, markers and loads see Section 
 <section id="developers-of-exudyn-and-thanks">
 <h2>Developers of Exudyn and thanks<a class="headerlink" href="#developers-of-exudyn-and-thanks" title="Link to this heading"></a></h2>
 <p>Exudyn is currently  developed at the University of Innsbruck.
-In the first phase most of the core code is written by Johannes Gerstmayr, implementing ideas that followed out of the project HOTINT . 15 years of development led to a lot of lessons learned and after 20 years, a code must be re-designed.</p>
+In general, most of the Exudyn is written by Johannes Gerstmayr, implementing ideas that followed from the project HOTINT , but also creating many new concepts and approaches. 15 years of development of HOTINT led to a lot of lessons learned and after 20 years, a code must be re-designed.</p>
 <p>Some important tests for the coupling between C++ and Python have been written by Stefan Holzinger. Stefan also helped to set up the previous upload to GitLab and to test parallelization features.
 For the interoperability between C++ and Python, we extensively use <strong>Pybind11</strong>, originally written by Jakob Wenzel, see <code class="docutils literal notranslate"><span class="pre">https://github.com/pybind/pybind11</span></code>. Without Pybind11 we couldn’t have made this project – Thanks a lot!</p>
 <p>Important discussions with researchers from the community were important for the design and development of Exudyn , where we like to mention Joachim Schöberl from TU-Vienna who boosted the design of the code with great concepts.</p>
 <p>The cooperation and funding within the EU H2020-MSCA-ITN project ‘Joint Training on Numerical Modelling of Highly Flexible Structures for Industrial Applications’ contributes to the development of the code.</p>
 <p>The following people have contributed to Python and C++ library implementations, testing, examples or theory:</p>
 <ul class="simple">
-<li><p>Joachim Schöberl, TU Vienna (Providing specialized NGsolve  core library with <code class="docutils literal notranslate"><span class="pre">taskmanager</span></code> for <strong>multi-threaded parallelization</strong>; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)</p></li>
+<li><p>Joachim Schöberl, TU Vienna (Providing specialized NGsolve  core library with <code class="docutils literal notranslate"><span class="pre">taskmanager</span></code> for <strong>multi-threaded parallelization</strong>, which is now replaced by a simplified internal version but closely following the original implementation; NGsolve mesh and FE-matrices import; highly efficient eigenvector computations)</p></li>
 <li><p>Stefan Holzinger, University of Innsbruck (Lie group module and solvers in Python, Lie group node; helped with Lie group solvers, geometrically exact beam; testing)</p></li>
-<li><p>Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation; revised artificialIntelligence, ParameterVariation, robotics and MPI parallelization; providing many figures for theDoc; pip install on linux, wsl with graphics)</p></li>
+<li><p>Peter Manzl, University of Innsbruck (ConvexRoll Python and C++ implementation; revised artificialIntelligence, ParameterVariation, robotics and MPI parallelization; providing many figures for theDoc; pip install on linux, wsl with graphics; several other fixes; examples)</p></li>
 <li><p>Andreas Zwölfer, Technical University Munich (theory and examples for FFRF, CMS formulation and ANCF 2D cable prototypes in MATLAB)</p></li>
+<li><p>Michael Pieber, University of Innsbruck (helped in several Python libraries; ComputeODE2Eigenvalues with constraints, FEM and CMS testing; Abaqus import and test files; ANCFCable2D+ALE theory improvements and equations check; examples); Exudyn graphical user interface</p></li>
 <li><p>Martin Sereinig, University of Innsbruck (special robotics functionality, mobile robots, manipulability measures, robot models)</p></li>
-<li><p>Michael Pieber, University of Innsbruck (helped in several Python libraries; ComputeODE2Eigenvalues with constraints, FEM and CMS testing; Abaqus import and test files; ANCFCable2D+ALE theory improvements and equations check)</p></li>
+<li><p>Sebastian Weyrer, University of Innsbruck (ObjectContactSphereSphere; FEM RigidBodyInertia; some fixes; examples)</p></li>
 <li><p>Grzegorz Orzechowski, Lappeenranta University of Technology (coupling with openAI gym and running machine learning algorithms)</p></li>
+<li><p>Zhaowei Zhang, Chinese Academy of Sciences (ANCFThinPlate; found several issues and bugs)</p></li>
 <li><p>Aaron Bacher, University of Innsbruck (helped to integrated OpenVR, connection with Franka Emika Panda)</p></li>
 <li><p>Martin Arnold, Martin-Luther-University of Halle-Wittenberg (support for explicit and implicit Lie group solvers, especially to theory / jacobians and automatic step size)</p></li>
 <li><p>Konstantina Ntarladima, University of Innsbruck (ANCFCable2D+ALE theory improvements and equations check)</p></li>
 <li><p>Alexander Humer, Johannes Kepler University Linz (initial discussions on structure and C++ code)</p></li>
 <li><p>Qasim Khadim, University of Oulu (suggestion for improved model of HydraulicsActuatorSimple with effective bulk modulus)</p></li>
 <li><p>Michael Gerbl, University of Innsbruck (figures in the documentation, taken from lecture notes)</p></li>
-<li><p>examples provided by: Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Simon Scheiber</p></li>
+<li><p>further examples provided by: Manuel Schieferle, Martin Knapp, Lukas March, Dominik Sponring, David Wibmer, Simon Scheiber and other Master students</p></li>
 </ul>
 <p>– thanks a lot! –</p>
 </section>

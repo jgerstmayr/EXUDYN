@@ -173,8 +173,8 @@ You can view and download this file on Github: `taskmanagerTest.py <https://gith
                            
                            #start solver:
                            if useGraphics:
-                               exu.StartRenderer()
-                               mbs.WaitForUserToContinue()
+                               SC.renderer.Start()
+                               SC.renderer.DoIdleTasks()
                            
                            if caseStatic:
                                mbs.SolveStatic(simulationSettings)
@@ -190,7 +190,7 @@ You can view and download this file on Github: `taskmanagerTest.py <https://gith
                                                     solverType=solverType)
                            
                            if useGraphics:
-                               exu.StopRenderer()
+                               SC.renderer.Stop()
                            
                            #+++++++++++++++++++++++++++++++++++++
                            #evaluate results

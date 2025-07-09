@@ -120,10 +120,10 @@ You can view and download this file on Github: `plotSensorTest.py <https://githu
    SC.visualizationSettings.general.autoFitScene = False #use loaded render state
    #useGraphics = False
    if useGraphics:
-       exu.StartRenderer()
+       SC.renderer.Start()
        if 'renderState' in exu.sys:
-           SC.SetRenderState(exu.sys[ 'renderState' ])
-       #mbs.WaitForUserToContinue()
+           SC.renderer.SetState(exu.sys[ 'renderState' ])
+       #SC.renderer.DoIdleTasks()
    else:
        simulationSettings.solutionSettings.writeSolutionToFile = False
    
@@ -132,8 +132,8 @@ You can view and download this file on Github: `plotSensorTest.py <https://githu
    
    #%%+++++++++++++++++++++++++++++
    if useGraphics:
-       #SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       #SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    
    exudynTestGlobals.testError = 0

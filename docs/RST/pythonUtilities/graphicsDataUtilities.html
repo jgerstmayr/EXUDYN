@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Module: graphicsDataUtilities &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>Module: graphicsDataUtilities &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -69,12 +69,14 @@
 <li class="toctree-l2"><a class="reference internal" href="artificialIntelligence.html">Module: artificialIntelligence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="basicUtilities.html">Module: basicUtilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="beams.html">Module: beams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demos.html">Module: demos</a></li>
 <li class="toctree-l2"><a class="reference internal" href="FEM.html">Module: FEM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="graphics.html">Module: graphics</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Module: graphicsDataUtilities</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#function-switchtripletorder">Function: SwitchTripletOrder</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-computetrianglenormal">Function: ComputeTriangleNormal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-computetrianglearea">Function: ComputeTriangleArea</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#function-compute6nodetrigsnormals">Function: Compute6NodeTrigsNormals</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-refinemesh">Function: RefineMesh</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-shrinkmeshnormaltosurface">Function: ShrinkMeshNormalToSurface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#function-computetriangularmesh">Function: ComputeTriangularMesh</a></li>
@@ -124,7 +126,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -225,9 +227,27 @@ includes functionality like mesh manipulation and some helper functions</p>
 </ul>
 <hr class="docutils" />
 </section>
+<section id="function-compute6nodetrigsnormals">
+<span id="sec-graphicsdatautilities-compute6nodetrigsnormals"></span><h2>Function: Compute6NodeTrigsNormals<a class="headerlink" href="#function-compute6nodetrigsnormals" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py#L115">Compute6NodeTrigsNormals</a>(<code class="docutils literal notranslate"><span class="pre">elementNodes</span></code>)</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><em>function description</em>:</div>
+<div class="line">Internal function: compute normals to 6-node triangular surface given by elementNodes</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">input</span></code>: elementNodes given as np.array with 6 node vectors in rows; node ordering must follow Netgen order, see the local coordinates in the function</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><em>output</em>:</div>
+<div class="line">returns np.array with 6 normals in rows</div>
+</div>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
 <section id="function-refinemesh">
 <span id="sec-graphicsdatautilities-refinemesh"></span><h2>Function: RefineMesh<a class="headerlink" href="#function-refinemesh" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py#L118">RefineMesh</a>(<code class="docutils literal notranslate"><span class="pre">points</span></code>, <code class="docutils literal notranslate"><span class="pre">triangles</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py#L186">RefineMesh</a>(<code class="docutils literal notranslate"><span class="pre">points</span></code>, <code class="docutils literal notranslate"><span class="pre">triangles</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -259,7 +279,7 @@ includes functionality like mesh manipulation and some helper functions</p>
 </section>
 <section id="function-shrinkmeshnormaltosurface">
 <span id="sec-graphicsdatautilities-shrinkmeshnormaltosurface"></span><h2>Function: ShrinkMeshNormalToSurface<a class="headerlink" href="#function-shrinkmeshnormaltosurface" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py#L177">ShrinkMeshNormalToSurface</a>(<code class="docutils literal notranslate"><span class="pre">points</span></code>, <code class="docutils literal notranslate"><span class="pre">triangles</span></code>, <code class="docutils literal notranslate"><span class="pre">distance</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py#L238">ShrinkMeshNormalToSurface</a>(<code class="docutils literal notranslate"><span class="pre">points</span></code>, <code class="docutils literal notranslate"><span class="pre">triangles</span></code>, <code class="docutils literal notranslate"><span class="pre">distance</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -292,7 +312,7 @@ includes functionality like mesh manipulation and some helper functions</p>
 </section>
 <section id="function-computetriangularmesh">
 <span id="sec-graphicsdatautilities-computetriangularmesh"></span><h2>Function: ComputeTriangularMesh<a class="headerlink" href="#function-computetriangularmesh" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py#L229">ComputeTriangularMesh</a>(<code class="docutils literal notranslate"><span class="pre">vertices</span></code>, <code class="docutils literal notranslate"><span class="pre">segments</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py#L286">ComputeTriangularMesh</a>(<code class="docutils literal notranslate"><span class="pre">vertices</span></code>, <code class="docutils literal notranslate"><span class="pre">segments</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -336,14 +356,14 @@ includes functionality like mesh manipulation and some helper functions</p>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
     <span class="n">segments</span> <span class="o">+=</span> <span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">tri</span> <span class="o">=</span> <span class="nf">ComputeTriangularMesh</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">segments</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">tri</span><span class="o">.</span><span class="n">simplices</span><span class="p">)</span>
+<span class="n">exudyn</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="n">tri</span><span class="o">.</span><span class="n">simplices</span><span class="p">)</span>
 </pre></div>
 </div>
 <hr class="docutils" />
 </section>
 <section id="function-segmentsfrompoints">
 <span id="sec-graphicsdatautilities-segmentsfrompoints"></span><h2>Function: SegmentsFromPoints<a class="headerlink" href="#function-segmentsfrompoints" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py#L321">SegmentsFromPoints</a>(<code class="docutils literal notranslate"><span class="pre">points</span></code>, <code class="docutils literal notranslate"><span class="pre">pointIndexOffset</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">invert</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">closeCurve</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py#L370">SegmentsFromPoints</a>(<code class="docutils literal notranslate"><span class="pre">points</span></code>, <code class="docutils literal notranslate"><span class="pre">pointIndexOffset</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">invert</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">closeCurve</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -366,7 +386,7 @@ includes functionality like mesh manipulation and some helper functions</p>
 </section>
 <section id="function-circlepointsandsegments">
 <span id="sec-graphicsdatautilities-circlepointsandsegments"></span><h2>Function: CirclePointsAndSegments<a class="headerlink" href="#function-circlepointsandsegments" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py#L348">CirclePointsAndSegments</a>(<code class="docutils literal notranslate"><span class="pre">center</span> <span class="pre">=</span> <span class="pre">[0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">invert</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">pointIndexOffset</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">16</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py#L397">CirclePointsAndSegments</a>(<code class="docutils literal notranslate"><span class="pre">center</span> <span class="pre">=</span> <span class="pre">[0,0]</span></code>, <code class="docutils literal notranslate"><span class="pre">radius</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">invert</span> <span class="pre">=</span> <span class="pre">False</span></code>, <code class="docutils literal notranslate"><span class="pre">pointIndexOffset</span> <span class="pre">=</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">nTiles</span> <span class="pre">=</span> <span class="pre">16</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -397,7 +417,7 @@ includes functionality like mesh manipulation and some helper functions</p>
 </section>
 <section id="function-graphicsdatarectangle">
 <span id="sec-graphicsdatautilities-graphicsdatarectangle"></span><h2>Function: GraphicsDataRectangle<a class="headerlink" href="#function-graphicsdatarectangle" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py#L372">GraphicsDataRectangle</a>(<code class="docutils literal notranslate"><span class="pre">xMin</span></code>, <code class="docutils literal notranslate"><span class="pre">yMin</span></code>, <code class="docutils literal notranslate"><span class="pre">xMax</span></code>, <code class="docutils literal notranslate"><span class="pre">yMax</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py#L421">GraphicsDataRectangle</a>(<code class="docutils literal notranslate"><span class="pre">xMin</span></code>, <code class="docutils literal notranslate"><span class="pre">yMin</span></code>, <code class="docutils literal notranslate"><span class="pre">xMax</span></code>, <code class="docutils literal notranslate"><span class="pre">yMax</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>
@@ -428,7 +448,7 @@ includes functionality like mesh manipulation and some helper functions</p>
 </section>
 <section id="function-graphicsdataorthocubelines">
 <span id="sec-graphicsdatautilities-graphicsdataorthocubelines"></span><h2>Function: GraphicsDataOrthoCubeLines<a class="headerlink" href="#function-graphicsdataorthocubelines" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py#L384">GraphicsDataOrthoCubeLines</a>(<code class="docutils literal notranslate"><span class="pre">xMin</span></code>, <code class="docutils literal notranslate"><span class="pre">yMin</span></code>, <code class="docutils literal notranslate"><span class="pre">zMin</span></code>, <code class="docutils literal notranslate"><span class="pre">xMax</span></code>, <code class="docutils literal notranslate"><span class="pre">yMax</span></code>, <code class="docutils literal notranslate"><span class="pre">zMax</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>)</p>
+<p><a class="reference external" href="https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py#L433">GraphicsDataOrthoCubeLines</a>(<code class="docutils literal notranslate"><span class="pre">xMin</span></code>, <code class="docutils literal notranslate"><span class="pre">yMin</span></code>, <code class="docutils literal notranslate"><span class="pre">zMin</span></code>, <code class="docutils literal notranslate"><span class="pre">xMax</span></code>, <code class="docutils literal notranslate"><span class="pre">yMax</span></code>, <code class="docutils literal notranslate"><span class="pre">zMax</span></code>, <code class="docutils literal notranslate"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">[0.,0.,0.,1.]</span></code>)</p>
 <ul>
 <li><div class="line-block">
 <div class="line"><em>function description</em>:</div>

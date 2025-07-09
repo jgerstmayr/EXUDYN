@@ -5,15 +5,15 @@
 ObjectContactCurveCircles
 =========================
 
-[UNDER CONSTRUCTION] A contact model between a curve defined by piecewise segments and a set of circles. The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. Note that there is a limit of 100 circle markes above which computation becomes slower as it requires memory allocation.
+A contact model between a curve defined by piecewise segments and a set of circles. The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. [REQUIRES FURTHER TESTING; friction not yet available]
 
 \ **Additional information for ObjectContactCurveCircles**\ :
 
 * | This \ ``Object``\  has/provides the following types = \ ``Connector``\ 
 * | Requested \ ``Marker``\  type = \ ``Position``\  + \ ``Orientation``\ 
 * | Requested \ ``Node``\  type = \ ``GenericData``\ 
-* | \ **Short name**\  for Python = \ ``CamFollower``\ 
-* | \ **Short name**\  for Python visualization object = \ ``VCamFollower``\ 
+* | \ **Short name**\  for Python = \ ``CamFollowerContactPlanar``\ 
+* | \ **Short name**\  for Python visualization object = \ ``VCamFollowerContactPlanar``\ 
 
 
 The item \ **ObjectContactCurveCircles**\  with type = 'ContactCurveCircles' has the following parameters:
@@ -29,7 +29,7 @@ The item \ **ObjectContactCurveCircles**\  with type = 'ContactCurveCircles' has
 * | **segmentsData** [\ :math:`{\mathbf{D}} \in \Rcal^{n_s \times 4}`\ , type = PyMatrixContainer, default = PyMatrixContainer[]]:
   | matrix containing a set of two planar point coordinates in each row, representing segments attached to marker \ :math:`m0`\  and undergoing contact with the circles; for segment \ :math:`s0`\  row 0 reads \ :math:`[p_{0x,s0},\,p_{0y,s0},\,p_{1x,s0},\,p_{1y,s0}]`\ ; note that the segments must be ordered such that going from \ :math:`{\mathbf{p}}_0`\  to \ :math:`{\mathbf{p}}_1`\ , the exterior lies on the right (positive) side. MatrixContainer has to be provided in dense mode!
 * | **polynomialData** [\ :math:`{\mathbf{P}} \in \Rcal^{n_s \times n_p}`\ , type = PyMatrixContainer, default = PyMatrixContainer[]]:
-  | matrix containing coefficients for polynomial enhancements of the linear segments; each row contains polynomial coefficients for the according segment; the polynomial coefficients may contain quadratic, cubic, etc. coefficients, while constant and linear coefficients are automatically selected such that the end points of the polynomial match the segment's endpoints; the local coordinate \ :math:`x`\  of the polynomial runs from 0 to 1 and positive values represent concave geometries (enlarging the curve). MatrixContainer has to be provided in dense mode!
+  | matrix containing coefficients for special polynomial enhancements of the linear segments; each row contains coefficients for polynomials for the according segment, prescribing slopes at beginning and end of segment as well as curvature at beginning and end of segment; slopes and curvatures are defined in a local x/y coordinate system where x is the segment axis (start: x=0; x-axis points towards end point) and the segment normal is in y-direction; MatrixContainer has to be provided in dense mode!
 * | **rotationMarker0** [type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:
   | local rotation matrix for marker 0; used to rotate marker coordinates such that the curve lies in the \ :math:`x-y`\ -plane
 * | **dynamicFriction** [\ :math:`\mu_d`\ , type = UReal, default = 0.]:
@@ -37,13 +37,21 @@ The item \ **ObjectContactCurveCircles**\  with type = 'ContactCurveCircles' has
 * | **frictionProportionalZone** [\ :math:`v_{reg}`\ , type = UReal, default = 1e-3]:
   | limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), Section :ref:`sec-module-physics`\ 
 * | **contactStiffness** [\ :math:`k_c`\ , type = Real, default = 0.]:
-  | normal contact stiffness [SI:N/m] (units in case that \ :math:`n_\mathrm{exp}=1`\ )
+  | normal contact stiffness [SI:N/(m*m)]
 * | **contactDamping** [\ :math:`d_c`\ , type = Real, default = 0.]:
-  | linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.
+  | linear normal contact damping [SI:N/(m s)]; this damping is a simplification of real contact dissipation and should be used with care.
 * | **contactModel** [\ :math:`m_\mathrm{contact}`\ , type = UInt, default = 0]:
-  | number of contact model: 0) linear model for stiffness and damping, only proportional to penetration; 1) model taking contact geometry, in particular curvature of circle and curve into account, giving nonlinear normal force model
+  | number of contact model: 0) linear model for stiffness and damping, only proportional to penetration; contact force is computed from \ :math:`l_\mathrm{seg}\left(p \cdot  \cdot k_c + \dot p \cdot d_c \right)`\  as long as \ :math:`p>0`\ ; while this is numerically more stable, it gives jumps in forces when sliding over contact geometry 1) contact force proportional to integral over penetration area of circle with segments, giving a smoother contact force when sliding over geometry;
 * | **activeConnector** [type = Bool, default = True]:
   | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+* | **gapPerSegment** [type = NumpyVector, default = []]:
+  | temporary vector for computed gap
+* | **gapPerSegment_t** [type = NumpyVector, default = []]:
+  | temporary vector for computed gap velocity
+* | **segmentsForceLocalX** [type = NumpyVector, default = []]:
+  | temporary vector for contact force per segment in local X-direction
+* | **segmentsForceLocalY** [type = NumpyVector, default = []]:
+  | temporary vector for contact force per segment in local Y-direction
 * | **visualization** [type = VObjectContactCurveCircles]:
   | parameters for visualization of item
 
@@ -111,7 +119,7 @@ tbd
 
 Relevant Examples and TestModels with weblink:
 
-    \ `chainDriveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chainDriveExample.py>`_\  (Examples/)
+    \ `camFollowerExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/camFollowerExample.py>`_\  (Examples/), \ `chainDriveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chainDriveExample.py>`_\  (Examples/), \ `contactCurvePolynomial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/contactCurvePolynomial.py>`_\  (Examples/), \ `contactCurveWithLongCurve.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/contactCurveWithLongCurve.py>`_\  (Examples/), \ `contactCurveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCurveExample.py>`_\  (TestModels/)
 
 
 

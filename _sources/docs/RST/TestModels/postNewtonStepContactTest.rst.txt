@@ -41,7 +41,7 @@ You can view and download this file on Github: `postNewtonStepContactTest.py <ht
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
-   exu.Print('EXUDYN version='+exu.GetVersionString())
+   exu.Print('EXUDYN version='+exu.config.Version())
    
    #define parameters of mass point
    L=0.5
@@ -199,16 +199,16 @@ You can view and download this file on Github: `postNewtonStepContactTest.py <ht
    #simulationSettings.timeIntegration.simulateInRealtime = True
    
    if useGraphics:
-       exu.StartRenderer()              #start graphics visualization
-       #mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
+       SC.renderer.Start()              #start graphics visualization
+       #SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
    
    #start solver:
    mbs.SolveDynamic(solverType=exu.DynamicSolverType.TrapezoidalIndex2, simulationSettings=simulationSettings)
    #mbs.SolveDynamic(solverType=exu.DynamicSolverType.RK67, simulationSettings=simulationSettings)
    
    if useGraphics:
-       #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
-       exu.StopRenderer()               #safely close rendering window!
+       #SC.renderer.DoIdleTasks()#wait for pressing 'Q' to quit
+       SC.renderer.Stop()               #safely close rendering window!
    
    u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
    exu.Print('postNewtonStepContactTest=',u[1])

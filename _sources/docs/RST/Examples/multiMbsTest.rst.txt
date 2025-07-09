@@ -77,17 +77,17 @@ You can view and download this file on Github: `multiMbsTest.py <https://github.
        SC.visualizationSettings.window.renderWindowSize=[1600,1200]
        SC.visualizationSettings.openGL.multiSampling = 4
        
-       # exu.StartRenderer()
+       # SC.renderer.Start()
        # if 'renderState' in exu.sys: #reload old view
-       #     SC.SetRenderState(exu.sys['renderState'])
+       #     SC.renderer.SetState(exu.sys['renderState'])
        
-       mbs.WaitForUserToContinue() #stop before simulating
+       SC.renderer.DoIdleTasks() #stop before simulating
        
        mbs.SolveDynamic(simulationSettings = simulationSettings,
                         solverType=exu.DynamicSolverType.TrapezoidalIndex2)
        
-       # SC.WaitForRenderEngineStopFlag() #stop before closing
-       # exu.StopRenderer() #safely close rendering window!
+       # SC.renderer.DoIdleTasks() #stop before closing
+       # SC.renderer.Stop() #safely close rendering window!
        
    
    
@@ -101,25 +101,25 @@ You can view and download this file on Github: `multiMbsTest.py <https://github.
    CreateSystem(mbs2, [0,0,0], graphics.color.red)
    CreateSystem(mbs2, [0.6,-1.2,0], graphics.color.green)
    
-   SC.AttachToRenderEngine()
-   exu.StartRenderer()
+   SC.renderer.Attach()
+   SC.renderer.Start()
    if 'renderState' in exu.sys: #reload old view
-       SC.SetRenderState(exu.sys['renderState'])
+       SC.renderer.SetState(exu.sys['renderState'])
        
    Simulate(SC, mbs)
-   # mbs.WaitForUserToContinue()
-   #SC.DetachFromRenderEngine()
-   SC.WaitForRenderEngineStopFlag() #stop before closing
-   exu.StopRenderer() #safely close rendering window!
+   # SC.renderer.DoIdleTasks()
+   #SC.renderer.Detach()
+   SC.renderer.DoIdleTasks() #stop before closing
+   SC.renderer.Stop() #safely close rendering window!
    
-   SC2.AttachToRenderEngine()
-   exu.StartRenderer()
+   SC2.renderer.Attach()
+   SC.renderer.Start()
    if 'renderState' in exu.sys: #reload old view
-       SC2.SetRenderState(exu.sys['renderState'])
+       SC2.renderer.SetState(exu.sys['renderState'])
    Simulate(SC2, mbs2)
    
-   SC2.WaitForRenderEngineStopFlag() #stop before closing
-   exu.StopRenderer() #safely close rendering window!
+   SC2.renderer.DoIdleTasks() #stop before closing
+   SC.renderer.Stop() #safely close rendering window!
    
    if False:
        

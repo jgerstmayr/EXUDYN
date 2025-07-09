@@ -35,7 +35,7 @@ You can view and download this file on Github: `lugreFrictionODE1.py <https://gi
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
-   exu.Print('EXUDYN version='+exu.GetVersionString())
+   exu.Print('EXUDYN version='+exu.config.Version())
    
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #Lugre friction text model: Canudas de Wit et al. (1995):    

@@ -176,11 +176,11 @@ You can view and download this file on Github: `fourBarMechanism3D.py <https://g
        SC.visualizationSettings.nodes.showBasis=True
    
        if useGraphics:
-           exu.StartRenderer()
+           SC.renderer.Start()
            if 'renderState' in exu.sys: #reload old view
-               SC.SetRenderState(exu.sys['renderState'])
+               SC.renderer.SetState(exu.sys['renderState'])
            
-           mbs.WaitForUserToContinue() #stop before simulating
+           SC.renderer.DoIdleTasks() #stop before simulating
    
        try: #solver will raise exception in case 1
            mbs.SolveDynamic(simulationSettings = simulationSettings)
@@ -190,8 +190,8 @@ You can view and download this file on Github: `fourBarMechanism3D.py <https://g
        # mbs.SolveDynamic(simulationSettings = simulationSettings,
        #                  solverType=exu.DynamicSolverType.TrapezoidalIndex2)
        if useGraphics:
-           SC.WaitForRenderEngineStopFlag() #stop before closing
-           exu.StopRenderer() #safely close rendering window!
+           SC.renderer.DoIdleTasks() #stop before closing
+           SC.renderer.Stop() #safely close rendering window!
    
        #check redundant constraints and DOF:
        mbs.ComputeSystemDegreeOfFreedom(verbose=useGraphics)

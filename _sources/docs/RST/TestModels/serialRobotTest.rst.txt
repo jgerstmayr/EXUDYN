@@ -239,7 +239,7 @@ You can view and download this file on Github: `serialRobotTest.py <https://gith
        tEnd = 0.2
        #tEnd = 1 #shows exactly static torques ComputeMBSstaticRobotTorques(newRobot) and desired angles (q2) at end
    
-   #mbs.WaitForUserToContinue()
+   #SC.renderer.DoIdleTasks()
    simulationSettings = exu.SimulationSettings() #takes currently set values or default values
    
    simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
@@ -266,15 +266,15 @@ You can view and download this file on Github: `serialRobotTest.py <https://gith
    
    if useGraphics:
        SC.visualizationSettings.general.autoFitScene=False
-       exu.StartRenderer()
+       SC.renderer.Start()
        if 'renderState' in exu.sys:
-           SC.SetRenderState(exu.sys['renderState'])
+           SC.renderer.SetState(exu.sys['renderState'])
    
        
        mbs.SolutionViewer()
-       exu.StopRenderer()
+       SC.renderer.Stop()
    
-   lastRenderState = SC.GetRenderState() #store model view
+   lastRenderState = SC.renderer.GetState() #store model view
    
    #compute final torques:
    measuredTorques=[]

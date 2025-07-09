@@ -158,8 +158,8 @@ You can view and download this file on Github: `geometricallyExactBeam2Dtest.py 
    
    ## start graphics and solver   
    if useGraphics:
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
    
    uTotal = np.zeros(3)
    
@@ -180,8 +180,8 @@ You can view and download this file on Github: `geometricallyExactBeam2Dtest.py 
    
    ## stop graphics and print solution
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    exu.Print('solution of geometricallyExactBeam2Dtest=',uTotal[1]) #use y-coordinate
    

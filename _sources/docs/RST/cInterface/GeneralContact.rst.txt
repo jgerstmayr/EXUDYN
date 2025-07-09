@@ -49,7 +49,7 @@ Structure to define general and highly efficient contact functionality in multib
 * | **excludeDuplicatedTrigSphereContactPoints**:
   | (default=False) run additional checks for double contacts at edges or vertices, being more accurate but can cause additional costs if many contacts 
 * | **computeExactStaticTriangleBins**:
-  | if True, search tree bins are computed exactly for static triangles while if False, it uses the overall (=very inaccurate) AABB of each triangle in the search tree
+  | (default=True) if True, search tree bins are computed exactly for static triangles while if False, it uses the overall (=very inaccurate) AABB of each triangle in the search tree
 * | **computeContactForces**:
   | (default=False) if True, additional system vector is computed which contains all contact force and torque contributions. In order to recover forces on a single rigid body, the respective LTG-vector has to be used and forces need to be extracted from this system vector; may slow down computations.
 * | **ancfCableUseExactMethod**:
@@ -58,6 +58,14 @@ Structure to define general and highly efficient contact functionality in multib
   | (default=1) number of segments to be used in case that ancfCableUseExactMethod=False; maximum number of segments=3 
 * | **ancfCableMeasuringSegments**:
   | (default=20) number of segments used to approximate geometry for ANCFCable2D elements for measuring with ShortestDistanceAlongLine; with 20 segments the relative error due to approximation as compared to 10 segments usually stays below 1e-8 
+* | **parallelTaskSplit**:
+  | (default=12) general number of tasks per thread (min)
+* | **parallelTaskSplitBoundingBoxes**:
+  | (default=48) number of tasks per thread for bounding box computations
+* | **parallelTaskSplitThreshold**:
+  | (default=12) general threshold below which only one task per thread is used
+* | **parallelTaskSplitBoundingBoxesThreshold**:
+  | (default=400) threshold below which only one task per thread is used, for bounding box computations
 * | **SetFrictionPairings**\ (\ *frictionPairings*\ ): 
   | set Coulomb friction coefficients for pairings of materials (e.g., use material 0,1, then the entries (0,1) and (1,0) define the friction coefficients for this pairing); matrix should be symmetric!
   | *Example*:

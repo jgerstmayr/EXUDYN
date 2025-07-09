@@ -169,13 +169,13 @@ You can view and download this file on Github: `symbolicUserFunctionMasses.py <h
    SC.visualizationSettings.openGL.multiSampling = 4
    
    import time
-   exu.StartRenderer()
+   SC.renderer.Start()
    ts = time.time()
    print('start simulation')
    mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44)
    print('finished: ', time.time()-ts, 'seconds')
-   mbs.WaitForUserToContinue()
-   exu.StopRenderer()
+   SC.renderer.DoIdleTasks()
+   SC.renderer.Stop()
    # mbs.SolutionViewer()
    #i7-1390, boost
    #results for ExplicitMidpoint, 100 steps, 6272 nodes, RK44, exudynFast=True:

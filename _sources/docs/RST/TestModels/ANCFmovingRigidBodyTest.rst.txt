@@ -188,7 +188,7 @@ You can view and download this file on Github: `ANCFmovingRigidBodyTest.py <http
    mbs.Assemble()
    #exu.Print(mbs)
    
-   #mbs.WaitForUserToContinue()
+   #SC.renderer.DoIdleTasks()
    
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
    # Simualtion settings:
@@ -210,12 +210,12 @@ You can view and download this file on Github: `ANCFmovingRigidBodyTest.py <http
    
    
    if useGraphics: 
-       exu.StartRenderer()
+       SC.renderer.Start()
    
    #get initial velocities
    vInit = mbs.systemData.GetODE2Coordinates_t(configuration = exu.ConfigurationType.Initial)
    
-   #mbs.WaitForUserToContinue()
+   #SC.renderer.DoIdleTasks()
    
    mbs.SolveStatic(simulationSettings) 
    
@@ -233,7 +233,7 @@ You can view and download this file on Github: `ANCFmovingRigidBodyTest.py <http
    u = sol[int(ncables/4)*4+1]; #y-displacement of node at midpoint of rope
         
    
-   #mbs.WaitForUserToContinue()
+   #SC.renderer.DoIdleTasks()
    
    mbs.SetObjectParameter(aleSlidingJoint, 'activeConnector', True)
    mbs.SetObjectParameter(nCCRigid0, 'activeConnector', False)
@@ -266,8 +266,8 @@ You can view and download this file on Github: `ANCFmovingRigidBodyTest.py <http
        
    
    if useGraphics: 
-       #SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       #SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    #compute error for test suite:
    ncables = len(suspensionCableNodeList)

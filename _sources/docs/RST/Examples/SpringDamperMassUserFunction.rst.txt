@@ -105,7 +105,7 @@ You can view and download this file on Github: `SpringDamperMassUserFunction.py 
    
    useGraphics = True
    if useGraphics: 
-       exu.StartRenderer()
+       SC.renderer.Start()
    
    simulationSettings = exu.SimulationSettings()
    simulationSettings.timeIntegration.numberOfSteps = 100*200
@@ -143,8 +143,8 @@ You can view and download this file on Github: `SpringDamperMassUserFunction.py 
    staticError = u[1]-(-0.44056224799446486)
    
    if useGraphics: 
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() 
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() 
    
    
    

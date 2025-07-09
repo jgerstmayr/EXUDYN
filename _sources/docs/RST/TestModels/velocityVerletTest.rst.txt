@@ -61,8 +61,8 @@ You can view and download this file on Github: `velocityVerletTest.py <https://g
    simulationSettings = exu.SimulationSettings()
        
    if useGraphics: #only start graphics once, but after background is set
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
    
    sumSol = 0
    for i in range(4):
@@ -73,7 +73,7 @@ You can view and download this file on Github: `velocityVerletTest.py <https://g
        simulationSettings.timeIntegration.verboseMode=1 #provide some output
        # simulationSettings.timeIntegration.simulateInRealtime = True
    
-       #mbs.WaitForUserToContinue()
+       #SC.renderer.DoIdleTasks()
        mbs.SolveDynamic(simulationSettings, solverType = exudyn.DynamicSolverType.VelocityVerlet)
        #mbs.SolveDynamic(simulationSettings, solverType = exudyn.DynamicSolverType.ExplicitEuler)
        # mbs.SolveDynamic(simulationSettings, solverType = exudyn.DynamicSolverType.ExplicitMidpoint)
@@ -119,7 +119,7 @@ You can view and download this file on Github: `velocityVerletTest.py <https://g
        #RK67:    p= [1.0332409398209816, 0.0, 0.0]
        #RK67/2:  p= [1.0332409398209812, 0.0, 0.0]
    if useGraphics: #only start graphics once, but after background is set
-       exu.StopRenderer()
+       SC.renderer.Stop()
        mbs.PlotSensor(sMass,components=[0])
    
    exu.Print("velocityVerletTest result=",sumSol)

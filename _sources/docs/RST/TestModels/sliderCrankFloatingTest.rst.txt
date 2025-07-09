@@ -233,7 +233,7 @@ You can view and download this file on Github: `sliderCrankFloatingTest.py <http
        SC.visualizationSettings.bodies.defaultSize = [dSize, dSize, dSize]
        SC.visualizationSettings.connectors.defaultSize = dSize
        
-       #data obtained from SC.GetRenderState(); use np.round(d['modelRotation'],4)
+       #data obtained from SC.renderer.GetState(); use np.round(d['modelRotation'],4)
        SC.visualizationSettings.openGL.initialModelRotation = [[ 0.87758,  0.04786, -0.47703],
                                                                [ 0.     ,  0.995  ,  0.09983],
                                                                [ 0.47943, -0.08761,  0.8732]]
@@ -241,10 +241,10 @@ You can view and download this file on Github: `sliderCrankFloatingTest.py <http
        SC.visualizationSettings.openGL.initialCenterPoint = [0.192, -0.0039,-0.075]
        SC.visualizationSettings.openGL.initialMaxSceneSize = 0.4
        SC.visualizationSettings.general.autoFitScene = False
-       #mbs.WaitForUserToContinue()
+       #SC.renderer.DoIdleTasks()
        
        if useGraphics: 
-           exu.StartRenderer()
+           SC.renderer.Start()
       
        mbs.SolveDynamic(simulationSettings)
            
@@ -257,8 +257,8 @@ You can view and download this file on Github: `sliderCrankFloatingTest.py <http
    #        AnimateSolution(mbs, solution, 10, 0.025, True)
            #+++++++++++++++++++++++++++++++++++++
    
-           SC.WaitForRenderEngineStopFlag()
-           exu.StopRenderer() #safely close rendering window!
+           SC.renderer.DoIdleTasks()
+           SC.renderer.Stop() #safely close rendering window!
        
        u = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position) #tip node
        exu.Print('sol =', abs(u[0]))

@@ -104,12 +104,12 @@ You can view and download this file on Github: `ConvexContactTest.py <https://gi
    if useGraphics: 
        sims.timeIntegration.verboseMode = 1
        sims.timeIntegration.stepInformation = 3+128+256
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
    mbs.SolveDynamic(sims)
    if useGraphics: 
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    sol = mbs.systemData.GetODE2Coordinates()
    exudynTestGlobals.testResult = np.sum(sol[:2])
@@ -129,7 +129,7 @@ You can view and download this file on Github: `ConvexContactTest.py <https://gi
        SC.visualizationSettings.general.graphicsUpdateInterval=0.02
        
        sol = LoadSolutionFile('solution/coordinatesSolution.txt', safeMode=True)#, maxRows=100)
-       print('start SolutionViewer')
+       exu.Print('start SolutionViewer')
        mbs.SolutionViewer(sol)
    
 

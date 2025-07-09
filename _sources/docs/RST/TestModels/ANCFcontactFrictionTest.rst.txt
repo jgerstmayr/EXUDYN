@@ -199,8 +199,8 @@ You can view and download this file on Github: `ANCFcontactFrictionTest.py <http
    
    # useGraphics=False
    if useGraphics: 
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
    
    solveDynamic = True
    if solveDynamic: 
@@ -239,8 +239,8 @@ You can view and download this file on Github: `ANCFcontactFrictionTest.py <http
    exu.Print("test result=",exudynTestGlobals.testResult)
    
    if useGraphics: 
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
 
 

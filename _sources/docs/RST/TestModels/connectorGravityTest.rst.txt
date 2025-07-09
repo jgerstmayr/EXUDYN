@@ -105,8 +105,8 @@ You can view and download this file on Github: `connectorGravityTest.py <https:/
    # SC.visualizationSettings.nodes.drawNodesAsPoint = False
    
    if useGraphics:
-       exu.StartRenderer()              #start graphics visualization
-       mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
+       SC.renderer.Start()              #start graphics visualization
+       SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
    
    #start solver:
    # mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.TrapezoidalIndex2)
@@ -114,8 +114,8 @@ You can view and download this file on Github: `connectorGravityTest.py <https:/
    mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.RK67)
    
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
-       exu.StopRenderer()               #safely close rendering window!
+       SC.renderer.DoIdleTasks()#wait for pressing 'Q' to quit
+       SC.renderer.Stop()               #safely close rendering window!
    
    #check result at default integration time
    #node1 is last node

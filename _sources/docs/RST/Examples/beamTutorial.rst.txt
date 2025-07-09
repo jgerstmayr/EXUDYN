@@ -134,10 +134,10 @@ You can view and download this file on Github: `beamTutorial.py <https://github.
    SC.visualizationSettings.nodes.drawNodesAsPoint = False
    SC.visualizationSettings.bodies.beams.crossSectionFilled = True
    
-   exu.StartRenderer()
+   SC.renderer.Start()
    ## run dynamic simulation
    mbs.SolveDynamic(simulationSettings)
-   exu.StopRenderer()
+   SC.renderer.Stop()
    
    ## visualize computed solution:
    mbs.SolutionViewer()

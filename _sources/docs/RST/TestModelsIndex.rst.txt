@@ -18,6 +18,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/ANCFgeneralContactCircle
    TestModels/ANCFmovingRigidBodyTest
    TestModels/ANCFslidingAndALEjointTest
+   TestModels/ballBearingTest
    TestModels/bricardMechanism
    TestModels/carRollingDiscTest
    TestModels/compareAbaqusAnsysRotorEigenfrequencies
@@ -28,14 +29,20 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/connectorGravityTest
    TestModels/connectorRigidBodySpringDamperTest
    TestModels/contactCoordinateTest
+   TestModels/contactCurveExample
    TestModels/contactSphereSphereTest
    TestModels/contactSphereSphereTestEAPM
    TestModels/ConvexContactTest
    TestModels/coordinateSpringDamperExt
    TestModels/coordinateVectorConstraint
    TestModels/coordinateVectorConstraintGenericODE2
+   TestModels/createKinematicTreeTest
+   TestModels/createFunctionsTest
    TestModels/createRollingDiscPenaltyTest
    TestModels/createRollingDiscTest
+   TestModels/createSphereQuadContact
+   TestModels/createSphereQuadContact2
+   TestModels/deleteItemsTest
    TestModels/distanceSensor
    TestModels/driveTrainTest
    TestModels/explicitLieGroupIntegratorPythonTest
@@ -54,6 +61,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/gridGeomExactBeam2D
    TestModels/heavyTop
    TestModels/hydraulicActuatorSimpleTest
+   TestModels/jointArgsTest
    TestModels/kinematicTreeAndMBStest
    TestModels/kinematicTreeConstraintTest
    TestModels/kinematicTreeTest
@@ -74,6 +82,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/objectGenericODE2Test
    TestModels/PARTS_ATEs_moving
    TestModels/pendulumFriction
+   TestModels/pickleCopyMbs
    TestModels/plotSensorTest
    TestModels/postNewtonStepContactTest
    TestModels/reevingSystemSpringsTest
@@ -93,6 +102,8 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/sliderCrankFloatingTest
    TestModels/solverExplicitODE1ODE2test
    TestModels/sparseMatrixSpringDamperTest
+   TestModels/sphereTriangleTest
+   TestModels/sphereTriangleTest2
    TestModels/sphericalJointTest
    TestModels/springDamperUserFunctionTest
    TestModels/stiffFlyballGovernor

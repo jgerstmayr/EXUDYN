@@ -136,9 +136,9 @@ inefficient and only designed to enable simpler tests, but not large scale probl
     mbs.Assemble()
     sims=exu.SimulationSettings()
     sims.timeIntegration.numberOfSteps = 10000000 #many steps to see graphics
-    exu.StartRenderer() #perform zoom all (press 'a' several times) after startup to see the sphere
+    SC.renderer.Start() #perform zoom all (press 'a' several times) after startup to see the sphere
     mbs.SolveDynamic(sims)
-    exu.StopRenderer()
+    SC.renderer.Stop()
 
 
 

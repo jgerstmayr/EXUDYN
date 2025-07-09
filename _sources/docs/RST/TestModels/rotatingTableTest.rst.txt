@@ -216,10 +216,10 @@ You can view and download this file on Github: `rotatingTableTest.py <https://gi
        SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
        
        if useGraphics:
-           exu.StartRenderer()
+           SC.renderer.Start()
            if 'renderState' in exu.sys:
-               SC.SetRenderState(exu.sys['renderState'])
-           mbs.WaitForUserToContinue()
+               SC.renderer.SetState(exu.sys['renderState'])
+           SC.renderer.DoIdleTasks()
        
        mbs.SolveDynamic(simulationSettings, 
                         solverType=exu.DynamicSolverType.TrapezoidalIndex2,
@@ -227,8 +227,8 @@ You can view and download this file on Github: `rotatingTableTest.py <https://gi
                         )
        
        if useGraphics:
-           SC.WaitForRenderEngineStopFlag()
-           exu.StopRenderer() #safely close rendering window!
+           SC.renderer.DoIdleTasks()
+           SC.renderer.Stop() #safely close rendering window!
        
        sol2 = mbs.systemData.GetODE2Coordinates(); 
        u = np.linalg.norm(sol2); 
@@ -254,10 +254,10 @@ You can view and download this file on Github: `rotatingTableTest.py <https://gi
                   newFigure=False, colorCodeOffset=3, labels=['trail velocity norm']) 
    
        forceEnd=mbs.GetSensorValues(sensorNumber=sForce)
-       print('sForce: ',forceEnd)
+       exu.Print('sForce: ',forceEnd)
        
        angAcc0=mbs.GetSensorStoredData(sensorNumber=sAngAcc)[0,1:]
-       print('angAcc: ',angAcc0)
+       exu.Print('angAcc: ',angAcc0)
        
        
 

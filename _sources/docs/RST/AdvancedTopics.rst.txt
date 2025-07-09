@@ -25,7 +25,7 @@ in which \ ``nMarker``\  represents the desired marker number to follow.
 See also related options in \ ``SC.visualizationSettings.interactive``\  in Section :ref:`sec-vsettingsinteractive`\ .
 
 The following paragraph represents a slower, slightly outdated approach, which may be interesting for advanced usage of object tracking.
-To do so, the current render state (\ ``SC.GetRenderState()``\ , \ ``SC.SetRenderState(...)``\ ) can be obtained and modified, in order to always follow a certain position.
+To do so, the current render state (\ ``SC.renderer.GetState()``\ , \ ``SC.renderer.SetState(...)``\ ) can be obtained and modified, in order to always follow a certain position.
 As this needs to be done during redraw of every frame, it is conveniently done in a graphicsUserFunction, e.g., within the ground body. This is shown in the following example, in which \ ``mbs.variables['nTrackNode']``\  is a node number to be tracked:
 
 .. code-block:: python
@@ -35,11 +35,11 @@ As this needs to be done during redraw of every frame, it is conveniently done i
       n = mbs.variables['nTrackNode']
       p = mbs.GetNodeOutput(n,exu.OutputVariableType.Position, 
                             configuration=exu.ConfigurationType.Visualization)
-      rs=SC.GetRenderState() #get current render state
+      rs=SC.renderer.GetState() #get current render state
       A = np.array(rs['modelRotation'])
       p = A.T @ p #transform point into model view coordinates
       rs['centerPoint']=[p[0],p[1],p[2]]
-      SC.SetRenderState(rs)  #modify render state
+      SC.renderer.SetState(rs)  #modify render state
       return []
 
   #add object with graphics user function

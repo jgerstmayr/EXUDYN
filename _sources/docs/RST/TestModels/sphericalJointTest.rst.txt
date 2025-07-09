@@ -118,8 +118,8 @@ You can view and download this file on Github: `sphericalJointTest.py <https://g
    #simulationSettings.displayStatistics = True
    
    if useGraphics:
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
    
    mbs.SolveDynamic(simulationSettings)
    
@@ -138,8 +138,8 @@ You can view and download this file on Github: `sphericalJointTest.py <https://g
    
    
    if useGraphics:
-       #SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       #SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
 
 

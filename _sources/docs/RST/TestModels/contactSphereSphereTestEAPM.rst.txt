@@ -42,7 +42,7 @@ You can view and download this file on Github: `contactSphereSphereTestEAPM.py <
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
-   exu.Print('EXUDYN version = ' + exu.GetVersionString())
+   exu.Print('EXUDYN version = ' + exu.config.Version())
    
    #+++++++++++++++++++++++++++++++++++++++++++++
    # define behaviour of script
@@ -93,7 +93,7 @@ You can view and download this file on Github: `contactSphereSphereTestEAPM.py <
                setPosition = 2*radius - (dMove/tMove)*t
            else:
                setPosition = 2*radius - dMove + (dMove/tMove)*(t-tMove)
-           # print(setPosition)
+           # exu.Print(setPosition)
            return (u-setPosition)*1e5
                
        mbs.AddObject(SpringDamper(markerNumbers=[mGround, mMass], referenceLength=0, springForceUserFunction=UFforce))
@@ -161,12 +161,12 @@ You can view and download this file on Github: `contactSphereSphereTestEAPM.py <
    
    #+++++++++++++++++++++++++++++++++++++++++++++
    if useGraphics:
-       exu.StartRenderer()                 # start graphics visualization
-       mbs.WaitForUserToContinue()         # wait for pressing SPACE bar to continue
+       SC.renderer.Start()                 # start graphics visualization
+       SC.renderer.DoIdleTasks()         # wait for pressing SPACE bar to continue
    mbs.SolveDynamic(simulationSettings)
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()    # wait for pressing 'Q' to quit
-       exu.StopRenderer()                  # safely close rendering window!
+       SC.renderer.DoIdleTasks()    # wait for pressing 'Q' to quit
+       SC.renderer.Stop()                  # safely close rendering window!
    
    
    #+++++++++++++++++++++++++++++++++++++++++++++

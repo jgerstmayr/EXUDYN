@@ -220,8 +220,8 @@ You can view and download this file on Github: `ROSMassPoint.py <https://github.
        SC.visualizationSettings.interactive.selectionLeftMouse=False
        SC.visualizationSettings.interactive.selectionRightMouse=False 
    
-       exu.StartRenderer(True)
-       exu.SolveDynamic(mbs, simulationSettings)
+       SC.renderer.Start(True)
+       mbs.SolveDynamic(simulationSettings)
    
        return True
    

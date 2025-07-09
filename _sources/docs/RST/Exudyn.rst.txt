@@ -39,17 +39,17 @@ Exudyn
 
 **A flexible multibody dynamics systems simulation code with Python and C++**
 
-Exudyn version = 1.9.83.dev1 (Krall)
 
++  Exudyn version = 1.10.0 (Lagrene)
 +  **University of Innsbruck**, Department of Mechatronics, Innsbruck, Austria
 
-If you like using Exudyn, please add a *star* on github and follow us on 
-`Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
+.. |pic7| image:: ../theDoc/figures/ExudynLOGO1.9.jpg
+   :width: 300
 
 **Update on Exudyn V1.9.0**: newer examples use ``exudyn.graphics`` instead of ``GraphicsData`` functions. FEM now uses internally in mass and stiffness matrices the scipy sparse csr matrices.
 
-+  **Exudyn** is *free, open source* and with plenty of *documentation* and *examples*
-+  **pre-built** for Python 3.8 - 3.12 under **Windows** , **Linux** and **MacOS** available ( **NEW** : now with manylinux2014 compatibility and PEP518 build); build wheels yourself, see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
++  **Exudyn** is *free, open source* and with plenty of *documentation*, *examples*, and *test models*
++  **pre-built** for Python 3.9 - 3.13 under **Windows** , **Linux** and **MacOS** available ( older versions available for Python >= 3.6); build wheels yourself, see `theDoc.pdf <https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf>`_ )
 +  Exudyn can be linked to any other Python package, but we explicitly mention: `NGsolve <https://github.com/NGSolve/ngsolve>`_, `OpenAI <https://github.com/openai>`_, `OpenAI gym <https://github.com/openai/gym>`_, `Robotics Toolbox (Peter Corke) <https://github.com/petercorke/robotics-toolbox-python>`_, `Pybind11 <https://github.com/pybind/pybind11>`_
 
 .. |pic1| image:: ../demo/screenshots/pistonEngine.gif
@@ -80,16 +80,22 @@ Due to limitations for complex formulas, images and references in .rst files, so
 
 For license, see LICENSE.txt in the root github folder on github!
 
-In addition to the tutorial in the documentation, many ( **250+** ) examples can be downloaded on github under main/pythonDev/Examples and main/pythonDev/TestModels . They are also on ReadTheDocs.
+If you like using Exudyn, please add a *star* on github and follow us on 
+`Twitter @RExudyn <https://twitter.com/RExudyn>`_ !
+
+In addition to the tutorials in the documentation, many ( **250+** ) examples can be downloaded on github under main/pythonDev/Examples and main/pythonDev/TestModels . They are also on ReadTheDocs.
 
 Note that **ChatGPT** and other large language models know Exudyn quite well. They are able to build parts of your code or even full models, see `https://doi.org/10.1007/s11044-023-09962-0 <https://doi.org/10.1007/s11044-023-09962-0>`_
 
-Tutorial videos ( **new Feb 2024** )can be found in the `youtube channel of Exudyn <https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx>`_ !
+Tutorial videos can be found in the `YouTube channel of Exudyn <https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx>`_ !
 
 **NOTE**: **NumPy** switched to version 2.x which causes problems with packages that are not adapted to NumPy 2.x. 
-The current version of Exudyn is already compatible with NumPy 2.x AND 1.x, however, some external packages (SciPy, robotics tools, etc.) cause problems.
+The current version of Exudyn is already compatible with NumPy 2.x AND 1.x, however, some external packages (SciPy, robotics tools, etc.) may cause problems, therefore you could still use Numpy 1.26 (not available for Python >= 3.13).
+
+**NOTE**: We finally like to emphasize that this is an open source library; we receive no specific money and most developements are done during free (=night) time; some models are simplifications that work for our needs, but may not be appropriate in your case; some models are under development (usually stated in theDoc) or may have bugs, therefore do not fully rely on all elements of the library!
 
 Enjoy the Python library for multibody dynamics modeling, simulation, creating large scale systems, parameterized systems, component mode synthesis, optimization, ...
+
 
 
 

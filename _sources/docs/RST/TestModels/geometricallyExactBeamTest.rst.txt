@@ -318,36 +318,9 @@ You can view and download this file on Github: `geometricallyExactBeamTest.py <h
        # exu.Print('M=',M.round(1))
    
        if useGraphics:
-           exu.StartRenderer()
-           mbs.WaitForUserToContinue()
+           SC.renderer.Start()
+           SC.renderer.DoIdleTasks()
    
-       # if computeEigenmodes:
-       #     nModes = 3*(1+int(compute3D))
-       #     nRigidModes = 3*(1+int(compute3D))
-       #     if compute2D:
-       #         constrainedCoordinates=[0,1,mbs.systemData.ODE2Size()-2]
-       #     else:
-       #         constrainedCoordinates=[0,1,2,5,mbs.systemData.ODE2Size()-8,mbs.systemData.ODE2Size()-7]
-       
-       #     # constrainedCoordinates=[]
-           
-       #     compeig=mbs.ComputeODE2Eigenvalues(simulationSettings, useSparseSolver=False, 
-       #                                 numberOfEigenvalues= nRigidModes+nModes, 
-       #                                 constrainedCoordinates=constrainedCoordinates,
-       #                                 convert2Frequencies= False)
-       
-       #     exu.Print('eigvalues=',np.sqrt(compeig[0][nRigidModes:]))
-           
-       #     if False: #show modes:
-       #         for i in range(nModes):
-       #             iMode = nRigidModes+i
-       #             mbs.systemData.SetODE2Coordinates(5*compeig[1][:,iMode], exudyn.ConfigurationType.Visualization)
-       #             mbs.systemData.SetTime(np.sqrt(compeig[0][iMode]), exudyn.ConfigurationType.Visualization)
-       #             mbs.SendRedrawSignal()
-           
-       #             mbs.WaitForUserToContinue()
-   
-       # else:
        mbs.SolveStatic(simulationSettings)
        # mbs.SolveDynamic(simulationSettings)
        #mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.RK44)
@@ -359,13 +332,13 @@ You can view and download this file on Github: `geometricallyExactBeamTest.py <h
            solver.InitializeSolver(mbs, simulationSettings)
            solver.ComputeJacobianODE2RHS(mbs)
            J=solver.GetSystemJacobian()
-           print((1e-6*J[:14,:7]).round(3))
-           print((1e-6*J[:14,7:14]).round(3))
+           exu.Print((1e-6*J[:14,:7]).round(3))
+           exu.Print((1e-6*J[:14,7:14]).round(3))
    
        #%%+++++++++++++++++++++++++++++++++++    
        if useGraphics:
-           SC.WaitForRenderEngineStopFlag()
-           exu.StopRenderer() #safely close rendering window!
+           SC.renderer.DoIdleTasks()
+           SC.renderer.Stop() #safely close rendering window!
        
        ##evaluate final (=current) output values
        uTip = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacement)

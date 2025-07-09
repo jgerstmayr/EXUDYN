@@ -137,10 +137,10 @@ You can view and download this file on Github: `ANCFcantileverTestDyn.py <https:
    
    simulationSettings.solutionSettings.solutionInformation = "nonlinear beam oscillations"
    
-   exu.StartRenderer()
+   SC.renderer.Start()
    mbs.SolveDynamic(simulationSettings)
-   SC.WaitForRenderEngineStopFlag()
-   exu.StopRenderer() #safely close rendering window!
+   SC.renderer.DoIdleTasks()
+   SC.renderer.Stop() #safely close rendering window!
    
 
 

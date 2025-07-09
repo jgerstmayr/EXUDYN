@@ -80,9 +80,12 @@ You can view and download this file on Github: `stlFileImport.py <https://github
    #revolute joint (free z-axis)
    
    #revolute joint option 3:
-   AddRevoluteJoint(mbs, body0=oGround, body1=b0, point=[0,0,0], 
-                     axis=[0,0,1], useGlobalFrame=True, showJoint=True,
-                     axisRadius=0.2*w, axisLength=1.4*w)
+   mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[0,0,0], axis=[0,0,1], 
+                           axisRadius=0.2*w, axisLength=1.4*w)
+   
+   # AddRevolute*Joint(mbs, body0=oGround, body1=b0, point=[0,0,0], 
+   #                   axis=[0,0,1], useGlobalFrame=True, showJoint=True,
+   #                   axisRadius=0.2*w, axisLength=1.4*w)
    
    #assemble system before solving
    mbs.Assemble()
@@ -104,17 +107,17 @@ You can view and download this file on Github: `stlFileImport.py <https://github
    SC.visualizationSettings.nodes.drawNodesAsPoint=False
    SC.visualizationSettings.nodes.showBasis=True
    
-   exu.StartRenderer()
+   SC.renderer.Start()
    if 'renderState' in exu.sys: #reload old view
-       SC.SetRenderState(exu.sys['renderState'])
+       SC.renderer.SetState(exu.sys['renderState'])
    
-   mbs.WaitForUserToContinue() #stop before simulating
+   SC.renderer.DoIdleTasks() #stop before simulating
    
    mbs.SolveDynamic(simulationSettings = simulationSettings,
                     solverType=exu.DynamicSolverType.TrapezoidalIndex2)
    
-   SC.WaitForRenderEngineStopFlag() #stop before closing
-   exu.StopRenderer() #safely close rendering window!
+   SC.renderer.DoIdleTasks() #stop before closing
+   SC.renderer.Stop() #safely close rendering window!
    
 
 

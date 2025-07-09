@@ -72,7 +72,7 @@ You can view and download this file on Github: `contactCoordinateTest.py <https:
    def springForce(mbs, t, itemIndex, u, v, k, d, offset, mu, muPropZone):
        p = 0*L+u-r
        data = mbs.systemData.GetDataCoordinates()
-       #print("p=", p, ", contact=", data[0])
+       #exu.Print("p=", p, ", contact=", data[0])
        if data[0] == 0:
            return k*p + d*v
        else:
@@ -190,15 +190,15 @@ You can view and download this file on Github: `contactCoordinateTest.py <https:
    #simulationSettings.timeIntegration.simulateInRealtime = True
    
    if useGraphics:
-       exu.StartRenderer()              #start graphics visualization
-       mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
+       SC.renderer.Start()              #start graphics visualization
+       SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
    
    #start solver:
    mbs.SolveDynamic(solverType=exu.DynamicSolverType.TrapezoidalIndex2, simulationSettings=simulationSettings) #chose index2, can handle adaptive steps
    #mbs.SolveDynamic(solverType=exu.DynamicSolverType.RK67, simulationSettings=simulationSettings)
    
    if useGraphics:
-       exu.StopRenderer()               #safely close rendering window!
+       SC.renderer.Stop()               #safely close rendering window!
    
    u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
    exu.Print('contactCoordinateTest=',u[1])

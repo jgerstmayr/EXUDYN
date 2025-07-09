@@ -39,7 +39,7 @@ You can view and download this file on Github: `interactiveTutorial.py <https://
    mbs.interactiveMode=True
    
    #start graphics visualization
-   exu.StartRenderer()
+   SC.renderer.Start()
    
    #better visible nodes:
    SC.visualizationSettings.nodes.drawNodesAsPoint=False
@@ -69,7 +69,7 @@ You can view and download this file on Github: `interactiveTutorial.py <https://
    mbs.SolveDynamic(exu.SimulationSettings())
    
    #stop rendering window
-   exu.StopRenderer()
+   SC.renderer.Stop()
    
    #visualize results:
    mbs.SolutionViewer()

@@ -112,7 +112,7 @@ You can view and download this file on Github: `kinematicTreeTest.py <https://gi
    
    simulationSettings = exu.SimulationSettings()
    simulationSettings.solutionSettings.writeSolutionToFile=False
-   simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h) #must be integer
+   simulationSettings.timeIntegration.numberOfSteps = tEnd/h
    simulationSettings.timeIntegration.endTime = tEnd
    simulationSettings.timeIntegration.verboseMode = 1
    
@@ -123,14 +123,14 @@ You can view and download this file on Github: `kinematicTreeTest.py <https://gi
    SC.visualizationSettings.openGL.multiSampling = 4
    
    if useGraphics:
-       exu.StartRenderer()              #start graphics visualization
-       mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
+       SC.renderer.Start()              #start graphics visualization
+       SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
    
    mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.RK44)
    
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
-       exu.StopRenderer()               #safely close rendering window!
+       SC.renderer.DoIdleTasks()#wait for pressing 'Q' to quit
+       SC.renderer.Stop()               #safely close rendering window!
    
    #evaluate final (=current) output values
    q = mbs.GetNodeOutput(nGeneric, exu.OutputVariableType.Coordinates)

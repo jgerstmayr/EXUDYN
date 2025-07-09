@@ -252,12 +252,12 @@ You can view and download this file on Github: `ANCFmovingRigidbody.py <https://
    
    solveDynamic = True
    if solveDynamic: 
-       exu.StartRenderer()
+       SC.renderer.Start()
    
        mbs.SolveDynamic(simulationSettings)
    
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    else:
        simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-8 #*100 #can be quite small; WHY?
@@ -275,7 +275,7 @@ You can view and download this file on Github: `ANCFmovingRigidbody.py <https://
        simulationSettings.staticSolver.pauseAfterEachStep = False
        simulationSettings.staticSolver.stabilizerODE2term = 100*0.0
    
-       exu.StartRenderer()
+       SC.renderer.Start()
    
        mbs.SolveStatic(simulationSettings)
    
@@ -289,10 +289,9 @@ You can view and download this file on Github: `ANCFmovingRigidbody.py <https://
        print('sol_t='+str(sol_t))
    
    
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
-   # exu.InfoStat();
    
    
    

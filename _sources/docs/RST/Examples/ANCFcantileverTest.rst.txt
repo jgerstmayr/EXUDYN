@@ -115,10 +115,10 @@ You can view and download this file on Github: `ANCFcantileverTest.py <https://g
    
    if doDynamicSimulation:
        ## do dynamic simulation
-       exu.StartRenderer()
+       SC.renderer.Start()
        mbs.SolveDynamic(simulationSettings)
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
        ## 
    else:
        ## perform static simulation with manual load stepping

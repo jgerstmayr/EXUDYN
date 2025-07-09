@@ -5,7 +5,7 @@
 ObjectContactSphereSphere
 =========================
 
-[UNDER CONSTRUCTION] A simple contact connector between two spheres. The connector implements at least the same functionality as in GeneralContact and is intended for simple setups and for testing, while GeneralContact is much more efficient due to parallelization approaches and efficient contact search.
+A simple contact connector between two spheres, using various contact models and the option for contact of sphere inside hollow sphere (marker1). The connector implements at least the same functionality as in GeneralContact and is intended for simple setups and for testing, while GeneralContact is much more efficient due to parallelization approaches and efficient contact search.
 
 Authors: Gerstmayr Johannes, Weyrer Sebastian
 
@@ -25,7 +25,9 @@ The item \ **ObjectContactSphereSphere**\  with type = 'ContactSphereSphere' has
 * | **nodeNumber** [\ :math:`n_d`\ , type = NodeIndex, default = invalid (-1)]:
   | node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is the plastic overlap of the Edinburgh Adhesive Elasto-Plastic Model, initialized usually with 0 and set back to 0 in case that spheres have been separated.
 * | **spheresRadii** [\ :math:`[r_0,r_1]\tp`\ , type = Vector2D, size = 2, default = [-1.,-1.]]:
-  | Vector containing radius of sphere 0 and radius of sphere 1 [SI:m]
+  | list containing radius of sphere 0 and radius of sphere 1 [SI:m].
+* | **isHollowSphere1** [type = Bool, default = False]:
+  | flag, which determines, if sphere attached to marker 1 (radius 1) is a hollow sphere.
 * | **dynamicFriction** [\ :math:`\mu_d`\ , type = UReal, default = 0.]:
   | dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, Section :ref:`sec-module-physics`\ 
 * | **frictionProportionalZone** [\ :math:`v_{reg}`\ , type = UReal, default = 1e-3]:
@@ -49,7 +51,7 @@ The item \ **ObjectContactSphereSphere**\  with type = 'ContactSphereSphere' has
 * | **minimumImpactVelocity** [\ :math:`\dot\delta_\mathrm{-,min}`\ , type = UReal, default = 0.]:
   | minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact)
 * | **impactModel** [\ :math:`m_\mathrm{impact}`\ , type = UInt, default = 0]:
-  | number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping still added, if not set to zero!
+  | number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!
 * | **activeConnector** [type = Bool, default = True]:
   | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
 * | **visualization** [type = VObjectContactSphereSphere]:
@@ -74,16 +76,18 @@ DESCRIPTION of ObjectContactSphereSphere
 
 \ **The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**\ :
 
-* | ``Director3``\ : 
-  | contains normalized vector from marker 0 to marker 1
+* | ``Position``\ : 
+  | contact center point (also given for positive gap, when no contact occurs)
 * | ``Displacement``\ : 
   | global displacement vector between the two spheres midpoints
 * | ``DisplacementLocal``\ : 
-  | 3D Vector, containing only gap (Z-component)
+  | 1D Vector, containing only gap
 * | ``Velocity``\ : 
   | global relative velocity between the two spheres midpoints
 * | ``Force``\ : 
   | global contact force vector
+* | ``Director1``\ : 
+  | contains normalized vector from marker 0 to marker 1
 * | ``Torque``\ : 
   | global torque due to friction on marker 0; to obetain torque on marker 1, multiply the torque with the factor \ :math:`\frac{r_1+g/2}{r_0+g/2}`\ 
 
@@ -146,19 +150,26 @@ This section outlines the computation of the forces acting on the two spheres wh
 
    Two spheres that are in contact, showing a force on marker 1 in normal direction due to overlap; forces on marker 0 act in opposite direction.
 
+Calculations reflect the case for outer contact of two spheres using \ :math:`h_1=1`\ . 
+In case that isHollowSphere1=True, we set \ :math:`h_1=-1`\  while the remaining formulas remain unchanged.
+
 For the following, the gap \ :math:`g`\  between the two spheres is computed as
 
 .. math::
 
-   g = || \LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0} || - (r_0 + r_1)
+   g = h_1 || \LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0} || - (r_0 + h_1 r_1)
 
 
-and the overlap \ :math:`\delta`\  is the negated gap: \ :math:`\delta=-g`\ . In the contact case, the overlap \ :math:`\delta`\  is positive. The normal vector \ :math:`\LU{0}{{\mathbf{n}}}`\  points from marker 0 to marker 1 and is computed with
+and the overlap \ :math:`\delta`\  is the negated gap: \ :math:`\delta=-g`\ . In the contact case, the overlap \ :math:`\delta`\  is positive. 
+The normal vector \ :math:`\LU{0}{{\mathbf{n}}}`\  points from marker 0 to the contact point,
 
 .. math::
 
-   \LU{0}{{\mathbf{n}}} = \frac{\LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0}}{|| \LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0} ||} .
+   \LU{0}{{\mathbf{n}}} = h_1 \frac{\LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0}}{|| \LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0} ||} .
 
+
+which in case of sphere-sphere contact, \ :math:`\LU{0}{{\mathbf{n}}}`\  points from marker 0 to marker 1, and 
+in case of sphere-hollowsphere contact, \ :math:`\LU{0}{{\mathbf{n}}}`\  points from marker 1 to marker 0.
 
 The scalar normal (gap) velocity \ :math:`v_\mathrm{\delta,n}`\  is computed with the velocities \ :math:`\LU{0}{{\mathbf{v}}}_{m0}=\LU{0}{\dot{{\mathbf{p}}}}_{m0}`\  and \ :math:`\LU{0}{{\mathbf{v}}}_{m1}=\LU{0}{\dot{{\mathbf{p}}}}_{m1}`\ 
 
@@ -179,7 +190,7 @@ To take the angular velocity of the spheres into account, the velocities \ :math
 
 .. math::
 
-   \LU{0}{{\mathbf{v}}}_{a0} = \LU{0}{{\mathbf{v}}}_{m0} + \LU{0}{\tomega}_{m0} \times \left(\LU{0}{{\mathbf{n}}}\cdot \left(r_0-\frac{\delta}{2}\right)\right) , \qquad \LU{0}{{\mathbf{v}}}_{a1} = \LU{0}{{\mathbf{v}}}_{m1} + \LU{0}{\tomega}_{m1} \times \left(-\LU{0}{{\mathbf{n}}}\cdot \left(r_1-\frac{\delta}{2}\right)\right) .
+   \LU{0}{{\mathbf{v}}}_{a0} = \LU{0}{{\mathbf{v}}}_{m0} + \LU{0}{\tomega}_{m0} \times \left(\LU{0}{{\mathbf{n}}}\cdot \left(r_0-\frac{\delta}{2}\right)\right) , \qquad \LU{0}{{\mathbf{v}}}_{a1} = \LU{0}{{\mathbf{v}}}_{m1} + h_1 \LU{0}{\tomega}_{m1} \times \left(-\LU{0}{{\mathbf{n}}}\cdot \left(r_1-h_1 \frac{\delta}{2}\right)\right) .
 
 
 The normal force acting on marker 1 is generally written as
@@ -198,38 +209,38 @@ where \ :math:`f_c`\  is the elastic and \ :math:`f_d`\  the damping part. The d
 
 The negative sign is because of the damping acting against the gap velocity: in the case of a positive normal (gap) velocity, the damping acts against \ :math:`\LU{0}{{\mathbf{n}}}`\  for marker 1. The elastic force \ :math:`f_c`\  is computed depending on the chosen impact model.
 
-+  \ :math:`m_\mathrm{impact}=0`\ : the Adhesive Elasto-Plastic model described in  is used. This model captures the key bulk behavior of cohesive powders and granular soils. For the impact model, the plastic overlap \ :math:`\delta_p`\  is needed. It is computed with
-  
+CASE \ :math:`m_\mathrm{impact}=0`\ : the Adhesive Elasto-Plastic model described in  is used. This model captures the key bulk behavior of cohesive powders and granular soils. For the impact model, the plastic overlap \ :math:`\delta_p`\  is needed. It is computed with
+
 .. math::
 
    \delta_p=\lambda_\mathrm{p}^{\frac{1}{n_\mathrm{exp}}}\delta .
 
 
-  The Adhesive Elasto-Plastic model distinguishes three different cases, modeling the loading and unloading behavior of the spheres:
-  
+The Adhesive Elasto-Plastic model distinguishes three different cases, modeling the loading and unloading behavior of the spheres:
+
 .. math::
 
-   f_c= \begin{cases} -f_\mathrm{adh} + k_c \delta^{n_\mathrm{exp}} & \text{if } k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right) \geq k_c\delta^{n_\mathrm{exp}} \\ -f_\mathrm{adh} + k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right) & \text{if } k_c\delta^{n_\mathrm{exp}} > k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}}\right) > -k_\mathrm{adh}\delta^{n_\mathrm{adh}} \\ -f_\mathrm{adh}-k_\mathrm{adh}\delta^{n_\mathrm{adh}} & \text{if } -k_\mathrm{adh}\delta^{n_\mathrm{adh}} > k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right) \end{cases} .
+   f_c= \begin{cases} -f_\mathrm{adh} + k_c \delta^{n_\mathrm{exp}} & \text{if } k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right) \geq k_c\delta^{n_\mathrm{exp}} \\ -f_\mathrm{adh} + k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right) & \text{if } k_c\delta^{n_\mathrm{exp}} > k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}}\right) > -k_\mathrm{adh}\delta^{n_\mathrm{adh}} \\ -f_\mathrm{adh}-k_\mathrm{adh}\delta^{n_\mathrm{adh}} & \text{if } -k_\mathrm{adh}\delta^{n_\mathrm{adh}} > k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right) \end{cases}.
 
 
 Note that \ :math:`k_2`\  is computed with \ :math:`k_2 = k_c/(1-\lambda_\mathrm{P})`\ . The terms with the stiffness \ :math:`k_c`\  and \ :math:`k_2`\  have a positive sign, since they act in the direction of \ :math:`\LU{0}{{\mathbf{n}}}`\  for marker 1. The constant adhesion force \ :math:`f_\mathrm{adh}`\  and the stiffness \ :math:`k_\mathrm{adh}`\  act against \ :math:`\LU{0}{{\mathbf{n}}}`\ , which corresponds to a force sticking the spheres together.
 
-+  \ :math:`m_\mathrm{impact}=1`\ : the restitution model proposed by Hunt and Crossley in  is used to simulate the energy loss of the spheres during contact:
-  
+CASE \ :math:`m_\mathrm{impact}=1`\ : the restitution model proposed by Hunt and Crossley in  is used to simulate the energy loss of the spheres during contact:
+
 .. math::
 
    f_c=k_c \delta^{n_\mathrm{exp}} + \lambda \delta^{n_\mathrm{exp}} v_\mathrm{\delta,n}
 
 
-  with
-  
+with
+
 .. math::
 
    \lambda = \frac{k_c}{\dot\delta_\mathrm{-}}\frac{3}{2}(e_\mathrm{res}-1) .
 
 
-  The restitution coefficient \ :math:`e_\mathrm{res}`\  describes the ration of the normal (gap) velocity before and after the impact of the spheres. In the case of \ :math:`e_\mathrm{res}<1`\ , the impact has a plastic portion, resulting in a force acting against \ :math:`\LU{0}{{\mathbf{n}}}`\  for marker 1, which is why \ :math:`\lambda`\  must be negative in that case. \ :math:`\dot\delta_\mathrm{-}`\  is the initial relative velocity, which is either the minimum impact velocity or the normal (negated gap) velocity:
-  
+The restitution coefficient \ :math:`e_\mathrm{res}`\  describes the ration of the normal (gap) velocity before and after the impact of the spheres. In the case of \ :math:`e_\mathrm{res}<1`\ , the impact has a plastic portion, resulting in a force acting against \ :math:`\LU{0}{{\mathbf{n}}}`\  for marker 1, which is why \ :math:`\lambda`\  must be negative in that case. \ :math:`\dot\delta_\mathrm{-}`\  is the initial relative velocity, which is either the minimum impact velocity or the normal (negated gap) velocity:
+
 .. math::
 
    \dot\delta_\mathrm{-} = \max{\left(\dot\delta_\mathrm{-,min}; -v_\mathrm{\delta,n} \right)}
@@ -237,12 +248,11 @@ Note that \ :math:`k_2`\  is computed with \ :math:`k_2 = k_c/(1-\lambda_\mathrm
 
 Note that the Hunt-Crossley restitution is valid for a very small energy loss (\ :math:`e_\mathrm{res}\approx1`\ ) .
 
-+  \ :math:`m_\mathrm{impact}=2`\ : a generalization of the Hunt-Crossley restitution proposed by Carvalho and Martins in  is used for \ :math:`e_\mathrm{res} > \frac{1}{3}`\  and a model proposed by Gonthier et al. in  is used for impacts with a high plastic proportion, \ :math:`e_\mathrm{res} < \frac{1}{3}`\ . Note that the two models are identical at \ :math:`e_\mathrm{res} = \frac{1}{3}`\ . \ :math:`\lambda`\  is therefore computed as follows:
-  
+CASE \ :math:`m_\mathrm{impact}=2`\ : a generalization of the Hunt-Crossley restitution proposed by Carvalho and Martins in  is used for \ :math:`e_\mathrm{res} > \frac{1}{3}`\  and a model proposed by Gonthier et al. in  is used for impacts with a high plastic proportion, \ :math:`e_\mathrm{res} < \frac{1}{3}`\ . Note that the two models are identical at \ :math:`e_\mathrm{res} = \frac{1}{3}`\ . \ :math:`\lambda`\  is therefore computed as follows:
+
 .. math::
 
-   \lambda= \begin{cases} \frac{k_c}{\dot\delta_\mathrm{-}}\frac{3}{2}(e_\mathrm{res}-1)\frac{11-e_\mathrm{res}}{1+9e_\mathrm{res}} & \text{if } e_\mathrm{res} > \frac{1}{3} \\ \frac{k_c}{\dot\delta_\mathrm{-}}\frac{e_\mathrm{rep}^2-1}{e_\mathrm{rep}} & \text{if } e_\mathrm{res} > 0 \\ \end{cases} .
-
+   \lambda= \begin{cases} \frac{k_c}{\dot\delta_\mathrm{-}}\frac{3}{2}(e_\mathrm{res}-1)\frac{11-e_\mathrm{res}}{1+9e_\mathrm{res}} & \text{if } e_\mathrm{res} > \frac{1}{3} \\ \frac{k_c}{\dot\delta_\mathrm{-}}\frac{e_\mathrm{rep}^2-1}{e_\mathrm{rep}} & \text{if } e_\mathrm{res} > 0 \\ \end{cases}.
 
 
 The tangential force acting on marker 1 due to the friction model acts against the tangential velocity \ :math:`{\mathbf{v}}_\mathrm{\delta,t}`\ , see the computation of \ :math:`{\mathbf{v}}_\mathrm{\delta,t}`\  in Equation \ :eq:`eq-ossctangentialvelocity`\ . Thus, the tangential force for marker 1 is computed as
@@ -263,14 +273,14 @@ the force acting on marker 0 is \ :math:`\LU{0}{{\mathbf{f}}}_{m0}=-\LU{0}{{\mat
 
 .. math::
 
-   \LU{0}{\ttau}_{m1}=-\LU{0}{{\mathbf{n}}}\left( r_1-\frac{1}{2}\delta \right) \times \LU{0}{{\mathbf{f}}}_{m1} ,
+   \LU{0}{\ttau}_{m1}=-h_1 \LU{0}{{\mathbf{n}}}\left( r_1-h_1 \frac{1}{2}\delta \right) \times \LU{0}{{\mathbf{f}}}_{m1} ,
 
 
 and on marker 0 as
 
 .. math::
 
-   \LU{0}{\ttau}_{m0}=\LU{0}{{\mathbf{n}}} \left(r_0-\frac{1}{2}\delta \right) \times \LU{0}{{\mathbf{f}}}_{m0}= \LU{0}{{\mathbf{n}}}\left( r_0-\frac{1}{2}\delta \right) \times -\LU{0}{{\mathbf{f}}}_{m1} .
+   \LU{0}{\ttau}_{m0}=\LU{0}{{\mathbf{n}}} \left(r_0-\frac{1}{2}\delta \right) \times \LU{0}{{\mathbf{f}}}_{m0}= \LU{0}{{\mathbf{n}}}\left( r_0-\frac{1}{2}\delta \right) \times \left( -\LU{0}{{\mathbf{f}}}_{m1} \right) .
 
 
 It can be seen that the torque due to the connector is the same for both spheres, if \ :math:`r_0=r_1`\  applies.
@@ -278,7 +288,7 @@ It can be seen that the torque due to the connector is the same for both spheres
 
 Relevant Examples and TestModels with weblink:
 
-    \ `newtonsCradle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/newtonsCradle.py>`_\  (Examples/), \ `contactSphereSphereTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactSphereSphereTest.py>`_\  (TestModels/), \ `contactSphereSphereTestEAPM.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactSphereSphereTestEAPM.py>`_\  (TestModels/)
+    \ `newtonsCradle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/newtonsCradle.py>`_\  (Examples/), \ `rollerBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rollerBearningModel.py>`_\  (Examples/), \ `contactSphereSphereTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactSphereSphereTest.py>`_\  (TestModels/), \ `contactSphereSphereTestEAPM.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactSphereSphereTestEAPM.py>`_\  (TestModels/), \ `createSphereQuadContact.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createSphereQuadContact.py>`_\  (TestModels/), \ `createSphereTriangleContact.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createSphereTriangleContact.py>`_\  (TestModels/), \ `sphereTriangleTest2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sphereTriangleTest2.py>`_\  (TestModels/)
 
 
 

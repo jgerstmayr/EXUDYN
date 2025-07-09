@@ -34,7 +34,7 @@ You can view and download this file on Github: `rigidRotor3Drunup.py <https://gi
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
-   print('EXUDYN version='+exu.GetVersionString())
+   print('EXUDYN version='+exu.config.Version())
    
    L=1                     #rotor axis length
    isSymmetric = True
@@ -188,14 +188,14 @@ You can view and download this file on Github: `rigidRotor3Drunup.py <https://gi
        SC.visualizationSettings.window.renderWindowSize = [1600,1080]
    
    
-   exu.StartRenderer()              #start graphics visualization
-   mbs.WaitForUserToContinue()    #wait for pressing SPACE bar to continue
+   SC.renderer.Start()              #start graphics visualization
+   SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
    
    #start solver:
    mbs.SolveDynamic(simulationSettings)
    
-   #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
-   exu.StopRenderer()               #safely close rendering window!
+   #SC.renderer.DoIdleTasks()#wait for pressing 'Q' to quit
+   SC.renderer.Stop()               #safely close rendering window!
    
    #evaluate final (=current) output values
    u = mbs.GetNodeOutput(n1, exu.OutputVariableType.AngularVelocity)

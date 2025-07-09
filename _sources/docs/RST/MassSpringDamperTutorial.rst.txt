@@ -47,7 +47,7 @@ in case of reporting some compatibility issues:
 
 .. code-block:: python
 
-  print('EXUDYN version='+exu.GetVersionString(True))
+  print('EXUDYN version='+exu.config.Version(True))
 
 
 Using the powerful Python language, we can define some variables for our problem, which will also be used for the analytical solution:
@@ -170,7 +170,7 @@ All settings for simulation, see according reference section, can be provided in
   simulationSettings = exu.SimulationSettings()
   simulationSettings.solutionSettings.solutionWritePeriod = 5e-3 #output interval general
   simulationSettings.solutionSettings.sensorsWritePeriod = 5e-3  #output interval of sensors
-  simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h) #must be integer
+  simulationSettings.timeIntegration.numberOfSteps = tEnd/h
   simulationSettings.timeIntegration.endTime = tEnd
   simulationSettings.displayComputationTime = True               #show how fast
 
@@ -195,8 +195,8 @@ In order to visualize the results online, a renderer can be started. As our comp
 
 .. code-block:: python
 
-  exu.StartRenderer()              #start graphics visualization
-  #mbs.WaitForUserToContinue()     #wait for SPACE bar or 'Q' to continue (in render window!)
+  SC.renderer.Start()              #start graphics visualization
+  #SC.renderer.DoIdleTasks()       #wait for SPACE bar or 'Q' to continue (in render window!)
 
 
 As the simulation is still very fast, we will not see the motion of our node. Using a very small step size of, e.g., \ ``h=1e-7``\  in the lines above allows us to visualize the resulting oscillations in realtime.
@@ -214,8 +214,8 @@ Sometimes you would like to wait until closing the render window, using \ ``Wait
 
 .. code-block:: python
 
-  #SC.WaitForRenderEngineStopFlag()#wait for pressing 'Q' to quit
-  exu.StopRenderer()               #safely close rendering window!
+  #SC.renderer.DoIdleTasks()       #wait for pressing 'Q' to quit
+  SC.renderer.Stop()               #safely close rendering window!
 
 
 If you run this code, e.g. in Spyder or Visual Studio Code, it may take a 1-2 seconds to complete. However, the time spent is only related to some overhead in the Python environment and for the visualization. The simulation itself will only take around 3-10 milliseconds, in which a large overhead is due to file writing.

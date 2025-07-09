@@ -156,8 +156,8 @@ You can view and download this file on Github: `LShapeGeomExactBeam2D.py <https:
    
    ## start graphics
    if useGraphics:
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
    
    ## start static solver
    mbs.SolveStatic(simulationSettings)
@@ -168,8 +168,8 @@ You can view and download this file on Github: `LShapeGeomExactBeam2D.py <https:
    
    ## stop graphics
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    exu.Print('solution of LShapeGeomExactBeam2D=',uLast[1]) #use y-coordinate
    

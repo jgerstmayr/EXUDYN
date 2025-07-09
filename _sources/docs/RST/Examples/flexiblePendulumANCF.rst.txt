@@ -133,16 +133,16 @@ You can view and download this file on Github: `flexiblePendulumANCF.py <https:/
    #SC.visualizationSettings.bodies.beams.crossSectionTiling = 8
    
    if useGraphics:
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
    
    success = mbs.SolveDynamic(simulationSettings, 
                               exudyn.DynamicSolverType.TrapezoidalIndex2)
    
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       #SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!        
+       SC.renderer.DoIdleTasks()
+       #SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!        
    
    
    #%%++++++++++++++++++

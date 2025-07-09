@@ -119,17 +119,17 @@ You can view and download this file on Github: `rigidBodyTutorial2.py <https://g
    SC.visualizationSettings.openGL.multiSampling = 4
    SC.visualizationSettings.general.autoFitScene = False
    
-   exu.StartRenderer()
+   SC.renderer.Start()
    if 'renderState' in exu.sys: #reload previous model view
-       SC.SetRenderState(exu.sys['renderState'])
+       SC.renderer.SetState(exu.sys['renderState'])
    
-   mbs.WaitForUserToContinue() #stop before simulating
+   SC.renderer.DoIdleTasks() #stop before simulating
    
    mbs.SolveDynamic(simulationSettings = simulationSettings,
                     solverType=exu.DynamicSolverType.TrapezoidalIndex2)
    
-   SC.WaitForRenderEngineStopFlag() #stop before closing
-   exu.StopRenderer() #safely close rendering window!
+   SC.renderer.DoIdleTasks() #stop before closing
+   SC.renderer.Stop() #safely close rendering window!
    
    #plot some sensor output
    

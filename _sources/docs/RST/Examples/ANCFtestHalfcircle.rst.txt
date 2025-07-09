@@ -146,7 +146,7 @@ You can view and download this file on Github: `ANCFtestHalfcircle.py <https://g
    
    solveDynamic = False
    if solveDynamic: 
-       exu.StartRenderer()
+       SC.renderer.Start()
        simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon = 1e-9*0.25
        
        def UFchangeLoad(mbs, t):
@@ -158,8 +158,8 @@ You can view and download this file on Github: `ANCFtestHalfcircle.py <https://g
        mbs.SolveDynamic(simulationSettings)
        #v = mbs.CallObjectFunction(1,'GetAngularVelocity',{'localPosition':[L/2,0,0],'configuration':'Current'})
        #print('angular vel='+str(v))
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    else:
        simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-9*0.25
@@ -168,7 +168,7 @@ You can view and download this file on Github: `ANCFtestHalfcircle.py <https://g
    #    simulationSettings.staticSolver.newton.absoluteTolerance = 1e-10
        simulationSettings.staticSolver.newton.maxIterations = 50 #for bending into circle
        
-       exu.StartRenderer()
+       SC.renderer.Start()
    
        doLoadStepping = False
        if doLoadStepping:
@@ -217,8 +217,8 @@ You can view and download this file on Github: `ANCFtestHalfcircle.py <https://g
            mbs.SolveStatic(simulationSettings)
    
    
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    
 

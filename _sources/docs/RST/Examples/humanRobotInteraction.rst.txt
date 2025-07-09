@@ -492,16 +492,16 @@ You can view and download this file on Github: `humanRobotInteraction.py <https:
    # SC.visualizationSettings.openGL.shadow=0.3 #don't do this for fine meshes!
    SC.visualizationSettings.openGL.light0position=[-6,2,12,0]
    
-   exu.StartRenderer()
+   SC.renderer.Start()
    if 'renderState' in exu.sys: #reload old view
-       SC.SetRenderState(exu.sys['renderState'])
+       SC.renderer.SetState(exu.sys['renderState'])
    
-   mbs.WaitForUserToContinue() #stop before simulating
+   SC.renderer.DoIdleTasks() #stop before simulating
    
    mbs.SolveDynamic(simulationSettings = simulationSettings,
                      solverType=exu.DynamicSolverType.TrapezoidalIndex2)
    
-   exu.StopRenderer() #safely close rendering window!
+   SC.renderer.Stop() #safely close rendering window!
    
    mbs.SolutionViewer()
    

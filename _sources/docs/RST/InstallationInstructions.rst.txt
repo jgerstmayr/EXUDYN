@@ -13,17 +13,17 @@ Requirements for Exudyn ?
 
 
 Exudyn only works with Python. Thus, you need an appropriate Python installation.
-So far (2021-07), we tested
+So far (2025-07), we thoroughly tested
 
++  Currently (2025-07), we support Python 3.9 - Python 3.13 \ **conda environments**\  on Windows, Linux and MacOS (please report configurations that do not work on GitHub/issues); the upgrades to newer Python versions will usually be done in line with new Python releases (every October).
++  \ **Anaconda 2025-06, 64bit, Python 3.12**\  with Spyder 6.0
 +  \ **Anaconda 2023-07, 64bit, Python 3.11**\  with Spyder 5.4
 +  \ **Anaconda 2021-11, 64bit, Python 3.9**\ \ (older Anaconda3 versions can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\ )
-+  Currently, we support Python 3.8 - Python 3.12 \ **conda environments**\  on Windows, Linux and MacOS (please report configurations that do not work on GitHub/issues).
 +  \ **Spyder 5.1.5**\  (with Python 3.9.7, 64bit) and \ **Spyder 4.1.3**\  (with Python 3.7.7, 64bit), which is included in the Anaconda installation\ (Note that it is important that Spyder, Python and Exudyn  are \ **either**\  32bit \ **or**\  64bit and are compiled up to the same minor version, i.e., 3.7.x. There will be a strange .DLL error, if you mix up 32/64bit. It is possible to install both, Anaconda 32bit and Anaconda 64bit -- then you should follow the recommendations of paths as suggested by Anaconda installer.); Spyder works with all virtual environments
 
 Many alternative options exist:
 
-+  Users report successful use of Exudyn with \ **Visual Studio Code**\ . \ **Jupyter**\  has been tested with some examples; both environments should work with default settings.
-+  Anaconda 2020-11 with \ **Python 3.8**\  and Spyder 4.1.5: no problems except some regular crashes of Spyder, TestSuite runs without problems since Exudyn version 1.0.182.
++  Many users report successful use of Exudyn with \ **Visual Studio Code**\ . \ **Jupyter**\  has been tested with some examples; both environments should work with default settings.
 +  Alternative option with more stable Spyder (as compared to Spyder 4.1.3): Anaconda, 64bit, Python 3.6.5)\ (Anaconda 64bit with Python3.6 can be downloaded via the repository archive \ ``https://repo.anaconda.com/archive/``\  choosing \ ``Anaconda3-5.2.0-Windows-x86_64.exe``\  for 64bit.)
 
 If you plan to extend the C++ code, we recommend to use Microsoft Visual Studio (VS2022) and previously VS2017\ (Note: VS2019 has problems with the library 'Eigen' and therefore leads to erroneous results with the sparse solver.) to compile your code, which offers Python 3.x compatibility.
@@ -108,7 +108,7 @@ Install from specific Wheel (Ubuntu and Windows)
 ------------------------------------------------
 
 A way to install the Python package Exudyn is to use the so-called 'wheels' (file ending \ ``.whl``\ ).
-NOTE that this approach usually is not required; just use the pip installer of the previous section!
+NOTE that this approach usually is not required; usually, just use the pip installer of the previous section!
 
 \ **Ubuntu**\ :
 
@@ -123,6 +123,7 @@ For Ubuntu 20.04 (which by default uses Python 3.8) this may read (version numbe
 
 +  \ ``Python 3.8, 64bit``\ : pip3 install dist\ :math:`\backslash`\ exudyn-1.0.20-cp38-cp38-linux_x86_64.whl
 
+We regularly upgrade to newer Ubuntu versions (like 24.04) and we did not observe any issues.
 NOTE that your installation may have environments with different Python versions, so install that Exudyn version appropriately!
 If the wheel installation does not work on Ubuntu, it is highly recommended to build Exudyn for your specific system as given in Section :ref:`sec-install-installinstructions-buildubuntu`\ .
 
@@ -130,7 +131,7 @@ If the wheel installation does not work on Ubuntu, it is highly recommended to b
 
 First, open an Anaconda prompt:
 
-+  EITHER calling: START->Anaconda->... OR go to anaconda/Scripts folder and call activate.bat
++  EITHER calling the Anaconda prompt directly using: START->Anaconda->... OR go to anaconda/Scripts folder and call activate.bat
 +  You can check your Python version then, by running \ ``python``\ \ (\ ``python3``\  under Ubuntu 18.04), the output reads like:
   
    \ ``Python 3.6.5 | Anaconda, Inc.| (default, Mar 29 2018, 13:32:41) [ MSC v.1900 64 bit (AMD64)] on win32``\ 
@@ -151,8 +152,8 @@ For Windows the installation commands may read (version number 1.0.20 may be dif
 .. _sec-install-installinstructions-buildwindows:
 
 
-Build and install Exudyn under Windows 10?
-------------------------------------------
+Build and install Exudyn under Windows 10
+-----------------------------------------
 
 Note that there are a couple of pre-requisites, depending on your system and installed libraries. For Windows 10, the following steps proved to work:
 
@@ -181,8 +182,8 @@ This will add a wheel in the \ ``dist``\  folder.
 .. _sec-install-installinstructions-buildmacos:
 
 
-Build and install Exudyn under Mac OS X?
-----------------------------------------
+Build and install Exudyn under Mac OS X
+---------------------------------------
 
 Installation and building on Mac OS X is less frequently tested, but successful compilation including GLFW has been achieved.
 Requirements are an according Anaconda (or Miniconda) installation.
@@ -234,8 +235,8 @@ Note that you need to run
 
 .. code-block:: python
 
-  exudyn.StartRenderer()
-  exudyn.DoRendererIdleTasks(-1)
+  SC.renderer.Start()
+  SC.renderer.DoIdleTasks()
 
 
 in order to interact with the render window, as there is only a single-threaded version available for Mac OS.
@@ -244,8 +245,8 @@ in order to interact with the render window, as there is only a single-threaded 
 .. _sec-install-installinstructions-buildubuntu:
 
 
-Build and install Exudyn under Ubuntu?
---------------------------------------
+Build and install Exudyn under Ubuntu
+-------------------------------------
 
 Having a new Ubuntu 18.04 standard installation (e.g. using a VM virtual box environment), the following steps need to be done (Python \ **3.6**\  is already installed on Ubuntu 18.04, otherwise use \ ``sudo apt install python3``\ )\ (see also the youtube video: `https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx <https://www.youtube.com/playlist?list=PLZduTa9mdcmOh5KVUqatD9GzVg_jtl6fx>`_):
 

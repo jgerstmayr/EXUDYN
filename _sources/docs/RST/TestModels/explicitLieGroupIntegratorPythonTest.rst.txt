@@ -139,8 +139,8 @@ You can view and download this file on Github: `explicitLieGroupIntegratorPython
    
    
    if useGraphics: #only start graphics once, but after background is set
-       exu.StartRenderer()
-       #mbs.WaitForUserToContinue()
+       SC.renderer.Start()
+       #SC.renderer.DoIdleTasks()
    
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -195,8 +195,8 @@ You can view and download this file on Github: `explicitLieGroupIntegratorPython
    
    
    if useGraphics: #only start graphics once, but after background is set
-       #SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       #SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    if useGraphics:
    

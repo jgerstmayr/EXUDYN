@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exudyn &mdash; Exudyn1.9.83.dev1 1.9.83.dev1 documentation</title>
+  <title>Exudyn &mdash; Exudynunknown unknown documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=86202e69"></script>
+      <script src="../../../_static/documentation_options.js?v=3f1b9271"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudyn1.9.83.dev1
+            Exudynunknown
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -63,6 +63,7 @@
 <li class="toctree-l2"><a class="reference internal" href="GeneralInformation.html">General information on Python-C++ interface</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Exudyn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SystemContainer.html">SystemContainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Renderer.html">Renderer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="MainSystem.html">MainSystem</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SystemData.html">SystemData</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Symbolic.html">Symbolic</a></li>
@@ -92,7 +93,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudyn1.9.83.dev1</a>
+          <a href="../../../index.html">Exudynunknown</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -124,11 +125,6 @@
 <p>The class <strong>exudyn</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
-<div class="line"><strong>GetVersionString</strong>(<em>addDetails</em> = False):</div>
-<div class="line">Get Exudyn built version as string (if addDetails=True, adds more information on compilation Python version, platform, etc.; the Python micro version may differ from that you are working with; AVX2 shows that you are running a AVX2 compiled version)</div>
-</div>
-</li>
-<li><div class="line-block">
 <div class="line"><strong>Help</strong>():</div>
 <div class="line">Show basic help information</div>
 </div>
@@ -143,100 +139,20 @@
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>StartRenderer</strong>(<em>verbose</em> = 0):</div>
-<div class="line">Start OpenGL rendering engine (in separate thread) for visualization of rigid or flexible multibody system; use verbose=1 to output information during OpenGL window creation; verbose=2 produces more output and verbose=3 gives a debug level; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of e.g. Spyder</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>StopRenderer</strong>():</div>
-<div class="line">Stop OpenGL rendering engine</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>IsRendererActive</strong>():</div>
-<div class="line">returns True if GLFW renderer is available and running; otherwise False</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>DoRendererIdleTasks</strong>(<em>waitSeconds</em> = 0):</div>
-<div class="line">Call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g. waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 to wait until window is closed</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>SolveStatic</strong>(<em>mbs</em>, <em>simulationSettings</em> = exudyn.SimulationSettings(), <em>updateInitialValues</em> = False, <em>storeSolver</em> = True):</div>
-<div class="line">Static solver function, mapped from module <code class="docutils literal notranslate"><span class="pre">solver</span></code>, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see Section <a class="reference internal" href="MainSystem.html#sec-mainsystemextensions-solvestatic"><span class="std std-ref">Function: SolveStatic</span></a>; for background on solvers, see Section <a class="reference internal" href="../Solvers.html#sec-solvers"><span class="std std-ref">Solvers</span></a></div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>SolveDynamic</strong>(<em>mbs</em>, <em>simulationSettings</em> = exudyn.SimulationSettings(), <em>solverType</em> = exudyn.DynamicSolverType.GeneralizedAlpha, <em>updateInitialValues</em> = False, <em>storeSolver</em> = True):</div>
-<div class="line">Dynamic solver function, mapped from module <code class="docutils literal notranslate"><span class="pre">solver</span></code>, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see Section <a class="reference internal" href="MainSystem.html#sec-mainsystemextensions-solvedynamic"><span class="std std-ref">Function: SolveDynamic</span></a>; for background on solvers, see Section <a class="reference internal" href="../Solvers.html#sec-solvers"><span class="std std-ref">Solvers</span></a></div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>ComputeODE2Eigenvalues</strong>(<em>mbs</em>, <em>simulationSettings</em> = exudyn.SimulationSettings(), <em>useSparseSolver</em> = False, <em>numberOfEigenvalues</em> = -1, <em>setInitialValues</em> = True, <em>convert2Frequencies</em> = False):</div>
-<div class="line">Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module <code class="docutils literal notranslate"><span class="pre">solver</span></code>; for details on the Python interface see Section <a class="reference internal" href="MainSystem.html#sec-mainsystemextensions-computeode2eigenvalues"><span class="std std-ref">Function: ComputeODE2Eigenvalues</span></a></div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>SetOutputPrecision</strong>(<em>numberOfDigits</em>):</div>
-<div class="line">Set the precision (integer) for floating point numbers written to console (reset when simulation is started!); NOTE: this affects only floats converted to strings inside C++ exudyn; if you print a float from Python, it is usually printed with 16 digits; if printing numpy arrays, 8 digits are used as standard, to be changed with numpy.set_printoptions(precision=16); alternatively convert into a list</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>SetLinalgOutputFormatPython</strong>(<em>flagPythonFormat</em>):</div>
-<div class="line">True: use Python format for output of vectors and matrices; False: use matlab format</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>SetWriteToConsole</strong>(<em>flag</em>):</div>
-<div class="line">set flag to write (True) or not write to console; default = True</div>
-</div>
-</li>
-<li><div class="line-block">
 <div class="line"><strong>SetWriteToFile</strong>(<em>filename</em>, <em>flagWriteToFile</em> = True, <em>flagAppend</em> = False, <em>flagFlushAlways</em> = False):</div>
-<div class="line">set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write <code class="docutils literal notranslate"><span class="pre">exu.SetWriteToFile('',</span> <span class="pre">False)</span></code> to close the output file; in case of flagFlushAlways=True, file will be finalized immediately in every print command;</div>
+<div class="line">set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write <code class="docutils literal notranslate"><span class="pre">exu.SetWriteToFile('',</span> <span class="pre">False)</span></code> to close the output file; in case of flagFlushAlways=True, file will be finalized immediately in every print command, but may be slower;</div>
 <div class="line"><em>Example</em>:</div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exu</span><span class="o">.</span><span class="nf">SetWriteToConsole</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span> <span class="c1">#no output to console</span>
-<span class="n">exu</span><span class="o">.</span><span class="nf">SetWriteToFile</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;testOutput.log&#39;</span><span class="p">,</span> <span class="n">flagWriteToFile</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">flagAppend</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exudyn</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">printToConsole</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#no output to console</span>
+<span class="n">exu</span><span class="o">.</span><span class="nf">SetWriteToFile</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;testOutput.log&#39;</span><span class="p">,</span> <span class="n">flagWriteToFile</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">flagAppend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">flagFlushAlways</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">exu</span><span class="o">.</span><span class="nf">Print</span><span class="p">(</span><span class="s1">&#39;print this to file&#39;</span><span class="p">)</span>
 <span class="n">exu</span><span class="o">.</span><span class="nf">SetWriteToFile</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="c1">#terminate writing to file which closes the file</span>
 </pre></div>
 </div>
 </li>
 <li><div class="line-block">
-<div class="line"><strong>SetPrintDelayMilliSeconds</strong>(<em>delayMilliSeconds</em>):</div>
-<div class="line">add some delay (in milliSeconds) to printing to console, in order to let Spyder process the output; default = 0</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>Print</strong>(<em>*args</em>):</div>
-<div class="line">this allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: print(‘test=’,42); allows to redirect all output to file given by SetWriteToFile(…); does not output in case that SetWriteToConsole is set to False</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>SuppressWarnings</strong>(<em>flag</em>):</div>
-<div class="line">set flag to suppress (=True) or enable (=False) warnings</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>InfoStat</strong>(<em>writeOutput</em> = True):</div>
-<div class="line">Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>Go</strong>():</div>
-<div class="line">Creates a SystemContainer SC and a main multibody system mbs</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>Demo1</strong>(<em>showAll</em>):</div>
-<div class="line">Run simple demo without graphics to check functionality, see exudyn/demos.py</div>
-</div>
-</li>
-<li><div class="line-block">
-<div class="line"><strong>Demo2</strong>(<em>showAll</em>):</div>
-<div class="line">Run advanced demo without graphics to check functionality, see exudyn/demos.py</div>
+<div class="line"><strong>Print</strong>():</div>
+<div class="line">this allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: exu.Print(‘test=’,42,sep=’ ‘,end=’’,flush=True); allows to redirect all output to file given by SetWriteToFile(…); does not print to console in case that exudyn.config.printToConsole eis set to False</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -246,12 +162,67 @@
 </li>
 <li><div class="line-block">
 <div class="line"><strong>__version__</strong>:</div>
-<div class="line">stores the current version of the Exudyn package</div>
+<div class="line">contains the current version of the Exudyn package</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>symbolic</strong>:</div>
 <div class="line">the symbolic submodule for creating symbolic variables in Python, see documentation of Symbolic; For details, see Section Symbolic.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>config</strong>:</div>
+<div class="line">global config settings, like precision, print behavior, warnings, etc.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>config.suppressWarnings</strong>:</div>
+<div class="line">flag to suppress all warnings (default=False)</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>config.outputPrecision</strong>:</div>
+<div class="line">change precision (number of digits) in C++ and Python output</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>config.linalgOutputFormatPython</strong>:</div>
+<div class="line">True (default): use Python format for output of vectors and matrices; False: use Matlab format</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>config.printDelayMilliSeconds</strong>:</div>
+<div class="line">add some delay (in milliSeconds) to printing to console (exudyn.Print), in order to let console (e.g. Spyder) process the output; default = 0</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>config.printFlushAlways</strong>:</div>
+<div class="line">flush always buffers when using exudyn.Print(…) to write to file or console; this is needed if you are streaming text or showing counters in parameter variation; default=False</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>config.printToConsole</strong>:</div>
+<div class="line">enables or disables writing to console with exudyn.Print(…); default=True</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>config.printToFile</strong>:</div>
+<div class="line">flag that shows if writing to file with exudyn.Print(…) is enabled; flag is readonly</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>config.printFileName</strong>:</div>
+<div class="line">file name for writing to file with exudyn.Print(…); flag is readonly</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>config.printToFileAppend</strong>:</div>
+<div class="line">flag that shows if append mode is used for writing to file with exudyn.Print(…); flag is readonly</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><strong>config.Version</strong>(<em>addDetails</em> = False):</div>
+<div class="line">Get Exudyn built version as string (if addDetails=True, adds more information on compilation Python version, platform, etc.; the Python micro version may differ from that you are working with; AVX2 shows that you are running a AVX2 compiled version)</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -265,6 +236,11 @@
 </div>
 </li>
 <li><div class="line-block">
+<div class="line"><strong>special.InfoStat</strong>(<em>writeOutput</em> = True):</div>
+<div class="line">Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag</div>
+</div>
+</li>
+<li><div class="line-block">
 <div class="line"><strong>special.solver</strong>:</div>
 <div class="line">special solver attributes and functions; not intended for regular users; for available features, see the C++ code class PySpecialSolver</div>
 </div>
@@ -275,13 +251,18 @@
 </div>
 </li>
 <li><div class="line-block">
+<div class="line"><strong>special.solver.multiThreadingLoadBalancing</strong>:</div>
+<div class="line">if True (=default), multithreaded code parts (in particular solver and raytracing) use load balancing, which may give better performance in case of non-equilibrated loads; (mobile) Intel CPUs may perform significantly better without load balancing</div>
+</div>
+</li>
+<li><div class="line-block">
 <div class="line"><strong>variables</strong>:</div>
-<div class="line">this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables[“myvar”] = 42</div>
+<div class="line">this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables[“myvar”] = 42; can be used in particular to exchange data between different mbs or between packages by importing exudyn.variables wherever needed.</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>sys</strong>:</div>
-<div class="line">this dictionary is used and reserved by the system, e.g. for testsuite, graphics or system function to store module-wide data in order to avoid global Python variables; the variable exu.sys[‘renderState’] contains the last render state after exu.StopRenderer() and can be used for subsequent simulations</div>
+<div class="line">this dictionary is used and reserved by the system, e.g. for testsuite, graphics or system function to store module-wide data in order to avoid global Python variables; the variable exu.sys[‘renderState’] contains the last render state after SC.renderer.Stop() and can be used for subsequent simulations</div>
 </div>
 </li>
 </ul>

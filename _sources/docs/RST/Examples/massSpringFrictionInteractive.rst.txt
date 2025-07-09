@@ -199,7 +199,7 @@ You can view and download this file on Github: `massSpringFrictionInteractive.py
    #simulationSettings.timeIntegration.realtimeFactor = 0.2
    
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   #data obtained from SC.GetRenderState(); use np.round(d['modelRotation'],4)
+   #data obtained from SC.renderer.GetState(); use np.round(d['modelRotation'],4)
    # SC.visualizationSettings.openGL.initialModelRotation = [[ 0.33  ,  0.0882, -0.9399],
    #                                                        [ 0.0819,  0.9892,  0.1216],
    #                                                        [ 0.9404, -0.1171,  0.3192]]
@@ -214,7 +214,7 @@ You can view and download this file on Github: `massSpringFrictionInteractive.py
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
    SC.visualizationSettings.general.autoFitScene = False #otherwise, renderState not accepted for zoom
    
-   exu.StartRenderer()
+   SC.renderer.Start()
    
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
    
@@ -289,9 +289,9 @@ You can view and download this file on Github: `massSpringFrictionInteractive.py
            mbs.SetObjectParameter(mbs.variables['oCCband'],'offset',mbs.variables['bandVelocity'])
    
    SC.visualizationSettings.general.autoFitScene = False #use loaded render state
-   exu.StartRenderer()
+   SC.renderer.Start()
    if 'renderState' in exu.sys:
-       SC.SetRenderState(exu.sys[ 'renderState' ])
+       SC.renderer.SetState(exu.sys[ 'renderState' ])
    
    dialog = InteractiveDialog(mbs=mbs, simulationSettings=simulationSettings,
                               simulationFunction=SimulationUF, 
@@ -301,7 +301,7 @@ You can view and download this file on Github: `massSpringFrictionInteractive.py
                               plots=plots, fontSize=12)
    
    # #stop solver and close render window
-   exu.StopRenderer() #safely close rendering window!
+   SC.renderer.Stop() #safely close rendering window!
    
    
 

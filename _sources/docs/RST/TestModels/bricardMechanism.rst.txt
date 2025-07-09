@@ -164,10 +164,10 @@ You can view and download this file on Github: `bricardMechanism.py <https://git
    SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
    
    if useGraphics:
-       exu.StartRenderer()
+       SC.renderer.Start()
        if 'renderState' in exu.sys:
-           SC.SetRenderState(exu.sys['renderState'])
-       mbs.WaitForUserToContinue()
+           SC.renderer.SetState(exu.sys['renderState'])
+       SC.renderer.DoIdleTasks()
    
    dof=mbs.ComputeSystemDegreeOfFreedom()
    exu.Print('dof',dof)
@@ -177,7 +177,7 @@ You can view and download this file on Github: `bricardMechanism.py <https://git
    mbs.SolveDynamic(simulationSettings = simulationSettings)
    
    if useGraphics:
-       exu.StopRenderer()
+       SC.renderer.Stop()
    
    if False:
        #%%++++

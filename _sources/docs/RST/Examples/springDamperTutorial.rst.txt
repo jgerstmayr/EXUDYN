@@ -34,7 +34,7 @@ You can view and download this file on Github: `springDamperTutorial.py <https:/
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
    
-   print('EXUDYN version='+exu.GetVersionString(True))
+   print('EXUDYN version='+exu.config.Version(True))
    
    L=0.5
    mass = 1.6          #mass in kg
@@ -86,7 +86,7 @@ You can view and download this file on Github: `springDamperTutorial.py <https:/
    simulationSettings = exu.SimulationSettings()
    simulationSettings.solutionSettings.solutionWritePeriod = 5e-3 #output interval general
    simulationSettings.solutionSettings.sensorsWritePeriod = 5e-3  #output interval of sensors
-   simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h) #must be integer
+   simulationSettings.timeIntegration.numberOfSteps = tEnd/h
    simulationSettings.timeIntegration.endTime = tEnd
    
    simulationSettings.timeIntegration.verboseMode = 1             #show some solver output
@@ -98,14 +98,14 @@ You can view and download this file on Github: `springDamperTutorial.py <https:/
    SC.visualizationSettings.nodes.drawNodesAsPoint=False
    SC.visualizationSettings.nodes.defaultSize=0.1
    
-   exu.StartRenderer()            #start graphics visualization
-   #mbs.WaitForUserToContinue()    #wait for pressing SPACE bar or 'Q' to continue
+   SC.renderer.Start()            #start graphics visualization
+   #SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar or 'Q' to continue
    
    #start solver:
    mbs.SolveDynamic(simulationSettings)
    
-   #SC.WaitForRenderEngineStopFlag() #wait for pressing 'Q' to quit
-   exu.StopRenderer()               #safely close rendering window!
+   #SC.renderer.DoIdleTasks() #wait for pressing 'Q' to quit
+   SC.renderer.Stop()               #safely close rendering window!
    
    #evaluate final (=current) output values
    u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)

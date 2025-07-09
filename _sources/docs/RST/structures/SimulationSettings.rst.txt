@@ -338,9 +338,9 @@ TimeIntegrationSettings has the following items:
 * | **minimumStepSize** [type = PReal, default = 1e-8]:
   | \ ``simulationSettings.timeIntegration.minimumStepSize``\ 
   | \ :math:`h\_{min}`\ : if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)
-* | **numberOfSteps** [type = PInt, default = 100]:
+* | **numberOfSteps** [type = PReal, default = 100]:
   | \ ``simulationSettings.timeIntegration.numberOfSteps``\ 
-  | \ :math:`n\_{steps}`\ : number of steps in time integration; (maximum) stepSize \ :math:`h`\  is computed from \ :math:`h = \frac{t\_{end} - t\_{start}}{n\_{steps}}`\ ; for automatic stepsize control, this stepSize is the maximum steps size, \ :math:`h\_{max} = h`\ 
+  | \ :math:`n\_{steps}`\ : number of steps in time integration; (maximum) stepSize \ :math:`h`\  is computed from \ :math:`h = \frac{t\_{end} - t\_{start}}{n\_{steps}}`\ ; for automatic stepsize control, this stepSize is the maximum steps size, \ :math:`h\_{max} = h`\ ; numberOfSteps can be a float-point type, but must be close to an integer (relative tolerance \ :math:`100\cdot\varepsilon`\ ) as it is silently rounded to int
 * | **realtimeFactor** [type = PReal, default = 1]:
   | \ ``simulationSettings.timeIntegration.realtimeFactor``\ 
   | if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)
@@ -503,6 +503,9 @@ Parallel has the following items:
 * | **taskSplitTasksPerThread** [type = PInt, default = 16]:
   | \ ``simulationSettings.parallel.taskSplitTasksPerThread``\ 
   | this is the number of subtasks that every thread receives; minimum is 1, the maximum should not be larger than 100; this factor is 1 as long as the taskSplitMinItems is not reached; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+* | **useLoadBalancing** [type = bool, default = True]:
+  | \ ``simulationSettings.parallel.useLoadBalancing``\ 
+  | if True, parallel computation uses load balancing, which may give better performance in case of non-equilibrated loads; (mobile) Intel CPUs may perform better without load balancing; this flag is coupled to exudyn.special.solver.multiThreadingLoadBalancing (overwritten when solver starts with multithreading)
 
 
 

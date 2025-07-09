@@ -550,7 +550,7 @@ You can view and download this file on Github: `ROSMobileManipulator.py <https:/
        SC.visualizationSettings.openGL.shadow = 0.5
        SC.visualizationSettings.openGL.light0position = [0, -2, 10, 0]
        SC.visualizationSettings.openGL.shadowPolygonOffset = 0.1
-       #mbs.WaitForUserToContinue()
+       #SC.renderer.DoIdleTasks()
    
        simulationSettings = exu.SimulationSettings() #takes currently set values or default values
        simulationSettings.timeIntegration.numberOfSteps = int(tEnd/hstepsize)
@@ -589,11 +589,11 @@ You can view and download this file on Github: `ROSMobileManipulator.py <https:/
        SC.visualizationSettings.openGL.initialCenterPoint = [0, 2, 0] # -1.7, -2, -2]
        # SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
        # SC.visualizationSettings.contour.outputVariableComponent = 2 #0=x, 1=y, 2=z
-       exu.StartRenderer()
-       mbs.WaitForUserToContinue()
-       exu.SolveDynamic(mbs, simulationSettings, showHints=True, storeSolver = True)
+       SC.renderer.Start()
+       SC.renderer.DoIdleTasks()
+       mbs.SolveDynamic(simulationSettings, showHints=True, storeSolver = True)
        #mbs.WaitForRenderEngineStopFlag()
-       exu.StopRenderer()
+       SC.renderer.Stop()
        
        # for debug 
        if debugFlag: 

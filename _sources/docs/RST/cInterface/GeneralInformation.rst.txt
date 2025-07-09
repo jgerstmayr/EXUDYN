@@ -50,13 +50,16 @@ Furthermore, there are a couple of commands available directly in the \ ``exudyn
    #  import exudyn module:
    import exudyn as exu
    #  print detailed exudyn version, Python version (at which it is compiled):
-   exu.GetVersionString(addDetails = True)
+   exu.config.Version(addDetails = True)
    #  set precision of C++ output to console
-   exu.SetOutputPrecision(numberOfDigits)
+   exu.config.precision = numberOfDigits
    #  turn on/off output to console
-   exu.SetWriteToConsole(False)
+   exu.config.printToConsole = False
    #  invalid index, may depend on compilation settings:
    nInvalid = exu.InvalidIndex() #the invalid index, depends on architecture and version
+   #  run basic demos (without/with graphics):
+   exu.demos.Demo1()
+   exu.demos.Demo2()
 
 Understanding the usage of functions for python object \ ``SystemContainer``\  of the module \ ``exudyn``\ , the following examples might help:
 
@@ -155,7 +158,7 @@ Exceptions and Error Messages
 
 There are several levels of type and argument checks, leading to different types of errors and exceptions. The according error messages are non-unique, because they may be raised in Python modules or in C++, and they may be raised on different levels of the code. Error messages depend on Python version and on your iPython console. Very often the exception may be called \ ``ValueError``\ , but it mustnot mean that it is a wrong error, but it could also be, e.g., a wrong order of function calls.
 
-As an example, a type conversion error is raised when providing wrong argument types, e.g., try \ ``exu.GetVersionString('abc')``\ :
+As an example, a type conversion error is raised when providing wrong argument types, e.g., try \ ``exu.config.Version('abc')``\ :
 
 .. code-block:: 
    :linenos:
@@ -163,9 +166,9 @@ As an example, a type conversion error is raised when providing wrong argument t
    Traceback (most recent call last):
    
    File "C:\Users\username\AppData\Local\Temp\ipykernel_24988\2212168679.py", line 1, in <module>
-       exu.GetVersionString('abc')
+       exu.config.Version('abc')
    
-   TypeError: GetVersionString(): incompatible function arguments. The following argument types are supported:
+   TypeError: Version(): incompatible function arguments. The following argument types are supported:
        1. (addDetails: bool = False) -> str
    
    Invoked with: 'abc'

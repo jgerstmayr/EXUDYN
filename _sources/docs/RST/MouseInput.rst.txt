@@ -29,7 +29,7 @@ The following table includes the mouse functions:
      - | zoom
      - | use mouse wheel to zoom (on touch screens 'pinch-to-zoom' might work as well) 
 
-Current mouse coordinates can be obtained via \ ``SystemContainer.GetCurrentMouseCoordinates()``\ .
+Current mouse coordinates can be obtained via \ ``SystemContainer.renderer.GetMouseCoordinates()``\ .
 
 6D mouse
 --------

@@ -35,7 +35,7 @@ You can view and download this file on Github: `lugreFrictionTest.py <https://gi
    
    SC = exu.SystemContainer()
    mbs = SC.AddSystem()
-   exu.Print('EXUDYN version='+exu.GetVersionString())
+   exu.Print('EXUDYN version='+exu.config.Version())
    
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #Lugre friction text model: Canudas de Wit et al. (1995):    
@@ -263,10 +263,10 @@ You can view and download this file on Github: `lugreFrictionTest.py <https://gi
    useGraphics = True
    if useGraphics:
        SC.visualizationSettings.general.autoFitScene = False
-       exu.StartRenderer()
+       SC.renderer.Start()
        if 'renderState' in exu.sys:
-           SC.SetRenderState(exu.sys['renderState'])
-       mbs.WaitForUserToContinue()
+           SC.renderer.SetState(exu.sys['renderState'])
+       SC.renderer.DoIdleTasks()
    
    
        
@@ -276,8 +276,8 @@ You can view and download this file on Github: `lugreFrictionTest.py <https://gi
    
    
    if useGraphics:
-       SC.WaitForRenderEngineStopFlag()
-       exu.StopRenderer() #safely close rendering window!
+       SC.renderer.DoIdleTasks()
+       SC.renderer.Stop() #safely close rendering window!
    
    if useLugre:
        exu.Print('coords1=', list(mbs.GetSensorValues(sCoords1)) )

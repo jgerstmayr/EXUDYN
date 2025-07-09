@@ -79,8 +79,8 @@ You can view and download this file on Github: `doublePendulum2D.py <https://git
    # simulationSettings.displayComputationTime = True
    
    #simulate:
-   exu.StartRenderer()
-   mbs.WaitForUserToContinue()
+   SC.renderer.Start()
+   SC.renderer.DoIdleTasks()
    mbs.SolveDynamic(simulationSettings)
-   exu.StopRenderer()
+   SC.renderer.Stop()
 

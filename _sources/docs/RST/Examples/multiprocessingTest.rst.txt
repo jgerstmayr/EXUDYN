@@ -63,9 +63,9 @@ You can view and download this file on Github: `multiprocessingTest.py <https://
        simulationSettings.timeIntegration.endTime = tEnd
        simulationSettings.solutionSettings.coordinatesSolutionFileName = "coordinatesSolution"+str(int(x))+".txt"
        simulationSettings.solutionSettings.writeSolutionToFile = True #no concurrent writing to files ...!
-       #exu.StartRenderer() #don't do this in parallelization: will crash
+       #SC.renderer.Start() #don't do this in parallelization: will crash
        mbs.SolveDynamic(simulationSettings)
-       #exu.StopRenderer() #don't do this in parallelization: will crash
+       #SC.renderer.Stop() #don't do this in parallelization: will crash
    
        #check result, get current mass position at local position [0,0,0]
        result = mbs.GetObjectOutputBody(mass, exu.OutputVariableType.Position, [0,0,0])[0]

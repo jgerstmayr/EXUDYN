@@ -135,7 +135,7 @@ The following notation conventions are applied (\ **no exceptions!**\ ):
 +  examples for variable names: secondOrderSize, massMatrix, mThetaTheta
 +  examples for function/class names: \ ``SecondOrderSize``\ , \ ``EvaluateMassMatrix``\ , \ ``Position(const Vector3D\& localPosition)``\ 
 +  use the Get/Set...() convention if data is retrieved from a class (Get) or something is set in a class (Set); Use \ ``const T\& Get()/T\& Get``\  if direct access to variables is needed; Use Get/Set for pybind11
-+  example Get/Set: \ ``Real* GetDataPointer()``\ , \ ``Vector::SetAll(Real)``\ , \ ``GetTransposed()``\ , \ ``SetRotationalParameters(...)``\ , \ ``SetColor(...)``\ , ...
++  example Get/Set: \ ``Real* GetDataPointer()``\ , \ ``Vector::SetAll(Real)``\ , \ ``GetTransposed()``\ , \ \ ``SetRotationalParameters(...)``\ , \ ``SetColor(...)``\ , ...
 +  use 'Real' instead of double or float: for compatibility, also for AVX with SP/DP
 +  use 'Index' for array/vector size and index instead of size_t or int
 +  item: object, node, marker, load: anything handled within the computational/visualization systems
@@ -203,7 +203,7 @@ In the following, two use cases are shown, which show the simplicity of the proc
   
 +  \ ``ComputeMassMatrix``\ : computes the mass matrix either in sparse or dense mode; this function is performance-critical if the mass matrix is non-constant
 +  \ ``ComputeODE2LHS``\ : computes the \ :ref:`LHS <LHS>`\  generalized forces of the body; this function is performance-critical
-+  \ ``GetAccessFunctionTypes``\ : specifies, which access functions are available in \ ``GetAccessFunctionBody(...)``\ 
++  \ ``GetAccessFunctionTypes``\ : specifies, which access functions are available in \ \ ``GetAccessFunctionBody(...)``\ 
 +  \ ``GetAccessFunctionBody``\ : needs to compute functions for 'access' to the body, in the sense that e.g. forces or torques can be applied. 
 +  \ ``GetAvailableJacobians``\ : shall return the flags which jacobians of \ ``ComputeODE2LHS``\  need to be computed and which are available as functions; binary flags added up
 +  \ ``GetOutputVariableBody``\ : function needs to implement the output variables, such as position, acceleration, forces, etc. as defined in \ ``GetOutputVariableTypes()``\ 

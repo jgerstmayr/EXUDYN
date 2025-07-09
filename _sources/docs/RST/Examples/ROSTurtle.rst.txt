@@ -316,8 +316,8 @@ You can view and download this file on Github: `ROSTurtle.py <https://github.com
        SC.visualizationSettings.interactive.selectionRightMouse=False
    
    
-       exu.StartRenderer(True)
-       exu.SolveDynamic(mbs, simulationSettings)
+       SC.renderer.Start(True)
+       mbs.SolveDynamic(simulationSettings)
    
        return True
    

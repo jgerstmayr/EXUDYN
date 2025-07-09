@@ -194,7 +194,3 @@ Class function: PublishSystemStateUpdate
   | Martin Sereinig
   | \ ``**note``\ :        collects important exudyn system data and send it to ros-topic
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-
-    \ `ROSMassPoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ROSMassPoint.py>`_\  (Ex), \ `ROSMobileManipulator.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ROSMobileManipulator.py>`_\  (Ex), \ `ROSTurtle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ROSTurtle.py>`_\  (Ex)
-
