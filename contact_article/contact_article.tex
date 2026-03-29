@@ -1,0 +1,1584 @@
+\documentclass[12pt]{ctexart}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,siunitx,booktabs,multirow,gensymb}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,shapes.geometric,shadows}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\floatname{algorithm}{算法}
+\renewcommand{\algorithmicrequire}{\textbf{输入:}}
+\renewcommand{\algorithmicensure}{\textbf{输出:}}
+
+% --- 代码美化 ---
+\usepackage[most]{tcolorbox}
+\usepackage{xcolor}
+\usepackage{listings}
+\tcbuselibrary{listings}
+
+% 定义Python语法高亮颜色
+\definecolor{pyblue}{RGB}{0,102,204}
+\definecolor{pygreen}{RGB}{0,128,0}
+\definecolor{pyred}{RGB}{204,0,0}
+\definecolor{pyorange}{RGB}{255,140,0}
+\definecolor{pygray}{RGB}{128,128,128}
+\definecolor{pypurple}{RGB}{128,0,128}
+\definecolor{pycyan}{RGB}{0,128,128}
+\definecolor{pybg}{RGB}{248,248,248}
+
+% 定义C++语法高亮颜色
+\definecolor{cppblue}{RGB}{0,0,255}
+\definecolor{cppgreen}{RGB}{0,128,0}
+\definecolor{cppred}{RGB}{163,21,21}
+\definecolor{cpporange}{RGB}{255,165,0}
+\definecolor{cppgray}{RGB}{128,128,128}
+\definecolor{cpppurple}{RGB}{128,0,128}
+\definecolor{cppbg}{RGB}{248,248,255}
+
+% Python语言定义
+\lstdefinelanguage{Python3}{
+  language=Python,
+  morekeywords={and,as,assert,break,class,continue,def,del,elif,else,except,
+    False,finally,for,from,global,if,import,in,is,lambda,None,nonlocal,not,
+    or,pass,raise,return,True,try,while,with,yield,async,await,self},
+  sensitive=true,
+  morecomment=[l]{\#},
+  morecomment=[s]{"""}{"""},
+  morecomment=[s]{'''}{'''},
+  morestring=[b]',
+  morestring=[b]",
+  morestring=[b]',
+  morestring=[b]",
+  alsoletter={_},
+  alsoother={\$},
+  moredelim=[is][\color{pyorange}]{@}{@},
+}
+
+% C++语言定义增强
+\lstdefinestyle{C++Enhanced}{
+  language=C++,
+  morekeywords={auto,constexpr,decltype,nullptr,override,final,
+    noexcept,static_assert,thread_local,unique_ptr,shared_ptr,weak_ptr,
+    make_unique,make_shared,const_cast,static_cast,dynamic_cast,
+    reinterpret_cast,sizeof,alignof,alignas,decltype},
+  moredirectives={\#include,\#define,\#ifdef,\#ifndef,\#endif,\#pragma},
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]",
+  morestring=[b]',
+  alsoletter={_},
+  alsoother={\$,\&,\*,\->,::,&&,||,==,!=,<=,>=,<,>,+,-,/,\%,~,^,|,\&},
+}
+
+\newtcblisting{pythoncode}[1][]{
+  enhanced,
+  colback=pybg,
+  colframe=pyblue!70!black,
+  listing only,
+  listing options={
+    language=Python3,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{pyblue}\bfseries,
+    stringstyle=\color{pyred},
+    commentstyle=\color{pygreen}\itshape,
+    numbers=left,
+    numberstyle=\tiny\color{pygray}\ttfamily,
+    numbersep=8pt,
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    showstringspaces=false,
+    frame=single,
+    frameround=tttt,
+    framesep=5pt,
+    backgroundcolor=\color{pybg},
+    xleftmargin=15pt,
+    xrightmargin=5pt,
+    aboveskip=10pt,
+    belowskip=10pt,
+    captionpos=b,
+    emph={self,True,False,None},
+    emphstyle=\color{cpppurple}\bfseries
+  },
+  title={\textbf{Python 代码}: #1},
+  fonttitle=\bfseries\small,
+  coltitle=white,
+  colbacktitle=pyblue,
+  sharp corners,
+  drop shadow={shadow scale=1.1, shadow xshift=1pt, shadow yshift=-1pt},
+  boxrule=0.5pt,
+  arc=2pt,
+  outer arc=2pt,
+  attach boxed title to top left={yshift=-2mm,xshift=2mm}
+}
+
+% 简化的inline代码样式
+\newtcblisting{pythoninline}[1][]{
+  enhanced,
+  colback=pybg,
+  colframe=pyblue!50!black,
+  listing only,
+  listing options={
+    language=Python3,
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\color{pyblue},
+    stringstyle=\color{pyred},
+    commentstyle=\color{pygreen}\itshape,
+    numbers=none,
+    breaklines=true,
+    tabsize=2,
+    showstringspaces=false
+  },
+  arc=1mm,
+  boxrule=0.3pt,
+  left=2pt,right=2pt,top=1pt,bottom=1pt,
+  #1
+}
+
+% 用于高亮特定行的Python代码
+\newtcblisting{pythonhighlight}[2][]{
+  enhanced,
+  colback=pybg,
+  colframe=pyblue!70!black,
+  listing only,
+  listing options={
+    language=Python3,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{pyblue}\bfseries,
+    stringstyle=\color{pyred},
+    commentstyle=\color{pygreen}\itshape,
+    numbers=left,
+    numberstyle=\tiny\color{pygray}\ttfamily,
+    numbersep=8pt,
+    breaklines=true,
+    tabsize=4,
+    showstringspaces=false,
+    emphstyle={\color{pyorange}\bfseries\underbar},
+    moreemph={#2}
+  },
+  title={\textbf{Python 代码}: #1},
+  fonttitle=\bfseries\small,
+  coltitle=white,
+  colbacktitle=pyblue,
+  sharp corners,
+  drop shadow={shadow scale=1.1, shadow xshift=1pt, shadow yshift=-1pt},
+  boxrule=0.5pt,
+  arc=2pt,
+  outer arc=2pt
+}
+
+\newtcblisting{cppcode}[1][]{
+  enhanced,
+  colback=cppbg,
+  colframe=cppblue!70!black,
+  listing only,
+  listing options={
+    style=C++Enhanced,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{cppblue}\bfseries,
+    stringstyle=\color{cppred},
+    commentstyle=\color{cppgreen}\itshape,
+    numbers=left,
+    numberstyle=\tiny\color{cppgray}\ttfamily,
+    numbersep=8pt,
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    showstringspaces=false,
+    frame=single,
+    frameround=tttt,
+    framesep=5pt,
+    backgroundcolor=\color{cppbg},
+    xleftmargin=15pt,
+    xrightmargin=5pt,
+    aboveskip=10pt,
+    belowskip=10pt,
+    captionpos=b,
+    emph={Index,Real,Vector3,Matrix3D,NodeGenericData,ObjectContactFewTeeth,
+           ObjectContactCircleCircle,ObjectContactCurveCircles,
+           MarkerBodyRigid,SimulationSettings,DynamicSolverType,
+           PostNewtonFlags,GeneralizedAlpha},
+    emphstyle=\color{cpppurple}\bfseries
+  },
+  title={\textbf{C++ 代码}: #1},
+  fonttitle=\bfseries\small,
+  coltitle=white,
+  colbacktitle=cppblue,
+  sharp corners,
+  drop shadow={shadow scale=1.1, shadow xshift=1pt, shadow yshift=-1pt},
+  boxrule=0.5pt,
+  arc=2pt,
+  outer arc=2pt,
+  attach boxed title to top left={yshift=-2mm,xshift=2mm}
+}
+
+% 简化的inline C++代码样式
+\newtcblisting{cppinline}[1][]{
+  enhanced,
+  colback=cppbg,
+  colframe=cppblue!50!black,
+  listing only,
+  listing options={
+    style=C++Enhanced,
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\color{cppblue},
+    stringstyle=\color{cppred},
+    commentstyle=\color{cppgreen}\itshape,
+    numbers=none,
+    breaklines=true,
+    tabsize=2,
+    showstringspaces=false
+  },
+  arc=1mm,
+  boxrule=0.3pt,
+  left=2pt,right=2pt,top=1pt,bottom=1pt,
+  #1
+}
+
+% 用于高亮特定行的C++代码
+\newtcblisting{cpphighlight}[2][]{
+  enhanced,
+  colback=cppbg,
+  colframe=cppblue!70!black,
+  listing only,
+  listing options={
+    style=C++Enhanced,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{cppblue}\bfseries,
+    stringstyle=\color{cppred},
+    commentstyle=\color{cppgreen}\itshape,
+    numbers=left,
+    numberstyle=\tiny\color{cppgray}\ttfamily,
+    numbersep=8pt,
+    breaklines=true,
+    tabsize=4,
+    showstringspaces=false,
+    emphstyle={\color{cpporange}\bfseries\underbar},
+    moreemph={#2}
+  },
+  title={\textbf{C++ 代码}: #1},
+  fonttitle=\bfseries\small,
+  coltitle=white,
+  colbacktitle=cppblue,
+  sharp corners,
+  drop shadow={shadow scale=1.1, shadow xshift=1pt, shadow yshift=-1pt},
+  boxrule=0.5pt,
+  arc=2pt,
+  outer arc=2pt
+}
+
+% 额外的代码高亮环境
+\newtcblisting{algorithmcode}[1][]{
+  enhanced,
+  colback=pybg!90!white,
+  colframe=pyblue!50!black,
+  listing only,
+  listing options={
+    language=Python3,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{pyblue}\bfseries,
+    stringstyle=\color{pyred},
+    commentstyle=\color{pygreen}\itshape,
+    numbers=left,
+    numberstyle=\tiny\color{pygray}\ttfamily,
+    numbersep=5pt,
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=2,
+    showstringspaces=false,
+    frame=single,
+    frameround=tttt,
+    framesep=2pt,
+    backgroundcolor=\color{pybg!95!white},
+    xleftmargin=10pt,
+    xrightmargin=5pt,
+    aboveskip=8pt,
+    belowskip=8pt,
+    captionpos=b,
+    emph={def,class,if,else,for,while,return,import,from,as,try,except,finally},
+    emphstyle={\color{pyblue}\bfseries}
+  },
+  title={\textbf{算法代码}: #1},
+  fonttitle=\bfseries\small,
+  coltitle=white,
+  colbacktitle=pyblue!70!black,
+  sharp corners,
+  drop shadow={shadow scale=1.05, shadow xshift=0.5pt, shadow yshift=-0.5pt},
+  boxrule=0.4pt,
+  arc=1pt,
+  outer arc=1pt,
+  attach boxed title to top left={yshift=-1mm,xshift=1mm}
+}
+
+% 配置代码片段环境
+\newtcblisting{configcode}[1][]{
+  enhanced,
+  colback=pybg!95!white,
+  colframe=pyorange!50!black,
+  listing only,
+  listing options={
+    language=Python3,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{pyorange}\bfseries,
+    stringstyle=\color{pyred},
+    commentstyle=\color{pygreen}\itshape,
+    numbers=left,
+    numberstyle=\tiny\color{pygray}\ttfamily,
+    numbersep=5pt,
+    breaklines=true,
+    tabsize=2,
+    showstringspaces=false,
+    frame=single,
+    frameround=tttt,
+    framesep=2pt,
+    backgroundcolor=\color{pybg!98!white},
+    xleftmargin=10pt,
+    xrightmargin=5pt,
+    aboveskip=8pt,
+    belowskip=8pt,
+    captionpos=b,
+    emph={stiffness,damping,friction,contact,mesh,gear},
+    emphstyle={\color{pyorange}\bfseries}
+  },
+  title={\textbf{参数配置}: #1},
+  fonttitle=\bfseries\small,
+  coltitle=white,
+  colbacktitle=pyorange!70!black,
+  sharp corners,
+  drop shadow={shadow scale=1.05, shadow xshift=0.5pt, shadow yshift=-0.5pt},
+  boxrule=0.4pt,
+  arc=1pt,
+  outer arc=1pt,
+  attach boxed title to top left={yshift=-1mm,xshift=1mm}
+}
+
+% --- 链接与引用 ---
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=green!60!black,
+    urlcolor=magenta!70!black,
+    pdftitle={RV/少齿差减速器建模},
+    pdfauthor={}
+}
+\usepackage[nameinlink]{cleveref}
+\crefname{equation}{公式}{公式}
+\crefname{figure}{图}{图}
+\crefname{table}{表}{表}
+\crefname{algorithm}{算法}{算法}
+\crefname{section}{节}{节}
+
+\title{\bfseries RV/少齿差减速器振动、精度与刚度理论建模}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+本文阐述 RV 减速器与少齿差减速器的振动特性、传动精度与啮合刚度的理论建模方法。研究聚焦于三类自定义接触模型：少齿差内啮合的解析渐开线模型、摆线廓线与针列多点接触模型、滚针轴承圆孔配合模型。建模脚本涵盖齿廓几何生成、刚体建模、接触挂载到求解的完整流程。文中论述渐开线解析表达、时变啮合刚度、罚式接触力、接触搜索优化与数值稳健性处理等关键技术，给出算法伪代码与流程图。
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{研究背景与目标}
+
+\subsection{研究对象}
+RV 减速器与少齿差减速器是精密传动领域的核心部件，广泛应用于工业机器人、数控机床、航空航天等高精度场合~\cite{rvdynamic,rvfree}。其传动性能直接影响整机的定位精度、重复精度与动态响应特性。
+
+\textbf{少齿差传动}采用内啮合渐开线齿轮副~\cite{litvin}，外齿轮与内齿圈的齿数差通常为 1$\sim$4 齿，通过偏心机构实现大传动比输出。其特点是结构紧凑、承载能力强、传动平稳。
+
+\textbf{RV 减速器}（旋转矢量减速器）采用两级传动：第一级为渐开线行星齿轮，第二级为摆线针轮~\cite{cycloidmodel,cycloidltca}。摆线轮与针齿壳之间形成多点同时接触，具有高刚度、低回差的优点。
+
+\subsection{研究目标}
+本研究的核心目标是建立可重用的 RV/少齿差减速器多体动力学模型，实现以下功能：
+\begin{enumerate}
+  \item \textbf{振动特性分析}：计算系统固有频率、模态振型与强迫振动响应；
+  \item \textbf{传动精度评估}：量化传递误差、回程误差与动态定位精度；
+  \item \textbf{啮合刚度计算}：获取时变啮合刚度曲线，分析刚度波动对振动的激励；
+  \item \textbf{参数优化支持}：为齿廓修形、间隙补偿、预紧力调节等优化设计提供仿真依据。
+\end{enumerate}
+
+\subsection{总体技术路线}
+为实现上述目标，本研究采用以下技术路线：
+
+\begin{enumerate}
+  \item \textbf{自定义接触模型开发}：针对三类典型接触场景（渐开线内啮合、摆线-针列、圆-圆配合），开发专用罚式接触模型，避免通用有限元方法的计算冗余；
+  \item \textbf{解析几何表达}：采用渐开线参数方程直接表达齿廓，无需网格离散，保证几何精度与计算效率；
+  \item \textbf{时变刚度建模}：基于 Weber-Banaschek 方法与 Hertz 接触理论~\cite{johnson,litvin}，建立位置相关的单齿刚度模型，实现啮合刚度的实时计算；
+  \item \textbf{高效接触搜索}：采用角度预筛选、AABB 包围盒过滤与 Warm-start 活跃集技术，降低接触检测的计算复杂度；
+  \item \textbf{数值稳健性处理}：通过阻尼正则化、速度缓冲区与接触子步等技术，保证刚性系统的稳定积分。
+\end{enumerate}
+
+罚式接触的基本力学模型为：
+\begin{equation}
+ f_n = k_c \,\max(0,-g)^{n} + d_c \,\max(0,-\dot g), \qquad
+ \|f_t\| \le \mu \, f_n ,
+ \label{eq:penalty_contact}
+\end{equation}
+其中 $g$ 为有符号间隙（负值表示穿透），$k_c$ 为接触刚度，$d_c$ 为接触阻尼，$\mu$ 为摩擦系数，$n$ 为接触力指数（本研究取 $n=10/9$ 以逼近 Hertz 接触特性~\cite{johnson}）。
+
+\section{少齿差齿轮建模流程}
+
+本节详细阐述少齿差齿轮传动系统的完整建模流程，\\ 主要实现位于 \texttt{main/\allowbreak fewTeeth/\allowbreak fewTeeth.py} 脚本中。
+
+\subsection{齿轮几何参数配置}
+
+少齿差齿轮的几何由 \texttt{FewTeethGearPair} 数据结构定义，核心参数包括：
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lll}
+\toprule
+参数 & 符号 & 说明 \\ 
+\midrule
+外齿轮齿数 & $z_1$ & 主动轮齿数（如 60） \\ 
+内齿轮齿数 & $z_2$ & 从动轮齿数，$z_2 = z_1 + \Delta z$（如 62） \\ 
+模数 & $m$ & 齿轮尺寸基准（单位：m） \\ 
+压力角 & $\alpha$ & 标准压力角（通常 $20^\circ$） \\ 
+变位系数 & $x_1, x_2$ & 齿廓修形量（无量纲） \\ 
+齿顶高系数 & $h_a^*$ & 齿顶高与模数之比 \\ 
+顶隙系数 & $c^*$ & 顶隙与模数之比 \\ 
+\bottomrule
+\end{tabular}
+\caption{少齿差齿轮几何参数}
+\end{table}
+
+由上述参数可导出基圆、分度圆、齿顶圆、齿根圆半径及中心距：
+\begin{align}
+r &= \frac{m \cdot z}{2}, \quad r_b = r \cos\alpha, \\ 
+r_a &= r + m(h_a^* + x), \quad r_f = r - m(h_a^* + c^* - x), \\ a_0 &= \frac{m(z_2 - z_1)}{2} \cdot \frac{\cos\alpha}{\cos\alpha_0},
+\end{align}
+其中 $\alpha_0$ 为啮合角，由渐开线函数方程求解。
+
+\subsection{渐开线齿廓解析表达}
+
+齿廓采用参数化渐开线方程直接表达，避免网格离散误差。设参数 $u \in [0, 1]$ 表示从齿根到齿顶的位置，接触点半径为：
+\begin{equation}
+r(u) = r_{\min} + u \cdot (r_{\max} - r_{\min}),
+\end{equation}
+其中 $r_{\min} = \max(r_f, r_b)$，$r_{\max} = r_a$。
+
+齿廓点在局部坐标系中的位置为：
+\begin{align}
+\alpha_c &= \arccos(r_b / r), \\ 
+\theta_c &= \tan\alpha_c - \alpha_c, \quad \text{（渐开线函数）} \\ 
+\phi_c &= \begin{cases}
+\theta_{base} + \phi_{pitch} - \theta_c, & \text{外齿轮} \\ -	heta_{base} + \phi_{pitch} + \theta_c, & \text{内齿轮}
+\end{cases} \\ x &= m_f \cdot r \sin\phi_c, \quad y = r \cos\phi_c,
+\end{align}
+其中 $m_f = \pm 1$ 为齿面镜像系数（左/右齿面），$\theta_{base}$ 为齿厚半角，$\phi_{pitch}$ 为齿间角。
+
+齿廓切向量与二阶导数用于曲率计算与法向确定：
+\begin{equation}
+\frac{d\mathbf{p}}{du} = \frac{dr}{du}\begin{pmatrix} \sin\phi_c + r\cos\phi_c \cdot \frac{d\phi_c}{dr} \\ \cos\phi_c - r\sin\phi_c \cdot \frac{d\phi_c}{dr} \end{pmatrix}.
+\end{equation}
+
+\subsection{刚体与标记系统建立}
+
+系统包含以下主要刚体：
+\begin{itemize}
+  \item \textbf{输入轴}：通过转动约束施加恒定转速或扭矩；
+  \item \textbf{曲柄轴}（3 根）：均布于分布圆上，带偏心段；
+  \item \textbf{摆线轮}（2 片）：相位差 $180^\circ$，与曲柄偏心段配合；
+  \item \textbf{内齿圈壳体}：固定于地面，提供内啮合齿面；
+  \item \textbf{输入/输出法兰}：通过滚针轴承与曲柄轴连接；
+  \item \textbf{滚针}：每个轴承孔内布置若干滚针，形成滚动支撑。
+\end{itemize}
+
+每个刚体配置质量、惯性张量与可视化图形，并创建 \texttt{MarkerBodyRigid} 标记用于接触与约束定义。
+
+\subsection{接触对象挂载}
+
+针对不同接触场景，分别挂载对应的接触对象：
+
+\textbf{齿面接触}：为内齿圈的每个齿面单独创建 \texttt{ObjectContactFewTeeth} 对象，实现多齿同时接触：
+
+\begin{pythoncode}[齿面接触对象创建]
+for tooth_idx in range(z_inner):
+    for flank_side in ["left", "right"]:
+        node = mbs.AddNode(NodeGenericData(
+            initialCoordinates=[0.0]*7,
+            numberOfDataCoordinates=7))
+        obj = mbs.AddObject(ObjectContactFewTeeth(
+            markerNumbers=[mCycloid, mShell],
+            nodeNumber=node,
+            stiffnessOuter=stiffnessOuter_tooth,
+            stiffnessInner=stiffnessInner_tooth,
+            contactDamping=contactDamping_tooth,
+            ...))
+\end{pythoncode}
+
+\textbf{轴承接触}：曲柄偏心段与滚针、\\ 滚针与摆线轮孔之间采用 \texttt{ObjectContactCircleCircle}：
+
+\begin{pythoncode}[圆-圆接触创建]
+create_circle_contact(mbs,
+    markerA=crankshaft_markers_ecc[i],
+    markerB=mNeedle,
+    radiusA=r_crank_eccentric,
+    radiusB=r_needle,
+    stiffness=1e9, damping=1e3)
+\end{pythoncode}
+
+\section{摆线针轮建模流程}
+
+摆线针轮传动建模实现于 \texttt{main/internal\_func\_cycloid\_6\_1.py}，与少齿差建模的主要差异在于齿廓生成~\cite{cycloidmodel}。
+
+\subsection{摆线廓线方程}
+
+摆线轮齿廓由短幅外摆线方程生成~\cite{litvin}：
+\begin{align}
+x(\phi) &= -\left[(R_p - \delta_{R_p}) - \frac{r_p + \delta_r}{\sqrt{S'}}\right]\sin\left[(1-i_H)\phi - \delta\right] \nonumber \\ &
+- \frac{a}{R_p - \delta_{R_p}}\left[(R_p - \delta_{R_p}) - \frac{z_p(r_p + \delta_r)}{\sqrt{S'}}\right]\sin(i_H\phi + \delta), \\ y(\phi) &= \left[(R_p - \delta_{R_p}) - \frac{r_p + \delta_r}{\sqrt{S'}}\right]\cos\left[(1-i_H)\phi - \delta\right] \nonumber \\ &
+- \frac{a}{R_p - \delta_{R_p}}\left[(R_p - \delta_{R_p}) - \frac{z_p(r_p + \delta_r)}{\sqrt{S'}}\right]\cos(i_H\phi + \delta),
+\end{align}
+其中：
+\begin{itemize}
+  \item $z_p$ 为针齿数，$a$ 为偏心距，$R_p$ 为针齿分布圆半径，$r_p$ 为针齿半径；
+  \item $i_H = z_p/(z_p - 1)$ 为传动比；
+  \item $S' = 1 + K_1^2 - 2K_1\cos\phi$，$K_1 = a \cdot z_p / (R_p - \delta_{R_p})$；
+  \item $\delta_{R_p}, \delta_r, \delta$ 为修形量。
+\end{itemize}
+
+\subsection{等弧长重采样}
+
+为保证接触搜索的均匀性，对摆线廓线进行等弧长重采样。算法流程：
+\begin{enumerate}
+  \item 以高密度（如 $20n$ 点）采样原始曲线，计算累积弧长 $s(\phi)$；
+  \item 均匀划分目标弧长 $s_i = i \cdot L_{total} / n$；
+  \item 反插值求解对应参数 $\phi_i$，牛顿迭代修正：
+  \begin{equation}
+  \phi^{(k+1)} = \phi^{(k)} - \frac{s(\phi^{(k)}) - s_i}{\|d\mathbf{p}/d\phi\|}.
+  \end{equation}
+\end{enumerate}
+
+\subsection{摆线-针列接触挂载}
+
+摆线轮与针齿列之间采用 \texttt{ObjectContactCurveCircles} 实现一对多接触。该对象将摆线廓线表示为分段线段列表，针齿表示为多个圆：
+
+\begin{pythoncode}[曲线-多圆接触创建]
+obj = mbs.AddObject(ObjectContactCurveCircles(
+    markerNumbers=[mCycloid] + pin_markers,
+    segmentsData=cycloid_segments,
+    circlesRadii=pin_radii,
+    contactStiffness=1e7,
+    contactDamping=1e3,
+    dynamicFriction=0.03,
+    ...))
+\end{pythoncode}
+
+\section{建模关键技术与难点}
+
+\subsection{时变啮合刚度计算}
+
+齿轮啮合刚度是振动分析的核心参数，直接影响系统的动态响应特性~\cite{rvdynamic}。本研究采用 Weber-Banaschek 方法结合 Hertz 接触理论~\cite{johnson}进行计算，实现了位置相关的时变啮合刚度。
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=1.0,>=Stealth]
+  % 啮合刚度组成示意图
+  \draw[thick] (-5,0) -- (-3,0) -- (-3,2) -- (-5,2) -- cycle;
+  \node[align=center,text width=3cm] at (-4,1) {$k_{struct,1}$\\(外齿轮结构刚度)};
+  
+  \draw[thick] (-2,0) -- (0,0) -- (0,2) -- (-2,2) -- cycle;
+  \node[align=center,text width=3cm] at (-1,1) {$k_{struct,2}$\\(内齿轮结构刚度)};
+  
+  \draw[thick] (1,0) -- (3,0) -- (3,2) -- (1,2) -- cycle;
+  \node[align=center,text width=3cm] at (2,1) {$k_{contact}$\\(Hertz 接触刚度)};
+  
+  \draw[thick,->] (-4,-1) -- (-4,0);
+  \draw[thick,->] (-1,-1) -- (-1,0);
+  \draw[thick,->] (2,-1) -- (2,0);
+  \node at (-4,-1.5) {$F$};
+  \node at (-1,-1.5) {$F$};
+  \node at (2,-1.5) {$F$};
+  
+  \draw[thick,->] (-5,1) -- (-6,1) node[left] {$\delta_1$};
+  \draw[thick,->] (0,1) -- (-1,1);
+  \draw[thick,->] (3,1) -- (4,1) node[right] {$\delta_3$};
+  
+  \draw[thick,dashed] (-6,-2) -- (4,-2);
+  \node at (-1,-2.5) {$\frac{1}{k_{mesh}} = \frac{1}{k_{struct,1}} + \frac{1}{k_{struct,2}} + \frac{1}{k_{contact}}$};
+  
+  \draw[thick,->] (-1,-3) -- (-1,-2);
+  \node[align=center] at (-1,-3.5) {$k_{mesh}$ \ (总啮合刚度)};
+  
+  \node at (0,-4.5) {啮合刚度串联组成示意图};
+\end{tikzpicture}
+\caption{啮合刚度的串联组成与变形关系}
+\end{figure}
+
+单齿刚度由三部分串联组成：
+\begin{equation}
+\frac{1}{k_{mesh}} = \frac{1}{k_{struct,1}} + \frac{1}{k_{struct,2}} + \frac{1}{k_{contact}},
+\end{equation}
+其中 $k_{struct}$ 为齿体结构刚度（弯曲+齿根变形），$k_{contact}$ 为 Hertz 接触刚度~\cite{johnson}。
+
+\subsubsection{齿体弯曲刚度}
+
+基于梁理论，齿体弯曲变形为：
+\begin{equation}
+\delta_B = \frac{F}{E} \sum_{k=1}^{n} \left[ \cos^2\beta \cdot \frac{T_k^3 + 3T_k^2 L_k + 3T_k L_k^2}{3I_k} + \frac{12(1+\nu)\cos^2\beta \cdot T_k}{5A_k} + \frac{\sin^2\beta \cdot T_k}{A_k} \right],
+\end{equation}
+其中 $T_k$ 为积分步长，$L_k$ 为力臂，$I_k$ 为截面惯性矩，$A_k$ 为截面面积，$\beta$ 为力作用角。
+
+\subsubsection{齿根变形}
+
+采用 Ishikawa 公式计算齿根变形：
+\begin{equation}
+\delta_M = \frac{F\cos^2\beta}{BE} \left[ 5.306\left(\frac{L_f}{H_f}\right)^2 + 2(1-\nu)\frac{L_f}{H_f} + 1.534\left(1 + \frac{0.4167\tan^2\beta}{1+\nu}\right) \right],
+\end{equation}
+其中 $L_f$ 为齿根处力臂，$H_f$ 为齿根危险截面厚度，$B$ 为齿宽。
+
+\subsubsection{Hertz 接触刚度}
+
+对于内-外齿啮合（凹-凸接触）~\cite{johnson}，等效曲率半径为：
+\begin{equation}
+\rho_{eq} = \frac{\rho_1 \cdot \rho_2}{|\rho_2 - \rho_1|},
+\end{equation}
+接触变形为：
+\begin{equation}
+\delta_C = \frac{2p}{\pi} \cdot \frac{1-\nu^2}{E} \left[ \ln\left(\frac{2\rho_{eq}}{b}\right) + 0.407 \right],
+\end{equation}
+其中 $p = F/B$ 为线载荷，$b = \sqrt{4p\rho_{eq}/(\pi E^*)}$ 为半接触宽度。
+
+刚度计算模块 \texttt{tooth\_stiffness.py} 提供了完整实现，可生成沿齿廓分布的刚度表。
+
+\subsection{高效接触搜索策略}
+
+接触搜索是影响计算效率的关键环节，本研究采用多级筛选策略，从粗到精逐步缩小搜索范围，将计算复杂度从 $O(n^2)$ 降低到近似 $O(n)$：
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.85,>=Stealth]
+  % AABB包围盒过滤示意图
+  \draw[thick,blue] (-4,-2) rectangle (4,2);
+  \node[blue] at (4.8,1.5) {AABB包围盒};
+  \draw[thick,red] (0,0) circle (3.5);
+  \node[red] at (-3.2,-2.8) {接触圆};
+  
+  % 曲线段
+  \draw[thick,black] (-3.5,-1.5) -- (-2.5,-1.0) -- (-1.5,-0.5) -- (-0.5,0) -- (0.5,0.5) -- (1.5,1.0) -- (2.5,1.5) -- (3.5,2.0);
+  
+  % 远离圆心的段（跳过）
+  \draw[thick,gray,dashed] (-3.5,-1.5) -- (-2.5,-1.0);
+  \draw[thick,gray,dashed] (2.5,1.5) -- (3.5,2.0);
+  \node[gray] at (-3.5,-0.5) {\small 跳过};
+  
+  % 靠近圆心的段（检测）
+  \draw[thick,green!70!black] (-1.5,-0.5) -- (-0.5,0) -- (0.5,0.5) -- (1.5,1.0);
+  \node[green!70!black] at (0.5,-0.8) {\small 检测};
+  
+  % 距离标记
+  \draw[<->,thick,orange] (0,0) -- (1.8,1.2);
+  \node[orange] at (1.5,0.3) {\small $d<r$};
+  \draw[<->,thick,gray] (0,0) -- (-3.0,-1.3);
+  \node[gray] at (-2.0,-0.3) {\small $d>r$};
+  
+  % 圆心
+  \filldraw[black] (0,0) circle (3pt) node[below right] {圆心};
+\end{tikzpicture}
+\caption{AABB包围盒过滤与块跳过优化原理}
+\end{figure}
+
+\textbf{1. 角度预筛选}：根据齿面类型（左/右）与相对位置角度判断接触可能性：
+\begin{itemize}
+  \item 右齿面仅在滞后方向（$-45^\circ\sim 0^\circ$）可能接触；
+  \item 左齿面仅在超前方向（$0^\circ\sim +45^\circ$）可能接触。
+\end{itemize}
+
+\textbf{2. AABB 包围盒过滤}：对曲线段计算轴对齐包围盒，快速排除远离圆心的段：
+\begin{equation}
+\text{Skip if } \quad p_c \notin [x_{min} - r, x_{max} + r] \times [y_{min} - r, y_{max} + r].
+\end{equation}
+
+\textbf{3. Warm-start 活跃集}：利用时间连续性，从上一时刻活跃的齿对/段开始搜索：
+
+\begin{cppcode}[Warm-start缓存]
+Index warmOuterTooth = lastOuterSegment;
+Index warmInnerTooth = lastInnerSegment;
+Real warmOuterParam = lastOuterParameter;
+\end{cppcode}
+
+\textbf{4. 块跳过优化}：对曲线-圆接触，若当前块起点与终点均远离圆心，则跳过整个块：
+
+\begin{cppcode}[块跳过策略]
+if (dist0_sq > farThresholdSq && distEnd_sq > farThresholdSq) {
+    jSeg += SKIP_BLOCK_SIZE;
+    continue;
+}
+\end{cppcode}
+
+这些优化策略的组合使用，使得接触搜索的计算效率提高了30%-50%，特别是在多齿同时接触的情况下效果显著。
+
+\subsection{接触法向与间隙计算}
+
+接触法向由曲率法向确定。对于解析齿廓，曲率向量为：
+\begin{equation}
+\kappa = \frac{d^2\mathbf{p}}{du^2} - \left(\frac{d^2\mathbf{p}}{du^2} \cdot \mathbf{t}\right)\mathbf{t},
+\end{equation}
+其中 $\mathbf{t}$ 为单位切向量。曲率法向指向曲率中心，对于外齿轮指向齿体实心侧，对于内齿轮需取反。
+
+间隙定义为接触点到对方齿面的有符号距离，负值表示穿透：
+\begin{equation}
+g = \|\mathbf{p}_{outer} - \mathbf{p}_{inner}\| \cdot \text{sign}(\mathbf{n} \cdot (\mathbf{p}_{outer} - \mathbf{p}_{inner})).
+\end{equation}
+
+\subsection{齿尖探针回退检测}
+
+当解析接触求解失败（如齿尖过渡区）时，采用几何探针方法作为回退：
+\begin{enumerate}
+  \item 从外齿轮齿尖沿法向发射射线；
+  \item 与内齿轮离散齿廓求交点；
+  \item 交点距离即为间隙估计值。
+\end{enumerate}
+
+\subsection{数值稳健性处理}
+
+\subsubsection{接触力指数修正}
+线性罚函数 $f_n = k_c \cdot (-g)$ 在接触边界处力的梯度不连续，导致积分器振荡。采用 Hertz 型指数：
+\begin{equation}
+f_n = k_c \cdot (-g)^{10/9},
+\end{equation}
+使力在 $g=0$ 处平滑过渡。
+
+\subsubsection{阻尼正则化}
+阻尼力 $f_d = d_c \cdot \max(0, -\dot g)$ 仅在接触压缩阶段生效，避免分离时产生粘附力。
+
+\subsubsection{摩擦力正则化}
+Coulomb 摩擦在零速度处不连续。采用速度正则化：
+\begin{equation}
+f_t = \mu f_n \cdot \frac{v_t}{\max(|v_t|, v_{reg})},
+\end{equation}
+其中 $v_{reg}$ 为正则化速度阈值。
+
+\section{自定义接触函数详解}
+
+本节详细阐述三类自定义接触函数的设计原理、力学模型与实现细节。
+
+\subsection{ObjectContactCircleCircle：圆-圆罚式接触}
+
+\subsubsection{功能概述}
+
+\texttt{ObjectContactCircleCircle} 用于两个圆形截面之间的 2D 平面接触，典型应用场景包括：
+\begin{itemize}
+  \item 滚针轴承：滚针与轴、滚针与孔壁的接触；
+  \item 曲柄支撑：偏心轴与摆线轮孔的配合；
+  \item 法兰轴承：曲柄主轴与法兰孔的接触。
+\end{itemize}
+
+该接触模型的特点是：
+\begin{itemize}
+  \item 支持凸-凸与凸-凹两种接触模式（通过半径正负号区分）；
+  \item 采用 2D 平面计算，忽略 Z 向坐标差异；
+  \item 包含库仑摩擦模型，考虑滚动与滑动。
+\end{itemize}
+
+\subsubsection{几何与间隙定义}
+
+设两个标记的位置为 $\mathbf{p}_0, \mathbf{p}_1$，对应半径为 $r_0, r_1$。当 $r_1 > 0$ 时表示凸-凸接触（两圆外切），当 $r_1 < 0$ 时表示凸-凹接触（圆在孔内）。
+
+圆心距离（仅考虑 XY 平面）：
+\begin{equation}
+d = \sqrt{(p_{1x} - p_{0x})^2 + (p_{1y} - p_{0y})^2}.
+\end{equation}
+
+接触间隙定义：
+\begin{equation}
+g = \begin{cases}
+d - (r_0 + r_1), & r_1 \geq 0 \quad \text{（凸-凸）} \\ |r_1| - (d + r_0), & r_1 < 0 \quad \text{（凸-凹）}
+\end{cases}
+\end{equation}
+
+接触法向量：
+\begin{equation}
+\mathbf{n} = \begin{cases}
+-(\mathbf{p}_1 - \mathbf{p}_0) / d, & r_1 \geq 0 \\ +(\mathbf{p}_1 - \mathbf{p}_0) / d, & r_1 < 0
+\end{cases}
+\end{equation}
+
+\subsubsection{力学模型}
+
+\textbf{法向力}采用非线性罚函数：
+\begin{equation}
+f_n = k_c \cdot \max(0, -g)^{10/9} - d_c \cdot \dot{g}, \quad f_n \geq 0.
+\end{equation}
+指数 $10/9$ 逼近 Hertz 接触理论的 $3/2$ 次方关系（考虑二维接触）。
+
+\textbf{摩擦力}考虑滚动接触点的速度：
+\begin{align}
+\mathbf{v}_{c,0} &= \mathbf{v}_0 + \omega_{z,0} \times \mathbf{r}_{c,0}, \\ 
+\mathbf{v}_{c,1} &= \mathbf{v}_1 + \omega_{z,1} \times \mathbf{r}_{c,1}, \\ 
+\mathbf{v}_{rel} &= \mathbf{v}_{c,1} - \mathbf{v}_{c,0}, \\ v_t &= \mathbf{v}_{rel} - (\mathbf{v}_{rel} \cdot \mathbf{n})\mathbf{n},
+\end{align}
+其中 $\mathbf{r}_{c,i}$ 为从圆心到接触点的矢量，$\omega_{z,i}$ 为绕 Z 轴的角速度。
+
+切向摩擦力：
+\begin{equation}
+\mathbf{f}_t = -\mu f_n \cdot \frac{\mathbf{v}_t}{\|\mathbf{v}_t\|}, \quad \|\mathbf{v}_t\| > \epsilon.
+\end{equation}
+
+\subsubsection{数据节点结构}
+
+每个接触对象关联一个 6 变量数据节点：
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{cl}
+\toprule
+索引 & 含义 \\
+\midrule
+0 & 间隙 $g$ \\
+1 & 间隙速度 $\dot{g}$ \\
+2 & 法向力 $f_n$ \\
+3 & 切向力 X 分量 \\
+4 & 切向力 Y 分量 \\
+5 & 接触状态（0/1） \\
+\bottomrule
+\end{tabular}
+\caption{CircleCircle 数据节点结构}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=1.2,>=Stealth]
+  % 两个圆
+  \draw[fill=blue!10] (0,0) circle (1.2);
+  \draw[fill=red!10] (3.5,0) circle (0.8);
+  
+  % 圆心标记
+  \filldraw[black] (0,0) circle (1.5pt);
+  \filldraw[black] (3.5,0) circle (1.5pt);
+  
+  % 圆心连线（虚线，在圆内部分）
+  \draw[dashed,gray] (0,0) -- (3.5,0);
+  
+  % 半径标注
+  \node at (0,-1.6) {圆0 ($r_0$)}; 
+  \node at (3.5,-1.2) {圆1 ($r_1$)};
+  
+  % 间隙标注（在两圆之间）
+  \draw[<->,thick,orange] (1.2,0) -- (2.7,0);
+  \node[orange] at (1.95,0.35) {间隙 $g$};
+  
+  % 接触点
+  \filldraw[green!60!black] (1.95,0) circle (2.5pt);
+  \node[green!60!black] at (1.95,-0.45) {接触点};
+  
+  % 法向量（从接触点向外）
+  \draw[->,thick,blue,line width=1.2pt] (1.95,0) -- (1.0,0);
+  \node[blue] at (0.5,0.35) {$\mathbf{n}$};
+\end{tikzpicture}
+\caption{Circle--Circle 接触几何示意（凸-凸情形）}
+\end{figure}
+
+\subsection{ObjectContactCurveCircles：曲线-多圆接触}
+
+\subsubsection{功能概述}
+
+\texttt{ObjectContactCurveCircles} 用于一条平面曲线与多个圆的同时接触，是摆线针轮传动的核心接触模型。典型应用场景包括：
+\begin{itemize}
+  \item 摆线轮与针齿列：摆线廓线与环绕的针齿同时接触；
+  \item 链条传动：链板与多个链轮齿的接触；
+  \item 凸轮机构：凸轮轮廓与多个滚子的接触。
+\end{itemize}
+
+该模型的核心特点是：
+\begin{itemize}
+  \item 曲线由分段线段列表表示，可选多项式曲率增强；
+  \item 支持一对多接触，同时处理数十个圆；
+  \item 曲线随载体标记共同旋转，实现动态接触。
+\end{itemize}
+
+\subsubsection{几何表示}
+
+\textbf{曲线表示}：曲线由 $N_{seg}$ 个线段组成，每段存储两端点坐标：
+\begin{equation}
+\text{segmentsData}[i] = [p_{0x}^{(i)}, p_{0y}^{(i)}, p_{1x}^{(i)}, p_{1y}^{(i)}], \quad i = 0, \ldots, N_{seg}-1.
+\end{equation}
+
+\textbf{多项式增强}：可选的多项式数据提供端点处的斜率与曲率，实现 $C^1$ 或 $C^2$ 连续：
+\begin{equation}
+y(x) = a_0 \left(x - \frac{2x^2}{c} + \frac{x^3}{c^2}\right) + a_1 \left(-\frac{x^2}{c} + \frac{x^3}{c^2}\right),
+\end{equation}
+其中 $c$ 为段长度，$a_0, a_1$ 为端点斜率系数。
+
+\textbf{圆表示}：每个圆由一个标记提供圆心位置，半径存储于 \verb|circlesRadii| 数组。
+
+\subsubsection{接触搜索算法}
+
+对每个圆，搜索最近的曲线段并计算接触：
+
+\begin{algorithm}[htbp]
+\caption{CurveCircles 接触搜索}
+\begin{algorithmic}[1]
+\For{每个圆 $i$}
+  \State 获取圆心 $\mathbf{p}_c$ 与半径 $r$
+  \State $g_{best} \gets +\infty$, $j_{best} \gets -1$
+  \For{每个线段 $j$}
+    \If{AABB 快速排除}
+      \State \textbf{continue}
+    \EndIf
+    \State 计算 $\mathbf{p}_c$ 到线段的最近点 $\mathbf{p}_{seg}$
+    \State $d \gets \|\mathbf{p}_c - \mathbf{p}_{seg}\|$
+    \If{$d < g_{best} + r$}
+      \State $g_{best} \gets d - r$, $j_{best} \gets j$
+    \EndIf
+  \EndFor
+  \If{$g_{best} < 0$}
+    \State 计算接触力并累加
+  \EndIf
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{力学模型}
+
+\textbf{法向力}：
+\begin{equation}
+f_n = -k_c \cdot (-g)^{10/9} + d_c \cdot \dot{g}, \quad g < 0.
+\end{equation}
+
+\textbf{接触模型选项}：
+\begin{itemize}
+  \item \verb|contactModel=0|：线性穿透模型，力与穿透深度成正比；
+  \item \verb|contactModel=1|：面积积分模型，对圆-段相交区域积分，力更平滑。
+\end{itemize}
+
+面积积分模型的法向力修正：
+\begin{equation}
+f_n^{area} = f_n \cdot \frac{1}{g} \int_{s_0}^{s_1} \left[ \sqrt{r^2 - d^2(s)} - d_0 \right] ds,
+\end{equation}
+其中 $s_0, s_1$ 为圆-段交点的参数。
+
+\textbf{摩擦力}采用 Stribeck 正则化：
+\begin{equation}
+f_t = -\mu |f_n| \cdot \text{sign}(v_t) \cdot \min\left(1, \frac{|v_t|}{v_{reg}}\right),
+\end{equation}
+其中 $v_{reg}$ 为正则化速度（\verb|frictionProportionalZone|）。
+
+\subsubsection{数据节点结构}
+
+每个线段关联 3 个数据变量：
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{cl}
+\toprule
+索引偏移 & 含义 \\ 
+\midrule
+0 & 活跃圆编号（-1 表示无接触） \\ 
+1 & 间隙 $g$ \\ 
+2 & 切向速度 $v_t$ \\ 
+\bottomrule
+\end{tabular}
+\caption{CurveCircles 每段数据结构}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=1.1,>=Stealth]
+  \draw[very thick,blue] (-3,-0.5) -- (-1,0.3) .. controls (0,0.8) .. (2,0.1) -- (3,-0.4);
+  \foreach \x/\y/\r in {-2.3/-0.2/0.25, -0.5/0.5/0.3, 1.5/0.4/0.35, 2.6/-0.2/0.25}{
+    \draw[fill=red!10] (\x,\y) circle (\r);
+  }
+  \node[blue] at (-3.5,0.3) {\small 分段曲线};
+  \node[red!80] at (2.8,1.0) {\small 针齿};
+  \draw[->,thick,orange] (-0.5,0.5) -- (-0.5,0.0);
+  \node[orange] at (-0.1,-0.2) {\small $f_n$};
+\end{tikzpicture}
+\caption{Curve--Circles 接触示意：摆线轮与针齿列}
+\end{figure}
+
+\subsubsection{核心参数说明}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lp{8cm}}
+\toprule
+参数 & 说明 \\ 
+\midrule
+\verb|segmentsData| & 曲线段列表，每行 4 个坐标 $[x_0, y_0, x_1, y_1]$ \\ 
+\verb|circlesRadii| & 各圆半径列表 \\ 
+\verb|contactStiffness| & 接触刚度 $k_c$ [N/m] \\ 
+\verb|contactDamping| & 接触阻尼 $d_c$ [N·s/m] \\ 
+\verb|contactModel| & 0=线性穿透，1=面积积分 \\ 
+\verb|dynamicFriction| & 动摩擦系数 $\mu$ \\ 
+\verb|frictionProportionalZone| & 正则化速度 $v_{reg}$ [m/s] \\ 
+\bottomrule
+\end{tabular}
+\caption{CurveCircles 参数说明}
+\end{table}
+
+\subsection{ObjectContactFewTeeth：解析渐开线内啮合接触}
+
+\subsubsection{功能概述}
+
+\texttt{ObjectContactFewTeeth} 是专为少齿差内啮合齿轮设计的解析接触模型，核心特点包括：
+\begin{itemize}
+  \item 直接使用渐开线参数方程计算齿廓点，无需网格离散；
+  \item 支持外齿轮-内齿轮的凸-凹接触；
+  \item 实时计算时变啮合刚度（结合结构刚度与 Hertz 接触刚度）；
+  \item 多级接触搜索优化（角度预筛选 + Warm-start + 探针回退）。
+\end{itemize}
+
+\subsubsection{解析齿廓结构}
+
+齿廓参数由 \texttt{FewTeethAnalyticProfile} 结构定义，该结构封装了渐开线齿轮的几何参数与派生量计算。
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=1.0,>=Stealth]
+  % 渐开线齿廓生成示意图
+  \draw[thick] (0,0) circle (1.5);  % 基圆
+  \draw[thick,dashed] (0,0) circle (2.5);  % 分度圆
+  \draw[thick] (0,0) circle (3.0);  % 齿顶圆
+  \draw[thick,dotted] (0,0) circle (1.2);  % 齿根圆
+  
+  % 圆的标注（右侧）
+  \node at (3.6,0) {\small 齿顶圆$r_a$};
+  \node at (3.0,1.8) {\small 分度圆};
+  \node at (2.2,2.5) {\small 基圆$r_b$};
+  \node at (1.6,-1.0) {\small 齿根圆$r_f$};
+  
+  % 渐开线（简化表示）
+  \draw[thick,red] (1.5,0) .. controls (2.0,0.6) and (2.4,1.3) .. (2.7,2.2);
+  \node[red] at (3.2,2.0) {\small 渐开线};
+  
+  % 角度标记
+  \draw[thick,gray] (0,0) -- (35:3.0);
+  
+  % 角度标注
+  \draw[thick,->] (0.8,0) arc (0:35:0.8);
+  \node at (1.3,0.25) {\small $\alpha$};
+  
+  % 点标注
+  \filldraw[black] (1.5,0) circle (2pt);
+  \node at (1.5,-0.4) {\small 基点};
+  \filldraw[red] (35:2.5) circle (2pt);
+  \node at (35:3.3) {\small 接触点};
+\end{tikzpicture}
+\caption{渐开线齿廓生成原理与几何参数关系}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lp{8cm}}
+\toprule
+参数 & 说明 \\ 
+\midrule
+\verb|isInner| & 是否为内齿轮 \\ 
+\verb|numberOfTeeth| & 齿数 $z$ \\ 
+\verb|module| & 模数 $m$ [m] \\ 
+\verb|alpha| & 压力角 $\alpha$ [rad] \\ 
+\verb|haStar| & 齿顶高系数 $h_a^*$ \\ 
+\verb|cStar| & 顶隙系数 $c^*$ \\ 
+\verb|x| & 变位系数 \\ 
+\verb|flankSign| & 齿面镜像（+1=右齿面，-1=左齿面） \\ 
+\verb|baseRotation| & 基准旋转角偏移 \\ 
+\verb|deltaY| & Y 向修正量 \\ 
+\bottomrule
+\end{tabular}
+\caption{FewTeethAnalyticProfile 参数结构}
+\end{table}
+
+由输入参数自动计算的派生量包括：
+\begin{align}
+r_b &= \frac{mz}{2} \cos\alpha, \quad \text{（基圆半径）} \\ 
+r_{min} &= \max(r_f, r_b), \quad r_{max} = r_a, \\ 
+\theta_{base} &= \tan\alpha - \alpha, \quad \text{（渐开线函数值）} \\ 
+\phi_{pitch} &= \frac{s}{2r}, \quad \text{（齿厚半角）}
+\end{align}
+
+渐开线齿廓的参数化表达基于以下核心公式：
+\begin{align}
+r(u) &= r_{min} + u \cdot (r_{max} - r_{min}), \\ 
+\alpha_c &= \arccos(r_b / r), \\ 
+\theta_c &= \tan\alpha_c - \alpha_c, \\ 
+\phi_c &= \begin{cases}
+\theta_{base} + \phi_{pitch} - \theta_c, & \text{外齿轮} \\ -	heta_{base} + \phi_{pitch} + \theta_c, & \text{内齿轮}
+\end{cases}
+\end{align}
+其中 $u \in [0,1]$ 为齿廓参数，从齿根（$u=0$）到齿顶（$u=1$）变化。
+
+\subsubsection{接触搜索流程}
+
+接触搜索采用多级筛选策略，从粗到精逐步缩小搜索范围，提高计算效率：
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9,>=Stealth]
+  % 角度预筛选示意图
+  \draw[thick] (0,0) circle (3.0);  % 内齿轮
+  \draw[thick] (0.5,0) circle (1.5);  % 外齿轮
+  
+  % 右齿面接触范围（-45°~0°）
+  \fill[blue!15] (0,0) -- (0:3.5) arc (0:-45:3.5) -- (0,0);
+  \draw[thick,blue] (0,0) -- (0:3.5);
+  \draw[thick,blue] (0,0) -- (-45:3.5);
+  \node[blue] at (4.0,-0.3) {\small $0^\circ$};
+  \node[blue] at (3.0,-2.5) {\small $-45^\circ$};
+  \node[blue] at (3.8,-1.2) {\small 右齿面};
+  \node[blue] at (3.8,-1.6) {\small 接触区};
+  
+  % 左齿面接触范围（0°~+45°）
+  \fill[red!15] (0,0) -- (0:3.5) arc (0:45:3.5) -- (0,0);
+  \draw[thick,red] (0,0) -- (45:3.5);
+  \node[red] at (3.0,2.5) {\small $+45^\circ$};
+  \node[red] at (3.8,1.2) {\small 左齿面};
+  \node[red] at (3.8,0.8) {\small 接触区};
+  
+  % 齿轮标记
+  \node at (-2.0,2.5) {内齿轮};
+  \node at (0.5,2.0) {外齿轮};
+  
+  % 中心连线
+  \draw[->,thick] (0,0) -- (0.5,0);
+  \node at (0.25,-0.4) {\small 偏心};
+\end{tikzpicture}
+\caption{接触搜索的角度预筛选示意图}
+\end{figure}
+
+\textbf{第一级：角度预筛选}
+
+根据齿面类型判断接触可能的方向范围：
+\begin{itemize}
+  \item 右齿面（\verb|flankSign| > 0）：仅在滞后方向（$-45^\circ\sim 0^\circ$）可能接触；
+  \item 左齿面（\verb|flankSign| < 0）：仅在超前方向（$0^\circ\sim +45^\circ$）可能接触。
+\end{itemize}
+
+判据为：
+\begin{equation}
+\text{contactPossible} = \begin{cases}
+(\mathbf{n}_{cross} \leq 0) \land (\cos\theta \geq \cos 45^\circ), & \text{右齿面} \\
+(\mathbf{n}_{cross} \geq 0) \land (\cos\theta \geq \cos 45^\circ), & \text{左齿面}
+\end{cases}
+\end{equation}
+其中 $\mathbf{n}_{cross}$ 为齿心向量与齿轮中心连线的叉积 Z 分量。
+
+\textbf{第二级：Warm-start 活跃集}
+
+利用时间连续性，优先从上一时刻活跃的齿对开始搜索：
+
+\begin{cppcode}[Warm-start初始化]
+Index warmOuterTooth = lastOuterSegment;
+Index warmInnerTooth = lastInnerSegment;
+Real warmOuterParam = lastOuterParameter;
+\end{cppcode}
+
+\textbf{第三级：解析求解}
+
+对候选齿对，采用参数化方法求解接触点：
+\begin{enumerate}
+  \item 在外齿轮齿面上采样若干点（如 36 个）；
+  \item 计算各采样点到内齿轮齿面的最近距离；
+  \item 取最小距离对应的点作为接触点。
+\end{enumerate}
+
+\textbf{第四级：探针回退}
+
+当解析求解失败（如齿尖过渡区）时，启用几何探针：
+\begin{enumerate}
+  \item 从外齿轮齿尖沿法向发射射线（长度 = \verb|tipProbeLength|）；
+  \item 与内齿轮离散齿廓求射线-段交点；
+  \item 以交点距离作为间隙估计。
+\end{enumerate}
+
+\subsubsection{力学模型}
+
+\textbf{啮合刚度计算}：
+
+啮合刚度由结构刚度与接触刚度串联：
+\begin{equation}
+k_{mesh} = \left( \frac{1}{k_{struct,out}(u_{out})} + \frac{1}{k_{struct,in}(u_{in})} + \frac{1}{k_{contact}} \right)^{-1},
+\end{equation}
+其中：
+\begin{itemize}
+  \item $k_{struct}(u)$ 从预计算的刚度表插值获得（\verb|stiffnessOuter|, \verb|stiffnessInner|）；
+  \item $k_{contact}$ 由 Hertz 公式实时计算。
+\end{itemize}
+
+刚度插值：
+\begin{cppcode}[刚度表插值]
+Real InterpolateStiffness(Real t, const vector<Real>& table) {
+    t = clamp(t, 0.0, 1.0);
+    Real idx = t * (table.size() - 1);
+    Index i0 = floor(idx), i1 = min(i0+1, table.size()-1);
+    Real frac = idx - i0;
+    return table[i0]*(1-frac) + table[i1]*frac;
+}
+\end{cppcode}
+
+\textbf{接触力计算}：
+\begin{equation}
+f_n = k_{mesh} \cdot \max(0, -g)^{10/9} + d_c \cdot \max(0, -\dot{g}).
+\end{equation}
+
+\subsubsection{数据节点结构}
+
+每个接触对象关联一个 7 变量数据节点：
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{cl}
+\toprule
+索引 & 含义 \\ 
+\midrule
+0 & 间隙 $g$ \\ 
+1 & 间隙速度 $\dot{g}$ \\ 
+2 & 接触力 $f_n$ \\ 
+3 & 外齿轮齿索引 \\ 
+4 & 外齿轮参数 $u_{out}$ \\ 
+5 & 内齿轮齿索引 \\ 
+6 & 内齿轮参数 $u_{in}$ \\ 
+\bottomrule
+\end{tabular}
+\caption{FewTeeth 数据节点结构}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.85,>=Stealth]
+  \draw[fill=blue!8] (0,0) circle (3);
+  \draw[fill=red!8] (0.3,0) circle (1.5);
+  \foreach \a in {0,30,...,330}{
+    \draw[thick] (\a:3) -- (\a+12:2.6);
+  }
+  \foreach \a in {15,45,...,345}{
+    \draw[thick,red!80] (0.3,0) ++(\a:1.5) -- ++(\a+10:0.4);
+  }
+  \draw[->,thick,orange] (2.6,1.5) -- (2.2,1.0);
+  \node[orange] at (2.9,1.0) {\small $\mathbf{n}$};
+  \filldraw[green!60!black] (2.4,1.25) circle (2pt);
+  \node[green!60!black] at (3.5,1.8) {\small 接触点};
+  \node[blue] at (-2.5,2.8) {内齿轮};
+  \node[red!70] at (0.3,-2.2) {外齿轮};
+\end{tikzpicture}
+\caption{FewTeeth 解析齿面接触示意（内啮合少齿差）}
+\end{figure}
+
+\subsubsection{性能优化措施}
+
+\begin{enumerate}
+  \item \textbf{齿心缓存}：预计算各齿的局部中心位置，运行时仅需一次矩阵乘法转换到全局；
+  \item \textbf{离散采样缓存}：预计算齿廓离散点，避免重复渐开线求值；
+  \item \textbf{平方距离比较}：搜索阶段使用距离平方比较，最后才开方；
+  \item \textbf{射线-段交叉快速剔除}：利用叉积符号快速判断段是否与射线相交。
+\end{enumerate}
+
+\section{系统动力学求解}
+
+\subsection{运动方程}
+
+整体系统的动力学方程为：
+\begin{equation}
+\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{K}\mathbf{q} = \mathbf{f}_{contact}(\mathbf{q}, \dot{\mathbf{q}}) + \mathbf{f}_{drive}(t) + \mathbf{f}_{ext},
+\end{equation}
+其中：
+\begin{itemize}
+  \item $\mathbf{M}$ 为质量/惯性矩阵；
+  \item $\mathbf{C}$ 为科氏力/离心力项；
+  \item $\mathbf{K}$ 为刚度矩阵（弹簧约束等）；
+  \item $\mathbf{f}_{contact}$ 为各接触对象的罚式力贡献；
+  \item $\mathbf{f}_{drive}$ 为驱动力/扭矩；
+  \item $\mathbf{f}_{ext}$ 为外部载荷。
+\end{itemize}
+
+\subsection{接触力装配流程}
+
+\begin{algorithm}[htbp]
+\caption{罚式接触力计算与装配}
+\begin{algorithmic}[1]
+\State \textbf{输入：} 当前状态 $(\mathbf{q}, \dot{\mathbf{q}})$，数据节点缓存
+\State \textbf{输出：} 广义力向量 $\mathbf{f}_{contact}$
+\State
+\For{每个接触对象 $obj$}
+  \State 读取关联标记的位姿 $(\mathbf{p}_i, \mathbf{R}_i, \mathbf{v}_i, \boldsymbol{\omega}_i)$
+  \State 从数据节点读取 Warm-start 信息
+  \State
+  \State \textbf{// 接触检测与间隙计算}
+  \State 执行预筛选（角度/AABB/块跳过）
+  \For{每个候选几何对}
+    \State 计算间隙 $g$、间隙速度 $\dot{g}$、接触点
+  \EndFor
+  \State
+  \State \textbf{// 接触力计算}
+  \If{$g < 0$}
+    \State 计算法向力：$f_n = k_c \cdot (-g)^{10/9} + d_c \cdot \max(0, -\dot{g})$
+    \State 计算切向速度 $v_t$ 与摩擦力 $\mathbf{f}_t$
+    \State 合成接触力：$\mathbf{f}_c = f_n \mathbf{n} + \mathbf{f}_t$
+  \Else
+    \State $\mathbf{f}_c = \mathbf{0}$
+  \EndIf
+  \State
+  \State \textbf{// 力装配到广义坐标}
+  \State $\mathbf{f}_{contact} \mathrel{+}= \mathbf{J}_0^T \mathbf{f}_{c,0} + \mathbf{J}_1^T \mathbf{f}_{c,1}$
+  \State 更新数据节点缓存
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{时间积分器}
+
+本研究采用 Generalized-$\alpha$ 方法进行时间积分，该方法具有以下优点：
+\begin{itemize}
+  \item 二阶精度，支持数值阻尼调节；
+  \item 对刚性系统稳定，适合罚式接触问题；
+  \item 保持能量耗散特性，避免非物理振荡。
+\end{itemize}
+
+积分器设置示例：
+\begin{pythoncode}[仿真设置]
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.endTime = 2.0
+simulationSettings.timeIntegration.numberOfSteps = 20000
+simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8
+simulationSettings.timeIntegration.newton.maxIterations = 8
+simulationSettings.timeIntegration.newton.relativeTolerance = 1e-6
+
+mbs.SolveDynamic(simulationSettings, 
+    solverType=exu.DynamicSolverType.GeneralizedAlpha)
+\end{pythoncode}
+
+\subsection{不连续性处理}
+
+接触问题具有本质的不连续性（接触/分离状态切换）。采用以下策略处理：
+
+\textbf{1. PostNewtonStep 回调}：每个牛顿迭代后检查接触状态变化：
+\begin{cppcode}[不连续性检测]
+Real PostNewtonStep(...) {
+    Real lastState = dataStartOfStep[dataIndexContactState];
+    Real currentState = (gap <= 0.0) ? 1.0 : 0.0;
+    if (lastState != currentState) {
+        discontinuousError = fabs(contactForce);
+        flags = PostNewtonFlags::UpdateJacobian;
+    }
+    return discontinuousError;
+}
+\end{cppcode}
+
+\textbf{2. 自适应步长}：当接触力变化剧烈时，自动缩短时间步长。
+
+\textbf{3. 雅可比矩阵更新}：接触状态切换时重新计算雅可比矩阵。
+
+\section{FewTeeth 接触求解流程图}
+
+图~\ref{fig:fewteeth_flow}展示了FewTeeth接触求解的完整流程，包括几何计算、接触检测与力计算三个主要阶段。
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[node distance=1.0cm,>=Stealth,
+  block/.style={rectangle,rounded corners,draw,align=center,fill=blue!8,minimum width=4.2cm,minimum height=0.9cm,font=\small},
+  blockwide/.style={rectangle,rounded corners,draw,align=center,fill=green!8,minimum width=5.5cm,minimum height=1.0cm,font=\small},
+  decision/.style={diamond,aspect=2.8,draw,fill=orange!12,align=center,font=\small},
+  arrow/.style={->,thick}]
+  
+  % 第一列：主流程
+  \node[block] (start) {读取标记位姿};
+  \node[below=0.15cm of start,font=\scriptsize] (eq1) {$\mathbf{p}_i, \mathbf{R}_i, \mathbf{v}_i, \boldsymbol{\omega}_i$};
+  
+  \node[block,below=0.8cm of eq1] (cache) {齿心坐标变换};
+  \node[below=0.15cm of cache,font=\scriptsize] (eq2) {$\mathbf{c}_j^{global} = \mathbf{R} \cdot \mathbf{c}_j^{local} + \mathbf{p}$};
+  
+  \node[block,below=0.8cm of eq2] (warm) {Warm-start 活跃集};
+  \node[below=0.15cm of warm,font=\scriptsize] (eq3) {优先检测上一步接触齿对};
+  
+  \node[block,below=0.8cm of eq3] (filter) {角度预筛选};
+  \node[below=0.15cm of filter,font=\scriptsize] (eq4) {$\theta \in [\theta_{min}, \theta_{max}]$};
+  
+  \node[block,below=0.8cm of eq4] (eval) {解析渐开线求值};
+  \node[below=0.15cm of eval,font=\scriptsize] (eq5) {$r(u), \alpha_c(u), \phi_c(u)$};
+  
+  \node[decision,below=0.9cm of eq5] (gap) {$g < 0$?};
+  
+  % 左分支：接触力计算
+  \node[blockwide,below left=1.2cm and 0.8cm of gap] (stiff) {啮合刚度计算};
+  \node[below=0.1cm of stiff,font=\scriptsize,align=center] (eq6) {$\displaystyle\frac{1}{k_{mesh}} = \frac{1}{k_{s1}} + \frac{1}{k_{s2}} + \frac{1}{k_H}$};
+  
+  \node[blockwide,below=1.0cm of eq6] (force) {罚式接触力};
+  \node[below=0.1cm of force,font=\scriptsize,align=center] (eq7) {$f_n = k_{mesh} \cdot (-g)^{10/9} + d \cdot \max(0,-\dot{g})$};
+  
+  % 右分支：探针回退
+  \node[block,below right=1.2cm and 0.8cm of gap] (probe) {齿尖探针检测};
+  \node[below=0.15cm of probe,font=\scriptsize] (eq8) {射线-线段求交};
+  
+  % 合并
+  \node[blockwide,below=4.5cm of gap] (assemble) {力装配到广义坐标};
+  \node[below=0.1cm of assemble,font=\scriptsize] (eq9) {$\mathbf{f}_{gen} = \mathbf{J}_0^T (-f_n \mathbf{n}) + \mathbf{J}_1^T (f_n \mathbf{n})$};
+  
+  \node[block,below=0.9cm of eq9] (update) {更新数据节点缓存};
+  
+  % 箭头连接（避免穿过节点）
+  \draw[arrow] (start) -- (cache);
+  \draw[arrow] (cache) -- (warm);
+  \draw[arrow] (warm) -- (filter);
+  \draw[arrow] (filter) -- (eval);
+  \draw[arrow] (eval) -- (gap);
+  
+  % 分支箭头
+  \draw[arrow] (gap.west) -- ++(-0.5,0) |- node[pos=0.25,left]{\small 是} (stiff.east);
+  \draw[arrow] (gap.east) -- ++(0.5,0) |- node[pos=0.25,right]{\small 否} (probe.west);
+  
+  \draw[arrow] (stiff) -- (force);
+  \draw[arrow] (force.south) -- ++(0,-0.5) -| (assemble.north west);
+  \draw[arrow] (probe.south) -- ++(0,-1.8) -| (assemble.north east);
+  
+  \draw[arrow] (assemble) -- (update);
+\end{tikzpicture}
+\caption{FewTeeth 接触求解完整流程}
+\label{fig:fewteeth_flow}
+\end{figure}
+
+\section{后处理与结果分析}
+
+\subsection{可提取的物理量}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lp{9cm}}
+\toprule
+物理量 & 说明 \\ 
+\midrule
+接触力 $f_n(t)$ & 各接触对的法向力时程曲线 \\ 
+间隙 $g(t)$ & 监测穿透深度，评估接触稳定性 \\ 
+传递误差 $TE(\theta)$ & 输出角与理论角的偏差，表征精度 \\ 
+啮合刚度 $k_{mesh}(\theta)$ & 随转角变化的刚度曲线 \\ 
+振动位移 $x(t)$ & 各刚体振动响应 \\ 
+轴承力 $F_{bearing}(t)$ & 滚针轴承的载荷分布 \\ 
+\bottomrule
+\end{tabular}
+\caption{可提取的后处理物理量}
+\end{table}
+
+\subsection{传递误差计算}
+
+传递误差定义为输出轴实际角位移与理论角位移的差值：
+\begin{equation}
+TE = \theta_{out,actual} - \frac{\theta_{in}}{i},
+\end{equation}
+其中 $i$ 为传动比。对于少齿差传动，$i = z_1 / \Delta z$。
+
+\subsection{结果可视化}
+
+仿真完成后，脚本自动生成以下图表：
+\begin{itemize}
+  \item 曲柄轴转角-时间曲线；
+  \item 输入轴与输出法兰转角对比；
+  \item 扭矩-转角特性曲线（刚度评估）；
+  \item 轴承接触力时程。
+\end{itemize}
+
+\section{三类接触模型对比}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lccc}
+\toprule
+特性 & FewTeeth & CurveCircles & CircleCircle \\ 
+\midrule
+几何表示 & 解析渐开线 & 分段线段+多项式 & 圆心+半径 \\ 
+接触类型 & 凸-凹（内啮合） & 凸-凸/凹 & 凸-凸/凸-凹 \\ 
+数据节点 & 7 变量 & 3/段 & 6 变量 \\ 
+摩擦支持 & 无（可扩展） & Stribeck 正则化 & 库仑摩擦 \\ 
+适用场景 & 少齿差齿轮 & 摆线针轮/链条 & 滚针轴承 \\ 
+计算复杂度 & 中等 & 中-高 & 低 \\ 
+刚度计算 & 时变+Hertz & 常值 & 常值 \\ 
+搜索优化 & 角度+Warm-start & AABB+块跳过 & 无需搜索 \\ 
+\bottomrule
+\end{tabular}
+\caption{三类接触模型特性对比}
+\end{table}
+
+\section{操作指南}
+
+\subsection{快速上手步骤}
+
+\begin{enumerate}
+  \item \textbf{参数配置}：打开 \texttt{main/fewTeeth/fewTeeth.py}，设定齿轮参数：
+  \begin{pythoncode}
+gear_profile_params = FewTeethGearPair(
+    z_outer=60, z_inner=62, module=4.0e-3,
+    x_outer=0.0, x_inner=0.25, alpha_deg=20.0)
+  \end{pythoncode}
+  
+  \item \textbf{刚度设定}：根据载荷设定接触刚度与阻尼：
+  \begin{pythoncode}
+contactStiffness_tooth = 1e9  # N/m
+contactDamping_tooth = 1e3    # N/(m/s)
+  \end{pythoncode}
+  
+  \item \textbf{运行仿真}：执行脚本，观察图形输出与日志：
+  \begin{pythoncode}
+python main/fewTeeth/fewTeeth.py
+  \end{pythoncode}
+  
+  \item \textbf{结果分析}：在 \texttt{solution/plots/} 目录查看生成的曲线图。
+\end{enumerate}
+
+\subsection{调参建议}
+
+\begin{itemize}
+  \item \textbf{刚度过高}：导致刚性问题，需减小时间步长或增大阻尼；
+  \item \textbf{刚度过低}：穿透深度过大，结果失真；
+  \item \textbf{摩擦振荡}：增大 \verb|frictionProportionalZone| 正则化速度；
+  \item \textbf{接触丢失}：检查 \verb|tipProbeLength| 是否足够大。
+\end{itemize}
+
+\section{结论}
+
+本文阐述了 RV 减速器与少齿差减速器的振动、精度与刚度理论建模方法。主要贡献包括：
+
+\begin{enumerate}
+  \item 开发了三类专用接触模型（FewTeeth、CurveCircles、CircleCircle），实现了渐开线内啮合、摆线-针列、滚针轴承等典型接触场景的高效求解；
+  
+  \item 建立了基于 Weber-Banaschek 方法与 Hertz 理论的时变啮合刚度计算模型，支持沿齿廓的刚度分布与实时接触刚度更新；
+  
+  \item 提出了多级接触搜索策略（角度预筛选、AABB 过滤、Warm-start 活跃集、块跳过优化），显著降低了计算复杂度；
+  
+  \item 采用数值稳健性处理技术（非线性罚函数、阻尼正则化、摩擦平滑、探针回退），保证了刚性系统的稳定积分；
+  
+  \item 提供了完整的建模脚本与参数配置接口，便于不同型号减速器的快速建模与参数优化。
+\end{enumerate}
+
+本研究建立的理论模型与仿真工具可用于减速器的动态性能预测、传动精度评估、齿廓修形优化等工程应用，为高精度减速器的设计提供支撑。
+
+\bibliographystyle{unsrt}
+\bibliography{references}
+
+\appendix
+\section{符号表}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{lll}
+\toprule
+符号 & 单位 & 含义 \\ 
+\midrule
+$z$ & — & 齿数 \\ 
+$m$ & m & 模数 \\ 
+$\alpha$ & rad & 压力角 \\ 
+$r_b$ & m & 基圆半径 \\ 
+$r_a$ & m & 齿顶圆半径 \\ 
+$r_f$ & m & 齿根圆半径 \\ 
+$g$ & m & 接触间隙（负值=穿透） \\ 
+$k_c$ & N/m & 接触刚度 \\ 
+$d_c$ & N·s/m & 接触阻尼 \\ 
+$\mu$ & — & 摩擦系数 \\ 
+$f_n$ & N & 法向接触力 \\ 
+$k_{mesh}$ & N/m & 啮合刚度 \\ 
+$TE$ & rad & 传递误差 \\ 
+\bottomrule
+\end{tabular}
+\caption{主要符号说明}
+\end{table}
+
+\end{document}
