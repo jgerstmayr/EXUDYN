@@ -1,0 +1,64 @@
+\contentsline {section}{\numberline {1}研究背景与目标}{4}{section.1}%
+\contentsline {subsection}{\numberline {1.1}研究对象}{4}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}研究目标}{4}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}总体技术路线}{4}{subsection.1.3}%
+\contentsline {section}{\numberline {2}摆线针轮建模流程}{5}{section.2}%
+\contentsline {subsection}{\numberline {2.1}摆线廓线方程}{5}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}等弧长重采样}{5}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}摆线-针列接触挂载}{6}{subsection.2.3}%
+\contentsline {section}{\numberline {3}建模关键技术与难点}{6}{section.3}%
+\contentsline {subsection}{\numberline {3.1}时变啮合刚度计算}{6}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}齿体弯曲刚度}{6}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}齿根变形}{7}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.3}Hertz 接触刚度}{7}{subsubsection.3.1.3}%
+\contentsline {subsection}{\numberline {3.2}高效接触搜索策略}{7}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}接触法向与间隙计算}{8}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}齿尖探针回退检测}{9}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}数值稳健性处理}{9}{subsection.3.5}%
+\contentsline {subsubsection}{\numberline {3.5.1}接触力指数修正}{9}{subsubsection.3.5.1}%
+\contentsline {subsubsection}{\numberline {3.5.2}阻尼正则化}{9}{subsubsection.3.5.2}%
+\contentsline {subsubsection}{\numberline {3.5.3}摩擦力正则化}{9}{subsubsection.3.5.3}%
+\contentsline {section}{\numberline {4}误差建模与仿真控制策略}{9}{section.4}%
+\contentsline {subsection}{\numberline {4.1}实际图纸公差要求与仿真参数对比}{9}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}曲柄轴几何误差的数学建模}{10}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}随机误差分配算法}{11}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}非理想坐标变换}{12}{subsubsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.3}滞回曲线的动态模拟控制}{12}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}五阶段扭矩加载序列}{13}{subsubsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.4}性能指标定义}{15}{subsection.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.1}扭转刚度 ($K_T$)}{15}{subsubsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.2}回差 / 空程 ($Lost Motion$)}{15}{subsubsection.4.4.2}%
+\contentsline {subsubsection}{\numberline {4.4.3}背隙 ($Backlash$)}{15}{subsubsection.4.4.3}%
+\contentsline {section}{\numberline {5}自定义接触函数详解}{15}{section.5}%
+\contentsline {subsection}{\numberline {5.1}ObjectContactCircleCircle：圆-圆罚式接触}{16}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}功能概述}{16}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}几何与间隙定义}{16}{subsubsection.5.1.2}%
+\contentsline {subsubsection}{\numberline {5.1.3}力学模型}{16}{subsubsection.5.1.3}%
+\contentsline {subsubsection}{\numberline {5.1.4}数据节点结构}{17}{subsubsection.5.1.4}%
+\contentsline {subsection}{\numberline {5.2}ObjectContactCurveCircles：曲线-多圆接触}{17}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}功能概述}{17}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}几何表示}{18}{subsubsection.5.2.2}%
+\contentsline {subsubsection}{\numberline {5.2.3}接触搜索算法}{18}{subsubsection.5.2.3}%
+\contentsline {subsubsection}{\numberline {5.2.4}力学模型}{18}{subsubsection.5.2.4}%
+\contentsline {subsubsection}{\numberline {5.2.5}数据节点结构}{19}{subsubsection.5.2.5}%
+\contentsline {subsubsection}{\numberline {5.2.6}核心参数说明}{20}{subsubsection.5.2.6}%
+\contentsline {section}{\numberline {6}系统动力学求解}{20}{section.6}%
+\contentsline {subsection}{\numberline {6.1}运动方程}{20}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}接触力装配流程}{22}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}时间积分器}{22}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}不连续性处理}{22}{subsection.6.4}%
+\contentsline {section}{\numberline {7}后处理算法与敏感度分析}{23}{section.7}%
+\contentsline {subsection}{\numberline {7.1}滞回曲线后处理算法}{23}{subsection.7.1}%
+\contentsline {subsubsection}{\numberline {7.1.1}数据清洗与滞回曲线校正}{23}{subsubsection.7.1.1}%
+\contentsline {subsubsection}{\numberline {7.1.2}加载/卸载曲线分离}{24}{subsubsection.7.1.2}%
+\contentsline {subsubsection}{\numberline {7.1.3}扭转刚度计算}{25}{subsubsection.7.1.3}%
+\contentsline {subsubsection}{\numberline {7.1.4}空程（Lost Motion）计算}{26}{subsubsection.7.1.4}%
+\contentsline {subsubsection}{\numberline {7.1.5}背隙（Backlash）计算}{27}{subsubsection.7.1.5}%
+\contentsline {subsubsection}{\numberline {7.1.6}多工作位置统计}{28}{subsubsection.7.1.6}%
+\contentsline {subsection}{\numberline {7.2}误差敏感度分析与参数化讨论}{28}{subsection.7.2}%
+\contentsline {subsubsection}{\numberline {7.2.1}敏感性分析方法}{28}{subsubsection.7.2.1}%
+\contentsline {subsubsection}{\numberline {7.2.2}敏感性分析结论}{29}{subsubsection.7.2.2}%
+\contentsline {subsubsection}{\numberline {7.2.3}仿真结果对比}{31}{subsubsection.7.2.3}%
+\contentsline {subsubsection}{\numberline {7.2.4}参数化验证}{31}{subsubsection.7.2.4}%
+\contentsline {section}{\numberline {8}结论}{34}{section.8}%
+\contentsline {section}{\numberline {A}符号表}{34}{appendix.A}%

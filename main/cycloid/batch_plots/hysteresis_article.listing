@@ -1,0 +1,27 @@
+import itertools
+import json
+
+# 定义误差水平
+eccentric_error_levels = [0, -5e-6, -10e-6]  # 偏心圆半径误差 (m)
+eccentricity_error_levels = [0, 5e-6]  # 偏心距误差 (m)
+angle_error_levels = [0, np.deg2rad(1/60)]  # 偏心角误差 (rad)
+
+# 生成参数组合
+param_combinations = list(itertools.product(
+    eccentric_error_levels,
+    eccentricity_error_levels,
+    angle_error_levels
+))
+
+# 为每个组合创建参数文件
+for i, (err_r, err_e, err_a) in enumerate(param_combinations):
+    params = {
+        'simulation_mode': 'stiffness',
+        'eccentric_error': err_r,
+        'eccentricity_error': err_e,
+        'angle_error': err_a,
+        'bearing_clearance_adjust': 0,
+        'output_dir': f'./results/batch_{i:03d}'
+    }
+    with open(f'params_{i:03d}.json', 'w') as f:
+        json.dump(params, f)

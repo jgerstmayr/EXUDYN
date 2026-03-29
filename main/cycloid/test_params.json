@@ -1,0 +1,9 @@
+{
+    "simulation_mode": "stiffness",
+    "eccentric_error": -1e-6,
+    "eccentricity_error": 0,
+    "angle_error": 0,
+    "bearing_clearance_adjust": 0,
+    "output_dir": "./test_batch_output",
+    "show_graphics": false
+}
