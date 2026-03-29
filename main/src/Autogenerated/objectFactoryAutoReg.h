@@ -610,6 +610,39 @@ bool MainObjectContactFrictionCircleCable2DIsRegistered = ClassFactoryItemsSyste
 		return object;
 	});
 
+bool MainObjectContactCircleCircleIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ContactCircleCircle", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectContactCircleCircle();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectContactCircleCircle(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectContactCircleCircle* vObject = new VisualizationObjectContactCircleCircle();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
+bool MainObjectContactFewTeethIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ContactFewTeeth", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectContactFewTeeth();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectContactFewTeeth(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectContactFewTeeth* vObject = new VisualizationObjectContactFewTeeth();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
+bool MainObjectContactExternalInvoluteIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ContactExternalInvolute", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectContactExternalInvolute();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectContactExternalInvolute(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectContactExternalInvolute* vObject = new VisualizationObjectContactExternalInvolute();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
 bool MainObjectContactSphereSphereIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ContactSphereSphere", [](CSystemData* cSystemData)
 	{ //AUTO: 
 		CObject* cObject = new CObjectContactSphereSphere();

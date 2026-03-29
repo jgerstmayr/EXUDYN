@@ -47,7 +47,7 @@ mutableArgsFunctionsChecked = [
     'MainSystemCreateSphericalJoint', 'MainSystemCreateGenericJoint', 'MainSystemCreateDistanceConstraint',
     'MainSystemCreateDistanceConstraint', 'MainSystemCreateRollingDiscPenalty', 'MainSystemCreateRollingDisc', 'MainSystemCreateKinematicTree',
     'MainSystemCreateForce','MainSystemCreateTorque','MainSystemCreateCoordinateConstraint',
-    'MainSystemCreateSphereSphereContact','MainSystemCreateSphereQuadContact','MainSystemCreateSphereTriangleContact',
+    'MainSystemCreateCircleCircleContact','MainSystemCreateSphereSphereContact','MainSystemCreateSphereQuadContact','MainSystemCreateSphereTriangleContact',
     #plot:
     'PlotSensor', 'DataArrayFromSensorList',
     #processing:

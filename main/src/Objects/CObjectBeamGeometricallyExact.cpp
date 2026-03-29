@@ -189,18 +189,23 @@ void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs, Index object
 	//pout << "incDisp=" << incDisp << ", ";
 	//pout << "incRot=" << incRot << "\n";
 
+	// MODIFIED: For Z-axis beam, swap stiffness components [0]<->[2] and [3]<->[5]
+	// Original order: [EA, GAy, GAz, GJ, EIy, EIz] for X-axis beam
+	// New order for Z-axis beam: [GAz, GAy, EA, EIz, EIy, GJ]
 	Vector6D K6D({
-		parameters.physicsAxialShearStiffness[0],
-		parameters.physicsAxialShearStiffness[1],
-		parameters.physicsAxialShearStiffness[2],
-		parameters.physicsTorsionalBendingStiffness[0],
-		parameters.physicsTorsionalBendingStiffness[1],
-		parameters.physicsTorsionalBendingStiffness[2]});
+		parameters.physicsAxialShearStiffness[2],   // Was [0], now shear in original X direction
+		parameters.physicsAxialShearStiffness[1],   // [1] stays same (shear Y)
+		parameters.physicsAxialShearStiffness[0],   // Was [2], now axial (along Z)
+		parameters.physicsTorsionalBendingStiffness[2],  // Was [3], now bending around original X
+		parameters.physicsTorsionalBendingStiffness[1],  // [4] stays same (bending Y)
+		parameters.physicsTorsionalBendingStiffness[0]}); // Was [5], now torsion (around Z)
 
 	//future: h0 must contain (pre-deformed) reference configuration!!!
+	// MODIFIED: beam axis along local Z (index 2) instead of X (index 0)
 	Vector6D h0(0.);
-	h0[0] = L;
-	Vector6D h({ incDisp[0], incDisp[1], incDisp[2], incRot[0] , incRot[1] , incRot[2] });
+	h0[2] = L;
+	// h keeps original order - the K6D reordering handles the axis change
+	Vector6D h({ incDisp[0], incDisp[1], incDisp[2], incRot[0], incRot[1], incRot[2] });
 
 	Vector6D eps = 1. / L * (h - h0); //deformation as incremental motion
 
@@ -321,12 +326,13 @@ void CObjectBeamGeometricallyExact::ComputeJacobianODE2_ODE2(EXUmath::MatrixCont
 #endif
 
 	Matrix6D K6D(6, 6, 0.);
-	K6D(0, 0) = parameters.physicsAxialShearStiffness[0];
-	K6D(1, 1) = parameters.physicsAxialShearStiffness[1];
-	K6D(2, 2) = parameters.physicsAxialShearStiffness[2];
-	K6D(3, 3) = parameters.physicsTorsionalBendingStiffness[0];
-	K6D(4, 4) = parameters.physicsTorsionalBendingStiffness[1];
-	K6D(5, 5) = parameters.physicsTorsionalBendingStiffness[2];
+	// MODIFIED: For Z-axis beam, swap stiffness components [0]<->[2] and [3]<->[5]
+	K6D(0, 0) = parameters.physicsAxialShearStiffness[2];   // Was [0]
+	K6D(1, 1) = parameters.physicsAxialShearStiffness[1];   // Unchanged
+	K6D(2, 2) = parameters.physicsAxialShearStiffness[0];   // Was [2]
+	K6D(3, 3) = parameters.physicsTorsionalBendingStiffness[2];  // Was [0]
+	K6D(4, 4) = parameters.physicsTorsionalBendingStiffness[1];  // Unchanged
+	K6D(5, 5) = parameters.physicsTorsionalBendingStiffness[0];  // Was [2]
 
 	Real Linv = 1./L; //integration weight, for quadratic velocity vector (approximated!)
 	K6D *= Linv* factorODE2;
@@ -433,7 +439,8 @@ void CObjectBeamGeometricallyExact::GetAccessFunctionBody(AccessFunctionType acc
 		//const Index dim = 2;  //2D finite element
 		//const Index ns = 2;   //number of shape functions
 
-		Real x = localPosition[0]; //only x-coordinate
+		// MODIFIED: For Z-axis beam, use localPosition[2]
+		Real x = localPosition[2]; //beam axis coordinate (was x, now z)
 		Vector2D SV = ComputeShapeFunctions(x);
 		value.SetNumberOfRowsAndColumns(3, GetODE2Size()); //3D velocity, 6 coordinates qt
 
@@ -451,7 +458,8 @@ void CObjectBeamGeometricallyExact::GetAccessFunctionBody(AccessFunctionType acc
 	{
 		//const Index ns = 2;   //number of shape functions
 
-		Real x = localPosition[0]; //only x-coordinate
+		// MODIFIED: For Z-axis beam, use localPosition[2]
+		Real x = localPosition[2]; //beam axis coordinate (was x, now z)
 
 		value.SetNumberOfRowsAndColumns(3, GetODE2Size()); //3D velocity, 6 coordinates qt
 		value.SetAll(0.); //last row not necessary to set to zero ... 
@@ -509,7 +517,8 @@ void CObjectBeamGeometricallyExact::GetOutputVariableBody(OutputVariableType var
 HomogeneousTransformation CObjectBeamGeometricallyExact::GetLocalPositionFrame(const Vector3D& localPosition, 
 	ConfigurationType configuration) const
 {
-	Vector2D SV = ComputeShapeFunctions(localPosition[0]); //SV[0] goes from 0 to 1
+	// MODIFIED: For Z-axis beam, use localPosition[2] as beam axis coordinate
+	Vector2D SV = ComputeShapeFunctions(localPosition[2]); //SV[0] goes from 0 to 1
 
 	const CNodeRigidBody* node0 = (CNodeRigidBody*)GetCNode(0);
 	const CNodeRigidBody* node1 = (CNodeRigidBody*)GetCNode(1);
@@ -537,9 +546,10 @@ Vector3D CObjectBeamGeometricallyExact::GetPosition(const Vector3D& localPositio
 
 	Vector3D p = HTlocalPosition.GetTranslation();
 	
-	if (localPosition[1] != 0. || localPosition[2] != 0.)
+	// MODIFIED: For Z-axis beam, cross-section offset is in X-Y plane
+	if (localPosition[0] != 0. || localPosition[1] != 0.)
 	{
-		p += HTlocalPosition.GetRotation() * Vector3D({0.,localPosition[1],localPosition[2]});
+		p += HTlocalPosition.GetRotation() * Vector3D({localPosition[0],localPosition[1],0.});
 	}
 
 	return p;
@@ -555,7 +565,8 @@ Vector3D CObjectBeamGeometricallyExact::GetDisplacement(const Vector3D& localPos
 //! return the (global) velocity of 'localPosition' according to configuration type
 Vector3D CObjectBeamGeometricallyExact::GetVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	Vector2D SV = ComputeShapeFunctions(localPosition[0]); //SV[0] goes from 0 to 1
+	// MODIFIED: For Z-axis beam, use localPosition[2] as beam axis coordinate
+	Vector2D SV = ComputeShapeFunctions(localPosition[2]); //SV[0] goes from 0 to 1
 
 	//Matrix3D A[2];
 	Vector3D vel[2];
@@ -570,7 +581,8 @@ Vector3D CObjectBeamGeometricallyExact::GetVelocity(const Vector3D& localPositio
 	Vector3D v = MapVectors(SV, vel[0], vel[1]); //interpolated at midline, not consistent with position ...
 
 	//add velocity due to cross section rotation:
-	Vector3D pCS({ 0.,localPosition[1],localPosition[2] });
+	// MODIFIED: For Z-axis beam, cross-section is in X-Y plane
+	Vector3D pCS({ localPosition[0],localPosition[1],0. });
 	v += GetLocalPositionFrame(localPosition, configuration).GetRotation()*
 		MapVectors(SV, omegaLoc[0], omegaLoc[1]).CrossProduct(pCS);
 
@@ -586,7 +598,8 @@ Matrix3D CObjectBeamGeometricallyExact::GetRotationMatrix(const Vector3D& localP
 //! return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect
 Vector3D CObjectBeamGeometricallyExact::GetAngularVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	Vector2D SV = ComputeShapeFunctions(localPosition[0]); //SV[0] goes from 0 to 1
+	// MODIFIED: For Z-axis beam, use localPosition[2] as beam axis coordinate
+	Vector2D SV = ComputeShapeFunctions(localPosition[2]); //SV[0] goes from 0 to 1
 
 	Vector3D omegaLoc[2];
 	for (Index i = 0; i < 2; i++)

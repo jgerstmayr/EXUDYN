@@ -7735,6 +7735,73 @@ writeFile = True
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = ObjectContactCircleCircle
+classDescription = "A penalty-based 2D connector enforcing contact between two circles defined by position markers. The second circle may be concave by providing a negative radius, enabling contact with grooves or raceways."
+cParentClass = CObjectConnector
+mainParentClass = MainObjectConnector
+visuParentClass = VisualizationObject
+addProtectedC = "    static constexpr Index nDataVariables = 6; //gap, gap velocity, normal force, friction x/y, contact state\n    static constexpr Index dataIndexGap = 0; //!< index in data node representing gap\n    static constexpr Index dataIndexGapVelocity = 1; //!< index in data node representing gap rate\n    static constexpr Index dataIndexContactForce = 2; //!< index in data node representing normal contact force magnitude\n    static constexpr Index dataIndexFrictionForceX = 3; //!< index in data node representing tangential friction force x-component\n    static constexpr Index dataIndexFrictionForceY = 4; //!< index in data node representing tangential friction force y-component\n    static constexpr Index dataIndexContactState = 5; //!< index in data node representing binary contact state\n    mutable Real gap = 0.;\n    mutable Real gapVelocity = 0.;\n    mutable Real contactForce = 0.;\n    mutable Vector3D contactNormal = Vector3D({1.,0.,0.});\n    mutable Vector3D contactPoint = Vector3D({0.,0.,0.});\n    mutable Vector3D frictionForce = Vector3D({0.,0.,0.});\n"
+outputVariables = "{'DisplacementLocal':'signed distance between the circle perimeters (negative for penetration)', 'VelocityLocal':'time derivative of the gap', 'ForceLocal':'global contact force vector acting on marker 1'}"
+author = Custom Implementation
+classType = Object
+objectType = Connector
+#add equations
+equations =
+    \mysubsubsubsection{Connector kinematics}
+    The markers $m_0$ and $m_1$ provide the circle midpoints $\pv_{m0}$ and $\pv_{m1}$. Radii $r_0$ and $r_1$ are taken from the parameters $\texttt{radius1}$ and $\texttt{radius2}$. A negative radius denotes a concave geometry, which flips the contact normal direction accordingly.
+    The signed gap reads
+    \be
+      g = \begin{cases}
+        \|\pv_{m1} - \pv_{m0}\| - (r_0 + r_1) & r_1 \ge 0\\
+        r_1 - (\|\pv_{m1} - \pv_{m0}\| + r_0) & r_1 < 0
+      \end{cases}
+    \ee
+    A penalty law enforces $g \le 0$ with stiffness $k_c$ and damping $d_c$. The friction force magnitude is limited by $\mu f_n$ using a simple Coulomb model.
+    %%RSTCOMPATIBLE
+/end
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
+Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "connector's unique name"
+V,      CP,     markerNumbers,                  ,               2,      ArrayMarkerIndex, "ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$list of markers representing the two circle centers"
+V,      CP,     nodeNumber,                     ,               ,       NodeIndex,      "EXUstd::InvalidIndex",   ,       I,      "$n_d$node number of a NodeGenericData with 6 dataCoordinates, storing gap history and friction information"
+V,      CP,     radius1,                        ,               ,       Real,       1.,                           ,       IO,     "$r_0$radius of circle attached to marker $m0$ [SI:m]; negative values denote concave contact"
+V,      CP,     radius2,                        ,               ,       Real,       1.,                           ,       IO,     "$r_1$radius of circle attached to marker $m1$ [SI:m]; negative values denote concave contact"
+V,      CP,     contactStiffness,               ,               ,       UReal,      0.,                           ,       I,      "$k_c$normal contact stiffness [SI:N/m]"
+V,      CP,     contactDamping,                 ,               ,       UReal,      0.,                           ,       IO,     "$d_c$linear normal contact damping [SI:N/(m s)]"
+V,      CP,     frictionCoefficient,            ,               ,       UReal,      0.,                           ,       IO,     "$\mu$Coulomb friction coefficient"
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                      ,       IO,     "flag to (temporarily) deactivate the connector"
+#
+Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default (read) function to return marker numbers"
+Fv,     C,      GetMarkerNumbers,               ,               ,       "ArrayIndex&",       "return parameters.markerNumbers;",, I,     "default (write) function to return marker numbers"
+Fv,     C,      RequestedNumberOfMarkers,       ,               ,       Index,      "return 2;",                 ,       CI,     "number of markers required for this connector"
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping"
+Fv,     C,      SetNodeNumber,                  ,               ,       void,       "parameters.nodeNumber=nodeNumber;",       "Index localIndex, Index nodeNumber",        I,     "Set global node number (with local node index)"
+Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object"
+Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return nDataVariables;",    ,       CI,     "size of associated data node"
+Fv,     C,      HasDiscontinuousIteration,      ,               ,       Bool,       "return true;",             ,       CI,     "connector uses discontinuous iteration"
+Fv,     C,      PostNewtonStep,                 ,               ,       Real,       ,                           "const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,      "function called after Newton method; returns a residual error (force)"
+Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,                             ,       DI,      "function called after discontinuous iterations have been completed for one step"
+Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return true;",             ,       CI,     "connector uses penalty formulation"
+Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber",          CDI,     "compute left-hand-side (LHS) of ODE2 equations"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return available Jacobians"
+Fv,     C,      GetOutputVariableConnector,     ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide output variable in 'value'"
+F,      C,      ComputeContactProperties,       ,               ,       void,       ,                           "const MarkerDataStructure& markerData, Index itemIndex, LinkedDataVector& data, bool useDataStates", CDI,    "compute gap, forces, and store helper quantities"
+Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::Position;", ,   CI,     "requested marker type for both markers"
+Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericData;", ,      CI,     "requested node type for associated data node"
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail"
+Fv,     C,      GetType,                        ,               ,       CObjectType,"return CObjectType::Connector;", , CI,    "return object type"
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'ContactCircleCircle';", , CI,     "return type name without 'Object' prefix"
+Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active"
+#VISUALIZATION:
+Vp,     V,      show,                           ,               ,       Bool,       "true",                      ,       IO,    "set True to show the connector"
+V,      V,      color,                          ,               ,       Float4,     "Float4({-1.f,-1.f,-1.f,-1.f})",,IO,    "RGBA connector color; if R==-1, use default color"
+Fv,     V,      UpdateGraphics,                 ,               ,       void,       ,                           "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData"
+Fv,     V,      IsConnector,                    ,               ,       Bool,       "return true;",             ,       CI,    "this function is needed to distinguish connector objects from body objects"
+#file names automatically determined from class name
+writeFile = True
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectContactSphereSphere
 classDescription = "A simple contact connector between two spheres, using various contact models and the option for contact of sphere inside hollow sphere (marker1). The connector implements at least the same functionality as in GeneralContact and is intended for simple setups and for testing, while GeneralContact is much more efficient due to parallelization approaches and efficient contact search."
 cParentClass = CObjectConnector

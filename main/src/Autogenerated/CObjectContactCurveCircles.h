@@ -17,6 +17,7 @@
 #define COBJECTCONTACTCURVECIRCLESPARAMETERS__H
 
 #include <ostream>
+#include <vector>
 
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
@@ -37,10 +38,23 @@ public: // AUTO:
     Matrix3D rotationMarker0;                     //!< AUTO: local rotation matrix for marker 0; used to rotate marker coordinates such that the curve lies in the \f$x-y\f$-plane
     Real dynamicFriction;                         //!< AUTO: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}
     Real frictionProportionalZone;                //!< AUTO: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}
+    Real frictionVelocityPenalty;                 //!< AUTO: velocity penalty coefficient for friction [SI:N/(m/s)]; if > 0, friction = min(frictionVelocityPenalty * vTangent, mu * fNormal)
+    Real frictionStiffness;                       //!< AUTO: sticking friction stiffness for Bristle model [SI:N/m]; 0=disabled
     Real contactStiffness;                        //!< AUTO: normal contact stiffness [SI:N/(m*m)]
     Real contactDamping;                          //!< AUTO: linear normal contact damping [SI:N/(m s)]; this damping is a simplification of real contact dissipation and should be used with care.
     Index contactModel;                           //!< AUTO: number of contact model: 0) linear model for stiffness and damping, only proportional to penetration; contact force is computed from \f$l_\mathrm{seg}\left(p \cdot  \cdot k_c + \dot p \cdot d_c \right)\f$ as long as \f$p>0\f$; while this is numerically more stable, it gives jumps in forces when sliding over contact geometry 1) contact force proportional to integral over penetration area of circle with segments, giving a smoother contact force when sliding over geometry;
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+    ArrayIndex profileNodeIndices;                //!< AUTO: optional array of mesh node indices for flexible body curve; if provided, these indices map segment points to flexible body mesh nodes for deformation tracking
+    
+    // =================== Hertz接触和位置相关刚度参数 ===================
+    bool useHertzContact;                         //!< enable Hertz contact model with position-dependent stiffness
+    Real faceWidth;                               //!< contact face width [SI:m] for Hertz stiffness calculation
+    Real elasticModulus;                          //!< elastic modulus [SI:Pa] for Hertz stiffness calculation
+    Real poissonRatio;                            //!< Poisson's ratio [-] for Hertz stiffness calculation
+    Vector curvaturePerPoint;                     //!< curvature kappa = 1/rho [SI:1/m] per curve point; positive=convex, negative=concave; length must match segmentsData rows
+    Vector baseStiffnessPerPoint;                 //!< base structure stiffness [SI:N/m] per curve point; length must match segmentsData rows
+    // =================== End Hertz parameters ===================
+    
     //! AUTO: default constructor with parameter initialization
     CObjectContactCurveCirclesParameters()
     {
@@ -52,10 +66,20 @@ public: // AUTO:
         rotationMarker0 = EXUmath::unitMatrix3D;
         dynamicFriction = 0.;
         frictionProportionalZone = 1e-3;
+        frictionVelocityPenalty = 0.;
+        frictionStiffness = 0.;
         contactStiffness = 0.;
         contactDamping = 0.;
         contactModel = 0;
         activeConnector = true;
+        profileNodeIndices = ArrayIndex();
+        // Hertz contact defaults
+        useHertzContact = false;
+        faceWidth = 0.01;           // 10mm default
+        elasticModulus = 2.1e11;    // steel
+        poissonRatio = 0.3;
+        curvaturePerPoint = Vector();
+        baseStiffnessPerPoint = Vector();
     };
 };
 
@@ -89,12 +113,16 @@ protected: // AUTO:
     mutable Vector gapPerSegment_t;               //!< AUTO: temporary vector for computed gap velocity
     mutable Vector segmentsForceLocalX;           //!< AUTO: temporary vector for contact force per segment in local X-direction
     mutable Vector segmentsForceLocalY;           //!< AUTO: temporary vector for contact force per segment in local Y-direction
+    mutable Vector segmentsTorqueLocal;           //!< AUTO: temporary vector for contact torque per segment
+    mutable std::vector<Index> lastNearestPointPerCircle; //!< warm start cache: last nearest point index per circle for fast local search
 
 public: // AUTO: 
-    static constexpr Index nDataVariablesPerSegment = 3; //number of data variables per circle marker
+    static constexpr Index nDataVariablesPerSegment = 5; //number of data variables per circle marker
     static constexpr Index dataIndexCircle = 0; //!< index in data node (per segment) representing circle number
     static constexpr Index dataIndexGap = 1; //!< index in data node (per segment) representing gap
     static constexpr Index dataIndexVtangent = 2; //!< index in data node (per segment) representing tangent velocity
+    static constexpr Index dataIndexStickPosX = 3; //!< index for Bristle model stick position X
+    static constexpr Index dataIndexStickPosY = 4; //!< index for Bristle model stick position Y
     //! AUTO: default constructor with parameter initialization
     CObjectContactCurveCircles()
     {
@@ -102,6 +130,7 @@ public: // AUTO:
         gapPerSegment_t = Vector();
         segmentsForceLocalX = Vector();
         segmentsForceLocalY = Vector();
+        segmentsTorqueLocal = Vector();
     };
 
     // AUTO: access functions
@@ -137,6 +166,13 @@ public: // AUTO:
     const Vector& GetSegmentsForceLocalY() const { return segmentsForceLocalY; }
     //! AUTO:  Read (Reference) access to:temporary vector for contact force per segment in local Y-direction
     Vector& GetSegmentsForceLocalY() { return segmentsForceLocalY; }
+
+    //! AUTO:  Write (Reference) access to:temporary vector for contact torque per segment
+    void SetSegmentsTorqueLocal(const Vector& value) { segmentsTorqueLocal = value; }
+    //! AUTO:  Read (Reference) access to:temporary vector for contact torque per segment
+    const Vector& GetSegmentsTorqueLocal() const { return segmentsTorqueLocal; }
+    //! AUTO:  Read (Reference) access to:temporary vector for contact torque per segment
+    Vector& GetSegmentsTorqueLocal() { return segmentsTorqueLocal; }
 
     //! AUTO:  default (read) function to return Marker numbers
     virtual const ArrayIndex& GetMarkerNumbers() const override
@@ -224,7 +260,7 @@ public: // AUTO:
     }
 
     //! AUTO:  main function to compute contact kinematics and forces
-    void ComputeConnectorProperties(const MarkerDataStructure& markerData, Index itemIndex, LinkedDataVector& data, bool useDataStates, Vector2D& forceMarker0, Real& torqueMarker0, Vector& gapPerSegment, Vector& gapPerSegment_t, Vector& segmentsForceLocalX, Vector& segmentsForceLocalY) const;
+    void ComputeConnectorProperties(const MarkerDataStructure& markerData, Index itemIndex, LinkedDataVector& data, bool useDataStates, Vector2D& forceMarker0, Real& torqueMarker0, Vector& gapPerSegment, Vector& gapPerSegment_t, Vector& segmentsForceLocalX, Vector& segmentsForceLocalY, Vector& segmentsTorqueLocal) const;
 
     //! AUTO:  compute sum of polynomials at x, with segment length c, segment number and polyCoeffs; implemented for 0, 2 or 4 coefficients
     Real ComputePolynomials(Real x, Real c, Index segNum, const ResizableMatrix& polyCoeffs) const;

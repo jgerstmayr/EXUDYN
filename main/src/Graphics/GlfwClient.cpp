@@ -1642,7 +1642,7 @@ void GlfwRenderer::InitCreateWindow()
 		if (sizex > maxWidth) { sizex = maxWidth; }
 		if (sizey > maxHeight) { sizey = maxHeight; }
 
-		window = glfwCreateWindow(sizex, sizey, "Exudyn OpenGL window", NULL, NULL);
+		window = glfwCreateWindow(sizex, sizey, "CRRC Qishuyan OpenGL window", NULL, NULL);
 
 		if (!window)
 		{
@@ -2150,15 +2150,12 @@ void GlfwRenderer::Render(GLFWwindow* window) //GLFWwindow* needed in argument, 
 		{
 			Float2 pInfo = PixelToVertexCoordinates((float)textIndentPixels, 
 				(float)(height) - (float)verticalPixelOffset); //fixed position, very top left window position
-			Float3 poff({ pInfo[0], pInfo[1], hOff });
-			Float2 pInfo2 = PixelToVertexCoordinates((float)textIndentPixels, 
-				(float)(height) - fontSize*(1.f*fontLargeFactor) - (float)verticalPixelOffset); //fixed position, very top left window position
-			Float3 poff2({ pInfo2[0], pInfo2[1], hOff });
+        Float2 pInfo2 = PixelToVertexCoordinates((float)textIndentPixels,
+            (float)(height) - (float)verticalPixelOffset - fontSize); //fixed position, very top left window position
+        Float3 poff2({ pInfo2[0], pInfo2[1], hOff });
 
-			DrawString("EXUDYN", fontSize*fontLargeFactor, poff, textColor);
-			
-			std::string message = basicVisualizationSystemContainer->GetComputationMessage(visSettings->general.showSolverInformation,
-				visSettings->general.showSolutionInformation, visSettings->general.showSolverTime);
+        std::string message = basicVisualizationSystemContainer->GetComputationMessage(visSettings->general.showSolverInformation,
+            visSettings->general.showSolutionInformation, visSettings->general.showSolverTime);
 			if (visSettings->general.renderWindowString.size() != 0)
 			{
 				message = visSettings->general.renderWindowString + '\n' + message;

@@ -2100,6 +2100,102 @@ def MainSystemCreateSphereSphereContact(mbs, name='', bodyNumbers=[None, None],
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: Create penalty-based circle-circle contact between two rigid or point bodies in the plane; the contact is based on ObjectContactCircleCircle and supports concave follower circles (negative radius).
+#**input:
+#  mbs: the MainSystem where markers and the contact object shall be created
+#  name: name string for the contact; markers get Marker0:name and Marker1:name
+#  bodyNumbers: list of object numbers for circle0 and circle1; use bodyOrNodeList for mixed node/object references
+#  localPosition0: local position (3D) of the first circle center on body0, if not a node reference
+#  localPosition1: local position (3D) of the second circle center on body1, if not a node reference
+#  radius1: radius [SI:m] of the first circle; negative values can be used for concave surfaces
+#  radius2: radius [SI:m] of the second circle; negative values can be used for concave surfaces
+#  contactStiffness: normal contact stiffness [SI:N/m]
+#  contactDamping: normal contact damping [SI:N s/m]
+#  frictionCoefficient: Coulomb friction coefficient; set to zero for frictionless contact
+#  dataInitialCoordinates: initial values for the six data coordinates used during discontinuous iteration
+#  activeConnector: flag to activate or deactivate the connector
+#  bodyOrNodeList: alternative to bodyNumbers; may contain node numbers (requires localPosition=[0,0,0])
+#  show: if True, connector visualization is drawn
+#  color: RGBA color of the connector visualization
+#**output: ObjectIndex; returns index of created contact object
+#**belongsTo: MainSystem
+def MainSystemCreateCircleCircleContact(mbs, name='', bodyNumbers=[None, None],
+                                        localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.],
+                                        radius1 = 1., radius2 = 1.,
+                                        contactStiffness = 0., contactDamping = 0.,
+                                        frictionCoefficient = 0.,
+                                        dataInitialCoordinates = [0.,0.,0.,0.,0.,0.],
+                                        activeConnector=True,
+                                        bodyOrNodeList=[None, None],
+                                        show=False, color=exudyn.graphics.color.default):
+
+    where = 'MainSystem.CreateCircleCircleContact(...)'
+    internBodyNodeList = ProcessBodyNodeLists(bodyNumbers, bodyOrNodeList, localPosition0, localPosition1, where)
+
+    if not exudyn.__useExudynFast:
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
+
+        if not IsVector(localPosition0, 3):
+            RaiseTypeError(where=where, argumentName='localPosition0', received = localPosition0, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(localPosition1, 3):
+            RaiseTypeError(where=where, argumentName='localPosition1', received = localPosition1, expectedType = ExpectedType.Vector, dim=3)
+
+        if not IsValidRealInt(radius1):
+            RaiseTypeError(where=where, argumentName='radius1', received = radius1, expectedType = ExpectedType.Real)
+        if not IsValidRealInt(radius2):
+            RaiseTypeError(where=where, argumentName='radius2', received = radius2, expectedType = ExpectedType.Real)
+
+        if not IsValidURealInt(contactStiffness):
+            RaiseTypeError(where=where, argumentName='contactStiffness', received = contactStiffness, expectedType = ExpectedType.Real)
+        if not IsValidURealInt(contactDamping):
+            RaiseTypeError(where=where, argumentName='contactDamping', received = contactDamping, expectedType = ExpectedType.Real)
+        if not IsValidURealInt(frictionCoefficient):
+            RaiseTypeError(where=where, argumentName='frictionCoefficient', received = frictionCoefficient, expectedType = ExpectedType.Real)
+
+        if not IsVector(dataInitialCoordinates, 6):
+            RaiseTypeError(where=where, argumentName='dataInitialCoordinates', received = dataInitialCoordinates, expectedType = ExpectedType.Vector, dim=6)
+
+        if not IsValidBool(activeConnector):
+            RaiseTypeError(where=where, argumentName='activeConnector', received = activeConnector, expectedType = ExpectedType.Bool)
+        if not IsValidBool(show):
+            RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
+        if not IsVector(color, 4):
+            RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+
+    mName0 = ''
+    mName1 = ''
+    if name != '':
+        mName0 = 'Marker0:'+name
+        mName1 = 'Marker1:'+name
+
+    if isinstance(internBodyNodeList[0], exudyn.ObjectIndex):
+        mBody0 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName0, bodyNumber=internBodyNodeList[0], localPosition=localPosition0))
+    else:
+        mBody0 = mbs.AddMarker(eii.MarkerNodePosition(name=mName0, nodeNumber=internBodyNodeList[0]))
+
+    if isinstance(internBodyNodeList[1], exudyn.ObjectIndex):
+        mBody1 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName1, bodyNumber=internBodyNodeList[1], localPosition=localPosition1))
+    else:
+        mBody1 = mbs.AddMarker(eii.MarkerNodePosition(name=mName1, nodeNumber=internBodyNodeList[1]))
+
+    nGeneric = mbs.AddNode(eii.NodeGenericData(initialCoordinates=dataInitialCoordinates,
+                                         numberOfDataCoordinates=len(dataInitialCoordinates)))
+
+    oContact = mbs.AddObject(eii.ObjectContactCircleCircle(markerNumbers=[mBody0, mBody1],
+                                                   nodeNumber=nGeneric,
+                                                   radius1=radius1,
+                                                   radius2=radius2,
+                                                   contactStiffness=contactStiffness,
+                                                   contactDamping=contactDamping,
+                                                   frictionCoefficient=frictionCoefficient,
+                                                   activeConnector=activeConnector,
+                                                   visualization=eii.VObjectContactCircleCircle(show=show, color=color)))
+
+    return oContact
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: Create penalty-based sphere-quad contact between two rigid bodies, mass points or according nodes; the contact is based on two ObjectContactSphereTriangle; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems
 #**input:
 #  mbs: the MainSystem where joint and markers shall be created

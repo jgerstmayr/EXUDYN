@@ -122,6 +122,11 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "velocityOffset")) { cObjectConnectorTorsionalSpringDamper->GetParameters().velocityOffset = py::cast<Real>(d["velocityOffset"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "torque")) { cObjectConnectorTorsionalSpringDamper->GetParameters().torque = py::cast<Real>(d["torque"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorTorsionalSpringDamper->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "factorMarker0")) { cObjectConnectorTorsionalSpringDamper->GetParameters().factorMarker0 = py::cast<Real>(d["factorMarker0"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "factorMarker1")) { cObjectConnectorTorsionalSpringDamper->GetParameters().factorMarker1 = py::cast<Real>(d["factorMarker1"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "backlash")) { cObjectConnectorTorsionalSpringDamper->GetParameters().backlash = py::cast<Real>(d["backlash"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "backlashStiffnessScale")) { cObjectConnectorTorsionalSpringDamper->GetParameters().backlashStiffnessScale = py::cast<Real>(d["backlashStiffnessScale"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "backlashDampingScale")) { cObjectConnectorTorsionalSpringDamper->GetParameters().backlashDampingScale = py::cast<Real>(d["backlashDampingScale"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "springTorqueUserFunction")) { cObjectConnectorTorsionalSpringDamper->GetParameters().springTorqueUserFunction = d["springTorqueUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectConnectorTorsionalSpringDamper->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -145,6 +150,11 @@ public: // AUTO:
         d["velocityOffset"] = (Real)cObjectConnectorTorsionalSpringDamper->GetParameters().velocityOffset; //! AUTO: cast variables into python (not needed for standard types) 
         d["torque"] = (Real)cObjectConnectorTorsionalSpringDamper->GetParameters().torque; //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectConnectorTorsionalSpringDamper->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
+        d["factorMarker0"] = (Real)cObjectConnectorTorsionalSpringDamper->GetParameters().factorMarker0; //! AUTO: cast variables into python (not needed for standard types) 
+        d["factorMarker1"] = (Real)cObjectConnectorTorsionalSpringDamper->GetParameters().factorMarker1; //! AUTO: cast variables into python (not needed for standard types) 
+        d["backlash"] = (Real)cObjectConnectorTorsionalSpringDamper->GetParameters().backlash; //! AUTO: cast variables into python (not needed for standard types) 
+        d["backlashStiffnessScale"] = (Real)cObjectConnectorTorsionalSpringDamper->GetParameters().backlashStiffnessScale; //! AUTO: cast variables into python (not needed for standard types) 
+        d["backlashDampingScale"] = (Real)cObjectConnectorTorsionalSpringDamper->GetParameters().backlashDampingScale; //! AUTO: cast variables into python (not needed for standard types) 
         d["springTorqueUserFunction"] = (py::object)cObjectConnectorTorsionalSpringDamper->GetParameters().springTorqueUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectConnectorTorsionalSpringDamper->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -167,6 +177,11 @@ public: // AUTO:
         else if (parameterName.compare("velocityOffset") == 0) { return py::cast((Real)cObjectConnectorTorsionalSpringDamper->GetParameters().velocityOffset);} //! AUTO: get parameter
         else if (parameterName.compare("torque") == 0) { return py::cast((Real)cObjectConnectorTorsionalSpringDamper->GetParameters().torque);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorTorsionalSpringDamper->GetParameters().activeConnector);} //! AUTO: get parameter
+        else if (parameterName.compare("factorMarker0") == 0) { return py::cast((Real)cObjectConnectorTorsionalSpringDamper->GetParameters().factorMarker0);} //! AUTO: get parameter
+        else if (parameterName.compare("factorMarker1") == 0) { return py::cast((Real)cObjectConnectorTorsionalSpringDamper->GetParameters().factorMarker1);} //! AUTO: get parameter
+        else if (parameterName.compare("backlash") == 0) { return py::cast((Real)cObjectConnectorTorsionalSpringDamper->GetParameters().backlash);} //! AUTO: get parameter
+        else if (parameterName.compare("backlashStiffnessScale") == 0) { return py::cast((Real)cObjectConnectorTorsionalSpringDamper->GetParameters().backlashStiffnessScale);} //! AUTO: get parameter
+        else if (parameterName.compare("backlashDampingScale") == 0) { return py::cast((Real)cObjectConnectorTorsionalSpringDamper->GetParameters().backlashDampingScale);} //! AUTO: get parameter
         else if (parameterName.compare("springTorqueUserFunction") == 0) { return cObjectConnectorTorsionalSpringDamper->GetParameters().springTorqueUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorTorsionalSpringDamper->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationObjectConnectorTorsionalSpringDamper->GetDrawSize());} //! AUTO: get parameter
@@ -190,6 +205,11 @@ public: // AUTO:
         else if (parameterName.compare("velocityOffset") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().velocityOffset = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("torque") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().torque = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("factorMarker0") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().factorMarker0 = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("factorMarker1") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().factorMarker1 = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("backlash") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().backlash = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("backlashStiffnessScale") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().backlashStiffnessScale = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("backlashDampingScale") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().backlashDampingScale = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("springTorqueUserFunction") == 0) { cObjectConnectorTorsionalSpringDamper->GetParameters().springTorqueUserFunction = value; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectConnectorTorsionalSpringDamper->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { visualizationObjectConnectorTorsionalSpringDamper->GetDrawSize() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

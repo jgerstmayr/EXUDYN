@@ -190,7 +190,7 @@ namespace EPyUtils {
 			return py::cast<Index>(pyObject);
 		}
 		//otherwise:
-		PyError(STDstring("Expected NodeIndex, but received '" + EXUstd::ToString(pyObject) + "', type=" + EXUstd::ToString(pyObject.get_type()) +
+		PyError(STDstring("Expected NodeIndex, but received '" + EXUstd::ToString(pyObject) + "', type=" + EXUstd::ToString(py::str(py::type::of(pyObject))) +
 			"'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
 		return EXUstd::InvalidIndex;
 	}
@@ -204,7 +204,7 @@ namespace EPyUtils {
 			return py::cast<Index>(pyObject);
 		}
 		//otherwise:
-		PyError(STDstring("Expected ObjectIndex, but received '" + EXUstd::ToString(pyObject) + "', type=" + EXUstd::ToString(pyObject.get_type()) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
+		PyError(STDstring("Expected ObjectIndex, but received '" + EXUstd::ToString(pyObject) + "', type=" + EXUstd::ToString(py::str(py::type::of(pyObject))) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
 		return EXUstd::InvalidIndex;
 	}
 
@@ -218,7 +218,7 @@ namespace EPyUtils {
 			return py::cast<Index>(pyObject);
 		}
 		//otherwise:
-		PyError(STDstring("Expected MarkerIndex, but received '" + EXUstd::ToString(pyObject) + "', type=" + EXUstd::ToString(pyObject.get_type()) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
+		PyError(STDstring("Expected MarkerIndex, but received '" + EXUstd::ToString(pyObject) + "', type=" + EXUstd::ToString(py::str(py::type::of(pyObject))) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
 		return EXUstd::InvalidIndex;
 	}
 
@@ -231,7 +231,7 @@ namespace EPyUtils {
 			return py::cast<Index>(pyObject);
 		}
 		//otherwise:
-		PyError(STDstring("Expected LoadIndex, but received '" + EXUstd::ToString(pyObject) + "', type=" + EXUstd::ToString(pyObject.get_type()) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
+		PyError(STDstring("Expected LoadIndex, but received '" + EXUstd::ToString(pyObject) + "', type=" + EXUstd::ToString(py::str(py::type::of(pyObject))) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
 		return EXUstd::InvalidIndex;
 	}
 
@@ -244,7 +244,7 @@ namespace EPyUtils {
 			return py::cast<Index>(pyObject);
 		}
 		//otherwise:
-		PyError(STDstring("Expected SensorIndex, but received '" + EXUstd::ToString(pyObject) + "', type=" + EXUstd::ToString(pyObject.get_type()) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
+		PyError(STDstring("Expected SensorIndex, but received '" + EXUstd::ToString(pyObject) + "', type=" + EXUstd::ToString(py::str(py::type::of(pyObject))) + "'; check potential mixing of different indices (ObjectIndex, NodeIndex, MarkerIndex, ...)!"));
 		return EXUstd::InvalidIndex;
 	}
 

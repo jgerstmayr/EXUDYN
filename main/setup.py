@@ -9,6 +9,7 @@ import platform
 import setuptools
 import time
 import json
+import glob
 
 #from src.pythonGenerator.exudynVersion import exudynVersionString #does not run under MacOS
 file='src/pythonGenerator/exudynVersion.py'
@@ -111,7 +112,7 @@ if '--openvr' in sys.argv:
     print("setup.py: *** compiling with OpenVR ***")
     sys.argv.remove('--openvr')
 
-useAVX = False              #this flag is used to create separate version without AVX
+useAVX = True               #enable AVX build for fast variant
 if '--nofast' in sys.argv:
     config['compileExudynFast'] = False
     print("setup.py: *** no exudynCPPfast created for this Python version ***")
@@ -134,6 +135,10 @@ isMacOS = False
 if platform.system() == 'Windows':
     isWindows = True
     print("platform == Windows")
+    #在已加载 Visual Studio 工具链的终端中，强制让 distutils 直接
+    #使用现有 SDK 设置，避免再次调用带空格路径的 vcvarsall 命令
+    os.environ.setdefault('DISTUTILS_USE_SDK', '1')
+    os.environ.setdefault('MSSdk', '1')
 if platform.system() == 'Linux':
     isLinux = True
     print("platform == Linux")
@@ -153,6 +158,7 @@ else:
     is32bits = True
 
 addLibrary_dirs = []
+ceres_libraries = []
 
 addPackageData = {'':['__init__.pyi']}
 
@@ -184,10 +190,23 @@ if isWindows:
             print('add package data for openVR:', addPackageData)
         
         addLibrary_dirs=['libs/libs64' ]
-        print("architecture==64bits")
+    print("architecture==64bits")
 
 if isMacOS:
     addLibrary_dirs=['libs/libsmacos' ] #should contain glfw-libraries
+
+#本地打包的 Ceres 头文件与静态库
+script_dir = os.path.abspath(os.path.dirname(__file__))
+ceres_include_dir = os.path.join(script_dir, "include", "ceres")
+ceres_lib_dir = os.path.join(script_dir, "libs", "ceres")
+if os.path.isdir(ceres_include_dir):
+    myIncludeDirs.append(ceres_include_dir)
+if os.path.isdir(ceres_lib_dir):
+    addLibrary_dirs.append(ceres_lib_dir)
+    ceres_libraries = ["ceres"] + [
+        os.path.splitext(os.path.basename(p))[0]
+        for p in glob.glob(os.path.join(ceres_lib_dir, "absl_*.lib"))
+    ]
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 print("python version =",platform.python_version())
@@ -204,7 +223,7 @@ if config['USEGLFW']:
     msvcCppGLFWflag = [] #GLFW will be used
     unixCppGLFWflag = [] #GLFW will be used
 
-    myIncludeDirs=["include/glfw/deps", "include/glfw",]
+    myIncludeDirs += ["include/glfw/deps", "include/glfw"]
     msvcGLFWlibs = ['opengl32.lib', 'glfw3.lib'] #opengl32.lib: not needed since VS2015?
 
     if isMacOS:
@@ -368,13 +387,17 @@ if not config["minimalCppFiles"]:
             'src/Objects/CObjectConnectorRollingDiscPenalty.cpp',
             'src/Objects/CObjectConnectorTorsionalSpringDamper.cpp',
             'src/Objects/CObjectContactCircleCable2D.cpp',
+            'src/Objects/CObjectContactCircleCircle.cpp',
             'src/Objects/CObjectContactConvexRoll.cpp',
             'src/Objects/CObjectContactCoordinate.cpp',
             'src/Objects/CObjectContactCurveCircles.cpp',
+            'src/Objects/CObjectContactFewTeeth.cpp',
+            'src/Objects/CObjectContactExternalInvolute.cpp',
             'src/Objects/CObjectContactFrictionCircleCable2D.cpp',
             'src/Objects/CObjectContactSphereSphere.cpp',
             'src/Objects/CObjectContactSphereTorus.cpp',
             'src/Objects/CObjectContactSphereTriangle.cpp',
+            'src/Objects/CObjectCustomContact.cpp',
             'src/Objects/CObjectFFRF.cpp',
             'src/Objects/CObjectFFRFreducedOrder.cpp',
             'src/Objects/CObjectGenericODE1.cpp',
@@ -406,52 +429,45 @@ myIncludeDirs += [
         			"include/lest",
                  ]
 
-ext_modules = [
-    Extension(
-        'exudyn.exudynCPP', #this is the regular C++ library with range checks inside the exudyn package
-        # Alternative, but not needed, as .cpp file list is generated automatically: sort input source files to ensure bit-for-bit reproducible builds: sorted([...])
-        cppFiles,
-        include_dirs=[get_pybind_include(), #does some magic for Pybind11
-                     ]+myIncludeDirs,
-        library_dirs = addLibrary_dirs,
-		define_macros=[],
-        extra_compile_args=['/arch:AVX2']*useAVX,
-        language='c++'
-    ),
-]
+# Add Windows SDK include paths for MSVC
+if isWindows:
+    import glob
+    sdk_paths = glob.glob(r"C:\Program Files (x86)\Windows Kits\10\Include\10.*\ucrt")
+    if not sdk_paths:
+        sdk_paths = glob.glob(r"C:\Program Files\Windows Kits\10\Include\10.*\ucrt")
+    
+    if sdk_paths:
+        sdk_base = sdk_paths[0].replace(r"\ucrt", "")
+        myIncludeDirs += [
+            sdk_base + r"\ucrt",
+            sdk_base + r"\um",
+            sdk_base + r"\shared",
+        ]
+        print(f"Added Windows SDK paths from: {sdk_base}")
+
+# ===== Only compile fast version =====
+ext_modules = []
 
 if config['compileExudynFast']:
-    if not (pyVersionString == '3.10') and isDevelopmentVersion: 
+    if not (pyVersionString == '3.10') and isDevelopmentVersion:
         config['compileExudynFast'] = False
 
 if config['compileExudynFast']:
-    print('***  preparing C++ module also for __FAST_EXUDYN_LINALG  ***')
-    ext_modules += [
+    print('***  preparing C++ module (FAST variant only) ***')
+    ext_modules.append(
         Extension(
-            'exudyn.exudynCPPfast', #this is the fast C++ library without range checks and try/catch inside the exudyn package
+            'exudyn.exudynCPPfast',
             cppFiles,
-            include_dirs=[get_pybind_include(), #does some magic for Pybind11
-                         ]+myIncludeDirs,
-            library_dirs = addLibrary_dirs,
-		    define_macros=[('__FAST_EXUDYN_LINALG', '')],
-            extra_compile_args=['/arch:AVX2']*useAVX,
+            include_dirs=[get_pybind_include()] + myIncludeDirs,
+            library_dirs=addLibrary_dirs,
+            libraries=ceres_libraries,
+            define_macros=[('__FAST_EXUDYN_LINALG', '')],
+            extra_compile_args=(['/arch:AVX2', '/fp:fast', '/favor:INTEL64'] if useAVX else []),
             language='c++'
-        ),
-        ]
-
-if useAVX and (not isDevelopmentVersion or pyVersionString == '3.10'):
-    print('***  preparing additional C++ module without AVX in release mode ***')
-    ext_modules += [
-        Extension(
-            'exudyn.exudynCPPnoAVX', #this is the slow C++ library but should run on old CPUs
-            cppFiles,
-            include_dirs=[get_pybind_include(), #does some magic for Pybind11
-                         ]+myIncludeDirs,
-            library_dirs = addLibrary_dirs,
-		    define_macros=[('__EXUDYN_COMPILE_NOAVX', '')],
-            language='c++'
-        ),
-        ]
+        )
+    )
+else:
+    raise RuntimeError('compileExudynFast 已被禁用，但当前 setup.py 仅支持 FAST 版本构建；请在 setupPyConfig.json 或命令行中启用该开关。')
 
 # cf http://bugs.python.org/issue26689
 def has_flag(compiler, flagname):
@@ -521,7 +537,9 @@ class BuildExt(build_ext):
 				'/O2', 
 				'/sdl',
 				'/Zc:inline',
-				'/fp:precise',
+				'/fp:fast',
+                '/arch:AVX2',
+                '/favor:INTEL64',
 			    '/D', '_MBCS', 
 				'/D', '_WINDLL',
 				'/D','_CRT_SECURE_NO_WARNINGS', #/D and _CRT_SECURE_NO_WARNINGS must be consecutive==>WORKS!
@@ -537,7 +555,13 @@ class BuildExt(build_ext):
 				'/Zc:twoPhase-',
             ]+msvcCppGLFWflag+commonCopts,
         'unix': [
-         #'-O3', #tests with GCC, Python3.8 do not show performance increase!!
+         '-O3',
+         '-march=native',
+         '-mavx2',
+         '-mfma',
+         '-flto',
+         '-ffast-math',
+         '-funsafe-math-optimizations',
          '-Wno-comment', #deactivate multiline comment warning /* ... * * ...*/
          #'-Wno-unknown-pragmas', #warning from ngs_core.hpp/taskmanager.hpp (NGsolve)
          #'-Wno-sign-compare', #warning from taskmanager.hpp (NGsolve)
@@ -843,4 +867,3 @@ if config['useOpenVR'] and isWindows: #delete copied file
     os.remove('pythonDev/exudyn/openvr_api.dll')
 
 print('*** setup.py: DURATION =', round(time.time()-startTime,2), 'seconds')
-

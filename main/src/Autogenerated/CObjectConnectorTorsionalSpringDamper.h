@@ -40,6 +40,11 @@ public: // AUTO:
     Real velocityOffset;                          //!< AUTO: angular velocity offset considered in the damper torque calculation (this can be used as angular velocity control input!)
     Real torque;                                  //!< AUTO: additional constant torque [SI:Nm] added to spring-damper; this can be used to prescribe a torque between the two attached bodies (e.g., for actuation and control)
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+    Real factorMarker0;                           //!< AUTO: scaling factor applied to marker 0 rotation when computing effective torsional deflection; enables gear transmission ratios
+    Real factorMarker1;                           //!< AUTO: scaling factor applied to marker 1 rotation when computing effective torsional deflection; enables gear transmission ratios
+    Real backlash;                                //!< AUTO: angular deadband [rad]; if >0 the connector produces reduced stiffness/ damping inside +/-backlash/2
+    Real backlashStiffnessScale;                  //!< AUTO: stiffness scaling factor used inside the backlash zone (default 0 -> zero stiffness inside)
+    Real backlashDampingScale;                    //!< AUTO: damping scaling factor used inside the backlash zone (default 0 -> zero damping inside)
     PythonUserFunctionBase< std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)> > springTorqueUserFunction;//!< AUTO: A Python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorTorsionalSpringDamperParameters()
@@ -54,6 +59,11 @@ public: // AUTO:
         velocityOffset = 0.;
         torque = 0.;
         activeConnector = true;
+        factorMarker0 = 1.;
+        factorMarker1 = 1.;
+        backlash = 0.;
+        backlashStiffnessScale = 0.;
+        backlashDampingScale = 0.;
         springTorqueUserFunction = 0;
     };
 };

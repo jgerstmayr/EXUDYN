@@ -290,17 +290,13 @@ namespace EPyUtils
 				}
 				rv = true;
 			}
-			else if (py::isinstance<TPyList>(value)) //the py instance is e.g. PyVector3DList, but it is casted to the pure C++ type Vector3DList
-			{
-#ifdef __EXUDYN__WINDOWS__
-				destination = (TList&)(py::cast<TPyList>(value)); //only casting necessary!
-#else
-				//gcc (Ubuntu18.04) has problems to cast templates ...
-				TPyList pyList = (py::cast<TPyList>(value));
-				destination = (TList&)(pyList); //only casting necessary!
-#endif
-				rv = true;
-			}
+            else if (py::isinstance<TPyList>(value)) //the py instance is e.g. PyVector3DList, but it is casted to the pure C++ type Vector3DList
+            {
+                // Use an intermediate lvalue and assign by value to avoid casting a prvalue to non-const lvalue reference (fails in MinGW/GCC)
+                TPyList pyList = py::cast<TPyList>(value);
+                destination = static_cast<TList>(pyList);
+                rv = true;
+            }
 			else
 			{
 				rv = false;
