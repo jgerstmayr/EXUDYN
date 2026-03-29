@@ -9,6 +9,10 @@
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+import sys, os
+
+sys.exudynFast = True          # 让 exudyn 优先加载 fast 版（依赖 AVX2）
+sys.exudynCPUhasAVX2 = True 
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -26,7 +30,7 @@ except:
         pass
     exudynTestGlobals = ExudynTestGlobals()
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-useGraphics = False #do test
+useGraphics = True #启用图形显示
 
 from exudyn.machines import GetBallBearingData, CreateBallBearing
 

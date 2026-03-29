@@ -929,6 +929,8 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
 #  offset: scalar offset, which can be used to realize a P-controlled actuator
 #  velocityOffset: scalar velocity offset, which can be used to realize a D-controlled actuator
 #  torque: additional constant torque added to spring-damper, acting between the two bodies
+#  factorMarker0/factorMarker1: scaling factors applied to marker rotations to model gear ratios (effective error = f1*phi1 - f0*phi0)
+#  backlash/backlashStiffnessScale/backlashDampingScale: parameters describing torsional backlash deadband and stiffness/damping scaling inside the gap
 #  useGlobalFrame: if False, the position and axis vectors are defined in the local coordinate system of body0, otherwise in global (reference) coordinates
 #  springTorqueUserFunction : a user function springTorqueUserFunction(mbs, t, itemNumber, rotation, angularVelocity, stiffness, damping, offset)->float ; this function replaces the internal connector torque computation
 #  unlimitedRotations: if True, an additional generic data node is added to enable measurement of rotations beyond +/- pi; this also allows the spring to cope with multiple turns.
@@ -949,6 +951,11 @@ def MainSystemCreateTorsionalSpringDamper(mbs,
                                           offset = 0.,
                                           velocityOffset = 0.,
                                           torque = 0.,
+                                          factorMarker0 = 1.,
+                                          factorMarker1 = 1.,
+                                          backlash = 0.,
+                                          backlashStiffnessScale = 0.,
+                                          backlashDampingScale = 0.,
                                           useGlobalFrame=True,
                                           springTorqueUserFunction=0,
                                           unlimitedRotations = True,
@@ -1032,9 +1039,11 @@ def MainSystemCreateTorsionalSpringDamper(mbs,
     mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=bodyNumbers[0], localPosition=pJ0))
     mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localPosition=pJ1))
 
-    if unlimitedRotations:
-        nGeneric = mbs.AddNode(eii.NodeGenericData(initialCoordinates=[0], 
-                                             numberOfDataCoordinates=1)) #for infinite rotations
+    useExtendedData = (factorMarker0 != 1.) or (factorMarker1 != 1.) or (backlash != 0.)
+    if unlimitedRotations or useExtendedData:
+        nCoords = 1 if not useExtendedData else 3
+        nGeneric = mbs.AddNode(eii.NodeGenericData(initialCoordinates=[0]*nCoords, 
+                                             numberOfDataCoordinates=nCoords))
     else:
         nGeneric = exudyn.InvalidIndex()
 
@@ -1046,6 +1055,11 @@ def MainSystemCreateTorsionalSpringDamper(mbs,
                                                                         offset = offset,
                                                                         velocityOffset = velocityOffset,
                                                                         torque = torque,
+                                                                        factorMarker0 = factorMarker0,
+                                                                        factorMarker1 = factorMarker1,
+                                                                        backlash = backlash,
+                                                                        backlashStiffnessScale = backlashStiffnessScale,
+                                                                        backlashDampingScale = backlashDampingScale,
                                                                         rotationMarker0=MR0, 
                                                                         rotationMarker1=MR1,
                                                                         springTorqueUserFunction=springTorqueUserFunction, 
@@ -2100,6 +2114,427 @@ def MainSystemCreateSphereSphereContact(mbs, name='', bodyNumbers=[None, None],
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: Create penalty-based circle-circle contact between two rigid or point bodies in the plane; the contact is based on ObjectContactCircleCircle and supports convex (positive radius) as well as concave (negative radius) follower circles.
+#**input:
+#  mbs: the MainSystem where markers and the contact object shall be created
+#  name: name string for the contact; markers get Marker0:name and Marker1:name
+#  bodyNumbers: list of object numbers for circle0 and circle1; pass None entries and use bodyOrNodeList for mixed node/object references
+#  localPosition0: local position (3D) of the first circle center on body0, if not a node reference
+#  localPosition1: local position (3D) of the second circle center on body1, if not a node reference
+#  radius1: radius [m] of the first circle; use negative value to model a concave surface
+#  radius2: radius [m] of the second circle; negative values create an inward facing cavity
+#  contactStiffness: normal contact stiffness [N/m]
+#  contactDamping: normal contact damping [N s/m]
+#  frictionCoefficient: Coulomb friction coefficient; set to 0 for frictionless contact
+#  dataInitialCoordinates: initialization for the discontinuous iteration data node (length must equal 6)
+#  activeConnector: flag to activate or deactivate the connector
+#  bodyOrNodeList: alternative to bodyNumbers; use for node references or mixed cases
+#  show: if True, connector visualization is drawn
+#  color: RGBA color of connector visualization
+#**output: ObjectIndex; returns index of created contact object
+#**belongsTo: MainSystem
+def MainSystemCreateCircleCircleContact(mbs, name='', bodyNumbers=[None, None],
+                                        localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.],
+                                        radius1 = 1., radius2 = 1.,
+                                        contactStiffness = 0., contactDamping = 0.,
+                                        frictionCoefficient = 0.,
+                                        frictionVelocityPenalty = 0.,
+                                        frictionProportionalZone = 0.001,
+                                        frictionStiffness = 0.,
+                                        dataInitialCoordinates = [0.,0.,0.,0.,0.,0.,0.,0.],
+                                        activeConnector=True,
+                                        bodyOrNodeList=[None, None],
+                                        show=False, color=exudyn.graphics.color.default):
+
+    where = 'MainSystem.CreateCircleCircleContact(...)'
+    internBodyNodeList = ProcessBodyNodeLists(bodyNumbers, bodyOrNodeList, localPosition0, localPosition1, where)
+
+    if not exudyn.__useExudynFast:
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
+
+        if not IsVector(localPosition0, 3):
+            RaiseTypeError(where=where, argumentName='localPosition0', received = localPosition0, expectedType = ExpectedType.Vector, dim=3)
+        if not IsVector(localPosition1, 3):
+            RaiseTypeError(where=where, argumentName='localPosition1', received = localPosition1, expectedType = ExpectedType.Vector, dim=3)
+
+        if not IsValidRealInt(radius1):
+            RaiseTypeError(where=where, argumentName='radius1', received = radius1, expectedType = ExpectedType.Real)
+        if not IsValidRealInt(radius2):
+            RaiseTypeError(where=where, argumentName='radius2', received = radius2, expectedType = ExpectedType.Real)
+
+        if not IsValidURealInt(contactStiffness):
+            RaiseTypeError(where=where, argumentName='contactStiffness', received = contactStiffness, expectedType = ExpectedType.Real)
+        if not IsValidURealInt(contactDamping):
+            RaiseTypeError(where=where, argumentName='contactDamping', received = contactDamping, expectedType = ExpectedType.Real)
+        if not IsValidURealInt(frictionCoefficient):
+            RaiseTypeError(where=where, argumentName='frictionCoefficient', received = frictionCoefficient, expectedType = ExpectedType.Real)
+        if not IsValidURealInt(frictionVelocityPenalty):
+            RaiseTypeError(where=where, argumentName='frictionVelocityPenalty', received = frictionVelocityPenalty, expectedType = ExpectedType.Real)
+        if not IsValidURealInt(frictionProportionalZone):
+            RaiseTypeError(where=where, argumentName='frictionProportionalZone', received = frictionProportionalZone, expectedType = ExpectedType.Real)
+        if not IsValidURealInt(frictionStiffness):
+            RaiseTypeError(where=where, argumentName='frictionStiffness', received = frictionStiffness, expectedType = ExpectedType.Real)
+
+        if not IsVector(dataInitialCoordinates, 8):
+            RaiseTypeError(where=where, argumentName='dataInitialCoordinates', received = dataInitialCoordinates, expectedType = ExpectedType.Vector, dim=6)
+
+        if not IsValidBool(activeConnector):
+            RaiseTypeError(where=where, argumentName='activeConnector', received = activeConnector, expectedType = ExpectedType.Bool)
+        if not IsValidBool(show):
+            RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
+        if not IsVector(color, 4):
+            RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
+
+    mName0 = ''
+    mName1 = ''
+    if name != '':
+        mName0 = 'Marker0:'+name
+        mName1 = 'Marker1:'+name
+
+    if isinstance(internBodyNodeList[0], exudyn.ObjectIndex):
+        mBody0 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName0, bodyNumber=internBodyNodeList[0], localPosition=localPosition0))
+    else:
+        mBody0 = mbs.AddMarker(eii.MarkerNodePosition(name=mName0, nodeNumber=internBodyNodeList[0]))
+
+    if isinstance(internBodyNodeList[1], exudyn.ObjectIndex):
+        mBody1 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName1, bodyNumber=internBodyNodeList[1], localPosition=localPosition1))
+    else:
+        mBody1 = mbs.AddMarker(eii.MarkerNodePosition(name=mName1, nodeNumber=internBodyNodeList[1]))
+
+    nGeneric = mbs.AddNode(eii.NodeGenericData(initialCoordinates=dataInitialCoordinates,
+                                         numberOfDataCoordinates=len(dataInitialCoordinates)))
+
+    oContact = mbs.AddObject(eii.ObjectContactCircleCircle(markerNumbers=[mBody0, mBody1],
+                                                   nodeNumber=nGeneric,
+                                                   radius1=radius1,
+                                                   radius2=radius2,
+                                                   contactStiffness=contactStiffness,
+                                                   contactDamping=contactDamping,
+                                                   frictionCoefficient=frictionCoefficient,
+                                                   frictionVelocityPenalty=frictionVelocityPenalty,
+                                                   frictionProportionalZone=frictionProportionalZone,
+                                                   frictionStiffness=frictionStiffness,
+                                                   activeConnector=activeConnector,
+                                                   visualization=eii.VObjectContactCircleCircle(show=show, color=color)))
+
+    return oContact
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: Create penalty-based curve-circle contact; wraps ObjectContactCurveCircles.
+#**input:
+#  name: name string for object
+#  bodyNumberCurve: body number of the body carrying the curve (segments)
+#  bodyNumberCircle: body number of the body carrying the circle
+#  localPositionCurve: local position of curve marker on bodyNumberCurve
+#  localPositionCircle: local position of circle marker on bodyNumberCircle
+#  circleRadius: radius of the circle [SI:m]
+#  segmentsData: matrix containing segment data, each row [x0,y0,x1,y1] defining a line segment
+#  rotationMarker0: 3x3 rotation matrix for curve marker orientation (default: identity)
+#  dynamicFriction: dynamic friction coefficient
+#  frictionProportionalZone: limit velocity [m/s] for friction regularization
+#  frictionVelocityPenalty: velocity penalty coefficient [SI:N/(m/s)]; if > 0, uses velocity penalty friction model
+#  contactStiffness: normal contact stiffness [SI:N/m]
+#  contactDamping: linear normal contact damping [SI:N/(m/s)]
+#  contactModel: contact model type (0: linear, 1: integral)
+#  activeConnector: flag to activate or deactivate the connector
+#  show: if True, connector visualization is drawn
+#  color: RGBA color of connector visualization
+#**output: ObjectIndex; returns index of created contact object
+#**belongsTo: MainSystem
+def MainSystemCreateContactCurveCircles(mbs, name='', 
+                                        bodyNumberCurve=None, bodyNumberCircle=None,
+                                        localPositionCurve=[0.,0.,0.], localPositionCircle=[0.,0.,0.],
+                                        circleRadius=1.,
+                                        segmentsData=None,
+                                        rotationMarker0=np.eye(3),
+                                        dynamicFriction=0., 
+                                        frictionProportionalZone=0.001,
+                                        frictionVelocityPenalty=0.,
+                                        frictionStiffness=0.,
+                                        contactStiffness=0., contactDamping=0.,
+                                        contactModel=0,
+                                        activeConnector=True,
+                                        # Hertz contact parameters
+                                        useHertzContact=False,
+                                        faceWidth=0.01,
+                                        elasticModulus=2.1e11,
+                                        poissonRatio=0.3,
+                                        curvaturePerPoint=[],
+                                        baseStiffnessPerPoint=[],
+                                        show=True, color=exudyn.graphics.color.default):
+
+    where = 'MainSystem.CreateContactCurveCircles(...)'
+
+    if not exudyn.__useExudynFast:
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received=name, expectedType=ExpectedType.String)
+        if bodyNumberCurve is None:
+            raise ValueError(where + ": bodyNumberCurve must be provided")
+        if bodyNumberCircle is None:
+            raise ValueError(where + ": bodyNumberCircle must be provided")
+        if segmentsData is None:
+            raise ValueError(where + ": segmentsData must be provided")
+        if not IsVector(localPositionCurve, 3):
+            RaiseTypeError(where=where, argumentName='localPositionCurve', received=localPositionCurve, expectedType=ExpectedType.Vector, dim=3)
+        if not IsVector(localPositionCircle, 3):
+            RaiseTypeError(where=where, argumentName='localPositionCircle', received=localPositionCircle, expectedType=ExpectedType.Vector, dim=3)
+        if not IsValidRealInt(circleRadius):
+            RaiseTypeError(where=where, argumentName='circleRadius', received=circleRadius, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(dynamicFriction):
+            RaiseTypeError(where=where, argumentName='dynamicFriction', received=dynamicFriction, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(frictionProportionalZone):
+            RaiseTypeError(where=where, argumentName='frictionProportionalZone', received=frictionProportionalZone, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(frictionVelocityPenalty):
+            RaiseTypeError(where=where, argumentName='frictionVelocityPenalty', received=frictionVelocityPenalty, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(frictionStiffness):
+            RaiseTypeError(where=where, argumentName='frictionStiffness', received=frictionStiffness, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(contactStiffness):
+            RaiseTypeError(where=where, argumentName='contactStiffness', received=contactStiffness, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(contactDamping):
+            RaiseTypeError(where=where, argumentName='contactDamping', received=contactDamping, expectedType=ExpectedType.Real)
+        if not IsValidBool(activeConnector):
+            RaiseTypeError(where=where, argumentName='activeConnector', received=activeConnector, expectedType=ExpectedType.Bool)
+        if not IsValidBool(show):
+            RaiseTypeError(where=where, argumentName='show', received=show, expectedType=ExpectedType.Bool)
+
+    mName0 = ''
+    mName1 = ''
+    if name != '':
+        mName0 = 'MarkerCurve:' + name
+        mName1 = 'MarkerCircle:' + name
+
+    # Create markers for curve and circle bodies
+    mCurve = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0, bodyNumber=bodyNumberCurve, localPosition=localPositionCurve))
+    mCircle = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1, bodyNumber=bodyNumberCircle, localPosition=localPositionCircle))
+
+    # Create data node for contact state (3 data variables per segment)
+    nSegments = len(segmentsData) if hasattr(segmentsData, '__len__') else segmentsData.shape[0]
+    initialContactData = []
+    for _ in range(nSegments):
+        initialContactData.extend([-1.0, 0.0, 0.0, 0.0, 0.0])  # circleIndex, gap, vTangent, stickPosX, stickPosY
+
+    nGeneric = mbs.AddNode(eii.NodeGenericData(initialCoordinates=initialContactData,
+                                               numberOfDataCoordinates=len(initialContactData)))
+
+    # Create segments matrix container
+    segmentsMatrix = exudyn.MatrixContainer(segmentsData)
+
+    oContact = mbs.AddObject(eii.ObjectContactCurveCircles(
+        name=name,
+        markerNumbers=[mCurve, mCircle],
+        nodeNumber=nGeneric,
+        circlesRadii=[circleRadius],
+        segmentsData=segmentsMatrix,
+        rotationMarker0=rotationMarker0,
+        dynamicFriction=dynamicFriction,
+        frictionProportionalZone=frictionProportionalZone,
+        frictionVelocityPenalty=frictionVelocityPenalty,
+        frictionStiffness=frictionStiffness,
+        contactStiffness=contactStiffness,
+        contactDamping=contactDamping,
+        contactModel=contactModel,
+        activeConnector=activeConnector,
+        # Hertz contact parameters
+        useHertzContact=useHertzContact,
+        faceWidth=faceWidth,
+        elasticModulus=elasticModulus,
+        poissonRatio=poissonRatio,
+        curvaturePerPoint=curvaturePerPoint,
+        baseStiffnessPerPoint=baseStiffnessPerPoint,
+        visualization=eii.VObjectContactCurveCircles(show=show, color=color)))
+
+    return oContact
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: Create penalty-based polyline/polyline gear contact for few-tooth-difference transmissions; wraps ObjectContactFewTeeth.
+#**input: see documentation of ObjectContactFewTeeth
+#**output: ObjectIndex of newly created contact object
+def MainSystemCreateFewTeethContact(mbs, name='', bodyNumbers=[None, None],
+                                    outerAnalytic=None, innerAnalytic=None,
+                                    contactStiffness=0., contactDamping=0.,
+                                    stiffnessOuter=None, stiffnessInner=None,
+                                    faceWidth=0.01, elasticModulus=2.1e11, poissonRatio=0.3,
+                                    frictionCoefficient=0., frictionVelocityPenalty=0., frictionProportionalZone=0.001,
+                                    frictionStiffness=0.,
+                                    contactReferenceDistance=0., tipProbeLength=0.005,
+                                    activeConnector=True,
+                                    bodyOrNodeList=[None, None],
+                                    show=False, color=exudyn.graphics.color.default):
+
+    where = 'MainSystem.CreateFewTeethContact(...)'
+    internBodyNodeList = ProcessBodyNodeLists(bodyNumbers, bodyOrNodeList, [0.,0.,0.], [0.,0.,0.], where)
+
+    if not exudyn.__useExudynFast:
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received=name, expectedType=ExpectedType.String)
+        for profName, profile in [('outerAnalytic', outerAnalytic), ('innerAnalytic', innerAnalytic)]:
+            if profile is not None and not isinstance(profile, dict):
+                RaiseTypeError(where=where, argumentName=profName, received=profile, expectedType='dict')
+        if not IsValidURealInt(contactStiffness):
+            RaiseTypeError(where=where, argumentName='contactStiffness', received=contactStiffness, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(contactDamping):
+            RaiseTypeError(where=where, argumentName='contactDamping', received=contactDamping, expectedType=ExpectedType.Real)
+        if not IsValidRealInt(contactReferenceDistance):
+            RaiseTypeError(where=where, argumentName='contactReferenceDistance', received=contactReferenceDistance, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(faceWidth):
+            RaiseTypeError(where=where, argumentName='faceWidth', received=faceWidth, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(elasticModulus):
+            RaiseTypeError(where=where, argumentName='elasticModulus', received=elasticModulus, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(poissonRatio):
+            RaiseTypeError(where=where, argumentName='poissonRatio', received=poissonRatio, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(frictionCoefficient):
+            RaiseTypeError(where=where, argumentName='frictionCoefficient', received=frictionCoefficient, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(frictionVelocityPenalty):
+            RaiseTypeError(where=where, argumentName='frictionVelocityPenalty', received=frictionVelocityPenalty, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(frictionProportionalZone):
+            RaiseTypeError(where=where, argumentName='frictionProportionalZone', received=frictionProportionalZone, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(frictionStiffness):
+            RaiseTypeError(where=where, argumentName='frictionStiffness', received=frictionStiffness, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(tipProbeLength):
+            RaiseTypeError(where=where, argumentName='tipProbeLength', received=tipProbeLength, expectedType=ExpectedType.Real)
+        if not IsValidBool(activeConnector):
+            RaiseTypeError(where=where, argumentName='activeConnector', received=activeConnector, expectedType=ExpectedType.Bool)
+        if not IsValidBool(show):
+            RaiseTypeError(where=where, argumentName='show', received=show, expectedType=ExpectedType.Bool)
+        if not IsVector(color, 4):
+            RaiseTypeError(where=where, argumentName='color', received=color, expectedType=ExpectedType.Vector, dim=4)
+
+    mName0 = ''
+    mName1 = ''
+    if name != '':
+        mName0 = 'Marker0:' + name
+        mName1 = 'Marker1:' + name
+
+    if isinstance(internBodyNodeList[0], exudyn.ObjectIndex):
+        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0, bodyNumber=internBodyNodeList[0], localPosition=[0.,0.,0.]))
+    else:
+        mBody0 = mbs.AddMarker(eii.MarkerNodeRigid(name=mName0, nodeNumber=internBodyNodeList[0]))
+
+    if isinstance(internBodyNodeList[1], exudyn.ObjectIndex):
+        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1, bodyNumber=internBodyNodeList[1], localPosition=[0.,0.,0.]))
+    else:
+        mBody1 = mbs.AddMarker(eii.MarkerNodeRigid(name=mName1, nodeNumber=internBodyNodeList[1]))
+
+    nGeneric = mbs.AddNode(eii.NodeGenericData(initialCoordinates=[0.]*9, numberOfDataCoordinates=9))  # 增加2个用于Bristle粘滞位置
+
+    oContact = mbs.AddObject(eii.ObjectContactFewTeeth(name=name,
+                                                       markerNumbers=[mBody0, mBody1],
+                                                       nodeNumber=nGeneric,
+                                                       outerAnalytic=outerAnalytic,
+                                                       innerAnalytic=innerAnalytic,
+                                                       contactStiffness=contactStiffness,
+                                                       contactDamping=contactDamping,
+                                                       stiffnessOuter=stiffnessOuter,
+                                                       stiffnessInner=stiffnessInner,
+                                                       faceWidth=faceWidth,
+                                                       elasticModulus=elasticModulus,
+                                                       poissonRatio=poissonRatio,
+                                                       frictionCoefficient=frictionCoefficient,
+                                                       frictionVelocityPenalty=frictionVelocityPenalty,
+                                                       frictionProportionalZone=frictionProportionalZone,
+                                                       frictionStiffness=frictionStiffness,
+                                                       contactReferenceDistance=contactReferenceDistance,
+                                                       tipProbeLength=tipProbeLength,
+                                                       activeConnector=activeConnector,
+                                                       visualization=eii.VObjectContactFewTeeth(show=show, color=color)))
+
+    return oContact
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: Create penalty-based external involute gear contact for standard gear pairs; wraps ObjectContactExternalInvolute.
+#**input: see documentation of ObjectContactExternalInvolute
+#**output: ObjectIndex of newly created contact object
+def MainSystemCreateExternalGearContact(mbs, name='', bodyNumbers=[None, None],
+                                        gear1Analytic=None, gear2Analytic=None,
+                                        contactDamping=0.,
+                                        stiffnessGear1=None, stiffnessGear2=None,
+                                        faceWidth=0.01, elasticModulus=2.1e11, poissonRatio=0.3,
+                                        frictionCoefficient=0., frictionVelocityPenalty=0., frictionProportionalZone=0.001,
+                                        frictionStiffness=0.,
+                                        tipProbeLength=0.005,
+                                        activeConnector=True,
+                                        bodyOrNodeList=[None, None],
+                                        show=False, color=exudyn.graphics.color.default):
+
+    where = 'MainSystem.CreateExternalGearContact(...)'
+    internBodyNodeList = ProcessBodyNodeLists(bodyNumbers, bodyOrNodeList, [0.,0.,0.], [0.,0.,0.], where)
+
+    if not exudyn.__useExudynFast:
+        if not isinstance(name, str):
+            RaiseTypeError(where=where, argumentName='name', received=name, expectedType=ExpectedType.String)
+        for profName, profile in [('gear1Analytic', gear1Analytic), ('gear2Analytic', gear2Analytic)]:
+            if profile is not None and not isinstance(profile, dict):
+                RaiseTypeError(where=where, argumentName=profName, received=profile, expectedType='dict')
+        if not IsValidURealInt(contactDamping):
+            RaiseTypeError(where=where, argumentName='contactDamping', received=contactDamping, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(faceWidth):
+            RaiseTypeError(where=where, argumentName='faceWidth', received=faceWidth, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(elasticModulus):
+            RaiseTypeError(where=where, argumentName='elasticModulus', received=elasticModulus, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(poissonRatio):
+            RaiseTypeError(where=where, argumentName='poissonRatio', received=poissonRatio, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(frictionCoefficient):
+            RaiseTypeError(where=where, argumentName='frictionCoefficient', received=frictionCoefficient, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(frictionVelocityPenalty):
+            RaiseTypeError(where=where, argumentName='frictionVelocityPenalty', received=frictionVelocityPenalty, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(frictionProportionalZone):
+            RaiseTypeError(where=where, argumentName='frictionProportionalZone', received=frictionProportionalZone, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(frictionStiffness):
+            RaiseTypeError(where=where, argumentName='frictionStiffness', received=frictionStiffness, expectedType=ExpectedType.Real)
+        if not IsValidURealInt(tipProbeLength):
+            RaiseTypeError(where=where, argumentName='tipProbeLength', received=tipProbeLength, expectedType=ExpectedType.Real)
+        if not IsValidBool(activeConnector):
+            RaiseTypeError(where=where, argumentName='activeConnector', received=activeConnector, expectedType=ExpectedType.Bool)
+        if not IsValidBool(show):
+            RaiseTypeError(where=where, argumentName='show', received=show, expectedType=ExpectedType.Bool)
+        if not IsVector(color, 4):
+            RaiseTypeError(where=where, argumentName='color', received=color, expectedType=ExpectedType.Vector, dim=4)
+
+    mName0 = ''
+    mName1 = ''
+    if name != '':
+        mName0 = 'Marker0:' + name
+        mName1 = 'Marker1:' + name
+
+    if isinstance(internBodyNodeList[0], exudyn.ObjectIndex):
+        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0, bodyNumber=internBodyNodeList[0], localPosition=[0.,0.,0.]))
+    else:
+        mBody0 = mbs.AddMarker(eii.MarkerNodeRigid(name=mName0, nodeNumber=internBodyNodeList[0]))
+
+    if isinstance(internBodyNodeList[1], exudyn.ObjectIndex):
+        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1, bodyNumber=internBodyNodeList[1], localPosition=[0.,0.,0.]))
+    else:
+        mBody1 = mbs.AddMarker(eii.MarkerNodeRigid(name=mName1, nodeNumber=internBodyNodeList[1]))
+
+    nGeneric = mbs.AddNode(eii.NodeGenericData(initialCoordinates=[0.]*11, numberOfDataCoordinates=11))
+
+    oContact = mbs.AddObject(eii.ObjectContactExternalInvolute(name=name,
+                                                       markerNumbers=[mBody0, mBody1],
+                                                       nodeNumber=nGeneric,
+                                                       gear1Analytic=gear1Analytic,
+                                                       gear2Analytic=gear2Analytic,
+                                                       contactDamping=contactDamping,
+                                                       stiffnessGear1=stiffnessGear1,
+                                                       stiffnessGear2=stiffnessGear2,
+                                                       faceWidth=faceWidth,
+                                                       elasticModulus=elasticModulus,
+                                                       poissonRatio=poissonRatio,
+                                                       frictionCoefficient=frictionCoefficient,
+                                                       frictionVelocityPenalty=frictionVelocityPenalty,
+                                                       frictionProportionalZone=frictionProportionalZone,
+                                                       frictionStiffness=frictionStiffness,
+                                                       tipProbeLength=tipProbeLength,
+                                                       activeConnector=activeConnector,
+                                                       visualization=eii.VObjectContactExternalInvolute(show=show, color=color)))
+
+    return oContact
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: Create penalty-based sphere-quad contact between two rigid bodies, mass points or according nodes; the contact is based on two ObjectContactSphereTriangle; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems
 #**input:
 #  mbs: the MainSystem where joint and markers shall be created
@@ -2907,6 +3342,14 @@ exu.MainSystem.CreateRollingDiscPenalty=MainSystemCreateRollingDiscPenalty
 
 
 #link MainSystem function to Python function:
+exu.MainSystem.CreateCircleCircleContact=MainSystemCreateCircleCircleContact
+
+
+#link MainSystem function to Python function:
+exu.MainSystem.CreateContactCurveCircles=MainSystemCreateContactCurveCircles
+
+
+#link MainSystem function to Python function:
 exu.MainSystem.CreateSphereSphereContact=MainSystemCreateSphereSphereContact
 
 
@@ -2964,4 +3407,3 @@ exu.MainSystem.CreateDistanceSensor=exu.utilities.CreateDistanceSensor
 
 #link MainSystem function to Python function:
 exu.MainSystem.DrawSystemGraph=exu.utilities.DrawSystemGraph
-

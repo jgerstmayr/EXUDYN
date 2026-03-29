@@ -1694,7 +1694,7 @@ class VObjectConnectorTorsionalSpringDamper:
     def __repr__(self):
         return str(dict(self))
 class ObjectConnectorTorsionalSpringDamper:
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = 0., damping = 0., rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = 0., velocityOffset = 0., torque = 0., activeConnector = True, springTorqueUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = 0., damping = 0., rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = 0., velocityOffset = 0., torque = 0., activeConnector = True, factorMarker0 = 1., factorMarker1 = 1., backlash = 0., backlashStiffnessScale = 0., backlashDampingScale = 0., springTorqueUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -1706,6 +1706,11 @@ class ObjectConnectorTorsionalSpringDamper:
         self.velocityOffset = velocityOffset
         self.torque = torque
         self.activeConnector = activeConnector
+        self.factorMarker0 = factorMarker0
+        self.factorMarker1 = factorMarker1
+        self.backlash = backlash
+        self.backlashStiffnessScale = backlashStiffnessScale
+        self.backlashDampingScale = backlashDampingScale
         self.springTorqueUserFunction = springTorqueUserFunction
         self.visualization = CopyDictLevel1(visualization)
 
@@ -1722,6 +1727,11 @@ class ObjectConnectorTorsionalSpringDamper:
         yield 'velocityOffset', self.velocityOffset
         yield 'torque', self.torque
         yield 'activeConnector', self.activeConnector
+        yield 'factorMarker0', self.factorMarker0
+        yield 'factorMarker1', self.factorMarker1
+        yield 'backlash', self.backlash
+        yield 'backlashStiffnessScale', self.backlashStiffnessScale
+        yield 'backlashDampingScale', self.backlashDampingScale
         yield 'springTorqueUserFunction', self.springTorqueUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
@@ -2415,6 +2425,173 @@ class ObjectContactFrictionCircleCable2D:
 
     def __repr__(self):
         return str(dict(self))
+class VObjectContactCircleCircle:
+    def __init__(self, show = True, color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.color = np.array(color)
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+class ObjectContactCircleCircle:
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), radius1 = 1., radius2 = 1., contactStiffness = 0., contactDamping = 0., frictionCoefficient = 0., frictionVelocityPenalty = 0., frictionProportionalZone = 0.001, frictionStiffness = 0., activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = copy.copy(markerNumbers)
+        self.nodeNumber = nodeNumber
+        self.radius1 = radius1
+        self.radius2 = radius2
+        self.contactStiffness = CheckForValidUReal(contactStiffness,"contactStiffness","ObjectContactCircleCircle")
+        self.contactDamping = CheckForValidUReal(contactDamping,"contactDamping","ObjectContactCircleCircle")
+        self.frictionCoefficient = CheckForValidUReal(frictionCoefficient,"frictionCoefficient","ObjectContactCircleCircle")
+        self.frictionVelocityPenalty = CheckForValidUReal(frictionVelocityPenalty,"frictionVelocityPenalty","ObjectContactCircleCircle")
+        self.frictionProportionalZone = CheckForValidUReal(frictionProportionalZone,"frictionProportionalZone","ObjectContactCircleCircle")
+        self.frictionStiffness = CheckForValidUReal(frictionStiffness,"frictionStiffness","ObjectContactCircleCircle")
+        self.activeConnector = activeConnector
+        self.visualization = CopyDictLevel1(visualization)
+
+    def __iter__(self):
+        yield 'objectType', 'ContactCircleCircle'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'nodeNumber', self.nodeNumber
+        yield 'radius1', self.radius1
+        yield 'radius2', self.radius2
+        yield 'contactStiffness', self.contactStiffness
+        yield 'contactDamping', self.contactDamping
+        yield 'frictionCoefficient', self.frictionCoefficient
+        yield 'frictionVelocityPenalty', self.frictionVelocityPenalty
+        yield 'frictionProportionalZone', self.frictionProportionalZone
+        yield 'frictionStiffness', self.frictionStiffness
+        yield 'activeConnector', self.activeConnector
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+
+class VObjectContactFewTeeth:
+    def __init__(self, show = True, color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.color = np.array(color)
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+
+class ObjectContactFewTeeth:
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), outerAnalytic = None, innerAnalytic = None, contactStiffness = 0., contactDamping = 0., stiffnessOuter = None, stiffnessInner = None, contactReferenceDistance = 0., tipProbeLength = 0.005, faceWidth = 0.01, elasticModulus = 2.1e11, poissonRatio = 0.3, frictionCoefficient = 0., frictionVelocityPenalty = 0., frictionProportionalZone = 0.001, frictionStiffness = 0., activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = copy.copy(markerNumbers)
+        self.nodeNumber = nodeNumber
+        self.outerAnalytic = {} if outerAnalytic is None else dict(outerAnalytic)
+        self.innerAnalytic = {} if innerAnalytic is None else dict(innerAnalytic)
+        self.contactStiffness = CheckForValidUReal(contactStiffness,"contactStiffness","ObjectContactFewTeeth")
+        self.contactDamping = CheckForValidUReal(contactDamping,"contactDamping","ObjectContactFewTeeth")
+        self.stiffnessOuter = [] if stiffnessOuter is None else list(stiffnessOuter)
+        self.stiffnessInner = [] if stiffnessInner is None else list(stiffnessInner)
+        self.contactReferenceDistance = contactReferenceDistance
+        self.tipProbeLength = CheckForValidUReal(tipProbeLength,"tipProbeLength","ObjectContactFewTeeth")
+        self.faceWidth = CheckForValidUReal(faceWidth,"faceWidth","ObjectContactFewTeeth")
+        self.elasticModulus = CheckForValidUReal(elasticModulus,"elasticModulus","ObjectContactFewTeeth")
+        self.poissonRatio = CheckForValidUReal(poissonRatio,"poissonRatio","ObjectContactFewTeeth")
+        self.frictionCoefficient = CheckForValidUReal(frictionCoefficient,"frictionCoefficient","ObjectContactFewTeeth")
+        self.frictionVelocityPenalty = CheckForValidUReal(frictionVelocityPenalty,"frictionVelocityPenalty","ObjectContactFewTeeth")
+        self.frictionProportionalZone = CheckForValidUReal(frictionProportionalZone,"frictionProportionalZone","ObjectContactFewTeeth")
+        self.frictionStiffness = CheckForValidUReal(frictionStiffness,"frictionStiffness","ObjectContactFewTeeth")
+        self.activeConnector = activeConnector
+        self.visualization = CopyDictLevel1(visualization)
+
+    def __iter__(self):
+        yield 'objectType', 'ContactFewTeeth'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'nodeNumber', self.nodeNumber
+        yield 'outerAnalytic', self.outerAnalytic
+        yield 'innerAnalytic', self.innerAnalytic
+        yield 'contactStiffness', self.contactStiffness
+        yield 'contactDamping', self.contactDamping
+        yield 'stiffnessOuter', self.stiffnessOuter
+        yield 'stiffnessInner', self.stiffnessInner
+        yield 'contactReferenceDistance', self.contactReferenceDistance
+        yield 'tipProbeLength', self.tipProbeLength
+        yield 'faceWidth', self.faceWidth
+        yield 'elasticModulus', self.elasticModulus
+        yield 'poissonRatio', self.poissonRatio
+        yield 'frictionCoefficient', self.frictionCoefficient
+        yield 'frictionVelocityPenalty', self.frictionVelocityPenalty
+        yield 'frictionProportionalZone', self.frictionProportionalZone
+        yield 'frictionStiffness', self.frictionStiffness
+        yield 'activeConnector', self.activeConnector
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+
+class VObjectContactExternalInvolute:
+    def __init__(self, show = True, color = [-1.,-1.,-1.,-1.]):
+        self.show = show
+        self.color = np.array(color)
+
+    def __iter__(self):
+        yield 'show', self.show
+        yield 'color', self.color
+
+    def __repr__(self):
+        return str(dict(self))
+
+class ObjectContactExternalInvolute:
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), gear1Analytic = None, gear2Analytic = None, contactDamping = 0., stiffnessGear1 = None, stiffnessGear2 = None, tipProbeLength = 0.005, faceWidth = 0.01, elasticModulus = 2.1e11, poissonRatio = 0.3, frictionCoefficient = 0., frictionVelocityPenalty = 0., frictionProportionalZone = 0.001, frictionStiffness = 0., activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+        self.name = name
+        self.markerNumbers = copy.copy(markerNumbers)
+        self.nodeNumber = nodeNumber
+        self.gear1Analytic = {} if gear1Analytic is None else dict(gear1Analytic)
+        self.gear2Analytic = {} if gear2Analytic is None else dict(gear2Analytic)
+        self.contactDamping = CheckForValidUReal(contactDamping,"contactDamping","ObjectContactExternalInvolute")
+        self.stiffnessGear1 = [] if stiffnessGear1 is None else list(stiffnessGear1)
+        self.stiffnessGear2 = [] if stiffnessGear2 is None else list(stiffnessGear2)
+        self.tipProbeLength = CheckForValidUReal(tipProbeLength,"tipProbeLength","ObjectContactExternalInvolute")
+        self.faceWidth = CheckForValidUReal(faceWidth,"faceWidth","ObjectContactExternalInvolute")
+        self.elasticModulus = CheckForValidUReal(elasticModulus,"elasticModulus","ObjectContactExternalInvolute")
+        self.poissonRatio = CheckForValidUReal(poissonRatio,"poissonRatio","ObjectContactExternalInvolute")
+        self.frictionCoefficient = CheckForValidUReal(frictionCoefficient,"frictionCoefficient","ObjectContactExternalInvolute")
+        self.frictionVelocityPenalty = CheckForValidUReal(frictionVelocityPenalty,"frictionVelocityPenalty","ObjectContactExternalInvolute")
+        self.frictionProportionalZone = CheckForValidUReal(frictionProportionalZone,"frictionProportionalZone","ObjectContactExternalInvolute")
+        self.frictionStiffness = CheckForValidUReal(frictionStiffness,"frictionStiffness","ObjectContactExternalInvolute")
+        self.activeConnector = activeConnector
+        self.visualization = CopyDictLevel1(visualization)
+
+    def __iter__(self):
+        yield 'objectType', 'ContactExternalInvolute'
+        yield 'name', self.name
+        yield 'markerNumbers', self.markerNumbers
+        yield 'nodeNumber', self.nodeNumber
+        yield 'gear1Analytic', self.gear1Analytic
+        yield 'gear2Analytic', self.gear2Analytic
+        yield 'contactDamping', self.contactDamping
+        yield 'stiffnessGear1', self.stiffnessGear1
+        yield 'stiffnessGear2', self.stiffnessGear2
+        yield 'tipProbeLength', self.tipProbeLength
+        yield 'faceWidth', self.faceWidth
+        yield 'elasticModulus', self.elasticModulus
+        yield 'poissonRatio', self.poissonRatio
+        yield 'frictionCoefficient', self.frictionCoefficient
+        yield 'frictionVelocityPenalty', self.frictionVelocityPenalty
+        yield 'frictionProportionalZone', self.frictionProportionalZone
+        yield 'frictionStiffness', self.frictionStiffness
+        yield 'activeConnector', self.activeConnector
+        yield 'Vshow', dict(self.visualization)["show"]
+        yield 'Vcolor', dict(self.visualization)["color"]
+
+    def __repr__(self):
+        return str(dict(self))
+
 class VObjectContactSphereSphere:
     def __init__(self, show = False, color = [0.7,0.7,0.7,1.]):
         self.show = show
@@ -2591,7 +2768,7 @@ class VObjectContactCurveCircles:
     def __repr__(self):
         return str(dict(self))
 class ObjectContactCurveCircles:
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), circlesRadii = [], segmentsData = None, polynomialData = None, rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), dynamicFriction = 0., frictionProportionalZone = 1e-3, contactStiffness = 0., contactDamping = 0., contactModel = 0, activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), circlesRadii = [], segmentsData = None, polynomialData = None, rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), dynamicFriction = 0., frictionProportionalZone = 1e-3, frictionVelocityPenalty = 0., frictionStiffness = 0., contactStiffness = 0., contactDamping = 0., contactModel = 0, activeConnector = True, profileNodeIndices = [], useHertzContact = False, faceWidth = 0.01, elasticModulus = 2.1e11, poissonRatio = 0.3, curvaturePerPoint = [], baseStiffnessPerPoint = [], visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -2601,10 +2778,20 @@ class ObjectContactCurveCircles:
         self.rotationMarker0 = np.array(rotationMarker0)
         self.dynamicFriction = CheckForValidUReal(dynamicFriction,"dynamicFriction","ObjectContactCurveCircles")
         self.frictionProportionalZone = CheckForValidUReal(frictionProportionalZone,"frictionProportionalZone","ObjectContactCurveCircles")
+        self.frictionVelocityPenalty = CheckForValidUReal(frictionVelocityPenalty,"frictionVelocityPenalty","ObjectContactCurveCircles")
+        self.frictionStiffness = CheckForValidUReal(frictionStiffness,"frictionStiffness","ObjectContactCurveCircles")
         self.contactStiffness = contactStiffness
         self.contactDamping = contactDamping
         self.contactModel = CheckForValidUInt(contactModel,"contactModel","ObjectContactCurveCircles")
         self.activeConnector = activeConnector
+        self.profileNodeIndices = np.array(profileNodeIndices, dtype=int)
+        # Hertz contact parameters
+        self.useHertzContact = useHertzContact
+        self.faceWidth = faceWidth
+        self.elasticModulus = elasticModulus
+        self.poissonRatio = poissonRatio
+        self.curvaturePerPoint = np.array(curvaturePerPoint)
+        self.baseStiffnessPerPoint = np.array(baseStiffnessPerPoint)
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -2618,10 +2805,20 @@ class ObjectContactCurveCircles:
         yield 'rotationMarker0', self.rotationMarker0
         yield 'dynamicFriction', self.dynamicFriction
         yield 'frictionProportionalZone', self.frictionProportionalZone
+        yield 'frictionVelocityPenalty', self.frictionVelocityPenalty
+        yield 'frictionStiffness', self.frictionStiffness
         yield 'contactStiffness', self.contactStiffness
         yield 'contactDamping', self.contactDamping
         yield 'contactModel', self.contactModel
         yield 'activeConnector', self.activeConnector
+        yield 'profileNodeIndices', self.profileNodeIndices
+        # Hertz contact parameters
+        yield 'useHertzContact', self.useHertzContact
+        yield 'faceWidth', self.faceWidth
+        yield 'elasticModulus', self.elasticModulus
+        yield 'poissonRatio', self.poissonRatio
+        yield 'curvaturePerPoint', self.curvaturePerPoint
+        yield 'baseStiffnessPerPoint', self.baseStiffnessPerPoint
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
