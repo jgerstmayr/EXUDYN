@@ -1642,7 +1642,7 @@ void GlfwRenderer::InitCreateWindow()
 		if (sizex > maxWidth) { sizex = maxWidth; }
 		if (sizey > maxHeight) { sizey = maxHeight; }
 
-		window = glfwCreateWindow(sizex, sizey, "CRRC Qishuyan OpenGL window", NULL, NULL);
+		window = glfwCreateWindow(sizex, sizey, "Exudyn OpenGL window", NULL, NULL);
 
 		if (!window)
 		{
