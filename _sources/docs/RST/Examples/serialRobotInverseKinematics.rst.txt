@@ -220,10 +220,10 @@ You can view and download this file on Github: `serialRobotInverseKinematics.py 
    SC.visualizationSettings.bodies.kinematicTree.showJointFrames = False # shows the frames for each joint of the robot
    SC.visualizationSettings.openGL.multiSampling=4
    SC.visualizationSettings.general.autoFitScene=False
-   SC.visualizationSettings.window.renderWindowSize=[1920,1200]
+   SC.visualizationSettings.view0.window.renderWindowSize=[1920,1200]
    SC.visualizationSettings.general.graphicsUpdateInterval = 0.01
-   SC.visualizationSettings.openGL.shadow=0.3
-   SC.visualizationSettings.openGL.perspective=0.5
+   SC.visualizationSettings.openGL.light0.shadow=0.3
+   SC.visualizationSettings.view0.camera.perspective=0.5
    
    #traces:
    SC.visualizationSettings.sensors.traces.listOfPositionSensors = [sPosTCP]

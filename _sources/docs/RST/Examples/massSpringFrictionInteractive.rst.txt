@@ -200,17 +200,17 @@ You can view and download this file on Github: `massSpringFrictionInteractive.py
    
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #data obtained from SC.renderer.GetState(); use np.round(d['modelRotation'],4)
-   # SC.visualizationSettings.openGL.initialModelRotation = [[ 0.33  ,  0.0882, -0.9399],
+   # SC.visualizationSettings.openGL.advanced.initialModelRotation = [[ 0.33  ,  0.0882, -0.9399],
    #                                                        [ 0.0819,  0.9892,  0.1216],
    #                                                        [ 0.9404, -0.1171,  0.3192]]
-   SC.visualizationSettings.openGL.initialZoom = 0.5#0.28
-   SC.visualizationSettings.openGL.initialCenterPoint = [0.297, 0.000318, 0.0]
-   SC.visualizationSettings.openGL.initialMaxSceneSize = 0.5
+   SC.visualizationSettings.openGL.advanced.initialZoom = 0.5#0.28
+   SC.visualizationSettings.openGL.advanced.initialCenterPoint = [0.297, 0.000318, 0.0]
+   SC.visualizationSettings.openGL.advanced.initialMaxSceneSize = 0.5
    SC.visualizationSettings.general.autoFitScene = False
-   SC.visualizationSettings.general.textSize = 12
+   SC.visualizationSettings.view0.window.globalFontSize = 12
    SC.visualizationSettings.general.showSolverInformation = 12
    SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
-   SC.visualizationSettings.window.renderWindowSize=[1200,1000]
+   SC.visualizationSettings.view0.window.renderWindowSize=[1200,1000]
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
    SC.visualizationSettings.general.autoFitScene = False #otherwise, renderState not accepted for zoom
    

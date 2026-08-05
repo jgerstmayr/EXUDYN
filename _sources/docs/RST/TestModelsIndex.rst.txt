@@ -11,8 +11,10 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    :maxdepth: 2
     
    TestModels/abaqusImportTest
+   TestModels/allExudynModulesTest
    TestModels/ANCFBeamTest
    TestModels/ANCFcable2DuserFunction
+   TestModels/ANCFCableBeamDampingTest
    TestModels/ANCFcontactCircleTest
    TestModels/ANCFcontactFrictionTest
    TestModels/ANCFgeneralContactCircle
@@ -74,6 +76,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/manualExplicitIntegrator
    TestModels/matrixContainerTest
    TestModels/mecanumWheelRollingDiscTest
+   TestModels/movingGroundRobotTest
    TestModels/NGsolveCMStest
    TestModels/objectFFRFreducedOrderAccelerations
    TestModels/objectFFRFreducedOrderTest
@@ -85,6 +88,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/pickleCopyMbs
    TestModels/plotSensorTest
    TestModels/postNewtonStepContactTest
+   TestModels/raytracerNOGLFWtest
    TestModels/reevingSystemSpringsTest
    TestModels/revoluteJointPrismaticJointTest
    TestModels/rigidBody2Dtest

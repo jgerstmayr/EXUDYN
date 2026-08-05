@@ -117,7 +117,7 @@ transforms the action of global applied forces \ :math:`\LU{0}{{\mathbf{f}}}_a`\
 
 .. math::
 
-   {\mathbf{Q}} = {\mathbf{J}}_{pos} \LU{0}{{\mathbf{f}}}_a.
+   {\mathbf{Q}} = {\mathbf{J}}_{pos}\tp \LU{0}{{\mathbf{f}}}_a.
 
 
 

@@ -18,7 +18,7 @@ Since Exudyn 1.4.18 you can attach view to a marker, using the visualization set
 
 .. code-block:: python
 
-  SC.visualizationSettings.interactive.trackMarker = nMarker
+  SC.visualizationSettings.view0.camera.trackMarker = nMarker
 
 
 in which \ ``nMarker``\  represents the desired marker number to follow.

@@ -9,7 +9,7 @@ The data is auto-generated from the according interfaces in order to keep fully 
 
 .. toctree::
    :maxdepth: 2
-    
+
    SimulationSettings
    VisualizationSettings
    CSolverStructures

@@ -6,9 +6,9 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NGsolveGeometry.py &mdash; Exudynunknown unknown documentation</title>
+  <title>NGsolveGeometry.py &mdash; Exudyn1.11.0 1.11.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e11081fd" />
@@ -16,9 +16,9 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=3f1b9271"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=6cf1fb80"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
       <script src="../../../_static/js/rtd_search_config.js"></script>
@@ -27,7 +27,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="NGsolveLinearFEM.py" href="NGsolveLinearFEM.html" />
-    <link rel="prev" title="NGsolveFFRF.py" href="NGsolveFFRF.html" /> 
+    <link rel="prev" title="NGsolveFFRFSlidingJoint.py" href="NGsolveFFRFSlidingJoint.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudynunknown
+            Exudyn1.11.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -83,6 +83,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ANCFcontactCircle2.html">ANCFcontactCircle2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFmovingRigidbody.html">ANCFmovingRigidbody.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFrotatingCable2D.html">ANCFrotatingCable2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFslidingJoint.html">ANCFslidingJoint.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFslidingJoint2D.html">ANCFslidingJoint2D.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFslidingJoint2Drigid.html">ANCFslidingJoint2Drigid.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFswitchingSlidingJoint2D.html">ANCFswitchingSlidingJoint2D.py</a></li>
@@ -142,10 +143,14 @@
 <li class="toctree-l2"><a class="reference internal" href="newtonsCradle.html">newtonsCradle.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveCMStutorial.html">NGsolveCMStutorial.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveCraigBampton.html">NGsolveCraigBampton.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveCreateFFRFreducedOrder.html">NGsolveCreateFFRFreducedOrder.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveFFRF.html">NGsolveFFRF.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveFFRFSlidingJoint.html">NGsolveFFRFSlidingJoint.py</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">NGsolveGeometry.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveLinearFEM.html">NGsolveLinearFEM.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveModalAnalysis.html">NGsolveModalAnalysis.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveOCCboundaries.html">NGsolveOCCboundaries.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveOCCboundaries2.html">NGsolveOCCboundaries2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveOCCgeometry.html">NGsolveOCCgeometry.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePistonEngine.html">NGsolvePistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePostProcessingStresses.html">NGsolvePostProcessingStresses.py</a></li>
@@ -175,9 +180,11 @@
 <li class="toctree-l2"><a class="reference internal" href="performanceMultiThreadingNG.html">performanceMultiThreadingNG.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pistonEngine.html">pistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotSensorExamples.html">plotSensorExamples.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pymeshlabFileImport.html">pymeshlabFileImport.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystem.html">reevingSystem.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystemOpen.html">reevingSystemOpen.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reinforcementLearningRobot.html">reinforcementLearningRobot.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rendererNOGLFWexample.html">rendererNOGLFWexample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigid3Dexample.html">rigid3Dexample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyIMUtest.html">rigidBodyIMUtest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyTutorial.html">rigidBodyTutorial.py</a></li>
@@ -247,7 +254,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudynunknown</a>
+          <a href="../../../index.html">Exudyn1.11.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -380,7 +387,7 @@
 <span class="linenos">109</span>    <span class="n">fem0</span> <span class="o">=</span> <span class="nc">FEMinterface</span><span class="p">()</span>
 <span class="linenos">110</span>    <span class="n">fem0</span><span class="o">.</span><span class="nf">ImportMeshFromNGsolve</span><span class="p">(</span><span class="n">mesh0</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">youngsModulus</span><span class="o">=</span><span class="n">Emodulus</span><span class="p">,</span> <span class="n">poissonsRatio</span><span class="o">=</span><span class="n">nu</span><span class="p">)</span>
 <span class="linenos">111</span>    <span class="n">graphics0</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">FromPointsAndTrigs</span><span class="p">(</span><span class="n">fem0</span><span class="o">.</span><span class="nf">GetNodePositionsAsArray</span><span class="p">(),</span> <span class="n">fem0</span><span class="o">.</span><span class="nf">GetSurfaceTriangles</span><span class="p">(),</span>
-<span class="linenos">112</span>                                               <span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">dodgerblue</span><span class="p">,</span> <span class="p">)</span>
+<span class="linenos">112</span>                                               <span class="nc">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="nc">color</span><span class="o">.</span><span class="n">dodgerblue</span><span class="p">,</span> <span class="p">)</span>
 <span class="linenos">113</span>    <span class="n">graphics0</span> <span class="o">=</span> <span class="nf">AddEdgesAndSmoothenNormals</span><span class="p">(</span><span class="n">graphics0</span><span class="p">)</span>
 <span class="linenos">114</span>
 <span class="linenos">115</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRigidBody</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">sy</span><span class="o">*</span><span class="mi">2</span><span class="o">-</span><span class="n">dy</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
@@ -394,7 +401,7 @@
 <span class="linenos">123</span>    <span class="n">fem1</span> <span class="o">=</span> <span class="nc">FEMinterface</span><span class="p">()</span>
 <span class="linenos">124</span>    <span class="n">fem1</span><span class="o">.</span><span class="nf">ImportMeshFromNGsolve</span><span class="p">(</span><span class="n">mesh1</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">youngsModulus</span><span class="o">=</span><span class="n">Emodulus</span><span class="p">,</span> <span class="n">poissonsRatio</span><span class="o">=</span><span class="n">nu</span><span class="p">)</span>
 <span class="linenos">125</span>    <span class="n">graphics1</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">FromPointsAndTrigs</span><span class="p">(</span><span class="n">fem1</span><span class="o">.</span><span class="nf">GetNodePositionsAsArray</span><span class="p">(),</span> <span class="n">fem1</span><span class="o">.</span><span class="nf">GetSurfaceTriangles</span><span class="p">(),</span>
-<span class="linenos">126</span>                                               <span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">lightred</span><span class="p">)</span>
+<span class="linenos">126</span>                                               <span class="nc">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="nc">color</span><span class="o">.</span><span class="n">lightred</span><span class="p">)</span>
 <span class="linenos">127</span>    <span class="n">graphics1</span> <span class="o">=</span> <span class="nf">AddEdgesAndSmoothenNormals</span><span class="p">(</span><span class="n">graphics1</span><span class="p">)</span>
 <span class="linenos">128</span>
 <span class="linenos">129</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRigidBody</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">sy</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
@@ -438,7 +445,7 @@
 <span class="linenos">167</span>    <span class="n">fem0</span> <span class="o">=</span> <span class="nc">FEMinterface</span><span class="p">()</span>
 <span class="linenos">168</span>    <span class="n">fem0</span><span class="o">.</span><span class="nf">ImportMeshFromNGsolve</span><span class="p">(</span><span class="n">mesh0</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">youngsModulus</span><span class="o">=</span><span class="n">Emodulus</span><span class="p">,</span> <span class="n">poissonsRatio</span><span class="o">=</span><span class="n">nu</span><span class="p">)</span>
 <span class="linenos">169</span>    <span class="n">graphics0</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">FromPointsAndTrigs</span><span class="p">(</span><span class="n">fem0</span><span class="o">.</span><span class="nf">GetNodePositionsAsArray</span><span class="p">(),</span> <span class="n">fem0</span><span class="o">.</span><span class="nf">GetSurfaceTriangles</span><span class="p">(),</span>
-<span class="linenos">170</span>                                               <span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">dodgerblue</span><span class="p">,</span> <span class="p">)</span>
+<span class="linenos">170</span>                                               <span class="nc">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="nc">color</span><span class="o">.</span><span class="n">dodgerblue</span><span class="p">,</span> <span class="p">)</span>
 <span class="linenos">171</span>    <span class="n">graphics0</span> <span class="o">=</span> <span class="nf">AddEdgesAndSmoothenNormals</span><span class="p">(</span><span class="n">graphics0</span><span class="p">)</span>
 <span class="linenos">172</span>
 <span class="linenos">173</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRigidBody</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">sy</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
@@ -452,7 +459,7 @@
 <span class="linenos">181</span>    <span class="n">fem1</span> <span class="o">=</span> <span class="nc">FEMinterface</span><span class="p">()</span>
 <span class="linenos">182</span>    <span class="n">fem1</span><span class="o">.</span><span class="nf">ImportMeshFromNGsolve</span><span class="p">(</span><span class="n">mesh1</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">youngsModulus</span><span class="o">=</span><span class="n">Emodulus</span><span class="p">,</span> <span class="n">poissonsRatio</span><span class="o">=</span><span class="n">nu</span><span class="p">)</span>
 <span class="linenos">183</span>    <span class="n">graphics1</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">FromPointsAndTrigs</span><span class="p">(</span><span class="n">fem1</span><span class="o">.</span><span class="nf">GetNodePositionsAsArray</span><span class="p">(),</span> <span class="n">fem1</span><span class="o">.</span><span class="nf">GetSurfaceTriangles</span><span class="p">(),</span>
-<span class="linenos">184</span>                                               <span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">lightred</span><span class="p">)</span>
+<span class="linenos">184</span>                                               <span class="nc">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="nc">color</span><span class="o">.</span><span class="n">lightred</span><span class="p">)</span>
 <span class="linenos">185</span>    <span class="n">graphics1</span> <span class="o">=</span> <span class="nf">AddEdgesAndSmoothenNormals</span><span class="p">(</span><span class="n">graphics1</span><span class="p">)</span>
 <span class="linenos">186</span>
 <span class="linenos">187</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateRigidBody</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">sy</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
@@ -474,14 +481,14 @@
 <span class="linenos">203</span>
 <span class="linenos">204</span><span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
 <span class="linenos">205</span><span class="c1">#%%++++++++++++++++++++++++++++++</span>
-<span class="linenos">206</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">polygonOffset</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1">#to draw edges clearly</span>
+<span class="linenos">206</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">advanced</span><span class="o">.</span><span class="n">polygonOffset</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1">#to draw edges clearly</span>
 <span class="linenos">207</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">lineWidth</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="linenos">208</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
-<span class="linenos">209</span><span class="c1"># SC.visualizationSettings.general.drawWorldBasis = True</span>
-<span class="linenos">210</span><span class="c1"># SC.visualizationSettings.general.worldBasisSize = axis</span>
-<span class="linenos">211</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">drawCoordinateSystem</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">212</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">textSize</span> <span class="o">=</span> <span class="mi">16</span>
-<span class="linenos">213</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1600</span><span class="p">,</span><span class="mi">1200</span><span class="p">]</span>
+<span class="linenos">209</span><span class="c1"># SC.visualizationSettings.view0.scene.drawWorldBasis = True</span>
+<span class="linenos">210</span><span class="c1"># SC.visualizationSettings.view0.scene.worldBasisSize = axis</span>
+<span class="linenos">211</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">view0</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">drawCoordinateSystem</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">212</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">view0</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">globalFontSize</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="linenos">213</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">view0</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1600</span><span class="p">,</span><span class="mi">1200</span><span class="p">]</span>
 <span class="linenos">214</span>
 <span class="linenos">215</span><span class="n">mbs</span><span class="o">.</span><span class="nf">SolveDynamic</span><span class="p">()</span>
 <span class="linenos">216</span>
@@ -494,7 +501,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="NGsolveFFRF.html" class="btn btn-neutral float-left" title="NGsolveFFRF.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="NGsolveFFRFSlidingJoint.html" class="btn btn-neutral float-left" title="NGsolveFFRFSlidingJoint.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="NGsolveLinearFEM.html" class="btn btn-neutral float-right" title="NGsolveLinearFEM.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

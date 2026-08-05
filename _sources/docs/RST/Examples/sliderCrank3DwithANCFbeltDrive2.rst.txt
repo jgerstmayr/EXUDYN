@@ -795,8 +795,8 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive2.
    SC.visualizationSettings.markers.show=True
    SC.visualizationSettings.sensors.show=True
    SC.visualizationSettings.general.autoFitScene=False
-   SC.visualizationSettings.openGL.initialCenterPoint = [0,0,0]
-   SC.visualizationSettings.openGL.initialZoom = 0.5
+   SC.visualizationSettings.openGL.advanced.initialCenterPoint = [0,0,0]
+   SC.visualizationSettings.openGL.advanced.initialZoom = 0.5
    SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.ForceLocal
    
    if sys_set == 0:
@@ -819,7 +819,7 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive2.
                    [ 0, 0, 1]])
    IMR = np.dot(R_x,R_y)
    IMR = np.dot(IMR,R_z)
-   SC.visualizationSettings.openGL.initialModelRotation = [[IMR[0,0],IMR[0,1],IMR[0,2]],
+   SC.visualizationSettings.openGL.advanced.initialModelRotation = [[IMR[0,0],IMR[0,1],IMR[0,2]],
                                                            [IMR[1,0],IMR[1,1],IMR[1,2]],   
                                                            [IMR[2,0],IMR[2,1],IMR[2,2]]]
    

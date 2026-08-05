@@ -183,9 +183,9 @@ You can view and download this file on Github: `NGsolveCraigBampton.py <https://
            from exudyn.interactive import AnimateModes
            mbs.Assemble()
            SC.visualizationSettings.nodes.show = False
-           SC.visualizationSettings.openGL.showFaceEdges = True
+           SC.visualizationSettings.view0.scene.showFaceEdges = True
            SC.visualizationSettings.openGL.multiSampling=4
-           #SC.visualizationSettings.window.renderWindowSize = [1600,1080]
+           #SC.visualizationSettings.view0.window.renderWindowSize = [1600,1080]
            # SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.DisplacementLocal
            # SC.visualizationSettings.contour.outputVariableComponent = 0 #component
            
@@ -239,8 +239,8 @@ You can view and download this file on Github: `NGsolveCraigBampton.py <https://
        SC.visualizationSettings.nodes.basisSize = 0.12
        SC.visualizationSettings.bodies.deformationScaleFactor = 1 #use this factor to scale the deformation of modes
        
-       SC.visualizationSettings.openGL.showFaceEdges = True
-       SC.visualizationSettings.openGL.showFaces = True
+       SC.visualizationSettings.view0.scene.showFaceEdges = True
+       SC.visualizationSettings.view0.scene.showFaces = True
        
        SC.visualizationSettings.sensors.show = True
        SC.visualizationSettings.sensors.drawSimplified = False
@@ -273,7 +273,7 @@ You can view and download this file on Github: `NGsolveCraigBampton.py <https://
        #create animation:
        # simulationSettings.solutionSettings.recordImagesInterval = 0.005
        # SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
-       SC.visualizationSettings.window.renderWindowSize=[1920,1080]
+       SC.visualizationSettings.view0.window.renderWindowSize=[1920,1080]
        SC.visualizationSettings.openGL.multiSampling = 4
    
        useGraphics=True

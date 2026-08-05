@@ -55,7 +55,7 @@ SolutionSettings has the following items:
   | precision for floating point numbers written to solution and sensor files
 * | **recordImagesInterval** [type = Real, default = -1.]:
   | \ ``simulationSettings.solutionSettings.recordImagesInterval``\ 
-  | record frames (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages
+  | record frames of the main view in the renderer (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages; note that only the main view (0) can be saved in this way, while for multiple views, you have to aquire data via renderer.RedrawAndGetImage()
 * | **restartFileName** [type = FileName, default = 'restartFile.txt']:
   | \ ``simulationSettings.solutionSettings.restartFileName``\ 
   | filename and (relative) path of text file for storing solution after every restartWritePeriod if writeRestartFile=True; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart
@@ -235,7 +235,7 @@ GeneralizedAlphaSettings has the following items:
   | True: for Lie group nodes, in case that lieGroupSimplifiedKinematicRelations=True, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)
 * | **lieGroupSimplifiedKinematicRelations** [type = bool, default = False]:
   | \ ``simulationSettings.timeIntegration.generalizedAlpha.lieGroupSimplifiedKinematicRelations``\ 
-  | True: for Lie group nodes, the integrator uses the original kinematic relations of the Bruls and Cardona 2010 paper
+  | True: for Lie group nodes, the integrator uses the original kinematic relations of the Bruls and Cardona 2010 paper; False (recommended): higher accuracy as proposed in paper by Holzinger, Arnold, Gerstmayr, sigma-modified Lie group generalized alpha methods for constrained multibody systems, 2025 (to be sumitted)
 * | **newmarkBeta** [type = UReal, default = 0.25]:
   | \ ``simulationSettings.timeIntegration.generalizedAlpha.newmarkBeta``\ 
   | value beta for Newmark method; default value beta = \ :math:`\frac 1 4`\  corresponds to (undamped) trapezoidal rule
@@ -248,6 +248,9 @@ GeneralizedAlphaSettings has the following items:
 * | **spectralRadius** [type = UReal, default = 0.9]:
   | \ ``simulationSettings.timeIntegration.generalizedAlpha.spectralRadius``\ 
   | spectral radius for Generalized-alpha solver; set this value to 1 for no damping or to 0 < spectralRadius < 1 for damping of high-frequency dynamics; for position-level constraints (index 3), spectralRadius must be < 1
+* | **storeInitialAlgebraicCoordinates** [type = bool, default = True]:
+  | \ ``simulationSettings.timeIntegration.generalizedAlpha.storeInitialAlgebraicCoordinates``\ 
+  | True: IF computeInitialAccelerations=True, store initial algebraic coordinates (usually the Lagrange multipliers) in the initial coordinates vector (and thus in the first line of the coordinates solution file); for further details on limitations, see computeInitialAccelerations
 * | **useIndex2Constraints** [type = bool, default = False]:
   | \ ``simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints``\ 
   | set useIndex2Constraints = true in order to use index2 (velocity level constraints) formulation
@@ -340,7 +343,7 @@ TimeIntegrationSettings has the following items:
   | \ :math:`h\_{min}`\ : if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)
 * | **numberOfSteps** [type = PReal, default = 100]:
   | \ ``simulationSettings.timeIntegration.numberOfSteps``\ 
-  | \ :math:`n\_{steps}`\ : number of steps in time integration; (maximum) stepSize \ :math:`h`\  is computed from \ :math:`h = \frac{t\_{end} - t\_{start}}{n\_{steps}}`\ ; for automatic stepsize control, this stepSize is the maximum steps size, \ :math:`h\_{max} = h`\ ; numberOfSteps can be a float-point type, but must be close to an integer (relative tolerance \ :math:`100\cdot\varepsilon`\ ) as it is silently rounded to int
+  | \ :math:`n\_{steps}`\ : number of steps in time integration; (maximum) stepSize \ :math:`h`\  is computed from \ :math:`h = \frac{t\_{end} - t\_{start}}{n\_{steps}}`\ ; for automatic stepsize control, this stepSize is the maximum steps size, \ :math:`h\_{max} = h`\ ; numberOfSteps can also be a float type, but must be close to an integer (relative tolerance \ :math:`100\cdot\varepsilon`\ ) as it is silently rounded to int
 * | **realtimeFactor** [type = PReal, default = 1]:
   | \ ``simulationSettings.timeIntegration.realtimeFactor``\ 
   | if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)
@@ -519,39 +522,39 @@ General Settings for simulation; according settings for solution and solvers are
 SimulationSettings has the following items:
 
 * | **linearSolverSettings** [type = LinearSolverSettings]:
-  | \ ``.simulationSettings.linearSolverSettings``\ 
+  | \ ``simulationSettings.linearSolverSettings``\ 
   | linear solver parameters (used for dense and sparse solvers)
 * | **parallel** [type = Parallel]:
-  | \ ``.simulationSettings.parallel``\ 
+  | \ ``simulationSettings.parallel``\ 
   | parameters for vectorized and parallelized (multi-threaded) computations
 * | **solutionSettings** [type = SolutionSettings]:
-  | \ ``.simulationSettings.solutionSettings``\ 
+  | \ ``simulationSettings.solutionSettings``\ 
   | settings for solution files
 * | **staticSolver** [type = StaticSolverSettings]:
-  | \ ``.simulationSettings.staticSolver``\ 
+  | \ ``simulationSettings.staticSolver``\ 
   | static solver parameters
 * | **timeIntegration** [type = TimeIntegrationSettings]:
-  | \ ``.simulationSettings.timeIntegration``\ 
+  | \ ``simulationSettings.timeIntegration``\ 
   | time integration parameters
 * | **cleanUpMemory** [type = bool, default = False]:
-  | \ ``.simulationSettings.cleanUpMemory``\ 
+  | \ ``simulationSettings.cleanUpMemory``\ 
   | True: solvers will free memory at exit (recommended for large systems); False: keep allocated memory for repeated computations to increase performance
 * | **displayComputationTime** [type = bool, default = False]:
-  | \ ``.simulationSettings.displayComputationTime``\ 
+  | \ ``simulationSettings.displayComputationTime``\ 
   | display computation time statistics at end of solving
 * | **displayGlobalTimers** [type = bool, default = True]:
-  | \ ``.simulationSettings.displayGlobalTimers``\ 
+  | \ ``simulationSettings.displayGlobalTimers``\ 
   | display global timer statistics at end of solving (e.g., for contact, but also for internal timings during development)
 * | **displayStatistics** [type = bool, default = False]:
-  | \ ``.simulationSettings.displayStatistics``\ 
+  | \ ``simulationSettings.displayStatistics``\ 
   | display general computation information at end of time step (steps, iterations, function calls, step rejections, ...
 * | **linearSolverType** [type = LinearSolverType, default = LinearSolverType::EXUdense]:
-  | \ ``.simulationSettings.linearSolverType``\ 
+  | \ ``simulationSettings.linearSolverType``\ 
   | selection of numerical linear solver: exu.LinearSolverType.EXUdense (dense matrix inverse), exu.LinearSolverType.EigenSparse (sparse matrix LU-factorization), ... (enumeration type)
 * | **outputPrecision** [type = UInt, default = 6]:
-  | \ ``.simulationSettings.outputPrecision``\ 
+  | \ ``simulationSettings.outputPrecision``\ 
   | precision for floating point numbers written to console; e.g. values written by solver
 * | **pauseAfterEachStep** [type = bool, default = False]:
-  | \ ``.simulationSettings.pauseAfterEachStep``\ 
+  | \ ``simulationSettings.pauseAfterEachStep``\ 
   | pause after every time step or static load step(user press SPACE)
 

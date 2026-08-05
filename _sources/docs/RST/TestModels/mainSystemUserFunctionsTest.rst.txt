@@ -197,7 +197,7 @@ You can view and download this file on Github: `mainSystemUserFunctionsTest.py <
        
        simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=False
        
-       SC.visualizationSettings.general.drawWorldBasis = True
+       SC.visualizationSettings.view0.scene.drawWorldBasis = True
        
        
        if useGraphics:

@@ -85,13 +85,13 @@ The following table includes the keyboard shortcuts available in the window.
      - | change center of rotation to current center of the window (affects only current plane coordinates; rotate model to ajust other coordinates)
    * - | \ **Q**\ 
      - | stop solver
-     - | current solver is stopped (proceeds to next simulation or end of file); after \ ``visualizationSettings.window.reallyQuitTimeLimit``\  seconds a dialog opens for safety
+     - | current solver is stopped (proceeds to next simulation or end of file); after \ ``visualizationSettings.general.reallyQuitTimeLimit``\  seconds a dialog opens for safety
    * - | \ **SPACE**\ 
      - | pause/continue simulation
      - | pause simulation, e.g. for model inspection; if simulation is paused, it can be continued by pressing space; use SHIFT+SPACE to continuously activate 'continue simulation'
    * - | \ **ESCAPE**\ 
      - | close renderer
-     - | stops the simulation (and further simulations) and closes the render window (same as close window); after \ ``visualizationSettings.window.reallyQuitTimeLimit``\  seconds a dialog opens for safety
+     - | stops the simulation (and further simulations) and closes the render window (same as close window); after \ ``visualizationSettings.general.reallyQuitTimeLimit``\  seconds a dialog opens for safety
    * - | \ **X**\ 
      - | execute command
      - | open dialog to enter a python command (in global python scope), see Section :ref:`sec-overview-basics-commandandhelp`\ ; dialog may appear behind the visualization window!
@@ -104,6 +104,9 @@ The following table includes the keyboard shortcuts available in the window.
    * - | \ **F3**\ 
      - | show mouse coordinates
      - | shown in status line
+   * - | \ **CTRL F3**\ 
+     - | show model view parameters
+     - | shown in status line; shows zoom, rotationVector (rot), and centerPoint (pos), as required in function \ ``renderer.SetModelView(zoom, rot, pos) which can be used to initialize view after renderer start``\ 
    * - | \ **'.' or KEYPAD +**\ 
      - | zoom in
      - | zoom one step into scene (additionally press CTRL to perform small zoom step)

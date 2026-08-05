@@ -6,10 +6,7 @@
 SystemData
 **********
 
-
-
-
-This is the data structure of a system which contains Objects (bodies/constraints/...), Nodes, Markers and Loads. The SystemData structure allows advanced access to this data, which HAS TO BE USED WITH CARE, as unexpected results and system crash might happen.
+A data structure of a MainSystem which mainly allows access to states and details of items (objects, nodes, loads, etc.). In particular access is given to system coordinates in all configurations, object and node coordinates, as well as to local-to-global (LTG) coordinate indices. Here, ODE2 represents second order differential equations (and coordinates), ODE1 for first order ODEs, AE represents algebraic equations, and Data is used for data (=history) variables that represent contact states or plastic deformation which is no classical state. The SystemData structure allows advanced access to this data, which HAS TO BE USED WITH CARE, as unexpected results and system crash might happen.
 
 .. code-block:: python
    :linenos:
@@ -29,7 +26,7 @@ This is the data structure of a system which contains Objects (bodies/constraint
    uTotal = mbs.systemData.GetODE2CoordinatesTotal()
    
    #obtain current ODE2 system vector without reference values 
-   #  (e.g. after static simulation finished):
+   #  (e.g., after static simulation finished):
    u = mbs.systemData.GetODE2Coordinates()
    #set initial ODE2 vector for next simulation (only coordinates!):
    mbs.systemData.SetODE2Coordinates(coordinates=u,
@@ -139,7 +136,7 @@ This is the data structure of a system which contains Objects (bodies/constraint
      mbs.systemData.GetTime(exu.ConfigurationType.Initial)
 
 * | **SetTime**\ (\ *newTime*\ , \ *configurationType*\  = exu.ConfigurationType.Current): 
-  | set configuration dependent time; use this access with care, e.g. in user-defined solvers.
+  | set configuration dependent time; use this access with care, e.g., in user-defined solvers.
   | *Example*:
 
   .. code-block:: python

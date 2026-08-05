@@ -15,7 +15,7 @@ You can view and download this file on Github: `NGsolveLinearFEM.py <https://git
    #
    # Details:  Linear FEM model using NGsolve and ObjectGenericODE2
    #
-   # Author:   Johannes Gerstmayr, Joachim SchÃ¶berl 
+   # Author:   Johannes Gerstmayr, Joachim Schöberl 
    # Date:     2021-10-05
    #
    # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
@@ -143,8 +143,8 @@ You can view and download this file on Github: `NGsolveLinearFEM.py <https://git
    SC.visualizationSettings.nodes.basisSize = 0.12
    SC.visualizationSettings.bodies.deformationScaleFactor = 1 #use this factor to scale the deformation of modes
    
-   SC.visualizationSettings.openGL.showFaceEdges = True
-   SC.visualizationSettings.openGL.showFaces = True
+   SC.visualizationSettings.view0.scene.showFaceEdges = True
+   SC.visualizationSettings.view0.scene.showFaces = True
    
    SC.visualizationSettings.sensors.show = True
    SC.visualizationSettings.sensors.drawSimplified = False
@@ -181,7 +181,7 @@ You can view and download this file on Github: `NGsolveLinearFEM.py <https://git
    #create animation:
    # simulationSettings.solutionSettings.recordImagesInterval = 0.005
    # SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
-   SC.visualizationSettings.window.renderWindowSize=[1920,1080]
+   SC.visualizationSettings.view0.window.renderWindowSize=[1920,1080]
    SC.visualizationSettings.openGL.multiSampling = 4
    # SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
    # SC.visualizationSettings.contour.outputVariableComponent = 1 #y-component

@@ -6,9 +6,9 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flexible body – FFRF tutorial &mdash; Exudynunknown unknown documentation</title>
+  <title>Flexible body – FFRF tutorial &mdash; Exudyn1.11.0 1.11.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=3ee1c6c6" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/rtd_sphinx_search.min.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e11081fd" />
@@ -16,9 +16,9 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=3f1b9271"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/documentation_options.js?v=6cf1fb80"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../_static/copybutton.js?v=f281be69"></script>
       <script src="../../_static/js/rtd_search_config.js"></script>
@@ -39,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Exudynunknown
+            Exudyn1.11.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -89,7 +89,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Exudynunknown</a>
+          <a href="../../index.html">Exudyn1.11.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -114,7 +114,7 @@
 including Netgen and NGsolve for mesh and finite element data generation and uses modal reduction for simulation.
 The tutorial will set up a body with Hurty-Craig-Bampton modes, giving a simple flexible pendulum meshed hinged with a revolute joint.</p>
 <figure class="align-default" id="id1">
-<span id="fig-tutorial-ffrfpendulum"></span><a class="reference internal image-reference" href="../../_images/TutorialFFRFpendulum.png"><img alt="../../_images/TutorialFFRFpendulum.png" src="../../_images/TutorialFFRFpendulum.png" style="width: 400px;" />
+<span id="fig-tutorial-ffrfpendulum"></span><a class="reference internal image-reference" href="../../_images/TutorialFFRFpendulum.png"><img alt="../../_images/TutorialFFRFpendulum.png" src="../../_images/TutorialFFRFpendulum.png" width="400" />
 </a>
 <figcaption>
 <p><span class="caption-number">Fig. 13 </span><span class="caption-text">Screen shot of pendulum modeled with floating frame of reference formulation, using HCB modes, and meshed with Netgen.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
@@ -213,7 +213,7 @@ of the FFRF object:</p>
     <span class="n">varType</span> <span class="o">=</span> <span class="n">exu</span><span class="o">.</span><span class="nc">OutputVariableType</span><span class="o">.</span><span class="n">StressLocal</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ComputePostProcessingModes ... (may take a while)&quot;</span><span class="p">)</span>
     <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="n">fem</span><span class="o">.</span><span class="nf">ComputePostProcessingModesNGsolve</span><span class="p">(</span><span class="n">fes</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">mat</span><span class="p">,</span>
+    <span class="n">fem</span><span class="o">.</span><span class="nf">ComputePostProcessingModesNGsolve</span><span class="p">(</span><span class="n">fes</span><span class="p">,</span> <span class="nc">material</span><span class="o">=</span><span class="n">mat</span><span class="p">,</span>
                                           <span class="n">outputVariableType</span><span class="o">=</span><span class="n">varType</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   ... needed</span>
     <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">reduceRange</span> <span class="o">=</span> <span class="kc">False</span>
@@ -231,7 +231,7 @@ of the FFRF object:</p>
                                         <span class="n">initialVelocity</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
                                         <span class="n">initialAngularVelocity</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
                                         <span class="n">gravity</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.81</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-                                        <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
+                                        <span class="nc">color</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Add markers and revolute joint, using a superelement marker:</p>

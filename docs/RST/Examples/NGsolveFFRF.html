@@ -6,9 +6,9 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NGsolveFFRF.py &mdash; Exudynunknown unknown documentation</title>
+  <title>NGsolveFFRF.py &mdash; Exudyn1.11.0 1.11.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e11081fd" />
@@ -16,9 +16,9 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=3f1b9271"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=6cf1fb80"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
       <script src="../../../_static/js/rtd_search_config.js"></script>
@@ -26,8 +26,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="NGsolveGeometry.py" href="NGsolveGeometry.html" />
-    <link rel="prev" title="NGsolveCraigBampton.py" href="NGsolveCraigBampton.html" /> 
+    <link rel="next" title="NGsolveFFRFSlidingJoint.py" href="NGsolveFFRFSlidingJoint.html" />
+    <link rel="prev" title="NGsolveCreateFFRFreducedOrder.py" href="NGsolveCreateFFRFreducedOrder.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudynunknown
+            Exudyn1.11.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -83,6 +83,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ANCFcontactCircle2.html">ANCFcontactCircle2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFmovingRigidbody.html">ANCFmovingRigidbody.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFrotatingCable2D.html">ANCFrotatingCable2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFslidingJoint.html">ANCFslidingJoint.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFslidingJoint2D.html">ANCFslidingJoint2D.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFslidingJoint2Drigid.html">ANCFslidingJoint2Drigid.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFswitchingSlidingJoint2D.html">ANCFswitchingSlidingJoint2D.py</a></li>
@@ -142,10 +143,14 @@
 <li class="toctree-l2"><a class="reference internal" href="newtonsCradle.html">newtonsCradle.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveCMStutorial.html">NGsolveCMStutorial.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveCraigBampton.html">NGsolveCraigBampton.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveCreateFFRFreducedOrder.html">NGsolveCreateFFRFreducedOrder.py</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">NGsolveFFRF.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveFFRFSlidingJoint.html">NGsolveFFRFSlidingJoint.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveGeometry.html">NGsolveGeometry.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveLinearFEM.html">NGsolveLinearFEM.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveModalAnalysis.html">NGsolveModalAnalysis.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveOCCboundaries.html">NGsolveOCCboundaries.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveOCCboundaries2.html">NGsolveOCCboundaries2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveOCCgeometry.html">NGsolveOCCgeometry.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePistonEngine.html">NGsolvePistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePostProcessingStresses.html">NGsolvePostProcessingStresses.py</a></li>
@@ -175,9 +180,11 @@
 <li class="toctree-l2"><a class="reference internal" href="performanceMultiThreadingNG.html">performanceMultiThreadingNG.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pistonEngine.html">pistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotSensorExamples.html">plotSensorExamples.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pymeshlabFileImport.html">pymeshlabFileImport.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystem.html">reevingSystem.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystemOpen.html">reevingSystemOpen.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reinforcementLearningRobot.html">reinforcementLearningRobot.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rendererNOGLFWexample.html">rendererNOGLFWexample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigid3Dexample.html">rigid3Dexample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyIMUtest.html">rigidBodyIMUtest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyTutorial.html">rigidBodyTutorial.py</a></li>
@@ -247,7 +254,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudynunknown</a>
+          <a href="../../../index.html">Exudyn1.11.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -425,7 +432,7 @@
 <span class="linenos">154</span>    <span class="c1"># varType = exu.OutputVariableType.StrainLocal</span>
 <span class="linenos">155</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ComputePostProcessingModes ... (may take a while)&quot;</span><span class="p">)</span>
 <span class="linenos">156</span>    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="linenos">157</span>    <span class="n">fem</span><span class="o">.</span><span class="nf">ComputePostProcessingModesNGsolve</span><span class="p">(</span><span class="n">fes</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">mat</span><span class="p">,</span>
+<span class="linenos">157</span>    <span class="n">fem</span><span class="o">.</span><span class="nf">ComputePostProcessingModesNGsolve</span><span class="p">(</span><span class="n">fes</span><span class="p">,</span> <span class="nc">material</span><span class="o">=</span><span class="n">mat</span><span class="p">,</span>
 <span class="linenos">158</span>                                   <span class="n">outputVariableType</span><span class="o">=</span><span class="n">varType</span><span class="p">)</span>
 <span class="linenos">159</span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   ... needed </span><span class="si">%.3f</span><span class="s2"> seconds&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
 <span class="linenos">160</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">reduceRange</span><span class="o">=</span><span class="kc">True</span>
@@ -444,7 +451,7 @@
 <span class="linenos">173</span>                                        <span class="n">initialAngularVelocity</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">174</span>                                        <span class="n">stiffnessProportionalDamping</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">,</span>
 <span class="linenos">175</span>                                        <span class="n">gravity</span><span class="o">=</span><span class="p">[</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">176</span>                                        <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.9</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">1.</span><span class="p">],</span>
+<span class="linenos">176</span>                                        <span class="nc">color</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.9</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">1.</span><span class="p">],</span>
 <span class="linenos">177</span>                                        <span class="p">)</span>
 <span class="linenos">178</span>
 <span class="linenos">179</span><span class="n">boundaryMarkerList</span> <span class="o">=</span> <span class="p">[]</span>
@@ -459,7 +466,7 @@
 <span class="linenos">188</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">markers</span><span class="o">.</span><span class="n">drawSimplified</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="linenos">189</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">markers</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="linenos">190</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">markers</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="mf">0.01</span>
-<span class="linenos">191</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1200</span><span class="p">,</span><span class="mi">1000</span><span class="p">]</span>
+<span class="linenos">191</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">view0</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1200</span><span class="p">,</span><span class="mi">1000</span><span class="p">]</span>
 <span class="linenos">192</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span><span class="o">=</span><span class="mi">4</span>
 <span class="linenos">193</span>
 <span class="linenos">194</span><span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
@@ -468,7 +475,7 @@
 <span class="linenos">197</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.interactive</span><span class="w"> </span><span class="kn">import</span> <span class="nf">AnimateModes</span>
 <span class="linenos">198</span>    <span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
 <span class="linenos">199</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">200</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">showFaceEdges</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">200</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">view0</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">showFaceEdges</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="linenos">201</span>
 <span class="linenos">202</span>
 <span class="linenos">203</span>    <span class="c1">#%%+++++++++++++++++++++++++++++++++++++++</span>
@@ -488,7 +495,7 @@
 <span class="linenos">217</span>
 <span class="linenos">218</span><span class="n">oGround</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">CreateGround</span><span class="p">(</span><span class="n">referencePosition</span><span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">219</span>                           <span class="n">graphicsDataList</span><span class="o">=</span><span class="p">[</span><span class="n">graphics</span><span class="o">.</span><span class="nf">CheckerBoard</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="n">L</span><span class="o">*</span><span class="mf">1.2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span><span class="p">],</span><span class="n">normal</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="o">*</span><span class="n">L</span><span class="p">,</span>
-<span class="linenos">220</span>                                                                   <span class="n">materialIndex</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">indexChrome</span><span class="p">)])</span>
+<span class="linenos">220</span>                                                                   <span class="n">materialIndex</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="nc">material</span><span class="o">.</span><span class="n">indexChrome</span><span class="p">)])</span>
 <span class="linenos">221</span>
 <span class="linenos">222</span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">nodeSet</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">boundaryNodesList</span><span class="p">):</span>
 <span class="linenos">223</span>    <span class="n">markerFFRF</span> <span class="o">=</span> <span class="n">boundaryMarkerList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -525,19 +532,19 @@
 <span class="linenos">254</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">basisSize</span> <span class="o">=</span> <span class="mf">0.12</span>
 <span class="linenos">255</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">deformationScaleFactor</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#use this factor to scale the deformation of modes</span>
 <span class="linenos">256</span>
-<span class="linenos">257</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">showFaceEdges</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">258</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">showFaces</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">257</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">view0</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">showFaceEdges</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">258</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">view0</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">showFaces</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="linenos">259</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">lineWidth</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="linenos">260</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">light0position</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
-<span class="linenos">261</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">shadow</span> <span class="o">=</span> <span class="mf">0.25</span>
+<span class="linenos">260</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">light0</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">261</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">light0</span><span class="o">.</span><span class="n">shadow</span> <span class="o">=</span> <span class="mf">0.25</span>
 <span class="linenos">262</span>
 <span class="linenos">263</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="linenos">264</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">drawSimplified</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="linenos">265</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">defaultSize</span> <span class="o">=</span> <span class="mf">0.01</span>
 <span class="linenos">266</span>
 <span class="linenos">267</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">loads</span><span class="o">.</span><span class="n">drawSimplified</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">268</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">drawWorldBasis</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">269</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">worldBasisSize</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="linenos">268</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">view0</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">drawWorldBasis</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">269</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">view0</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">worldBasisSize</span> <span class="o">=</span> <span class="mf">0.5</span>
 <span class="linenos">270</span>
 <span class="linenos">271</span>
 <span class="linenos">272</span><span class="n">stepSize</span><span class="o">=</span><span class="mf">4e-3</span>
@@ -557,14 +564,14 @@
 <span class="linenos">286</span>    <span class="c1">#raytracing options</span>
 <span class="linenos">287</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">useMultiThreadedRendering</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="linenos">288</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="linenos">289</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">enableLight1</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="linenos">289</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">light1</span><span class="o">.</span><span class="n">enable</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="linenos">290</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">raytracer</span><span class="o">.</span><span class="n">numberOfThreads</span> <span class="o">=</span> <span class="mi">16</span> <span class="c1">#number of threads!</span>
-<span class="linenos">291</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">raytracer</span><span class="o">.</span><span class="n">enable</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#set True for raytracing</span>
-<span class="linenos">292</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">raytracer</span><span class="o">.</span><span class="n">ambientLightColor</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
-<span class="linenos">293</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">raytracer</span><span class="o">.</span><span class="n">backgroundColorReflections</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
-<span class="linenos">294</span>    <span class="c1">#SC.visualizationSettings.raytracer.searchTreeFactor = 8</span>
+<span class="linenos">291</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">view0</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">useRaytracer</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#set True for raytracing</span>
+<span class="linenos">292</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">lightModelAmbient</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">293</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">raytracer</span><span class="o">.</span><span class="n">advanced</span><span class="o">.</span><span class="n">backgroundColorReflections</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos">294</span>    <span class="c1">#SC.visualizationSettings.raytracer.advanced.searchTreeFactor = 8</span>
 <span class="linenos">295</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">raytracer</span><span class="o">.</span><span class="n">imageSizeFactor</span><span class="o">=</span><span class="mi">3</span> <span class="c1">#for faster rendering</span>
-<span class="linenos">296</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">alphaTransparency</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">indexShiny</span>
+<span class="linenos">296</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">alphaTransparency</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nc">material</span><span class="o">.</span><span class="n">indexShiny</span>
 <span class="linenos">297</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">general</span><span class="o">.</span><span class="n">graphicsUpdateInterval</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1">#for record images, avoid intermediate redraw</span>
 <span class="linenos">298</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">exportImages</span><span class="o">.</span><span class="n">saveImageTimeOut</span> <span class="o">=</span> <span class="mi">200000</span>
 <span class="linenos">299</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">raytracer</span><span class="o">.</span><span class="n">keepWindowActive</span><span class="o">=</span> <span class="kc">True</span>
@@ -602,8 +609,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="NGsolveCraigBampton.html" class="btn btn-neutral float-left" title="NGsolveCraigBampton.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="NGsolveGeometry.html" class="btn btn-neutral float-right" title="NGsolveGeometry.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="NGsolveCreateFFRFreducedOrder.html" class="btn btn-neutral float-left" title="NGsolveCreateFFRFreducedOrder.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="NGsolveFFRFSlidingJoint.html" class="btn btn-neutral float-right" title="NGsolveFFRFSlidingJoint.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

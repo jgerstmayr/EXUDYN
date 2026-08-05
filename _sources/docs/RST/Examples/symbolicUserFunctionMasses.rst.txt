@@ -165,7 +165,7 @@ You can view and download this file on Github: `symbolicUserFunctionMasses.py <h
    
    SC.visualizationSettings.contour.outputVariableComponent = -1
    SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
-   SC.visualizationSettings.window.renderWindowSize = [2000,1600]
+   SC.visualizationSettings.view0.window.renderWindowSize = [2000,1600]
    SC.visualizationSettings.openGL.multiSampling = 4
    
    import time

@@ -15,7 +15,7 @@ You can view and download this file on Github: `ANCFslidingAndALEjointTest.py <h
    #
    # Details:  Test model for rigid bodies sliding on cables
    #
-   # Author:   Andreas ZwÃ¶lfer, Johannes Gerstmayr
+   # Author:   Andreas Zwölfer, Johannes Gerstmayr
    # Date:     2019-12-18
    #
    # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.

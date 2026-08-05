@@ -366,9 +366,9 @@ You can view and download this file on Github: `reevingSystemOpen.py <https://gi
    
    # SC.visualizationSettings.general.useGradientBackground = True
    simulationSettings.solutionSettings.solutionInformation = 'elevator'
-   # SC.visualizationSettings.general.textSize = 14
+   # SC.visualizationSettings.view0.window.globalFontSize = 14
    
-   SC.visualizationSettings.window.renderWindowSize = [1024,2000]
+   SC.visualizationSettings.view0.window.renderWindowSize = [1024,2000]
    
    if False:
        SC.visualizationSettings.contour.outputVariableComponent=0

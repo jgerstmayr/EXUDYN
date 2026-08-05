@@ -221,10 +221,10 @@ You can view and download this file on Github: `distanceSensor.py <https://githu
    simulationSettings.timeIntegration.verboseMode = 1
    
    # SC.visualizationSettings.loads.show=False
-   SC.visualizationSettings.window.renderWindowSize=[1600,1200]
+   SC.visualizationSettings.view0.window.renderWindowSize=[1600,1200]
    SC.visualizationSettings.openGL.multiSampling = 4
-   # SC.visualizationSettings.openGL.shadow = 0.3
-   SC.visualizationSettings.openGL.light0position = [-5,-5,20,0]
+   # SC.visualizationSettings.openGL.light0.shadow = 0.3
+   SC.visualizationSettings.openGL.light0.position = [-5,-5,20,0]
    
    simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
    simulationSettings.timeIntegration.endTime = tEnd

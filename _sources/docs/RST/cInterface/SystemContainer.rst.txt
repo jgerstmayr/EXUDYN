@@ -3,10 +3,9 @@
 SystemContainer
 ***************
 
+The SystemContainer is the top level of structures in Exudyn. The container holds all (multibody) systems of type \ ``MainSystem``\  and the link to OpenGL renderers and raytracers (every SystemContainer has an independent rendering, while all MainSystems are rendered together).Via the MainSystems it thus contains all computational data. A SystemContainer is created by \ ``SC = exu.SystemContainer()``\ , understanding \ ``exu.SystemContainer``\  as a state machine where MainSystems are added and renderer state machines are processed, similar to the behavior of other Python packages. Usually, only one container shall be used, while multiple containers are possible -- e.g., for reasons of significantly different behavior (drawing, etc.). The SystemContainer contains \ ``visualizationSettings``\  to adjust all kinds of visualization appearance, windows and interactions.
 
-
-
-The SystemContainer is the top level of structures in Exudyn. The container holds all (multibody) systems, solvers and all other data structures for computation and it is the hub for the OpenGL renderer. A SystemContainer is created by \ ``SC = exu.SystemContainer()``\ , understanding \ ``exu.SystemContainer``\  as a class like Python's internal list class, creating a list instance with \ ``x=list()``\ . Currently, only one container shall be used, while multiple containers are possible -- e.g. for reasons of different behavior. The SystemContainer contains visualizationSettings, see Section :ref:`sec-visualizationsettingsmain`\ , which can be edited when pressing the key V in the render window and it holds the renderer substructure to start and stop the renderer, and to interact with the renderer. Regarding the \ **(basic) module access**\ , functions are related to the \ ``exudyn = exu``\  module, see also the introduction of this chapter and this example:
+The \ ``visualizationSettings``\ , see Section :ref:`sec-visualizationsettingsmain`\ , can be edited when pressing the key V in the render window and it holds the renderer substructure (type: Renderer) to start and stop the renderer, and to interact with the renderer. Regarding the \ **(basic) module access**\ , functions are related to the \ ``exudyn = exu``\  module, see also the introduction of this chapter and this example:
 
 .. code-block:: python
    :linenos:

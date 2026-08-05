@@ -194,7 +194,7 @@ You can view and download this file on Github: `createSphereQuadContact.py <http
        
        simulationSettings.displayStatistics = True
        simulationSettings.timeIntegration.verboseMode = 1
-       SC.visualizationSettings.general.drawCoordinateSystem = False
+       SC.visualizationSettings.view0.scene.drawCoordinateSystem = False
        SC.visualizationSettings.general.showSolverInformation = False
        
        

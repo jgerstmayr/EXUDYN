@@ -320,7 +320,7 @@ You can view and download this file on Github: `serialRobotTSD.py <https://githu
    
    simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
    SC.visualizationSettings.general.autoFitScene=False
-   SC.visualizationSettings.window.renderWindowSize=[1920,1200]
+   SC.visualizationSettings.view0.window.renderWindowSize=[1920,1200]
    useGraphics = False
    
    if useGraphics:

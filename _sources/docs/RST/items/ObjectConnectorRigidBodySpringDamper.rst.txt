@@ -5,7 +5,7 @@
 ObjectConnectorRigidBodySpringDamper
 ====================================
 
-An 3D spring-damper element acting on relative displacements and relative rotations of two rigid body (position+orientation) markers; connects to (position+orientation)-based markers and represents a penalty-based rigid joint (or prismatic, revolute, etc.)
+An 3D spring-damper element acting on relative displacements and relative rotations of two rigid body (position+orientation) markers. It represents a penalty-based rigid joint (or prismatic, revolute, etc.)
 
 \ **Additional information for ObjectConnectorRigidBodySpringDamper**\ :
 

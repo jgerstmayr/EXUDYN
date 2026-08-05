@@ -6,9 +6,9 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NGsolveCraigBampton.py &mdash; Exudynunknown unknown documentation</title>
+  <title>NGsolveCraigBampton.py &mdash; Exudyn1.11.0 1.11.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e11081fd" />
@@ -16,9 +16,9 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=3f1b9271"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=6cf1fb80"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
       <script src="../../../_static/js/rtd_search_config.js"></script>
@@ -26,7 +26,7 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="NGsolveFFRF.py" href="NGsolveFFRF.html" />
+    <link rel="next" title="NGsolveCreateFFRFreducedOrder.py" href="NGsolveCreateFFRFreducedOrder.html" />
     <link rel="prev" title="NGsolveCMStutorial.py" href="NGsolveCMStutorial.html" /> 
 </head>
 
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudynunknown
+            Exudyn1.11.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -83,6 +83,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ANCFcontactCircle2.html">ANCFcontactCircle2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFmovingRigidbody.html">ANCFmovingRigidbody.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFrotatingCable2D.html">ANCFrotatingCable2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFslidingJoint.html">ANCFslidingJoint.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFslidingJoint2D.html">ANCFslidingJoint2D.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFslidingJoint2Drigid.html">ANCFslidingJoint2Drigid.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFswitchingSlidingJoint2D.html">ANCFswitchingSlidingJoint2D.py</a></li>
@@ -142,10 +143,14 @@
 <li class="toctree-l2"><a class="reference internal" href="newtonsCradle.html">newtonsCradle.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveCMStutorial.html">NGsolveCMStutorial.py</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">NGsolveCraigBampton.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveCreateFFRFreducedOrder.html">NGsolveCreateFFRFreducedOrder.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveFFRF.html">NGsolveFFRF.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveFFRFSlidingJoint.html">NGsolveFFRFSlidingJoint.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveGeometry.html">NGsolveGeometry.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveLinearFEM.html">NGsolveLinearFEM.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveModalAnalysis.html">NGsolveModalAnalysis.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveOCCboundaries.html">NGsolveOCCboundaries.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveOCCboundaries2.html">NGsolveOCCboundaries2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveOCCgeometry.html">NGsolveOCCgeometry.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePistonEngine.html">NGsolvePistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePostProcessingStresses.html">NGsolvePostProcessingStresses.py</a></li>
@@ -175,9 +180,11 @@
 <li class="toctree-l2"><a class="reference internal" href="performanceMultiThreadingNG.html">performanceMultiThreadingNG.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pistonEngine.html">pistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotSensorExamples.html">plotSensorExamples.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pymeshlabFileImport.html">pymeshlabFileImport.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystem.html">reevingSystem.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystemOpen.html">reevingSystemOpen.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reinforcementLearningRobot.html">reinforcementLearningRobot.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rendererNOGLFWexample.html">rendererNOGLFWexample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigid3Dexample.html">rigid3Dexample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyIMUtest.html">rigidBodyIMUtest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyTutorial.html">rigidBodyTutorial.py</a></li>
@@ -247,7 +254,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudynunknown</a>
+          <a href="../../../index.html">Exudyn1.11.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -412,10 +419,10 @@
 <span class="linenos">141</span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ComputePostProcessingModes ... (may take a while)&quot;</span><span class="p">)</span>
 <span class="linenos">142</span>        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 <span class="linenos">143</span>        <span class="k">if</span> <span class="kc">True</span><span class="p">:</span> <span class="c1">#faster with ngsolve; requires fes</span>
-<span class="linenos">144</span>            <span class="n">fem</span><span class="o">.</span><span class="nf">ComputePostProcessingModesNGsolve</span><span class="p">(</span><span class="n">fes</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">mat</span><span class="p">,</span>
+<span class="linenos">144</span>            <span class="n">fem</span><span class="o">.</span><span class="nf">ComputePostProcessingModesNGsolve</span><span class="p">(</span><span class="n">fes</span><span class="p">,</span> <span class="nc">material</span><span class="o">=</span><span class="n">mat</span><span class="p">,</span>
 <span class="linenos">145</span>                                           <span class="n">outputVariableType</span><span class="o">=</span><span class="n">varType</span><span class="p">)</span>
 <span class="linenos">146</span>        <span class="k">else</span><span class="p">:</span>
-<span class="linenos">147</span>            <span class="n">fem</span><span class="o">.</span><span class="nf">ComputePostProcessingModes</span><span class="p">(</span><span class="n">material</span><span class="o">=</span><span class="n">mat</span><span class="p">,</span>
+<span class="linenos">147</span>            <span class="n">fem</span><span class="o">.</span><span class="nf">ComputePostProcessingModes</span><span class="p">(</span><span class="nc">material</span><span class="o">=</span><span class="n">mat</span><span class="p">,</span>
 <span class="linenos">148</span>                                            <span class="n">outputVariableType</span><span class="o">=</span><span class="n">varType</span><span class="p">)</span>
 <span class="linenos">149</span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   ... needed </span><span class="si">%.3f</span><span class="s2"> seconds&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
 <span class="linenos">150</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">contour</span><span class="o">.</span><span class="n">reduceRange</span><span class="o">=</span><span class="kc">False</span>
@@ -433,7 +440,7 @@
 <span class="linenos">162</span>                                                  <span class="n">initialVelocity</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">163</span>                                                  <span class="n">initialAngularVelocity</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos">164</span>                                                  <span class="n">gravity</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">9.81</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-<span class="linenos">165</span>                                                  <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.9</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">1.</span><span class="p">],</span>
+<span class="linenos">165</span>                                                  <span class="nc">color</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.9</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">1.</span><span class="p">],</span>
 <span class="linenos">166</span>                                                  <span class="p">)</span>
 <span class="linenos">167</span>
 <span class="linenos">168</span>    <span class="c1">#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++</span>
@@ -442,9 +449,9 @@
 <span class="linenos">171</span>        <span class="kn">from</span><span class="w"> </span><span class="nn">exudyn.interactive</span><span class="w"> </span><span class="kn">import</span> <span class="nf">AnimateModes</span>
 <span class="linenos">172</span>        <span class="n">mbs</span><span class="o">.</span><span class="nf">Assemble</span><span class="p">()</span>
 <span class="linenos">173</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="linenos">174</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">showFaceEdges</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">174</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">view0</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">showFaceEdges</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="linenos">175</span>        <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span><span class="o">=</span><span class="mi">4</span>
-<span class="linenos">176</span>        <span class="c1">#SC.visualizationSettings.window.renderWindowSize = [1600,1080]</span>
+<span class="linenos">176</span>        <span class="c1">#SC.visualizationSettings.view0.window.renderWindowSize = [1600,1080]</span>
 <span class="linenos">177</span>        <span class="c1"># SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.DisplacementLocal</span>
 <span class="linenos">178</span>        <span class="c1"># SC.visualizationSettings.contour.outputVariableComponent = 0 #component</span>
 <span class="linenos">179</span>
@@ -498,8 +505,8 @@
 <span class="linenos">227</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">basisSize</span> <span class="o">=</span> <span class="mf">0.12</span>
 <span class="linenos">228</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">deformationScaleFactor</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#use this factor to scale the deformation of modes</span>
 <span class="linenos">229</span>
-<span class="linenos">230</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">showFaceEdges</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="linenos">231</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">showFaces</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">230</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">view0</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">showFaceEdges</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="linenos">231</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">view0</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">showFaces</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="linenos">232</span>
 <span class="linenos">233</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">show</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="linenos">234</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">drawSimplified</span> <span class="o">=</span> <span class="kc">False</span>
@@ -532,7 +539,7 @@
 <span class="linenos">261</span>    <span class="c1">#create animation:</span>
 <span class="linenos">262</span>    <span class="c1"># simulationSettings.solutionSettings.recordImagesInterval = 0.005</span>
 <span class="linenos">263</span>    <span class="c1"># SC.visualizationSettings.exportImages.saveImageFileName = &quot;animation/frame&quot;</span>
-<span class="linenos">264</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1920</span><span class="p">,</span><span class="mi">1080</span><span class="p">]</span>
+<span class="linenos">264</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">view0</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">renderWindowSize</span><span class="o">=</span><span class="p">[</span><span class="mi">1920</span><span class="p">,</span><span class="mi">1080</span><span class="p">]</span>
 <span class="linenos">265</span>    <span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">multiSampling</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="linenos">266</span>
 <span class="linenos">267</span>    <span class="n">useGraphics</span><span class="o">=</span><span class="kc">True</span>
@@ -602,7 +609,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="NGsolveCMStutorial.html" class="btn btn-neutral float-left" title="NGsolveCMStutorial.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="NGsolveFFRF.html" class="btn btn-neutral float-right" title="NGsolveFFRF.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="NGsolveCreateFFRFreducedOrder.html" class="btn btn-neutral float-right" title="NGsolveCreateFFRFreducedOrder.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

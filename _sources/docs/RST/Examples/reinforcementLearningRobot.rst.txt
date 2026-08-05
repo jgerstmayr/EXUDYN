@@ -301,7 +301,7 @@ You can view and download this file on Github: `reinforcementLearningRobot.py <h
        #add some useful graphics settings
        
        SC.visualizationSettings.general.circleTiling=200
-       SC.visualizationSettings.general.drawCoordinateSystem=True
+       SC.visualizationSettings.view0.scene.drawCoordinateSystem=True
        SC.visualizationSettings.loads.show=False
        SC.visualizationSettings.bodies.show=True
        SC.visualizationSettings.markers.show=False
@@ -314,8 +314,8 @@ You can view and download this file on Github: `reinforcementLearningRobot.py <h
        SC.visualizationSettings.nodes.defaultSize = 0 #must not be -1, otherwise uses autocomputed size
        
        SC.visualizationSettings.openGL.multiSampling = 4
-       # SC.visualizationSettings.openGL.shadow = 0.25
-       #SC.visualizationSettings.openGL.light0position = [-3,3,10,0]
+       # SC.visualizationSettings.openGL.light0.shadow = 0.25
+       #SC.visualizationSettings.openGL.light0.position = [-3,3,10,0]
        # SC.visualizationSettings.contact.showBoundingBoxes = True
        SC.visualizationSettings.contact.showTriangles = True
        SC.visualizationSettings.contact.showSpheres = True
@@ -389,7 +389,7 @@ You can view and download this file on Github: `reinforcementLearningRobot.py <h
        simulationSettings.timeIntegration.endTime = tEnd
        simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
        
-       SC.visualizationSettings.window.renderWindowSize=[1600,1024]
+       SC.visualizationSettings.view0.window.renderWindowSize=[1600,1024]
        SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
    
        if useGeneralContact or usePenalty:
@@ -480,7 +480,7 @@ You can view and download this file on Github: `reinforcementLearningRobot.py <h
            simulationSettings.timeIntegration.endTime = self.stepUpdateTime
            simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
            
-           SC.visualizationSettings.window.renderWindowSize=[1600,1024]
+           SC.visualizationSettings.view0.window.renderWindowSize=[1600,1024]
            SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
            
            #+++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -704,7 +704,7 @@ You can view and download this file on Github: `reinforcementLearningRobot.py <h
        from stable_baselines3 import A2C, SAC
        
        
-       # here the model is loaded (either for vectorized or scalar environmentÂ´using SAC or A2C).     
+       # here the model is loaded (either for vectorized or scalar environment´using SAC or A2C).     
        def GetModel(myEnv, modelType='SAC'): 
            if modelType=='SAC': 
                model = SAC('MlpPolicy',

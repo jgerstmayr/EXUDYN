@@ -10,6 +10,7 @@ You can view and download this file on Github: `solutionViewerTest.py <https://g
 .. code-block:: python
    :linenos:
 
+   # -*- coding: utf-8 -*-
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    # This is an EXUDYN example
    #
@@ -133,11 +134,19 @@ You can view and download this file on Github: `solutionViewerTest.py <https://g
    #for snapshot:
    SC.visualizationSettings.openGL.multiSampling=4
    SC.visualizationSettings.openGL.lineWidth=2
-   SC.visualizationSettings.window.renderWindowSize = [800,600]
-   SC.visualizationSettings.general.drawCoordinateSystem=False
-   SC.visualizationSettings.general.drawWorldBasis=True
+   SC.visualizationSettings.view0.window.renderWindowSize = [800,600]
+   SC.visualizationSettings.view0.scene.drawCoordinateSystem=False
+   SC.visualizationSettings.view0.scene.drawWorldBasis=True
    # SC.visualizationSettings.general.useMultiThreadedRendering = False
    SC.visualizationSettings.general.autoFitScene = False #use loaded render state
+   
+   
+   #test UTF-8 characters:
+   text = 'Demo UTF-8 text:ΓΔΘΛΞΠΣΦΨΩ\nαβγδεζηθικλμνξοπρστυφχψωϕϵ\n'
+   text+= 'x₀₁₂₃₄₅₆₇₈₉x⁰¹²³⁴⁵⁶⁷⁸⁹\n∂∫♥√≈∞🙂😒°×·\nüöäÜÖÄßéèáàØ§ÿ~'
+   
+   SC.visualizationSettings.general.renderWindowString = text
+   SC.visualizationSettings.view0.window.globalFontSize = 14 #to see special characters
    useGraphics = True
    if useGraphics:
        simulationSettings.displayComputationTime = True

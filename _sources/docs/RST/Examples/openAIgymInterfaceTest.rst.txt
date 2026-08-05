@@ -128,7 +128,7 @@ You can view and download this file on Github: `openAIgymInterfaceTest.py <https
            
            self.simulationSettings.timeIntegration.newton.useModifiedNewton = True
            
-           self.SC.visualizationSettings.general.drawWorldBasis=True
+           self.SC.visualizationSettings.view0.scene.drawWorldBasis=True
            self.SC.visualizationSettings.general.graphicsUpdateInterval = 0.01 #50Hz
            self.SC.visualizationSettings.openGL.multiSampling=4
            

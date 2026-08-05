@@ -212,12 +212,12 @@ You can view and download this file on Github: `involuteGearGraphics.py <https:/
    simulationSettings.displayStatistics = True
    simulationSettings.timeIntegration.verboseMode = 1
    
-   SC.visualizationSettings.window.renderWindowSize=[1600,1200]
+   SC.visualizationSettings.view0.window.renderWindowSize=[1600,1200]
    SC.visualizationSettings.general.graphicsUpdateInterval = 0.01
    
    SC.visualizationSettings.openGL.multiSampling=2
-   SC.visualizationSettings.openGL.shadow = 0.25
-   SC.visualizationSettings.openGL.light0position = [0.2,1,0.2,1]
+   SC.visualizationSettings.openGL.light0.shadow = 0.25
+   SC.visualizationSettings.openGL.light0.position = [0.2,1,0.2,1]
    #SC.visualizationSettings.nodes.showBasis = True
    SC.visualizationSettings.loads.show = False
    SC.visualizationSettings.loads.drawSimplified=False
@@ -226,6 +226,7 @@ You can view and download this file on Github: `involuteGearGraphics.py <https:/
    useGraphics=True
    if useGraphics:
        SC.renderer.Start()              #start graphics visualization
+       SC.renderer.SetModelView(zoom=0.45,rotationVector=[0.3597916,0.8191503,0.105715],centerPoint=[0,0.164935,0])
        SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
    
    #start solver:q

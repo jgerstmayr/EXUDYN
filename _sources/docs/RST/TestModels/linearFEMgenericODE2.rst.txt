@@ -17,7 +17,7 @@ You can view and download this file on Github: `linearFEMgenericODE2.py <https:/
    #           example can be used to model linear FEM bodies directly in exudyn (may be slow; consider ObjectFFRFreducedOrder instead!!!)
    #           2 cases considered: 1) use K and M directly; 2) use M and implement jacobian manually (to show how this would look like!)
    #
-   # Author:   Johannes Gerstmayr, Andreas ZwÃ¶lfer
+   # Author:   Johannes Gerstmayr, Andreas Zwölfer
    # Date:     2024-10-06
    #
    # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.

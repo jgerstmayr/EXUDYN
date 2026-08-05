@@ -99,9 +99,9 @@ You can view and download this file on Github: `scissorPrismaticRevolute2D.py <h
    
    
    if useGraphics: #only start graphics once, but after background is set
-   #    SC.visualizationSettings.window.alwaysOnTop = True #must be done before SC.renderer.Start() called
-   #    SC.visualizationSettings.window.maximize = True
-   #    SC.visualizationSettings.window.showWindow = False
+   #    SC.visualizationSettings.view0.window.alwaysOnTop = True #must be done before SC.renderer.Start() called
+   #    SC.visualizationSettings.view0.window.maximize = True
+   #    SC.visualizationSettings.view0.window.showWindow = False
        SC.renderer.Start()
    
    
@@ -201,9 +201,9 @@ You can view and download this file on Github: `scissorPrismaticRevolute2D.py <h
    
        #exu.Print(mbs)
        mbs.Assemble()
-       SC.renderer.ZoomAll()
        
        if useGraphics:
+           SC.renderer.ZoomAll()
            SC.renderer.DoIdleTasks()
        #solve
        solver = exu.MainSolverImplicitSecondOrder()

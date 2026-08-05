@@ -142,8 +142,8 @@ You can view and download this file on Github: `addRevoluteJoint.py <https://git
    
    SC.visualizationSettings.openGL.multiSampling=4
    SC.visualizationSettings.openGL.lineWidth=2
-   SC.visualizationSettings.window.renderWindowSize = [800,600]
-   SC.visualizationSettings.general.drawCoordinateSystem=True
+   SC.visualizationSettings.view0.window.renderWindowSize = [800,600]
+   SC.visualizationSettings.view0.scene.drawCoordinateSystem=True
    
    SC.visualizationSettings.general.autoFitScene = False #use loaded render state
    simulationSettings.displayComputationTime = True

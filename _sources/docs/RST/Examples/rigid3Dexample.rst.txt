@@ -105,8 +105,8 @@ You can view and download this file on Github: `rigid3Dexample.py <https://githu
    SC.visualizationSettings.openGL.lineWidth = 2
    
    # uncomment following line for shadow:
-   # SC.visualizationSettings.openGL.shadow = 0.5
-   # SC.visualizationSettings.openGL.light0position = [4,4,10,0]
+   # SC.visualizationSettings.openGL.light0.shadow = 0.5
+   # SC.visualizationSettings.openGL.light0.position = [4,4,10,0]
    
    SC.renderer.Start()
    SC.renderer.DoIdleTasks()

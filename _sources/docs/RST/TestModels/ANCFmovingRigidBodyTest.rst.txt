@@ -15,7 +15,7 @@ You can view and download this file on Github: `ANCFmovingRigidBodyTest.py <http
    #
    # Details:  Test model for moving rigid body on two cables
    #
-   # Author:   Andreas ZwÃ¶lfer, Johannes Gerstmayr
+   # Author:   Andreas Zwölfer, Johannes Gerstmayr
    # Date:     2019-12-16
    #
    # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.

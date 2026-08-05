@@ -188,8 +188,8 @@ The algebraic equations read
 
 .. math::
 
-   \LU{0}{\Delta{\mathbf{p}}} &=& \Null, \quad \mbox{... two index 3 eqs, ensure sliding body stays at cable}\\
-   \left[\lambda_0,\lambda_1\right] \cdot  \LURU{0}{{\mathbf{r}}}{ANCF}{\prime} - |\LURU{0}{{\mathbf{r}}}{ANCF}{\prime}| \cdot f_\mathrm{ax} &=& 0, \quad \mbox{... one index 1 equ., ensure force in sliding dir.~= 0}  \\
+   \LU{0}{\Delta{\mathbf{p}}} &=& \Null, \quad \mbox{... two index 3 eqs $\ra$ sliding body stays on cable}\\
+   \left[\lambda_0,\lambda_1\right] \cdot  \LURU{0}{{\mathbf{r}}}{ANCF}{\prime} - |\LURU{0}{{\mathbf{r}}}{ANCF}{\prime}| \cdot f_\mathrm{ax} &=& 0, \quad \mbox{... one index 1 equ. $\ra$ force in sliding dir.=$f_\mathrm{ax}$}  \\
 
 
 
@@ -224,19 +224,19 @@ The algebraic equations read
 
 .. math::
 
-   \lambda_0 &=& 0, \quad \mbox{... equation not necessary, but can be used for switching to other modes}  \\
-   \LU{0}{\Delta{\mathbf{p}}\tp} \LU{0}{{\mathbf{n}}} &=& 0, \quad \mbox{... equation ensures that sliding body stays at cable centerline; index3}\\
-   \LU{0}{\Delta{\mathbf{p}}\tp} \LURU{0}{{\mathbf{r}}}{ANCF}{\prime} &=& 0. \quad \mbox{... resolves the sliding coordinate $s$; index1 equation!}
+   \lambda_0 &=& 0, \quad \mbox{... eq.~not necessary, but can be used for switching to other modes}  \\
+   \LU{0}{\Delta{\mathbf{p}}\tp} \LU{0}{{\mathbf{n}}} &=& 0, \quad \mbox{... eq.~ensures that sliding body stays at cable centerline; index3}\\
+   \LU{0}{\Delta{\mathbf{p}}\tp} \LURU{0}{{\mathbf{r}}}{ANCF}{\prime} &=& 0. \quad \mbox{... resolves the sliding coordinate $s$; index1 eq.!}
 
 
 In the index 2 case, the second equation reads
 
 .. math::
 
-   \LU{0}{\Delta{\mathbf{v}}\tp} \LU{0}{{\mathbf{n}}}  + \LU{0}{\Delta{\mathbf{p}}\tp} \LU{0}{\dot{\mathbf{n}}}  = 0
+   \LU{0}{\Delta{\mathbf{v}}\tp} \LU{0}{{\mathbf{n}}}  + \LU{0}{\Delta{\mathbf{p}}\tp} \LU{0}{\dot{\mathbf{n}}}  = 0 .
 
 
-if \ ``activeConnector = False``\ , the algebraic equations are changed to:
+If \ ``activeConnector = False``\ , the algebraic equations are changed to:
 
 .. math::
 

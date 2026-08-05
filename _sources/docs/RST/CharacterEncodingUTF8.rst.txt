@@ -14,10 +14,10 @@ More about encoding can be found in `Wikipedia:UTF-8 <https://en.wikipedia.org/w
 
 For short, Exudyn uses UTF-8 character encoding in texts / strings drawn in OpenGL renderer window.
 However, the set of available UTF-8 characters in Exudyn is restricted to a very small set of characters (as compared to available characters in UTF-8).
+For an example of available UTF-8 characters, see \ ``examples/solutionViewerTest.py``\ .
 
 
-Greek characters include: \ :math:`\alpha, \beta, \gamma, \delta, \varepsilon, \zeta, \eta, \theta, 
-\kappa, \lambda, \nu, \xi, \pi, \rho, \sigma, \varphi, \Delta, \Pi, \Sigma, {\mathbf{O}}ega`\ .
+Greek characters include all lower case characters (including variations) and only upper case characters, which are different from latin characters: \ :math:`\alpha, \beta, \gamma, ... \sigma, \varphi, \varepsilon; \Gamma, \Delta, \Theta, \Lambda, \Xi, \Pi, \Sigma, \Phi, \Psi, {\mathbf{O}}ega`\ .
 
 
 

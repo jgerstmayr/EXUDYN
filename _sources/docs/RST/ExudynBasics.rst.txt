@@ -121,7 +121,7 @@ The renderer is set up in a minimalistic way, just to ensure that you can check 
 +  For closing the render window, press key 'Q' or Escape or just close the window.
 +  There is no way to contruct models inside the renderer (no 'GUI').
 +  Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.
-+  After \ ``visualizationSettings.window.reallyQuitTimeLimit``\  seconds a 'do you really want to quit' dialog opens for safety on pressing 'Q'; if no tkinter is available, you just have to press 'Q' twice. For closing the window, you need to click a second time on the close button of the window after \ ``reallyQuitTimeLimit``\  seconds (usually 900 seconds).
++  After \ ``visualizationSettings.general.reallyQuitTimeLimit``\  seconds a 'do you really want to quit' dialog opens for safety on pressing 'Q'; if no tkinter is available, you just have to press 'Q' twice. For closing the window, you need to click a second time on the close button of the window after \ ``reallyQuitTimeLimit``\  seconds (usually 900 seconds).
 
  
 Here are the \ **main features of the renderer**\ , using keyboard and mouse, for details see Section :ref:`sec-graphicsvisualization`\ :
@@ -206,9 +206,9 @@ The visualization settings structure can be accessed in the system container \ `
 
   #change openGL parameters; current values can be obtained from SC.renderer.GetState()
   #change zoom factor:
-  SC.visualizationSettings.openGL.initialZoom = 0.2       
+  SC.visualizationSettings.openGL.advanced.initialZoom = 0.2       
   #set the center point of the scene (can be attached to moving object):
-  SC.visualizationSettings.openGL.initialCenterPoint = [0.192, -0.0039,-0.075]
+  SC.visualizationSettings.openGL.advanced.initialCenterPoint = [0.192, -0.0039,-0.075]
 
   #turn of auto-fit:
   SC.visualizationSettings.general.autoFitScene = False
@@ -217,7 +217,7 @@ The visualization settings structure can be accessed in the system container \ `
   SC.visualizationSettings.general.cylinderTiling = 100
   
   #make round objects flat:
-  SC.visualizationSettings.openGL.shadeModelSmooth = False
+  SC.visualizationSettings.openGL.advanced.shadeModelSmooth = False
 
   #turn on coloured plot, using y-component of displacements:
   SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
@@ -369,10 +369,10 @@ To add raytracing to your project, do like this:
   ...
   #after computation, switch to raytracing
   SC.visualizationSettings.openGL.multiSampling = 1
-  #SC.visualizationSettings.openGL.imageSizeFactor = 4 #reduce resolution for first tests!
-  SC.visualizationSettings.openGL.enableLight1 = False
+  SC.visualizationSettings.openGL.imageSizeFactor = 3 #reduce resolution for first tests!
+  SC.visualizationSettings.openGL.light1.enable = False
   SC.visualizationSettings.raytracer.numberOfThreads = 16 #adjust to your n-threads
-  SC.visualizationSettings.raytracer.enable = True
+  SC.visualizationSettings.view0.camera.useRaytracer = True
   
   mbs.SolutionViewer()
 
@@ -388,7 +388,30 @@ Have fun!
 Storing the model view
 ----------------------
 
-There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using \ ``SC.renderer.GetState()``\  and \ ``SC.renderer.SetState()``\ ,
+The \ **simplest way to store the model view**\  is to \ **press CTRL-F3**\  when the renderer is running, to get the code for setting the model view printed to the console, e.g., 
+
+   \ ``Set current view: SC.renderer.SetModelView(zoom=8.8,rotationVector=``\ 
+
+        \ ``[-0.8120557,0.4727261,0.7176849],centerPoint=[1.562,-1.526,0])``\ 
+
+Then, just copy the code after \ ``SC.renderer.Start``\ , see the following code snippet:
+
+.. code-block:: python
+
+  import exudyn as exu
+  SC=exu.SystemContainer()
+  SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
+  SC.renderer.Start()
+  SC.renderer.SetModelView(zoom=8.8,rotationVector=[-0.8120557,0.4727261,0.7176849],centerPoint=[1.562,-1.526,0])
+  #+++++++++++++++
+  #do simulation here
+  #+++++++++++++++
+  SC.renderer.Stop()
+
+
+
+
+If you are using an interactive Python, there is a automated way to store and restore the current view (zoom, centerpoint, orientation, etc.) by using \ ``SC.renderer.GetState()``\  and \ ``SC.renderer.SetState()``\ ,
 see also Section :ref:`sec-renderstate`\ .
 A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation\ (
 note that \ ``visualizationSettings.general.autoFitScene``\  should be set False if you want to use the stored zoom factor):
@@ -411,7 +434,10 @@ note that \ ``visualizationSettings.general.autoFitScene``\  should be set False
 
  
 
-Alternatively, you can obtain the current model view from the console after a simulation, e.g.,
+Whenever \ ``SC.renderer.Start()``\  is called, the renderState is reset (because it is assumed that the model has been changed and the previous view is invalid). However, you always can store and restore the renderstate manually.
+Since version 1.10.98, the \ ``ZoomAll``\  and \ ``SetModelView``\  also work without starting the renderer (using only the raytracer). However, note that \ ``ZoomAll``\  and \ ``SetModelView``\  have to be called before the raytracer call RedrawAndGetImage(True) or after renderer.Start() using regular OpenGL.
+
+If you wish to include all details of your view, like to rotation, you can obtain the current model view from the console after a simulation, e.g., 
 
 .. code-block:: python
 
@@ -426,7 +452,7 @@ Alternatively, you can obtain the current model view from the console after a si
                      [-0.7198463 , -0.6427876 , 0.26200265]])}
 
 
-which contains the last state of the renderer.
+which contains the last state of the renderer (NOTE: here, only part of the render state is shown for simplicity!).
 Now copy the output and set this with \ ``SC.renderer.SetState``\  in your Python code to have a fixed model view in every simulation (\ ``SC.renderer.SetState``\  AFTER \ ``SC.renderer.Start()``\ ):
 
 .. code-block:: python
@@ -544,10 +570,48 @@ An example for the \ ``SolutionViewer``\  is integrated into the \ ``Examples/``
 .. _sec-overview-basics-animations:
 
 
-Generating animations
----------------------
+Storing images and generating animations
+----------------------------------------
 
 In many dynamics simulations, it is very helpful to create animations in order to better understand the motion of bodies. Specifically, the animation can be used to visualize the model much slower or faster than the model is computed.
+
+Images can be stored conveniently either in the way shown below for series of images, or using the SolutionViewer, Section :ref:`sec-overview-basics-solutionviewer`\ .
+For single images, you can use 
+
++  \ ``SC.renderer.RedrawAndGetImage()``\ 
+
+to obtain single images at dedicated time instants.
+If the renderer is active, you directly get a snapshot of the current view. 
+
+
+Software rendering
+^^^^^^^^^^^^^^^^^^
+
+Setting the flag \ ``useRaytracer=True``\  in \ ``RedrawAndGetImage``\ , the software raytracer will be used -- see Section :ref:`sec-overview-basics-raytracing`\  for more details.
+If the renderer has not yet been started, you ONLY can use the raytracer for image retrieval, however, you should use \ ``renderer.ZoomAll``\  and \ ``renderer.SetModelView``\  to adjust the view previously.
+However, the pure raytracer capability allows to retrieve images without opening the render window, which may be annoying in automated image retrieval or on HPC environments where openGL may not be available.
+
+Retrieved images can be conveniently used with \ ``matplotlib``\  for further manipulation or storing, also see examples:
+
+.. code-block:: python
+
+  import matplotlib.pyplot as plt
+
+  #zoom all or set model view first!
+  #...
+
+  image=SC.renderer.RedrawAndGetImage()
+  plt.imsave("testImage.jpg", image)
+  plt.imshow(image)
+  plt.axis('off')
+  plt.show()
+
+
+
+
+
+Generating Animations
+^^^^^^^^^^^^^^^^^^^^^
 
 Animations are created based on a series of images (frames, snapshots) taken during simulation. It is important, that the current view is used to record these images -- this means that the view should not be changed during the recording of images.
 The easiest way to create animations, is using the SolutionViewer with its integrated features, see Section :ref:`sec-overview-basics-solutionviewer`\ .

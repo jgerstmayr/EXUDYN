@@ -51,7 +51,7 @@ You can view and download this file on Github: `stlFileImport.py <https://github
    
    #graphics for body
    fileName = 'solution/stlImport.stl'
-   if True: #True=create STL file; False=load STL file
+   if False: #True=create STL file; False=load STL file
        graphicsBody0 = graphics.Brick([0,0,0], bodyDim, graphics.color.dodgerblue)
        graphics.ExportSTL(graphicsBody0, fileName)
    
@@ -99,7 +99,7 @@ You can view and download this file on Github: `stlFileImport.py <https://github
    #simulationSettings.timeIntegration.simulateInRealtime = True
    simulationSettings.solutionSettings.solutionWritePeriod = 0.005 #store every 5 ms
    
-   SC.visualizationSettings.window.renderWindowSize=[1600,1200]
+   SC.visualizationSettings.view0.window.renderWindowSize=[1600,1200]
    SC.visualizationSettings.openGL.multiSampling = 4
    SC.visualizationSettings.openGL.lineWidth = 3
    SC.visualizationSettings.general.autoFitScene = False

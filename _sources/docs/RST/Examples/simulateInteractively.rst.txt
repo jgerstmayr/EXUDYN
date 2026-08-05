@@ -23,8 +23,8 @@ You can view and download this file on Github: `simulateInteractively.py <https:
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
-   from exudyn.itemInterface import *
-   from exudyn.graphicsDataUtilities import *
+   from exudyn.utilities import *
+   import exudyn.graphics as graphics
    import matplotlib.pyplot as plt
    from exudyn.interactive import InteractiveDialog
    
@@ -160,12 +160,12 @@ You can view and download this file on Github: `simulateInteractively.py <https:
    mbs.Assemble()
    
    
-   SC.visualizationSettings.general.textSize = 16
+   SC.visualizationSettings.view0.window.globalFontSize = 16
    SC.visualizationSettings.openGL.lineWidth = 2
    SC.visualizationSettings.openGL.multiSampling = 4
    SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
-   #SC.visualizationSettings.window.renderWindowSize=[1024,900]
-   SC.visualizationSettings.window.renderWindowSize=[1200,1080]
+   #SC.visualizationSettings.view0.window.renderWindowSize=[1024,900]
+   SC.visualizationSettings.view0.window.renderWindowSize=[1200,1080]
    SC.visualizationSettings.general.showSolverInformation = False
    
    

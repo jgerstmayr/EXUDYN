@@ -196,10 +196,9 @@ Therefore, we may rewrite Eq. :eq:`theory-eigenmodes-eom`\  as follows
 or, equivalently,
 
 .. math::
-   :label: eq-guyan-bb
 
    {\mathbf{M}}_{bb} \ddot{{\mathbf{q}}}_b + {\mathbf{M}}_{bi} \ddot{{\mathbf{q}}}_i +{\mathbf{K}}_{bb}  {{\mathbf{q}}}_b + {\mathbf{K}}_{bi}  {{\mathbf{q}}}_i  = {{\mathbf{f}}}_b \\
-   {\mathbf{M}}_{ib} \ddot{{\mathbf{q}}}_b + {\mathbf{M}}_{ii} \ddot{{\mathbf{q}}}_i +{\mathbf{K}}_{ib}  {{\mathbf{q}}}_b + {\mathbf{K}}_{ii}  {{\mathbf{q}}}_i  = \Null . \label{eq_Guyan_ii}
+   {\mathbf{M}}_{ib} \ddot{{\mathbf{q}}}_b + {\mathbf{M}}_{ii} \ddot{{\mathbf{q}}}_i +{\mathbf{K}}_{ib}  {{\mathbf{q}}}_b + {\mathbf{K}}_{ii}  {{\mathbf{q}}}_i  = \Null .
 
 
 A pure static condensation follows from Eq. :eq:`eq-guyanirons`\  with the assumption that inertia terms are neglected,

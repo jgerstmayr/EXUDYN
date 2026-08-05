@@ -14,7 +14,7 @@ You can view and download this file on Github: `slidercrankWithMassSpring.py <ht
    # This is an EXUDYN example
    #
    # Details:  Slider crank with additional mass and spring (flexible slidercrank);
-   #           Example of paper Arnold, BrÃ¼ls, 2007, Convergence of the generalized-[alpha] scheme for constrained mechanical systems, Multibody System Dynamics
+   #           Example of paper Arnold, Brüls, 2007, Convergence of the generalized-[alpha] scheme for constrained mechanical systems, Multibody System Dynamics
    #
    # Author:   Johannes Gerstmayr
    # Date:     2019-12-28
@@ -168,7 +168,7 @@ You can view and download this file on Github: `slidercrankWithMassSpring.py <ht
    
    initCrank = True
    if initCrank:
-       #turn crank to 90Â° as enforced by constraintCrankAngle
+       #turn crank to 90° as enforced by constraintCrankAngle
        mbs.SolveStatic(simulationSettings)
        
        #use static solution as initial conditions for dynamic solution

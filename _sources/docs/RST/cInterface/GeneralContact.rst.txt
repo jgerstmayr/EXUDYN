@@ -6,10 +6,9 @@
 GeneralContact
 **************
 
+Structure to define general and highly efficient contact functionality in multibody systems, allowing millions of particles, using search trees and parallelized contact computations, mainly intended for explicit solvers. 
 
-
-
-Structure to define general and highly efficient contact functionality in multibody systems\ (Note that GeneralContact is still developed, use with care.). For further explanations and theoretical backgrounds, see Section :ref:`seccontacttheory`\ . Internally, the contacts are stored with global indices, which are in the following list: [numberOfSpheresMarkerBased, numberOfANCFCable2D, numberOfTrigsRigidBodyBased], see alsothe output of GetPythonObject().
+For further explanations and theoretical backgrounds, see Section :ref:`seccontacttheory`\ . Internally, the contacts are stored with global indices, which are in the following list: [numberOfSpheresMarkerBased, numberOfANCFCable2D, numberOfTrigsRigidBodyBased], see alsothe output of GetPythonObject().
 
 .. code-block:: python
    :linenos:
@@ -101,7 +100,7 @@ Structure to define general and highly efficient contact functionality in multib
 * | **AddTrianglesRigidBodyBased**\ (\ *rigidBodyMarkerIndex*\ , \ *contactStiffness*\ , \ *contactDamping*\ , \ *frictionMaterialIndex*\ , \ *pointList*\ , \ *triangleList*\ , \ *staticTriangles*\  = False): 
   | add contact object using a rigidBodyMarker (of a body), contact/friction parameters, a list of points (as 3D numpy arrays or lists; coordinates relative to rigidBodyMarker) and a list of triangles (3 indices as numpy array or list) according to a mesh attached to the rigidBodyMarker; the flag staticTriangles=True can be used to inform the contact solver that these triangles are static (fixed in space); note that static triangles have to be added before dynamic triangles; function returns starting local index of trigsRigidBodyBased at which the triangles are stored; mesh can be produced with GraphicsData2TrigsAndPoints(...); contact is possible between sphere (circle) and Triangle but yet not between triangle and triangle; frictionMaterialIndex refers to frictionPairings in GeneralContact; contactStiffness is computed as serial spring between contacting objects, while damping is computed as a parallel damper (otherwise the smaller damper would always dominate); the triangle normal must point outwards, with the normal of a triangle given with local points (p0,p1,p2) defined as n=(p1-p0) x (p2-p0), see function ComputeTriangleNormal(...)
 * | **GetItemsInBox**\ (\ *pMin*\ , \ *pMax*\ ): 
-  | Get all items in box defined by minimum coordinates given in pMin and maximum coordinates given by pMax, accepting 3D lists or numpy arrays; in case that no objects are found, False is returned; otherwise, a dictionary is returned, containing numpy arrays with indices of obtained MarkerBasedSpheres, TrigsRigidBodyBased, ANCFCable2D, ...; the indices refer to the local index in GeneralContact which can be evaluated e.g. by GetMarkerBasedSphere(localIndex)
+  | Get all items in box defined by minimum coordinates given in pMin and maximum coordinates given by pMax, accepting 3D lists or numpy arrays; in case that no objects are found, False is returned; otherwise, a dictionary is returned, containing numpy arrays with indices of obtained MarkerBasedSpheres, TrigsRigidBodyBased, ANCFCable2D, ...; the indices refer to the local index in GeneralContact which can be evaluated e.g., by GetMarkerBasedSphere(localIndex)
   | *Example*:
 
   .. code-block:: python
@@ -110,17 +109,17 @@ Structure to define general and highly efficient contact functionality in multib
          pMax=[2,3,2])
 
 * | **GetSphereMarkerBased**\ (\ *localIndex*\ , \ *addData*\  = False): 
-  | Get dictionary with current position, orientation, velocity, angular velocity as computed in last contact iteration; if addData=True, adds stored data of contact element, such as radius, markerIndex and contact parameters; localIndex is the internal index of contact element, as returned e.g. from GetItemsInBox
+  | Get dictionary with current position, orientation, velocity, angular velocity as computed in last contact iteration; if addData=True, adds stored data of contact element, such as radius, markerIndex and contact parameters; localIndex is the internal index of contact element, as returned e.g., from GetItemsInBox
 * | **SetSphereMarkerBased**\ (\ *localIndex*\ , \ *contactStiffness*\  = -1., \ *contactDamping*\  = -1., \ *radius*\  = -1., \ *frictionMaterialIndex*\  = -1): 
   | Set data of marker based sphere with localIndex (as internally stored) with given arguments; arguments that are < 0 (default) imply that current values are not overwritten
 * | **GetTriangleRigidBodyBased**\ (\ *localIndex*\ ): 
   | Get dictionary with rigid body index, local position of triangle vertices (nodes) and triangle normal; NOTE: the mesh added to contact is different from this structure, as it contains nodes and connectivity lists; the triangle index corresponds to the order as triangles are added to GeneralContact
 * | **SetTriangleRigidBodyBased**\ (\ *localIndex*\ , \ *points*\ , \ *contactRigidBodyIndex*\  = -1): 
   | Set data of marker based sphere with localIndex (triangle index); points are provided as 3x3 numpy array, with point coordinates in rows; contactRigidBodyIndex<0 indicates no change of the current index (and changing this index should be handled with care)
-* | **ShortestDistanceAlongLine**\ (\ *pStart*\  = [0,0,0], \ *direction*\  = [1,0,0], \ *minDistance*\  = -1e-7, \ *maxDistance*\  = 1e7, \ *asDictionary*\  = False, \ *cylinderRadius*\  = 0, \ *typeIndex*\  = Contact.IndexEndOfEnumList): 
+* | **ShortestDistanceAlongLine**\ (\ *pStart*\  = [0,0,0], \ *direction*\  = [1,0,0], \ *minDistance*\  = -1e-7, \ *maxDistance*\  = 1e7, \ *asDictionary*\  = False, \ *cylinderRadius*\  = 0, \ *typeIndex*\  = ContactTypeIndex.IndexEndOfEnumList): 
   | Find shortest distance to contact objects in GeneralContact along line with pStart (given as 3D list or numpy array) and direction (as 3D list or numpy array with no need to be normalized); the function returns the distance which is >= minDistance and < maxDistance; in case of beam elements, it measures the distance to the beam centerline; the distance is measured from pStart along given direction and can also be negative; if no item is found along line, the maxDistance is returned; if asDictionary=False, the result is a float, while otherwise details are returned as dictionary (including distance, velocityAlongLine (which is the object velocity in given direction and may be different from the time derivative of the distance; works similar to a laser Doppler vibrometer - LDV), itemIndex and itemType in GeneralContact); the cylinderRadius, if not equal to 0, will be used for spheres to find closest sphere along cylinder with given point and direction; the typeIndex can be set to a specific contact type, e.g., which are searched for (otherwise all objects are considered)
 * | **UpdateContacts**\ (\ *mainSystem*\ ): 
-  | Update contact sets, e.g. if no contact is simulated (isActive=False) but user functions need up-to-date contact states for GetItemsInBox(...) or for GetActiveContacts(...)
+  | Update contact sets, e.g., if no contact is simulated (isActive=False) but user functions need up-to-date contact states for GetItemsInBox(...) or for GetActiveContacts(...)
   | *Example*:
 
   .. code-block:: python

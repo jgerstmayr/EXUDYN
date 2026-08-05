@@ -6,9 +6,9 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Type definitions &mdash; Exudynunknown unknown documentation</title>
+  <title>Type definitions &mdash; Exudyn1.11.0 1.11.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e11081fd" />
@@ -16,9 +16,9 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=3f1b9271"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=6cf1fb80"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
       <script src="../../../_static/js/rtd_search_config.js"></script>
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudynunknown
+            Exudyn1.11.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -105,7 +105,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudynunknown</a>
+          <a href="../../../index.html">Exudyn1.11.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -141,7 +141,7 @@
 </div>
 <section id="outputvariabletype">
 <span id="sec-outputvariabletype"></span><h2>OutputVariableType<a class="headerlink" href="#outputvariabletype" title="Link to this heading"></a></h2>
-<p>This section shows the OutputVariableType structure, which is used for selecting output values, e.g. for GetObjectOutput(…) or for selecting variables for contour plot.</p>
+<p>The enumeration type  OutputVariableType is used for selecting output values, e.g., for GetObjectOutput(…) or for selecting variables for contour plot.</p>
 <p>Available output variables and the interpreation of the output variable can be found at the object definitions.
 The OutputVariableType does not provide information about the size of the output variable, which can be either scalar or a list (vector). For vector output quantities, the contour plot option offers an additional parameter for selection of the component of the OutputVariableType. The components are usually out of {0,1,2}, representing {x,y,z} components (e.g., of displacements, velocities, …), or {0,1,2,3,4,5} representing {xx,yy,zz,yz,xz,xy} components (e.g., of strain or stress). In order to compute a norm, chose component=-1, which will result in the quadratic norm for other vectors and to a norm specified for stresses (if no norm is defined for an outputVariable, it does not compute anything)</p>
 <p>The class <strong>OutputVariableType</strong> has the following <strong>functions and structures</strong>:</p>
@@ -168,7 +168,7 @@ The OutputVariableType does not provide information about the size of the output
 </li>
 <li><div class="line-block">
 <div class="line"><strong>DisplacementLocal</strong>:</div>
-<div class="line">measure local displacement, e.g. in local joint coordinates</div>
+<div class="line">measure local displacement, e.g., in local joint coordinates</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -178,7 +178,7 @@ The OutputVariableType does not provide information about the size of the output
 </li>
 <li><div class="line-block">
 <div class="line"><strong>VelocityLocal</strong>:</div>
-<div class="line">measure local (translational) velocity, e.g. in local body or joint coordinates</div>
+<div class="line">measure local (translational) velocity, e.g., in local body or joint coordinates</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -248,17 +248,17 @@ The OutputVariableType does not provide information about the size of the output
 </li>
 <li><div class="line-block">
 <div class="line"><strong>Director1</strong>:</div>
-<div class="line">measure a director (e.g. of a rigid body frame), or a slope vector in local 1 or x-direction</div>
+<div class="line">measure a director (e.g., of a rigid body frame), or a slope vector in local 1 or x-direction</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>Director2</strong>:</div>
-<div class="line">measure a director (e.g. of a rigid body frame), or a slope vector in local 2 or y-direction</div>
+<div class="line">measure a director (e.g., of a rigid body frame), or a slope vector in local 2 or y-direction</div>
 </div>
 </li>
 <li><div class="line-block">
 <div class="line"><strong>Director3</strong>:</div>
-<div class="line">measure a director (e.g. of a rigid body frame), or a slope vector in local 3 or z-direction</div>
+<div class="line">measure a director (e.g., of a rigid body frame), or a slope vector in local 3 or z-direction</div>
 </div>
 </li>
 <li><div class="line-block">
@@ -305,7 +305,7 @@ The OutputVariableType does not provide information about the size of the output
 </section>
 <section id="configurationtype">
 <span id="sec-configurationtype"></span><h2>ConfigurationType<a class="headerlink" href="#configurationtype" title="Link to this heading"></a></h2>
-<p>This section shows the ConfigurationType structure, which is used for selecting a configuration for reading or writing information to the module. Specifically, the ConfigurationType.Current configuration is usually used at the end of a solution process, to obtain result values, or the ConfigurationType.Initial is used to set initial values for a solution process.</p>
+<p>The enumeration type  ConfigurationType is used for selecting a configuration for reading or writing information to the module. Specifically, the ConfigurationType.Current configuration is usually used at the end of a solution process, to obtain result values, or the ConfigurationType.Initial is used to set initial values for a solution process.</p>
 <p>The class <strong>ConfigurationType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
@@ -347,7 +347,7 @@ The OutputVariableType does not provide information about the size of the output
 </section>
 <section id="itemtype">
 <span id="sec-itemtype"></span><h2>ItemType<a class="headerlink" href="#itemtype" title="Link to this heading"></a></h2>
-<p>This section shows the ItemType structure, which is used for defining types of indices, e.g., in render window and will be also used in item dictionaries in future.</p>
+<p>The enumeration type  ItemType is used for defining types of indices, e.g., in render window and will be also used in item dictionaries in future.</p>
 <p>The class <strong>ItemType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
@@ -384,7 +384,7 @@ The OutputVariableType does not provide information about the size of the output
 </section>
 <section id="nodetype">
 <span id="sec-nodetype"></span><h2>NodeType<a class="headerlink" href="#nodetype" title="Link to this heading"></a></h2>
-<p>This section shows the NodeType structure, which is used for defining node types for 3D rigid bodies.</p>
+<p>The enumeration type  NodeType is used for defining node types for 3D rigid bodies.</p>
 <p>The class <strong>NodeType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
@@ -486,7 +486,7 @@ The OutputVariableType does not provide information about the size of the output
 </section>
 <section id="jointtype">
 <span id="sec-jointtype"></span><h2>JointType<a class="headerlink" href="#jointtype" title="Link to this heading"></a></h2>
-<p>This section shows the JointType structure, which is used for defining joint types, used in KinematicTree.</p>
+<p>The enumeration type  JointType is used for defining joint types, used in KinematicTree.</p>
 <p>The class <strong>JointType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
@@ -528,7 +528,7 @@ The OutputVariableType does not provide information about the size of the output
 </section>
 <section id="dynamicsolvertype">
 <span id="sec-dynamicsolvertype"></span><h2>DynamicSolverType<a class="headerlink" href="#dynamicsolvertype" title="Link to this heading"></a></h2>
-<p>This section shows the DynamicSolverType structure, which is used for selecting dynamic solvers for simulation.</p>
+<p>The enumeration type  DynamicSolverType is used for selecting dynamic solvers for simulation.</p>
 <p>The class <strong>DynamicSolverType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
@@ -590,7 +590,7 @@ The OutputVariableType does not provide information about the size of the output
 </section>
 <section id="crosssectiontype">
 <span id="sec-crosssectiontype"></span><h2>CrossSectionType<a class="headerlink" href="#crosssectiontype" title="Link to this heading"></a></h2>
-<p>This section shows the CrossSectionType structure, which is used for defining beam cross section types.</p>
+<p>The enumeration type  CrossSectionType is used for defining beam cross section types.</p>
 <p>The class <strong>CrossSectionType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
@@ -607,7 +607,7 @@ The OutputVariableType does not provide information about the size of the output
 </section>
 <section id="keycode">
 <span id="sec-keycode"></span><h2>KeyCode<a class="headerlink" href="#keycode" title="Link to this heading"></a></h2>
-<p>This section shows the KeyCode structure, which is used for special key codes in keyPressUserFunction.</p>
+<p>The enumeration type  KeyCode is used for special key codes in keyPressUserFunction.</p>
 <p>The class <strong>KeyCode</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
@@ -702,7 +702,7 @@ The OutputVariableType does not provide information about the size of the output
 </section>
 <section id="linearsolvertype">
 <span id="sec-linearsolvertype"></span><h2>LinearSolverType<a class="headerlink" href="#linearsolvertype" title="Link to this heading"></a></h2>
-<p>This section shows the LinearSolverType structure, which is used for selecting linear solver types, which are dense or sparse solvers.</p>
+<p>The enumeration type  LinearSolverType is used for selecting linear solver types, which are dense or sparse solvers.</p>
 <p>The class <strong>LinearSolverType</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">
@@ -727,14 +727,14 @@ The OutputVariableType does not provide information about the size of the output
 </li>
 <li><div class="line-block">
 <div class="line"><strong>EigenDense</strong>:</div>
-<div class="line">use Eigen’s LU factorization with partial pivoting (faster than EXUdense) or full pivot (if linearSolverSettings.ignoreSingularJacobian=True; is much slower)</div>
+<div class="line">use Eigen’s LU factorization with partial pivoting (faster than EXUdense) or full pivot (if linearSolverSettings.ignoreSingularJacobian=True; is much slower, but can resolve overdetermined and underdetermined problems!)</div>
 </div>
 </li>
 </ul>
 </section>
 <section id="contacttypeindex">
 <span id="sec-contacttypeindex"></span><h2>ContactTypeIndex<a class="headerlink" href="#contacttypeindex" title="Link to this heading"></a></h2>
-<p>This section shows the ContactTypeIndex structure, which is in GeneralContact to select specific contact items, such as spheres, ANCFCable or triangle items.</p>
+<p>The enumeration type  ContactTypeIndex is used in GeneralContact to select specific contact items, such as spheres, ANCFCable or triangle items.</p>
 <p>The class <strong>ContactTypeIndex</strong> has the following <strong>functions and structures</strong>:</p>
 <ul>
 <li><div class="line-block">

@@ -57,16 +57,16 @@ You can view and download this file on Github: `geneticOptimizationSliderCrank.p
        class P: pass #create emtpy structure for parameters; simplifies way to update parameters
        P.s1=L1*0.5
        P.s2=L2*0.5
-       P.h=0.002
-       P.computationIndex = ''
+       P.computationIndex = '' #will be filled with parameterSet and can be used with multithreaded tasks (filenames, etc.)
        
        # #now update parameters with parameterSet (will work with any parameters in structure P)
        for key,value in parameterSet.items():
            setattr(P,key,value)
    
-       globalSettings = parameterSet['functionData'] 
+       globalSettings = parameterSet['functionData']
        stiffness = globalSettings['stiffness']
-       computationIndex = parameterSet['computationIndex']  #could be used for temporary variables when using multithreading
+       stepSize = globalSettings['stepSize']
+   
    
        #++++++++++++++++++++++++++++++++++++++++++++++
        #++++++++++++++++++++++++++++++++++++++++++++++
@@ -211,11 +211,11 @@ You can view and download this file on Github: `geneticOptimizationSliderCrank.p
        simulationSettings = exu.SimulationSettings() #takes currently set values or default values
        tEnd = 3
        
-       simulationSettings.timeIntegration.numberOfSteps = int(tEnd/P.h) 
+       simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize) 
        simulationSettings.timeIntegration.endTime = tEnd              
    
        
-       simulationSettings.solutionSettings.solutionWritePeriod = 2e-3
+       simulationSettings.solutionSettings.solutionWritePeriod = stepSize
        simulationSettings.solutionSettings.writeSolutionToFile = useGraphics
    
        simulationSettings.timeIntegration.newton.useModifiedNewton = True
@@ -234,12 +234,12 @@ You can view and download this file on Github: `geneticOptimizationSliderCrank.p
        SC.visualizationSettings.connectors.defaultSize = dSize
        
        #data obtained from SC.renderer.GetState(); use np.round(d['modelRotation'],4)
-       SC.visualizationSettings.openGL.initialModelRotation = [[ 0.87758,  0.04786, -0.47703],
+       SC.visualizationSettings.openGL.advanced.initialModelRotation = [[ 0.87758,  0.04786, -0.47703],
                                                                [ 0.     ,  0.995  ,  0.09983],
                                                                [ 0.47943, -0.08761,  0.8732]]
-       SC.visualizationSettings.openGL.initialZoom = 0.47
-       SC.visualizationSettings.openGL.initialCenterPoint = [0.192, -0.0039,-0.075]
-       SC.visualizationSettings.openGL.initialMaxSceneSize = 0.4
+       SC.visualizationSettings.openGL.advanced.initialZoom = 0.47
+       SC.visualizationSettings.openGL.advanced.initialCenterPoint = [0.192, -0.0039,-0.075]
+       SC.visualizationSettings.openGL.advanced.initialMaxSceneSize = 0.4
        SC.visualizationSettings.general.autoFitScene = False
        #SC.renderer.DoIdleTasks()
        
@@ -274,13 +274,13 @@ You can view and download this file on Github: `geneticOptimizationSliderCrank.p
    import matplotlib.ticker as ticker
    
    doOptimize = True
+   functionData = {'stiffness':5000, 'stepSize':0.002} #additional static data
    #now perform parameter variation
    if __name__ == '__main__': #include this to enable parallel processing
        if doOptimize:
            import time
        
            #some data which shall not be optimized, but passed to objectiveFunction (e.g. in variation calculations)
-           functionData = {'stiffness':5000}
            
            #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
            #GeneticOptimization    
@@ -288,7 +288,7 @@ You can view and download this file on Github: `geneticOptimizationSliderCrank.p
            [pOpt, vOpt, pList, values] = GeneticOptimization(objectiveFunction = ParameterFunction, 
                                                 parameters = {'s1':(-L1,L1), 's2':(-L2,L2)}, #parameters provide search range
                                                 parameterFunctionData = functionData,
-                                                numberOfGenerations = 30,
+                                                numberOfGenerations = 12,
                                                 populationSize = 50,
                                                 elitistRatio = 0.1,
                                                 crossoverProbability = 0.1,
@@ -297,7 +297,8 @@ You can view and download this file on Github: `geneticOptimizationSliderCrank.p
                                                 randomizerInitialization=0, #for reproducible results
                                                 #distanceFactor = 0.1, #for this example only one significant minimum
                                                 debugMode=False,
-                                                useMultiProcessing=True, #may be problematic for test
+                                                #useMultiProcessing=True, #usefule only for larger simulation times
+                                                #numberOfThreads=12, #number of threads
                                                 showProgress=True,
                                                 resultsFile = 'solution/geneticSliderCrank.txt',
                                                 )
@@ -322,8 +323,9 @@ You can view and download this file on Github: `geneticOptimizationSliderCrank.p
                [figList, axList] = PlotOptimizationResults2D(pList, values, yLogScale=True)
        else:
            useGraphics = True
-           parameterSet = {'s1':L1*0.5, 's2':L2*0.5, 'h':1e-5}
-           #parameterSet = {'s1':-0.075, 's2':-0.15, 'h':1e-5}
+           parameterSet = {'s1':L1*0.5, 's2':L2*0.5, 'h':1e-5} #standard values
+           #parameterSet = {'s1':-0.075, 's2':-0.15, 'h':1e-5} #optimal values
+           parameterSet['functionData'] = functionData
            ParameterFunction(parameterSet)    
    
    

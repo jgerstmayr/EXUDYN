@@ -5,7 +5,7 @@
 NodeGenericODE1
 ===============
 
-A node containing a number of \ :ref:`ODE1 <ODE1>`\  variables; use e.g. linear state space systems. Note that referenceCoordinates and initialCoordinates must be initialized, because no default values exist.
+A node containing a number of \ :ref:`ODE1 <ODE1>`\  variables. Use this node e.g. for linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.
 
 The item \ **NodeGenericODE1**\  with type = 'GenericODE1' has the following parameters:
 

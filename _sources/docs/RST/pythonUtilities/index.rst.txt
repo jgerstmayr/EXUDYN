@@ -32,6 +32,7 @@ Python Utility Functions
    robotics.motion
    robotics.special
    robotics.utilities
+   shells
    signalProcessing
    solver
    utilities

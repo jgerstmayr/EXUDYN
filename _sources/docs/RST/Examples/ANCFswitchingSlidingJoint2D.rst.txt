@@ -190,7 +190,7 @@ You can view and download this file on Github: `ANCFswitchingSlidingJoint2D.py <
    SC.visualizationSettings.connectors.showContact = 1
    
    #SC.visualizationSettings.general.minSceneSize = 4
-   SC.visualizationSettings.openGL.initialCenterPoint = [0.5*L,-0.25*L,0]
+   SC.visualizationSettings.openGL.advanced.initialCenterPoint = [0.5*L,-0.25*L,0]
    #SC.visualizationSettings.openGL.lineWidth=2
    
    simulationSettings.solutionSettings.solutionInformation = "ANCF cable with sliding joint"

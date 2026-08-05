@@ -309,8 +309,8 @@ You can view and download this file on Github: `geometricallyExactBeamTest.py <h
        SC.visualizationSettings.nodes.defaultSize=0.01
    
        SC.visualizationSettings.bodies.beams.axialTiling = 50
-       SC.visualizationSettings.general.drawWorldBasis = True
-       SC.visualizationSettings.general.worldBasisSize = 0.1
+       SC.visualizationSettings.view0.scene.drawWorldBasis = True
+       SC.visualizationSettings.view0.scene.worldBasisSize = 0.1
        SC.visualizationSettings.openGL.multiSampling = 4
    
    
@@ -373,10 +373,10 @@ You can view and download this file on Github: `geometricallyExactBeamTest.py <h
    
    # case= 0/CantileverLinear2011 
    #NachbagauerPechsteinIrschikGerstmayrMUBO2011 (2D):
-   # ne=1,   9.12273046eâ€“8, 6.16666566eâ€“4, 0.000193
-   # ne=2,   1.61293091eâ€“7, 7.61594059eâ€“4, 4.831eâ€“5
-   # ne=4,   1.81763233eâ€“7, 7.97825954eâ€“4, 1.208eâ€“5
-   # ne=256, 1.88847418eâ€“7, 8.09900305eâ€“4, 2.945eâ€“9
+   # ne=1,   9.12273046e–8, 6.16666566e–4, 0.000193
+   # ne=2,   1.61293091e–7, 7.61594059e–4, 4.831e–5
+   # ne=4,   1.81763233e–7, 7.97825954e–4, 1.208e–5
+   # ne=256, 1.88847418e–7, 8.09900305e–4, 2.945e–9
    #Exudyn: ksFact=1
    # ne= 1 , ux= 9.122730637578513e-08 , uy= 0.0006166665660910789 
    # ne= 2 , ux= 1.612930911054633e-07 , uy= 0.0007615940599560586 
@@ -394,7 +394,7 @@ You can view and download this file on Github: `geometricallyExactBeamTest.py <h
    # ne=1,    0.07140274, 0.54225823, 0.168310
    # ne=2,    0.12379212, 0.65687111, 0.053697
    # ne=4,    0.14346767, 0.69593561, 0.014633
-   # ne=1024, 0.15097103, 0.71056837, 2.280eâ€“7
+   # ne=1024, 0.15097103, 0.71056837, 2.280e–7
    
    #Exudyn: ksFact=1
    # ne= 1 , ux= 0.07140273975041422 , uy= 0.5422582285449739 
@@ -426,7 +426,7 @@ You can view and download this file on Github: `geometricallyExactBeamTest.py <h
    # case = 3:
    #Princeton beam with ANSYS (Leonid Obrezkov / Aki Mikkola / Marko Matikainen et al.,
    #       Performance review of locking alleviation methods for continuum ANCF beam elements,
-   #       Nonlinear Dynamics, Vol. 109, pp. 31â€“546, May 2022
+   #       Nonlinear Dynamics, Vol. 109, pp. 31–546, May 2022
    # beta=[0 15 30 45 60 75 90];
    if (case==3 or case == 4) and False:
        # F2=8.896

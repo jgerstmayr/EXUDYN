@@ -5,7 +5,7 @@
 ObjectBeamGeometricallyExact2D
 ==============================
 
-A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D; FURTHER TESTS REQUIRED. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the \ :math:`y`\ -axis, while and angle \ :math:`\pi/2`\  means that the cross section points in negative \ :math:`x`\ -direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length \ :math:`L`\ =physicsLength and height \ :math:`h`\  ranges in \ :math:`X`\ -direction in range \ :math:`[-L/2, L/2]`\  and in \ :math:`Y`\ -direction in range \ :math:`[-h/2,h/2]`\  (which is in fact not needed in the \ :ref:`EOM <EOM>`\ ).
+A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the \ :math:`y`\ -axis, while and angle \ :math:`\pi/2`\  means that the cross section points in negative \ :math:`x`\ -direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length \ :math:`L`\ =physicsLength and height \ :math:`h`\  ranges in \ :math:`X`\ -direction in range \ :math:`[-L/2, L/2]`\  and in \ :math:`Y`\ -direction in range \ :math:`[-h/2,h/2]`\  (which is in fact not needed in the \ :ref:`EOM <EOM>`\ ).
 
 \ **Additional information for ObjectBeamGeometricallyExact2D**\ :
 
@@ -19,7 +19,7 @@ The item \ **ObjectBeamGeometricallyExact2D**\  with type = 'BeamGeometricallyEx
 
 * | **name** [type = String, default = '']:
   | objects's unique name
-* | **nodeNumbers** [type = NodeIndex2, default = [invalid [-1], invalid [-1]]]:
+* | **nodeNumbers** [type = ArrayNodeIndex, default = []]:
   | two node numbers for beam element
 * | **physicsLength** [\ :math:`L`\ , type = UReal, default = 0.]:
   | [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \ :math:`\rho A L`\ ; must be positive
@@ -42,7 +42,7 @@ The item \ **ObjectBeamGeometricallyExact2D**\  with type = 'BeamGeometricallyEx
 * | **physicsReferenceCurvature** [\ :math:`\kappa_0`\ , type = Real, default = 0.]:
   | [SI:1/m] reference curvature of beam (pre-deformation) of beam
 * | **includeReferenceRotations** [type = bool, default = False]:
-  | if True, rotations at nodes consider reference rotations, which are used for the computation of bending strains (this means that a pre-curved beam is stress-free); if False, the reference rotation of the cross section is orthogonal to the direction between the reference position of the end nodes. This allows to easily share nodes among several beams with different cross section orientation.
+  | if True, rotation of the cross section at the nodes includes node reference rotations (within referenceCoordinates of NodeRigidBody2D), which are used for the computation of bending strains (this means that a pre-curved beam is stress-free); if False, the reference rotation of the cross section is orthogonal to the reference slope vector. This allows to easily share nodes among several beams with different reference cross section orientation (i.e., only the change of rotation counts).
 * | **visualization** [type = VObjectBeamGeometricallyExact2D]:
   | parameters for visualization of item
 

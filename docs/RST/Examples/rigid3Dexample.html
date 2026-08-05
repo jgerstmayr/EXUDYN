@@ -6,9 +6,9 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rigid3Dexample.py &mdash; Exudynunknown unknown documentation</title>
+  <title>rigid3Dexample.py &mdash; Exudyn1.11.0 1.11.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=3ee1c6c6" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/rtd_sphinx_search.min.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e11081fd" />
@@ -16,9 +16,9 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=3f1b9271"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=6cf1fb80"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
       <script src="../../../_static/js/rtd_search_config.js"></script>
@@ -27,7 +27,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="rigidBodyIMUtest.py" href="rigidBodyIMUtest.html" />
-    <link rel="prev" title="reinforcementLearningRobot.py" href="reinforcementLearningRobot.html" /> 
+    <link rel="prev" title="rendererNOGLFWexample.py" href="rendererNOGLFWexample.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -39,7 +39,7 @@
           
           
           <a href="../../../index.html" class="icon icon-home">
-            Exudynunknown
+            Exudyn1.11.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -83,6 +83,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ANCFcontactCircle2.html">ANCFcontactCircle2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFmovingRigidbody.html">ANCFmovingRigidbody.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFrotatingCable2D.html">ANCFrotatingCable2D.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ANCFslidingJoint.html">ANCFslidingJoint.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFslidingJoint2D.html">ANCFslidingJoint2D.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFslidingJoint2Drigid.html">ANCFslidingJoint2Drigid.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANCFswitchingSlidingJoint2D.html">ANCFswitchingSlidingJoint2D.py</a></li>
@@ -142,10 +143,14 @@
 <li class="toctree-l2"><a class="reference internal" href="newtonsCradle.html">newtonsCradle.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveCMStutorial.html">NGsolveCMStutorial.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveCraigBampton.html">NGsolveCraigBampton.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveCreateFFRFreducedOrder.html">NGsolveCreateFFRFreducedOrder.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveFFRF.html">NGsolveFFRF.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveFFRFSlidingJoint.html">NGsolveFFRFSlidingJoint.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveGeometry.html">NGsolveGeometry.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveLinearFEM.html">NGsolveLinearFEM.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveModalAnalysis.html">NGsolveModalAnalysis.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveOCCboundaries.html">NGsolveOCCboundaries.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NGsolveOCCboundaries2.html">NGsolveOCCboundaries2.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolveOCCgeometry.html">NGsolveOCCgeometry.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePistonEngine.html">NGsolvePistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="NGsolvePostProcessingStresses.html">NGsolvePostProcessingStresses.py</a></li>
@@ -175,9 +180,11 @@
 <li class="toctree-l2"><a class="reference internal" href="performanceMultiThreadingNG.html">performanceMultiThreadingNG.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pistonEngine.html">pistonEngine.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotSensorExamples.html">plotSensorExamples.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pymeshlabFileImport.html">pymeshlabFileImport.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystem.html">reevingSystem.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reevingSystemOpen.html">reevingSystemOpen.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reinforcementLearningRobot.html">reinforcementLearningRobot.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rendererNOGLFWexample.html">rendererNOGLFWexample.py</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">rigid3Dexample.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyIMUtest.html">rigidBodyIMUtest.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rigidBodyTutorial.html">rigidBodyTutorial.py</a></li>
@@ -247,7 +254,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Exudynunknown</a>
+          <a href="../../../index.html">Exudyn1.11.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -295,7 +302,7 @@
 <span class="linenos"> 24</span><span class="c1">#background</span>
 <span class="linenos"> 25</span><span class="c1">#rect = [-0.1,-0.1,0.1,0.1] #xmin,ymin,xmax,ymax</span>
 <span class="linenos"> 26</span><span class="c1">#background0 = {&#39;type&#39;:&#39;Line&#39;, &#39;color&#39;:[0.1,0.1,0.8,1], &#39;data&#39;:[rect[0],rect[1],0, rect[2],rect[1],0, rect[2],rect[3],0, rect[0],rect[3],0, rect[0],rect[1],0]} #background</span>
-<span class="linenos"> 27</span><span class="n">color</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="linenos"> 27</span><span class="nc">color</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
 <span class="linenos"> 28</span><span class="n">zz</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="mi">3</span> <span class="c1">#max size</span>
 <span class="linenos"> 29</span><span class="n">s</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1">#size of cube</span>
 <span class="linenos"> 30</span><span class="n">sx</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">s</span> <span class="c1">#x-size</span>
@@ -324,9 +331,9 @@
 <span class="linenos"> 53</span>
 <span class="linenos"> 54</span>    <span class="n">nRB</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddNode</span><span class="p">(</span><span class="nc">NodeRigidBodyEP</span><span class="p">(</span><span class="n">referenceCoordinates</span><span class="o">=</span><span class="n">p0</span><span class="o">+</span><span class="n">ep0</span><span class="p">,</span>
 <span class="linenos"> 55</span>                                      <span class="n">initialVelocities</span><span class="o">=</span><span class="n">v0</span><span class="o">+</span><span class="nb">list</span><span class="p">(</span><span class="n">ep_t0</span><span class="p">)))</span>
-<span class="linenos"> 56</span>    <span class="n">oGraphicsLines</span> <span class="o">=</span> <span class="nf">GraphicsDataOrthoCubeLines</span><span class="p">(</span><span class="o">-</span><span class="mf">0.9</span><span class="o">*</span><span class="n">sx</span><span class="p">,</span><span class="o">-</span><span class="n">s</span><span class="p">,</span><span class="o">-</span><span class="n">s</span><span class="p">,</span> <span class="mf">0.9</span><span class="o">*</span><span class="n">sx</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">s</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">black</span><span class="p">)</span>
-<span class="linenos"> 57</span>    <span class="n">oGraphics</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">Brick</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mf">1.8</span><span class="o">*</span><span class="n">sx</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">s</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">dodgerblue</span><span class="p">)</span>
-<span class="linenos"> 58</span>    <span class="n">oGraphicsJoint</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">Sphere</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="n">sx</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">cPosZ</span><span class="p">],</span> <span class="n">radius</span> <span class="o">=</span> <span class="mf">0.6</span><span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">darkgrey</span><span class="p">,</span> <span class="n">nTiles</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
+<span class="linenos"> 56</span>    <span class="n">oGraphicsLines</span> <span class="o">=</span> <span class="nf">GraphicsDataOrthoCubeLines</span><span class="p">(</span><span class="o">-</span><span class="mf">0.9</span><span class="o">*</span><span class="n">sx</span><span class="p">,</span><span class="o">-</span><span class="n">s</span><span class="p">,</span><span class="o">-</span><span class="n">s</span><span class="p">,</span> <span class="mf">0.9</span><span class="o">*</span><span class="n">sx</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">s</span><span class="p">,</span> <span class="nc">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="nc">color</span><span class="o">.</span><span class="n">black</span><span class="p">)</span>
+<span class="linenos"> 57</span>    <span class="n">oGraphics</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">Brick</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mf">1.8</span><span class="o">*</span><span class="n">sx</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">s</span><span class="p">],</span> <span class="nc">color</span><span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nc">color</span><span class="o">.</span><span class="n">dodgerblue</span><span class="p">)</span>
+<span class="linenos"> 58</span>    <span class="n">oGraphicsJoint</span> <span class="o">=</span> <span class="n">graphics</span><span class="o">.</span><span class="nf">Sphere</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="n">sx</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">cPosZ</span><span class="p">],</span> <span class="n">radius</span> <span class="o">=</span> <span class="mf">0.6</span><span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="nc">color</span><span class="o">=</span><span class="n">graphics</span><span class="o">.</span><span class="nc">color</span><span class="o">.</span><span class="n">darkgrey</span><span class="p">,</span> <span class="n">nTiles</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
 <span class="linenos"> 59</span>    <span class="n">oRB</span> <span class="o">=</span> <span class="n">mbs</span><span class="o">.</span><span class="nf">AddObject</span><span class="p">(</span><span class="nc">ObjectRigidBody</span><span class="p">(</span><span class="n">physicsMass</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
 <span class="linenos"> 60</span>                                        <span class="n">physicsInertia</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
 <span class="linenos"> 61</span>                                        <span class="n">nodeNumber</span><span class="o">=</span><span class="n">nRB</span><span class="p">,</span>
@@ -364,8 +371,8 @@
 <span class="linenos"> 93</span><span class="n">SC</span><span class="o">.</span><span class="nf">visualizationSettings</span><span class="o">.</span><span class="n">openGL</span><span class="o">.</span><span class="n">lineWidth</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="linenos"> 94</span>
 <span class="linenos"> 95</span><span class="c1"># uncomment following line for shadow:</span>
-<span class="linenos"> 96</span><span class="c1"># SC.visualizationSettings.openGL.shadow = 0.5</span>
-<span class="linenos"> 97</span><span class="c1"># SC.visualizationSettings.openGL.light0position = [4,4,10,0]</span>
+<span class="linenos"> 96</span><span class="c1"># SC.visualizationSettings.openGL.light0.shadow = 0.5</span>
+<span class="linenos"> 97</span><span class="c1"># SC.visualizationSettings.openGL.light0.position = [4,4,10,0]</span>
 <span class="linenos"> 98</span>
 <span class="linenos"> 99</span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">Start</span><span class="p">()</span>
 <span class="linenos">100</span><span class="n">SC</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="nf">DoIdleTasks</span><span class="p">()</span>
@@ -382,7 +389,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="reinforcementLearningRobot.html" class="btn btn-neutral float-left" title="reinforcementLearningRobot.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rendererNOGLFWexample.html" class="btn btn-neutral float-left" title="rendererNOGLFWexample.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="rigidBodyIMUtest.html" class="btn btn-neutral float-right" title="rigidBodyIMUtest.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

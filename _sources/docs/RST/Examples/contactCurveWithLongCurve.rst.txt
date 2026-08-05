@@ -172,11 +172,11 @@ You can view and download this file on Github: `contactCurveWithLongCurve.py <ht
    SC.visualizationSettings.connectors.contactPointsDefaultSize = 0
    
    SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
-   SC.visualizationSettings.general.drawWorldBasis = True
-   SC.visualizationSettings.window.renderWindowSize=[1600,1200]
+   SC.visualizationSettings.view0.scene.drawWorldBasis = True
+   SC.visualizationSettings.view0.window.renderWindowSize=[1600,1200]
    SC.visualizationSettings.openGL.multiSampling=4
-   #SC.visualizationSettings.openGL.facesTransparent=True
-   SC.visualizationSettings.openGL.shadow=0.3*useGraphics
+   #SC.visualizationSettings.view0.scene.facesTransparent=True
+   SC.visualizationSettings.openGL.light0.shadow=0.3*useGraphics
    SC.visualizationSettings.loads.show = False
    
    SC.renderer.Start()              #start graphics visualization

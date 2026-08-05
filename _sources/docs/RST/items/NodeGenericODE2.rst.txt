@@ -5,7 +5,7 @@
 NodeGenericODE2
 ===============
 
-A node containing a number of \ :ref:`ODE2 <ODE2>`\  variables; use e.g. for scalar dynamic equations (Mass1D) or for the ALECable element. Note that referenceCoordinates and all initialCoordinates(_t) must be initialized, because no default values exist.
+A node containing a number of \ :ref:`ODE2 <ODE2>`\  variables. Use this node e.g. for scalar dynamic equations (Mass1D), for ObjectGenericODE2 or for the Eulerian coordinate in the ALECable element. NOTE: referenceCoordinates and all initialCoordinates(_t) must be initialized, because no default values exist.
 
 \ **Additional information for NodeGenericODE2**\ :
 

@@ -46,7 +46,7 @@ Function: Manipulator3RSimple
   | Martin Sereinig
 - | \ *notes*\ :
   | \ ``DH-parameters``\ : [theta, d, a, alpha], according to P. Corke
-  | Values according to WÃ¶rnle simple example with l1=0
+  | Values according to Wörnle simple example with l1=0
   | d=[h1 0 0];
   | theta=[beta1 beta2 beta3];
   | a=[l1 l2 l3];

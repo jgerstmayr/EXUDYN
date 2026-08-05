@@ -5,7 +5,7 @@
 ObjectConnectorSpringDamper
 ===========================
 
-An simple spring-damper element with additional force; connects to position-based markers.
+An simple spring-damper element with additional force, connecting to position-based markers.
 
 \ **Additional information for ObjectConnectorSpringDamper**\ :
 

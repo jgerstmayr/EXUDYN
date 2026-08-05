@@ -158,7 +158,7 @@ GraphicsData \ ``'type' = 'Circle'``\  draws a polygonal line between all specif
 GraphicsData: Text
 ------------------
 
-GraphicsData \ ``'type' = 'Text'``\  places the given text at position:
+GraphicsData \ ``'type' = 'Text'``\  places the given text (mono-space font) at position:
 
 .. list-table:: \ 
    :widths: auto
@@ -175,11 +175,19 @@ GraphicsData \ ``'type' = 'Text'``\  places the given text at position:
    * - | text
      - | string
      - | mandatory
-     - | text to be displayed, using UTF-8 encoding (see Section :ref:`sec-utf8`\ )
+     - | text to be displayed, using UTF-8 encoding (see Section :ref:`sec-utf8`\ ); multiline texts can be written with line breaks
    * - | position
      - | list
      - | mandatory
      - | list of float triples of [x,y,z] coordinates of the left upper position of the text; e.g. position=[20,10,0]
+   * - | fontSize
+     - | float
+     - | 0
+     - | scalar fontSize or 0 for default; default font size in Exudyn is 12 (visualizationSettings.view0.window.globalFontSize); display scaling increases font size
+   * - | offset
+     - | list
+     - | [0,0]
+     - | offset in X/Y screen plane provided as list of 2 float values; this offset is not rotated with the model view and given relative to font size (offset [1,1] equals offset of one character to the right and up)
 
 
 

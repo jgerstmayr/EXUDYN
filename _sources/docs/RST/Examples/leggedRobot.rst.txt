@@ -288,7 +288,7 @@ You can view and download this file on Github: `leggedRobot.py <https://github.c
    
    if False: #record animation frames:
        SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
-       SC.visualizationSettings.window.renderWindowSize=[1980,1080]
+       SC.visualizationSettings.view0.window.renderWindowSize=[1980,1080]
        SC.visualizationSettings.openGL.multiSampling = 4
        simulationSettings.solutionSettings.recordImagesInterval = 0.01
        

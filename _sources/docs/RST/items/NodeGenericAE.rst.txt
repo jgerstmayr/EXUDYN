@@ -5,7 +5,7 @@
 NodeGenericAE
 =============
 
-A node containing a number of \ :ref:`AE <AE>`\  variables; use e.g. linear state space systems. Note that referenceCoordinates and initialCoordinates must be initialized, because no default values exist.
+A node containing a number of \ :ref:`AE <AE>`\  variables. Use e.g. linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.
 
 The item \ **NodeGenericAE**\  with type = 'GenericAE' has the following parameters:
 

@@ -14,7 +14,7 @@ You can view and download this file on Github: `heavyTop.py <https://github.com/
    # This is an EXUDYN example
    #
    # Details:  Heavy top example
-   #           Refs.:  Terze, Z., MÃ¼ller, A., Zlatar, D.: Singularity-free time integration of rotational quaternions using non-redundant ordinary differential equations. Multibody System Dynamics 38(3),201â€“225 (2016)
+   #           Refs.:  Terze, Z., Müller, A., Zlatar, D.: Singularity-free time integration of rotational quaternions using non-redundant ordinary differential equations. Multibody System Dynamics 38(3),201–225 (2016)
    #
    # Author:   Johannes Gerstmayr
    # Date:     2020-02-02
