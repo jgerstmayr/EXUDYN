@@ -53,6 +53,12 @@ void MainObjectANCFBeam::SetInternalBeamSection(const py::object& pyObject)
 		    GetCObjectANCFBeam()->GetParameters().physicsTorsionalBendingStiffness =
 			    Vector3D({ bs.stiffnessMatrix(3,3),bs.stiffnessMatrix(4,4),bs.stiffnessMatrix(5,5) });
 
+			GetCObjectANCFBeam()->GetParameters().physicsAxialShearDamping =
+				Vector3D({ bs.dampingMatrix(0,0),bs.dampingMatrix(1,1),bs.dampingMatrix(2,2) });
+			GetCObjectANCFBeam()->GetParameters().physicsTorsionalBendingDamping =
+				Vector3D({ bs.dampingMatrix(3,3),bs.dampingMatrix(4,4),bs.dampingMatrix(5,5) });
+
+
 		    GetCObjectANCFBeam()->GetParameters().physicsCrossSectionInertia = bs.inertia;
 		    GetCObjectANCFBeam()->GetParameters().physicsMassPerLength = bs.massPerLength;
 
@@ -61,11 +67,15 @@ void MainObjectANCFBeam::SetInternalBeamSection(const py::object& pyObject)
 		    bsCheck = GetInternalBeamSection();
 		    if (!(bs.stiffnessMatrix == bsCheck.stiffnessMatrix))
 		    {
-			    PyError("ObjectANCFBeam: BeamSection stiffnessMatrix contains values which can not be used");
+			    PyError("ObjectANCFBeam: BeamSection stiffnessMatrix contains off-diagonal values which can not be used");
 		    }
-		    if (!(bs.inertia == bsCheck.inertia))
+			if (!(bs.dampingMatrix == bsCheck.dampingMatrix))
+			{
+				PyError("ObjectANCFBeam: BeamSection dampingMatrix contains off-diagonal values which can not be used");
+			}
+			if (!(bs.inertia == bsCheck.inertia))
 		    {
-			    PyError("ObjectANCFBeam: BeamSection inertia contains values which can not be used");
+			    PyError("ObjectANCFBeam: BeamSection inertia contains off-diagonal values which can not be used");
 		    }
 	    }
 	    else
@@ -78,7 +88,8 @@ void MainObjectANCFBeam::SetInternalBeamSection(const py::object& pyObject)
 //! AUTO: special function which returns BeamSection converted from local data
 PyBeamSection MainObjectANCFBeam::GetInternalBeamSection() const
 {
-	PyBeamSection bs;
+	PyBeamSection bs; //sets all data to zero
+
 	Vector3D kAS = GetCObjectANCFBeam()->GetParameters().physicsAxialShearStiffness;
 	bs.stiffnessMatrix(0, 0) = kAS[0];
 	bs.stiffnessMatrix(1, 1) = kAS[1];
@@ -88,6 +99,16 @@ PyBeamSection MainObjectANCFBeam::GetInternalBeamSection() const
 	bs.stiffnessMatrix(3, 3) = kKappa[0];
 	bs.stiffnessMatrix(4, 4) = kKappa[1];
 	bs.stiffnessMatrix(5, 5) = kKappa[2];
+
+	Vector3D dAS = GetCObjectANCFBeam()->GetParameters().physicsAxialShearDamping;
+	bs.dampingMatrix(0, 0) = dAS[0];
+	bs.dampingMatrix(1, 1) = dAS[1];
+	bs.dampingMatrix(2, 2) = dAS[2];
+
+	Vector3D dKappa = GetCObjectANCFBeam()->GetParameters().physicsTorsionalBendingDamping;
+	bs.dampingMatrix(3, 3) = dKappa[0];
+	bs.dampingMatrix(4, 4) = dKappa[1];
+	bs.dampingMatrix(5, 5) = dKappa[2];
 
 	bs.inertia = GetCObjectANCFBeam()->GetParameters().physicsCrossSectionInertia;
 	bs.massPerLength = GetCObjectANCFBeam()->GetParameters().physicsMassPerLength;
@@ -675,6 +696,10 @@ void CObjectANCFBeam::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//for thickness stiffness, take average of shear stiffness: 0.5*(GAy+GAz)
 
+	const bool hasTorsionalBendingDamping = !(parameters.physicsTorsionalBendingDamping == 0);
+	const bool hasAxialShearDamping = !(parameters.physicsAxialShearDamping == 0);
+	const bool hasCrossSectionDamping = !(parameters.crossSectionDamping == 0);
+
 	ConstSizeMatrixBase<TReal, dim3D * nODE2coordinates> deltaDeformation(dim3D, nODE2coordinates); //for deltaKappa, delta...
 	ConstSizeVectorBase<TReal, dim3D> deformation; //kappa, axialShear, etc.
 
@@ -695,6 +720,15 @@ void CObjectANCFBeam::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 		deformation.MultComponentWise(factInt*parameters.physicsTorsionalBendingStiffness);
 
 		EXUmath::MultMatrixTransposedVectorAddTemplate(deltaDeformation, deformation, ode2Lhs);
+
+		if (hasTorsionalBendingDamping)
+		{
+			EXUmath::MultMatrixVectorTemplate(deltaDeformation, qANCF_t, deformation); //==> deformation = deformation_t !
+
+			deformation.MultComponentWise(factInt * parameters.physicsTorsionalBendingDamping);
+
+			EXUmath::MultMatrixTransposedVectorAddTemplate(deltaDeformation, deformation, ode2Lhs);
+		}
 	}
 
 	//compute axial and shear terms:
@@ -709,6 +743,15 @@ void CObjectANCFBeam::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 		deformation.MultComponentWise(factInt*parameters.physicsAxialShearStiffness);
 
 		EXUmath::MultMatrixTransposedVectorAddTemplate(deltaDeformation, deformation, ode2Lhs);
+
+		if (hasAxialShearDamping)
+		{
+			EXUmath::MultMatrixVectorTemplate(deltaDeformation, qANCF_t, deformation); //==> deformation = deformation_t !
+
+			deformation.MultComponentWise(factInt * parameters.physicsAxialShearDamping);
+
+			EXUmath::MultMatrixTransposedVectorAddTemplate(deltaDeformation, deformation, ode2Lhs);
+		}
 	}
 
 	//compute cross section deformation terms:
@@ -716,6 +759,8 @@ void CObjectANCFBeam::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 	Real GA2 = parameters.physicsAxialShearStiffness[1] + parameters.physicsAxialShearStiffness[2]; //add both, if different
 	Vector3D kCS({ EA,EA,GA2 }); //according to paper
 	kCS.MultComponentWise(parameters.crossSectionPenaltyFactor); //additional factors
+	Vector3D dCS({ EA,EA,GA2 }); //according to paper
+	dCS.MultComponentWise(parameters.crossSectionDamping); //additional damping factors
 
 	//EXUmath::SetGaussIntegrationRule(orderCrossSection, intPoints, intWeights);
 	EXUmath::SetLobattoIntegrationRule(orderCrossSection, intPoints, intWeights);
@@ -726,13 +771,20 @@ void CObjectANCFBeam::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 
 		GetDeltaCrossSectionDeformation(x, deltaDeformation, deformation);
 
-
-		deformation.MultComponentWise(factInt*kCS);
-		//deformation *= kThickness * factInt;
+		deformation.MultComponentWise(factInt * kCS);
 
 		EXUmath::MultMatrixTransposedVectorAddTemplate(deltaDeformation, deformation, ode2Lhs);
-	}
 
+		if (hasCrossSectionDamping)
+		{
+			EXUmath::MultMatrixVectorTemplate(deltaDeformation, qANCF_t, deformation); //==> deformation = deformation_t !
+
+			deformation.MultComponentWise(factInt * dCS);
+
+			EXUmath::MultMatrixTransposedVectorAddTemplate(deltaDeformation, deformation, ode2Lhs);
+		}
+
+	}
 
 }
 
@@ -806,12 +858,6 @@ AccessFunctionType CObjectANCFBeam::GetAccessFunctionTypes() const
 		//TODO: (Index)AccessFunctionType::JacobianTtimesVector_q +
 		(Index)AccessFunctionType::DisplacementMassIntegral_q);
 }
-
-////! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-//OutputVariableType CObjectANCFBeam::GetOutputVariableTypes() const
-//{
-//	return (OutputVariableType)((Index)OutputVariableType::Position + (Index)OutputVariableType::Velocity);
-//}
 
 //! provide Jacobian at localPosition in "value" according to object access
 void CObjectANCFBeam::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const

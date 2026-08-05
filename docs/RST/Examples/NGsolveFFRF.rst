@@ -200,7 +200,7 @@ You can view and download this file on Github: `NGsolveFFRF.py <https://github.c
    SC.visualizationSettings.markers.drawSimplified = False
    SC.visualizationSettings.markers.show = True
    SC.visualizationSettings.markers.defaultSize = 0.01
-   SC.visualizationSettings.window.renderWindowSize = [1200,1000]
+   SC.visualizationSettings.view0.window.renderWindowSize = [1200,1000]
    SC.visualizationSettings.openGL.multiSampling=4
    
    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -209,7 +209,7 @@ You can view and download this file on Github: `NGsolveFFRF.py <https://github.c
        from exudyn.interactive import AnimateModes
        mbs.Assemble()
        SC.visualizationSettings.nodes.show = False
-       SC.visualizationSettings.openGL.showFaceEdges = True
+       SC.visualizationSettings.view0.scene.showFaceEdges = True
        
        
        #%%+++++++++++++++++++++++++++++++++++++++
@@ -266,19 +266,19 @@ You can view and download this file on Github: `NGsolveFFRF.py <https://github.c
    SC.visualizationSettings.nodes.basisSize = 0.12
    SC.visualizationSettings.bodies.deformationScaleFactor = 1 #use this factor to scale the deformation of modes
    
-   SC.visualizationSettings.openGL.showFaceEdges = False
-   SC.visualizationSettings.openGL.showFaces = True
+   SC.visualizationSettings.view0.scene.showFaceEdges = False
+   SC.visualizationSettings.view0.scene.showFaces = True
    SC.visualizationSettings.openGL.lineWidth = 2
-   SC.visualizationSettings.openGL.light0position = [-8,-5,1,1]
-   SC.visualizationSettings.openGL.shadow = 0.25
+   SC.visualizationSettings.openGL.light0.position = [-8,-5,1,1]
+   SC.visualizationSettings.openGL.light0.shadow = 0.25
    
    SC.visualizationSettings.sensors.show = True
    SC.visualizationSettings.sensors.drawSimplified = False
    SC.visualizationSettings.sensors.defaultSize = 0.01
    
    SC.visualizationSettings.loads.drawSimplified = False
-   SC.visualizationSettings.general.drawWorldBasis = True
-   SC.visualizationSettings.general.worldBasisSize = 0.5
+   SC.visualizationSettings.view0.scene.drawWorldBasis = True
+   SC.visualizationSettings.view0.scene.worldBasisSize = 0.5
    
    
    stepSize=4e-3
@@ -298,12 +298,12 @@ You can view and download this file on Github: `NGsolveFFRF.py <https://github.c
        #raytracing options
        SC.visualizationSettings.general.useMultiThreadedRendering = False
        SC.visualizationSettings.openGL.multiSampling = 1
-       SC.visualizationSettings.openGL.enableLight1 = False
+       SC.visualizationSettings.openGL.light1.enable = False
        SC.visualizationSettings.raytracer.numberOfThreads = 16 #number of threads!
-       SC.visualizationSettings.raytracer.enable = False #set True for raytracing
-       SC.visualizationSettings.raytracer.ambientLightColor = [0.5,0.5,0.5,1]
-       SC.visualizationSettings.raytracer.backgroundColorReflections = [0.3,0.3,0.3,1]
-       #SC.visualizationSettings.raytracer.searchTreeFactor = 8
+       SC.visualizationSettings.view0.camera.useRaytracer = False #set True for raytracing
+       SC.visualizationSettings.openGL.lightModelAmbient = [0.5,0.5,0.5,1]
+       SC.visualizationSettings.raytracer.advanced.backgroundColorReflections = [0.3,0.3,0.3,1]
+       #SC.visualizationSettings.raytracer.advanced.searchTreeFactor = 8
        SC.visualizationSettings.raytracer.imageSizeFactor=3 #for faster rendering
        SC.visualizationSettings.contour.alphaTransparency = graphics.material.indexShiny
        SC.visualizationSettings.general.graphicsUpdateInterval = 0.1 #for record images, avoid intermediate redraw

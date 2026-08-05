@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2025-05-06  23:48:38 (last modified)
+* @date         2026-02-05  22:13:56 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -60,7 +60,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectFFRF
-* @brief        This object is used to represent equations modelled by the \hac{FFRF}. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the \hac{FFRF}. Note that temporary matrices and vectors are subject of change in future. Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead.
+* @brief        This object is used to represent equations modelled by the \hac{FFRF}. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the \hac{FFRF}. Note that temporary matrices and vectors are subject of change in future. NOTE: Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead.
 *
 * @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
@@ -386,10 +386,10 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
-            (Index)OutputVariableType::Coordinates +
-            (Index)OutputVariableType::Coordinates_t +
-            (Index)OutputVariableType::Coordinates_tt +
-            (Index)OutputVariableType::Force );
+            (Index64)OutputVariableType::Coordinates +
+            (Index64)OutputVariableType::Coordinates_t +
+            (Index64)OutputVariableType::Coordinates_tt +
+            (Index64)OutputVariableType::Force );
     }
 
 };

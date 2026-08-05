@@ -29,7 +29,7 @@ oSD = mbs.CreateSpringDamper(bodyNumbers=[oGround, oMass],
 mbs.Assemble()
 
 SC.visualizationSettings.nodes.drawNodesAsPoint = False
-SC.visualizationSettings.general.drawWorldBasis = True
+SC.visualizationSettings.view0.scene.drawWorldBasis = True
 
 tEnd = 10
 stepSize = 0.02 #smaller gives more accurate results

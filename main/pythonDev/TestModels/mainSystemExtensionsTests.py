@@ -101,7 +101,7 @@ b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
 
 oGround = mbs.AddObject(ObjectGround())
 #add vertical spring
-oSD = mbs.CreateSpringDamper(bodyList=[oGround, b0],
+oSD = mbs.CreateSpringDamper(bodyNumbers=[oGround, b0],
                              localPosition0=[2,1,0],
                              localPosition1=[0,0,0],
                              stiffness=1e4, damping=1e2,
@@ -135,7 +135,7 @@ b0 = mbs.CreateMassPoint(referencePosition = [7,0,0],
 
 oGround = mbs.AddObject(ObjectGround())
 
-oSD = mbs.CreateCartesianSpringDamper(bodyList=[oGround, b0],
+oSD = mbs.CreateCartesianSpringDamper(bodyNumbers=[oGround, b0],
                               localPosition0=[7.5,1,0],
                               localPosition1=[0,0,0],
                               stiffness=[200,2000,0], damping=[2,20,0],
@@ -314,7 +314,7 @@ b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
 
 oGround = mbs.AddObject(ObjectGround())
 #add vertical spring
-oSD = mbs.CreateSpringDamper(bodyList=[oGround, b0],
+oSD = mbs.CreateSpringDamper(bodyNumbers=[oGround, b0],
                              localPosition0=[2,1,0],
                              localPosition1=[0,0,0],
                              stiffness=1e4, damping=1e2,
@@ -399,7 +399,7 @@ m1 = mbs.CreateMassPoint(referencePosition=[5.5,-1,0],
 n1 = mbs.GetObject(m1)['nodeNumber']
     
 oGround = mbs.AddObject(ObjectGround())
-mbs.CreateDistanceConstraint(bodyList=[oGround, b0], 
+mbs.CreateDistanceConstraint(bodyNumbers=[oGround, b0], 
                              localPosition0 = [6.5,1,0],
                              localPosition1 = [0.5,0,0],
                              distance=None, #automatically computed

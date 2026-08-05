@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-10-26  18:53:41 (last modified)
+* @date         2026-02-05  22:13:55 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CNode1D
-* @brief        A node with one \hac{ODE2} coordinate for one dimensional (1D) problems; use e.g. for scalar dynamic equations (Mass1D) and mass-spring-damper mechanisms, representing either translational or rotational degrees of freedom: in most cases, Node1D is equivalent to NodeGenericODE2 using one coordinate, however, it offers a transformation to 3D translational or rotational motion and allows to couple this node to 2D or 3D bodies.
+* @brief        A node with one \hac{ODE2} coordinate for one dimensional (1D) problems. Use e.g. for scalar dynamic equations (Mass1D) and mass-spring-damper mechanisms, representing either translational or rotational degrees of freedom: in most cases, Node1D is equivalent to NodeGenericODE2 using one coordinate, however, it offers a transformation to 3D translational or rotational motion and allows to couple this node to 2D or 3D bodies.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -103,10 +103,10 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
-            (Index)OutputVariableType::CoordinatesTotal +
-            (Index)OutputVariableType::Coordinates +
-            (Index)OutputVariableType::Coordinates_t +
-            (Index)OutputVariableType::Coordinates_tt );
+            (Index64)OutputVariableType::CoordinatesTotal +
+            (Index64)OutputVariableType::Coordinates +
+            (Index64)OutputVariableType::Coordinates_t +
+            (Index64)OutputVariableType::Coordinates_tt );
     }
 
 };

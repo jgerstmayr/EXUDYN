@@ -263,13 +263,21 @@ public:
 	//! ode2ReactionForces += C_{q2}^T * \lambda
 	void ComputeODE2ProjectedReactionForces(TemporaryComputationDataArray& tempArray, const Vector& reactionForces, Vector& ode2ReactionForces);
 
-	//! compute numerically the derivative of (C_{q2} * v), v being an arbitrary vector
+	//! compute numerically the derivative of (C_{q2} * v), v being an arbitrary vector, system-wide
 	//! jacobianCqV = scalarFactor*d/dq2(C_{q2} * v)
-	void ComputeConstraintJacobianDerivative(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff, Vector& f0, Vector& f1, 
-		const Vector& v, GeneralMatrix& jacobianCqV, Real scalarFactor = 1., Index rowOffset = 0, Index columnOffset = 0);
+	void NumericalConstraintJacobianDerivative(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff, Vector& f0, Vector& f1,
+		const Vector& v, GeneralMatrix& jacobianCqV, Real scalarFactor = 1.);
 
-	//! compute (C_{q2} * v), v being an arbitrary vector
-	void ComputeConstraintJacobianTimesVector(TemporaryComputationData& temp, const Vector& v, Vector& result);
+	//! compute (C_{q2} * v), v being an arbitrary vector, system-wide
+	void NumericalConstraintJacobianTimesVector(TemporaryComputationData& temp, const Vector& v, Vector& result);
+
+	//! compute object-wise the derivative of (C_{q2} * v), v being an arbitrary vector
+	//! jacobianCqV = scalarFactor*d/dq2(C_{q2} * v)
+	void ComputeConstraintJacobianDerivative(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff, Vector& f0, Vector& f1,
+		const Vector& v, GeneralMatrix& jacobianCqV, Real scalarFactor = 1.);
+
+	//! compute (C_{q2} * v), v being an arbitrary vector for specific object with index
+	void ComputeConstraintJacobianTimesVector(TemporaryComputationData& temp, const Vector& v, Vector& localAEcontributions, Index objectIndex, Index nodeIndex);
 
 	//! PostNewtonStep: do this for every object (connector), which has a PostNewtonStep ->discontinuous iteration e.g. to resolve contact, friction or plasticity; returns an error (residual)
 	//! recommended step size \f$h_{recom}\f$ after PostNewton(...): \f$h_{recom} < 0\f$: no recommendation, \f$h_{recom}==0\f$: use minimum step size, \f$h_{recom}>0\f$: use specific step size, if no smaller size requested by other reason

@@ -299,6 +299,19 @@ namespace EPyUtils {
 		return Index3(arrayIndex, 0);
 	}
 
+	//! Expect list of 4 NodeIndex; otherwise throws error
+	inline Index4 GetNodeIndex4Safely(const py::object& pyObject)
+	{
+		ArrayIndex arrayIndex = GetArrayNodeIndexSafely(pyObject);
+
+		if (arrayIndex.NumberOfItems() != 4)
+		{
+			PyError(STDstring("Expected list of 4 NodeIndex, but received " + EXUstd::ToString(arrayIndex.NumberOfItems()) + " items in list"));
+			return Index4({ EXUstd::InvalidIndex, EXUstd::InvalidIndex, EXUstd::InvalidIndex, EXUstd::InvalidIndex });
+		}
+		return Index4(arrayIndex, 0);
+	}
+
 	//! get pybind-convertible vector of NodeIndex from ArrayIndex
 	inline std::vector<NodeIndex> GetArrayNodeIndex(const ArrayIndex& arrayIndex)
 	{
@@ -996,6 +1009,22 @@ namespace EPyUtils {
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	template<typename T, class TMatrix>
+	bool SetNumpyMatrixSafelyTemplate(const py::object& value, TMatrix& destination)
+	{
+		//allow silent conversion from Real:
+		if (IsPyTypeScalar(value))
+		{
+			T vReal = py::cast<T>(value);
+			destination.SetMatrix(1, 1, { vReal });
+			return true;
+		}
+		NumPy2Matrix<T>(py::cast<py::array_t<T>>(value), destination);
+		return true;
+	}
+
+
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//numpy conversions
 	template<typename T>
 	inline bool SetNumpyMatrixSafelyTemplate(const py::dict& d, const char* itemName, MatrixBase<T>& destination)
@@ -1003,8 +1032,9 @@ namespace EPyUtils {
 		if (d.contains(itemName))
 		{
 			py::object other = d[itemName]; //this is necessary to make isinstance work
+			SetNumpyMatrixSafelyTemplate<T, MatrixBase<T>>(other, destination); //includes silent conversion from Real (e.g. for ANCFPlate)
 
-			NumPy2Matrix<T>(py::cast<py::array_t<T>>(other), destination);
+			//NumPy2Matrix<T>(py::cast<py::array_t<T>>(other), destination);
 			return true;
 		}
 		PyError(STDstring("ERROR: failed to convert '") + itemName + "' (expected: numpy matrix) into Matrix; dictionary:\n" + EXUstd::ToString(d));
@@ -1021,36 +1051,50 @@ namespace EPyUtils {
 		return SetNumpyMatrixSafelyTemplate<Real>(d, itemName, destination);
 	}
 
+	template<typename T, class TVector>
+	inline bool SetNumpyVectorSafelyTemplate(const py::object& value, TVector& destination)
+	{
+		//allow silent conversion from Real:
+		if (IsPyTypeScalar(value))
+		{
+			destination.SetNumberOfItems(1);
+			destination[0] = py::cast<T>(value);
+			return true;
+		}
+		NumPy2Vector(py::cast<py::array_t<T>>(value), destination);
+		return true;
+	}
+
+
 	inline bool SetNumpyVectorSafely(const py::dict& d, const char* itemName, Vector& destination)
 	{
 		if (d.contains(itemName))
 		{
 			py::object other = d[itemName]; //this is necessary to make isinstance work
 
-			NumPy2Vector(py::cast<py::array_t<Real>>(other), destination);
-			//destination = Vector(py::cast<std::vector<Real>>(other)); //alternative via std::vector
-			return true;
+			return SetNumpyVectorSafelyTemplate<Real, Vector>(other, destination);
 		}
 		PyError(STDstring("ERROR: failed to convert '") + itemName + "' (expected: numpy vector) into Vector; dictionary:\n" + EXUstd::ToString(d));
 		return false;
 	}
 
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	template<class TMatrix>
 	inline bool SetNumpyMatrixSafely(const py::object& value, TMatrix& destination)
 	{
-		NumPy2Matrix<Real>(py::cast<py::array_t<Real>>(value), destination);
-		return true;
+		return SetNumpyMatrixSafelyTemplate<Real, TMatrix>(value, destination);
 	}
 	inline bool SetNumpyMatrixISafely(const py::object& value, MatrixI& destination)
 	{
-		NumPy2Matrix<Index>(py::cast<py::array_t<Index>>(value), destination);
-		return true;
+		return SetNumpyMatrixSafelyTemplate<Index, MatrixI>(value, destination);
+		//NumPy2Matrix<Index>(py::cast<py::array_t<Index>>(value), destination);
+		//return true;
 	}
+
 	inline bool SetNumpyVectorSafely(const py::object& value, Vector& destination)
 	{
-		NumPy2Vector(py::cast<py::array_t<Real>>(value), destination);
-		return true;
+		return SetNumpyVectorSafelyTemplate<Real, Vector>(value, destination);
+		//NumPy2Vector(py::cast<py::array_t<Real>>(value), destination);
+		//return true;
 	}
 
 

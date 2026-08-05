@@ -44,14 +44,6 @@ Vector3D CNodePoint::GetAcceleration(ConfigurationType configuration) const
 	return Vector3D(GetCoordinateVector_tt(configuration));
 }
 
-
-////! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-//OutputVariableType CNodePoint::GetOutputVariableTypes() const
-//{
-//	return (OutputVariableType)((Index)OutputVariableType::Position + (Index)OutputVariableType::Velocity + 
-//		(Index)OutputVariableType::Coordinates + (Index)OutputVariableType::Coordinates_t);
-//}
-
 //! provide according output variable in "value"
 void CNodePoint::GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Vector& value) const
 {

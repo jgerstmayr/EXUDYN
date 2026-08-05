@@ -113,10 +113,8 @@ void CObjectContactSphereTriangle::ComputeConnectorProperties(const MarkerDataSt
 	const Vector3D& v1 = markerData.GetMarkerData(1).velocity;
 	const Vector3D& omega1 = markerData.GetMarkerData(1).angularVelocityLocal;
 
-	const Matrix3D& A0 = markerData.GetMarkerData(0).orientation;
 	const Vector3D& p0 = markerData.GetMarkerData(0).position;
 	const Vector3D& v0 = markerData.GetMarkerData(0).velocity;
-	const Vector3D& omega0 = markerData.GetMarkerData(0).angularVelocityLocal;
 
 	Vector3D trigPP;
 	Index inside, onEdge;
@@ -145,13 +143,21 @@ void CObjectContactSphereTriangle::ComputeConnectorProperties(const MarkerDataSt
 	//global trig velocity at contact point
 	Vector3D vTrigJ = (A1 * omega1).CrossProduct(trigPP - p1) + v1;
 	//global sphere velocity at contact point:
-	Vector3D vSphereI = (A0 * omega0).CrossProduct(trigPP - p0) + v0;
+	Vector3D vSphereI = v0;
+	if (parameters.dynamicFriction != 0) //only in this case, the A0 and omega0 exist and velocity can be computed
+	{
+		const Matrix3D& A0 = markerData.GetMarkerData(0).orientation;
+		const Vector3D& omega0 = markerData.GetMarkerData(0).angularVelocityLocal;
+
+		vSphereI += (A0 * omega0).CrossProduct(trigPP - p0);
+
+	}
 	deltaV = vTrigJ - vSphereI;
-	Real deltaVnormal = n0 * deltaV;
+	//Real deltaVnormal = n0 * deltaV; //unused
 
 	gap = dist - parameters.radiusSphere; //gap is negative
 
-	frictionCoeff = parameters.dynamicFriction; //this has to be computed depending on velocity, using Stribeck function ...
+	frictionCoeff = parameters.dynamicFriction; //this should be computed depending on velocity, using Stribeck function ...
 
 	bool hasContact;
 	if (contactFromData) { hasContact = (data[dataIndexGap] < 0); }
@@ -217,7 +223,7 @@ void CObjectContactSphereTriangle::ComputeODE2LHS(Vector& ode2Lhs, const MarkerD
 			//positionJacobian.NumberOfColumns() == rotationJacobian.NumberOfColumns()
 			LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(), markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
 			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(1).positionJacobian, fVec, ldv1); //fVec = f_m1
-			if (frictionCoeff != 0)
+			//if (frictionCoeff != 0) //this torque is always acting, as it acts not on GetMarkerData(1).position !!!!
 			{
 				//==>trigPP = p0 + deltaP = p0 + n0*(radius+gap); //for torque use gap*0.5
 				Vector3D contactPoint = markerData.GetMarkerData(0).position + (parameters.radiusSphere + 0.5 * gap) * n0;

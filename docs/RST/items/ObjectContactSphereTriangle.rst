@@ -5,7 +5,7 @@
 ObjectContactSphereTriangle
 ===========================
 
-[UNDER DEVELOPMENT] A simple contact connector between a sphere (marker0) and a triangle (marker1). Penalty-based contact is computed from penetration of the sphere with the triangle, including contact with edges if desired.
+A simple contact connector between a sphere (marker0) and a triangle (marker1). Penalty-based contact is computed from penetration of the sphere with the triangle, including contact with edges if desired.
 
 Author: Gerstmayr Johannes
 

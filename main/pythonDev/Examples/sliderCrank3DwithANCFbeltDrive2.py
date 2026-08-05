@@ -783,8 +783,8 @@ SC.visualizationSettings.loads.defaultSize = 0.1
 SC.visualizationSettings.markers.show=True
 SC.visualizationSettings.sensors.show=True
 SC.visualizationSettings.general.autoFitScene=False
-SC.visualizationSettings.openGL.initialCenterPoint = [0,0,0]
-SC.visualizationSettings.openGL.initialZoom = 0.5
+SC.visualizationSettings.openGL.advanced.initialCenterPoint = [0,0,0]
+SC.visualizationSettings.openGL.advanced.initialZoom = 0.5
 SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.ForceLocal
 
 if sys_set == 0:
@@ -807,7 +807,7 @@ R_z = np.array([[ np.cos(rot_gamma), -np.sin(rot_gamma), 0],
                 [ 0, 0, 1]])
 IMR = np.dot(R_x,R_y)
 IMR = np.dot(IMR,R_z)
-SC.visualizationSettings.openGL.initialModelRotation = [[IMR[0,0],IMR[0,1],IMR[0,2]],
+SC.visualizationSettings.openGL.advanced.initialModelRotation = [[IMR[0,0],IMR[0,1],IMR[0,2]],
                                                         [IMR[1,0],IMR[1,1],IMR[1,2]],   
                                                         [IMR[2,0],IMR[2,1],IMR[2,2]]]
 

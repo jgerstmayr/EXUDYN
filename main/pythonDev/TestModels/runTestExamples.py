@@ -287,6 +287,7 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
         fileString = fileString.replace('plt.tight_layout()', '') 
         fileString = fileString.replace('ClearWorkspace()', '') 
         fileString = fileString.replace('(verbose=True)', '(verbose=False)') #ComputeSystemDegreeOfFreedom 
+        fileString = fileString.replace('sys.exit()', 'pass')
 
         #massSpringFrictionInteractive.py:
         fileString = fileString.replace('def SimulationUF(mbs, dialog):', 
@@ -316,6 +317,8 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
         
         try:
             exec(fileString, globals())
+        except SystemExit: #e.g. for AnimateModes, we trigger end of script with sys.exit(), see above
+            print('(sys.exit)',flush=True, end='')
         except Exception as e:
             exStr = '*FAILED*: EXAMPLE ' + str(thisCnt) + ' ("' + exampleFileName + '") raised exception:\n'+str(e)
             exu.Print(exStr)

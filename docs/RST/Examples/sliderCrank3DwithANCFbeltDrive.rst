@@ -474,7 +474,7 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive.p
    if False:
        simulationSettings.solutionSettings.recordImagesInterval = 0.002
        SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
-       SC.visualizationSettings.window.renderWindowSize = [1920,1080]
+       SC.visualizationSettings.view0.window.renderWindowSize = [1920,1080]
        SC.visualizationSettings.openGL.multiSampling = 4
    
    

@@ -258,8 +258,8 @@ simulationSettings.solutionSettings.solutionInformation = 'Hydraulic actuator te
 
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.lineWidth = 2
-SC.visualizationSettings.openGL.shadow = 0.5
-SC.visualizationSettings.window.renderWindowSize = [1600,1200]
+SC.visualizationSettings.openGL.light0.shadow = 0.5
+SC.visualizationSettings.view0.window.renderWindowSize = [1600,1200]
 
 SC.renderer.Start()
 SC.renderer.DoIdleTasks()

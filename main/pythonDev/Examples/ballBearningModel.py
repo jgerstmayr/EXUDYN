@@ -187,9 +187,9 @@ simulationSettings.parallel.numberOfThreads = 1
 simulationSettings.displayStatistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 
-SC.visualizationSettings.window.renderWindowSize=[1600,1400]
+SC.visualizationSettings.view0.window.renderWindowSize=[1600,1400]
 SC.visualizationSettings.openGL.multiSampling=2
-SC.visualizationSettings.openGL.shadow = 0.25
+SC.visualizationSettings.openGL.light0.shadow = 0.25
 #SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.loads.show = False
 SC.visualizationSettings.loads.drawSimplified=False

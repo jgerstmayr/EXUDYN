@@ -22,6 +22,7 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/ANCFcontactCircle2
    Examples/ANCFmovingRigidbody
    Examples/ANCFrotatingCable2D
+   Examples/ANCFslidingJoint
    Examples/ANCFslidingJoint2D
    Examples/ANCFslidingJoint2Drigid
    Examples/ANCFswitchingSlidingJoint2D
@@ -81,10 +82,14 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/newtonsCradle
    Examples/NGsolveCMStutorial
    Examples/NGsolveCraigBampton
+   Examples/NGsolveCreateFFRFreducedOrder
    Examples/NGsolveFFRF
+   Examples/NGsolveFFRFSlidingJoint
    Examples/NGsolveGeometry
    Examples/NGsolveLinearFEM
    Examples/NGsolveModalAnalysis
+   Examples/NGsolveOCCboundaries
+   Examples/NGsolveOCCboundaries2
    Examples/NGsolveOCCgeometry
    Examples/NGsolvePistonEngine
    Examples/NGsolvePostProcessingStresses
@@ -114,9 +119,11 @@ This section includes all Examples for Exudyn.They can also be found and downloa
    Examples/performanceMultiThreadingNG
    Examples/pistonEngine
    Examples/plotSensorExamples
+   Examples/pymeshlabFileImport
    Examples/reevingSystem
    Examples/reevingSystemOpen
    Examples/reinforcementLearningRobot
+   Examples/rendererNOGLFWexample
    Examples/rigid3Dexample
    Examples/rigidBodyIMUtest
    Examples/rigidBodyTutorial

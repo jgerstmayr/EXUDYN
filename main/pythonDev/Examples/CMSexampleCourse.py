@@ -134,10 +134,10 @@ if False: #activate to animate modes
                                                   )
     mbs.Assemble()
     SC.visualizationSettings.nodes.show = False
-    SC.visualizationSettings.openGL.showFaceEdges = True
+    SC.visualizationSettings.view0.scene.showFaceEdges = True
     SC.visualizationSettings.openGL.multiSampling=4
     SC.visualizationSettings.openGL.lineWidth=2
-    SC.visualizationSettings.window.renderWindowSize = [1600,1080]
+    SC.visualizationSettings.view0.window.renderWindowSize = [1600,1080]
 
     #%%+++++++++++++++++++++++++++++++++++++++
     SC.visualizationSettings.general.autoFitScene = False #otherwise, model may be difficult to be moved
@@ -242,9 +242,9 @@ if False:
     from exudyn.interactive import AnimateModes
     mbs.Assemble()
     SC.visualizationSettings.nodes.show = False
-    SC.visualizationSettings.openGL.showFaceEdges = True
+    SC.visualizationSettings.view0.scene.showFaceEdges = True
     SC.visualizationSettings.openGL.multiSampling=4
-    #SC.visualizationSettings.window.renderWindowSize = [1600,1080]
+    #SC.visualizationSettings.view0.window.renderWindowSize = [1600,1080]
     SC.visualizationSettings.general.autoFitScene = False #otherwise, model may be difficult to be moved
 
     nodeNumber = objFFRF['nGenericODE2'] #this is the node with the generalized coordinates
@@ -330,8 +330,8 @@ SC.visualizationSettings.nodes.showBasis = True #of rigid body node of reference
 SC.visualizationSettings.nodes.basisSize = t*4
 SC.visualizationSettings.bodies.deformationScaleFactor = 1 #use this factor to scale the deformation of modes
 
-SC.visualizationSettings.openGL.showFaceEdges = True
-SC.visualizationSettings.openGL.showFaces = True
+SC.visualizationSettings.view0.scene.showFaceEdges = True
+SC.visualizationSettings.view0.scene.showFaces = True
 
 SC.visualizationSettings.sensors.show = True
 SC.visualizationSettings.sensors.drawSimplified = False
@@ -344,7 +344,7 @@ SC.visualizationSettings.loads.drawSimplified = False
 SC.visualizationSettings.loads.defaultSize = t*3
 SC.visualizationSettings.loads.defaultRadius = 0.05*t
 
-SC.visualizationSettings.window.renderWindowSize=[1280,720]
+SC.visualizationSettings.view0.window.renderWindowSize=[1280,720]
 SC.visualizationSettings.openGL.multiSampling = 4
 
 #create animation:

@@ -145,14 +145,14 @@ simulationSettings.timeIntegration.discontinuous.iterationTolerance = 0.1
 
 SC.visualizationSettings.general.graphicsUpdateInterval=0.01
 #SC.visualizationSettings.general.circleTiling=50
-SC.visualizationSettings.general.drawCoordinateSystem=True
+SC.visualizationSettings.view0.scene.drawCoordinateSystem=True
 SC.visualizationSettings.loads.show=False
 SC.visualizationSettings.nodes.show=True
 SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = r*2
 SC.visualizationSettings.nodes.defaultSize = r
 SC.visualizationSettings.nodes.tiling = 2
-SC.visualizationSettings.window.renderWindowSize=[1200,800]
+SC.visualizationSettings.view0.window.renderWindowSize=[1200,800]
 SC.visualizationSettings.openGL.multiSampling = 4
 
 showContact = False

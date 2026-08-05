@@ -122,7 +122,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GeneticOptimization
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GeneticOptimization <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L540>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``populationSize = 100``\ , \ ``numberOfGenerations = 10``\ , \ ``elitistRatio = 0.1``\ , \ ``crossoverProbability = 0.25``\ , \ ``crossoverAmount = 0.5``\ , \ ``rangeReductionFactor = 0.7``\ , \ ``distanceFactor = 0.1``\ , \ ``childDistribution = "uniform"``\ , \ ``distanceFactorGenerations = -1``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``clusterHostNames = []``\ , \ ``parameterFunctionData = {}``\ , \ ``**kwargs``\ )
+`GeneticOptimization <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L541>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``populationSize = 100``\ , \ ``numberOfGenerations = 10``\ , \ ``elitistRatio = 0.1``\ , \ ``crossoverProbability = 0.25``\ , \ ``crossoverAmount = 0.5``\ , \ ``rangeReductionFactor = 0.7``\ , \ ``distanceFactor = 0.1``\ , \ ``childDistribution = "uniform"``\ , \ ``distanceFactorGenerations = -1``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``clusterHostNames = []``\ , \ ``parameterFunctionData = {}``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | compute minimum of given objectiveFunction
@@ -149,6 +149,7 @@ Function: GeneticOptimization
   | \ ``resultsFile``\ : if provided, the results are stored columnwise into the given file and written after every generation; use resultsMonitor.py to track results in realtime
   | \ ``clusterHostNames``\ : list of hostnames, e.g. clusterHostNames=['123.124.125.126','123.124.125.127'] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true
   | \ ``useDispyWebMonitor``\ : if given in \*\*kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation
+  | \ ``useMPI``\ : if given in \*\*kwargs and set True, and if Python package mpi4py is installed, mpi parallelization is used
 - | \ *output*\ :
   | returns [optimumParameter, optimumValue, parameterList, valueList], containing the optimum parameter set 'optimumParameter', optimum value 'optimumValue', the whole list of parameters parameterList with according objective values 'valueList'
   | values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem ..., can also contain tuples, etc.)
@@ -174,7 +175,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Minimize
 ^^^^^^^^^^^^^^^^^^
-`Minimize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L886>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``initialGuess = []``\ , \ ``method = 'Nelder-Mead'``\ , \ ``tol = 1e-4``\ , \ ``options = {}``\ , \ ``enforceBounds = True``\ , \ ``debugMode = False``\ , \ ``showProgress = True``\ , \ ``addComputationIndex = False``\ , \ ``storeFunctionValues = True``\ , \ ``**kwargs``\ )
+`Minimize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L891>`__\ (\ ``objectiveFunction``\ , \ ``parameters``\ , \ ``initialGuess = []``\ , \ ``method = 'Nelder-Mead'``\ , \ ``tol = 1e-4``\ , \ ``options = {}``\ , \ ``enforceBounds = True``\ , \ ``debugMode = False``\ , \ ``showProgress = True``\ , \ ``addComputationIndex = False``\ , \ ``storeFunctionValues = True``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | Compute minimum of given objectiveFunction. This function is based on scipy.optimize.minimize() and it provides the same interface as GeneticOptimization(). Note that in special cases, you should copy this function and adapt to your needs.
@@ -213,7 +214,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeSensitivities
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeSensitivities <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1087>`__\ (\ ``parameterFunction``\ , \ ``parameters``\ , \ ``scaledByReference = False``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``parameterFunctionData = dict()``\ , \ ``**kwargs``\ )
+`ComputeSensitivities <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1093>`__\ (\ ``parameterFunction``\ , \ ``parameters``\ , \ ``scaledByReference = False``\ , \ ``debugMode = False``\ , \ ``addComputationIndex = False``\ , \ ``useMultiProcessing = False``\ , \ ``showProgress = True``\ , \ ``parameterFunctionData = dict()``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | Perform a sensitivity analysis by successively calling the function parameterFunction(parameterList[i]) with a one at a time variation of parameters in the defined increments.
@@ -229,6 +230,7 @@ Function: ComputeSensitivities
   | \ ``resultsFile``\ : if provided, output is immediately written to resultsFile during processing
   | \ ``numberOfThreads``\ : default: same as number of cpus (threads); used for multiprocessing lib;
   | \ ``parameterFunctionData``\ : dictionary containing additional data passed to the parameterFunction inside the parameters with dict key 'functionData'; use this e.g. for passing solver parameters or other settings
+  | \ ``useMPI``\ : if given in \*\*kwargs and set True, and if Python package mpi4py is installed, mpi parallelization is used
 - | \ *output*\ :
   | returns [parameterList, valRef, valuesSorted, sensitivity], parameterList containing the list of dictionaries processed. valRef is the Solution for the reference values paramList[0], valuesSorted contains the results sorted by the dictionary key that was varied in the simulation. The sensitivity contains the calculated sensitivity, where the rows are the corresponding outputparameters, while the columns are the input parameters, thereby the index sensitivity[1,0] is the sensitivity of output parameter 1 with respect to the input parameter 0.
 - | \ *author*\ :
@@ -253,7 +255,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: PlotOptimizationResults2D
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PlotOptimizationResults2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1201>`__\ (\ ``parameterList``\ , \ ``valueList``\ , \ ``xLogScale = False``\ , \ ``yLogScale = False``\ )
+`PlotOptimizationResults2D <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1211>`__\ (\ ``parameterList``\ , \ ``valueList``\ , \ ``xLogScale = False``\ , \ ``yLogScale = False``\ )
 
 - | \ *function description*\ :
   | visualize results of optimization for every parameter (2D plots)
@@ -278,7 +280,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: PlotSensitivityResults
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PlotSensitivityResults <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1257>`__\ (\ ``valRef``\ , \ ``valuesSorted``\ , \ ``sensitivity``\ , \ ``fVar = None``\ , \ ``strYAxis = None``\ )
+`PlotSensitivityResults <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/processing.py\#L1267>`__\ (\ ``valRef``\ , \ ``valuesSorted``\ , \ ``sensitivity``\ , \ ``fVar = None``\ , \ ``strYAxis = None``\ )
 
 - | \ *function description*\ :
   | visualize results of Sensitivityanalyis for every parameter (2D plots)

@@ -11,7 +11,6 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import numpy as np
 import exudyn
 
 def DemoInfo():
@@ -28,7 +27,6 @@ def DemoInfo():
 def Demo1(showAll = True):
     if showAll:
         exudyn.Print('start demo1: verify that exudyn is running')
-    import exudyn as exu               #EXUDYN package including C++ core part
     import exudyn.itemInterface as eii #conversion of data to exudyn dictionaries
     
     SC = exudyn.SystemContainer()         #container of systems
@@ -55,9 +53,8 @@ def Demo1(showAll = True):
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #**function: advanced demo, showing that graphics is available; similar to Examples/rigid3Dexample.py
 def Demo2(showAll = True):
-    import exudyn as exu
     import exudyn.itemInterface as eii #conversion of data to exudyn dictionaries
-    from exudyn.utilities import eulerParameters0, AngularVelocity2EulerParameters_t
+    from exudyn.utilities import eulerParameters0
     import exudyn.graphics as graphics
     
     SC = exudyn.SystemContainer()
@@ -68,7 +65,6 @@ def Demo2(showAll = True):
     
     #%%+++++++++++++++++++++++++++++++++++
     #background
-    color = [0.1,0.1,0.8,1]
     zz = 2  #max size
     s = 0.1 #size of cube
     sx = 3*s #x-size
@@ -109,12 +105,13 @@ def Demo2(showAll = True):
     
     simulationSettings = exudyn.SimulationSettings() #takes currently set values or default values
     
-    fact = 2000*(1+9*showAll) #10000
+    fact = 200*(1+99*showAll) #10000
     simulationSettings.timeIntegration.numberOfSteps = 1*fact
     simulationSettings.timeIntegration.endTime = 0.001*fact*0.5*4
     simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact*20
-    simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/chain.txt'
-    simulationSettings.timeIntegration.verboseMode = 1
+    if showAll:
+        simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/chain.txt'
+    simulationSettings.timeIntegration.verboseMode = int(showAll)
     simulationSettings.linearSolverType = exudyn.LinearSolverType.EigenSparse
 
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
@@ -127,8 +124,8 @@ def Demo2(showAll = True):
     SC.visualizationSettings.openGL.multiSampling = 4
     SC.visualizationSettings.openGL.lineWidth = 2
     
-    SC.visualizationSettings.openGL.shadow = 0.3
-    SC.visualizationSettings.openGL.light0position = [4,4,10,0]
+    SC.visualizationSettings.openGL.light0.shadow = 0.3
+    SC.visualizationSettings.openGL.light0.position = [4,4,10,0]
     
     if showAll:
         SC.renderer.Start()
@@ -145,7 +142,7 @@ def Demo2(showAll = True):
     if showAll:
         input("Press Enter to start SolutionViewer...")
     
-        from exudyn.interactive import SolutionViewer
+        # from exudyn.interactive import SolutionViewer
         mbs.SolutionViewer()
 
         DemoInfo()

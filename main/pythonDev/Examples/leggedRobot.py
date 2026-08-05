@@ -276,7 +276,7 @@ SC.visualizationSettings.nodes.basisSize = 0.015
 
 if False: #record animation frames:
     SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
-    SC.visualizationSettings.window.renderWindowSize=[1980,1080]
+    SC.visualizationSettings.view0.window.renderWindowSize=[1980,1080]
     SC.visualizationSettings.openGL.multiSampling = 4
     simulationSettings.solutionSettings.recordImagesInterval = 0.01
     

@@ -33,7 +33,7 @@ useOldCSRformat = False
 #check if scipy is available:
 scipyInstalled = False
 try:
-    import scipy
+    import scipy # noqa # pylint: disable=unused-import
     scipyInstalled = True
 except:
     pass
@@ -1485,6 +1485,7 @@ class ObjectFFRFreducedOrderInterface:
     #  massProportionalDamping: Rayleigh damping factor for mass proportional damping (multiplied with reduced mass matrix), added to floating frame/modal coordinates only
     #  stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only (multiplied with reduced stiffness matrix)
     #  color: provided as list of 4 RGBA values
+    #  name: name string for FFRFreducedOrder object, rigid body node is 'NodeRigidBody:'+name, GenericODE2 node is 'NodeGeneric:'+name
     #**example:
     # #example of a user function for forces:
     # def UFforceFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced_t):
@@ -1501,13 +1502,17 @@ class ObjectFFRFreducedOrderInterface:
                                                   UFforce=0, UFmassMatrix=0,
                                                   massProportionalDamping = 0, stiffnessProportionalDamping = 0,
                                                   color=[0.1,0.9,0.1,1.],
-                                                  eulerParametersRef=[]):
+                                                  eulerParametersRef=[],
+                                                  name=''):
 
         #check chosen rotation parameterization:
         if len(rotationMatrixRef) == 0 and len(eulerParametersRef) == 0:
             rotationMatrixRef=np.diag([1,1,1])
         elif len(rotationMatrixRef) != 0 and len(eulerParametersRef) != 0:
             raise ValueError('AddObjectFFRFreducedOrderWithUserFunctions: rotationMatrixRef or eulerParametersRef must be zero')
+        
+        nameNodeRigid = '' if name=='' else 'NodeRigidBody:'+name
+        nameNodeGeneric = '' if name=='' else 'NodeGeneric:'+name
         
         if len(eulerParametersRef) != 0:
             if str(self.rigidBodyNodeType) != 'NodeType.RotationEulerParameters':
@@ -1517,7 +1522,7 @@ class ObjectFFRFreducedOrderInterface:
             self.rotationParameters0 = eulerParametersRef
     
             #rigid body node for ObjectFFRFreducedOrder
-            self.nRigidBody = mbs.AddNode(eii.NodeRigidBodyEP(referenceCoordinates=list(positionRef)+list(eulerParametersRef), 
+            self.nRigidBody = mbs.AddNode(eii.NodeRigidBodyEP(name=nameNodeRigid, referenceCoordinates=list(positionRef)+list(eulerParametersRef), 
                                                 initialVelocities=list(initialVelocity)+list(self.rotationParameters_t0)))
             self.rigidBodyNodeType = exu.NodeType.RotationEulerParameters
         else:
@@ -1525,6 +1530,7 @@ class ObjectFFRFreducedOrderInterface:
             nodeItem = GetRigidBodyNode(nodeType=self.rigidBodyNodeType, position=positionRef, 
                                         velocity=initialVelocity, rotationMatrix=rotationMatrixRef, 
                                         angularVelocity=initialAngularVelocity)
+            nodeItem.name = nameNodeRigid
             self.nRigidBody = mbs.AddNode(nodeItem)
                         
             self.rotationParameters0 = nodeItem.referenceCoordinates[3:]
@@ -1554,10 +1560,11 @@ class ObjectFFRFreducedOrderInterface:
             
         #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         #generic node for modal coordinates in ObjectFFRFreducedOrder
-        self.nGenericODE2 = mbs.AddNode(eii.NodeGenericODE2(numberOfODE2Coordinates=self.nModes,
-                                          referenceCoordinates=[0]*self.nModes,
-                                          initialCoordinates=[0]*self.nModes,
-                                          initialCoordinates_t=[0]*self.nModes))
+        self.nGenericODE2 = mbs.AddNode(eii.NodeGenericODE2(name=nameNodeGeneric,
+                                                            numberOfODE2Coordinates=self.nModes,
+                                                            referenceCoordinates=[0]*self.nModes,
+                                                            initialCoordinates=[0]*self.nModes,
+                                                            initialCoordinates_t=[0]*self.nModes))
 
         stiffnessMatrixMC = exu.MatrixContainer()
         stiffnessMatrixMC.SetWithDenseMatrix(self.stiffnessMatrixReduced,useDenseMatrix=False)
@@ -1583,37 +1590,39 @@ class ObjectFFRFreducedOrderInterface:
         #add generic body for FFRF-Object:
         if UFmassMatrix == 0 or UFforce == 0:
             
-            self.oFFRFreducedOrder = mbs.AddObject(eii.ObjectFFRFreducedOrder(nodeNumbers = [self.nRigidBody, self.nGenericODE2], 
-                                                                stiffnessMatrixReduced=stiffnessMatrixMC, 
-                                                                massMatrixReduced=massMatrixMC,
-                                                                dampingMatrixReduced=dampingMatrixMC,
-                                                                modeBasis=self.modeBasis,
-                                                                referencePositions = self.xRef,
-                                                                physicsMass=self.totalMass,
-                                                                physicsInertia=self.inertiaLocal,
-                                                                physicsCenterOfMass=self.chiU,
-                                                                mPsiTildePsi = self.mPsiTildePsi,
-                                                                mPsiTildePsiTilde = self.mPsiTildePsiTilde,
-                                                                mPhitTPsi = self.mPhitTPsi,
-                                                                mPhitTPsiTilde = self.mPhitTPsiTilde,
-                                                                mXRefTildePsi = self.mXRefTildePsi,
-                                                                mXRefTildePsiTilde = self.mXRefTildePsiTilde,
-                                                                outputVariableModeBasis = outputVariableModeBasis,
-                                                                outputVariableTypeModeBasis = outputVariableTypeModeBasis,
-                                                                #
-                                                                forceUserFunction=UFforce,
-                                                                massMatrixUserFunction=UFmassMatrix,
-                                                                computeFFRFterms=True, #only compute user function, no internal components ...
-                                                                visualization=eii.VObjectFFRF(triangleMesh = self.trigList, 
-                                                                                            color=color,
-                                                                                            showNodes = True)))
+            self.oFFRFreducedOrder = mbs.AddObject(eii.ObjectFFRFreducedOrder(name=name,
+                                                                              nodeNumbers = [self.nRigidBody, self.nGenericODE2], 
+                                                                            stiffnessMatrixReduced=stiffnessMatrixMC, 
+                                                                            massMatrixReduced=massMatrixMC,
+                                                                            dampingMatrixReduced=dampingMatrixMC,
+                                                                            modeBasis=self.modeBasis,
+                                                                            referencePositions = self.xRef,
+                                                                            physicsMass=self.totalMass,
+                                                                            physicsInertia=self.inertiaLocal,
+                                                                            physicsCenterOfMass=self.chiU,
+                                                                            mPsiTildePsi = self.mPsiTildePsi,
+                                                                            mPsiTildePsiTilde = self.mPsiTildePsiTilde,
+                                                                            mPhitTPsi = self.mPhitTPsi,
+                                                                            mPhitTPsiTilde = self.mPhitTPsiTilde,
+                                                                            mXRefTildePsi = self.mXRefTildePsi,
+                                                                            mXRefTildePsiTilde = self.mXRefTildePsiTilde,
+                                                                            outputVariableModeBasis = outputVariableModeBasis,
+                                                                            outputVariableTypeModeBasis = outputVariableTypeModeBasis,
+                                                                            #
+                                                                            forceUserFunction=UFforce,
+                                                                            massMatrixUserFunction=UFmassMatrix,
+                                                                            computeFFRFterms=True, #only compute user function, no internal components ...
+                                                                            visualization=eii.VObjectFFRF(triangleMesh = self.trigList, 
+                                                                                                        color=color,
+                                                                                                        showNodes = True)))
 
             if np.array(gravity) @ np.array(gravity) != 0.:
                 mBody = mbs.AddMarker(eii.MarkerBodyMass(bodyNumber=self.oFFRFreducedOrder))
                 self.loadGravity = mbs.AddLoad(eii.LoadMassProportional(markerNumber=mBody, loadVector= gravity))
 
         else:
-            self.oFFRFreducedOrder = mbs.AddObject(eii.ObjectFFRFreducedOrder(nodeNumbers = [self.nRigidBody, self.nGenericODE2], 
+            self.oFFRFreducedOrder = mbs.AddObject(eii.ObjectFFRFreducedOrder(name=name,
+                                                                              nodeNumbers = [self.nRigidBody, self.nGenericODE2], 
                                                                 stiffnessMatrixReduced=stiffnessMatrixMC, 
                                                                 massMatrixReduced=massMatrixMC,
                                                                 dampingMatrixReduced=dampingMatrixMC,
@@ -1779,17 +1788,18 @@ class ObjectFFRFreducedOrderInterface:
     #  stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only
     #  gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
     #  color: provided as list of 4 RGBA values
+    #  name: name string for FFRFreducedOrder object, rigid body node is 'NodeRigidBody:'+name, GenericODE2 node is 'NodeGeneric:'+name
     def AddObjectFFRFreducedOrder(self, mbs, 
                                   positionRef=[0,0,0], initialVelocity=[0,0,0], 
                                   rotationMatrixRef=[], initialAngularVelocity=[0,0,0],
                                   massProportionalDamping = 0, stiffnessProportionalDamping = 0,
                                   gravity = [0,0,0],
-                                  color=[0.1,0.9,0.1,1.]):
+                                  color=[0.1,0.9,0.1,1.], name=''):
         return self.AddObjectFFRFreducedOrderWithUserFunctions(exu=exu, mbs=mbs, 
                                                   positionRef=positionRef, initialVelocity=initialVelocity, rotationMatrixRef=rotationMatrixRef, 
                                                   initialAngularVelocity=initialAngularVelocity,
                                                   massProportionalDamping = massProportionalDamping, stiffnessProportionalDamping = stiffnessProportionalDamping,
-                                                  gravity = gravity, color=color)
+                                                  gravity = gravity, color=color, name=name)
     
         
 
@@ -1838,6 +1848,7 @@ class FEMinterface:
     # fem.eigenValues = []           # np.array([ev0, ev1, ...])
     # fem.postProcessingModes = {}   # {'matrix':<matrix (np.array) containing stress components (xx,yy,zz,yz,xz,xy) in each column, rows are for every mesh node>,'outputVariableType':exudyn.OutputVariableType.StressLocal}
     def __init__(self):
+        self.metaData = {'source':'unknown'} # a dictionary with metaData that is used in load/save and can be used by the user for adding additional information (textual description, mesh, geometry, etc.); source contains information on where the mesh has been generated
         self.nodes = {}                 # {'Position':np.array([[x0,y0,z0],...]), 'RigidBodyRxyz':np.array([[x0,y0,z0,alpha0,beta0,gamma0],...]),  },...]                     #dictionary of different node lists
         self.elements = []              # [{'Name':'identifier', 'Tet4':np.array([[n0,n1,n2,n3],...]), 'Hex8':np.array([[n0,...,n7],...]),  },...]        #there may be several element sets
         self.massMatrix = None          # scipy csr_matrix; OLD: np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
@@ -1845,7 +1856,7 @@ class FEMinterface:
         # self.massMatrixReduced = np.zeros((0,0))    # np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
         # self.stiffnessMatrixReduced=np.zeros((0,0)) # np.array([[r0,c0,value0],[r1,c1,value1], ... ])                                #currently only in SparseCSR format allowed!
         self.surface = []               # [{'Name':'identifier', 'Trigs':np.array([[n0,n1,n2],...]), 'Quads':np.array([[n0,...,n3],...]),  },...]           #surface with faces
-        self.nodeSets = []              # [{'Name':'identifier', 'NodeNumbers':np.array([n_0,...,n_ns]), 'NodeWeights':np.array([w_0,...,w_ns])},...]     #for boundary conditions, etc.
+        self.nodeSets = []              # [{'Name':'identifier', 'NodeNumbers':np.array([n_0,...,n_ns]), 'NodeWeights':np.array([w_0,...,w_ns]) [, 'type':'boundary'] },...]     #for boundary conditions, etc.; type is optional and 'boundary' indicates that node set is used for e.g. HCB modes
         self.elementSets = []           # [{'Name':'identifier', 'ElementNumbers':np.array([n_0,...,n_ns])},...]                                #for different volumes, etc.
 
         self.modeBasis = {}             # {'matrix':np.array([[Psi_00,Psi_01, ..., Psi_0m],...,[Psi_n0,Psi_n1, ..., Psi_nm]]),'type':'NormalModes'}
@@ -1880,16 +1891,9 @@ class FEMinterface:
 
     #**classFunction: get dictionary containing current data of FEMinterface
     def GetDictionary(self):
-        #convert surface to np.array to speed up saving with HDF5, etc.!
-        # import copy
-        # modSurface = copy.deepcopy(self.surface)
-        # for item in modSurface:
-        #     if 'Trigs' in item:
-        #         item['Trigs'] = np.array(item['Trigs'])
-        #     if 'Quads' in item:
-        #         item['Quads'] = np.array(item['Quads'])
 
-        data = {'nodes':self.nodes,
+        data = {'metaData':self.metaData,
+                'nodes':self.nodes,
                 'elements':self.elements,
                 'massMatrix':self.massMatrix,
                 'stiffnessMatrix':self.stiffnessMatrix,
@@ -1913,13 +1917,15 @@ class FEMinterface:
         #             item['Quads'] = item['Quads'].tolist()
 
         fileVersion = 1 if 'fileVersion' not in dictData else int(dictData['fileVersion'])
+        if fileVersion < 1: #adjust this in future for different behavior
+            print('WARNING: FEMinterface.SetDictionary: illegal fileVersion')
         #... fileVersion may be used in future
 
-        attrlist = ['nodes', 'elements', 'massMatrix', 'stiffnessMatrix',
+        attrlist = ['metaData', 'nodes', 'elements', 'massMatrix', 'stiffnessMatrix',
                     'surface', 'nodeSets', 'elementSets', 'modeBasis',
                     'eigenValues', 'postProcessingModes']
         listTypes = ['elements', 'surface', 'nodeSets', 'elementSets']
-        itemTypes = ['nodes', 'massMatrix', 'stiffnessMatrix', 'modeBasis', 'postProcessingModes'] #can be converted with .item()
+        itemTypes = ['metaData', 'nodes', 'massMatrix', 'stiffnessMatrix', 'modeBasis', 'postProcessingModes'] #can be converted with .item()
         
         for item in attrlist:
             if item in dictData: 
@@ -1930,7 +1936,7 @@ class FEMinterface:
                     if item in itemTypes:
                         data = data.item()
                 self.__setattr__(item, data)
-            elif warn:
+            elif warn and item != 'metaData':
                 exu.Print('WARNING: FEMinterface.SetDictionary: key '+item+' not found in dictionary')
         
         self.ConvertElementsLists2Numpy() #if loading old format
@@ -1944,7 +1950,7 @@ class FEMinterface:
     #  mode: default: numpy format ('NPZ'); alternatives: 'HDF5' (requires h5py package) and 'PKL' (pickle); NPY (deprecated, under Numpy 1.x)
     #**output: stores file
     #**nodes: test with 10-node tets and 86154 nodes, 50752 elements and 20 modes (incl. stress modes) gives the timings for save+load: [NPY: 2.10s, PKL: 0.76s, HDF5: 0.69s] and file sizes [NPY: 1032MB, PKL: 580MB, HDF5: 581MB]
-    def SaveToFile(self, fileName, fileVersion = 3, mode=None):
+    def SaveToFile(self, fileName, fileVersion = 4, mode=None):
         [fileName, fileExtension, mode] = FileNameToMode(fileName, mode)
 
         try:
@@ -1952,7 +1958,7 @@ class FEMinterface:
         except:
             pass #makedirs may fail on some systems, but we keep going
 
-        if mode == 'NPY':
+        if mode == 'NPY': #only for numpy version < 2.0
             with open(fileName+fileExtension, 'wb') as f:
                 if fileVersion>0:
                     dataVersion = np.array([int(fileVersion)])
@@ -1974,6 +1980,8 @@ class FEMinterface:
                 np.save(f, self.modeBasis, allow_pickle=True)
                 np.save(f, self.eigenValues, allow_pickle=True)
                 np.save(f, self.postProcessingModes, allow_pickle=True)
+                if fileVersion >= 4:
+                    np.save(f, self.metaData, allow_pickle=True)
         else:
             data = self.GetDictionary()
             data['fileVersion'] = fileVersion
@@ -2027,6 +2035,8 @@ class FEMinterface:
                     self.modeBasis = np.load(f, allow_pickle=True).all()
                     self.eigenValues = np.array(list(np.load(f, allow_pickle=True))) #load as numpy array!
                     self.postProcessingModes = np.load(f, allow_pickle=True).all()
+                    if fileVersion >= 4:
+                        self.metaData = np.load(f, allow_pickle=True).all()
             elif mode == 'NPZ':
                 with np.load(fileName+fileExtension, allow_pickle=True) as dictData:
                     self.SetWithDictionary(dictData,fromNPZ=True)
@@ -2044,7 +2054,7 @@ class FEMinterface:
             self.ConvertSurfaceLists2Numpy()  #in case that old format is loaded
                     
         except Exception as e:
-            exu.Print('\n\nFEMinterface.LoadFromFile(...) failed; check filename; if your data file is using old format, try with: LoadFromFile(self, fileName=..., forceVersion=0)\n')
+            exu.Print(f'\n\nFEMinterface.LoadFromFile(...) failed:\n{e}\n; check filename; if your data file is using old format, try with: LoadFromFile(self, fileName=..., forceVersion=0)\n')
             raise
         return fileVersion
 
@@ -2224,6 +2234,8 @@ class FEMinterface:
         self.ConvertElementsLists2Numpy() #avoid lists of lists
         self.ConvertSurfaceLists2Numpy() #store in numpy fomat
         
+        self.metaData['source'] = 'ABAQUS'
+        
         return np.array(nodes)
         
         #return [np.array(nodes), elementsDict]
@@ -2253,6 +2265,18 @@ class FEMinterface:
         if not useOldCSRformat:
             self.stiffnessMatrix = SparseTripletsToScipySparseCSR(self.stiffnessMatrix)
 
+    #**classFunction: function to get all node sets in FEMinterface.nodeSet which have type 'boundary', e.g. made in function GetNodesOfNGsolveBoundary; can be directly used for HCB modes
+    def GetBoundaryNodeSetsAsLists(self):
+        boundaryNodesList = []
+        boundaryWeightsList= []
+        for nodeSet in self.nodeSets:
+            if ('NodeNumbers' in nodeSet
+                and 'NodeWeights' in nodeSet):
+                    if 'type' in nodeSet:
+                        if nodeSet['type'] == 'boundary':
+                            boundaryNodesList += [nodeSet['NodeNumbers']]
+                            boundaryWeightsList += [nodeSet['NodeWeights']]
+        return [boundaryNodesList, boundaryWeightsList]
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2301,14 +2325,14 @@ class FEMinterface:
                 nNodesBC = len(nodeList)
                 try:
                     weights = self.GetNodeWeightsFromSurfaceAreas(nodeList)
-                except Exception as e:
+                except Exception as _: #e
                     if warnNodeSets: 
                         exu.Print('Warning: CreateNGsolveBoundaryNodeSets: could not compute correct node weights for boundary "'+name+'"')
                     weights = 1/nNodesBC*np.ones(nNodesBC)
                     
-                bcDict = {'Name':name, 'NodeNumbers':nodeList, 'NodeWeights':weights}
+                bcDict = {'Name':name, 'NodeNumbers':nodeList, 'NodeWeights':weights, 'type':'boundary'}
                 nodeSets.append(bcDict)
-        except Exception as e:
+        except Exception as _: #e
             if warnNodeSets: 
                 exu.Print('Warning: CreateNGsolveBoundaryNodeSets: could not compute node sets for boundaries')
 
@@ -2498,6 +2522,7 @@ class FEMinterface:
         if createBoundaryNodeSets:
             self.nodeSets = self.CreateNGsolveBoundaryNodeSets(mesh, boundaryNamesList=boundaryNamesList)
             
+        self.metaData['source'] = 'NGsolve'
 
         return [bfM, bfK, fes]
 
@@ -2608,7 +2633,7 @@ class FEMinterface:
             bndDOFs = ngs.BitArray(n)
             bndDOFs[:] = False
     
-            DOFb = np.zeros(nbn*3, dtype=np.int)
+            DOFb = np.zeros(nbn*3, dtype=int)
             for i in range(len(boundaryNodes)):
                 node = boundaryNodes[i]
                 #DOFb[i*3:i*3+3] = [node*3,node*3+1,node*3+2] #interleaved xyzxyz
@@ -3488,6 +3513,7 @@ class FEMinterface:
     #  boundaryNodesWeights: according list of weights with same order as boundaryNodesList, as returned e.g. by FEMinterface.GetNodeWeightsFromSurfaceAreas(...)
     #  excludeRigidBodyMotion: if True (recommended), the first set of boundary modes is eliminated, which defines the reference conditions for the FFRF object
     #  RBE3secondMomentOfAreaWeighting: if True, the weighting of RBE3 boundaries is done according to second moment of area; if False, the more conventional (but less appropriate) quadratic distance to reference point weighting is used
+    #  numberOfRigidBodyModes: only used in case that no boundary interfaces (node lists) exist, then the rigid body motion can be excluded using this number of rigid body modes (in 3D usually)
     #  verboseMode: if True, some additional output is printed
     #  timerTreshold: for more DOF than this number, CPU times are printed even with verboseMode=False
     #**notes: for NGsolve / Netgen meshes, see the according ComputeHurtyCraigBamptonModesNGsolve function, which is usually much faster - currently only implemented for RBE2 case
@@ -3500,6 +3526,7 @@ class FEMinterface:
                                   boundaryNodesWeights = [],
                                   excludeRigidBodyMotion = True,
                                   RBE3secondMomentOfAreaWeighting = True,
+                                  numberOfRigidBodyModes = None,
                                   verboseMode = False,
                                   timerTreshold = 20000):
 
@@ -3892,8 +3919,16 @@ class FEMinterface:
                 self.eigenValues = np.array([])
     
         else:
-            [eigVals, eigVecs] = eigh(K,M) #this gives omega^2 ... squared eigen frequencies (rad/s)
-            self.modeBasis = {'matrix':eigVecs[:,0:nEigenModes], 'type':'NormalModes'}
+            if useSparseSolver:
+                [eigVals, eigVecs] = eigsh(A=K, k=nEigenModes, M=M, 
+                                           which='LM', sigma=0, mode='normal') 
+            else:
+                [eigVals, eigVecs] = eigh(K,M) #this gives omega^2 ... squared eigen frequencies (rad/s)
+            
+            if numberOfRigidBodyModes is None:
+                numberOfRigidBodyModes = 6
+            nRB = excludeRigidBodyMotion * numberOfRigidBodyModes
+            self.modeBasis = {'matrix':eigVecs[:,nRB:nEigenModes], 'type':'NormalModes'}
             self.eigenValues = abs(eigVals)
 
 
@@ -4318,10 +4353,12 @@ class FEMinterface:
     def ReadNodalCoordinatesFromAnsys(self, fileName, verbose=False):
         nodes = ReadNodalCoordinatesFromAnsysTxt(fileName, verbose)
         self.nodes['Position'] = np.array(nodes)
-        
+        self.metaData['source'] = 'Ansys'
+
     #**classFunction: read elements (exported from Ansys as .txt-File)
     def ReadElementsFromAnsys(self, fileName, verbose=False):
         self.elements += [ReadElementsFromAnsysTxt(fileName, verbose)] #add dictionary to list of dicts
         self.VolumeToSurfaceElements() #generate surface elements
+        self.metaData['source'] = 'Ansys'
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

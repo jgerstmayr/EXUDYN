@@ -5,7 +5,7 @@
 ObjectConnectorHydraulicActuatorSimple
 ======================================
 
-A basic hydraulic actuator with pressure build up equations. The actuator follows a valve input value, which results in a in- or outflow of fluid depending on the pressure difference. Valve values can be prescribed by user functions (not yet available) or with the MainSystem PreStepUserFunction(...).
+A basic hydraulic actuator with pressure build up equations. The actuator follows a valve input value, which results in a in- or outflow of fluid depending on the pressure difference. Valve values can be prescribed by user functions (not yet available) or with the \ ``MainSystem``\  \ ``PreStepUserFunction(...)``\ .
 
 \ **Additional information for ObjectConnectorHydraulicActuatorSimple**\ :
 

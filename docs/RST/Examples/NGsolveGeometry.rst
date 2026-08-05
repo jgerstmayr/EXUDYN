@@ -215,14 +215,14 @@ You can view and download this file on Github: `NGsolveGeometry.py <https://gith
    
    mbs.Assemble()
    #%%++++++++++++++++++++++++++++++
-   SC.visualizationSettings.openGL.polygonOffset = 0.1 #to draw edges clearly
+   SC.visualizationSettings.openGL.advanced.polygonOffset = 0.1 #to draw edges clearly
    SC.visualizationSettings.openGL.lineWidth = 2
    SC.visualizationSettings.openGL.multiSampling = 4
-   # SC.visualizationSettings.general.drawWorldBasis = True
-   # SC.visualizationSettings.general.worldBasisSize = axis
-   SC.visualizationSettings.general.drawCoordinateSystem = False
-   SC.visualizationSettings.general.textSize = 16
-   SC.visualizationSettings.window.renderWindowSize = [1600,1200]
+   # SC.visualizationSettings.view0.scene.drawWorldBasis = True
+   # SC.visualizationSettings.view0.scene.worldBasisSize = axis
+   SC.visualizationSettings.view0.scene.drawCoordinateSystem = False
+   SC.visualizationSettings.view0.window.globalFontSize = 16
+   SC.visualizationSettings.view0.window.renderWindowSize = [1600,1200]
    
    mbs.SolveDynamic()
    

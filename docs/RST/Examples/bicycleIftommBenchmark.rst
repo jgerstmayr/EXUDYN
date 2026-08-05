@@ -134,7 +134,8 @@ You can view and download this file on Github: `bicycleIftommBenchmark.py <https
    graphicsH = graphics.Cylinder(pAxis=P3-hCOM, vAxis=P2-P3, radius=dY*1.3, color=graphics.color.lightgreen)
    
    #option to track motion of bicycle
-   if True: 
+   #old version; does not work any more to set state during graphics user function => use trackMarker
+   if False: 
        #add user function to track bicycle frame
        def UFgraphics(mbs, objectNum):
            n = mbs.variables['nTrackNode']
@@ -375,14 +376,17 @@ You can view and download this file on Github: `bicycleIftommBenchmark.py <https
    simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
    simulationSettings.timeIntegration.newton.useModifiedNewton = True
    
+   #SC.visualizationSettings.general.useMultiThreadedRendering = False
    SC.visualizationSettings.nodes.show = True
    SC.visualizationSettings.nodes.drawNodesAsPoint  = False
    SC.visualizationSettings.nodes.showBasis = True
    SC.visualizationSettings.nodes.basisSize = 0.015
    
+   SC.visualizationSettings.view0.camera.trackMarker = markerR #rear wheel
+   
    if False: #record animation frames:
        SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
-       SC.visualizationSettings.window.renderWindowSize=[1600,1024]
+       SC.visualizationSettings.view0.window.renderWindowSize=[1600,1024]
        SC.visualizationSettings.openGL.multiSampling = 4
        simulationSettings.solutionSettings.recordImagesInterval = 0.02
        

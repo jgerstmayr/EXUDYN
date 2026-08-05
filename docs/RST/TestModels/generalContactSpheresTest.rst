@@ -212,7 +212,7 @@ You can view and download this file on Github: `generalContactSpheresTest.py <ht
    
    SC.visualizationSettings.general.graphicsUpdateInterval=0.5
    SC.visualizationSettings.general.circleTiling=200
-   SC.visualizationSettings.general.drawCoordinateSystem=False
+   SC.visualizationSettings.view0.scene.drawCoordinateSystem=False
    SC.visualizationSettings.loads.show=False
    SC.visualizationSettings.bodies.show=True
    SC.visualizationSettings.markers.show=False
@@ -222,8 +222,8 @@ You can view and download this file on Github: `generalContactSpheresTest.py <ht
    SC.visualizationSettings.nodes.defaultSize = 0 #must not be -1, otherwise uses autocomputed size
    SC.visualizationSettings.nodes.tiling = 4
    
-   SC.visualizationSettings.window.renderWindowSize=[800,800]
-   #SC.visualizationSettings.window.renderWindowSize=[1024,1400]
+   SC.visualizationSettings.view0.window.renderWindowSize=[800,800]
+   #SC.visualizationSettings.view0.window.renderWindowSize=[1024,1400]
    SC.visualizationSettings.openGL.multiSampling = 4
    #improved OpenGL rendering
    

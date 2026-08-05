@@ -5,7 +5,7 @@
 ObjectContactCircleCable2D
 ==========================
 
-A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane; a node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap \ :math:`g`\  is integrated (piecewise linear) along the cable and circle; the contact force \ :math:`f_c`\  is zero for \ :math:`gap>0`\  and otherwise computed from \ :math:`f_c = g*contactStiffness + \dot g*contactDamping`\ ; during Newton iterations, the contact force is actived only, if \ :math:`dataCoordinate[0] <= 0`\ ; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
+A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap \ :math:`g`\  is integrated (piecewise linear) along the cable and circle; the contact force \ :math:`f_c`\  is zero for \ :math:`gap>0`\  and otherwise computed from \ :math:`f_c = g*contactStiffness + \dot g*contactDamping`\ ; during Newton iterations, the contact force is actived only, if \ :math:`dataCoordinate[0] <= 0`\ ; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
 
 \ **Additional information for ObjectContactCircleCable2D**\ :
 

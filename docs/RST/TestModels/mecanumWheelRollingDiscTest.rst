@@ -124,7 +124,7 @@ You can view and download this file on Github: `mecanumWheelRollingDiscTest.py <
    
    
    for iWheel in range(nWheels):
-       frictionAngle = 0.25*np.pi #45Â°
+       frictionAngle = 0.25*np.pi #45°
        if iWheel == 0 or iWheel == 3: #difference in diagonal
            frictionAngle *= -1
    
@@ -315,7 +315,7 @@ You can view and download this file on Github: `mecanumWheelRollingDiscTest.py <
    
    #create animation:
    if useGraphics:
-       SC.visualizationSettings.window.renderWindowSize=[1920,1080]
+       SC.visualizationSettings.view0.window.renderWindowSize=[1920,1080]
        SC.visualizationSettings.openGL.multiSampling = 4
        if False:
            simulationSettings.solutionSettings.recordImagesInterval = 0.05

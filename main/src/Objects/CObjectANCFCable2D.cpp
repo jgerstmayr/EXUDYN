@@ -209,26 +209,6 @@ void CObjectANCFCable2DBase::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber)
 	}
 }
 
-////does not resolve problem in general; find other ways!
-//inline void AxialStrainNumericallyStable(const DReal16& rxNorm, const SlimVectorBase<DReal16, 2>& rx, DReal16& axialStrain)
-//{
-//	axialStrain = rxNorm - 1.;
-//	//axialStrain = ((rx[0] * rx[0] - 1.) + rx[1] * rx[1]) / (rxNorm + 1);
-//}
-//
-//inline void AxialStrainNumericallyStable(const Real& rxNorm, const Vector2D& rx, Real& axialStrain)
-//{
-//	if (rx[0] > rx[1])
-//	{
-//		axialStrain = ((rx[0] * rx[0] - 1.) + rx[1] * rx[1]) / (rxNorm+1);
-//	}
-//	else
-//	{
-//		axialStrain = ((rx[1] * rx[1] - 1.) + rx[0] * rx[0]) / (rxNorm+1);
-//	}
-//
-//}
-
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 template<class TReal, Index ancfSize>
 void CObjectANCFCable2DBase::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, 
@@ -608,18 +588,6 @@ void CObjectANCFCable2DBase::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& 
 		}
 	}
 
-	//jacobian.SetNumberOfRowsAndColumns(2 * ns, 2 * ns);
-	//jacobian_ODE2_t.SetNumberOfRowsAndColumns(2 * ns, 2 * ns);
-
-	////now copy autodifferentiated result:
-	//for (Index i = 0; i < 2 * ns; i++)
-	//{
-	//	for (Index j = 0; j < 2 * ns; j++)
-	//	{
-	//		jacobian(i, j) = ode2Lhs[i].DValue((int)j);
-	//		jacobian_ODE2_t(i, j) = ode2Lhs[i].DValue((int)(j+2*ns));
-	//	}
-	//}
 }
 
 
@@ -635,7 +603,7 @@ AccessFunctionType CObjectANCFCable2DBase::GetAccessFunctionTypes() const
 //! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
 OutputVariableType CObjectANCFCable2DBase::GetOutputVariableTypes() const
 {
-	return (OutputVariableType)((Index)OutputVariableType::Position + (Index)OutputVariableType::Velocity);
+	return (OutputVariableType)((Index64)OutputVariableType::Position + (Index64)OutputVariableType::Velocity);
 }
 
 //! provide Jacobian at localPosition in "value" according to object access

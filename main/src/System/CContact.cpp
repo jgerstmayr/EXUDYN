@@ -100,7 +100,7 @@ void VisuGeneralContact::DrawContacts(const GeneralContact& gContact, const Visu
 
 		std::array<Vector3D, 3> points;
 		std::array<Float4, 3> colors;
-		for (Index i = 0; i < colors.size(); i++) { colors[i] = visualizationSettings.contact.colorTriangles; }
+		for (Index i = 0; i < (Index)colors.size(); i++) { colors[i] = visualizationSettings.contact.colorTriangles; }
 
 		for (const auto& item : trigs)
 		{
@@ -144,7 +144,7 @@ void VisuGeneralContact::DrawContacts(const GeneralContact& gContact, const Visu
 				{
 					Real z = iz * sz + box.PMinZ();
 					Index boxIndex = ST.GlobalIndex(ix, iy, iz);
-					Index nItemsInBox = ST.NumberOfItemsInBox(boxIndex);
+					Index nItemsInBox = ST.NumberOfItemsInBin(boxIndex);
 					if (nItemsInBox != 0)
 					{
 						//draws used box with smaller size and alternative color
@@ -939,7 +939,7 @@ void GeneralContact::ComputeContactDataAndBoundingBoxes(const CSystem& cSystem, 
 			else
 			{
 				//! directly add triangles to search tree (this is non-parallelized, but avoids overly many boxes filled for 45° triangles):
-				Index offset = globalJacobianIndexOffsets[trigsRigidBodyBasedIndex];
+				//Index offset = globalJacobianIndexOffsets[trigsRigidBodyBasedIndex]; //unused
 				for (Index j = 0;
 					j < trigsRigidBodyBasedDynamicStartIndex; j++)
 				{

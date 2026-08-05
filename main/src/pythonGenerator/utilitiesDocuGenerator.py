@@ -8,12 +8,15 @@ goal: generate latex documentation for all utilities packages
 """
 import copy #for deep copies
 import io   #for utf-8 encoding
+import os
 import numpy as np
-from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword, \
-          RemoveIndentation, RSTheaderString, RSTlabelString, RSTinlineMath, RSTmath, RSTurl, RSTmarkup, RSTcodeBlock, \
-          LatexString2RST, Latex2RSTlabel, ArgNotSet
+from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, \
+          RemoveIndentation, RSTheaderString, RSTlabelString, RSTurl, RSTmarkup, RSTcodeBlock, \
+          LatexString2RST, Latex2RSTlabel, DocStringGoogleFromPlainText #, CleanStringForPyiDescription
 
 from exudynVersion import exudynVersionString
+
+ADD_DOCSTRINGS = True
 
 maxWarningsMutableArgs = 200 #warnings in case of list or dict default args (mutable args)
 #list of functions for which mutable args have been checked:
@@ -48,6 +51,7 @@ mutableArgsFunctionsChecked = [
     'MainSystemCreateDistanceConstraint', 'MainSystemCreateRollingDiscPenalty', 'MainSystemCreateRollingDisc', 'MainSystemCreateKinematicTree',
     'MainSystemCreateForce','MainSystemCreateTorque','MainSystemCreateCoordinateConstraint',
     'MainSystemCreateSphereSphereContact','MainSystemCreateSphereQuadContact','MainSystemCreateSphereTriangleContact',
+    'MainSystemCreateFFRFReducedOrderObject',
     #plot:
     'PlotSensor', 'DataArrayFromSensorList',
     #processing:
@@ -102,6 +106,7 @@ filesParsed=[
              'robotics/motion.py',
              'robotics/special.py',
              'robotics/utilities.py',
+             'shells.py',
              'signalProcessing.py',
              'solver.py',
              'utilities.py',
@@ -166,6 +171,9 @@ def HasDocuIdentifier(lineString, identifier):
     s = lineString.strip() #erase spaces at beginning
     n = len(identifier)
     if len(s) >= n+len(tagPreamble): #additional symbols needed: #**function
+        # if (s[0:n+len(tagPreamble)] == tagPreamble+identifier and 
+        #     s[0:n+len(tagPreamble)+1] != tagPreamble+identifier+':'):
+        #     print('problematic identifier:',tagPreamble+identifier)
         if s[0:n+len(tagPreamble)] == tagPreamble+identifier:
             return True
     return False
@@ -187,6 +195,16 @@ def HasClassIdentifier(lineString):
         if s[0:6] == 'class ':
             return True
     return False
+
+def TagString2TypeAndString(tag, tagStr):
+    tagType = None
+    if tagStr.startswith(':'):
+        if tagStr[1:].count(':') == 0:
+            print('WARNING: TagString2TypeAndString: invalid tagType with one ":"')
+        tagType = tagStr[1:].split(':')[0]
+        tagStr = tagStr[(len(tagType)+2):]
+    
+    return (tagType,tagStr)
 
 #split string with commas, but do not consider commas inside brackets or strings
 #return a list of strings
@@ -263,7 +281,7 @@ def GetFunctionArguments(functionLine, infoText):
 #parse file and extract list of dictionaries (every dict for one function)
 def ParsePythonFile(fileName):
     fileLines = []
-    file=open(fileName,'r') 
+    file=open(fileName,'r',encoding='utf8') 
     fileLines = file.readlines()
     file.close()
 
@@ -476,6 +494,12 @@ def DictToItemsText(functionDict, tagList, addStr, eraseInput=''):
             #     mycnt += 1
             strTag = RemoveIndentation(functionDict[tag].strip())
             #print(strTag)
+            if tag == 'output':
+                (tagType,strTag) = TagString2TypeAndString(tag, strTag)
+                if tagType is not None:
+                    strTag = '(type: '+tagType+')'+strTag
+                    #print(strTag)
+
             if tag == 'example':
                 strTag = functionDict[tag].strip('\n').replace('\\_','_') #do not remove indentation, nor strip spaces, only blank lines
                 #print("example=", strTag)
@@ -487,6 +511,7 @@ def DictToItemsText(functionDict, tagList, addStr, eraseInput=''):
                 sLatex += '\\vspace{-24pt}\\bi\\item[]\\vspace{-24pt}' #for global itemize list for function
                 sRST += '\n'+RSTcodeBlock(RemoveIndentation(strTag, '  ', removeAllSpaces = False, removeIndentation = True)+'\n', 'python')
             elif strTag.count("\n") > 0 and strTag.strip() != '': #multiple lines are replaced by list
+                    
                 sLatex += '\\vspace{-6pt}\n'+sSpaces+'\\begin{itemize}[leftmargin=1.2cm]\n'
                 sLatex += '\\setlength{\\itemindent}{-0.7cm}\n'
                 if strTag[0] == '\n':
@@ -616,11 +641,18 @@ def WriteFunctionDescription2LatexRST(functionDict, moduleNamePython, pythonFile
                 #sPyReturn += sAdd
 
     if createPyiFile:
-        output = functionDict['output']
-        output = output.split(';')[0].strip()
-        # print('output=',output)
+        output = functionDict['output'].strip()
+        (outputType,dummy) = TagString2TypeAndString('output', output)
+        if outputType is None:
+            print('missing outputType in function ',functionDict['functionName'])
+            outputType = 'Any'
+        #outputType = output.split(';')[0].strip() #previous format
+        #print('outputType=',outputType)
         
-        sPyi += ') -> '+output+': ...\n\n' #for now, we do not know the return type
+        sPyi += ') -> '+outputType+': '
+        if ADD_DOCSTRINGS:
+            sPyi += '\n' + DocStringGoogleFromPlainText(functionDict['functionDescriptionClean'], addSpaces=' '*8) + ' '*4
+        sPyi += '...\n\n' #for now, we do not know the return type
         #sPyReturn += ')\n\n' 
         #sPy += '):\n'+sPyReturn
     
@@ -680,9 +712,10 @@ dictModules['name'] = 'utilities'
 latexExtensionsMainSystem = ''
 rstExtensionsMainSystem = ''
 
-with open('mainSystemExtensionsHeader.py','r') as f:
+with open('mainSystemExtensionsHeader.py','r',encoding='utf8') as f:
     pyExtensions = f.read()
 
+print('*** updating exudyn.mainSystemExtensions.py ***')
 #write headers, as we need the text already updated in mainSystemExtensions.py
 file=io.open(fileDir+'mainSystemExtensions.py','w',encoding='utf8')  #clear file by one write access
 file.write(pyExtensions)
@@ -690,6 +723,7 @@ file.close()
 
 
 for fileName in filesParsed:
+    # print('parse file:',fileName)
     dictModule = {}
     sRST = ''
     [functionList,classList,header] = ParsePythonFile(fileDir+fileName)
@@ -772,6 +806,7 @@ for fileName in filesParsed:
         SpecialAppend(localListFunctionNames, funcDict['functionName'].replace(belongsTo,''))
 
         functionDescription = funcDict['function']
+        funcDict['functionDescriptionClean'] = functionDescription
         functionName = funcDict['functionName']
 
         if not isFirstFunction and moduleNamePython != 'mainSystemExtensions':# and not belongsTo:
@@ -913,7 +948,12 @@ for fileName in filesParsed:
                 sRST += "\n----\n" #horizontal ruler
 
                 #sLatex += "\\hline\\vspace{3pt}\\\\ \n"
-            [sFuncLatex, sFuncRST, sPyi, sPy] = WriteFunctionDescription2LatexRST(funcDict, moduleNamePython, fileName, isClassFunction=True, className=classDict['className'], createPyiFile=False)
+            [sFuncLatex, sFuncRST, sPyi, sPy] = WriteFunctionDescription2LatexRST(funcDict, 
+                                                                                  moduleNamePython, 
+                                                                                  fileName, 
+                                                                                  isClassFunction=True, 
+                                                                                  className=classDict['className'], 
+                                                                                  createPyiFile=False)
             sLatex += sFuncLatex
             sRST += sFuncRST
 
@@ -1011,7 +1051,7 @@ for s in localListClassNames:
     sConfHelper += "'" + s + "'" + ', '
 sConfHelper += ']\n\n'
 
-with open(rstDir+'confHelperPyUtilities.py', 'w') as f:
+with open(rstDir+'confHelperPyUtilities.py', 'w',encoding='utf8') as f:
     f.write(sConfHelper)
 
 
@@ -1055,5 +1095,24 @@ file.close()
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
 
-print('----------- finished ---------------------')
+print('------- utilitiesDocu finished -----------')
+
+#%%++++++++++++++++++++++++
+if False: #test docstrings conversion
+    from autoGenerateDocstrings import ConvertExuDoc2Docstrings
+    print('convert to docstrings:')
+    
+    sourcePath = fileDir
+    destPath = fileDir.replace('pythonDev/exudyn/','build/tempExudyn/')
+
+    if sourcePath!=destPath:
+        for fileName in filesParsed:
+            if fileName == 'GUI.py':
+                continue
+            os.makedirs(os.path.dirname(destPath+fileName), exist_ok=True) #make sure that destination dir exists
+            ConvertExuDoc2Docstrings(sourcePath+fileName, destPath+fileName)
+
+
+    print('------- convert to docstrings finished -----------')
+
 

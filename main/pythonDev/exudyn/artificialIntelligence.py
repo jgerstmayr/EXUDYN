@@ -26,12 +26,17 @@ import numpy as np
 # for older versions the reset and step function behaves slightly differently
 # for step see https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/
 import stable_baselines3
-useOldGym = tuple(map(int, stable_baselines3.__version__.split('.'))) <= tuple(map(int, '1.8.0'.split('.')))
+useOldGym = False
+try:
+    useOldGym = tuple(map(int, stable_baselines3.__version__.split('.')))[:3] <= tuple(map(int, '1.8.0'.split('.')))
+except:
+    pass #if it fails, useOldGym = False
+
 if useOldGym:
     #old version #will be removed in future versions!
     from gym import logger, spaces, Env
 else:
-    from gymnasium import logger, spaces, Env
+    from gymnasium import logger, spaces, Env # noqa # pylint: disable=unused-import
 
 
 #**class: interface class to set up Exudyn model which can be used as model in open AI gym;
@@ -41,7 +46,6 @@ class OpenAIGymInterfaceEnv(Env):
     metadata = {'render_modes': ['human'], 'render_fps': 50}
     #**classFunction: internal function to initialize model; store self.mbs and self.simulationSettings; special arguments **kwargs are passed to CreateMBS
     def __init__(self, **kwargs):
-
         #some general gym initialization
         self.state = None
 
@@ -292,7 +296,7 @@ class OpenAIGymInterfaceEnv(Env):
     #**classFunction: openAI gym interface function to render the system
     def render(self, mode="human"):
         if self.rendererRunning==None and self.useRenderer:
-            SC.renderer.Start()
+            self.SC.renderer.Start()
             self.rendererRunning = True
 
     #**classFunction: openAI gym interface function to close system after learning or simulation
@@ -300,5 +304,5 @@ class OpenAIGymInterfaceEnv(Env):
         self.dynamicSolver.FinalizeSolver(self.mbs, self.simulationSettings)
         if self.rendererRunning==True:
             # SC.renderer.DoIdleTasks()
-            SC.renderer.Stop() #safely close rendering window!
+            self.SC.renderer.Stop() #safely close rendering window!
 

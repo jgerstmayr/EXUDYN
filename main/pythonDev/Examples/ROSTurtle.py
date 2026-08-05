@@ -296,12 +296,12 @@ def main():
     simulationSettings.solutionSettings.writeSolutionToFile = False 
     SC.visualizationSettings.general.autoFitScene = True
     # set up parameter for usage in WSL2 (Ubuntu 20.04) on Windows 10
-    SC.visualizationSettings.interactive.trackMarker = mUIP
-    SC.visualizationSettings.window.startupTimeout = 8000
-    SC.visualizationSettings.openGL.initialZoom = 0.2
-    SC.visualizationSettings.openGL.initialMaxSceneSize= 0.7
-    SC.visualizationSettings.interactive.selectionLeftMouse=False
-    SC.visualizationSettings.interactive.selectionRightMouse=False
+    SC.visualizationSettings.view0.camera.trackMarker = mUIP
+    SC.visualizationSettings.general.rendererStartupTimeout = 8000
+    SC.visualizationSettings.openGL.advanced.initialZoom = 0.2
+    SC.visualizationSettings.openGL.advanced.initialMaxSceneSize= 0.7
+    SC.visualizationSettings.interactive.advanced.selectionLeftMouse=False
+    SC.visualizationSettings.interactive.advanced.selectionRightMouse=False
 
 
     SC.renderer.Start(True)

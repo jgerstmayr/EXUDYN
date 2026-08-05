@@ -48,7 +48,7 @@
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NodePoint
-classDescription = "A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for \acf{ODE2}."
+classDescription = "A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for \hac{ODE2}."
 cParentClass = CNodeODE2
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
@@ -96,7 +96,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NodePoint2D
-classDescription = "A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for second order differential equations."
+classDescription = "A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for \ac{ODE2}."
 cParentClass = CNodeODE2
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
@@ -144,7 +144,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NodeRigidBodyEP
-classDescription = "A 3D rigid body node based on Euler parameters for rigid bodies or beams; the node has 3 displacement coordinates (representing displacement of reference point $\LU{0}{\rv}$) and four rotation coordinates (Euler parameters = unit quaternions)."
+classDescription = "A 3D rigid body node based on Euler parameters for rigid bodies or beams. The node has 3 displacement coordinates (representing displacement of reference point $\LU{0}{\rv}$) and four rotation coordinates (Euler parameters = unit quaternions)."
 cParentClass = CNodeRigidBody
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
@@ -258,7 +258,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NodeRigidBodyRxyz
-classDescription = "A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beams; all coordinates lead to second order differential equations; NOTE that this node has a singularity if the second rotation parameter reaches $\psi_1 = (2k-1) \pi/2$, with $k \in \Ncal$ or $-k \in \Ncal$."
+classDescription = "A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beams. All coordinates lead to second order differential equations; NOTE: this node has a singularity if the second rotation parameter reaches $\psi_1 = (2k-1) \pi/2$, with $k \in \Ncal$ or $-k \in \Ncal$."
 cParentClass = CNodeRigidBody
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
@@ -345,7 +345,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NodeRigidBodyRotVecLG
-classDescription = "A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies; the node has 3 displacement coordinates and three rotation coordinates and can be used in combination with explicit Lie Group time integration methods."
+classDescription = "A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies. The node has 3 displacement coordinates and three rotation coordinates and can be used in combination with explicit Lie Group time integration methods."
 cParentClass = CNodeRigidBody
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
@@ -550,7 +550,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NodeRigidBody2D
-classDescription = "A 2D rigid body node for rigid bodies or beams; the node has 2 displacement degrees of freedom and one rotation coordinate (rotation around z-axis: uphi). All coordinates are \hac{ODE2}, used for second order differetial equations."
+classDescription = "A 2D rigid body node for rigid bodies or beams. The node has 2 displacement degrees of freedom and one rotation coordinate (rotation around z-axis: $\psi_0$). All coordinates are \hac{ODE2}, used for second order differetial equations."
 cParentClass = CNodeODE2
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
@@ -607,7 +607,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = Node1D
-classDescription = "A node with one \hac{ODE2} coordinate for one dimensional (1D) problems; use e.g. for scalar dynamic equations (Mass1D) and mass-spring-damper mechanisms, representing either translational or rotational degrees of freedom: in most cases, Node1D is equivalent to NodeGenericODE2 using one coordinate, however, it offers a transformation to 3D translational or rotational motion and allows to couple this node to 2D or 3D bodies."
+classDescription = "A node with one \hac{ODE2} coordinate for one dimensional (1D) problems. Use e.g. for scalar dynamic equations (Mass1D) and mass-spring-damper mechanisms, representing either translational or rotational degrees of freedom: in most cases, Node1D is equivalent to NodeGenericODE2 using one coordinate, however, it offers a transformation to 3D translational or rotational motion and allows to couple this node to 2D or 3D bodies."
 cParentClass = CNodeODE2
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
@@ -653,7 +653,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NodePoint2DSlope1
-classDescription = "A 2D point/slope vector node for planar Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements; the node has 4 displacement degrees of freedom (2 for displacement of point node and 2 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime]^T=[1\;\;0]^T$."
+classDescription = "A 2D point/slope vector node for planar Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements. The node has 4 displacement degrees of freedom (2 for displacement of point node and 2 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime]^T=[1\;\;0]^T$."
 cParentClass = CNodeODE2
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
@@ -693,7 +693,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NodePointSlope1
-classDescription = "A 3D point/slope vector node for spatial Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements; the node has 6 displacement degrees of freedom (3 for displacement of point node and 3 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime\;\;r_z^\prime]^T=[1\;\;0]^T$."
+classDescription = "A 3D point/slope vector node for spatial Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements. The node has 6 displacement degrees of freedom (3 for displacement of point node and 3 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime\;\;r_z^\prime]^T=[1\;\;0]^T$."
 cParentClass = CNodeODE2
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
@@ -733,7 +733,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NodePointSlope12
-classDescription = "A 3D point/slope vector node for thin ANCF (absolute nodal coordinate formulation) plate elements; the node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopeX' and 'slopeY'); all coordinates lead to second order differential equations; the slopeX vector defines the directional derivative w.r.t the local axial (x) coordinate, etc.; in straight configuration aligned at the global x-axis, the slopeY vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$."
+classDescription = "A 3D point/slope vector node for thin ANCF (absolute nodal coordinate formulation) plate elements. The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopeX' and 'slopeY'); all coordinates lead to second order differential equations; the slopeX vector defines the directional derivative w.r.t the local axial (x) coordinate, etc.; in straight configuration aligned at the global x-axis, the slopeY vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$."
 cParentClass = CNodeODE2
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
@@ -775,7 +775,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NodePointSlope23
-classDescription = "A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements; the node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopeY' and 'slopeZ'); all coordinates lead to second order differential equations; the slopeY vector defines the directional derivative w.r.t the local axial (y) coordinate, etc.; the slopeY vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$ and slopeZ gets $\rv_z^\prime=[0\;\;0\;\;1]^T$."
+classDescription = "A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements. The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopeY' and 'slopeZ'); all coordinates lead to second order differential equations; the slopeY vector defines the directional derivative w.r.t the local axial (y) coordinate, etc.; the slopeY vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$ and slopeZ gets $\rv_z^\prime=[0\;\;0\;\;1]^T$."
 cParentClass = CNodeODE2
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
@@ -820,7 +820,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NodeGenericODE2
-classDescription = "A node containing a number of \hac{ODE2} variables; use e.g. for scalar dynamic equations (Mass1D) or for the ALECable element. Note that referenceCoordinates and all initialCoordinates(\_t) must be initialized, because no default values exist."
+classDescription = "A node containing a number of \hac{ODE2} variables. Use this node e.g. for scalar dynamic equations (Mass1D), for ObjectGenericODE2 or for the Eulerian coordinate in the ALECable element. NOTE: referenceCoordinates and all initialCoordinates(\_t) must be initialized, because no default values exist."
 cParentClass = CNodeODE2
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
@@ -853,7 +853,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NodeGenericODE1
-classDescription = "A node containing a number of \hac{ODE1} variables; use e.g. linear state space systems. Note that referenceCoordinates and initialCoordinates must be initialized, because no default values exist."
+classDescription = "A node containing a number of \hac{ODE1} variables. Use this node e.g. for linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist."
 cParentClass = CNodeODE1
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
@@ -882,7 +882,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NodeGenericAE
-classDescription = "A node containing a number of \hac{AE} variables; use e.g. linear state space systems. Note that referenceCoordinates and initialCoordinates must be initialized, because no default values exist."
+classDescription = "A node containing a number of \hac{AE} variables. Use e.g. linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist."
 cParentClass = CNodeAE
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
@@ -909,7 +909,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NodeGenericData
-classDescription = "A node containing a number of data (history) variables; use e.g. for contact (active set), friction or plasticity (history variable)."
+classDescription = "A node containing a number of data (history) variables. Use this node e.g. for contact (active set), friction or plasticity (history variables)."
 cParentClass = CNodeData
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
@@ -937,7 +937,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = NodePointGround
-classDescription = "A 3D point node fixed to ground. The node can be used as NodePoint, but it does not generate coordinates. Applied or reaction forces do not have any effect. This node can be used for 'blind' or 'dummy' \hac{ODE2} and \hac{ODE1} coordinates to which CoordinateSpringDamper or CoordinateConstraint objects are attached to."
+classDescription = "A 3D point node fixed to ground which is similar to NodePoint, but it does not generate coordinates. Applied or reaction forces do not have any effect. This node can be used for 'blind' or 'dummy' \hac{ODE2} and \hac{ODE1} coordinates to which CoordinateSpringDamper or CoordinateConstraint objects are attached to."
 cParentClass = CNodeODE2
 mainParentClass = MainNode
 visuParentClass = VisualizationNode
@@ -981,7 +981,7 @@ writeFile = True
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectGround
-classDescription = "A ground object behaving like a rigid body, but having no degrees of freedom; used to attach body-connectors without an action. For examples see spring dampers and joints."
+classDescription = "A ground object behaving like a rigid body, but having no degrees of freedom. Used to attach body-connectors without an action. For examples see spring dampers and joints."
 cParentClass = CObjectBody
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObject
@@ -1124,11 +1124,11 @@ equations =
     
     Position-based markers can measure position $\pv\cConfig$. The {\bf position jacobian}  
     \be
-      \Jm_{pos} = \partial \pv\cCur / \partial \cv\cCur = \mr{1}{0}{0} {0}{1}{0} {0}{0}{0}
+      \Jm_{pos} = \partial \pv\cCur / \partial \cv\cCur = \mr{1}{0}{0} {0}{1}{0} {0}{0}{1}
     \ee
     transforms the action of global applied forces $\LU{0}{\fv}_a$ of position-based markers on the coordinates $\cv$
     \be
-      \Qm = \Jm_{pos} \LU{0}{\fv}_a.
+      \Qm = \Jm_{pos}\tp \LU{0}{\fv}_a.
     \ee
     %%RSTCOMPATIBLE
 /end
@@ -1223,7 +1223,7 @@ equations =
     \ee
     transforms the action of global applied forces $\LU{0}{\fv}_a$ of position-based markers on the coordinates $\cv$
     \be
-      \Qm = \Jm_{pos} \LU{0}{\fv}_a.
+      \Qm = \Jm_{pos}\tp \LU{0}{\fv}_a.
     \ee
     %%RSTCOMPATIBLE
 /end
@@ -1845,7 +1845,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectGenericODE2
-classDescription = "A system of $n$ second order ordinary differential equations (\hac{ODE2}), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE that all matrices, vectors, etc. must have the same dimensions $n$ or $(n \times n)$, or they must be empty $(0 \times 0)$, except for the mass matrix which always needs to have dimensions $(n \times n)$."
+classDescription = "A system of $n$ second order ordinary differential equations (\hac{ODE2}), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE: all matrices, vectors, etc. must have the same dimensions $n$ or $(n \times n)$, or they must be empty $(0 \times 0)$, except for the mass matrix which always needs to have dimensions $(n \times n)$."
 cParentClass = CObjectSuperElement
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObjectSuperElement
@@ -2685,7 +2685,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectFFRF
-classDescription = "This object is used to represent equations modelled by the \hac{FFRF}. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the \hac{FFRF}. Note that temporary matrices and vectors are subject of change in future. Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead."
+classDescription = "This object is used to represent equations modelled by the \hac{FFRF}. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the \hac{FFRF}. Note that temporary matrices and vectors are subject of change in future. NOTE: Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead."
 cParentClass = CObjectSuperElement
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObjectSuperElement
@@ -3442,14 +3442,14 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectANCFCable
-classDescription = "A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the \hac{EOM}). For description see ObjectANCFCable2D, which is almost identical to 3D case. Note that this element does not include torsion, therfore a torque cannot be applied along the local x-axis."
+classDescription = "A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the \hac{EOM}). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis."
 cParentClass = CObjectBody
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObject
 pythonShortName = Cable
-addProtectedC = "    static constexpr Index nODE2coordinates = 12; //!< fixed size of coordinates used e.g. for ConstSizeVectors\n    mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set\n    mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation\n"
+addProtectedC = "    mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set\n    mutable ConstSizeMatrix<12*12> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation\n"
 #addIncludesC = '#include "Objects/CObjectANCFCable2DBase.h"\n'
-#addPublicC = ""
+addPublicC = "    static constexpr Index nODE2coordinates = 12; //!< fixed size element coordinates used e.g. for ConstSizeVectors\n    static constexpr Index nShapeFunctions = 4; //!< number of shape functions\n    static constexpr Index nNodalCoordinates = 6; //!< number of nodal coordinates\n"
 #outputVariables = "{'Position':'global position vector of local position (in X/Y beam coordinates)', 'Displacement':'global displacement vector of local position', 'Velocity':'global velocity vector of local position', 'VelocityLocal':'local velocity vector of local position', 'Rotation':'(scalar) rotation angle of axial slope vector (relative to global x-axis)', 'Director1':'(axial) slope vector of local axis position (at Y=0)', 'StrainLocal':'$\varepsilon$axial strain (scalar) of local axis position (at Y=0)', 'CurvatureLocal':'$K$axial strain (scalar)', 'ForceLocal':'$N$ (local) section normal force (scalar, including reference strains) (at Y=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint', 'TorqueLocal':'$M$ (local) bending moment (scalar) (at Y=0)', 'AngularVelocity':'angular velocity of local axis position (at Y=0)', 'Acceleration':'global acceleration vector of local position', 'AngularAcceleration':'angular acceleration of local axis position (at Y=0)'}"
 outputVariables = "{'Position':'$\LU{0}{\pv\cConfig(x,0,0)} = \rv\cConfig(x) + y\cdot \nv\cConfig(x)$global position vector of local position $[x,0,0]$', 'Displacement':'$\LU{0}{\uv\cConfig(x,0,0)} = \LU{0}{\pv\cConfig(x,0,0)} - \LU{0}{\pv\cRef(x,0,0)}$global displacement vector of local position', 'Velocity':'$\LU{0}{\vv(x,0,0)} = \LU{0}{\dot \rv(x)}$global velocity vector of local position', 'Director1':"$\rv'(x)$(axial) slope vector of local axis position (at $y$=0)", 'StrainLocal':'$\varepsilon$axial strain (scalar) of local axis position (at Y=Z=0)', 'CurvatureLocal':'$[K_x, K_y, K_z]\tp$local curvature vector', 'ForceLocal':'$N$ (local) section normal force (scalar, including reference strains) (at $y$=$z$=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint', 'TorqueLocal':'$M$ (local) bending moment (scalar) (at $y$=$z$=0), which are bending moments as there is no torque', 'Acceleration':'$\LU{0}{\av(x,0,0)} = \LU{0}{\ddot \rv(x)}$global acceleration vector of local position'}"
 classType = Object
@@ -3576,9 +3576,9 @@ cParentClass = CObjectANCFCable2DBase
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObject
 pythonShortName = Cable2D
-#addProtectedC = "    static constexpr Index nODE2coordinates = 8; //!< fixed size of coordinates used e.g. for ConstSizeVectors\n    mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set\n    mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation\n"
+#addProtectedC = "\n    mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set\n    mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation\n"
 addIncludesC = '#include "Objects/CObjectANCFCable2DBase.h"\nclass MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h\n'
-#addPublicC = ""
+addPublicC = "    static constexpr Index nODE2coordinates = 8; //!< fixed size of coordinates used e.g. for ConstSizeVectors    static constexpr Index nShapeFunctions = 4; //!< number of shape functions\n    static constexpr Index nNodalCoordinates = 4; //!< number of nodal coordinates\n"
 #outputVariables = "{'Position':'global position vector of local position (in X/Y beam coordinates)', 'Displacement':'global displacement vector of local position', 'Velocity':'global velocity vector of local position', 'VelocityLocal':'local velocity vector of local position', 'Rotation':'(scalar) rotation angle of axial slope vector (relative to global x-axis)', 'Director1':'(axial) slope vector of local axis position (at Y=0)', 'StrainLocal':'$\varepsilon$axial strain (scalar) of local axis position (at Y=0)', 'CurvatureLocal':'$K$axial strain (scalar)', 'ForceLocal':'$N$ (local) section normal force (scalar, including reference strains) (at Y=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint', 'TorqueLocal':'$M$ (local) bending moment (scalar) (at Y=0)', 'AngularVelocity':'angular velocity of local axis position (at Y=0)', 'Acceleration':'global acceleration vector of local position', 'AngularAcceleration':'angular acceleration of local axis position (at Y=0)'}"
 outputVariables = "{'Position':'$\LU{0}{\pv\cConfig(x,y,0)} = \rv\cConfig(x) + y\cdot \nv\cConfig(x)$global position vector of local position $[x,y,0]$', 'Displacement':'$\LU{0}{\uv\cConfig(x,y,0)} = \LU{0}{\pv\cConfig(x,y,0)} - \LU{0}{\pv\cRef(x,y,0)}$global displacement vector of local position', 'Velocity':'$\LU{0}{\vv(x,y,0)} = \LU{0}{\dot \rv(x)} - y \cdot \omega_2 \cdot\LU{0}{\tv(x)} $global velocity vector of local position', 'VelocityLocal':'$\LU{b}{\vv(x,y,0)} = \LU{b0}{\Rot}\LU{0}{\vv(x,y,0)}$local velocity vector of local position', 'Rotation':"$\varphi = \mathrm{atan2}(r'_y, r'_x)$(scalar) rotation angle of axial slope vector (relative to global $x$-axis)", 'Director1':"$\rv'(x)$(axial) slope vector of local axis position (at $y$=0)", 'StrainLocal':'$\varepsilon$axial strain (scalar) of local axis position (at Y=0)', 'CurvatureLocal':'$K$axial strain (scalar)', 'ForceLocal':'$N$ (local) section normal force (scalar, including reference strains) (at $y$=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint', 'TorqueLocal':'$M$ (local) bending moment (scalar) (at $y$=0)', 'AngularVelocity':'$\tomega = [0,\, ,0,\, \omega_2]$angular velocity of local axis position (at $y$=0)', 'Acceleration':'$\LU{0}{\av(x,y,0)} = \LU{0}{\ddot \rv(x)} - y \cdot \dot\omega_2 \cdot\LU{0}{\tv(x)}- y \cdot \omega_2 \cdot\LU{0}{\dot\tv(x)} $global acceleration vector of local position', 'AngularAcceleration':'$\talpha = [0,\, ,0,\, \dot\omega_2]$angular acceleration of local axis position'}"
 classType = Object
@@ -4083,7 +4083,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectANCFBeam
-classDescription = "OBJECT UNDER CONSTRUCTION: A 3D beam finite element based on the absolute nodal coordinate formulation, using two nodes. The localPosition $x$ of the beam ranges from $-L/2$ (at node 0) to $L/2$ (at node 1). The axial coordinate is $x$ (first coordinate) and the cross section is spanned by local $y$/$z$ axes; assuming dimensions $w_y$ and $w_z$ in cross section, the local position range is $\in [[-L/2,L/2],\, [-wy/2,wy/2],\, [-wz/2,wz/2] ]$."
+classDescription = "A 3D beam finite element based on the absolute nodal coordinate formulation, using two nodes. The localPosition $x$ of the beam ranges from $-L/2$ (at node 0) to $L/2$ (at node 1). The axial coordinate is $x$ (first coordinate) and the cross section is spanned by local $y$/$z$ axes; assuming dimensions $w_y$ and $w_z$ in cross section, the local position range is $\in [[-L/2,L/2],\, [-wy/2,wy/2],\, [-wz/2,wz/2] ]$. NOTE: Requires further development and tests!"
 cParentClass = CObjectBody
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObject
@@ -4106,12 +4106,17 @@ Vp,     M,      name,                           ,               ,       String, 
 V,      CP,     nodeNumbers,                    ,               ,       NodeIndex2,     "Index2({EXUstd::InvalidIndex, EXUstd::InvalidIndex})",       ,       I,      "two node numbers for beam element"
 V,      CP,     physicsLength,                  ,               ,       PReal,      "0.",                       ,       I,     "$L$ [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive"
 V,      M,      sectionData,                    ,               ,       BeamSection,"BeamSection()",            ,       I,     "data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section."
-V,      CP,     crossSectionPenaltyFactor,      ,               ,       Vector3D,   "Vector3D({1.,1.,1.})",     ,       I,     "$f_{cs} = [f_{yy},\,f_{zz},\,f_{yz}]\tp$ [SI:1] additional penalty factors for cross section deformation, which are in total $k_{cs} = [f_{yy}\cdot k_{yy},\, f_{zz}\cdot k_{zz},\, f_{yz}\cdot k_{yz}]\tp$"
 V,      CP,     physicsMassPerLength,           ,               ,       UReal,      "0.",                       ,       ,      "$\rho A$ [SI:kg/m] mass per length of beam; this data is used internally for computation"
 V,      CP,     physicsCrossSectionInertia,     ,               ,       Matrix3D,      "EXUmath::zeroMatrix3D", ,       ,      "$\rho \Jm$ [SI:kg m] cross section mass moment of inertia tensor; this data is used internally for computation"
 #
-V,      CP,     physicsTorsionalBendingStiffness,,              ,       Vector3D,   "0.",                       ,       ,      "$K_\kappa = [GJ_x, \, EI_y, \, EI_z]\tp$ [SI:Nm$^2$] bending and torsional stiffness vector;"
-V,      CP,     physicsAxialShearStiffness,     ,               ,       Vector3D,   "0.",                       ,       ,      "$K_{as} = [EA, \, GA_y, \, GA_z]\tp$ [SI:N] axial and shear stiffness;"
+V,      CP,     physicsTorsionalBendingStiffness,,              ,       Vector3D,   "Vector3D({0.,0.,0.})",     ,        ,     "$k_\kappa = [GJ_x, \, EI_y, \, EI_z]\tp$ [SI:Nm$^2$] bending and torsional stiffness vector;"
+V,      CP,     physicsAxialShearStiffness,     ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",     ,        ,     "$k_{as} = [EA, \, GA_y, \, GA_z]\tp$ [SI:N] axial and shear stiffness;"
+V,      CP,     crossSectionPenaltyFactor,      ,               ,       Vector3D,   "Vector3D({1.,1.,1.})",     ,       I,     "$k_{cs} = [f_{yy},\,f_{zz},\,f_{yz}]\tp$ [SI:1] additional penalty factors for cross section deformation, which are in total $k_{cs} = [f_{yy}\cdot EA,\, f_{zz}\cdot EA,\, f_{yz}\cdot (GA_y+GA_z)]\tp$"
+#
+V,      CP,     physicsTorsionalBendingDamping, ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",     ,        ,     "$d_\kappa = [d_{GJx}, \, d_{EIy}, \, d_{EIz}]\tp$ [SI:Nm$^2$] viscous damping of bending and torsional deformation, according to $k_\kappa$"
+V,      CP,     physicsAxialShearDamping,       ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",     ,        ,     "$d_{as} = [d_{EA}, \, d_{GAy}, \, d_{GAz}]\tp$ [SI:N] viscous damping of axial and shear deformation, according to $k_{as}$"
+V,      CP,     crossSectionDamping,            ,               ,       Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,     "$d_{cs} = [d_{fyy},\,d_{fzz},\,d_{fyz}]\tp$ [SI:1] viscous damping according to penalty factors for cross section deformation; the damping is relative to the stiffness and should be thus usually much smaller than 1; the viscous damping factors read  $d_{cs} = [d_{fyy}\cdot EA,\, d_{fzz}\cdot EA,\, d_{fyz}\cdot (GA_y+GA_z)]\tp$"
+#
 #default: V,      CP,     useReducedOrderIntegration,     ,               ,       Bool,       false,                      ,       I,      "false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments"
 #
 Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse=false",       CDI,    "Computational function: compute mass matrix"
@@ -4129,7 +4134,7 @@ Fv,     C,      GetVelocity,                    ,               ,       Vector3D
 F,      C,      GetAcceleration,                ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) acceleration of 'localPosition' according to configuration type" 
 Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
-Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'ObjectANCFBeam3D';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'ObjectANCFBeam';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
 Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex <= 1, __EXUDYN_invalid_local_node1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      SetNodeNumber,                  ,               ,       void,       "parameters.nodeNumbers[localIndex]=nodeNumber;",       "Index localIndex, Index nodeNumber",        I,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return nNodes;",           ,       CI,    "number of nodes; needed for every object" 
@@ -4174,12 +4179,12 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectBeamGeometricallyExact2D
-classDescription = "A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D; FURTHER TESTS REQUIRED. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the $y$-axis, while and angle $\pi/2$ means that the cross section points in negative $x$-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[-L/2, L/2]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the \hac{EOM})."
+classDescription = "A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the $y$-axis, while and angle $\pi/2$ means that the cross section points in negative $x$-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[-L/2, L/2]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the \hac{EOM})."
 cParentClass = CObjectBody
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObject
 pythonShortName = Beam2D
-addProtectedC = "    static constexpr Index nODE2coordinates = 6; //!< fixed size of coordinates used e.g. for ConstSizeVectors\n    mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set\n    mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation\n"
+addProtectedC = "    static constexpr Index maxNNodes = 3; //!< max number of nodes\n    static constexpr Index maxODE2coordinates = 9; //!< max size of coordinates used e.g. for ConstSizeVectors\n    mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set\n    mutable ConstSizeMatrix<maxODE2coordinates*maxODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation\n"
 outputVariables = "{'Position':'global position vector of local axis (X) and cross section (Y) position', 'Displacement':'global displacement vector of local axis (X) and cross section (Y) position', 'Velocity':'global velocity vector of local axis (X) and cross section (Y) position', 'Rotation':'3D Tait-Bryan rotation components, containing rotation around $Z$-axis only', 'StrainLocal':'6 (local) strain components, containing only axial ($XX$, index 0) and shear strain ($XY$, index 5); evaluated at beam axis ONLY', 'CurvatureLocal':'3D vector of (local) curvature, only $Z$ component is non-zero', 'ForceLocal':'3D vector of (local) section normal force, containing axial (X) and shear force (Y)', 'TorqueLocal':'3D vector of (local) torques, containing only bending moment (Z)'}"
 classType = Object
 objectType = FiniteElement
@@ -4189,8 +4194,8 @@ equations =
     %%RSTCOMPATIBLE
 /end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
-Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "objects's unique name"
-V,      CP,     nodeNumbers,                    ,               ,       NodeIndex2,     "Index2({EXUstd::InvalidIndex, EXUstd::InvalidIndex})",       ,       I,      "two node numbers for beam element"
+Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "objects's unique name"
+V,      CP,     nodeNumbers,                    ,               ,       ArrayNodeIndex, "ArrayIndex()",         ,       I,      "two node numbers for beam element"
 V,      CP,     physicsLength,                  ,               ,       UReal,      "0.",                       ,       I,      "$L$ [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive"
 V,      CP,     physicsMassPerLength,           ,               ,       UReal,      "0.",                       ,       I,      "$\rho A$ [SI:kg/m] mass per length of beam"
 V,      CP,     physicsCrossSectionInertia,     ,               ,       UReal,      "0.",                       ,       I,      "$\rho J$ [SI:kg m] cross section mass moment of inertia; inertia acting against rotation of cross section"
@@ -4204,12 +4209,15 @@ V,      CP,     physicsAxialDamping,            ,               ,       UReal,  
 V,      CP,     physicsShearDamping,            ,               ,       UReal,      "0.",                       ,       I,      "$d_{\gamma}$ [SI:N/s] viscous damping of shear deformation"
 #Not needed, is included by length vs distance of nodes #V,      CP,     physicsReferenceAxialStrain,    ,               ,       Real,       "0.",                       ,       I,      "$\varepsilon_0$ [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value"
 V,      CP,     physicsReferenceCurvature,      ,               ,       Real,       "0.",                       ,       I,      "$\kappa_0$ [SI:1/m] reference curvature of beam (pre-deformation) of beam"
-V,      CP,     includeReferenceRotations,      ,               ,       bool,       "false",                    ,       I,      "if True, rotations at nodes consider reference rotations, which are used for the computation of bending strains (this means that a pre-curved beam is stress-free); if False, the reference rotation of the cross section is orthogonal to the direction between the reference position of the end nodes. This allows to easily share nodes among several beams with different cross section orientation."
+V,      CP,     includeReferenceRotations,      ,               ,       bool,       "false",                    ,       I,      "if True, rotation of the cross section at the nodes includes node reference rotations (within referenceCoordinates of NodeRigidBody2D), which are used for the computation of bending strains (this means that a pre-curved beam is stress-free); if False, the reference rotation of the cross section is orthogonal to the reference slope vector. This allows to easily share nodes among several beams with different reference cross section orientation (i.e., only the change of rotation counts)."
 #default: V,      CP,     useReducedOrderIntegration,     ,               ,       Bool,       false,                      ,       I,      "false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments"
 #
 Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse=false",       CDI,    "Computational function: compute mass matrix"
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+F,      C,      ComputeODE2LHStemplate,         ,               ,       "template<class TReal> void", , "VectorBase<TReal>& ode2Lhs, const ConstSizeVectorBase<TReal, maxODE2coordinates>& qBeamTotal, const ConstSizeVectorBase<TReal, maxODE2coordinates>& qBeam_t, const ConstSizeVectorBase<Real, maxODE2coordinates>& qBeamRef, Index objectNumber",          CDI,    "templated function to enable automatic differentiation" 
+Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg",       CDI,    "Computational function: compute jacobian (dense or sparse mode, see parent CObject function)" 
+#
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, ,                   ,          CDI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 #Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
 Fv,     C,      GetAccessFunctionBody,          ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value",          DC, "provide Jacobian at localPosition in 'value' according to object access" 
@@ -4222,23 +4230,26 @@ F,      C,      GetRotation,                    ,               ,       Real,   
 Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad" 
 #
-Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'BeamGeometricallyExact2D';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex <= 1, __EXUDYN_invalid_local_node1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'BeamGeometricallyExact2D';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex < parameters.nodeNumbers.NumberOfItems(), __EXUDYN_invalid_local_node0);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      SetNodeNumber,                  ,               ,       void,       "parameters.nodeNumbers[localIndex]=nodeNumber;",       "Index localIndex, Index nodeNumber",        I,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
-Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 2;",                ,       CI,     "number of nodes; needed for every object" 
-Fv,     C,      GetODE2Size,                    ,               ,       Index,      "return nODE2coordinates;",                ,       CI,     "number of \hac{ODE2} coordinates; needed for object?" 
+Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return parameters.nodeNumbers.NumberOfItems();",                ,       CI,     "number of nodes; needed for every object" 
+Fv,     C,      GetODE2Size,                    ,               ,       Index,      "return parameters.nodeNumbers.NumberOfItems()*3;",              ,       CI,     "number of \hac{ODE2} coordinates" 
+F,      C,      IsLinear,                       ,               ,       bool,       "return parameters.nodeNumbers.NumberOfItems() == 2;",           ,       CI,     "Linear=2 node element, Quadratic (!Linear)=3 node element" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return (Node::Type)(Node::Position2D + Node::Orientation2D);", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
 Fv,     C,      HasConstantMassMatrix,          ,               ,       bool,       "return true;",             ,       CI,     "return true if object has time and coordinate independent (=constant) mass matrix" 
 Fv,     C,      ParametersHaveChanged,          ,               ,       void,        "massMatrixComputed = false;", ,     I,    "This flag is reset upon change of parameters; says that mass matrix (future: other pre-computed values) need to be recomputed" 
-#not needed because mass matrix constant: Fv,     C,      ParametersHaveChanged,          ,               ,       void,        "massMatrixComputed = false;", ,     I,    "This flag is reset upon change of parameters; says that mass matrix (future: other pre-computed values) need to be recomputed" 
-#Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #internal functions:
-F,      C,      MapCoordinates,                 ,               ,       Vector3D,   ,                           "const Vector2D& SV, const LinkedDataVector& q0, const LinkedDataVector& q1",          CDI, "map element coordinates (position or velocity level) given by nodal vectors q0 and q1 onto compressed shape function vector to compute position, etc.; if SV=SV(x), it returns Vector of coordinates at certain position x: [p0,p1,theta0]" 
-F,      C,      ComputeShapeFunctions,          ,               ,       Vector2D,   ,                           "Real x",          CDI, "get compressed shape function vector $\Sm_v$, depending local position $x \in [0,L]$"
-F,      C,      ComputeShapeFunctions_x,        ,               ,       Vector2D,   ,                           "Real x",          CDI, "get first derivative of compressed shape function vector $\frac{\partial \Sm_v}{\partial x}$, depending local position $x \in [0,L]$"
+F,      C,      ComputeCurrentCoordinates,      ,               ,       void,       , "ConstSizeVectorBase<Real, maxODE2coordinates>& qBeamTotal, ConstSizeVectorBase<Real, maxODE2coordinates>& qBeam_t, ConstSizeVectorBase<Real, maxODE2coordinates>& qBeamRef, ConfigurationType configuration",          CDI, "compute object coordinates for configuration" 
+F,      C,      MapCoordinates,                 ,               ,       "template<class TReal, Index nODE2> SlimVectorBase<TReal, 3>",   , "const ConstSizeVector<maxNNodes>& SV, const ConstSizeVectorBase<TReal, nODE2>& qBeam",          CDI, "templated map of element coordinate vector to  [u0,u1,theta0]" 
+F,      C,      MapCoordinatesLinear,           ,               ,       Vector3D,   ,                           "const ConstSizeVector<maxNNodes>& SV, const LinkedDataVector& q0, const LinkedDataVector& q1",          CDI, "map element coordinates (position or velocity level) given by nodal vectors q0 and q1 onto compressed shape function vector to compute position, etc.; if SV=SV(x), it returns Vector of coordinates at certain position x: [p0,p1,theta0]" 
+F,      C,      MapCoordinatesQuadratic,        ,               ,       Vector3D,   ,                           "const ConstSizeVector<maxNNodes>& SV, const LinkedDataVector& q0, const LinkedDataVector& q1, const LinkedDataVector& q2",          CDI, "map element coordinates for 3-node element" 
+F,      C,      ComputeShapeFunctions,          ,               ,       ConstSizeVector<maxNNodes>,   ,         "Real x",          CDI, "get compressed shape function vector $\Sm_v$, depending local position $x \in [0,L]$"
+F,      C,      ComputeShapeFunctions_x,        ,               ,       ConstSizeVector<maxNNodes>,   ,         "Real x",          CDI, "get first derivative of compressed shape function vector $\frac{\partial \Sm_v}{\partial x}$, depending local position $x \in [0,L]$"
 F,      C,      GetRotationMatrix2D,            ,               4,      Matrix2D,   ,                           "Real theta",      CDI, "compute rotation matrix from angle theta" 
-F,      C,      ComputeGeneralizedStrains,      ,               ,       void,       ,                           "Real x, Real& theta, Vector2D& SV, Vector2D& SV_x, Real& gamma1, Real& gamma2, Real& theta_x, Real& gamma1_t, Real& gamma2_t, Real& theta_xt, CSVector6D& deltaGamma1, CSVector6D& deltaGamma2",          CDI, "compute strains and variation of strains for given interpolated derivatives of displacement u1_x, u2_x, angle theta (incl. reference config.!), shape vector SV and shape vector derivatives SV_x and slope vector in reference configuration"
+F,      C,      ComputeGeneralizedStrains,      ,               ,       "template<class TReal> void", ,"Real x, TReal& theta, const ConstSizeVectorBase<TReal, maxODE2coordinates>& qBeamTotal, const ConstSizeVectorBase<TReal, maxODE2coordinates>& qBeam_t, const ConstSizeVectorBase<Real, maxODE2coordinates>& qBeamRef, ConstSizeVectorBase<Real,maxNNodes>& SV, ConstSizeVectorBase<Real, maxNNodes>& SV_x, TReal& gamma1, TReal& gamma2, TReal& theta_x, TReal& gamma1_t, TReal& gamma2_t, TReal& theta_xt, ConstSizeVectorBase<TReal, maxODE2coordinates>& deltaGamma1, ConstSizeVectorBase<TReal, maxODE2coordinates>& deltaGamma2",          CDI, "compute strains and variation of strains for given interpolated derivatives of displacement u1_x, u2_x, angle theta (incl. reference config.!), shape vector SV and shape vector derivatives SV_x and slope vector in reference configuration"
 #not needed:
 #F,      C,      ComputeCurrentObjectCoordinates,,               ,       void,       ,                           "ConstSizeVector<4>& qObject",          CDI, "Compute object (finite element) coordinates in current configuration including reference coordinates" 
 #F,      C,      ComputeCurrentObjectVelocities, ,               ,       void,       ,                           "ConstSizeVector<4>& qObject_t",        CDI, "Compute object (finite element) velocities in current configuration" 
@@ -4257,7 +4268,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectBeamGeometricallyExact
-classDescription = "OBJECT UNDER CONSTRUCTION: A 3D geometrically exact beam finite element, currently using two 3D rigid body nodes. The localPosition $x$ of the beam ranges from $-L/2$ (at node 0) to $L/2$ (at node 1). The axial coordinate is $x$ (first coordinate) and the cross section is spanned by local $y$/$z$ axes."
+classDescription = "A 3D geometrically exact beam finite element, currently using two 3D rigid body nodes. The localPosition $x$ of the beam ranges from $-L/2$ (at node 0) to $L/2$ (at node 1). The axial coordinate is $x$ (first coordinate) and the cross section is spanned by local $y$/$z$ axes. NOTE: Requires further development and tests!"
 cParentClass = CObjectBody
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObject
@@ -4331,15 +4342,18 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectANCFThinPlate
-classDescription = "A 3D thin Kirchhoff plate finite element based on the absolute nodal coordinate formulation, using 4 nodes of type NodePointSlope12. The geometry as well as (deformed and distorted) reference configuration is given by the nodes. The localPosition follows unit-coordinates in the range [-1,1] for X, Y and Z coordinates; the thickness of the plate is h; This element is under construction."
+classDescription = "OBJECT UNDER CONSTRUCTION: A 3D thin Kirchhoff plate finite element based on the absolute nodal coordinate formulation, using 4 nodes of type NodePointSlope12. The geometry as well as (deformed and distorted) reference configuration is given by the nodes. The localPosition follows unit-coordinates in the range [-1,1] for X, Y and Z coordinates; the thickness of the plate is h; This element is under construction."
 cParentClass = CObjectBody
 mainParentClass = MainObjectBody
 visuParentClass = VisualizationObject
-addProtectedC = "    static constexpr Index nNodes = 4; //!< number of nodes\n    static constexpr Index nnc = 9; //!< number of node coordinates\n    static constexpr Index nODE2coordinates = 36; //!< fixed size of coordinates used e.g. for ConstSizeVectors\n    mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set\n    mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation\n"
-outputVariables = "{'Position':'$\LU{0}{\pv\cConfig(x,0,0)} = \rv\cConfig(x) + y\cdot \nv\cConfig(x)$global position vector of local position $[x,0,0]$', 'Displacement':'$\LU{0}{\uv\cConfig(x,0,0)} = \LU{0}{\pv\cConfig(x,0,0)} - \LU{0}{\pv\cRef(x,0,0)}$global displacement vector of local position', 'Velocity':'$\LU{0}{\vv(x,0,0)} = \LU{0}{\dot \rv(x)}$global velocity vector of local position', 'Director1':"$\rv'(x)$(axial) slope vector of local axis position (at $y$=0)", 'StrainLocal':'$\varepsilon$axial strain (scalar) of local axis position (at Y=Z=0)', 'CurvatureLocal':'$[K_x, K_y, K_z]\tp$local curvature vector', 'ForceLocal':'$N$ (local) section normal force (scalar, including reference strains) (at $y$=$z$=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint', 'TorqueLocal':'$M$ (local) bending moment (scalar) (at $y$=$z$=0), which are bending moments as there is no torque', 'Acceleration':'$\LU{0}{\av(x,0,0)} = \LU{0}{\ddot \rv(x)}$global acceleration vector of local position'}"
+addPublicC = "    static constexpr Index nNodes = 4; //!< number of nodes\n    static constexpr Index nSF = 12; //!< number of shape functions\n    static constexpr Index nnc = 9; //!< number of node coordinates\n"
+addProtectedC = "    static constexpr Index nODE2coordinates = 36; //!< fixed size of coordinates used e.g. for ConstSizeVectors\n    mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set\n    mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation\n"
+outputVariables = "{'Position':'$\LU{0}{\pv\cConfig(x,y,z)}$global position vector of local position $[x,y,z]$', 'Displacement':'$\LU{0}{\uv\cConfig(x,y,z)} = \LU{0}{\pv\cConfig(x,y,z)} - \LU{0}{\pv\cRef(x,y,z)}$global displacement vector of local position', 'Velocity':'$\LU{0}{\vv(x,y,z)} = \LU{0}{\dot \rv(x,y,z)}$global velocity vector of local position', 'Director1':"$\rv_x(x,y,z)$(axial) slope vector of local position (at $z$=0)", 'Director2':"$\rv_y(x,y,z)$(axial) slope vector of local position (at $z$=0)", 'StrainLocal':'$\varepsilon$axial strain (scalar) of local axis position (at Z=0)', 'CurvatureLocal':'$[K_x, K_y, K_z]\tp$local curvature vector', 'ForceLocal':'$N$ (local) section normal force per length (scalar, including reference strains) (at $z$=0)', 'TorqueLocal':'$M$ (local) bending moment per length (scalar) (at $z$=0), which are bending moments as there is no torque', 'StressLocal':'local inplane stress components', 'Acceleration':'$\LU{0}{\av(x,y,z)} = \LU{0}{\ddot \rv(x,y,z)}$global acceleration vector of local position'}"
+#"{'Position':'$\LU{0}{\pv\cConfig(x,0,0)} = \rv\cConfig(x) + y\cdot \nv\cConfig(x)$global position vector of local position $[x,0,0]$', 'Displacement':'$\LU{0}{\uv\cConfig(x,0,0)} = \LU{0}{\pv\cConfig(x,0,0)} - \LU{0}{\pv\cRef(x,0,0)}$global displacement vector of local position', 'Velocity':'$\LU{0}{\vv(x,0,0)} = \LU{0}{\dot \rv(x)}$global velocity vector of local position', 'Director1':"$\rv'(x)$(axial) slope vector of local axis position (at $y$=0)", 'StrainLocal':'$\varepsilon$axial strain (scalar) of local axis position (at Y=Z=0)', 'CurvatureLocal':'$[K_x, K_y, K_z]\tp$local curvature vector', 'ForceLocal':'$N$ (local) section normal force (scalar, including reference strains) (at $y$=$z$=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint', 'TorqueLocal':'$M$ (local) bending moment (scalar) (at $y$=$z$=0), which are bending moments as there is no torque', 'Acceleration':'$\LU{0}{\av(x,0,0)} = \LU{0}{\ddot \rv(x)}$global acceleration vector of local position'}"
 classType = Object
 objectType = FiniteElement
 equations = 
+    Note: For output variables, the localPosition is defined in $[-1,-1,-1] ... [1,1,1]$, where $[-1,-1,0]$ is the position of node 0.
     %%RSTCOMPATIBLE
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -4348,23 +4362,25 @@ miniExample =
 
     #check result
     exudynTestGlobals.testResult = 0
-    #ux=-0.5013058140308901
 /end
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "objects's unique name"
-V,      CP,     physicsThickness,               ,               ,       UReal,      "0.",                     ,       I,      "$h$ [SI:m] thickness of plate"
+V,      CP,     physicsThickness,               ,               ,       NumpyVector,"Vector()",               ,       I,      "$h$ [SI:m] thickness of plate either provided as scalar or as vector (4 values, same order as local element node numbers) values that are linearly interpolated from nodal values; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients"
 V,      CP,     physicsDensity,                 ,               ,       UReal,      "0.",                     ,       I,      "$\rho$ [SI:kg/m$^3$] density of the plate, possibly averaged over thickness"
-V,      CP,     physicsStrainCoefficients,      ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",    ,       I,      "$\Dm_\varepsilon$ [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate"
-V,      CP,     physicsCurvatureCoefficients,   ,               ,       Matrix3D,   "EXUmath::unitMatrix3D",    ,       I,      "$\Dm_\kappa$ [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate"
-V,      CP,     strainIsRelativeToReference,    ,               ,       Real,       "1.",                       ,       I,      "$f\cRef$ if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation"
-V,      CP,     nodeNumbers,                    ,               ,       NodeIndex4,     "Index4({EXUstd::InvalidIndex, EXUstd::InvalidIndex, EXUstd::InvalidIndex, EXUstd::InvalidIndex})",       ,       I,      "4 NodePointSlope12 node numbers"
+V,      CP,     physicsMassProportionalDamping, ,               ,       Real,       "0.",                     ,       I,      "mass-proportional damping coefficient $\alpha$ [SI:1/s]; adds massmatrix proportional damping forces $\fv_d = \alpha \Mm \dot{\qv}$"
+V,      CP,     physicsStrainCoefficients,      ,               ,       Matrix3DList,"Matrix3DList()",        ,       I,      "$\Dm_\varepsilon$ [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients"
+V,      CP,     physicsCurvatureCoefficients,   ,               ,       Matrix3DList,"Matrix3DList()",        ,       I,      "$\Dm_\kappa$ [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients"
+V,      CP,     strainIsRelativeToReference,    ,               ,       Real,       "1.",                       ,     I,      "$f\cRef$ if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation"
+V,      CP,     slopesScalingX,                 ,               4,      Vector4D,   "Vector4D({-1.,-1.,-1.,-1.})", ,  I,      "scaling of x-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances."
+V,      CP,     slopesScalingY,                 ,               4,      Vector4D,   "Vector4D({-1.,-1.,-1.,-1.})", ,  I,      "scaling of y-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances."
+V,      CP,     nodeNumbers,                    ,               ,       NodeIndex4, "Index4({EXUstd::InvalidIndex, EXUstd::InvalidIndex, EXUstd::InvalidIndex, EXUstd::InvalidIndex})",       ,       I,      "4 NodePointSlope12 node numbers, with local (xi,eta) coordinates as [(-1,-1),(1,-1),(1,1),(-1,1)]"
 V,      CP,     useReducedOrderIntegration,     ,               ,       Index,      0,                      ,       I,      "0/false: use highest Gauss integration for virtual work of strains"
 #access to parameters for Base class:
 #
 Fv,     C,      ComputeMassMatrix,              ,               ,       void,       ,                           "EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse=false",       CDI,    "Computational function: compute mass matrix"
 Fv,     C,      ComputeODE2LHS,                 ,               ,       void,       ,                           "Vector& ode2Lhs, Index objectNumber",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
-F,      C,      ComputeODE2LHStemplate,         ,               ,       "template<class TReal, Index ancfSize> void", , "VectorBase<TReal>& ode2Lhs, const ConstSizeVectorBase<TReal, ancfSize>& qANCF, const ConstSizeVectorBase<TReal, ancfSize>& qANCF_t",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
+F,      C,      ComputeODE2LHStemplate,         ,               ,       "template<class TReal> void", , "VectorBase<TReal>& ode2Lhs, const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCFtotal, const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCF_t",          CDI,    "Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'" 
 Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
 Fv,     C,      GetAccessFunctionTypes,         ,               ,       AccessFunctionType,,                    ,          CDI, "Flags to determine, which access (forces, moments, connectors, ...) to object are possible" 
 Fv,     C,      GetAccessFunctionBody,          ,               ,       void,       ,                           "AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value",          DC, "provide Jacobian at localPosition in 'value' according to object access" 
@@ -4375,36 +4391,47 @@ Fv,     C,      GetVelocity,                    ,               ,       Vector3D
 F,      C,      GetAcceleration,                ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) acceleration of 'localPosition' according to configuration type" 
 #this is impossible for Cable 3D: Fv,     C,      GetRotationMatrix,              ,               9,      Matrix3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
 Fv,     C,      GetAngularVelocity,             ,               3,      Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",       CDI,    "return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect" 
-Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", , CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad" 
+Fv,     C,      GetLocalCenterOfMass,           ,               3,      Vector3D,   "return Vector3D({0.,0.,0.});", ,CI, "return the local position of the center of mass, needed for equations of motion and for massProportionalLoad" 
 #
-Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'ANCFCable';" ,    ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
-Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex <= 1, __EXUDYN_invalid_local_node1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,      "return 'ANCFThinPlate';" ,  ,       CI,     "Get type name of object; could also be realized via a string -> type conversion?" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex <= 3, __EXUDYN_invalid_local_node1);\n        return parameters.nodeNumbers[localIndex];",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
 Fv,     C,      SetNodeNumber,                  ,               ,       void,       "parameters.nodeNumbers[localIndex]=nodeNumber;",       "Index localIndex, Index nodeNumber",        I,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
-Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 2;",                ,       CI,     "number of nodes; needed for every object" 
+Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 4;",               ,     CI,      "number of nodes; needed for every object" 
 Fv,     C,      GetODE2Size,                    ,               ,       Index,      "return nODE2coordinates;",                ,       CI,     "number of \hac{ODE2} coordinates; needed for object?" 
-Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return (Node::Type)(Node::Position + Node::PointSlope1);", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
+Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return (Node::Type)(Node::Position + Node::PointSlope12);", ,         CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::MultiNoded);",,       CI,     "Get type of object, e.g. to categorize and distinguish during assembly and computation" 
-Fv,     C,      HasConstantMassMatrix,          ,               ,       bool,       "return true;",             ,       CI,     "return true if object has time and coordinate independent (=constant) mass matrix" 
-Fv,     C,      ParametersHaveChanged,          ,               ,       void,        "massMatrixComputed = false;", ,     I,    "This flag is reset upon change of parameters; says that mass matrix (future: other pre-computed values) need to be recomputed" 
+Fv,     C,      HasConstantMassMatrix,          ,               ,       bool,       "return true;",            ,     CI,      "return true if object has time and coordinate independent (=constant) mass matrix" 
+Fv,     C,      ParametersHaveChanged,          ,               ,       void,       ,                          ,     DI,      "This function is called upon change of parameters" 
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #internal functions:
-Fs,     C,      MapCoordinates,                 ,               ,       Vector3D,   ,                           "const Vector12D& SV, const LinkedDataVector& q0, const LinkedDataVector& q1, const LinkedDataVector& q2, const LinkedDataVector& q3",          DI, "map element coordinates (position or veloctiy level) given by nodal vectors q0, ..., q3 onto compressed shape function vector to compute position, etc." 
-Fs,     C,      ComputeShapeFunctions,          ,               ,       void,       ,                           "Real xi, Real eta, Vector12D& sf",          DI, "get compressed shape function vector $\Sm_v$, depending on local position $[\xi, \eta] \in [-1,1] \times [-1,1]$ (in unit coordinates)"
-Fs,     C,      ComputeShapeFunctions_xy,       ,               ,       void,       ,                           "Real xi, Real eta, Vector12D& sf_x, Vector12D& sf_y",          DI, "get first derivatives of compressed shape function vector $\Sm_v$, depending on local position $[\xi, \eta] \in [-1,1] \times [-1,1]$ (in unit coordinates)"
-Fs,     C,      ComputeShapeFunctions_xxyy,     ,               ,       void,       ,                           "Real xi, Real eta, Vector12D& sf_xx, Vector12D& sf_yy, Vector12D& sf_xy",          DI, "get second derivatives of compressed shape function vector $\Sm_v$, depending on local position $[\xi, \eta] \in [-1,1] \times [-1,1]$ (in unit coordinates)"
-F,      C,      ComputeCurrentNodeCoordinates,  ,               ,       void,       ,                           "ConstSizeVector<6>& qNode0, ConstSizeVector<6>& qNode1",          CDI, "Compute node coordinates in current configuration including reference coordinates" 
-F,      C,      ComputeCurrentNodeVelocities,   ,               ,       void,       ,                           "ConstSizeVector<6>& qNode0, ConstSizeVector<6>& qNode1",          CDI, "Compute node velocity coordinates in current configuration" 
-F,      C,      ComputeCurrentObjectCoordinates,,               ,       void,       ,                           "ConstSizeVector<nODE2coordinates>& qANCF",          CDI, "Compute object (finite element) coordinates in current configuration including reference coordinates" 
-F,      C,      ComputeCurrentObjectVelocities, ,               ,       void,       ,                           "ConstSizeVector<nODE2coordinates>& qANCF_t",        CDI, "Compute object (finite element) velocities in current configuration" 
-#F,      C,      ComputeCurrentObjectCoordinates,,               ,       template<Index ancfSize> void, ,        "ConstSizeVector<ancfSize>& qANCF",          CDI, "Compute object (finite element) coordinates in current configuration including reference coordinates" 
-#F,      C,      ComputeCurrentObjectVelocities, ,               ,       template<Index ancfSize> void, ,        "ConstSizeVector<ancfSize>& qANCF_t",        CDI, "Compute object (finite element) velocities in current configuration" 
-# F,      C,      ComputeSlopeVector,             ,               ,       Vector3D,   ,                           "Real x, ConfigurationType configuration",          CDI, "compute the slope vector at a certain position, for given configuration" 
-# F,      C,      ComputeSlopeVector_t,           ,               ,       Vector3D,   ,                           "Real x, ConfigurationType configuration",          CDI, "compute the d(slope)/dt vector at a certain position, for given configuration" 
-# F,      C,      ComputeSlopeVector_x,           ,               ,       Vector3D,   ,                           "Real x, ConfigurationType configuration",          CDI, "compute the d(slope)/dx vector at a certain position, for given configuration" 
-# F,      C,      ComputeSlopeVector_xt,          ,               ,       Vector3D,   ,                           "Real x, ConfigurationType configuration",          CDI, "compute the d(slope)/dxdt vector at a certain position, for given configuration" 
+#validation functions (internal; implemented in src/Objects/CObjectANCFThinPlate.cpp):
+#F,      C,      ValidateForceEnergyConsistency, ,               ,       Real,       ,                           "const ConstSizeVector<nODE2coordinates>& qANCF_test, Real h = 1e-6, Real tolerance = 1e-4", CI, "Validation: Verify that internal forces equal gradient of energy (sign according to Exudyn LHS convention); returns maximum relative error"
+#F,      C,      ValidateShapeFunctionDerivatives, ,             ,       Real,       ,                           "Real xi = 0.0, Real eta = 0.0, Real h = 1e-6, Real tolerance = 1e-4", CI, "Validation: Verify shape function derivative consistency; returns maximum relative error"
+#F,      C,      ValidateMassMatrix,             ,               ,       Real,       ,                           "Real tolerance = 1e-4", CI, "Validation: Verify mass matrix consistency; returns maximum relative error"
+F,      C,      MapCoordinates,                 ,               ,       "template<class TReal> SlimVectorBase<TReal, 3>",   ,         "const Vector12D& sf, const ConstSizeVectorBase<TReal, nODE2coordinates>& q",          CDI, "map element coordinates (position or veloctiy level) given by nodal vectors q0, ..., q3 onto shape function vector to compute position, etc." 
+F,      C,      ComputeKinematics,              ,               ,       "template<class TReal> void",   ,         "Real xi, Real eta, const ConstSizeVectorBase<Real, nODE2coordinates>& qANCFref, const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCFtotal, SlimVectorBase<TReal, 3>& eps, SlimVectorBase<TReal, 3>& kappa",          CDI, "compute strains and curvatures relative to reference configuration" 
+F,      C,      ComputeElementEnergy,           ,               ,       "template<class TReal> TReal",  ,         "const ConstSizeVectorBase<Real, nODE2coordinates>& qANCFref, const ConstSizeVectorBase<TReal, nODE2coordinates>& qANCFtotal",          CDI, "compute element energy integrating over Gauss points" 
+F,      C,      ScaleShapeFunctions,            ,               ,       void,       , "Vector12D& sf", CDI, "scale shape functions accordingly (only reference configuration!)"
+F,      C,      ComputeShapeFunctions,          ,               ,       void,       , "Real xi, Real eta, Vector12D& sf, bool scaled=true", CDI, "get compressed shape function vector $\Sm_v$, depending on local position $[\xi, \eta] \in [-1,1] \times [-1,1]$ (in unit coordinates)"
+F,      C,      ComputeShapeFunctions_xy,       ,               ,       void,       , "Real xi, Real eta, Vector12D& sf_x, Vector12D& sf_y, bool scaled=true", CDI, "get first derivatives of compressed shape function vector $\Sm_v$, depending on local position $[\xi, \eta] \in [-1,1] \times [-1,1]$ (in unit coordinates)"
+F,      C,      ComputeShapeFunctions_xxyy,     ,               ,       void,       , "Real xi, Real eta, Vector12D& sf_xx, Vector12D& sf_yy, Vector12D& sf_xy, bool scaled=true", CDI, "get second derivatives of compressed shape function vector $\Sm_v$, depending on local position $[\xi, \eta] \in [-1,1] \times [-1,1]$ (in unit coordinates)"
+F,      C,      ComputeReferenceObjectCoordinates,,             ,       void,       , "ConstSizeVector<nODE2coordinates>& qANCF",          CDI, "Compute object (finite element) coordinates in reference configuration" 
+F,      C,      ComputeCurrentTotalObjectCoordinates,,          ,       void,       , "ConstSizeVector<nODE2coordinates>& qANCF",          CDI, "Compute object (finite element) coordinates in current configuration including reference coordinates" 
+#configuration-dependent functions
+F,      C,      ComputeObjectCoordinates,       ,               ,       void,       , "ConstSizeVector<nODE2coordinates>& qANCF, ConfigurationType configuration = ConfigurationType::Current",          CDI, "Compute object (finite element) coordinates in given configuration" 
+F,      C,      ComputeObjectVelocities,        ,               ,       void,       , "ConstSizeVector<nODE2coordinates>& qANCF_t, ConfigurationType configuration = ConfigurationType::Current",        CDI, "Compute object (finite element) velocities in given configuration" 
+F,      C,      ComputeObjectAccelerations,     ,               ,       void,       , "ConstSizeVector<nODE2coordinates>& qANCF_tt, ConfigurationType configuration = ConfigurationType::Current",        CDI, "Compute object (finite element) accelerations in given configuration" 
+F,      C,      GetNormal,                      ,               ,       Vector3D,   ,                           "const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current",          DIC, "return the (global) normal at 'localPosition' according to configuration type" 
+F,      C,      GetSlopes,                      ,               ,       void,       ,                           "const Vector3D& localPosition, Vector3D& slopeX, Vector3D& slopeY, ConfigurationType configuration = ConfigurationType::Current",          DIC, "compute the (global) slope vectors at 'localPosition' according to configuration type" 
 #
+#delete: F,      C,      GetElementJacobian,             ,               ,       void,       , "const ConstSizeVector<nODE2coordinates>& qANCFref, Real& Lx, Real& Ly, Real& jacDet",       CDI,    "compute element jacobian for transformation of unit element derivatives to global derivatives" 
+F,      C,      GetElementJacobian,             ,               ,       "template<class TReal> ConstSizeMatrixBase<TReal, 4>", , "const SlimVectorBase<TReal, 3>& r_xi_ref, const SlimVectorBase<TReal, 3>& r_eta_ref, const SlimVectorBase<TReal, 3>& n0", CDI,    "compute 2x2 element jacobian matrix; uses inplane orthogonal basis vectors" 
+F,      C,      GetElementJacobian,             ,               ,       Real,       ,                           ,       CDI,    "compute element jacobian for transformation of unit element derivatives to global derivatives" 
 F,      C,      PreComputeMassTerms,            ,               ,       void,       ,                           ,       CDI,    "precompute mass terms if it has not been done yet" 
-# Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg",       CDI,    "Computational function: compute jacobian (dense or sparse mode, see parent CObject function)" 
+F,      C,      ComputeThicknessAtPoint,        ,               ,       Real,       ,        "Real xi, Real eta",       CDI,    "compute thickness from local unit coordinates" 
+F,      C,      ComputeStrainCoefficientsAtPoint, ,             ,       Matrix3D,   ,        "Real xi, Real eta",       CDI,    "compute strain coefficient matrix from local unit coordinates" 
+F,      C,      ComputeCurvatureCoefficientsAtPoint, ,          ,       Matrix3D,   ,        "Real xi, Real eta",       CDI,    "compute curvature coefficient matrix from local unit coordinates" 
+Fv,     C,      ComputeJacobianODE2_ODE2,       ,               ,       void,       ,                           "EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg",       CDI,    "Computational function: compute jacobian (dense or sparse mode, see parent CObject function)" 
 # F,      C,      ComputeAxialStrain,             ,               ,       Real,       ,                           "Real x, ConfigurationType configuration",          CDI, "compute scalar axial strain at a certain position, for given configuration" 
 # F,      C,      ComputeAxialStrain_t,           ,               ,       Real,       ,                           "Real x, ConfigurationType configuration",          CDI, "compute scalar time derivative of axial strain at a certain position, for given configuration" 
 # F,      C,      ComputeCurvature,               ,               ,       Vector3D,   ,                           "Real x, ConfigurationType configuration",          CDI, "compute vectorial curvature at a certain position, for given configuration" 
@@ -4412,7 +4439,6 @@ F,      C,      PreComputeMassTerms,            ,               ,       void,   
 #VISUALIZATION:
 Vp,     V,      show,                           ,               ,       Bool,   "true",                         ,       IO,      "set true, if item is shown in visualization and false if it is not shown; note that all quantities are computed at the beam centerline, even if drawn on surface of cylinder of beam; this effects, e.g., Displacement or Velocity, which is drawn constant over cross section"
 Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                       "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
-# V,      V,      radius,                         ,               ,       float,  "0.f",                          ,       IO,    "if radius==0, only the centerline is drawn; else, a cylinder with radius is drawn; circumferential tiling follows general.cylinderTiling and beam axis tiling follows bodies.beams.axialTiling"
 V,      V,      color,                          ,               ,       Float4,    "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA color of the object; if R==-1, use default color" 
 #lateron: use this for cross-section definition: V,      V,      graphicsData,                   ,               ,       BodyGraphicsData, ,                     ,       IO,      "Structure contains data for body visualization; data is defined in special list / dictionary structure"
 #file names automatically determined from class name
@@ -4422,7 +4448,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorSpringDamper
-classDescription = "An simple spring-damper element with additional force; connects to position-based markers."
+classDescription = "An simple spring-damper element with additional force, connecting to position-based markers."
 cParentClass = CObjectConnector
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
@@ -4858,7 +4884,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorRigidBodySpringDamper
-classDescription = "An 3D spring-damper element acting on relative displacements and relative rotations of two rigid body (position+orientation) markers; connects to (position+orientation)-based markers and represents a penalty-based rigid joint (or prismatic, revolute, etc.)"
+classDescription = "An 3D spring-damper element acting on relative displacements and relative rotations of two rigid body (position+orientation) markers. It represents a penalty-based rigid joint (or prismatic, revolute, etc.)"
 #; the resulting force in the spring-damper reads ($m0 = marker[0]$ and $m1 = marker[1]$): \be force_x = (A0loc \cdot A0) \cdot stiffness_x \cdot (A0loc \cdot A0)^T(m1.position_x - m0.position_x - offset_x) + (A0loc \cdot A0) \cdot damping_x \cdot (A0loc \cdot A0)^T (m1.velocity_x - m0.velocity_x), etc. \ee and accordingly for rotation coordinates, which act on $(rotationMarker0 \cdot Rxyz0)^T \cdot (rotationMarker1 \cdot Rxyz1) $ rotations (0...rotation of marker0, 1...rotation of marker1).
 cParentClass = CObjectConnector
 mainParentClass = MainObjectConnector
@@ -5062,7 +5088,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorLinearSpringDamper
-classDescription = "An linear spring-damper element acting on relative translations along given axis of local joint0 coordinate system; connects to position and orientation-based markers; the linear spring-damper is intended to act within prismatic joints or in situations where only one translational axis is free; if the two markers rotate relative to each other, the spring-damper will always act in the local joint0 coordinate system."
+classDescription = "An linear spring-damper element acting on relative translations along given axis of local joint0 coordinate system. It connects to position and orientation-based markers; the linear spring-damper is intended to act within prismatic joints or in situations where only one translational axis is free; if the two markers rotate relative to each other, the spring-damper will always act in the local joint0 coordinate system."
 cParentClass = CObjectConnector
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
@@ -5220,7 +5246,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorTorsionalSpringDamper
-classDescription = "An torsional spring-damper element acting on relative rotations around Z-axis of local joint0 coordinate system; connects to orientation-based markers; if other rotation axis than the local joint0 Z axis shall be used, the joint rotationMarker0 / rotationMarker1 may be used. The joint perfectly extends a RevoluteJoint with a spring-damper, which can also be used to represent feedback control in an elegant and efficient way, by chosing appropriate user functions. It also allows to measure continuous / infinite rotations by making use of a NodeGeneric which compensates $\pm \pi$ jumps in the measured rotation (OutputVariableType.Rotation)."
+classDescription = "An torsional spring-damper element acting on relative rotations around Z-axis of local joint0 coordinate system. It connects to orientation-based markers; if other rotation axis than the local joint0 Z axis shall be used, the joint rotationMarker0 / rotationMarker1 may be used. The joint perfectly extends a RevoluteJoint with a spring-damper, which can also be used to represent feedback control in an elegant and efficient way, by chosing appropriate user functions. It also allows to measure continuous / infinite rotations by making use of a NodeGeneric which compensates $\pm \pi$ jumps in the measured rotation (\texttt{OutputVariableType.Rotation})."
 cParentClass = CObjectConnector
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
@@ -5382,7 +5408,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorCoordinateSpringDamper
-classDescription = "A 1D (scalar) spring-damper element acting on single \hac{ODE2} coordinates; connects to coordinate-based markers; NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates."
+classDescription = "A 1D (scalar) spring-damper element acting on single \hac{ODE2} coordinates and connecting to coordinate-based markers. NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates."
 cParentClass = CObjectConnector
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
@@ -5533,7 +5559,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorCoordinateSpringDamperExt
-classDescription = "A 1D (scalar) spring-damper element acting on single \hac{ODE2} coordinates; same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction; has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. It is highly recommended, to use the bristle model for friction with frictionProportionalZone=0 in case of implicit integrators (GeneralizedAlpha) as it converges better."
+classDescription = "A 1D (scalar) spring-damper element acting on single \hac{ODE2} coordinates, same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction. It has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. It is highly recommended, to use the bristle model for friction with frictionProportionalZone=0 in case of implicit integrators (GeneralizedAlpha) as it converges better."
 cParentClass = CObjectConnector
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
@@ -5769,7 +5795,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorGravity
-classDescription = "A connector for additing forces due to gravitational fields beween two bodies, which can be used for aerospace and small-scale astronomical problems; DO NOT USE this connector for adding gravitational forces (loads), which should be using LoadMassProportional, which is acting global and always in the same direction."
+classDescription = "A connector for additing forces due to gravitational fields beween two bodies, which can be used for aerospace and small-scale astronomical problems. NOTE: DO NOT USE this connector for adding gravitational forces (loads), which should be using LoadMassProportional, which is acting global and always in the same direction."
 cParentClass = CObjectConnector
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
@@ -5911,7 +5937,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectConnectorHydraulicActuatorSimple
-classDescription = "A basic hydraulic actuator with pressure build up equations. The actuator follows a valve input value, which results in a in- or outflow of fluid depending on the pressure difference. Valve values can be prescribed by user functions (not yet available) or with the MainSystem PreStepUserFunction(...)."
+classDescription = "A basic hydraulic actuator with pressure build up equations. The actuator follows a valve input value, which results in a in- or outflow of fluid depending on the pressure difference. Valve values can be prescribed by user functions (not yet available) or with the \texttt{MainSystem} \texttt{PreStepUserFunction(...)}."
 cParentClass = CObjectConnector
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
@@ -7222,7 +7248,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectContactCircleCable2D
-classDescription = "A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane; a node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap $g$ is integrated (piecewise linear) along the cable and circle; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations."
+classDescription = "A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap $g$ is integrated (piecewise linear) along the cable and circle; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations."
 cParentClass = CObjectConnector
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
@@ -7287,7 +7313,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectContactFrictionCircleCable2D
-classDescription = "A very specialized penalty-based contact/friction condition between a 2D circle in the local x/y plane (=marker0, a RigidBody Marker, from node or object) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane; a node NodeGenericData is required with 3$\times$(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=0, slip=+-1, undefined=-2), last friction position]. The connector works with Cable2D and ALECable2D, HOWEVER, due to conceptual differences the (tangential) frictionStiffness cannot be used with ALECable2D; if using, it gives wrong tangential stresses, even though it may work in general."
+classDescription = "A very specialized penalty-based contact/friction condition between a 2D circle in the local x/y plane (=marker0, a RigidBody Marker, from node or object) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with 3$\times$(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=0, slip=+-1, undefined=-2), last friction position]. The connector works with Cable2D and ALECable2D, HOWEVER, due to conceptual differences the (tangential) frictionStiffness cannot be used with ALECable2D; if using, it gives wrong tangential stresses, even though it may work in general."
 cParentClass = CObjectConnector
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
@@ -7762,121 +7788,143 @@ equations =
     \mysubsubsubsection{Connector Forces}
     This section outlines the computation of the forces acting on the two spheres when they are in contact with each other. Two types of forces can act on the spheres due to the connector:
     \bi
-      \item normal force computed according to the chosen impact model $m_\mathrm{impact}$ and with contact damping if $d_c\neq0$; this type of force does not create a torque acting on the spheres.
-      \item tangential force due to a regularized friction law to model dry friction between the spheres; this type of force creates a torque acting on the spheres and is computed independently of the chosen impact model if $\mu_d\neq0$ is set. Note that in the implemented model, rolling deformations are not considered, i.e. the friction is only a function of the relative tangential velocity between the spheres at the contact point.
+    \item normal force computed according to the chosen impact model $m_\mathrm{impact}$ and with contact damping if $d_c\neq0$; this type of force does not create a torque acting on the spheres.
+    \item tangential force due to a regularized friction law to model dry friction between the spheres; this type of force creates a torque acting on the spheres and is computed independently of the chosen impact model if $\mu_d\neq0$ is set. Note that in the implemented model, rolling deformations are not considered, i.e. the friction is only a function of the relative tangential velocity between the spheres at the contact point.
     \ei
 
     \ignoreRST{
-    \begin{figure}[tbph]
-      \begin{center}
-            \includegraphics[width=12cm]{figures/SphereSphereContact.pdf}
-      \end{center}
-        \caption{Two spheres that are in contact. For illustration, a force due to the overlap $\delta$ acting in the direction of $\nv$ for marker 1 is shown, as well as a force due to friction acting against the tangential (gap) velocity. The respective opposing forces are imprinted on marker 0.}
-        \label{fig:ObjectSphereSphereContact}
-    \end{figure}
+        \begin{figure}[tbph]
+            \begin{center}
+                \includegraphics[width=8cm]{figures/SphereSphereContact.pdf}
+            \end{center}
+            \caption{Two spheres that are in contact. For illustration, a force due to the overlap $\delta$ acting in the direction of $\nv$ for marker 1 is shown, as well as a force due to friction acting against the tangential (gap) velocity. The respective opposing forces are imprinted on marker 0.}
+            \label{fig:ObjectSphereSphereContact}
+        \end{figure}
     }
     \onlyRST{
-    .. _fig-objectspherespherecontact-mesh:
+    .. _fig-objectspherespherecontact:
     .. figure:: docs/theDoc/figures/SphereSphereContact.png
-       :width: 400
-
-       Two spheres that are in contact, showing a force on marker 1 in normal direction due to overlap; forces on marker 0 act in opposite direction.
+        :width: 400
+        
+        Two spheres that are in contact, showing a force on marker 1 in normal direction due to overlap; forces on marker 0 act in opposite direction.
     }
-    Calculations reflect the case for outer contact of two spheres using $h_1=1$. 
-    In case that isHollowSphere1=True, we set $h_1=-1$ while the remaining formulas remain unchanged.
-    
+    Calculations reflect the case for outer contact of two spheres using $h_1=1$. In case that isHollowSphere1=True, we set $h_1=-1$ while the remaining formulas are unchanged. In Figure \ref{fig:ObjectSphereSphereContact} the sphere sphere and in Figure \ref{fig:ObjectSphereHollowsphereContact} the sphere hollowsphere contact case are shown.
+
     For the following, the gap $g$ between the two spheres is computed as
     \be
-      g = h_1 || \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} || - (r_0 + h_1 r_1)
+    g = h_1 || \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} || - (r_0 + h_1 r_1)
     \ee
-    and the overlap $\delta$ is the negated gap: $\delta=-g$. In the contact case, the overlap $\delta$ is positive. 
-    The normal vector $\LU{0}{\nv}$ points from marker 0 to the contact point,
+    and the overlap $\delta$ is the negated gap: $\delta=-g$. In the contact case, the overlap $\delta$ is positive. If the first sphere is a hollow sphere, the gap consequently reads
     \be
-      \LU{0}{\nv} = h_1 \frac{\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}}{|| \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} ||} \eqDot
+    g = r_1 - r_0 - || \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} || \eqComma
     \ee
-    which in case of sphere-sphere contact, $\LU{0}{\nv}$ points from marker 0 to marker 1, and 
-    in case of sphere-hollowsphere contact, $\LU{0}{\nv}$ points from marker 1 to marker 0.
-    
+    such that if sphere 0 is in contact with the inner side of sphere 1, i.e. $|| \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} ||\geq(r_1-r_0)$ holds, the gap is negative and the overlap $\delta$ is positive. The normal vector $\LU{0}{\nv}$ always points from marker 0 to the contact point:
+    \be
+    \LU{0}{\nv} = h_1 \frac{\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}}{|| \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0} ||} \eqDot
+    \ee
+    In the case of sphere-sphere contact, $\LU{0}{\nv}$ points from marker 0 to marker 1, and 
+    in the case of sphere-hollowsphere contact, $\LU{0}{\nv}$ has the reversed direction as if it points from marker 1 to marker 0.
+
     The scalar normal (gap) velocity $v_\mathrm{\delta,n}$ is computed with the velocities $\LU{0}{\vv}_{m0}=\LU{0}{\dot{\pv}}_{m0}$ and $\LU{0}{\vv}_{m1}=\LU{0}{\dot{\pv}}_{m1}$
     \be
-      v_\mathrm{\delta,n} = \left(\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}\right)\cdot \LU{0}{\nv}
+    v_\mathrm{\delta,n} = \left(\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}\right)\cdot \LU{0}{\nv}
     \ee
     and the tangential (gap) velocity $\LU{0}{\vv}_\mathrm{\delta,t}$ at the contact point, that is needed for the friction model, reads
     \be \label{eq:OSSCTangentialVelocity}
-      \LU{0}{\vv}_\mathrm{\delta,t} = \left(\LU{0}{\vv}_{a1} - \LU{0}{\vv}_{a0}\right) - v_\mathrm{\delta,n} \cdot \LU{0}{\nv}, \qquad v_\mathrm{rel} = || \LU{0}{\vv}_\mathrm{\delta,t} || \eqDot
+    \LU{0}{\vv}_\mathrm{\delta,t} = \left(\LU{0}{\vv}_{a1} - \LU{0}{\vv}_{a0}\right) - v_\mathrm{\delta,n} \cdot \LU{0}{\nv}, \qquad v_\mathrm{rel} = || \LU{0}{\vv}_\mathrm{\delta,t} || \eqDot
     \ee
+
+    \ignoreRST{
+        \begin{figure}[tbph]
+            \begin{center}
+                \includegraphics[width=8cm]{figures/SphereHollowsphereContact.pdf}
+            \end{center}
+            \caption{One sphere and one hollowsphere that are in contact. For illustration, a force due to the overlap $\delta$ acting against the direction of $\nv$ for marker 1 is shown, as well as a force due to friction acting against the tangential (gap) velocity.}
+            \label{fig:ObjectSphereHollowsphereContact}
+        \end{figure}
+    }
+    \onlyRST{
+    .. _fig-objectspherehollowspherecontact:
+    .. figure:: docs/theDoc/figures/SphereHollowsphereContact.png
+        :width: 400
+        
+        One sphere and one hollowsphere that are in contact, showing a force on marker 1 against normal direction due to overlap; forces on marker 0 act in opposite direction.
+    }
+
     To take the angular velocity of the spheres into account, the velocities $\LU{0}{\vv}_{a0}$ and $\LU{0}{\vv}_{a1}$ at the contact point are computed using Euler's theorem for kinematics:
     \be
-      \LU{0}{\vv}_{a0} = \LU{0}{\vv}_{m0} + \LU{0}{\tomega}_{m0} \times \left(\LU{0}{\nv}\cdot \left(r_0-\frac{\delta}{2}\right)\right)
-      , \qquad
-      \LU{0}{\vv}_{a1} = \LU{0}{\vv}_{m1} + h_1 \LU{0}{\tomega}_{m1} \times \left(-\LU{0}{\nv}\cdot \left(r_1-h_1 \frac{\delta}{2}\right)\right) \eqDot
+    \LU{0}{\vv}_{a0} = \LU{0}{\vv}_{m0} + \LU{0}{\tomega}_{m0} \times \left(\LU{0}{\nv}\cdot \left(r_0-\frac{\delta}{2}\right)\right)
+    , \qquad
+    \LU{0}{\vv}_{a1} = \LU{0}{\vv}_{m1} + h_1 \LU{0}{\tomega}_{m1} \times \left(-\LU{0}{\nv}\cdot \left(r_1-h_1 \frac{\delta}{2}\right)\right) \eqDot
     \ee
+    For the velocity $\LU{0}{\vv}_{a0}$ of sphere 0 at the contact point the sphere-sphere and sphere-hollowsphere contact cases are computed equally. For the velocity $\LU{0}{\vv}_{a1}$ of sphere 1 at the contact point, one negative sign $h_1$ is needed since the vector pointing to the contact point has the same direction for both spheres and one negative sign $h_1$ is needed to correctly compute the length of the vector pointing from the center of sphere 1 to the contact point.
+
     The normal force acting on marker 1 is generally written as
     \be
-      \LU{0}{\fv}_\mathrm{1,n} = \underbrace{(f_c + f_d)}_{f_\mathrm{1,n}} \cdot \LU{0}{\nv} \eqComma
+    \LU{0}{\fv}_\mathrm{1,n} = \underbrace{(f_c + f_d)}_{f_\mathrm{1,n}} \cdot \LU{0}{\nv} \eqComma
     \ee
     where $f_c$ is the elastic and $f_d$ the damping part. The damping $f_d$ is always computed the same, independent of the chosen impact model:
     \be
-      f_d = - d_c v_\mathrm{\delta,n} \eqDot
+    f_d = - d_c v_\mathrm{\delta,n} \eqDot
     \ee
-    The negative sign is because of the damping acting against the gap velocity: in the case of a positive normal (gap) velocity, the damping acts against $\LU{0}{\nv}$ for marker 1. The elastic force $f_c$ is computed depending on the chosen impact model.
+    The negative sign is because of the damping acting against the gap velocity: in the case of a positive normal (gap) velocity, the damping acts against $\LU{0}{\nv}$ for marker 1. As an illustrative case, the gap velocity is positive, if sphere 0 does not move, i.e. $\LU{0}{\vv}_{m0}=0$ holds, and sphere 1 in direction of the normal vector. Note that this holds for the sphere-sphere contact and sphere-hollowsphere contact cases. The elastic force $f_c$ is computed depending on the chosen impact model.
 
     CASE $m_\mathrm{impact}=0$: the Adhesive Elasto-Plastic model described in \cite{Morrissey2014} is used. This model captures the key bulk behavior of cohesive powders and granular soils. For the impact model, the plastic overlap $\delta_p$ is needed. It is computed with
     \be
-      \delta_p=\lambda_\mathrm{p}^{\frac{1}{n_\mathrm{exp}}}\delta \eqDot
+    \delta_p=\lambda_\mathrm{p}^{\frac{1}{n_\mathrm{exp}}}\delta \eqDot
     \ee
     The Adhesive Elasto-Plastic model distinguishes three different cases, modeling the loading and unloading behavior of the spheres:
     \be
-      f_c=
-      \begin{cases}
+    f_c=
+    \begin{cases}
         -f_\mathrm{adh} + k_c \delta^{n_\mathrm{exp}} & \text{if } k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right) \geq k_c\delta^{n_\mathrm{exp}} \\
         -f_\mathrm{adh} + k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right) & \text{if } k_c\delta^{n_\mathrm{exp}} > k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}}\right) > -k_\mathrm{adh}\delta^{n_\mathrm{adh}} \\
         -f_\mathrm{adh}-k_\mathrm{adh}\delta^{n_\mathrm{adh}} & \text{if } -k_\mathrm{adh}\delta^{n_\mathrm{adh}} > k_2 \left(\delta^{n_\mathrm{exp}}-\delta_p^{n_\mathrm{exp}} \right)
-      \end{cases}\eqDot
+    \end{cases}\eqDot
     \ee
     Note that $k_2$ is computed with $k_2 = k_c/(1-\lambda_\mathrm{P})$. The terms with the stiffness $k_c$ and $k_2$ have a positive sign, since they act in the direction of $\LU{0}{\nv}$ for marker 1. The constant adhesion force $f_\mathrm{adh}$ and the stiffness $k_\mathrm{adh}$ act against $\LU{0}{\nv}$, which corresponds to a force sticking the spheres together.
 
     CASE $m_\mathrm{impact}=1$: the restitution model proposed by Hunt and Crossley in \cite{Hunt1975} is used to simulate the energy loss of the spheres during contact:
     \be
-      f_c=k_c \delta^{n_\mathrm{exp}} + \lambda \delta^{n_\mathrm{exp}} v_\mathrm{\delta,n}
+    f_c=k_c \delta^{n_\mathrm{exp}} + \lambda \delta^{n_\mathrm{exp}} v_\mathrm{\delta,n}
     \ee
     with
     \be
-      \lambda = \frac{k_c}{\dot\delta_\mathrm{-}}\frac{3}{2}(e_\mathrm{res}-1) \eqDot
+    \lambda = \frac{k_c}{\dot\delta_\mathrm{-}}\frac{3}{2}(e_\mathrm{res}-1) \eqDot
     \ee
     The restitution coefficient $e_\mathrm{res}$ describes the ration of the normal (gap) velocity before and after the impact of the spheres. In the case of $e_\mathrm{res}<1$, the impact has a plastic portion, resulting in a force acting against $\LU{0}{\nv}$ for marker 1, which is why $\lambda$ must be negative in that case. $\dot\delta_\mathrm{-}$ is the initial relative velocity, which is either the minimum impact velocity or the normal (negated gap) velocity:
     \be
-      \dot\delta_\mathrm{-} = \max{\left(\dot\delta_\mathrm{-,min}; -v_\mathrm{\delta,n} \right)}
+    \dot\delta_\mathrm{-} = \max{\left(\dot\delta_\mathrm{-,min}; -v_\mathrm{\delta,n} \right)}
     \ee
     Note that the Hunt-Crossley restitution is valid for a very small energy loss ($e_\mathrm{res}\approx1$) \cite{Carvalho2019}.
 
     CASE $m_\mathrm{impact}=2$: a generalization of the Hunt-Crossley restitution proposed by Carvalho and Martins in \cite{Carvalho2019} is used for $e_\mathrm{res} > \frac{1}{3}$ and a model proposed by Gonthier et al. in \cite{Gonthier2004} is used for impacts with a high plastic proportion, $e_\mathrm{res} < \frac{1}{3}$. Note that the two models are identical at $e_\mathrm{res} = \frac{1}{3}$. $\lambda$ is therefore computed as follows:
     \be
-      \lambda=
-      \begin{cases}
+    \lambda=
+    \begin{cases}
         \frac{k_c}{\dot\delta_\mathrm{-}}\frac{3}{2}(e_\mathrm{res}-1)\frac{11-e_\mathrm{res}}{1+9e_\mathrm{res}} & \text{if } e_\mathrm{res} > \frac{1}{3} \\
         \frac{k_c}{\dot\delta_\mathrm{-}}\frac{e_\mathrm{rep}^2-1}{e_\mathrm{rep}} & \text{if } e_\mathrm{res} > 0 \\
-      \end{cases}\eqDot
+    \end{cases}\eqDot
     \ee
     The tangential force acting on marker 1 due to the friction model acts against the tangential velocity $\vv_\mathrm{\delta,t}$, see the computation of $\vv_\mathrm{\delta,t}$ in Equation \eqref{eq:OSSCTangentialVelocity}. Thus, the tangential force for marker 1 is computed as
     \be
-      \LU{0}{\fv}_\mathrm{1,t} = -\LU{0}{\vv}_\mathrm{\delta,t} \cdot
-      \begin{cases}
+    \LU{0}{\fv}_\mathrm{1,t} = -\LU{0}{\vv}_\mathrm{\delta,t} \cdot
+    \begin{cases}
         \frac{\mu_d f_\mathrm{1,n}}{v_{reg}} & \text{if } v_{rel} < v_{reg} \\
         \frac{\mu_d f_\mathrm{1,n}}{v_{rel}} & \text{else}\\
-      \end{cases} \eqDot
+    \end{cases} \eqDot
     \ee
     Note that the case distinction above is made to ensure that for very small relative velocities the friction force does not become implausibly high. Taken together, the force acting on marker 1 due to the connector is computed as
     \be
-      \LU{0}{\fv}_{m1}=\LU{0}{\fv}_\mathrm{1,n}+\LU{0}{\fv}_\mathrm{1,t} \eqComma
+    \LU{0}{\fv}_{m1}=\LU{0}{\fv}_\mathrm{1,n}+\LU{0}{\fv}_\mathrm{1,t} \eqComma
     \ee
     the force acting on marker 0 is $\LU{0}{\fv}_{m0}=-\LU{0}{\fv}_{m1}$. The global torque $\LU{0}{\ttau}_{m1}$ acting on marker 1 due to the connector is computed as
     \be
-      \LU{0}{\ttau}_{m1}=-h_1 \LU{0}{\nv}\left( r_1-h_1 \frac{1}{2}\delta \right) \times \LU{0}{\fv}_{m1} \eqComma
+    \LU{0}{\ttau}_{m1}=-h_1 \LU{0}{\nv}\left( r_1-h_1 \frac{1}{2}\delta \right) \times \LU{0}{\fv}_{m1} \eqComma
     \ee
     and on marker 0 as
     \be
-      \LU{0}{\ttau}_{m0}=\LU{0}{\nv} \left(r_0-\frac{1}{2}\delta \right) \times \LU{0}{\fv}_{m0}= \LU{0}{\nv}\left( r_0-\frac{1}{2}\delta \right) \times \left( -\LU{0}{\fv}_{m1} \right) \eqDot
+    \LU{0}{\ttau}_{m0}=\LU{0}{\nv} \left(r_0-\frac{1}{2}\delta \right) \times \LU{0}{\fv}_{m0}= \LU{0}{\nv}\left( r_0-\frac{1}{2}\delta \right) \times \left( -\LU{0}{\fv}_{m1} \right) \eqDot
     \ee
     It can be seen that the torque due to the connector is the same for both spheres, if $r_0=r_1$ applies.
     %%RSTCOMPATIBLE
@@ -7936,7 +7984,7 @@ F,      C,      ComputeConnectorProperties,     ,               ,       void,   
 #
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #
-Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation);", ,   CI,     "provide requested markerType for connector" 
+Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return (Marker::Type)((Index)Marker::Position + (parameters.dynamicFriction!=0)*(Index)Marker::Orientation);", ,   CI,     "provide requested markerType for connector" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericData;", ,      CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return CObjectType::Connector;", , CI,    "return object type (for node treatment in computation)" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'ContactSphereSphere';", , CI,     "Get type name of node (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
@@ -7953,7 +8001,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectContactSphereTorus
-classDescription = "[UNDER DEVELOPMENT] A simple contact connector between a sphere (marker0) and a torus (marker1). The sphere is assumed to be placed inside of the torus (outer contact of sphere with torus currently not implemented!)."
+classDescription = "A simple contact connector between a sphere (marker0) and a torus (marker1). The sphere is assumed to be placed inside of the torus (outer contact of sphere with torus currently not implemented!)."
 cParentClass = CObjectConnector
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
@@ -8046,7 +8094,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectContactSphereTriangle
-classDescription = "[UNDER DEVELOPMENT] A simple contact connector between a sphere (marker0) and a triangle (marker1). Penalty-based contact is computed from penetration of the sphere with the triangle, including contact with edges if desired."
+classDescription = "A simple contact connector between a sphere (marker0) and a triangle (marker1). Penalty-based contact is computed from penetration of the sphere with the triangle, including contact with edges if desired."
 cParentClass = CObjectConnector
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
@@ -8121,7 +8169,7 @@ F,      C,      ComputeConnectorProperties,     ,               ,       void,   
 #
 Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
 #
-Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation);", ,   CI,     "provide requested markerType for connector" 
+Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return (Marker::Type)((Index)Marker::Position + (parameters.dynamicFriction!=0)*(Index)Marker::Orientation);", ,   CI,     "provide requested markerType for connector" 
 Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericData;", ,      CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
 Fv,     C,      GetType,                        ,               ,       CObjectType,"return CObjectType::Connector;", , CI,    "return object type (for node treatment in computation)" 
 Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'ContactSphereSphere';", , CI,     "Get type name of node (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
@@ -8988,13 +9036,28 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectJointPrismatic2D
-classDescription = "A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers; the vector $\tv_0$ = axisMarker0 is given in local coordinates of the first marker's (body) frame and defines the prismatic axis; the vector $\mathbf{n}_1$ = normalMarker1 is given in the second marker's (body) frame and is the normal vector to the prismatic axis; using the global position vector $\pv_0$ and rotation matrix $\Am_0$ of marker0 and the global position vector $\pv_1$ rotation matrix $\Am_1$ of marker1, the equations for the prismatic joint follow as \be (\pv_1-\pv_0)^T\cdot \Am_1 \cdot \mathbf{n}_1 = 0 \ee  \be (\Am_0 \cdot \tv_0)^T \cdot \Am_1 \cdot \mathbf{n}_1 = 0\ee The lagrange multipliers follow for these two equations $[\lambda_0,\lambda_1]$, in which $\lambda_0$ is the transverse force and $\lambda_1$ is the torque in the joint."
+classDescription = "A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers."
 cParentClass = CObjectConstraint
 mainParentClass = MainObjectConnector
 visuParentClass = VisualizationObject
 pythonShortName = PrismaticJoint2D
 classType = Object
 objectType = Joint
+equations =
+    \mysubsubsubsection{Geometric relations}
+    The vector $\tv_0$ = axisMarker0 is given in local coordinates of the first marker's (body) frame and defines the prismatic axis.
+    The vector $\mathbf{n}_1$ = normalMarker1 is given in the second marker's (body) frame and is the normal vector to the prismatic axis.
+    Using the global position vector $\pv_0$ and rotation matrix $\Am_0$ of marker0 and 
+    the global position vector $\pv_1$ rotation matrix $\Am_1$ of marker1, the equations for the prismatic joint follow as 
+    \be 
+      (\pv_1-\pv_0)^T\cdot \Am_1 \cdot \mathbf{n}_1 = 0 
+    \ee  
+    \be 
+      (\Am_0 \cdot \tv_0)^T \cdot \Am_1 \cdot \mathbf{n}_1 = 0
+    \ee 
+    The Lagrange multipliers follow for these two equations $[\lambda_0,\lambda_1]$, 
+    in which $\lambda_0$ is the transverse force and $\lambda_1$ is the torque in the joint.
+/end
 #V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
 #CObjectMarkerBodyPosition* automatically inserted!
 Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "constraints's unique name"
@@ -9027,6 +9090,183 @@ V,      V,      color,                          ,               ,       Float4, 
 #file names automatically determined from class name
 writeFile = True
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = ObjectJointSliding
+classDescription = "A specialized 3D sliding joint between a list of beam elements (updated marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep."
+cParentClass = CObjectConstraint
+mainParentClass = MainObjectConnector
+visuParentClass = VisualizationObject
+pythonShortName = SlidingJoint
+addProtectedC = "    static constexpr Index slidingCoordinateIndex = 0; //!< index of alqebraic coordinate\n    static constexpr Index forcesStartIndex = 1; //!< starting index of alqebraic coordinates for forces\n    static constexpr Index torquesStartIndex = 4; //!< starting index of alqebraic coordinates for torques (if existing)\n"
+outputVariables = "{'Position':'position vector of joint given by marker0', 'Velocity':'velocity vector of joint given by marker0', 'SlidingCoordinate':'global sliding coordinate along all elements; the maximum sliding coordinate is equivalent to the reference lengths of all sliding elements', 'Force':'joint force vector (3D)'}"
+classType = Object
+objectType = Joint
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+equations =
+    \mysubsubsubsection{Definition of quantities}
+    %
+    \startTable{intermediate variables}{symbol}{description}
+    \rowTable{data node}{$\xv=[x_{data0},\,x_{data1}]\tp$}{coordinates of node with node number $n_{GD}$}
+    \rowTable{data coordinate 0}{$x_{data0}$}{the current index in slidingMarkerNumbers}
+    \rowTable{data coordinate 1}{$x_{data1}$}{the global sliding coordinate (ranging from 0 to the total length of all sliding elements) at {\bf start-of-step} - beginning of the timestep}
+    \rowTable{marker m0 position}{$\LU{0}{\pv}_{m0}$}{current global position which is provided by marker m0}
+    \rowTable{marker m0 velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity which is provided by marker m0}
+    %
+    \rowTable{marker m0 orientation}{$\LU{0,m0}{\Rot}$}{current rotation matrix provided by marker m0 (assumed to be rigid body)}
+    \rowTable{marker m0 angular velocity}{$\LU{0}{\tomega}_{m0}$}{current angular velocity vector provided by marker m0 (assumed to be rigid body)}
+    %
+    %\rowTable{cable coordinates}{$\qv_{ANCF,m1}$}{current coordiantes of the ANCF cable element with the current marker $m1$ is referring to}
+    \rowTable{sliding position}{$\LUR{0}{\rv}{ANCF} = \Sm(s_{el})\qv_{ANCF,m1}$}{current global position at the ANCF cable element, evaluated at local sliding position $s_{el}$}
+    \rowTable{sliding position slope}{$\LURU{0}{\rv}{ANCF}{\prime} = \Sm^\prime(s_{el})\qv_{ANCF,m1} = [r^\prime_0,\,r^\prime_1,\,r^\prime_2]\tp$}{current global slope vector of the ANCF cable element, evaluated at local sliding position $s_{el}$}
+    \rowTable{sliding velocity}{$\LUR{0}{\vv}{ANCF} = \Sm(s_{el})\dot\qv_{ANCF,m1}$}{current global velocity at the ANCF cable element, evaluated at local sliding position $s_{el}$ ($s_{el}$ not differentiated!!!)}
+    \rowTable{sliding velocity slope}{$\LURU{0}{\vv}{ANCF}{\prime} = \Sm^\prime(s_{el})\dot\qv_{ANCF,m1}$}{current global slope velocity vector of the ANCF cable element, evaluated at local sliding position $s_{el}$}
+    %
+    \rowTable{algebraic coordinates}{$\zv=[\lambda_0,\,\ldots,\,\lambda_5,\, s]\tp$}{algebraic coordinates composed of 3 Lagrange multipliers for forces $\lambda_{0..2}$, 3 multipliers for torques $\lambda_{3..5}$ and the current sliding coordinate $s$, which is local in the current cable element. }
+    \rowTable{local sliding coordinate}{$s$}{local incremental sliding coordinate $s$: the (algebraic) sliding coordinate {\bf relative to the start-of-step value}. Thus, $s$ only contains small local increments.}
+    \finishTable
+    \startTable{output variables}{symbol}{formula}
+    \rowTable{Position}{$\LU{0}{\pv}_{m0}$}{current global position of position marker $m0$}
+    \rowTable{Velocity}{$\LU{0}{\vv}_{m0}$}{current global velocity of position marker $m0$}
+    \rowTable{SlidingCoordinate}{$s_g = s + x_{data1}$}{current value of the global sliding coordinate}
+    \rowTable{Force}{$\fv$}{see below}
+    \finishTable
+
+    \mysubsubsubsection{Geometric relations}
+    %cable
+    Assume we have given the sliding coordinate $s$ (e.g., as a guess of the Newton method or beginning of the time step). 
+    The element sliding coordinate (in the local coordinates of the current sliding element) is computed as
+    \be
+      s_{el} = s + x_{data1} - d_{m1} = s_g - d_{m1}.
+    \ee
+    The vector (=difference; error) between the marker $m0$ and the marker $m1$ (=$\rv_{ANCF}$) positions reads
+    \be
+      \LU{0}{\Delta\pv} = \LUR{0}{\rv}{ANCF} - \LU{0}{\pv}_{m0}
+    \ee
+    The vector (=difference; error) between the marker $m0$ and the marker $m1$ velocities reads
+    \be
+      \LU{0}{\Delta\vv} = \LUR{0}{\dot\rv}{ANCF} - \LU{0}{\vv}_{m0}
+    \ee
+    %
+    %+++++++++++++++++++++++++++++++++++++++++++++
+    \mysubsubsubsection{Connector constraint equations} % (classicalFormulation=True)
+    The 3D sliding joint is implemented having 7 equations, using the special algebraic coordinates $\zv$.
+    The algebraic equations read
+    \bea
+      \LU{0}{\Delta\pv} \!&=&\! \Null, \quad \mbox{... three index 3 eqs $\ra$ sliding body stays on cable}\\
+      \vr{\lambda_1}{\lambda_2}{\lambda_3} \cdot  \LURU{0}{\rv}{ANCF}{\prime} - |\LURU{0}{\rv}{ANCF}{\prime}| \cdot f_\mathrm{ax} \!&=&\! 0, \quad \mbox{... three index 1 equ. 
+                                               $\ra$ force in sliding dir.=$f_\mathrm{ax}$}  \\
+    \eea
+    No index 2 case exists, because no time derivative exists for $s_{el}$. The jacobian matrices for algebraic and \hac{ODE2} coordinates read
+    %\be
+    %  \Jm_{AE} = \mr{0}{0}{r^\prime_0} {0}{0}{r^\prime_1} {r^\prime_0}{r^\prime_1}{r^{\prime\prime}_0\lambda_0 + r^{\prime\prime}_1\lambda_1}    %\LURU{0}{\rv}{ANCF}{\prime\prime \mathrm{T}} \vp{\lambda_0}{\lambda_1}}
+    %\ee
+    %\be
+    %  \Jm_{ODE2} = \mp{-J_{pos,m0}}{\Sm(s_{el})} {\Null\tp}{\left[\lambda_0,\,\lambda_1,\,\lambda_2\right]\cdot\Sm^\prime(s_{el}) }
+    %\ee
+    if \texttt{activeConnector = False}, the algebraic equations are changed to:
+    \bea
+      \lambda_0 &=& 0,   \\
+      \ldots && ,   \\
+      \lambda_5 &=& 0,   \\
+      s &=& 0
+    \eea
+    %+++++++++++++++++++++++++++++++++++++++++++++
+    %for (classicalFormulation=False), see 2D case!
+    %+++++++++++++++++++++++++++++++++++++++++++++
+    In case that \texttt{constrainRotations=[0,0,0]}, the Lagrange multipliers for rotations are set
+    \be
+      \left[\lambda_3,\lambda_4,\lambda_5\right] = \Null
+    \ee
+    In case that any flag in \texttt{constrainRotations} is equal to 1, the constraints read 
+    for \texttt{constrainRotations[0] = 1}:
+    \be
+      \LURU{0}{\rv}{ANCF,y}{\mathrm{T}} \LU{0,m0}{\Rot} \vr{0}{0}{1} = 0
+    \ee
+    for \texttt{constrainRotations[1] = 1}:
+    \be
+      \LURU{0}{\rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \vr{0}{0}{1} = 0
+    \ee
+    for \texttt{constrainRotations[2] = 0}:
+    \be
+      \LURU{0}{\rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \vr{0}{1}{0} = 0
+    \ee
+
+    %\noindent The index 2 case follows straightforward to 
+    %\be
+    %  \LURU{0}{\dot \rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \vp{0}{1}  + 
+    %  \LURU{0}{\rv}{ANCF}{\prime\mathrm{T}} \LU{0,m0}{\Rot} \LU{0}{\tilde \tomega}_{m0} \vp{0}{1} = 0
+    %\ee
+    %again assuming, that $\LU{0}{\tilde \tomega}_{m0}$ is only a $2 \times 2$ matrix.
+    %+++++++++++++++++++++++++++++++++++++++++++++
+    \mysubsubsubsection{Post Newton Step}
+    After the Newton solver has converged, a PostNewtonStep is performed for the element, which
+    updates the marker $m1$ index if necessary.
+    \bea
+      s_{el} < 0 \quad \ra \quad x_{data0}\;-\!\!=1 \nonumber\\
+      s_{el} > L \quad \ra \quad x_{data0}\;+\!\!=1
+    \eea
+    Furthermore, it is checked, if $x_{data0}$ becomes smaller than zero, which raises a warning and keeps $x_{data0}=0$.
+    The same results if $x_{data0}\ge sn$, then $x_{data0} = sn$.
+    Finally, the data coordinate is updated in order to provide the starting value for the next step,
+    \be
+      x_{data1} \;+\!\!= s.
+    \ee
+    %the data coordinates are \be \qv_{Data} = [i_{marker} \;\; s_{0}]^T \ee in which $i_{marker}$ is the current local index to the slidingMarkerNumber list and  $s_{0}$ is the sliding coordinate (which is the total sliding length along all cable elements in the cableMarkerNumber list) at the beginning of the solution step.
+    %%RSTCOMPATIBLE
+/end
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
+#CObjectMarkerBodyPosition* automatically inserted!
+Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "constraints's unique name"
+V,      CP,     markerNumbers,                  ,               ,       ArrayMarkerIndex,"ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })", ,       I,      "$[m0,m1]\tp$marker m0: position or rigid body marker of mass point or rigid body; marker m1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)"
+V,      CP,     slidingMarkerNumbers,           ,               ,       ArrayMarkerIndex,"ArrayIndex()",        ,       I,      "$[m_{s0}, \ldots, m_{sn}]\tp$these markers are used to update marker m1, if the sliding position exceeds the current cable's range; the markers must be sorted such that marker $m_{si}$ at x=cable(i).length is equal to marker(i+1) at x=0 of cable(i+1)"
+V,      CP,     slidingMarkerOffsets,           ,               ,       Vector,"Vector()",                      ,       I,      "$[d_{s0}, \ldots, d_{sn}]$this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker m0: offset=0, marker m1: offset=Length(cable0), marker m2: offset=Length(cable0)+Length(cable1), ..."
+V,      CP,     nodeNumber,                     ,               ,       NodeIndex,      "EXUstd::InvalidIndex", ,       I,      "$n_{GD}$node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position"
+#V,      CP,     classicalFormulation,           ,               ,       Bool,       "true",                     ,       IO,     "True: uses a formulation with 3 (+1) equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; False: use local formulation, which only needs 2 (+1) equations and can be used with index 2 formulation"
+V,      CP,     constrainRotations,             ,               3,      ArrayIndex, "ArrayIndex({1,1,1})",      ,       IO,     "flags for constrained rotation about x, y and z-axis: if flag=1, add constraint on rotation of marker m0 relative to respective axis; flag=0: sliding body can rotate freely about this axis; for ANCFCable, rotation about x-axis cannot be constrained"
+V,      CP,     constrainTranslations,          ,               3,      ArrayIndex, "ArrayIndex({1,1,1})",      ,       IO,     "flags for constrained translation in x, y and z-direction: if flag=1, add constraint on translation of marker m0 relative to respective axis; flag=0: sliding body can translate freely about this axis; along x-axis this should be usually 0, except for driven motion"
+V,      CP,     axialForce,                     ,               ,       Real,       "0",                        ,       IO,     "$f_\mathrm{ax}$ONLY APPLIES if classicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions."
+V,      CP,     activeConnector,                ,               ,       Bool,       "true",                     ,       IO,     "flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint"
+#
+Fv,     C,      GetMarkerNumbers,               ,               ,       "const ArrayIndex&", "return parameters.markerNumbers;",,CI,     "default (read) function to return Marker numbers"
+Fv,     C,      GetMarkerNumbers,               ,               ,       "ArrayIndex&",       "return parameters.markerNumbers;",, I,     "default (write) function to return Marker numbers" 
+Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "CHECKandTHROW(localIndex == 0, __EXUDYN_invalid_local_node);\n        return parameters.nodeNumber;",       "Index localIndex",       CI,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      SetNodeNumber,                  ,               ,       void,       "parameters.nodeNumber=nodeNumber;",        "Index localIndex, Index nodeNumber",        I,     "Get global node number (with local node index); needed for every object ==> does local mapping" 
+Fv,     C,      GetNumberOfNodes,               ,               ,       Index,      "return 1;",                ,       CI,     "number of nodes; needed for every object" 
+Fv,     C,      GetDataVariablesSize,           ,               ,       Index,      "return 2;",                ,       CI,     "data variables: [0] showing the current (local) index in slidingMarkerNumber list --> providing the cable element active in sliding; coordinate [1] stores the previous sliding coordinate" 
+Fv,     M,      CheckPreAssembleConsistency,    ,               ,       Bool,       ,                           "const MainSystem& mainSystem, STDstring& errorString", CDI,     "Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail" 
+#
+Fv,     C,      IsPenaltyConnector,             ,               ,       Bool,       "return false;",            ,      CI,      "constraints uses Lagrance multiplier formulation" 
+#Fv,     C,      HasVelocityEquations,           ,               ,       Bool,       "return false;",            ,      CI,      "constraint also implements velocity level equations" 
+Fv,     C,      ComputeAlgebraicEquations,      ,               ,       void,       ,                           "Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel = false",          CDI,     "Computational function: compute algebraic equations and write residual into 'algebraicEquations'; velocityLevel: equation provided at velocity level" 
+Fv,     C,      ComputeJacobianAE,              ,               ,       void,       ,  "ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex", CDI, "compute derivative of algebraic equations w.r.t. \hac{ODE2}, \hac{ODE2t}, \hac{ODE1} and \hac{AE} coordinates in jacobian [flags ODE2_t_AE_function, AE_AE_function, etc. need to be set in GetAvailableJacobians()]; jacobianODE2[_t] has dimension GetAlgebraicEquationsSize() x GetODE2Size() ; q are the system coordinates; markerData provides according marker information to compute jacobians"
+Fv,     C,      GetAvailableJacobians,          ,               ,       JacobianType::Type, "return (JacobianType::Type)(JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function + JacobianType::AE_AE + JacobianType::AE_AE_function);",                    ,          CI, "return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags"
+Fv,     C,      HasDiscontinuousIteration,      ,               ,       Bool,       "return true;",           ,       CI,     "flag to be set for connectors, which use DiscontinuousIteration" 
+Fv,     C,      PostNewtonStep,                 ,               ,       Real,       ,"const MarkerDataStructure& markerDataCurrent, Index itemIndex, PostNewtonFlags::Type& flags, Real& recommendedStepSize",       DI,      "function called after Newton method; returns a residual error (force)" 
+Fv,     C,      PostDiscontinuousIterationStep, ,               ,       void,       ,                           ,       DI,     "function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)" 
+#
+#Fv,     C,      GetOutputVariableTypes,         ,               ,       OutputVariableType,,                    ,       CDI,    "Flags to determine, which output variables are available (displacment, velocity, stress, ...)" 
+Fv,     C,      GetOutputVariableConnector,     ,               ,       void,       ,                           "OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value",          DC, "provide according output variable in 'value'" 
+Fv,     C,      GetRequestedMarkerType,         ,               ,       Marker::Type, "return Marker::_None;", ,   CI,     "provide requested markerType for connector; for different markerTypes in marker0/1 => set to ::\_None" 
+Fv,     M,      GetRequestedNodeType,           ,               ,       Node::Type, "return Node::GenericData;", ,        CI,     "provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity()" 
+Fv,     C,      GetType,                        ,               ,       CObjectType,"return (CObjectType)((Index)CObjectType::Connector + (Index)CObjectType::Constraint);", , CI,    "return object type (for node treatment in computation)" 
+Fv,     C,      GetAlgebraicEquationsSize,      ,               ,       Index,      "return 4 + 3*HasRotationConstraints();", , CI, "one sliding coordinate, 3 translation, optional: 3 rotation constraints"
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'JointSliding';", ,   CI,     "Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?" 
+Fv,     C,      IsActive,                       ,               ,       Bool,       "return parameters.activeConnector;", , CI,    "return if connector is active-->speeds up computation" 
+#internal functions:
+F,      C,      HasRotationConstraints,         ,               ,       Bool,       "return !(parameters.constrainRotations==0);",                            ,      CI, "add 3 rotation constraints if any is non-zero" 
+F,      C,      ComputeLocalSlidingCoordinate,  ,               ,       Real,       ,                            ,      CDI, "compute the (local) sliding coordinate within the current cable element" 
+#VISUALIZATION:
+Fv,     V,      UpdateGraphics,                 ,               ,       void,        ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+Fv,     V,      IsConnector,                    ,               ,       Bool,   "return true;",                  ,       CI,    "this function is needed to distinguish connector objects from body objects"
+Vp,     V,      show,                           ,               ,       Bool,   "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
+V,      V,      drawSize,                       ,               ,       float,  "-1.f",                          ,       IO,    "drawing size = radius of revolute joint; size == -1.f means that default connector size is used"
+V,      V,      color,                          ,               ,       Float4,        "Float4({-1.f,-1.f,-1.f,-1.f})",, IO,    "RGBA connector color; if R==-1, use default color" 
+#file names automatically determined from class name
+writeFile = True
+
+
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = ObjectJointSliding2D
@@ -9041,13 +9281,6 @@ objectType = Joint
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 equations =
     \mysubsubsubsection{Definition of quantities}
-    %\startTable{input parameter}{symbol}{description}
-    %\rowTable{nodeNumber}{$n_{GD}$}{node number of generic data node}
-    %\rowTable{markerNumbers[0]}{$m0$}{position-marker of mass point or rigid body (needs to be rigid body marker if constrainRotation==True)}
-    %\rowTable{markerNumbers[1]}{$m1$}{marker to a Cable2D element, which is {\bf updated} in every PostNewtonStep; if the sliding body ($m0$) is in the range of all sliding cable elements, $m1$ contains the current marker number, which is active for the sliding joint}
-    %\rowTable{slidingMarkerNumbers}{$[m_{s0}, \ldots, m_{sn}]\tp$}{a list of $sn$ (global) marker numbers which are are used to update marker1}
-    %\rowTable{slidingMarkerOffsets}{$[d_{s0}, \ldots, d_{sn}]$}{a list of $sn$ scalar offsets, which represent the (reference arc) length of all previous sliding cable elements}
-    %\finishTable
     %
     \startTable{intermediate variables}{symbol}{description}
     \rowTable{data node}{$\xv=[x_{data0},\,x_{data1}]\tp$}{coordinates of node with node number $n_{GD}$}
@@ -9099,9 +9332,9 @@ equations =
     The 2D sliding joint is implemented having 3 equations (4 if constrainRotation==True, see below), using the special algebraic coordinates $\zv$.
     The algebraic equations read
     \bea
-      \LU{0}{\Delta\pv} &=& \Null, \quad \mbox{... two index 3 eqs, ensure sliding body stays at cable}\\
-      \left[\lambda_0,\lambda_1\right] \cdot  \LURU{0}{\rv}{ANCF}{\prime} - |\LURU{0}{\rv}{ANCF}{\prime}| \cdot f_\mathrm{ax} &=& 0, \quad \mbox{... one index 1 equ., 
-                                               ensure force in sliding dir.~= 0}  \\
+      \LU{0}{\Delta\pv} &=& \Null, \quad \mbox{... two index 3 eqs $\ra$ sliding body stays on cable}\\
+      \left[\lambda_0,\lambda_1\right] \cdot  \LURU{0}{\rv}{ANCF}{\prime} - |\LURU{0}{\rv}{ANCF}{\prime}| \cdot f_\mathrm{ax} &=& 0, \quad \mbox{... one index 1 equ. 
+                                               $\ra$ force in sliding dir.=$f_\mathrm{ax}$}  \\
     \eea
     No index 2 case exists, because no time derivative exists for $s_{el}$. The jacobian matrices for algebraic and \hac{ODE2} coordinates read
     \be
@@ -9122,15 +9355,15 @@ equations =
     The 2D sliding joint is implemented having 3 equations (first equation is dummy and could be eliminated; 4 equations if constrainRotation==True, see below), using the special algebraic coordinates $\zv$. 
     The algebraic equations read
     \bea
-      \lambda_0 &=& 0, \quad \mbox{... equation not necessary, but can be used for switching to other modes}  \\
-      \LU{0}{\Delta\pv\tp} \LU{0}{\nv} &=& 0, \quad \mbox{... equation ensures that sliding body stays at cable centerline; index3}\\
-      \LU{0}{\Delta\pv\tp} \LURU{0}{\rv}{ANCF}{\prime} &=& 0. \quad \mbox{... resolves the sliding coordinate $s$; index1 equation!}
+      \lambda_0 &=& 0, \quad \mbox{... eq.~not necessary, but can be used for switching to other modes}  \\
+      \LU{0}{\Delta\pv\tp} \LU{0}{\nv} &=& 0, \quad \mbox{... eq.~ensures that sliding body stays at cable centerline; index3}\\
+      \LU{0}{\Delta\pv\tp} \LURU{0}{\rv}{ANCF}{\prime} &=& 0. \quad \mbox{... resolves the sliding coordinate $s$; index1 eq.!}
     \eea
     In the index 2 case, the second equation reads
     \be
-      \LU{0}{\Delta\vv\tp} \LU{0}{\nv}  + \LU{0}{\Delta\pv\tp} \LU{0}{\dot\nv}  = 0
+      \LU{0}{\Delta\vv\tp} \LU{0}{\nv}  + \LU{0}{\Delta\pv\tp} \LU{0}{\dot\nv}  = 0 \eqDot
     \ee
-    if \texttt{activeConnector = False}, the algebraic equations are changed to:
+    If \texttt{activeConnector = False}, the algebraic equations are changed to:
     \bea
       \lambda_0 &=& 0,   \\
       \lambda_1 &=& 0,   \\
@@ -9616,7 +9849,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = MarkerNodeCoordinate
-classDescription = "A node-Marker attached to a \hac{ODE2} coordinate of a node; this marker allows to connect a coordinate-based constraint or connector to a nodal coordinate (also NodeGround); for \hac{ODE1} coordinates use MarkerNodeODE1Coordinate."
+classDescription = "A node-Marker attached to a \hac{ODE2} coordinate of a node; this marker allows to connect a coordinate-based constraint or connector to a nodal coordinate (also NodeGround); for \hac{ODE1} coordinates use \texttt{MarkerNodeODE1Coordinate}."
 cParentClass = CMarker
 mainParentClass = MainMarker
 visuParentClass = VisualizationMarker
@@ -9647,7 +9880,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = MarkerNodeCoordinates
-classDescription = "A node-Marker attached to all \hac{ODE2} coordinates of a node; IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! for \hac{ODE1} coordinates use MarkerNodeODE1Coordinates (under development)."
+classDescription = "A node-Marker attached to all \hac{ODE2} coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! For \hac{ODE1} coordinates use \texttt{MarkerNodeODE1Coordinates}."
 cParentClass = CMarker
 mainParentClass = MainMarker
 visuParentClass = VisualizationMarker
@@ -9733,7 +9966,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = MarkerBodiesRelativeTranslationCoordinate
-classDescription = "A coordinate-based Marker attached to two rigid bodies or beams which computes the relative translation between the bodies according to the given axis; this marker can be used together with coordinate-based constraints and connectors (e.g., CoordinateSpringDamper and CoordinateConstraint). Note that it is assumed that the two bodies can only move along the given axis (e.g., constrained by a prismatic joint) -- otherwise results may be unexpected. Note that this approach is not compatible with FFRF-based flexible bodies and currently requires and intermediate rigid body."
+classDescription = "A coordinate-based Marker attached to two rigid bodies or beams which computes the relative translation between the bodies according to the given axis. This marker can be used together with coordinate-based constraints and connectors (e.g., CoordinateSpringDamper and CoordinateConstraint). NOTE: it is assumed that the two bodies can only move along the given axis (e.g., constrained by a prismatic joint) -- otherwise results may be unexpected. NOTE: this approach is not compatible with FFRF-based flexible bodies and currently requires and intermediate rigid body."
 cParentClass = CMarker
 mainParentClass = MainMarker
 visuParentClass = VisualizationMarker
@@ -9791,7 +10024,7 @@ writeFile = True
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = MarkerBodiesRelativeRotationCoordinate
-classDescription = "A coordinate-based Marker attached to two rigid bodies or beams which computes the relative rotation between the bodies according to the given axis; this marker can be used together with coordinate-based constraints and connectors (e.g., CoordinateSpringDamper and CoordinateConstraint). Note that it is assumed that the two bodies can only rotate about the given axis (e.g., constrained by a revolute joint) -- otherwise results may be unexpected. Note that this approach is not compatible with FFRF-based flexible bodies and currently requires and intermediate rigid body."
+classDescription = "A coordinate-based Marker attached to two rigid bodies or beams which computes the relative rotation between the bodies according to the given axis; this marker can be used together with coordinate-based constraints and connectors (e.g., CoordinateSpringDamper and CoordinateConstraint). NOTE: it is assumed that the two bodies can only rotate about the given axis (e.g., constrained by a revolute joint) -- otherwise results may be unexpected. NOTE: this approach is not compatible with FFRF-based flexible bodies and currently requires and intermediate rigid body."
 cParentClass = CMarker
 mainParentClass = MainMarker
 visuParentClass = VisualizationMarker
@@ -10394,6 +10627,7 @@ Fv,     V,      UpdateGraphics,                 ,               ,       void,   
 #file names automatically determined from class name
 writeFile = True
 
+
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = MarkerBodyCable2DCoordinates
 classDescription = "A special Marker attached to the coordinates of a 2D ANCF beam finite element with cubic interpolation."
@@ -10422,37 +10656,35 @@ Fv,     V,      UpdateGraphics,                 ,               ,       void,   
 #file names automatically determined from class name
 writeFile = True
 
-##%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#class = MarkerBodySlidingPosition
-#classDescription = "A position marker attached to a sliding (along local x-coordinate) local position (x,y,z) of the body; ADDITIONALLY, a GenericNodeODE2 provides the sliding coordinate, which is the sliding position; needs to be attached to a body, which provides a SlopeVector()."
-#cParentClass = CMarker
-#mainParentClass = MainMarker
-#visuParentClass = VisualizationMarker
-#classType = Marker
-##V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
-##CObjectMarkerBodyPosition* automatically inserted!
-#Vp,     M,      name,                           ,               ,       String,     "",                       ,       I,      "marker's unique name"
-#V,      CP,     bodyNumber,                     ,               ,       Index,      "EXUstd::InvalidIndex",       ,       I,      "Current sliding body number (e.g. beam)to which marker is CURRENTLY attached to (needs to be initialized accordingly)"
-#V,      CP,     localPosition,                  ,               3,      Vector3D,   "Vector3D({0.,0.,0.})",     ,       I,      "local body position of marker; e.g. local (body-fixed) position where force is applied to"
-#V,      CP,     bodyFixed,                      ,               ,       Bool,       "false",                    ,       IO,      "if bodyFixed is true, the force/sensor is using body-fixed coordinates (orientation); otherwise, it uses global coordinates"
-#V,      CP,     nodeNumber,                     ,               ,       Index,      "EXUstd::InvalidIndex",       ,       I,      "node number which contains sliding coordinate"
-#V,      CP,     cableNumbers,                   ,               ,       ArrayIndex, "ArrayIndex()",             ,       I,      "a list of Cable2D beam elements; the cable elements must be in a sequence, such that at beam(i),x=L the beam(i+1),x=0 needs to start"
-##
-#Fv,     C,      GetObjectNumber,                ,               ,       Index,      "return parameters.bodyNumber;", ,  CI,     "general access to object number" 
-#Fv,     C,      SetObjectNumber,                ,               ,       void,       "parameters.bodyNumber = bodyNumber;", "Index bodyNumber",  I,     "change bodyNumber"
-#Fv,     C,      GetNodeNumber,                  ,               ,       Index,      "return parameters.nodeNumber;", ,  CI,     "general access to node number" 
-#Fv,     C,      GetType,                        ,               ,       "Marker::Type", "return (Marker::Type)(Marker::Body + Marker::Object + Marker::Node + Marker::Position);", ,       CI,     "return marker type (for node treatment in computation)" 
-#Fv,     C,      GetDimension,                   ,               ,       Index,      "return 3;",                ,       CI,     "return dimension of connector, which an attached connector would have" 
-#Fv,     C,      GetPosition,                    ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& position, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return position of sliding point (body-marker)" 
-#Fv,     C,      GetVelocity,                    ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return velocity of sliding point (body-marker)" 
-##Fv,     C,      GetPositionJacobian,            ,               ,       void,       ,                           "const CSystemData& cSystemData, Matrix& jacobian", CDI,     "return current position Jacobian of marker" 
-#Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,  "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian) for a marker" 
-#Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'BodyPosition';",   ,       CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
-##VISUALIZATION:
-#Vp,     V,      show,                           ,               ,       Bool,       "true",                          ,       IO,      "set true, if item is shown in visualization and false if it is not shown"
-#Fv,     V,      UpdateGraphics,                 ,               ,       void,       ";",                        "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
-##file names automatically determined from class name
-#writeFile = True
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = MarkerBodyBeamShape
+classDescription = "A special Marker attached to a 3D beam finite element which provides at least position and tangent to the beam axis."
+cParentClass = CMarker
+mainParentClass = MainMarker
+visuParentClass = VisualizationMarker
+classType = Marker
+#V|F,   Dest,   pythonName,                   cplusplusName,     size,   type,       (default)Value,             Args,   cFlags, parameterDescription
+#CObjectMarkerBodyPosition* automatically inserted!
+Vp,     M,      name,                           ,               ,       String,     "",                         ,       I,      "marker's unique name"
+V,      CP,     bodyNumber,                     ,               ,       ObjectIndex,"EXUstd::InvalidIndex",     ,       I,      "body number to which marker is attached to (beam type)"
+#
+Fv,     C,      GetObjectNumber,                ,               ,       Index,      "return parameters.bodyNumber;", "Index localIndex = 0",  CI,     "general access to object number" 
+Fv,     C,      SetObjectNumber,                ,               ,       void,       "parameters.bodyNumber = bodyNumber;", "Index bodyNumber, Index localIndex = 0",  I,     "change bodyNumber"
+Fv,     C,      GetNumberOfObjects,             ,               ,       Index,      "return 1;",                ,       CI,     "general access to local object number" 
+Fv,     C,      GetType,                        ,               ,       "Marker::Type", "return (Marker::Type)(Marker::Body + Marker::Object + Marker::Beam3DShape + Marker::JacobianDerivativeAvailable);", ,       CI,     "return marker type" 
+Fv,     C,      GetDimension,                   ,               ,       Index,      "return 3;",                "const CSystemData& cSystemData", CI,   "return dimension of connector, which an attached connector would have; for coordinate markers, it gives the number of coordinates used by the marker"
+Fv,     C,      GetPosition,                    ,               ,       void,       ,                           "const CSystemData& cSystemData, Vector3D& position, ConfigurationType configuration = ConfigurationType::Current", CDI,   "return position of marker -> axis-midpoint of beam element; mostly for drawing" 
+Fv,     C,      ComputeMarkerData,              ,               ,       void,       ,  "const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData", CDI,     "Compute marker data (e.g. position and positionJacobian, etc.) for a marker" 
+Fv,     C,      ComputeMarkerDataJacobianDerivative, ,          ,       void,       ,  "const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData", CDI,     "fill in according data for derivative of jacobian times vector v6D, e.g.: d(Jpos.T @ v6D[0:3])/dq; v6D represents 3 force components and 3 torque components in global coordinates!" 
+Fv,     M,      GetTypeName,                    ,               ,       const char*,"return 'BodyBeamShape';",,         CI,     "Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?" 
+#special
+Fs,     C,      ComputeSlidingJointData,        ,               ,       void,       ,                           "Real xBeam, Real lBeam, const ResizableVector& totalCoordinates, const ResizableVector& totalCoordinates_t, Vector3D& position, Vector3D& slopeVector, Vector3D& slopeVector_x, bool& beamHasTorsion, ConfigurationType configuration=ConfigurationType::Current",       DI,     "Compute all data for sliding joint computations" 
+#VISUALIZATION:
+Vp,     V,      show,                           ,               ,       Bool,  "true",                          ,       IO,     "set true, if item is shown in visualization and false if it is not shown"
+Fv,     V,      UpdateGraphics,                 ,               ,       void,        ,                          "const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber", DI,  "Update visualizationSystem -> graphicsData for item; index shows item Number in CData" 
+#file names automatically determined from class name
+writeFile = True
+
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

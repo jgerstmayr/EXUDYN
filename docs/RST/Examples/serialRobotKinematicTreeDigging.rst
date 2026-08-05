@@ -440,22 +440,22 @@ You can view and download this file on Github: `serialRobotKinematicTreeDigging.
    
    simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
    SC.visualizationSettings.general.autoFitScene=False
-   SC.visualizationSettings.window.renderWindowSize=[1920,1200]
+   SC.visualizationSettings.view0.window.renderWindowSize=[1920,1200]
    #SC.visualizationSettings.general.circleTiling = 100
-   SC.visualizationSettings.general.textSize = 14
+   SC.visualizationSettings.view0.window.globalFontSize = 14
    SC.visualizationSettings.general.showSolutionInformation = False
    SC.visualizationSettings.general.showSolverInformation = False
    SC.visualizationSettings.general.graphicsUpdateInterval = 4#0.05
    SC.visualizationSettings.bodies.kinematicTree.showJointFrames=False
-   SC.visualizationSettings.general.drawCoordinateSystem=False
-   SC.visualizationSettings.general.drawWorldBasis=False
+   SC.visualizationSettings.view0.scene.drawCoordinateSystem=False
+   SC.visualizationSettings.view0.scene.drawWorldBasis=False
    
    SC.visualizationSettings.nodes.drawNodesAsPoint = False
    SC.visualizationSettings.nodes.show = True
    SC.visualizationSettings.markers.show = False
    SC.visualizationSettings.nodes.defaultSize = 0 #must not be -1, otherwise uses autocomputed size
    SC.visualizationSettings.nodes.tiling = 8
-   SC.visualizationSettings.openGL.shadow = 0.4
+   SC.visualizationSettings.openGL.light0.shadow = 0.4
    # SC.visualizationSettings.contact.showSearchTree = 1
    # SC.visualizationSettings.contact.showSearchTreeCells = 1
    

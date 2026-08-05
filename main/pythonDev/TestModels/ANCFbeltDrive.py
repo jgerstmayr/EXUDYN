@@ -303,7 +303,7 @@ simulationSettings.staticSolver.discontinuous.iterationTolerance = 1
 simulationSettings.staticSolver.stabilizerODE2term = 2 #may only act on position degrees of freedom
 #+++++++++++++++++++++++++++++++++++++++++++++
 
-SC.visualizationSettings.general.drawWorldBasis=True
+SC.visualizationSettings.view0.scene.drawWorldBasis=True
 SC.visualizationSettings.nodes.show = True
 SC.visualizationSettings.nodes.defaultSize = h*20
 SC.visualizationSettings.loads.show = False

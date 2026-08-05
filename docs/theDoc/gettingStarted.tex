@@ -319,15 +319,10 @@ For Windows the installation commands may read (version number 1.0.20 may be dif
 Note that there are a couple of pre-requisites, depending on your system and installed libraries. For Windows 10, the following steps proved to work:
 \bi
   \item you need an appropriate compiler (tested with Microsoft Visual Studio; recommended: VS2017)
-  \item install your Anaconda distribution including Spyder
+  \item install your Anaconda distribution including Spyder or use VisualStudioCode; you can also use a miniconda (only numpy is really required and distribution tools)
   \item close all Python programs (e.g. Spyder, Jupyter, ...) 
-  \item run an Anaconda prompt (may need to be run as administrator)
-  \item if you cannot run Anaconda prompt directly, do:
-  \bi
-    \item open windows shell (cmd.exe) as administrator (START $\ra$ search for cmd.exe $\ra$ right click on app $\ra$ 'run as administrator' if necessary) [may not be necessary]
-    \item go to your Scripts folder inside the Anaconda folder (e.g. \texttt{C:$\backslash$ProgramData$\backslash$Anaconda$\backslash$Scripts}) [may not be necessary]
-    \item run 'activate.bat' [may not be necessary]
-  \ei
+  \item run an Anaconda prompt (may need to be run as administrator, depends on installation)
+  \item it is recommended to use conda environments!
   \item go to 'main' of your cloned github folder of \codeName 
   \item run:\footnote{Since version 1.7.116 a PEP518 compatible build is available. This should work with Windows, MacOS and linux. The \texttt{setupPyConfig.json} file includes some flags such as the parallel compilation, GLFW, etc.; the \texttt{-v} flag adds verbosity.} \texttt{pip wheel . -v -w dist --no-deps}
   \item Before version 1.7.116: run:\footnote{the \texttt{--parallel} option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x} \texttt{python setup.py install --parallel}
@@ -468,6 +463,7 @@ Congratulation! \mybold{Now, run a test example} (will also open an OpenGL windo
   \item[] \texttt{sudo pip3 install wheel}
   \item[] \texttt{sudo python3 setup.py bdist\_wheel --parallel}
 \ei
+Note that the build mechanisms used for \codeName, e.g., on GitHub or when building internal wheels use docker in order to build highly compatible multilinux wheels.
 
 \noindent Since version 1.7.116, the PEP518 compatible way which puts wheels into the \texttt{dist} folder reads:
 \bi
@@ -487,7 +483,7 @@ Congratulation! \mybold{Now, run a test example} (will also open an OpenGL windo
 \bi
   \item Exudyn also compiles under RaspberryPi 4b, Ubuntu Mate 20.04, Python 3.8; current version should compile out of the box using \texttt{python3 setup.py install} command.
   \item Performance is quite ok and it is even capable to use all cores (but you should add a fan!)
-  \item $\ra$ this could lead to a nice cluster project!
+  \item $\ra$ this could be used for a nice realtime application!
 \ei
 
 \noindent \mybold{KNOWN issues for linux builds}:
@@ -787,7 +783,7 @@ to explicitly load the version without AVX2.
 \item WSL/Ubuntu: render window crashes after left or right mouse click:
 \bi
 \item[$\ra$] This happens, in some (all?) Linux installations during mouse selection
-\item[$\ra$] workaround: setting \texttt{SC.visualizationSettings.interactive.selectionLeftMouse = False} and \texttt{SC.visualizationSettings.interactive.selectionRightMouse = False} removes the option to select with mouse, but avoids crashes
+\item[$\ra$] workaround: setting \texttt{SC.visualizationSettings.interactive.advanced.selectionLeftMouse = False} and \texttt{SC.visualizationSettings.interactive.advanced.selectionRightMouse = False} removes the option to select with mouse, but avoids crashes
 \ei
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \item \texttt{SolveDynamic} or \texttt{SolveStatic} \mybold{terminated due to errors}:
@@ -987,7 +983,7 @@ which draws the according object in red and others gray/transparent (but sometim
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \item Why can't I get the focus of the simulation window on startup (render window hidden)?
 \bi
-\item[$\ra$] Starting \codeName out of Spyder might not bring the simulation window to front, because of specific settings in Spyder(version 3.2.8), e.g., Tools$\ra$Preferences$\ra$Editor$\ra$Advanced settings: uncheck 'Maintain focus in the Editor after running cells or selections'; Alternatively, set \texttt{SC.visualizationSettings.window.alwaysOnTop=True} \mybold{before} starting the renderer with \texttt{SC.renderer.Start()}
+\item[$\ra$] Starting \codeName out of Spyder might not bring the simulation window to front, because of specific settings in Spyder(version 3.2.8), e.g., Tools$\ra$Preferences$\ra$Editor$\ra$Advanced settings: uncheck 'Maintain focus in the Editor after running cells or selections'; Alternatively, set \texttt{SC.visualizationSettings.view0.window.alwaysOnTop=True} \mybold{before} starting the renderer with \texttt{SC.renderer.Start()}
 \ei
 %
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

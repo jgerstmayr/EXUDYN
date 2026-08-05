@@ -240,7 +240,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8
 simulationSettings.displayComputationTime = True
 
 #create animation:
-SC.visualizationSettings.window.renderWindowSize=[1920,1080]
+SC.visualizationSettings.view0.window.renderWindowSize=[1920,1080]
 SC.visualizationSettings.openGL.multiSampling = 4
 
 if useGraphics:

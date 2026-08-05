@@ -54,7 +54,6 @@ We define a set of beam parameters, discretization and geometry for both beam mo
 
 
 
-Build geometrically exact 2D beam template (Timoshenko-Reissner), which includes all parameters
 In order to create beams, we usually need to create 2D rigid body nodes, 
 create beam elements, add constraints and loads.
 

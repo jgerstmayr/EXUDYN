@@ -76,14 +76,17 @@ class InvoluteGear:
     #  dedendumFactor: factor for dedendum (depth below the pitch circle)
     #  addendumFactor: factor for addendum (height above the pitch circle)
     #  isInternalGear: set flag True for internal gear
+    #  tolerance: points closer than this distance are removed; this avoids problems with meshing later on
     def __init__(self, module=1, nTeeth=12, pressureAngleDeg=20, fillet=0, backlash=0,
                  maxSteps=100, arcStepSize=0.1, reductionToleranceDeg=0, 
-                 dedendumFactor=1.157, addendumFactor=1.0, isInternalGear=False):
+                 dedendumFactor=1.157, addendumFactor=1.0, isInternalGear=False,
+                 tolerance = 1e-6):
         self.module = module
         self.nTeeth = nTeeth
         self.pressureAngle = radians(pressureAngleDeg)
         self.reductionTolerance = radians(reductionToleranceDeg)
         self.isInternalGear = isInternalGear
+        self.tolerance = tolerance
 
         # Addendum and dedendum
         self.addendum = addendumFactor * module
@@ -131,32 +134,6 @@ class InvoluteGear:
     def CartesianToPolar(self, cartesianCoordinates):
         x, y = cartesianCoordinates
         return np.array([sqrt(x * x + y * y), atan2(y, x)])
-
-    # #classFunction: reduce points from polyline (size n) which deviate less than a certain angle tolerance
-    # #input:
-    # #  polyline: A numpy array of shape (2, n) representing the polyline
-    # #output: A reduced numpy array of shape (2, m), m being the reduced number of points
-    # def ReducePolyline(self, polyline):
-    #     vertices = [[], []]
-    #     lastVertex = [polyline[0][0], polyline[1][0]]
-
-    #     for vertexIndex in range(1, len(polyline[0]) - 1):
-    #         nextSlope = atan2(polyline[1][vertexIndex + 1] - polyline[1][vertexIndex],
-    #                            polyline[0][vertexIndex + 1] - polyline[0][vertexIndex])
-    #         prevSlope = atan2(polyline[1][vertexIndex] - lastVertex[1],
-    #                            polyline[0][vertexIndex] - lastVertex[0])
-
-    #         deviationAngle = abs(prevSlope - nextSlope)
-
-    #         if deviationAngle > self.reductionTolerance:
-    #             vertices[0].append(polyline[0][vertexIndex])
-    #             vertices[1].append(polyline[1][vertexIndex])
-    #             lastVertex = [polyline[0][vertexIndex], polyline[1][vertexIndex]]
-
-    #     return np.array([
-    #         np.concatenate([[polyline[0][0]], vertices[0], [polyline[0][-1]]]),
-    #         np.concatenate([[polyline[1][0]], vertices[1], [polyline[1][-1]]])
-    #     ])
 
     #**classFunction: generate half of an involute tooth profile; later on mirrored for full tooth
     #**output: numpy array of shape (2, n) representing the half-tooth profile
@@ -244,7 +221,16 @@ class InvoluteGear:
         toothAndGap = self.GenerateToothAndGap()
         teeth = [self.RotationMatrix2D(self.angleToothAndGap * n) @ toothAndGap for n in range(self.nTeeth)]
         gear = np.concatenate(teeth, axis=1)
-        return gear.T
+        gear = gear.T
+        
+        gearFixed = []
+        pLast = gear[0,:]
+        for p in gear[1:]:
+            if np.linalg.norm(p-pLast) >= self.tolerance:
+                gearFixed.append(p)
+                pLast = p
+        
+        return np.array(gearFixed)
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -332,9 +318,7 @@ def GetBallBearingData(axis, outsideDiameter, boreDiameter, width, nBalls,
             'outerEdgeChamfer':outerEdgeChamfer,
             #additional data:
             'innerGrooveTorusRadius':innerGrooveTorusRadius,
-            'innerGrooveRadius':innerGrooveRadius,
             'outerGrooveTorusRadius':outerGrooveTorusRadius,
-            'outerGrooveRadius':outerGrooveRadius,
             'ballPositions':ballPositions
             }
     
@@ -362,6 +346,7 @@ def GetBallBearingData(axis, outsideDiameter, boreDiameter, width, nBalls,
 #  nTilesBalls: tiling of spheres for balls
 #  colorBalls: balls RGBA color
 #  addBallsBasis: if True, basis vectors are added to drawing of balls, to see rotation
+#  ballsDrawRadiusFactor: a factor for drawing balls smaller to avoid drawing artifacts between rings and balls; ideally should be 1
 #**output: returns dictionary with newly created items: objectsBalls, objectCage, innerRingBallContacts, outerRingBallContacts, objectsCageBallContact
 def CreateBallBearing(mbs, bearingData, markerInnerRing, markerOuterRing, densityBalls, densityCage,
                       cageInitialAngularVelocity=[0,0,0], ballsInitialAngularVelocity=[0,0,0],
@@ -370,7 +355,7 @@ def CreateBallBearing(mbs, bearingData, markerInnerRing, markerOuterRing, densit
                       contactParametersRingBalls={'contactStiffness':2e6,'contactDamping':2e2,'dynamicFriction':0.2,'contactStiffnessExponent':1},
                       nTilesRings=32, nTilesGrooves=12, colorCage=[0.6,0.57,0.4,0.4], 
                       colorInnerRing=[0.5,0.5,0.5,1], colorOuterRing=[0.5,0.5,0.5,1],
-                      nTilesBalls=32, colorBalls=[0.6,0.6,0.65,1], addBallsBasis=False,
+                      nTilesBalls=32, colorBalls=[0.6,0.6,0.65,1], addBallsBasis=False, ballsDrawRadiusFactor=1
                       ):
     
     import exudyn.graphics as graphics
@@ -401,8 +386,8 @@ def CreateBallBearing(mbs, bearingData, markerInnerRing, markerOuterRing, densit
                                     initialAngularVelocity=ballsInitialAngularVelocity, # omegaBalls * globalBearingAxis, 
                                     inertia=InertiaSphere(density=densityBalls, radius=radiusBalls),
                                     gravity = gravity,
-                                    graphicsDataList=[graphics.Sphere(radius=radiusBalls,color=colorBalls, nTiles=nTilesBalls),
-                                                      graphics.Basis(length=radiusBalls*1.3)],
+                                    graphicsDataList=[graphics.Sphere(radius=radiusBalls*ballsDrawRadiusFactor,color=colorBalls, nTiles=nTilesBalls)]+
+                                                      addBallsBasis*[graphics.Basis(length=radiusBalls*1.3)],
                                     )
         objectsBalls.append(oBall)
 
@@ -416,12 +401,14 @@ def CreateBallBearing(mbs, bearingData, markerInnerRing, markerOuterRing, densit
 
     inertiaCage = inertiaCage.Rotated(bearingLocalRot) #not this is accordint to the local bearing axis!
     
+    cageGraphicsList = [bearingGraphics['cageGraphics']] if 'cageGraphics' in bearingGraphics else []
+    
     objectCage = mbs.CreateRigidBody(referencePosition=bearingCenterPos,
                                      referenceRotationMatrix=bearingRot,
                                      inertia=inertiaCage,
                                      initialAngularVelocity=cageInitialAngularVelocity,
                                      gravity = gravity,
-                                     graphicsDataList=[bearingGraphics['cageGraphics']])
+                                     graphicsDataList=cageGraphicsList)
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++
     #contact / spring-dampers for cage-balls interaction

@@ -89,9 +89,9 @@ simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.95 #SHOULD work with 0.9 as well
 
 SC.visualizationSettings.general.autoFitScene=False
-SC.visualizationSettings.window.renderWindowSize = [1600,1200]
-SC.visualizationSettings.general.drawCoordinateSystem=True
-SC.visualizationSettings.general.drawWorldBasis=True
+SC.visualizationSettings.view0.window.renderWindowSize = [1600,1200]
+SC.visualizationSettings.view0.scene.drawCoordinateSystem=True
+SC.visualizationSettings.view0.scene.drawWorldBasis=True
 SC.visualizationSettings.openGL.multiSampling=4
 SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = 0.5

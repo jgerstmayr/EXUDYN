@@ -15,11 +15,7 @@
 *
 ************************************************************************************************ */
 
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h" //includes stdoutput.h
-#include "Utilities/BasicFunctions.h"	//includes stdoutput.h
-#include "Linalg/BasicLinalg.h"		//includes Vector.h
-
+#include "Linalg/RigidBodyMath.h"
 #include "Graphics/VisualizationSystemContainer.h"
 #include "Graphics/VisualizationPrimitives.h"
 
@@ -440,6 +436,7 @@ namespace EXUvis {
 			graphicsData.AddLine(pMid + rot * Vector3D({ x0,y0,0. }), pMid + rot * Vector3D({ x1,y1,0. }), color, color, itemID);
 		}
 	}
+
 
 	//! add a cylinder to graphicsData with reference point (pAxis0), axis vector (vAxis) and radius using triangle representation
 	//! angleRange is used to draw only part of the cylinder; 
@@ -946,9 +943,9 @@ namespace EXUvis {
 		{
 			Vector3D pPrevious[3]; //end points of previous segment
 			Vector3D pAct[3];
-			for (Index i = 0; i <= nTiles; i++)
+			for (Index i = 0; i <= 2*nTiles; i++)
 			{
-				Real phi = (Real)i / (Real)nTiles * 2. * EXUstd::pi;
+				Real phi = (Real)i / (Real)nTiles * EXUstd::pi;
 				Real x = radius * sin(phi);
 				Real y = radius * cos(phi);
 

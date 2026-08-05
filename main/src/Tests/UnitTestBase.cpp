@@ -129,7 +129,7 @@ Index RunUnitTests(bool reportOnPass=false, bool printOutput=true)
 	//pout << v1 - v2 << "\n";
 	//pout << v1 * v2 << "\n";
 
-	//std::thread th(GlfwRenderer::SetupRenderer);
+	//std::thread th(GlfwRenderer::StartRenderer);
 
 
 	//++++++++++++++++++++++++++++++++++++++++++++

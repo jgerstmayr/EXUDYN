@@ -16,7 +16,7 @@
 #size = leave empty if size is variable; e.g. 3 (size of vector), 2x3 (2 rows, 3 columns)  %used for vectors and matrices only!
 #type = Bool, Int, Real, UInt, UReal (unsigned Real), PInt (Int > 0), PReal (Real > 0), Vector, Matrix, VectorFloat, MatrixFloat, SymmetricMatrix
 #defaultValue = default value or string (use "" to clearly identify strings incl. spaces); for 'V'-types: default initialization; vor 'F' and 'F'-types: C++ code of function;
-#cFlags = A...add access functions (e.g. const Real&/Real&), D...no dictionary with type info, S...substructure (e.g. Newton), V... return value policy copy, O...move return policy, G... add args for pybind, R(read only), M(modifiableDuringSimulation), C...const function, D...definition only (implementation in separate file), P ... write Pybind11 interface [default is read/write access and that changes are immediately applied and need no reset of the system]
+#cFlags = A...add access functions (e.g. const Real&/Real&), D...no dictionary with type info, S...substructure (e.g. Newton), V... return value policy copy, O...move return policy, G... add args for pybind, R(read only), M(modifiableDuringSimulation), C...const function, D...definition only (implementation in separate file), P... write Pybind11 interface [default is read/write access and that changes are immediately applied and need no reset of the system], X... deprecated (description contains "link" to relocated value)
 #parameterDescription = description for parameter used in C++ code
 
 # classDescription = "parameters for CSystem"
@@ -119,7 +119,7 @@ V,  sensorsStoreAndWriteFiles,          ,       , bool,                     true
 V,  solutionInformation,                ,       , String,                   "",         ,       P   , "special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in \refSection{sec:utf8}, but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)"
 V,  solverInformationFileName,          ,       , FileName,                 "solverInformation.txt",,P, "filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only"
 #
-V,  recordImagesInterval,               ,       , Real,                     -1.,        ,       P   , "record frames (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages"
+V,  recordImagesInterval,               ,       , Real,                     -1.,        ,       P   , "record frames of the main view in the renderer (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages; note that only the main view (0) can be saved in this way, while for multiple views, you have to aquire data via renderer.RedrawAndGetImage()"
 #
 #
 #
@@ -196,9 +196,10 @@ V,  useIndex2Constraints,               ,       , bool,                     fals
 V,  useNewmark,                         ,       , bool,                     false,      ,       P   , "if true, use Newmark method with beta and gamma instead of generalized-Alpha"
 V,  spectralRadius,                     ,       , UReal,                    0.9,        ,       P   , "spectral radius for Generalized-alpha solver; set this value to 1 for no damping or to 0 < spectralRadius < 1 for damping of high-frequency dynamics; for position-level constraints (index 3), spectralRadius must be < 1"
 V,  computeInitialAccelerations,        ,       , bool,                     true,       ,       P   , "True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations"
+V,  storeInitialAlgebraicCoordinates,   ,       , bool,                     true,       ,       P   , "True: IF computeInitialAccelerations=True, store initial algebraic coordinates (usually the Lagrange multipliers) in the initial coordinates vector (and thus in the first line of the coordinates solution file); for further details on limitations, see computeInitialAccelerations"
 V,  resetAccelerations,                 ,       , bool,                     false,      ,       P   , "this flag only affects if computeInitialAccelerations=False: if resetAccelerations=True, accelerations are set zero in the solver function InitializeSolverInitialConditions; this may be unwanted in case of repeatedly called SolveSteps() and in cases where solutions shall be prolonged from previous computations"
 V,  lieGroupAddTangentOperator,         ,       , bool,                     true,       ,       P   , "True: for Lie group nodes, in case that lieGroupSimplifiedKinematicRelations=True, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)"
-V,  lieGroupSimplifiedKinematicRelations, ,     , bool,                     false,      ,       P   , "True: for Lie group nodes, the integrator uses the original kinematic relations of the Bruls and Cardona 2010 paper"
+V,  lieGroupSimplifiedKinematicRelations, ,     , bool,                     false,      ,       P   , "True: for Lie group nodes, the integrator uses the original kinematic relations of the Bruls and Cardona 2010 paper; False (recommended): higher accuracy as proposed in paper by Holzinger, Arnold, Gerstmayr, sigma-modified Lie group generalized alpha methods for constrained multibody systems, 2025 (to be sumitted)"
 #
 writeFile=SimulationSettings.h
 
@@ -233,7 +234,7 @@ V,  explicitIntegration,                ,       , ExplicitIntegrationSettings,, 
 #                       
 V,  startTime,                          ,       , UReal,                    0,          ,       P   , "$t_{start}$: start time of time integration (usually set to zero)"
 V,  endTime,                            ,       , UReal,                    1,          ,       P   , "$t_{end}$: end time of time integration"
-V,  numberOfSteps,                      ,       , PReal,                    100,        ,       P   , "$n_{steps}$: number of steps in time integration; (maximum) stepSize $h$ is computed from $h = \frac{t_{end} - t_{start}}{n_{steps}}$; for automatic stepsize control, this stepSize is the maximum steps size, $h_{max} = h$; numberOfSteps can be a float-point type, but must be close to an integer (relative tolerance $100\cdot\varepsilon$) as it is silently rounded to int"
+V,  numberOfSteps,                      ,       , PReal,                    100,        ,       P   , "$n_{steps}$: number of steps in time integration; (maximum) stepSize $h$ is computed from $h = \frac{t_{end} - t_{start}}{n_{steps}}$; for automatic stepsize control, this stepSize is the maximum steps size, $h_{max} = h$; numberOfSteps can also be a float type, but must be close to an integer (relative tolerance $100\cdot\varepsilon$) as it is silently rounded to int"
 V,  adaptiveStep,                       ,       , bool,                     true,       ,       P   , "True: the step size may be reduced if step fails; no automatic stepsize control"
 V,  adaptiveStepRecoverySteps,          ,       , UInt,                     10,         ,       P   , "Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors"
 V,  adaptiveStepRecoveryIterations,     ,       , UInt,                     7,          ,       P   , "Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value"
@@ -350,7 +351,7 @@ V,  displayComputationTime,         ,                 , bool,                fal
 V,  displayGlobalTimers,            ,                 , bool,                true     , , P        , "display global timer statistics at end of solving (e.g., for contact, but also for internal timings during development)"
 V,  displayStatistics,              ,                 , bool,                false    , , P        , "display general computation information at end of time step (steps, iterations, function calls, step rejections, ..."
 V,  outputPrecision,                ,                 , UInt,                6        , , P        , "precision for floating point numbers written to console; e.g. values written by solver"
-V,  pauseAfterEachStep,             ,                  , bool,                  false  , , P        , "pause after every time step or static load step(user press SPACE)"
+V,  pauseAfterEachStep,             ,                 , bool,                  false  , , P        , "pause after every time step or static load step(user press SPACE)"
 #moved to parallel 2022-01-18: V,  numberOfThreads,                ,                 , PInt,                1       , , P        , "number of threads used for parallel computation (1 == scalar processing); not yet implemented (status: Nov 2019)"
 #
 writeFile=SimulationSettings.h
@@ -373,11 +374,11 @@ appendToFile=False
 latexText = "\n%++++++++++++++++++++++++++++++++++++++\n\mysubsectionlabel{Visualization settings}{sec:VisualizationSettingsMain}\nThis section includes hierarchical structures for visualization settings, e.g., drawing of nodes, bodies, connectors, loads and markers and furthermore openGL, window and save image options. For further information, see \refSection{sec:overview:basics:visualizationsettings}.\n"
 writePybindIncludes = True
 typicalPaths = SC.visualizationSettings
-classDescription = "General settings for visualization."
+cppText = 'class VisualizationSettings; //! AUTO: forward declaration for backlink\n'
+classDescription = "General settings for visualization that influence all windows, default values, autofit, multithreading, etc."
 #V|F,   pythonName,                     cplusplusName,     size, type,          defaultValue,args,      cFlags, parameterDescription
-V,      graphicsUpdateInterval,         ,                  ,     float,        "0.1f",                 , P,      "interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed"
+V,      graphicsUpdateInterval,         ,                  ,     UFloat,       "0.1f",                 , P,      "interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed"
 V,      autoFitScene,                   ,                  ,     bool,         true,                   , P,      "automatically fit scene within startup after SC.renderer.Start()"
-V,      textSize,                       ,                  ,     float,        "12.f",                 , P,      "general text size (font size) in pixels if not overwritten; if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)"
 V,      textColor,                      ,                  4,    Float4,       "Float4({0.f,0.f,0.f,1.0f})", , P, "general text color (default); used for system texts in render window"
 V,      textHasBackground,              ,                  ,     bool,         false,                  , P,      "if true, text for item numbers and other item-related text have a background (depending on text color), allowing for better visibility if many numbers are shown; the text itself is black; therefore, dark background colors are ignored and shown as white"
 V,      textOffsetFactor,               ,                  ,     UFloat,       0.005f,                 , P,      "This is an additional out of plane offset for item texts (node number, etc.); the factor is relative to the maximum scene size and is only used, if textAlwaysInFront=False; this factor allows to draw text, e.g., in front of nodes"
@@ -386,28 +387,57 @@ V,      rendererPrecision,              ,                  ,     PInt,         "
 V,      useWindowsDisplayScaleFactor,   ,                  ,     bool,         true,                   , P,      "the Windows display scaling (monitor scaling; content scaling) factor is used for increased visibility of texts on high resolution displays; based on GLFW glfwGetWindowContentScale; deactivated on linux compilation as it leads to crashes (adjust textSize manually!)"
 V,      linuxDisplayScaleFactor,        ,                  ,     PFloat,       1.,                     , P,      "Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts"
 V,      useBitmapText,                  ,                  ,     bool,         true,                   , P,      "if true, texts are displayed using pre-defined bitmaps for the text; may increase the complexity of your scene, e.g., if many (>10000) node numbers shown"
-V,      minSceneSize,                   ,                  ,     float,        "0.1f",                 , P,      "minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO"
+V,      minSceneSize,                   ,                  ,     PFloat,       "0.1f",                 , P,      "minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO"
+V,      zoomAllUseBoundingBox,          ,                  ,     bool,         true,                   , P,      "if true, use exact scene bounding box (but not including texts) for zoom; does not include perspective effects!"
+V,      boundingBoxZoomAllOffset,       ,                  ,     UFloat,       "0.01f",                , P,      "minimum offset to bounding box of scene in window - width or height, whatever is smaller; adjust for very small or large scenes; may be negative"
+V,      boundingBoxZoomAllFactor,       ,                  ,     PFloat,       "1.2f",                 , P,      "factor on boundingBox for zoom all (without minimum offset)"
 V,      backgroundColor,                ,                  4,    Float4,       "Float4({1.0f,1.0f,1.0f,1.0f})", , P, "red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])"
 V,      backgroundColorBottom,          ,                  4,    Float4,       "Float4({0.8f,0.8f,1.0f,1.0f})", , P, "red, green, blue and alpha values for bottom background color in case that useGradientBackground = True"
 V,      useGradientBackground,          ,                  ,     bool,         false,                  , P,      "true = use vertical gradient for background; "
-V,      coordinateSystemSize,           ,                  ,     float,        "5.f",                  , P,      "size of coordinate system relative to font size"
-V,      drawCoordinateSystem,           ,                  ,     bool,         true,                   , P,      "false = no coordinate system shown"
-V,      drawWorldBasis,                 ,                  ,     bool,         false,                  , P,      "true = draw world basis coordinate system at (0,0,0)"
-V,      worldBasisSize,                 ,                  ,     float,        "1.0f",                 , P,      "size of world basis coordinate system"
-V,      showHelpOnStartup,              ,                  ,     PInt,         5,                      , P,      "seconds to show help message on startup (0=deactivate)"
-V,      showComputationInfo,            ,                  ,     bool,         true,                   , P,      "true = show (hide) all computation information including Exudyn and version"
+V,      coordinateSystemSize,           ,                  ,     PFloat,        "5.f",                  , P,      "size of coordinate system relative to font size"
+V,      showHelpOnStartup,              ,                  ,     UInt,         5,                      , P,      "seconds to show help message on startup (0=deactivate)"
 V,      showSolutionInformation,        ,                  ,     bool,         true,                   , P,      "true = show solution information (from simulationSettings.solution)"
 V,      showSolverInformation,          ,                  ,     bool,         true,                   , P,      "true = solver name and further information shown in render window"
 V,      showSolverTime,                 ,                  ,     bool,         true,                   , P,      "true = solver current time shown in render window"
 V,      renderWindowString,             ,                  ,     String,       "",                     , P,      "string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to solutionInformation in SimulationSettings.solutionSettings)"
-V,      pointSize,                      ,                  ,     float,        "0.01f",                , P,      "global point size (absolute)"
+V,      pointSize,                      ,                  ,     PFloat,        "0.01f",                , P,      "global point size (absolute)"
 V,      circleTiling,                   ,                  ,     PInt,         "16",                   , P,      "global number of segments for circles; if smaller than 2, 2 segments are used (flat)"
 V,      cylinderTiling,                 ,                  ,     PInt,         "16",                   , P,      "global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)"
 V,      sphereTiling,                   ,                  ,     PInt,         "6",                    , P,      "global number of segments for spheres; if smaller than 2, 2 segments are used (flat)"
 V,      axesTiling,                     ,                  ,     PInt,         "12",                   , P,      "global number of segments for drawing cylinders for axes and cones for arrows (reduce this number, e.g. to 4, if many axes are drawn)"
 V,      threadSafeGraphicsUpdate,       ,                  ,     bool,         true,                   , P,      "true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations; may be improved in future by adding a safe visualizationUpdate state"
-V,      useMultiThreadedRendering,      ,                  ,     bool,         true,                   , P,      "true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); set this parameter before call to SC.renderer.Start(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW"
-#V,      useSoftwareRenderer,            ,                  ,     bool,         false,                  , P,      "false = use OpenGL renderer; true = use software renderer (slow, experimental!) inside OpenGL window"
+V,      useMultiThreadedRendering,      ,                  ,     bool,         true,                   , P,      "true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); you MUST set this parameter BEFORE call to SC.renderer.Start(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW"
+V,      rendererStartupTimeout,         ,                  ,     PInt,         "2500",                 , P,      "OpenGL render windows startup timeout in ms (change might be necessary if CPU is very slow)"
+V,      reallyQuitTimeLimit,            ,                  ,     UReal,        "900",                  , P,      "number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked"
+V,      limitWindowToScreenSize,        ,                  ,     bool,         true,                   , P,      "True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize"
+#DEPRECATED:
+V,      drawWorldBasis,                 ,                  ,     bool,         "1.10.80;EXP=2030",     , PX,     "view0.scene.drawWorldBasis"
+V,      worldBasisSize,                 ,                  ,     PFloat,       "1.10.80;EXP=2030",     , PX,     "view0.scene.worldBasisSize"
+V,      drawCoordinateSystem,           ,                  ,     UInt,         "1.10.80;EXP=2030",     , PX,     "view0.scene.drawCoordinateSystem"
+V,      textSize,                       ,                  ,     PFloat,       "1.10.80;EXP=2030",     , PX,     "view0.window.globalFontSize"
+V,      showComputationInfo,            ,                  ,     bool,         "1.10.80;EXP=2030",     , PX,     "view0.window.showComputationInfo"
+
+#
+writeFile=VisualizationSettings.h
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = VSettingsContourAdvanced
+appendToFile=True
+writePybindIncludes = True
+typicalPaths = SC.visualizationSettings.contour
+classDescription = "Advanced settings for contour plots."
+#V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
+V,      contourColor0,               ,                     4,    Float4,       "Float4({0.1f,0.1f,0.9f,1.f})",, P,  "RGBA color for relative value 0 used for contour plot; alpha is ignored"
+V,      contourColor1,               ,                     4,    Float4,       "Float4({0.1f,0.9f,0.9f,1.f})",, P,  "RGBA color for relative value 0.25 used for contour plot; alpha is ignored"
+V,      contourColor2,               ,                     4,    Float4,       "Float4({0.1f,0.9f,0.1f,1.f})",, P,  "RGBA color for relative value 0.25 used for contour plot; alpha is ignored"
+V,      contourColor3,               ,                     4,    Float4,       "Float4({0.9f,0.9f,0.1f,1.f})",, P,  "RGBA color for relative value 0.25 used for contour plot; alpha is ignored"
+V,      contourColor4,               ,                     4,    Float4,       "Float4({0.9f,0.1f,0.1f,1.f})",, P,  "RGBA color for relative value 0.25 used for contour plot; alpha is ignored"
+V,      contourColorMin,             ,                     4,    Float4,       "Float4({0.1f,0.1f,0.1f,1.f})",, P,  "RGBA color if relative value in contour plot is smaller than 0 (if automaticRange=False); alpha is ignored"
+V,      contourColorMax,             ,                     4,    Float4,       "Float4({0.9f,0.9f,0.9f,1.f})",, P,  "RGBA color if relative value in contour plot is larger than 1 (if automaticRange=False); alpha is ignored"
+V,      showColorBar,                   ,                  ,     bool,         true,                   , P,      "show the colour bar with minimum and maximum values for the contour plot"
+V,      colorBarPrecision,              ,                  ,     PInt,         "4",                    , P,      "precision of floating point values shown in color bar; total number of digits used (max. 16)"
+V,      colorBarTiling,                 ,                  1,    PInt,         "12",                   , P,      "number of tiles (segements) shown in the colorbar for the contour plot"
 #
 writeFile=VisualizationSettings.h
 
@@ -424,12 +454,15 @@ V,      minValue,                       ,                  1,    float,        "
 V,      maxValue,                       ,                  1,    float,        "1",                    , P,      "maximum value for contour plot; set manually, if automaticRange == False"
 V,      automaticRange,                 ,                  ,     bool,         true,                   , P,      "if true, the contour plot value range is chosen automatically to the maximum range"
 V,      reduceRange,                    ,                  ,     bool,         true,                   , P,      "if true, the contour plot value range is also reduced; better for static computation; in dynamic computation set this option to false, it can reduce visualization artifacts; you should also set minVal to max(float) and maxVal to min(float)"
-V,      showColorBar,                   ,                  ,     bool,         true,                   , P,      "show the colour bar with minimum and maximum values for the contour plot"
-V,      colorBarPrecision,              ,                  ,     PInt,         "4",                    , P,      "precision of floating point values shown in color bar; total number of digits used (max. 16)"
-V,      colorBarTiling,                 ,                  1,    PInt,         "12",                   , P,      "number of tiles (segements) shown in the colorbar for the contour plot"
+#
 V,      rigidBodiesColored,             ,                  ,     bool,         true,                   , P,      "if true, the contour color is also applied to triangular faces of rigid bodies and mass points, otherwise the rigid body drawing are not influenced by contour settings; for general rigid bodies (except for ObjectGround), Position, Displacement, DisplacementLocal(=0), Velocity, VelocityLocal, AngularVelocity, and AngularVelocityLocal are available; may slow down visualization!"
 V,      nodesColored,                   ,                  ,     bool,         true,                   , P,      "if true, the contour color is also applied to nodes (except mesh nodes), otherwise node drawing is not influenced by contour settings"
 V,      alphaTransparency,              ,                  1,    float,        "1",                    , P,      "default value for contour alpha transparency (RGB color computed from contour value)"
+V,      advanced,                       ,                  ,     VSettingsContourAdvanced,  ,          , PS,     "advanced settings for contour"
+#DEPRECATED:
+V,      showColorBar,                   ,                  ,     bool,         "1.10.80;EXP=2030",     , PX,      "contour.advanced.showColorBar"
+V,      colorBarPrecision,              ,                  ,     PInt,         "1.10.80;EXP=2030",     , PX,      "contour.advanced.colorBarPrecision"
+V,      colorBarTiling,                 ,                  1,    PInt,         "1.10.80;EXP=2030",     , PX,      "contour.advanced.colorBarTiling"
 #
 writeFile=VisualizationSettings.h
 
@@ -461,11 +494,11 @@ typicalPaths = SC.visualizationSettings.bodies
 classDescription = "Visualization settings for beam finite elements."
 #V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,args,           cFlags, parameterDescription
 V,      axialTiling,                ,                  ,     PInt,          "8",                      , P,       "number of segments to discretise the beams axis"
-V,      reducedAxialInterploation,  ,                  ,     bool,          true,                     , P,       "if True, the interpolation along the beam axis may be lower than the beam element order; this may be, however, show more consistent values than a full interpolation, e.g. for strains or forces"
+V,      reducedAxialInterploation,  ,                  ,     bool,          true,                     , P,       "if True, the interpolation along the beam axis may be lower than the beam element order; this may, however, show more consistent values than a full interpolation, e.g. for strains or forces"
 V,      crossSectionTiling,         ,                  ,     PInt,          "4",                      , P,       "number of quads drawn over height of beam, if drawn as flat objects; leads to higher accuracy of components drawn over beam height or with, but also to larger CPU costs for drawing"
-V,      crossSectionFilled,         ,                  ,     bool,          true,                     , P,       "if implemented for element, cross section is drawn as solid (filled) instead of wire-frame; NOTE: some quantities may not be interpolated correctly over cross section in visualization"
+V,      crossSectionFilled,         ,                  ,     bool,          true,                     , P,       "if implemented for element, cross section is drawn as solid (filled) instead of wire-frame; NOTE: some quantities may not be interpolated correctly over cross section in visualization; equivalent to drawSolid of shells"
 V,      drawVertical,               ,                  ,     bool,          false,                    , P,       "draw contour plot outputVariables 'vertical' along beam height; contour.outputVariable must be set accordingly"
-V,      drawVerticalFactor,         ,                  ,     float,         "1.f",                    , P,       "factor for outputVariable to be drawn along cross section (vertically)"
+V,      drawVerticalFactor,         ,                  ,     UFloat,        "1.f",                    , P,       "factor for outputVariable to be drawn along cross section (vertically)"
 V,      drawVerticalColor,          ,                  4,    Float4,        "Float4({0.2f,0.2f,0.2f,1.f})", , P, "color for outputVariable to be drawn along cross section (vertically)"
 V,      drawVerticalLines,          ,                  ,     bool,          true,                     , P,       "draw additional vertical lines for better visibility"
 V,      drawVerticalValues,         ,                  ,     bool,          false,                    , P,       "show values at vertical lines; note that these numbers are interpolated values and may be different from values evaluated directly at this point!"
@@ -473,6 +506,16 @@ V,      drawVerticalOffset,         ,                  ,     float,         "0.f
 #
 writeFile=VisualizationSettings.h
 
+class = VSettingsShells
+appendToFile=True
+writePybindIncludes = True
+typicalPaths = SC.visualizationSettings.bodies
+classDescription = "Visualization settings for plate/shell finite elements."
+#V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,args,           cFlags, parameterDescription
+V,      drawSolid,                  ,                  ,     bool,          true,                     , P,       "if true: to draw plates/shells as 3D objects; false: only the element surface is drawn; equivalent to crossSectionFilled in beams"
+V,      thicknessFactor,            ,                  ,     PFloat,        "1.f",                    , P,       "a factor multiplied with the thickness of shells/plates only for visualization (e.g. to make some effects more visible)"
+#
+writeFile=VisualizationSettings.h
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsKinematicTree
@@ -502,6 +545,7 @@ V,      defaultSize,                ,                  3,    Float3,       "Floa
 V,      defaultColor,               ,                  4,    Float4,       "Float4({0.3f,0.3f,1.f,1.f})",, P,  "default RGBA color for bodies; 4th value is alpha-transparency"
 V,      deformationScaleFactor,     ,                  ,     float,        "1",                        , P,    "global deformation scale factor; also applies to nodes, if drawn; currently only used for scaled drawing of (linear) finite elements in FFRF and FFRFreducedOrder objects"
 V,      beams,                      ,                  ,     VSettingsBeams,   ,                       , PS,   "visualization settings for beams (e.g. ANCFCable or other beam elements)"
+V,      shells,                     ,                  ,     VSettingsShells,   ,                      , PS,   "visualization settings for plates and shells"
 V,      kinematicTree,              ,                  ,     VSettingsKinematicTree,   ,               , PS,   "visualization settings for kinematic tree"
 #
 writeFile=VisualizationSettings.h
@@ -645,26 +689,115 @@ V,      contactForcesFactor,        ,                  ,     float,        "0.00
 writeFile=VisualizationSettings.h
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = VSettingsCamera
+appendToFile=True
+writePybindIncludes = True
+typicalPaths = SC.visualizationSettings.view
+classDescription = "Settings for camera like perspective, marker tracking, clipping plane, etc. Note that some options may also be found in openGL settings."
+#V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
+V,      modelCentricView,               ,                  ,     bool,         true,                   , P,      "True: rotations and translations are applied to model, while camera stays far enough away from the model and always captures the whole model (everything is in front of camera plane); False: camera moves and rotates while model stays in physical space; only geometry in front of camera is visible; note that the behavior of trackMarker changes with modelCentricView and some features are not available in case of modelCentricView=False."
+V,      clippingPlaneNormal,            ,                  3,    Float3,       "Float3({0.f,0.f,0.f})",, P,      "normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; the clipped half-space is in direction of the normal; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance and openGL.advanced.clippingPlaneColor"
+V,      clippingPlaneDistance,          ,                  ,     float,        "0.f",                  , P,      "distance of clipping plane on normal vector; see also clippingPlaneNormal and openGL.advanced.clippingPlaneColor"
+V,      perspective,                    ,                  ,     UFloat,       "0.f",                  , P,      "parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 1 (extreme: 5), where larger values are possible but should be used with care; NOTE that the relation to the common field of view (FOV) angle alpha, with alpha=90°, is given by perspective = tan(alpha/2) = 1; mouse coordinates (F3) can not be shown with perspective>0"
+V,      useRaytracer,                   ,                  ,     bool,         false,                  , P,      "True: use (software) raytracer for this view; False: use standard OpenGL renderer"
+V,      nearFarPlaneOffset,             ,                  3,    Float3,       "Float3({0.f,0.f,0.f})",, P,      "the three values are [nearPlaneOffset, farPlaneOffset, flag]; if flag=0, the offsets are ignored and computed automatically, using x = 2 * maxSceneSize * zMaxSceneFactor, setting near plane to -x and far plane to +x in case of modelCentricView=True and setting near plane to 0.01 (minimal offset to eye point) and far plane to +x if modelCentricView=False; if flag=1, the near and far plane values are just overwritten; note that positive values for near plane make objects in front of the camera invisible while negative values make objects behind the camera plane visible; in case of camera-centric view, the eyepoint can be shifted backwards using cameraPosition accordingly."
+V,      cameraPosition,                 ,                  3,    Float3,       "Float3({0.f,0.f,0.f})" ,,P,      "if modelCentricView=True: offset to camera position in model view (and, if used, relative to tracked marker - instead of a tracked marker position, you could also just change the camera position in camera-centric views); camera rotation follows modelRotation in renderState"
+#track marker:
+V,      trackMarker,                    ,                  ,     Int,          "-1",                   , P,      "if valid marker index is provided and marker provides position (and orientation), the centerpoint of the scene follows the marker (and orientation); depends on trackMarkerPosition and trackMarkerOrientation; by default, only position is tracked"
+V,      trackMarkerMbsNumber,           ,                  ,     Index,        "0",                    , P,      "number of main system which is used to track marker; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number"
+V,      trackMarkerPosition,            ,                  3,    Float3,       "Float3({1.f,1.f,1.f})" ,,P,      "choose which coordinates or marker are tracked (x,y,z)"
+V,      trackMarkerOrientation,         ,                  3,    Float3,       "Float3({0.f,0.f,0.f})" ,,P,      "choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one"
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+writeFile=VisualizationSettings.h
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = VSettingsScene
+appendToFile=True
+writePybindIncludes = True
+typicalPaths = SC.visualizationSettings.view
+classDescription = "Settings change scene representation (show edges, show faces, global transparency), adding world basis, etc., in particular settings that are individual to each view. Note that some scene settings that are global to all views may be found in general and in openGL settings"
+#V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
+V,      drawWorldBasis,                 ,                  ,     bool,         false,                  , P,      "true = draw world basis coordinate system at (0,0,0)"
+V,      drawCoordinateSystem,           ,                  ,     UInt,         2,                      , P,      "0 = no coordinate system shown, 1 = draw lines with text, 2 = draw arrows, 3 = draw arrows with text"
+V,      worldBasisSize,                 ,                  ,     PFloat,       "1.0f",                 , P,      "size of world basis coordinate system"
+#
+V,      facesTransparent,               ,                  1,    bool,         false,                  , P,      "True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers"
+V,      showFaces,                      ,                  1,    bool,         true,                   , P,      "True: show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wireframe representation"
+V,      showFaceEdges,                  ,                  1,    bool,         false,                  , P,      "True: show edges of triangles; using the options showFaces=false and showFaceEdges=true gives are wire frame representation"
+V,      showMeshFaces,                  ,                  1,    bool,         true,                   , P,      "True: show faces of finite elements; independent of showFaces"
+V,      showMeshEdges,                  ,                  1,    bool,         true,                   , P,      "True: show edges of finite elements; independent of showFaceEdges"
+V,      showLines,                      ,                  1,    bool,         true,                   , P,      "True: show lines (other lines than face and mesh edges)"
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+writeFile=VisualizationSettings.h
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsWindow
+appendToFile=True
+writePybindIncludes = True
+typicalPaths = SC.visualizationSettings.view
+classDescription = "Settings for window that are individual to each view; in particular initial size, and behavior. Note that some of the settings are only used during creation of the window"
+#V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
+V,      renderWindowSize,               ,                  2,    Index2,       "Index2({1024,768})",   , P,      "initial size of render window of respective view for specific view in pixels for"
+V,      showWindow,                     ,                  ,     bool,         true,                   , P,      "True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically)"
+V,      alwaysOnTop,                    ,                  ,     bool,         false,                  , P,      "True: render window of respective view will be always on top of all other windows"
+V,      maximize,                       ,                  ,     bool,         false,                  , P,      "True: render window of respective view will be maximized at startup"
+V,      showMouseCoordinates,           ,                  ,     bool,         "false",                , P,      "True: show OpenGL coordinates and distance to last left mouse button pressed position in renderer status message; switched on/off with key 'F3'; only works for axis-aligned ortho-projections"
+V,      showRenderStateInfo,            ,                  ,     bool,         "false",                , P,      "True: show renderer.state infos regarding zoom, offset and rotation in renderer status message; switched on/off with 'CTRL-F3'"
+V,      lockModelView,                  ,                  ,     bool,         false,                  , P,      "True: all movements (with mouse/keys), rotations, zoom are disabled; the view is either based on initial values (or on the current state) ==> initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value"
+V,      showComputationInfo,            ,                  ,     bool,         true,                   , P,      "true = show (hide) all computation information including Exudyn and version"
+V,      globalFontSize,                 ,                  ,     PFloat,       "12.f",                 , P,      "general text font size (roughly measured in pixels); if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)"
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+writeFile=VisualizationSettings.h
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = VSettingsView
+appendToFile=True
+writePybindIncludes = True
+typicalPaths = SC.visualizationSettings
+classDescription = "Settings for view including camera, scene, window, and advanced options to setup a view or view window."
+#V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
+V,      camera,                         ,                  ,     VSettingsCamera,    ,                 , PS,     "settings for camera like perspective, marker tracking or clipping plane"
+V,      scene,                          ,                  ,     VSettingsScene,     ,                 , PS,     "settings which change scene representation, showing edges, faces or world basis"
+V,      window,                         ,                  ,     VSettingsWindow,    ,                 , PS,     "visualization settings for window that are individual to each view"
+#V,      advanced,                       ,                  ,     VSettingsViewAdvanced, ,              , PS,     "openVR visualization settings"
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+writeFile=VisualizationSettings.h
+
+
+
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = VSettingsWindowDeprecated
 appendToFile=True
 writePybindIncludes = True
 typicalPaths = SC.visualizationSettings
 classDescription = "OpenGL Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes."
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
-V,      renderWindowSize,               ,                  2,    Index2,       "Index2({1024,768})",   , P,      "initial size of OpenGL render window in pixel"
-V,      showWindow,                     ,                  ,     bool,         true,                   , P,      "True: OpenGL render window is shown on startup; False: window will be iconified at startup (e.g. if you are starting multiple computations automatically)"
-V,      startupTimeout,                 ,                  ,     PInt,         "2500",                 , P,      "OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)"
-V,      alwaysOnTop,                    ,                  ,     bool,         false,                  , P,      "True: OpenGL render window will be always on top of all other windows"
-V,      maximize,                       ,                  ,     bool,         false,                  , P,      "True: OpenGL render window will be maximized at startup"
-V,      limitWindowToScreenSize,        ,                  ,     bool,         true,                   , P,      "True: render window size is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize"
-V,      reallyQuitTimeLimit,            ,                  ,     UReal,        "900",                  , P,      "number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked"
-#special settings:
-V,      keyPressUserFunction,           ,                  ,     KeyPressUserFunction,  0,             , P,      "add a Python function f(key, action, mods) here, which is called every time a key is pressed; function shall return true, if key has been processed; Example: \tabnewline def f(key, action, mods):\tabnewline \phantom{XXX} print('key=',key);\tabnewline use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)"
-V,      showMouseCoordinates,           ,                  ,     bool,         "false",                , P,      "True: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'"
-V,      ignoreKeys,                     ,                  ,     bool,         "false",                , P,      "True: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'"
-F,      ResetKeyPressUserFunction,      ,                  ,     void,         "keyPressUserFunction = 0;", , P,      "set keyPressUserFunction to zero (no function); because this cannot be assign to the variable itself"
+V,      renderWindowSize,               ,                  2,    Index2,       "1.10.80;EXP=2030",     , PX,      "view0.window.renderWindowSize"
+V,      showWindow,                     ,                  ,     bool,         "1.10.80;EXP=2030",     , PX,      "view0.window.showWindow"
+V,      alwaysOnTop,                    ,                  ,     bool,         "1.10.80;EXP=2030",     , PX,      "view0.window.alwaysOnTop"
+V,      maximize,                       ,                  ,     bool,         "1.10.80;EXP=2030",     , PX,      "view0.window.maximize"
+V,      showMouseCoordinates,           ,                  ,     bool,         "1.10.80;EXP=2030",     , PX,      "view0.window.showMouseCoordinates"
+V,      showRenderStateInfo,            ,                  ,     bool,         "1.10.80;EXP=2030",     , PX,      "view0.window.showRenderStateInfo"
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#DEPRECATED:
+V,      startupTimeout,                 ,                  ,     PInt,         "1.10.80;EXP=2030",     , PX,     "general.rendererStartupTimeout"
+V,      reallyQuitTimeLimit,            ,                  ,     UReal,        "1.10.80;EXP=2030",     , PX,     "general.reallyQuitTimeLimit"
+V,      limitWindowToScreenSize,        ,                  ,     bool,         "1.10.80;EXP=2030",     , PX,     "general.limitWindowToScreenSize"
+V,      ignoreKeys,                     ,                  ,     bool,         "1.10.80;EXP=2030",     , PX,     "interactive.ignoreKeys"
+V,      keyPressUserFunction,           ,                  ,     KeyPressUserFunction,  "1.10.80;EXP=2030", , PX, "interactive.keyPressUserFunction"
+#not needed any more: F,      ResetKeyPressUserFunction,      ,                  ,     void,         "keyPressUserFunction = 0;", , P,      "set keyPressUserFunction to zero (no function); because this cannot be assign to the variable itself"
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #
 writeFile=VisualizationSettings.h
+
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsDialogs
@@ -673,7 +806,7 @@ writePybindIncludes = True
 typicalPaths = SC.visualizationSettings
 classDescription = "Settings related to dialogs (e.g., visualization settings dialog)."
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
-V,      multiThreadedDialogs,           ,                  ,     bool,         true,                   , P,      "True: During dialogs, the OpenGL render window will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed"
+V,      multiThreadedDialogs,           ,                  ,     bool,         true,                   , P,      "True: During dialogs, the OpenGL render windows will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed"
 V,      alwaysTopmost,                  ,                  ,     bool,         true,                   , P,      "True: dialogs are always topmost (otherwise, they are sometimes hidden)"
 V,      alphaTransparency,              ,                  ,     UFloat,       "0.94f",                , P,      "alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all)"
 V,      fontScalingMacOS,               ,                  ,     UFloat,       "1.35f",                , P,      "font scaling value for MacOS systems (on Windows, system display scaling is used)"
@@ -700,6 +833,25 @@ V,      emission,                       ,                  3,    Float3,       "
 #
 writeFile=VisualizationSettings.h
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = VSettingsRaytracerAdvanced
+appendToFile=True
+writePybindIncludes = True
+typicalPaths = SC.visualizationSettings.raytracer
+classDescription = "Advanced settings for raytracer."
+#V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
+V,      tilesPerThread,                 ,                  ,     PInt,         "12",                   , P,      "Total number of sub-tiles per thread, used to evenly distribute rendering load to threads"
+V,      zBiasLines,                     ,                  ,     float,        "1e-3f",                , P,      "offset for lines to draw in front of faces; relative to scene radius"
+V,      showText,                       ,                  ,     bool,         true,                   , P,      "True: show any kind of status text, node numbers, object numbers, etc. (depending on settings); False: do not show any text in raytracer, independently of settings"
+V,      searchTreeFactor,               ,                  ,     PInt,         "1",                    , P,      "This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128"
+#
+V,      backgroundColorReflections,     ,                  4,    Float4,       "Float4({0.4f,0.4f,0.4f,1.f})",,P,"scene RGBA color for background that is hit by reflection material; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; this is generally needed, as our scenes are usually not inside a closed geometry (like inside a room); this color is also used if maxReflectionDepth is reached"
+V,      shadowScalingFactor,            ,                  1,    UInt,         "3",                    , P,      "if lightRadiusVariations>1, this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries"
+V,      shadowSmoothingSteps,            ,                 1,    UInt,         "3",                    , P,      "if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing  steps may cause artifacts at shadow boundaries; only works for directional lights with position (e.g. 4th component in light0Position should be 1)"
+#
+writeFile=VisualizationSettings.h
+
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class = VSettingsRaytracer
@@ -708,24 +860,7 @@ writePybindIncludes = True
 typicalPaths = SC.visualizationSettings
 classDescription = "Settings for raytracer (software renderer) which can be used as alternative to classic OpenGL rendering; this option may be erased in future in favor of a modern GPU rendering. To activate the raytracer, simply switch the enable flag to True. The raytracer uses CPU-based rendering and is therefore comparably slow (may take seconds to render one frame). Thus, take care with the window dimension (start with small window size like 400 x 300) and use openGL.multiSampling=1. Note that many parameters are used from openGL settings, like backgroundColor, lineWidth, multiSampling, shadow (only on/off), and lights. See the options to improve appearance and performance."
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
-V,      enable,                         ,                  ,     bool,         false,                  , P,      "True: use (software) raytracer; False: use standard OpenGL renderer"
-V,      maxReflectionDepth,             ,                  ,     UInt,         "2",                    , P,      "Maximum number of reflections computed for one ray (note that for each transparent face passed, the reflection depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)"
-V,      maxTransparencyDepth,           ,                  ,     UInt,         "2",                    , P,      "Maximum number of transparent faces that can be passed (note that for each reflection, the transparency depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)"
-V,      keepWindowActive,               ,                  ,     bool,         false,                  , P,      "Special flag, handle with care; True: sends some glfw functions to keep window reactive for long render times (>2 seconds); otherwise, the rendering may not finish due to timeout"
-V,      backgroundColorReflections,     ,                  4,    Float4,       "Float4({0.4f,0.4f,0.4f,1.f})",,P,"scene RGBA color for background that is hit by reflection; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; important, if scene is not inside a room."
-V,      ambientLightColor,              ,                  4,    Float4,       "Float4({0.6f,0.6f,0.6f,1.f})",,P,"scene RGBA color for ambient light effect (min. light for regions in shadow); same as openGL.materialAmbientAndDiffuse in OpenGL renderer"
-V,      globalFogColor,                 ,                  4,    Float4,       "Float4({0.5f,0.5f,0.5f,1.f})",,P,"scene RGBA fog color"
-V,      globalFogDensity,               ,                  ,     Real,         "0.",                   , P,      "global fog density; fog is deactivated if fogDensity=0, otherwise it is a density relative to scene max size; as it is relative, the factor has to be relatively high to be visible (usually >1)"
-#
-V,      verbose,                        ,                  ,     bool,         false,                  , P,      "True: print out some debug information on rendering, in particular rendering timings and counter"
-V,      numberOfThreads,                ,                  ,     PInt,         "8",                    , P,      "Number of CPU-threads (max: 256) used for software rendering (should be approx. the number of available threads)"
-V,      tilesPerThread,                 ,                  ,     PInt,         "12",                   , P,      "Total number of sub-tiles per thread, used to evenly distribute rendering load to threads"
-V,      imageSizeFactor,                ,                  ,     PInt,         "1",                    , P,      "Special size factor (1-16) to allow drawing with smaller resolution (faster); use this for long rendering times for adjustments, etc."
-V,      searchTreeFactor,               ,                  ,     PInt,         "1",                    , P,      "This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128"
-V,      lightRadius,                    ,                  1,    float,        "0.1f",                 , P,      "if lightRadiusVariations>1, it uses the given radius for all lights, to convert point lights into distributed lights (slower)"
-V,      lightRadiusVariations,          ,                  1,    PInt,         "1",                    , P,      "if lightRadiusVariations>1, this defines the number of positions that are used to compute the effect of distributed lights (larger is slower but better quality); range=1..64"
-V,      zOffsetCamera,                  ,                  ,     Real,         "-0.01",                , P,      "offset for for camera towards the scene; use positive factor put camera inside, e.g. of brick (like a room) or sphere; use (slightly) negative value to make whole scene visible"
-V,      zBiasLines,                     ,                  ,     Real,         "1e-3",                 , P,      "offset for lines to draw in front of faces; relative to scene radius"
+V,      advanced,                       ,                  ,     VSettingsRaytracerAdvanced,,          , PS,     "advanced settings for raytracer"
 V,      material0,                      ,                  ,     VSettingsMaterial,  ,                 , PS,     "settings for material0"
 V,      material1,                      ,                  ,     VSettingsMaterial,  ,                 , PS,     "settings for material1"
 V,      material2,                      ,                  ,     VSettingsMaterial,  ,                 , PS,     "settings for material2"
@@ -736,9 +871,96 @@ V,      material6,                      ,                  ,     VSettingsMateri
 V,      material7,                      ,                  ,     VSettingsMaterial,  ,                 , PS,     "settings for material7"
 V,      material8,                      ,                  ,     VSettingsMaterial,  ,                 , PS,     "settings for material8"
 V,      material9,                      ,                  ,     VSettingsMaterial,  ,                 , PS,     "settings for material9"
+#driving performance:
+V,      maxReflectionDepth,             ,                  ,     UInt,         "2",                    , P,      "Maximum number of reflections computed for one ray (note that for each transparent face passed, the reflection depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)"
+V,      maxTransparencyDepth,           ,                  ,     UInt,         "2",                    , P,      "Maximum number of transparent faces that can be passed (note that for each reflection, the transparency depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)"
+V,      lightRadiusVariations,          ,                  1,    PInt,         "1",                    , P,      "if lightRadiusVariations>1, this defines the number of positions that are used to compute the effect of distributed lights (larger is slower but better quality); range=1..256; avoid squares of integers; good values: 1 (hard shadow boundaries), 6, 13, 20, 31, 72, 130, 240; for lower values, use shadowSmoothingSteps=2..8"
+V,      multiSampling,                  ,                  1,    PInt,         "1",                    , P,      "Multi-sampling used for rendering of faces, lines and text; increases image quality along edges (lines, etc.) but INCREASES rendering costs dramatically (multiSampling=3 => 3x3=9 times slower); also used for shadow if shadowScalingFactor=0; values only accepted in range [1..4]"
+V,      imageSizeFactor,                ,                  ,     PInt,         "1",                    , P,      "Special size factor (1-16) to allow drawing with smaller resolution (faster); use this for long rendering times for adjustments, etc."
+V,      numberOfThreads,                ,                  ,     PInt,         "8",                    , P,      "Number of CPU-threads (max: 256) used for software rendering (should be approx. the number of available threads)"
+#
+V,      keepWindowActive,               ,                  ,     bool,         false,                  , P,      "Special flag, handle with care; True: sends some glfw functions to keep window reactive for long render times (>2 seconds); otherwise, the rendering may not finish due to timeout"
+V,      globalFogColor,                 ,                  4,    Float4,       "Float4({0.5f,0.5f,0.5f,1.f})",,P,"scene RGBA fog color"
+V,      globalFogDensity,               ,                  ,     UFloat,       "0.",                   , P,      "global fog density; fog is deactivated if fogDensity=0, otherwise it is a density relative to scene max size; as it is relative, the factor has to be relatively high to be visible (usually >1)"
+V,      verbose,                        ,                  ,     Index,        "0",                    , P,      "1: print out some debug information on rendering, in particular rendering timings and counter; 2 and higher: advanced debug information"
+#DEPRECATED / moved:
+V,      enable,                         ,                  ,     bool,         "1.10.80;EXP=2030",     , PX,     "view0.camera.useRaytracer"
+V,      backgroundColorReflections,     ,                  4,    Float4,       "1.10.80;EXP=2030",     , PX,     "raytracer.advanced.backgroundColorReflections"
+#
+V,      lightRadius,                    ,                  1,    float,        "1.10.80;EXP=2030",     , PX,     "openGL.light0.lightRadius"
+#V,      lightRadiusVariations,          ,                  1,    PInt,         "1.10.80;EXP=2030",     , PX,     "raytracer.advanced.lightRadiusVariations"
+V,      shadowScalingFactor,            ,                  1,    UInt,         "1.10.80;EXP=2030",     , PX,     "raytracer.advanced.shadowScalingFactor"
+V,      shadowSmoothingSteps,            ,                 1,    UInt,         "1.10.80;EXP=2030",     , PX,     "raytracer.advanced.shadowSmoothingSteps"
+#
+V,      tilesPerThread,                 ,                  ,     PInt,         "1.10.80;EXP=2030",     , PX,     "raytracer.advanced.tilesPerThread"
+V,      zOffsetCamera,                  ,                  ,     float,        "1.10.80;EXP=2030",     , PX,     "openGL.dummy"
+V,      zBiasLines,                     ,                  ,     float,        "1.10.80;EXP=2030",     , PX,     "raytracer.advanced.zBiasLines"
+V,      showText,                       ,                  ,     bool,         "1.10.80;EXP=2030",     , PX,     "raytracer.advanced.showText"
+V,      searchTreeFactor,               ,                  ,     PInt,         "1.10.80;EXP=2030",     , PX,     "raytracer.advanced.searchTreeFactor"
+#
+V,      ambientLightColor,              ,                  4,    Float4,       "1.10.80;EXP=2030",     , PX,     "openGL.lightModelAmbient"
+#V,      ambientLightColor,              ,                  4,    Float4,       "Float4({0.6f,0.6f,0.6f,1.f})",,P,"scene RGBA color for ambient light effect (min. light for regions in shadow or orthogonal to light direction)"
 #
 writeFile=VisualizationSettings.h
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = VSettingsOpenGLAdvanced
+appendToFile=True
+writePybindIncludes = True
+typicalPaths = SC.visualizationSettings.openGL
+classDescription = "Advanced settings for openGL."
+#V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
+V,      initialCenterPoint,             ,                  3,    Float3,       "Float3({0.f,0.f,0.f})",, P,      "centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True; only used in case that modelCentricView=True"
+V,      initialZoom,                    ,                  ,     UFloat,       "1.f",                  , P,      "initial zoom of scene; overwritten/ignored if autoFitScene = True"
+V,      initialMaxSceneSize,            ,                  ,     PFloat,       "1.f",                  , P,      "initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True"
+V,      initialModelRotation,           ,                  3x3,  StdArray33F,  "EXUmath::Matrix3DFToStdArray33(Matrix3DF(3,3,{1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f}))",      , P,      "initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]; only used in case that modelCentricView=True"
+#
+V,      clippingPlaneColor,             ,                  4,    Float4,       "Float4({0.7f,0.5f,0.5f,0.f})",, P,"RGBA color for clipping plane; if alpha-channel is 0, the cutting plane is not drawn; if alpha-channel is 1, the clippingPlaneColor is used; if alpha-channel is 2, the color of the object interior is used as clipping plane color (which may look strange in case of object-in-object); see also view.camera for clipping plane options"
+V,      faceNormalsColor,               ,                  4,    Float4,       "Float4({0.8f,0.2f,0.2f,1.f})",,P, "global RGBA color for face normals"
+V,      vertexNormalsColor,             ,                  4,    Float4,       "Float4({0.8f,0.2f,0.2f,1.f})",,P, "global RGBA color for vertex normals"
+#
+V,      shadowPolygonOffset,            ,                  ,     PFloat,       "0.1f",                 , P,      "some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies"
+V,      polygonOffset,                  ,                  ,     float,        "0.05f",                , P,      "general polygon offset for polygons, except for shadows; use this parameter to draw polygons behind lines to reduce artifacts for very large or small models"
+V,      shadeModelSmooth,               ,                  1,    bool,         true,                   , P,      "True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces"
+V,      depthSorting,                   ,                  1,    bool,         false,                  , P,      "True (slower): sort triangles by Z-depth to remove transparency artifacts: only works if triangles do not intersect or come close (you may like to refine triangle meshes); False: no depth-sort (faster)"
+V,      textLineWidth,                  ,                  1,    UFloat,       "1.f",                  , P,      "width of lines used for representation of text"
+V,      textLineSmooth,                 ,                  1,    bool,         false,                  , P,      "draw lines for representation of text smooth"
+V,      enableLighting,                 ,                  1,    bool,         true,                   , P,      "generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL_LIGHTING)"
+V,      lightModelLocalViewer,          ,                  1,    bool,         false,                  , P,      "True: the camera origin is used to compute shininess effects (more realistic); maps to OpenGL glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,...)"
+V,      lightModelTwoSide,              ,                  1,    bool,         false,                  , P,      "enlighten also backside of object; may cause problems on some graphics cards and lead to slower performance; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,...)"
+V,      lineSmooth,                     ,                  1,    bool,         true,                   , P,      "draw lines smooth"
+V,      showBoundingBox,                ,                  1,    bool,         false,                  , P,      "show scene bounding box (red), as available in renderState.boundingBox; NOTE that the bounding box is only updated with ZoomAll or at startup; this is a debug flag and it may show reasongs for strange ZoomAll behavior, as ZoomAll should zoom to the bounding box; does only work for perspective=0"
+#
+writeFile=VisualizationSettings.h
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = VSettingsLight
+appendToFile=True
+writePybindIncludes = True
+typicalPaths = SC.visualizationSettings.openGL
+classDescription = "Settings for lights."
+#V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
+V,      useCameraFrame,                 ,                  1,    bool,         false,                  , P,      "set False to set light positions and directions relative to model frame; True: lights are in camera frame, not following the visual transformations; this was True up to Exudyn 1.9.174"
+#
+V,      enable,                         ,                  1,    bool,         true,                   , P,      "turn on/off light"
+V,      position,                       ,                  4,    Float4,       "Float4({2.f,2.f,10.f,0.f})",, P, "4D position vector of GL_LIGHT[0,1,2,3]; 4th value should be 0 for directional lights that are (almost) infinitely far away, like the sun, but 1 for position-based lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position to be located at a reasonable location; the openGL renderer uses shadow volumes and approximates directional lights by enlarging the direction to 200 times maxSceneSize, while the raytracer uses the correct direction; see opengl manuals"
+V,      diffuse,                        ,                  1,    float,        "0.5f",                 , P,      "diffuse value of GL_LIGHT[0,1,2,3]"
+V,      specular,                       ,                  1,    float,        "0.5f",                 , P,      "specular value of GL_LIGHT[0,1,2,3]"
+V,      constantAttenuation,            ,                  1,    float,        "1.0f",                 , P,      "constant attenuation coefficient of GL_LIGHT[0,1,2,3], this is a constant factor that attenuates the light source; attenuation factor = 1/(kc +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1"
+V,      linearAttenuation,              ,                  1,    float,        "0.0f",                 , P,      "linear attenuation coefficient of GL_LIGHT[0,1,2,3], this is a linear factor for attenuation of the light source with distance"
+V,      quadraticAttenuation,           ,                  1,    float,        "0.0f",                 , P,      "quadratic attenuation coefficient of GL_LIGHT[0,1,2,3], this is a quadratic factor for attenuation of the light source with distance"
+V,      shadow,                         ,                  ,     UFloat,       "0.f",                  , P,      "in OpenGL renderer, the shadow parameter $\in [0 ... 1]$ prescribes amount of shadow of light [0,1,2,3] that is added to the scene, using light position (or only direction), accumulating for each light; if this parameter is different from 0, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for each light if shadow>0, accumulating effects of each light source"
+V,      lightRadius,                    ,                  1,    float,        "0.1f",                 , P,      "only used by raytracers: radius of light used to compute smooth shadows (approximated by raytracer.lightRadiusVariations); if lightRadiusVariations>1, this value defines the radius of the light, converting point lights into distributed lights (slower)"
+# old default values for light1 (differs from light0, initialized in .cpp / 
+# V,      enableLight1,                   ,                  1,    bool,         true,                   , P,      "turn on/off light1"
+# V,      light1position,                 ,                  4,    Float4,       "Float4({2.f,2.f,-10.f,0.f})",, P, "4D position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals"
+# V,      light1diffuse,                  ,                  1,    float,        "0.5f",                 , P,      "diffuse value of GL_LIGHT1"
+# V,      light1specular,                 ,                  1,    float,        "0.6f",                 , P,      "specular value of GL_LIGHT1"
+# V,      light1constantAttenuation,      ,                  1,    float,        "1.0f",                 , P,      "constant attenuation coefficient of GL_LIGHT1, this is a constant factor that attenuates the light source; attenuation factor = 1/(kc +kl*d + kq*d*d); only used for lights, where last component of light position is 1"
+# V,      light1linearAttenuation,        ,                  1,    float,        "0.0f",                 , P,      "linear attenuation coefficient of GL_LIGHT1, this is a linear factor for attenuation of the light source with distance"
+# V,      light1quadraticAttenuation,     ,                  1,    float,        "0.0f",                 , P,      "quadratic attenuation coefficient of GL_LIGHT1, this is a quadratic factor for attenuation of the light source with distance"
+#
+writeFile=VisualizationSettings.h
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -746,70 +968,87 @@ class = VSettingsOpenGL
 appendToFile=True
 writePybindIncludes = True
 typicalPaths = SC.visualizationSettings
-classDescription = "OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL functionality"
+classDescription = "OpenGL settings for 2D and 3D rendering - with many settings also used for raytracer. For further details and backgrounds also see OpenGL 1.3 functionality on the web."
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
-V,      initialCenterPoint,             ,                  3,    Float3,       "Float3({0.f,0.f,0.f})",, P,      "centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True"
-V,      initialZoom,                    ,                  ,     UFloat,       "1.f",                  , P,      "initial zoom of scene; overwritten/ignored if autoFitScene = True"
-V,      initialMaxSceneSize,            ,                  ,     PFloat,       "1.f",                  , P,      "initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True"
-V,      initialModelRotation,           ,                  3x3,    StdArray33F,    "EXUmath::Matrix3DFToStdArray33(Matrix3DF(3,3,{1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f}))",      , P,      "initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]"
+V,      advanced,                       ,                  ,     VSettingsOpenGLAdvanced,  ,           , PS,     "advanced settings for openGL"
+V,      light0,                         ,                  ,     VSettingsLight, ,                     , PS,     "settings for light0 and shadow"
+V,      light1,                         ,                  ,     VSettingsLight, ,                     , PS,     "settings for light1 and shadow"
+V,      light2,                         ,                  ,     VSettingsLight, ,                     , PS,     "settings for light2 and shadow"
+V,      light3,                         ,                  ,     VSettingsLight, ,                     , PS,     "settings for light3 and shadow"
 #
-V,      clippingPlaneNormal,            ,                  3,    Float3,       "Float3({0.f,0.f,0.f})",, P,      "normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; the clipped half-space is in direction of the normal; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance"
-V,      clippingPlaneDistance,          ,                  ,     float,        "0.f",                  , P,      "distance of clipping plane on normal vector; see also clippingPlaneNormal"
-V,      clippingPlaneColor,             ,                  4,    Float4,       "Float4({0.7f,0.5f,0.5f,0.f})",, P,"RGBA color for clipping plane; if alpha-channel is 0, the cutting plane is not drawn; if alpha-channel is 1, the clippingPlaneColor is used; if alpha-channel is 2, the color of the object interior is used as clipping plane color (which may look strange in case of object-in-object)"
-#
-V,      perspective,                    ,                  ,     UFloat,       "0.f",                  , P,      "parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 0.5 (large amount of perspective); mouse coordinates will not work with perspective"
-V,      shadow,                         ,                  ,     UFloat,       "0.f",                  , P,      "parameter $\in [0 ... 1]$ prescribes amount of shadow for light0 (using light0position, etc.) in OpenGL renderer; if this parameter is different from 1, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for all lights if shadow>0"
-V,      shadowPolygonOffset,            ,                  ,     PFloat,       "0.1f",                 , P,      "some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies"
-V,      polygonOffset,                  ,                  ,     float,        "0.01f",                , P,      "general polygon offset for polygons, except for shadows; use this parameter to draw polygons behind lines to reduce artifacts for very large or small models"
+V,      zMaxSceneFactor,                ,                  ,     PFloat,       "2.f",                  , P,      "factor multiplied with maxSceneSize to avoid clipping of modelview; larger values reduce clipping of near or far objects, but may lead to artifacts (so-called Z-fighting)"
 # 
-V,      multiSampling,                  ,                  1,    PInt,         "1",                    , P,      "NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!"
+V,      multiSampling,                  ,                  1,    PInt,         "1",                    , P,      "NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 3, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!"
 V,      lineWidth,                      ,                  1,    UFloat,       "1.f",                  , P,      "width of lines used for representation of lines, circles, points, etc."
-V,      lineSmooth,                     ,                  1,    bool,         true,                   , P,      "draw lines smooth"
-V,      textLineWidth,                  ,                  1,    UFloat,       "1.f",                  , P,      "width of lines used for representation of text"
-V,      textLineSmooth,                 ,                  1,    bool,         false,                  , P,      "draw lines for representation of text smooth"
-V,      facesTransparent,               ,                  1,    bool,         false,                  , P,      "True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers"
 V,      faceTransparencyGlobal,         ,                  1,    UFloat,       "0.4f",                 , P,      "in case that facesTransparent=True this represents the max alpha-transparency"
-V,      depthSorting,                   ,                  1,    bool,         false,                  , P,      "True (slower): sort triangles by Z-depth to remove transparency artifacts: only works if triangles do not intersect or come close (you may like to refine triangle meshes); False: no depth-sort (faster)"
-V,      showFaces,                      ,                  1,    bool,         true,                   , P,      "show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation"
-V,      showFaceEdges,                  ,                  1,    bool,         false,                  , P,      "show edges of faces; using the options showFaces=false and showFaceEdges=true gives are wire frame representation"
-V,      showLines,                      ,                  1,    bool,         true,                   , P,      "show lines (different from edges of faces)"
-V,      showMeshFaces,                  ,                  1,    bool,         true,                   , P,      "show faces of finite elements; independent of showFaces"
-V,      showMeshEdges,                  ,                  1,    bool,         true,                   , P,      "show edges of finite elements; independent of showFaceEdges"
 V,      faceEdgesColor,                 ,                  4,    Float4,       "Float4({0.2f,0.2f,0.2f,1.f})",,P,"global RGBA color for face edges"
 #
-V,      shadeModelSmooth,               ,                  1,    bool,         true,                   , P,      "True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces"
-V,      materialAmbientAndDiffuse,      ,                  4,    Float4,       "Float4({0.6f,0.6f,0.6f,1.f})",, P,"RGBA ambient color of material"
 V,      materialShininess,              ,                  1,    float,        "32.f",                 , P,      "shininess of material"
-V,      materialSpecular,               ,                  4,    Float4,       "Float4({0.6f,0.6f,0.6f,1.f})",, P,  "RGBA specular color of material"
+V,      materialSpecular,               ,                  4,    Float4,       "Float4({0.6f,0.6f,0.6f,1.f})",,P,"RGBA specular color of material"
 #lights:
-V,      enableLighting,                 ,                  1,    bool,         true,                   , P,      "generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL_LIGHTING)"
-V,      lightModelLocalViewer,          ,                  1,    bool,         false,                  , P,      "select local viewer for light; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,...)"
-V,      lightModelTwoSide,              ,                  1,    bool,         false,                  , P,      "enlighten also backside of object; may cause problems on some graphics cards and lead to slower performance; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,...)"
-V,      lightModelAmbient,              ,                  4,    Float4,       "Float4({0.f,0.f,0.f,1.f})",,P,"global ambient light; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_AMBIENT,[r,g,b,a])"
-V,      lightPositionsInCameraFrame,    ,                  1,    bool,         false,                  , P,      "set False to set light positions and directions relative to model frame; True: lights are in global (camera) frame; this is always False for raytracer; this was True up to Exudyn 1.9.174"
-#
-V,      enableLight0,                   ,                  1,    bool,         true,                   , P,      "turn on/off light0"
-V,      light0position,                 ,                  4,    Float4,       "Float4({0.2f,0.2f,10.f,0.f})",, P,"4D position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position; see opengl manuals"
-V,      light0ambient,                  ,                  1,    float,        "0.3f",                , P,      "ambient value of GL_LIGHT0"
-V,      light0diffuse,                  ,                  1,    float,        "0.6f",                 , P,      "diffuse value of GL_LIGHT0"
-V,      light0specular,                 ,                  1,    float,        "0.5f",                 , P,      "specular value of GL_LIGHT0"
-V,      light0constantAttenuation,      ,                  1,    float,        "1.0f",                 , P,      "constant attenuation coefficient of GL_LIGHT0, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1"
-V,      light0linearAttenuation,        ,                  1,    float,        "0.0f",                 , P,      "linear attenuation coefficient of GL_LIGHT0, this is a linear factor for attenuation of the light source with distance"
-V,      light0quadraticAttenuation,     ,                  1,    float,        "0.0f",                 , P,      "quadratic attenuation coefficient of GL_LIGHT0, this is a quadratic factor for attenuation of the light source with distance"
-#
-V,      enableLight1,                   ,                  1,    bool,         true,                   , P,      "turn on/off light1"
-V,      light1position,                 ,                  4,    Float4,       "Float4({1.f,1.f,-10.f,0.f})",, P, "4D position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals"
-V,      light1ambient,                  ,                  1,    float,        "0.0f ",                , P,      "ambient value of GL_LIGHT1"
-V,      light1diffuse,                  ,                  1,    float,        "0.5f",                 , P,      "diffuse value of GL_LIGHT1"
-V,      light1specular,                 ,                  1,    float,        "0.6f",                 , P,      "specular value of GL_LIGHT1"
-V,      light1constantAttenuation,      ,                  1,    float,        "1.0f",                 , P,      "constant attenuation coefficient of GL_LIGHT1, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); only used for lights, where last component of light position is 1"
-V,      light1linearAttenuation,        ,                  1,    float,        "0.0f",                 , P,      "linear attenuation coefficient of GL_LIGHT1, this is a linear factor for attenuation of the light source with distance"
-V,      light1quadraticAttenuation,     ,                  1,    float,        "0.0f",                 , P,      "quadratic attenuation coefficient of GL_LIGHT1, this is a quadratic factor for attenuation of the light source with distance"
-
+#previously 0 -> 0.3 -> 0.6 (same as raytracer)
+V,      lightModelAmbient,              ,                  4,    Float4,       "Float4({0.4f,0.4f,0.4f,1.f})",,P,"global ambient light (needed for faces that are close to orthogonal to light or faces in shadow region); maps to OpenGL glLightModeli(GL_LIGHT_MODEL_AMBIENT,[r,g,b,a]); also used by raytracer"
 # debug:
 V,      drawFaceNormals,                ,                  1,    bool,         false,                  , P,      "draws triangle normals, e.g. at center of triangles; used for debugging of faces"
 V,      drawVertexNormals,              ,                  1,    bool,         false,                  , P,      "draws vertex normals; used for debugging"
 V,      drawNormalsLength,              ,                  1,    PFloat,       "0.1f",                 , P,      "length of normals; used for debugging"
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#DEPRECATED
+#lights:
+V,      shadow,                         ,                  ,     UFloat,       "1.10.80;EXP=2030",     , PX,     "openGL.light0.shadow"
+V,      lightPositionsInCameraFrame,    ,                  1,    bool,         "1.10.80;EXP=2030",     , PX,     "openGL.light0.useCameraFrame"
+#
+V,      enableLight0,                   ,                  1,    bool,         "1.10.80;EXP=2030",     , PX,     "openGL.light0.enable"
+V,      light0position,                 ,                  4,    Float4,       "1.10.80;EXP=2030",     , PX,     "openGL.light0.position"
+V,      light0diffuse,                  ,                  1,    float,        "1.10.80;EXP=2030",     , PX,     "openGL.light0.diffuse"
+V,      light0specular,                 ,                  1,    float,        "1.10.80;EXP=2030",     , PX,     "openGL.light0.specular"
+V,      light0constantAttenuation,      ,                  1,    float,        "1.10.80;EXP=2030",     , PX,     "openGL.light0.constantAttenuation"
+V,      light0linearAttenuation,        ,                  1,    float,        "1.10.80;EXP=2030",     , PX,     "openGL.light0.linearAttenuation"
+V,      light0quadraticAttenuation,     ,                  1,    float,        "1.10.80;EXP=2030",     , PX,     "openGL.light0.quadraticAttenuation"
+#
+V,      enableLight1,                   ,                  1,    bool,         "1.10.80;EXP=2030",     , PX,     "openGL.light1.enable"
+V,      light1position,                 ,                  4,    Float4,       "1.10.80;EXP=2030",     , PX,     "openGL.light1.position"
+V,      light1diffuse,                  ,                  1,    float,        "1.10.80;EXP=2030",     , PX,     "openGL.light1.diffuse"
+V,      light1specular,                 ,                  1,    float,        "1.10.80;EXP=2030",     , PX,     "openGL.light1.specular"
+V,      light1constantAttenuation,      ,                  1,    float,        "1.10.80;EXP=2030",     , PX,     "openGL.light1.constantAttenuation"
+V,      light1linearAttenuation,        ,                  1,    float,        "1.10.80;EXP=2030",     , PX,     "openGL.light1.linearAttenuation"
+V,      light1quadraticAttenuation,     ,                  1,    float,        "1.10.80;EXP=2030",     , PX,     "openGL.light1.quadraticAttenuation"
+#scene:
+V,      facesTransparent,               ,                  1,    bool,         "1.10.80;EXP=2030",     , PX,     "view0.scene.facesTransparent"
+V,      showFaces,                      ,                  1,    bool,         "1.10.80;EXP=2030",     , PX,     "view0.scene.showFaces"
+V,      showFaceEdges,                  ,                  1,    bool,         "1.10.80;EXP=2030",     , PX,     "view0.scene.showFaceEdges"
+V,      showMeshFaces,                  ,                  1,    bool,         "1.10.80;EXP=2030",     , PX,     "view0.scene.showMeshFaces"
+V,      showMeshEdges,                  ,                  1,    bool,         "1.10.80;EXP=2030",     , PX,     "view0.scene.showMeshEdges"
+V,      showLines,                      ,                  1,    bool,         "1.10.80;EXP=2030",     , PX,     "view0.scene.showLines"
+#advanced:
+V,      shadowPolygonOffset,            ,                  ,     PFloat,       "1.10.80;EXP=2030",     , PX,     "openGL.advanced.shadowPolygonOffset"
+V,      polygonOffset,                  ,                  ,     float,        "1.10.80;EXP=2030",     , PX,     "openGL.advanced.polygonOffset"
+V,      shadeModelSmooth,               ,                  1,    bool,         "1.10.80;EXP=2030",     , PX,     "openGL.advanced.shadeModelSmooth"
+V,      depthSorting,                   ,                  1,    bool,         "1.10.80;EXP=2030",     , PX,     "openGL.advanced.depthSorting"
+V,      textLineWidth,                  ,                  1,    UFloat,       "1.10.80;EXP=2030",     , PX,     "openGL.advanced.textLineWidth"
+V,      textLineSmooth,                 ,                  1,    bool,         "1.10.80;EXP=2030",     , PX,     "openGL.advanced.textLineSmooth"
+V,      enableLighting,                 ,                  1,    bool,         "1.10.80;EXP=2030",     , PX,     "openGL.advanced.enableLighting"
+V,      lightModelLocalViewer,          ,                  1,    bool,         "1.10.80;EXP=2030",     , PX,     "openGL.advanced.lightModelLocalViewer"
+V,      lightModelTwoSide,              ,                  1,    bool,         "1.10.80;EXP=2030",     , PX,     "openGL.advanced.lightModelTwoSide"
+V,      lineSmooth,                     ,                  1,    bool,         "1.10.80;EXP=2030",     , PX,     "openGL.advanced.lineSmooth"
+#
+V,      initialCenterPoint,             ,                  3,    Float3,       "1.10.80;EXP=2030",     , PX,     "openGL.advanced.initialCenterPoint"
+V,      initialZoom,                    ,                  ,     UFloat,       "1.10.80;EXP=2030",     , PX,     "openGL.advanced.initialZoom"
+V,      initialMaxSceneSize,            ,                  ,     PFloat,       "1.10.80;EXP=2030",     , PX,     "openGL.advanced.initialMaxSceneSize"
+V,      initialModelRotation,           ,                  3x3,  StdArray33F,  "1.10.80;EXP=2030",     , PX,     "openGL.advanced.initialModelRotation"
+#
+V,      clippingPlaneNormal,            ,                  3,    Float3,       "1.10.80;EXP=2030",     , PX,     "view0.camera.clippingPlaneNormal"
+V,      clippingPlaneDistance,          ,                  ,     float,        "1.10.80;EXP=2030",     , PX,     "view0.camera.clippingPlaneDistance"
+V,      clippingPlaneColor,             ,                  4,    Float4,       "1.10.80;EXP=2030",     , PX,     "openGL.advanced.clippingPlaneColor"
+V,      perspective,                    ,                  ,     UFloat,       "1.10.80;EXP=2030",     , PX,     "view0.camera.perspective"
+#removed,previously 0.3
+V,      light0ambient,                  ,                  1,    float,        "1.10.80;EXP=2030",     , PX,     "openGL.dummy"
+V,      light1ambient,                  ,                  1,    float,        "1.10.80;EXP=2030",     , PX,     "openGL.dummy"
+V,      dummy,                          ,                  1,    float,        "0.0f",                 ,  ,      "unused dummy variable, used to redirect deprecated values"
+#removed, previously [0.6,0.6,0.6,1] - but unused:
+V,      materialAmbientAndDiffuse,      ,                  4,    Float4,       "1.10.80;EXP=2030",     , PX,     "openGL.materialSpecular"
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #
 writeFile=VisualizationSettings.h
 
@@ -818,7 +1057,7 @@ class = VSettingsExportImages
 appendToFile=True
 writePybindIncludes = True
 typicalPaths = SC.visualizationSettings
-classDescription = "Functionality to export images to files (PNG or TGA format) which can be used to create animations; to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly."
+classDescription = "Functionality to export images of view0 to files (PNG or TGA format) which can be used to create animations; in order to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly."
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
 V,      saveImageTimeOut,               ,                  ,     PInt,         "5000",                 , P,      "timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes"
 V,      saveImageFileName,              ,                  ,     FileName,     "images/frame",         , P,      "filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.png, frame0001.png,...); ; directory will be created if it does not exist"
@@ -844,11 +1083,38 @@ typicalPaths = SC.visualizationSettings.interactive
 classDescription = "Functionality to interact openVR; requires special hardware or software emulator, see steam / openVR descriptions"
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
 #have been in VSettingsWindows earlier:
-V,      enable,                         ,                  ,     bool,         false,                 , P,      "True: openVR enabled (if compiled with according flag and installed openVR)"
-V,      showCompanionWindow,            ,                  ,     bool,         true,                  , P,      "True: openVR will show companion window containing left and right eye view"
-V,      logLevel,                       ,                  ,     Int,          1,                     , P,      "integer value setting log level of openVR: -1 (no output), 0 (error), 1 (warning), 2 (info), 3 (debug); increase log level to get more output"
+V,      enable,                         ,                  ,     bool,         false,                  , P,      "True: openVR enabled (if compiled with according flag and installed openVR)"
+V,      showCompanionWindow,            ,                  ,     bool,         true,                   , P,      "True: openVR will show companion window containing left and right eye view"
+V,      logLevel,                       ,                  ,     Int,          1,                      , P,      "integer value setting log level of openVR: -1 (no output), 0 (error), 1 (warning), 2 (info), 3 (debug); increase log level to get more output"
 V,      actionManifestFileName,         ,                  ,     FileName,     "C:/openVRactionsManifest.json", , P,  "This string must contain a string representing a valid absolute path to a vr_actions.json manifest, which describes all HMD, tracker, etc. devices as given by openVR"
 writeFile=VisualizationSettings.h
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+class = VSettingsInteractiveAdvanced
+appendToFile=True
+writePybindIncludes = True
+typicalPaths = SC.visualizationSettings.interactive
+classDescription = "Advanced settings for interactive."
+#V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
+#
+V,      keypressRotationStep,           ,                  ,     float,        "5.f",                  , P,      "rotation increment per keypress in degree (full rotation = 360 degree)"
+V,      mouseMoveRotationFactor,        ,                  ,     float,        "1.f",                  , P,      "rotation increment per 1 pixel mouse movement in degree"
+V,      keypressTranslationStep,        ,                  ,     float,        "0.1f",                 , P,      "translation increment per keypress relative to window size"
+V,      zoomStepFactor,                 ,                  ,     float,        "1.15f",                , P,      "change of zoom per keypress (keypad +/-) or mouse wheel increment"
+V,      joystickScaleTranslation,       ,                  ,     float,        "6.f",                  , P,      "translation scaling factor for joystick input"
+V,      joystickScaleRotation,          ,                  ,     float,        "200.f",                , P,      "rotation scaling factor for joystick input"
+#
+V,      highlightColor,                 ,                  4,    Float4,       "Float4({0.8f,0.05f,0.05f,0.75f})",, P, "RGBA color for highlighted item; 4th value is alpha-transparency"
+V,      highlightOtherColor,            ,                  4,    Float4,       "Float4({0.5f,0.5f,0.5f,0.4f})", , P, "RGBA color for other items (which are not highlighted); 4th value is alpha-transparency"
+V,      selectionHighlights,            ,                  ,     bool,         true,                   , P,      "True: enable mouse click to highlights item (default: red)"
+V,      selectionLeftMouse,             ,                  ,     bool,         true,                   , P,      "True: enable left mouse click on items to show basic information"
+V,      selectionRightMouse,            ,                  ,     bool,         true,                   , P,      "True: enable right mouse click on items to show dictionary (read only!)"
+V,      selectionRightMouseGraphicsData,,                  ,     bool,         false,                  , P,      "True: right mouse click on items also shows GraphicsData information for inspectation (may sometimes be very large and may not fit into dialog for large graphics objects!)"
+V,      selectionLeftMouseItemTypes,    ,                  ,     Index,        "31",                   , P,      "binary flags (1,2,4,8,16) for (Node,Object,Marker,Load,Sensor) that are identified with left mouse click selection"
+V,      pauseWithSpacebar,              ,                  ,     bool,         true,                   , P,      "True: during simulation, space bar can be pressed to pause simulation"
+writeFile=VisualizationSettings.h
+
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #settings that are used for interaction with renderer: 
@@ -856,37 +1122,46 @@ class = VSettingsInteractive
 appendToFile=True
 writePybindIncludes = True
 typicalPaths = SC.visualizationSettings
-classDescription = "Functionality to interact with render window; will include left and right mouse press actions and others in future."
+classDescription = "Functionality to interact with render window; includes special rotation and zoom factors, item-highlighting, marker tracking, item selection and keyPressUserFunction."
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
 #have been in VSettingsWindows earlier:
+V,      advanced,                       ,                  ,     VSettingsInteractiveAdvanced,,        , PS,     "advanced interactive visualization settings"
 V,      openVR,                         ,                  ,     VSettingsOpenVR,    ,                 , PS,     "openVR visualization settings"
-V,      keypressRotationStep,           ,                  ,     float,        "5.f",                  , P,      "rotation increment per keypress in degree (full rotation = 360 degree)"
-V,      mouseMoveRotationFactor,        ,                  ,     float,        "1.f",                  , P,      "rotation increment per 1 pixel mouse movement in degree"
-V,      keypressTranslationStep,        ,                  ,     float,        "0.1f",                 , P,      "translation increment per keypress relative to window size"
-V,      zoomStepFactor,                 ,                  ,     float,        "1.15f",                , P,      "change of zoom per keypress (keypad +/-) or mouse wheel increment"
-V,      lockModelView,                  ,                  ,     bool,         false,                  , P,      "True: all movements (with mouse/keys), rotations, zoom are disabled; initial values are considered ==> initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value"
-V,      pauseWithSpacebar,              ,                  ,     bool,         true,                   , P,      "True: during simulation, space bar can be pressed to pause simulation"
+V,      autoRotateModelView,            ,                  ,     bool,         false,                  , P,      "True: rotate model view with autorotation"
+V,      autoRotationVelocity,           ,                  3,    Float3,       "Float3({0.f,0.f,1.047198f})",, P,"Angular velocity vector for auto-rotation of scene (only visualization view is rotated, not the model itself!)"
 #
-V,      highlightItemIndex,             ,                  ,     Int,          "-1",                   , P,      "index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted"
-V,      highlightItemType,              ,                  ,     ItemType,     "ItemType::_None",      , P,      "item type (Node, Object, ...) that shall be highlighted (e.g., need to find item due to errors)"
+V,      highlightItemIndex,             ,                  ,     Int,          "-1",                   , P,      "index of item that shall be highlighted (e.g., to find item which cauess problems); if set -1, no item is highlighted"
+V,      highlightItemType,              ,                  ,     ItemType,     "ItemType::_None",      , P,      "item type (Node, Object, ...) that shall be highlighted (e.g., to find item which cauess problems)"
 V,      highlightMbsNumber,             ,                  ,     UInt,         "0",                    , P,      "index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)"
-V,      highlightColor,                 ,                  4,    Float4,       "Float4({0.8f,0.05f,0.05f,0.75f})",, P, "RGBA color for highlighted item; 4th value is alpha-transparency"
-V,      highlightOtherColor,            ,                  4,    Float4,       "Float4({0.5f,0.5f,0.5f,0.4f})", , P, "RGBA color for other items (which are not highlighted); 4th value is alpha-transparency"
-#marker tracking
-V,      trackMarker,                    ,                  ,     Int,          "-1",                  , P,      "if valid marker index is provided and marker provides position (and orientation), the centerpoint of the scene follows the marker (and orientation); depends on trackMarkerPosition and trackMarkerOrientation; by default, only position is tracked"
-V,      trackMarkerMbsNumber,           ,                  ,     Index,        "0",                   , P,      "number of main system which is used to track marker; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number"
-V,      trackMarkerPosition,            ,                  3,    Float3,       "Float3({1.f,1.f,1.f})",,P,      "choose which coordinates or marker are tracked (x,y,z)"
-V,      trackMarkerOrientation,         ,                  3,    Float3,       "Float3({0.f,0.f,0.f})",,P,      "choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one"
 #
-V,      selectionHighlights,            ,                  ,     bool,         true,                  , P,      "True: mouse click highlights item (default: red)"
-V,      selectionLeftMouse,             ,                  ,     bool,         true,                  , P,      "True: left mouse click on items and show basic information"
-V,      selectionRightMouse,            ,                  ,     bool,         true,                  , P,      "True: right mouse click on items and show dictionary (read only!)"
-V,      selectionRightMouseGraphicsData,,                  ,     bool,         false,                 , P,      "True: right mouse click on items also shows GraphicsData information for inspectation (may sometimes be very large and may not fit into dialog for large graphics objects!)"
-V,      selectionLeftMouseItemTypes,    ,                  ,     Index,        "31",                  , P,      "binary flags (1,2,4,8,16) for (Node,Object,Marker,Load,Sensor) that are identified with left mouse click selection"
 #
-V,      useJoystickInput,               ,                  ,     bool,         true,                  , P,      "True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems ..."
-V,      joystickScaleTranslation,       ,                  ,     float,        "6.f",                 , P,      "translation scaling factor for joystick input"
-V,      joystickScaleRotation,          ,                  ,     float,        "200.f",               , P,      "rotation scaling factor for joystick input"
+V,      useJoystickInput,               ,                  ,     bool,         true,                   , P,      "True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems ..."
+V,      logMouseCoordinates,            ,                  ,     bool,         "true",                 , P,      "True: if showMouseCoordinates=True, also log mouse coordinates (transformed to model coordinates); only works for axis-aligned ortho-projections and shows the coordinates of the current plane"
+V,      ignoreKeys,                     ,                  ,     bool,         "false",                , P,      "True: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'; if ignoreKeys=True, then keyPressUserFunction can be used!"
+V,      keyPressUserFunction,           ,                  ,     KeyPressUserFunction,  0,             , P,      "add a Python function f(key, action, mods) here, which is called every time a key is pressed; set this parameter to 0 (int) in order to deactivate it; the user function is only called if interactive.ignoreKeys=True; function shall return true, if key has been processed; Example: \tabnewline def f(key, action, mods):\tabnewline \phantom{XXX} print('key=',key);\tabnewline use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)"
+#DEPRECATED:
+V,      lockModelView,                  ,                  ,     bool,         "1.10.80;EXP=2030",     , PX,     "view0.window.lockModelView"
+#marker tracking:
+V,      trackMarker,                    ,                  ,     Int,          "1.10.80;EXP=2030",     , PX,     "view0.camera.trackMarker"
+V,      trackMarkerMbsNumber,           ,                  ,     Index,        "1.10.80;EXP=2030",     , PX,     "view0.camera.trackMarkerMbsNumber"
+V,      trackMarkerPosition,            ,                  3,    Float3,       "1.10.80;EXP=2030",     , PX,     "view0.camera.trackMarkerPosition"
+V,      trackMarkerOrientation,         ,                  3,    Float3,       "1.10.80;EXP=2030",     , PX,     "view0.camera.trackMarkerOrientation"
+#=>advanced
+V,      keypressRotationStep,           ,                  ,     float,        "1.10.80;EXP=2030",     , PX,     "interactive.advanced.keypressRotationStep"
+V,      mouseMoveRotationFactor,        ,                  ,     float,        "1.10.80;EXP=2030",     , PX,     "interactive.advanced.mouseMoveRotationFactor"
+V,      keypressTranslationStep,        ,                  ,     float,        "1.10.80;EXP=2030",     , PX,     "interactive.advanced.keypressTranslationStep"
+V,      zoomStepFactor,                 ,                  ,     float,        "1.10.80;EXP=2030",     , PX,     "interactive.advanced.zoomStepFactor"
+V,      joystickScaleTranslation,       ,                  ,     float,        "1.10.80;EXP=2030",     , PX,     "interactive.advanced.joystickScaleTranslation"
+V,      joystickScaleRotation,          ,                  ,     float,        "1.10.80;EXP=2030",     , PX,     "interactive.advanced.joystickScaleRotation"
+#                                                                                                                                      
+V,      highlightColor,                 ,                  4,    Float4,       "1.10.80;EXP=2030",     , PX,     "interactive.advanced.highlightColor"
+V,      highlightOtherColor,            ,                  4,    Float4,       "1.10.80;EXP=2030",     , PX,     "interactive.advanced.highlightOtherColor"
+V,      selectionHighlights,            ,                  ,     bool,         "1.10.80;EXP=2030",     , PX,     "interactive.advanced.selectionHighlights"
+V,      selectionLeftMouse,             ,                  ,     bool,         "1.10.80;EXP=2030",     , PX,     "interactive.advanced.selectionLeftMouse"
+V,      selectionRightMouse,            ,                  ,     bool,         "1.10.80;EXP=2030",     , PX,     "interactive.advanced.selectionRightMouse"
+V,      selectionRightMouseGraphicsData,,                  ,     bool,         "1.10.80;EXP=2030",     , PX,     "interactive.advanced.selectionRightMouseGraphicsData"
+V,      selectionLeftMouseItemTypes,    ,                  ,     Index,        "1.10.80;EXP=2030",     , PX,     "interactive.advanced.selectionLeftMouseItemTypes"
+V,      pauseWithSpacebar,              ,                  ,     bool,         "1.10.80;EXP=2030",     , PX,     "interactive.advanced.pauseWithSpacebar"
 writeFile=VisualizationSettings.h
 
 
@@ -896,8 +1171,8 @@ class = VisualizationSettings
 appendToFile=True
 writePybindIncludes = True
 addDictionaryAccess = True
-typicalPaths = 
-classDescription = "Settings for visualization"
+typicalPaths = SC
+classDescription = "Top structure for all visualization settings in Exudyn"
 #V|F,   pythonName,                   cplusplusName,      size, type,         defaultValue,args,           cFlags, parameterDescription
 #
 V,      nodes,                      ,                  ,     VSettingsNodes,    ,                 , PS,      "node visualization settings"
@@ -909,13 +1184,19 @@ V,      sensors,                    ,                  ,     VSettingsSensors,  
 #
 V,      contour,                    ,                  ,     VSettingsContour,  ,                 , PS,      "contour plot visualization settings"
 V,      contact,                    ,                  ,     VSettingsContact,  ,                 , PS,      "contact visualization settings"
-V,      interactive,                ,                  ,     VSettingsInteractive, ,              , PS,      "Settings for interaction with renderer"
-V,      dialogs,                    ,                  ,     VSettingsDialogs,  ,                 , PS,      "dialogs settings"
-V,      exportImages,               ,                  ,     VSettingsExportImages,,              , PS,      "settings for exporting (saving) images to files in order to create animations"
-V,      window,                     ,                  ,     VSettingsWindow,   ,                 , PS,      "visualization window and interaction settings"
+#
+V,      view0,                      ,                  ,     VSettingsView,     ,                 , PS,      "Settings for main view 0"
+V,      view1,                      ,                  ,     VSettingsView,     ,                 , PS,      "Settings for sub-view 1"
+V,      view2,                      ,                  ,     VSettingsView,     ,                 , PS,      "Settings for sub-view 2"
+V,      view3,                      ,                  ,     VSettingsView,     ,                 , PS,      "Settings for sub-view 3"
 V,      openGL,                     ,                  ,     VSettingsOpenGL,   ,                 , PS,      "OpenGL rendering settings"
 V,      raytracer,                  ,                  ,     VSettingsRaytracer,,                 , PS,      "Raytracer settings (builds on OpenGL rendering settings)"
 V,      general,                    ,                  ,     VSettingsGeneral,  ,                 , PS,      "general visualization settings"
+#
+V,      interactive,                ,                  ,     VSettingsInteractive, ,              , PS,      "Settings for interaction with renderer"
+V,      dialogs,                    ,                  ,     VSettingsDialogs,  ,                 , PS,      "dialogs settings"
+V,      exportImages,               ,                  ,     VSettingsExportImages,,              , PS,      "settings for exporting (saving) images to files in order to create animations"
+V,      window,                     ,                  ,     VSettingsWindowDeprecated, "1.10.80;EXP=2030", , PSX, "Deprecated visualization settings for window; DO NOT USE"
 #
 #done in WriteToPybind function FL,      GetDictionaryWithTypeInformation,  ,        ,     py::dict,          ,                 , DP,      "access function to dictionary of settings hierarchical structure including type information"
 #
@@ -1090,6 +1371,9 @@ classDescription = "Solver internal structure for output modes, output timers an
 #V|F,   pythonName,                   cplusplusName,      size, type,          defaultValue,            args,           cFlags, parameterDescription
 V,      finishedSuccessfully,       ,                  ,     bool,         false,                  ,   P,    "flag is false until solver functions SolveSteps)...) or SolveSystem(...) finished successfully (can be used as external trigger)"
 V,      initializationSuccessful,   ,                  ,     bool,         false,                  ,   P,    "flag is set during call to InitializeSolver(...); reasons for failure are multiple, either inconsistent solver settings are used, files cannot be written (file locked), or initial conditions could not be computed "
+V,      simulationStoppedByUser,    ,                  ,     bool,         false,                  ,   P,    "flag (initialized false) is set true when user stops the simulation (press Q, Escape, etc.)"
+V,      simulationStoppedByUserFunction,    ,          ,     bool,         false,                  ,   P,    "flag (initialized false) is set true when a user function (PreStep, PostNewton, etc.) sends termination signal"
+V,      simulationTimeout,          ,                  ,     bool,         false,                  ,   P,    "flag (initialized false) is set true when exudyn.special.solver.timeout is reached (and timeout is >= 0)"
 #write to file and console
 V,      verboseMode,                ,                  ,     Index,        0,                      ,   P,    "this is a copy of the solvers verboseMode used for console output"
 V,      verboseModeFile,            ,                  ,     Index,        0,                      ,   P,    "this is a copy of the solvers verboseModeFile used for file"
@@ -1103,6 +1387,7 @@ V,      lastSolutionWritten,        ,                  ,     Real,         0.,  
 V,      lastSensorsWritten,         ,                  ,     Real,         0.,                     ,   P,    "simulation time when last sensors have been written"
 V,      lastImageRecorded,          ,                  ,     Real,         0.,                     ,   P,    "simulation time when last image has been recorded"
 V,      cpuStartTime,               ,                  ,     Real,         0.,                     ,   P,    "CPU start time of computation (starts counting at computation of initial conditions)"
+V,      cpuSolverStartTime,         ,                  ,     Real,         0.,                     ,   P,    "CPU start time of main solver (not including initial conditions); cpuSolverStartTime-cpuStartTime gives time for initialization"
 V,      cpuLastTimePrinted,         ,                  ,     Real,         0.,                     ,   P,    "CPU time when output has been printed last time"
 #
 V,      lastVerboseStepIndex,       ,                  ,     Index,        0,                      ,   P,    "step index when last time written to console (or file)"

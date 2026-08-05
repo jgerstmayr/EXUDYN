@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-06  23:48:36 (last modified)
+* @date         2026-02-05  22:13:55 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -42,7 +42,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectGround
-* @brief        A ground object behaving like a rigid body, but having no degrees of freedom; used to attach body-connectors without an action. For examples see spring dampers and joints.
+* @brief        A ground object behaving like a rigid body, but having no degrees of freedom. Used to attach body-connectors without an action. For examples see spring dampers and joints.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -175,11 +175,11 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
-            (Index)OutputVariableType::Position +
-            (Index)OutputVariableType::Displacement +
-            (Index)OutputVariableType::Velocity +
-            (Index)OutputVariableType::AngularVelocity +
-            (Index)OutputVariableType::RotationMatrix );
+            (Index64)OutputVariableType::Position +
+            (Index64)OutputVariableType::Displacement +
+            (Index64)OutputVariableType::Velocity +
+            (Index64)OutputVariableType::AngularVelocity +
+            (Index64)OutputVariableType::RotationMatrix );
     }
 
 };

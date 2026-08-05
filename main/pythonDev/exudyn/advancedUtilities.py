@@ -12,7 +12,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import numpy as np
-from math import sin, cos, pi, sqrt
+from math import sin, cos, pi
 from enum import Enum
 import copy 
 
@@ -553,7 +553,7 @@ def SaveDictToHDF5(fileName, dataDict):
 def LoadDictFromHDF5(fileName, callerGlobals=None):
     try:
         import h5py
-        from scipy.sparse import csr_matrix
+        #from scipy.sparse import csr_matrix
     except:
         raise ImportError('LoadDictFromHDF5 only works if scipy and h5py are installed')        
 

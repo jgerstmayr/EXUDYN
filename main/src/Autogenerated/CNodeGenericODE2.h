@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-10-26  18:53:42 (last modified)
+* @date         2026-02-05  22:13:55 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -40,7 +40,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CNodeGenericODE2
-* @brief        A node containing a number of \hac{ODE2} variables; use e.g. for scalar dynamic equations (Mass1D) or for the ALECable element. Note that referenceCoordinates and all initialCoordinates(_t) must be initialized, because no default values exist.
+* @brief        A node containing a number of \hac{ODE2} variables. Use this node e.g. for scalar dynamic equations (Mass1D), for ObjectGenericODE2 or for the Eulerian coordinate in the ALECable element. NOTE: referenceCoordinates and all initialCoordinates(_t) must be initialized, because no default values exist.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -114,10 +114,10 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
-            (Index)OutputVariableType::CoordinatesTotal +
-            (Index)OutputVariableType::Coordinates +
-            (Index)OutputVariableType::Coordinates_t +
-            (Index)OutputVariableType::Coordinates_tt );
+            (Index64)OutputVariableType::CoordinatesTotal +
+            (Index64)OutputVariableType::Coordinates +
+            (Index64)OutputVariableType::Coordinates_t +
+            (Index64)OutputVariableType::Coordinates_tt );
     }
 
 };

@@ -108,28 +108,28 @@ You can view and download this file on Github: `NGsolveOCCgeometry.py <https://g
    
    mbs.Assemble()
    
-   SC.visualizationSettings.window.renderWindowSize=[1200,800]
+   SC.visualizationSettings.view0.window.renderWindowSize=[1200,800]
    SC.visualizationSettings.general.autoFitScene=False
    
-   SC.visualizationSettings.general.drawCoordinateSystem = False
+   SC.visualizationSettings.view0.scene.drawCoordinateSystem = False
    SC.visualizationSettings.general.showSolverInformation = False
    SC.visualizationSettings.openGL.multiSampling=1
-   SC.visualizationSettings.openGL.shadow = 0.2
+   SC.visualizationSettings.openGL.light0.shadow = 0.2
    SC.visualizationSettings.openGL.lineWidth = 2
-   #SC.visualizationSettings.openGL.light0position = [-2.0, 4.0, 1.0, 1.0]
+   #SC.visualizationSettings.openGL.light0.position = [-2.0, 4.0, 1.0, 1.0]
    SC.visualizationSettings.loads.show = False
-   SC.visualizationSettings.openGL.light0position=[2,-0.25,0.25,1]
+   SC.visualizationSettings.openGL.light0.position=[2,-0.25,0.25,1]
    
    #raytracing options
    SC.visualizationSettings.exportImages.saveImageTimeOut = 200000
    SC.visualizationSettings.openGL.multiSampling = 1
-   SC.visualizationSettings.openGL.enableLight1 = False
+   SC.visualizationSettings.openGL.light1.enable = False
    SC.visualizationSettings.raytracer.numberOfThreads = 16 #number of threads!
-   SC.visualizationSettings.raytracer.enable = False #set True for raytracing
-   SC.visualizationSettings.raytracer.ambientLightColor = [0.5,0.5,0.5,1]
-   SC.visualizationSettings.raytracer.backgroundColorReflections = [0.3,0.3,0.3,1]
+   SC.visualizationSettings.view0.camera.useRaytracer = False #set True for raytracing
+   SC.visualizationSettings.openGL.lightModelAmbient = [0.5,0.5,0.5,1]
+   SC.visualizationSettings.raytracer.advanced.backgroundColorReflections = [0.3,0.3,0.3,1]
    SC.visualizationSettings.raytracer.keepWindowActive= True
-   SC.visualizationSettings.raytracer.searchTreeFactor = 8
+   SC.visualizationSettings.raytracer.advanced.searchTreeFactor = 8
    SC.visualizationSettings.raytracer.imageSizeFactor=2 #for faster rendering
    
    

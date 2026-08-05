@@ -21,6 +21,7 @@
 #include "Graphics/GlfwClient.h"
 
 //#undef __EXUDYN_USE_OPENVR
+//#define __EXUDYN_USE_OPENVR
 #ifdef __EXUDYN_USE_OPENVR
 //#pragma message("==========================")
 #pragma message("** COMPILED WITH OPENVR **")
@@ -673,7 +674,7 @@ void OpenVRinterface::RenderStereoTargets()
 		GetGlfwRenderer()->SetProjectionMatrix(hmd, 1);
 
 		int width, height;
-		GetGlfwRenderer()->GetWindowSize(width, height);
+		GetGlfwRenderer()->GetWindowSize(GetGlfwRenderer()->GetRenderViews()->GetWindow(0), width, height);
 		//rendererOut << "current window: width=" << width << ", height=" << height << "\n";
 
 		float ratio, zoom;

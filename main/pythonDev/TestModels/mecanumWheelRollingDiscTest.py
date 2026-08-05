@@ -303,7 +303,7 @@ SC.visualizationSettings.nodes.basisSize = 0.015
 
 #create animation:
 if useGraphics:
-    SC.visualizationSettings.window.renderWindowSize=[1920,1080]
+    SC.visualizationSettings.view0.window.renderWindowSize=[1920,1080]
     SC.visualizationSettings.openGL.multiSampling = 4
     if False:
         simulationSettings.solutionSettings.recordImagesInterval = 0.05

@@ -10,12 +10,15 @@ currently: automatic generate structures with ostream and initialization
 
 from autoGenerateHelper import GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword, RemoveSpacesTabs, CountLines, \
     TypeConversion, GenerateHeader, SplitString, Str2Latex, DefaultValue2Python, Str2Doxygen, GetDateStr, GetTypesStringLatex, \
-    PyLatexRST, LatexString2RST, RSTheaderString, RSTlabelString, FileNameLower, RemoveIndentation, CutLinesFromString
+    PyLatexRST, LatexString2RST, RSTheaderString, RSTlabelString, FileNameLower, RemoveIndentation, CutLinesFromString,\
+        SplitSummaryDescription, GoogleDocstringRenderer, CleanStringForPyiDescription
 
 import copy
 import os
 import io #RST files written as UTF-8
 from exudynVersion import exudynVersionString
+
+ADD_DOCSTRINGS = True
 
 space4 = '    '
 space8 = space4+space4
@@ -96,6 +99,31 @@ if useNewUserFunctions:
     pyFunctionTypeConversionUFtemplate = 'PythonUserFunctionBase< {UFT} >'
 
 
+type2PyTyping = {'Bool':'bool', 'Int':'int', 'Index':'int', 'Real':'float', 'float':'float', 'UInt':'int', 'UReal':'float', 'PInt':'int', 'PReal':'float', 
+                 'String':'str',
+                 'Vector':'array_like', 'Vector9D':'array_like', 'Vector7D':'array_like', 'Vector6D':'array_like', 
+                 'Vector4D':'[float,float,float,float]', 'Vector3D':'[float,float,float]', 'Vector2D':'[float,float]',
+                 #
+                 'Matrix':'array_like', 'SymmetricMatrix':'array_like', 
+                 'Matrix3D':'array_like', 'Matrix6D':'array_like', #'Matrix6D':'array_like', 
+                 #'JointTypeList':'std::vector<Joint::Type>',#not needed; JointTypeList is defined in C++
+                 'ArrayIndex':'array_like',
+                 'NumpyMatrix':'array_like', 
+                 'NumpyMatrixI':'array_like', 
+                 'NumpyVector':'array_like',
+                 'Float2': '[float,float]', 'Float3': '[float,float,float]', 'Float4': '[float,float,float,float]',  #e.g. for OpenGL vectors
+                 'Float9': 'array_like', 'Float16': 'array_like', #e.g. for OpenGL rotation matrix and homogenous transformation
+                 'Index2': 'array_like', 'Index3': 'array_like', 'Index4': 'array_like',
+                 'NodeIndex':'NodeIndex','ObjectIndex':'ObjectIndex','MarkerIndex':'MarkerIndex',
+                 'LoadIndex':'LoadIndex','SensorIndex':'SensorIndex',
+                 'OutputVariableType':'OutputVariableType',
+                 } #convert parameter types to C++/EXUDYN types
+
+def Type2PythonType(t):
+    if t in type2PyTyping:
+        return type2PyTyping[t]
+    # print('WARNING: unknown type '+t)
+    return t
 
 #this for mutable args
 def IsASafelyVector(parameterType):
@@ -232,6 +260,7 @@ def IsItemIndex(parameterType):
         (parameterType == 'SensorIndex') or
         (parameterType == 'NodeIndex2') or
         (parameterType == 'NodeIndex3') or
+        (parameterType == 'NodeIndex4') or
         (parameterType == 'ArrayNodeIndex') or
         (parameterType == 'ArrayObjectIndex') or
         (parameterType == 'ArrayMarkerIndex') or
@@ -534,6 +563,20 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     sectionLevel=2, 
                     sectionLabel='sec:item:' + parseInfo['class'])
         plr.sLatex += '\\vspace{12pt}'+'\\\\'+'\n'
+
+        #+++++++++++++++++++++++++++
+        #docstrings / pyi
+        (pyiSummary,pyiDescription) = SplitSummaryDescription(CleanStringForPyiDescription(
+            #LatexString2RST(descriptionStr)) #looses $ which is helpful later
+            descriptionStr)
+            )
+        dataDocstring = {'kind': 'classFunction', 'notes':[], 'inputs':[]}
+        dataDocstring['summary'] = pyiSummary
+        dataDocstring['description'] = pyiDescription
+        dataDocstringV = {'kind': 'classFunction', 
+                          'summary':'Visualization data for '+parseInfo['class'],
+                          'inputs':[]}
+        #+++++++++++++++++++++++++++
         
         # plr.sLatex += '\n%+++++++++++++++++++++++++++++++++++\n\mysubsubsection{' + parseInfo['class'] + '}\n'
         # plr.sLatex += '\\label{sec:item:' + parseInfo['class'] + '}\n'
@@ -583,6 +626,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 #write latex doc:
                 parameterDescription = parameter['parameterDescription']
                 [parameterDescription, latexSymbol] = ExtractLatexSymbol(parameterDescription)
+                pyiParameterDescription = parameterDescription
                 if len(latexSymbol) != 0:
                     #if there is a \n, it was wrongly converted => convert back!
                     symbolList+= "\\rowTable{" + parameter['pythonName'].replace('_','\\_') +"}{" + latexSymbol.replace('\n','\\n') + "}{}\n"  #this is the latex symbol string 
@@ -604,8 +648,10 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 
                 if parameter['destination'].find('V') != -1: #visualization
                     thisPLR = vPLR
+                    thisDataDocString = dataDocstringV
                 else:
                     thisPLR = cPLR
+                    thisDataDocString = dataDocstring
 
                 thisPLR.ItemInterfaceWriteRow(pythonName = parameter['pythonName'], 
                                               typeName = Str2Latex(parameterTypeStr), 
@@ -614,6 +660,11 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                                               sSymbol = latexSymbol.replace('\n','\\n'), #correct e.g. \nu
                                               description = parameterDescription)
 
+                thisDataDocString['inputs'].append({'name': parameter['pythonName'],
+                                                    'description': CleanStringForPyiDescription(pyiParameterDescription),
+                                                    # 'description': parameterDescription,
+                                                    'type_hint': Type2PythonType(parameterTypeStr)
+                                                    })
                 
             elif (parameter['pythonName'] == 'GetRequestedMarkerType'):
                 requestedMarkerString = GetTypesStringLatex(parameter['defaultValue'],'Marker', possibleTypes['Marker'],' +')
@@ -649,13 +700,17 @@ def WriteFile(parseInfo, parameterList, typeConversion):
             plr.AddDocu('\\noindent \\mybold{Additional information for ' + parseInfo['class'] + '}:\n', preNewLine=True)
             if len(itemTypeString) != 0:
                 lstAdd += ['This \\texttt{' + parseInfo['classType'] + '} has/provides the following types = ' + itemTypeString]
+                dataDocstring['notes'].append(parseInfo['classType'] + ' has/provides the following types: ' + CleanStringForPyiDescription(itemTypeString))
+
             if len(requestedMarkerString) != 0:
                 lstAdd += ['Requested \\texttt{Marker} type = ' + requestedMarkerString]
+                dataDocstring['notes'].append('Requested Marker type: ' + CleanStringForPyiDescription(requestedMarkerString))
             if len(requestedNodeString) != 0:
                 if requestedNodeString.find('_None') != -1:
                     lstAdd += ['Requested \\texttt{Node} type: read detailed information of item']
                 else:
                     lstAdd += ['Requested \\texttt{Node} type = ' + requestedNodeString]
+                    dataDocstring['notes'].append('Requested Node type: ' + CleanStringForPyiDescription(requestedNodeString))
             if len(parseInfo['pythonShortName']) != 0:
                 lstAdd += ['{\\bf Short name} for Python = \\texttt{' + parseInfo['pythonShortName'] + '}']
                 lstAdd += ['{\\bf Short name} for Python visualization object = \\texttt{V' + parseInfo['pythonShortName'] + '}']
@@ -773,11 +828,16 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 
 
     if hasPybindInterface: #otherwise do not include the description into latex doc
+        #add pyi (stub) information from dataDocstring here!
+        renderer = GoogleDocstringRenderer()
+
         sPythonClass += 'class ' + parseInfo['class'] + ':\n'
+        if ADD_DOCSTRINGS: sPythonClass += renderer.render(dataDocstring, indent=sIndent)+'\n'
         sPythonClass += sIndent+'def __init__(self'
         sPythonIter += sIndent+sIndent+'yield ' + "'" + classTypeStr[0].lower() + classTypeStr[1:] + 'Type' + "'" + ', ' + "'"+sTypeName+"'" + '\n'
         
         vPythonClass += 'class V' + parseInfo['class'] + ':\n'
+        if ADD_DOCSTRINGS: vPythonClass += renderer.render(dataDocstringV, indent=sIndent)+'\n'
         vPythonClass += sIndent+'def __init__(self'
         vDefaultDict = '{'
         vDefaultDictEmpty = True
@@ -812,7 +872,12 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     or IsASimpleMatrix(parameter['type'])
                     #or IsAMatrixVectorSpecial(parameter['type']) #defaults to None!
                     ):
-                    parameterWithCheck = 'np.array('+parameterWithCheck+')'
+                    if parameter['type'] == 'NumpyVector':
+                        parameterWithCheck = 'CheckForValidNumpyArray('+parameterWithCheck+')'
+                    elif parameter['type'] == 'NumpyMatrix':
+                        parameterWithCheck = 'CheckForValidNumpyArray('+parameterWithCheck+')'
+                    else:
+                        parameterWithCheck = 'np.array('+parameterWithCheck+')'
                 elif (IsAArrayIndex(parameter['type'])
                       or parameter['type'] == 'BodyGraphicsData' #in this case, flat copy is ok
                       or parameter['type'] == 'BodyGraphicsDataList' #in this case, flat copy is ok
@@ -854,21 +919,25 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         vDefaultDict += '}'
         #print(vDefaultDict)
         sPythonClass += ', visualization = ' + vDefaultDict + '):\n' #add visualization structure (must always be there...)
-        #sPythonClass += ', visualization = {}):\n' #add visualization structure (must always be there...)
+        #HERE the docstring for __init__ would be placed with GoogleDocstringRenderer
+                
         #OLD MODE: sPythonClass += ', visualization = V' + parseInfo['class'] + '()):\n' #add visualization structure (must always be there...)
         sPythonClass += sPythonClassInit + sIndent+sIndent+'self.visualization = CopyDictLevel1(visualization)\n\n'
         sPythonClass += sIndent+'def __iter__(self):\n'
         sPythonClass += sPythonIter + '\n'
         sPythonClass += sIndent+'def __repr__(self):\n'
         sPythonClass += sIndent+space4+'return str(dict(self))\n'
-
+        sPythonClass += '\n' #one empty line at end of class
+        
         vPythonClass += '):\n'
+        #HERE the docstring for __init__ would be placed
         vPythonClass += vPythonClassInit + '\n'
         vPythonClass += sIndent+'def __iter__(self):\n'
         vPythonClass += vPythonIter + '\n'
         vPythonClass += sIndent+'def __repr__(self):\n'
         vPythonClass += sIndent+space4+'return str(dict(self))\n'
-
+        #HERE the docstring for __init__ would be placed with GoogleDocstringRenderer
+        vPythonClass += '\n' #one empty line at end of class
         sPythonClass = vPythonClass + sPythonClass #visualization class must be first, otherwise the main class cannot be initialized
         if (len(parseInfo['pythonShortName'])):
             sPythonClass += '#add typedef for short usage:\n'
@@ -1141,8 +1210,8 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     elif (typeCastStr == 'ArraySensorIndex'):
                         parRead = 'EPyUtils::GetArraySensorIndex(' + destStr + ')'
                     elif (typeCastStr == 'NodeIndex2') or (typeCastStr == 'NodeIndex3') or (typeCastStr == 'NodeIndex4'):
-                        parRead = 'EPyUtils::GetArrayNodeIndex(ArrayIndex(' + destStr + '))'
-                        #parRead = 'EPyUtils::GetArrayNodeIndexFromSlimArray(' + destStr + ')'
+                        parRead = 'EPyUtils::GetArrayNodeIndex((ArrayIndex)' + destStr + ')'  # Convert Index2/Index3/Index4 to ArrayIndex for Python
+
                     else:
                         parRead = '(' + typeCastStr + ')' + destStr
                 elif isPyFunction:
@@ -1316,7 +1385,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
             sList[indexComp] += space4+'virtual OutputVariableType GetOutputVariableTypes() const override\n    {\n        return (OutputVariableType)('
             dictOV = eval(parseInfo['outputVariables'].replace('\\','\\\\').replace('\n','\\n')) #output variables are given as a string, representing a dictionary with OutputVariables and descriptions
             for outputVariables in dictOV.items(): 
-                sList[indexComp] += '\n            (Index)OutputVariableType::' + outputVariables[0] + ' +'
+                sList[indexComp] += '\n            (Index64)OutputVariableType::' + outputVariables[0] + ' +'
             if len(dictOV.items()):
                 sList[indexComp] = sList[indexComp][0:len(sList[indexComp])-1]
             sList[indexComp] += ');\n    }\n\n'
@@ -1759,7 +1828,7 @@ try: #still close file if crashes
     lineDefinition = ['lineType',       #[V|F[v]]P: V...Value (=member variable), F...Function (access via member function); v ... virtual Function; P ... write Pybind11 interface
                       'destination',    #M ... Main object, C ... computational object, V ... visualization object; P ... parameter structure
                       'pythonName',     #name which is used in python
-                      'cplusplusName',     #name which is used in DYNALFEX (leave empty if it is the same)
+                      'cplusplusName',     #name which is used in Exudyn (leave empty if it is the same)
                       'size',           #for size check; leave empty if size is non-constant; e.g. 3 (size of vector), 2x3 (2 rows, 3 columns)  %used for variables and vectors and matrices only!
                       'type',           #variable or return type: Bool, Int, Real, UInt, UReal, Vector, Matrix, SymmetricMatrix
                       'defaultValue',   #default value for member variable or function definition
@@ -2130,72 +2199,89 @@ For description of types (e.g., the meaning of \texttt{Vector3D} or \texttt{Nump
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #write Python itemInterface
-    filePython=open('../../pythonDev/exudyn/itemInterface.py','w') 
-    s = ''
-    s += '#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n'
-    s += '# This is an EXUDYN example \n'
-    s += '# \n'
-    s += '# Details:  automatically generated file for conversion of item (node, object, marker, ...) data to dictionaries\n'
-    s += '# \n'
-    s += '# Author:   Johannes Gerstmayr\n'
-    s += '# Date:     2019-07-01\n'
-    s += '#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n'
-    #s += 'from exudyn import OutputVariableType\n\n' #do not import exudyn, causes problems e.g. with exudynFast, ...
-    s += '#item interface diagonal matrix creator\n'
-    s += '\n'
-    s += 'import exudyn #for exudyn.InvalidIndex() and other exudyn native structures needed in RigidBodySpringDamper\n'
-    s += 'import numpy as np\n'
-    s += 'import copy \n\n'
+    filePython=open('../../pythonDev/exudyn/itemInterface.py','w',encoding='utf8') 
+    s = '''#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is the Exudyn item interface
+# 
+# Details:  automatically generated file for conversion of item (node, object, marker, ...) data to dictionaries
+# 
+# Author:   Johannes Gerstmayr
+# Date:     2019-07-01 (first created)
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    s += '#helper function for level-1 copy of dicts (for visualization default args!)\n'
-    s += '#visualization dictionaries (which may be huge, are only flat copied, which is sufficient)\n'
-    s += 'def CopyDictLevel1(originalDict):\n'
-    s += space4+'if isinstance(originalDict,dict): #copy only required if default dict is used\n'
-    s += space4+'    copyDict = {}\n'
-    s += space4+'    for key, value in originalDict.items():\n'
-    s += space4+'        copyDict[key] = copy.copy(value)\n'
-    s += space4+'    return copyDict\n'
-    s += space4+'else:\n'
-    s += space4+'    return originalDict #fast track for everything else\n'
-    s += space4+'\n'
+import exudyn #for exudyn.InvalidIndex() and other exudyn native structures needed in RigidBodySpringDamper
+import numpy as np
+import copy \n
 
-    s += '#helper function diagonal matrices, not needing numpy\n'
-    s += 'def IIDiagMatrix(rowsColumns, value):\n'
-    s += space4+'m = []\n'
-    s += space4+'for i in range(rowsColumns):\n'
-    s += space8+'m += [rowsColumns*[0]]\n'
-    s += space8+'m[i][i] = value\n'
-    s += space4+'return m\n\n'
-    
-    s += '#helper function to check valid range\n'
-    s += 'def CheckForValidUInt(value, parameterName, objectName):\n'
-    s += space4+'if value < 0:\n'
-    s += space8+'raise ValueError("Error in "+objectName+": (int) parameter "+parameterName + " may not be negative, but received "+str(value))\n'
-    s += space8+'return 0\n'
-    s += space4+'return value\n'
-    s += '#helper function to check valid range\n'
-    s += 'def CheckForValidPInt(value, parameterName, objectName):\n'
-    s += space4+'if value <= 0:\n'
-    s += space8+'raise ValueError("Error in "+objectName+": (int) parameter "+parameterName + " must be positive (> 0), but received "+str(value))\n'
-    s += space8+'return 1 #this position is usually not reached\n'
-    s += space4+'return value\n'
-    
-    s += '#helper function to check valid range\n'
-    s += 'def CheckForValidUReal(value, parameterName, objectName):\n'
-    s += space4+'if value < 0:\n'
-    s += space8+'raise ValueError("Error in "+objectName+": (float) parameter "+parameterName + " may not be negative, but received "+str(value))\n'
-    s += space8+'return 0.\n'
-    s += space4+'return value\n'
-    s += '#helper function to check valid range\n'
-    s += 'def CheckForValidPReal(value, parameterName, objectName):\n'
-    s += space4+'if value <= 0:\n'
-    s += space8+'raise ValueError("Error in "+objectName+": (float) parameter "+parameterName + " must be positive (> 0), but received "+str(value))\n'
-    s += space8+'return 1. #this position is usually not reached\n'
-    s += space4+'return value\n'
-    
-    s += '\nuserFunctionArgsDict = ' + str(userFunctionArgsDict).replace(']],',']],\n       ') + '\n'
+#helper function for level-1 copy of dicts (for visualization default args!)
+#visualization dictionaries (which may be huge, are only flat copied, which is sufficient)
+def CopyDictLevel1(originalDict):
+    if isinstance(originalDict,dict): #copy only required if default dict is used
+        copyDict = {}
+        for key, value in originalDict.items():
+            copyDict[key] = copy.copy(value)
+        return copyDict
+    else:
+        return originalDict #fast track for everything else
 
-    s += '\n\n'
+#helper function diagonal matrices, not needing numpy
+def IIDiagMatrix(rowsColumns, value):
+    m = []
+    for i in range(rowsColumns):
+        m += [rowsColumns*[0]]
+        m[i][i] = value
+    return m\n
+    
+#helper function to check valid range
+def CheckForValidUInt(value, parameterName, objectName):
+    if value < 0:
+        raise ValueError("Error in "+objectName+": (int) parameter "+parameterName + " may not be negative, but received "+str(value))
+        return 0
+    return value
+
+#helper function to check valid range
+def CheckForValidPInt(value, parameterName, objectName):
+    if value <= 0:
+        raise ValueError("Error in "+objectName+": (int) parameter "+parameterName + " must be positive (> 0), but received "+str(value))
+        return 1 #this position is usually not reached
+    return value
+    
+#helper function to check valid range
+def CheckForValidUReal(value, parameterName, objectName):
+    if value < 0:
+        raise ValueError("Error in "+objectName+": (float) parameter "+parameterName + " may not be negative, but received "+str(value))
+        return 0.
+    return value
+
+#helper function to check valid range
+def CheckForValidPReal(value, parameterName, objectName):
+    if value <= 0:
+        raise ValueError("Error in "+objectName+": (float) parameter "+parameterName + " must be positive (> 0), but received "+str(value))
+        return 1. #this position is usually not reached
+    return value
+
+#helper: return True, if x is int, float, np.double, np.integer or similar types that can be automatically casted to pybind11
+def IsValidNumber(x):
+    if (isinstance(x, float) 
+        or isinstance(x, int)
+        or isinstance(x, np.double)
+        or isinstance(x, np.integer)
+        ):
+        return True
+    return False
+
+#helper function to check valid range
+def CheckForValidNumpyArray(value):
+    if IsValidNumber(value): 
+        return value
+    else:
+        return np.array(value)
+
+'''
+
+    s += '\nuserFunctionArgsDict = ' + str(userFunctionArgsDict).replace(']],',']],\n       ') + '\n\n\n'
+
+
     filePython.write(s)
     
     
@@ -2308,7 +2394,7 @@ Reference manual for: objects, nodes, markers, loads and sensors
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #files and structures for autoregistration of items
     from autoGenerateHelper import minimalItemsList
-    excludeItemsList=['ObjectANCFThinPlate']
+    excludeItemsList=[]
     
     templateItemSDAutoReg="""
 bool MainObject{classNamePure}IsRegistered = ClassFactoryItemsSystemData<Main{itemType}>::Get().RegisterClass("{classNamePure}", [](CSystemData* cSystemData)

@@ -15,6 +15,8 @@ exudynVersionString=''
 file='main/src/pythonGenerator/exudynVersion.py'
 exec(open(file).read(), globals())
 
+# print('version='+exudynVersionString)
+
 release = exudynVersionString
 
 project = 'Exudyn'+release
@@ -25,8 +27,13 @@ author = 'Johannes Gerstmayr'
 #seems not to work:
 # from confHelper import listClassNames, listFunctionNames
 
+#initialize to avoid error markers
 listClassNames=[]
+listPyClassNames=[]
+listItemNames=[]
 listFunctionNames=[]
+listPyFunctionNames=[]
+
 file='docs/RST/confHelper.py'
 exec(open(file).read(), globals())
 file='docs/RST/confHelperItems.py'

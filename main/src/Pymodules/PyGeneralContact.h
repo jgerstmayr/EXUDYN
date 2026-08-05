@@ -272,7 +272,7 @@ public:
 			data.contactRigidBodyIndex = contactRigidBodyIndex;
 		}
 
-		for (Index i=0; i < data.points.size(); i++)
+		for (Index i=0; i < (Index)data.points.size(); i++)
 		{
 			data.points[i] = Vector3D(points[i]);
 		}

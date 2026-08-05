@@ -18,7 +18,7 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
 
 Function: Sphere
 ^^^^^^^^^^^^^^^^
-`Sphere <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L148>`__\ (\ ``point = [0,0,0]``\ , \ ``radius = 0.1``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``nTiles = 8``\ , \ ``addEdges = False``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ )
+`Sphere <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L120>`__\ (\ ``point = [0,0,0]``\ , \ ``radius = 0.1``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``nTiles = 8``\ , \ ``addEdges = False``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ , \ ``majorAngleMin = -0.5*pi``\ , \ ``majorAngleMax = 0.5*pi``\ , \ ``innerRadius = None``\ )
 
 - | \ *function description*\ :
   | generate graphics data for a sphere with point p and radius
@@ -26,16 +26,19 @@ Function: Sphere
   | \ ``point``\ : center of sphere (3D list or np.array)
   | \ ``radius``\ : positive value
   | \ ``color``\ : provided as list of 4 RGBA values
-  | \ ``nTiles``\ : used to determine resolution of sphere >=3; use larger values for finer resolution
+  | \ ``nTiles``\ : used to determine resolution of sphere >=2; represents resolution of a half-circle; use larger values for finer resolution
   | \ ``addEdges``\ : True or number of edges along sphere shell (under development); for optimal drawing, nTiles shall be multiple of 4 or 8
   | \ ``edgeColor``\ : optional color for edges
-  | \ ``addFaces``\ : if False, no faces are added (only edges)
+  | \ ``addFaces``\ : if False, no faces are added (only edges); ignored in case of hollow sphere
+  | \ ``majorAngleMin``\ : starting angle for sphere to be drawn; if > -0.5\*pi, it will be shortened at -Z coordinate
+  | \ ``majorAngleMax``\ : final angle for sphere to be drawn; if < 0.5\*pi, it will be shortened at +Z coordinate
+  | \ ``innerRadius``\ : draw hollow sphere in case of majorAngleMin or majorAngleMax do not have default values
 - | \ *output*\ :
   | graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `bungeeJump.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bungeeJump.py>`_\  (Ex), \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py>`_\  (Ex), \ `contactCurvePolynomial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/contactCurvePolynomial.py>`_\  (Ex), \ `graphicsDataExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py>`_\  (Ex), \ `connectorGravityTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorGravityTest.py>`_\  (TM), \ `contactCoordinateTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCoordinateTest.py>`_\  (TM), \ `contactCurveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCurveExample.py>`_\  (TM)
+    \ `ANCFslidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint.py>`_\  (Ex), \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `bungeeJump.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bungeeJump.py>`_\  (Ex), \ `chatGPTupdate.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chatGPTupdate.py>`_\  (Ex), \ `contactCurvePolynomial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/contactCurvePolynomial.py>`_\  (Ex), \ `connectorGravityTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/connectorGravityTest.py>`_\  (TM), \ `contactCoordinateTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCoordinateTest.py>`_\  (TM), \ `contactCurveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactCurveExample.py>`_\  (TM)
 
 
 
@@ -46,7 +49,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Lines
 ^^^^^^^^^^^^^^^
-`Lines <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L269>`__\ (\ ``pList``\ , \ ``color = [0.,0.,0.,1.]``\ )
+`Lines <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L349>`__\ (\ ``pList``\ , \ ``color = [0.,0.,0.,1.]``\ )
 
 - | \ *function description*\ :
   | generate graphics data for lines, given by list of points and color; transforms to GraphicsData dictionary
@@ -65,7 +68,7 @@ Function: Lines
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ANCFcontactCircle2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py>`_\  (Ex), \ `doublePendulum2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/doublePendulum2D.py>`_\  (Ex), \ `simple4linkPendulumBing.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simple4linkPendulumBing.py>`_\  (Ex), \ `doublePendulum2DControl.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/doublePendulum2DControl.py>`_\  (TM)
+    \ `ANCFcontactCircle2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py>`_\  (Ex), \ `doublePendulum2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/doublePendulum2D.py>`_\  (Ex), \ `rendererNOGLFWexample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/rendererNOGLFWexample.py>`_\  (Ex), \ `simple4linkPendulumBing.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simple4linkPendulumBing.py>`_\  (Ex), \ `doublePendulum2DControl.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/doublePendulum2DControl.py>`_\  (TM)
 
 
 
@@ -76,7 +79,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Circle
 ^^^^^^^^^^^^^^^^
-`Circle <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L286>`__\ (\ ``point = [0,0,0]``\ , \ ``radius = 1``\ , \ ``color = [0.,0.,0.,1.]``\ )
+`Circle <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L366>`__\ (\ ``point = [0,0,0]``\ , \ ``radius = 1``\ , \ ``color = [0.,0.,0.,1.]``\ )
 
 - | \ *function description*\ :
   | generate graphics data for a single circle; currently the plane normal = [0,0,1], just allowing to draw planar circles -- this may be extended in future!
@@ -102,21 +105,23 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Text
 ^^^^^^^^^^^^^^
-`Text <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L298>`__\ (\ ``point = [0,0,0]``\ , \ ``text = ''``\ , \ ``color = [0.,0.,0.,1.]``\ )
+`Text <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L380>`__\ (\ ``point = [0,0,0]``\ , \ ``text = ''``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``fontSize = 0.``\ , \ ``offset = [0.,0.]``\ )
 
 - | \ *function description*\ :
   | generate graphics data for a text drawn at a 3D position
 - | \ *input*\ :
   | \ ``point``\ : position of text
-  | \ ``text``\ : string representing text
+  | \ ``text``\ : string representing text; multiline texts can be written with line breaks
   | \ ``color``\ : provided as list of 4 RGBA values
-  | \ ``**nodes``\ : text size can be adjusted with visualizationSettings.general.textSize, which affects the text size (=font size) globally
+  | \ ``fontSize``\ : scalar fontSize or 0. for default; default font size in Exudyn is 12 (visualizationSettings.view0.window.globalFontSize)
+  | \ ``offset``\ : offset in X/Y screen plane provided as list of 2 float values; this offset is not rotated with the model view and given relative to font size (offset [1,1] equals to offset of one character moved right and up)
+  | \ ``**nodes``\ : text size can be adjusted with visualizationSettings.view0.window.globalFontSize, which affects the text size (=font size) globally
 - | \ *output*\ :
   | graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ANCFcontactCircle2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py>`_\  (Ex), \ `NGsolveGeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveGeometry.py>`_\  (Ex)
+    \ `ANCFcontactCircle2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcontactCircle2.py>`_\  (Ex), \ `NGsolveGeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveGeometry.py>`_\  (Ex), \ `raytracerNOGLFWtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/raytracerNOGLFWtest.py>`_\  (TM)
 
 
 
@@ -127,7 +132,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Cuboid
 ^^^^^^^^^^^^^^^^
-`Cuboid <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L312>`__\ (\ ``pList``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``faces = [1,1,1,1,1,1]``\ , \ ``addNormals = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ )
+`Cuboid <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L399>`__\ (\ ``pList``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``faces = [1,1,1,1,1,1]``\ , \ ``addNormals = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ )
 
 - | \ *function description*\ :
   | generate graphics data for general block with endpoints, according to given vertex definition
@@ -151,7 +156,7 @@ Function: Cuboid
 
 Function: BrickXYZ
 ^^^^^^^^^^^^^^^^^^
-`BrickXYZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L407>`__\ (\ ``xMin``\ , \ ``yMin``\ , \ ``zMin``\ , \ ``xMax``\ , \ ``yMax``\ , \ ``zMax``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``addNormals = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ )
+`BrickXYZ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L494>`__\ (\ ``xMin``\ , \ ``yMin``\ , \ ``zMin``\ , \ ``xMax``\ , \ ``yMax``\ , \ ``zMax``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``addNormals = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ )
 
 - | \ *function description*\ :
   | generate graphics data for orthogonal 3D block with min and max dimensions
@@ -180,7 +185,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Brick
 ^^^^^^^^^^^^^^^
-`Brick <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L427>`__\ (\ ``centerPoint = [0,0,0]``\ , \ ``size = [0.1,0.1,0.1]``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``addNormals = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ , \ ``roundness = 0``\ , \ ``nTiles = 12``\ )
+`Brick <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L513>`__\ (\ ``centerPoint = [0,0,0]``\ , \ ``size = [0.1,0.1,0.1]``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``addNormals = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ , \ ``roundness = 0``\ , \ ``nTiles = 12``\ )
 
 - | \ *function description*\ :
   | generate graphics data for orthogonal 3D box with center point and size; using roundness=1, it draws an ellipsoid inside the box and in case 0 < roundness < 1, it draws a body blended between box and ellipsoid
@@ -199,7 +204,7 @@ Function: Brick
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `ANCFrotatingCable2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py>`_\  (Ex), \ `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py>`_\  (Ex), \ `beltDrivesComparison.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py>`_\  (Ex), \ `ballBearingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ballBearingTest.py>`_\  (TM), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py>`_\  (TM), \ `carRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py>`_\  (TM)
+    \ `addPrismaticJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addPrismaticJoint.py>`_\  (Ex), \ `addRevoluteJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py>`_\  (Ex), \ `ANCFrotatingCable2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py>`_\  (Ex), \ `ANCFslidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint.py>`_\  (Ex), \ `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py>`_\  (Ex), \ `ballBearingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ballBearingTest.py>`_\  (TM), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py>`_\  (TM), \ `carRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py>`_\  (TM)
 
 
 
@@ -210,7 +215,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Cylinder
 ^^^^^^^^^^^^^^^^^^
-`Cylinder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L544>`__\ (\ ``pAxis = [0,0,0]``\ , \ ``vAxis = [0,0,1]``\ , \ ``radius = 0.1``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``nTiles = 16``\ , \ ``radiusInner = None``\ , \ ``angleRange = [0,2*pi]``\ , \ ``lastFace = True``\ , \ ``cutPlain = True``\ , \ ``addEdges = False``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ , \ ``**kwargs``\ )
+`Cylinder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L628>`__\ (\ ``pAxis = [0,0,0]``\ , \ ``vAxis = [0,0,1]``\ , \ ``radius = 0.1``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``nTiles = 16``\ , \ ``radiusInner = None``\ , \ ``angleRange = [0,2*pi]``\ , \ ``lastFace = True``\ , \ ``cutPlain = True``\ , \ ``addEdges = False``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | generate graphics data for a cylinder with given axis, radius and color; nTiles gives the number of tiles (minimum=3)
@@ -233,7 +238,7 @@ Function: Cylinder
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `beltDrivesComparison.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py>`_\  (Ex), \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `chainDriveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chainDriveExample.py>`_\  (Ex), \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFgeneralContactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py>`_\  (TM), \ `coordinateSpringDamperExt.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateSpringDamperExt.py>`_\  (TM)
+    \ `ANCFslidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint.py>`_\  (Ex), \ `beltDriveALE.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py>`_\  (Ex), \ `beltDriveReevingSystem.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py>`_\  (Ex), \ `beltDrivesComparison.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py>`_\  (Ex), \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `ANCFbeltDrive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py>`_\  (TM), \ `ANCFgeneralContactCircle.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py>`_\  (TM), \ `coordinateSpringDamperExt.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/coordinateSpringDamperExt.py>`_\  (TM)
 
 
 
@@ -244,7 +249,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Tube
 ^^^^^^^^^^^^^^
-`Tube <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L748>`__\ (\ ``points``\ , \ ``axes``\ , \ ``radius = 0.1``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``nTiles = 16``\ )
+`Tube <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L831>`__\ (\ ``points``\ , \ ``axes``\ , \ ``radius = 0.1``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``nTiles = 16``\ )
 
 - | \ *function description*\ :
   | generate graphics data for a tube with given list of points and axes, radius and color; nTiles gives the number of tiles (minimum=3)
@@ -266,7 +271,7 @@ Function: Tube
 
 Function: Torus
 ^^^^^^^^^^^^^^^
-`Torus <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L848>`__\ (\ ``point``\ , \ ``axis``\ , \ ``radiusMajor = 0.5``\ , \ ``radiusMinor = 0.1``\ , \ ``color = [0., 0., 0., 1.]``\ , \ ``nTilesMajor = 24``\ , \ ``nTilesMinor = 12``\ , \ ``minorAngleStart = 0``\ , \ ``minorAngleEnd = 2*np.pi``\ , \ ``smoothNormals = True``\ , \ ``invert = False``\ )
+`Torus <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L930>`__\ (\ ``point``\ , \ ``axis``\ , \ ``radiusMajor = 0.5``\ , \ ``radiusMinor = 0.1``\ , \ ``color = [0., 0., 0., 1.]``\ , \ ``nTilesMajor = 24``\ , \ ``nTilesMinor = 12``\ , \ ``minorAngleStart = 0``\ , \ ``minorAngleEnd = 2*np.pi``\ , \ ``smoothNormals = True``\ , \ ``invert = False``\ )
 
 - | \ *function description*\ :
   | generate graphics data for a torus with given major and minor radius, center point and axis
@@ -294,7 +299,7 @@ Function: Torus
 
 Function: RigidLink
 ^^^^^^^^^^^^^^^^^^^
-`RigidLink <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L940>`__\ (\ ``p0``\ , \ ``p1``\ , \ ``axis0 = [0,0,0]``\ , \ ``axis1 = [0,0,0]``\ , \ ``radius = [0.1,0.1]``\ , \ ``thickness = 0.05``\ , \ ``width = [0.05,0.05]``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``nTiles = 16``\ )
+`RigidLink <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1022>`__\ (\ ``p0``\ , \ ``p1``\ , \ ``axis0 = [0,0,0]``\ , \ ``axis1 = [0,0,0]``\ , \ ``radius = [0.1,0.1]``\ , \ ``thickness = 0.05``\ , \ ``width = [0.05,0.05]``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``nTiles = 16``\ )
 
 - | \ *function description*\ :
   | generate graphics data for a planar Link between the two joint positions, having two axes
@@ -324,7 +329,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: SolidOfRevolution
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`SolidOfRevolution <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1022>`__\ (\ ``pAxis``\ , \ ``vAxis``\ , \ ``contour``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``nTiles = 16``\ , \ ``smoothContour = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ , \ ``smoothingAngle = 2*np.pi``\ , \ ``**kwargs``\ )
+`SolidOfRevolution <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1104>`__\ (\ ``pAxis``\ , \ ``vAxis``\ , \ ``contour``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``nTiles = 16``\ , \ ``smoothContour = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ , \ ``smoothingAngle = 2*np.pi``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | generate graphics data for a solid of revolution with given 3D point and axis, 2D point list for contour, (optional)2D normals and color;
@@ -377,7 +382,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Arrow
 ^^^^^^^^^^^^^^^
-`Arrow <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1174>`__\ (\ ``pAxis``\ , \ ``vAxis``\ , \ ``radius``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``headFactor = 2``\ , \ ``headStretch = 4``\ , \ ``nTiles = 12``\ )
+`Arrow <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1254>`__\ (\ ``pAxis``\ , \ ``vAxis``\ , \ ``radius``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``headFactor = 2``\ , \ ``headStretch = 4``\ , \ ``nTiles = 12``\ )
 
 - | \ *function description*\ :
   | generate graphics data for an arrow with given origin, axis, shaft radius, optional size factors for head and color; nTiles gives the number of tiles (minimum=3)
@@ -405,7 +410,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Basis
 ^^^^^^^^^^^^^^^
-`Basis <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1192>`__\ (\ ``origin = [0,0,0]``\ , \ ``rotationMatrix = np.eye(3)``\ , \ ``length = 1``\ , \ ``colors = [color.red, color.green, color.blue]``\ , \ ``headFactor = 2``\ , \ ``headStretch = 4``\ , \ ``nTiles = 12``\ , \ ``**kwargs``\ )
+`Basis <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1273>`__\ (\ ``origin = [0,0,0]``\ , \ ``rotationMatrix = np.eye(3)``\ , \ ``length = 1``\ , \ ``colors = [color.red, color.green, color.blue]``\ , \ ``headFactor = 2``\ , \ ``headStretch = 4``\ , \ ``nTiles = 12``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | generate graphics data for three arrows representing an orthogonal basis with point of origin, shaft radius, optional size factors for head and colors; nTiles gives the number of tiles (minimum=3)
@@ -418,6 +423,7 @@ Function: Basis
   | \ ``headStretch``\ : positive value representing the ratio between the head's radius and the head's length
   | \ ``nTiles``\ : used to determine resolution of arrows of basis (of revolution object) >=3; use larger values for finer resolution
   | \ ``radius``\ : positive value representing radius of arrows; default: radius = 0.01\*length
+  | \ ``labels``\ : a list of 3 strings written to the three axes (X, Y, Z); in this case, the result is returned as list of GraphicsData!
 - | \ *output*\ :
   | graphicsData dictionary, to be used in visualization of EXUDYN objects
 
@@ -434,7 +440,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Frame
 ^^^^^^^^^^^^^^^
-`Frame <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1215>`__\ (\ ``HT = np.eye(4)``\ , \ ``length = 1``\ , \ ``colors = [color.red, color.green, color.blue]``\ , \ ``headFactor = 2``\ , \ ``headStretch = 4``\ , \ ``nTiles = 12``\ , \ ``**kwargs``\ )
+`Frame <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1307>`__\ (\ ``HT = np.eye(4)``\ , \ ``length = 1``\ , \ ``colors = [color.red, color.green, color.blue]``\ , \ ``headFactor = 2``\ , \ ``headStretch = 4``\ , \ ``nTiles = 12``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | generate graphics data for frame (similar to Basis), showing three arrows representing an orthogonal basis for the homogeneous transformation HT; optional shaft radius, optional size factors for head and colors; nTiles gives the number of tiles (minimum=3)
@@ -462,7 +468,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Quad
 ^^^^^^^^^^^^^^
-`Quad <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1247>`__\ (\ ``pList``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``**kwargs``\ )
+`Quad <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1339>`__\ (\ ``pList``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | generate graphics data for simple quad with option for checkerboard pattern;
@@ -499,7 +505,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: CheckerBoard
 ^^^^^^^^^^^^^^^^^^^^^^
-`CheckerBoard <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1323>`__\ (\ ``point = [0,0,0]``\ , \ ``normal = [0,0,1]``\ , \ ``size = 1``\ , \ ``color = color.lightgrey``\ , \ ``alternatingColor = color.lightgrey2``\ , \ ``nTiles = 10``\ , \ ``**kwargs``\ )
+`CheckerBoard <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1414>`__\ (\ ``point = [0,0,0]``\ , \ ``normal = [0,0,1]``\ , \ ``size = 1``\ , \ ``color = color.lightgrey``\ , \ ``alternatingColor = color.lightgrey2``\ , \ ``nTiles = 10``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | function to generate checkerboard background;
@@ -527,7 +533,7 @@ Function: CheckerBoard
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ANCFrotatingCable2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py>`_\  (Ex), \ `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py>`_\  (Ex), \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `camFollowerExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/camFollowerExample.py>`_\  (Ex), \ `chainDriveExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/chainDriveExample.py>`_\  (Ex), \ `ANCFoutputTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFoutputTest.py>`_\  (TM), \ `ballBearingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ballBearingTest.py>`_\  (TM), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py>`_\  (TM)
+    \ `ANCFrotatingCable2D.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py>`_\  (Ex), \ `ANCFslidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint.py>`_\  (Ex), \ `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py>`_\  (Ex), \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `camFollowerExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/camFollowerExample.py>`_\  (Ex), \ `ANCFoutputTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFoutputTest.py>`_\  (TM), \ `ballBearingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ballBearingTest.py>`_\  (TM), \ `bricardMechanism.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py>`_\  (TM)
 
 
 
@@ -538,7 +544,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: SolidExtrusion
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`SolidExtrusion <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1366>`__\ (\ ``vertices``\ , \ ``segments``\ , \ ``height``\ , \ ``rot = np.diag([1,1,1])``\ , \ ``pOff = [0,0,0]``\ , \ ``relRot = np.diag([1,1,1])``\ , \ ``relOff = [0,0,0]``\ , \ ``color = [0,0,0,1]``\ , \ ``smoothNormals = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ )
+`SolidExtrusion <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1466>`__\ (\ ``vertices``\ , \ ``segments``\ , \ ``height``\ , \ ``rot = np.diag([1,1,1])``\ , \ ``pOff = [0,0,0]``\ , \ ``relRot = np.diag([1,1,1])``\ , \ ``relOff = [0,0,0]``\ , \ ``color = [0,0,0,1]``\ , \ ``smoothNormals = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ )
 
 - | \ *function description*\ :
   | create graphicsData for solid extrusion based on 2D points and segments; by default, the extrusion is performed in z-direction;
@@ -559,6 +565,18 @@ Function: SolidExtrusion
   | \ ``addFaces``\ : if False, no faces are added (only edges)
 - | \ *output*\ :
   | graphicsData dictionary, to be used in visualization of EXUDYN objects
+- | \ *example*\ :
+
+.. code-block:: python
+
+  #simple block with cutout
+  g = graphics.SolidExtrusion(vertices=[[-0.4,-0.4], [0.4,-0.4], [ 0.4,0.4], [0.1,0.4],
+                                        [0.1,  0.2], [-0.1,0.2], [-0.1,0.4], [-0.4,0.4]],
+                             segments=[[0,1], [1,2], [2,3], [3,4], [4,5], [5,6], [6,7], [7,0]],
+                             pOff = [0,2,-1], height=1.5,
+                             color=graphics.color.steelblue, addEdges=2)
+  oGround=mbs.CreateGround(graphicsDataList=[g])
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -569,11 +587,51 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 ----
 
 
+.. _sec-graphics-linkedcylinders:
+
+Function: LinkedCylinders
+^^^^^^^^^^^^^^^^^^^^^^^^^
+`LinkedCylinders <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1605>`__\ (\ ``point0``\ , \ ``point1``\ , \ ``axisCylinder``\ , \ ``radius0``\ , \ ``radius1``\ , \ ``radiusInner0 = 0``\ , \ ``radiusInner1 = 0``\ , \ ``nTiles = 32``\ , \ ``color = [0,0,0,1]``\ , \ ``addEdges = 0``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ , \ ``smoothNormals = True``\ , \ ``**kwargs``\ )
+
+- | \ *function description*\ :
+  | generate graphics data for an extrusion solid linking two circles by their external tangents in a plane; the shape is extruded along axisCylinder with height equal to its norm; nTiles controls circle tessellation
+- | \ *input*\ :
+  | \ ``point0``\ : center of the first circle and base point of the extrusion (3D list or np.array)
+  | \ ``point1``\ : a point whose projection into the plane through point0 with normal axisCylinder defines the direction to the second circle center (3D list or np.array)
+  | \ ``axisCylinder``\ : vector normal to the circle plane and extrusion direction; extrusion height is ||axisCylinder|| (3D list or np.array)
+  | \ ``radius0``\ : radius of the first circle (positive float)
+  | \ ``radius1``\ : radius of the second circle (positive float)
+  | \ ``radiusInner0``\ : if > 0, radius of bore of the first circle
+  | \ ``radiusInner1``\ : if > 0, radius of bore of the second circle
+  | \ ``nTiles``\ : tiling used for a full circle (>=3); partial arcs are sampled proportionally
+  | \ ``color``\ : provided as list of 4 RGBA values
+  | \ ``addEdges``\ : if True, edges are added in TriangleList of GraphicsData; if addEdges is integer, additional int(addEdges) lines are added on the extrusion
+  | \ ``edgeColor``\ : optional color for edges
+  | \ ``addFaces``\ : if False, no faces are added (only edges)
+  | \ ``smoothNormals``\ : if True, algorithm tries to smoothen normals at vertices and normals are added; creates more points; if False, triangle normals are used internally
+  | \ ``kwargs``\ : forwarded to graphics.SolidExtrusion
+- | \ *output*\ :
+  | graphicsData dictionary, to be used in visualization of Exudyn objects
+- | \ *example*\ :
+
+.. code-block:: python
+
+  g = graphics.LinkedCylinders(point0=[0,0,0], point1=[0.8,0.2,0.4], axisCylinder=[0,0,1.2],
+                                radius0=0.25, radius1=0.15, nTiles=48,
+                                color=graphics.color.steelblue, addEdges=2)
+  oGround=mbs.CreateGround(graphicsDataList=[g])
+
+
+
+
+----
+
+
 .. _sec-graphics-ballbearingrings:
 
 Function: BallBearingRings
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`BallBearingRings <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1501>`__\ (\ ``axis``\ , \ ``outsideDiameter``\ , \ ``boreDiameter``\ , \ ``width``\ , \ ``radiusCage``\ , \ ``innerRingShoulderRadius``\ , \ ``outerRingShoulderRadius``\ , \ ``widthCage``\ , \ ``heightCage``\ , \ ``innerEdgeChamfer``\ , \ ``outerEdgeChamfer``\ , \ ``innerGrooveRadius``\ , \ ``outerGrooveRadius``\ , \ ``innerGrooveTorusRadius``\ , \ ``outerGrooveTorusRadius``\ , \ ``nTilesRings = 32``\ , \ ``nTilesGrooves = 12``\ , \ ``colorCage = [0.6,0.5,0.5,0.4]``\ , \ ``colorInnerRing = [0.5,0.5,0.5,0.5]``\ , \ ``colorOuterRing = [0.5,0.5,0.5,0.5]``\ , \ ``**kwargs``\ )
+`BallBearingRings <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1731>`__\ (\ ``axis``\ , \ ``outsideDiameter``\ , \ ``boreDiameter``\ , \ ``width``\ , \ ``radiusCage``\ , \ ``innerRingShoulderRadius``\ , \ ``outerRingShoulderRadius``\ , \ ``widthCage``\ , \ ``heightCage``\ , \ ``innerEdgeChamfer``\ , \ ``outerEdgeChamfer``\ , \ ``innerGrooveRadius``\ , \ ``outerGrooveRadius``\ , \ ``innerGrooveTorusRadius``\ , \ ``outerGrooveTorusRadius``\ , \ ``nTilesRings = 32``\ , \ ``nTilesGrooves = 12``\ , \ ``colorCage = [0.6,0.5,0.5,0.4]``\ , \ ``colorInnerRing = [0.5,0.5,0.5,0.5]``\ , \ ``colorOuterRing = [0.5,0.5,0.5,0.5]``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | generate graphics for ball bearing rings, in particular for inner and outer rings; note that base parameters are identical as in function GetBallBearingData, assuming that the dictionary of the latter function is used as input for BallBearingRings
@@ -612,7 +670,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: InvoluteGear
 ^^^^^^^^^^^^^^^^^^^^^^
-`InvoluteGear <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1593>`__\ (\ ``involuteGear``\ , \ ``width``\ , \ ``centerPoint = np.zeros(3)``\ , \ ``rotationMatrix = np.eye(3)``\ , \ ``helixAngleDeg = 0``\ , \ ``radius = 0``\ , \ ``relativeAngleOffset = 0``\ , \ ``color = [0,0,0,1]``\ , \ ``nTilesCylinder = 32``\ , \ ``smoothNormals = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ )
+`InvoluteGear <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1829>`__\ (\ ``involuteGear``\ , \ ``width``\ , \ ``centerPoint = np.zeros(3)``\ , \ ``rotationMatrix = np.eye(3)``\ , \ ``helixAngleDeg = 0``\ , \ ``radius = 0``\ , \ ``relativeAngleOffset = 0``\ , \ ``color = [0,0,0,1]``\ , \ ``nTilesCylinder = 32``\ , \ ``smoothNormals = False``\ , \ ``addEdges = False``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ )
 
 - | \ *function description*\ :
   | create graphics for involute gear, using data from machines.InvoluteGear
@@ -645,7 +703,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ToothedRack
 ^^^^^^^^^^^^^^^^^^^^^
-`ToothedRack <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1652>`__\ (\ ``module``\ , \ ``nTeeth``\ , \ ``width``\ , \ ``toothHeight``\ , \ ``rackBaseHeight``\ , \ ``pressureAngleDeg = 20``\ , \ ``centerPoint = np.zeros(3)``\ , \ ``rotationMatrix = np.eye(3)``\ , \ ``color = [0,0,0,1]``\ , \ ``nTilesCylinder = 32``\ , \ ``addEdges = False``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ )
+`ToothedRack <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1887>`__\ (\ ``module``\ , \ ``nTeeth``\ , \ ``width``\ , \ ``toothHeight``\ , \ ``rackBaseHeight``\ , \ ``pressureAngleDeg = 20``\ , \ ``centerPoint = np.zeros(3)``\ , \ ``rotationMatrix = np.eye(3)``\ , \ ``color = [0,0,0,1]``\ , \ ``nTilesCylinder = 32``\ , \ ``addEdges = False``\ , \ ``edgeColor = color.black``\ , \ ``addFaces = True``\ )
 
 - | \ *function description*\ :
   | create graphics for toothed rack
@@ -675,11 +733,47 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 ----
 
 
+.. _sec-graphics-boundingboxsingle:
+
+Function: BoundingBoxSingle
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`BoundingBoxSingle <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1941>`__\ (\ ``graphicsData``\ )
+
+- | \ *function description*\ :
+  | compute bounding box of single graphicsData
+- | \ *input*\ :
+  | graphicsData: a single Exudyn GraphicsData object
+- | \ *output*\ :
+  | (type: list) [bmin, bmax]; tuple of np.array shape (3,), or (None, None) if no points.
+
+
+
+----
+
+
+.. _sec-graphics-boundingbox:
+
+Function: BoundingBox
+^^^^^^^^^^^^^^^^^^^^^
+`BoundingBox <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1988>`__\ (\ ``graphicsData``\ )
+
+- | \ *function description*\ :
+  | compute bounding box of single GraphicsData or list of GraphicsData
+- | \ *input*\ :
+  | graphicsData: a single Exudyn GraphicsData object or list
+- | \ *output*\ :
+  | (type: list) [bmin, bmax]; tuple of np.array shape (3,), or (None, None) if no points.
+
+
+
+----
+
+
 .. _sec-graphics-frompointsandtrigs:
 
 Function: FromPointsAndTrigs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`FromPointsAndTrigs <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1709>`__\ (\ ``points``\ , \ ``triangles``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``normals = None``\ )
+`FromPointsAndTrigs <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L2017>`__\ (\ ``points``\ , \ ``triangles``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``normals = None``\ )
 
 - | \ *function description*\ :
   | convert triangles and points as returned from graphics.ToPointsAndTrigs(...) to GraphicsData; additionally, normals and color(s) can be provided
@@ -693,7 +787,7 @@ Function: FromPointsAndTrigs
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `NGsolveGeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveGeometry.py>`_\  (Ex), \ `NGsolveOCCgeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveOCCgeometry.py>`_\  (Ex), \ `particlesSilo.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py>`_\  (Ex), \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py>`_\  (TM), \ `generalContactFrictionTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py>`_\  (TM)
+    \ `NGsolveGeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveGeometry.py>`_\  (Ex), \ `NGsolveOCCboundaries2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveOCCboundaries2.py>`_\  (Ex), \ `NGsolveOCCgeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveOCCgeometry.py>`_\  (Ex), \ `particlesSilo.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py>`_\  (Ex), \ `pymeshlabFileImport.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pymeshlabFileImport.py>`_\  (Ex), \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py>`_\  (TM), \ `generalContactFrictionTests.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py>`_\  (TM)
 
 
 
@@ -704,7 +798,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ToPointsAndTrigs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ToPointsAndTrigs <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1741>`__\ (\ ``g``\ )
+`ToPointsAndTrigs <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L2049>`__\ (\ ``g``\ )
 
 - | \ *function description*\ :
   | convert graphics data into list of points and list of triangle indices (triplets)
@@ -715,7 +809,33 @@ Function: ToPointsAndTrigs
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mobileMecanumWheelRobotWithLidar.py>`_\  (Ex), \ `particleClusters.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py>`_\  (Ex), \ `particlesSilo.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py>`_\  (Ex), \ `reinforcementLearningRobot.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reinforcementLearningRobot.py>`_\  (Ex), \ `serialRobotKinematicTreeDigging.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTreeDigging.py>`_\  (Ex), \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py>`_\  (TM), \ `generalContactCylinderTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactCylinderTest.py>`_\  (TM), \ `generalContactCylinderTrigsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactCylinderTrigsTest.py>`_\  (TM)
+    \ `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mobileMecanumWheelRobotWithLidar.py>`_\  (Ex), \ `particleClusters.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particleClusters.py>`_\  (Ex), \ `particlesSilo.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/particlesSilo.py>`_\  (Ex), \ `pymeshlabFileImport.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pymeshlabFileImport.py>`_\  (Ex), \ `reinforcementLearningRobot.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reinforcementLearningRobot.py>`_\  (Ex), \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py>`_\  (TM), \ `generalContactCylinderTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactCylinderTest.py>`_\  (TM), \ `generalContactCylinderTrigsTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactCylinderTrigsTest.py>`_\  (TM)
+
+
+
+----
+
+
+.. _sec-graphics-transform:
+
+Function: Transform
+^^^^^^^^^^^^^^^^^^^
+`Transform <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L2079>`__\ (\ ``graphicsData``\ , \ ``translation = None``\ , \ ``rotation = None``\ , \ ``scale = 1``\ , \ ``normalizeNormals = False``\ , \ ``invertNormals = False``\ , \ ``invertTriangles = False``\ , \ ``warn = True``\ )
+
+- | \ *function description*\ :
+  | transform a GraphicsData object in several ways: move, rotate, scale; furthermore, normals can be fixed and inverted, etc.
+- | \ *input*\ :
+  | \ ``g``\ : graphicsData to be transformed
+  | \ ``translation``\ : 3D offset as list or numpy.array added to rotated points; if pOff=None, no translation is applied
+  | \ ``rotation``\ : 3D rotation matrix as list of lists or numpy.array with shape (3,3); if A is scaled by factor, e.g. using 0.001\*np.eye(3), you can also scale the coordinates; if Aoff=None, no rotation is performed
+  | \ ``scale``\ : scaling of position coordinates
+  | \ ``normalizeNormals``\ : if True, normals are scaled such that length=1 (or zero for zero-normals)
+  | \ ``invertTriangles``\ : if True, it inverts the triangle orientation (changing vertex index 0 and 1)
+  | \ ``invertNormals``\ : if True, the direction of normal is flipped
+- | \ *output*\ :
+  | returns new graphcsData object to be used for drawing in objects
+- | \ *notes*\ :
+  | the rigid body transformation corresponds to HomogeneousTransformation(rotation, translation), transforming original coordinates v into vNew = translation + rotation @ v
 
 
 
@@ -726,14 +846,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Move
 ^^^^^^^^^^^^^^
-`Move <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1766>`__\ (\ ``g``\ , \ ``pOff``\ , \ ``Aoff = None``\ )
+`Move <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L2175>`__\ (\ ``g``\ , \ ``pOff``\ , \ ``Aoff = None``\ )
 
 - | \ *function description*\ :
-  | add rigid body transformation to GraphicsData, using position offset (global) pOff (list or np.array) and rotation Aoff (transforms local to global coordinates; list of lists or np.array); see Aoff how to scale coordinates!
+  | add rigid body transformation and possible scaling to GraphicsData, using position offset (global) pOff (list or np.array) and rotation Aoff (transforms local to global coordinates; list of lists or np.array)
 - | \ *input*\ :
   | \ ``g``\ : graphicsData to be transformed
   | \ ``pOff``\ : 3D offset as list or numpy.array added to rotated points
-  | \ ``Aoff``\ : 3D rotation matrix as list of lists or numpy.array with shape (3,3); if A is scaled by factor, e.g. using 0.001\*np.eye(3), you can also scale the coordinates; if Aoff=None, no rotation is performed
+  | \ ``Aoff``\ : 3D rotation matrix as list of lists or numpy.array with shape (3,3); if Aoff=None, no rotation is performed
 - | \ *output*\ :
   | returns new graphcsData object to be used for drawing in objects
 - | \ *notes*\ :
@@ -741,7 +861,7 @@ Function: Move
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py>`_\  (Ex), \ `graphicsDataExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py>`_\  (Ex), \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `openVRengine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/openVRengine.py>`_\  (Ex), \ `rigidBodyAsUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyAsUserFunctionTest.py>`_\  (TM)
+    \ `ballBearningModel.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py>`_\  (Ex), \ `graphicsDataExample.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/graphicsDataExample.py>`_\  (Ex), \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `kinematicTreeAndMBS.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py>`_\  (Ex), \ `NGsolveFFRFSlidingJoint.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveFFRFSlidingJoint.py>`_\  (Ex), \ `raytracerNOGLFWtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/raytracerNOGLFWtest.py>`_\  (TM), \ `rigidBodyAsUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyAsUserFunctionTest.py>`_\  (TM)
 
 
 
@@ -752,7 +872,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: MergeTriangleLists
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`MergeTriangleLists <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1817>`__\ (\ ``g1``\ , \ ``g2``\ )
+`MergeTriangleLists <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L2182>`__\ (\ ``g1``\ , \ ``g2``\ )
 
 - | \ *function description*\ :
   | merge 2 different graphics data with triangle lists
@@ -774,14 +894,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: InvertTriangles
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`InvertTriangles <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1870>`__\ (\ ``graphicsData``\ , \ ``invertTriangles = True``\ , \ ``invertVertexNormals = True``\ )
+`InvertTriangles <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L2235>`__\ (\ ``graphicsData``\ , \ ``invertTriangles = True``\ , \ ``invertNormals = True``\ )
 
 - | \ *function description*\ :
   | invert triangle orientation and triangle normals (or only one of these tasks); can also check consistency of normals
 - | \ *input*\ :
   | \ ``graphicsData``\ : graphicsData as returned e.g. from graphics.Sphere
   | \ ``invertTriangles``\ : if True, it inverts the triangle orientation (changing vertex index 0 and 1)
-  | \ ``invertVertexNormals``\ : if True, the direction of normal is flipped
+  | \ ``invertNormals``\ : if True, the direction of normal is flipped
 - | \ *output*\ :
   | returns new graphicsData (copy) with modified triangles and normals
 
@@ -794,7 +914,7 @@ Function: InvertTriangles
 
 Function: InconsistentTriangles
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`InconsistentTriangles <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1915>`__\ (\ ``graphicsData``\ )
+`InconsistentTriangles <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L2280>`__\ (\ ``graphicsData``\ )
 
 - | \ *function description*\ :
   | check consistency of orientation of triangles and vertex (point) normals
@@ -816,7 +936,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: NGsolveMesh2PointsAndTrigs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`NGsolveMesh2PointsAndTrigs <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L1958>`__\ (\ ``mesh = None``\ , \ ``ngMesh = None``\ , \ ``meshOrder = 2``\ , \ ``scale = 1``\ , \ ``addNormals = True``\ , \ ``verbose = False``\ )
+`NGsolveMesh2PointsAndTrigs <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L2322>`__\ (\ ``mesh = None``\ , \ ``ngMesh = None``\ , \ ``meshOrder = 2``\ , \ ``scale = 1``\ , \ ``addNormals = True``\ , \ ``verbose = False``\ )
 
 - | \ *function description*\ :
   | convert NGsolve (surface) mesh into (surface) points and triangles; clearly, it requires to have ngsolve installed
@@ -847,7 +967,7 @@ Function: NGsolveMesh2PointsAndTrigs
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `NGsolveOCCgeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveOCCgeometry.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex)
+    \ `NGsolveOCCboundaries2.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveOCCboundaries2.py>`_\  (Ex), \ `NGsolveOCCgeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveOCCgeometry.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex)
 
 
 
@@ -858,7 +978,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: FromSTLfileASCII
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`FromSTLfileASCII <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L2068>`__\ (\ ``fileName``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``verbose = False``\ , \ ``invertNormals = True``\ , \ ``invertTriangles = True``\ )
+`FromSTLfileASCII <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L2432>`__\ (\ ``fileName``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``verbose = False``\ , \ ``invertNormals = True``\ , \ ``invertTriangles = True``\ )
 
 - | \ *function description*\ :
   | generate graphics data from STL file (text format!) and use color for visualization; this function is slow, use stl binary files with FromSTLfile(...)
@@ -880,11 +1000,41 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 ----
 
 
+.. _sec-graphics-frompymeshlabfile:
+
+Function: FromPyMeshlabFile
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`FromPyMeshlabFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L2529>`__\ (\ ``fileName``\ , \ ``defaultColor = color.defaultBody``\ , \ ``invertNormals = False``\ , \ ``invertTriangles = False``\ , \ ``normalizeNormals = True``\ , \ ``useDefaultColor = False``\ , \ ``verbose = False``\ )
+
+- | \ *function description*\ :
+  | generate graphics data from any file that can be loaded with PyMeshLab (in particular .obj, .dae and .stl); either use defaultColor or given color in mesh.
+- | \ *input*\ :
+  | \ ``fileName``\ : string containing directory and filename of geometry file
+  | \ ``defaultColor``\ : provided as list of 4 RGBA values; used only if meshlab cannot load valid color or if file does not include color (e.g., STL)
+  | \ ``verbose``\ : if True, some information is logged during file import
+  | \ ``invertNormals``\ : if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
+  | \ ``invertTriangles``\ : if True: triangle orientation (based on local indices) is inverted for compatibility in Exudyn
+  | \ ``normalizeNormals``\ : if True, normals are scaled such that length=1 (or zero for zero-normals)
+  | \ ``useDefaultColor``\ : if True: ignores colors of the loaded mesh and uses defaultColor
+- | \ *output*\ :
+  | (type: dict) graphicsData in Exudyn dictionary format
+- | \ *notes*\ :
+  | requires pymeshlab to be installed (pip install pymeshlab); materials and textures are currently not considered in the import functionality!
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `pymeshlabFileImport.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pymeshlabFileImport.py>`_\  (Ex)
+
+
+
+----
+
+
 .. _sec-graphics-fromstlfile:
 
 Function: FromSTLfile
 ^^^^^^^^^^^^^^^^^^^^^
-`FromSTLfile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L2165>`__\ (\ ``fileName``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``verbose = False``\ , \ ``density = 0.``\ , \ ``scale = 1.``\ , \ ``Aoff = []``\ , \ ``pOff = []``\ , \ ``invertNormals = True``\ , \ ``invertTriangles = True``\ )
+`FromSTLfile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L2603>`__\ (\ ``fileName``\ , \ ``color = [0.,0.,0.,1.]``\ , \ ``verbose = False``\ , \ ``density = 0.``\ , \ ``scale = 1.``\ , \ ``Aoff = []``\ , \ ``pOff = []``\ , \ ``invertNormals = True``\ , \ ``invertTriangles = True``\ )
 
 - | \ *function description*\ :
   | generate graphics data from STL file, allowing text or binary format; requires numpy-stl to be installed; additionally can scale, rotate and translate
@@ -914,17 +1064,17 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: AddEdgesAndSmoothenNormals
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`AddEdgesAndSmoothenNormals <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L2236>`__\ (\ ``graphicsData``\ , \ ``edgeColor = color.black``\ , \ ``edgeAngle = 0.25*pi``\ , \ ``pointTolerance = 5``\ , \ ``addEdges = True``\ , \ ``smoothNormals = True``\ , \ ``roundDigits = 5``\ , \ ``triangleColor = []``\ )
+`AddEdgesAndSmoothenNormals <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L2673>`__\ (\ ``graphicsData``\ , \ ``edgeColor = color.black``\ , \ ``edgeAngle = 0.25*pi``\ , \ ``addEdges = True``\ , \ ``smoothNormals = True``\ , \ ``roundDigits = 5``\ , \ ``triangleColor = []``\ )
 
 - | \ *function description*\ :
-  | compute and return GraphicsData with edges and smoothend normals for mesh consisting of points and triangles (e.g., as returned from GraphicsData2PointsAndTrigs)
+  | compute and return GraphicsData with edges and smoothend normals for mesh consisting of points and triangles (e.g., as returned from GraphicsData2PointsAndTrigs); ignores stored normals
   | \ ``graphicsData``\ : single GraphicsData object of type TriangleList; existing edges are ignored
   | \ ``edgeColor``\ : optional color for edges
   | \ ``edgeAngle``\ : angle above which edges are added to geometry
-  | \ ``roundDigits``\ : number of digits, relative to max dimensions of object, at which points are assumed to be equal
-  | \ ``smoothNormals``\ : if True, algorithm tries to smoothen normals at vertices; otherwise, uses triangle normals
   | \ ``addEdges``\ : if True, edges are added in TriangleList of GraphicsData
-  | \ ``triangleColor``\ : if triangleColor is set to a RGBA color, this color is used for the new triangle mesh throughout
+  | \ ``smoothNormals``\ : if True, algorithm tries to smoothen normals at vertices; otherwise, uses triangle normals
+  | \ ``roundDigits``\ : number of digits, relative to max dimensions of object, at which points are assumed to be equal; too small or too larger number of digits may cause artifacts
+  | \ ``triangleColor``\ : if triangleColor is set to a RGBA color, this color is used for the new triangle mesh throughout; otherwise, stored colors are unchanged
 - | \ *output*\ :
   | returns GraphicsData with added edges and smoothed normals
 - | \ *notes*\ :
@@ -932,7 +1082,7 @@ Function: AddEdgesAndSmoothenNormals
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `NGsolveGeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveGeometry.py>`_\  (Ex), \ `NGsolveOCCgeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveOCCgeometry.py>`_\  (Ex), \ `stlFileImport.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stlFileImport.py>`_\  (Ex)
+    \ `humanRobotInteraction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/humanRobotInteraction.py>`_\  (Ex), \ `NGsolveGeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveGeometry.py>`_\  (Ex), \ `NGsolveOCCgeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveOCCgeometry.py>`_\  (Ex), \ `pymeshlabFileImport.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/pymeshlabFileImport.py>`_\  (Ex), \ `stlFileImport.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stlFileImport.py>`_\  (Ex)
 
 
 
@@ -943,7 +1093,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ExportSTL
 ^^^^^^^^^^^^^^^^^^^
-`ExportSTL <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L2398>`__\ (\ ``graphicsData``\ , \ ``fileName``\ , \ ``solidName = 'ExudynSolid'``\ , \ ``invertNormals = True``\ , \ ``invertTriangles = True``\ )
+`ExportSTL <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphics.py\#L2835>`__\ (\ ``graphicsData``\ , \ ``fileName``\ , \ ``solidName = 'ExudynSolid'``\ , \ ``invertNormals = True``\ , \ ``invertTriangles = True``\ )
 
 - | \ *function description*\ :
   | export given graphics data (only type TriangleList allowed!) to STL ascii file using fileName
@@ -957,4 +1107,28 @@ Function: ExportSTL
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
     \ `NGsolveOCCgeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveOCCgeometry.py>`_\  (Ex), \ `stlFileImport.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/stlFileImport.py>`_\  (Ex)
+
+
+.. _sec-module-graphics-class-color:
+
+CLASS color (in module graphics)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+**class description**: 
+
+    A structure with default values representing RGBA-colors (list of 4 values ranging from 0 to 1); users will access colors via graphics.color, e.g., graphics.color.red
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `contactSphereSphereTestEAPM.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/contactSphereSphereTestEAPM.py>`_\  (TM)
+
+
+.. _sec-module-graphics-class-material:
+
+CLASS material (in module graphics)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+**class description**: 
+
+    A structure that defines material indices and RGBA-values for standard materials; the material index (like indexChrome) can be used for the alpha-channel of a color to represent the material index; used only in the raytracer!
+
 

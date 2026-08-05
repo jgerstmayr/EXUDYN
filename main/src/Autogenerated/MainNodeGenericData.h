@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-03  15:35:21 (last modified)
+* @date         2026-02-05  22:13:55 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -44,7 +44,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainNodeGenericData
-* @brief        A node containing a number of data (history) variables; use e.g. for contact (active set), friction or plasticity (history variable).
+* @brief        A node containing a number of data (history) variables. Use this node e.g. for contact (active set), friction or plasticity (history variables).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

@@ -37,6 +37,8 @@ public: //
 	Real time;										//!< time or quasi-time (static solver) to which the data is linked to
 
 public: // 
+	//! initialize time
+	CSystemState() : time(0.) {}
 
 	//! Write access to: time
 	void SetTime(const Real& timeInit) { time = timeInit; }
@@ -52,7 +54,7 @@ public: //
 		ODE2Coords_tt.Reset();
 		AECoords.Reset();
 		dataCoords.Reset();
-		time = 0;
+		time = 0.;
 	}
 
 	//! Write access to: first order differential equations (ODE1) coordinates

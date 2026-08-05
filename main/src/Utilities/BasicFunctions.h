@@ -59,6 +59,19 @@ namespace EXUstd {
 		return (rangeBegin <= index) && (index < rangeEnd);
 	}
 
+	//! count number of occurances in a given container
+	//! usage: EXUstd::Count("asdfa", 'a');
+	template <typename T, typename V>
+	inline Index Count(const T& container, const V& value) {
+		Index count = 0;
+		for (const auto& element : container) {
+			if (element == value) 
+			{
+				count++;
+			}
+		}
+		return count;
+	}
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//template functions need to be implemented in header!!!
 
@@ -157,6 +170,19 @@ namespace EXUstd {
 		sstream << streamableObject;
 		return sstream.str();
 	}
+
+	//! template function to allow string conversion for objects having stream operator
+	template<class T>
+	STDstring ToString(const T & streamableObject, Index precision)
+	{
+		std::ostringstream sstream;
+		std::streamsize old_precision = sstream.precision();
+		sstream.precision(precision);
+		sstream << streamableObject;
+		sstream.precision(old_precision);
+		return sstream.str();
+	}
+
 
 	//! specialization for Real
 	template<>

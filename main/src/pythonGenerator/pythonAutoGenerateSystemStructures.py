@@ -9,15 +9,19 @@ currently: automatic generate structures with ostream and initialization
 """
 import datetime # for current date
 from autoGenerateHelper import RemoveSpacesTabs, CountLines, TypeConversion, GenerateHeader, SplitString, Str2Latex,\
-                               Str2Doxygen, GetDateStr, CutLinesFromString, PyLatexRST, IsEqualIgnoringDateStrings
+                               Str2Doxygen, GetDateStr, CutLinesFromString, PyLatexRST, IsEqualIgnoringDateStrings,\
+                               WriteTextIfDifferent, DocStringGoogleFromPlainText
+
 import copy
 import io
 import os
 import numpy as np
 from exudynVersion import exudynVersionString
 
+SHOW_PARAMETER_CHANGES = False
 sortStructures = True
-
+ADD_DOCSTRINGS = True
+    
 typeCasts = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt':'Index', 
              'UReal':'Real',  'PReal':'Real', 'UFloat':'float',  'PFloat':'float', 
              'Vector':'std::vector<Real>', 'Vector3D':'std::vector<Real>', #'Matrix':'Matrix', 'SymmetricMatrix':'Matrix', 
@@ -30,7 +34,7 @@ typeCasts = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt'
              'Matrix3D': 'std::array<std::array<Real,3>,3>',
              'Matrix6D': 'std::array<std::array<Real,6>,6>',
              'Vector2DList': 'PyVector2DList',
-             } #convert parameter types to C++/DYNALFEX types
+             } #convert parameter types to C++/Exudyn types
 
 #conversion rules for dictionary 'type'; this type conversion adds rules for the user's values in the dictionary
 convertToDict = {'ResizableVector':'Vector', 'StdArray33F':'MatrixFloat', 
@@ -71,10 +75,33 @@ def IsTypeWithRangeCheck(origType):
 def IsTypeWithSetGetFunction(origType):
     if (origType.find('Matrix3D') != -1 or
         origType.find('Matrix6D') != -1 or
-        origType.find('Vector2DList') != -1 
+        origType.find('Vector2DList') != -1 or
+        origType.find('KeyPressUserFunction') != -1 
         ):
         return True
     return False
+
+
+settingsClassName2member = {'ContourAdvanced':'advanced','ViewAdvanced':'advanced',
+                            'GeneralAdvanced':'advanced','OpenGLAdvanced':'advanced',
+                            'RaytracerAdvanced':'advanced','InteractiveAdvanced':'advanced',
+                            'WindowDeprecated':'window',
+                            'TimeIntegrationSettings':'timeIntegration', 
+                            'StaticSolverSettings':'staticSolver', 
+                            'ExplicitIntegrationSettings':'explicitIntegration', 
+                            'GeneralizedAlphaSettings':'generalizedAlpha',
+                            'NewtonSettings':'newton', 
+                            'DiscontinuousSettings':'discontinuous', 
+                            'NumericalDifferentiationSettings':'numericalDifferentiation',
+                            }
+#convert settings class name like Contour into contour
+def ConvertClassName2member(className):
+    className = className.replace('VSettings','') #fixes name prefix for all visualization settings
+    if className in settingsClassName2member.keys():
+        finalName = settingsClassName2member[className]
+    else:
+        finalName = className[0:1].lower() + className[1:] #also works for empty strings
+    return finalName
 
 #remove special latex commands from string, especially for pybind descriptions
 def RemoveLatexCommands(s):
@@ -88,6 +115,69 @@ def ClassHasGetSetDictionary(className):
         or className == 'StaticSolverSettings'
         or className == 'LinearSolverSettings')
 
+def ClassHasBackLink(className):
+    return (className == 'VisualizationSettings'
+            or className.startswith('VSettings'))
+
+def TopClassName(className):
+    if className.startswith('VSettings') or className == 'VisualizationSettings':
+        return 'VisualizationSettings'
+    else:
+        return ''
+    
+#if it is a substructure, return True; if topclass, return False
+def HasTopClass(className):
+    return TopClassName(className) != className
+
+#just extract and evaluate cflag
+def IsDeprecatedParameter(parameter):
+    return (parameter['cFlags'].find('X') != -1)
+
+#just extract and evaluate cflag
+def IsStructureParameter(parameter):
+    return (parameter['cFlags'].find('S') != -1)
+
+#convert parameter to deprecation version and expiration data
+def DParameter2VersionExpiration(parameter):
+    changedInfo = parameter['defaultValue'] #workaround; contains 'version;EXP=....' where in EXP, the expire year is noted where the deprecated parameter will be removed
+    if len(changedInfo.split(';')) < 2 or 'EXP=' not in changedInfo:
+        raise ValueError('VersionExpiration: parameter '+str(parameter) + 'has illegal version')
+    version = changedInfo.split(';')[0]
+    expDate = changedInfo.split(';')[1].replace('EXP=','')
+    return (version, expDate)
+    
+
+#extract parameterdescription depending on deprecated status (then it is the re-link)
+def ParameterDescription(parameter):
+    IDP = IsDeprecatedParameter(parameter)
+    return 'DEPRECATED; Instead use '*IDP + parameter['parameterDescription']
+
+def ParameterChanges2LatexRST(parameterChangesList, latexStr, rstStr):
+    if len(parameterChangesList):
+        text = '\nThe following parameter changes have been made:\n'
+        latexStr += text
+        rstStr += text+'\n'
+        latexStr += '\\bi\n'
+        for param in parameterChangesList:
+            latexStr += '  \\item '
+            latexStr += param[0].replace('visualizationSettings.','')+' $\\ra$ '
+            latexStr += param[1].replace('visualizationSettings.','')
+            text = ' (changed in version '+param[2]+', expires: '+param[3]+')\n'
+            latexStr += text
+            rstStr += '  - ' + param[0]+' → '+param[1]+text
+        latexStr += '\\ei\n'
+        rstStr += '\n'
+        # print(rstStr[-200:])
+    return (latexStr, rstStr)
+
+
+def ParameterDescription2DocString(text):
+    if text.strip().startswith('$'): #formula at beginning
+        listStrip = text.split('$')
+        if len(listStrip) > 2: 
+            text = '$'.join(listStrip[2:])
+    return text
+
 globalList=[]
 
 #************************************************
@@ -100,6 +190,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     spaces4 = '    '
     
     dateStr = GetDateStr()
+    yearStr = dateStr.split('-')[0]
 
     plr.AddDocu(parseInfo['latexText']) #.replace('\\n','\n') #this is the string for latex documentation
     
@@ -138,13 +229,14 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         s+='#define '+sHeaderOnce.upper()+'__H\n'
         s+='\n'
     
-    s+='#include <ostream>\n'
-    s+='\n'
-    s+='#include "Utilities/ReleaseAssert.h"\n'
-    s+='#include "Utilities/BasicDefinitions.h"\n'
-    s+='#include "Main/OutputVariable.h"\n'
-    s+='#include "Linalg/BasicLinalg.h"\n' #for std::array conversion
-    s+='\n'
+        s+='#include <ostream>\n'
+        s+='\n'
+        s+='#include "Utilities/ReleaseAssert.h"\n'
+        s+='#include "Utilities/BasicDefinitions.h"\n'
+        s+='#include "Main/OutputVariable.h"\n'
+        s+='#include "Linalg/BasicLinalg.h"\n' #for std::array conversion
+        s+='\n'
+
     if cppText != '':
         s += cppText
         s += '\n'
@@ -152,6 +244,12 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     pythonClass = parseInfo['class']
     if parseInfo['pythonClass'] != '':
         pythonClass = parseInfo['pythonClass']
+
+    classInitBackLink = ClassHasBackLink(parseInfo['class'])
+    classHasBackLink = ClassHasBackLink(parseInfo['class']) and HasTopClass(parseInfo['class'])
+
+    implementationGetSetStr = '' #implementations that come in the end
+    parameterChangesList = [] #old and new parameter (full path)
 
     #create sorted parameter list; distinguish between structures (cFlags have 'S') and values: adds 0/1 before name for sorting ...
     parameterListSorted=sorted(parameterList, 
@@ -179,28 +277,45 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 
         stubStr += '\n#information for '+ pythonClass + '\n'
         stubStr += 'class ' + pythonClass + ':\n'
-
+        if ADD_DOCSTRINGS: 
+            stubStr += DocStringGoogleFromPlainText(parseInfo['classDescription'],
+                                                    addSpaces=' '*4, multiline=True)
         typicalPaths = []
         if parseInfo['typicalPaths'] != None:
             typicalPaths = parseInfo['typicalPaths']
             class2name = parseInfo['class']
-            class2name = class2name.replace('VSettings','') #fixes name for all visualization settings
-            # typicalPaths = typicalPaths.replace('VSettings','') #fixes name for all visualization settings
+
+            if class2name.endswith('View'):
+                typicalPaths += '.view'
+                class2name = ''
+                
+            if typicalPaths.endswith('.view'):
+                oldTypicalPath = typicalPaths
+                typicalPaths = ''
+                sep = ''
+                for i in range(4):
+                    typicalPaths += sep + oldTypicalPath.replace('.view','.view'+str(i))
+                    sep = ','
+
+            class2name = ConvertClassName2member(class2name)
             
-            conv = ['TimeIntegrationSettings', 'StaticSolverSettings', 'ExplicitIntegrationSettings', 'GeneralizedAlphaSettings',
-            'NewtonSettings', 'DiscontinuousSettings', 'NumericalDifferentiationSettings']
-            for c in conv:
-                if c in class2name:
-                    class2name = class2name.replace('Settings','')
-                # if c in typicalPaths:
-                #     typicalPaths.replace('Settings','')
+            #remove Settings from structure:
+            # conv = ['TimeIntegrationSettings', 'StaticSolverSettings', 'ExplicitIntegrationSettings', 'GeneralizedAlphaSettings',
+            # 'NewtonSettings', 'DiscontinuousSettings', 'NumericalDifferentiationSettings']
+            # for c in conv:
+            #     if c in class2name:
+            #         class2name = class2name.replace('Settings','')
             
             typicalPaths = typicalPaths.split(',')
             for i in range(len(typicalPaths)):
-                typicalPaths[i] += '.'+class2name[0].lower() + class2name[1:]
+                typicalPaths[i] += '.' if (typicalPaths[i]!='' and class2name!='') else ''
+                typicalPaths[i] += class2name[0:1].lower() + class2name[1:]
+
+        #print('typical:',typicalPaths)
 
         descriptionStr = parseInfo['classDescription']
-        if descriptionStr[-1] != '.': descriptionStr += '. '
+        if not descriptionStr.endswith('.'): 
+            descriptionStr += '. '
         
         plr.sLatex += '\n%+++++++++++++++++++++++++++++++++++\n'
         plr.AddDocu(Str2Latex(descriptionStr, replaceCurlyBracket=False)+
@@ -222,9 +337,12 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         plr.sLatex += '    \\bf Name & \\bf type / function return type & \\bf size & \\bf default value / function args & \\bf description \\\\ \\hline\n'
     
         for parameter in parameterListSorted:
+            if IsDeprecatedParameter(parameter):
+                continue
             if (parameter['lineType'].find('V') != -1 and 
                 parameter['cFlags'].find('P') != -1 and
-                    parameter['type'].find('ResizableVector') == -1): #only if it is a member variable
+                parameter['type'].find('ResizableVector') == -1): #only if it is a member variable
+                
                 sString = ''
                 if (parameter['type'] == 'String' or parameter['type'] == 'FileName'):
                     sString="'"
@@ -248,6 +366,9 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                                 
                 stubStr += spaces4+parameter['pythonName']+': '
                 stubStr += TypeConversion(parameter['type'], typeConversionStub) + '\n'
+                if ADD_DOCSTRINGS: 
+                    stubStr += DocStringGoogleFromPlainText(text=ParameterDescription2DocString(parameter['parameterDescription']),
+                                                            addSpaces=' '*4, multiline=False)
 
             if (parameter['lineType'].find('F') != -1) and (parameter['cFlags'].find('P') != -1): #only if it is a function
                 #write latex doc:
@@ -295,13 +416,25 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     s+='class ' + parseInfo['class'] + strParentClass + ' // AUTO: \n'
     s+='{\n'
 
+
     #************************************
     #member variables:
     sPublic = ''
     sPrivate = ''
     sProtected = ''
     for parameter in parameterListSorted:
-        if (parameter['lineType'].find('V') != -1) and (parameter['lineType'].find('L') == -1) and (parameter['cplusplusName'].find('.') == -1): #only if it is a member variable, but not linked
+        if IsDeprecatedParameter(parameter) and not IsStructureParameter(parameter): #for structures, there is no replacement; only for values
+            for path in typicalPaths:
+                oldParameterStr = path.replace('SC.','') +'.'+ parameter['pythonName']
+                baseParameter = oldParameterStr.split('.')[0]
+                newParameterStr = baseParameter+'.'+parameter['parameterDescription']
+                (version, expDate) = DParameter2VersionExpiration(parameter)
+                parameterChangesList.append([oldParameterStr, newParameterStr, version, expDate])
+
+        if ((parameter['lineType'].find('V') != -1) and 
+            (parameter['lineType'].find('L') == -1) and 
+            (parameter['cplusplusName'].find('.') == -1) and 
+            (not IsDeprecatedParameter(parameter) or IsStructureParameter(parameter)) ): #only if it is a member variable, but not linked
             typeStr = TypeConversion(parameter['type'], typeConversion)
             temp = '  ' + typeStr + ' ' + parameter['cplusplusName']+ ';'
             nChar = len(temp)
@@ -309,7 +442,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
             insertSpaces = ''
             if nChar < alignment:
                 insertSpaces = ' '*(alignment-nChar)
-            temp += insertSpaces + '//!< AUTO: ' + Str2Doxygen(parameter['parameterDescription']) + '\n'
+            temp += insertSpaces + '//!< AUTO: ' + Str2Doxygen(ParameterDescription(parameter)) + '\n'
 
             if (parameter['lineType'].find('p') != -1): #make variable private ==> no direct access via C++ or python!
                 sPrivate += temp
@@ -318,6 +451,10 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     sPublic += temp
                 else:
                     sProtected += temp
+
+    if classHasBackLink:
+        #print('class with backlink:',parseInfo['class'])
+        sPrivate += '  ' + TopClassName(parseInfo['class']) + '* backlink; //!< AUTO: backlink for global access of structure\n'
 
     if (sPublic !='' or sProtected !=''):
         s+='public: // AUTO: \n'
@@ -344,13 +481,17 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 cntDefaultParameters += 1
 
     #constructor with default initialization:
-    if cntDefaultParameters or len(parseInfo['addConstructor']) != 0:
+    if classInitBackLink or cntDefaultParameters or len(parseInfo['addConstructor']) != 0:
         s+='  //! AUTO: default constructor with parameter initialization\n'
         s+='  '+parseInfo['class']+'()'+constructorParentClass+'\n'
         s+='  {\n'
+        if classHasBackLink:
+            #print('has backlink:',parseInfo['class'])
+            s+='    '+'backlink=nullptr;\n'
+
     
         for parameter in parameterListSorted:
-            if (parameter['lineType'].find('V') != -1): #only if it is a member variable
+            if (parameter['lineType'].find('V') != -1) and not IsDeprecatedParameter(parameter): #only if it is a member variable
                 strDefault = parameter['defaultValue']
                 if len(strDefault): #only add initialization if default value exists
                     if parameter['type'] == 'String' or parameter['type'] == 'FileName':
@@ -358,6 +499,19 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     s+='    ' + parameter['cplusplusName'] + ' = ' + strDefault + ';\n'
         s+=parseInfo['addConstructor'].replace('\\n','\n')
         s+='  };\n'
+
+    #++++++++++++
+    #add initializatio nof backlink
+    if classInitBackLink:
+        s += '  void Init('+TopClassName(parseInfo['class']) + '* backlinkInit) //!< AUTO: called from parent structure\n'
+        s += '  {\n'
+        if classHasBackLink: #not for top class itself
+            s += '    backlink = backlinkInit;\n'
+        for parameter in parameterListSorted:
+            if IsStructureParameter(parameter):# and not IsDeprecatedParameter(parameter):
+                s+='    ' + parameter['cplusplusName'] + '.Init(backlinkInit);\n'
+        s += '  }\n'
+    #++++++++++++
 
     s+='\n  // AUTO: access functions\n'
 
@@ -379,20 +533,10 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     sDictSet = ''
     sDictSet += '//! AUTO: write access to data structure; converting dictionary d into structure\n'
     sDictSet += 'inline void SetDictionary(' + parseInfo['class'] + '& data, const py::dict& d) {\n'
-
+    
     #************************************
     #access functions and dictionaries for visualization dialog ...:
     
-    #create second list, which causes contour to show up as first option
-    # parameterListSorted2 = copy.deepcopy(parameterListSorted)
-    # if len(parameterListSorted2) >= 4:
-    #     if (parameterListSorted2[0]['pythonName'] == 'bodies' and
-    #         parameterListSorted2[3]['pythonName'] == 'contour'):
-    #         print('resort parameter list!')
-    #         parameterListSorted2[0] = copy.deepcopy(parameterListSorted[3])
-    #         parameterListSorted2[1] = copy.deepcopy(parameterListSorted[0])
-    #         parameterListSorted2[2] = copy.deepcopy(parameterListSorted[1])
-    #         parameterListSorted2[3] = copy.deepcopy(parameterListSorted[2])
     if (parseInfo['class'] == 'VisualizationSettings'):
         parameterListSorted2 = copy.deepcopy(parameterList) #unsorted, sorting as in definition file
     else:
@@ -402,81 +546,116 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     parameterInfo = [] #list for exporting dictionaries
     for parameter in parameterListSorted2:
         if (parameter['lineType'].find('V') != -1): #only if it is a member variable
+            ISP = bool(IsStructureParameter(parameter))
+            IDP = bool(IsDeprecatedParameter(parameter))
+            IDPNS = bool(IsDeprecatedParameter(parameter)) and not ISP #IDP but not structure
+
+            lineBreakIDP = ''
+            deprecationWarning = ''
+            if IDPNS:
+                lineBreakIDP = '\n    '
+                deprecationWarning = 'PyWarning("VisualizationSettings parameter '
+                deprecationWarning += ConvertClassName2member(parseInfo['class'])+'.'+parameter['pythonName']
+                deprecationWarning += ' is deprecated! use '+parameter['parameterDescription']+' instead!");'+lineBreakIDP
+                (version, expDate) = DParameter2VersionExpiration(parameter)
+                if expDate <= yearStr:
+                    print('parameter outdated '+expDate+':', parseInfo['class']+'::'+parameter['cplusplusName'])
+                    continue #not included any more with backlinks!
+                
+                
             origType = parameter['type']
             typeStr = TypeConversion(parameter['type'], typeConversion)
             paramStr = parameter['cplusplusName']
+            paramAccessStr = paramStr if not IDPNS else 'backlink->'+parameter['parameterDescription']
+
             paramStrPure = parameter['cplusplusName'] #without 'cSolver.'
-            if (paramStr.find('.') != -1): #for linked class
+            if (paramStrPure.find('.') != -1): #for linked class; mainly solver
                 paramStrPure = parameter['pythonName']
 
-            functionStr = paramStrPure
+            functionStr = paramStrPure #Get/Set function name follows old name, not new parameter
+            
+            if IDPNS:
+                paramStrPure = paramAccessStr.split('.')[-1]
+
             c = functionStr[0]
             functionStr = c.upper()+functionStr[1:]
             refChar = '&' #use only '&' in read access, if it is no pointer; 
             if typeStr[len(typeStr)-1] == '*':
                 refChar = ''
-    
+
             accessWritten = False
-            if parameter['cFlags'].find('A') != -1:
+            if parameter['cFlags'].find('A') != -1 and not IDPNS:
                 accessWritten = True
-                s+='  //! AUTO: Read (Reference) access to: ' + Str2Doxygen(parameter['parameterDescription']) + '\n'
+                s+='  //! AUTO: Read (Reference) access to: ' + Str2Doxygen(ParameterDescription(parameter)) + '\n'
                 s+='  const ' + typeStr + refChar + ' '
-                s+='Get' + functionStr + '() const { return '+paramStr+'; }\n'
+                s+='Get' + functionStr + '() const { return '+paramAccessStr+'; }\n'
     
-                s+='  //! AUTO: Write (Reference) access to: ' + Str2Doxygen(parameter['parameterDescription']) + '\n'
+                s+='  //! AUTO: Write (Reference) access to: ' + Str2Doxygen(ParameterDescription(parameter)) + '\n'
                 s+='  '+typeStr + '&' + ' '
-                s+='Get' + functionStr + '() { return ' + paramStr + '; }\n'
+                s+='Get' + functionStr + '() { return ' + paramAccessStr + '; }\n'
 
             typeWithRangeCheck = IsTypeWithRangeCheck(origType)
-            typeWithGetSetFunction = IsTypeWithSetGetFunction(origType)
+            typeWithGetSetFunction = IsTypeWithSetGetFunction(origType) or IDPNS
+            
+            getFunction = [] #return type, function decl, impl
+            setFunction = [] #return type, function decl, impl
                 
             typeCastStr = TypeConversion(parameter['type'], typeCasts)
-            #delete: if (((typeCastStr.find('std::vector') != -1 or typeCastStr.find('std::array') != -1 or (parameter['type'].find('KeyPressUserFunction') != -1)) and typeCastStr.find('std::ofstream') == -1) or 
             if (((typeCastStr.find('std::vector') != -1 or typeCastStr.find('std::array') != -1) and 
                  typeCastStr.find('std::ofstream') == -1 and typeCastStr.find('ExuFile::BinaryFileSettings') == -1) or 
                 typeWithRangeCheck or typeWithGetSetFunction or
                 (parameter['lineType'].find('L') == -1  and parameter['cplusplusName'].find('.') != -1)): #then it must get a set/get function!
                 accessWritten = True
-                castStr = '(' + typeCastStr + ')'
-                linkedClassStr = ''
-#                if (len(parseInfo['linkedClass']) != 0) and (parameter['lineType'].find('L') != -1):
-#                    linkedClassStr = parseInfo['linkedClass'] + '.'
                 
                 paramSetStr = paramStrPure + 'Init'
                 if typeWithRangeCheck:
                     paramSetStr  = 'EXUstd::GetSafely'+origType+'('+paramSetStr+',"'+paramStrPure+'")'
                 
-                #print(paramStr + ':' + typeStr + ' gets a setter function')
-                s+='  //! AUTO: Set function (needed in pybind) for: ' + Str2Doxygen(parameter['parameterDescription']) + '\n'
-                s+='  void '
+                #print(paramAccessStr + ':' + typeStr + ' gets a setter function')
+                s+='  //! AUTO: Set function (needed in pybind) for: ' + Str2Doxygen(ParameterDescription(parameter)) + '\n'
+                setFunction.append('void ')
                 getReturnStr = typeCastStr
                 
                 if not typeWithGetSetFunction:
-                    s+='PySet' + functionStr + '(const ' + typeCastStr + refChar + ' ' + paramStrPure + 'Init) { ' + linkedClassStr + paramStr + ' = ' + paramSetStr + '; }\n'
+                    setFunction.append('PySet' + functionStr + '(const ' + typeCastStr + refChar + ' ' + paramStrPure + 'Init) ')
+                    setFunction.append('{ '+paramAccessStr + ' = ' + paramSetStr + '; }\n')
                 else:
-                    paramInitStr = paramStr+ '= '+'(const ' + typeStr+ '&)' + paramStrPure + 'Init'
+                    paramInitStr = paramAccessStr+ '= '+'(const ' + typeStr+ '&)' + paramStrPure + 'Init'
                     #in this case, we need special typecast
-                    if typeStr == 'Matrix3D' or typeStr == 'Matrix6D': #in linux casting from std::array<std::array<Real,...>> gives segmentation fault (overrides strangely)
-                        #print('parameter '+parameter['pythonName']+' needs special treatment:', typeStr)
+                    if (typeStr == 'Matrix3D' or 
+                        typeStr == 'Matrix6D'): #in linux casting from std::array<std::array<Real,...>> gives segmentation fault (overrides strangely)
+                        
                         typeCastStr = 'py::object'
                         matDim = 3
                         if typeStr == 'Matrix6D':
                             matDim = 6
                         paramInitStr = 'EPyUtils::SetConstMatrixTemplateSafely<'+str(matDim)+', '+str(matDim)+'>('+paramStrPure+'Init, '+ paramStrPure+')'
-                        
-                    s+='PySet' + functionStr + '(const ' + typeCastStr + refChar + ' ' + paramStrPure + 'Init) { ' 
-                    s+= paramInitStr+'; }\n'
+
+                    setFunction.append('PySet' + functionStr + '(const ' + typeCastStr + refChar + ' ' + paramStrPure + 'Init) ')
+                    setFunction.append('{ ' + lineBreakIDP + deprecationWarning + paramInitStr+'; '+lineBreakIDP+'}\n')
                         
                     if typeStr == 'Matrix3D' or typeStr == 'Matrix6D': #Matrix type (Matrix3D, ...)
                         getReturnStr = 'py::array_t<Real>' #this makes a numpy array instead of list of lists!
                         typeCastStr = 'EPyUtils::Matrix2NumPyTemplate'
 
-                s+='  //! AUTO: Read (Copy) access to: ' + Str2Doxygen(parameter['parameterDescription']) + '\n'
-                s+='  '+getReturnStr + ' '
-                s+='PyGet' + functionStr + '() const { return ' + typeCastStr + '('+linkedClassStr + paramStr + '); }\n'
-            
+                
+                s+= '  '+setFunction[0] + setFunction[1] + setFunction[2]*(1-IDPNS) + ';\n'*IDPNS #spaces/linebreaks included
+                s+='  //! AUTO: Read (Copy) access to: ' + Str2Doxygen(ParameterDescription(parameter)) + '\n'
+
+                getFunction.append(getReturnStr + ' ')
+                getFunction.append('PyGet' + functionStr + '() const ')
+                getFunction.append('{ '+lineBreakIDP+deprecationWarning+'return ' + typeCastStr + '('+ paramAccessStr + '); '+lineBreakIDP+'}\n')
+                s+= '  '+getFunction[0] + getFunction[1] + getFunction[2]*(1-IDPNS)+';\n'*IDPNS #spaces/linebreaks included
+
             if accessWritten:
                 s+= '\n'
+            
+            if IDPNS:
+                implementationGetSetStr += '\n'
+                cn = parseInfo['class']
+                implementationGetSetStr += 'inline ' + setFunction[0] + cn + '::'+setFunction[1] + setFunction[2]
+                implementationGetSetStr += 'inline ' + getFunction[0] + cn + '::'+getFunction[1] + getFunction[2]
+                # print('implementationGetSetStr:',implementationGetSetStr)
             
             #++++++++++++++++++++++++++++++++++++++++++++++++++++++
             #read/write dictionary from hierarchical structure
@@ -485,10 +664,11 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 if parameter['pythonName'] == 'itemIdentifier':
                     print("ERROR: pythonName may not be called 'itemIdentifier'") #this term needs to be reserved, as this is the key for a value object
                 #check if substructure (folder)
-                if parameter['cFlags'].find('S') != -1:
-                    sDictGet += '    structureDict["' + parameter['pythonName'] + '"] = GetDictionaryWithTypeInfo(data.' + parameter['cplusplusName'] + ');\n'
-                    sDictGetPure += '    structureDict["' + parameter['pythonName'] + '"] = GetDictionary(data.' + parameter['cplusplusName'] + ');\n'
-                    sDictSet+= '    SetDictionary(data.' + parameter['cplusplusName'] + ', py::cast<py::dict>(d["' + parameter['pythonName']  + '"]));\n'
+                if IsStructureParameter(parameter):
+                    if not IsDeprecatedParameter(parameter):
+                        sDictGet += '    structureDict["' + parameter['pythonName'] + '"] = GetDictionaryWithTypeInfo(data.' + parameter['cplusplusName'] + ');\n'
+                        sDictGetPure += '    structureDict["' + parameter['pythonName'] + '"] = GetDictionary(data.' + parameter['cplusplusName'] + ');\n'
+                        sDictSet+= '    SetDictionary(data.' + parameter['cplusplusName'] + ', py::cast<py::dict>(d["' + parameter['pythonName']  + '"]));\n'
                 else: #parameter
                     cValueStr = parameter['cplusplusName'];
                     #cSetStr = parameter['cplusplusName'];
@@ -517,16 +697,16 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                     else: 
                         pSize = '{'+pSize+'}'
                         
-                    descrStr = parameter['parameterDescription'].replace("\\_","_").replace("\\","\\\\").replace('$','')
+                    descrStr = ParameterDescription(parameter).replace("\\_","_").replace("\\","\\\\").replace('$','')
                     typeCastStr = TypeConversion(parameter['type'], typeCasts)
                     
-                    if parameter['type'] != 'KeyPressUserFunction': #this would not work for editing dictionary
+                    if parameter['type'] != 'KeyPressUserFunction' and not IsDeprecatedParameter(parameter): #this would not work for editing dictionary
                         #get functions:
                         sDictGet += '    d = py::dict(); //reset local dict\n'
                         sDictGet += '    d["itemIdentifier"] = std::string(""); //identifier for item\n'
                         sDictGet += '    d["value"] = data.' + cValueStr + ';\n'
                         sDictGet += '    d["type"] = "' + pType + '";\n'
-                        sDictGet += '    d["size"] = std::vector<int>' + pSize + ';\n' #only used for vectors (e.g. '3') and matrices (e.g. '3x3')
+                        sDictGet += '    d["size"] = std::vector<int>' + pSize + ';\n' #only used for vectors/matrices (e.g. '3') and matrices (e.g. '3x3')
                         sDictGet += '    d["description"] = "' + descrStr + '";\n'
                         sDictGet += '    structureDict["' + parameter['pythonName'] + '"] = d;\n' #keyName used to identify the object
                         sDictGet += '\n'
@@ -613,7 +793,8 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         (parameter['type']!='TemporaryComputationData') and (parameter['type']!='TemporaryComputationDataArray') and 
         (parameter['type'].find('std::ofstream')==-1) and #(parameter['type'].find('ExuFile::BinaryFileSettings')==-1) and 
         (parameter['type'].find('std::vector<Vector2D>')==-1) and (parameter['type'].find('CrossSectionType')==-1) and
-        (parameter['type'].find('userFunction')==-1) and (parameter['type'].find('UserFunction')==-1)): #only if it is a member variable; some types not printable
+        (parameter['type'].find('userFunction')==-1) and (parameter['type'].find('UserFunction')==-1) and
+        not IsDeprecatedParameter(parameter)): #only if it is a member variable; some types not printable
             paramStr = parameter['cplusplusName']
             typeStr = TypeConversion(parameter['type'], typeConversion)
             refChar = ''
@@ -648,10 +829,14 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     
     s+='};\n\n\n' #class
 
-    # if not hasPybindInterface:
-    #     stubStr = ''
-
-    return [s, plr.sLatex, sGetSetDictionarys, plr.sRST, stubStr, parameterInfo]
+    if len(parameterChangesList) and SHOW_PARAMETER_CHANGES:
+        #print('parameter changes:\n',parameterChangesList,sep='')
+        for pChange in parameterChangesList:
+            print(pChange[0]+' → '+pChange[1])
+        
+    
+    return [s, plr.sLatex, sGetSetDictionarys, plr.sRST, stubStr, 
+            parameterInfo, implementationGetSetStr, parameterChangesList]
 
 #**************************************************************************************
 #**************************************************************************************
@@ -710,6 +895,9 @@ def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
     #member variables access:
     for parameter in parameterListSorted:
         if (parameter['lineType'].find('V') != -1) and (parameter['cFlags'].find('P') != -1): #only if it is a member variable
+            ISP = bool(IsStructureParameter(parameter))
+            IDP = bool(IsDeprecatedParameter(parameter))
+
             typeCastStr = TypeConversion(parameter['type'], typeCasts)
             linkedClassStr = ''
             if (len(parseInfo['linkedClass']) != 0):
@@ -717,8 +905,8 @@ def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
 
             if ((typeCastStr.find('std::vector') == -1) and (typeCastStr.find('std::array') == -1) and 
             (parameter['lineType'].find('L') == -1) and (parameter['cplusplusName'].find('.') == -1)
-            and not IsTypeWithRangeCheck(parameter['type']) and not IsTypeWithSetGetFunction(parameter['type'])): #then it has a set/get function! e.g. Int2, Int3, Float2, Float3, .... are array structures ==> must be converted
-            #and (parameter['type'].find('KeyPressUserFunction') == -1)): 
+            and not IsTypeWithRangeCheck(parameter['type']) 
+            and not (IsTypeWithSetGetFunction(parameter['type']) or (IDP and not ISP))): #then it has a set/get function! e.g. Int2, Int3, Float2, Float3, .... are array structures ==> must be converted
                 s += spaces2 + '.def_readwrite("' + parameter['pythonName'] + '", &' + parseInfo['class'] + '::' + linkedClassStr + parameter['cplusplusName']
                 if addDocuMember:
                     #s += ', "member: ' + parameter['pythonName'] + '"'
@@ -733,8 +921,20 @@ def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
                 #functionName = parameter['cplusplusName']
                 functionName = parameter['pythonName'] #for linked variables, this is easier to work with linking e.g. to cSolver
                 functionName = functionName[0].upper()+functionName[1:]
-                s += spaces2 + '.def_property("' + parameter['pythonName'] + '", &' + parseInfo['class'] + '::PyGet' + functionName
-                s += ', &' + parseInfo['class'] + '::PySet' + functionName + sReturnValueProperty + ')\n'
+                s += spaces2 + '.def_property("' + parameter['pythonName'] + '", '
+                s += '&' + parseInfo['class'] + '::PyGet' + functionName + ', '
+                if parameter['type'] != 'KeyPressUserFunction' or IsDeprecatedParameter(parameter):
+                    s += '&' + parseInfo['class'] + '::PySet' + functionName + sReturnValueProperty 
+                else:
+                    #this is quite brute force, and needs to be adjusted in case ...
+                    ind12 = ' '*12
+                    s += '\n'+ind12+'[](VSettingsInteractive &self, py::object func) {\n'
+                    #func.is_none() could be used to detect None as well
+                    s += ind12+'  if (py::isinstance<py::int_>(func) && func.cast<int>() == 0) {\n'
+                    s += ind12+'    self.PySetKeyPressUserFunction(nullptr); // Resets the function\n' #self.backlink->interactive.keyPressUserFunction
+                    s += ind12+'    } else {\n'+ind12+'    self.PySetKeyPressUserFunction(func.cast<std::function<bool(int, int, int)>>());\n'
+                    s += ind12+'  }\n'+ind12+'}'
+                s += ')\n'
                 #    .def_property("name", &Pet::getName, &Pet::setName)
                 
     #s += '\n'
@@ -749,7 +949,7 @@ def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
                     s += ', py::return_value_policy::copy'
                 else:
                     s += ', py::return_value_policy::reference' #extend this to incorporate 'read only' and other flags
-            s += ', "' + RemoveLatexCommands(parameter['parameterDescription']) + '"'
+            s += ', "' + RemoveLatexCommands(ParameterDescription(parameter)) + '"'
             if (parameter['cFlags'].find('G') != -1): #add py::arg() in order that type completion shows args in python
                 argStr = parameter['args']
                 if (argStr != ''):
@@ -891,7 +1091,7 @@ try: #still close file if crashes
     filename = "systemStructuresDefinition.py"
     totalNumberOfLines = 0
 
-    file=open(filename,'r') 
+    file=open(filename,'r', encoding='utf8') 
     fileLines = file.readlines()
     file.close()
     
@@ -913,6 +1113,7 @@ try: #still close file if crashes
                       'String':'str', 'FileName':'str', 'Index2':'Tuple[int,int]', 
                       'KeyPressUserFunction': 'Any',
                       'std::string':'str', 'void':'None', 
+                      'ArrayIndex':'List[int]','ArrayFloat':'List[float]',
                       } #conversion for stub files
 
     parseInfo = {'class':'',            # C++ class name
@@ -930,7 +1131,7 @@ try: #still close file if crashes
                  'cppText':''}          #code which is added before class definition
     lineDefinition = ['lineType',       #[V|F[v]]P: V...Value (=member variable), F...Function (access via member function); v ... virtual Function; P ... write Pybind11 interface
                       'pythonName',     #name which is used in python
-                      'cplusplusName',     #name which is used in DYNALFEX (leave empty if it is the same)
+                      'cplusplusName',     #name which is used in Exudyn (leave empty if it is the same)
                       'size',           #leave empty if size is variable; e.g. 3 (size of vector), 2x3 (2 rows, 3 columns)  %used for vectors and matrices only!
                       'type',           #Bool, Int, Real, UInt, UReal, Vector, Matrix, SymmetricMatrix
                       'defaultValue',   #default value for member variable or function definition
@@ -948,7 +1149,9 @@ try: #still close file if crashes
     
     globalLatexStr = '' #this is the whole string for the latex docu
     globalStubStr = ''  #will be written into .pyi file
-
+    globalImplementationGetSetStr = '' #implementation part added at end of each structure (visualization, etc.)
+    globalParameterChangesList = []
+    
     fileListHeaderOnce = [] #store all opened files, which get a "#endif " at the end for the #ifdef ... at the beginning
     
     for line in fileLines:
@@ -1007,14 +1210,26 @@ try: #still close file if crashes
                                     mode = 0
                                     #++++++++++++++++++++++++++++++
                                     #now write C++ header file for defined class
-                                    [fileStr, latexStr, getSetDict, rstStr, stubStr, parameterInfo] = WriteFile(parseInfo, parameterList, typeConversion)
+                                    [fileStr, latexStr, getSetDict, rstStr, stubStr, parameterInfo, 
+                                     implementationGetSetStr, parameterChangesList] = WriteFile(parseInfo, parameterList, typeConversion)
                                     globalLatexStr += latexStr
                                     globalStubStr += stubStr
+                                    globalImplementationGetSetStr += implementationGetSetStr
+                                    globalParameterChangesList += parameterChangesList
                                     strFileMode = 'w'
+                                    
                                     if parseInfo['appendToFile'] == 'True':
                                         strFileMode = 'a'
                                     else:
                                         fileListHeaderOnce += [directoryString+parseInfo['writeFile']]
+                                        
+                                    if not HasTopClass(parseInfo['class']) and globalImplementationGetSetStr != '':
+                                        fileStr += '\n\n//! implementation:\n'+globalImplementationGetSetStr
+                                        #print(parseInfo['class']+'-IMPL:',globalImplementationGetSetStr)
+                                        (globalLatexStr, rstStr) = ParameterChanges2LatexRST(globalParameterChangesList, globalLatexStr, rstStr)
+                                        globalParameterChangesList = []
+                                        globalImplementationGetSetStr = ''
+                                        
                                     # file=open(directoryString+parseInfo['writeFile'],strFileMode) 
                                     # file.write(fileStr)
                                     # file.close()
@@ -1099,28 +1314,11 @@ try: #still close file if crashes
     print('total number of lines generated =',totalNumberOfLines)
 
     totalNumberOfFilesChanged = 0
-    
+
     #++++++++++++++++++++++++++++++++++++++++
     #now write files and check changes
     for fileName, text in writeFilesDict.items():
-        nLinesHeader = 8
-        if os.path.isfile(fileName):
-            file=open(fileName,'r',encoding='utf8')
-            fileText = file.read()
-            file.close()
-
-        #if (CutLinesFromString(fileText,nLinesHeader) != CutLinesFromString(text,nLinesHeader)):
-        if not IsEqualIgnoringDateStrings(fileText, text):
-            # import difflib
-            # diff = difflib.ndiff(fileText.split(), text.split())
-            # print('diff=\n'+'\n'.join(diff))
-
-            print('changed file:', fileName)
-            #write file as main part has been changed
-            file=open(fileName, 'w',encoding='utf8')
-            file.write(text)
-            file.close()
-            totalNumberOfFilesChanged += 1
+        totalNumberOfFilesChanged += int(WriteTextIfDifferent(fileName, text, True) )
 
     print('total number of files changed =', totalNumberOfFilesChanged)
     
@@ -1142,7 +1340,7 @@ The data is auto-generated from the according interfaces in order to keep fully 
 
 """ + globalStubStr
 
-    fileStub=open(stubFile,'w')  #clear file by one write access
+    fileStub=open(stubFile,'w',encoding='utf8')  #clear file by one write access
     fileStub.write(globalStubStr)
     fileStub.close()
 

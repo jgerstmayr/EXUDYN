@@ -19,7 +19,10 @@ from exudynVersion import exudynVersionString
 from autoGenerateHelper import PyLatexRST, GetDateStr, RSTlabelString
      #AddEnumValue, DefPyFunctionAccess, DefPyStartClass, DefPyFinishClass, DefLatexStartClass, DefLatexFinishTable
 
-from autoGenerateHelper import localListFunctionNames, localListClassNames, localListEnumNames
+from autoGenerateHelper import localListFunctionNames, localListClassNames, localListEnumNames, ADD_DOCSTRINGS
+
+
+ADD_DOCSTRINGS = True
 
 theDocDir = '../../../docs/theDoc/'
 rstDir='../../../docs/RST/'
@@ -77,6 +80,7 @@ rstList = [] #list of tuples with (file, text) => add lists, clean content (exam
 #
 #enumExportValues = '.export_values()' #don't do that for enum class => would be visible at global scope
 enumExportValues = '' #since 1.6.98
+mainViewID = '0' #just used to avoid using value 0 for main view
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -317,7 +321,7 @@ plr.sPy += '\n//        pybinding to enum classes:\n'
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'OutputVariableType'
 
-descriptionStr = 'This section shows the ' + pyClass + ' structure, which is used for selecting output values, e.g. for GetObjectOutput(...) or for selecting variables for contour plot.\n\n'
+descriptionStr = 'The enumeration type  ' + pyClass + ' is used for selecting output values, e.g., for GetObjectOutput(...) or for selecting variables for contour plot.\n\n'
 descriptionStr += 'Available output variables and the interpreation of the output variable can be found at the object definitions. \n The OutputVariableType does not provide information about the size of the output variable, which can be either scalar or a list (vector). For vector output quantities, the contour plot option offers an additional parameter for selection of the component of the OutputVariableType. The components are usually out of \\{0,1,2\\}, representing \\{x,y,z\\} components (e.g., of displacements, velocities, ...), or \\{0,1,2,3,4,5\\} representing \\{xx,yy,zz,yz,xz,xy\\} components (e.g., of strain or stress). In order to compute a norm, chose component=-1, which will result in the quadratic norm for other vectors and to a norm specified for stresses (if no norm is defined for an outputVariable, it does not compute anything)\n'
 
 #plr.sPy +=	'  py::enum_<' + pyClass + '>(m, "' + pyClass + '")\n'
@@ -331,9 +335,9 @@ plr.AddEnumValue(pyClass, '_None', 'no value; used, e.g., to select no output va
 plr.AddEnumValue(pyClass, 'Distance', 'e.g., measure distance in spring damper connector')
 plr.AddEnumValue(pyClass, 'Position', 'measure 3D position, e.g., of node or body')
 plr.AddEnumValue(pyClass, 'Displacement', 'measure displacement; usually difference between current position and reference position')
-plr.AddEnumValue(pyClass, 'DisplacementLocal', 'measure local displacement, e.g. in local joint coordinates')
+plr.AddEnumValue(pyClass, 'DisplacementLocal', 'measure local displacement, e.g., in local joint coordinates')
 plr.AddEnumValue(pyClass, 'Velocity', 'measure (translational) velocity of node or object')
-plr.AddEnumValue(pyClass, 'VelocityLocal', 'measure local (translational) velocity, e.g. in local body or joint coordinates')
+plr.AddEnumValue(pyClass, 'VelocityLocal', 'measure local (translational) velocity, e.g., in local body or joint coordinates')
 plr.AddEnumValue(pyClass, 'Acceleration', 'measure (translational) acceleration of node or object')
 plr.AddEnumValue(pyClass, 'AccelerationLocal', 'measure (translational) acceleration of node or object in local coordinates')
 
@@ -350,9 +354,9 @@ plr.AddEnumValue(pyClass, 'Coordinates_t', 'measure the time derivative of coord
 plr.AddEnumValue(pyClass, 'Coordinates_tt', 'measure the second time derivative of coordinates (= acceleration coordinates) of a node or object')
 
 plr.AddEnumValue(pyClass, 'SlidingCoordinate', 'measure sliding coordinate in sliding joint')
-plr.AddEnumValue(pyClass, 'Director1', 'measure a director (e.g. of a rigid body frame), or a slope vector in local 1 or x-direction')
-plr.AddEnumValue(pyClass, 'Director2', 'measure a director (e.g. of a rigid body frame), or a slope vector in local 2 or y-direction')
-plr.AddEnumValue(pyClass, 'Director3', 'measure a director (e.g. of a rigid body frame), or a slope vector in local 3 or z-direction')
+plr.AddEnumValue(pyClass, 'Director1', 'measure a director (e.g., of a rigid body frame), or a slope vector in local 1 or x-direction')
+plr.AddEnumValue(pyClass, 'Director2', 'measure a director (e.g., of a rigid body frame), or a slope vector in local 2 or y-direction')
+plr.AddEnumValue(pyClass, 'Director3', 'measure a director (e.g., of a rigid body frame), or a slope vector in local 3 or z-direction')
 
 plr.AddEnumValue(pyClass, 'Force', 'measure global force, e.g., in joint or beam (resultant force), or generalized forces; see description of according object')
 plr.AddEnumValue(pyClass, 'ForceLocal', 'measure local force, e.g., in joint or beam (resultant force)')
@@ -375,7 +379,7 @@ plr.DefLatexFinishTable()
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'ConfigurationType'
 
-descriptionStr = 'This section shows the ' + pyClass + ' structure, which is used for selecting a configuration for reading or writing information to the module. Specifically, the ConfigurationType.Current configuration is usually used at the end of a solution process, to obtain result values, or the ConfigurationType.Initial is used to set initial values for a solution process.\n\n'
+descriptionStr = 'The enumeration type  ' + pyClass + ' is used for selecting a configuration for reading or writing information to the module. Specifically, the ConfigurationType.Current configuration is usually used at the end of a solution process, to obtain result values, or the ConfigurationType.Initial is used to set initial values for a solution process.\n\n'
 
 # plr.sPy +=	'  py::enum_<' + pyClass + '>(m, "' + pyClass + '")\n'
 plr.DefStartEnumClass(className = pyClass, 
@@ -397,7 +401,7 @@ plr.DefLatexFinishTable()
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'ItemType'
 
-descriptionStr = 'This section shows the ' + pyClass + ' structure, which is used for defining types of indices, e.g., in render window and will be also used in item dictionaries in future.\n\n'
+descriptionStr = 'The enumeration type  ' + pyClass + ' is used for defining types of indices, e.g., in render window and will be also used in item dictionaries in future.\n\n'
 
 # plr.sPy +=	'  py::enum_<' + pyClass + '>(m, "' + pyClass + '")\n'
 plr.DefStartEnumClass(className = pyClass, 
@@ -419,7 +423,7 @@ plr.DefLatexFinishTable()
 pyClass = 'NodeType'
 cClass = 'Node'
 
-descriptionStr = 'This section shows the ' + pyClass + ' structure, which is used for defining node types for 3D rigid bodies.\n\n'
+descriptionStr = 'The enumeration type  ' + pyClass + ' is used for defining node types for 3D rigid bodies.\n\n'
 
 # plr.sPy +=	'  py::enum_<' + cClass + '::Type' + '>(m, "' + pyClass + '")\n'
 plr.DefStartEnumClass(className = pyClass, 
@@ -456,7 +460,7 @@ plr.DefLatexFinishTable()
 pyClass = 'JointType'
 cClass = 'Joint'
 
-descriptionStr = 'This section shows the ' + pyClass + ' structure, which is used for defining joint types, used in KinematicTree.\n\n'
+descriptionStr = 'The enumeration type  ' + pyClass + ' is used for defining joint types, used in KinematicTree.\n\n'
 
 # plr.sPy +=	'  py::enum_<' + cClass + '::Type' + '>(m, "' + pyClass + '")\n'
 plr.DefStartEnumClass(className = pyClass, 
@@ -479,7 +483,7 @@ plr.DefLatexFinishTable()
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'DynamicSolverType'
 
-descriptionStr = 'This section shows the ' + pyClass + ' structure, which is used for selecting dynamic solvers for simulation.\n\n'
+descriptionStr = 'The enumeration type  ' + pyClass + ' is used for selecting dynamic solvers for simulation.\n\n'
 
 # plr.sPy +=	'  py::enum_<' + pyClass + '>(m, "' + pyClass + '")\n'
 plr.DefStartEnumClass(className = pyClass, 
@@ -505,7 +509,7 @@ plr.DefLatexFinishTable()
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'CrossSectionType'
 
-descriptionStr = 'This section shows the ' + pyClass + ' structure, which is used for defining beam cross section types.\n\n'
+descriptionStr = 'The enumeration type  ' + pyClass + ' is used for defining beam cross section types.\n\n'
 
 # plr.sPy +=	'  py::enum_<' + pyClass + '>(m, "' + pyClass + '")\n'
 plr.DefStartEnumClass(className = pyClass, 
@@ -522,7 +526,7 @@ plr.DefLatexFinishTable()
 #+++++++++++++++++++++++++++++++++++++++++++++++++++
 pyClass = 'KeyCode'
 
-descriptionStr = 'This section shows the ' + pyClass + ' structure, which is used for special key codes in keyPressUserFunction.\n\n'
+descriptionStr = 'The enumeration type  ' + pyClass + ' is used for special key codes in keyPressUserFunction.\n\n'
 
 # plr.sPy +=	'  py::enum_<' + pyClass + '>(m, "' + pyClass + '")\n'
 plr.DefStartEnumClass(className = pyClass, 
@@ -556,7 +560,7 @@ plr.DefLatexFinishTable()
 pyClass = 'LinearSolverType'
 
 
-descriptionStr = 'This section shows the ' + pyClass + ' structure, which is used for selecting linear solver types, which are dense or sparse solvers.\n\n'
+descriptionStr = 'The enumeration type  ' + pyClass + ' is used for selecting linear solver types, which are dense or sparse solvers.\n\n'
 
 # plr.sPy +=	'  py::enum_<' + pyClass + '>(m, "' + pyClass + '")\n'
 plr.DefStartEnumClass(className = pyClass, 
@@ -568,7 +572,7 @@ plr.AddEnumValue(pyClass, '_None', 'no value; used, e.g., if no solver is select
 plr.AddEnumValue(pyClass, 'EXUdense', 'use dense matrices and according solvers for densly populated matrices (usually the CPU time grows cubically with the number of unknowns)')
 plr.AddEnumValue(pyClass, 'EigenSparse', 'use sparse matrices and according solvers; additional overhead for very small multibody systems; specifically, memory allocation is performed during a factorization process')
 plr.AddEnumValue(pyClass, 'EigenSparseSymmetric', 'use sparse matrices and according solvers; NOTE: this is the symmetric mode, which assumes symmetric system matrices; this is EXPERIMENTAL and should only be used of user knows that the system matrices are (nearly) symmetric; does not work with scaled GeneralizedAlpha matrices; does not work with constraints, as it must be symmetric positive definite')
-plr.AddEnumValue(pyClass, 'EigenDense', "use Eigen's LU factorization with partial pivoting (faster than EXUdense) or full pivot (if linearSolverSettings.ignoreSingularJacobian=True; is much slower)")
+plr.AddEnumValue(pyClass, 'EigenDense', "use Eigen's LU factorization with partial pivoting (faster than EXUdense) or full pivot (if linearSolverSettings.ignoreSingularJacobian=True; is much slower, but can resolve overdetermined and underdetermined problems!)")
 
 plr.sPy +=	'		'+enumExportValues+';\n\n'
 plr.DefLatexFinishTable()
@@ -578,7 +582,7 @@ plr.DefLatexFinishTable()
 pyClass = 'ContactTypeIndex'
 cClass = 'Contact'
 
-descriptionStr = 'This section shows the ' + pyClass + ' structure, which is in GeneralContact to select specific contact items, such as spheres, ANCFCable or triangle items.\n\n'
+descriptionStr = 'The enumeration type  ' + pyClass + ' is used in GeneralContact to select specific contact items, such as spheres, ANCFCable or triangle items.\n\n'
 
 # plr.sPy +=	'  py::enum_<' + cClass + '::TypeIndex' + '>(m, "' + pyClass + '")\n'
 plr.DefStartEnumClass(className = pyClass, 
@@ -640,7 +644,7 @@ plr.DefPyFunctionAccess('', 'Help', 'PyHelp',
                                )
 
 plr.DefPyFunctionAccess(cClass='', pyName='StartRenderer', cName='PyStartOpenGLRenderer', 
-                                description="DEPRECATED; Start OpenGL rendering engine (in separate thread) for visualization of rigid or flexible multibody system; use verbose=1 to output information during OpenGL window creation; verbose=2 produces more output and verbose=3 gives a debug level; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of e.g. Spyder",
+                                description="DEPRECATED; Start OpenGL rendering engine (in separate thread) for visualization of rigid or flexible multibody system; use verbose=1 to output information during OpenGL window creation; verbose=2 produces more output and verbose=3 gives a debug level; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of e.g., Spyder",
                                 argList=['verbose','deprecationWarning'],
                                 defaultArgs=['0','True'],
                                 returnType='bool',
@@ -666,7 +670,7 @@ plr.DefPyFunctionAccess(cClass='', pyName='IsRendererActive', cName='PyIsRendere
                                 )
 
 plr.DefPyFunctionAccess(cClass='', pyName='DoRendererIdleTasks', cName='PyDoRendererIdleTasks', 
-                                description="DEPRECATED; Call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g. waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 (default) to wait until window is closed",
+                                description="DEPRECATED; Call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g., waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 (default) to wait until window is closed",
                                 argList=['waitSeconds','deprecationWarning'],
                                 defaultArgs=['0','True'],
                                 returnType='None',
@@ -818,7 +822,7 @@ plr.DefPyFunctionAccess(cClass='', pyName='SetWriteToConsole', cName='PySetWrite
 # plr.sPy = sPyOld  #pybindings added manually
     
 plr.DefPyFunctionAccess('', 'InvalidIndex', 'GetInvalidIndex', 
-                            "This function provides the invalid index, which may depend on the kind of 32-bit, 64-bit signed or unsigned integer; e.g. node index or item index in list; currently, the InvalidIndex() gives -1, but it may be changed in future versions, therefore you should use this function",
+                            "This function provides the invalid index, which may depend on the kind of 32-bit, 64-bit signed or unsigned integer; e.g., node index or item index in list; currently, the InvalidIndex() gives -1, but it may be changed in future versions, therefore you should use this function",
                             returnType='int',
                             )
 
@@ -848,7 +852,7 @@ plr.DefLatexDataAccess('config.outputPrecision','change precision (number of dig
                         dataType='Config', isTopLevel = True)
 plr.DefLatexDataAccess('config.linalgOutputFormatPython','True (default): use Python format for output of vectors and matrices; False: use Matlab format',
                         dataType='Config', isTopLevel = True)
-plr.DefLatexDataAccess('config.printDelayMilliSeconds','add some delay (in milliSeconds) to printing to console (exudyn.Print), in order to let console (e.g. Spyder) process the output; default = 0',
+plr.DefLatexDataAccess('config.printDelayMilliSeconds','add some delay (in milliSeconds) to printing to console (exudyn.Print), in order to let console (e.g., Spyder) process the output; default = 0',
                         dataType='Config', isTopLevel = True)
 plr.DefLatexDataAccess('config.printFlushAlways','flush always buffers when using exudyn.Print(...) to write to file or console; this is needed if you are streaming text or showing counters in parameter variation; default=False',
                         dataType='Config', isTopLevel = True)
@@ -904,7 +908,7 @@ plr.DefLatexDataAccess('variables','this dictionary may be used by the user to s
                        dataType='dict', isTopLevel = True)
 
 plr.sPy += '        m.attr("sys") = exudynSystemVariables;\n' 
-plr.DefLatexDataAccess('sys',"this dictionary is used and reserved by the system, e.g. for testsuite, graphics or system function to store module-wide data in order to avoid global Python variables; the variable exu.sys['renderState'] contains the last render state after SC.renderer.Stop() and can be used for subsequent simulations ",
+plr.DefLatexDataAccess('sys',"this dictionary is used and reserved by the system, e.g., for testsuite, graphics or system function to store module-wide data in order to avoid global Python variables; the variable exu.sys['renderState'] contains the last render state after SC.renderer.Stop() and can be used for subsequent simulations ",
                        dataType='dict', isTopLevel = True)
 
 
@@ -925,13 +929,16 @@ pyClassStr = 'SystemContainer'
 classStr = 'Main'+pyClassStr
 sPyOld = plr.PyStr() #systemcontainer manually added in C++
 
-plr.DefPyStartClass(classStr, pyClassStr, '')
+plr.DefPyStartClass(classStr, pyClassStr, 
+                    'The SystemContainer is the top level of structures in \\codeName. '+
+                    "The container holds all (multibody) systems of type \\texttt{MainSystem} and the link to OpenGL renderers and raytracers (every SystemContainer has an independent rendering, while all MainSystems are rendered together)."+
+                    "Via the MainSystems it thus contains all computational data. "+
+                    "A SystemContainer is created by \\texttt{SC = exu.SystemContainer()}, understanding \\texttt{exu.SystemContainer} as a state machine where MainSystems are added and renderer state machines are processed, similar to the behavior of other Python packages. "+
+                    'Usually, only one container shall be used, while multiple containers are possible -- e.g., for reasons of significantly different behavior (drawing, etc.). '+
+                    "The SystemContainer contains \\texttt{visualizationSettings} to adjust all kinds of visualization appearance, windows and interactions."
+                    )
 
-plr.AddDocu('The SystemContainer is the top level of structures in \\codeName. '+
-            'The container holds all (multibody) systems, solvers and all other data structures for computation and it is the hub for the OpenGL renderer. '+
-            "A SystemContainer is created by \\texttt{SC = exu.SystemContainer()}, understanding \\texttt{exu.SystemContainer} as a class like Python's internal list class, creating a list instance with \\texttt{x=list()}. "+
-            'Currently, only one container shall be used, while multiple containers are possible -- e.g. for reasons of different behavior. '+
-            'The SystemContainer contains visualizationSettings, see \\refSection{sec:VisualizationSettingsMain}, which can be edited when pressing the key V in the render window and it holds the renderer substructure to start and stop the renderer, and to interact with the renderer. '+
+plr.AddDocu("The \\texttt{visualizationSettings}, see \\refSection{sec:VisualizationSettingsMain}, can be edited when pressing the key V in the render window and it holds the renderer substructure (type: Renderer) to start and stop the renderer, and to interact with the renderer. "
             'Regarding the \\mybold{(basic) module access}, functions are related to the \\texttt{exudyn = exu} module, '+
             'see also the introduction of this chapter and this example:')
 
@@ -1084,10 +1091,14 @@ pyClassStr = 'Renderer'
 classStr = 'Main'+pyClassStr
 #sPyOld = plr.PyStr() #renderer manually added in C++
 
-plr.DefPyStartClass(classStr,pyClassStr, '', labelName='sec:SC:renderer',
+plr.DefPyStartClass(classStr,pyClassStr, 
+                    "The Renderer is the substructure of SystemContainer that collects rendering and visualization interaction, in particular starting and stopping the renderer, image retrieval and materials. "+
+                    "Rendering is done for a single SystemContainer, which may include several MainSystems. "+
+                    "Note that visualizationSettings are directly accessible from the SystemContainer.", 
+                    labelName='sec:SC:renderer',
                     forbidPythonConstructor=True)
 
-plr.AddDocu('This is the substructure of SystemContainer that collects rendering and visualization interaction. Rendering is done for a SystemContainer, which may include several MainSystems. Note that visualizationSettings are directly accessible from the SystemContainer.')
+#plr.AddDocu()
 
 plr.AddDocuCodeBlock(code="""
 import exudyn as exu
@@ -1110,7 +1121,7 @@ plr.DefLatexStartTable(classStr)
 #+++++++++++++++++++++++++++++++++
 #General functions:
 plr.DefPyFunctionAccess(cClass=classStr, pyName='Start', cName='Start', 
-                        description="Start OpenGL rendering engine (in separate thread) for visualization of rigid or flexible multibody system; use verbose=1 to output information during OpenGL window creation; verbose=2 produces more output and verbose=3 gives a debug level; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of e.g. Spyder",
+                        description="Start OpenGL rendering engine (in separate thread) for visualization of rigid or flexible multibody system; use verbose=1 to output information during OpenGL window creation; verbose=2 produces more output and verbose=3 gives a debug level; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of e.g., Spyder",
                         argList=['verbose'],
                         defaultArgs=['0'],
                         returnType='bool',
@@ -1140,7 +1151,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='Detach', cName='Detach',
 
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='DoIdleTasks', cName='DoIdleTasks', 
-                        description="Interrupt further computation until user input (Space, 'Q', Escape-key), representing a PAUSE function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; replaces former SC.WaitForRenderEngineStopFlag() and mbs.WaitForUserToContinue(); call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g. waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 (default) to wait until window is closed",
+                        description="Interrupt further computation until user input (Space, 'Q', Escape-key), representing a PAUSE function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; replaces former SC.WaitForRenderEngineStopFlag() and mbs.WaitForUserToContinue(); call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g., waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 (default) to wait until window is closed; NOTE: may also first initialize renderState from visualizationSettings (if renderer is inactive)",
                         example = 'SC.renderer.DoIdleTasks()',
                         argList=['waitSeconds','printPauseMessage'],
                         argTypes=['float','bool'],
@@ -1148,13 +1159,91 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='DoIdleTasks', cName='DoIdleTask
                         returnType='bool',
                         )
 
+plr.DefPyFunctionAccess(cClass=classStr, pyName='EnableView', cName='EnableView', 
+                        description="Enables a specified view (1,2 or 3) additionally to the main view (0); a window is created if createWindow=True, otherwise, the view is only enabled to use it with the raytracer; NOTE: additional views cause slightly more workload for the renderer which is why they are disabled by default; failure to create the view usually results in an exception; to check whether the view exists, check the according RenderState regarding viewEnabled and windowOpen",
+                        argList=['viewID','createWindow'],
+                        argTypes=['int','bool'],
+                        defaultArgs=['','True'],
+                        returnType='None',
+                        )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='DisableView', cName='DisableView', 
+                        description="Disables a specified view (1,2 or 3) and (if created) closes the according window; NOTE: in case of renderer.Stop(), all views are closed; NOTE: if you still aim to use the view without the window, you have to enable the view again EnableView(..., createWindow=False)",
+                        argList=['viewID'],
+                        argTypes=['int'],
+                        returnType='None',
+                        )
+
 plr.DefPyFunctionAccess(cClass=classStr, pyName='ZoomAll', cName='ZoomAll', 
-                        description="Send zoom all signal, which will perform zoom all at next redraw request",
+                        description="Send zoom all signal, which will perform zoom all at next redraw request; if renderer is inactive (renderer.IsActive()=0), it will perform computations for renderState, thus at the next RedrawAndGetImage() having the full view as with the OpenGL renderer; NOTE: in case of OpenGL, call ZoomAll() after renderer.Start(); NOTE: may also first initialize renderState from visualizationSettings (if renderer is inactive)",
+                        argList=['computeMaxScene','viewID'],
+                        argTypes=['bool','int'],
+                        defaultArgs=['True',mainViewID],
+                        returnType='None',
+                        )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='SetModelView', cName='SetModelView', 
+                        description="Function to adjusts the current view in renderState; rotationVector and centerPoint transform the modelView while zoom equals the visible scene height; rotationVector is the axis of rotation times the angle in radiant; if zoom=0 then zoom will be computed automatically like in autoFitScene with openGL; use this function in particular for raytracing before RedrawAndGetImage() or with regular OpenGL after renderer.Start(); you can also store the renderState and write the full renderState alternatively; NOTE: may also first initialize renderState from visualizationSettings (if renderer is inactive)",
+                        example = "SC.renderer.SetModelView(10,[0,0,pi],[2.5,0,0])\\\\image=SC.renderer.RedrawAndGetImage()",
+                        argList=['zoom', 'rotationVector', 'centerPoint','viewID'],
+                        argTypes=['float', vector3D, vector3D, 'int'],
+                        defaultArgs=['0','(std::vector<Real>)Vector3D({0,0,0})', '(std::vector<Real>)Vector3D({0,0,0})',mainViewID],
                         returnType='None',
                         )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='RedrawAndSaveImage', cName='RedrawAndSaveImage', 
-                        description="Redraw openGL scene and save image (command waits until process is finished)",
+                        description="Redraw openGL scene and save image (command waits until process is finished); uses the current rendering engine (OpenGL or raytracer).",
+                        argList=['viewID'],
+                        argTypes=['int'],
+                        defaultArgs=[mainViewID],
+                        returnType='None',
+                        )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='RedrawAndGetImage', cName='RedrawAndGetImage', 
+                        description="Redraw scene and return image in numpy-format, containing a 3-dimensional array with 3 matrices of RGB channels; the shape is according to (height,width,3) where height and width represent the window pixels defined in visualizationSettings.window.renderWindowSize (Note: in case that raytracer.imageSizeFactor>1 the retrieved image size is smaller by the imageSizeFactor!); command waits until process is finished; if useRaytracer=False, the openGL render is used and the render window needs to be opened before; if useRaytracer=True, the software raytracer is used which runs completely without GLFW and OpenGL (e.g., on a supercomputer); NOTE: in case of useRaytracer=True the displayScaling factor is only available if the OpenGL renderer has been opened once; otherwise e.g., SC.renderer.SetState({'displayScaling':1.5}) has to be used to adjust it; NOTE: may also first initialize renderState from visualizationSettings (if renderer is inactive)",
+                        example = "import matplotlib.pyplot as plt\\\\image=SC.renderer.RedrawAndGetImage()\\\\plt.imshow(image)\\\\plt.axis('off')\\\\plt.show()",
+                        argList=['useRaytracer','viewID'],
+                        argTypes=['bool','int'],
+                        defaultArgs=['False',mainViewID],
+                        returnType='NDArray[np.uint8]',
+                        )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='GetState', cName='GetState', 
+                        description="Get dictionary with current render state (openGL zoom, modelview, etc.)",
+                        example = "SC = exu.SystemContainer()\\\\renderState = SC.renderer.GetState() \\\\print(renderState['zoom'])",
+                        argList=['viewID'],
+                        argTypes=['int'],
+                        defaultArgs=[mainViewID],
+                        returnType='dict',
+                        )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='SetState', cName='SetState', 
+                        description="Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState; waitForRendererFullStartup is used to wait at startup for the first frame to be drawn (and zoom all to be set), but be be set False in case of performance issues; NOTE: before setting available state values, this function may also first initialize renderState from visualizationSettings (if renderer is inactive)",
+                        example = "SC = exu.SystemContainer()\\\\SC.renderer.SetState(renderState)",
+                        argList=['renderState','waitForRendererFullStartup','viewID'],
+                        argTypes=['dict','bool','int'],
+                        defaultArgs=['','True',mainViewID],
+                        returnType='None',
+                        )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='GetMouseCoordinates', cName='GetMouseCoordinates', 
+                        description="Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(useOpenGLcoordinates=True) to obtain OpenGLcoordinates of projected plane",
+                        argList=['useOpenGLcoordinates','viewID'],
+                        argTypes=['bool','int'],
+                        defaultArgs=['False',mainViewID],
+                        returnType='[float,float]',
+                        )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='GetItemSelection', cName='GetItemSelection', 
+                        description="Get selected item in render state; option to reset selected item afterwards; item is selected in render window by clicking left mouse button; returns [mbs number, ItemType, ItemIndex, depth] where depth is the Z-depth in the current view; note that only items of the categories activated in visualizationSettings.interactive.selectionLeftMouseItemTypes are returned; NOTE: if itemType == 0, no item has been selected",
+                        argList=['resetSelection','viewID'],
+                        argTypes=['bool','int'],
+                        defaultArgs=['True',mainViewID],
+                        returnType='[int,int,int,float]',
+                        )
+
+plr.DefPyFunctionAccess(cClass=classStr, pyName='ResetState', cName='ResetState', 
+                        description="Reset renderState in all views to default values using current visualizationSettings; usually this does not have to be called!",
                         returnType='None',
                         )
 
@@ -1166,37 +1255,6 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SendRedrawSignal', cName='SendR
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetRenderCount', cName='GetRedrawCount', 
                         description="Returns the number of rendered OpenGL images; can be used to determine if image has been drawn by comparing to previous counter; also shows that first image has been drawn (needed for zoom all)",
                         returnType='bool',
-                        )
-
-plr.DefPyFunctionAccess(cClass=classStr, pyName='GetState', cName='GetState', 
-                        description="Get dictionary with current render state (openGL zoom, modelview, etc.); will have no effect if GLFW_GRAPHICS is deactivated",
-                        example = "SC = exu.SystemContainer()\\\\renderState = SC.renderer.GetState() \\\\print(renderState['zoom'])",
-                        returnType='dict',
-                        )
-
-plr.DefPyFunctionAccess(cClass=classStr, pyName='SetState', cName='SetState', 
-                        description="Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState; waitForRendererFullStartup is used to wait at startup for the first frame to be drawn (and zoom all to be set), but be be set False in case of performance issues; will have no effect if GLFW_GRAPHICS is deactivated",
-                        example = "SC = exu.SystemContainer()\\\\SC.renderer.SetState(renderState)",
-                        argList=['renderState','waitForRendererFullStartup'],
-                        argTypes=['dict','bool'],
-                        defaultArgs=['','True'],
-                        returnType='None',
-                        )
-
-plr.DefPyFunctionAccess(cClass=classStr, pyName='GetMouseCoordinates', cName='GetMouseCoordinates', 
-                        description="Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(useOpenGLcoordinates=True) to obtain OpenGLcoordinates of projected plane",
-                        argList=['useOpenGLcoordinates'],
-                        argTypes=['bool'],
-                        defaultArgs=['False'],
-                        returnType='[float,float]',
-                        )
-
-plr.DefPyFunctionAccess(cClass=classStr, pyName='GetItemSelection', cName='GetItemSelection', 
-                        description="Get selected item in render state; option to reset selected item afterwards; item is selected in render window by clicking left mouse button; returns [mbs number, ItemType, ItemIndex, depth] where depth is the Z-depth in the current view; note that only items of the categories activated in visualizationSettings.interactive.selectionLeftMouseItemTypes are returned; if itemType == 0 if no item has been selected",
-                        argList=['resetSelection'],
-                        argTypes=['bool'],
-                        defaultArgs=['True'],
-                        returnType='[int,int,int,float]',
                         )
 
 
@@ -1232,10 +1290,15 @@ plr.sPyi = ''
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 plr.CreateNewRSTfile('MainSystem')
 classStr = 'MainSystem'
-plr.DefPyStartClass(classStr, classStr, '', forbidPythonConstructor=False)
+plr.DefPyStartClass(classStr, classStr, 
+                    "MainSystem is the class which defines a (multibody) system and it's instance if usually called \\texttt{mbs}. "+
+                    "Interactions with the system are done via MainSystem, either through, e.g., \\texttt{mbs.AddObject(...)} or "+
+                    "with create functions, such as \\texttt{mbs.CreateRigidBody(...)}; States are accessible via \\texttt{mbs.systemData}. "+
+                    "The MainSystem shall only be created from a SystemContainer \\texttt{SC} using \\texttt{SC.AddSystem()}; do not use \\texttt{exu.MainSystem()}, as the latter one would not be linked to a SystemContainer. "+
+                    "Having already a valid \\texttt{mbs}, you may use \\texttt{SC.Append(mbs).} ",
+                    forbidPythonConstructor=False)
 
-plr.AddDocu("This is the class which defines a (multibody) system. "+
-            "The MainSystem shall only be created by \\texttt{SC.AddSystem()}, not with \\texttt{exu.MainSystem()}, as the latter one would not be linked to a SystemContainer. In some cases, you may use SC.Append(mbs). "+
+plr.AddDocu(
             "In C++, there is a MainSystem (the part which links to Python) and a System (computational part). "+
             "For that reason, the name is MainSystem on the Python side, but it is often just called 'system'. "+
             "For compatibility, it is recommended to denote the variable holding this system as mbs, the multibody dynamics system. "+
@@ -1284,7 +1347,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset',
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetSystemContainer', cName='GetMainSystemContainer', 
                         description="return the systemContainer where the mainSystem (mbs) was created",
-                        returnType='SystemContainer',
+                        returnType='"SystemContainer"', #SystemContainer not known at this point for .pyi
                         )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='WaitForUserToContinue', cName='WaitForUserToContinue', 
@@ -1324,10 +1387,10 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='ActivateRendering', cName='Acti
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #USER FUNCTIONS
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetPreStepUserFunction', cName='PySetPreStepUserFunction', 
-                        description="Sets a user function PreStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step; set to 0 (integer) in order to erase user function. Note that the time returned is already the end of the step, which allows to compute forces consistently with trapezoidal integrators; for higher order Runge-Kutta methods, step time will be available only in object-user functions.",
+                        description="Sets a user function PreStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step; set to 0 (integer) in order to erase user function. Note that the time t in the args is already the end of the step, which allows to compute forces consistently with trapezoidal integrators; for higher order Runge-Kutta methods, step time will be available only in object-user functions. The PreStepUserFunction is recommended e.g., for prescribing forces or set values of actuators",
                         example = 'def PreStepUserFunction(mbs, t):\\\\ \\TAB print(mbs.systemData.NumberOfNodes())\\\\ \\TAB if(t>1): \\\\ \\TAB  \\TAB return False \\\\ \\TAB return True \\\\mbs.SetPreStepUserFunction(PreStepUserFunction)',
                         argList=['value'],
-                        argTypes=['Callable[[MainSystem, float],bool]'],
+                        argTypes=['Callable[["MainSystem", float],bool]'], #MainSystem not known at this point for .pyi
                         returnType='None',
                         )
                                                       
@@ -1336,14 +1399,14 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetPreStepUserFunction', cName=
                         argList=['asDict'],
                         argTypes=['bool'],
                         defaultArgs=['False'],
-                        returnType='Callable[[MainSystem, float],bool]',
+                        returnType='Callable[["MainSystem", float],bool]', #MainSystem not known at this point for .pyi
                         )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetPostStepUserFunction', cName='PySetPostStepUserFunction', 
-                        description="Sets a user function PostStepUserFunction(mbs, t) executed at beginning of every computation step; in normal case return True; return False to stop simulation after current step; set to 0 (integer) in order to erase user function.",
+                        description="Sets a user function PostStepUserFunction(mbs, t) executed at end of every computation step; in normal case return True; return False to stop simulation after current step; set to 0 (integer) in order to erase user function. The difference to PreStepUserFunction, the PostStepUserFunction is called after the step has been computed, AFTER the discontinuous iterations, just BEFORE writing solution file, sensors and visualization. This allows to change or evaluate results before they are stored (e.g., do some projection).",
                         example = 'def PostStepUserFunction(mbs, t):\\\\ \\TAB print(mbs.systemData.NumberOfNodes())\\\\ \\TAB if(t>1): \\\\ \\TAB  \\TAB return False \\\\ \\TAB return True \\\\mbs.SetPostStepUserFunction(PostStepUserFunction)',
                         argList=['value'],
-                        argTypes=['Callable[[MainSystem, float],bool]'],
+                        argTypes=['Callable[["MainSystem", float],bool]'], #MainSystem not known at this point for .pyi
                         returnType='None',
                         )
                                                       
@@ -1352,14 +1415,14 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetPostStepUserFunction', cName
                         argList=['asDict'],
                         argTypes=['bool'],
                         defaultArgs=['False'],
-                        returnType='Callable[[MainSystem, float],bool]',
+                        returnType='Callable[["MainSystem", float],bool]', #MainSystem not known at this point for .pyi
                         )
                                                       
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetPostNewtonUserFunction', cName='PySetPostNewtonUserFunction', 
                         description="Sets a user function PostNewtonUserFunction(mbs, t) executed after successful Newton iteration in implicit or static solvers and after step update of explicit solvers, but BEFORE PostNewton functions are called by the solver; function returns list [discontinuousError, recommendedStepSize], containing a error of the PostNewtonStep, which is compared to [solver].discontinuous.iterationTolerance. The recommendedStepSize shall be negative, if no recommendation is given, 0 in order to enforce minimum step size or a specific value to which the current step size will be reduced and the step will be repeated; use this function, e.g., to reduce step size after impact or change of data variables; set to 0 (integer) in order to erase user function. Similar described by Flores and Ambrosio, https://doi.org/10.1007/s11044-010-9209-8",
                         example = 'def PostNewtonUserFunction(mbs, t):\\\\ \\TAB if(t>1): \\\\ \\TAB  \\TAB return [0, 1e-6] \\\\ \\TAB return [0,0] \\\\mbs.SetPostNewtonUserFunction(PostNewtonUserFunction)',
                         argList=['value'],
-                        argTypes=['Callable[[MainSystem, float],[float,float]]'],
+                        argTypes=['Callable[["MainSystem", float],[float,float]]'], #MainSystem not known at this point for .pyi
                         returnType='None',
                         )
 
@@ -1368,7 +1431,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetPostNewtonUserFunction', cNa
                         argList=['asDict'],
                         argTypes=['bool'],
                         defaultArgs=['False'],
-                        returnType='Callable[[MainSystem, float],bool]',
+                        returnType='Callable[["MainSystem", float],bool]', #MainSystem not known at this point for .pyi
                         )
 
 
@@ -1376,7 +1439,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='SetPreNewtonResidualUserFunctio
                         description="Sets a user function PreNewtonResidualUserFunction(mbs, t, newtonIt, discontinuousIt) executed prior to computation of the Newton residual in implicit or static solvers. This function returns nothing. The arguments newtonIt and discontinuousIt may be used to distinguish if the call is done at the beginning of a discontinuous iteration (newtonIt=0) or during Newton iterations (newtonIt>0). The typical use case would be to modify objects or loads in every iteration. Note that this user function is not called during Jacobian computation. If needed, the jacobian can be modified with the user function set by SetSystemJacobianUserFunction.",
                         example = 'def PreNewtonResidualUserFunction(mbs, t, newtonIt, discontinuousIt):\\\\ \\TAB print("t=",t,", newtonIt=",newtonIt,", discIt=",discontinuousIt)\\\\mbs.SetPreNewtonResidualUserFunction(PreNewtonResidualUserFunction)',
                         argList=['value'],
-                        argTypes=['Callable[[MainSystem, float, int, int],None]'],
+                        argTypes=['Callable[["MainSystem", float, int, int],None]'], #MainSystem not known at this point for .pyi
                         returnType='None',
                         )
 
@@ -1385,14 +1448,14 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetPreNewtonResidualUserFunctio
                         argList=['asDict'],
                         argTypes=['bool'],
                         defaultArgs=['False'],
-                        returnType='Callable[[MainSystem, float, int, int],None]',
+                        returnType='Callable[["MainSystem", float, int, int],None]', #MainSystem not known at this point for .pyi
                         )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetSystemJacobianUserFunction', cName='PySetSystemJacobianUserFunction', 
                         description="Sets a user function SystemJacobianUserFunction(mbs, t, factorODE2, factorODE2_t, factorODE1) executed after computation of the Newton jacobian of a static solver or an implicit timeintegrator; The function shall return additional terms for the jacobian at RHS, e.g., related to dependencies that are added by the user in the PreNewtonResidualUserFunction; RHS means that for a spring with stiffness K, the jacobian would be -K as it is computed for the RHS, see the RHS-LHS convention. If you like to completely replace the jacobian, consider using the solver's user function SetUserFunctionComputeNewtonJacobian which can be used to replace the jacobian computation; the factors factorODE2, factorODE2_t, factorODE1 must be multiplied with quantities related to ODE2 coordinates (like stiffness terms), ODE2_t velocity coordinates (like damping terms) and ODE1 quantities. The functions returns a MatrixContainer, for which the sparse format is recommended for efficiency reasons.",
                         example = 'def SystemJacobianUserFunction(mbs, t, factorODE2, factorODE2_t, factorODE1):\\\\ \\TAB return MatrixContainer([[factorODE2*10,0],[0,0]])\\\\mbs.SetSystemJacobianUserFunction(SystemJacobianUserFunction)',
                         argList=['value'],
-                        argTypes=['Callable[[MainSystem, float, float, float, float],'+matrixContainerType+']'],
+                        argTypes=['Callable[["MainSystem", float, float, float, float],'+matrixContainerType+']'], #MainSystem not known at this point for .pyi
                         returnType='None',
                         )
                                                       
@@ -1401,7 +1464,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetSystemJacobianUserFunction',
                         argList=['asDict'],
                         argTypes=['bool'],
                         defaultArgs=['False'],
-                        returnType='Callable[[MainSystem, float, float, float, float],'+matrixContainerType+']',
+                        returnType='Callable[["MainSystem", float, float, float, float],'+matrixContainerType+']', #MainSystem not known at this point for .pyi
                         )
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1488,7 +1551,7 @@ plr.DefLatexDataAccess('systemIsConsistent','this flag is used by solvers to dec
                        )
 
 plr.sPy += '        .def_property("interactiveMode", &MainSystem::GetInteractiveMode, &MainSystem::SetInteractiveMode)\n' 
-plr.DefLatexDataAccess('interactiveMode','set this flag to True in order to invoke a Assemble() command in every system modification, e.g. AddNode, AddObject, ModifyNode, ...; this helps that the system can be visualized in interactive mode.',
+plr.DefLatexDataAccess('interactiveMode','set this flag to True in order to invoke a Assemble() command in every system modification, e.g., AddNode, AddObject, ModifyNode, ...; this helps that the system can be visualized in interactive mode.',
                        dataType='bool',
                        )
 
@@ -1503,7 +1566,7 @@ plr.DefLatexDataAccess('sys','this dictionary is used by exudyn Python libraries
                        )
 
 plr.sPy += '        .def_property("solverSignalJacobianUpdate", &MainSystem::GetFlagSolverSignalJacobianUpdate, &MainSystem::SetFlagSolverSignalJacobianUpdate)\n' 
-plr.DefLatexDataAccess('solverSignalJacobianUpdate','this flag is used by solvers to decide, whether the jacobian should be updated; at beginning of simulation and after jacobian computation, this flag is set automatically to False; use this flag to indicate system changes, e.g. during time integration  ',
+plr.DefLatexDataAccess('solverSignalJacobianUpdate','this flag is used by solvers to decide, whether the jacobian should be updated; at beginning of simulation and after jacobian computation, this flag is set automatically to False; use this flag to indicate system changes, e.g., during time integration  ',
                        dataType='bool',
                        )
 
@@ -1534,7 +1597,7 @@ b1=mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, sideLengths=[0.1,0.
 
 plr.sLatex += '\\input{MainSystemCreateExt.tex}\n\n'
 
-with open('generated/MainSystemCreateExt.rst', 'r') as f:
+with open('generated/MainSystemCreateExt.rst', 'r', encoding='utf8') as f:
     plr.sRST += f.read()
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1560,7 +1623,7 @@ mbs.PlotSensor(...)
 
 plr.sLatex += '\\input{MainSystemExt.tex}\n\n'
 
-with open('generated/MainSystemExt.rst', 'r') as f:
+with open('generated/MainSystemExt.rst', 'r', encoding='utf8') as f:
     plr.sRST += f.read()
 
 
@@ -1575,7 +1638,7 @@ plr.AddDocu('This section provides functions for adding, reading and modifying n
             'if constraints are not present). Nodes can provide various types of coordinates for '+
             'second/first order differential equations (ODE2/ODE1), algebraic equations (AE) and for data '+
             '(history) variables -- which are not providing unknowns in the nonlinear solver but will be solved '+
-            'in an additional nonlinear iteration for e.g. contact, friction or plasticity.')
+            'in an additional nonlinear iteration for e.g., contact, friction or plasticity.')
 
 plr.AddDocuCodeBlock(code="""
 import exudyn as exu               #EXUDYN package including C++ core part
@@ -1643,7 +1706,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetNodeDefaults', cName='PyGetN
 #                                )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetNodeOutput', cName='PyGetNodeOutputVariable', 
-                                description="get the ouput of the node specified with the OutputVariableType; output may be scalar or array (e.g. displacement vector)",
+                                description="get the ouput of the node specified with the OutputVariableType; output may be scalar or array (e.g., displacement vector)",
                                 argList=['nodeNumber','variableType','configuration'],
                                 defaultArgs=['','','exu.ConfigurationType::Current'],
                                 example = "mbs.GetNodeOutput(nodeNumber=0, variableType=exu.OutputVariableType.Displacement)",
@@ -2123,12 +2186,17 @@ plr.sPyi = ''
 plr.CreateNewRSTfile('SystemData')
 pyClassStr = 'SystemData'
 classStr = 'Main'+pyClassStr
-plr.DefPyStartClass(classStr,pyClassStr, '', labelName='sec:mbs:systemData',
+plr.DefPyStartClass(classStr,pyClassStr, 
+                    "A data structure of a MainSystem which mainly allows access to states and details of items (objects, nodes, loads, etc.). "+
+                    "In particular access is given to system coordinates in all configurations, object and node coordinates, as well as to local-to-global (LTG) coordinate indices. "+
+                    "Here, ODE2 represents second order differential equations (and coordinates), ODE1 for first order ODEs, "+
+                    "AE represents algebraic equations, and Data is used for data (=history) variables that represent contact states or plastic deformation which is no classical state. "+
+                    'The SystemData structure allows advanced access to this data, which HAS TO BE USED WITH CARE, as unexpected results '+
+                    'and system crash might happen.',
+                    labelName='sec:mbs:systemData',
                     forbidPythonConstructor=True)
 
-plr.AddDocu('This is the data structure of a system which contains Objects (bodies/constraints/...), Nodes, Markers and Loads. '+
-            'The SystemData structure allows advanced access to this data, which HAS TO BE USED WITH CARE, as unexpected results '+
-            'and system crash might happen.')
+# plr.AddDocu('')
 
 plr.AddDocuCodeBlock(code="""
 import exudyn as exu               #EXUDYN package including C++ core part
@@ -2146,7 +2214,7 @@ mbs.SolveDynamic(exu.SimulationSettings())
 uTotal = mbs.systemData.GetODE2CoordinatesTotal()
 
 #obtain current ODE2 system vector without reference values 
-#  (e.g. after static simulation finished):
+#  (e.g., after static simulation finished):
 u = mbs.systemData.GetODE2Coordinates()
 #set initial ODE2 vector for next simulation (only coordinates!):
 mbs.systemData.SetODE2Coordinates(coordinates=u,
@@ -2169,7 +2237,7 @@ mbs.systemData.InfoLTG()
 plr.DefLatexStartTable(classStr)
 
 plr.sPy += "\n//        General functions:\n"
-#plr.sLatex += '\\\\ \n'+classStr+': General functions', 'These functions allow to obtain system information (e.g. for debug purposes)', subSection=True)
+#plr.sLatex += '\\\\ \n'+classStr+': General functions', 'These functions allow to obtain system information (e.g., for debug purposes)', subSection=True)
 
 #+++++++++++++++++++++++++++++++++
 #General functions:
@@ -2263,7 +2331,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetTime', cName='PyGetStateTime
                                 )
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='SetTime', cName='PySetStateTime', 
-                                description="set configuration dependent time; use this access with care, e.g. in user-defined solvers.",
+                                description="set configuration dependent time; use this access with care, e.g., in user-defined solvers.",
                                 argList=['newTime','configurationType'],
                                 argTypes=['float','ConfigurationType'],
                                 defaultArgs=['', 'exu.ConfigurationType::Current'], #exu will be removed for binding
@@ -3398,12 +3466,13 @@ plr.sLatex += plrsym.sLatex
 plr.CreateNewRSTfile('GeneralContact')
 classStr = 'PyGeneralContact'
 pyClassStr = 'GeneralContact'
-plr.DefPyStartClass(classStr, pyClassStr, '',labelName='sec:GeneralContact',
+plr.DefPyStartClass(classStr, pyClassStr, 
+                    'Structure to define general and highly efficient contact functionality in multibody systems, allowing millions of particles, using search trees and parallelized contact computations, mainly intended for explicit solvers. ',
+                    labelName='sec:GeneralContact',
                     forbidPythonConstructor=True)
 
-plr.AddDocu('Structure to define general and highly efficient contact functionality in multibody systems'+
-            '\\footnote{Note that GeneralContact is still developed, use with care.}. For further explanations '+
-            'and theoretical backgrounds, see \\refSection{secContactTheory}. '+
+plr.AddDocu(
+            'For further explanations and theoretical backgrounds, see \\refSection{secContactTheory}. '+
             'Internally, the contacts are stored with global indices, which are in the following list: '+
             '[numberOfSpheresMarkerBased, numberOfANCFCable2D, numberOfTrigsRigidBodyBased], see also'+
             'the output of GetPythonObject().')
@@ -3595,7 +3664,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='AddTrianglesRigidBodyBased', cN
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetItemsInBox', cName='PyGetItemsInBox', 
                         argList=['pMin','pMax'],
                         example='gContact.GetItemsInBox(pMin=[0,1,1],\\\\ \\TAB pMax=[2,3,2])',
-                        description="Get all items in box defined by minimum coordinates given in pMin and maximum coordinates given by pMax, accepting 3D lists or numpy arrays; in case that no objects are found, False is returned; otherwise, a dictionary is returned, containing numpy arrays with indices of obtained MarkerBasedSpheres, TrigsRigidBodyBased, ANCFCable2D, ...; the indices refer to the local index in GeneralContact which can be evaluated e.g. by GetMarkerBasedSphere(localIndex)",
+                        description="Get all items in box defined by minimum coordinates given in pMin and maximum coordinates given by pMax, accepting 3D lists or numpy arrays; in case that no objects are found, False is returned; otherwise, a dictionary is returned, containing numpy arrays with indices of obtained MarkerBasedSpheres, TrigsRigidBodyBased, ANCFCable2D, ...; the indices refer to the local index in GeneralContact which can be evaluated e.g., by GetMarkerBasedSphere(localIndex)",
                         argTypes=[vector3D,vector3D],
                         returnType='Union[dict,bool]',
                         )
@@ -3604,7 +3673,7 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='GetItemsInBox', cName='PyGetIte
 
 plr.DefPyFunctionAccess(cClass=classStr, pyName='GetSphereMarkerBased', cName='PyGetSphereMarkerBased', 
                         argList=['localIndex','addData'],
-                        description="Get dictionary with current position, orientation, velocity, angular velocity as computed in last contact iteration; if addData=True, adds stored data of contact element, such as radius, markerIndex and contact parameters; localIndex is the internal index of contact element, as returned e.g. from GetItemsInBox",
+                        description="Get dictionary with current position, orientation, velocity, angular velocity as computed in last contact iteration; if addData=True, adds stored data of contact element, such as radius, markerIndex and contact parameters; localIndex is the internal index of contact element, as returned e.g., from GetItemsInBox",
                         argTypes=['int','bool'],
                         defaultArgs=['','False'],
                         returnType='dict',
@@ -3647,8 +3716,8 @@ plr.DefPyFunctionAccess(cClass=classStr, pyName='ShortestDistanceAlongLine', cNa
 plr.DefPyFunctionAccess(cClass=classStr, pyName='UpdateContacts', cName='PyUpdateContacts', 
                         argList=['mainSystem'],
                         example='gContact.UpdateContacts(mbs)',
-                        description="Update contact sets, e.g. if no contact is simulated (isActive=False) but user functions need up-to-date contact states for GetItemsInBox(...) or for GetActiveContacts(...)",
-                        argTypes=['MainSystem'],
+                        description="Update contact sets, e.g., if no contact is simulated (isActive=False) but user functions need up-to-date contact states for GetItemsInBox(...) or for GetActiveContacts(...)",
+                        argTypes=['"MainSystem"'], #MainSystem undefined at this point
                         returnType='None',
                         )
 
@@ -3720,7 +3789,7 @@ plr.CreateNewRSTfile('DataStructures')
 plr.AddDocu(text="""
 This section describes a set of special data structures which are used in the Python-C++ interface, 
 such as a MatrixContainer for dense/sparse matrices or a list of 3D vectors. 
-Note that there are many native data types, such as lists, dicts and numpy arrays (e.g. 3D vectors), 
+Note that there are many native data types, such as lists, dicts and numpy arrays (e.g., 3D vectors), 
 which are not described here as they are native to Pybind11, but can be passed as arguments when appropriate.
 """, section='Data structures', sectionLevel=1,sectionLabel='sec:cinterface:dataStructures')
 
@@ -3877,7 +3946,7 @@ mat0 = SC.renderer.materials[0]
 #convert into dictionary for easier processing:
 matDict = mat0.GetDictionary()
 matDict['alpha'] = 0.5
-#change material (e.g. using a data base):
+#change material (e.g., using a data base):
 mat0.SetDictionary(matDict)
 #or directly update material
 mat0.name = 'new name'
@@ -4216,7 +4285,7 @@ plr.DefPyStartClass(classStr, pyClassStr, "The Matrix3DList is used to represent
         ' \\\\ \\\\ Usage: \\bi\n'+
         '  \\item Create empty \\texttt{Matrix3DList} with \\texttt{x = Matrix3DList()} \n'+
         '  \\item Create \\texttt{Matrix3DList} with list of numpy arrays:\\\\\\texttt{x = Matrix3DList([ numpy.eye(3), numpy.array([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]) ])}\n'+
-        # '  \\item Create \\texttt{Matrix3DList} with list of lists \\texttt{x = Matrix3DList([[1.,2.,3.], [4.,5.,6.]])}\n'+
+        '  \\item Create \\texttt{Matrix3DList} with one matrix \\texttt{x = Matrix3DList(13.*numpy.eye(3))} \n'+
         '  \\item Append item: \\texttt{x.Append(numpy.eye(3))}\n'+
         '  \\item Convert into list of numpy arrays: \\texttt{x.GetPythonObject()}\n'+
         '  \\item similar to Vector3DList !\n'+
@@ -4335,7 +4404,7 @@ directoryString = '../Autogenerated/'
 pybindFile = directoryString + 'pybind_manual_classes.h'
 latexFile = theDocDir+'manual_interfaces.tex'
 
-file=open(pybindFile,'w')  #clear file by one write access
+file=open(pybindFile,'w', encoding='utf8')  #clear file by one write access
 file.write('// AUTO:  ++++++++++++++++++++++\n')
 file.write('// AUTO:  pybind11 manual module includes; generated by Johannes Gerstmayr\n')
 file.write('// AUTO:  last modified = '+ GetDateStr() + '\n')
@@ -4430,7 +4499,7 @@ for s in localListFunctionNames:
 sConfHelper += ']\n\n'
 
 
-with open(exuDir+'confHelper.py', 'w') as f:
+with open(exuDir+'confHelper.py', 'w', encoding='utf8') as f:
     f.write(sConfHelper)
 
 

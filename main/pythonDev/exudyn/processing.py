@@ -531,6 +531,7 @@ def ParameterVariation(parameterFunction, parameters,
 #    resultsFile: if provided, the results are stored columnwise into the given file and written after every generation; use resultsMonitor.py to track results in realtime
 #    clusterHostNames: list of hostnames, e.g. clusterHostNames=['123.124.125.126','123.124.125.127'] providing a list of strings with IP addresses or host names, see dispy documentation. If list is non-empty and useMultiProcessing==True and dispy is installed, cluster computation is used; NOTE that cluster computation speedup factors shown are not fully true, as they include a significant overhead; thus, only for computations which take longer than 1-5 seconds and for sufficient network bandwith, the speedup is roughly true
 #    useDispyWebMonitor: if given in **kwargs, a web browser is startet in case of cluster computation to manage the cluster during computation
+#    useMPI: if given in **kwargs and set True, and if Python package mpi4py is installed, mpi parallelization is used
 #**output:
 #    returns [optimumParameter, optimumValue, parameterList, valueList], containing the optimum parameter set 'optimumParameter', optimum value 'optimumValue', the whole list of parameters parameterList with according objective values 'valueList'
 #           values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem ..., can also contain tuples, etc.)
@@ -584,8 +585,11 @@ def GeneticOptimization(objectiveFunction, parameters,
             exudyn.Print("number of threads used =", numberOfThreads,flush=True) #very useful information
         else:
             exudyn.Print("using cluster",flush=True) 
-            
-
+    
+    useMPI = False
+    if 'useMPI' in kwargs: 
+        useMPI = kwargs['useMPI']
+        
     useDispyWebMonitor = False
     if 'useDispyWebMonitor' in kwargs: 
         useDispyWebMonitor = kwargs['useDispyWebMonitor']
@@ -680,7 +684,8 @@ def GeneticOptimization(objectiveFunction, parameters,
 
         totalEvaluations += len(currentGeneration)
         values = ProcessParameterList(objectiveFunction, currentGeneration, useMultiProcessing, showProgress = showProgress, numberOfThreads=numberOfThreads,
-                                      clusterHostNames=clusterHostNames, useDispyWebMonitor=useDispyWebMonitor)
+                                      clusterHostNames=clusterHostNames, useDispyWebMonitor=useDispyWebMonitor,
+                                      useMPI=useMPI)
 
         if (showProgress and useMultiProcessing and popCnt < numberOfGenerations-1): 
             exudyn.Print("            #"+str(popCnt+1), end='')
@@ -1079,6 +1084,7 @@ def Minimize(objectiveFunction, parameters, initialGuess=[], method='Nelder-Mead
 #    resultsFile: if provided, output is immediately written to resultsFile during processing
 #    numberOfThreads: default: same as number of cpus (threads); used for multiprocessing lib;
 #    parameterFunctionData: dictionary containing additional data passed to the parameterFunction inside the parameters with dict key 'functionData'; use this e.g. for passing solver parameters or other settings
+#    useMPI: if given in **kwargs and set True, and if Python package mpi4py is installed, mpi parallelization is used
 #**output:
 #    returns [parameterList, valRef, valuesSorted, sensitivity], parameterList containing the list of dictionaries processed. valRef is the Solution for the reference values paramList[0], valuesSorted contains the results sorted by the dictionary key that was varied in the simulation. The sensitivity contains the calculated sensitivity, where the rows are the corresponding outputparameters, while the columns are the input parameters, thereby the index sensitivity[1,0] is the sensitivity of output parameter 1 with respect to the input parameter 0. 
 #**author: Peter Manzl
@@ -1102,6 +1108,10 @@ def ComputeSensitivities(parameterFunction, parameters, scaledByReference=False,
     resultsFile = ''
     if 'resultsFile' in kwargs: 
         resultsFile = kwargs['resultsFile']
+
+    useMPI = False
+    if 'useMPI' in kwargs: 
+        useMPI = kwargs['useMPI']
         
     paramKeys = list(parameters.keys())
     for i in range(len(parameters)): 
@@ -1139,7 +1149,7 @@ def ComputeSensitivities(parameterFunction, parameters, scaledByReference=False,
                 else: 
                     jVar = j  - nVar[i] +1
                 parameterList += [deepcopy(parameterList[0])]
-                valVar = max(jVar*fVal, 1e-6) # if fVal == 0! 
+                #unused: valVar = max(jVar*fVal, 1e-6) # if fVal == 0! 
                 parameterList[-1][iKey] = parameterList[-1][iKey] *(1+jVar*fVal)
                 if parameterList[-1][iKey] == 0: 
                     parameterList[-1][iKey] += max(fVal, 1e-6)
@@ -1154,7 +1164,7 @@ def ComputeSensitivities(parameterFunction, parameters, scaledByReference=False,
 
     values = ProcessParameterList(parameterFunction, parameterList, useMultiProcessing, 
                                   showProgress = showProgress, numberOfThreads=numberOfThreads,
-                                  resultsFile = resultsFile, parameters=parameters)
+                                  resultsFile = resultsFile, parameters=parameters, useMPI=useMPI)
    
     if not(hasattr(values[0], '__iter__')): 
         # if sensitivity is only calculated regarding to one output, reshape

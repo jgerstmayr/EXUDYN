@@ -236,7 +236,7 @@ You can view and download this file on Github: `rollingDiscTangentialForces.py <
    SC.visualizationSettings.connectors.jointAxesLength = 0.3
    SC.visualizationSettings.connectors.jointAxesRadius = 0.08
    SC.visualizationSettings.openGL.lineWidth=2 #maximum
-   SC.visualizationSettings.openGL.shadow=0.2
+   SC.visualizationSettings.openGL.light0.shadow=0.2
    SC.visualizationSettings.openGL.multiSampling = 4
    
    if useGraphics:

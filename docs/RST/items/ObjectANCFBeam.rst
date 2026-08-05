@@ -5,7 +5,7 @@
 ObjectANCFBeam
 ==============
 
-OBJECT UNDER CONSTRUCTION: A 3D beam finite element based on the absolute nodal coordinate formulation, using two nodes. The localPosition \ :math:`x`\  of the beam ranges from \ :math:`-L/2`\  (at node 0) to \ :math:`L/2`\  (at node 1). The axial coordinate is \ :math:`x`\  (first coordinate) and the cross section is spanned by local \ :math:`y`\ /\ :math:`z`\  axes; assuming dimensions \ :math:`w_y`\  and \ :math:`w_z`\  in cross section, the local position range is \ :math:`\in [[-L/2,L/2],\, [-wy/2,wy/2],\, [-wz/2,wz/2] ]`\ .
+A 3D beam finite element based on the absolute nodal coordinate formulation, using two nodes. The localPosition \ :math:`x`\  of the beam ranges from \ :math:`-L/2`\  (at node 0) to \ :math:`L/2`\  (at node 1). The axial coordinate is \ :math:`x`\  (first coordinate) and the cross section is spanned by local \ :math:`y`\ /\ :math:`z`\  axes; assuming dimensions \ :math:`w_y`\  and \ :math:`w_z`\  in cross section, the local position range is \ :math:`\in [[-L/2,L/2],\, [-wy/2,wy/2],\, [-wz/2,wz/2] ]`\ . NOTE: Requires further development and tests!
 
 \ **Additional information for ObjectANCFBeam**\ :
 
@@ -25,8 +25,10 @@ The item \ **ObjectANCFBeam**\  with type = 'ANCFBeam' has the following paramet
   | [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \ :math:`\rho A L`\ ; must be positive
 * | **sectionData** [type = BeamSection, default = BeamSection()]:
   | data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.
-* | **crossSectionPenaltyFactor** [\ :math:`f_{cs} = [f_{yy},\,f_{zz},\,f_{yz}]\tp`\ , type = Vector3D, default = [1.,1.,1.]]:
-  | [SI:1] additional penalty factors for cross section deformation, which are in total \ :math:`k_{cs} = [f_{yy}\cdot k_{yy},\, f_{zz}\cdot k_{zz},\, f_{yz}\cdot k_{yz}]\tp`\ 
+* | **crossSectionPenaltyFactor** [\ :math:`k_{cs} = [f_{yy},\,f_{zz},\,f_{yz}]\tp`\ , type = Vector3D, default = [1.,1.,1.]]:
+  | [SI:1] additional penalty factors for cross section deformation, which are in total \ :math:`k_{cs} = [f_{yy}\cdot EA,\, f_{zz}\cdot EA,\, f_{yz}\cdot (GA_y+GA_z)]\tp`\ 
+* | **crossSectionDamping** [\ :math:`d_{cs} = [d_{fyy},\,d_{fzz},\,d_{fyz}]\tp`\ , type = Vector3D, default = [0.,0.,0.]]:
+  | [SI:1] viscous damping according to penalty factors for cross section deformation; the damping is relative to the stiffness and should be thus usually much smaller than 1; the viscous damping factors read  \ :math:`d_{cs} = [d_{fyy}\cdot EA,\, d_{fzz}\cdot EA,\, d_{fyz}\cdot (GA_y+GA_z)]\tp`\ 
 * | **visualization** [type = VObjectANCFBeam]:
   | parameters for visualization of item
 
@@ -76,7 +78,7 @@ Detailed description coming later.
 
 Relevant Examples and TestModels with weblink:
 
-    \ `ANCFBeamEigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py>`_\  (TestModels/), \ `ANCFBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py>`_\  (TestModels/), \ `geometricallyExactBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeamTest.py>`_\  (TestModels/), \ `rightAngleFrame.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rightAngleFrame.py>`_\  (TestModels/)
+    \ `ANCFBeamEigTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py>`_\  (TestModels/), \ `ANCFBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamTest.py>`_\  (TestModels/), \ `ANCFCableBeamDampingTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFCableBeamDampingTest.py>`_\  (TestModels/), \ `geometricallyExactBeamTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/geometricallyExactBeamTest.py>`_\  (TestModels/), \ `rightAngleFrame.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rightAngleFrame.py>`_\  (TestModels/)
 
 
 

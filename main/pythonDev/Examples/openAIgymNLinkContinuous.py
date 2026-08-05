@@ -215,7 +215,7 @@ class InvertedNPendulumEnv(OpenAIGymInterfaceEnv):
         
         self.simulationSettings.timeIntegration.newton.useModifiedNewton = True
         
-        self.SC.visualizationSettings.general.drawWorldBasis=True
+        self.SC.visualizationSettings.view0.scene.drawWorldBasis=True
         self.SC.visualizationSettings.general.graphicsUpdateInterval = 0.01
         self.SC.visualizationSettings.openGL.multiSampling=4
         

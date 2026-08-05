@@ -157,7 +157,7 @@ simulationSettings.solutionSettings.solutionInformation = "rigid body tests"
 SC.visualizationSettings.nodes.defaultSize = 0.05
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.lineWidth = 2
-SC.visualizationSettings.window.renderWindowSize = [2000,1600]
+SC.visualizationSettings.view0.window.renderWindowSize = [2000,1600]
 
 if useGraphics:
     SC.renderer.Start()

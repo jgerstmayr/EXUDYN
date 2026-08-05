@@ -128,7 +128,7 @@ SC.visualizationSettings.nodes.show = True
 SC.visualizationSettings.nodes.drawNodesAsPoint  = False
 SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = 0.015
-SC.visualizationSettings.openGL.perspective = 2
+SC.visualizationSettings.view0.camera.perspective = 1
 
 if useGraphics:
     SC.renderer.Start()

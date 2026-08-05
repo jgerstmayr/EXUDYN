@@ -211,7 +211,7 @@ You can view and download this file on Github: `rigidRotor3DFWBW.py <https://git
    if createAnimation:
        simulationSettings.solutionSettings.recordImagesInterval = 0.05
        SC.visualizationSettings.exportImages.saveImageFileName = "images/frame"
-       SC.visualizationSettings.window.renderWindowSize = [1600,1080]
+       SC.visualizationSettings.view0.window.renderWindowSize = [1600,1080]
        SC.visualizationSettings.openGL.multiSampling = 4
        
    #visualize loads:

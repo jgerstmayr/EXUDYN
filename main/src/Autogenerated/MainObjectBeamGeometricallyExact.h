@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-03  15:35:22 (last modified)
+* @date         2026-02-05  22:13:56 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -39,7 +39,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectBeamGeometricallyExact
-* @brief        OBJECT UNDER CONSTRUCTION: A 3D geometrically exact beam finite element, currently using two 3D rigid body nodes. The localPosition \f$x\f$ of the beam ranges from \f$-L/2\f$ (at node 0) to \f$L/2\f$ (at node 1). The axial coordinate is \f$x\f$ (first coordinate) and the cross section is spanned by local \f$y\f$/\f$z\f$ axes.
+* @brief        A 3D geometrically exact beam finite element, currently using two 3D rigid body nodes. The localPosition \f$x\f$ of the beam ranges from \f$-L/2\f$ (at node 0) to \f$L/2\f$ (at node 1). The axial coordinate is \f$x\f$ (first coordinate) and the cross section is spanned by local \f$y\f$/\f$z\f$ axes. NOTE: Requires further development and tests!
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -129,7 +129,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex(ArrayIndex(cObjectBeamGeometricallyExact->GetParameters().nodeNumbers)); //! AUTO: cast variables into python (not needed for standard types) 
+        d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex((ArrayIndex)cObjectBeamGeometricallyExact->GetParameters().nodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsLength"] = (Real)cObjectBeamGeometricallyExact->GetParameters().physicsLength; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["sectionData"] = GetInternalBeamSection(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -143,7 +143,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex(ArrayIndex(cObjectBeamGeometricallyExact->GetParameters().nodeNumbers)));} //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex((ArrayIndex)cObjectBeamGeometricallyExact->GetParameters().nodeNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("physicsLength") == 0) { return py::cast((Real)cObjectBeamGeometricallyExact->GetParameters().physicsLength);} //! AUTO: get parameter
         else if (parameterName.compare("sectionData") == 0) { return py::cast(GetInternalBeamSection());} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectBeamGeometricallyExact->GetShow());} //! AUTO: get parameter

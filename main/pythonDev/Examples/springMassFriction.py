@@ -91,14 +91,14 @@ sPos = mbs.AddSensor(SensorBody(bodyNumber=oMass, storeInternal=True,
 mbs.Assemble()
 
 
-SC.visualizationSettings.general.textSize = 12
+SC.visualizationSettings.view0.window.globalFontSize = 12
 SC.visualizationSettings.openGL.lineWidth = 4
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.general.graphicsUpdateInterval = 0.005
-#SC.visualizationSettings.window.renderWindowSize=[1024,900]
-SC.visualizationSettings.window.renderWindowSize=[1600,1000]
+#SC.visualizationSettings.view0.window.renderWindowSize=[1024,900]
+SC.visualizationSettings.view0.window.renderWindowSize=[1600,1000]
 SC.visualizationSettings.general.showSolverInformation = False
-SC.visualizationSettings.general.drawCoordinateSystem = False
+SC.visualizationSettings.view0.scene.drawCoordinateSystem = False
 
 SC.visualizationSettings.loads.fixedLoadSize=0
 SC.visualizationSettings.loads.loadSizeFactor=0.5

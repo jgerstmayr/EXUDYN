@@ -128,8 +128,8 @@ void CObjectANCFCable::ComputeCurrentNodeVelocities(ConstSizeVector<6>& qNode0, 
 void CObjectANCFCable::ComputeCurrentObjectCoordinates(ConstSizeVector<nODE2coordinates>& qANCF) const
 {
 	const Index dim = 3;		//3D finite element
-	//const Index ns = 4;			//number of shape functions
-	const Index nnc = dim * 2;  //number of node coordinates
+	//const Index ns = nShapeFunctions;			//number of shape functions
+	const Index nnc = nNodalCoordinates;  //number of node coordinates
 	LinkedDataVector qNode0(qANCF, 0, nnc);		//link node values to element vector
 	LinkedDataVector qNode1(qANCF, nnc, nnc);		//link node values to element vector
 
@@ -143,8 +143,8 @@ void CObjectANCFCable::ComputeCurrentObjectCoordinates(ConstSizeVector<nODE2coor
 void CObjectANCFCable::ComputeCurrentObjectVelocities(ConstSizeVector<nODE2coordinates>& qANCF_t) const
 {
 	const Index dim = 3;		//3D finite element
-	//const Index ns = 4;			//number of shape functions
-	const Index nnc = dim * 2;  //number of node coordinates
+	//const Index ns = nShapeFunctions;			//number of shape functions
+	const Index nnc = nNodalCoordinates;  //number of node coordinates
 
 	LinkedDataVector qNode0(qANCF_t, 0, nnc);		//link node values to element vector
 	LinkedDataVector qNode1(qANCF_t, nnc, nnc);		//link node values to element vector
@@ -162,7 +162,7 @@ void CObjectANCFCable::PreComputeMassTerms() const
 		Real L = parameters.physicsLength;
 		Real rhoA = parameters.physicsMassPerLength;
 		const Index dim = 3;		//3D finite element
-		const Index ns = 4;			//number of shape functions
+		const Index ns = nShapeFunctions;			//number of shape functions
 
 		Index cnt = 0;
 		Real a = 0; //integration interval [a,b]
@@ -201,8 +201,8 @@ void CObjectANCFCable::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 void CObjectANCFCable::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 {
-	const Index dim = 3;		//3D finite element
-	const Index ns = 4;			//number of shape functions
+	const Index dim = 3;				//3D finite element
+	const Index ns = nShapeFunctions;	//number of shape functions
 	//pout << "GetNumberOfNodes() =" << GetNumberOfNodes() << "\n";
 
 	ConstSizeVector<dim * ns> qANCF;
@@ -222,8 +222,8 @@ void CObjectANCFCable::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 
 	//compute work of elastic forces:
 	const Index dim = 3;		//3D finite element
-	const Index ns = 4;			//number of shape functions
-	const Index nnc = dim * 2;  //number of node coordinates
+	const Index ns = nShapeFunctions;			//number of shape functions
+	const Index nnc = nNodalCoordinates;  //number of node coordinates
 
 	Real L = parameters.physicsLength;
 	Real EA = parameters.physicsAxialStiffness;
@@ -438,8 +438,8 @@ void CObjectANCFCable::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobi
 	Index objectNumber, const ArrayIndex& ltg) const
 {
 	const Index dim = 3;		//3D finite element
-	const Index ns = 4;			//number of shape functions
-	//const Index nnc = dim * 2;  //number of node coordinates
+	const Index ns = nShapeFunctions;			//number of shape functions
+	//const Index nnc = nNodalCoordinates;  //number of node coordinates
 
 	ConstSizeVector<dim * ns> qANCF0;
 	ConstSizeVector<dim * ns> qANCF0_t;
@@ -493,7 +493,7 @@ void CObjectANCFCable::GetAccessFunctionBody(AccessFunctionType accessType, cons
 	case AccessFunctionType::TranslationalVelocity_qt:
 	{
 		const Index dim = 3;		//3D finite element
-		const Index ns = 4;			//number of shape functions
+		const Index ns = nShapeFunctions;			//number of shape functions
 
 		Real x = localPosition[0]; //only x-coordinate
 		Vector4D SV = ComputeShapeFunctions(x, L);
@@ -523,8 +523,8 @@ void CObjectANCFCable::GetAccessFunctionBody(AccessFunctionType accessType, cons
 	//case AccessFunctionType::AngularVelocity_qt: 
 	//{
 	//	//const Index dim = 3;		//3D finite element
-	//	const Index ns = 4;			//number of shape functions
-	//	//const Index nnc = dim * 2;  //number of node coordinates
+	//	const Index ns = nShapeFunctions;			//number of shape functions
+	//	//const Index nnc = nNodalCoordinates;  //number of node coordinates
 
 	//	Real xLoc = localPosition[0]; //only x-coordinate
 	//	Vector3D slope = ComputeSlopeVector(xLoc, ConfigurationType::Current);
@@ -549,7 +549,7 @@ void CObjectANCFCable::GetAccessFunctionBody(AccessFunctionType accessType, cons
 	case AccessFunctionType::DisplacementMassIntegral_q:
 	{
 		const Index dim = 3;		//3D finite element
-		const Index ns = 4;			//number of shape functions
+		const Index ns = nShapeFunctions;			//number of shape functions
 
 		value.SetNumberOfRowsAndColumns(dim, dim * ns); //3D velocity, 12 coordinates qt
 		value.SetAll(0.);

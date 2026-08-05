@@ -125,7 +125,7 @@ namespace ExuThreading {
 		}
 	}
 
-	inline void TaskManager::Loop(Index threadID)
+	void TaskManager::Loop(Index threadID)
 	{
 		thread_id = threadID;
 
@@ -223,7 +223,7 @@ namespace ExuThreading {
 		}
 	}
 
-	inline void TaskManager::StartWorkers()
+	void TaskManager::StartWorkers()
 	{
 		isRunning.store(true, std::memory_order_relaxed);
 
@@ -249,7 +249,7 @@ namespace ExuThreading {
 		while (active_workers < num_threads - 1) { ; }
 	}
 
-	inline void TaskManager::StopWorkers()
+	void TaskManager::StopWorkers()
 	{
 		isRunning.store(false, std::memory_order_relaxed);
 

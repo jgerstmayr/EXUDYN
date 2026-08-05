@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-08  11:59:26 (last modified)
+* @date         2026-02-05  22:13:56 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -61,7 +61,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectConnectorRigidBodySpringDamper
-* @brief        An 3D spring-damper element acting on relative displacements and relative rotations of two rigid body (position+orientation) markers; connects to (position+orientation)-based markers and represents a penalty-based rigid joint (or prismatic, revolute, etc.)
+* @brief        An 3D spring-damper element acting on relative displacements and relative rotations of two rigid body (position+orientation) markers. It represents a penalty-based rigid joint (or prismatic, revolute, etc.)
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -193,12 +193,12 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
-            (Index)OutputVariableType::DisplacementLocal +
-            (Index)OutputVariableType::VelocityLocal +
-            (Index)OutputVariableType::Rotation +
-            (Index)OutputVariableType::AngularVelocityLocal +
-            (Index)OutputVariableType::ForceLocal +
-            (Index)OutputVariableType::TorqueLocal );
+            (Index64)OutputVariableType::DisplacementLocal +
+            (Index64)OutputVariableType::VelocityLocal +
+            (Index64)OutputVariableType::Rotation +
+            (Index64)OutputVariableType::AngularVelocityLocal +
+            (Index64)OutputVariableType::ForceLocal +
+            (Index64)OutputVariableType::TorqueLocal );
     }
 
 };

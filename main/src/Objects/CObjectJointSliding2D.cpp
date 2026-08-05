@@ -30,14 +30,12 @@ Real CObjectJointSliding2D::ComputeLocalSlidingCoordinate() const
 	return slidingPos;
 }
 
-//bool sjnew = true; //new formulation of sliding joint using projection into tangential and normal direction, also suitable for index 2 formulation
-
 //! Computational function: compute algebraic equations and write residual into "algebraicEquations"
 void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel) const
 {
 	//markerData.GetMarkerData(1).vectorValue/_t:cable (refCoordinates+coordinates)/velocities
-	//markerData.GetMarkerData(1).value:cable Length (current cable)
-	//markerData.GetMarkerData(0).position:   position on other body (e.g. rigid body or mass point)
+	//markerData.GetMarkerData(1).GetHelper():   cable Length (current cable)
+	//markerData.GetMarkerData(0).position:      position on other body (e.g. rigid body or mass point)
 
 	//CObjectJointSliding2D: contains NodeGenericData: for current Cable marker number in marker list
 	//3 equations: Residuum X,Residuum Y and force*slope = 0
@@ -141,13 +139,9 @@ void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations
 		algebraicEquations.SetNumberOfItems(GetAlgebraicEquationsSize());
 		const Index slidingCoordinateIndex = 2;
 		Real slidingPos = GetCurrentAEcoordinate(slidingCoordinateIndex); //get 3rd algebraic variable ==> s
-		algebraicEquations[0] = markerData.GetLagrangeMultipliers()[0];   //leads to crash; forceX = 0
-		algebraicEquations[1] = markerData.GetLagrangeMultipliers()[1];   //leads to crash; forceY = 0
+		algebraicEquations[0] = markerData.GetLagrangeMultipliers()[0];   //forceX = 0
+		algebraicEquations[1] = markerData.GetLagrangeMultipliers()[1];   //forceY = 0
 		algebraicEquations[2] = slidingPos;   //s = 0
-
-		//algebraicEquations[0] = GetCurrentAEcoordinate(forceXindex);   //forceX = 0
-		//algebraicEquations[1] = GetCurrentAEcoordinate(forceYindex);   //forceY = 0
-		//Index s = markerData.GetLagrangeMultipliers().NumberOfItems();
 	}
 
 }
@@ -256,13 +250,6 @@ void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, Re
 			vPos[1] = (slidingPosition[1] - markerData.GetMarkerData(0).position[1]);
 
 
-			//algebraicEquations[0] = forceX; //dummy equation; should be erased in future
-			//algebraicEquations[1] = vPos * normalVector;
-			//algebraicEquations[2] = vPos * slopeVector; //index1
-
-			//Real forceX = GetCurrentAEcoordinate(forceXindex);
-			//Real forceY = GetCurrentAEcoordinate(forceYindex);
-
 			//derivatives w.r.t. to s and w.r.t. forceX (dummy)
 			jacobian_AE(forceXindex, forceXindex) = 1;
 			//
@@ -298,16 +285,6 @@ void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, Re
 
 
 }
-
-//now generated automatically in python:
-////! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-//OutputVariableType CObjectJointSliding2D::GetOutputVariableTypes() const
-//{
-//	return (OutputVariableType)((Index)OutputVariableType::ScalarPosition + 
-//		(Index)OutputVariableType::Position +
-//		(Index)OutputVariableType::Velocity +
-//		(Index)OutputVariableType::Force);
-//}
 
 //! provide according output variable in "value"
 void CObjectJointSliding2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
@@ -361,17 +338,6 @@ Real CObjectJointSliding2D::PostNewtonStep(const MarkerDataStructure& markerData
 	LinkedDataVector currentState = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current);	//copy, but might change values ...
 
 	Real slidingCoordinate = ComputeLocalSlidingCoordinate();
-	//Real slidingPos = GetCurrentAEcoordinate(slidingCoordinateIndex); //this is only the small changed solved in Newton
-	//slidingPos += currentState[1]; //this contains the startOfStep value of the sliding coordinate (or initial value); ranges from 0 to total length of sliding cables
-	//slidingPos -= parameters.slidingMarkerOffsets[(Index)currentState[0]]; //slidingPos now ranges from 0 to L in current cable element
-
-	//pout << "  L=" << L << "\n";
-	//pout << "  currentCoordinate=" << GetCurrentAEcoordinate(slidingCoordinateIndex) << "\n";
-	//pout << "  offset=" << parameters.slidingMarkerOffsets[(Index)currentState[0]] << "\n";
-
-	//pout << "  slidingCoordinate=" << slidingCoordinate << "\n";
-	//pout << "  currentState[0]=" << currentState[0] << "\n";
-	//pout << "  currentState[1]=" << currentState[1] << "\n";
 
 	if (slidingCoordinate < 0) //reduce cableMarkerIndex
 	{

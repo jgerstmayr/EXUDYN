@@ -32,8 +32,7 @@ bool VisualizationSystemContainer::AttachToRenderEngine(bool warnNoRenderer)
 
 	glfwRenderer.DetachVisualizationSystem(nullptr); //nullptr means, that every new systemcontainer links to the render engine and the old container is lost; necessary if an old systemcontainer is still linked
 
-	if (!glfwRenderer.LinkVisualizationSystem(&graphicsDataList, &settings, this, &renderState)) 
-		//(&graphicsData, &settings, this, &renderState))
+	if (!glfwRenderer.LinkVisualizationSystem(this))
 	{
 		//should never happen:
 		SysError("VisualizationSystemContainer::AttachToRenderEngine: Renderer cannot be linked to several SystemContainers at the same time; detach other SystemContainer first!");
@@ -67,28 +66,17 @@ bool VisualizationSystemContainer::DetachFromRenderEngine(VisualizationSystemCon
 //! OpenGL renderer sends message that graphics shall be updated ==> update graphics data
 void VisualizationSystemContainer::UpdateGraphicsData()
 {
-	//this is now done in GLFWclient for zoom all, InitializeView done
-	//if (zoomAllRequest)
-	//{
-	//	zoomAllRequest = false; //this is not fully thread safe, but should not happen very often ==> user needs to zoom manually then ...
-
-	//	InitializeView();
-	//}
 	if (updateGraphicsDataNow) { updateGraphicsDataNowInternal = true; updateGraphicsDataNow = false; } //enables immediate new set of updateGraphicsDataNow
-	if (saveImage) { saveImageOpenGL = true; } //as graphics are updated now, the saveImageOpenGL flag can be set
+	
+	for (Index viewID = 0; viewID < (Index)renderViewDataArray.size(); viewID++)
+	{
+		if (renderViewDataArray[viewID].saveImage) { renderViewDataArray[viewID].saveImageOpenGL = true; } //as graphics are updated now, the saveImageOpenGL flag can be set
+	}
 
-	Index cnt = 0;
+	//Index cnt = 0;
 	for (auto item : visualizationSystems)
 	{
-		//pout << "UpdateGraphicsData1\n";
 		item->UpdateGraphicsData(*this);
-		//pout << "UpdateGraphicsData2\n";
-		if (cnt == 0 && settings.general.drawWorldBasis)
-		{
-			EXUvis::DrawOrthonormalBasis(Vector3D({ 0,0,0 }), EXUmath::unitMatrix3D, settings.general.worldBasisSize,
-				0.005*settings.general.worldBasisSize, item->GetGraphicsData(), Index2ItemID(-1, ItemType::_None, 0)); //world basis has no special index
-		}
-		cnt++;
 	}
 
 	updateGraphicsDataNowInternal = false; //only valid for one run; may not be earlier, as item->UpdateGraphicsData(...) needs this flag!
@@ -98,11 +86,11 @@ Index globalTimeOutVisualizationContainer = 5000;
 
 // put this to SystemContainer ...
 //! perform render update and save the current openGL window to file using the visualization settings
-void VisualizationSystemContainer::RedrawAndSaveImage()
+void VisualizationSystemContainer::RedrawAndSaveImage(Index viewID)
 {
 	//now a new saveImage message can be sent
-	saveImage = true;			//flag initiates saveImageOpenGL at next UpdateGraphicsData() called from Renderer
-	saveImageOpenGL = false;	//after graphics update, the scene is saved and flags (saveImage, saveImageOpenGL) are set to false
+	renderViewDataArray[viewID].saveImage = true;			//flag initiates saveImageOpenGL at next UpdateGraphicsData() called from Renderer
+	renderViewDataArray[viewID].saveImageOpenGL = false;	//after graphics update, the scene is saved and flags (saveImage, saveImageOpenGL) are set to false
 	UpdateGraphicsDataNow();	//if a current redraw is performed, it will also initiate a second redraw operation ...
 
 	globalTimeOutVisualizationContainer = settings.exportImages.saveImageTimeOut; //used in CSystem, as it is not available there!
@@ -122,7 +110,7 @@ void VisualizationSystemContainer::RedrawAndSaveImage()
 
 	//now wait until the saveImage flag has been deleted by the current redraw operation
 	Index i = 0;
-	while (i++ < timeOut && (saveImageOpenGL || saveImage)) //wait timeOut*timerMilliseconds seconds for last operation to finish
+	while (i++ < timeOut && (renderViewDataArray[viewID].saveImageOpenGL || renderViewDataArray[viewID].saveImage)) //wait timeOut*timerMilliseconds seconds for last operation to finish
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(timerMilliseconds));
 #ifdef USE_GLFW_GRAPHICS
@@ -137,7 +125,7 @@ void VisualizationSystemContainer::RedrawAndSaveImage()
 		}
 #endif
 	}
-	if (saveImageOpenGL || saveImage)
+	if (renderViewDataArray[viewID].saveImageOpenGL || renderViewDataArray[viewID].saveImage)
 	{
 		PyWarning("PostProcessData::RedrawAndSaveImage: save frame to image file did not finish; increase timeout parameter");
 	}
@@ -315,51 +303,69 @@ bool VisualizationSystemContainer::DoIdleTasks(Real waitSeconds, bool printPause
 }
 
 //! if the system has changed or loaded, compute maximum box of all items and reset scene to the maximum box
-void VisualizationSystemContainer::InitializeView()
+void VisualizationSystemContainer::InitializeRenderState(bool validInitialization, bool initializeOnlyIfInvalid)
 {
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	renderState.zoom = settings.openGL.initialZoom;
-	renderState.maxSceneSize = settings.openGL.initialMaxSceneSize;
-	renderState.centerPoint = settings.openGL.initialCenterPoint; //this is the initial centerPoint; hereafter it can be changed!
-	renderState.rotationCenterPoint.SetAll(0);
-	renderState.displayScaling = 1;
-
-	renderState.currentWindowSize = settings.window.renderWindowSize;
-	if (renderState.currentWindowSize[0] < 1) { renderState.currentWindowSize[0] = 1; } //avoid division by zero
-	if (renderState.currentWindowSize[1] < 1) { renderState.currentWindowSize[1] = 1; } //avoid division by zero
-
-	//set modelRotation to identity matrix (4x4); Use rotation part only from Float9 initialModelRotation
-	renderState.modelRotation.SetScalarMatrix(4,1.f);
-	for (Index i = 0; i < 3; i++)
+	for (Index viewID=0; viewID < (Index)renderViewDataArray.size(); viewID++)
 	{
-		for (Index j = 0; j < 3; j++)
+		RenderViewDataVSC& renderViewData = renderViewDataArray[viewID];
+		RenderState& renderState = renderViewData.renderState;
+
+		if (initializeOnlyIfInvalid && renderState.validInitialization) { continue; } //no initialization needed
+
+		renderState.viewEnabled = (viewID == 0); //view 0 enabled by default; this should be synced with settings!
+		renderState.windowOpen = false; //set when renderer is started
+
+		renderViewData.zoomAllRequest = false;
+		renderViewData.saveImage = false;
+		renderViewData.saveImageOpenGL = false;
+
+		renderState.validInitialization = validInitialization; //not valid at SystemContainer instantiation (only default VisualizationSettings used)
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		renderState.zoom = settings.openGL.advanced.initialZoom;
+		renderState.maxSceneSize = settings.openGL.advanced.initialMaxSceneSize;
+		renderState.centerPoint = settings.openGL.advanced.initialCenterPoint; //this is the initial centerPoint; hereafter it can be changed!
+		renderState.boundingBox = Box3DF(Float3(0), 1.f); //initialize to valid size
+
+		renderState.rotationCenterPoint.SetAll(0);
+		renderState.displayScaling = 1;
+
+		renderState.currentWindowSize = GetSettingsView(viewID, settings).window.renderWindowSize;
+		if (renderState.currentWindowSize[0] < 1) { renderState.currentWindowSize[0] = 1; } //avoid division by zero
+		if (renderState.currentWindowSize[1] < 1) { renderState.currentWindowSize[1] = 1; } //avoid division by zero
+
+		//set modelRotation to identity matrix (4x4); Use rotation part only from Float9 initialModelRotation
+		renderState.modelRotation.SetScalarMatrix(4, 1.f);
+		for (Index i = 0; i < 3; i++)
 		{
-			renderState.modelRotation(i, j) = settings.openGL.initialModelRotation[i][j];
+			for (Index j = 0; j < 3; j++)
+			{
+				renderState.modelRotation(i, j) = settings.openGL.advanced.initialModelRotation[i][j];
+			}
 		}
+
+		renderState.projectionMatrix.SetScalarMatrix(4, 1.f);
+		renderState.projectionInfo = 0;
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//moved here from GlfwClient:
+		renderState.mouseCoordinates.SetAll(0.);
+		renderState.openGLcoordinates.SetAll(0.);
+		renderState.mouseLeftPressed = false;
+		renderState.mouseRightPressed = false;
+		renderState.mouseMiddlePressed = false;
+		renderState.joystickPosition.SetAll(0.);
+		renderState.joystickRotation.SetAll(0.);
+		renderState.joystickAvailable = -1; //GlfwClient::invalidIndex
+		renderState.displayScaling = 1;
+
+		renderState.mouseSelectionMbsNumber = 0;
+		renderState.mouseSelectionItemType = ItemType::_None;
+		renderState.mouseSelectionItemID = 0;
+		renderState.mouseSelectionZdepth = 0.f;
+
+		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//openVR:
+		renderState.openVRstate.Initialize(false); //disable
 	}
-
-	renderState.projectionMatrix.SetScalarMatrix(4, 1.f);
-	renderState.projectionInfo = 0;
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//moved here from GlfwClient:
-	renderState.mouseCoordinates.SetAll(0.);
-	renderState.openGLcoordinates.SetAll(0.);
-	renderState.mouseLeftPressed = false;
-	renderState.mouseRightPressed = false;
-	renderState.mouseMiddlePressed = false;
-	renderState.joystickPosition.SetAll(0.);
-	renderState.joystickRotation.SetAll(0.);
-	renderState.joystickAvailable = -1; //GlfwClient::invalidIndex
-	renderState.displayScaling = 1;
-
-	renderState.mouseSelectionMbsNumber = 0;
-	renderState.mouseSelectionItemType = ItemType::_None;
-	renderState.mouseSelectionItemID = 0;
-	renderState.mouseSelectionZdepth = 0.f;
-
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//openVR:
-	renderState.openVRstate.Initialize(false); //disable
 }
 
 //! any multi-line text message from computation to be shown in renderer (e.g. time, solver, ...)
@@ -547,6 +553,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 			//{'type':'Line', 'color':[1,0,0,1], 'data':[x1,y1,z1, x2,y2,z2, ...]}
 			//{'type':'Circle', 'color':[1,0,0,1], 'radius': r, 'position': [x,y,z], 'normal': [x,y,z]}
 			//{'type':'Text', 'color':[1,0,0,1], 'text':"sample text", 'position':[x,y,z]}
+			//{'type':'TriangleList', ...}
 
 			if (py::isinstance<py::dict>(graphicsItem)) //must be a dictionary of graphicsData
 			{
@@ -640,7 +647,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 									py::list colorList = (py::list)(gColor);
 									stdColorsList = py::cast<std::vector<float>>(colorList); //! # read out dictionary and cast to C++ type
 
-									if (stdColorsList.size() != nLines * 8)
+									if ((Index)stdColorsList.size() != nLines * 8)
 									{ PyError("GraphicsData Line: for n lines, colors must contain 8*n floats, 4 floats per line point"); return false; }
 								}
 								else { PyError("GraphicsData Line: for n lines, colors must contain 8*n floats, 4 floats per line point"); return false; }
@@ -721,8 +728,35 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 							text.color = EXUvis::defaultColorFloat4;
 							text.offsetX = 0.f;
 							text.offsetY = 0.f;
-							text.size = 0; //indicates to use default size
+							text.fontSize = 0; //indicates to use default size
 
+							if (gDict.contains("fontSize"))
+							{
+								py::object gData = gDict["fontSize"]; 
+								if (EPyUtils::IsPyTypeScalar(gData)) //must be a scalar value
+								{
+									text.fontSize = (py::float_)(gData);
+								}
+								else { PyError("GraphicsData Text: 'fontSize' must be of type float or int"); return false; }
+							}
+
+							if (gDict.contains("offset"))
+							{
+								py::object gData = gDict["offset"];
+								if (EPyUtils::IsPyTypeListOrArray(gData))
+								{
+									py::list offset = (py::list)(gData);
+									std::vector<float> stdOffsetList = py::cast<std::vector<float>>(offset); //! # read out dictionary and cast to C++ type
+
+									if (stdOffsetList.size() == 2)
+									{
+										text.offsetX = stdOffsetList[0];
+										text.offsetY = stdOffsetList[1];
+									}
+									else { PyError("GraphicsData Text: offset must be a float list or numpy array with 2 components"); return false; }
+								}
+								else { PyError("GraphicsData Text: offset must be a float list or numpy array with 2 components"); return false; }
+							}
 
 							if (gDict.contains("color"))
 							{
@@ -807,6 +841,7 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 										for (Index i = 0; i < n; i++)
 										{
 											points[i] = Float3({ stdGList[i * 3],stdGList[i * 3 + 1],stdGList[i * 3 + 2] });
+											if (points[i].HasInvalid()) { PyError("GraphicsData::TriangleList::points contain not-a-number (nan) or infinity"); return false; }
 											//pout << "p" << i << " = " << points[i] << "\n";
 										}
 									}
@@ -1152,7 +1187,8 @@ bool PyWriteBodyGraphicsDataListOfLists(const py::object object, BodyGraphicsDat
 	}
 	else
 	{
-		PyError("GraphicsDataList must be of type list: [graphicsData, graphicsData, ...]"); return false;
+		PyError("GraphicsDataList must be of type list: [graphicsData, graphicsData, ...]"); 
+		return false;
 	}
 	return true;
 }

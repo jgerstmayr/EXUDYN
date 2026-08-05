@@ -19,15 +19,528 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.10.0, 
-+  last change =  2025-07-09, 
-+  Number of issues = 2139, 
-+  Number of resolved issues = 1912 (0 in current version), 
++  Exudyn version = 1.11.0, 
++  last change =  2026-08-05, 
++  Number of issues = 2350, 
++  Number of resolved issues = 2073 (0 in current version), 
+
+************
+Version 1.11
+************
+
+ * Version 1.11.0: :textred:`resolved BUG 2348` : StableBaselines 
+    - issue author: P. Manzl
+    - description:  Importing exudyn.artificialIntelligence raises an error at to the old gym legacy flag with the latest stable-baselines3 versions due to non-numeric version numbers
+    - date resolved: **2026-06-01 14:43**\ , date raised: 2026-06-01 
 
 ************
 Version 1.10
 ************
 
+ * Version 1.10.160: resolved Issue 2346: special.solver.timeout (change)
+    - description:  change start time for this timer to output.cpuSolverStartTime to more accurately handle timeouts and simulationInRealtime
+    - date resolved: **2026-04-20 22:39**\ , date raised: 2026-04-20 
+ * Version 1.10.159: resolved Issue 2347: solver.output (extension)
+    - description:  add distinguished flags for stopping simulation: simulationTimeout, simulationStoppedByUser and simulationStoppedByUserFunction to determine causes for stopped simulations (all giving finishedSuccessfully=True)
+    - date resolved: **2026-04-20 22:38**\ , date raised: 2026-04-20 
+ * Version 1.10.158: resolved Issue 2345: Create functions (fix)
+    - description:  several parameters like CreateTorsionalSpringDamper offset, velocityOffset and torque require UReal but only Real needed
+    - date resolved: **2026-04-19 14:39**\ , date raised: 2026-04-19 
+ * Version 1.10.157: resolved Issue 2341: CreateSphereTriangleContact (change)
+    - description:  CreateSphereTriangleContact, CreateSphereQuadContact and CreateSphereSphereContact: adapt to make it work with mass points in case that there is no friction, similar to issue 2231
+    - date resolved: **2026-04-07 20:15**\ , date raised: 2026-04-07 
+ * Version 1.10.156: resolved Issue 2231: CreateSphereSphereContact (extension)
+    - description:  if objects are mass points (2D, 3D), only add MarkerBodyPosition if dynamicFriction=0 (otherwise error); enable markers in bodyNumbers field
+    - date resolved: **2026-04-07 20:13**\ , date raised: 2026-01-19 
+ * Version 1.10.155: resolved Issue 2340: CreateSphereTriangleContact (change)
+    - description:  CreateSphereTriangleContact and CreateSphereQuadContact shall accept list of quadPoints or trianglePoints instead of Vector3DList
+    - date resolved: **2026-04-07 20:01**\ , date raised: 2026-04-07 
+ * Version 1.10.154: resolved Issue 2339: ContactSphereTriangle (fix)
+    - description:  in case of frictionless contact, torques on triangle are neglected
+    - date resolved: **2026-04-06 19:46**\ , date raised: 2026-04-06 
+ * Version 1.10.153: resolved Issue 2338: CreateContactSphereSphere (fix)
+    - description:  allow mass points with MarkerBodyPosition or MarkerNodePosition in friction-less case
+    - date resolved: **2026-04-06 19:42**\ , date raised: 2026-04-06 
+ * Version 1.10.152: resolved Issue 2336: beams (extension)
+    - description:  add new beams generate function GenerateBeamElementsAlongLine which is similar to GenerateStraightBeam, but has more readable args and a dict as return value
+    - date resolved: **2026-04-06 15:53**\ , date raised: 2026-04-06 
+ * Version 1.10.151: resolved Issue 2335: shells (extension)
+    - description:  add visualization setting shells.thicknessFactor for drawing larger thickness for visual inspectation
+    - date resolved: **2026-04-03 14:03**\ , date raised: 2026-04-03 
+ * Version 1.10.150: resolved Issue 2334: VSettingsShells (extension)
+    - description:  add visualization settings for plates and shells
+    - date resolved: **2026-04-02 16:04**\ , date raised: 2026-04-02 
+ * Version 1.10.149: resolved Issue 2331: NumpyMatrix (extension)
+    - description:  add option to silently convert scalar values into NumpyMatrix in object parameter initialization (e.g. height in ANCFThinPlate being either scalar or matrix)
+    - date resolved: **2026-04-02 13:25**\ , date raised: 2026-04-02 
+ * Version 1.10.148: resolved Issue 2330: AddSystem (fix)
+    - description:  add py::keep_alive<0, 1>() to functions like AddSystem which return an object which depends on another object (SystemContainer); avoids severe problems when SystemContainer is destroyed
+    - date resolved: **2026-03-31 19:03**\ , date raised: 2026-03-31 
+ * Version 1.10.147: resolved Issue 2329: InvoluteGear (fix)
+    - description:  in machines.InvoluteGear, add tolerance to avoid point duplications, leading to graphics problems
+    - date resolved: **2026-03-25 09:33**\ , date raised: 2026-03-25 
+ * Version 1.10.146: resolved Issue 2327: ANCFBeam (fix)
+    - description:  add implementation for damping similar to ANCFCable elements
+    - date resolved: **2026-03-24 17:00**\ , date raised: 2026-03-24 
+ * Version 1.10.145: resolved Issue 2323: graphics (extension)
+    - description:  add function LinkedCylinders which draws the convex hull of two cylinders with parallel axes, useful for levers in mechanisms
+    - date resolved: **2026-03-05 16:21**\ , date raised: 2026-03-05 
+ * Version 1.10.144: resolved Issue 2324: SolidExtrusion (extension)
+    - description:  add WARNING for unreferenced vertices in Delauney triangles, as this can indicate duplicated vertices in contour and often causes graphical issues
+    - date resolved: **2026-03-05 16:20**\ , date raised: 2026-03-05 
+ * Version 1.10.143: resolved Issue 2322: SolidExtrusion (fix)
+    - description:  normals not correctly computed in case of smoothNormals=True
+    - date resolved: **2026-03-05 12:48**\ , date raised: 2026-03-05 
+ * Version 1.10.142: resolved Issue 2320: clippingPlane (change)
+    - description:  add automatic normalization of clippingPlaneNormal in OpenGL renderer if norm is not 1 (except for 0 length)
+    - date resolved: **2026-03-03 16:29**\ , date raised: 2026-03-03 
+ * Version 1.10.141: resolved Issue 2314: Add ObjectJointSliding (extension)
+    - description:  Add 3D SlidingJoint basic functionality
+    - date resolved: **2026-03-02 09:48**\ , date raised: 2026-03-02 
+ * Version 1.10.140: resolved Issue 2313: Add MarkerBodyBeamShape (extension)
+    - description:  marker to be attached to beams for sliding joint and contact with beams
+    - date resolved: **2026-03-02 09:46**\ , date raised: 2026-03-02 
+ * Version 1.10.139: resolved Issue 2312: Newton (fix)
+    - description:  newton.useNewtonSolver not used
+    - date resolved: **2026-02-27 16:02**\ , date raised: 2026-02-27 
+ * Version 1.10.138: resolved Issue 2311: DrawSystemGraph (extension)
+    - description:  extend to add more information in graph, like type and name; add option to only retrieve graph but not to show; optionally add all item information
+    - date resolved: **2026-02-25 10:34**\ , date raised: 2026-02-25 
+ * Version 1.10.137: resolved Issue 2310: FEM (fix)
+    - description:  ComputeHurtyCraigBamptonModes: for pure eigenmodes with no boundary lists, computation only works in sparse mode - extend to sparse mode and include optional exclusion of rigid body modes
+    - date resolved: **2026-02-24 15:09**\ , date raised: 2026-02-24 
+ * Version 1.10.136: resolved Issue 2257: VisualizationSettings (extension)
+    - description:  check for all changed parameter names in .py and .tex files 
+    - date resolved: **2026-02-20 00:16**\ , date raised: 2026-01-31 
+ * Version 1.10.135: resolved Issue 2249: VisualizationSettings (extension)
+    - description:  add feature to re-link outdated/changed settings and print warnings
+    - date resolved: **2026-02-20 00:16**\ , date raised: 2026-01-31 
+ * Version 1.10.134: resolved Issue 2248: VisualizationSettings (extension)
+    - description:  add backlink to top settings structure in every substructure and initialize in constructor
+    - date resolved: **2026-02-20 00:16**\ , date raised: 2026-01-31 
+ * Version 1.10.133: resolved Issue 2285: visualizationSettings (fix)
+    - description:  adapt Examples and TestModels to new visualizationSettings introduced in Exudyn 1.10.103
+    - date resolved: **2026-02-20 00:15**\ , date raised: 2026-02-12 
+ * Version 1.10.132: resolved Issue 2300: rotationCenterPoint (fix)
+    - description:  fix correct calculation of mouse coordinates, bounding box, etc. when changing rotationCenterPoint
+    - date resolved: **2026-02-19 22:29**\ , date raised: 2026-02-14 
+ * Version 1.10.131: resolved Issue 2245: GLFWClient (extension)
+    - description:  add camera position and orentation as alternative to current modelview; centerPoint adds up to it and modelRotation rotates the camera
+    - date resolved: **2026-02-19 13:54**\ , date raised: 2026-01-31 
+ * Version 1.10.130: resolved Issue 2307: zOffsetCamera (change)
+    - description:  removed raytracer.zOffsetCamera as the z-shift is now possible with camera.nearFarPlaneOffset
+    - date resolved: **2026-02-17 15:55**\ , date raised: 2026-02-17 
+ * Version 1.10.129: resolved Issue 2306: trackMarker (fix)
+    - description:  include trackMarker in light position and further transformations during OpenGL rendering and raytracing
+    - date resolved: **2026-02-16 23:06**\ , date raised: 2026-02-16 
+ * Version 1.10.128: resolved Issue 2294: views (fix)
+    - description:  raytracing bounding box (searchTree?) wrong for example unbalancedFlywheel.py
+    - **notes:** was due to NaN in numpy calculation for Bearing graphics; fixed
+    - date resolved: **2026-02-16 22:46**\ , date raised: 2026-02-13 
+ * Version 1.10.127: resolved Issue 2299: light positions (fix)
+    - description:  Fix light positions for lights in camera frame - sync with lights initialization and with Raytracer
+    - date resolved: **2026-02-16 22:45**\ , date raised: 2026-02-14 
+ * Version 1.10.126: resolved Issue 2296: openGL settings (extension)
+    - description:  add option showBoundingBox, which shows the bounding box of the current scene (as available in renderState)
+    - date resolved: **2026-02-16 22:45**\ , date raised: 2026-02-14 
+ * Version 1.10.125: resolved Issue 2303: boundingBox (fix)
+    - description:  bounding box calculation resets in case that nan is included in points; check for nan in points in graphicsData when reading!
+    - date resolved: **2026-02-15 22:38**\ , date raised: 2026-02-15 
+ * Version 1.10.124: resolved Issue 2302: graphics (fix)
+    - description:  BallBearingRings leads to nan (not a number) for impossible geometries, thus grooves not being calculated; add error message
+    - date resolved: **2026-02-15 22:37**\ , date raised: 2026-02-15 
+ * Version 1.10.123: resolved Issue 2301: ConstSizeMatrix (fix)
+    - description:  Fix wrong GetDataPointer function, which points to data instead of &data[0]
+    - date resolved: **2026-02-15 01:24**\ , date raised: 2026-02-15 
+ * Version 1.10.122: resolved Issue 2241: systemStructures.py (change)
+    - description:  add structure for ChildWindow (childWindow1-3)
+    - **notes:** added view1-3 already earlier; 
+    - date resolved: **2026-02-14 23:13**\ , date raised: 2026-01-31 
+ * Version 1.10.121: resolved Issue 2297: tkinter font (fix)
+    - description:  Exudyn Command dialog raises error due to AttributeError for tkinter.font
+    - date resolved: **2026-02-14 22:52**\ , date raised: 2026-02-14 
+ * Version 1.10.120: resolved Issue 2291: FromPyMeshlabFile (extension)
+    - description:  add option to check and normalize normals
+    - date resolved: **2026-02-14 17:31**\ , date raised: 2026-02-13 
+ * Version 1.10.119: resolved Issue 2292: graphics.Move (extension)
+    - description:  remove explanation to scale, as it also scales normals; add function MoveAndScale, which does both and Move calls MoveAndScale
+    - date resolved: **2026-02-14 17:30**\ , date raised: 2026-02-13 
+ * Version 1.10.118: resolved Issue 2295: AddEdgesAndSmoothenNormals (fix)
+    - description:  remove arg pointTolerance as it is unused (roundDigits was introduced earlier)
+    - date resolved: **2026-02-13 15:53**\ , date raised: 2026-02-13 
+ * Version 1.10.117: resolved Issue 2293: graphics (change)
+    - description:  functoin InvertTriangles: change arg invertVertexNormals to invertNormals for consistency reason with other functions
+    - date resolved: **2026-02-13 15:02**\ , date raised: 2026-02-13 
+ * Version 1.10.116: resolved Issue 2283: raytracer (extension)
+    - description:  enable rendering of views with OpenGL or raytracer independently using flag view.camera.useRaytracer
+    - date resolved: **2026-02-12 21:49**\ , date raised: 2026-02-11 
+ * Version 1.10.115: resolved Issue 2280: FromPyMeshlabFile (extension)
+    - description:  add graphics.FromPyMeshlabFile to import arbitrary geometries, e.g., .stl, .obj, .dae, etc. which can be loaded with pymeshlab; note: currently no textures or materials are loaded
+    - date resolved: **2026-02-12 21:48**\ , date raised: 2026-02-11 
+ * Version 1.10.114: resolved Issue 2254: RedrawAndGetImage (extension)
+    - description:  add optional viewID=0 to enable offline rendering of window; use renderer.EnableView(viewID=...) before rendering to enable virtual camera and adjust settings with renderer.SetState(viewID=...) (without opening window)
+    - date resolved: **2026-02-12 21:48**\ , date raised: 2026-02-01 
+ * Version 1.10.113: resolved Issue 2253: GLFWClient (change)
+    - description:  homogenize functions that operate on modelRotation and modelTranslation
+    - date resolved: **2026-02-12 21:45**\ , date raised: 2026-02-01 
+ * Version 1.10.112: resolved Issue 2252: VisualizationSettings (extension)
+    - description:  add advanced subfolders to avoid large settings folders: general.advanced, contour.advanced, openGL.advanced, raytracer.advanced, interactive.advanced 
+    - date resolved: **2026-02-12 21:45**\ , date raised: 2026-01-31 
+ * Version 1.10.111: resolved Issue 2250: VisualizationSettings (extension)
+    - description:  put openGL.light0/1xyz data to settings.openGL.light0/1.xyz; add total of 4 lights both for OpenGL and raytracer; add shadow to all lights; put cameraPos/Rot, lockModelView, clippingPlaneDistance, clippingPlaneNormal, perspective, facesTransparent, showFaceEdges, showFaces, showMeshEdges, showMeshFaces, general.worldBasisSize, general.drawCoordinateSystem, general.drawWorldBasis, general.showComputationInfo, general.textSize, ... to scene, window or camera 
+    - date resolved: **2026-02-12 21:45**\ , date raised: 2026-01-31 
+ * Version 1.10.110: resolved Issue 2284: raytracer (extension)
+    - description:  add separate multiSampling flag: raytracers.advanced.multiSampling which is independent from OpenGL multiSampling
+    - date resolved: **2026-02-12 21:42**\ , date raised: 2026-02-11 
+ * Version 1.10.109: resolved Issue 2290: light position (change)
+    - description:  change default values for openGL.light0position to [2,2,10,0] leading to less spot lights in flat scenes in x-y plane; similar for light1position 
+    - date resolved: **2026-02-12 16:31**\ , date raised: 2026-02-12 
+ * Version 1.10.108: resolved Issue 2289: nodes markers loads (change)
+    - description:  simplified drawing cannot be turned on any more if drawFaces=False, because drawFaces has now moved to view.scene; added flag drawNodesMarkersLoadsWithFaces in C++ code to mark changes
+    - date resolved: **2026-02-12 15:44**\ , date raised: 2026-02-12 
+ * Version 1.10.107: resolved Issue 2288: nodes (change)
+    - description:  drawNodesAsPoint together with showBasis: showBasis shall be drawn with lines if drawNodesAsPoint=True and with 3D faces otherwise
+    - date resolved: **2026-02-12 15:41**\ , date raised: 2026-02-12 
+ * Version 1.10.106: resolved Issue 2287: lightModelAmbient (change)
+    - description:  use openGL.lightModelAmbient throughout for ambient color both for OpenGL and raytracer; adapt to [0.4,0.4,0.4,1] being slightly lighter while diffuse light0 is reduced from 0.6 to 0.5; this should give better visibility; light ambient color removed
+    - date resolved: **2026-02-12 14:02**\ , date raised: 2026-02-12 
+ * Version 1.10.105: resolved Issue 2286: ambientAndDiffuse (fix)
+    - description:  In OpenGL materialAmbientAndDiffuse is not used for colored materials, so remove the value (deprecated structure redirects now to materialSpecular but must not be used anymore)
+    - date resolved: **2026-02-12 14:02**\ , date raised: 2026-02-12 
+ * Version 1.10.104: resolved Issue 2251: VisualizationSettings (extension)
+    - description:  relocate options and add new folders scene, camera, window in new folders view0 (standard view as before), view0, view2, etc. 
+    - date resolved: **2026-02-11 23:18**\ , date raised: 2026-01-31 
+ * Version 1.10.103: resolved Issue 2282: light0 position (change)
+    - description:  changed from [0.2,0.2,10,0] to [2,2,10,0] to avoid specular effects of objects in x-y plane in initial configuration
+    - date resolved: **2026-02-11 14:00**\ , date raised: 2026-02-11 
+ * Version 1.10.102: resolved Issue 2279: openGL.light0ambient (change)
+    - description:  openGL.light0ambient and openGL.light1ambient are removed as they are redundant with openGL.lightModelAmbient which shall be used in future
+    - **notes:** for that reason, the default value of openGL.lightModelAmbient has been changed to [0.3,0.3,0.3,1] to stay consistent!
+    - date resolved: **2026-02-10 22:34**\ , date raised: 2026-02-10 
+ * Version 1.10.101: resolved Issue 2276: charBitmap.h (change)
+    - description:  split up into header and implementation to suppress warnings
+    - date resolved: **2026-02-09 14:56**\ , date raised: 2026-02-09 
+ * Version 1.10.100: resolved Issue 2275: GLFWClient (extension)
+    - description:  add new substructure RenderView which collects GLFWwindow and RenderState, allowing to open several windows; window0=main window as before
+    - date resolved: **2026-02-08 00:15**\ , date raised: 2026-02-08 
+ * Version 1.10.99: resolved Issue 2243: GLFWClient (extension)
+    - description:  add crosslines instead of mouse cursor when mouse coordinates are shown in renderer
+    - date resolved: **2026-02-08 00:14**\ , date raised: 2026-01-31 
+ * Version 1.10.98: resolved Issue 2274: Raytracer (fix)
+    - description:  improve line drawing linewidth to comply with OpenGL renderer
+    - date resolved: **2026-02-06 23:53**\ , date raised: 2026-02-06 
+ * Version 1.10.97: resolved Issue 2271: ZoomAll (extension)
+    - description:  allow call to ZoomAll with inactive renderer; add flag render=True; put current ZoomAll functionality from GLFWClient to accessible location
+    - date resolved: **2026-02-06 23:53**\ , date raised: 2026-02-06 
+ * Version 1.10.96: resolved Issue 2273: RenderState (fix)
+    - description:  Initialize RenderState provisionally with default visualizationSettings at SystemContainer creation, then initialize with current SC.visualizationSettings at first call to any renderer function
+    - date resolved: **2026-02-06 21:24**\ , date raised: 2026-02-06 
+ * Version 1.10.95: resolved Issue 2272: general.autoFitScene (fix)
+    - description:  already called at initialization of SystemContainer; needs to be overwritten at start of renderer or at first call to renderer/raytracer function - otherwise ZoomAll always called
+    - date resolved: **2026-02-06 21:20**\ , date raised: 2026-02-06 
+ * Version 1.10.94: resolved Issue 2263: docstrings (extension)
+    - description:  similar to issue 0444, auto-convert comments to docstrings when creating wheels
+    - date resolved: **2026-02-06 15:22**\ , date raised: 2026-02-03 
+ * Version 1.10.93: resolved Issue 0444: docstrings (docu)
+    - description:  change function comments in .py files to PEP standardized docstrings
+    - date resolved: **2026-02-06 15:21**\ , date raised: 2020-09-06 
+ * Version 1.10.92: resolved Issue 2270: Renderer (extension)
+    - description:  in mode showMouseCoordinates, enable logging of mouse coordinates in current axis-aligned plane; behavior switched with logMouseCoordinates; only in case that perspective=0
+    - date resolved: **2026-02-05 23:20**\ , date raised: 2026-02-04 
+ * Version 1.10.91: resolved Issue 2258: showMouseCoordinates (change)
+    - description:  make not available for perspective!=0 as it gives wrong values; disable zoom and mouse move as well
+    - date resolved: **2026-02-05 23:20**\ , date raised: 2026-02-02 
+ * Version 1.10.90: resolved Issue 2268: docstrings (extension)
+    - description:  add docstrings to itemInterface
+    - date resolved: **2026-02-05 23:19**\ , date raised: 2026-02-04 
+ * Version 1.10.89: resolved Issue 2266: docstrings (extension)
+    - description:  add docstrings for itemInterface items (__init__ function with all parameters)
+    - date resolved: **2026-02-05 23:19**\ , date raised: 2026-02-03 
+ * Version 1.10.88: resolved Issue 2265: stub files (.pyi) (extension)
+    - description:  add details (input, output, example) for functions created in autoGeneratePyBindings, using a common GoogleStyle generator
+    - date resolved: **2026-02-05 23:19**\ , date raised: 2026-02-03 
+ * Version 1.10.87: resolved Issue 2269: Renderer (extension)
+    - description:  allow finer zoom  stepsstep with CTRL+mouse wheel
+    - date resolved: **2026-02-04 20:27**\ , date raised: 2026-02-04 
+ * Version 1.10.86: resolved Issue 2262: stub files (.pyi) (extension)
+    - description:  add description for objects created in autoGeneratePyBindings
+    - date resolved: **2026-02-03 16:20**\ , date raised: 2026-02-03 
+ * Version 1.10.85: resolved Issue 2256: stub files (.pyi) (extension)
+    - description:  add docstrings for better help, as .pyi information is prioritized in Spyder
+    - date resolved: **2026-02-03 16:20**\ , date raised: 2026-02-01 
+ * Version 1.10.84: resolved Issue 2264: docstrings (extension)
+    - description:  add docstrings for enums
+    - date resolved: **2026-02-03 09:06**\ , date raised: 2026-02-03 
+ * Version 1.10.83: resolved Issue 2261: stub files (.pyi) (extension)
+    - description:  add docstrings to system structures
+    - date resolved: **2026-02-02 23:37**\ , date raised: 2026-02-02 
+ * Version 1.10.82: resolved Issue 2260: solvers (change)
+    - description:  change default value exu.SimulationSettings() to None, but keep default behavior internally; this improves in-editor help
+    - date resolved: **2026-02-02 22:48**\ , date raised: 2026-02-02 
+ * Version 1.10.81: resolved Issue 2255: ResetKeyPressUserFunction (change)
+    - description:  removed functionality as keyPressUserFunction can be reset by assigning it to 0
+    - **notes:** keyPressUserFunction can now be reset by setting it to 0
+    - date resolved: **2026-02-01 17:02**\ , date raised: 2026-02-01 
+ * Version 1.10.80: resolved Issue 2242: GLFWClient (extension)
+    - description:  add option for autorotation of scene, using a angular velocity vector; standard=[0,0,pi/2]; factor related to start time when timer is started
+    - date resolved: **2026-02-01 12:13**\ , date raised: 2026-01-31 
+ * Version 1.10.79: resolved Issue 2246: GLFWClient (change)
+    - description:  model translation currently only uses x and y components: glTranslatef(translationMV[0], translationMV[1], 0.f); => fix in order to avoid large offsets in large scenes
+    - **notes:** check graphics functionality in examples...
+    - date resolved: **2026-01-31 22:12**\ , date raised: 2026-01-31 
+ * Version 1.10.78: resolved Issue 2233: computeInitialAccelerations (extension)
+    - description:  extend to sparse mode for initial velocities by simple global differentiation of sparse constraints
+    - date resolved: **2026-01-23 00:29**\ , date raised: 2026-01-21 
+ * Version 1.10.77: resolved Issue 2232: storeInitialAlgebraicCoordinates (change)
+    - description:  in case of computation of initial  accelerations, also store initial Lagrange multipliers in initial coordinates
+    - date resolved: **2026-01-21 23:01**\ , date raised: 2026-01-21 
+ * Version 1.10.76: resolved Issue 2224: ANCFThinPlate (extension)
+    - description:  add slopes scaling to elements
+    - date resolved: **2026-01-18 23:07**\ , date raised: 2026-01-16 
+ * Version 1.10.75: resolved Issue 2222: Jacobian description (docu)
+    - description:  jacobians are computed e.g. as J = partial p/partial q and generalized forces are computed as J^T \* f; fix this in item descriptions, in ObjectMassPoint2D and ObjectMassPoint where J \* f is used; check 
+    - date resolved: **2026-01-15 11:04**\ , date raised: 2026-01-15 
+ * Version 1.10.74: resolved Issue 2221: CreateForce, CreateTorque (extension)
+    - description:  allow marker indices in bodyNumber
+    - date resolved: **2026-01-14 13:57**\ , date raised: 2026-01-14 
+ * Version 1.10.73: resolved Issue 2220: AVX2 linux (change)
+    - description:  enable AVX2 on linux and activate performance flags (O3)
+    - date resolved: **2026-01-14 01:46**\ , date raised: 2026-01-14 
+ * Version 1.10.72: resolved Issue 2214: shells.py (extension)
+    - description:  add shells module for plate and shell elements; add generator function for planar meshes
+    - date resolved: **2026-01-13 22:25**\ , date raised: 2026-01-11 
+ * Version 1.10.71: resolved Issue 2199: ANCFThinPlate (extension)
+    - description:  add access functions
+    - date resolved: **2026-01-13 22:25**\ , date raised: 2026-01-07 
+ * Version 1.10.70: resolved Issue 2216: graphics.Sphere (extension)
+    - description:  add option to draw only part of sphere using min and max axis length given by angles; add option to draw hollow sphere with innerRadius
+    - date resolved: **2026-01-12 22:37**\ , date raised: 2026-01-12 
+ * Version 1.10.69: resolved Issue 2217: graphics.Sphere (extension)
+    - description:  double tiling of circles to obtain better visibility
+    - date resolved: **2026-01-12 19:03**\ , date raised: 2026-01-12 
+ * Version 1.10.68: resolved Issue 2215: graphics.Basis (extension)
+    - description:  add option to add text within arg labels
+    - date resolved: **2026-01-12 18:37**\ , date raised: 2026-01-12 
+ * Version 1.10.67: resolved Issue 2198: ANCFThinPlate (extension)
+    - description:  add position, velocity, ... computation
+    - date resolved: **2026-01-11 17:25**\ , date raised: 2026-01-07 
+ * Version 1.10.66: resolved Issue 2197: ANCFThinPlate (extension)
+    - description:  add correct element jacobian
+    - date resolved: **2026-01-11 17:25**\ , date raised: 2026-01-07 
+ * Version 1.10.65: resolved Issue 2213: GeometricallyExactBeam2D (fix)
+    - description:  correct drawing with cross section and drawVertical
+    - date resolved: **2026-01-09 20:43**\ , date raised: 2026-01-09 
+ * Version 1.10.64: :textred:`resolved BUG 2212` : __init__.py, AVX2 
+    - description:  error in __init__.py causes exudyn to always choose non-AVX2 version
+    - date resolved: **2026-01-09 10:48**\ , date raised: 2026-01-09 
+ * Version 1.10.63: resolved Issue 2211: GeometricallyExactBeam2D (extension)
+    - description:  add autodiff jacobian
+    - date resolved: **2026-01-09 02:15**\ , date raised: 2026-01-08 
+ * Version 1.10.62: resolved Issue 2209: GeometricallyExactBeam2D (extension)
+    - description:  add reference curvature and correct reference rotation for curved case
+    - date resolved: **2026-01-08 23:10**\ , date raised: 2026-01-08 
+ * Version 1.10.61: resolved Issue 2210: GeometricallyExactBeam2D (extension)
+    - description:  flag includeReferenceRotations=False now refers to axial slopes rather to the direction of endpoints; this is identical for linear elements, but different for quadratic ones
+    - date resolved: **2026-01-08 22:47**\ , date raised: 2026-01-08 
+ * Version 1.10.60: resolved Issue 2207: GeometricallyExactBeam2D (extension)
+    - description:  extend element for 3-node case with quadratic interpolation (just by providing a 3rd nodeNumber)
+    - date resolved: **2026-01-08 21:42**\ , date raised: 2026-01-08 
+ * Version 1.10.59: resolved Issue 2206: Manylinux wheels (extension)
+    - description:  switch to docker, add compile manylinux wheels locally
+    - date resolved: **2026-01-08 13:32**\ , date raised: 2026-01-08 
+ * Version 1.10.58: resolved Issue 2195: maxSceneSize (extension)
+    - description:  add bounding box for scene for better adjustments
+    - date resolved: **2026-01-08 00:07**\ , date raised: 2026-01-06 
+ * Version 1.10.57: resolved Issue 2201: OutputVariable (extension)
+    - description:  change to 64bit
+    - date resolved: **2026-01-07 19:03**\ , date raised: 2026-01-07 
+ * Version 1.10.56: resolved Issue 1662: ANCFThinPlate (extension)
+    - description:  add ANCF plate element based on 2 inplane slope vectors Slope12, based on Dufva/Shabana
+    - date resolved: **2026-01-07 19:00**\ , date raised: 2023-10-15 
+ * Version 1.10.55: resolved Issue 2190: perspective (fix)
+    - description:  find causes for raytracer artifacts in case of larger perspective values
+    - **notes:** adapted centerPoint; artifacts may still appear for very out of center models
+    - date resolved: **2026-01-06 22:34**\ , date raised: 2026-01-04 
+ * Version 1.10.54: resolved Issue 2196: ZoomAll (extension)
+    - description:  add parameters zoomAllUseBoundingBox, boundingBoxZoomAllOffset and boundingBoxZoomAllFactor to adjust to exact bounding box of scene in rotated coordinates 
+    - date resolved: **2026-01-06 18:30**\ , date raised: 2026-01-06 
+ * Version 1.10.53: resolved Issue 2193: store model view (extension)
+    - description:  print SetModelView code to console when pressing CTRL-F3
+    - **notes:** see also section 'Storing the model view' in the docu
+    - date resolved: **2026-01-06 16:59**\ , date raised: 2026-01-06 
+ * Version 1.10.52: resolved Issue 2170: GLFWclient (testing)
+    - description:  Test new USE_GLFW_GRAPHICS settings in compilation with -noglfw
+    - date resolved: **2026-01-06 11:46**\ , date raised: 2025-12-25 
+ * Version 1.10.51: resolved Issue 2192: coordinateSystem (change)
+    - description:  add option to draw coordinate system with arrows; change general.drawCoordinateSystem to integer where 2 and 3 represent drawing with arrows
+    - date resolved: **2026-01-06 02:09**\ , date raised: 2026-01-06 
+ * Version 1.10.50: resolved Issue 2191: RedrawAndGetImage (fix)
+    - description:  UpdatePostProcessData needs to be called in case that renderer is not running
+    - date resolved: **2026-01-05 10:44**\ , date raised: 2026-01-05 
+ * Version 1.10.49: resolved Issue 2153: raytracer (extension)
+    - description:  add text using textures
+    - date resolved: **2026-01-05 00:21**\ , date raised: 2025-11-02 
+ * Version 1.10.48: resolved Issue 2167: perspective (change)
+    - description:  revise perspective model and synchronize raytracer with openGL implementation
+    - date resolved: **2026-01-04 22:19**\ , date raised: 2025-12-16 
+ * Version 1.10.47: resolved Issue 2189: polygonOffset (change)
+    - description:  increase openGL polygonOffset due to change in OpenGL projection method (zMaxSceneFactor changed from 100 to 2)
+    - date resolved: **2026-01-04 20:34**\ , date raised: 2026-01-04 
+ * Version 1.10.46: resolved Issue 2188: zMaxSceneFactor (change)
+    - description:  add factor that previously was fixed to 100.; now defaulting to smaller default value, thus requiring adjustment in certain cases!
+    - date resolved: **2026-01-04 14:17**\ , date raised: 2026-01-04 
+ * Version 1.10.45: resolved Issue 2187: MainSystemExtensions (fix)
+    - description:  JointPreCheckCalcBodyMarkers requires position even if not used
+    - date resolved: **2026-01-04 12:44**\ , date raised: 2026-01-04 
+ * Version 1.10.44: resolved Issue 2185: Create functions (extension)
+    - description:  Add mbs.CreateFFRFReducedOrderObject
+    - date resolved: **2026-01-04 11:42**\ , date raised: 2026-01-04 
+    - resolved by: S. Weyrer
+ * Version 1.10.43: resolved Issue 1196: ObjectFFRFreducedOrder sparse (extension)
+    - description:  add sparse option for ObjectFFRFreducedOrder, filling in flexible-flexible mass terms into sparse mass matrix
+    - **notes:** partially resolved and moved to newer issues
+    - date resolved: **2026-01-04 11:35**\ , date raised: 2022-07-11 
+ * Version 1.10.42: resolved Issue 0599: ObjectFFRFreducedOrder (check)
+    - description:  compare Tait-Bryan and RotationVector cases with Euler parameters
+    - **notes:** already resolved earlier
+    - date resolved: **2026-01-04 11:23**\ , date raised: 2021-03-18 
+ * Version 1.10.41: resolved Issue 0643: ObjectFFRFreducedOrder / CMS (tutorial)
+    - description:  create tutorial with two bodies (crank, connecting rod, rigid piston)
+    - **notes:** already resolved earlier with FFRF tutorial
+    - date resolved: **2026-01-04 11:22**\ , date raised: 2021-04-30 
+ * Version 1.10.40: resolved Issue 2169: GLFWclient (change)
+    - description:  decouple graphics settings from USE_GLFW_GRAPHICS if they do not require OpenGL and GLFW
+    - date resolved: **2026-01-03 23:38**\ , date raised: 2025-12-25 
+ * Version 1.10.39: resolved Issue 2180: renderer.SetModelView (extension)
+    - description:  add renderer function renderer.SetModelView(zoom, rotationVector, centerPoint) which adjusts the view to zoom, rotation and center point; in particular for raytracing
+    - date resolved: **2026-01-03 01:51**\ , date raised: 2026-01-03 
+ * Version 1.10.38: resolved Issue 2177: renderer.RedrawAndGetImage (extension)
+    - description:  extended for software renderer (useRaytracer=True), to grab images of the 3D view completely without starting the renderer
+    - date resolved: **2026-01-03 01:51**\ , date raised: 2026-01-01 
+ * Version 1.10.37: resolved Issue 2181: renderState (change)
+    - description:  update visualizationSettings.window.renderWindowSize when renderState.currentWindowSize is prescribed in call to renderer.SetState(...)
+    - date resolved: **2026-01-03 01:11**\ , date raised: 2026-01-03 
+ * Version 1.10.36: resolved Issue 2179: raytracer (fix)
+    - description:  check why raytracer does not render triangles at first run
+    - date resolved: **2026-01-03 00:50**\ , date raised: 2026-01-03 
+ * Version 1.10.35: resolved Issue 2147: raytracer (extension)
+    - description:  export images without opening renderer; including view settings
+    - date resolved: **2026-01-03 00:43**\ , date raised: 2025-09-23 
+ * Version 1.10.34: resolved Issue 2178: RendererInActiveError (change)
+    - description:  add error handling if a renderer function is called which requires the renderer to be active but it is not
+    - date resolved: **2026-01-01 23:09**\ , date raised: 2026-01-01 
+ * Version 1.10.33: resolved Issue 2176: processing (extension)
+    - description:  useMPI is not used in GeneticOptimization and in ComputeSensitivities; add flag and pass through to ProcessParameterList
+    - date resolved: **2025-12-31 16:31**\ , date raised: 2025-12-31 
+    - resolved by: Z. Zhang
+ * Version 1.10.32: resolved Issue 2175: GlfwRenderer (change)
+    - description:  change the way how interactive.lockModelView is realized, ignoring keys and mouse actions on model view
+    - date resolved: **2025-12-29 23:57**\ , date raised: 2025-12-29 
+ * Version 1.10.31: resolved Issue 2174: GlfwRenderer (change)
+    - description:  change selectBufferSize during mouse select from 10000 to 1000 to reduce stack size problems
+    - date resolved: **2025-12-29 23:57**\ , date raised: 2025-12-29 
+ * Version 1.10.30: resolved Issue 2173: GraphicsData (extension)
+    - description:  add fontSize and offset to graphicsData text structure as well as to graphics.Text(...) function
+    - date resolved: **2025-12-29 21:40**\ , date raised: 2025-12-29 
+ * Version 1.10.29: resolved Issue 2172: contour (extension)
+    - description:  add contour colors to VisualizationSettings
+    - date resolved: **2025-12-27 23:09**\ , date raised: 2025-12-26 
+ * Version 1.10.28: resolved Issue 2166: raytracer (extension)
+    - description:  add shortkey to switch to raytracing
+    - **notes:** CTRL-R used for switching
+    - date resolved: **2025-12-27 22:01**\ , date raised: 2025-12-16 
+ * Version 1.10.27: resolved Issue 2171: GLFWclient (change)
+    - description:  decouple Raytracer from GlfwClient
+    - date resolved: **2025-12-26 00:03**\ , date raised: 2025-12-26 
+ * Version 1.10.26: resolved Issue 2168: GLFWclient (change)
+    - description:  decouple GlfwClientBitmapText.h from USE_GLFW_GRAPHICS as it does not require OpenGL and GLFW
+    - date resolved: **2025-12-25 22:47**\ , date raised: 2025-12-25 
+ * Version 1.10.25: resolved Issue 2165: perspective (change)
+    - description:  improve perspective for raytracer, accepting values > 1
+    - date resolved: **2025-12-16 14:30**\ , date raised: 2025-12-16 
+ * Version 1.10.24: resolved Issue 2164: multiSampling (extension)
+    - description:  allow 3 as value for multisampling, in accordance with raytracer
+    - date resolved: **2025-12-16 14:29**\ , date raised: 2025-12-16 
+ * Version 1.10.23: resolved Issue 2146: raytracer (extension)
+    - description:  improve performance of line-triangle cuts by skipping bounding boxes further away
+    - date resolved: **2025-12-15 00:47**\ , date raised: 2025-09-23 
+ * Version 1.10.22: resolved Issue 2163: Create functions (extension)
+    - description:  extend Create functions in MainSystemExtensions to accept marker indices in bodyNumbers in connector and joint functions when useful for flexible bodies - CreateSpringDamper, CreateRevoluteJoint, etc.
+    - date resolved: **2025-12-13 01:11**\ , date raised: 2025-12-13 
+ * Version 1.10.21: resolved Issue 2162: raytracer (fix)
+    - description:  lines: adjust functionality to openGL settings; currently mesh edges and face edges draw with same settings
+    - date resolved: **2025-12-12 23:26**\ , date raised: 2025-12-12 
+ * Version 1.10.20: resolved Issue 2161: __init__.py, AVX2 (change)
+    - description:  remove numpy determination of AVX2 support and just use try-except approach; should work better with newer numpy versions
+    - date resolved: **2025-12-08 17:08**\ , date raised: 2025-12-08 
+ * Version 1.10.19: resolved Issue 2160: FEMinterface (extension)
+    - description:  add function Get BoundaryNodeSetsAsLists to retrieve boundary node sets as two lists containing nodes list and weights list
+    - date resolved: **2025-11-27 10:11**\ , date raised: 2025-11-27 
+    - resolved by: S. Weyrer
+ * Version 1.10.18: resolved Issue 2159: FEMinterface (extension)
+    - description:  nodeSets receive additional "type" information, e.g. used to indicate boundary node sets in CreateNGsolveBoundaryNodeSets
+    - date resolved: **2025-11-27 10:09**\ , date raised: 2025-11-27 
+ * Version 1.10.17: resolved Issue 2158: FEMinterface (extension)
+    - description:  add metaData dictionary for optional information and source of mesh/model
+    - **notes:** switching to FEM fileVersion 4
+    - date resolved: **2025-11-27 10:08**\ , date raised: 2025-11-27 
+ * Version 1.10.16: resolved Issue 2157: FEMinterface (fix)
+    - description:  ComputeHurtyCraigBamptonModesNGsolve: change dtype=np.int into dtype=int to comply with numpy
+    - date resolved: **2025-11-27 10:06**\ , date raised: 2025-11-27 
+    - resolved by: S. Weyrer
+ * Version 1.10.15: resolved Issue 2156: Exudyn version (fix)
+    - description:  version shown as unknown in readthedocs page
+    - date resolved: **2025-11-11 15:12**\ , date raised: 2025-11-11 
+ * Version 1.10.14: resolved Issue 2152: renderer (extension)
+    - description:  add function RedrawAndGetImage to directly obtain numpy array with RGB image data to be used with matplotlib imshow
+    - date resolved: **2025-10-17 18:38**\ , date raised: 2025-10-17 
+ * Version 1.10.13: resolved Issue 2151: general.showHelpOnStartup (fix)
+    - description:  only allows values >0 but 0 required to turn of message
+    - date resolved: **2025-10-17 18:37**\ , date raised: 2025-10-17 
+ * Version 1.10.12: resolved Issue 2150: simulation (change)
+    - description:  add smiley and frowney for end of simulation
+    - date resolved: **2025-10-17 09:14**\ , date raised: 2025-10-17 
+ * Version 1.10.11: resolved Issue 2149: UTF-8 encoding (change)
+    - description:  unify internal character representation, add full greek letters and sub/super indices for numbers
+    - **notes:** some special characters may now appear differently!
+    - date resolved: **2025-10-16 23:02**\ , date raised: 2025-10-16 
+ * Version 1.10.10: resolved Issue 2148: InteractiveDialog (fix)
+    - description:  problems showing marker as set_data in matplotlib does not accept scalars any more
+    - date resolved: **2025-10-13 10:14**\ , date raised: 2025-10-13 
+ * Version 1.10.9: resolved Issue 2145: raytracer (extension)
+    - description:  add smoothing filter for shadows, only applied in case that values in kernel are not containing 0 and 1 (which could be real edges)
+    - **notes:** smoothing done at low resolution shadow map, using number of shadowSmoothingSteps
+    - date resolved: **2025-09-30 15:17**\ , date raised: 2025-09-23 
+ * Version 1.10.8: resolved Issue 2144: raytracer (extension)
+    - description:  improve smooth shadows performance by precomputation of smoothed shadow map (without multisampling)
+    - **notes:** added raytracer options shadowScalingFactor and shadowSmoothingSteps; default values work well with lightRadiusVariations=31
+    - date resolved: **2025-09-30 15:14**\ , date raised: 2025-09-23 
+ * Version 1.10.7: resolved Issue 2143: raytracer (fix)
+    - description:  improve smooth shadows by adding radius variations for lightRadius
+    - date resolved: **2025-09-23 12:26**\ , date raised: 2025-09-23 
+ * Version 1.10.6: resolved Issue 2142: Lie group sigma (change)
+    - description:  improve accuracy of implicit Lie group integrator; to activate set timeIntegration.generalizedAlpha.lieGroupSimplifiedKinematicRelations = False; see paper Holzinger, Arnold, Gerstmayr. Sigma-modified Lie group generalized alpha methods for constrained multibody systems, 2025 (to be sumitted)
+    - date resolved: **2025-08-07 13:40**\ , date raised: 2025-08-07 
+    - resolved by: S. Holzinger
+ * Version 1.10.5: resolved Issue 1650: MacOS Rosetta (fix)
+    - description:  importing numpy gives Intel MKL Warning: Support of Intel Streaming SIMD Extensions 4.2 ... has been deprecated. Intel oneAPI Math Kernel Library 2025.0 will require AVX instructions
+    - **notes:** works at least with Exudyn 1.10.0;  Rosetta will be abandoned in future, if compilation does not work any more
+    - date resolved: **2025-07-11 15:59**\ , date raised: 2023-07-20 
+ * Version 1.10.4: resolved Issue 1026: Save as PNG (testing)
+    - description:  check MacOS implementation if glfw works with saving PNG files
+    - **notes:** resolved earlier; works with Exudyn 1.10.0
+    - date resolved: **2025-07-11 15:58**\ , date raised: 2022-04-02 
+ * Version 1.10.3: resolved Issue 0865: multithreaded solver (extension)
+    - description:  test TaskManager::SuspendWorkers() for non-parallel parts (e.g. linear solver); possibly measure time spent for these parts, which should be larger than 2 ms to make sense; add option parallel.stopThreadsInSerialSections=False
+    - **notes:** not relevant any more
+    - date resolved: **2025-07-11 15:49**\ , date raised: 2022-01-15 
+ * Version 1.10.2: resolved Issue 2141: CreateDistanceSensor (fix)
+    - description:  args storeInternal and fileName not used
+    - date resolved: **2025-07-10 16:53**\ , date raised: 2025-07-10 
+    - resolved by: P. Manzl
+ * Version 1.10.1: resolved Issue 2139: linux (fix)
+    - description:  time seems to be non-initilized in linux version
+    - date resolved: **2025-07-10 01:56**\ , date raised: 2025-07-10 
  * Version 1.10.0: resolved Issue 2123: Mechanisms (extension)
     - description:  Add example for gear and toothed rack mounted on body, using relative translation/rotation marker
     - **notes:** see Example involuteGearGraphics.py
@@ -342,7 +855,7 @@ Version 1.9
     - description:  add option to sort transparent triangles to improve quality of transparent objects; use simple depth sort for triangle midpoints
     - **notes:** added option openGL.depthSorting which sorts triangles by their depth for improved transparency view (but requires triangles to be small enough)
     - date resolved: **2025-05-22 16:35**\ , date raised: 2025-05-22 
- * Version 1.9.141: resolved Issue 2043: pyi / stub files (fix)
+ * Version 1.9.141: resolved Issue 2043: stub files (.pyi) (fix)
     - description:  revise section for exudyn stubs in order to enable completion of exudyn.config and other exudyn functions
     - **notes:** seems that removing erroneous info like "special." was sufficient to work
     - date resolved: **2025-05-22 11:00**\ , date raised: 2025-05-22 
@@ -1009,7 +1522,7 @@ Version 1.8
  * Version 1.8.20: resolved Issue 1820: item type info (change)
     - description:  change py::dict to py:object in functions such as AddMarker according to github issue #64, otherwise giving typing errors in PyLance and similar
     - date resolved: **2024-04-21 19:17**\ , date raised: 2024-04-19 
- * Version 1.8.19: resolved Issue 1823: stub files (change)
+ * Version 1.8.19: resolved Issue 1823: stub files (.pyi) (change)
     - description:  change type in AddObject, AddMarker, AddSensor, AddLoad, AddNode from pyObject: dict to pyObject: Any in order to resolve typing errors
     - date resolved: **2024-04-21 19:16**\ , date raised: 2024-04-19 
  * Version 1.8.18: resolved Issue 1819: KinematicTreePendulum.py (example)
@@ -1017,21 +1530,21 @@ Version 1.8
     - **notes:** changed SensorObject(objectNumber=oKT into SensorBody(bodyNumber=oKT
     - date resolved: **2024-04-17 16:13**\ , date raised: 2024-04-17 
     - resolved by: P. Manzl
- * Version 1.8.17: resolved Issue 1818: stub files (fix)
+ * Version 1.8.17: resolved Issue 1818: stub files (.pyi) (fix)
     - description:  add types for mainsystem extensions (e.g. SolutionViewer)
     - **notes:** not resolved, because mainSystemExtension functions do not contain argument types
     - date resolved: **2024-04-14 17:54**\ , date raised: 2024-04-14 
- * Version 1.8.16: resolved Issue 1817: stub files (fix)
+ * Version 1.8.16: resolved Issue 1817: stub files (.pyi) (fix)
     - description:  add types for system structures (mainly solver functions)
     - **notes:** not resolved, because this information is not available in the structures for solver methods
     - date resolved: **2024-04-14 17:53**\ , date raised: 2024-04-14 
- * Version 1.8.15: resolved Issue 1816: stub files (fix)
+ * Version 1.8.15: resolved Issue 1816: stub files (.pyi) (fix)
     - description:  fix a couple of wrong return types and similar wrong typings (in particular return types in SetODE2Coordinates, etc.
     - date resolved: **2024-04-14 16:15**\ , date raised: 2024-04-14 
- * Version 1.8.14: resolved Issue 1814: stub files (fix)
+ * Version 1.8.14: resolved Issue 1814: stub files (.pyi) (fix)
     - description:  .pyi files do not contain correct default args for C++ interfaces
     - date resolved: **2024-04-14 16:15**\ , date raised: 2024-04-14 
- * Version 1.8.13: resolved Issue 1815: stub files (fix)
+ * Version 1.8.13: resolved Issue 1815: stub files (.pyi) (fix)
     - description:  .pyi are missing backslash before underscore (for latex) documentation
     - date resolved: **2024-04-14 15:15**\ , date raised: 2024-04-14 
  * Version 1.8.12: resolved Issue 1812: GetMarkerOutput (fix)
@@ -1652,10 +2165,10 @@ Version 1.6
     - description:  referenceRotationMatrix multiplied in wrong way with initialRotationMatrix
     - **notes:** also rotation parameters in initialVelocities were wrong for initialRotationMatrix!=np.eye(3); fixed, but more testing needed
     - date resolved: **2023-06-08 17:42**\ , date raised: 2023-06-08 
- * Version 1.6.138: resolved Issue 1600: stub files (extension)
+ * Version 1.6.138: resolved Issue 1600: stub files (.pyi) (extension)
     - description:  extend .pyi files for system structures functions, e.g., ComputeJacobianODE2RHS
     - date resolved: **2023-06-08 17:17**\ , date raised: 2023-06-08 
- * Version 1.6.137: resolved Issue 1601: stub files (change)
+ * Version 1.6.137: resolved Issue 1601: stub files (.pyi) (change)
     - description:  merge .pyi files to have classes such as MainSystem only appearing once
     - date resolved: **2023-06-08 16:37**\ , date raised: 2023-06-08 
  * Version 1.6.136: resolved Issue 0746: ComputeODEEigenvalues (extension)
@@ -1765,20 +2278,20 @@ Version 1.6
  * Version 1.6.104: resolved Issue 1564: Type definitions (docu)
     - description:  fix header structure in latex and RST for Type Definitions
     - date resolved: **2023-05-11 11:30**\ , date raised: 2023-05-11 
- * Version 1.6.103: resolved Issue 1561: stub files .pyi (extension)
+ * Version 1.6.103: resolved Issue 1561: stub files (.pyi) (extension)
     - description:  add .pyi files to setup_tools, copying them from autogenerate folder; use try catch to avoid problems at other platforms
     - date resolved: **2023-05-10 23:30**\ , date raised: 2023-05-09 
- * Version 1.6.102: resolved Issue 1560: stub files .pyi (extension)
+ * Version 1.6.102: resolved Issue 1560: stub files (.pyi) (extension)
     - description:  automatically create stub file for C++ classes such as MainSystem, SystemContainer, GeneralContact, ... by adding return type information and creating .pyi file; use temporary .pyi files in autogenerate folder
     - date resolved: **2023-05-10 23:19**\ , date raised: 2023-05-09 
- * Version 1.6.101: resolved Issue 1562: stub files .pyi (extension)
+ * Version 1.6.101: resolved Issue 1562: stub files (.pyi) (extension)
     - description:  add .pyi files for enums from autoGeneratePyBindings
     - date resolved: **2023-05-10 20:43**\ , date raised: 2023-05-09 
- * Version 1.6.100: resolved Issue 1559: stub files .pyi (extension)
+ * Version 1.6.100: resolved Issue 1559: stub files (.pyi) (extension)
     - description:  automatically create stub file for settings to alleviate auto-completion; type completion now also works for functions, types and structures: tested in Spyder and Visual Studio Code
     - date resolved: **2023-05-10 08:39**\ , date raised: 2023-05-09 
- * Version 1.6.99: resolved Issue 1557: stub files (check)
-    - description:  test creating stub files .pyi which are needed for MainSystem Python extensions
+ * Version 1.6.99: resolved Issue 1557: stub files (.pyi) (check)
+    - description:  test creating stub files (.pyi) which are needed for MainSystem Python extensions
     - **notes:** tested with Spyder 5.1.5 and Visual Studio Code 1.78
     - date resolved: **2023-05-10 08:39**\ , date raised: 2023-05-07 
  * Version 1.6.98: resolved Issue 1558: enum in global scope (fix)
@@ -6225,6 +6738,238 @@ Version 0.1
 Open issues
 ***********
 
+ * **open issue 2349:** shells              
+    - description:  adjust comments to fit to internal exudyn format
+    - date raised: 2026-08-05 
+
+ * **open issue 2344:** itemInterface       
+    - description:  add automated test for all items and parameters with dummy class type which always fails. Use objectDefinition database to independently check if all parameters raise exceptions with according strings in it
+    - date raised: 2026-04-17 
+
+ * **open issue 2343:** itemInterface       
+    - description:  add safe parameter conversion for all data types in item initialization; add parameter checks like UReal, PInt, etc. into C++ code; exception shall always return causing ItemClass name and parameter name
+    - date raised: 2026-04-17 
+
+ * **open issue 2342:** itemInterface       
+    - description:  replace CopyDictLevel1 with function that takes visualization and VItemClass in all self.visualization inits and either call VItemClass(\*\*visualization) if visualization is a dict, or store VItemClass object; this would enable to accept visualization as dict with only non-default values set; add try-except for dict-based call
+    - date raised: 2026-04-17 
+
+ * **open issue 2337:** CreateCoordinateConstraint
+    - description:  change bodyNumbers to itemNumbers allowing both bodies and nodes to be constrained
+    - date raised: 2026-04-06 
+
+ * **open issue 2333:** itemInterface       
+    - description:  consider advanced checks, in particular for int / float-convertable types in checks like CheckForValidUReal
+    - date raised: 2026-04-02 
+
+ * **open issue 2332:** SetNumpyMatrixSafely
+    - description:  SetNumpyMatrixSafely and SetNumpyVectorSafely: add type checks and check exceptions printed when initialized with wrong types; consider more advanced checks for standard types in itemInterface
+    - date raised: 2026-04-02 
+
+ * **open issue 2328:** ANCFCable           
+    - description:  add documentation
+    - date raised: 2026-03-24 
+
+ * **open issue 2326:** SliderCrank Benchmark
+    - description:  adapt TestModels/sliderCrank3Dbenchmark.py to revised IFToMM model
+    - date raised: 2026-03-23 
+
+ * **open issue 2325:** GenericJoint        
+    - description:  improve documentation, in particular about order of axes for case of 1 and 2 rotation axes constrained
+    - date raised: 2026-03-23 
+
+ * **open issue 2321:** FEMinterface        
+    - description:  meshes imported from NGsolve lead to triangles with wrong orientation as compared to GraphicsData
+    - date raised: 2026-03-03 
+
+ * **open issue 2319:** FEM                 
+    - description:  extend interface to 6-noded triangles to represent quadratic shape functions / meshOrder=2 in ngsolve directly
+    - date raised: 2026-03-02 
+
+ * **open issue 2318:** GraphicsData        
+    - description:  extend GraphicsData (C++ and interface) for 6-noded triangles to represent curved geometries with option for fine-interpolation and smooth normals
+    - date raised: 2026-03-02 
+
+ * **open issue 2317:** Add ObjectJointSliding
+    - description:  Add implementation and tests for SlidingJoint with thick ANCF beam
+    - date raised: 2026-03-02 
+
+ * **open issue 2316:** Add ObjectJointSliding
+    - description:  Add tests for SlidingJoint with thin ANCF cable
+    - date raised: 2026-03-02 
+
+ * **open issue 2315:** Add ObjectJointSliding
+    - description:  Extend SlidingJoint for rotation case
+    - date raised: 2026-03-02 
+
+ * **open issue 2309:** ZoomAll             
+    - description:  does not include trackMarker position (and orientation); fix that even for moving markers in modelCentricView zoom all is possible
+    - date raised: 2026-02-19 
+
+ * **open issue 2308:** shadows             
+    - description:  in case modelCentricView=False, lights with useCameraFrame=True have erratic shadows  in OpenGL mode
+    - date raised: 2026-02-19 
+
+ * **open issue 2305:** graphics            
+    - description:  Add error checks for isfinite for all point data imported in PyWriteBodyGraphicsDataList
+    - date raised: 2026-02-15 
+
+ * **open issue 2304:** graphics            
+    - description:  add hints (object type, etc.) to PyWriteBodyGraphicsDataList in VisualizationSystemContainer to simplify error localisation
+    - date raised: 2026-02-15 
+
+ * **open issue 2298:** testing checklist   
+    - description:  Add testing checklist and guidelines
+    - date raised: 2026-02-14 
+
+ * **open issue 2281:** graphics            
+    - description:  add functionality to make consistent triangles with same orientation (all computed normals are outbound or inbound); used to heal imported geometries
+    - date raised: 2026-02-11 
+
+ * **open issue 2278:** linux GLFW          
+    - description:  check if call to glfwDestroyWindow from StopRenderer avoids crashes on linux?
+    - date raised: 2026-02-09 
+
+ * **open issue 2277:** linux GLFW          
+    - description:  check if glfwGetWindowContentScale now works on newer GLFW version to enable display scaling on linux
+    - date raised: 2026-02-09 
+
+ * **open issue 2267:** GetURDFrobotData    
+    - description:  add detailed description to function, in particular to returned dict
+    - date raised: 2026-02-04 
+
+ * **open issue 2259:** SystemContainer     
+    - description:  add option to constructor whether to attach to renderer or not (if used purely for computations, like in InverseKinematics
+    - date raised: 2026-02-02 
+
+ * **open issue 2247:** camera              
+    - description:  add documentation for model-centric and camera-centric views
+    - date raised: 2026-01-31 
+
+ * **open issue 2244:** GLFWClient          
+    - description:  add ruler to renderer, only for case where axes are parallel to x, y and z (i.e. 90 degree rotations)
+    - date raised: 2026-01-31 
+
+ * **open issue 2240:** systemStructures.py 
+    - description:  add functions for type conversions C++ - Python (Vector3D, etc.)
+    - date raised: 2026-01-31 
+
+ * **open issue 2239:** systemStructures.py 
+    - description:  transfor into more suitable Python native format
+    - date raised: 2026-01-31 
+
+ * **open issue 2238:** explicit solver     
+    - description:  add adaptive step refinement for case of divergence - define limit for velocities/solution increment to decide step refinement (+ nan/inf)
+    - date raised: 2026-01-27 
+
+ * **open issue 2237:** MacOS               
+    - description:  Check Spyder-issues and crashes with PlotSensor on MacOS systems
+    - date raised: 2026-01-26 
+
+ * **open issue 2236:** linux               
+    - description:  fix wrong initialization for time in renderer on linux systems
+    - date raised: 2026-01-26 
+
+ * **open issue 2235:** computeInitialAccelerations
+    - description:  add test for initial accelerations and velocities
+    - date raised: 2026-01-23 
+
+ * **open issue 2234:** computeInitialAccelerations
+    - description:  add WARNING for inconsistent initial velocities - which usually cause heavy oscillations in constraint forces
+    - date raised: 2026-01-21 
+
+ * **open issue 2230:** ANCFThinPlate       
+    - description:  add hemispheric test problem; compare to literature
+    - date raised: 2026-01-18 
+
+ * **open issue 2229:** ANCFThinPlate       
+    - description:  add cylindrical test problem; compare to ANCFCable2D
+    - date raised: 2026-01-18 
+
+ * **open issue 2228:** Symmetric basis     
+    - description:  add a function to compute a basis for two given non-parallel vectors; the average of the two vectors is computed from averaging normalized vectors (=mid axis) and according projections; used for NodeSlope12
+    - date raised: 2026-01-18 
+
+ * **open issue 2227:** build wheels        
+    - description:  add flag to setupPyConfig.json to turn on/off AVX2 and AVX512 compile in windows and linux builds
+    - date raised: 2026-01-16 
+
+ * **open issue 2226:** ANCFThinPlate       
+    - description:  compute optimal slopes scaling in ShellMesh functionality
+    - date raised: 2026-01-16 
+
+ * **open issue 2225:** ANCFThinPlate       
+    - description:  add documentation of equations
+    - date raised: 2026-01-16 
+
+ * **open issue 2223:** symbolic            
+    - description:  add vector and matrix functionality for Diff()
+    - date raised: 2026-01-16 
+
+ * **open issue 2219:** NodePointSlope12    
+    - description:  correct average Rotation and RotationJacobian to be symmetric w.r.t. both slopes
+    - date raised: 2026-01-13 
+
+ * **open issue 2218:** ANCFThinPlate       
+    - description:  add access function for rotation
+    - date raised: 2026-01-13 
+
+ * **open issue 2208:** GeometricallyExactBeam2D
+    - description:  add test for 3-node element
+    - date raised: 2026-01-08 
+
+ * **open issue 2205:** perspective         
+    - description:  test moving along a scene when changing the centerPoint
+    - date raised: 2026-01-08 
+
+ * **open issue 2204:** perspective         
+    - description:  check OpenGL visibility problems with larger zoom (is this the 0.1 limit?)
+    - date raised: 2026-01-08 
+
+ * **open issue 2203:** MainSystem.Inspect  
+    - description:  add function MainSystem.Inspect(itemIndex, what, optArgs) which retrieves additional info on items like available output variables, node/marker types, etc.
+    - date raised: 2026-01-07 
+
+ * **open issue 2202:** OutputVariable      
+    - description:  add kinetic and potential energy
+    - date raised: 2026-01-07 
+
+ * **open issue 2200:** ANCFThinPlate       
+    - description:  add test model
+    - date raised: 2026-01-07 
+
+ * **open issue 2194:** OpenGL view         
+    - description:  add manual offsets for zNear and zFar, to adjust visible objects
+    - date raised: 2026-01-06 
+
+ * **open issue 2186:** RedrawAndSaveImage  
+    - description:  add raytracer flag and make working offline
+    - date raised: 2026-01-04 
+
+ * **open issue 2184:** MarkerSuperElementRigid
+    - description:  highly improve efficiency for larger number of nodes by adding according precomputed transformations
+    - date raised: 2026-01-04 
+
+ * **open issue 2183:** SparseTripletMatrix 
+    - description:  add functions AddSparseTripletMatrix with parameters like AddToDenseMatrix; also add functions AddSubmatrix() and AddTransposedSubmatrix to add dense submatrices for ObjectFFRFreducedOrder
+    - date raised: 2026-01-04 
+
+ * **open issue 2182:** ObjectFFRFreducedOrder
+    - description:  improve efficiency by using internal sparse triplets for mass matrix in C++ code
+    - date raised: 2026-01-04 
+
+ * **open issue 2155:** OpenGL              
+    - description:  add textures to renderer (and add reset function), using numpy binary array representing RGB/RGBA image; reference numbers are then used in triangle lists
+    - date raised: 2025-11-02 
+
+ * **open issue 2154:** OpenGL              
+    - description:  add textures for triangle lists, using texture reference number and coordinates, according to standard format
+    - date raised: 2025-11-02 
+
+ * **open issue 2140:** linux               
+    - description:  fix graphics-related crashes on linux versions, in particular when closing renderer and with mbs.SolutionViewer()
+    - date raised: 2025-07-10 
+
  * **open issue 2131:** ObjectContact       
     - description:  add rolling resistance
     - date raised: 2025-07-05 
@@ -6485,17 +7230,9 @@ Open issues
     - description:  add test example
     - date raised: 2023-10-16 
 
- * **open issue 1662:** ANCFThinPlate       
-    - description:  add ANCF plate element based on 2 inplane slope vectors Slope12, based on Dufva/Shabana
-    - date raised: 2023-10-15 
-
  * **open issue 1653:** ANCFBeam            
     - description:  reconsider name: ANCFBeamStructural, not to have too many cases; use this for 2/3 node, different number of slopes except for 1 slope, which is ANCFCable, the 3D version of ANCFCable2D
     - date raised: 2023-08-16 
-
- * **open issue 1650:** MacOS Rosetta       
-    - description:  importing numpy gives Intel MKL Warning: Support of Intel Streaming SIMD Extensions 4.2 ... has been deprecated. Intel oneAPI Math Kernel Library 2025.0 will require AVX instructions
-    - date raised: 2023-07-20 
 
  * **open issue 1631:** velocityOffset      
     - description:  add to CartesianSpringDamper, RigidBodySpringDamper
@@ -6613,10 +7350,6 @@ Open issues
     - description:  C++: add multithreading for JacobianAE
     - date raised: 2022-07-12 
 
- * **open issue 1196:** ObjectFFRFreducedOrder sparse
-    - description:  add sparse option for ObjectFFRFreducedOrder, filling in flexible-flexible mass terms into sparse mass matrix
-    - date raised: 2022-07-11 
-
  * **open issue 1194:** generalizedAlpha scaling
     - description:  turn on/off scaling in interface to test symmetric solver speedup
     - date raised: 2022-07-11 
@@ -6668,10 +7401,6 @@ Open issues
  * **open issue 1032:** ObjectConnectorCoordinateVector
     - description:  cleanup, consider better UF and check implementation with theory (jac?)
     - date raised: 2022-04-04 
-
- * **open issue 1026:** Save as PNG         
-    - description:  check MacOS implementation if glfw works with saving PNG files
-    - date raised: 2022-04-02 
 
  * **open issue 1008:** Contact switching   
     - description:  Test improved contact integration method with resolution of switching and correction of integration of discontinuous forces; compare to switching point resolution
@@ -6789,10 +7518,6 @@ Open issues
     - description:  change deltaV terms in ANCFCable and TrigSphere contact to fit signs used in docu
     - date raised: 2022-01-17 
 
- * **open issue 0865:** multithreaded solver
-    - description:  test TaskManager::SuspendWorkers() for non-parallel parts (e.g. linear solver); possibly measure time spent for these parts, which should be larger than 2 ms to make sense; add option parallel.stopThreadsInSerialSections=False
-    - date raised: 2022-01-15 
-
  * **open issue 0862:** Vector alignment    
     - description:  add 32 or 64 byte memory + length alignment to allocation of vectors in order to be able to always use AVX and/or loop unrolling for copying or manipulating vectors; use _mm_malloc / _mm_free and separate flags to turn on/off memory and length alignment, memory alignment turned off in case that AVX is not available
     - date raised: 2022-01-13 
@@ -6901,10 +7626,6 @@ Open issues
     - description:  create video with frequent solver errors and FAQ
     - date raised: 2021-05-01 
 
- * **open issue 0643:** ObjectFFRFreducedOrder / CMS
-    - description:  create tutorial with two bodies (crank, connecting rod, rigid piston)
-    - date raised: 2021-04-30 
-
  * **open issue 0627:** ObjectContactFrictionCircleCable2D
     - description:  add description, connector equations and figure
     - date raised: 2021-04-21 
@@ -6932,10 +7653,6 @@ Open issues
  * **open issue 0608:** recommendedStepSize 
     - description:  add recommendedStepSize to ContactCoordinate element
     - date raised: 2021-03-20 
-
- * **open issue 0599:** ObjectFFRFreducedOrder
-    - description:  compare Tait-Bryan and RotationVector cases with Euler parameters
-    - date raised: 2021-03-18 
 
  * **open issue 0591:** ObjectFFRF          
     - description:  Check forceVector and gravity forces in comparison to paper
@@ -6968,10 +7685,6 @@ Open issues
  * **open issue 0451:** AVX integration     
     - description:  test AVX in vector.cpp and dense solver
     - date raised: 2020-09-16 
-
- * **open issue 0444:** docstrings          
-    - description:  change function comments in .py files to PEP standardized docstrings
-    - date raised: 2020-09-06 
 
  * **open issue 0436:** virtual functions   
     - description:  make virtual functions consistent for some system classes like MainSystem, etc. which have no derived classes

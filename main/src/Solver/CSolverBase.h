@@ -66,6 +66,14 @@ public:
 		//timer not initialized, because it needs information if timings are required
 	}
 
+	//! evaluate if simulation has been stopped by user or by other event
+	inline virtual bool SimulationStoppedByUser(const CSystem& computationalSystem)
+	{
+		return (computationalSystem.GetPostProcessData()->stopSimulation &&
+			!output.simulationTimeout &&
+			!output.simulationStoppedByUserFunction);
+	}
+
 	//! return true, if static solver; needs to be overwritten in derived class
 	//! +++++ TO BE IMPLEMENTED IN DERIVED CLASS +++++
 	virtual bool IsStaticSolver() const { CHECKandTHROWstring("CSolverBase::illegal call"); return false; }

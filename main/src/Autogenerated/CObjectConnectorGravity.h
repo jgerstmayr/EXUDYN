@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-08  11:59:26 (last modified)
+* @date         2026-02-05  22:13:57 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -48,7 +48,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectConnectorGravity
-* @brief        A connector for additing forces due to gravitational fields beween two bodies, which can be used for aerospace and small-scale astronomical problems; DO NOT USE this connector for adding gravitational forces (loads), which should be using LoadMassProportional, which is acting global and always in the same direction.
+* @brief        A connector for additing forces due to gravitational fields beween two bodies, which can be used for aerospace and small-scale astronomical problems. NOTE: DO NOT USE this connector for adding gravitational forces (loads), which should be using LoadMassProportional, which is acting global and always in the same direction.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -137,9 +137,9 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
-            (Index)OutputVariableType::Distance +
-            (Index)OutputVariableType::Displacement +
-            (Index)OutputVariableType::Force );
+            (Index64)OutputVariableType::Distance +
+            (Index64)OutputVariableType::Displacement +
+            (Index64)OutputVariableType::Force );
     }
 
 };

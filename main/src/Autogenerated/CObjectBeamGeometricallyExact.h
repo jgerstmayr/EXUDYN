@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-06  23:48:39 (last modified)
+* @date         2026-02-05  22:13:56 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -50,7 +50,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectBeamGeometricallyExact
-* @brief        OBJECT UNDER CONSTRUCTION: A 3D geometrically exact beam finite element, currently using two 3D rigid body nodes. The localPosition \f$x\f$ of the beam ranges from \f$-L/2\f$ (at node 0) to \f$L/2\f$ (at node 1). The axial coordinate is \f$x\f$ (first coordinate) and the cross section is spanned by local \f$y\f$/\f$z\f$ axes.
+* @brief        A 3D geometrically exact beam finite element, currently using two 3D rigid body nodes. The localPosition \f$x\f$ of the beam ranges from \f$-L/2\f$ (at node 0) to \f$L/2\f$ (at node 1). The axial coordinate is \f$x\f$ (first coordinate) and the cross section is spanned by local \f$y\f$/\f$z\f$ axes. NOTE: Requires further development and tests!
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -179,12 +179,12 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
-            (Index)OutputVariableType::Position +
-            (Index)OutputVariableType::Displacement +
-            (Index)OutputVariableType::Velocity +
-            (Index)OutputVariableType::Rotation +
-            (Index)OutputVariableType::StrainLocal +
-            (Index)OutputVariableType::CurvatureLocal );
+            (Index64)OutputVariableType::Position +
+            (Index64)OutputVariableType::Displacement +
+            (Index64)OutputVariableType::Velocity +
+            (Index64)OutputVariableType::Rotation +
+            (Index64)OutputVariableType::StrainLocal +
+            (Index64)OutputVariableType::CurvatureLocal );
     }
 
 };

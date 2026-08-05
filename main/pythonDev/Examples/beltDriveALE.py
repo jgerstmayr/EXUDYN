@@ -406,7 +406,7 @@ SC.visualizationSettings.markers.show=False
 SC.visualizationSettings.nodes.defaultSize = 0.002
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.lineWidth = 2
-SC.visualizationSettings.window.renderWindowSize = [1920,1080]
+SC.visualizationSettings.view0.window.renderWindowSize = [1920,1080]
 
 SC.visualizationSettings.connectors.showContact = True
 SC.visualizationSettings.contact.contactPointsDefaultSize = 0.0002

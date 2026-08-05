@@ -128,7 +128,7 @@ You can view and download this file on Github: `mouseInteractionExample.py <http
    def UFmouseDrag0(mbs, t, itemIndex, u, v, k, d, offset): #changed 2023-01-21:, mu, muPropZone):
        if not mbs.variables['activateMouseDrag'] == True:
            return 0
-       p = SC.GetCurrentMouseCoordinates(True)
+       p = SC.renderer.GetMouseCoordinates(True)
        p = SC.renderer.GetState()['openGLcoordinates']
        #print("u=",u)
        return k*(Ltot-0.5*sx+u-p[0]) + d*v
@@ -136,13 +136,13 @@ You can view and download this file on Github: `mouseInteractionExample.py <http
    def UFmouseDrag1(mbs, t, itemIndex, u, v, k, d, offset): #changed 2023-01-21:, mu, muPropZone):
        if not mbs.variables['activateMouseDrag'] == True:
            return 0
-       p = SC.GetCurrentMouseCoordinates(True)
+       p = SC.renderer.GetMouseCoordinates(True)
        return k*(u-p[1]) + d*v
    
    def UFmouseDrag2(mbs, t, itemIndex, u, v, k, d, offset): #changed 2023-01-21:, mu, muPropZone):
        if not mbs.variables['activateMouseDrag'] == True:
            return 0
-       p = SC.GetCurrentMouseCoordinates(True)
+       p = SC.renderer.GetMouseCoordinates(True)
        return k*(u-p[1]) + d*v
    
    if True:
@@ -193,22 +193,21 @@ You can view and download this file on Github: `mouseInteractionExample.py <http
    SC.visualizationSettings.nodes.drawNodesAsPoint = False
    SC.visualizationSettings.nodes.showBasis = False
    
-   SC.visualizationSettings.openGL.light0position = [0.2,0.2,10,0]
+   SC.visualizationSettings.openGL.light0.position = [0.2,0.2,10,0]
    
-   SC.visualizationSettings.openGL.light1position = [1,1,-10,0]
-   SC.visualizationSettings.openGL.light1ambient= 0. #0.25
-   SC.visualizationSettings.openGL.light1diffuse= 0.5 #0.4
-   SC.visualizationSettings.openGL.light1specular= 0.6 #0.4
-   SC.visualizationSettings.openGL.enableLight1 = True
+   SC.visualizationSettings.openGL.light1.position = [1,1,-10,0]
+   SC.visualizationSettings.openGL.light1.diffuse= 0.5 #0.4
+   SC.visualizationSettings.openGL.light1.specular= 0.6 #0.4
+   SC.visualizationSettings.openGL.light1.enable = True
    
-   SC.visualizationSettings.openGL.lightModelTwoSide= True
+   SC.visualizationSettings.openGL.advanced.lightModelTwoSide= True
    
-   SC.visualizationSettings.general.drawWorldBasis= True
+   SC.visualizationSettings.view0.scene.drawWorldBasis= True
    SC.visualizationSettings.general.graphicsUpdateInterval = 0.01
    
    SC.visualizationSettings.openGL.multiSampling = 4
    SC.visualizationSettings.openGL.lineWidth = 2
-   SC.visualizationSettings.window.ignoreKeys = True #otherwise keyPressUserFunction not called!
+   SC.visualizationSettings.interactive.ignoreKeys = True #otherwise keyPressUserFunction not called!
    SC.visualizationSettings.general.useMultiThreadedRendering = True
    
    useGraphics = True
@@ -241,11 +240,11 @@ You can view and download this file on Github: `mouseInteractionExample.py <http
            mbs.variables['activateMouseDrag'] = not mbs.variables['activateMouseDrag']
        
    if activateWithKeyPress:
-       SC.visualizationSettings.window.keyPressUserFunction = UFkeyPress
+       SC.visualizationSettings.interactive.keyPressUserFunction = UFkeyPress
    
    
    mbs.SolveDynamic(simulationSettings)
-   SC.visualizationSettings.window.ResetKeyPressUserFunction()
+   SC.visualizationSettings.interactive.keyPressUserFunction = 0
    
    if useGraphics:
        SC.renderer.Stop() #safely close rendering window!

@@ -90,7 +90,7 @@ JacobianType::Type CObjectJointRevolute2D::GetAvailableJacobians() const
 //! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
 OutputVariableType CObjectJointRevolute2D::GetOutputVariableTypes() const
 {
-	return (OutputVariableType)((Index)OutputVariableType::Displacement + (Index)OutputVariableType::Rotation); //Displacement represents drift in index2 case
+	return (OutputVariableType)((Index64)OutputVariableType::Displacement + (Index64)OutputVariableType::Rotation); //Displacement represents drift in index2 case
 }
 
 //! provide according output variable in "value"

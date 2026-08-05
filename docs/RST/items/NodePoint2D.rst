@@ -5,7 +5,7 @@
 NodePoint2D
 ===========
 
-A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for second order differential equations.
+A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for \ :ref:`ODE2 <ODE2>`\ .
 
 \ **Additional information for NodePoint2D**\ :
 

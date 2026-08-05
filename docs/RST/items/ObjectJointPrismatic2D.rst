@@ -5,17 +5,7 @@
 ObjectJointPrismatic2D
 ======================
 
-A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers; the vector \ :math:`{\mathbf{t}}_0`\  = axisMarker0 is given in local coordinates of the first marker's (body) frame and defines the prismatic axis; the vector \ :math:`\mathbf{n}_1`\  = normalMarker1 is given in the second marker's (body) frame and is the normal vector to the prismatic axis; using the global position vector \ :math:`{\mathbf{p}}_0`\  and rotation matrix \ :math:`{\mathbf{A}}_0`\  of marker0 and the global position vector \ :math:`{\mathbf{p}}_1`\  rotation matrix \ :math:`{\mathbf{A}}_1`\  of marker1, the equations for the prismatic joint follow as 
-.. math::
-
-   ({\mathbf{p}}_1-{\mathbf{p}}_0)^T\cdot {\mathbf{A}}_1 \cdot \mathbf{n}_1 = 0
-
-  
-.. math::
-
-   ({\mathbf{A}}_0 \cdot {\mathbf{t}}_0)^T \cdot {\mathbf{A}}_1 \cdot \mathbf{n}_1 = 0
-
- The lagrange multipliers follow for these two equations \ :math:`[\lambda_0,\lambda_1]`\ , in which \ :math:`\lambda_0`\  is the transverse force and \ :math:`\lambda_1`\  is the torque in the joint.
+A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers.
 
 \ **Additional information for ObjectJointPrismatic2D**\ :
 

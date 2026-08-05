@@ -336,7 +336,7 @@ You can view and download this file on Github: `driveTrainTest.py <https://githu
    
    #simulationSettings.solutionSettings.recordImagesInterval = 0.005
    #SC.visualizationSettings.exportImages.saveImageFileName = "images/frame"
-   SC.visualizationSettings.window.renderWindowSize = [1920,1080]
+   SC.visualizationSettings.view0.window.renderWindowSize = [1920,1080]
    SC.visualizationSettings.openGL.multiSampling = 4
    
    if useGraphics:

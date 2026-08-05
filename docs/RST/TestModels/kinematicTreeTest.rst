@@ -118,8 +118,8 @@ You can view and download this file on Github: `kinematicTreeTest.py <https://gi
    
    SC.visualizationSettings.bodies.kinematicTree.frameSize = 1
    SC.visualizationSettings.bodies.kinematicTree.showJointFrames = True
-   SC.visualizationSettings.general.drawWorldBasis = True
-   SC.visualizationSettings.general.worldBasisSize = 2
+   SC.visualizationSettings.view0.scene.drawWorldBasis = True
+   SC.visualizationSettings.view0.scene.worldBasisSize = 2
    SC.visualizationSettings.openGL.multiSampling = 4
    
    if useGraphics:

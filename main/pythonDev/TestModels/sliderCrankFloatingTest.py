@@ -222,12 +222,12 @@ for testCases in rangeTests:
     SC.visualizationSettings.connectors.defaultSize = dSize
     
     #data obtained from SC.renderer.GetState(); use np.round(d['modelRotation'],4)
-    SC.visualizationSettings.openGL.initialModelRotation = [[ 0.87758,  0.04786, -0.47703],
+    SC.visualizationSettings.openGL.advanced.initialModelRotation = [[ 0.87758,  0.04786, -0.47703],
                                                             [ 0.     ,  0.995  ,  0.09983],
                                                             [ 0.47943, -0.08761,  0.8732]]
-    SC.visualizationSettings.openGL.initialZoom = 0.47
-    SC.visualizationSettings.openGL.initialCenterPoint = [0.192, -0.0039,-0.075]
-    SC.visualizationSettings.openGL.initialMaxSceneSize = 0.4
+    SC.visualizationSettings.openGL.advanced.initialZoom = 0.47
+    SC.visualizationSettings.openGL.advanced.initialCenterPoint = [0.192, -0.0039,-0.075]
+    SC.visualizationSettings.openGL.advanced.initialMaxSceneSize = 0.4
     SC.visualizationSettings.general.autoFitScene = False
     #SC.renderer.DoIdleTasks()
     

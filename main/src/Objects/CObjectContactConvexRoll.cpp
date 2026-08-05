@@ -188,10 +188,9 @@ void CObjectContactConvexRoll::ComputeContactForces(const MarkerDataStructure& m
 	const Matrix3D& Rotm = markerData.GetMarkerData(1).orientation;	// Rotation matrix from ground to roller
 	const Vector3D& v1 = markerData.GetMarkerData(1).velocity;		// global velocity of the roller
 
-
-	//const Vector& poly = GetCoefficientsHullDerivative();
-	//const Vector& dpoly = GetCoefficientsHullDDerivative();
-	const Real& dataGap = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current)[0]; 
+	//create variable data as otherwise Warning to reference with is destroyed:
+	LinkedDataVector data = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current);
+	const Real& dataGap = data[0];
 
 	//contact only considered, if switched in PostNewton
 	if ((allowSwitching || dataGap < 0) && CObjectContactConvexRoll::PreContactCheckRoller(Rotm, p1, parameters.rollLength, GetRBoundingSphere(), pC))

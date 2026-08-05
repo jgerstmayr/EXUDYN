@@ -14,7 +14,6 @@
 import tkinter as tk
 import tkinter.messagebox
 import tkinter.ttk as ttk
-import tkinter.font as tkFont
 import numpy as np #for array checks
 from numpy import float32
 import ast #for ast.literal_eval

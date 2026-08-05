@@ -615,6 +615,19 @@ public:
 		}
 	}
 
+	//! check if vector has invalid component
+	inline bool HasInvalid() const
+	{
+		for (const auto& item : *this)
+		{
+			if (!std::isfinite(item))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	//! Returns the sum of all components of a vector in range [0, numberOfItems]
 	T Sum() const
 	{

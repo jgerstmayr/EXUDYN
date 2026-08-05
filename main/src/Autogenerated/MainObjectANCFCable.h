@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-03  15:35:21 (last modified)
+* @date         2026-02-05  22:13:56 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectANCFCable
-* @brief        A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[0, L]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the \hac{EOM}). For description see ObjectANCFCable2D, which is almost identical to 3D case. Note that this element does not include torsion, therfore a torque cannot be applied along the local x-axis.
+* @brief        A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[0, L]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the \hac{EOM}). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -144,7 +144,7 @@ public: // AUTO:
         d["physicsAxialDamping"] = (Real)cObjectANCFCable->GetParameters().physicsAxialDamping; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsReferenceAxialStrain"] = (Real)cObjectANCFCable->GetParameters().physicsReferenceAxialStrain; //! AUTO: cast variables into python (not needed for standard types) 
         d["strainIsRelativeToReference"] = (Real)cObjectANCFCable->GetParameters().strainIsRelativeToReference; //! AUTO: cast variables into python (not needed for standard types) 
-        d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex(ArrayIndex(cObjectANCFCable->GetParameters().nodeNumbers)); //! AUTO: cast variables into python (not needed for standard types) 
+        d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex((ArrayIndex)cObjectANCFCable->GetParameters().nodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["useReducedOrderIntegration"] = (Index)cObjectANCFCable->GetParameters().useReducedOrderIntegration; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectANCFCable->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -165,7 +165,7 @@ public: // AUTO:
         else if (parameterName.compare("physicsAxialDamping") == 0) { return py::cast((Real)cObjectANCFCable->GetParameters().physicsAxialDamping);} //! AUTO: get parameter
         else if (parameterName.compare("physicsReferenceAxialStrain") == 0) { return py::cast((Real)cObjectANCFCable->GetParameters().physicsReferenceAxialStrain);} //! AUTO: get parameter
         else if (parameterName.compare("strainIsRelativeToReference") == 0) { return py::cast((Real)cObjectANCFCable->GetParameters().strainIsRelativeToReference);} //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex(ArrayIndex(cObjectANCFCable->GetParameters().nodeNumbers)));} //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex((ArrayIndex)cObjectANCFCable->GetParameters().nodeNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("useReducedOrderIntegration") == 0) { return py::cast((Index)cObjectANCFCable->GetParameters().useReducedOrderIntegration);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectANCFCable->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("Vradius") == 0) { return py::cast((float)visualizationObjectANCFCable->GetRadius());} //! AUTO: get parameter

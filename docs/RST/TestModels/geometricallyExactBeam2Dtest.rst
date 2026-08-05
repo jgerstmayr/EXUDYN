@@ -15,7 +15,7 @@ You can view and download this file on Github: `geometricallyExactBeam2Dtest.py 
    #
    # Details:  Test model for GeometricallyExactBeam2D, cantilever beam with tip force and torque
    #
-   # Model:    A 2m long shear deformable beam, located between [0,0,0] and [sqrt(2), sqrt(2), 0], which are 45Â° relative to the x-axis;
+   # Model:    A 2m long shear deformable beam, located between [0,0,0] and [sqrt(2), sqrt(2), 0], which are 45° relative to the x-axis;
    #           The beam's height is h = 0.5m and the width is b=0.1m; Young's modulus and density are according to a steel material;
    #           The beam is fixed at [0,0,0], where displacements and rotation are constrained; a force [F,-F,0] with F=5e8 * h**3 * sqrt(0.5) is applied to the tip of the beam.
    # 

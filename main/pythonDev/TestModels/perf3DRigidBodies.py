@@ -129,9 +129,9 @@ SC.visualizationSettings.connectors.showJointAxes = True
 #for snapshot:
 SC.visualizationSettings.openGL.multiSampling=4
 SC.visualizationSettings.openGL.lineWidth=2
-SC.visualizationSettings.window.renderWindowSize = [800,600]
-SC.visualizationSettings.general.drawCoordinateSystem=False
-SC.visualizationSettings.general.drawWorldBasis=True
+SC.visualizationSettings.view0.window.renderWindowSize = [800,600]
+SC.visualizationSettings.view0.scene.drawCoordinateSystem=False
+SC.visualizationSettings.view0.scene.drawWorldBasis=True
 
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
 if useGraphics:

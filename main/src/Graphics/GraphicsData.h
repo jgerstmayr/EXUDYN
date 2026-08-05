@@ -19,6 +19,7 @@
 #include <ostream>
 
 #include "Linalg/BasicLinalg.h"	
+#include "Linalg/SearchTree.h"	
 #include "Main/OutputVariable.h"		//for ItemType conversion, used in GlfwClient and others
 
 #include <array>						//std::array
@@ -82,7 +83,7 @@ public:
 	Index itemID;			//!< itemID according to ItemType and index, see Index2ItemID(...)
 	Float3 point;			//!< 3D point coordinates
 	Float4 color;			//!< RGBA color in range 0.f - 1.f; A ... alpha
-	float size;				//!< size of text; if size==0 --> use default text size
+	float fontSize;			//!< size of text; if size==0 --> use default text size
 	float offsetX;			//!< offset of text in x-direction relative to textsize; not corotated with model
 	float offsetY;			//!< offset of text in y-direction relative to textsize; not corotated with model
 	char* text;				//!< pointer to 0-terminated string
@@ -100,11 +101,11 @@ public:
 class GLTriangle
 {
 public:
-	Index itemID;					//!< itemID according to ItemType and index, see Index2ItemID(...)
-	std::array< Float3, 3> points;	//!< 3D point coordinates
-	std::array< Float3, 3> normals;	//!< 3D normal coordinates, pointing outwards; [0,0,0] if unused
-	std::array< Float4, 3> colors;	//!< RGBA color in range 0.f - 1.f; A ... alpha
-	GLisFiniteElement isFiniteElement;			//!< true, if finite element with different handling of edge drawing, etc.
+	Index itemID;						//!< itemID according to ItemType and index, see Index2ItemID(...)
+	std::array< Float3, 3> points;		//!< 3D point coordinates
+	std::array< Float3, 3> normals;		//!< 3D normal coordinates, pointing outwards; [0,0,0] if unused
+	std::array< Float4, 3> colors;		//!< RGBA color in range 0.f - 1.f; A ... alpha
+	GLisFiniteElement isFiniteElement;	//!< true, if finite element with different handling of edge drawing, etc.
 };
 
 //!interface for system graphics data
@@ -118,34 +119,35 @@ public:
 	ResizableArray<GLText> glTexts;				//!< texts to be displayed
 	ResizableArray<GLTriangle> glTriangles;		//!< triangles to be displayed
 
-	bool isStatic;				//!< true, if object is fixed to world-frame (e.g. background or groundObject)
-	bool isRigid;				//!< signals that after creation of the object, all points just undergo a rigidbody transformation
-	hMatrix4f transformation;	//!< used for rigidbody transformation, if object is rigid
+	//bool isStatic;				//!< true, if object is fixed to world-frame (e.g. background or groundObject)
+	//bool isRigid;				//!< signals that after creation of the object, all points just undergo a rigidbody transformation
+	//hMatrix4f transformation;	//!< used for rigidbody transformation, if object is rigid
 
 private:
-	std::atomic_flag lock;		
+	mutable std::atomic_flag lock;
 	uint64_t visualizationCounter;
-	bool updateGraphicsDataNow; //! flag set by Renderer to recompute graphics data (e.g. when settings changed)
-	float contourCurrentMinValue; //! current minimum value for contour plot
-	float contourCurrentMaxValue; //! current maximum value for contour plot
+	//bool updateGraphicsDataNow;		//! flag set by Renderer to recompute graphics data (e.g. when settings changed)
+	float contourCurrentMinValue;	//! current minimum value for contour plot
+	float contourCurrentMaxValue;	//! current maximum value for contour plot
 
 public:
 	GraphicsData()
 	{
 		contourCurrentMinValue = EXUstd::_MAXFLOAT;
 		contourCurrentMaxValue = EXUstd::_MINFLOAT;
+		visualizationCounter = 0;
 		ClearLock();
 	}
 	//! Aquire lock for data, such that computation / visualization thread does not access data at the same time
-	void LockData() 
-	{ 
+	void LockData() const
+	{
 		EXUstd::WaitAndLockSemaphore(lock);
 		//now data is locked until it is cleared!!!
 		//hereafter, lock must be cleared, otherwise, a new lock is not possible
 	}
 	//! Release the lock of a previous LockData()
-	void ClearLock() 
-	{ 
+	void ClearLock() const
+	{
 		EXUstd::ReleaseSemaphore(lock);
 	}
 
@@ -157,8 +159,8 @@ public:
 	const uint64_t& GetVisualizationCounter() const { return visualizationCounter; };
 	uint64_t& GetVisualizationCounter() { return visualizationCounter; };
 
-	const bool& GetUpdateGraphicsDataNow() const { return updateGraphicsDataNow; };
-	bool& GetUpdateGraphicsDataNow() { return updateGraphicsDataNow; };
+	//const bool& GetUpdateGraphicsDataNow() const { return updateGraphicsDataNow; };
+	//bool& GetUpdateGraphicsDataNow() { return updateGraphicsDataNow; };
 
 	const float& GetContourCurrentMinValue() const { return contourCurrentMinValue; };
 	float& GetContourCurrentMinValue() { return contourCurrentMinValue; };
@@ -183,7 +185,80 @@ public:
 		ClearLock();
 	}
 
-	Index AddLine(const Vector3D& point1, const Vector3D& point2, const Float4& color1, const Float4& color2, 
+	Box3DF ComputeMaxScene(const Matrix3DF& rotationMV, const Float3& translationMV, bool transform = true) const
+	{
+		LockData();
+
+		//max scene size from current line data:
+		Box3DF box;
+		if (translationMV == Float3(0) && rotationMV == EXUmath::unitMatrix3DF) { transform = false; }
+
+		auto Transform = [&](const Float3& p) -> Float3 {
+			if (transform) {
+				return rotationMV * p + translationMV;
+			}
+			else {
+				return p;
+			}
+		};
+
+		for (const GLLine& item : glLines)
+		{
+			box.Add(Transform(item.point1));
+			box.Add(Transform(item.point2));
+		}
+		for (const GLText& item : glTexts)
+		{
+			box.Add(Transform(item.point));
+		}
+		for (const GLSphere& item : glSpheres)
+		{
+			Box3DF sphere(Transform(item.point), EXUstd::Maximum(item.radius,0.f) ); //avoid negative radius
+			box.Add(sphere);
+		}
+		for (const GLCircleXY& item : glCirclesXY)
+		{
+			Box3DF circle(Transform(item.point), EXUstd::Maximum(item.radius, 0.f)); //avoid negative radius
+			box.Add(circle);
+		}
+		for (const GLTriangle& item : glTriangles)
+		{
+			for (const Float3& point : item.points)
+			{
+				box.Add(Transform(point));
+			}
+		}
+
+		ClearLock();
+		return box;
+	}
+
+	static Box3DF ComputeMaxScene(ResizableArray<GraphicsData*>* graphicsDataList, 
+		const Matrix3DF& rotationMV, const Float3& translationMV,
+		float minSceneSize, float emptySceneSize = 1.f)
+	{
+		Box3DF box;
+		if (graphicsDataList != nullptr)// && state != nullptr && visSettings != nullptr)
+		{
+			for (auto graphicsData : *graphicsDataList)
+			{
+				box.Add(graphicsData->ComputeMaxScene( rotationMV.GetTransposed(), -translationMV)); //inverted transformation, as OpenGL works "inverted" here
+			}
+		}
+		if (box.Empty() || box.Radius() == 0.f)
+		{
+			box = Box3DF(Float3(0.f), 0.5f); //box with radius 0.5 / size 1
+		}
+		else if (box.Radius() * 2.f < minSceneSize)
+		{
+			float r = box.Radius();
+			box.InflateFactor(0.5f * minSceneSize / r); //inflate all axes to exactly obtain minSceneSize
+		}
+		return box;
+	}
+
+	template<class TPoint>
+	Index AddLine(const TPoint& point1, const TPoint& point2, const Float4& color1, const Float4& color2,
 		Index itemID)
 	{
 		GLLine line;
@@ -293,14 +368,15 @@ public:
 	}
 
 	//! create a quad with local colors; normals not considered in this call!
-	void AddQuad(const std::array<Vector3D, 4>& points, /*const std::array<Vector3D, 4>& normals,*/ const std::array<Float4, 4>& colors,
+	template<class TPoint>
+	void AddQuad(const std::array<TPoint, 4>& points, const std::array<Float4, 4>& colors,
 		Index itemID, GLisFiniteElement isFiniteElement = false)
 	{
 		GLTriangle trig;
 		trig.itemID = itemID;
 		trig.isFiniteElement = isFiniteElement;
 
-		Vector3D normal = EXUmath::ComputeTriangleNormal(points[0], points[1], points[2]);
+		TPoint normal = EXUmath::ComputeTriangleNormal(points[0], points[1], points[2]);
 
 		for (Index i = 0; i < 3; i++)
 		{
@@ -320,17 +396,44 @@ public:
 		glTriangles.Append(trig);
 	}
 
-	//! create text from string with 3D-point, color and size (0 ... use default text size)
-	//Index AddText(const Vector3D& point, const Float4& color, const STDstring& text, float size = 0.f, float offsetX = 0.f, float offsetY = 0.f, Index index, ItemType itemType)
-	Index AddText(const Vector3D& point, const Float4& color, const STDstring& text, float size, float offsetX, float offsetY, 
-		Index itemID)
+	//! create a quad with points, normals and colors
+	template<class TPoint>
+	void AddQuad(const std::array<TPoint, 4>& points, const std::array<TPoint, 4>& normals, const std::array<Float4, 4>& colors,
+		Index itemID, GLisFiniteElement isFiniteElement = false)
 	{
-		return AddText(Float3({ (float)point[0],(float)point[1],(float)point[2] }), color, text, size, offsetX, offsetY, itemID);
+		GLTriangle trig;
+		trig.itemID = itemID;
+		trig.isFiniteElement = isFiniteElement;
+
+		for (Index i = 0; i < 3; i++)
+		{
+			trig.points[i] = Float3({ (float)(points[i][0]), (float)(points[i][1]), (float)(points[i][2]) });
+			trig.normals[i] = Float3({ (float)(normals[i][0]), (float)(normals[i][1]), (float)(normals[i][2]) });
+			trig.colors[i] = colors[i];
+		}
+		glTriangles.Append(trig);
+		for (Index i = 0; i < 3; i++)
+		{
+			Index ii = i;
+			if (i > 0) { ii++; }
+			trig.points[i] = Float3({ (float)(points[ii][0]), (float)(points[ii][1]), (float)(points[ii][2]) });
+			trig.normals[i] = Float3({ (float)(normals[ii][0]), (float)(normals[ii][1]), (float)(normals[ii][2]) });
+			trig.colors[i] = colors[ii];
+		}
+		glTriangles.Append(trig);
 	}
 
 	//! create text from string with 3D-point, color and size (0 ... use default text size)
 	//Index AddText(const Vector3D& point, const Float4& color, const STDstring& text, float size = 0.f, float offsetX = 0.f, float offsetY = 0.f, Index index, ItemType itemType)
-	Index AddText(const Float3& point, const Float4& color, const STDstring& text, float size, float offsetX, float offsetY, 
+	Index AddText(const Vector3D& point, const Float4& color, const STDstring& text, float fontSize, float offsetX, float offsetY, 
+		Index itemID)
+	{
+		return AddText(Float3({ (float)point[0],(float)point[1],(float)point[2] }), color, text, fontSize, offsetX, offsetY, itemID);
+	}
+
+	//! create text from string with 3D-point, color and size (0 ... use default text size)
+	//Index AddText(const Vector3D& point, const Float4& color, const STDstring& text, float size = 0.f, float offsetX = 0.f, float offsetY = 0.f, Index index, ItemType itemType)
+	Index AddText(const Float3& point, const Float4& color, const STDstring& text, float fontSize, float offsetX, float offsetY, 
 		Index itemID)
 	{
 		GLText glText;
@@ -338,7 +441,7 @@ public:
 
 		glText.point = point;
 		glText.color = color;
-		glText.size = size;
+		glText.fontSize = fontSize;
 		glText.offsetX = offsetX;
 		glText.offsetY = offsetY;
 

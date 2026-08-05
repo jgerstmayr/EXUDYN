@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-08  11:59:26 (last modified)
+* @date         2026-02-05  22:13:57 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -61,7 +61,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectConnectorTorsionalSpringDamper
-* @brief        An torsional spring-damper element acting on relative rotations around Z-axis of local joint0 coordinate system; connects to orientation-based markers; if other rotation axis than the local joint0 Z axis shall be used, the joint rotationMarker0 / rotationMarker1 may be used. The joint perfectly extends a RevoluteJoint with a spring-damper, which can also be used to represent feedback control in an elegant and efficient way, by chosing appropriate user functions. It also allows to measure continuous / infinite rotations by making use of a NodeGeneric which compensates \f$\pm \pi\f$ jumps in the measured rotation (OutputVariableType.Rotation).
+* @brief        An torsional spring-damper element acting on relative rotations around Z-axis of local joint0 coordinate system. It connects to orientation-based markers; if other rotation axis than the local joint0 Z axis shall be used, the joint rotationMarker0 / rotationMarker1 may be used. The joint perfectly extends a RevoluteJoint with a spring-damper, which can also be used to represent feedback control in an elegant and efficient way, by chosing appropriate user functions. It also allows to measure continuous / infinite rotations by making use of a NodeGeneric which compensates \f$\pm \pi\f$ jumps in the measured rotation (\texttt{OutputVariableType.Rotation}).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -190,9 +190,9 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
-            (Index)OutputVariableType::Rotation +
-            (Index)OutputVariableType::AngularVelocityLocal +
-            (Index)OutputVariableType::TorqueLocal );
+            (Index64)OutputVariableType::Rotation +
+            (Index64)OutputVariableType::AngularVelocityLocal +
+            (Index64)OutputVariableType::TorqueLocal );
     }
 
 };

@@ -115,7 +115,7 @@ You can view and download this file on Github: `rigidBodyTutorial3.py <https://g
    simulationSettings.timeIntegration.verboseMode = 1
    simulationSettings.solutionSettings.solutionWritePeriod = 0.01 #store every 10 ms
    
-   SC.visualizationSettings.window.renderWindowSize=[1600,1200]
+   SC.visualizationSettings.view0.window.renderWindowSize=[1600,1200]
    SC.visualizationSettings.openGL.multiSampling = 4
    
    SC.visualizationSettings.nodes.showBasis=True

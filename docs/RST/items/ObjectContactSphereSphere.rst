@@ -144,14 +144,13 @@ This section outlines the computation of the forces acting on the two spheres wh
 
 
 
-.. _fig-objectspherespherecontact-mesh:
+.. _fig-objectspherespherecontact:
 .. figure:: ../../theDoc/figures/SphereSphereContact.png
-   :width: 400
+    :width: 400
+    
+    Two spheres that are in contact, showing a force on marker 1 in normal direction due to overlap; forces on marker 0 act in opposite direction.
 
-   Two spheres that are in contact, showing a force on marker 1 in normal direction due to overlap; forces on marker 0 act in opposite direction.
-
-Calculations reflect the case for outer contact of two spheres using \ :math:`h_1=1`\ . 
-In case that isHollowSphere1=True, we set \ :math:`h_1=-1`\  while the remaining formulas remain unchanged.
+Calculations reflect the case for outer contact of two spheres using \ :math:`h_1=1`\ . In case that isHollowSphere1=True, we set \ :math:`h_1=-1`\  while the remaining formulas are unchanged. In Figure  :ref:`fig-objectspherespherecontact`\  the sphere sphere and in Figure  :ref:`fig-objectspherehollowspherecontact`\  the sphere hollowsphere contact case are shown.
 
 For the following, the gap \ :math:`g`\  between the two spheres is computed as
 
@@ -160,16 +159,22 @@ For the following, the gap \ :math:`g`\  between the two spheres is computed as
    g = h_1 || \LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0} || - (r_0 + h_1 r_1)
 
 
-and the overlap \ :math:`\delta`\  is the negated gap: \ :math:`\delta=-g`\ . In the contact case, the overlap \ :math:`\delta`\  is positive. 
-The normal vector \ :math:`\LU{0}{{\mathbf{n}}}`\  points from marker 0 to the contact point,
+and the overlap \ :math:`\delta`\  is the negated gap: \ :math:`\delta=-g`\ . In the contact case, the overlap \ :math:`\delta`\  is positive. If the first sphere is a hollow sphere, the gap consequently reads
+
+.. math::
+
+   g = r_1 - r_0 - || \LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0} || ,
+
+
+such that if sphere 0 is in contact with the inner side of sphere 1, i.e. \ :math:`|| \LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0} ||\geq(r_1-r_0)`\  holds, the gap is negative and the overlap \ :math:`\delta`\  is positive. The normal vector \ :math:`\LU{0}{{\mathbf{n}}}`\  always points from marker 0 to the contact point:
 
 .. math::
 
    \LU{0}{{\mathbf{n}}} = h_1 \frac{\LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0}}{|| \LU{0}{{\mathbf{p}}}_{m1} - \LU{0}{{\mathbf{p}}}_{m0} ||} .
 
 
-which in case of sphere-sphere contact, \ :math:`\LU{0}{{\mathbf{n}}}`\  points from marker 0 to marker 1, and 
-in case of sphere-hollowsphere contact, \ :math:`\LU{0}{{\mathbf{n}}}`\  points from marker 1 to marker 0.
+In the case of sphere-sphere contact, \ :math:`\LU{0}{{\mathbf{n}}}`\  points from marker 0 to marker 1, and 
+in the case of sphere-hollowsphere contact, \ :math:`\LU{0}{{\mathbf{n}}}`\  has the reversed direction as if it points from marker 1 to marker 0.
 
 The scalar normal (gap) velocity \ :math:`v_\mathrm{\delta,n}`\  is computed with the velocities \ :math:`\LU{0}{{\mathbf{v}}}_{m0}=\LU{0}{\dot{{\mathbf{p}}}}_{m0}`\  and \ :math:`\LU{0}{{\mathbf{v}}}_{m1}=\LU{0}{\dot{{\mathbf{p}}}}_{m1}`\ 
 
@@ -186,12 +191,24 @@ and the tangential (gap) velocity \ :math:`\LU{0}{{\mathbf{v}}}_\mathrm{\delta,t
    \LU{0}{{\mathbf{v}}}_\mathrm{\delta,t} = \left(\LU{0}{{\mathbf{v}}}_{a1} - \LU{0}{{\mathbf{v}}}_{a0}\right) - v_\mathrm{\delta,n} \cdot \LU{0}{{\mathbf{n}}}, \qquad v_\mathrm{rel} = || \LU{0}{{\mathbf{v}}}_\mathrm{\delta,t} || .
 
 
+
+
+
+.. _fig-objectspherehollowspherecontact:
+.. figure:: ../../theDoc/figures/SphereHollowsphereContact.png
+    :width: 400
+    
+    One sphere and one hollowsphere that are in contact, showing a force on marker 1 against normal direction due to overlap; forces on marker 0 act in opposite direction.
+
+
 To take the angular velocity of the spheres into account, the velocities \ :math:`\LU{0}{{\mathbf{v}}}_{a0}`\  and \ :math:`\LU{0}{{\mathbf{v}}}_{a1}`\  at the contact point are computed using Euler's theorem for kinematics:
 
 .. math::
 
    \LU{0}{{\mathbf{v}}}_{a0} = \LU{0}{{\mathbf{v}}}_{m0} + \LU{0}{\tomega}_{m0} \times \left(\LU{0}{{\mathbf{n}}}\cdot \left(r_0-\frac{\delta}{2}\right)\right) , \qquad \LU{0}{{\mathbf{v}}}_{a1} = \LU{0}{{\mathbf{v}}}_{m1} + h_1 \LU{0}{\tomega}_{m1} \times \left(-\LU{0}{{\mathbf{n}}}\cdot \left(r_1-h_1 \frac{\delta}{2}\right)\right) .
 
+
+For the velocity \ :math:`\LU{0}{{\mathbf{v}}}_{a0}`\  of sphere 0 at the contact point the sphere-sphere and sphere-hollowsphere contact cases are computed equally. For the velocity \ :math:`\LU{0}{{\mathbf{v}}}_{a1}`\  of sphere 1 at the contact point, one negative sign \ :math:`h_1`\  is needed since the vector pointing to the contact point has the same direction for both spheres and one negative sign \ :math:`h_1`\  is needed to correctly compute the length of the vector pointing from the center of sphere 1 to the contact point.
 
 The normal force acting on marker 1 is generally written as
 
@@ -207,7 +224,7 @@ where \ :math:`f_c`\  is the elastic and \ :math:`f_d`\  the damping part. The d
    f_d = - d_c v_\mathrm{\delta,n} .
 
 
-The negative sign is because of the damping acting against the gap velocity: in the case of a positive normal (gap) velocity, the damping acts against \ :math:`\LU{0}{{\mathbf{n}}}`\  for marker 1. The elastic force \ :math:`f_c`\  is computed depending on the chosen impact model.
+The negative sign is because of the damping acting against the gap velocity: in the case of a positive normal (gap) velocity, the damping acts against \ :math:`\LU{0}{{\mathbf{n}}}`\  for marker 1. As an illustrative case, the gap velocity is positive, if sphere 0 does not move, i.e. \ :math:`\LU{0}{{\mathbf{v}}}_{m0}=0`\  holds, and sphere 1 in direction of the normal vector. Note that this holds for the sphere-sphere contact and sphere-hollowsphere contact cases. The elastic force \ :math:`f_c`\  is computed depending on the chosen impact model.
 
 CASE \ :math:`m_\mathrm{impact}=0`\ : the Adhesive Elasto-Plastic model described in  is used. This model captures the key bulk behavior of cohesive powders and granular soils. For the impact model, the plastic overlap \ :math:`\delta_p`\  is needed. It is computed with
 

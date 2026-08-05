@@ -52,13 +52,21 @@ try:
             if (('AVX' in __cpu_features__) and ('AVX2' in __cpu_features__) and
                 (__cpu_features__['AVX'] == True) and (__cpu_features__['AVX2'] == True)):
                 thisCpuHasAVX2 = True
-        #Numpy2.0 way, using numpy config:
-        elif 'AVX2' in numpy.__config__.CONFIG['SIMD Extensions']['found']: #this also works for Numpy 1.26 but not for 1.22 ....
-            thisCpuHasAVX2 = True
+        
+        else: #Numpy2.0 way, using numpy config:
+            thisCpuHasAVX2 = True  #assume that we have AVX2 for future cases
+
+            # try: #try this way, may fail in future
+            #     numpyInfo = numpy.__config__.CONFIG['SIMD Extensions']['found']
+            #     #some CPUs only show 'AVX', not 'AVX2'
+            #     if ('AVX2' in numpyInfo) or ('AVX' in numpyInfo): #this also works for Numpy 1.26 but not for 1.22 ....
+            #         thisCpuHasAVX2 = True
+            # except:
+            #     pass
         
         if thisCpuHasAVX2:
             if not __cpuHasAVX2 and hasattr(sys, 'exudynCPUhasAVX2'):
-                print('WARNING: user deactivated AVX2 support, but support detected on current CPU')
+                print('WARNING: user deactivated AVX2 support')
             else:
                 __cpuHasAVX2 = True
         elif __cpuHasAVX2:
@@ -68,9 +76,9 @@ try:
         #         __cpuHasAVX2 = True #standard case!
     else:
         __cpuHasAVX2 = True #for MacOS and Linux, this means that there is no exudynCPPnoAVX version!
-    del thisCpuHasAVX2
+    del thisCpuHasAVX2 #remove from exudyn scope
 except:
-    print('Warning: during import of exudyn, it was detected that either numpy, numpy.core module "_multiarray_umath" or "numpy.__config__.CONFIG" are missing')
+    print('Warning: during import of exudyn, detection of AVX2 compatibility failed')
 
 try:
     #for regular loading in installed python package
@@ -89,12 +97,18 @@ try:
             try:
                 from .exudynCPP import *
             except:
-                raise ImportError('Warning: Import of exudyn C++ module (with AVX2) failed; check your installation or try to import without AVX by settings sys.exudynCPUhasAVX2=False')
+                try: #fallback
+                    from .exudynCPPnoAVX import *
+                except:
+                    raise ImportError('Warning: Import of exudyn C++ module (with AVX2) failed; check your installation or try to import without AVX by settings sys.exudynCPUhasAVX2=False')
         else:
             try:
                 from .exudynCPPnoAVX import *
             except:
-                raise ImportError('Import of exudyn C++ module (without AVX2) failed; non-AVX2 versions are only available in release versions (without .dev1 appendix); check your installation, Python version, conda environment and site-packages for exudyn; try re-installation')
+                try: #fallback
+                    from .exudynCPP import *
+                except:
+                    raise ImportError('Import of exudyn C++ module (without AVX2) failed; non-AVX2 versions are only available in release versions (without .dev1 appendix); check your installation, Python version, conda environment and site-packages for exudyn; try re-installation')
 
 except:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders); no exudynFast! :
@@ -119,10 +133,10 @@ except:
     #import exudyn.demos as demos
 
 try:
-    from .mainSystemExtensions import JointPreCheckCalc #import just some function, will assign MainSystem patches
+    from .mainSystemExtensions import JointPreCheckCalcBodyMarkers #import just some function, will assign MainSystem patches
 except:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
-    from mainSystemExtensions import JointPreCheckCalc
+    from mainSystemExtensions import JointPreCheckCalcBodyMarkers
 
 
 __version__ = config.Version() #add __version__ to exudyn module ...
@@ -142,7 +156,7 @@ def RequireVersion(requiredVersionString):
 
     Example
     ----------
-    RequireVersion("1.0.26")
+    RequireVersion("1.10.0")
 
     """
     vExudyn = config.Version().split('.')

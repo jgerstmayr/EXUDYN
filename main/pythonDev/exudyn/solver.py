@@ -131,7 +131,7 @@ def SolverErrorMessage(solver, mbs, isStatic=False,
 #   showHints: show additional hints, if solver fails
 #   showCausingItems: if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
 #   autoAssemble: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
-#**output: bool; returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
+#**output::bool: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
@@ -154,13 +154,14 @@ def SolverErrorMessage(solver, mbs, isStatic=False,
 # exu.Print("iterations = ", mbs.sys['staticSolver'].it)
 # exu.Print("pos=", mbs.GetObjectOutputBody(body,localPosition=[0,0,0], 
 #       variableType=exu.OutputVariableType.Position))
-def SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(), 
+def SolveStatic(mbs, simulationSettings = None, 
                 updateInitialValues = False,
                 storeSolver = True,
                 showHints = False,
                 showCausingItems = True,
                 autoAssemble = True,
                 ):
+    if simulationSettings is None: simulationSettings = exudyn.SimulationSettings()
     if not mbs.systemIsConsistent and autoAssemble:
         exudyn.Print('WARNING: SolveStatic: mbs.systemIsConsistent=False, therefore calling mbs.Assemble() before solving; to avoid this, set autoAssemble=False')
         mbs.Assemble()
@@ -197,7 +198,7 @@ def SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(),
 #   showHints: show additional hints, if solver fails
 #   showCausingItems: if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
 #   autoAssemble: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
-#**output: bool; returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
+#**output::bool: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
 #**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
@@ -222,7 +223,7 @@ def SolveStatic(mbs, simulationSettings = exudyn.SimulationSettings(),
 # exu.Print("pos=", mbs.GetObjectOutputBody(body,localPosition=[0,0,0], 
 #       variableType=exu.OutputVariableType.Position))
 def SolveDynamic(mbs,
-                simulationSettings = exudyn.SimulationSettings(), 
+                simulationSettings = None, 
                 solverType = exudyn.DynamicSolverType.GeneralizedAlpha,
                 updateInitialValues = False,
                 storeSolver = True,
@@ -230,6 +231,7 @@ def SolveDynamic(mbs,
                 showCausingItems = True,
                 autoAssemble = True,
                 ):
+    if simulationSettings is None: simulationSettings = exudyn.SimulationSettings()
     success = False
     if not mbs.systemIsConsistent and autoAssemble:
         exudyn.Print('WARNING: SolveDynamic: mbs.systemIsConsistent=False, therefore calling mbs.Assemble() before solving; to avoid this, set autoAssemble=False')
@@ -304,7 +306,7 @@ def SolveDynamic(mbs,
 #**function: return success (True/False) and error message of solver after SolveSteps(...), SolveSystem(...), SolveDynamic(...) or SolveStatic(...) have been called. May also be set if other higher level functions called e.g. SolveSystem(...)
 #**input: 
 #  solverStructure: solver structure, as stored in mbs.sys or as created e.g. by exudyn.MainSolverExplicit()
-#**output: [success, errorString], returns success=True or False and in case of no success, information is provided in errorString
+#**output::List[bool, str]: returns list [success,errorString], in which success=True or False and in case of no success, information is provided in errorString
 #**example:
 #  #assume MainSystem mbs, exu library and simulationSettings:
 #  try:
@@ -348,7 +350,7 @@ def RestoreSimulationSettings(simulationSettings, store):
 #   returnConstraintJacobian: if True, the returned list contains [M, K, D, C, N] where C is the constraint jacobian and N is the nullspace matrix (may be empty)
 #   returnConstraintNullspace: if True, the returned list contains [M, K, D, C, N] where C is the constraint jacobian (may be empty) and N is the nullspace matrix
 #   autoAssemble: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
-#**output: [ArrayLike, ArrayLike, ArrayLike]; [M, K, D]; list containing numpy mass matrix M, stiffness matrix K and damping matrix D; for constraints, see options with arguments above, return values may change to [M, K, D, C, N]
+#**output::[ArrayLike, ArrayLike, ArrayLike]: [M, K, D]; list containing numpy mass matrix M, stiffness matrix K and damping matrix D; for constraints, see options with arguments above, return values may change to [M, K, D, C, N]
 #**notes: consider paper of Agundez, Vallejo, Freire, Mikkola, "The dependent coordinates in the linearization of constrained multibody systems: Handling and elimination", https://www.sciencedirect.com/science/article/pii/S0020740324000791
 #**belongsTo: MainSystem
 #**example:
@@ -375,13 +377,14 @@ def RestoreSimulationSettings(simulationSettings, store):
 # [M,K,D] = mbs.ComputeLinearizedSystem()
 # exu.Print('M=\n',M,'\nK=\n',K,'\nD=\n',D) 
 def ComputeLinearizedSystem(mbs, 
-                            simulationSettings = exudyn.SimulationSettings(),
+                            simulationSettings = None,
                             projectIntoConstraintNullspace = False,
                             singularValuesTolerance = 1e-12,
                             returnConstraintJacobian = False,
                             returnConstraintNullspace = False,
                             autoAssemble = True,
                             ):
+    if simulationSettings is None: simulationSettings = exudyn.SimulationSettings()
 
     #do not overide sensor files or solution files ...
     store = DeactivateWritingOfSolvers(simulationSettings)
@@ -477,7 +480,7 @@ def ComputeLinearizedSystem(mbs,
 #   ignoreAlgebraicEquations: if True, algebraic equations (and constraint jacobian) are not considered for eigenvalue computation; otherwise, the solver tries to automatically project the system into the nullspace kernel of the constraint jacobian using a SVD; this gives eigenvalues of the constrained system; eigenvectors are not computed
 #   singularValuesTolerance: tolerance used to distinguish between zero and nonzero singular values for algebraic constraints projection
 #   autoAssemble: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
-#**output: [ArrayLike, ArrayLike]; [eigenValues, eigenVectors]; eigenValues being a numpy array of eigen values ($\omega_i^2$, being the squared eigen frequencies in ($\omega_i$ in rad/s)!), eigenVectors a numpy array containing the eigenvectors in every column
+#**output::[ArrayLike, ArrayLike]: [eigenValues, eigenVectors]; eigenValues being a numpy array of eigen values ($\omega_i^2$, being the squared eigen frequencies in ($\omega_i$ in rad/s)!), eigenVectors a numpy array containing the eigenvectors in every column
 #**belongsTo: MainSystem
 #**author: Johannes Gerstmayr, Michael Pieber
 #**example:
@@ -513,13 +516,14 @@ def ComputeLinearizedSystem(mbs,
 # [eigenvaluesComplex, ev] = mbs.ComputeODE2Eigenvalues(computeComplexEigenvalues=True,
 #                                                       useAbsoluteValues=False)
 def ComputeODE2Eigenvalues(mbs, 
-                           simulationSettings = exudyn.SimulationSettings(),
+                           simulationSettings = None,
                            useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates=[],
                            convert2Frequencies = False, useAbsoluteValues = True, 
                            computeComplexEigenvalues = False,
                            ignoreAlgebraicEquations=False, singularValuesTolerance=1e-12,
                            autoAssemble = True,
                            ):
+    if simulationSettings is None: simulationSettings = exudyn.SimulationSettings()
 
     store = DeactivateWritingOfSolvers(simulationSettings)
 
@@ -713,7 +717,7 @@ def ComputeODE2Eigenvalues(mbs,
 #  useSVD: use singular value decomposition directly, also showing SVD values if verbose=True
 #  verbose: if True, it will show the singular values and one may decide if the threshold shall be adapted
 #  autoAssemble: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
-#**output: dict; returns dictionary with key words 'degreeOfFreedom', 'redundantConstraints', 'nODE2', 'nODE1', 'nAE', 'nPureAE', where: degreeOfFreedom = the system degree of freedom computed numerically, redundantConstraints=the number of redundant constraints, nODE2=number of ODE2 coordinates, nODE1=number of ODE1 coordinates, nAE=total number of constraints, nPureAE=number of constraints on algebraic variables (e.g., lambda=0) that are not coupled to ODE2 coordinates
+#**output::dict: returns dictionary with key words 'degreeOfFreedom', 'redundantConstraints', 'nODE2', 'nODE1', 'nAE', 'nPureAE', where: degreeOfFreedom = the system degree of freedom computed numerically, redundantConstraints=the number of redundant constraints, nODE2=number of ODE2 coordinates, nODE1=number of ODE1 coordinates, nAE=total number of constraints, nPureAE=number of constraints on algebraic variables (e.g., lambda=0) that are not coupled to ODE2 coordinates
 #**notes: this approach could possibly fail with special constraints! Currently only works with dense matrices, thus it will be slow for larger systems
 #**belongsTo: MainSystem
 #**example:
@@ -739,10 +743,12 @@ def ComputeODE2Eigenvalues(mbs,
 # mbs.Assemble()
 # dof = mbs.ComputeSystemDegreeOfFreedom(verbose=1)['degreeOfFreedom'] #print out details
 def ComputeSystemDegreeOfFreedom(mbs, 
-                simulationSettings = exudyn.SimulationSettings(),
+                simulationSettings = None,
                 threshold = 1e-12, verbose=False, useSVD=False,
                 autoAssemble = True,
                 ):
+    if simulationSettings is None: simulationSettings = exudyn.SimulationSettings()
+
     #use static solver, as it does not include factors from time integration (and no velocity derivatives) in the jacobian
     store = DeactivateWritingOfSolvers(simulationSettings)
 
@@ -860,7 +866,9 @@ if __name__ == '__main__':
     #3D rigid-body with revolute joint and spring, same as in TestModels/ComputeODE2AEeigenvaluesTest.py
     #compared to analytical solution
     if True:
-        from exudyn.utilities import *
+        from exudyn.utilities import ObjectGround, InertiaCuboid, MarkerBodyRigid,\
+            CartesianSpringDamper, VObjectConnectorCartesianSpringDamper
+            
         import exudyn.graphics as graphics 
         import numpy as np
 

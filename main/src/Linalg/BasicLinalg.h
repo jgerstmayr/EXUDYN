@@ -63,19 +63,40 @@ typedef MatrixList<6> Matrix6DList;
 
 namespace EXUmath {
 
+	template <typename T>
+	inline const ConstSizeMatrixBase<T, 9> Identity3D = ConstSizeMatrixBase<T,9>(3, 3, {
+		static_cast<T>(1), static_cast<T>(0), static_cast<T>(0),
+		static_cast<T>(0), static_cast<T>(1), static_cast<T>(0),
+		static_cast<T>(0), static_cast<T>(0), static_cast<T>(1)
+		});
+
+	template <typename T>
+	inline const ConstSizeMatrixBase<T, 9> Zero3D = ConstSizeMatrixBase<T, 9>(3, 3, {
+		static_cast<T>(0), static_cast<T>(0), static_cast<T>(0),
+		static_cast<T>(0), static_cast<T>(0), static_cast<T>(0),
+		static_cast<T>(0), static_cast<T>(0), static_cast<T>(0)
+		});
+
+	// You can also create aliases for the specific types you mentioned
+	inline const auto& unitMatrix3D = Identity3D<double>;
+	inline const auto& unitMatrix3DF = Identity3D<float>;
+	inline const auto& unitMatrix3DI = Identity3D<double>;
+	inline const auto& zeroMatrix3D = Zero3D<double>;
+	inline const auto& zeroMatrix3DF = Zero3D<double>;
+
 #ifndef __EXUDYN__APPLE__
-	inline static const Matrix3DF unitMatrix3DF(3, 3, { 1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f });
-	inline static const Matrix3D unitMatrix3D(3, 3, { 1.,0.,0., 0.,1.,0., 0.,0.,1. });
-	inline static const Matrix3D zeroMatrix3D(3, 3, 0.);
-	inline static const MatrixI unitMatrixI(3, 3, { 1,0,0, 0,1,0, 0,0,1 });
+	//inline static const Matrix3DF unitMatrix3DF(3, 3, { 1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f });
+	//inline static const Matrix3D unitMatrix3D(3, 3, { 1.,0.,0., 0.,1.,0., 0.,0.,1. });
+	//inline static const Matrix3D zeroMatrix3D(3, 3, 0.);
+	//inline static const MatrixI unitMatrixI(3, 3, { 1,0,0, 0,1,0, 0,0,1 });
 	inline static const Vector3D unitVecX({ 1.,0.,0. });
 	inline static const Vector3D unitVecY({ 0.,1.,0. });
 	inline static const Vector3D unitVecZ({ 0.,0.,1. });
 #else
-	static const Matrix3DF unitMatrix3DF(3, 3, { 1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f });
-	static const Matrix3D unitMatrix3D(3, 3, { 1.,0.,0., 0.,1.,0., 0.,0.,1. });
-	static const Matrix3D zeroMatrix3D(3, 3, 0.);
-	static const MatrixI unitMatrixI(3, 3, { 1,0,0, 0,1,0, 0,0,1 });
+	//static const Matrix3DF unitMatrix3DF(3, 3, { 1.f,0.f,0.f, 0.f,1.f,0.f, 0.f,0.f,1.f });
+	//static const Matrix3D unitMatrix3D(3, 3, { 1.,0.,0., 0.,1.,0., 0.,0.,1. });
+	//static const Matrix3D zeroMatrix3D(3, 3, 0.);
+	//static const MatrixI unitMatrixI(3, 3, { 1,0,0, 0,1,0, 0,0,1 });
 	static const Vector3D unitVecX({ 1.,0.,0. });
 	static const Vector3D unitVecY({ 0.,1.,0. });
 	static const Vector3D unitVecZ({ 0.,0.,1. });
@@ -283,7 +304,9 @@ namespace EXUmath {
 	template<class TVector>
 	inline void GramSchmidtOrthogonalization(const TVector& vector, TVector& normal)
 	{
-		Real h = (normal * vector) / (vector*vector);
+		Real s = (vector * vector);
+		CHECKandTHROW(s != 0, "GramSchmidtOrthogonalization: vector length is zero!");
+		Real h = (normal * vector) / s;
 		normal -= h * vector;
 	}
 
@@ -329,7 +352,7 @@ namespace EXUmath {
 	}
 
 	//! compute orthogonal, normalized basis from two given non-parallel and non-zero vectors (vector0, vector1);
-	//! In this version, Z is the leading vector, Y is used to define the plane and X is compute from cross product
+	//! In this version, X is the leading vector, Y is used to define the plane and Z is compute from cross product
 	//! column vectors in Matrix A are normalized
 	template <class TReal>
 	inline void OrthogonalBasisFromVectorsXY(SlimVectorBase<TReal, 3> vectorX,  //copy vectors because they are modified
@@ -712,6 +735,22 @@ namespace EXUmath {
 		}
 	}
 
+	//! scalar multiply different vector types and define result type
+	template<class TVector1, class TVector2, class TResult>
+	inline TResult MultVectors(const TVector1& vector1, const TVector2& vector2)
+	{
+		CHECKandTHROW((vector1.NumberOfItems() == vector2.NumberOfItems()),
+			"EXUmath::MultVectors(vector1,vector2,result): Size mismatch");
+
+		TResult result = (TResult)0.;
+
+		for (Index i = 0; i < vector1.NumberOfItems(); i++)
+		{
+			result += vector1[i] * vector2[i];
+		}
+		return result;
+	}
+
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! apply column-wise a transformation matrix of fixed size (e.g. for a 3xn matrix, multiply with 3x3 rotation matrix A => size=3)
 	template<class TMatrix>
@@ -1086,7 +1125,7 @@ namespace EXUmath {
 		//! get size of full vector
 		Index VectorSize() const { return vectorSize; }
 
-		//! set all matrix items to zero (in dense matrix, all entries are set 0, in sparse matrix, the vector of items is erased)
+		//! set all vector items to zero
 		void SetAllZero() { data.SetNumberOfItems(0); }
 
 		//! reset matrices and free memory

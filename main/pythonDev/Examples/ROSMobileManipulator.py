@@ -523,7 +523,7 @@ def SimulationMobileRobot(funcStatMachine,myROSInterface, p0=[0,0], theta0=0, fl
             return True
         
     mbs.SetPreStepUserFunction(PreStepUF)
-    SC.visualizationSettings.interactive.trackMarker = mobileRobotBackDic['mPlatformList'][0]
+    SC.visualizationSettings.view0.camera.trackMarker = mobileRobotBackDic['mPlatformList'][0]
     # start simulation: 
     mbs.Assemble()
     PreStepUF(mbs, 0)
@@ -535,9 +535,9 @@ def SimulationMobileRobot(funcStatMachine,myROSInterface, p0=[0,0], theta0=0, fl
     SC.visualizationSettings.nodes.basisSize = 0.1
     SC.visualizationSettings.loads.show = False
     SC.visualizationSettings.openGL.multiSampling=4
-    SC.visualizationSettings.openGL.shadow = 0.5
-    SC.visualizationSettings.openGL.light0position = [0, -2, 10, 0]
-    SC.visualizationSettings.openGL.shadowPolygonOffset = 0.1
+    SC.visualizationSettings.openGL.light0.shadow = 0.5
+    SC.visualizationSettings.openGL.light0.position = [0, -2, 10, 0]
+    SC.visualizationSettings.openGL.light0.shadowPolygonOffset = 0.1
     #SC.renderer.DoIdleTasks()
 
     simulationSettings = exu.SimulationSettings() #takes currently set values or default values
@@ -567,14 +567,14 @@ def SimulationMobileRobot(funcStatMachine,myROSInterface, p0=[0,0], theta0=0, fl
 
     SC.visualizationSettings.general.autoFitScene=False
     SC.visualizationSettings.general.renderWindowString = 'Mobile Robot Simulation'
-    SC.visualizationSettings.window.renderWindowSize=[1920,1200]
-    SC.visualizationSettings.window.startupTimeout=5000
-    SC.visualizationSettings.interactive.selectionLeftMouse = False
-    SC.visualizationSettings.interactive.selectionRightMouse = False
+    SC.visualizationSettings.view0.window.renderWindowSize=[1920,1200]
+    SC.visualizationSettings.general.rendererStartupTimeout=5000
+    SC.visualizationSettings.interactive.advanced.selectionLeftMouse = False
+    SC.visualizationSettings.interactive.advanced.selectionRightMouse = False
     
-    SC.visualizationSettings.openGL.initialModelRotation =RotationMatrixZ(-0.2) @ RotationMatrixX(np.pi/2.7)  #
-    SC.visualizationSettings.openGL.initialZoom = 1.5
-    SC.visualizationSettings.openGL.initialCenterPoint = [0, 2, 0] # -1.7, -2, -2]
+    SC.visualizationSettings.openGL.advanced.initialModelRotation =RotationMatrixZ(-0.2) @ RotationMatrixX(np.pi/2.7)  #
+    SC.visualizationSettings.openGL.advanced.initialZoom = 1.5
+    SC.visualizationSettings.openGL.advanced.initialCenterPoint = [0, 2, 0] # -1.7, -2, -2]
     # SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
     # SC.visualizationSettings.contour.outputVariableComponent = 2 #0=x, 1=y, 2=z
     SC.renderer.Start()

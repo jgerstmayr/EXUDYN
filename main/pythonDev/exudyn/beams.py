@@ -19,7 +19,7 @@ import exudyn.itemInterface as eii
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: generate 2D ANCF cable elements along straight line given by two points; applies discretization (numberOfElements) and may apply gravity as well as nodal constraints
+#**function: DEPRECATED: generate 2D ANCF cable elements along straight line given by two points; applies discretization (numberOfElements) and may apply gravity as well as nodal constraints
 #**input:
 #  mbs: the system where ANCF cables are added
 #  positionOfNode0: 3D position (list or np.array) for starting point of line
@@ -39,7 +39,6 @@ def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numbe
                                 massProportionalLoad=[0,0,0], 
                                 fixedConstraintsNode0=[0,0,0,0], fixedConstraintsNode1=[0,0,0,0],
                                 nodeNumber0=-1, nodeNumber1=-1):
-
     return GenerateStraightBeam(mbs=mbs, positionOfNode0=positionOfNode0, positionOfNode1=positionOfNode1, 
                                 numberOfElements=numberOfElements, beamTemplate=cableTemplate,
                                 gravity=massProportionalLoad, 
@@ -48,7 +47,7 @@ def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numbe
     
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: generate 3D ANCF cable elements along straight line given by two points; applies discretization (numberOfElements) and may apply gravity as well as nodal constraints
+#**function: DEPRECATED: generate 3D ANCF cable elements along straight line given by two points; applies discretization (numberOfElements) and may apply gravity as well as nodal constraints
 #**input:
 #  mbs: the system where ANCF cables are added
 #  positionOfNode0: 3D position (list or np.array) for starting point of line
@@ -71,16 +70,52 @@ def GenerateStraightLineANCFCable(mbs, positionOfNode0, positionOfNode1, numberO
                                 gravity=massProportionalLoad, 
                                 fixedConstraintsNode0=fixedConstraintsNode0, fixedConstraintsNode1=fixedConstraintsNode1,
                                 nodeNumber0=nodeNumber0, nodeNumber1=nodeNumber1)
-    
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#**function: new generic function to create beam elements along straight line given by two points; applies discretization (numberOfElements) and may apply gravity as well as nodal ground constraints
+#**input:
+#  mbs: the system where beam elements are added
+#  positionStart: 3D position (list or np.array) for starting point of line
+#  positionEnd: 3D position (list or np.array) for end point of line
+#  numberOfElements: for discretization of line
+#  beamTemplate: a Beam object (ObjectANCFCable2D, ObjectBeamGeometricallyExact2D, ObjectALEANCFCable2D, etc.), containing the desired beam type and properties; for Beam2D the size of nodeNumbers in the template defines the order (2=linear, 3=quadratic); finite (beam) element length and node numbers are filled automatically; for ALE element, the beamTemplate.nodeNumbers[2] must be set in the template and will not be overwritten
+#  gravity: a 3D list or np.array, containing the gravity vector or zero
+#  groundConstraintsStart: a list of True/False values, indicating the coordinate contraints on the first node (position and slope); must agree with the number of coordinates in the node; use None to add no constraints
+#  groundConstraintsEnd: a list of True/False values, indicating the coordinate contraints on the last node (position and slope); must agree with the number of coordinates in the node; use None to add no constraints
+#  nodeNumberStart: if not None, this node number defines the node that shall be used at positionStart; allow to connect with other beams
+#  nodeNumberEnd: if not None, this node number defines the node that shall be used at positionEnd; allow to connect with other beams
+#**output: returns a dict containing created items {'nodes', 'elements', 'nodePositions', constraintObjects', 'loads'}
+def GenerateBeamElementsAlongLine(mbs, positionStart, positionEnd, numberOfElements, 
+                           beamTemplate=None,
+                           gravity=[0,0,0], 
+                           groundConstraintsStart=None, groundConstraintsEnd=None,
+                           nodeNumberStart=None, nodeNumberEnd=None,
+                           EI=None, EA=None, GA=None):
+
+    beamData = GenerateStraightBeam(mbs=mbs, 
+                                    positionOfNode0=positionStart, positionOfNode1=positionEnd,
+                                    numberOfElements=numberOfElements, beamTemplate=beamTemplate,
+                                    gravity=gravity, 
+                                    fixedConstraintsNode0=groundConstraintsStart, fixedConstraintsNode1=groundConstraintsEnd,
+                                    nodeNumber0=nodeNumberStart, nodeNumber1=nodeNumberEnd)
+
+    [beamNodeList, beamObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList] = beamData
+    beamElementsDict = {'nodes': beamNodeList, 
+                 'elements': beamObjectList,
+                 'nodePositions': cableNodePositionList,
+                 'constraintObjects': cableCoordinateConstraintList,
+                 'loads': loadList,
+                 }
+    return beamElementsDict
     
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: generic function to create beam elements along straight line given by two points; applies discretization (numberOfElements) and may apply gravity as well as nodal constraints
+#**function: DEPRECATED: generic function to create beam elements along straight line given by two points; applies discretization (numberOfElements) and may apply gravity as well as nodal constraints
 #**input:
 #  mbs: the system where beam elements are added
 #  positionOfNode0: 3D position (list or np.array) for starting point of line
 #  positionOfNode1: 3D position (list or np.array) for end point of line
 #  numberOfElements: for discretization of line
-#  beamTemplate: a Beam object (ObjectANCFCable2D, ObjectBeamGeometricallyExact2D, ObjectALEANCFCable2D, etc.), containing the desired beam type and properties; finite (beam) element length and node numbers are set automatically; for ALE element, the beamTemplate.nodeNumbers[2] must be set in the template and will not be overwritten
+#  beamTemplate: a Beam object (ObjectANCFCable2D, ObjectBeamGeometricallyExact2D, ObjectALEANCFCable2D, etc.), containing the desired beam type and properties; for Beam2D the size of nodeNumbers in the template defines the order (2=linear, 3=quadratic); finite (beam) element length and node numbers are filled automatically; for ALE element, the beamTemplate.nodeNumbers[2] must be set in the template and will not be overwritten
 #  gravity: a 3D list or np.array, containing the gravity vector or zero
 #  fixedConstraintsNode0: a list of binary values, indicating the coordinate contraints on the first node (position and slope); must agree with the number of coordinates in the node; use None to add no constraints
 #  fixedConstraintsNode1: a list of binary values, indicating the coordinate contraints on the last node (position and slope); must agree with the number of coordinates in the node; use None to add no constraints
@@ -109,7 +144,6 @@ def GenerateStraightLineANCFCable(mbs, positionOfNode0, positionOfNode1, numberO
 def GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, numberOfElements, beamTemplate,
                          gravity=[0,0,0], fixedConstraintsNode0=None, fixedConstraintsNode1=None,
                          nodeNumber0=-1, nodeNumber1=-1):
-    
     beamNodeList=[]
     beamNodePositionList=[positionOfNode0]
     beamObjectList=[]
@@ -120,7 +154,7 @@ def GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, numberOfElements
         exudyn.Print('WARNING: GenerateStraightBeam: positionOfNode0 should be a 3D vector')
     if len(positionOfNode1) != 3:
         exudyn.Print('WARNING: GenerateStraightBeam: positionOfNode1 should be a 3D vector')
-
+    numberOfNodes = 2
     
     if '__class__' in beamTemplate.__dir__():
         className = str(beamTemplate.__class__.__name__)
@@ -138,6 +172,8 @@ def GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, numberOfElements
             nDOFnode = 3
             is2D = True
             isGeomExact = True
+            if len(beamTemplate.nodeNumbers) == 3:
+                numberOfNodes = 3
         else:
             raise ValueError('GenerateStraightBeam: invalid beamTemplate "'+className+'" (maybe not implemented)')
             
@@ -188,13 +224,14 @@ def GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, numberOfElements
     
     # add all other ANCF nodes (straight reference configuration) and attach Gravity marker to them:
     for i in range(numberOfElements): 
-        
+ 
+        if isGeomExact and numberOfNodes == 3:
+            positionOfMidNode = (np.array(positionOfNode0)+beamLength*beamSlopeVec*(i+0.5)).tolist()
+            beamNodePositionList+=[positionOfMidNode]
+            nBeamMid = mbs.AddNode(NodeTemplate(referenceCoordinates=ConvertVector(positionOfMidNode, is2D) + beamRotations)) 
+            beamNodeList+=[nBeamMid]
+                
         positionOfCurrentNode = (np.array(positionOfNode0)+beamLength*beamSlopeVec*(i+1)).tolist()
-        # positionOfCurrentNode=[positionOfNode0[0]+beamLength*beamSlopeVec[0]*(i+1),
-        #                        positionOfNode0[1]+beamLength*beamSlopeVec[1]*(i+1), 
-        #                        positionOfNode0[2]+beamLength*beamSlopeVec[2]*(i+1), 
-        #                        ]
-        #if is2D: positionOfCurrentNode[2] = 0
         
         beamNodePositionList+=[positionOfCurrentNode]
         
@@ -202,15 +239,14 @@ def GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, numberOfElements
             nBeamLast = nodeNumber1
         else:
             nBeamLast = mbs.AddNode(NodeTemplate(referenceCoordinates=ConvertVector(positionOfCurrentNode, is2D) + beamRotations)) 
-            # if is2D:
-            #     nBeamLast = mbs.AddNode(eii.NodePoint2DSlope1(referenceCoordinates=[positionOfCurrentNode[0],positionOfCurrentNode[1],beamSlopeVec[0],beamSlopeVec[1]]))
-            # else:
-            #     nBeamLast = mbs.AddNode(eii.NodePointSlope1(referenceCoordinates=list(positionOfCurrentNode) + list(beamSlopeVec) ))
         
         beamNodeList+=[nBeamLast]
         
-        #do not override all node numbers, as nodeNumbers[2] may be ALE node
-        beamTemplate.nodeNumbers[0:2]=[beamNodeList[i],beamNodeList[i+1]]
+        if not (isGeomExact and numberOfNodes == 3):
+            #do not override all node numbers, as nodeNumbers[2] may be ALE node
+            beamTemplate.nodeNumbers[0:2]=[beamNodeList[-2],beamNodeList[-1]]
+        else:
+            beamTemplate.nodeNumbers[0:3]=[beamNodeList[-3],beamNodeList[-2],beamNodeList[-1]]
             
         oBeam=mbs.AddObject(beamTemplate)
         beamObjectList+=[oBeam]
@@ -273,8 +309,6 @@ def GenerateCircularArcANCFCable2D(mbs, positionOfNode0, radius, startAngle, arc
                                    numberOfElements, cableTemplate,
                                    massProportionalLoad=[0,0,0], fixedConstraintsNode0=[0,0,0,0], fixedConstraintsNode1=[0,0,0,0],
                                    nodeNumber0=-1, nodeNumber1=-1, setCurvedReferenceConfiguration=True, verboseMode=False):
-    
-
     cableNodeList=[]
     cableNodePositionList=[positionOfNode0]
     cableObjectList=[]
@@ -428,7 +462,6 @@ def CreateReevingCurve(circleList, drawingLinesPerCircle = 64, numberOfANCFnodes
                        radialOffset = 0., closedCurve=False,
                        graphicsElementsPerCircle=64, graphicsNodeSize=0,
                        colorCircles=[0.,0.5,1.,1.], colorLines=[1.,0.5,0.,1.]):
-
     nodesANCFcreated = numberOfANCFnodes
     minP=np.array([ 1e30, 1e30, 1e30])
     maxP=np.array([-1e30,-1e30,-1e30])
@@ -655,7 +688,6 @@ def CreateReevingCurve(circleList, drawingLinesPerCircle = 64, numberOfANCFnodes
 def PointsAndSlopes2ANCFCable2D(mbs, ancfPointsSlopes, elementLengths, cableTemplate, massProportionalLoad=[0,0,0], 
                                 fixedConstraintsNode0=[0,0,0,0], fixedConstraintsNode1=[0,0,0,0], firstNodeIsLastNode=True,
                                 elementCurvatures=[], graphicsSizeConstraints=-1):
-
     cableNodeList=[]
     cableNodePositionList=[]
     cableObjectList=[]
@@ -767,7 +799,6 @@ def GenerateSlidingJoint(mbs,cableObjectList,markerBodyPositionOfSlidingBody,loc
 def GenerateAleSlidingJoint(mbs,cableObjectList,markerBodyPositionOfSlidingBody,AleNode,
                             localMarkerIndexOfStartCable=0,AleSlidingOffset=0,
                             activeConnector=True, penaltyStiffness=0):
-
     cableMarkerList = []#list of Cable2DCoordinates markers
     offsetList = []     #list of offsets counted from first cable element; needed in sliding joint
     offset = 0          #first cable element has offset 0

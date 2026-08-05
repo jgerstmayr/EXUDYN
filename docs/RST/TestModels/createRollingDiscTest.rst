@@ -78,8 +78,8 @@ You can view and download this file on Github: `createRollingDiscTest.py <https:
    SC.visualizationSettings.nodes.drawNodesAsPoint  = False
    SC.visualizationSettings.nodes.showBasis = True
    SC.visualizationSettings.nodes.basisSize = 0.015
-   SC.visualizationSettings.openGL.perspective = 2
-   SC.visualizationSettings.openGL.shadow=0.3
+   SC.visualizationSettings.view0.camera.perspective = 1
+   SC.visualizationSettings.openGL.light0.shadow=0.3
    SC.visualizationSettings.openGL.multiSampling=4
    
    if useGraphics:

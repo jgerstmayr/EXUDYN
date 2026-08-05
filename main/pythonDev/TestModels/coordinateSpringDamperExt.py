@@ -259,7 +259,7 @@ if useGraphics:
     simulationSettings.timeIntegration.realtimeFactor = 2
 
 SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
-SC.visualizationSettings.window.renderWindowSize=[1200,1024]
+SC.visualizationSettings.view0.window.renderWindowSize=[1200,1024]
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SC.visualizationSettings.general.autoFitScene = False #otherwise, renderState not accepted for zoom
 

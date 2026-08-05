@@ -887,9 +887,9 @@ class RigidBodyInertia:
         Iy = inertiaTensor[1,1]
         Iz = inertiaTensor[2,2]
         if (Ix + Iy < Iz) or (Ix + Iz < Iy) or (Iy + Iz < Ix):
-            exu.Print('WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangule inequality! This may lead to unphysical and numerically unstable results!')
+            exu.Print('WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangle inequality! This may lead to unphysical and numerically unstable results!')
         if (Ix + Iy < Iz) or (Ix + Iz < Iy) or (Iy + Iz < Ix):
-            exu.Print('WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangule inequality! This may lead to unphysical and numerically unstable results!')
+            exu.Print('WARNING: RigidBodyInertia: inertiaTensor does not fulfill triangle inequality! This may lead to unphysical and numerically unstable results!')
 
         norm = np.linalg.norm(inertiaTensor)
         if norm != 0: #in case of mass point, this shall be possible

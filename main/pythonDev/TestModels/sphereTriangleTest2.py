@@ -35,11 +35,9 @@ mbs = SC.AddSystem()
 
 solverList = [
               exu.DynamicSolverType.GeneralizedAlpha, 
+              exu.DynamicSolverType.VelocityVerlet,
               #exu.DynamicSolverType.TrapezoidalIndex2, #not used in test
               #exu.DynamicSolverType.ExplicitEuler,     #not used in test
-              exu.DynamicSolverType.VelocityVerlet,
-              #exu.DynamicSolverType.RK44,   #not recommended as multi-stage integration over discontinuities not meaningful
-              #exu.DynamicSolverType.DOPRI5, #not recommended, as discontinuities lead to problems with stepsize selection
               ]
 
 listSolutions = []
@@ -166,8 +164,13 @@ for solverNum, solver in enumerate(solverList):
     simulationSettings.solutionSettings.writeSolutionToFile = True
     simulationSettings.solutionSettings.solutionWritePeriod = 0.005
     simulationSettings.solutionSettings.sensorsWritePeriod = 0.001  #output interval
+
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
     simulationSettings.timeIntegration.endTime = tEnd
+    # simulationSettings.timeIntegration.numberOfSteps = 1
+    # simulationSettings.timeIntegration.endTime = stepSize
+    simulationSettings.timeIntegration.verboseMode = 1
+
     #simulationSettings.timeIntegration.simulateInRealtime = True
     simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-6
     simulationSettings.timeIntegration.newton.relativeTolerance = 1e-6
@@ -189,24 +192,23 @@ for solverNum, solver in enumerate(solverList):
     simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
     
     simulationSettings.displayStatistics = True
-    simulationSettings.timeIntegration.verboseMode = 1
-    SC.visualizationSettings.general.drawCoordinateSystem = False
+    SC.visualizationSettings.view0.scene.drawCoordinateSystem = False
     SC.visualizationSettings.general.showSolverInformation = False
     
     #++++++++++++++++++++++++++++++++++++++++++++++++++
     #special visualization options
     SC.visualizationSettings.openGL.multiSampling = 2
-    SC.visualizationSettings.openGL.shadow = 0.2
-    SC.visualizationSettings.openGL.depthSorting = True
-    SC.visualizationSettings.openGL.light0position = [3, -5, 10.0, 0.0]
-    SC.visualizationSettings.openGL.enableLight1 = False
-    SC.visualizationSettings.openGL.perspective = 1
+    SC.visualizationSettings.openGL.light0.shadow = 0.2
+    SC.visualizationSettings.openGL.advanced.depthSorting = True
+    SC.visualizationSettings.openGL.light0.position = [3, -5, 10.0, 0.0]
+    SC.visualizationSettings.openGL.light1.enable = False
+    SC.visualizationSettings.view0.camera.perspective = 1
     SC.visualizationSettings.raytracer.numberOfThreads = 16
     SC.visualizationSettings.raytracer.keepWindowActive = True
     SC.visualizationSettings.raytracer.imageSizeFactor = 7
     SC.visualizationSettings.raytracer.maxTransparencyDepth = 2
     SC.visualizationSettings.raytracer.maxReflectionDepth = 2
-    SC.visualizationSettings.raytracer.searchTreeFactor = 8
+    SC.visualizationSettings.raytracer.advanced.searchTreeFactor = 8
     SC.visualizationSettings.raytracer.verbose = True
     
     mat0 = SC.renderer.materials.Get(0)
@@ -223,7 +225,7 @@ for solverNum, solver in enumerate(solverList):
     mat1.reflectivity = 0.2
     SC.renderer.materials.Set(4,mat1)
     
-    SC.visualizationSettings.window.renderWindowSize=[1280,1024]
+    SC.visualizationSettings.view0.window.renderWindowSize=[1280,1024]
     SC.visualizationSettings.nodes.showBasis = True
     SC.visualizationSettings.nodes.basisSize = radius*1.3
     SC.visualizationSettings.exportImages.saveImageTimeOut = 500000
@@ -254,6 +256,11 @@ for solverNum, solver in enumerate(solverList):
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 exu.Print('solution of sphereTriangleTest2=',testSolution) 
 exudynTestGlobals.testResult = testSolution
+#dense:  4.356119232234876 (since V1.10.78)
+#sparse: 4.356119232231812 (since V1.10.78)
+#OLD
+#sparse: 4.356128117693937 (until V1.10.77)
+#dense:  4.356119232234876 (until V1.10.77)
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 for i, sol in enumerate(listSolutions):

@@ -185,7 +185,7 @@ You can view and download this file on Github: `rigidRotor3Drunup.py <https://gi
    if createAnimation:
        simulationSettings.solutionSettings.recordImagesInterval = 0.2
        SC.visualizationSettings.exportImages.saveImageFileName = "images/frame"
-       SC.visualizationSettings.window.renderWindowSize = [1600,1080]
+       SC.visualizationSettings.view0.window.renderWindowSize = [1600,1080]
    
    
    SC.renderer.Start()              #start graphics visualization

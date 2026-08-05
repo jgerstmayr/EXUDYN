@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-06-15  11:03:49 (last modified)
+* @date         2026-04-06  20:09:36 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -64,7 +64,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectContactSphereTriangle
-* @brief        [UNDER DEVELOPMENT] A simple contact connector between a sphere (marker0) and a triangle (marker1). Penalty-based contact is computed from penetration of the sphere with the triangle, including contact with edges if desired.
+* @brief        A simple contact connector between a sphere (marker0) and a triangle (marker1). Penalty-based contact is computed from penetration of the sphere with the triangle, including contact with edges if desired.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -177,7 +177,7 @@ public: // AUTO:
     //! AUTO:  provide requested markerType for connector
     virtual Marker::Type GetRequestedMarkerType() const override
     {
-        return (Marker::Type)((Index)Marker::Position + (Index)Marker::Orientation);
+        return (Marker::Type)((Index)Marker::Position + (parameters.dynamicFriction!=0)*(Index)Marker::Orientation);
     }
 
     //! AUTO:  return object type (for node treatment in computation)
@@ -195,12 +195,12 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
-            (Index)OutputVariableType::Position +
-            (Index)OutputVariableType::Displacement +
-            (Index)OutputVariableType::DisplacementLocal +
-            (Index)OutputVariableType::Director1 +
-            (Index)OutputVariableType::Force +
-            (Index)OutputVariableType::Torque );
+            (Index64)OutputVariableType::Position +
+            (Index64)OutputVariableType::Displacement +
+            (Index64)OutputVariableType::DisplacementLocal +
+            (Index64)OutputVariableType::Director1 +
+            (Index64)OutputVariableType::Force +
+            (Index64)OutputVariableType::Torque );
     }
 
 };

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-06  23:48:37 (last modified)
+* @date         2026-02-05  22:13:56 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -62,7 +62,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectGenericODE2
-* @brief        A system of \f$n\f$ second order ordinary differential equations (\hac{ODE2}), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE that all matrices, vectors, etc. must have the same dimensions \f$n\f$ or \f$(n \times n)\f$, or they must be empty \f$(0 \times 0)\f$, except for the mass matrix which always needs to have dimensions \f$(n \times n)\f$.
+* @brief        A system of \f$n\f$ second order ordinary differential equations (\hac{ODE2}), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE: all matrices, vectors, etc. must have the same dimensions \f$n\f$ or \f$(n \times n)\f$, or they must be empty \f$(0 \times 0)\f$, except for the mass matrix which always needs to have dimensions \f$(n \times n)\f$.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -272,11 +272,11 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
-            (Index)OutputVariableType::CoordinatesTotal +
-            (Index)OutputVariableType::Coordinates +
-            (Index)OutputVariableType::Coordinates_t +
-            (Index)OutputVariableType::Coordinates_tt +
-            (Index)OutputVariableType::Force );
+            (Index64)OutputVariableType::CoordinatesTotal +
+            (Index64)OutputVariableType::Coordinates +
+            (Index64)OutputVariableType::Coordinates_t +
+            (Index64)OutputVariableType::Coordinates_tt +
+            (Index64)OutputVariableType::Force );
     }
 
 };

@@ -44,17 +44,15 @@ extern PySpecial pySpecial;			//! special features; affects exudyn globally; tre
 //! build main system (unconventional way!)
 MainSystem::MainSystem()
 {
-	//CSystem* cSystem = new CSystem();
-
-	//MainSystem* mainSystem = new MainSystem();
 	cSystem.GetSystemData().SetMainSystemBacklink(this);
-	//this->cSystem = cSystem;
 	this->mainSystemData.SetCSystemData(&(cSystem.GetSystemData()));
 	this->LinkToVisualizationSystem(); //links the system to be rendered in OpenGL
 	this->SetInteractiveMode(false);
 
 	this->SetMainSystemIndex(-1); //indicates that there is no system container so far
 	this->SetMainSystemContainer(nullptr);
+
+	//=> Reset() is called in MainSystemContainer!
 }
 
 
@@ -72,7 +70,6 @@ void MainSystem::Reset()
 	visualizationSystem.Reset();
 
 	interactiveMode = false;
-	//mainSystemIndex = -1; //... check if this is correctly set? test several SC.Reset and similar operations ==> this MainSystem would not be usable any more, as it is not linked to SystemContainer
 }
 
 void MainSystem::SystemHasChanged()

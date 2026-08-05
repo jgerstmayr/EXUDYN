@@ -157,7 +157,7 @@ for nMasses in [0, 1, 2, 4]:
                         
                         SC.visualizationSettings.nodes.drawNodesAsPoint = False
                         SC.visualizationSettings.nodes.tiling = 32
-                        SC.visualizationSettings.window.alwaysOnTop = True
+                        SC.visualizationSettings.view0.window.alwaysOnTop = True
                         
                         #start solver:
                         if useGraphics:

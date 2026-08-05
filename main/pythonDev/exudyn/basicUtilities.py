@@ -182,8 +182,7 @@ def Normalize(v):
     
 #**function: apply tilde operator (skew) to 3D-vector and return skew matrix
 #**input: 3D vector v as list or in numpy format
-#**output: matrix as list of lists with the skew-symmetric matrix from v: 
-#  $\left[\!\! \begin{array}{ccc} 0 & -v[2] & v[1] \\ v[2] & 0 & -v[0] \\ -v[1] & v[0] & 0  \end{array} \!\!\right]$
+#**output: matrix as list of lists with the skew-symmetric matrix from v: $\left[\!\! \begin{array}{ccc} 0 & -v[2] & v[1] \\ v[2] & 0 & -v[0] \\ -v[1] & v[0] & 0  \end{array} \!\!\right]$
 def Vec2Tilde(v):
     print('Vec2Tilde is deprecated; use exudyn.rigidBodyUtilities.Skew(...)')
     return [[0.,-v[2],v[1]],[v[2],0.,-v[0]],[-v[1],v[0],0.]]

@@ -5,7 +5,7 @@
 NodeRigidBodyRotVecLG
 =====================
 
-A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies; the node has 3 displacement coordinates and three rotation coordinates and can be used in combination with explicit Lie Group time integration methods.
+A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies. The node has 3 displacement coordinates and three rotation coordinates and can be used in combination with explicit Lie Group time integration methods.
 
 Authors: Gerstmayr Johannes, Holzinger Stefan
 

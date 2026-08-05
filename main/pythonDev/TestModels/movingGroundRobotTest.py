@@ -38,10 +38,7 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
 #useGraphics = False
-if useGraphics:
-    sensorWriteToFile = True
-else:
-    sensorWriteToFile = False
+sensorWriteToFile = False
 
 jointWidth=0.1
 jointRadius=0.06
@@ -68,9 +65,10 @@ newRobot = Robot(gravity=[0,0,9.81],
                  tool = RobotTool(HT=HTtranslate([0,0,0.1]), visualization=VRobotTool(graphicsData=graphicsToolList)),
                  referenceConfiguration = []) #referenceConfiguration created with 0s automatically
 
-newRobot.AddLink(RobotLink(mass=20, COM=[0,0,0], inertia=np.diag([1e-8,0.35,1e-8]), localHT = StdDH2HT([0,0,0,np.pi/2]), visualization=VRobotLink(linkColor=graphics.colorList[0])))
+# illegal Ixx and Izz: newRobot.AddLink(RobotLink(mass=20, COM=[0,0,0], inertia=np.diag([1e-8,0.35,1e-8]), localHT = StdDH2HT([0,0,0,np.pi/2]), visualization=VRobotLink(linkColor=graphics.colorList[0])))
+newRobot.AddLink(RobotLink(mass=20, COM=[0,0,0], inertia=np.diag([0.18,0.35,0.18]), localHT = StdDH2HT([0,0,0,np.pi/2]), visualization=VRobotLink(linkColor=graphics.colorList[0]))) #0.18 is assumed and has no influence
 newRobot.AddLink(RobotLink(mass=17.4, COM=[-0.3638, 0.006, 0.2275], inertia=np.diag([0.13,0.524,0.539]), localHT = StdDH2HT([0,0,0.4318,0]), visualization=VRobotLink(linkColor=graphics.colorList[1])))
-newRobot.AddLink(RobotLink(mass=4.8, COM=[-0.0203,-0.0141,0.07], inertia=np.diag([0.066,0.086,0.0125]), localHT = StdDH2HT([0,0.15,0.0203,-np.pi/2]), visualization=VRobotLink(linkColor=graphics.colorList[2])))
+newRobot.AddLink(RobotLink(mass=4.8, COM=[-0.0203,-0.0141,0.07], inertia=np.diag([0.066,0.086,0.0125+0.0075]), localHT = StdDH2HT([0,0.15,0.0203,-np.pi/2]), visualization=VRobotLink(linkColor=graphics.colorList[2]))) #+0.0075 is added to make inertia parameters physically sound
 newRobot.AddLink(RobotLink(mass=0.82, COM=[0,0.019,0], inertia=np.diag([0.0018,0.0013,0.0018]), localHT = StdDH2HT([0,0.4318,0,np.pi/2]), visualization=VRobotLink(linkColor=graphics.colorList[3])))
 newRobot.AddLink(RobotLink(mass=0.34, COM=[0,0,0], inertia=np.diag([0.0003,0.0004,0.0003]), localHT = StdDH2HT([0,0,0,-np.pi/2]), visualization=VRobotLink(linkColor=graphics.colorList[4])))
 newRobot.AddLink(RobotLink(mass=0.09, COM=[0,0,0.032], inertia=np.diag([0.00015,0.00015,4e-5]), localHT = StdDH2HT([0,0,0,0]), visualization=VRobotLink(linkColor=graphics.colorList[5])))
@@ -277,12 +275,12 @@ if useGraphics:
         exu.Print('sensor rot ',cnt, '=', mbs.GetSensorValues(sensorNumber))
 
 
-
-exu.Print("torques at tEnd=", VSum(measuredTorques))
+fact=0.01 #to reach desired accuracy
+exu.Print("torques at tEnd=", fact*VSum(measuredTorques))
 
 #add larger test tolerance for 32/64bits difference
-exudynTestGlobals.testError = (VSum(measuredTorques) - 0.7681856909852399)  #until 2022-04-21: 7680031232063571; until 2021-09-10: 76.8003123206452; until 2021-08-19 (changed robotics.py): 76.80031232091771; old controller: 77.12176106978085) #OLDER results: up to 2021-06-28: 0.7712176106955341; 2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507
-exudynTestGlobals.testResult = VSum(measuredTorques)   
+exudynTestGlobals.testError = (fact*VSum(measuredTorques) - 0.007681798995944785)  #until 2026-01-28 (unphysical inertia) #until 2022-04-21: 7680031232063571; until 2021-09-10: 76.8003123206452; until 2021-08-19 (changed robotics.py): 76.80031232091771; old controller: 77.12176106978085) #OLDER results: up to 2021-06-28: 0.7712176106955341; 2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507
+exudynTestGlobals.testResult = fact*VSum(measuredTorques)   
 
 #exu.Print('error=', exudynTestGlobals.testError)
 

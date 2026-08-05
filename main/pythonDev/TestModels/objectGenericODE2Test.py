@@ -207,8 +207,8 @@ SC.visualizationSettings.bodies.deformationScaleFactor = 10 #use this factor to 
 if SC.visualizationSettings.bodies.deformationScaleFactor !=1:
     SC.visualizationSettings.nodes.show = False #nodes are not scaled
 
-SC.visualizationSettings.openGL.showFaceEdges = True
-SC.visualizationSettings.openGL.showFaces = True
+SC.visualizationSettings.view0.scene.showFaceEdges = True
+SC.visualizationSettings.view0.scene.showFaces = True
 
 #SC.visualizationSettings.sensors.show = True
 #SC.visualizationSettings.sensors.drawSimplified = False

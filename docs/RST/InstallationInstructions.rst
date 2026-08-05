@@ -158,15 +158,10 @@ Build and install Exudyn under Windows 10
 Note that there are a couple of pre-requisites, depending on your system and installed libraries. For Windows 10, the following steps proved to work:
 
 +  you need an appropriate compiler (tested with Microsoft Visual Studio; recommended: VS2017)
-+  install your Anaconda distribution including Spyder
++  install your Anaconda distribution including Spyder or use VisualStudioCode; you can also use a miniconda (only numpy is really required and distribution tools)
 +  close all Python programs (e.g. Spyder, Jupyter, ...) 
-+  run an Anaconda prompt (may need to be run as administrator)
-+  if you cannot run Anaconda prompt directly, do:
-  
-+  open windows shell (cmd.exe) as administrator (START \ :math:`\ra`\  search for cmd.exe \ :math:`\ra`\  right click on app \ :math:`\ra`\  'run as administrator' if necessary) [may not be necessary]
-+  go to your Scripts folder inside the Anaconda folder (e.g. \ ``C:\ProgramData\Anaconda\Scripts``\ ) [may not be necessary]
-+  run 'activate.bat' [may not be necessary]
-  
++  run an Anaconda prompt (may need to be run as administrator, depends on installation)
++  it is recommended to use conda environments!
 +  go to 'main' of your cloned github folder of Exudyn 
 +  run:\ (Since version 1.7.116 a PEP518 compatible build is available. This should work with Windows, MacOS and linux. The \ ``setupPyConfig.json``\  file includes some flags such as the parallel compilation, GLFW, etc.; the \ ``-v``\  flag adds verbosity.) \ ``pip wheel . -v -w dist --no-deps``\ 
 +  Before version 1.7.116: run:\ (the \ ``--parallel``\  option performs parallel compilation on multithreaded CPUs and can speedup by 2x - 8x) \ ``python setup.py install --parallel``\ 
@@ -335,6 +330,7 @@ You can also create a Ubuntu wheel which can be easily installed on the same mac
    \ ``sudo pip3 install wheel``\ 
    \ ``sudo python3 setup.py bdist_wheel --parallel``\ 
 
+Note that the build mechanisms used for Exudyn, e.g., on GitHub or when building internal wheels use docker in order to build highly compatible multilinux wheels.
 
 Since version 1.7.116, the PEP518 compatible way which puts wheels into the \ ``dist``\  folder reads:
 
@@ -354,7 +350,7 @@ Since version 1.7.116, the PEP518 compatible way which puts wheels into the \ ``
 
 +  Exudyn also compiles under RaspberryPi 4b, Ubuntu Mate 20.04, Python 3.8; current version should compile out of the box using \ ``python3 setup.py install``\  command.
 +  Performance is quite ok and it is even capable to use all cores (but you should add a fan!)
-+  \ :math:`\ra`\  this could lead to a nice cluster project!
++  \ :math:`\ra`\  this could be used for a nice realtime application!
 
 
 \ **KNOWN issues for linux builds**\ :

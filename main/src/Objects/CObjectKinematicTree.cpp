@@ -648,18 +648,18 @@ OutputVariableType CObjectKinematicTree::GetOutputVariableTypesSuperElement(Inde
 {
 	//independent of meshNodeNumber!!!
 	OutputVariableType ovt = (OutputVariableType)(
-		(Index)OutputVariableType::Position +
-		(Index)OutputVariableType::Displacement +
-		(Index)OutputVariableType::Velocity +
-		(Index)OutputVariableType::VelocityLocal +
-		(Index)OutputVariableType::Acceleration +
-		(Index)OutputVariableType::AccelerationLocal +
-		(Index)OutputVariableType::Rotation +
-		(Index)OutputVariableType::RotationMatrix +
-		(Index)OutputVariableType::AngularVelocity +
-		(Index)OutputVariableType::AngularVelocityLocal +
-        (Index)OutputVariableType::AngularAcceleration +
-        (Index)OutputVariableType::AngularAccelerationLocal
+		(Index64)OutputVariableType::Position +
+		(Index64)OutputVariableType::Displacement +
+		(Index64)OutputVariableType::Velocity +
+		(Index64)OutputVariableType::VelocityLocal +
+		(Index64)OutputVariableType::Acceleration +
+		(Index64)OutputVariableType::AccelerationLocal +
+		(Index64)OutputVariableType::Rotation +
+		(Index64)OutputVariableType::RotationMatrix +
+		(Index64)OutputVariableType::AngularVelocity +
+		(Index64)OutputVariableType::AngularVelocityLocal +
+        (Index64)OutputVariableType::AngularAcceleration +
+        (Index64)OutputVariableType::AngularAccelerationLocal
         );
 
 	return ovt;

@@ -75,7 +75,7 @@ General settings for exporting the solution (results) of a simulation.
     flushFilesDOF &     PInt &      &     10000 &     number of DOF, above which solution file (coordinatesSolutionFile) buffers are always flushed, irrespectively of whether flushFilesImmediately is set True or False (see also flushFilesImmediately); for larger files, writing takes so much time that flushing does not add considerable time\\ \hline
     flushFilesImmediately &     bool &      &     False &     flush file buffers after every solution period written (coordinatesSolutionFile and sensor files); if set False, the output is written through a buffer, which is highly efficient, but during simulation, files may be always in an incomplete state; if set True, this may add a large amount of CPU time as the process waits until files are really written to hard disc (especially for simulation of small scale systems, writing 10.000s of time steps; at least 5us per step/file, depending on hardware)\\ \hline
     outputPrecision &     UInt &      &     10 &     precision for floating point numbers written to solution and sensor files\\ \hline
-    recordImagesInterval &     Real &      &     -1. &     record frames (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages\\ \hline
+    recordImagesInterval &     Real &      &     -1. &     record frames of the main view in the renderer (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages; note that only the main view (0) can be saved in this way, while for multiple views, you have to aquire data via renderer.RedrawAndGetImage()\\ \hline
     restartFileName &     FileName &      &     'restartFile.txt' &     filename and (relative) path of text file for storing solution after every restartWritePeriod if writeRestartFile=True; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart\\ \hline
     restartWritePeriod &     UReal &      &     0.01 &     time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance\\ \hline
     sensorsAppendToFile &     bool &      &     False &     flag (true/false); if true, sensor output is appended to existing file (otherwise created) or in case of internal storage, it is appended to existing currently stored data; this allows storing sensor values over different simulations\\ \hline
@@ -187,11 +187,12 @@ Settings for generalized-alpha, implicit trapezoidal or Newmark time integration
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     computeInitialAccelerations &     bool &      &     True &     True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations\\ \hline
     lieGroupAddTangentOperator &     bool &      &     True &     True: for Lie group nodes, in case that lieGroupSimplifiedKinematicRelations=True, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)\\ \hline
-    lieGroupSimplifiedKinematicRelations &     \tabnewline bool &      &     False &     True: for Lie group nodes, the integrator uses the original kinematic relations of the Bruls and Cardona 2010 paper\\ \hline
+    lieGroupSimplifiedKinematicRelations &     \tabnewline bool &      &     False &     True: for Lie group nodes, the integrator uses the original kinematic relations of the Bruls and Cardona 2010 paper; False (recommended): higher accuracy as proposed in paper by Holzinger, Arnold, Gerstmayr, sigma-modified Lie group generalized alpha methods for constrained multibody systems, 2025 (to be sumitted)\\ \hline
     newmarkBeta &     UReal &      &     0.25 &     value beta for Newmark method; default value beta = $\frac 1 4$ corresponds to (undamped) trapezoidal rule\\ \hline
     newmarkGamma &     UReal &      &     0.5 &     value gamma for Newmark method; default value gamma = $\frac 1 2$ corresponds to (undamped) trapezoidal rule\\ \hline
     resetAccelerations &     bool &      &     False &     this flag only affects if computeInitialAccelerations=False: if resetAccelerations=True, accelerations are set zero in the solver function InitializeSolverInitialConditions; this may be unwanted in case of repeatedly called SolveSteps() and in cases where solutions shall be prolonged from previous computations\\ \hline
     spectralRadius &     UReal &      &     0.9 &     spectral radius for Generalized-alpha solver; set this value to 1 for no damping or to 0 < spectralRadius < 1 for damping of high-frequency dynamics; for position-level constraints (index 3), spectralRadius must be < 1\\ \hline
+    storeInitialAlgebraicCoordinates &     \tabnewline bool &      &     True &     True: IF computeInitialAccelerations=True, store initial algebraic coordinates (usually the Lagrange multipliers) in the initial coordinates vector (and thus in the first line of the coordinates solution file); for further details on limitations, see computeInitialAccelerations\\ \hline
     useIndex2Constraints &     bool &      &     False &     set useIndex2Constraints = true in order to use index2 (velocity level constraints) formulation\\ \hline
     useNewmark &     bool &      &     False &     if true, use Newmark method with beta and gamma instead of generalized-Alpha\\ \hline
 	  \end{longtable}
@@ -248,7 +249,7 @@ General parameters used in time integration; specific parameters are provided in
     endTime &     UReal &      &     1 &     $t\_{end}$: end time of time integration\\ \hline
     initialStepSize &     UReal &      &     0 &     $h\_{init}$: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster.\\ \hline
     minimumStepSize &     PReal &      &     1e-8 &     $h\_{min}$: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)\\ \hline
-    numberOfSteps &     PReal &      &     100 &     $n\_{steps}$: number of steps in time integration; (maximum) stepSize $h$ is computed from $h = \frac{t\_{end} - t\_{start}}{n\_{steps}}$; for automatic stepsize control, this stepSize is the maximum steps size, $h\_{max} = h$; numberOfSteps can be a float-point type, but must be close to an integer (relative tolerance $100\cdot\varepsilon$) as it is silently rounded to int\\ \hline
+    numberOfSteps &     PReal &      &     100 &     $n\_{steps}$: number of steps in time integration; (maximum) stepSize $h$ is computed from $h = \frac{t\_{end} - t\_{start}}{n\_{steps}}$; for automatic stepsize control, this stepSize is the maximum steps size, $h\_{max} = h$; numberOfSteps can also be a float type, but must be close to an integer (relative tolerance $100\cdot\varepsilon$) as it is silently rounded to int\\ \hline
     realtimeFactor &     PReal &      &     1 &     if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)\\ \hline
     realtimeWaitMicroseconds &     PInt &      &     1000 &     if simulateInRealtime=True, a loop runs which waits realtimeWaitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (< 1000) increase CPU usage but improve realtime accuracy\\ \hline
     relativeTolerance &     UReal &      &     1e-8 &     $r\_{tol}$: if automaticStepSize=True, relative tolerance for the error control; must fulfill $r\_{tol} \ge 0$; see \refSection{sec:ExplicitSolver}\\ \hline
@@ -384,7 +385,7 @@ This section includes hierarchical structures for visualization settings, e.g., 
 
 \mysubsubsubsection{VSettingsGeneral}
 \label{sec:VSettingsGeneral}
-General settings for visualization.
+General settings for visualization that influence all windows, default values, autofit, multithreading, etc.
 
 \noindent VSettingsGeneral has the following items:
 %reference manual TABLE
@@ -397,19 +398,21 @@ General settings for visualization.
     axesTiling &     PInt &      &     12 &     global number of segments for drawing cylinders for axes and cones for arrows (reduce this number, e.g. to 4, if many axes are drawn)\\ \hline
     backgroundColor &     Float4 &     4 &     [1.0,1.0,1.0,1.0] &     \tabnewline red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])\\ \hline
     backgroundColorBottom &     Float4 &     4 &     [0.8,0.8,1.0,1.0] &     \tabnewline red, green, blue and alpha values for bottom background color in case that useGradientBackground = True\\ \hline
+    boundingBoxZoomAllFactor &     PFloat &      &     1.2 &     factor on boundingBox for zoom all (without minimum offset)\\ \hline
+    boundingBoxZoomAllOffset &     UFloat &      &     0.01 &     minimum offset to bounding box of scene in window - width or height, whatever is smaller; adjust for very small or large scenes; may be negative\\ \hline
     circleTiling &     PInt &      &     16 &     global number of segments for circles; if smaller than 2, 2 segments are used (flat)\\ \hline
-    coordinateSystemSize &     float &      &     5. &     size of coordinate system relative to font size\\ \hline
+    coordinateSystemSize &     PFloat &      &     5. &     size of coordinate system relative to font size\\ \hline
     cylinderTiling &     PInt &      &     16 &     global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)\\ \hline
-    drawCoordinateSystem &     bool &      &     True &     false = no coordinate system shown\\ \hline
-    drawWorldBasis &     bool &      &     False &     true = draw world basis coordinate system at (0,0,0)\\ \hline
-    graphicsUpdateInterval &     float &      &     0.1 &     interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed\\ \hline
+    graphicsUpdateInterval &     UFloat &      &     0.1 &     interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed\\ \hline
+    limitWindowToScreenSize &     bool &      &     True &     True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize\\ \hline
     linuxDisplayScaleFactor &     PFloat &      &     1. &     Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts\\ \hline
-    minSceneSize &     float &      &     0.1 &     minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO\\ \hline
-    pointSize &     float &      &     0.01 &     global point size (absolute)\\ \hline
+    minSceneSize &     PFloat &      &     0.1 &     minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO\\ \hline
+    pointSize &     PFloat &      &     0.01 &     global point size (absolute)\\ \hline
+    reallyQuitTimeLimit &     UReal &      &     900 &     number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked\\ \hline
     rendererPrecision &     PInt &      &     4 &     precision of general floating point numbers shown in render window: total number of digits used  (max. 16)\\ \hline
+    rendererStartupTimeout &     PInt &      &     2500 &     OpenGL render windows startup timeout in ms (change might be necessary if CPU is very slow)\\ \hline
     renderWindowString &     String &      &     '' &     string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to solutionInformation in SimulationSettings.solutionSettings)\\ \hline
-    showComputationInfo &     bool &      &     True &     true = show (hide) all computation information including Exudyn and version\\ \hline
-    showHelpOnStartup &     PInt &      &     5 &     seconds to show help message on startup (0=deactivate)\\ \hline
+    showHelpOnStartup &     UInt &      &     5 &     seconds to show help message on startup (0=deactivate)\\ \hline
     showSolutionInformation &     bool &      &     True &     true = show solution information (from simulationSettings.solution)\\ \hline
     showSolverInformation &     bool &      &     True &     true = solver name and further information shown in render window\\ \hline
     showSolverTime &     bool &      &     True &     true = solver current time shown in render window\\ \hline
@@ -418,13 +421,39 @@ General settings for visualization.
     textColor &     Float4 &     4 &     [0.,0.,0.,1.0] &     \tabnewline general text color (default); used for system texts in render window\\ \hline
     textHasBackground &     bool &      &     False &     if true, text for item numbers and other item-related text have a background (depending on text color), allowing for better visibility if many numbers are shown; the text itself is black; therefore, dark background colors are ignored and shown as white\\ \hline
     textOffsetFactor &     UFloat &      &     0.005 &     This is an additional out of plane offset for item texts (node number, etc.); the factor is relative to the maximum scene size and is only used, if textAlwaysInFront=False; this factor allows to draw text, e.g., in front of nodes\\ \hline
-    textSize &     float &      &     12. &     general text size (font size) in pixels if not overwritten; if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)\\ \hline
     threadSafeGraphicsUpdate &     bool &      &     True &     true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations; may be improved in future by adding a safe visualizationUpdate state\\ \hline
     useBitmapText &     bool &      &     True &     if true, texts are displayed using pre-defined bitmaps for the text; may increase the complexity of your scene, e.g., if many (>10000) node numbers shown\\ \hline
     useGradientBackground &     bool &      &     False &     true = use vertical gradient for background; \\ \hline
-    useMultiThreadedRendering &     bool &      &     True &     true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); set this parameter before call to SC.renderer.Start(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW\\ \hline
+    useMultiThreadedRendering &     bool &      &     True &     true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); you MUST set this parameter BEFORE call to SC.renderer.Start(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW\\ \hline
     useWindowsDisplayScaleFactor &     bool &      &     True &     the Windows display scaling (monitor scaling; content scaling) factor is used for increased visibility of texts on high resolution displays; based on GLFW glfwGetWindowContentScale; deactivated on linux compilation as it leads to crashes (adjust textSize manually!)\\ \hline
-    worldBasisSize &     float &      &     1.0 &     size of world basis coordinate system\\ \hline
+    zoomAllUseBoundingBox &     bool &      &     True &     if true, use exact scene bounding box (but not including texts) for zoom; does not include perspective effects!\\ \hline
+	  \end{longtable}
+	\end{center}
+
+
+%+++++++++++++++++++++++++++++++++++
+
+\mysubsubsubsection{VSettingsContourAdvanced}
+\label{sec:VSettingsContourAdvanced}
+Advanced settings for contour plots.
+
+\noindent VSettingsContourAdvanced has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    colorBarPrecision &     PInt &      &     4 &     precision of floating point values shown in color bar; total number of digits used (max. 16)\\ \hline
+    colorBarTiling &     PInt &     1 &     12 &     number of tiles (segements) shown in the colorbar for the contour plot\\ \hline
+    contourColor0 &     Float4 &     4 &     [0.1,0.1,0.9,1.] &     \tabnewline RGBA color for relative value 0 used for contour plot; alpha is ignored\\ \hline
+    contourColor1 &     Float4 &     4 &     [0.1,0.9,0.9,1.] &     \tabnewline RGBA color for relative value 0.25 used for contour plot; alpha is ignored\\ \hline
+    contourColor2 &     Float4 &     4 &     [0.1,0.9,0.1,1.] &     \tabnewline RGBA color for relative value 0.25 used for contour plot; alpha is ignored\\ \hline
+    contourColor3 &     Float4 &     4 &     [0.9,0.9,0.1,1.] &     \tabnewline RGBA color for relative value 0.25 used for contour plot; alpha is ignored\\ \hline
+    contourColor4 &     Float4 &     4 &     [0.9,0.1,0.1,1.] &     \tabnewline RGBA color for relative value 0.25 used for contour plot; alpha is ignored\\ \hline
+    contourColorMax &     Float4 &     4 &     [0.9,0.9,0.9,1.] &     \tabnewline RGBA color if relative value in contour plot is larger than 1 (if automaticRange=False); alpha is ignored\\ \hline
+    contourColorMin &     Float4 &     4 &     [0.1,0.1,0.1,1.] &     \tabnewline RGBA color if relative value in contour plot is smaller than 0 (if automaticRange=False); alpha is ignored\\ \hline
+    showColorBar &     bool &      &     True &     show the colour bar with minimum and maximum values for the contour plot\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -442,10 +471,9 @@ Settings for contour plots; use these options to visualize field data, such as d
   \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    advanced &     VSettingsContourAdvanced &      &      &     advanced settings for contour\\ \hline
     alphaTransparency &     float &     1 &     1 &     default value for contour alpha transparency (RGB color computed from contour value)\\ \hline
     automaticRange &     bool &      &     True &     if true, the contour plot value range is chosen automatically to the maximum range\\ \hline
-    colorBarPrecision &     PInt &      &     4 &     precision of floating point values shown in color bar; total number of digits used (max. 16)\\ \hline
-    colorBarTiling &     PInt &     1 &     12 &     number of tiles (segements) shown in the colorbar for the contour plot\\ \hline
     maxValue &     float &     1 &     1 &     maximum value for contour plot; set manually, if automaticRange == False\\ \hline
     minValue &     float &     1 &     0 &     minimum value for contour plot; set manually, if automaticRange == False\\ \hline
     nodesColored &     bool &      &     True &     if true, the contour color is also applied to nodes (except mesh nodes), otherwise node drawing is not influenced by contour settings\\ \hline
@@ -453,7 +481,6 @@ Settings for contour plots; use these options to visualize field data, such as d
     outputVariableComponent &     Int &     1 &     0 &     select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; for stresses, 6 components are available, see OutputVariableType description; to draw the norm of a outputVariable, set component to -1; if a certain component is not available by certain objects or nodes, no value is drawn (using default color)\\ \hline
     reduceRange &     bool &      &     True &     if true, the contour plot value range is also reduced; better for static computation; in dynamic computation set this option to false, it can reduce visualization artifacts; you should also set minVal to max(float) and maxVal to min(float)\\ \hline
     rigidBodiesColored &     bool &      &     True &     if true, the contour color is also applied to triangular faces of rigid bodies and mass points, otherwise the rigid body drawing are not influenced by contour settings; for general rigid bodies (except for ObjectGround), Position, Displacement, DisplacementLocal(=0), Velocity, VelocityLocal, AngularVelocity, and AngularVelocityLocal are available; may slow down visualization!\\ \hline
-    showColorBar &     bool &      &     True &     show the colour bar with minimum and maximum values for the contour plot\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -498,15 +525,34 @@ Visualization settings for beam finite elements.
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     axialTiling &     PInt &      &     8 &     number of segments to discretise the beams axis\\ \hline
-    crossSectionFilled &     bool &      &     True &     if implemented for element, cross section is drawn as solid (filled) instead of wire-frame; NOTE: some quantities may not be interpolated correctly over cross section in visualization\\ \hline
+    crossSectionFilled &     bool &      &     True &     if implemented for element, cross section is drawn as solid (filled) instead of wire-frame; NOTE: some quantities may not be interpolated correctly over cross section in visualization; equivalent to drawSolid of shells\\ \hline
     crossSectionTiling &     PInt &      &     4 &     number of quads drawn over height of beam, if drawn as flat objects; leads to higher accuracy of components drawn over beam height or with, but also to larger CPU costs for drawing\\ \hline
     drawVertical &     bool &      &     False &     draw contour plot outputVariables 'vertical' along beam height; contour.outputVariable must be set accordingly\\ \hline
     drawVerticalColor &     Float4 &     4 &     [0.2,0.2,0.2,1.] &     \tabnewline color for outputVariable to be drawn along cross section (vertically)\\ \hline
-    drawVerticalFactor &     float &      &     1. &     factor for outputVariable to be drawn along cross section (vertically)\\ \hline
+    drawVerticalFactor &     UFloat &      &     1. &     factor for outputVariable to be drawn along cross section (vertically)\\ \hline
     drawVerticalLines &     bool &      &     True &     draw additional vertical lines for better visibility\\ \hline
     drawVerticalOffset &     float &      &     0. &     offset for vertical drawn lines; offset is added before multiplication with drawVerticalFactor\\ \hline
     drawVerticalValues &     bool &      &     False &     show values at vertical lines; note that these numbers are interpolated values and may be different from values evaluated directly at this point!\\ \hline
-    reducedAxialInterploation &     bool &      &     True &     if True, the interpolation along the beam axis may be lower than the beam element order; this may be, however, show more consistent values than a full interpolation, e.g. for strains or forces\\ \hline
+    reducedAxialInterploation &     bool &      &     True &     if True, the interpolation along the beam axis may be lower than the beam element order; this may, however, show more consistent values than a full interpolation, e.g. for strains or forces\\ \hline
+	  \end{longtable}
+	\end{center}
+
+
+%+++++++++++++++++++++++++++++++++++
+
+\mysubsubsubsection{VSettingsShells}
+\label{sec:VSettingsShells}
+Visualization settings for plate/shell finite elements.
+
+\noindent VSettingsShells has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    drawSolid &     bool &      &     True &     if true: to draw plates/shells as 3D objects; false: only the element surface is drawn; equivalent to crossSectionFilled in beams\\ \hline
+    thicknessFactor &     PFloat &      &     1. &     a factor multiplied with the thickness of shells/plates only for visualization (e.g. to make some effects more visible)\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -547,6 +593,7 @@ Visualization settings for bodies.
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     beams &     VSettingsBeams &      &      &     visualization settings for beams (e.g. ANCFCable or other beam elements)\\ \hline
     kinematicTree &     VSettingsKinematicTree &      &      &     visualization settings for kinematic tree\\ \hline
+    shells &     VSettingsShells &      &      &     visualization settings for plates and shells\\ \hline
     defaultColor &     Float4 &     4 &     [0.3,0.3,1.,1.] &     \tabnewline default RGBA color for bodies; 4th value is alpha-transparency\\ \hline
     defaultSize &     Float3 &     3 &     [1.,1.,1.] &     \tabnewline global body size of xyz-cube\\ \hline
     deformationScaleFactor &     float &      &     1 &     global deformation scale factor; also applies to nodes, if drawn; currently only used for scaled drawing of (linear) finite elements in FFRF and FFRFreducedOrder objects\\ \hline
@@ -725,9 +772,63 @@ Global visualization settings for GeneralContact. This allows to easily switch o
 
 %+++++++++++++++++++++++++++++++++++
 
+\mysubsubsubsection{VSettingsCamera}
+\label{sec:VSettingsCamera}
+Settings for camera like perspective, marker tracking, clipping plane, etc. Note that some options may also be found in openGL settings.
+
+\noindent VSettingsCamera has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    cameraPosition &     Float3 &     3 &     [0.,0.,0.] &     \tabnewline if modelCentricView=True: offset to camera position in model view (and, if used, relative to tracked marker - instead of a tracked marker position, you could also just change the camera position in camera-centric views); camera rotation follows modelRotation in renderState\\ \hline
+    clippingPlaneDistance &     float &      &     0. &     distance of clipping plane on normal vector; see also clippingPlaneNormal and openGL.advanced.clippingPlaneColor\\ \hline
+    clippingPlaneNormal &     Float3 &     3 &     [0.,0.,0.] &     \tabnewline normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; the clipped half-space is in direction of the normal; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance and openGL.advanced.clippingPlaneColor\\ \hline
+    modelCentricView &     bool &      &     True &     True: rotations and translations are applied to model, while camera stays far enough away from the model and always captures the whole model (everything is in front of camera plane); False: camera moves and rotates while model stays in physical space; only geometry in front of camera is visible; note that the behavior of trackMarker changes with modelCentricView and some features are not available in case of modelCentricView=False.\\ \hline
+    nearFarPlaneOffset &     Float3 &     3 &     [0.,0.,0.] &     \tabnewline the three values are [nearPlaneOffset, farPlaneOffset, flag]; if flag=0, the offsets are ignored and computed automatically, using x = 2 * maxSceneSize * zMaxSceneFactor, setting near plane to -x and far plane to +x in case of modelCentricView=True and setting near plane to 0.01 (minimal offset to eye point) and far plane to +x if modelCentricView=False; if flag=1, the near and far plane values are just overwritten; note that positive values for near plane make objects in front of the camera invisible while negative values make objects behind the camera plane visible; in case of camera-centric view, the eyepoint can be shifted backwards using cameraPosition accordingly.\\ \hline
+    perspective &     UFloat &      &     0. &     parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 1 (extreme: 5), where larger values are possible but should be used with care; NOTE that the relation to the common field of view (FOV) angle alpha, with alpha=90°, is given by perspective = tan(alpha/2) = 1; mouse coordinates (F3) can not be shown with perspective>0\\ \hline
+    trackMarker &     Int &      &     -1 &     if valid marker index is provided and marker provides position (and orientation), the centerpoint of the scene follows the marker (and orientation); depends on trackMarkerPosition and trackMarkerOrientation; by default, only position is tracked\\ \hline
+    trackMarkerMbsNumber &     Index &      &     0 &     number of main system which is used to track marker; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number\\ \hline
+    trackMarkerOrientation &     Float3 &     3 &     [0.,0.,0.] &     \tabnewline choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one\\ \hline
+    trackMarkerPosition &     Float3 &     3 &     [1.,1.,1.] &     \tabnewline choose which coordinates or marker are tracked (x,y,z)\\ \hline
+    useRaytracer &     bool &      &     False &     True: use (software) raytracer for this view; False: use standard OpenGL renderer\\ \hline
+	  \end{longtable}
+	\end{center}
+
+
+%+++++++++++++++++++++++++++++++++++
+
+\mysubsubsubsection{VSettingsScene}
+\label{sec:VSettingsScene}
+Settings change scene representation (show edges, show faces, global transparency), adding world basis, etc., in particular settings that are individual to each view. Note that some scene settings that are global to all views may be found in general and in openGL settings. 
+
+\noindent VSettingsScene has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    drawCoordinateSystem &     UInt &      &     2 &     0 = no coordinate system shown, 1 = draw lines with text, 2 = draw arrows, 3 = draw arrows with text\\ \hline
+    drawWorldBasis &     bool &      &     False &     true = draw world basis coordinate system at (0,0,0)\\ \hline
+    facesTransparent &     bool &     1 &     False &     True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers\\ \hline
+    showFaceEdges &     bool &     1 &     False &     True: show edges of triangles; using the options showFaces=false and showFaceEdges=true gives are wire frame representation\\ \hline
+    showFaces &     bool &     1 &     True &     True: show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wireframe representation\\ \hline
+    showLines &     bool &     1 &     True &     True: show lines (other lines than face and mesh edges)\\ \hline
+    showMeshEdges &     bool &     1 &     True &     True: show edges of finite elements; independent of showFaceEdges\\ \hline
+    showMeshFaces &     bool &     1 &     True &     True: show faces of finite elements; independent of showFaces\\ \hline
+    worldBasisSize &     PFloat &      &     1.0 &     size of world basis coordinate system\\ \hline
+	  \end{longtable}
+	\end{center}
+
+
+%+++++++++++++++++++++++++++++++++++
+
 \mysubsubsubsection{VSettingsWindow}
 \label{sec:VSettingsWindow}
-OpenGL Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes.
+Settings for window that are individual to each view; in particular initial size, and behavior. Note that some of the settings are only used during creation of the window. 
 
 \noindent VSettingsWindow has the following items:
 %reference manual TABLE
@@ -736,17 +837,52 @@ OpenGL Window and interaction settings for visualization; handle changes with ca
   \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
-    alwaysOnTop &     bool &      &     False &     True: OpenGL render window will be always on top of all other windows\\ \hline
-    ignoreKeys &     bool &      &     False &     True: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'\\ \hline
-    keyPressUserFunction &     KeyPressUserFunction &      &     0 &     add a Python function f(key, action, mods) here, which is called every time a key is pressed; function shall return true, if key has been processed; Example: \tabnewline def f(key, action, mods):\tabnewline \phantom{XXX} print('key=',key);\tabnewline use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)\\ \hline
-    limitWindowToScreenSize &     bool &      &     True &     True: render window size is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize\\ \hline
-    maximize &     bool &      &     False &     True: OpenGL render window will be maximized at startup\\ \hline
-    reallyQuitTimeLimit &     UReal &      &     900 &     number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked\\ \hline
-    renderWindowSize &     Index2 &     2 &     [1024,768] &     initial size of OpenGL render window in pixel\\ \hline
-    ResetKeyPressUserFunction() &     void &      &      &     set keyPressUserFunction to zero (no function); because this cannot be assign to the variable itself\\ \hline
-    showMouseCoordinates &     bool &      &     False &     True: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'\\ \hline
-    showWindow &     bool &      &     True &     True: OpenGL render window is shown on startup; False: window will be iconified at startup (e.g. if you are starting multiple computations automatically)\\ \hline
-    startupTimeout &     PInt &      &     2500 &     OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)\\ \hline
+    alwaysOnTop &     bool &      &     False &     True: render window of respective view will be always on top of all other windows\\ \hline
+    globalFontSize &     PFloat &      &     12. &     general text font size (roughly measured in pixels); if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)\\ \hline
+    lockModelView &     bool &      &     False &     True: all movements (with mouse/keys), rotations, zoom are disabled; the view is either based on initial values (or on the current state) ==> initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value\\ \hline
+    maximize &     bool &      &     False &     True: render window of respective view will be maximized at startup\\ \hline
+    renderWindowSize &     Index2 &     2 &     [1024,768] &     initial size of render window of respective view for specific view in pixels for\\ \hline
+    showComputationInfo &     bool &      &     True &     true = show (hide) all computation information including Exudyn and version\\ \hline
+    showMouseCoordinates &     bool &      &     False &     True: show OpenGL coordinates and distance to last left mouse button pressed position in renderer status message; switched on/off with key 'F3'; only works for axis-aligned ortho-projections\\ \hline
+    showRenderStateInfo &     bool &      &     False &     True: show renderer.state infos regarding zoom, offset and rotation in renderer status message; switched on/off with 'CTRL-F3'\\ \hline
+    showWindow &     bool &      &     True &     True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically)\\ \hline
+	  \end{longtable}
+	\end{center}
+
+
+%+++++++++++++++++++++++++++++++++++
+
+\mysubsubsubsection{VSettingsView}
+\label{sec:VSettingsView}
+Settings for view including camera, scene, window, and advanced options to setup a view or view window.
+
+\noindent VSettingsView has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    camera &     VSettingsCamera &      &      &     settings for camera like perspective, marker tracking or clipping plane\\ \hline
+    scene &     VSettingsScene &      &      &     settings which change scene representation, showing edges, faces or world basis\\ \hline
+    window &     VSettingsWindow &      &      &     visualization settings for window that are individual to each view\\ \hline
+	  \end{longtable}
+	\end{center}
+
+
+%+++++++++++++++++++++++++++++++++++
+
+\mysubsubsubsection{VSettingsWindowDeprecated}
+\label{sec:VSettingsWindowDeprecated}
+OpenGL Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes.
+
+\noindent VSettingsWindowDeprecated has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -767,7 +903,7 @@ Settings related to dialogs (e.g., visualization settings dialog).
     alphaTransparency &     UFloat &      &     0.94 &     alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all)\\ \hline
     alwaysTopmost &     bool &      &     True &     True: dialogs are always topmost (otherwise, they are sometimes hidden)\\ \hline
     fontScalingMacOS &     UFloat &      &     1.35 &     font scaling value for MacOS systems (on Windows, system display scaling is used)\\ \hline
-    multiThreadedDialogs &     bool &      &     True &     True: During dialogs, the OpenGL render window will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed\\ \hline
+    multiThreadedDialogs &     bool &      &     True &     True: During dialogs, the OpenGL render windows will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed\\ \hline
     openTreeView &     bool &      &     False &     True: all sub-trees of the visusalization dialog are opened when opening the dialog; False: only some sub-trees are opened\\ \hline
 	  \end{longtable}
 	\end{center}
@@ -800,6 +936,30 @@ Settings for rendering materials, in particular for the Raytracer (may be availa
 
 %+++++++++++++++++++++++++++++++++++
 
+\mysubsubsubsection{VSettingsRaytracerAdvanced}
+\label{sec:VSettingsRaytracerAdvanced}
+Advanced settings for raytracer.
+
+\noindent VSettingsRaytracerAdvanced has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    backgroundColorReflections &     Float4 &     4 &     [0.4,0.4,0.4,1.] &     \tabnewline scene RGBA color for background that is hit by reflection material; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; this is generally needed, as our scenes are usually not inside a closed geometry (like inside a room); this color is also used if maxReflectionDepth is reached\\ \hline
+    searchTreeFactor &     PInt &      &     1 &     This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128\\ \hline
+    shadowScalingFactor &     UInt &     1 &     3 &     if lightRadiusVariations>1, this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries\\ \hline
+    shadowSmoothingSteps &     UInt &     1 &     3 &     if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing  steps may cause artifacts at shadow boundaries; only works for directional lights with position (e.g. 4th component in light0Position should be 1)\\ \hline
+    showText &     bool &      &     True &     True: show any kind of status text, node numbers, object numbers, etc. (depending on settings); False: do not show any text in raytracer, independently of settings\\ \hline
+    tilesPerThread &     PInt &      &     12 &     Total number of sub-tiles per thread, used to evenly distribute rendering load to threads\\ \hline
+    zBiasLines &     float &      &     1e-3 &     offset for lines to draw in front of faces; relative to scene radius\\ \hline
+	  \end{longtable}
+	\end{center}
+
+
+%+++++++++++++++++++++++++++++++++++
+
 \mysubsubsubsection{VSettingsRaytracer}
 \label{sec:VSettingsRaytracer}
 Settings for raytracer (software renderer) which can be used as alternative to classic OpenGL rendering; this option may be erased in future in favor of a modern GPU rendering. To activate the raytracer, simply switch the enable flag to True. The raytracer uses CPU-based rendering and is therefore comparably slow (may take seconds to render one frame). Thus, take care with the window dimension (start with small window size like 400 x 300) and use openGL.multiSampling=1. Note that many parameters are used from openGL settings, like backgroundColor, lineWidth, multiSampling, shadow (only on/off), and lights. See the options to improve appearance and performance.
@@ -811,6 +971,7 @@ Settings for raytracer (software renderer) which can be used as alternative to c
   \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    advanced &     VSettingsRaytracerAdvanced &      &      &     advanced settings for raytracer\\ \hline
     material0 &     VSettingsMaterial &      &      &     settings for material0\\ \hline
     material1 &     VSettingsMaterial &      &      &     settings for material1\\ \hline
     material2 &     VSettingsMaterial &      &      &     settings for material2\\ \hline
@@ -821,23 +982,78 @@ Settings for raytracer (software renderer) which can be used as alternative to c
     material7 &     VSettingsMaterial &      &      &     settings for material7\\ \hline
     material8 &     VSettingsMaterial &      &      &     settings for material8\\ \hline
     material9 &     VSettingsMaterial &      &      &     settings for material9\\ \hline
-    ambientLightColor &     Float4 &     4 &     [0.6,0.6,0.6,1.] &     \tabnewline scene RGBA color for ambient light effect (min. light for regions in shadow); same as openGL.materialAmbientAndDiffuse in OpenGL renderer\\ \hline
-    backgroundColorReflections &     Float4 &     4 &     [0.4,0.4,0.4,1.] &     \tabnewline scene RGBA color for background that is hit by reflection; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; important, if scene is not inside a room.\\ \hline
-    enable &     bool &      &     False &     True: use (software) raytracer; False: use standard OpenGL renderer\\ \hline
     globalFogColor &     Float4 &     4 &     [0.5,0.5,0.5,1.] &     \tabnewline scene RGBA fog color\\ \hline
-    globalFogDensity &     Real &      &     0. &     global fog density; fog is deactivated if fogDensity=0, otherwise it is a density relative to scene max size; as it is relative, the factor has to be relatively high to be visible (usually >1)\\ \hline
+    globalFogDensity &     UFloat &      &     0. &     global fog density; fog is deactivated if fogDensity=0, otherwise it is a density relative to scene max size; as it is relative, the factor has to be relatively high to be visible (usually >1)\\ \hline
     imageSizeFactor &     PInt &      &     1 &     Special size factor (1-16) to allow drawing with smaller resolution (faster); use this for long rendering times for adjustments, etc.\\ \hline
     keepWindowActive &     bool &      &     False &     Special flag, handle with care; True: sends some glfw functions to keep window reactive for long render times (>2 seconds); otherwise, the rendering may not finish due to timeout\\ \hline
-    lightRadius &     float &     1 &     0.1 &     if lightRadiusVariations>1, it uses the given radius for all lights, to convert point lights into distributed lights (slower)\\ \hline
-    lightRadiusVariations &     PInt &     1 &     1 &     if lightRadiusVariations>1, this defines the number of positions that are used to compute the effect of distributed lights (larger is slower but better quality); range=1..64\\ \hline
+    lightRadiusVariations &     PInt &     1 &     1 &     if lightRadiusVariations>1, this defines the number of positions that are used to compute the effect of distributed lights (larger is slower but better quality); range=1..256; avoid squares of integers; good values: 1 (hard shadow boundaries), 6, 13, 20, 31, 72, 130, 240; for lower values, use shadowSmoothingSteps=2..8\\ \hline
     maxReflectionDepth &     UInt &      &     2 &     Maximum number of reflections computed for one ray (note that for each transparent face passed, the reflection depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)\\ \hline
     maxTransparencyDepth &     UInt &      &     2 &     Maximum number of transparent faces that can be passed (note that for each reflection, the transparency depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)\\ \hline
+    multiSampling &     PInt &     1 &     1 &     Multi-sampling used for rendering of faces, lines and text; increases image quality along edges (lines, etc.) but INCREASES rendering costs dramatically (multiSampling=3 => 3x3=9 times slower); also used for shadow if shadowScalingFactor=0; values only accepted in range [1..4]\\ \hline
     numberOfThreads &     PInt &      &     8 &     Number of CPU-threads (max: 256) used for software rendering (should be approx. the number of available threads)\\ \hline
-    searchTreeFactor &     PInt &      &     1 &     This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128\\ \hline
-    tilesPerThread &     PInt &      &     12 &     Total number of sub-tiles per thread, used to evenly distribute rendering load to threads\\ \hline
-    verbose &     bool &      &     False &     True: print out some debug information on rendering, in particular rendering timings and counter\\ \hline
-    zBiasLines &     Real &      &     1e-3 &     offset for lines to draw in front of faces; relative to scene radius\\ \hline
-    zOffsetCamera &     Real &      &     -0.01 &     offset for for camera towards the scene; use positive factor put camera inside, e.g. of brick (like a room) or sphere; use (slightly) negative value to make whole scene visible\\ \hline
+    verbose &     Index &      &     0 &     1: print out some debug information on rendering, in particular rendering timings and counter; 2 and higher: advanced debug information\\ \hline
+	  \end{longtable}
+	\end{center}
+
+
+%+++++++++++++++++++++++++++++++++++
+
+\mysubsubsubsection{VSettingsOpenGLAdvanced}
+\label{sec:VSettingsOpenGLAdvanced}
+Advanced settings for openGL.
+
+\noindent VSettingsOpenGLAdvanced has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    clippingPlaneColor &     Float4 &     4 &     [0.7,0.5,0.5,0.] &     \tabnewline RGBA color for clipping plane; if alpha-channel is 0, the cutting plane is not drawn; if alpha-channel is 1, the clippingPlaneColor is used; if alpha-channel is 2, the color of the object interior is used as clipping plane color (which may look strange in case of object-in-object); see also view.camera for clipping plane options\\ \hline
+    depthSorting &     bool &     1 &     False &     True (slower): sort triangles by Z-depth to remove transparency artifacts: only works if triangles do not intersect or come close (you may like to refine triangle meshes); False: no depth-sort (faster)\\ \hline
+    enableLighting &     bool &     1 &     True &     generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL\_LIGHTING)\\ \hline
+    faceNormalsColor &     Float4 &     4 &     [0.8,0.2,0.2,1.] &     \tabnewline global RGBA color for face normals\\ \hline
+    initialCenterPoint &     Float3 &     3 &     [0.,0.,0.] &     \tabnewline centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True; only used in case that modelCentricView=True\\ \hline
+    initialMaxSceneSize &     PFloat &      &     1. &     initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True\\ \hline
+    initialModelRotation &     StdArray33F &     3x3 &     [Matrix3DF[3,3,1.,0.,0., 0.,1.,0., 0.,0.,1.]] &     \tabnewline initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]; only used in case that modelCentricView=True\\ \hline
+    initialZoom &     UFloat &      &     1. &     initial zoom of scene; overwritten/ignored if autoFitScene = True\\ \hline
+    lightModelLocalViewer &     bool &     1 &     False &     True: the camera origin is used to compute shininess effects (more realistic); maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_LOCAL\_VIEWER,...)\\ \hline
+    lightModelTwoSide &     bool &     1 &     False &     enlighten also backside of object; may cause problems on some graphics cards and lead to slower performance; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_TWO\_SIDE,...)\\ \hline
+    lineSmooth &     bool &     1 &     True &     draw lines smooth\\ \hline
+    polygonOffset &     float &      &     0.05 &     general polygon offset for polygons, except for shadows; use this parameter to draw polygons behind lines to reduce artifacts for very large or small models\\ \hline
+    shadeModelSmooth &     bool &     1 &     True &     True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces\\ \hline
+    shadowPolygonOffset &     PFloat &      &     0.1 &     some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies\\ \hline
+    showBoundingBox &     bool &     1 &     False &     show scene bounding box (red), as available in renderState.boundingBox; NOTE that the bounding box is only updated with ZoomAll or at startup; this is a debug flag and it may show reasongs for strange ZoomAll behavior, as ZoomAll should zoom to the bounding box; does only work for perspective=0\\ \hline
+    textLineSmooth &     bool &     1 &     False &     draw lines for representation of text smooth\\ \hline
+    textLineWidth &     UFloat &     1 &     1. &     width of lines used for representation of text\\ \hline
+    vertexNormalsColor &     Float4 &     4 &     [0.8,0.2,0.2,1.] &     \tabnewline global RGBA color for vertex normals\\ \hline
+	  \end{longtable}
+	\end{center}
+
+
+%+++++++++++++++++++++++++++++++++++
+
+\mysubsubsubsection{VSettingsLight}
+\label{sec:VSettingsLight}
+Settings for lights.
+
+\noindent VSettingsLight has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    constantAttenuation &     float &     1 &     1.0 &     constant attenuation coefficient of GL\_LIGHT[0,1,2,3], this is a constant factor that attenuates the light source; attenuation factor = 1/(kc +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1\\ \hline
+    diffuse &     float &     1 &     0.5 &     diffuse value of GL\_LIGHT[0,1,2,3]\\ \hline
+    enable &     bool &     1 &     True &     turn on/off light\\ \hline
+    lightRadius &     float &     1 &     0.1 &     only used by raytracers: radius of light used to compute smooth shadows (approximated by raytracer.lightRadiusVariations); if lightRadiusVariations>1, this value defines the radius of the light, converting point lights into distributed lights (slower)\\ \hline
+    linearAttenuation &     float &     1 &     0.0 &     linear attenuation coefficient of GL\_LIGHT[0,1,2,3], this is a linear factor for attenuation of the light source with distance\\ \hline
+    position &     Float4 &     4 &     [2.,2.,10.,0.] &     \tabnewline 4D position vector of GL\_LIGHT[0,1,2,3]; 4th value should be 0 for directional lights that are (almost) infinitely far away, like the sun, but 1 for position-based lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position to be located at a reasonable location; the openGL renderer uses shadow volumes and approximates directional lights by enlarging the direction to 200 times maxSceneSize, while the raytracer uses the correct direction; see opengl manuals\\ \hline
+    quadraticAttenuation &     float &     1 &     0.0 &     quadratic attenuation coefficient of GL\_LIGHT[0,1,2,3], this is a quadratic factor for attenuation of the light source with distance\\ \hline
+    shadow &     UFloat &      &     0. &     in OpenGL renderer, the shadow parameter $\in [0 ... 1]$ prescribes amount of shadow of light [0,1,2,3] that is added to the scene, using light position (or only direction), accumulating for each light; if this parameter is different from 0, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for each light if shadow>0, accumulating effects of each light source\\ \hline
+    specular &     float &     1 &     0.5 &     specular value of GL\_LIGHT[0,1,2,3]\\ \hline
+    useCameraFrame &     bool &     1 &     False &     set False to set light positions and directions relative to model frame; True: lights are in camera frame, not following the visual transformations; this was True up to Exudyn 1.9.174\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -846,7 +1062,7 @@ Settings for raytracer (software renderer) which can be used as alternative to c
 
 \mysubsubsubsection{VSettingsOpenGL}
 \label{sec:VSettingsOpenGL}
-OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL functionality. 
+OpenGL settings for 2D and 3D rendering - with many settings also used for raytracer. For further details and backgrounds also see OpenGL 1.3 functionality on the web.
 
 \noindent VSettingsOpenGL has the following items:
 %reference manual TABLE
@@ -855,59 +1071,22 @@ OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL fun
   \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
-    clippingPlaneColor &     Float4 &     4 &     [0.7,0.5,0.5,0.] &     \tabnewline RGBA color for clipping plane; if alpha-channel is 0, the cutting plane is not drawn; if alpha-channel is 1, the clippingPlaneColor is used; if alpha-channel is 2, the color of the object interior is used as clipping plane color (which may look strange in case of object-in-object)\\ \hline
-    clippingPlaneDistance &     float &      &     0. &     distance of clipping plane on normal vector; see also clippingPlaneNormal\\ \hline
-    clippingPlaneNormal &     Float3 &     3 &     [0.,0.,0.] &     \tabnewline normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; the clipped half-space is in direction of the normal; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance\\ \hline
-    depthSorting &     bool &     1 &     False &     True (slower): sort triangles by Z-depth to remove transparency artifacts: only works if triangles do not intersect or come close (you may like to refine triangle meshes); False: no depth-sort (faster)\\ \hline
+    advanced &     VSettingsOpenGLAdvanced &      &      &     advanced settings for openGL\\ \hline
+    light0 &     VSettingsLight &      &      &     settings for light0 and shadow\\ \hline
+    light1 &     VSettingsLight &      &      &     settings for light1 and shadow\\ \hline
+    light2 &     VSettingsLight &      &      &     settings for light2 and shadow\\ \hline
+    light3 &     VSettingsLight &      &      &     settings for light3 and shadow\\ \hline
     drawFaceNormals &     bool &     1 &     False &     draws triangle normals, e.g. at center of triangles; used for debugging of faces\\ \hline
     drawNormalsLength &     PFloat &     1 &     0.1 &     length of normals; used for debugging\\ \hline
     drawVertexNormals &     bool &     1 &     False &     draws vertex normals; used for debugging\\ \hline
-    enableLight0 &     bool &     1 &     True &     turn on/off light0\\ \hline
-    enableLight1 &     bool &     1 &     True &     turn on/off light1\\ \hline
-    enableLighting &     bool &     1 &     True &     generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL\_LIGHTING)\\ \hline
     faceEdgesColor &     Float4 &     4 &     [0.2,0.2,0.2,1.] &     \tabnewline global RGBA color for face edges\\ \hline
-    facesTransparent &     bool &     1 &     False &     True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers\\ \hline
     faceTransparencyGlobal &     UFloat &     1 &     0.4 &     in case that facesTransparent=True this represents the max alpha-transparency\\ \hline
-    initialCenterPoint &     Float3 &     3 &     [0.,0.,0.] &     \tabnewline centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True\\ \hline
-    initialMaxSceneSize &     PFloat &      &     1. &     initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True\\ \hline
-    initialModelRotation &     StdArray33F &     3x3 &     [Matrix3DF[3,3,1.,0.,0., 0.,1.,0., 0.,0.,1.]] &     \tabnewline initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]\\ \hline
-    initialZoom &     UFloat &      &     1. &     initial zoom of scene; overwritten/ignored if autoFitScene = True\\ \hline
-    light0ambient &     float &     1 &     0.3 &     ambient value of GL\_LIGHT0\\ \hline
-    light0constantAttenuation &     float &     1 &     1.0 &     constant attenuation coefficient of GL\_LIGHT0, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1\\ \hline
-    light0diffuse &     float &     1 &     0.6 &     diffuse value of GL\_LIGHT0\\ \hline
-    light0linearAttenuation &     float &     1 &     0.0 &     linear attenuation coefficient of GL\_LIGHT0, this is a linear factor for attenuation of the light source with distance\\ \hline
-    light0position &     Float4 &     4 &     [0.2,0.2,10.,0.] &     \tabnewline 4D position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position; see opengl manuals\\ \hline
-    light0quadraticAttenuation &     float &     1 &     0.0 &     quadratic attenuation coefficient of GL\_LIGHT0, this is a quadratic factor for attenuation of the light source with distance\\ \hline
-    light0specular &     float &     1 &     0.5 &     specular value of GL\_LIGHT0\\ \hline
-    light1ambient &     float &     1 &     0.0  &     ambient value of GL\_LIGHT1\\ \hline
-    light1constantAttenuation &     float &     1 &     1.0 &     constant attenuation coefficient of GL\_LIGHT1, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); only used for lights, where last component of light position is 1\\ \hline
-    light1diffuse &     float &     1 &     0.5 &     diffuse value of GL\_LIGHT1\\ \hline
-    light1linearAttenuation &     float &     1 &     0.0 &     linear attenuation coefficient of GL\_LIGHT1, this is a linear factor for attenuation of the light source with distance\\ \hline
-    light1position &     Float4 &     4 &     [1.,1.,-10.,0.] &     \tabnewline 4D position vector of GL\_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals\\ \hline
-    light1quadraticAttenuation &     float &     1 &     0.0 &     quadratic attenuation coefficient of GL\_LIGHT1, this is a quadratic factor for attenuation of the light source with distance\\ \hline
-    light1specular &     float &     1 &     0.6 &     specular value of GL\_LIGHT1\\ \hline
-    lightModelAmbient &     Float4 &     4 &     [0.,0.,0.,1.] &     \tabnewline global ambient light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_AMBIENT,[r,g,b,a])\\ \hline
-    lightModelLocalViewer &     bool &     1 &     False &     select local viewer for light; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_LOCAL\_VIEWER,...)\\ \hline
-    lightModelTwoSide &     bool &     1 &     False &     enlighten also backside of object; may cause problems on some graphics cards and lead to slower performance; maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_TWO\_SIDE,...)\\ \hline
-    lightPositionsInCameraFrame &     bool &     1 &     False &     set False to set light positions and directions relative to model frame; True: lights are in global (camera) frame; this is always False for raytracer; this was True up to Exudyn 1.9.174\\ \hline
-    lineSmooth &     bool &     1 &     True &     draw lines smooth\\ \hline
+    lightModelAmbient &     Float4 &     4 &     [0.4,0.4,0.4,1.] &     \tabnewline global ambient light (needed for faces that are close to orthogonal to light or faces in shadow region); maps to OpenGL glLightModeli(GL\_LIGHT\_MODEL\_AMBIENT,[r,g,b,a]); also used by raytracer\\ \hline
     lineWidth &     UFloat &     1 &     1. &     width of lines used for representation of lines, circles, points, etc.\\ \hline
-    materialAmbientAndDiffuse &     Float4 &     4 &     [0.6,0.6,0.6,1.] &     \tabnewline RGBA ambient color of material\\ \hline
     materialShininess &     float &     1 &     32. &     shininess of material\\ \hline
     materialSpecular &     Float4 &     4 &     [0.6,0.6,0.6,1.] &     \tabnewline RGBA specular color of material\\ \hline
-    multiSampling &     PInt &     1 &     1 &     NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!\\ \hline
-    perspective &     UFloat &      &     0. &     parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 0.5 (large amount of perspective); mouse coordinates will not work with perspective\\ \hline
-    polygonOffset &     float &      &     0.01 &     general polygon offset for polygons, except for shadows; use this parameter to draw polygons behind lines to reduce artifacts for very large or small models\\ \hline
-    shadeModelSmooth &     bool &     1 &     True &     True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces\\ \hline
-    shadow &     UFloat &      &     0. &     parameter $\in [0 ... 1]$ prescribes amount of shadow for light0 (using light0position, etc.) in OpenGL renderer; if this parameter is different from 1, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for all lights if shadow>0\\ \hline
-    shadowPolygonOffset &     PFloat &      &     0.1 &     some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies\\ \hline
-    showFaceEdges &     bool &     1 &     False &     show edges of faces; using the options showFaces=false and showFaceEdges=true gives are wire frame representation\\ \hline
-    showFaces &     bool &     1 &     True &     show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation\\ \hline
-    showLines &     bool &     1 &     True &     show lines (different from edges of faces)\\ \hline
-    showMeshEdges &     bool &     1 &     True &     show edges of finite elements; independent of showFaceEdges\\ \hline
-    showMeshFaces &     bool &     1 &     True &     show faces of finite elements; independent of showFaces\\ \hline
-    textLineSmooth &     bool &     1 &     False &     draw lines for representation of text smooth\\ \hline
-    textLineWidth &     UFloat &     1 &     1. &     width of lines used for representation of text\\ \hline
+    multiSampling &     PInt &     1 &     1 &     NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 3, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!\\ \hline
+    zMaxSceneFactor &     PFloat &      &     2. &     factor multiplied with maxSceneSize to avoid clipping of modelview; larger values reduce clipping of near or far objects, but may lead to artifacts (so-called Z-fighting)\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -916,7 +1095,7 @@ OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL fun
 
 \mysubsubsubsection{VSettingsExportImages}
 \label{sec:VSettingsExportImages}
-Functionality to export images to files (PNG or TGA format) which can be used to create animations; to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly.
+Functionality to export images of view0 to files (PNG or TGA format) which can be used to create animations; in order to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly.
 
 \noindent VSettingsExportImages has the following items:
 %reference manual TABLE
@@ -963,9 +1142,40 @@ Functionality to interact openVR; requires special hardware or software emulator
 
 %+++++++++++++++++++++++++++++++++++
 
+\mysubsubsubsection{VSettingsInteractiveAdvanced}
+\label{sec:VSettingsInteractiveAdvanced}
+Advanced settings for interactive.
+
+\noindent VSettingsInteractiveAdvanced has the following items:
+%reference manual TABLE
+\begin{center}
+  \footnotesize
+  \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
+    \hline
+    \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    highlightColor &     Float4 &     4 &     [0.8,0.05,0.05,0.75] &     \tabnewline RGBA color for highlighted item; 4th value is alpha-transparency\\ \hline
+    highlightOtherColor &     Float4 &     4 &     [0.5,0.5,0.5,0.4] &     \tabnewline RGBA color for other items (which are not highlighted); 4th value is alpha-transparency\\ \hline
+    joystickScaleRotation &     float &      &     200. &     rotation scaling factor for joystick input\\ \hline
+    joystickScaleTranslation &     float &      &     6. &     translation scaling factor for joystick input\\ \hline
+    keypressRotationStep &     float &      &     5. &     rotation increment per keypress in degree (full rotation = 360 degree)\\ \hline
+    keypressTranslationStep &     float &      &     0.1 &     translation increment per keypress relative to window size\\ \hline
+    mouseMoveRotationFactor &     float &      &     1. &     rotation increment per 1 pixel mouse movement in degree\\ \hline
+    pauseWithSpacebar &     bool &      &     True &     True: during simulation, space bar can be pressed to pause simulation\\ \hline
+    selectionHighlights &     bool &      &     True &     True: enable mouse click to highlights item (default: red)\\ \hline
+    selectionLeftMouse &     bool &      &     True &     True: enable left mouse click on items to show basic information\\ \hline
+    selectionLeftMouseItemTypes &     Index &      &     31 &     binary flags (1,2,4,8,16) for (Node,Object,Marker,Load,Sensor) that are identified with left mouse click selection\\ \hline
+    selectionRightMouse &     bool &      &     True &     True: enable right mouse click on items to show dictionary (read only!)\\ \hline
+    selectionRightMouseGraphicsData &     \tabnewline bool &      &     False &     True: right mouse click on items also shows GraphicsData information for inspectation (may sometimes be very large and may not fit into dialog for large graphics objects!)\\ \hline
+    zoomStepFactor &     float &      &     1.15 &     change of zoom per keypress (keypad +/-) or mouse wheel increment\\ \hline
+	  \end{longtable}
+	\end{center}
+
+
+%+++++++++++++++++++++++++++++++++++
+
 \mysubsubsubsection{VSettingsInteractive}
 \label{sec:VSettingsInteractive}
-Functionality to interact with render window; will include left and right mouse press actions and others in future.
+Functionality to interact with render window; includes special rotation and zoom factors, item-highlighting, marker tracking, item selection and keyPressUserFunction.
 
 \noindent VSettingsInteractive has the following items:
 %reference manual TABLE
@@ -974,30 +1184,17 @@ Functionality to interact with render window; will include left and right mouse 
   \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
+    advanced &     VSettingsInteractiveAdvanced &      &      &     advanced interactive visualization settings\\ \hline
     openVR &     VSettingsOpenVR &      &      &     openVR visualization settings\\ \hline
-    highlightColor &     Float4 &     4 &     [0.8,0.05,0.05,0.75] &     \tabnewline RGBA color for highlighted item; 4th value is alpha-transparency\\ \hline
-    highlightItemIndex &     Int &      &     -1 &     index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted\\ \hline
-    highlightItemType &     ItemType &      &     ItemType::\_None &     item type (Node, Object, ...) that shall be highlighted (e.g., need to find item due to errors)\\ \hline
+    autoRotateModelView &     bool &      &     False &     True: rotate model view with autorotation\\ \hline
+    autoRotationVelocity &     Float3 &     3 &     [0.,0.,1.047198] &     \tabnewline Angular velocity vector for auto-rotation of scene (only visualization view is rotated, not the model itself!)\\ \hline
+    highlightItemIndex &     Int &      &     -1 &     index of item that shall be highlighted (e.g., to find item which cauess problems); if set -1, no item is highlighted\\ \hline
+    highlightItemType &     ItemType &      &     ItemType::\_None &     item type (Node, Object, ...) that shall be highlighted (e.g., to find item which cauess problems)\\ \hline
     highlightMbsNumber &     UInt &      &     0 &     index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)\\ \hline
-    highlightOtherColor &     Float4 &     4 &     [0.5,0.5,0.5,0.4] &     \tabnewline RGBA color for other items (which are not highlighted); 4th value is alpha-transparency\\ \hline
-    joystickScaleRotation &     float &      &     200. &     rotation scaling factor for joystick input\\ \hline
-    joystickScaleTranslation &     float &      &     6. &     translation scaling factor for joystick input\\ \hline
-    keypressRotationStep &     float &      &     5. &     rotation increment per keypress in degree (full rotation = 360 degree)\\ \hline
-    keypressTranslationStep &     float &      &     0.1 &     translation increment per keypress relative to window size\\ \hline
-    lockModelView &     bool &      &     False &     True: all movements (with mouse/keys), rotations, zoom are disabled; initial values are considered ==> initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value\\ \hline
-    mouseMoveRotationFactor &     float &      &     1. &     rotation increment per 1 pixel mouse movement in degree\\ \hline
-    pauseWithSpacebar &     bool &      &     True &     True: during simulation, space bar can be pressed to pause simulation\\ \hline
-    selectionHighlights &     bool &      &     True &     True: mouse click highlights item (default: red)\\ \hline
-    selectionLeftMouse &     bool &      &     True &     True: left mouse click on items and show basic information\\ \hline
-    selectionLeftMouseItemTypes &     Index &      &     31 &     binary flags (1,2,4,8,16) for (Node,Object,Marker,Load,Sensor) that are identified with left mouse click selection\\ \hline
-    selectionRightMouse &     bool &      &     True &     True: right mouse click on items and show dictionary (read only!)\\ \hline
-    selectionRightMouseGraphicsData &     \tabnewline bool &      &     False &     True: right mouse click on items also shows GraphicsData information for inspectation (may sometimes be very large and may not fit into dialog for large graphics objects!)\\ \hline
-    trackMarker &     Int &      &     -1 &     if valid marker index is provided and marker provides position (and orientation), the centerpoint of the scene follows the marker (and orientation); depends on trackMarkerPosition and trackMarkerOrientation; by default, only position is tracked\\ \hline
-    trackMarkerMbsNumber &     Index &      &     0 &     number of main system which is used to track marker; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number\\ \hline
-    trackMarkerOrientation &     Float3 &     3 &     [0.,0.,0.] &     \tabnewline choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one\\ \hline
-    trackMarkerPosition &     Float3 &     3 &     [1.,1.,1.] &     \tabnewline choose which coordinates or marker are tracked (x,y,z)\\ \hline
+    ignoreKeys &     bool &      &     False &     True: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'; if ignoreKeys=True, then keyPressUserFunction can be used!\\ \hline
+    keyPressUserFunction &     KeyPressUserFunction &      &     0 &     add a Python function f(key, action, mods) here, which is called every time a key is pressed; set this parameter to 0 (int) in order to deactivate it; the user function is only called if interactive.ignoreKeys=True; function shall return true, if key has been processed; Example: \tabnewline def f(key, action, mods):\tabnewline \phantom{XXX} print('key=',key);\tabnewline use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)\\ \hline
+    logMouseCoordinates &     bool &      &     True &     True: if showMouseCoordinates=True, also log mouse coordinates (transformed to model coordinates); only works for axis-aligned ortho-projections and shows the coordinates of the current plane\\ \hline
     useJoystickInput &     bool &      &     True &     True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems ...\\ \hline
-    zoomStepFactor &     float &      &     1.15 &     change of zoom per keypress (keypad +/-) or mouse wheel increment\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -1006,7 +1203,7 @@ Functionality to interact with render window; will include left and right mouse 
 
 \mysubsubsubsection{VisualizationSettings}
 \label{sec:VisualizationSettings}
-Settings for visualization. 
+Top structure for all visualization settings in Exudyn. 
 
 \noindent VisualizationSettings has the following items:
 %reference manual TABLE
@@ -1029,9 +1226,108 @@ Settings for visualization.
     openGL &     VSettingsOpenGL &      &      &     OpenGL rendering settings\\ \hline
     raytracer &     VSettingsRaytracer &      &      &     Raytracer settings (builds on OpenGL rendering settings)\\ \hline
     sensors &     VSettingsSensors &      &      &     sensor visualization settings\\ \hline
-    window &     VSettingsWindow &      &      &     visualization window and interaction settings\\ \hline
+    view0 &     VSettingsView &      &      &     Settings for main view 0\\ \hline
+    view1 &     VSettingsView &      &      &     Settings for sub-view 1\\ \hline
+    view2 &     VSettingsView &      &      &     Settings for sub-view 2\\ \hline
+    view3 &     VSettingsView &      &      &     Settings for sub-view 3\\ \hline
 	  \end{longtable}
 	\end{center}
+
+The following parameter changes have been made:
+\bi
+  \item general.drawCoordinateSystem $\ra$ view0.scene.drawCoordinateSystem (changed in version 1.10.80, expires: 2030)
+  \item general.drawWorldBasis $\ra$ view0.scene.drawWorldBasis (changed in version 1.10.80, expires: 2030)
+  \item general.showComputationInfo $\ra$ view0.window.showComputationInfo (changed in version 1.10.80, expires: 2030)
+  \item general.textSize $\ra$ view0.window.globalFontSize (changed in version 1.10.80, expires: 2030)
+  \item general.worldBasisSize $\ra$ view0.scene.worldBasisSize (changed in version 1.10.80, expires: 2030)
+  \item contour.colorBarPrecision $\ra$ contour.advanced.colorBarPrecision (changed in version 1.10.80, expires: 2030)
+  \item contour.colorBarTiling $\ra$ contour.advanced.colorBarTiling (changed in version 1.10.80, expires: 2030)
+  \item contour.showColorBar $\ra$ contour.advanced.showColorBar (changed in version 1.10.80, expires: 2030)
+  \item window.alwaysOnTop $\ra$ view0.window.alwaysOnTop (changed in version 1.10.80, expires: 2030)
+  \item window.ignoreKeys $\ra$ interactive.ignoreKeys (changed in version 1.10.80, expires: 2030)
+  \item window.keyPressUserFunction $\ra$ interactive.keyPressUserFunction (changed in version 1.10.80, expires: 2030)
+  \item window.limitWindowToScreenSize $\ra$ general.limitWindowToScreenSize (changed in version 1.10.80, expires: 2030)
+  \item window.maximize $\ra$ view0.window.maximize (changed in version 1.10.80, expires: 2030)
+  \item window.reallyQuitTimeLimit $\ra$ general.reallyQuitTimeLimit (changed in version 1.10.80, expires: 2030)
+  \item window.renderWindowSize $\ra$ view0.window.renderWindowSize (changed in version 1.10.80, expires: 2030)
+  \item window.showMouseCoordinates $\ra$ view0.window.showMouseCoordinates (changed in version 1.10.80, expires: 2030)
+  \item window.showRenderStateInfo $\ra$ view0.window.showRenderStateInfo (changed in version 1.10.80, expires: 2030)
+  \item window.showWindow $\ra$ view0.window.showWindow (changed in version 1.10.80, expires: 2030)
+  \item window.startupTimeout $\ra$ general.rendererStartupTimeout (changed in version 1.10.80, expires: 2030)
+  \item raytracer.ambientLightColor $\ra$ openGL.lightModelAmbient (changed in version 1.10.80, expires: 2030)
+  \item raytracer.backgroundColorReflections $\ra$ raytracer.advanced.backgroundColorReflections (changed in version 1.10.80, expires: 2030)
+  \item raytracer.enable $\ra$ view0.camera.useRaytracer (changed in version 1.10.80, expires: 2030)
+  \item raytracer.lightRadius $\ra$ openGL.light0.lightRadius (changed in version 1.10.80, expires: 2030)
+  \item raytracer.searchTreeFactor $\ra$ raytracer.advanced.searchTreeFactor (changed in version 1.10.80, expires: 2030)
+  \item raytracer.shadowScalingFactor $\ra$ raytracer.advanced.shadowScalingFactor (changed in version 1.10.80, expires: 2030)
+  \item raytracer.shadowSmoothingSteps $\ra$ raytracer.advanced.shadowSmoothingSteps (changed in version 1.10.80, expires: 2030)
+  \item raytracer.showText $\ra$ raytracer.advanced.showText (changed in version 1.10.80, expires: 2030)
+  \item raytracer.tilesPerThread $\ra$ raytracer.advanced.tilesPerThread (changed in version 1.10.80, expires: 2030)
+  \item raytracer.zBiasLines $\ra$ raytracer.advanced.zBiasLines (changed in version 1.10.80, expires: 2030)
+  \item raytracer.zOffsetCamera $\ra$ openGL.dummy (changed in version 1.10.80, expires: 2030)
+  \item openGL.clippingPlaneColor $\ra$ openGL.advanced.clippingPlaneColor (changed in version 1.10.80, expires: 2030)
+  \item openGL.clippingPlaneDistance $\ra$ view0.camera.clippingPlaneDistance (changed in version 1.10.80, expires: 2030)
+  \item openGL.clippingPlaneNormal $\ra$ view0.camera.clippingPlaneNormal (changed in version 1.10.80, expires: 2030)
+  \item openGL.depthSorting $\ra$ openGL.advanced.depthSorting (changed in version 1.10.80, expires: 2030)
+  \item openGL.enableLight0 $\ra$ openGL.light0.enable (changed in version 1.10.80, expires: 2030)
+  \item openGL.enableLight1 $\ra$ openGL.light1.enable (changed in version 1.10.80, expires: 2030)
+  \item openGL.enableLighting $\ra$ openGL.advanced.enableLighting (changed in version 1.10.80, expires: 2030)
+  \item openGL.facesTransparent $\ra$ view0.scene.facesTransparent (changed in version 1.10.80, expires: 2030)
+  \item openGL.initialCenterPoint $\ra$ openGL.advanced.initialCenterPoint (changed in version 1.10.80, expires: 2030)
+  \item openGL.initialMaxSceneSize $\ra$ openGL.advanced.initialMaxSceneSize (changed in version 1.10.80, expires: 2030)
+  \item openGL.initialModelRotation $\ra$ openGL.advanced.initialModelRotation (changed in version 1.10.80, expires: 2030)
+  \item openGL.initialZoom $\ra$ openGL.advanced.initialZoom (changed in version 1.10.80, expires: 2030)
+  \item openGL.light0ambient $\ra$ openGL.dummy (changed in version 1.10.80, expires: 2030)
+  \item openGL.light0constantAttenuation $\ra$ openGL.light0.constantAttenuation (changed in version 1.10.80, expires: 2030)
+  \item openGL.light0diffuse $\ra$ openGL.light0.diffuse (changed in version 1.10.80, expires: 2030)
+  \item openGL.light0linearAttenuation $\ra$ openGL.light0.linearAttenuation (changed in version 1.10.80, expires: 2030)
+  \item openGL.light0position $\ra$ openGL.light0.position (changed in version 1.10.80, expires: 2030)
+  \item openGL.light0quadraticAttenuation $\ra$ openGL.light0.quadraticAttenuation (changed in version 1.10.80, expires: 2030)
+  \item openGL.light0specular $\ra$ openGL.light0.specular (changed in version 1.10.80, expires: 2030)
+  \item openGL.light1ambient $\ra$ openGL.dummy (changed in version 1.10.80, expires: 2030)
+  \item openGL.light1constantAttenuation $\ra$ openGL.light1.constantAttenuation (changed in version 1.10.80, expires: 2030)
+  \item openGL.light1diffuse $\ra$ openGL.light1.diffuse (changed in version 1.10.80, expires: 2030)
+  \item openGL.light1linearAttenuation $\ra$ openGL.light1.linearAttenuation (changed in version 1.10.80, expires: 2030)
+  \item openGL.light1position $\ra$ openGL.light1.position (changed in version 1.10.80, expires: 2030)
+  \item openGL.light1quadraticAttenuation $\ra$ openGL.light1.quadraticAttenuation (changed in version 1.10.80, expires: 2030)
+  \item openGL.light1specular $\ra$ openGL.light1.specular (changed in version 1.10.80, expires: 2030)
+  \item openGL.lightModelLocalViewer $\ra$ openGL.advanced.lightModelLocalViewer (changed in version 1.10.80, expires: 2030)
+  \item openGL.lightModelTwoSide $\ra$ openGL.advanced.lightModelTwoSide (changed in version 1.10.80, expires: 2030)
+  \item openGL.lightPositionsInCameraFrame $\ra$ openGL.light0.useCameraFrame (changed in version 1.10.80, expires: 2030)
+  \item openGL.lineSmooth $\ra$ openGL.advanced.lineSmooth (changed in version 1.10.80, expires: 2030)
+  \item openGL.materialAmbientAndDiffuse $\ra$ openGL.materialSpecular (changed in version 1.10.80, expires: 2030)
+  \item openGL.perspective $\ra$ view0.camera.perspective (changed in version 1.10.80, expires: 2030)
+  \item openGL.polygonOffset $\ra$ openGL.advanced.polygonOffset (changed in version 1.10.80, expires: 2030)
+  \item openGL.shadeModelSmooth $\ra$ openGL.advanced.shadeModelSmooth (changed in version 1.10.80, expires: 2030)
+  \item openGL.shadow $\ra$ openGL.light0.shadow (changed in version 1.10.80, expires: 2030)
+  \item openGL.shadowPolygonOffset $\ra$ openGL.advanced.shadowPolygonOffset (changed in version 1.10.80, expires: 2030)
+  \item openGL.showFaceEdges $\ra$ view0.scene.showFaceEdges (changed in version 1.10.80, expires: 2030)
+  \item openGL.showFaces $\ra$ view0.scene.showFaces (changed in version 1.10.80, expires: 2030)
+  \item openGL.showLines $\ra$ view0.scene.showLines (changed in version 1.10.80, expires: 2030)
+  \item openGL.showMeshEdges $\ra$ view0.scene.showMeshEdges (changed in version 1.10.80, expires: 2030)
+  \item openGL.showMeshFaces $\ra$ view0.scene.showMeshFaces (changed in version 1.10.80, expires: 2030)
+  \item openGL.textLineSmooth $\ra$ openGL.advanced.textLineSmooth (changed in version 1.10.80, expires: 2030)
+  \item openGL.textLineWidth $\ra$ openGL.advanced.textLineWidth (changed in version 1.10.80, expires: 2030)
+  \item interactive.highlightColor $\ra$ interactive.advanced.highlightColor (changed in version 1.10.80, expires: 2030)
+  \item interactive.highlightOtherColor $\ra$ interactive.advanced.highlightOtherColor (changed in version 1.10.80, expires: 2030)
+  \item interactive.joystickScaleRotation $\ra$ interactive.advanced.joystickScaleRotation (changed in version 1.10.80, expires: 2030)
+  \item interactive.joystickScaleTranslation $\ra$ interactive.advanced.joystickScaleTranslation (changed in version 1.10.80, expires: 2030)
+  \item interactive.keypressRotationStep $\ra$ interactive.advanced.keypressRotationStep (changed in version 1.10.80, expires: 2030)
+  \item interactive.keypressTranslationStep $\ra$ interactive.advanced.keypressTranslationStep (changed in version 1.10.80, expires: 2030)
+  \item interactive.lockModelView $\ra$ view0.window.lockModelView (changed in version 1.10.80, expires: 2030)
+  \item interactive.mouseMoveRotationFactor $\ra$ interactive.advanced.mouseMoveRotationFactor (changed in version 1.10.80, expires: 2030)
+  \item interactive.pauseWithSpacebar $\ra$ interactive.advanced.pauseWithSpacebar (changed in version 1.10.80, expires: 2030)
+  \item interactive.selectionHighlights $\ra$ interactive.advanced.selectionHighlights (changed in version 1.10.80, expires: 2030)
+  \item interactive.selectionLeftMouse $\ra$ interactive.advanced.selectionLeftMouse (changed in version 1.10.80, expires: 2030)
+  \item interactive.selectionLeftMouseItemTypes $\ra$ interactive.advanced.selectionLeftMouseItemTypes (changed in version 1.10.80, expires: 2030)
+  \item interactive.selectionRightMouse $\ra$ interactive.advanced.selectionRightMouse (changed in version 1.10.80, expires: 2030)
+  \item interactive.selectionRightMouseGraphicsData $\ra$ interactive.advanced.selectionRightMouseGraphicsData (changed in version 1.10.80, expires: 2030)
+  \item interactive.trackMarker $\ra$ view0.camera.trackMarker (changed in version 1.10.80, expires: 2030)
+  \item interactive.trackMarkerMbsNumber $\ra$ view0.camera.trackMarkerMbsNumber (changed in version 1.10.80, expires: 2030)
+  \item interactive.trackMarkerOrientation $\ra$ view0.camera.trackMarkerOrientation (changed in version 1.10.80, expires: 2030)
+  \item interactive.trackMarkerPosition $\ra$ view0.camera.trackMarkerPosition (changed in version 1.10.80, expires: 2030)
+  \item interactive.zoomStepFactor $\ra$ interactive.advanced.zoomStepFactor (changed in version 1.10.80, expires: 2030)
+\ei
 
 
 %++++++++++++++++++++++++++++++++++++++
@@ -1169,6 +1465,7 @@ Solver internal structure for output modes, output timers and counters.
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
     cpuLastTimePrinted &     Real &      &     0. &     CPU time when output has been printed last time\\ \hline
+    cpuSolverStartTime &     Real &      &     0. &     CPU start time of main solver (not including initial conditions); cpuSolverStartTime-cpuStartTime gives time for initialization\\ \hline
     cpuStartTime &     Real &      &     0. &     CPU start time of computation (starts counting at computation of initial conditions)\\ \hline
     finishedSuccessfully &     bool &      &     False &     flag is false until solver functions SolveSteps)...) or SolveSystem(...) finished successfully (can be used as external trigger)\\ \hline
     initializationSuccessful &     bool &      &     False &     flag is set during call to InitializeSolver(...); reasons for failure are multiple, either inconsistent solver settings are used, files cannot be written (file locked), or initial conditions could not be computed \\ \hline
@@ -1182,6 +1479,9 @@ Solver internal structure for output modes, output timers and counters.
     lastVerboseStepIndex &     Index &      &     0 &     step index when last time written to console (or file)\\ \hline
     multiThreadingMode &     Index &      &     0 &     multithreading mode that has been used: 0=None (serial), 1=multithreading, 2=multithreading with load balancing; (modes new since 2025-06, V1.9.198)\\ \hline
     numberOfThreadsUsed &     Index &      &     1 &     number of threads that have been used in simulation\\ \hline
+    simulationStoppedByUser &     bool &      &     False &     flag (initialized false) is set true when user stops the simulation (press Q, Escape, etc.)\\ \hline
+    simulationStoppedByUserFunction &     \tabnewline bool &      &     False &     flag (initialized false) is set true when a user function (PreStep, PostNewton, etc.) sends termination signal\\ \hline
+    simulationTimeout &     bool &      &     False &     flag (initialized false) is set true when exudyn.special.solver.timeout is reached (and timeout is >= 0)\\ \hline
     stepInformation &     Index &      &     0 &     this is a copy of the solvers stepInformation used for console output\\ \hline
     verboseMode &     Index &      &     0 &     this is a copy of the solvers verboseMode used for console output\\ \hline
     verboseModeFile &     Index &      &     0 &     this is a copy of the solvers verboseModeFile used for file\\ \hline

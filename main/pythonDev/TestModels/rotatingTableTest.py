@@ -196,10 +196,10 @@ for mode in range(2):
     SC.visualizationSettings.connectors.jointAxesLength = 0.3
     SC.visualizationSettings.connectors.jointAxesRadius = 0.08
     SC.visualizationSettings.openGL.lineWidth=2 #maximum
-    SC.visualizationSettings.openGL.lineSmooth=True
-    SC.visualizationSettings.openGL.shadow=0.15
+    
+    SC.visualizationSettings.openGL.light0.shadow=0.15
     SC.visualizationSettings.openGL.multiSampling = 4
-    SC.visualizationSettings.openGL.light0position = [8,8,10,0]
+    SC.visualizationSettings.openGL.light0.position = [8,8,10,0]
     simulationSettings.solutionSettings.solutionInformation = "Example Kollermill"
     SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
     

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-03  15:35:21 (last modified)
+* @date         2026-01-07  17:57:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -151,7 +151,7 @@ public: // AUTO:
         d["physicsReferenceCurvature"] = (Real)cObjectALEANCFCable2D->GetParameters().physicsReferenceCurvature; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsUseCouplingTerms"] = (bool)cObjectALEANCFCable2D->GetParameters().physicsUseCouplingTerms; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsAddALEvariation"] = (bool)cObjectALEANCFCable2D->GetParameters().physicsAddALEvariation; //! AUTO: cast variables into python (not needed for standard types) 
-        d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex(ArrayIndex(cObjectALEANCFCable2D->GetParameters().nodeNumbers)); //! AUTO: cast variables into python (not needed for standard types) 
+        d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex((ArrayIndex)cObjectALEANCFCable2D->GetParameters().nodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["useReducedOrderIntegration"] = (Index)cObjectALEANCFCable2D->GetParameters().useReducedOrderIntegration; //! AUTO: cast variables into python (not needed for standard types) 
         d["strainIsRelativeToReference"] = (Real)cObjectALEANCFCable2D->GetParameters().strainIsRelativeToReference; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
@@ -176,7 +176,7 @@ public: // AUTO:
         else if (parameterName.compare("physicsReferenceCurvature") == 0) { return py::cast((Real)cObjectALEANCFCable2D->GetParameters().physicsReferenceCurvature);} //! AUTO: get parameter
         else if (parameterName.compare("physicsUseCouplingTerms") == 0) { return py::cast((bool)cObjectALEANCFCable2D->GetParameters().physicsUseCouplingTerms);} //! AUTO: get parameter
         else if (parameterName.compare("physicsAddALEvariation") == 0) { return py::cast((bool)cObjectALEANCFCable2D->GetParameters().physicsAddALEvariation);} //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex(ArrayIndex(cObjectALEANCFCable2D->GetParameters().nodeNumbers)));} //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex((ArrayIndex)cObjectALEANCFCable2D->GetParameters().nodeNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("useReducedOrderIntegration") == 0) { return py::cast((Index)cObjectALEANCFCable2D->GetParameters().useReducedOrderIntegration);} //! AUTO: get parameter
         else if (parameterName.compare("strainIsRelativeToReference") == 0) { return py::cast((Real)cObjectALEANCFCable2D->GetParameters().strainIsRelativeToReference);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectALEANCFCable2D->GetShow());} //! AUTO: get parameter

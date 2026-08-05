@@ -376,9 +376,9 @@ simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2 = Fal
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
 
 SC.visualizationSettings.general.graphicsUpdateInterval=0.05
-# SC.visualizationSettings.general.drawWorldBasis = True
+# SC.visualizationSettings.view0.scene.drawWorldBasis = True
 SC.visualizationSettings.general.circleTiling=200
-SC.visualizationSettings.general.drawCoordinateSystem=True
+SC.visualizationSettings.view0.scene.drawCoordinateSystem=True
 SC.visualizationSettings.loads.show=False
 SC.visualizationSettings.bodies.show=True
 SC.visualizationSettings.markers.show=False
@@ -391,8 +391,8 @@ SC.visualizationSettings.nodes.tiling = 4
 SC.visualizationSettings.openGL.drawFaceNormals = False
 
 SC.visualizationSettings.openGL.multiSampling = 4
-SC.visualizationSettings.openGL.shadow = 0.25
-SC.visualizationSettings.openGL.light0position = [-3,3,10,0]
+SC.visualizationSettings.openGL.light0.shadow = 0.25
+SC.visualizationSettings.openGL.light0.position = [-3,3,10,0]
 
 if useGraphics:
     SC.visualizationSettings.general.autoFitScene = False

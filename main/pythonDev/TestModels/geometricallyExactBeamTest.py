@@ -297,8 +297,8 @@ for case in caseList:
     SC.visualizationSettings.nodes.defaultSize=0.01
 
     SC.visualizationSettings.bodies.beams.axialTiling = 50
-    SC.visualizationSettings.general.drawWorldBasis = True
-    SC.visualizationSettings.general.worldBasisSize = 0.1
+    SC.visualizationSettings.view0.scene.drawWorldBasis = True
+    SC.visualizationSettings.view0.scene.worldBasisSize = 0.1
     SC.visualizationSettings.openGL.multiSampling = 4
 
 

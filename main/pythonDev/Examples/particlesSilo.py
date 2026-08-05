@@ -47,12 +47,13 @@ if n >= 4000*8:
     row=40
     ss = 16*4
     holeRad *= 1.4 #better 1.4 !
+    stepSize *= 0.5
 
 if n >= 4000*64:
     #a*=0.75
     SHsilo = 8*L
     row=int(1.3*row)
-    stepSize *= 0.25
+    stepSize *= 0.5
     ss=100
     
 radius = 0.5*a
@@ -147,16 +148,20 @@ for i in range(n):
         mThis = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
     else:
         RBinertia = InertiaSphere(m, radius)
+        RBinertia._nTilesGraphics = 4 #reduce from 16, if drawn
         dictMass = mbs.CreateRigidBody(
                       inertia=RBinertia, 
                       nodeType=exu.NodeType.RotationRotationVector,
                       referencePosition=pRef, 
                       initialVelocity=v0,
-                      returnDict=True)
+                      returnDict=True, 
+                      show=False, #nodes are drawn!
+                      )
         [nMass, oMass] = [dictMass['nodeNumber'], dictMass['bodyNumber']]
 
         mbs.SetNodeParameter(nMass, 'VdrawSize', 2*gRad)
         mbs.SetNodeParameter(nMass, 'Vcolor', color4node)
+        mbs.SetNodeParameter(nMass, 'Vshow', True)
         mThis = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nMass))
 
     mbs.AddLoad(Force(markerNumber=mThis, loadVector= [0,0,-m*9.81]))
@@ -175,7 +180,7 @@ if True: #add Silo
     contour=np.array([[0,SR2],[0,SR2+ST],[SH2-ST,SR2+ST],[2*SH2-ST,SR+ST],[2*SH2+SHsilo,SR+ST],
                       [2*SH2+SHsilo,SR],[2*SH2,SR],[SH2,SR2],[0,SR2]])
     contour = list(contour)
-    contour.reverse()
+    # contour.reverse()
     gSilo = graphics.SolidOfRevolution(pAxis=[0,0,3*L], vAxis=[0,0,1],
             contour=contour, color=[0.8,0.1,0.1,0.5], nTiles = 64)
     
@@ -217,8 +222,8 @@ simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerat
 simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody = True
 
 SC.visualizationSettings.general.graphicsUpdateInterval=2
-SC.visualizationSettings.general.circleTiling=200
-SC.visualizationSettings.general.drawCoordinateSystem=True
+SC.visualizationSettings.general.circleTiling=20
+SC.visualizationSettings.view0.scene.drawCoordinateSystem=True
 SC.visualizationSettings.loads.show=False
 SC.visualizationSettings.bodies.show=True
 SC.visualizationSettings.markers.show=False
@@ -226,10 +231,10 @@ SC.visualizationSettings.markers.show=False
 SC.visualizationSettings.nodes.show=True
 SC.visualizationSettings.nodes.drawNodesAsPoint = False
 SC.visualizationSettings.nodes.defaultSize = 0 #must not be -1, otherwise uses autocomputed size
-SC.visualizationSettings.nodes.tiling = 4
+SC.visualizationSettings.nodes.tiling = 8
 
-SC.visualizationSettings.window.renderWindowSize=[1200,1200]
-#SC.visualizationSettings.window.renderWindowSize=[1024,1400]
+SC.visualizationSettings.view0.window.renderWindowSize=[1200,1200]
+#SC.visualizationSettings.view0.window.renderWindowSize=[1024,1400]
 SC.visualizationSettings.openGL.multiSampling = 4
 #improved OpenGL rendering
 

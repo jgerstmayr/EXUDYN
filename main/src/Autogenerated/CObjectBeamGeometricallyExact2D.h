@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-06  23:48:38 (last modified)
+* @date         2026-01-09  01:47:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -27,7 +27,7 @@
 class CObjectBeamGeometricallyExact2DParameters // AUTO: 
 {
 public: // AUTO: 
-    Index2 nodeNumbers;                           //!< AUTO: two node numbers for beam element
+    ArrayIndex nodeNumbers;                       //!< AUTO: two node numbers for beam element
     Real physicsLength;                           //!< AUTO:  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
     Real physicsMassPerLength;                    //!< AUTO:  [SI:kg/m] mass per length of beam
     Real physicsCrossSectionInertia;              //!< AUTO:  [SI:kg m] cross section mass moment of inertia; inertia acting against rotation of cross section
@@ -38,11 +38,11 @@ public: // AUTO:
     Real physicsAxialDamping;                     //!< AUTO:  [SI:N/s] viscous damping of axial deformation
     Real physicsShearDamping;                     //!< AUTO:  [SI:N/s] viscous damping of shear deformation
     Real physicsReferenceCurvature;               //!< AUTO:  [SI:1/m] reference curvature of beam (pre-deformation) of beam
-    bool includeReferenceRotations;               //!< AUTO: if True, rotations at nodes consider reference rotations, which are used for the computation of bending strains (this means that a pre-curved beam is stress-free); if False, the reference rotation of the cross section is orthogonal to the direction between the reference position of the end nodes. This allows to easily share nodes among several beams with different cross section orientation.
+    bool includeReferenceRotations;               //!< AUTO: if True, rotation of the cross section at the nodes includes node reference rotations (within referenceCoordinates of NodeRigidBody2D), which are used for the computation of bending strains (this means that a pre-curved beam is stress-free); if False, the reference rotation of the cross section is orthogonal to the reference slope vector. This allows to easily share nodes among several beams with different reference cross section orientation (i.e., only the change of rotation counts).
     //! AUTO: default constructor with parameter initialization
     CObjectBeamGeometricallyExact2DParameters()
     {
-        nodeNumbers = Index2({EXUstd::InvalidIndex, EXUstd::InvalidIndex});
+        nodeNumbers = ArrayIndex();
         physicsLength = 0.;
         physicsMassPerLength = 0.;
         physicsCrossSectionInertia = 0.;
@@ -60,7 +60,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectBeamGeometricallyExact2D
-* @brief        A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D; FURTHER TESTS REQUIRED. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the \f$y\f$-axis, while and angle \f$\pi/2\f$ means that the cross section points in negative \f$x\f$-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[-L/2, L/2]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the \hac{EOM}).
+* @brief        A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the \f$y\f$-axis, while and angle \f$\pi/2\f$ means that the cross section points in negative \f$x\f$-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[-L/2, L/2]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the \hac{EOM}).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -82,9 +82,10 @@ public: // AUTO:
 class CObjectBeamGeometricallyExact2D: public CObjectBody // AUTO: 
 {
 protected: // AUTO: 
-    static constexpr Index nODE2coordinates = 6; //!< fixed size of coordinates used e.g. for ConstSizeVectors
+    static constexpr Index maxNNodes = 3; //!< max number of nodes
+    static constexpr Index maxODE2coordinates = 9; //!< max size of coordinates used e.g. for ConstSizeVectors
     mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set
-    mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation
+    mutable ConstSizeMatrix<maxODE2coordinates*maxODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation
     CObjectBeamGeometricallyExact2DParameters parameters; //! AUTO: contains all parameters for CObjectBeamGeometricallyExact2D
 
 public: // AUTO: 
@@ -101,11 +102,14 @@ public: // AUTO:
     //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
     virtual void ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const override;
 
+    //! AUTO:  templated function to enable automatic differentiation
+    template<class TReal> void ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs, const ConstSizeVectorBase<TReal, maxODE2coordinates>& qBeamTotal, const ConstSizeVectorBase<TReal, maxODE2coordinates>& qBeam_t, const ConstSizeVectorBase<Real, maxODE2coordinates>& qBeamRef, Index objectNumber) const;
+
+    //! AUTO:  Computational function: compute jacobian (dense or sparse mode, see parent CObject function)
+    virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg) const override;
+
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
-    virtual JacobianType::Type GetAvailableJacobians() const override
-    {
-        return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
-    }
+    virtual JacobianType::Type GetAvailableJacobians() const override;
 
     //! AUTO:  Flags to determine, which access (forces, moments, connectors, ...) to object are possible
     virtual AccessFunctionType GetAccessFunctionTypes() const override;
@@ -143,7 +147,7 @@ public: // AUTO:
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
     virtual Index GetNodeNumber(Index localIndex) const override
     {
-        CHECKandTHROW(localIndex <= 1, __EXUDYN_invalid_local_node1);
+        CHECKandTHROW(localIndex < parameters.nodeNumbers.NumberOfItems(), __EXUDYN_invalid_local_node0);
         return parameters.nodeNumbers[localIndex];
     }
 
@@ -156,13 +160,19 @@ public: // AUTO:
     //! AUTO:  number of nodes; needed for every object
     virtual Index GetNumberOfNodes() const override
     {
-        return 2;
+        return parameters.nodeNumbers.NumberOfItems();
     }
 
-    //! AUTO:  number of \hac{ODE2} coordinates; needed for object?
+    //! AUTO:  number of \hac{ODE2} coordinates
     virtual Index GetODE2Size() const override
     {
-        return nODE2coordinates;
+        return parameters.nodeNumbers.NumberOfItems()*3;
+    }
+
+    //! AUTO:  Linear=2 node element, Quadratic (!Linear)=3 node element
+    bool IsLinear() const
+    {
+        return parameters.nodeNumbers.NumberOfItems() == 2;
     }
 
     //! AUTO:  Get type of object, e.g. to categorize and distinguish during assembly and computation
@@ -183,32 +193,41 @@ public: // AUTO:
         massMatrixComputed = false;
     }
 
+    //! AUTO:  compute object coordinates for configuration
+    void ComputeCurrentCoordinates(ConstSizeVectorBase<Real, maxODE2coordinates>& qBeamTotal, ConstSizeVectorBase<Real, maxODE2coordinates>& qBeam_t, ConstSizeVectorBase<Real, maxODE2coordinates>& qBeamRef, ConfigurationType configuration) const;
+
+    //! AUTO:  templated map of element coordinate vector to  [u0,u1,theta0]
+    template<class TReal, Index nODE2> SlimVectorBase<TReal, 3> MapCoordinates(const ConstSizeVector<maxNNodes>& SV, const ConstSizeVectorBase<TReal, nODE2>& qBeam) const;
+
     //! AUTO:  map element coordinates (position or velocity level) given by nodal vectors q0 and q1 onto compressed shape function vector to compute position, etc.; if SV=SV(x), it returns Vector of coordinates at certain position x: [p0,p1,theta0]
-    Vector3D MapCoordinates(const Vector2D& SV, const LinkedDataVector& q0, const LinkedDataVector& q1) const;
+    Vector3D MapCoordinatesLinear(const ConstSizeVector<maxNNodes>& SV, const LinkedDataVector& q0, const LinkedDataVector& q1) const;
+
+    //! AUTO:  map element coordinates for 3-node element
+    Vector3D MapCoordinatesQuadratic(const ConstSizeVector<maxNNodes>& SV, const LinkedDataVector& q0, const LinkedDataVector& q1, const LinkedDataVector& q2) const;
 
     //! AUTO:  get compressed shape function vector \f$\Sm_v\f$, depending local position \f$x \in [0,L]\f$
-    Vector2D ComputeShapeFunctions(Real x) const;
+    ConstSizeVector<maxNNodes> ComputeShapeFunctions(Real x) const;
 
     //! AUTO:  get first derivative of compressed shape function vector \f$\frac{\partial \Sm_v}{\partial x}\f$, depending local position \f$x \in [0,L]\f$
-    Vector2D ComputeShapeFunctions_x(Real x) const;
+    ConstSizeVector<maxNNodes> ComputeShapeFunctions_x(Real x) const;
 
     //! AUTO:  compute rotation matrix from angle theta
     Matrix2D GetRotationMatrix2D(Real theta) const;
 
     //! AUTO:  compute strains and variation of strains for given interpolated derivatives of displacement u1_x, u2_x, angle theta (incl. reference config.!), shape vector SV and shape vector derivatives SV_x and slope vector in reference configuration
-    void ComputeGeneralizedStrains(Real x, Real& theta, Vector2D& SV, Vector2D& SV_x, Real& gamma1, Real& gamma2, Real& theta_x, Real& gamma1_t, Real& gamma2_t, Real& theta_xt, CSVector6D& deltaGamma1, CSVector6D& deltaGamma2) const;
+    template<class TReal> void ComputeGeneralizedStrains(Real x, TReal& theta, const ConstSizeVectorBase<TReal, maxODE2coordinates>& qBeamTotal, const ConstSizeVectorBase<TReal, maxODE2coordinates>& qBeam_t, const ConstSizeVectorBase<Real, maxODE2coordinates>& qBeamRef, ConstSizeVectorBase<Real,maxNNodes>& SV, ConstSizeVectorBase<Real, maxNNodes>& SV_x, TReal& gamma1, TReal& gamma2, TReal& theta_x, TReal& gamma1_t, TReal& gamma2_t, TReal& theta_xt, ConstSizeVectorBase<TReal, maxODE2coordinates>& deltaGamma1, ConstSizeVectorBase<TReal, maxODE2coordinates>& deltaGamma2) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
-            (Index)OutputVariableType::Position +
-            (Index)OutputVariableType::Displacement +
-            (Index)OutputVariableType::Velocity +
-            (Index)OutputVariableType::Rotation +
-            (Index)OutputVariableType::StrainLocal +
-            (Index)OutputVariableType::CurvatureLocal +
-            (Index)OutputVariableType::ForceLocal +
-            (Index)OutputVariableType::TorqueLocal );
+            (Index64)OutputVariableType::Position +
+            (Index64)OutputVariableType::Displacement +
+            (Index64)OutputVariableType::Velocity +
+            (Index64)OutputVariableType::Rotation +
+            (Index64)OutputVariableType::StrainLocal +
+            (Index64)OutputVariableType::CurvatureLocal +
+            (Index64)OutputVariableType::ForceLocal +
+            (Index64)OutputVariableType::TorqueLocal );
     }
 
 };

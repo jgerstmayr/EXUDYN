@@ -160,48 +160,46 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 
 		//.... for velocity level constraints: add dg/dq*\dot q and ODE1 term in future
 
-		if (IsVerbose(3)) { Verbose(3, "    initial accelerations update Jacobian: Jac    = " + EXUstd::ToString(*(data.systemJacobian)) + "\n"); }
+		if (IsVerbose(3)) { Verbose(3, "    initial accelerations update Jacobian: Jac  =\n" + EXUstd::ToString(*(data.systemJacobian)) + "\n"); }
 
 		if (computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_t.GetL2Norm() > 1e-10)
 		{
-			if (!EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolverType))
-			{
-				PyWarning("Generalized alpha: initial accelerations due to initial velocities can only be computed in dense matrix mode!");
-			}
-			else
+			//if (!EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolverType))
+			//{
+			//	PyWarning("Generalized alpha: initial accelerations due to initial velocities can only be computed in dense matrix mode!");
+			//}
+			//else
 			{
 
-				Index rowOffset = 0;
-				Index columnOffset = 0;
 				Real factor = -1.; //(C_q*q_t)_q*q_t put on RHS
 				Vector& vInitial = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_t; //=initialState! for consistency here, only currentState is used
 				data.jacobianAE->SetNumberOfRowsAndColumns(data.nAE, data.nODE2);
-				computationalSystem.ComputeConstraintJacobianDerivative(data.tempCompData, newton.numericalDifferentiation, 
-					data.tempODE2F0, data.tempODE2F1, vInitial, *(data.jacobianAE), factor, rowOffset, columnOffset);
+				if (EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolverType))
+				{
+					computationalSystem.NumericalConstraintJacobianDerivative(data.tempCompData, newton.numericalDifferentiation,
+						data.tempODE2F0, data.tempODE2F1, vInitial, *(data.jacobianAE), factor);
+				}
+				else //sparse; we could only use the second mode, as it also works for dense matrices!!!
+				{
+					computationalSystem.ComputeConstraintJacobianDerivative(data.tempCompData, newton.numericalDifferentiation,
+						data.tempODE2F0, data.tempODE2F1, vInitial, *(data.jacobianAE), factor);
+				}
+
+				if (IsVerbose(3)) { Verbose(3, STDstring("    (C_q*q_t)_q =\n        ") + EXUstd::ToString(*(data.jacobianAE)) + "\n"); }
+
 
 				Vector Cqv2(data.nAE);
 				data.jacobianAE->MultMatrixVector(vInitial, Cqv2);
 				aeRHS += Cqv2;
 
-				if (IsVerbose(3)) { Verbose(3, STDstring("vInitial = ") + EXUstd::ToString(vInitial) + "\n"); }
-				if (IsVerbose(3)) { Verbose(3, STDstring("Cqv2     = ") + EXUstd::ToString(Cqv2) + "\n"); }
+				if (IsVerbose(3)) { Verbose(3, STDstring("    vInitial = ") + EXUstd::ToString(vInitial) + "\n"); }
+				if (IsVerbose(3)) { Verbose(3, STDstring("    Cqv2     = ") + EXUstd::ToString(Cqv2) + "\n"); }
 			}
 		}
 
 		data.systemJacobian->FinalizeMatrix();
 
-		//bool ignoreRedundantEquations = false;
-		//Index redundantEqStart = 0;
-		//if (simulationSettings.linearSolverSettings.ignoreSingularJacobian || simulationSettings.linearSolverSettings.ignoreRedundantConstraints)
-		//{
-		//	ignoreRedundantEquations = true;
-		//	if (simulationSettings.linearSolverSettings.ignoreRedundantConstraints && !simulationSettings.linearSolverSettings.ignoreSingularJacobian)
-		//	{
-		//		redundantEqStart = data.startAE;
-		//	}
-		//}
-
-        Index factorizeOutput = data.systemJacobian->FactorizeNew();// ignoreRedundantEquations, redundantEqStart);
+        Index factorizeOutput = data.systemJacobian->FactorizeNew();
 
 		if (factorizeOutput != -1)
 		{
@@ -215,14 +213,25 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 			s += "\n******************************************\n";
 			PyWarning(s);
 			solutionODE2_tt.SetAll(0.);
+			solutionAE.SetAll(0.);
 		}
 		else
 		{
 			Vector systemInitialValues(data.nSys);
 			systemInitialValues.SetAll(0.);
-			LinkedDataVector ode2InitialValues(systemInitialValues, 0, data.nODE2);
 			data.systemJacobian->Solve(systemRHS, systemInitialValues);
-			solutionODE2_tt.CopyFrom(ode2InitialValues); //initial lagrange multipliers are not considered! Should we?
+
+			LinkedDataVector ode2InitialValues(systemInitialValues, 0, data.nODE2);
+			solutionODE2_tt.CopyFrom(ode2InitialValues);
+			if (simulationSettings.timeIntegration.generalizedAlpha.storeInitialAlgebraicCoordinates)
+			{
+				LinkedDataVector ae2InitialValues(systemInitialValues, data.startAE, data.nAE);
+				solutionAE.CopyFrom(ae2InitialValues);
+			}
+			else
+			{
+				solutionAE.SetAll(0.);
+			}
 		}
 		//Vector& solutionODE2_tt = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_tt;
 		//Vector& solutionAE = computationalSystem.GetSystemData().GetCData().currentState.AECoords;
@@ -238,15 +247,16 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
         if (simulationSettings.timeIntegration.generalizedAlpha.resetAccelerations)
         {
             solutionODE2_tt.SetAll(0.);
-        }
+		}
+		solutionAE.SetAll(0.); //only visible in file and used as start values
 	}
 
 	//these vectors are used in time stepping from previous step
-	solutionAE.SetAll(0.);
 	data.aAlgorithmic.CopyFrom(solutionODE2_tt);
 
-	if (IsVerbose(3)) { Verbose(3, STDstring("initial accelerations = ") + EXUstd::ToString(solutionODE2_tt) + "\n"); }
-
+	if (IsVerbose(3)) { Verbose(3, STDstring("initial accelerations     = ") + EXUstd::ToString(solutionODE2_tt) + "\n"); }
+	if (IsVerbose(3)) { Verbose(3, STDstring("initial constraint forces = ") + EXUstd::ToString(solutionAE) + "\n"); }
+	
 }
 
 //! initialize static step / time step: do some outputs, checks, etc.
@@ -384,8 +394,9 @@ void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& co
 		} 
 		else //Lie group active!
 		{
-			if (!EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolverType) &&
-				simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator)
+			if (!EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolverType) 
+				&& simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator
+				&& simulationSettings.timeIntegration.generalizedAlpha.lieGroupSimplifiedKinematicRelations)
 			{
 				PyError("SolveDynamic:GeneralizedAlpha: generalizedAlpha.lieGroupAddTangentOperator may not be set True in case of EigenSparse solver", file.solverFile);
 			}
@@ -655,12 +666,14 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 	//	alpha3 = ((it.currentStepSize * newmarkBeta) / newmarkGamma);
 	//}
 
-	if (initial)
+	if (initial) //Newton method initialization
 	{
 		if (useLieGroupIntegration)
 		{
-			ResetCoordinatesLieGroupNodes(computationalSystem, lieGroupDirectUpdateNewtonSolution);
-			SetPreviousNewtonSolutionLieGroupDirectUpdateNodes(computationalSystem, lieGroupDirectUpdateNewtonSolution, solutionODE2);
+			//reset both coordinates:
+			ResetCoordinatesLieGroupNodes(computationalSystem, lieGroupDirectUpdateNewtonSolution); //lieGroupDirectUpdateNewtonSolution=0 for Lie group coordinates
+			SetPreviousNewtonSolutionLieGroupDirectUpdateNodes(computationalSystem, lieGroupDirectUpdateNewtonSolution, solutionODE2); //solutionODE2=lieGroupDirectUpdateNewtonSolution
+			//Lie group non-simplified: solutionODE2 is currently theta_{n+1}
 		}
 		//solutionODE2_tt must contain initial accelerations !!!
 		//solutionAE.SetAll(0.); //already done in Newton
@@ -693,8 +706,9 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 		//store previous Newton solution:
 		if (useLieGroupIntegration)
 		{
-			if (lieGroupSimplifiedKinematicRelations)
-			{
+			if (!lieGroupSimplifiedKinematicRelations)
+			{ 
+				//solutionODE2 is currently theta_{n+1}
 				//add initialization for solutionODE2 (xi)
 				for (Index k : lieGroupDirectUpdateNodes)
 				{
@@ -710,64 +724,67 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 					Index off = node.GetGlobalODE2CoordinateIndex();
 					CHECKandTHROW(nRot == 3, "CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate: lieGroupSimplifiedKinematicRelations only works for 3 rotation parameters!");
 
-					//missing reference solution?
 					LinkedDataVector phi(solutionODE2, off + nPos, nRot);
-					LinkedDataVector phi0(computationalSystem.GetSystemData().GetCData().referenceState.ODE2Coords, off + nPos, nRot);
-					Vector3D phiOld({ phi[0] + phi0[0], phi[1] + phi0[1], phi[2] + phi0[2] });
-					//Vector3D phiOld({ phi[0] , phi[1] , phi[2] });
+					Vector3D phiOld({ phi[0], phi[1], phi[2] });
 					EXUmath::MultMatrixVectorTemplate(Xi, phiOld, phi);
-					phi[0] -= phi0[0];
-					phi[1] -= phi0[1];
-					phi[2] -= phi0[2];
+
+					//OLD: //missing reference solution?
+					//LinkedDataVector phi(solutionODE2, off + nPos, nRot);
+					//LinkedDataVector phi0(computationalSystem.GetSystemData().GetCData().referenceState.ODE2Coords, off + nPos, nRot);
+					//Vector3D phiOld({ phi[0] + phi0[0], phi[1] + phi0[1], phi[2] + phi0[2] });
+					////Vector3D phiOld({ phi[0] , phi[1] , phi[2] });
+					//EXUmath::MultMatrixVectorTemplate(Xi, phiOld, phi);
+					//phi[0] -= phi0[0];
+					//phi[1] -= phi0[1];
+					//phi[2] -= phi0[2];
 				}
 			}
-			SetPreviousNewtonSolutionLieGroupDirectUpdateNodes(computationalSystem, solutionODE2, lieGroupDirectUpdateNewtonSolution);
+			SetPreviousNewtonSolutionLieGroupDirectUpdateNodes(computationalSystem, solutionODE2, lieGroupDirectUpdateNewtonSolution); //old Lie Group version: lieGroupDirectUpdateNewtonSolution = delta q_n
 		}
 
 	}
-	else
+	else //Newton increment
 	{
-		if (useLieGroupIntegration)
+		if (useLieGroupIntegration && lieGroupSimplifiedKinematicRelations)
 		{
 			//lieGroupDirectUpdateNewtonSolution = Delta \bar q
-			SetPreviousNewtonSolutionLieGroupDirectUpdateNodes(computationalSystem, lieGroupDirectUpdateNewtonSolution, solutionODE2);
+			//solutionODE2 set to theta_n+1 at old Newton step 
+			SetPreviousNewtonSolutionLieGroupDirectUpdateNodes(computationalSystem, lieGroupDirectUpdateNewtonSolution, solutionODE2);//old Lie Group version: solutionODE2 = delta q_n
 		}
 
 		//now only add increments
-		if (!(useLieGroupIntegration && lieGroupSimplifiedKinematicRelations))
+		if (!(useLieGroupIntegration && !lieGroupSimplifiedKinematicRelations))
 		{
 			solutionODE2 -= newtonSolutionODE2; //Delta q in Arnold/Bruls is (-1)*Delta q here	
 		}
-		else
+		else //New Lie group method (non-simplified kinematics): solutionODE2 is q_n+1 at previous Newton iteration
 		{
-			newtonSolutionODE2 *= -1;
 
-			//add initialization for solutionODE2 (xi)
+			lieGroupDirectUpdateNewtonSolution.SetAll(0.);
+			lieGroupDirectUpdateNewtonSolution -= newtonSolutionODE2; //Exudyn: Newton increment is negative!
+
+			CompositionRuleCoordinatesLieGroupIntegrator(computationalSystem, lieGroupDirectUpdateNodes,
+				solutionODE2, //q_n+1
+				lieGroupDirectUpdateNewtonSolution,  //Delta theta
+				solutionODE2); //q_n+1 = q_n+1 o exp(Delta theta)
+
+			//in order to do the regular Newton update, we set newtonSolutionODE2 for Lie group coordinates to 0
 			for (Index k : lieGroupDirectUpdateNodes)
 			{
 				const CNodeRigidBody& node = (const CNodeRigidBody&)(computationalSystem.GetSystemData().GetCNode(k));
-				//- for transposed!
 
 				Index nPos = node.GetNumberOfDisplacementCoordinates(); //should be 3
 				Index nRot = node.GetNumberOfRotationCoordinates();     //should be 3
 				Index off = node.GetGlobalODE2CoordinateIndex();
-				CHECKandTHROW(nRot == 3, "CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate: lieGroupSimplifiedKinematicRelations only works for 3 rotation parameters!");
 
-				//missing reference solution?
-				LinkedDataVector phi(newtonSolutionODE2, off + nPos, nRot);
-				LinkedDataVector xiOld(solutionODE2, off + nPos, nRot);
-				LinkedDataVector xi0(computationalSystem.GetSystemData().GetCData().referenceState.ODE2Coords, off + nPos, nRot);
-				Vector3D phi3D({ phi[0], phi[1], phi[2] });
-				Vector3D xiOld3D({ xiOld[0] + xi0[0], xiOld[1] + xi0[1], xiOld[2] + xi0[2] });
-				//Vector3D xiOld3D({ xiOld[0] , xiOld[1] , xiOld[2] });
-				Matrix3D TExp = EXUlie::TExpSO3Inv(xiOld3D);
-				
-				EXUmath::MultMatrixVectorTemplate(TExp, phi3D, phi);
+				for (Index i = 0; i < nPos + nRot; i++)
+				{
+					lieGroupDirectUpdateNewtonSolution[off + i] = 0;
+				}
 			}
-			solutionODE2 += newtonSolutionODE2; //Delta q in Arnold/Bruls is (-1)*Delta q here	
-			newtonSolutionODE2 *= -1;
-		}
 
+			solutionODE2 += lieGroupDirectUpdateNewtonSolution; //Delta q in Arnold/Bruls is (-1)*Delta q here	
+		}
 
 		solutionODE2_t.MultAdd(-gammaPrime, newtonSolutionODE2); //Delta q in Arnold/Bruls is (-1)*Delta q here
 		solutionODE2_tt.MultAdd(-betaPrime, newtonSolutionODE2); //Delta q in Arnold/Bruls is (-1)*Delta q here	
@@ -785,31 +802,18 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(CSystem& computation
 		solutionODE1_t.MultAdd(-2. / it.currentStepSize, newtonSolutionODE1); //2/h =^= gammaPrime = gamma/(h*beta) = 0.5/(h*0.25)
 
 		//store previous Newton solution:
-		if (useLieGroupIntegration)
+		if (useLieGroupIntegration && lieGroupSimplifiedKinematicRelations)
 		{
 			SetPreviousNewtonSolutionLieGroupDirectUpdateNodes(computationalSystem, solutionODE2, lieGroupDirectUpdateNewtonSolution);
 			//lieGroupDirectUpdateNewtonSolution = Delta \bar q + Delta q
-			//}
-			//else
-			//{
-			//	SetPreviousNewtonSolutionLieGroupDirectUpdateNodes(computationalSystem, lieGroupDirectUpdateNewtonSolution, solutionODE2);
-
-			//	lieGroupDirectUpdateNewtonSolution.CopyFrom(newtonSolutionODE2);
-			//	lieGroupDirectUpdateNewtonSolution *= -1;
-
-			//	//update ODE2 coordinates with composition rule; reference configuration is considered in node.ComputationRule
-			//	CompositionRuleCoordinatesLieGroupIntegrator(computationalSystem, lieGroupDirectUpdateNodes,
-			//		solutionODE2, //q_n+1 old
-			//		lieGroupDirectUpdateNewtonSolution,  //Delta \xi
-			//		solutionODE2); //q_n+1 = q_n+1 o exp(Delta \xi)
-			//}
 		}
 	}
 
 	if (useLieGroupIntegration)
 	{
-		//if (!lieGroupSimplifiedKinematicRelations)
+		if (lieGroupSimplifiedKinematicRelations || initial)
 		{
+			//New paper, initial step: solutionODE2 is theta_n+1 (Lie algebra) and becomes q_n+1 (Lie group)
 			//update ODE2 coordinates with composition rule; reference configuration is considered in node.ComputationRule
 			CompositionRuleCoordinatesLieGroupIntegrator(computationalSystem, lieGroupDirectUpdateNodes,
 				computationalSystem.GetSystemData().GetCData().startOfStepState.ODE2Coords, //q_n
@@ -849,8 +853,10 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 	Real betaPrime = (1. - alphaM) / (EXUstd::Square(it.currentStepSize)*newmarkBeta*(1. - alphaF));
 	Real gammaPrime = newmarkGamma / (it.currentStepSize*newmarkBeta);
 
+	bool lieGroupAddTangentOperator = simulationSettings.timeIntegration.generalizedAlpha.lieGroupSimplifiedKinematicRelations
+										&& simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator;
 
-	if (useLieGroupIntegration && simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator)
+	if (useLieGroupIntegration && lieGroupAddTangentOperator)
 	{
 		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		//CAUTION: very experimental solution for Tangent operator
@@ -945,7 +951,7 @@ void CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian(CSystem& computati
 		factorODE2_AE, factorODE1_AE, factorAE_AE);
 	STOPTIMER(timer.jacobianAE);
 
-	if (useLieGroupIntegration && simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator)
+	if (useLieGroupIntegration && lieGroupAddTangentOperator)
 	{
 		Index startRow = data.nODE2 + data.nODE1;
 		//LieGroupNodesApplyTangentOperator(computationalSystem, computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords,

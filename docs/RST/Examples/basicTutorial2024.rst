@@ -41,7 +41,7 @@ You can view and download this file on Github: `basicTutorial2024.py <https://gi
    mbs.Assemble()
    
    SC.visualizationSettings.nodes.drawNodesAsPoint = False
-   SC.visualizationSettings.general.drawWorldBasis = True
+   SC.visualizationSettings.view0.scene.drawWorldBasis = True
    
    tEnd = 10
    stepSize = 0.02 #smaller gives more accurate results

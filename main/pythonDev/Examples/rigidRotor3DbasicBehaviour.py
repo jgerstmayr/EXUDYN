@@ -198,8 +198,8 @@ simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
-SC.visualizationSettings.window.renderWindowSize = [1600,1080]
-SC.visualizationSettings.general.textSize = 22
+SC.visualizationSettings.view0.window.renderWindowSize = [1600,1080]
+SC.visualizationSettings.view0.window.globalFontSize = 22
 
 SC.renderer.Start()              #start graphics visualization
 SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue

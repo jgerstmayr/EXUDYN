@@ -137,7 +137,7 @@ simulationSettings.timeIntegration.verboseMode = 1
 #simulationSettings.parallel.numberOfThreads = 4
 
 SC.visualizationSettings.general.graphicsUpdateInterval=0.02
-SC.visualizationSettings.general.drawCoordinateSystem=True
+SC.visualizationSettings.view0.scene.drawCoordinateSystem=True
 SC.visualizationSettings.loads.show=False
 SC.visualizationSettings.bodies.show=True
 SC.visualizationSettings.markers.show=False
@@ -147,7 +147,7 @@ SC.visualizationSettings.nodes.drawNodesAsPoint = False
 SC.visualizationSettings.nodes.defaultSize = 0 #must not be -1, otherwise uses autocomputed size
 SC.visualizationSettings.nodes.tiling = 4
 
-SC.visualizationSettings.window.renderWindowSize=[1900,1200]
+SC.visualizationSettings.view0.window.renderWindowSize=[1900,1200]
 SC.visualizationSettings.openGL.multiSampling = 4
 #improved OpenGL rendering
 

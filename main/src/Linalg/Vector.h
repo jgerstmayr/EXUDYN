@@ -158,9 +158,12 @@ protected:
         if (numberOfItems == 0) { data = nullptr; }//for case that list is zero length? ==> TEST CASE
         else
         {
+#ifndef EXUDYN_USE_ALIGNED_VECTORS
+			//previous logic (until 2026-01-14)
 			try 
 			{
 				data = new T[numberOfItems];
+				//data = new (std::align_val_t{ exuMemoryAlignment * sizeof(T) }) T[numberOfItems]; //exuMemoryAlignment * sizeof(T)==32 for AVX2
 			}
 			catch (const std::bad_alloc& e) {
 				pout << "Allocation failed: " << e.what() << '\n';
@@ -168,7 +171,29 @@ protected:
 
 				CHECKandTHROWstring("VectorBase::Allocation failed");
 			}
+#else
+			size_t size = sizeof(T) * numberOfItems;
+			size_t alignment = exuMemoryAlignment * sizeof(T); // min 32 for AVX2;
 
+			void* tempPtr = nullptr;
+#ifdef __EXUDYN__WINDOWS__
+			tempPtr = _aligned_malloc(size, alignment);
+#else
+			// Works on both Linux and MacOS
+			if (posix_memalign(&tempPtr, alignment, size) != 0) {
+				tempPtr = nullptr;
+			}
+#endif
+			data = (T*)tempPtr;
+			if (!data)
+			{
+				pout << "Aligned Allocation failed!" << '\n';
+				pout << "requested memory = " << sizeof(T) * numberOfItems / pow(2, 20) << " MB, number of items = " << numberOfItems << "\n";
+
+				CHECKandTHROWstring("VectorBase::Allocation failed");
+				//throw std::bad_alloc(); //not needed as _aligned_malloc and posix_memalign are C-standard functions which do not throw exceptions!
+			}
+#endif
 #ifdef __EXUDYN_RUNTIME_CHECKS__
 			vector_new_counts++;
 #endif
@@ -180,8 +205,13 @@ protected:
     {
         if (data != nullptr)
         {
-            delete[] data;
-            data = nullptr;
+#ifndef EXUDYN_USE_ALIGNED_VECTORS
+            delete[] data; //data allocate with new is deleted with delete[]
+			// operator delete[](data, std::align_val_t{ 32 }); //C++17: with aligned new[]
+#else
+			EXUstd::AlignedFree(data); 
+#endif
+			data = nullptr;
 #ifdef __EXUDYN_RUNTIME_CHECKS__
 			vector_delete_counts++;
 #endif
@@ -597,6 +627,18 @@ public:
 	//VectorBase Append(const VectorBase& vector) const;
 	VectorBase<T> Append(const VectorBase<T>& vector) const;
 
+	//! check if vector has invalid component
+	inline bool HasInvalid() const
+	{
+		for (const auto& item : *this)
+		{
+			if (!std::isfinite(item))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
     //! Returns the sum of all components of a vector in range [0, numberOfItems]
     T Sum() const
@@ -656,7 +698,7 @@ VectorBase<T>::VectorBase(const VectorBase<T>& vector)
 	AllocateMemory(vector.NumberOfItems());
 
 	Index cnt = 0;
-	for (auto value : vector) {
+	for (const T& value : vector) {
 		data[cnt++] = value;
 	}
 }

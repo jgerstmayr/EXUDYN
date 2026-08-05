@@ -67,8 +67,9 @@ Shape2D = Shape[T1, T2]
 
 
 import exudyn
-from exudyn import (ObjectIndex, NodeIndex, MarkerIndex, LoadIndex, SensorIndex)
+from exudyn import (ObjectIndex, NodeIndex, MarkerIndex, LoadIndex, SensorIndex,
+                    VSettingsMaterial)
 
-#from exudyn.graphicsDataUtilities import color4red, color4default #now accessible as e.g. exudyn.graphics.color.default
+
 
 

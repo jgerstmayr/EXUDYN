@@ -393,8 +393,8 @@ for engine in engines:
     simulationSettings.solutionSettings.solutionInformation = "Engine"
     
     SC.visualizationSettings.general.graphicsUpdateInterval = 0.01
-    #SC.visualizationSettings.general.drawWorldBasis = True
-    #SC.visualizationSettings.general.worldBasisSize = 0.1
+    #SC.visualizationSettings.view0.scene.drawWorldBasis = True
+    #SC.visualizationSettings.view0.scene.worldBasisSize = 0.1
     
     SC.visualizationSettings.markers.show = False
     SC.visualizationSettings.loads.show = False
@@ -402,27 +402,27 @@ for engine in engines:
     SC.visualizationSettings.connectors.show = False
     
     SC.visualizationSettings.openGL.multiSampling = 4
-    SC.visualizationSettings.openGL.shadow = 0.3 #set to 0, if your graphics card cannot handle this!
+    SC.visualizationSettings.openGL.light0.shadow = 0.3 #set to 0, if your graphics card cannot handle this!
     SC.visualizationSettings.openGL.lineWidth = 3
-    SC.visualizationSettings.openGL.light0position = [0.25,1,3,0]
+    SC.visualizationSettings.openGL.light0.position = [0.25,1,3,0]
 
     #++++++++++++++++++++++++++++++++
     #openVR:
-    SC.visualizationSettings.general.drawCoordinateSystem = False
+    SC.visualizationSettings.view0.scene.drawCoordinateSystem = False
     #good for openVR
     SC.visualizationSettings.general.graphicsUpdateInterval = 0.005 #small enough to get large enough fps
     simulationSettings.timeIntegration.simulateInRealtime = True
 
     useOpenVR = False #set this true for openVR to run!!!
-    SC.visualizationSettings.window.renderWindowSize=[1176, 1320] # this needs to fit to your VR HMD (Head Mounted Display) settings (will show in console when openVR is started and openVR.logLevel is large enough!)
+    SC.visualizationSettings.view0.window.renderWindowSize=[1176, 1320] # this needs to fit to your VR HMD (Head Mounted Display) settings (will show in console when openVR is started and openVR.logLevel is large enough!)
     if useOpenVR:
-        SC.visualizationSettings.openGL.initialZoom = 1# 0.4*20 #0.4*max scene size
-        #SC.visualizationSettings.openGL.initialCenterPoint = [0,0,2]
+        SC.visualizationSettings.openGL.advanced.initialZoom = 1# 0.4*20 #0.4*max scene size
+        #SC.visualizationSettings.openGL.advanced.initialCenterPoint = [0,0,2]
         SC.visualizationSettings.general.autoFitScene = False
-        SC.visualizationSettings.window.limitWindowToScreenSize = False #this allows a larger window size than your monitor can display in case!
-        SC.visualizationSettings.window.startupTimeout = 100000 #if steam / VRidge, etc. not found
+        SC.visualizationSettings.general.limitWindowToScreenSize = False #this allows a larger window size than your monitor can display in case!
+        SC.visualizationSettings.general.rendererStartupTimeout = 100000 #if steam / VRidge, etc. not found
         SC.visualizationSettings.interactive.openVR.enable = True
-        SC.visualizationSettings.interactive.lockModelView = True #lock rotation/translation/zoom of model
+        SC.visualizationSettings.view0.window.lockModelView = True #lock rotation/translation/zoom of model
         SC.visualizationSettings.interactive.openVR.logLevel = 3
         SC.visualizationSettings.interactive.openVR.actionManifestFileName = "C:/DATA/cpp/DocumentationAndInformation/openVR/hellovr_actions.json"
 

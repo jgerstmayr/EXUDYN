@@ -511,6 +511,19 @@ public:
 		}
 	}
 
+	//! check if vector has invalid component
+	inline bool HasInvalid() const
+	{
+		for (const auto& item : *this)
+		{
+			if (!std::isfinite(item))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	////! get sum of components
 	//T Sum() const
 	//{
@@ -524,6 +537,14 @@ public:
 	{
 		T result = 0.;
 		for (auto item : *this) { result += fabs(item); }
+		return result;
+	}
+
+	//! get maximum of absolute values
+	inline T MaxAbs() const
+	{
+		T result = 0.;
+		for (auto item : *this) { result = EXUstd::Maximum(result, fabs(item)); }
 		return result;
 	}
 

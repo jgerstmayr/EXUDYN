@@ -174,7 +174,7 @@ to explicitly load the version without AVX2.
 +  WSL/Ubuntu: render window crashes after left or right mouse click:
 
   |  →  This happens, in some (all?) Linux installations during mouse selection
-  |  →  workaround: setting \ ``SC.visualizationSettings.interactive.selectionLeftMouse = False``\  and \ ``SC.visualizationSettings.interactive.selectionRightMouse = False``\  removes the option to select with mouse, but avoids crashes
+  |  →  workaround: setting \ ``SC.visualizationSettings.interactive.advanced.selectionLeftMouse = False``\  and \ ``SC.visualizationSettings.interactive.advanced.selectionRightMouse = False``\  removes the option to select with mouse, but avoids crashes
 
 +  \ ``SolveDynamic``\  or \ ``SolveStatic``\  \ **terminated due to errors**\ :
 
@@ -355,7 +355,7 @@ FAQ
 
 +  Why can't I get the focus of the simulation window on startup (render window hidden)?
 
-  |  →  Starting Exudyn out of Spyder might not bring the simulation window to front, because of specific settings in Spyder(version 3.2.8), e.g., Tools\ :math:`\ra`\ Preferences\ :math:`\ra`\ Editor\ :math:`\ra`\ Advanced settings: uncheck 'Maintain focus in the Editor after running cells or selections'; Alternatively, set \ ``SC.visualizationSettings.window.alwaysOnTop=True``\  \ **before**\  starting the renderer with \ ``SC.renderer.Start()``\ 
+  |  →  Starting Exudyn out of Spyder might not bring the simulation window to front, because of specific settings in Spyder(version 3.2.8), e.g., Tools\ :math:`\ra`\ Preferences\ :math:`\ra`\ Editor\ :math:`\ra`\ Advanced settings: uncheck 'Maintain focus in the Editor after running cells or selections'; Alternatively, set \ ``SC.visualizationSettings.view0.window.alwaysOnTop=True``\  \ **before**\  starting the renderer with \ ``SC.renderer.Start()``\ 
 
 
 

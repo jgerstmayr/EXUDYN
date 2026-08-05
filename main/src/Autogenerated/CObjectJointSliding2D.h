@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-08  11:59:29 (last modified)
+* @date         2026-01-07  23:36:18 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -184,10 +184,10 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
-            (Index)OutputVariableType::Position +
-            (Index)OutputVariableType::Velocity +
-            (Index)OutputVariableType::SlidingCoordinate +
-            (Index)OutputVariableType::Force );
+            (Index64)OutputVariableType::Position +
+            (Index64)OutputVariableType::Velocity +
+            (Index64)OutputVariableType::SlidingCoordinate +
+            (Index64)OutputVariableType::Force );
     }
 
 };

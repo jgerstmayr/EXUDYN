@@ -82,7 +82,7 @@ simulationSettings.timeIntegration.newton.useModifiedNewton = True
 #simulationSettings.timeIntegration.realtimeFactor = 0.5
 
 SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
-SC.visualizationSettings.window.renderWindowSize=[1200,1024]
+SC.visualizationSettings.view0.window.renderWindowSize=[1200,1024]
 SC.visualizationSettings.nodes.show = False
 SC.visualizationSettings.loads.show = False
 SC.visualizationSettings.connectors.show = False

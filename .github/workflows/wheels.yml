@@ -5,175 +5,94 @@ on:
     branches:
       - master
   pull_request:
+  workflow_dispatch:        # CHANGED: allow manual runs (useful before a release)
+
+permissions:
+  contents: read            # CHANGED: least-privilege default
 
 jobs:
-  buildUbuntu:
-    name: Build ${{ matrix.os }} manylinux wheels
+
+  build_wheels:
+    name: cp3${{ matrix.python-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    continue-on-error: true #will continue, such that other wheels are built
+    continue-on-error: true   # keep: other wheels still get built
     strategy:
+      fail-fast: false        # CHANGED: don't cancel siblings on first failure
       matrix:
-        os: [ubuntu-latest]
-        # python-version: ['10']
-        python-version: ['9','10','11','12','13']
+        os: [ubuntu-24.04, ubuntu-24.04-arm, windows-2025, macos-15]
+        python-version: ['10', '11', '12', '13', '14']
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6          # CHANGED: v4 -> v6
 
-      - name: Set up Python 3.${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+      # CHANGED: host Python is now fixed and independent of the target version.
+      # cibuildwheel downloads the target interpreters itself, so there is no
+      # reason to ask setup-python for e.g. 3.9/arm64 (which does not exist and
+      # was silently breaking the macOS matrix once macos-latest became arm64).
+      - name: Set up host Python
+        uses: actions/setup-python@v6      # CHANGED: v4/v5 -> v6
         with:
-          python-version: 3.${{ matrix.python-version }}
+          python-version: '3.13'
 
-      #https://github.com/RalfG/python-wheels-manylinux-build/blob/master/full_workflow_example.yml
-      - uses: RalfG/python-wheels-manylinux-build@v0.7.1-manylinux2014_x86_64
+      # REMOVED: docker/setup-qemu-action - no longer needed, aarch64 wheels are
+      # now built natively on ubuntu-24.04-arm (much faster, and the test suite
+      # actually runs at native speed).
+
+      - name: Install cibuildwheel
+        run: python -m pip install "cibuildwheel==3.4.1"   # CHANGED: pinned
+
+      - name: Build wheels
+        run: python -m cibuildwheel --output-dir wheelhouse main
+        env:
+          CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
+          CIBW_SKIP: "*-win32 *-win_arm64 *musllinux*"
+          CIBW_ARCHS: "auto64"
+          CIBW_ARCHS_MACOS: "universal2"
+          CIBW_TEST_SKIP: "*universal2:x86_64"   # x86_64 half can't run on arm64 runner          CIBW_BUILD_VERBOSITY: 1
+
+          CIBW_BEFORE_ALL_LINUX: >-
+            dnf install -y epel-release &&
+            dnf install -y mesa-libGL-devel mesa-libGLU-devel
+            glfw-devel freeglut-devel libX11-devel
+
+          CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=11.0"
+
+          CIBW_TEST_REQUIRES: "numpy matplotlib scipy"
+          CIBW_TEST_COMMAND_LINUX: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
+          CIBW_TEST_COMMAND_MACOS: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
+          # CHECK again 2026-08-05: (was disabled before: strange exit code on Windows since 2024-10-09)
+          CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
+
+      - uses: actions/upload-artifact@v7    # CHANGED: v4 -> v7
         with:
-          python-versions: cp3${{ matrix.python-version }}-cp3${{ matrix.python-version }}
-          build-requirements: 'numpy' #only test requires matplotlib scipy
-          #not required: freeglut-devel libX11-devel
-          system-packages: 'mesa-libGL-devel mesa-libGLU-devel glfw glfw-devel freeglut-devel libX11-devel'
-          pre-build-command: ''
-          package-path: 'main'
-          pip-wheel-args: '-w ./dist --no-deps'
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: uploaddata-wheels-manylinux-x86-cp3${{ matrix.python-version }}-cp3${{ matrix.python-version }}
-          path: ./main/dist/*manylinux2014*x86_64.whl
-
-      - name: Install built wheels for test suite
-        run: python -m pip install main/dist/*manylinux2014*x86_64.whl
-        shell: bash
-
-      - name: Change directory and run test suite
-        run: |
-          python -m pip install matplotlib scipy
-          cd main/pythonDev/TestModels
-          python runTestSuite.py -quiet -local
-        shell: bash
+          name: uploaddata-wheels-${{ matrix.os }}-cp3${{ matrix.python-version }}
+          path: wheelhouse/*.whl
+          if-no-files-found: error          # CHANGED: fail loudly on empty upload
 
       - name: Upload tests
-        uses: actions/upload-artifact@v4 #artifacts are stored locally!
+        uses: actions/upload-artifact@v7    # CHANGED: v4 -> v7
+        if: always()                        # CHANGED: keep logs even if tests fail
         with:
-          name: uploaddata-tests-${{ matrix.os }}-manylinux-x86--3${{ matrix.python-version }}
+          name: uploaddata-tests-${{ matrix.os }}-cp3${{ matrix.python-version }}
           path: main/pythonDev/TestModels/testSuiteLog_V*.txt
+          if-no-files-found: ignore
 
-  #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  #REPLACED BY universal2
-  # buildMacOSarm64: #not needed with universal2 files for macos
-    # name: Build wheels on ${{ matrix.os }}
-    # runs-on: ${{ matrix.os }}
-    # strategy:
-      # matrix:
-        # os: [macos-latest]
-        # python-version: ['10', '11']
-        # # python-version: ['8', '9', '10', '11', '12'] 
-    # steps:
-    # - uses: actions/checkout@v4
-
-    # - name: Set up Python 3.${{ matrix.python-version }}
-      # uses: actions/setup-python@v4
-      # with:
-        # python-version: 3.${{ matrix.python-version }}
-        # architecture: "arm64"
-
-    # - name: Install cibuildwheel
-      # run: python -m pip install cibuildwheel
-
-    # - name: Build wheels
-      # run: python -m cibuildwheel --output-dir wheelstore
-      # env:
-        # CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
-        # CIBW_ARCHS_MACOS: "arm64"
-      # working-directory: main  #specify the local dir where setup.py is located
-
-    # - uses: actions/upload-artifact@v4
-      # with:
-        # name: uploaddata-wheels-${{ matrix.os }}-arm64-python-3${{ matrix.python-version }}
-        # path: wheelhouse/*.whl
-  #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-  buildWindowsMacOS:
-    name: Build ${{ matrix.os }} wheels
-    runs-on: ${{ matrix.os }}
-    continue-on-error: true #will continue, such that other wheels are built
-    strategy:
-      matrix:
-        # os: [ubuntu-latest] #ubuntu with aarch64 seems to need emulation: see QEMU / setup-qemu-action
-        os: [windows-latest, macos-latest] #, ubuntu-latest] #ubuntu with aarch64 seems to need emulation: see QEMU / setup-qemu-action
-        # python-version: ['10']
-        python-version: ['9', '10', '11', '12', '13'] 
-        #exclude:
-        #  - os: macos-latest
-        #    python-version: "8" #this version fails during testing / installation of exudyn universal2 wheel
-          # - os: macos-latest
-            # python-version: "3.9"
-
+  mergeArtifacts:
+    needs: [build_wheels]                   # CHANGED: single build job now
+    runs-on: ubuntu-24.04                   # CHANGED: pinned label
     steps:
-    - uses: actions/checkout@v4
+      - name: Merge All Artifacts
+        uses: actions/download-artifact@v6  # CHANGED: v4 -> v6
+        with:
+          path: merged-artifacts
+          pattern: 'uploaddata-*'
+          merge-multiple: true
 
-    - name: Set up Python 3.${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.${{ matrix.python-version }}
+      - name: Zip Merged Artifacts
+        run: zip -r merged-wheels.zip merged-artifacts
 
-    - name: Check if QEMU is needed for Linux
-      if: runner.os == 'Linux'
-      uses: docker/setup-qemu-action@v3
-      with:
-        platforms: arm64
-
-    - name: Install cibuildwheel
-      run: python -m pip install cibuildwheel
-
-    - name: Build wheels
-      run: python -m cibuildwheel --output-dir wheelhouse main #main is the project folder; works on all platforms
-      env: 
-        CIBW_BEFORE_BUILD_LINUX: "yum install -y epel-release && yum update -y && yum install -y glfw-devel libX11-devel"
-        CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
-        CIBW_SKIP: "*-win32 *musllinux*"   #skip building 32-bit (win32) wheels
-        CIBW_ARCHS_MACOS: "universal2" #universal2 does both arm64 and x86_64, requires actions/setup-python@v5 since 2024-06-04
-        CIBW_ARCHS_LINUX: "aarch64"    #for raspberry pi, etc.
-
-        CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=11.0"  # resolves problems with repairing/delocate-wheel; since 2024-06-04
-        #{project} folder is in Exudyn root, not in main!
-        # since 2024-10-09, the testsuite does not run under windows; strange exit code and nothing else...
-        # CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
-        # perform a test and rename it into a wheel to be copied by cibuild ...
-        CIBW_TEST_COMMAND_LINUX: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
-        CIBW_TEST_COMMAND_MACOS: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
-        # CIBW_TEST_REQUIRES: matplotlib scipy #problems on windows with numpy >= 2.0 !
-        CIBW_TEST_REQUIRES: numpy matplotlib scipy
-        CIBW_TEST_REQUIRES_WINDOWS: "numpy==1.24.4 matplotlib scipy"
-
-    - uses: actions/upload-artifact@v4 #artifacts are stored locally!
-      with:
-        name: uploaddata-wheels-${{ matrix.os }}-python-3${{ matrix.python-version }}
-        path: wheelhouse/*.whl
-
-    - name: Upload tests #for windows and macos
-      uses: actions/upload-artifact@v4 #artifacts are stored locally!
-      with:
-        name: uploaddata-tests-${{ matrix.os }}-3${{ matrix.python-version }}
-        path: main/pythonDev/TestModels/testSuiteLog_V*.txt
-
-
-  mergeArtifacts: #merge artifacts into one directory and zip it
-    needs: [buildWindowsMacOS, buildUbuntu] #buildMacOSarm64, 
-    runs-on: ubuntu-latest
-    steps:
-    - name: Merge All Artifacts
-      uses: actions/download-artifact@v4
-      with:
-        path: merged-artifacts
-        pattern: 'uploaddata-*'
-        merge-multiple: true
-
-    - name: Zip Merged Artifacts
-      run: zip -r merged-wheels.zip merged-artifacts
-
-    - name: Upload Merged ZIP Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: merged-wheels
-        path: merged-wheels.zip
+      - name: Upload Merged ZIP Artifact
+        uses: actions/upload-artifact@v7    # CHANGED: v4 -> v7
+        with:
+          name: merged-wheels
+          path: merged-wheels.zip

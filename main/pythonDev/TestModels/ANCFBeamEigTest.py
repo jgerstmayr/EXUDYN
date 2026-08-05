@@ -154,8 +154,8 @@ if True:
     simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
     
     SC.visualizationSettings.bodies.beams.axialTiling = 20 #for drawing of small number of beams
-    SC.visualizationSettings.general.drawWorldBasis = True
-    SC.visualizationSettings.general.worldBasisSize = 0.1
+    SC.visualizationSettings.view0.scene.drawWorldBasis = True
+    SC.visualizationSettings.view0.scene.worldBasisSize = 0.1
     SC.visualizationSettings.openGL.multiSampling = 4
         
     # [M, K, D] = mbs.ComputeLinearizedSystem(simulationSettings, useSparseSolver=True)

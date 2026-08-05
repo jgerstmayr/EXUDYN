@@ -172,7 +172,7 @@ public:
 	void Assemble() 
 	{ 
 		cSystem.Assemble(*this); 
-		//visualizationSystem.InitializeView(); //uses reference coordinates to obtain the scene center and its size
+		//visualizationSystem.InitializeRenderState(); //uses reference coordinates to obtain the scene center and its size
 	}
 	void AssembleCoordinates() { cSystem.AssembleCoordinates(*this); }
 	void AssembleLTGLists() { cSystem.AssembleLTGLists(*this); }

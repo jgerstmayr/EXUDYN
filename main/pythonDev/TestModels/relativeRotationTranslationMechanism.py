@@ -212,8 +212,8 @@ SC.visualizationSettings.connectors.showJointAxes = True
 
 SC.visualizationSettings.openGL.multiSampling=2
 SC.visualizationSettings.openGL.lineWidth=2
-SC.visualizationSettings.window.renderWindowSize = [1600,1200]
-SC.visualizationSettings.general.drawCoordinateSystem=True
+SC.visualizationSettings.view0.window.renderWindowSize = [1600,1200]
+SC.visualizationSettings.view0.scene.drawCoordinateSystem=True
 
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
 simulationSettings.displayComputationTime = True

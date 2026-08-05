@@ -60,13 +60,14 @@ The following table includes the keyboard shortcuts available in the window.
 \rowTableThree{\mybold{CTRL S}}{show/hide sensors numbers}{pressing this key switches the visibility of sensors numbers}
 \rowTableThree{\mybold{T}}{faces / edges mode}{switch between faces transparent/ faces transparent + edges / only face edges / full faces with edges / only faces visible}
 \rowTableThree{\mybold{O}}{change center}{change center of rotation to current center of the window (affects only current plane coordinates; rotate model to ajust other coordinates)}
-\rowTableThree{\mybold{Q}}{stop solver}{current solver is stopped (proceeds to next simulation or end of file); after \texttt{visualizationSettings.window.reallyQuitTimeLimit} seconds a dialog opens for safety}
+\rowTableThree{\mybold{Q}}{stop solver}{current solver is stopped (proceeds to next simulation or end of file); after \texttt{visualizationSettings.general.reallyQuitTimeLimit} seconds a dialog opens for safety}
 \rowTableThree{\mybold{SPACE}}{pause/continue simulation}{pause simulation, e.g. for model inspection; if simulation is paused, it can be continued by pressing space; use SHIFT+SPACE to continuously activate 'continue simulation'}
-\rowTableThree{\mybold{ESCAPE}}{close renderer}{stops the simulation (and further simulations) and closes the render window (same as close window); after \texttt{visualizationSettings.window.reallyQuitTimeLimit} seconds a dialog opens for safety}
+\rowTableThree{\mybold{ESCAPE}}{close renderer}{stops the simulation (and further simulations) and closes the render window (same as close window); after \texttt{visualizationSettings.general.reallyQuitTimeLimit} seconds a dialog opens for safety}
 \rowTableThree{\mybold{X}}{execute command}{open dialog to enter a python command (in global python scope), see \refSection{sec:overview:basics:commandAndHelp}; dialog may appear behind the visualization window!}
 \rowTableThree{\mybold{V}}{visualization settings}{open dialog to modify visualization settings, see \refSection{sec:overview:basics:visualizationsettings}; dialog may appear behind the visualization window!}
 \rowTableThree{\mybold{F2}}{ignore keys}{ switch key input on / off; can be used in combination with keyPressUserFunction to make simulators}
 \rowTableThree{\mybold{F3}}{show mouse coordinates}{shown in status line}
+\rowTableThree{\mybold{CTRL F3}}{show model view parameters}{shown in status line; shows zoom, rotationVector (rot), and centerPoint (pos), as required in function \texttt{renderer.SetModelView(zoom, rot, pos) which can be used to initialize view after renderer start}}
 \rowTableThree{\mybold{'.' or KEYPAD +}}{zoom in}{zoom one step into scene (additionally press CTRL to perform small zoom step)}
 \rowTableThree{\mybold{',' or KEYPAD -}}{zoom out}{zoom one step out of scene (additionally press CTRL to perform small zoom step)}
 \rowTableThree{\mybold{KEYPAD 2/8,4/6,1/9}}{rotate scene}{about 1, 2 and 3-axis (use CTRL for small rotations)}
@@ -80,8 +81,10 @@ This information is updated whenever the renderer performs redrawing or when acc
 When starting with an empty \texttt{mbs} and calling \texttt{SC.renderer.Start()}, the \texttt{SC.renderer.GetState()} will return a dictionary similar to:
 \pythonstyle\begin{lstlisting}
   {'centerPoint': [0.0, 0.0, 0.0],
+  'rotationCenterPoint': [0.0, 0.0, 0.0],
   'maxSceneSize': 1.0,
-  'zoom': 0.4000000059604645,
+  'zoom': 0.4,
+  'boundingBox': [[-1.0,-1.0,-1.0],[1.0,1.0,1.0]],
   'currentWindowSize': [1024, 768],
   'displayScaling': 1.0,
   'modelRotation': [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
@@ -94,6 +97,7 @@ When starting with an empty \texttt{mbs} and calling \texttt{SC.renderer.Start()
 Note that in case that you compiled with OpenVR, there will be a separate key \texttt{openVRstate}, containing details on OpenVR, e.g., HMD pose, eye projections and controller poses.
 Most entries in \texttt{renderState} are having single precision due to compatibility with values entered in OpenGL.
 The most typical scenario for using \texttt{SC.renderer.SetState(...)} is to restore a previous view or to start a simulation with a specific view, projection or similar. Furthermore, mouse and joystick values can be used for interactive models.
+Note that a simpler way to restore the model view is based on pressing CTRL-F3, to obtain the current model view values, see \refSection{sec:overview:basics:storingmodelview}.
 
 There is a set of variables, which can be actively changed by calling  \texttt{SC.renderer.SetState(renderState)} with \texttt{renderState}
 containing a modified dictionary:
@@ -102,19 +106,21 @@ containing a modified dictionary:
   \item \texttt{rotationCenterPoint}: the centerpoint for rotation with mouse (pressing right button)
   \item \texttt{maxSceneSize}: this value is used in the 3D view, clipping objects nearer or farer than this size; also used for perspective view; computed automatically based on the model
   \item \texttt{zoom}: this factor changes the zoom for the renderer, in fact for the size of the view; this leads to smaller objects with larger zoom values
+  \item \texttt{boundingBox}: a list of two vectors \texttt{pMin} and \texttt{pMax}, representing the bounding box of the current view (rotated into the screen plane); thus, \texttt{pMax[0]-pMin[0]} is the width of the scene, \texttt{pMax[0]-pMin[0]} is the height of the scene, and \texttt{pMax[2]-pMin[2]} is the depth of the scene; this value cannot be set with \texttt{SC.renderer.SetState(...)}
   \item \texttt{modelRotation}: this is the $3 \times 3$ rotation matrix used for model rotation; changing this matrix allows to rotate the model in the view; overwriting modelRotation, centerPoint and zoom with stored values allows to reset to a certain (default) view
   \item \texttt{projectionMatrix}: the $4 \times 4$ matrix for camera projection (as a homogeneous transformation, according to classical OpenGL standard)
 \ei
 Note that other items in renderState are ignored when calling \texttt{SC.renderer.SetState(renderState)}. The read only variables in \texttt{SC.renderer.GetState()} are:
 \bi
   \item \texttt{currentWindowSize}: contains current window size, which is different from default values in visualizationSettings, if window is scaled by user
-  \item \texttt{displayScaling}: contains display scaling (monitor scaling; content scaling) as returned by GLFW and Windows (always 1 on Linux); used internally in renderer to scale fonts
-  \item \texttt{mouseCoordinates}: returns 2D vector of current mouse coordinates on screen
-  \item \texttt{openGLcoordinates}: returns 3D vector of current mouse coordinates
-  \item \texttt{joystickAvailable}: set True, if a special 6D mouse is available (only works for special hardware, e.g., 3Dconnexion space mouse)
-  \item \texttt{joystickPosition}: contains current joystick position vector information 
-  \item \texttt{joystickRotation}: contains current joystick rotation vector information (linearized rotation angles)
+  \item \texttt{displayScaling}$^*$: contains display scaling (monitor scaling; content scaling) as returned by GLFW and Windows (always 1 on Linux); used internally in renderer to scale fonts
+  \item \texttt{mouseCoordinates}$^*$: returns 2D vector of current mouse coordinates on screen
+  \item \texttt{openGLcoordinates}$^*$: returns 3D vector of current mouse coordinates
+  \item \texttt{joystickAvailable}$^*$: set True, if a special 6D mouse is available (only works for special hardware, e.g., 3Dconnexion space mouse)
+  \item \texttt{joystickPosition}$^*$: contains current joystick position vector information 
+  \item \texttt{joystickRotation}$^*$: contains current joystick rotation vector information (linearized rotation angles)
 \ei
+$^*$Note that values with an asterisk are only available if the renderer has already been started using \texttt{SC.renderer.Start()}.
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \newpage %to resolve problems with line breaks in GraphicsData
@@ -222,12 +228,14 @@ GraphicsData \texttt{'type' = 'Circle'} draws a polygonal line between all speci
 
 \mysubsubsection{GraphicsData: Text}
 %
-GraphicsData \texttt{'type' = 'Text'} places the given text at position:
+GraphicsData \texttt{'type' = 'Text'} places the given text (mono-space font) at position:
 \startGenericTable{| p{3cm} | p{2cm} | p{2cm} | p{8.5cm} |}
 \rowTableFour{\mybold{Name}}{\mybold{type}}{\mybold{default value}}{\mybold{description}}
 \rowTableFour{color}{list}{[0,0,0,1]}{list of 4 floats to define RGB-color and transparency}
-\rowTableFour{text}{string}{mandatory}{text to be displayed, using UTF-8 encoding (see \refSection{sec:utf8})}
+\rowTableFour{text}{string}{mandatory}{text to be displayed, using UTF-8 encoding (see \refSection{sec:utf8}); multiline texts can be written with line breaks}
 \rowTableFour{position}{list}{mandatory}{list of float triples of [x,y,z] coordinates of the left upper position of the text; e.g.\ position=[20,10,0]}
+\rowTableFour{fontSize}{float}{0}{scalar fontSize or 0 for default; default font size in Exudyn is 12 (visualizationSettings.view0.window.globalFontSize); display scaling increases font size}
+\rowTableFour{offset}{list}{[0,0]}{offset in X/Y screen plane provided as list of 2 float values; this offset is not rotated with the model view and given relative to font size (offset [1,1] equals offset of one character to the right and up)}
 \finishTable
 
 \mysubsubsection{GraphicsData: TriangleList}
@@ -255,9 +263,10 @@ More about encoding can be found in \exuUrl{https://en.wikipedia.org/wiki/UTF-8}
 
 For short, \codeName\ uses UTF-8 character encoding in texts / strings drawn in OpenGL renderer window.
 However, the set of available UTF-8 characters in \codeName\ is restricted to a very small set of characters (as compared to available characters in UTF-8).
+For an example of available UTF-8 characters, see \texttt{examples/solutionViewerTest.py}.
 
 \ignoreRST{
-The following table shows of available characters (using hex codes, e.g. \texttt{0x20} = \texttt{32}):
+The following table gives and overview of available characters (using hex codes, e.g. \texttt{0x20} = \texttt{32}):
 \begin{center}
   \footnotesize
   \begin{longtable}{| p{2cm} | p{4cm} | p{8cm} |} 
@@ -275,12 +284,12 @@ The following table shows of available characters (using hex codes, e.g. \texttt
   5A & 5A & 'Z'\\
   $\ldots$ & $\ldots$ & $\ldots$\\
   7E & 7E & '\textasciitilde{}'\\
-  7F & 7F & control, not shown\\
+  7F & 7F & framed '?`'\\
   $\ldots$ & $\ldots$ & $\ldots$\\
-  A0 & C2 A0 & no-break space\\
-  A1 & C2 A1 & inverted exclamation mark: '!`'\\
-  $\ldots$ & $\ldots$ & $\ldots$\\
-  BF & C2 BF & inverted '?`'\\
+  %A0 & C2 A0 & no-break space\\
+  %A1 & C2 A1 & inverted exclamation mark: '!`'\\
+  %$\ldots$ & $\ldots$ & $\ldots$\\
+  BF & C2 BF & framed '?`'\\
   C0 & C3 80 & A with grave\\
   $\ldots$ & $\ldots$ & $\ldots$\\
   FF & C3 BF & y with diaeresis: '$\ddot{\mathrm{y}}$' \\ \hline
@@ -293,7 +302,7 @@ The following table shows of available characters (using hex codes, e.g. \texttt
 	 & E2 88 9A & $\sqrt{}$ \\
 	 & CE B1 & $\alpha$ \\
 	 & CE B2 & $\beta$ \\
-	 & $\ldots$ & (complete list of greek letters see below) \\
+	 & $\ldots$ & (list of greek letters see below) \\
    & F0 9F 99 82 & smiley \\
    & F0 9F 98 92 & frowney \\
 	 & E2 88 9e & infinity: $\infty$ \\ \hline
@@ -304,8 +313,7 @@ The following table shows of available characters (using hex codes, e.g. \texttt
 \end{center}
 Note, that unicode character codes are shown only for completeness, but they {\bf cannot be encoded in general by \codeName}!
 }
-Greek characters include: $\alpha, \beta, \gamma, \delta, \varepsilon, \zeta, \eta, \theta, 
-\kappa, \lambda, \nu, \xi, \pi, \rho, \sigma, \varphi, \Delta, \Pi, \Sigma, \Omega$.
+Greek characters include all lower case characters (including variations) and only upper case characters, which are different from latin characters: $\alpha, \beta, \gamma, ... \sigma, \varphi, \varepsilon; \Gamma, \Delta, \Theta, \Lambda, \Xi, \Pi, \Sigma, \Phi, \Psi, \Omega$.
 
 
 

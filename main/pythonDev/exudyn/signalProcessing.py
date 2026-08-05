@@ -15,7 +15,6 @@
 import numpy as np
 import exudyn
 from exudyn.advancedUtilities import IsListOrArray
-import copy
 
 #**function: filter output of sensors (using numpy savgol filter) as well as numerical differentiation to compute derivative of signal
 #**input:

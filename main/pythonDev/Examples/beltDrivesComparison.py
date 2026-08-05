@@ -366,11 +366,11 @@ SC.visualizationSettings.nodes.defaultSize = 0.005
 SC.visualizationSettings.nodes.show=False
 SC.visualizationSettings.openGL.multiSampling = 4
 
-SC.visualizationSettings.general.textSize=14
+SC.visualizationSettings.view0.window.globalFontSize=14
 SC.visualizationSettings.general.showSolverInformation=False
 SC.visualizationSettings.general.renderWindowString = 'Comparision of belt drive configurations:\n - prescribed drive velocity at left pulley\n - lever arm under gravity attached to right pulley\n - showing axial forces as vertical bars along beams'
-SC.visualizationSettings.window.renderWindowSize=[1920,1080]
-SC.visualizationSettings.general.drawCoordinateSystem=False
+SC.visualizationSettings.view0.window.renderWindowSize=[1920,1080]
+SC.visualizationSettings.view0.scene.drawCoordinateSystem=False
 
 if True:
     SC.visualizationSettings.bodies.beams.axialTiling = 1

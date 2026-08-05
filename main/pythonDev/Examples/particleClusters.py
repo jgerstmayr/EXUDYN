@@ -250,13 +250,13 @@ simulationSettings.solutionSettings.exportVelocities = False
 
 SC.visualizationSettings.general.graphicsUpdateInterval=1
 SC.visualizationSettings.general.circleTiling=200
-SC.visualizationSettings.general.drawCoordinateSystem=True
-SC.visualizationSettings.general.drawCoordinateSystem=False
+SC.visualizationSettings.view0.scene.drawCoordinateSystem=True
+SC.visualizationSettings.view0.scene.drawCoordinateSystem=False
 SC.visualizationSettings.loads.show=False
 SC.visualizationSettings.nodes.showBasis = False
 SC.visualizationSettings.nodes.basisSize = radius*2
 
-SC.visualizationSettings.window.renderWindowSize=[1600,1200]
+SC.visualizationSettings.view0.window.renderWindowSize=[1600,1200]
 SC.visualizationSettings.openGL.multiSampling = 4
 #improved OpenGL rendering
 

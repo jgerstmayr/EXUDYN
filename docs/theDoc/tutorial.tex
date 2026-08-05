@@ -598,7 +598,7 @@ which may lead to very large files and may slow down simulation, but is used in 
 
 \noindent In order to improve visualization, there are hundreds of options, see Visualization settings in \refSection{sec:VisualizationSettingsMain}, some of them used here:
 \pythonstyle\begin{lstlisting}
-  SC.visualizationSettings.window.renderWindowSize = [1600,1200]
+  SC.visualizationSettings.view0.window.renderWindowSize = [1600,1200]
   SC.visualizationSettings.openGL.multiSampling = 4  #improved OpenGL rendering
   SC.visualizationSettings.general.autoFitScene = False
 
@@ -709,8 +709,7 @@ The shear deformable beam is rigidly attached to ground and the cable is rigidly
   positionOfNode1 = [L,0,0] # 3D vector
 \end{lstlisting}
 
-\noindent Build geometrically exact 2D beam template (Timoshenko-Reissner), which includes all parameters
-In order to create beams, we usually need to create 2D rigid body nodes, 
+\noindent In order to create beams, we usually need to create 2D rigid body nodes, 
 create beam elements, add constraints and loads.
 
 \noindent However, there is a utility function \texttt{GenerateStraightBeam(...)}, 

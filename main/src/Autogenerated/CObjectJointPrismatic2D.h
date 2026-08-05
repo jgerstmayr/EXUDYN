@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-08  11:59:28 (last modified)
+* @date         2026-02-05  22:13:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -46,7 +46,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectJointPrismatic2D
-* @brief        A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers; the vector \f$\tv_0\f$ = axisMarker0 is given in local coordinates of the first marker's (body) frame and defines the prismatic axis; the vector \f$\mathbf{n}_1\f$ = normalMarker1 is given in the second marker's (body) frame and is the normal vector to the prismatic axis; using the global position vector \f$\pv_0\f$ and rotation matrix \f$\Am_0\f$ of marker0 and the global position vector \f$\pv_1\f$ rotation matrix \f$\Am_1\f$ of marker1, the equations for the prismatic joint follow as \f[ (\pv_1-\pv_0)^T\cdot \Am_1 \cdot \mathbf{n}_1 = 0 \f]  \f[ (\Am_0 \cdot \tv_0)^T \cdot \Am_1 \cdot \mathbf{n}_1 = 0\f] The lagrange multipliers follow for these two equations \f$[\lambda_0,\lambda_1]\f$, in which \f$\lambda_0\f$ is the transverse force and \f$\lambda_1\f$ is the torque in the joint.
+* @brief        A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

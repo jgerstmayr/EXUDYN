@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-03  15:37:34 (last modified)
+* @date         2026-01-07  17:57:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -149,7 +149,7 @@ public: // AUTO:
         d["physicsReferenceAxialStrain"] = (Real)cObjectANCFCable2D->GetParameters().physicsReferenceAxialStrain; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsReferenceCurvature"] = (Real)cObjectANCFCable2D->GetParameters().physicsReferenceCurvature; //! AUTO: cast variables into python (not needed for standard types) 
         d["strainIsRelativeToReference"] = (Real)cObjectANCFCable2D->GetParameters().strainIsRelativeToReference; //! AUTO: cast variables into python (not needed for standard types) 
-        d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex(ArrayIndex(cObjectANCFCable2D->GetParameters().nodeNumbers)); //! AUTO: cast variables into python (not needed for standard types) 
+        d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex((ArrayIndex)cObjectANCFCable2D->GetParameters().nodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["useReducedOrderIntegration"] = (Index)cObjectANCFCable2D->GetParameters().useReducedOrderIntegration; //! AUTO: cast variables into python (not needed for standard types) 
         d["axialForceUserFunction"] = (py::object)cObjectANCFCable2D->GetParameters().axialForceUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
         d["bendingMomentUserFunction"] = (py::object)cObjectANCFCable2D->GetParameters().bendingMomentUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
@@ -173,7 +173,7 @@ public: // AUTO:
         else if (parameterName.compare("physicsReferenceAxialStrain") == 0) { return py::cast((Real)cObjectANCFCable2D->GetParameters().physicsReferenceAxialStrain);} //! AUTO: get parameter
         else if (parameterName.compare("physicsReferenceCurvature") == 0) { return py::cast((Real)cObjectANCFCable2D->GetParameters().physicsReferenceCurvature);} //! AUTO: get parameter
         else if (parameterName.compare("strainIsRelativeToReference") == 0) { return py::cast((Real)cObjectANCFCable2D->GetParameters().strainIsRelativeToReference);} //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex(ArrayIndex(cObjectANCFCable2D->GetParameters().nodeNumbers)));} //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex((ArrayIndex)cObjectANCFCable2D->GetParameters().nodeNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("useReducedOrderIntegration") == 0) { return py::cast((Index)cObjectANCFCable2D->GetParameters().useReducedOrderIntegration);} //! AUTO: get parameter
         else if (parameterName.compare("axialForceUserFunction") == 0) { return cObjectANCFCable2D->GetParameters().axialForceUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
         else if (parameterName.compare("bendingMomentUserFunction") == 0) { return cObjectANCFCable2D->GetParameters().bendingMomentUserFunction.GetPythonDictionary();;} //! AUTO: get parameter

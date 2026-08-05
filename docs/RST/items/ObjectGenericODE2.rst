@@ -5,7 +5,7 @@
 ObjectGenericODE2
 =================
 
-A system of \ :math:`n`\  second order ordinary differential equations (\ :ref:`ODE2 <ODE2>`\ ), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE that all matrices, vectors, etc. must have the same dimensions \ :math:`n`\  or \ :math:`(n \times n)`\ , or they must be empty \ :math:`(0 \times 0)`\ , except for the mass matrix which always needs to have dimensions \ :math:`(n \times n)`\ .
+A system of \ :math:`n`\  second order ordinary differential equations (\ :ref:`ODE2 <ODE2>`\ ), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE: all matrices, vectors, etc. must have the same dimensions \ :math:`n`\  or \ :math:`(n \times n)`\ , or they must be empty \ :math:`(0 \times 0)`\ , except for the mass matrix which always needs to have dimensions \ :math:`(n \times n)`\ .
 
 \ **Additional information for ObjectGenericODE2**\ :
 

@@ -483,7 +483,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 		.def(py::init<>())
 		//+++++++++++++++++++++++++++++++++++++++++++
 		//System functions:
-		.def("AddSystem", &MainSystemContainer::AddMainSystem, "add a new computational system", py::return_value_policy::reference)
+		.def("AddSystem", &MainSystemContainer::AddMainSystem, "add a new computational system", py::return_value_policy::reference, py::keep_alive<0, 1>())
 
 		.def("AppendSystem", &MainSystemContainer::AppendMainSystem, "append an existing computational system")
 

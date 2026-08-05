@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-02-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -37,7 +37,7 @@ public: // AUTO:
   Index flushFilesDOF;                            //!< AUTO: number of DOF, above which solution file (coordinatesSolutionFile) buffers are always flushed, irrespectively of whether flushFilesImmediately is set True or False (see also flushFilesImmediately); for larger files, writing takes so much time that flushing does not add considerable time
   bool flushFilesImmediately;                     //!< AUTO: flush file buffers after every solution period written (coordinatesSolutionFile and sensor files); if set False, the output is written through a buffer, which is highly efficient, but during simulation, files may be always in an incomplete state; if set True, this may add a large amount of CPU time as the process waits until files are really written to hard disc (especially for simulation of small scale systems, writing 10.000s of time steps; at least 5us per step/file, depending on hardware)
   Index outputPrecision;                          //!< AUTO: precision for floating point numbers written to solution and sensor files
-  Real recordImagesInterval;                      //!< AUTO: record frames (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages
+  Real recordImagesInterval;                      //!< AUTO: record frames of the main view in the renderer (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages; note that only the main view (0) can be saved in this way, while for multiple views, you have to aquire data via renderer.RedrawAndGetImage()
   std::string restartFileName;                    //!< AUTO: filename and (relative) path of text file for storing solution after every restartWritePeriod if writeRestartFile=True; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart
   Real restartWritePeriod;                        //!< AUTO: time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance
   bool sensorsAppendToFile;                       //!< AUTO: flag (true/false); if true, sensor output is appended to existing file (otherwise created) or in case of internal storage, it is appended to existing currently stored data; this allows storing sensor values over different simulations
@@ -162,7 +162,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-02-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -170,13 +170,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
 class NumericalDifferentiationSettings // AUTO: 
 {
 public: // AUTO: 
@@ -245,7 +238,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-02-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -253,13 +246,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
 class DiscontinuousSettings // AUTO: 
 {
 public: // AUTO: 
@@ -316,7 +302,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-02-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -324,13 +310,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
 class NewtonSettings // AUTO: 
 {
 public: // AUTO: 
@@ -446,7 +425,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-02-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -454,23 +433,17 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
 class GeneralizedAlphaSettings // AUTO: 
 {
 public: // AUTO: 
   bool computeInitialAccelerations;               //!< AUTO: True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations
   bool lieGroupAddTangentOperator;                //!< AUTO: True: for Lie group nodes, in case that lieGroupSimplifiedKinematicRelations=True, the integrator adds the tangent operator for stiffness and constraint matrices, for improved Newton convergence; not available for sparse matrix mode (EigenSparse)
-  bool lieGroupSimplifiedKinematicRelations;      //!< AUTO: True: for Lie group nodes, the integrator uses the original kinematic relations of the Bruls and Cardona 2010 paper
+  bool lieGroupSimplifiedKinematicRelations;      //!< AUTO: True: for Lie group nodes, the integrator uses the original kinematic relations of the Bruls and Cardona 2010 paper; False (recommended): higher accuracy as proposed in paper by Holzinger, Arnold, Gerstmayr, sigma-modified Lie group generalized alpha methods for constrained multibody systems, 2025 (to be sumitted)
   Real newmarkBeta;                               //!< AUTO: value beta for Newmark method; default value beta = \f$\frac 1 4\f$ corresponds to (undamped) trapezoidal rule
   Real newmarkGamma;                              //!< AUTO: value gamma for Newmark method; default value gamma = \f$\frac 1 2\f$ corresponds to (undamped) trapezoidal rule
   bool resetAccelerations;                        //!< AUTO: this flag only affects if computeInitialAccelerations=False: if resetAccelerations=True, accelerations are set zero in the solver function InitializeSolverInitialConditions; this may be unwanted in case of repeatedly called SolveSteps() and in cases where solutions shall be prolonged from previous computations
   Real spectralRadius;                            //!< AUTO: spectral radius for Generalized-alpha solver; set this value to 1 for no damping or to 0 < spectralRadius < 1 for damping of high-frequency dynamics; for position-level constraints (index 3), spectralRadius must be < 1
+  bool storeInitialAlgebraicCoordinates;          //!< AUTO: True: IF computeInitialAccelerations=True, store initial algebraic coordinates (usually the Lagrange multipliers) in the initial coordinates vector (and thus in the first line of the coordinates solution file); for further details on limitations, see computeInitialAccelerations
   bool useIndex2Constraints;                      //!< AUTO: set useIndex2Constraints = true in order to use index2 (velocity level constraints) formulation
   bool useNewmark;                                //!< AUTO: if true, use Newmark method with beta and gamma instead of generalized-Alpha
 
@@ -486,6 +459,7 @@ public: // AUTO:
     newmarkGamma = 0.5;
     resetAccelerations = false;
     spectralRadius = 0.9;
+    storeInitialAlgebraicCoordinates = true;
     useIndex2Constraints = false;
     useNewmark = false;
   };
@@ -517,6 +491,7 @@ public: // AUTO:
     os << "  newmarkGamma = " << newmarkGamma << "\n";
     os << "  resetAccelerations = " << resetAccelerations << "\n";
     os << "  spectralRadius = " << spectralRadius << "\n";
+    os << "  storeInitialAlgebraicCoordinates = " << storeInitialAlgebraicCoordinates << "\n";
     os << "  useIndex2Constraints = " << useIndex2Constraints << "\n";
     os << "  useNewmark = " << useNewmark << "\n";
     os << "\n";
@@ -537,7 +512,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-02-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -545,13 +520,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
 class ExplicitIntegrationSettings // AUTO: 
 {
 public: // AUTO: 
@@ -601,7 +569,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-02-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -609,13 +577,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
 class TimeIntegrationSettings // AUTO: 
 {
 public: // AUTO: 
@@ -634,7 +595,7 @@ public: // AUTO:
   Real endTime;                                   //!< AUTO: \f$t_{end}\f$: end time of time integration
   Real initialStepSize;                           //!< AUTO: \f$h_{init}\f$: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster.
   Real minimumStepSize;                           //!< AUTO: \f$h_{min}\f$: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)
-  Real numberOfSteps;                             //!< AUTO: \f$n_{steps}\f$: number of steps in time integration; (maximum) stepSize \f$h\f$ is computed from \f$h = \frac{t_{end} - t_{start}}{n_{steps}}\f$; for automatic stepsize control, this stepSize is the maximum steps size, \f$h_{max} = h\f$; numberOfSteps can be a float-point type, but must be close to an integer (relative tolerance \f$100\cdot\varepsilon\f$) as it is silently rounded to int
+  Real numberOfSteps;                             //!< AUTO: \f$n_{steps}\f$: number of steps in time integration; (maximum) stepSize \f$h\f$ is computed from \f$h = \frac{t_{end} - t_{start}}{n_{steps}}\f$; for automatic stepsize control, this stepSize is the maximum steps size, \f$h_{max} = h\f$; numberOfSteps can also be a float type, but must be close to an integer (relative tolerance \f$100\cdot\varepsilon\f$) as it is silently rounded to int
   Real realtimeFactor;                            //!< AUTO: if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)
   Index realtimeWaitMicroseconds;                 //!< AUTO: if simulateInRealtime=True, a loop runs which waits realtimeWaitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (< 1000) increase CPU usage but improve realtime accuracy
   Real relativeTolerance;                         //!< AUTO: \f$r_{tol}\f$: if automaticStepSize=True, relative tolerance for the error control; must fulfill \f$r_{tol} \ge 0\f$; see \refSection{sec:ExplicitSolver}
@@ -723,9 +684,9 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: \f$h_{min}\f$: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)
   Real PyGetMinimumStepSize() const { return Real(minimumStepSize); }
 
-  //! AUTO: Set function (needed in pybind) for: \f$n_{steps}\f$: number of steps in time integration; (maximum) stepSize \f$h\f$ is computed from \f$h = \frac{t_{end} - t_{start}}{n_{steps}}\f$; for automatic stepsize control, this stepSize is the maximum steps size, \f$h_{max} = h\f$; numberOfSteps can be a float-point type, but must be close to an integer (relative tolerance \f$100\cdot\varepsilon\f$) as it is silently rounded to int
+  //! AUTO: Set function (needed in pybind) for: \f$n_{steps}\f$: number of steps in time integration; (maximum) stepSize \f$h\f$ is computed from \f$h = \frac{t_{end} - t_{start}}{n_{steps}}\f$; for automatic stepsize control, this stepSize is the maximum steps size, \f$h_{max} = h\f$; numberOfSteps can also be a float type, but must be close to an integer (relative tolerance \f$100\cdot\varepsilon\f$) as it is silently rounded to int
   void PySetNumberOfSteps(const Real& numberOfStepsInit) { numberOfSteps = EXUstd::GetSafelyPReal(numberOfStepsInit,"numberOfSteps"); }
-  //! AUTO: Read (Copy) access to: \f$n_{steps}\f$: number of steps in time integration; (maximum) stepSize \f$h\f$ is computed from \f$h = \frac{t_{end} - t_{start}}{n_{steps}}\f$; for automatic stepsize control, this stepSize is the maximum steps size, \f$h_{max} = h\f$; numberOfSteps can be a float-point type, but must be close to an integer (relative tolerance \f$100\cdot\varepsilon\f$) as it is silently rounded to int
+  //! AUTO: Read (Copy) access to: \f$n_{steps}\f$: number of steps in time integration; (maximum) stepSize \f$h\f$ is computed from \f$h = \frac{t_{end} - t_{start}}{n_{steps}}\f$; for automatic stepsize control, this stepSize is the maximum steps size, \f$h_{max} = h\f$; numberOfSteps can also be a float type, but must be close to an integer (relative tolerance \f$100\cdot\varepsilon\f$) as it is silently rounded to int
   Real PyGetNumberOfSteps() const { return Real(numberOfSteps); }
 
   //! AUTO: Set function (needed in pybind) for: if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)
@@ -822,7 +783,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-02-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -830,13 +791,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
 class StaticSolverSettings // AUTO: 
 {
 public: // AUTO: 
@@ -994,7 +948,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-02-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1002,13 +956,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
 class LinearSolverSettings // AUTO: 
 {
 public: // AUTO: 
@@ -1060,7 +1007,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-02-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1068,13 +1015,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
 class Parallel // AUTO: 
 {
 public: // AUTO: 
@@ -1168,7 +1108,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-02-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1176,13 +1116,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
 class SimulationSettings // AUTO: 
 {
 public: // AUTO: 

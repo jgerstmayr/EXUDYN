@@ -101,7 +101,6 @@ class InteractiveDialog:
                  doTimeIntegration = True, runOnStart = False, 
                  addLabelStringVariables=False, addSliderVariables=False, 
                  checkRenderEngineStopFlag = True, userOnChange=None, useSysVariables=False):
-        
         try:
             import tkinter
             import tkinter.font as tkFont
@@ -475,7 +474,7 @@ class InteractiveDialog:
                             raise ValueError('ERROR: InteractiveDialog: plots.sensor '+str(j)+': access to invalid coordinate')
                             
                 self.plots['line'][j].set_data(data[:,0], data[:,1]) 
-                self.plots['marker'][j].set_data(data[i,0], data[i,1]) 
+                self.plots['marker'][j].set_data([data[i,0]], [data[i,1]]) 
     
                 self.plots['ax'][j].set_xlim(min(data[:,0]), max(data[:,0]))
                 
@@ -591,12 +590,11 @@ class InteractiveDialog:
 def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPerPeriod = 30, showTime = True, 
                  renderWindowText = '', runOnStart = False, runMode=0, scaleAmplitude = 1, title='', fontSize = 12,
                  checkRenderEngineStopFlag = True, systemEigenVectors=None):
-
     SC = systemContainer
     mbs = mainSystem
     SC.visualizationSettings.general.graphicsUpdateInterval = 0.25*min(period, 2e-3) #set according update interval!
     SC.visualizationSettings.general.showSolverTime = showTime
-    #SC.visualizationSettings.general.showComputationInfo = False
+    #SC.visualizationSettings.view0.window.showComputationInfo = False
     SC.visualizationSettings.general.showSolverInformation = False
     SC.visualizationSettings.general.renderWindowString = renderWindowText+'mode 0'
     
@@ -707,11 +705,11 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
         SC.visualizationSettings.contour.outputVariable = outputVariable
         SC.visualizationSettings.contour.outputVariableComponent = int(mbs.sys['modeShapeComponent']) #component
 
-        #SC.visualizationSettings.openGL.showFaces = (mbs.sys['modeShapeMesh'] & 1) == 1
-        SC.visualizationSettings.openGL.showMeshFaces = (mbs.sys['modeShapeMesh'] & 1) == 1
+        #SC.visualizationSettings.view0.scene.showFaces = (mbs.sys['modeShapeMesh'] & 1) == 1
+        SC.visualizationSettings.view0.scene.showMeshFaces = (mbs.sys['modeShapeMesh'] & 1) == 1
 
-        #SC.visualizationSettings.openGL.showFaceEdges = (mbs.sys['modeShapeMesh'] & 2) == 2
-        SC.visualizationSettings.openGL.showMeshEdges = (mbs.sys['modeShapeMesh'] & 2) == 2
+        #SC.visualizationSettings.view0.scene.showFaceEdges = (mbs.sys['modeShapeMesh'] & 2) == 2
+        SC.visualizationSettings.view0.scene.showMeshEdges = (mbs.sys['modeShapeMesh'] & 2) == 2
         
 
         SC.renderer.SendRedrawSignal()
@@ -744,7 +742,8 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
     if title != '': 
         titleDialog = title
     
-    dialog = InteractiveDialog(mbs, simulationSettings=simulationSettings, 
+    #dialog = 
+    InteractiveDialog(mbs, simulationSettings=simulationSettings, 
                       simulationFunction=UFshowModes, 
                       dialogItems=dialogItems,
                       title=titleDialog,
@@ -771,7 +770,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 #  fontSize: define font size for labels in InteractiveDialog
 #  title: if empty, it uses default; otherwise define specific title
 #  checkRenderEngineStopFlag: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
-#**output: None; updates current visualization state, renders the scene continuously (after pressing button 'Run')
+#**output::None: updates current visualization state, renders the scene continuously (after pressing button 'Run')
 #**belongsTo: MainSystem
 #**example:
 ##HERE, mbs must contain same model as solution stored in coordinatesSolution.txt
@@ -784,7 +783,6 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 #mbs.SolutionViewer(sol) #call via MainSystem
 def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, runOnStart = True, runMode=2, 
                    fontSize=12, title='', checkRenderEngineStopFlag=True):
-
     from exudyn.utilities import SetSolutionState, LoadSolutionFile
     
     mbs = mainSystem
@@ -829,7 +827,7 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
     #call other dialog, create video and get back
     def UFmakeMP4():
         try:
-            import ffmpeg
+            import ffmpeg # noqa # pylint: disable=unused-import
         except:
             messagebox.showinfo('Warning', 'FFMPEG is not installed, therefore mp4 files cannot be generated.\nUse: "pip install ffmpeg-python"')
             return
@@ -911,7 +909,8 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
     if title != '':
         dialogTitle = title
 
-    dialog = InteractiveDialog(mbs, simulationSettings=simulationSettings, 
+    #dialog = 
+    InteractiveDialog(mbs, simulationSettings=simulationSettings, 
                       simulationFunction=UFviewer, 
                       dialogItems=dialogItems,
                       fontSize=fontSize,title=dialogTitle,
@@ -986,7 +985,6 @@ def ConvertImages2Video(workingDir='images',
 
 #**function: interactive dialog to convert generated images to videos using ffmpeg library; see also ConvertImages2Video() for meaning of values; requires ffmpeg-python to be installed
 def InteractiveImages2Video(closeAfterCreation=False,fontSize=11):
-
     try:
         import tkinter
         import tkinter.font as tkFont
@@ -1000,7 +998,7 @@ def InteractiveImages2Video(closeAfterCreation=False,fontSize=11):
     #import os
     
     try:
-        import ffmpeg #only to test before starting!
+        import ffmpeg # noqa # pylint: disable=unused-import
     except:
         raise ImportError('ConvertImages2Video: ffmpeg not found! install using "pip install ffmpeg-python"')
 

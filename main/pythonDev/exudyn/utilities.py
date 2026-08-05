@@ -18,16 +18,22 @@ import numpy as np
 from math import sqrt #, sin, cos, pi
 
 import exudyn
-from exudyn.basicUtilities import *
-from exudyn.advancedUtilities import *
-from exudyn.rigidBodyUtilities import *
-from exudyn.graphicsDataUtilities import *
+#for convenience, exudyn.utilities imports a lot of things globally
+from exudyn.basicUtilities import * # noqa: F403, F401
+from exudyn.advancedUtilities import * # noqa: F403, F401
+from exudyn.rigidBodyUtilities import * # noqa: F403, F401
+from exudyn.graphicsDataUtilities import * # noqa: F403, F401
 import exudyn.graphics #requires import for usage during __init__.py
-from exudyn.itemInterface import *
+from exudyn.itemInterface import * # noqa: F403, F401
+
+from exudyn.basicUtilities import Normalize
+from exudyn.itemInterface import ObjectGround, VObjectGround, \
+                                 MarkerBodyRigid, VMarkerBodyRigid, \
+                                 SensorUserFunction
 
 #for compatibility with older models:
 from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint,\
-                         GenerateStraightBeam
+                         GenerateStraightBeam # noqa # pylint: disable=unused-import
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -300,7 +306,7 @@ def __UFsensorDistance(mbs, t, sensorNumbers, factors, configuration):
 #  meshTrigs: list of trigs (3 node indices each), as returned by graphics.ToPointsAndTrigs()
 #  rigidBodyMarkerIndex: rigid body marker to which the triangles are fixed on (ground or moving object)
 #  searchTreeCellSize: size of search tree (X,Y,Z); use larger values in directions where more triangles are located
-#**output: int; returns ngc, which is the number of GeneralContact in mbs, to be used in CreateDistanceSensor(...); keep the gContact as deletion may corrupt data
+#**output::int: returns ngc, which is the number of GeneralContact in mbs, to be used in CreateDistanceSensor(...); keep the gContact as deletion may corrupt data
 #**notes: should be used by CreateDistanceSensor(...) and AddLidar(...) for simple initialization of GeneralContact; old name: DistanceSensorSetupGeometry(...)
 #**belongsTo: MainSystem
 def CreateDistanceSensorGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerIndex, searchTreeCellSize=[8,8,8]):
@@ -333,7 +339,7 @@ def CreateDistanceSensorGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerInde
 #  addGraphicsObject: if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small
 #  drawDisplaced: if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position
 #  color: optional color for 'laser beam' to be drawn
-#**output: SensorIndex; creates sensor and returns according sensor number of SensorUserFunction
+#**output::SensorIndex: creates sensor and returns according sensor number of SensorUserFunction
 #**notes: use generalContactIndex = CreateDistanceSensorGeometry(...) before to create GeneralContact module containing geometry; old name: AddDistanceSensor(...)
 #**belongsTo: MainSystem
 def CreateDistanceSensor(mbs, generalContactIndex,
@@ -350,7 +356,9 @@ def CreateDistanceSensor(mbs, generalContactIndex,
     elif type(positionOrMarker)==exudyn.MarkerIndex:
         markerNumber = float(int(positionOrMarker))
         try:
-            p0list = mbs.GetMarkerOutput(markerNumber=positionOrMarker,variableType=exu.OutputVariableType.Position, configuration=exu.ConfigurationType.Reference)
+            p0list = mbs.GetMarkerOutput(markerNumber=positionOrMarker,
+                                         variableType=exudyn.OutputVariableType.Position, 
+                                         configuration=exudyn.ConfigurationType.Reference)
             p0list = list(p0list)
         except:
             p0list = [0,0,0] #this was just a trial, otherwise initialize with zeros (e.g. for special objects where this does not work)
@@ -377,7 +385,8 @@ def CreateDistanceSensor(mbs, generalContactIndex,
 
 
     sUF = mbs.AddSensor(SensorUserFunction(sensorNumbers=[], factors=dataUF,
-                                              storeInternal=True,
+                                              storeInternal=storeInternal,
+                                              fileName=fileName,
                                               sensorUserFunction=__UFsensorDistance))
 
     return sUF
@@ -856,7 +865,7 @@ def RecoverSolutionFile(fileName, newFileName, verbose=0):
 def InitializeFromRestartFile(mbs, simulationSettings, restartFileName, verbose=True):
     raise ValueError('InitializeFromRestartFile: not fully implemented')
 
-    fileRead=open(fileName,'r') 
+    fileRead=open(restartFileName,'r') 
     fileLines = fileRead.readlines()
     
     #fileLines = []
@@ -884,30 +893,34 @@ def InitializeFromRestartFile(mbs, simulationSettings, restartFileName, verbose=
         raise ValueError('ERROR in InitializeFromRestartFile: last line does not contain "#FINISHED" and is thus expected to be corrupted!')
 
     #now everything should be ok and we can just read the line with numpy:
-    data = np.loadtxt(fileName, comments='#', delimiter=',')
+    data = np.loadtxt(restartFileName, comments='#', delimiter=',')
     nRows = np.size(data,0) #should be 1
     if nRows != 1:
         raise ValueError('ERROR in InitializeFromRestartFile: got more than one rows, but expected one')
 
-    row = 0 #first row used 
-    rowData = data[row]
+    rowData = data[-1] #last row
     #cols = solution['columnsExported']
     [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData] = columnsExported
 
-    #note that these visualization updates are not threading safe!
-    mbs.systemData.SetODE2Coordinates(rowData[1:1+nODE2], configuration)
-    if (nVel2): mbs.systemData.SetODE2Coordinates_t(rowData[1+nODE2:1+nODE2+nVel2], configuration)
-    if (nAcc2): mbs.systemData.SetODE2Coordinates_tt(rowData[1+nODE2+nVel2:1+nODE2+nVel2+nAcc2], configuration)
-    if (nODE1): mbs.systemData.SetODE1Coordinates(rowData[1+nODE2+nVel2+nAcc2:1+nODE2+nVel2+nAcc2+nODE1], configuration)
-    if (nVel1): mbs.systemData.SetODE1Coordinates_t(rowData[1+nODE2+nVel2+nAcc2+nODE1:1+nODE2+nVel2+nAcc2+nODE1+nVel1], configuration)
+    #update several configurations:
+    configurations = [exudyn.ConfigurationType.Current, 
+                      exudyn.ConfigurationType.Initial, 
+                      exudyn.ConfigurationType.Visualization]
     
-    if (nAlgebraic): mbs.systemData.SetAECoordinates(rowData[1+nODE2+nVel2+nAcc2+nODE1+nVel1:1+nODE2+nVel2+nAcc2+nODE1+nVel1+nAlgebraic], configuration)
-    if (nData): mbs.systemData.SetDataCoordinates(rowData[1+nODE2+nVel2+nAcc2+nODE1+nVel1+nAlgebraic:1+nODE2+nVel2+nAcc2+nODE1+nVel1+nAlgebraic+nData], configuration)
-
-    if configuration == exudyn.ConfigurationType.Visualization:
-        mbs.systemData.SetTime(rowData[0], exudyn.ConfigurationType.Visualization)
-        SC=mbs.GetSystemContainer()
-        SC.renderer.SendRedrawSignal()
+    for configuration in configurations:
+        mbs.systemData.SetODE2Coordinates(rowData[1:1+nODE2], configuration)
+        if (nVel2): mbs.systemData.SetODE2Coordinates_t(rowData[1+nODE2:1+nODE2+nVel2], configuration)
+        if (nAcc2): mbs.systemData.SetODE2Coordinates_tt(rowData[1+nODE2+nVel2:1+nODE2+nVel2+nAcc2], configuration)
+        if (nODE1): mbs.systemData.SetODE1Coordinates(rowData[1+nODE2+nVel2+nAcc2:1+nODE2+nVel2+nAcc2+nODE1], configuration)
+        if (nVel1): mbs.systemData.SetODE1Coordinates_t(rowData[1+nODE2+nVel2+nAcc2+nODE1:1+nODE2+nVel2+nAcc2+nODE1+nVel1], configuration)
+        
+        if (nAlgebraic): mbs.systemData.SetAECoordinates(rowData[1+nODE2+nVel2+nAcc2+nODE1+nVel1:1+nODE2+nVel2+nAcc2+nODE1+nVel1+nAlgebraic], configuration)
+        if (nData): mbs.systemData.SetDataCoordinates(rowData[1+nODE2+nVel2+nAcc2+nODE1+nVel1+nAlgebraic:1+nODE2+nVel2+nAcc2+nODE1+nVel1+nAlgebraic+nData], configuration)
+    
+        if configuration == exudyn.ConfigurationType.Visualization:
+            mbs.systemData.SetTime(rowData[0], exudyn.ConfigurationType.Visualization)
+            SC=mbs.GetSystemContainer()
+            SC.renderer.SendRedrawSignal()
     
     #add integration parameters to simulationSettings ...
     
@@ -984,21 +997,25 @@ def AnimateSolution(mbs, solution, rowIncrement = 1, timeout=0.04, createImages 
 #   useItemNames: if True, object names are shown instead of basic object types (Node, Load, ...)
 #   useItemTypes: if True, object type names (MassPoint, JointRevolute, ...) are shown instead of basic object types (Node, Load, ...); Note that Node, Object, is omitted at the beginning of itemName (as compared to theDoc.pdf); item classes become clear from the legend
 #   addItemTypeNames: if True, type nymes (Node, Load, etc.) are added
-#   multiLine: if True, labels are multiline, improving readability
+#   multiLine: if True, labels are multiline, improving readability; ignored if showGraph = False
 #   fontSizeFactor: use this factor to scale fonts, allowing to fit larger graphs on the screen with values < 1
 #   showLegend: shows legend for different item types
 #   layoutDistanceFactor: this factor influences the arrangement of labels; larger distance values lead to circle-like results
 #   layoutIterations: more iterations lead to better arrangement of the layout, but need more time for larger systems (use 1000-10000 to get good results)
 #   tightLayout: if True, uses matplotlib plt.tight\_layout() which may raise warning
-#**output: [Any, Any, Any]; returns [networkx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw\_networkx\_labels(...)
+#   showGraph: if True, graph is plotted with matplotlib
+#   addItemData: if True, specific data is added to the graph nodes, to be used for deeper analysis of system graphs
+#   addAnnotations: add data node graphs (not shown), except for graphics data, item numbers, names and types (which are already available in graph data or edges)
+#**output::[Any, Any, Any]: returns [networkx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw\_networkx\_labels(...)
 #**belongsTo: MainSystem
 def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False, 
                     useItemTypes = False, addItemTypeNames=True, multiLine=True, fontSizeFactor=1., 
-                    layoutDistanceFactor=3., layoutIterations=100, showLegend = True, tightLayout = True):
+                    layoutDistanceFactor=3., layoutIterations=100, showLegend = True, tightLayout = True, 
+                    showGraph = True, addItemData = False, addAnnotations = False):
     
     try:
         #all imports are part of anaconda (e.g. anaconda 5.2.0, python 3.6.5)
-        import numpy as np
+        #import numpy as np
         import networkx as nx #for generating graphs and graph arrangement
         import matplotlib.pyplot as plt #for drawing
     except ImportError as e:
@@ -1007,11 +1024,28 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
         exudyn.Print("DrawSystemGraph(...): unexpected error during import of numpy, networkx and matplotlib")
         raise
     
+    excludeAnnotations = ['V',
+                          'nodeNumber', 'objectNumber', 'bodyNumber', 'markerNumber', 
+                          'loadNumber', 'sensorNumber',
+                          'nodeType','objectType','markerType','loadType','sensorType',
+                          'name',
+                          ]
+    def GetAnnotations(itemDict):
+        annotations = {}
+        for key, value in itemDict.items():
+            exclude = False
+            for startWith in excludeAnnotations:
+                if key.startswith(startWith):
+                    exclude = True
+                    break
+            if not exclude:
+                annotations[key] = value
+        return annotations
+                
+    
     itemColors = {'Node':'red', 'Object':'skyblue', 'Oconnector':'dodgerblue', 'Ojoint':'dodgerblue', 'Ocontact':'dodgerblue', #turqoise, skyblue
                       'Marker': 'orange', 'Load': 'mediumorchid', 
                       'Sensor': 'forestgreen'} #https://matplotlib.org/examples/color/named_colors.html
-    
-    plt.clf()
     
     itemColorMap=[]     #color per item
     itemNames=[]        #name per item 
@@ -1033,7 +1067,7 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
     #     showLegend = True
 
     sLineBreak = ''
-    if multiLine:
+    if multiLine and showGraph:
         sLineBreak = '-\n'
 
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1058,7 +1092,16 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
                 itemName=itemName.replace('Node'+sLineBreak+'Rigid','NodeRigid'+sLineBreak)
                 itemName=itemName.replace('Node'+sLineBreak+'Generic','NodeGeneric'+sLineBreak)
     
-        G.add_node(itemName) #attributes: size, weight, ...
+        G.add_node(itemName)
+        if addItemData:
+            G.nodes[itemName].update({'type':itemType + item['nodeType'],
+                                      'basicType': itemType,
+                                      'ID': i,
+                                      'name': item['name'],
+                                      })
+        if addAnnotations:
+            G.nodes[itemName].update({'annotations': GetAnnotations(item)})
+
         nodesToItems += [len(itemColorMap)]
         itemColorMap += [itemColors[itemType]]
         itemNames += [itemName]
@@ -1086,6 +1129,14 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
                 itemName=itemName.replace('Marker'+sLineBreak+'Kinematic','MarkerKinematic'+sLineBreak)
     
         G.add_node(itemName) #attributes: size, weight, ...
+        if addItemData:
+            G.nodes[itemName].update({'type':itemType + item['markerType'],
+                                      'basicType': itemType,
+                                      'ID': i,
+                                      'name': item['name'],
+                                      })
+        if addAnnotations:
+            G.nodes[itemName].update({'annotations': GetAnnotations(item)})
         markersToItems += [len(itemColorMap)]
         itemColorMap += [itemColors[itemType]]
         itemNames += [itemName]
@@ -1123,6 +1174,14 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
                 itemName=itemName.replace('Object'+sLineBreak+'FFRFr','ObjectFFRF'+sLineBreak+'r')
             
         G.add_node(itemName) #attributes: size, weight, ...
+        if addItemData:
+            G.nodes[itemName].update({'type':itemType + item['objectType'],
+                                      'basicType': itemType,
+                                      'ID': i,
+                                      'name': item['name'],
+                                      })
+        if addAnnotations:
+            G.nodes[itemName].update({'annotations': GetAnnotations(item)})
         objectsToItems += [len(itemColorMap)]
         itemNames += [itemName]
         itemTypes += [itemType]
@@ -1141,7 +1200,16 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
     
         for j in nodeNumbers:
             if j != exudyn.InvalidIndex(): #for RigidBodySpringDamper
-                G.add_edge(itemNames[objectsToItems[i]],itemNames[nodesToItems[j]],color=objectNodeColor)
+                edge = (itemNames[objectsToItems[i]],itemNames[nodesToItems[j]])
+                G.add_edge(*edge)
+                # if addItemData:
+                #     G.edges[edge].update({'type':itemType + item['objectType'],
+                #                           'basicType': itemType,
+                #                           'ID': i,
+                #                           'name': item['name'],
+                #                           })
+                if showGraph:
+                    G.edges[edge].update({'color':objectNodeColor})
     
         #for connectors, contact, joint: add edges to these objects
         markerNumbers = []
@@ -1152,7 +1220,18 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
             markerNumbers[j] = int(markerNumbers[j])
     
         for j in markerNumbers:
-            G.add_edge(itemNames[objectsToItems[i]],itemNames[markersToItems[j]], color=itemColors['Oconnector'])
+            edge = (itemNames[objectsToItems[i]],itemNames[markersToItems[j]])
+            G.add_edge(*edge)
+            # if addItemData:
+            #     G.edges[edge].update({'type':itemType + item['objectType'],
+            #                           'basicType': itemType,
+            #                           'ID': i,
+            #                           'name': item['name'],
+            #                           })
+            if showGraph:
+                G.edges[edge].update({'color':itemColors['Oconnector']})
+
+
             
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++
     #now add only edges for markers:
@@ -1171,7 +1250,16 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
             nodeNumbers[j] = int(nodeNumbers[j])
     
         for j in nodeNumbers:
-            G.add_edge(itemNames[markersToItems[i]],itemNames[nodesToItems[j]],color='orange')
+            edge = (itemNames[markersToItems[i]],itemNames[nodesToItems[j]])
+            G.add_edge(*edge)
+            # if addItemData:
+            #     G.edges[edge].update({'type':itemType + item['markerType'],
+            #                           'basicType': itemType,
+            #                           'ID': i,
+            #                           'name': item['name'],
+            #                           })
+            if showGraph:
+                G.edges[edge].update({'color':'orange'})
     
         #for object markers:
         objectNumbers = []
@@ -1182,7 +1270,16 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
             objectNumbers[j] = int(objectNumbers[j])
     
         for j in objectNumbers:
-            G.add_edge(itemNames[markersToItems[i]],itemNames[objectsToItems[j]],color='orange')
+            edge = (itemNames[markersToItems[i]],itemNames[objectsToItems[j]])
+            G.add_edge(*edge)
+            # if addItemData:
+            #     G.edges[edge].update({'type':itemType + item['markerType'],
+            #                           'basicType': itemType,
+            #                           'ID': i,
+            #                           'name': item['name'],
+            #                           })
+            if showGraph:
+                G.edges[edge].update({'color':'orange'})
             
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++
     #add loads
@@ -1204,6 +1301,15 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
 
         
             G.add_node(itemName) #attributes: size, weight, ...
+            if addItemData:
+                G.nodes[itemName].update({'type':itemType + item['loadType'],
+                                          'basicType': itemType,
+                                          'ID': i,
+                                          'name': item['name'],
+                                          })
+            if addAnnotations:
+                G.nodes[itemName].update({'annotations': GetAnnotations(item)})
+
             loadsToItems += [len(itemColorMap)]
             itemColorMap += [itemColors[itemType]]
             itemNames += [itemName]
@@ -1230,6 +1336,14 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
                     itemName = 'Sensor' + sLineBreak + itemName
         
             G.add_node(itemName) #attributes: size, weight, ...
+            if addItemData:
+                G.nodes[itemName].update({'type':itemType + item['sensorType'],
+                                          'basicType': itemType,
+                                          'ID': i,
+                                          'name': item['name'],
+                                          })
+            if addAnnotations:
+                G.nodes[itemName].update({'annotations': GetAnnotations(item)})
             sensorsToItems += [len(itemColorMap)]
             itemColorMap += [itemColors[itemType]]
             itemNames += [itemName]
@@ -1252,70 +1366,74 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
                    
             for j in nodeNumbers:
                 G.add_edge(itemNames[sensorsToItems[i]],itemNames[nodesToItems[j]],color=itemColors[itemType])
-       
-    if showLegend:
-        legendColors = {'Node':'red', 'Object':'skyblue', 'Object(Connector)':'dodgerblue', 
-                      'Marker': 'orange', 'Load': 'mediumorchid', 
-                      'Sensor': 'forestgreen'} 
-        #f = plt.figure(1)
-        #ax = f.add_subplot(1,1,1)
-        for label in legendColors:
-            plt.plot([0],[0],linewidth=8,color=legendColors[label],label=label)
+
+    items = None #only assigned if shown
+    if showGraph:
+        plt.clf()
+    
+        if showLegend:
+            legendColors = {'Node':'red', 'Object':'skyblue', 'Object(Connector)':'dodgerblue', 
+                          'Marker': 'orange', 'Load': 'mediumorchid', 
+                          'Sensor': 'forestgreen'} 
+            #f = plt.figure(1)
+            #ax = f.add_subplot(1,1,1)
+            for label in legendColors:
+                plt.plot([0],[0],linewidth=8,color=legendColors[label],label=label)
+            
+            fontSizeLegend = 10
+            if fontSizeFactor > 1: #do not make font size smaller!
+                fontSizeLegend *= fontSizeFactor
+            plt.legend(fontsize=fontSizeLegend)
+    
         
-        fontSizeLegend = 10
-        if fontSizeFactor > 1: #do not make font size smaller!
-            fontSizeLegend *= fontSizeFactor
-        plt.legend(fontsize=fontSizeLegend)
-
+        #now get out the right sorting of colors ...
+        edgeColorMap = []
+        edgeWidths = []
+        edges=G.edges()
+        for item in edges.items(): 
+            edgeColorMap += [item[1]['color']] #color is in item[1], which is a dictionary ...
+            edgeWidth = 2
+            if item[1]['color'] == objectNodeColor: #object-node should be emphasized
+                edgeWidth = 4
+            edgeWidths += [edgeWidth]
+        
+        pos = nx.drawing.spring_layout(G, scale=0.5, k=layoutDistanceFactor*1/np.sqrt(G.size()), 
+                                       threshold = 1e-5, iterations = layoutIterations)
+        nx.draw_networkx_nodes(G, pos, node_size=1)
+        nx.draw_networkx_edges(G, pos, edge_color=edgeColorMap, width=edgeWidths)#width=2)
+        
+        #reproduce what draw_networkx_labels does, allowing different colors for nodes
+        #check: https://networkx.github.io/documentation/stable/_modules/networkx/drawing/nx_pylab.html
+        items = nx.draw_networkx_labels(G, pos, font_size=10*fontSizeFactor, clip_on=False, #clip at plot boundary
+                                        bbox=dict(facecolor='skyblue', edgecolor='black', 
+                                                  boxstyle='round,pad=0.1', lw=10*fontSizeFactor)) #lw is border size (no effect?)
     
-    #now get out the right sorting of colors ...
-    edgeColorMap = []
-    edgeWidths = []
-    edges=G.edges()
-    for item in edges.items(): 
-        edgeColorMap += [item[1]['color']] #color is in item[1], which is a dictionary ...
-        edgeWidth = 2
-        if item[1]['color'] == objectNodeColor: #object-node should be emphasized
-            edgeWidth = 4
-        edgeWidths += [edgeWidth]
-    
-    pos = nx.drawing.spring_layout(G, scale=0.5, k=layoutDistanceFactor*1/sqrt(G.size()), 
-                                   threshold = 1e-5, iterations = layoutIterations)
-    nx.draw_networkx_nodes(G, pos, node_size=1)
-    nx.draw_networkx_edges(G, pos, edge_color=edgeColorMap, width=edgeWidths)#width=2)
-    
-    #reproduce what draw_networkx_labels does, allowing different colors for nodes
-    #check: https://networkx.github.io/documentation/stable/_modules/networkx/drawing/nx_pylab.html
-    items = nx.draw_networkx_labels(G, pos, font_size=10*fontSizeFactor, clip_on=False, #clip at plot boundary
-                                    bbox=dict(facecolor='skyblue', edgecolor='black', 
-                                              boxstyle='round,pad=0.1', lw=10*fontSizeFactor)) #lw is border size (no effect?)
-
-    
-    #now assign correct colors:
-    for i in range(len(itemNames)):
-        currentColor = itemColorMap[i]
-        itemType = itemTypes[i]
-        boxStyle = 'round,pad=0.2'
-        fontSize = 10*fontSizeFactor
-        if itemType == 'Object':
+        
+        #now assign correct colors:
+        for i in range(len(itemNames)):
+            currentColor = itemColorMap[i]
+            itemType = itemTypes[i]
             boxStyle = 'round,pad=0.2'
-            fontSize = 12*fontSizeFactor
-        if itemType == 'Node':  
-            boxStyle = 'square,pad=0.1'
             fontSize = 10*fontSizeFactor
-        if itemType == 'Marker':  
-            boxStyle = 'square,pad=0.1'
-            fontSize = 8*fontSizeFactor
-    
-        items[itemNames[i]].set_bbox(dict(facecolor=currentColor,  
-              edgecolor=currentColor, boxstyle=boxStyle))
-        items[itemNames[i]].set_fontsize(fontSize)
-    
-    plt.axis('off') #do not show frame, because usually some nodes are very close to frame ...
-    if tightLayout:
-        plt.tight_layout()
-    plt.margins(x=0.1*fontSizeFactor, y=0.1*fontSizeFactor) #larger margin, to avoid clipping of long texts
-    plt.draw() #force redraw after colors have changed
+            if itemType == 'Object':
+                boxStyle = 'round,pad=0.2'
+                fontSize = 12*fontSizeFactor
+            if itemType == 'Node':  
+                boxStyle = 'square,pad=0.1'
+                fontSize = 10*fontSizeFactor
+            if itemType == 'Marker':  
+                boxStyle = 'square,pad=0.1'
+                fontSize = 8*fontSizeFactor
+        
+            items[itemNames[i]].set_bbox(dict(facecolor=currentColor,  
+                  edgecolor=currentColor, boxstyle=boxStyle))
+            items[itemNames[i]].set_fontsize(fontSize)
+        
+        plt.axis('off') #do not show frame, because usually some nodes are very close to frame ...
+        if tightLayout:
+            plt.tight_layout()
+        plt.margins(x=0.1*fontSizeFactor, y=0.1*fontSizeFactor) #larger margin, to avoid clipping of long texts
+        plt.draw() #force redraw after colors have changed
     
     return [nx, G, items]
 

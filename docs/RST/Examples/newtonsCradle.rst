@@ -181,20 +181,19 @@ You can view and download this file on Github: `newtonsCradle.py <https://github
    simulationSettings.displayStatistics = True
    simulationSettings.timeIntegration.verboseMode = 1
    
-   SC.visualizationSettings.general.drawCoordinateSystem = False
+   SC.visualizationSettings.view0.scene.drawCoordinateSystem = False
    SC.visualizationSettings.general.showSolverInformation = False
-   SC.visualizationSettings.window.renderWindowSize=[1200,800]
+   SC.visualizationSettings.view0.window.renderWindowSize=[1200,800]
    SC.visualizationSettings.openGL.multiSampling=4
-   SC.visualizationSettings.openGL.shadow = 0.2
+   SC.visualizationSettings.openGL.light0.shadow = 0.2
    SC.visualizationSettings.openGL.lineWidth = 2
-   SC.visualizationSettings.openGL.light0position = [-2.0, 4.0, 1.0, 1.0]
-   SC.visualizationSettings.openGL.light1position = [-0.2, 0.2, -0.55, 1.0]
-   SC.visualizationSettings.openGL.light1specular = 1 
-   SC.visualizationSettings.openGL.light1diffuse = 0
-   SC.visualizationSettings.openGL.light1ambient = 0
-   SC.visualizationSettings.openGL.light1specular = 1
-   SC.visualizationSettings.openGL.light1quadraticAttenuation = 1
-   SC.visualizationSettings.openGL.light1linearAttenuation = 0
+   SC.visualizationSettings.openGL.light0.position = [-2.0, 4.0, 1.0, 1.0]
+   SC.visualizationSettings.openGL.light1.position = [-0.2, 0.2, -0.55, 1.0]
+   SC.visualizationSettings.openGL.light1.specular = 1 
+   SC.visualizationSettings.openGL.light1.diffuse = 0
+   SC.visualizationSettings.openGL.light1.specular = 1
+   SC.visualizationSettings.openGL.light1.quadraticAttenuation = 1
+   SC.visualizationSettings.openGL.light1.linearAttenuation = 0
    SC.visualizationSettings.loads.show = False
    
    
@@ -217,10 +216,10 @@ You can view and download this file on Github: `newtonsCradle.py <https://github
    
    if useRaytracer:
        SC.visualizationSettings.openGL.multiSampling = 1
-       SC.visualizationSettings.openGL.enableLight1 = False
+       SC.visualizationSettings.openGL.light1.enable = False
        SC.visualizationSettings.raytracer.numberOfThreads = 32 #number of threads!
-       SC.visualizationSettings.raytracer.enable = True
-       SC.visualizationSettings.raytracer.searchTreeFactor = 8
+       SC.visualizationSettings.view0.camera.useRaytracer = True
+       SC.visualizationSettings.raytracer.advanced.searchTreeFactor = 8
    
    
    mbs.SolutionViewer()

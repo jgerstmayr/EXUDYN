@@ -27,7 +27,7 @@ Function: SolverErrorMessage
 
 Function: SolveStatic
 ^^^^^^^^^^^^^^^^^^^^^
-`SolveStatic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L157>`__\ (\ ``mbs``\ , \ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``updateInitialValues = False``\ , \ ``storeSolver = True``\ , \ ``showHints = False``\ , \ ``showCausingItems = True``\ , \ ``autoAssemble = True``\ )
+`SolveStatic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L157>`__\ (\ ``mbs``\ , \ ``simulationSettings = None``\ , \ ``updateInitialValues = False``\ , \ ``storeSolver = True``\ , \ ``showHints = False``\ , \ ``showCausingItems = True``\ , \ ``autoAssemble = True``\ )
 
 
 - | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolveStatic(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-solvestatic`\ 
@@ -38,7 +38,7 @@ Function: SolveStatic
 
 Function: SolveDynamic
 ^^^^^^^^^^^^^^^^^^^^^^
-`SolveDynamic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L224>`__\ (\ ``mbs``\ , \ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``solverType = exudyn.DynamicSolverType.GeneralizedAlpha``\ , \ ``updateInitialValues = False``\ , \ ``storeSolver = True``\ , \ ``showHints = False``\ , \ ``showCausingItems = True``\ , \ ``autoAssemble = True``\ )
+`SolveDynamic <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L225>`__\ (\ ``mbs``\ , \ ``simulationSettings = None``\ , \ ``solverType = exudyn.DynamicSolverType.GeneralizedAlpha``\ , \ ``updateInitialValues = False``\ , \ ``storeSolver = True``\ , \ ``showHints = False``\ , \ ``showCausingItems = True``\ , \ ``autoAssemble = True``\ )
 
 
 - | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolveDynamic(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-solvedynamic`\ 
@@ -52,14 +52,14 @@ Function: SolveDynamic
 
 Function: SolverSuccess
 ^^^^^^^^^^^^^^^^^^^^^^^
-`SolverSuccess <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L321>`__\ (\ ``solverStructure``\ )
+`SolverSuccess <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L323>`__\ (\ ``solverStructure``\ )
 
 - | \ *function description*\ :
   | return success (True/False) and error message of solver after SolveSteps(...), SolveSystem(...), SolveDynamic(...) or SolveStatic(...) have been called. May also be set if other higher level functions called e.g. SolveSystem(...)
 - | \ *input*\ :
   | solverStructure: solver structure, as stored in mbs.sys or as created e.g. by exudyn.MainSolverExplicit()
 - | \ *output*\ :
-  | [success, errorString], returns success=True or False and in case of no success, information is provided in errorString
+  | (type: List[bool, str]) returns list [success,errorString], in which success=True or False and in case of no success, information is provided in errorString
 - | \ *example*\ :
 
 .. code-block:: python
@@ -83,7 +83,7 @@ Function: SolverSuccess
 
 Function: ComputeLinearizedSystem
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeLinearizedSystem <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L377>`__\ (\ ``mbs``\ , \ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``projectIntoConstraintNullspace = False``\ , \ ``singularValuesTolerance = 1e-12``\ , \ ``returnConstraintJacobian = False``\ , \ ``returnConstraintNullspace = False``\ , \ ``autoAssemble = True``\ )
+`ComputeLinearizedSystem <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L379>`__\ (\ ``mbs``\ , \ ``simulationSettings = None``\ , \ ``projectIntoConstraintNullspace = False``\ , \ ``singularValuesTolerance = 1e-12``\ , \ ``returnConstraintJacobian = False``\ , \ ``returnConstraintNullspace = False``\ , \ ``autoAssemble = True``\ )
 
 
 - | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeLinearizedSystem(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-computelinearizedsystem`\ 
@@ -94,7 +94,7 @@ Function: ComputeLinearizedSystem
 
 Function: ComputeODE2Eigenvalues
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeODE2Eigenvalues <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L515>`__\ (\ ``mbs``\ , \ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``useSparseSolver = False``\ , \ ``numberOfEigenvalues = 0``\ , \ ``constrainedCoordinates = []``\ , \ ``convert2Frequencies = False``\ , \ ``useAbsoluteValues = True``\ , \ ``computeComplexEigenvalues = False``\ , \ ``ignoreAlgebraicEquations = False``\ , \ ``singularValuesTolerance = 1e-12``\ , \ ``autoAssemble = True``\ )
+`ComputeODE2Eigenvalues <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L518>`__\ (\ ``mbs``\ , \ ``simulationSettings = None``\ , \ ``useSparseSolver = False``\ , \ ``numberOfEigenvalues = 0``\ , \ ``constrainedCoordinates = []``\ , \ ``convert2Frequencies = False``\ , \ ``useAbsoluteValues = True``\ , \ ``computeComplexEigenvalues = False``\ , \ ``ignoreAlgebraicEquations = False``\ , \ ``singularValuesTolerance = 1e-12``\ , \ ``autoAssemble = True``\ )
 
 
 - | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeODE2Eigenvalues(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-computeode2eigenvalues`\ 
@@ -105,7 +105,7 @@ Function: ComputeODE2Eigenvalues
 
 Function: ComputeSystemDegreeOfFreedom
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeSystemDegreeOfFreedom <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L741>`__\ (\ ``mbs``\ , \ ``simulationSettings = exudyn.SimulationSettings()``\ , \ ``threshold = 1e-12``\ , \ ``verbose = False``\ , \ ``useSVD = False``\ , \ ``autoAssemble = True``\ )
+`ComputeSystemDegreeOfFreedom <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L745>`__\ (\ ``mbs``\ , \ ``simulationSettings = None``\ , \ ``threshold = 1e-12``\ , \ ``verbose = False``\ , \ ``useSVD = False``\ , \ ``autoAssemble = True``\ )
 
 
 - | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.ComputeSystemDegreeOfFreedom(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-computesystemdegreeoffreedom`\ 
@@ -119,7 +119,7 @@ Function: ComputeSystemDegreeOfFreedom
 
 Function: CheckSolverInfoStatistics
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CheckSolverInfoStatistics <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L833>`__\ (\ ``solverName``\ , \ ``infoStat``\ , \ ``numberOfEvaluations``\ )
+`CheckSolverInfoStatistics <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L839>`__\ (\ ``solverName``\ , \ ``infoStat``\ , \ ``numberOfEvaluations``\ )
 
 - | \ *function description*\ :
   | helper function for solvers to check e.g. if high number of memory allocations happened during simulation

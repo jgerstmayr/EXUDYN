@@ -39,7 +39,7 @@ public:
 	std::atomic_flag accessMessage;		//!< flag, which is locked / released to access messages
 	bool postProcessDataReady;			//!< signals, that data can be plotted (CSystem must be consistent, state is a current state of the CSystem, ...); usually same as CSystem::systemIsConsistent
 	uint64_t updateCounter;				//!< updateCounter is increased upon every update of state; can be used to judge graphics update; for 1 billion steps/second counter goes for 585 years before overflow
-	uint64_t recordImageCounter;				//!< updateCounter is increased upon every update of state; can be used to judge graphics update; for 1 billion steps/second counter goes for 585 years before overflow
+	uint64_t recordImageCounter;		//!< updateCounter is increased upon every update of state; can be used to judge graphics update; for 1 billion steps/second counter goes for 585 years before overflow
 	bool simulationFinished;			//!< shows that computation has been finished ==> visualize last step
 	bool stopSimulation;				//!< renderer or GUI sends signal that simulation shall be interrupted
 	bool forceQuitSimulation;			//!< flag is set if user closes simulation window (but not if Escape pressed)

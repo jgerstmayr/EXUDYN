@@ -195,8 +195,8 @@ You can view and download this file on Github: `fourBarMechanismIftomm.py <https
        SC.visualizationSettings.general.graphicsUpdateInterval=0.01
        SC.visualizationSettings.openGL.lineWidth=2
        SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
-       #SC.visualizationSettings.window.renderWindowSize=[1980,1080]
-       SC.visualizationSettings.window.renderWindowSize=[1280,720]
+       #SC.visualizationSettings.view0.window.renderWindowSize=[1980,1080]
+       SC.visualizationSettings.view0.window.renderWindowSize=[1280,720]
        SC.visualizationSettings.openGL.multiSampling = 4
        #simulationSettings.solutionSettings.recordImagesInterval = 0.01
        

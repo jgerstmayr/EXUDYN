@@ -1,4 +1,4 @@
-/** ***********************************************************************************************
+﻿/** ***********************************************************************************************
 * @brief		Implentation for computational solver CSolverBase
 * @details		Details:
 * 				- base classes for computational solver (as compared to main solver, which interacts with Python, etc.)
@@ -75,7 +75,11 @@ bool CSolverBase::InitializeSolver(CSystem& computationalSystem, const Simulatio
 {
 	//keep the following order!
     //output.initializationSuccessful set in InitCSolverBase
-	InitCSolverBase(); //reset all data, such that multiple calls to SolveSystem give same results
+	InitCSolverBase(); //reset all data in structure output, such that multiple calls to SolveSystem give same results
+
+	//start timers at the very beginning to see all contributions to cpuStartTime
+	output.cpuStartTime = EXUstd::GetTimeInSeconds();
+	output.cpuLastTimePrinted = output.cpuStartTime; //updated again at start of solver (for long initializations...)
 
 	PreInitializeSolverSpecific(computationalSystem, simulationSettings); //do solver specific things
 
@@ -530,8 +534,6 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 	output.lastSolutionWritten = it.startTime;
 	output.lastSensorsWritten = it.startTime;
 	output.lastImageRecorded = it.startTime;
-	output.cpuStartTime = EXUstd::GetTimeInSeconds();
-	output.cpuLastTimePrinted = output.cpuStartTime;
 
 	//+++++++++++++++++++++++++++++++++++++++++
 
@@ -561,6 +563,8 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 	globalTimers.Reset();
 	timer.Reset(simulationSettings.displayComputationTime);
 	timer.total = -EXUstd::GetTimeInSeconds();
+	output.cpuSolverStartTime = -timer.total; //exactly the same!
+	output.cpuLastTimePrinted = output.cpuSolverStartTime; //this should be close to start of first step
 
 	if (success)
 	{
@@ -586,6 +590,7 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 //! main solver part: calls multiple InitializeStep(...)/PerformStep(...); do step reduction if necessary; return true if success, false else
 void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
+	output.simulationStoppedByUser = SimulationStoppedByUser(computationalSystem);
 
 	if (IsVerboseCheck(1))
 	{
@@ -600,7 +605,7 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 			else { str += ", factor = " + EXUstd::ToString(ComputeLoadFactor(simulationSettings)); }
 
 			if (output.stepInformation & StepInfo::timeToGo) {
-				str += ", tCPU=" + EXUstd::ToString(tCPU - output.cpuStartTime) + "s";
+				str += ", tCPU=" + EXUstd::ToString(tCPU - output.cpuSolverStartTime) + "s";
 			}
 
 			if ((output.stepInformation & StepInfo::newtonIterations) && it.currentStepIndex != 0) {
@@ -618,7 +623,13 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 
 		if (computationalSystem.GetPostProcessData()->stopSimulation)
 		{
-			VerboseWrite(1, STDstring("solver stopped by user after ") + EXUstd::ToString(timer.total) + " seconds.\n");
+			output.simulationStoppedByUser = SimulationStoppedByUser(computationalSystem);
+
+			STDstring stopInfo;
+			if (output.simulationStoppedByUser) { stopInfo = "by user"; }
+			else if (output.simulationStoppedByUserFunction) { stopInfo = "by user function"; }
+			else if (output.simulationTimeout) { stopInfo = "due to special.solver.timout"; }
+			VerboseWrite(1, STDstring("solver stopped ")+stopInfo+" after " + EXUstd::ToString(timer.total) + " seconds.\n");
 		}
 		else
 		{
@@ -714,11 +725,14 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 
 	if (!conv.stepReductionFailed)
 	{
-		STDstring str = "Solver finished successfully";
-		if (computationalSystem.GetPostProcessData()->stopSimulation) { str += "(user stops)"; }
+		STDstring str = u8"Solver finished successfully \U0001F642";
+		if (output.simulationStoppedByUser) { str += " (user stops)"; }
+		else if (output.simulationStoppedByUserFunction) { str += " (user function stops)"; }
+		else if (output.simulationTimeout) { str += " (timeout)"; }
+
 		computationalSystem.GetPostProcessData()->SetSolverMessage(str);
 	}
-	else { computationalSystem.GetPostProcessData()->SetSolverMessage("Solver finished with errors"); }
+	else { computationalSystem.GetPostProcessData()->SetSolverMessage(u8"Solver finished with errors \U0001F612"); }
 
 	StopThreadsAndCloseFiles();
 }
@@ -794,7 +808,12 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 		//do step size reduction
 		while (!stepAccomplished && !conv.stepReductionFailed)
 		{
-			if (PyCheckSignals()) { computationalSystem.GetPostProcessData()->stopSimulation = true; PyThrowErrorAlreadySet(); } //this stops at CTRL+"C"
+			if (PyCheckSignals()) 
+			{ 
+				computationalSystem.GetPostProcessData()->stopSimulation = true; 
+				output.simulationStoppedByUser = true; //this is slightly redundant here, as it will be determined later again
+				PyThrowErrorAlreadySet(); //this stops at CTRL+"C"
+			} 
 
 			//python linking, visualization, output, ... for every step
 			InitializeStep(computationalSystem, simulationSettings);
@@ -867,6 +886,8 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 		if (it.currentTime >= it.endTime - 1e-10) { simulationEndTimeReached = true; } //accept small tolerance
 	}//time integration loop
 
+	output.simulationStoppedByUser = SimulationStoppedByUser(computationalSystem);
+
     output.finishedSuccessfully = !conv.stepReductionFailed; //if only SolveSteps is called
 	return !conv.stepReductionFailed; //return success (true) or fail (false)
 }
@@ -914,6 +935,7 @@ void CSolverBase::InitializeStep(CSystem& computationalSystem, const SimulationS
 		{
 			if (IsVerbose(1)) { Verbose(1, STDstring("\n++++++++++++++++++++++++++++++\nPreStepUserFunction returned False; simulation is stopped after current step\n\n")); }
 			computationalSystem.GetPostProcessData()->stopSimulation = true;
+			output.simulationStoppedByUserFunction = true;
 		}
 		STOPTIMER(timer.python);
 	}
@@ -944,10 +966,13 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 	Real t = computationalSystem.GetSystemData().GetCData().GetCurrent().GetTime();
 	Real tCPU = EXUstd::GetTimeInSeconds();
 	Real timeDelay = 2.; //print output every 2 seconds
-	if (tCPU - output.cpuStartTime > 3600) { timeDelay = 30; }
-	if (pySpecial.solver.timeout >= 0. && (tCPU - output.cpuStartTime) > pySpecial.solver.timeout) 
+	if (tCPU - output.cpuSolverStartTime > 3600) { timeDelay = 30; }
+	if (pySpecial.solver.timeout >= 0. && 
+		(tCPU + timer.total) > pySpecial.solver.timeout) // use (tCPU + timer.total) instead of (tCPU - output.cpuStartTime) as it then shows timer.total > pySpecial.solver.timeout
 	{  
 		computationalSystem.GetPostProcessData()->stopSimulation = true;
+		output.simulationTimeout = true;
+
 		if (IsVerbose(1)) {
 			Verbose(1, STDstring("\n++++++++++++++++++++++++++++++\nexudyn.special.solver.timeout=" + EXUstd::ToString(pySpecial.solver.timeout)+
 			" seconds reached\nsimulation receives stop signal\n\n")); }
@@ -962,7 +987,7 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 	if (simulationSettings.timeIntegration.simulateInRealtime)
 	{
 		STARTTIMER(timer.realtimeIdleCPU);
-		Real cpuTimeElapsed = simulationSettings.timeIntegration.realtimeFactor * (EXUstd::GetTimeInSeconds() - output.cpuStartTime);
+		Real cpuTimeElapsed = simulationSettings.timeIntegration.realtimeFactor * (EXUstd::GetTimeInSeconds() - output.cpuSolverStartTime);
 		Real simTimeElapsed = t - it.startTime;
 		Index waitMicroSeconds = simulationSettings.timeIntegration.realtimeWaitMicroseconds; //wait time until next computation
 
@@ -972,7 +997,7 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 			{
 				std::this_thread::sleep_for(std::chrono::microseconds(waitMicroSeconds)); //avoid continuous computation
 			}
-			cpuTimeElapsed = (EXUstd::GetTimeInSeconds() - output.cpuStartTime);
+			cpuTimeElapsed = (EXUstd::GetTimeInSeconds() - output.cpuSolverStartTime);
 		}
 		STOPTIMER(timer.realtimeIdleCPU);
 	}
@@ -986,7 +1011,7 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 		if (tCPU - output.cpuLastTimePrinted > timeDelay*0.5) { output.cpuLastTimePrinted = EXUstd::GetTimeInSeconds();}
 
 		Real timeToGo = 0;
-		Real cpuTimeElapsed = (EXUstd::GetTimeInSeconds() - output.cpuStartTime);
+		Real cpuTimeElapsed = (EXUstd::GetTimeInSeconds() - output.cpuSolverStartTime);
 		Real simTotalTime = it.endTime - it.startTime;
 		Real simTimeRemaining = it.endTime - t;
 		Real simTimeElapsed = t - it.startTime;
@@ -1011,7 +1036,7 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 			str += ", timeToGo = " + SolverTimeToString(timeToGo);
 		}
 		if (output.stepInformation & StepInfo::CPUtimeSpent) {
-			str += ", tCPU=" + SolverTimeToString(tCPU - output.cpuStartTime);
+			str += ", tCPU=" + SolverTimeToString(tCPU - output.cpuSolverStartTime);
 		}
 		Index stepsSinceLastOutput = it.currentStepIndex - output.lastVerboseStepIndex;
 		Index newtonStepsSinceLastOutput = it.newtonStepsCount - output.lastNewtonStepsCount;
@@ -1055,6 +1080,7 @@ void CSolverBase::FinishStep(CSystem& computationalSystem, const SimulationSetti
 		{
 			if (IsVerbose(1)) { Verbose(1, STDstring("\n++++++++++++++++++++++++++++++\nPostStepUserFunction returned False; simulation is stopped after current step\n\n")); }
 			computationalSystem.GetPostProcessData()->stopSimulation = true;
+			output.simulationStoppedByUserFunction = true;
 		}
 		STOPTIMER(timer.python);
 	}
@@ -1418,7 +1444,8 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 				if (IsVerbose(2)) { Verbose(2, "    update initial residual with current residual; initial residual = " + EXUstd::ToString(initialResidual) + "\n"); }
 			}
 
-			if (conv.residual / initialResidual <= newton.relativeTolerance)
+			if (conv.residual / initialResidual <= newton.relativeTolerance 
+				|| !newton.useNewtonSolver) //in linear case, we always converge after 1 step!
 			{
 				conv.newtonConverged = true;
 			}

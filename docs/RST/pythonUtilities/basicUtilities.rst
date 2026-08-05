@@ -241,15 +241,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Vec2Tilde
 ^^^^^^^^^^^^^^^^^^^
-`Vec2Tilde <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L187>`__\ (\ ``v``\ )
+`Vec2Tilde <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L186>`__\ (\ ``v``\ )
 
 - | \ *function description*\ :
   | apply tilde operator (skew) to 3D-vector and return skew matrix
 - | \ *input*\ :
   | 3D vector v as list or in numpy format
 - | \ *output*\ :
-  | matrix as list of lists with the skew-symmetric matrix from v:
-  | \ :math:`\left[\!\! \begin{array}{ccc} 0 & -v[2] & v[1] \\ v[2] & 0 & -v[0] \\ -v[1] & v[0] & 0  \end{array} \!\!\right]`\ 
+  | matrix as list of lists with the skew-symmetric matrix from v: \ :math:`\left[\!\! \begin{array}{ccc} 0 & -v[2] & v[1] \\ v[2] & 0 & -v[0] \\ -v[1] & v[0] & 0  \end{array} \!\!\right]`\
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -264,7 +263,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Tilde2Vec
 ^^^^^^^^^^^^^^^^^^^
-`Tilde2Vec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L194>`__\ (\ ``m``\ )
+`Tilde2Vec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L193>`__\ (\ ``m``\ )
 
 - | \ *function description*\ :
   | take skew symmetric matrix and return vector (inverse of Skew(...))
@@ -282,7 +281,7 @@ Function: Tilde2Vec
 
 Function: GaussIntegrate
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`GaussIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L221>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
+`GaussIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L220>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
 
 - | \ *function description*\ :
   | compute numerical integration of functionOfX in interval [a,b] using Gaussian integration
@@ -303,7 +302,7 @@ Function: GaussIntegrate
 
 Function: LobattoIntegrate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`LobattoIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L257>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
+`LobattoIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L256>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
 
 - | \ *function description*\ :
   | compute numerical integration of functionOfX in interval [a,b] using Lobatto integration

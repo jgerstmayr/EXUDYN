@@ -14,7 +14,7 @@ You can view and download this file on Github: `rollingCoinTest.py <https://gith
    # This is an EXUDYN example
    #
    # Details:  Rolling coin example; 
-   #           examine example of Rill, Schaeffer, Grundlagen und Methodik der MehrkÃ¶rpersimulation, 2010, page 59
+   #           examine example of Rill, Schaeffer, Grundlagen und Methodik der Mehrkörpersimulation, 2010, page 59
    #           Note that in comparison to the literature, we use the local x-axis for the local axis of the coin, z is the normal to the plane
    #           mass and inertia do not influence the results, as long as mass and inertia of a infinitely small ring are used
    #           gravity is set to [0,0,-9.81m/s^2] and the radius is 0.01m

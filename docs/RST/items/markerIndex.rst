@@ -24,4 +24,5 @@ A Marker provides an interface BETWEEN a large variety of Nodes / Bodies / Objec
    MarkerObjectODE2Coordinates.rst
    MarkerBodyCable2DShape.rst
    MarkerBodyCable2DCoordinates.rst
+   MarkerBodyBeamShape.rst
 

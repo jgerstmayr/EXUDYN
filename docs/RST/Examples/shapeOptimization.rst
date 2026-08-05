@@ -200,7 +200,7 @@ You can view and download this file on Github: `shapeOptimization.py <https://gi
                    from exudyn.interactive import AnimateModes
                    mbs.Assemble()
                    SC.visualizationSettings.nodes.show = False
-                   SC.visualizationSettings.openGL.showFaceEdges = True
+                   SC.visualizationSettings.view0.scene.showFaceEdges = True
                    SC.visualizationSettings.openGL.multiSampling=4
                    
                    #+++++++++++++++++++++++++++++++++++++++

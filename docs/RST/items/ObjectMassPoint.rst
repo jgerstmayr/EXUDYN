@@ -111,14 +111,14 @@ Position-based markers can measure position \ :math:`{\mathbf{p}}\cConfig`\ . Th
 
 .. math::
 
-   {\mathbf{J}}_{pos} = \partial {\mathbf{p}}\cCur / \partial {\mathbf{c}}\cCur = \mr{1}{0}{0} {0}{1}{0} {0}{0}{0}
+   {\mathbf{J}}_{pos} = \partial {\mathbf{p}}\cCur / \partial {\mathbf{c}}\cCur = \mr{1}{0}{0} {0}{1}{0} {0}{0}{1}
 
 
 transforms the action of global applied forces \ :math:`\LU{0}{{\mathbf{f}}}_a`\  of position-based markers on the coordinates \ :math:`{\mathbf{c}}`\ 
 
 .. math::
 
-   {\mathbf{Q}} = {\mathbf{J}}_{pos} \LU{0}{{\mathbf{f}}}_a.
+   {\mathbf{Q}} = {\mathbf{J}}_{pos}\tp \LU{0}{{\mathbf{f}}}_a.
 
 
 

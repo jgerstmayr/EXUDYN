@@ -18,56 +18,6 @@
 
 #include "Linalg/BasicLinalg.h" //for Resizable Vector
 
-//template<typename T>
-//inline MatrixBase<T>::~MatrixBase()
-//{
-//	if (data != nullptr) //not necessary
-//	{
-//		delete[] data;
-//		data = nullptr;     //do not set to zero==>causes runtime error to detect multiple deletes!
-//#ifdef __EXUDYN_RUNTIME_CHECKS__
-//		matrix_delete_counts++;
-//#endif
-//	}
-//};
-
-
-////! allocate memory if numberOfRealsInit!=0; set data to allocated array of Reals or to nullptr; return false if failed
-//template<typename T>
-//bool MatrixBase<T>::AllocateMemory(Index numberOfRowsInit, Index numberOfColumnsInit)
-//{
-//	if (numberOfRowsInit*numberOfColumnsInit == 0) { data = nullptr; }
-//	else
-//	{
-//		try {
-//			data = new T[numberOfRowsInit*numberOfColumnsInit];
-//		}
-//		catch (const std::bad_alloc& e) {
-//			std::cout << "Allocation failed: " << e.what() << '\n';
-//			std::cout << "requested memory = " << (8. * numberOfRowsInit*numberOfColumnsInit) / pow(2, 20) << " MB, rows = " << numberOfRowsInit << ", columns = " << numberOfColumnsInit << "\n";
-//			CHECKandTHROWstring("MatrixBase<T>::AllocateMemory");
-//			return false; //no success
-//		}
-//#ifdef __EXUDYN_RUNTIME_CHECKS__
-//		matrix_new_counts++; //only counted if try succeeded
-//#endif
-//	}
-//	return true;
-//}
-//
-////! free memory if data!=nullptr
-//template<typename T>
-//void MatrixBase<T>::FreeMemory()
-//{
-//	if (data != nullptr)
-//	{
-//		delete[] data;
-//		data = nullptr;
-//#ifdef __EXUDYN_RUNTIME_CHECKS__
-//		matrix_delete_counts++;
-//#endif
-//	}
-//}
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // SOLVER

@@ -138,68 +138,6 @@ void CSensorMarker::GetSensorValues(const CSystemData& cSystemData, Vector& valu
 	{
 		SysError("SensorMarker: Error with GetSensorValues; possible reasons: marker values for OutputVariableType::Coordinates / Coordinates_t are only available at current configuration or velocity level not available!");
 	}
-
-	//if (!EXUstd::IsOfType((Index)OutputVariableType::Coordinates + (Index)OutputVariableType::Coordinates_t, (Index)parameters.outputVariableType))
-	//{
-	//}
-	//else //special; only for current configuration
-	//{
-	//	bool computeJacobian = false;
-	//	MarkerData markerData;
-	//	cMarker.ComputeMarkerData(cSystemData, computeJacobian, markerData);
-	//	if (configuration != ConfigurationType::Current)
-	//	{
-	//		SysError("SensorMarker: GetSensorValues: marker values for OutputVariableType::Coordinates / Coordinates_t are only available at current configuration!");
-	//	}
-	//	if (parameters.outputVariableType == OutputVariableType::Coordinates)
-	//	{
-	//		values.CopyFrom(markerData.vectorValue);
-	//	}
-	//	if (parameters.outputVariableType == OutputVariableType::Coordinates_t)
-	//	{
-	//		CHECKandTHROW(markerData.velocityAvailable, "SensorMarker: OutputVariableType::Coordinates_t: velocityLevel not available for this Marker");
-	//		values.CopyFrom(markerData.vectorValue_t);
-	//	}
-
-	//}
-
-
-	/*
-	bool computeJacobian = false;
-	MarkerData markerData;
-	cMarker.ComputeMarkerData(cSystemData, computeJacobian, markerData);
-	if (configuration != ConfigurationType::Current)
-	{
-		SysError("SensorMarker: GetSensorValues: marker values are only available at current configuration!");
-	}
-
-	//at this place, the outputVariableType has been checked against the marker and data should be written into the according markerData entry
-	switch (parameters.outputVariableType)
-	{
-	case OutputVariableType::Position: values.CopyFrom(markerData.position); break;
-	case OutputVariableType::Velocity:
-	{
-		CHECKandTHROW(markerData.velocityAvailable, "SensorMarker: OutputVariableType::Velocity: velocityLevel not available for Marker");
-		values.CopyFrom(markerData.velocity); break;
-	}
-	case OutputVariableType::Rotation: {
-		Vector3D rot = RigidBodyMath::RotationMatrix2RotXYZ(markerData.orientation);
-		values.CopyFrom(rot);
-		break;
-	}
-	case OutputVariableType::RotationMatrix: {
-		values.SetVector(9, markerData.orientation.GetDataPointer());
-		break;
-	}
-	case OutputVariableType::AngularVelocityLocal: {
-		CHECKandTHROW(markerData.velocityAvailable, "SensorMarker: OutputVariableType::AngularVelocityLocal: velocityLevel not available for Marker");
-		values.CopyFrom(markerData.angularVelocityLocal); break;
-		break;
-	}
-	default:
-		SysError("SensorMarker: failed"); //error should not occur, because types are checked!
-	}
-	*/
 }
 
 //! main function to generate sensor output values

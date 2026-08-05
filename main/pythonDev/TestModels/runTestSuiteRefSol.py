@@ -16,8 +16,10 @@ def TestExamplesReferenceSolution():
     
     refSol = {
         'abaqusImportTest.py': 0.0005885208722206333,               #new 2023-04-20; 5 modes as 8 modes have sensitive "half mode included"
+        'allExudynModulesTest.py': 1,                               #new 2026-02-03; test all modules (if some major error is contained...)
         'ANCFBeamTest.py': 1.010486312300459,                       #new 2023-04-04, after resolving local kappa bug
         'ANCFcable2DuserFunction.py': 0.6015588367721232,           #new 2023-12-13
+        'ANCFCableBeamDampingTest.py': 0.18992335572078087,         #new 2026-03-25, checking damping between ANCFCable2D and ANCFBeam
         'ANCFcontactCircleTest.py':-0.4842698420787613,
         'ANCFcontactFrictionTest.py':-0.014187561328096003,         #with old ObjectContactFrictionCircleCable2D until : 2022-03-09: -0.014188649931059739,
         'ANCFgeneralContactCircle.py':-0.5816542531620952,          #new 2022-07-11 (CState Parallel); #before some update to contact module(iterations decreased!):-0.5816521429557808, #2022-02-01
@@ -61,7 +63,7 @@ def TestExamplesReferenceSolution():
         'genericJointUserFunctionTest.py':1.1922383967562884,
         'genericODE2test.py':0.036045463499024655,                  #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 0.036045463498793825,
         'geneticOptimizationTest.py':0.10117518366826603,           #before 2022-02-20 (accuracy of internal sensors is higher); 0.10117518367051619, #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 0.10117518366934351,
-        'geometricallyExactBeam2Dtest.py':-2.2115028353806547,
+        'geometricallyExactBeam2Dtest.py':-2.211502835379855,       #2026-01-09 update due to autodifferentiation
         'geometricallyExactBeamTest.py':1.0128209428598958,         #before 2023-01-29: 1.012822053539261; before 2023-05-05: 1.0128218992948643 (changed Texp function); new 2023-04-06 may still include small errors in implementation
         'gridGeomExactBeam2D.py':-1.582796574326255,                #new 2024-01-28
         'heavyTop.py':33.42312575174431,                            #new 2022-07-11 (CState Parallel); 
@@ -73,12 +75,13 @@ def TestExamplesReferenceSolution():
         'laserScannerTest.py':2.695064443768281 ,                   #new 2024-04-29
         'linearFEMgenericODE2.py': 0.3876719712975609,              #new 2024-10-06 for jacobianUserFunction in GenericODE2
         'loadUserFunctionTest.py': 1.8051173706570725,              #new 2024-10-10 for visualization of time-dependent loads
-        'LShapeGeomExactBeam2D.py':-0.9181474511543884,             #new 2024-01-28
+        'LShapeGeomExactBeam2D.py':-0.9181474510515214,             #2026-01-09 update due to autodifferentiation
         'mainSystemExtensionsTests.py': 57.64639446941554,          #updated 2023-11-16; updated 2023-06-09; old: new 2023-05-19
         'mainSystemUserFunctionsTest.py': 4.069301305919624,        #new 2024-10-17
         'manualExplicitIntegrator.py':2.059698629692295,
         'matrixContainerTest.py':56.5,                              #new 2024-10-09
         'mecanumWheelRollingDiscTest.py':0.2714267238324343,
+        'movingGroundRobotTest.py':0.007681798995944785,            #added, as it was not in TestSuite
         'NGsolveCMStest.py': 0.06953224923173523,                   #changed 2025-05-05 (new .pkl file with newer ngsolve); until: 2024-10-11: 0.06953227339277462
         'objectFFRFreducedOrderAccelerations.py':0.1000057024588858,#before 2022-07-22 (because often small fails); 0.5000285122944431,#before 2022-02-20 (accuracy of internal sensors is higher): 0.5000285122930983,
         'objectFFRFreducedOrderTest.py':0.0053552332680605694,      #until 2022-03-18 (div result by 5): 0.026776166340247865,
@@ -90,6 +93,7 @@ def TestExamplesReferenceSolution():
         'pickleCopyMbs.py':0.2583013564103496,                      #new 2025-05-10
         'plotSensorTest.py':1,
         'postNewtonStepContactTest.py':0.057286638346409235,
+        'raytracerNOGLFWtest.py':0.28151013387134,                  #new 2026-01-03
         'reevingSystemSpringsTest.py':2.2155575717433007,           #new 2023-07-17 (old solution contained compression forces: 2.213190117855691),
         'revoluteJointPrismaticJointTest.py':1.2538806799249342,    #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver (modified Newton restart, etc.); before 2022-01-18: 1.2538806799243265,
         'rigidBody2Dtest.py': -0.5055295700922415,                  #new 2025-02-05: added arbitrary COM to 2D rigid body
@@ -108,7 +112,7 @@ def TestExamplesReferenceSolution():
         'solverExplicitODE1ODE2test.py':3.3767933275970896,         #new 2022-07-11 (CState Parallel); 
         'sparseMatrixSpringDamperTest.py':-0.06779862812271394,     #changed to analytic Spring-Damper jacobian (missing d(vel)/dpos term): -0.06779862983767654,
         'sphereTriangleTest.py':3.8226410966196975,                 #new 2025-06-14
-        'sphereTriangleTest2.py':4.356128117693937,                 #new 2025-06-22
+        'sphereTriangleTest2.py':4.356119232231812,                 #changed: 2026-01-23 (sparse acc(vel) initialization); new 2025-06-22
         'sphericalJointTest.py':4.409080446575089,                  #new 2022-07-11 (CState Parallel); 
         'springDamperUserFunctionTest.py':0.5062872273010911,
         'stiffFlyballGovernor.py':0.8962488779114738,

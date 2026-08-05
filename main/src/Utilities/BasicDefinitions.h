@@ -72,13 +72,24 @@
 //#define __EXUDYN__GNUC__
 //#endif
 
-//#define EXUDYN_RELEASE			//!< defined in preprocessor flags, in setup.py (for all versions), set this flag to exclude experimental parts of the code
+//#define EXUDYN_RELEASE		//!< defined in preprocessor flags, in setup.py (for all versions), set this flag to exclude experimental parts of the code
 #define _USE_MATH_DEFINES		//!< this must be included very first before any cmath is included; needed for M_PI and other constants ==> but not used anymore
+
+#undef EXUDYN_USE_ALIGNED_VECTORS     //!< for AVX2 on linux required; potential speedup on windows
+#define EXUDYN_USE_ALIGNED_VECTORS
+
+
+//this is usually defined in setup.py:
+//#define EXUDYN_MINIMAL_COMPILATION
 
 //#define __NOGLFW //passed from compiler
 #ifndef __NOGLFW //passed from compiler
   #define USE_GLFW_GRAPHICS		//!< set this flag to enable OpenGL graphics with glfw
 #endif
+
+#define MAX_VIEWS_GLFW 4 //!< max views in GLFW, globally fixed!
+#define MAX_LIGHTS_GLFW 4 //!< max lights used in GLFW and raytracer
+
 //#define FLIP_NORMALS //!< lets flip normals to point inside objects in some internal triangle drawing functions (sphere, ...) (old mode before 2022-06-27)
 //#define FLIP_TRIANGLES  //!< lets flip triangle orientation in some internal triangle drawing functions (sphere, ...) (old mode before 2022-06-27)
 
@@ -157,6 +168,7 @@ typedef std::string STDstring;	//!< decouple std::string for future extensions, 
 #define USE_INDEX_AS_INT
 #ifdef USE_INDEX_AS_INT
 	typedef int Index;
+	typedef std::uint64_t Index64;
 	typedef int SignedIndex;
 	#if defined(__EXUDYN__APPLE__)
 		typedef unsigned long UnsignedIndex;			//!< all indices used in Exudyn must be declared with Index, not 'int' (64 bit portability)
@@ -182,21 +194,8 @@ typedef std::string STDstring;	//!< decouple std::string for future extensions, 
 	#endif
 #endif
 
-//this is usually defined in setup.py:
-//#define EXUDYN_MINIMAL_COMPILATION
 
 #include "Main/Stdoutput.h"		//for pout and error/warning messages
-
-//DELETE: (openmp is much less performant than manual multithreading)
-////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-////#define USE_OPENMP //needs omp.h, not available on MacOS; currently only used in CSystem.cpp for some tests
-//
-//#ifdef USE_OPENMP
-//const int maxThreads = 12; //adjust this for supercomputers, if necessary
-//#endif
-////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
 
 
 typedef uint32_t UInt;          //!< explicitly used for smaller indices
@@ -208,11 +207,15 @@ namespace EXUstd {
 
 	const Real pi = 3.14159265358979323846; //as cmath does not work properly (#define _USE_MATH_DEFINES must be included everywhere), pi is defined here
 	const float pi_f = (float)pi;
+	const Real rad2degree = 180. / pi;
+	const float rad2degreeF = 180.f / pi_f;
+	const Real degree2rad = pi / 180.;
+	const float degree2radF = pi_f / 180.f;
 	const Index InvalidIndex = -1; //!< invalid index used e.g. in GetIndexOfItem, etc.
 	//const float _MINFLOAT = -1e38f; //!< largest negative value to be on the safe side; @TODO use std lib constants instead
 	//const float _MAXFLOAT =  1e38f; //!< largest positive value to be on the safe side
 
-	const float _MINFLOAT = std::numeric_limits<float>::lowest(); //!< largest negative value to be on the safe side; @TODO use std lib constants instead
+	const float _MINFLOAT = std::numeric_limits<float>::lowest(); //!< largest negative value to be on the safe side
 	const float _MAXFLOAT = std::numeric_limits<float>::max(); //!< largest positive value to be on the safe side
 
 	constexpr Index dim3D = 3; //!< this shall make changes to other dimensionalities easier; avoid using 3 in code
@@ -222,6 +225,13 @@ namespace EXUstd {
 	constexpr double EPSILONREAL = std::numeric_limits<Real>::epsilon();  //smallest (pos) Real number relative to one
 	constexpr double MAXREAL = std::numeric_limits<Real>::max();  //highest (pos) Real number
 	constexpr Index MAXINDEX = std::numeric_limits<int>::max();   //highest (pos) Real number
+
+#ifdef USE_GLFW_GRAPHICS
+	const bool compiledwithGLFW = true;
+#else
+	const bool compiledwithGLFW = false;
+#endif
+
 
 	//empty class for default initialization, cannot be converted from e.g. Real, Index, etc.
 	class Dummy
@@ -263,6 +273,15 @@ namespace EXUstd {
 		return s;
 	}
 
+	// Helper for cleaning up memory safely
+	inline void AlignedFree(void* ptr) {
+		if (!ptr) return;
+#ifdef __EXUDYN__WINDOWS__
+		_aligned_free(ptr);
+#else
+		free(ptr); // posix_memalign memory is freed with standard free()
+#endif
+	}
 
 } //EXUstd
 

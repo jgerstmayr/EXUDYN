@@ -131,7 +131,7 @@ You can view and download this file on Github: `rigidBodyTutorial3withMarkers.py
    #simulationSettings.timeIntegration.simulateInRealtime = True
    simulationSettings.solutionSettings.solutionWritePeriod = 0.005 #store every 5 ms
    
-   SC.visualizationSettings.window.renderWindowSize=[1600,1200]
+   SC.visualizationSettings.view0.window.renderWindowSize=[1600,1200]
    SC.visualizationSettings.openGL.multiSampling = 4
    SC.visualizationSettings.general.autoFitScene = False
    

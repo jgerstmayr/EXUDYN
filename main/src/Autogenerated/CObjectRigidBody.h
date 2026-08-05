@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-06  23:48:37 (last modified)
+* @date         2026-01-07  23:36:15 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -177,18 +177,18 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
-            (Index)OutputVariableType::Position +
-            (Index)OutputVariableType::Displacement +
-            (Index)OutputVariableType::Velocity +
-            (Index)OutputVariableType::VelocityLocal +
-            (Index)OutputVariableType::RotationMatrix +
-            (Index)OutputVariableType::Rotation +
-            (Index)OutputVariableType::AngularVelocity +
-            (Index)OutputVariableType::AngularVelocityLocal +
-            (Index)OutputVariableType::Acceleration +
-            (Index)OutputVariableType::AccelerationLocal +
-            (Index)OutputVariableType::AngularAcceleration +
-            (Index)OutputVariableType::AngularAccelerationLocal );
+            (Index64)OutputVariableType::Position +
+            (Index64)OutputVariableType::Displacement +
+            (Index64)OutputVariableType::Velocity +
+            (Index64)OutputVariableType::VelocityLocal +
+            (Index64)OutputVariableType::RotationMatrix +
+            (Index64)OutputVariableType::Rotation +
+            (Index64)OutputVariableType::AngularVelocity +
+            (Index64)OutputVariableType::AngularVelocityLocal +
+            (Index64)OutputVariableType::Acceleration +
+            (Index64)OutputVariableType::AccelerationLocal +
+            (Index64)OutputVariableType::AngularAcceleration +
+            (Index64)OutputVariableType::AngularAccelerationLocal );
     }
 
 };

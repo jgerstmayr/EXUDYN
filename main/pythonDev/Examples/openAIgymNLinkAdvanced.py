@@ -291,8 +291,8 @@ class InvertedNPendulumEnv(OpenAIGymInterfaceEnv):
         
         self.simulationSettings.timeIntegration.newton.useModifiedNewton = True
         
-        self.SC.visualizationSettings.general.drawWorldBasis=True
-        self.SC.visualizationSettings.general.drawCoordinateSystem = False
+        self.SC.visualizationSettings.view0.scene.drawWorldBasis=True
+        self.SC.visualizationSettings.view0.scene.drawCoordinateSystem = False
         self.SC.visualizationSettings.general.graphicsUpdateInterval = 0.01
         self.SC.visualizationSettings.openGL.multiSampling=4
         self.SC.visualizationSettings.bodies.kinematicTree.showCOMframes = False
@@ -692,9 +692,9 @@ if __name__ == '__main__': #this is only executed when file is direct called in 
         #visualize (and make animations) in exudyn:
         from exudyn.interactive import SolutionViewer
         env.SC.visualizationSettings.general.autoFitScene = False
-        env.SC.visualizationSettings.window.renderWindowSize = [1600,1200]
-        env.SC.visualizationSettings.openGL.shadow = 0.25
-        env.SC.visualizationSettings.openGL.light0position = [3,8,4,0]
+        env.SC.visualizationSettings.view0.window.renderWindowSize = [1600,1200]
+        env.SC.visualizationSettings.openGL.light0.shadow = 0.25
+        env.SC.visualizationSettings.openGL.light0.position = [3,8,4,0]
         
         solution = LoadSolutionFile(solutionFile)
         

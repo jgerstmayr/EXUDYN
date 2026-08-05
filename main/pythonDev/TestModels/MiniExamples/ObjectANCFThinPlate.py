@@ -29,7 +29,6 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 #check result
 exudynTestGlobals.testResult = 0
-#ux=-0.5013058140308901
 
 exu.Print("example for ObjectANCFThinPlate completed, test result =", exudynTestGlobals.testResult)
 

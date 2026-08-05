@@ -185,7 +185,7 @@ for case in caseList:
     
     simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=False
     
-    SC.visualizationSettings.general.drawWorldBasis = True
+    SC.visualizationSettings.view0.scene.drawWorldBasis = True
     
     
     if useGraphics:

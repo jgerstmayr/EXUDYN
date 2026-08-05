@@ -204,9 +204,9 @@ def main():
     viewMatrix = np.eye(3)  @ RotationMatrixZ(np.pi/2)@ RotationMatrixX(np.pi/2)
     SC.visualizationSettings.general.autoFitScene = False
     # set up parameter for usage in WSL2 (Ubuntu 20.04) on Windows 10
-    SC.visualizationSettings.window.startupTimeout = 5000
-    SC.visualizationSettings.interactive.selectionLeftMouse=False
-    SC.visualizationSettings.interactive.selectionRightMouse=False 
+    SC.visualizationSettings.general.rendererStartupTimeout = 5000
+    SC.visualizationSettings.interactive.advanced.selectionLeftMouse=False
+    SC.visualizationSettings.interactive.advanced.selectionRightMouse=False 
 
     SC.renderer.Start(True)
     mbs.SolveDynamic(simulationSettings)

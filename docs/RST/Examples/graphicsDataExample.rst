@@ -106,12 +106,20 @@ You can view and download this file on Github: `graphicsDataExample.py <https://
    # SC.visualizationSettings.openGL.drawVertexNormals = True
    # SC.visualizationSettings.openGL.drawFaceNormals = True
    SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
-   SC.visualizationSettings.window.renderWindowSize=[1920,1200]
+   SC.visualizationSettings.view0.window.renderWindowSize=[1920,1200]
    
    SC.renderer.Start()
    mbs.SolveDynamic(simulationSettings)
    
    SC.renderer.DoIdleTasks()
+   
+   if SC.renderer.IsActive(): #retrieve image into matplotlib
+       import matplotlib.pyplot as plt
+       image=SC.renderer.RedrawAndGetImage() 
+       plt.imshow(image) 
+       plt.axis('off') 
+       plt.show()
+   
    SC.renderer.Stop() #safely close rendering window!
    
 

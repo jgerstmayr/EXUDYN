@@ -17,8 +17,6 @@
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
 
-#ifdef USE_GLFW_GRAPHICS
-
 
 typedef unsigned int guint; //unsigned int used for graphics module
 typedef unsigned char gchar; //unsigned char used for graphics module
@@ -35,10 +33,10 @@ public:
 	guint characterHeight;		//!< height of one character in pixel
 	guint characterBytes;		//!< number of bytes per character
 	guint characterByteWidth;	//!< width in bytes
-	gchar* openGLBitmap;				//!< black/white bitmap stored for all characters; size=characterBytes*nCharacters; every byte stores 8 pixels
+	gchar* openGLBitmap;		//!< black/white bitmap stored for all characters; size=characterBytes*nCharacters; every byte stores 8 pixels
 
 public:
-	BitmapFont() : toBeDeleted(false), nCharacters(0), characterOffset(0), fontSize(1), characterWidth(1), characterHeight(1), characterBytes(0), characterByteWidth(1) { ; }
+	BitmapFont() : toBeDeleted(false), nCharacters(0), characterOffset(0), fontSize(1), characterWidth(1), characterHeight(1), characterBytes(0), characterByteWidth(1), openGLBitmap(NULL) { ; }
 	BitmapFont(guint fontSizeInit, guint nCharactersInit, guint characterOffsetInit,
 		guint characterWidthInit, guint characterHeightInit,
 		guint characterByteWidthInit, guint characterBytesInit, gchar* bitmap)
@@ -193,7 +191,7 @@ public:
                     font[y*w * colorSize + x * colorSize + 0] = 255; //all color white ==> text color will be added; 
                     font[y*w * colorSize + x * colorSize + 1] = 255;
                     font[y*w * colorSize + x * colorSize + 2] = 255;
-                    font[y*w * colorSize + x * colorSize + 3] = 255 - binv; //color has no effect ==> character will be visible ...
+                    font[y*w * colorSize + x * colorSize + 3] = 255 - binv; //transparent only for background; character is all (white*textColor)/256
                 }
                 else
                 {
@@ -201,7 +199,7 @@ public:
                     font[y*w * colorSize + x * colorSize + 0] = 255 - b; //all color white ==> text color will be added; 
                     font[y*w * colorSize + x * colorSize + 1] = 255 - b;
                     font[y*w * colorSize + x * colorSize + 2] = 255 - b;
-                    font[y*w * colorSize + x * colorSize + 3] = 255; //color has no effect ==> character will be visible ...
+                    font[y*w * colorSize + x * colorSize + 3] = 255; //not transparent for character and background!
                 }
             }
 		}
@@ -281,7 +279,7 @@ public:
 			{ 
 				updatedIndex++; 
 				//std::cout << "not expected:" << (guint)ci0 << "\n";
-				return 0xA1; 
+				return ' '; //space; dont show
 			} //not expected; return inverted ! and increment
 
 			bool ok = true; //check if zero occurs (which is wrong, but could happen in some weird encodings)
@@ -295,62 +293,117 @@ public:
 			{
 				gchar ci1 = (gchar)(text[updatedIndex+1]); //second character (must exist at this point)
 
-				ci = 0xBF; //return inverted '?' if character cannot be converted to unicode
+				ci = 127; //return inverted ? if character cannot be converted to internal UTF-8 representation
 				if (sequenceLen == 2)
 				{
-					if (ci0 == 0xC2 && ci1 >= 0xA0 && ci1 <= 0xBF)
-					{
-						ci = ci1; //second char directly maps to unicode character
-					}
+					if (ci0 == 0xCE && ci1 == 0x93) { ci = 128; } //upper case Greek Gamma
+					else if (ci0 == 0xCE && ci1 == 0x94) { ci = 129; } //
+					else if (ci0 == 0xCE && ci1 == 0x98) { ci = 130; } //
+					else if (ci0 == 0xCE && ci1 == 0x9B) { ci = 131; } //
+					else if (ci0 == 0xCE && ci1 == 0x9E) { ci = 132; } //
+					else if (ci0 == 0xCE && ci1 == 0xA0) { ci = 133; } //
+					else if (ci0 == 0xCE && ci1 == 0xA3) { ci = 134; } //
+					else if (ci0 == 0xCE && ci1 == 0xA6) { ci = 135; } //
+					else if (ci0 == 0xCE && ci1 == 0xA8) { ci = 136; } //
+					else if (ci0 == 0xCE && ci1 == 0xA9) { ci = 137; } //
+					else if (ci0 == 0xCE && ci1 == 0xB1) { ci = 138; } //lower case Greek alpha
+					else if (ci0 == 0xCE && ci1 == 0xB2) { ci = 139; } //
+					else if (ci0 == 0xCE && ci1 == 0xB3) { ci = 140; } //
+					else if (ci0 == 0xCE && ci1 == 0xB4) { ci = 141; } //
+					else if (ci0 == 0xCE && ci1 == 0xB5) { ci = 142; } //
+					else if (ci0 == 0xCE && ci1 == 0xB6) { ci = 143; } //
+					else if (ci0 == 0xCE && ci1 == 0xB7) { ci = 144; } //
+					else if (ci0 == 0xCE && ci1 == 0xB8) { ci = 145; } //
+					else if (ci0 == 0xCE && ci1 == 0xB9) { ci = 146; } //
+					else if (ci0 == 0xCE && ci1 == 0xBA) { ci = 147; } //
+					else if (ci0 == 0xCE && ci1 == 0xBB) { ci = 148; } //
+					else if (ci0 == 0xCE && ci1 == 0xBC) { ci = 149; } //
+					else if (ci0 == 0xCE && ci1 == 0xBD) { ci = 150; } //
+					else if (ci0 == 0xCE && ci1 == 0xBE) { ci = 151; } //
+					else if (ci0 == 0xCE && ci1 == 0xBF) { ci = 152; } //
+					else if (ci0 == 0xCF && ci1 == 0x80) { ci = 153; } //
+					else if (ci0 == 0xCF && ci1 == 0x81) { ci = 154; } //
+					else if (ci0 == 0xCF && ci1 == 0x83) { ci = 155; } //
+					else if (ci0 == 0xCF && ci1 == 0x84) { ci = 156; } //
+					else if (ci0 == 0xCF && ci1 == 0x85) { ci = 157; } //
+					else if (ci0 == 0xCF && ci1 == 0x86) { ci = 158; } //
+					else if (ci0 == 0xCF && ci1 == 0x87) { ci = 159; } //
+					else if (ci0 == 0xCF && ci1 == 0x88) { ci = 160; } //
+					else if (ci0 == 0xCF && ci1 == 0x89) { ci = 161; } //
+					else if (ci0 == 0xCF && ci1 == 0x95) { ci = 162; } //
+					else if (ci0 == 0xCF && ci1 == 0xB5) { ci = 163; } //end lower case greek
+					else if (ci0 == 0xC2 && ci1 == 0xB9) { ci = 175; } //^1
+					else if (ci0 == 0xC2 && ci1 == 0xB2) { ci = 176; } //^2
+					else if (ci0 == 0xC2 && ci1 == 0xB3) { ci = 177; } //^3
+					else if (ci0 == 0xC2 && ci1 == 0xB5) { ci = 149; } //µ (alternative, directly from keyboard)
+					else if (ci0 == 0xC2 && ci1 == 0xB0) { ci = 174; } //° (use ^0 as ° is not any more available since 1.10.11!)
+					else if (ci0 == 0xC2 && ci1 == 0xB7) { ci = 215; } //mult (x or .); currently only x available!
+					else if (ci0 == 0xC2 && ci1 == 0x97) { ci = 215; } //mult (x or .); currently only x available!
+					else if (ci0 == 0xC2 && ci1 == 0xBF) { ci = 127; } //inverted/framed ?
+
+					//these characters are now used by indices and greek letters and not available any more!
+					//else if (ci0 == 0xC2 && ci1 >= 0xA0 && ci1 <= 0xBF)
+					//{
+					//	ci = ci1; //second char directly maps to unicode character
+					//}
 					else if (ci0 == 0xC3 && ci1 >= 0x80 && ci1 <= 0xBF)
 					{
-						ci = ci1+0x40; //second char maps to unicode character + 0x40: 0x80 -> 0xC0
+						ci = ci1 + 0x40; //second char maps to unicode character + 0x40: 0x80 -> 0xC0
 					}
-					else if (ci0 == 0xCE && ci1 == 0xB1) { ci = 144; } //alpha
-					else if (ci0 == 0xCE && ci1 == 0xB2) { ci = 145; } //...
-					else if (ci0 == 0xCE && ci1 == 0xB3) { ci = 146; } //...
-					else if (ci0 == 0xCE && ci1 == 0xB4) { ci = 147; } //...
-					else if (ci0 == 0xCE && ci1 == 0xB5) { ci = 148; } //...
-					else if (ci0 == 0xCE && ci1 == 0xB6) { ci = 149; } //...
-					else if (ci0 == 0xCE && ci1 == 0xB7) { ci = 150; } //...
-					else if (ci0 == 0xCE && ci1 == 0xB8) { ci = 151; } //...
-					else if (ci0 == 0xCE && ci1 == 0xBA) { ci = 152; } //...
-					else if (ci0 == 0xCE && ci1 == 0xBB) { ci = 153; } //...
-					else if (ci0 == 0xCE && ci1 == 0xBD) { ci = 154; } //...
-					else if (ci0 == 0xCE && ci1 == 0xBE) { ci = 155; } //...
-					else if (ci0 == 0xCF && ci1 == 0x80) { ci = 156; } //...
-					else if (ci0 == 0xCF && ci1 == 0x81) { ci = 157; } //...
-					else if (ci0 == 0xCF && ci1 == 0x83) { ci = 158; } //...
-					else if (ci0 == 0xCF && ci1 == 0x95) { ci = 159; } //...
-					//
-					else if (ci0 == 0xCF && ci1 == 0x87) { ci = 130; } //...
-					else if (ci0 == 0xCF && ci1 == 0x88) { ci = 131; } //...
-					else if (ci0 == 0xCF && ci1 == 0x89) { ci = 132; } //...
-					else if (ci0 == 0xCE && ci1 == 0x94) { ci = 133; } //...
-					else if (ci0 == 0xCE && ci1 == 0xA0) { ci = 134; } //...
-					else if (ci0 == 0xCE && ci1 == 0xA3) { ci = 135; } //...
-					else if (ci0 == 0xCE && ci1 == 0xA9) { ci = 136; } //...
-					//
-
-					//std::cout << "c0=" << ci0 << ", c1=" << ci1 << "\n";
 				}
 				else if (sequenceLen == 3)
 				{
 					gchar ci2 = (gchar)(text[updatedIndex + 2]); //third character (must exist at this point)
-					if (ci0 == 0xE2 && ci1 == 0x88 && ci2 == 0x82) { ci = 128; } //partial
-					else if (ci0 == 0xE2 && ci1 == 0x88 && ci2 == 0xAB) { ci = 129; } //int
-					else if (ci0 == 0xE2 && ci1 == 0x99 && ci2 == 0xA5) { ci = 137; } //like
-					else if (ci0 == 0xE2 && ci1 == 0x88 && ci2 == 0x9A) { ci = 139; } //sqrt
-					else if (ci0 == 0xE2 && ci1 == 0x89 && ci2 == 0x88) { ci = 140; } //approx
-					else if (ci0 == 0xE2 && ci1 == 0x88 && ci2 == 0x9E) { ci = 143; } //infinity
+
+					if (ci0 == 0xE2 && ci1 == 0x82 && ci2 == 0x80) { ci = 164; } //_0
+					else if (ci0 == 0xE2 && ci1 == 0x82 && ci2 == 0x81) { ci = 165; } //
+					else if (ci0 == 0xE2 && ci1 == 0x82 && ci2 == 0x82) { ci = 166; } //
+					else if (ci0 == 0xE2 && ci1 == 0x82 && ci2 == 0x83) { ci = 167; } //
+					else if (ci0 == 0xE2 && ci1 == 0x82 && ci2 == 0x84) { ci = 168; } //
+					else if (ci0 == 0xE2 && ci1 == 0x82 && ci2 == 0x85) { ci = 169; } //
+					else if (ci0 == 0xE2 && ci1 == 0x82 && ci2 == 0x86) { ci = 170; } //
+					else if (ci0 == 0xE2 && ci1 == 0x82 && ci2 == 0x87) { ci = 171; } //
+					else if (ci0 == 0xE2 && ci1 == 0x82 && ci2 == 0x88) { ci = 172; } //
+					else if (ci0 == 0xE2 && ci1 == 0x82 && ci2 == 0x89) { ci = 173; } //_9
+					else if (ci0 == 0xE2 && ci1 == 0x81 && ci2 == 0xB0) { ci = 174; } //^0
+					else if (ci0 == 0xE2 && ci1 == 0x81 && ci2 == 0xB4) { ci = 178; } //^4
+					else if (ci0 == 0xE2 && ci1 == 0x81 && ci2 == 0xB5) { ci = 179; } //
+					else if (ci0 == 0xE2 && ci1 == 0x81 && ci2 == 0xB6) { ci = 180; } //
+					else if (ci0 == 0xE2 && ci1 == 0x81 && ci2 == 0xB7) { ci = 181; } //
+					else if (ci0 == 0xE2 && ci1 == 0x81 && ci2 == 0xB8) { ci = 182; } //
+					else if (ci0 == 0xE2 && ci1 == 0x81 && ci2 == 0xB9) { ci = 183; } //^9
+					else if (ci0 == 0xE2 && ci1 == 0x88 && ci2 == 0x82) { ci = 184; } //partial
+					else if (ci0 == 0xE2 && ci1 == 0x88 && ci2 == 0xAB) { ci = 185; } //int
+					else if (ci0 == 0xE2 && ci1 == 0x99 && ci2 == 0xA5) { ci = 186; } //heart
+					else if (ci0 == 0xE2 && ci1 == 0x88 && ci2 == 0x9A) { ci = 187; } //sqrt
+					else if (ci0 == 0xE2 && ci1 == 0x89 && ci2 == 0x88) { ci = 188; } //approx
+					else if (ci0 == 0xE2 && ci1 == 0x88 && ci2 == 0x9E) { ci = 189; } //infinity
+
+					else if (ci0 == 0xC2 && ci1 == 0x98 && ci2 == 0xBA) { ci = 190; } //smiley
+					else if (ci0 == 0xC2 && ci1 == 0x98 && ci2 == 0xB9) { ci = 191; } //frowney #not verified
+					else if (ci0 == 0xE2 && ci1 == 0x98 && ci2 == 0xB9) { ci = 191; } //frowney 
+
+					//if (ci0 == 0xE2 && ci1 == 0x88 && ci2 == 0x82) { ci = 128; } //partial
+					//else if (ci0 == 0xE2 && ci1 == 0x88 && ci2 == 0xAB) { ci = 129; } //int
+					//else if (ci0 == 0xE2 && ci1 == 0x99 && ci2 == 0xA5) { ci = 137; } //like
+					//else if (ci0 == 0xE2 && ci1 == 0x88 && ci2 == 0x9A) { ci = 139; } //sqrt
+					//else if (ci0 == 0xE2 && ci1 == 0x89 && ci2 == 0x88) { ci = 140; } //approx
+					//else if (ci0 == 0xE2 && ci1 == 0x88 && ci2 == 0x9E) { ci = 143; } //infinity
 				}
 				else if (sequenceLen == 4)
 				{
 					gchar ci2 = (gchar)(text[updatedIndex + 2]); //third character (must exist at this point)
 					gchar ci3 = (gchar)(text[updatedIndex + 3]); //fourth character (must exist at this point)
-					if (ci0 == 0xF0 && ci1 == 0x9F && ci2 == 0x99 && ci3 == 0x82) { ci = 141; } //smiley
-					else if (ci0 == 0xF0 && ci1 == 0x9F && ci2 == 0x98 && ci3 == 0x92) { ci = 142; } //frowney
-				}
+					if      (ci0 == 0xF0 && ci1 == 0x9F && ci2 == 0x99 && ci3 == 0x82) { ci = 190; } //smiley
+					else if (ci0 == 0xF0 && ci1 == 0x9F && ci2 == 0x98 && ci3 == 0x80) { ci = 190; } //smiley
+					else if (ci0 == 0xF0 && ci1 == 0x9F && ci2 == 0x98 && ci3 == 0x86) { ci = 190; } //smiley
+					else if (ci0 == 0xF0 && ci1 == 0x9F && ci2 == 0x98 && ci3 == 0x8A) { ci = 190; } //smiley
+					
+					else if (ci0 == 0xF0 && ci1 == 0x9F && ci2 == 0x98 && ci3 == 0x92) { ci = 191; } //frowney
+					else if (ci0 == 0xF0 && ci1 == 0x9F && ci2 == 0x99 && ci3 == 0x81) { ci = 191; } //frowney
+					else if (ci0 == 0xF0 && ci1 == 0x9F && ci2 == 0x98 && ci3 == 0x9E) { ci = 191; } //frowney
+					else if (ci0 == 0xF0 && ci1 == 0x9F && ci2 == 0x98 && ci3 == 0x9F) { ci = 191; } //frowney
+					}
 				//if (ci == 0xBF) {std::cout << "unknown:" << (guint)ci0 << "\n";}
 			}
 			updatedIndex += sequenceLen;
@@ -361,6 +414,7 @@ public:
 	//! function draws string as bitmap text, using the internal bitmap font
 	void DrawString(const char* text, const Float3& p, const Float4& color)
 	{
+#ifdef USE_GLFW_GRAPHICS
 		glColor4f(color[0], color[1], color[2], color[3]);  /* white */
 		glRasterPos3f(p[0], p[1], p[2]);
 
@@ -411,9 +465,9 @@ public:
 			//i++;
 			cUnicode = GetUnicodeCharacterFromUTF8(text, updatedIndex);
 		}
+#endif // USE_GLFW_GRAPHICS
 	}
 };
 
 
-#endif //USE_GLFW_GRAPHICS
 #endif //include once

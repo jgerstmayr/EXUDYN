@@ -21,7 +21,7 @@ void CMarkerBodyCable2DCoordinates::GetPosition(const CSystemData& cSystemData, 
 	position = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetPosition(Vector3D({0.,0.,0.}), configuration);
 }
 
-//void CMarkerBodyCable2DCoordinates::GetVelocity(const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration) const
+//void CMarkerBodyBeamShape::GetVelocity(const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration) const
 //{
 //	velocity = ((CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]))->GetVelocity(configuration);
 //}
@@ -29,16 +29,15 @@ void CMarkerBodyCable2DCoordinates::GetPosition(const CSystemData& cSystemData, 
 //very specific marker for Cable2D shape; this is not the usual way to compute markerdata!
 void CMarkerBodyCable2DCoordinates::ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const
 {
-	//maxNumberOfSegments ... used for ConstSizeVectors
+	//marker data includes coordinates of beam which allows to reconstruct the shape functions of the beam
 
-	//the markerdata consists of the shape functions SV(pos_i)*q_Cable, in which pos_i is evaluated at (numberOfSegments+1) equidistant points 
 	CObjectANCFCable2DBase* cable = ((CObjectANCFCable2DBase*)(cSystemData.GetCObjects()[parameters.bodyNumber]));
 	Index nCoordinatesCable = cable->GetODE2Size();
-	const Index ns = 4;   //number of shape functions
+	const Index nnc = CObjectANCFCable2D::nNodalCoordinates;   //number of nodal coordinates functions
 
 
-	ConstSizeVector<ns> q0DisplRef;	//coordinates (displacement+reference) node 0
-	ConstSizeVector<ns> q1DisplRef; //coordinates (displacement+reference) node 1
+	ConstSizeVector<nnc> q0DisplRef;	//coordinates (displacement+reference) node 0
+	ConstSizeVector<nnc> q1DisplRef; //coordinates (displacement+reference) node 1
 
 	markerData.GetHelper() = cable->GetLength(); //OLD: 2020-03-09; cable->GetParameters().physicsLength; //needed for shape function computation; WORKAROUND
 
@@ -46,12 +45,12 @@ void CMarkerBodyCable2DCoordinates::ComputeMarkerData(const CSystemData& cSystem
 	markerData.vectorValue_t.SetNumberOfItems(nCoordinatesCable); //stores 8 cable coordinates velocities
 
 	cable->ComputeCurrentNodeCoordinates(q0DisplRef, q1DisplRef);
-	markerData.vectorValue.CopyFrom(q0DisplRef, 0, 0, ns);
-	markerData.vectorValue.CopyFrom(q1DisplRef, 0, ns, ns);
+	markerData.vectorValue.CopyFrom(q0DisplRef, 0, 0, nnc);
+	markerData.vectorValue.CopyFrom(q1DisplRef, 0, nnc, nnc);
 
 	cable->ComputeCurrentNodeVelocities(q0DisplRef, q1DisplRef);
-	markerData.vectorValue_t.CopyFrom(q0DisplRef, 0, 0, ns);
-	markerData.vectorValue_t.CopyFrom(q1DisplRef, 0, ns, ns);
+	markerData.vectorValue_t.CopyFrom(q0DisplRef, 0, 0, nnc);
+	markerData.vectorValue_t.CopyFrom(q1DisplRef, 0, nnc, nnc);
 	markerData.velocityAvailable = true;
 
 	if (computeJacobian)

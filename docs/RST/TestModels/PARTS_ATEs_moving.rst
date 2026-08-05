@@ -63,7 +63,7 @@ You can view and download this file on Github: `PARTS_ATEs_moving.py <https://gi
    L2 = 29e-3 #mm
    L3 = 8e-3 #mm
    L4 = 10e-3 #mm
-   psi = np.arctan(L3/L1) #11.9Â°
+   psi = np.arctan(L3/L1) #11.9°
    CE = L3/np.sin(psi) #38.8e-3 mm
    
    
@@ -495,9 +495,9 @@ You can view and download this file on Github: `PARTS_ATEs_moving.py <https://gi
    SC.visualizationSettings.markers.show= False
    
    SC.visualizationSettings.openGL.lineWidth=2 #maximum
-   SC.visualizationSettings.openGL.lineSmooth=True
-   SC.visualizationSettings.general.drawCoordinateSystem = False
-   SC.visualizationSettings.window.renderWindowSize=[1600,1024]
+   
+   SC.visualizationSettings.view0.scene.drawCoordinateSystem = False
+   SC.visualizationSettings.view0.window.renderWindowSize=[1600,1024]
    
    ##++++++++++++++++++++++++++++++
    ##ANIMATIONS

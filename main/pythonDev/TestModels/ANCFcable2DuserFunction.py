@@ -96,7 +96,7 @@ simulationSettings.timeIntegration.numberOfSteps = int(endTime/stepSize)
 simulationSettings.timeIntegration.endTime = endTime
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-SC.visualizationSettings.window.renderWindowSize=[1200,1024]
+SC.visualizationSettings.view0.window.renderWindowSize=[1200,1024]
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 

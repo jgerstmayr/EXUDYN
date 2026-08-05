@@ -317,10 +317,10 @@ SC.visualizationSettings.nodes.basisSize = 0.015
 
 SC.visualizationSettings.loads.show = False
 
-SC.visualizationSettings.window.renderWindowSize = [2000,1600]
-SC.visualizationSettings.openGL.shadow = 0.25
-SC.visualizationSettings.openGL.perspective = 1
-SC.visualizationSettings.openGL.light0position = [20,-20,40,0]
+SC.visualizationSettings.view0.window.renderWindowSize = [2000,1600]
+SC.visualizationSettings.openGL.light0.shadow = 0.25
+SC.visualizationSettings.view0.camera.perspective = 1
+SC.visualizationSettings.openGL.light0.position = [20,-20,40,0]
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

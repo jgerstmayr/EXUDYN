@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-04-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -142,7 +142,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-04-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -150,13 +150,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
 class SolverLocalData // AUTO: 
 {
 public: // AUTO: 
@@ -266,7 +259,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-04-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -274,13 +267,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
 class SolverIterationData // AUTO: 
 {
 public: // AUTO: 
@@ -380,7 +366,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-04-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -388,13 +374,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
 class SolverConvergenceData // AUTO: 
 {
 public: // AUTO: 
@@ -476,7 +455,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-04-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -484,17 +463,11 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
 class SolverOutputData // AUTO: 
 {
 public: // AUTO: 
   Real cpuLastTimePrinted;                        //!< AUTO: CPU time when output has been printed last time
+  Real cpuSolverStartTime;                        //!< AUTO: CPU start time of main solver (not including initial conditions); cpuSolverStartTime-cpuStartTime gives time for initialization
   Real cpuStartTime;                              //!< AUTO: CPU start time of computation (starts counting at computation of initial conditions)
   bool finishedSuccessfully;                      //!< AUTO: flag is false until solver functions SolveSteps)...) or SolveSystem(...) finished successfully (can be used as external trigger)
   bool initializationSuccessful;                  //!< AUTO: flag is set during call to InitializeSolver(...); reasons for failure are multiple, either inconsistent solver settings are used, files cannot be written (file locked), or initial conditions could not be computed 
@@ -507,6 +480,9 @@ public: // AUTO:
   Index lastVerboseStepIndex;                     //!< AUTO: step index when last time written to console (or file)
   Index multiThreadingMode;                       //!< AUTO: multithreading mode that has been used: 0=None (serial), 1=multithreading, 2=multithreading with load balancing; (modes new since 2025-06, V1.9.198)
   Index numberOfThreadsUsed;                      //!< AUTO: number of threads that have been used in simulation
+  bool simulationStoppedByUser;                   //!< AUTO: flag (initialized false) is set true when user stops the simulation (press Q, Escape, etc.)
+  bool simulationStoppedByUserFunction;           //!< AUTO: flag (initialized false) is set true when a user function (PreStep, PostNewton, etc.) sends termination signal
+  bool simulationTimeout;                         //!< AUTO: flag (initialized false) is set true when exudyn.special.solver.timeout is reached (and timeout is >= 0)
   Index stepInformation;                          //!< AUTO: this is a copy of the solvers stepInformation used for console output
   Index verboseMode;                              //!< AUTO: this is a copy of the solvers verboseMode used for console output
   Index verboseModeFile;                          //!< AUTO: this is a copy of the solvers verboseModeFile used for file
@@ -521,6 +497,7 @@ public: // AUTO:
   SolverOutputData()
   {
     cpuLastTimePrinted = 0.;
+    cpuSolverStartTime = 0.;
     cpuStartTime = 0.;
     finishedSuccessfully = false;
     initializationSuccessful = false;
@@ -533,6 +510,9 @@ public: // AUTO:
     lastVerboseStepIndex = 0;
     multiThreadingMode = 0;
     numberOfThreadsUsed = 1;
+    simulationStoppedByUser = false;
+    simulationStoppedByUserFunction = false;
+    simulationTimeout = false;
     stepInformation = 0;
     verboseMode = 0;
     verboseModeFile = 0;
@@ -551,6 +531,7 @@ public: // AUTO:
   {
     os << "SolverOutputData" << ":\n";
     os << "  cpuLastTimePrinted = " << cpuLastTimePrinted << "\n";
+    os << "  cpuSolverStartTime = " << cpuSolverStartTime << "\n";
     os << "  cpuStartTime = " << cpuStartTime << "\n";
     os << "  finishedSuccessfully = " << finishedSuccessfully << "\n";
     os << "  initializationSuccessful = " << initializationSuccessful << "\n";
@@ -565,6 +546,9 @@ public: // AUTO:
     os << "  numberOfThreadsUsed = " << numberOfThreadsUsed << "\n";
     os << "  sensorValuesTemp = " << sensorValuesTemp << "\n";
     os << "  sensorValuesTemp2 = " << sensorValuesTemp2 << "\n";
+    os << "  simulationStoppedByUser = " << simulationStoppedByUser << "\n";
+    os << "  simulationStoppedByUserFunction = " << simulationStoppedByUserFunction << "\n";
+    os << "  simulationTimeout = " << simulationTimeout << "\n";
     os << "  stepInformation = " << stepInformation << "\n";
     os << "  verboseMode = " << verboseMode << "\n";
     os << "  verboseModeFile = " << verboseModeFile << "\n";
@@ -588,7 +572,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-04-20 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -596,13 +580,6 @@ public: // AUTO:
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
 class SolverFileData // AUTO: 
 {
 public: // AUTO: 

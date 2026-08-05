@@ -6,7 +6,7 @@ and hereafter you can access all data and functions via 'solver'.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-02-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -91,7 +91,7 @@ and hereafter you can access all data and functions via 'solver'.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-02-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -99,13 +99,6 @@ and hereafter you can access all data and functions via 'solver'.
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
 class MainSolverImplicitSecondOrder: public MainSolverBase // AUTO: 
 {
 public: // AUTO: 
@@ -260,7 +253,7 @@ and hereafter you can access all data and functions via 'solver'.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2025-06-18 (last modfied)
+* @date         AUTO: 2026-02-10 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -268,13 +261,6 @@ and hereafter you can access all data and functions via 'solver'.
                 - weblink: missing
                 
 ************************************************************************************************ **/
-#include <ostream>
-
-#include "Utilities/ReleaseAssert.h"
-#include "Utilities/BasicDefinitions.h"
-#include "Main/OutputVariable.h"
-#include "Linalg/BasicLinalg.h"
-
 class MainSolverExplicit: public MainSolverBase // AUTO: 
 {
 public: // AUTO: 

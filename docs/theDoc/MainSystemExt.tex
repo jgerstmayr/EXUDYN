@@ -1,5 +1,5 @@
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L785}{SolutionViewer}{}}}\label{sec:mainsystemextensions:SolutionViewer}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L784}{SolutionViewer}{}}}\label{sec:mainsystemextensions:SolutionViewer}
 ({\it solution}= None, {\it rowIncrement}= 1, {\it timeout}= 0.04, {\it runOnStart}= True, {\it runMode}= 2, {\it fontSize}= 12, {\it title}= '', {\it checkRenderEngineStopFlag}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -25,7 +25,7 @@
 \item[]{\it checkRenderEngineStopFlag}: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
 \end{itemize}
 \item[--]
-{\bf output}: None; updates current visualization state, renders the scene continuously (after pressing button 'Run')
+{\bf output}: (type: None) updates current visualization state, renders the scene continuously (after pressing button 'Run')
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   #HERE, mbs must contain same model as solution stored in coordinatesSolution.txt
@@ -44,20 +44,20 @@
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/addRevoluteJoint.py}{\texttt{addRevoluteJoint.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFcableCantilevered.py}{\texttt{ANCFcableCantilevered.py}} (Ex), 
 \\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFrotatingCable2D.py}{\texttt{ANCFrotatingCable2D.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ballBearningModel.py}{\texttt{ballBearningModel.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ANCFslidingJoint.py}{\texttt{ANCFslidingJoint.py}} (Ex), 
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
 \\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py}{\texttt{ANCFgeneralContactCircle.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFCableBeamDampingTest.py}{\texttt{ANCFCableBeamDampingTest.py}} (TM), 
  ...
 
 \ei
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L227}{PlotSensor}{}}}\label{sec:mainsystemextensions:PlotSensor}
-({\it sensorNumbers}= [], {\it components}= 0, {\it xLabel}= 'time (s)', {\it yLabel}= None, {\it labels}= [], {\it colorCodeOffset}= 0, {\it newFigure}= True, {\it closeAll}= False, {\it componentsX}= [], {\it title}= '', {\it figureName}= '', {\it fontSize}= 16, {\it colors}= [], {\it lineStyles}= [], {\it lineWidths}= [], {\it markerStyles}= [], {\it markerSizes}= [], {\it markerDensity}= 0.08, {\it rangeX}= [], {\it rangeY}= [], {\it majorTicksX}= 10, {\it majorTicksY}= 10, {\it offsets}= [], {\it factors}= [], {\it subPlot}= [], {\it sizeInches}= [6.4,4.8], {\it fileName}= '', {\it useXYZcomponents}= True, {\it **kwargs})
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/plot.py\#L228}{PlotSensor}{}}}\label{sec:mainsystemextensions:PlotSensor}
+({\it sensorNumbers}= [], {\it components}= 0, {\it xLabel}= 'time (s)', {\it yLabel}= None, {\it labels}= [], {\it colorCodeOffset}= 0, {\it newFigure}= True, {\it closeAll}= False, {\it componentsX}= [], {\it title}= '', {\it figureName}= '', {\it fontSize}= 16, {\it colors}= [], {\it lineStyles}= [], {\it lineWidths}= [], {\it markerStyles}= [], {\it markerSizes}= [], {\it markerDensity}= 0.08, {\it rangeX}= [], {\it rangeY}= [], {\it majorTicksX}= 10, {\it majorTicksY}= 10, {\it offsets}= [], {\it factors}= [], {\it subPlot}= [], {\it sizeInches}= [6.4,4.8], {\it fileName}= '', {\it useXYZcomponents}= True, {\it legendArgs}= None, {\it **kwargs})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -82,6 +82,7 @@
 \item[]{\it xLabel}: string for text at x-axis
 \item[]{\it yLabel}: string for text at y-axis (default: None==> label is automatically computed from sensor value types)
 \item[]{\it labels}: string (for one sensor) or list of strings (according to number of sensors resp. components) representing the labels used in legend; if labels=[], automatically generated legend is used
+\item[]{\it legendArgs}: if string or tuple of floats, they are used for the loc arg of matplotlib legend; if dict, the replace all args of legend
 \item[]{\it rangeX}: default rangeX=[]: computes range automatically; otherwise use rangeX to set range (limits) for x-axis provided as sorted list of two floats, e.g., rangeX=[0,4]
 \item[]{\it rangeY}: default rangeY=[]: computes range automatically; otherwise use rangeY to set range (limits) for y-axis provided as sorted list of two floats, e.g., rangeY=[-1,1]
 \item[]{\it figureName}: optional name for figure, if newFigure=True
@@ -113,7 +114,7 @@
 \item[]{\it fileDelimiterChar}: if exists, defines the character indicating the columns for data (',', ' ', ';', ...)
 \end{itemize}
 \item[--]
-{\bf output}: [Any, Any, Any, Any]; plots the sensor data; returns [plt, fig, ax, line] in which plt is matplotlib.pyplot, fig is the figure (or None), ax is the axis (or None) and line is the return value of plt.plot (or None) which could be changed hereafter
+{\bf output}: (type: [Any, Any, Any, Any]) plots the sensor data; returns [plt, fig, ax, line] in which plt is matplotlib.pyplot, fig is the figure (or None), ax is the axis (or None) and line is the return value of plt.plot (or None) which could be changed hereafter
 \item[--]
 {\bf notes}: adjust default values by modifying the variables exudyn.plot.plotSensorDefault..., e.g., exudyn.plot.plotSensorDefaultFontSize
 \item[--]
@@ -157,7 +158,7 @@
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
 \\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py}{\texttt{ANCFgeneralContactCircle.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFCableBeamDampingTest.py}{\texttt{ANCFCableBeamDampingTest.py}} (TM), 
  ...
 
 \ei
@@ -165,7 +166,7 @@
 %
 \begin{flushleft}
 \noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L157}{SolveStatic}{}}}\label{sec:mainsystemextensions:SolveStatic}
-({\it simulationSettings}= exudyn.SimulationSettings(), {\it updateInitialValues}= False, {\it storeSolver}= True, {\it showHints}= False, {\it showCausingItems}= True, {\it autoAssemble}= True)
+({\it simulationSettings}= None, {\it updateInitialValues}= False, {\it storeSolver}= True, {\it showHints}= False, {\it showCausingItems}= True, {\it autoAssemble}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -188,7 +189,7 @@
 \item[]{\it autoAssemble}: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 \end{itemize}
 \item[--]
-{\bf output}: bool; returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
+{\bf output}: (type: bool) returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   import exudyn as exu
@@ -233,8 +234,8 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L224}{SolveDynamic}{}}}\label{sec:mainsystemextensions:SolveDynamic}
-({\it simulationSettings}= exudyn.SimulationSettings(), {\it solverType}= exudyn.DynamicSolverType.GeneralizedAlpha, {\it updateInitialValues}= False, {\it storeSolver}= True, {\it showHints}= False, {\it showCausingItems}= True, {\it autoAssemble}= True)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L225}{SolveDynamic}{}}}\label{sec:mainsystemextensions:SolveDynamic}
+({\it simulationSettings}= None, {\it solverType}= exudyn.DynamicSolverType.GeneralizedAlpha, {\it updateInitialValues}= False, {\it storeSolver}= True, {\it showHints}= False, {\it showCausingItems}= True, {\it autoAssemble}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -258,7 +259,7 @@
 \item[]{\it autoAssemble}: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 \end{itemize}
 \item[--]
-{\bf output}: bool; returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
+{\bf output}: (type: bool) returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
 \item[--]
 {\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   import exudyn as exu
@@ -304,8 +305,8 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L377}{ComputeLinearizedSystem}{}}}\label{sec:mainsystemextensions:ComputeLinearizedSystem}
-({\it simulationSettings}= exudyn.SimulationSettings(), {\it projectIntoConstraintNullspace}= False, {\it singularValuesTolerance}= 1e-12, {\it returnConstraintJacobian}= False, {\it returnConstraintNullspace}= False, {\it autoAssemble}= True)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L379}{ComputeLinearizedSystem}{}}}\label{sec:mainsystemextensions:ComputeLinearizedSystem}
+({\it simulationSettings}= None, {\it projectIntoConstraintNullspace}= False, {\it singularValuesTolerance}= 1e-12, {\it returnConstraintJacobian}= False, {\it returnConstraintNullspace}= False, {\it autoAssemble}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -328,7 +329,7 @@
 \item[]{\it autoAssemble}: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 \end{itemize}
 \item[--]
-{\bf output}: [ArrayLike, ArrayLike, ArrayLike]; [M, K, D]; list containing numpy mass matrix M, stiffness matrix K and damping matrix D; for constraints, see options with arguments above, return values may change to [M, K, D, C, N]
+{\bf output}: (type: [ArrayLike, ArrayLike, ArrayLike]) [M, K, D]; list containing numpy mass matrix M, stiffness matrix K and damping matrix D; for constraints, see options with arguments above, return values may change to [M, K, D, C, N]
 \item[--]
 {\bf notes}: consider paper of Agundez, Vallejo, Freire, Mikkola, "The dependent coordinates in the linearization of constrained multibody systems: Handling and elimination", https://www.sciencedirect.com/science/article/pii/S0020740324000791
 \item[--]
@@ -369,8 +370,8 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L515}{ComputeODE2Eigenvalues}{}}}\label{sec:mainsystemextensions:ComputeODE2Eigenvalues}
-({\it simulationSettings}= exudyn.SimulationSettings(), {\it useSparseSolver}= False, {\it numberOfEigenvalues}= 0, {\it constrainedCoordinates}= [], {\it convert2Frequencies}= False, {\it useAbsoluteValues}= True, {\it computeComplexEigenvalues}= False, {\it ignoreAlgebraicEquations}= False, {\it singularValuesTolerance}= 1e-12, {\it autoAssemble}= True)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L518}{ComputeODE2Eigenvalues}{}}}\label{sec:mainsystemextensions:ComputeODE2Eigenvalues}
+({\it simulationSettings}= None, {\it useSparseSolver}= False, {\it numberOfEigenvalues}= 0, {\it constrainedCoordinates}= [], {\it convert2Frequencies}= False, {\it useAbsoluteValues}= True, {\it computeComplexEigenvalues}= False, {\it ignoreAlgebraicEquations}= False, {\it singularValuesTolerance}= 1e-12, {\it autoAssemble}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -397,7 +398,7 @@
 \item[]{\it autoAssemble}: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 \end{itemize}
 \item[--]
-{\bf output}: [ArrayLike, ArrayLike]; [eigenValues, eigenVectors]; eigenValues being a numpy array of eigen values ($\omega_i^2$, being the squared eigen frequencies in ($\omega_i$ in rad/s)!), eigenVectors a numpy array containing the eigenvectors in every column
+{\bf output}: (type: [ArrayLike, ArrayLike]) [eigenValues, eigenVectors]; eigenValues being a numpy array of eigen values ($\omega_i^2$, being the squared eigen frequencies in ($\omega_i$ in rad/s)!), eigenVectors a numpy array containing the eigenvectors in every column
 \item[--]
 {\bf author}: Johannes Gerstmayr, Michael Pieber
 \item[--]
@@ -443,18 +444,18 @@
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorEigenmodes.py}{\texttt{nMassOscillatorEigenmodes.py}} (Ex), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py}{\texttt{nMassOscillatorInteractive.py}} (Ex), 
 \\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFBeamEigTest.py}{\texttt{ANCFBeamEigTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFThinPlateTests.py}{\texttt{ANCFThinPlateTests.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/bricardMechanism.py}{\texttt{bricardMechanism.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/complexEigenvaluesTest.py}{\texttt{complexEigenvaluesTest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2AEeigenvaluesTest.py}{\texttt{computeODE2AEeigenvaluesTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2EigenvaluesTest.py}{\texttt{computeODE2EigenvaluesTest.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/complexEigenvaluesTest.py}{\texttt{complexEigenvaluesTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/computeODE2AEeigenvaluesTest.py}{\texttt{computeODE2AEeigenvaluesTest.py}} (TM), 
  ...
 
 \ei
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L741}{ComputeSystemDegreeOfFreedom}{}}}\label{sec:mainsystemextensions:ComputeSystemDegreeOfFreedom}
-({\it simulationSettings}= exudyn.SimulationSettings(), {\it threshold}= 1e-12, {\it verbose}= False, {\it useSVD}= False, {\it autoAssemble}= True)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/solver.py\#L745}{ComputeSystemDegreeOfFreedom}{}}}\label{sec:mainsystemextensions:ComputeSystemDegreeOfFreedom}
+({\it simulationSettings}= None, {\it threshold}= 1e-12, {\it verbose}= False, {\it useSVD}= False, {\it autoAssemble}= True)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -476,7 +477,7 @@
 \item[]{\it autoAssemble}: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 \end{itemize}
 \item[--]
-{\bf output}: dict; returns dictionary with key words 'degreeOfFreedom', 'redundantConstraints', 'nODE2', 'nODE1', 'nAE', 'nPureAE', where: degreeOfFreedom = the system degree of freedom computed numerically, redundantConstraints=the number of redundant constraints, nODE2=number of ODE2 coordinates, nODE1=number of ODE1 coordinates, nAE=total number of constraints, nPureAE=number of constraints on algebraic variables (e.g., lambda=0) that are not coupled to ODE2 coordinates
+{\bf output}: (type: dict) returns dictionary with key words 'degreeOfFreedom', 'redundantConstraints', 'nODE2', 'nODE1', 'nAE', 'nPureAE', where: degreeOfFreedom = the system degree of freedom computed numerically, redundantConstraints=the number of redundant constraints, nODE2=number of ODE2 coordinates, nODE1=number of ODE1 coordinates, nAE=total number of constraints, nPureAE=number of constraints on algebraic variables (e.g., lambda=0) that are not coupled to ODE2 coordinates
 \item[--]
 {\bf notes}: this approach could possibly fail with special constraints! Currently only works with dense matrices, thus it will be slow for larger systems
 \item[--]
@@ -516,7 +517,7 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L306}{CreateDistanceSensorGeometry}{}}}\label{sec:mainsystemextensions:CreateDistanceSensorGeometry}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L312}{CreateDistanceSensorGeometry}{}}}\label{sec:mainsystemextensions:CreateDistanceSensorGeometry}
 ({\it meshPoints}, {\it meshTrigs}, {\it rigidBodyMarkerIndex}, {\it searchTreeCellSize}= [8,8,8])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -539,7 +540,7 @@
 \item[]{\it searchTreeCellSize}: size of search tree (X,Y,Z); use larger values in directions where more triangles are located
 \end{itemize}
 \item[--]
-{\bf output}: int; returns ngc, which is the number of GeneralContact in mbs, to be used in CreateDistanceSensor(...); keep the gContact as deletion may corrupt data
+{\bf output}: (type: int) returns ngc, which is the number of GeneralContact in mbs, to be used in CreateDistanceSensor(...); keep the gContact as deletion may corrupt data
 \item[--]
 {\bf notes}: should be used by CreateDistanceSensor(...) and AddLidar(...) for simple initialization of GeneralContact; old name: DistanceSensorSetupGeometry(...)
 \vspace{12pt}\end{itemize}
@@ -554,7 +555,7 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L339}{CreateDistanceSensor}{}}}\label{sec:mainsystemextensions:CreateDistanceSensor}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L345}{CreateDistanceSensor}{}}}\label{sec:mainsystemextensions:CreateDistanceSensor}
 ({\it generalContactIndex}, {\it positionOrMarker}, {\it dirSensor}, {\it minDistance}= -1e7, {\it maxDistance}= 1e7, {\it cylinderRadius}= 0, {\it selectedTypeIndex}= exudyn.ContactTypeIndex.IndexEndOfEnumList, {\it storeInternal}= False, {\it fileName}= '', {\it measureVelocity}= False, {\it addGraphicsObject}= False, {\it drawDisplaced}= True, {\it color}= exudyn.graphics.color.red)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -585,7 +586,7 @@
 \item[]{\it color}: optional color for 'laser beam' to be drawn
 \end{itemize}
 \item[--]
-{\bf output}: SensorIndex; creates sensor and returns according sensor number of SensorUserFunction
+{\bf output}: (type: SensorIndex) creates sensor and returns according sensor number of SensorUserFunction
 \item[--]
 {\bf notes}: use generalContactIndex = CreateDistanceSensorGeometry(...) before to create GeneralContact module containing geometry; old name: AddDistanceSensor(...)
 \vspace{12pt}\end{itemize}
@@ -600,8 +601,8 @@
 
 %
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L995}{DrawSystemGraph}{}}}\label{sec:mainsystemextensions:DrawSystemGraph}
-({\it showLoads}= True, {\it showSensors}= True, {\it useItemNames}= False, {\it useItemTypes}= False, {\it addItemTypeNames}= True, {\it multiLine}= True, {\it fontSizeFactor}= 1., {\it layoutDistanceFactor}= 3., {\it layoutIterations}= 100, {\it showLegend}= True, {\it tightLayout}= True)
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1011}{DrawSystemGraph}{}}}\label{sec:mainsystemextensions:DrawSystemGraph}
+({\it showLoads}= True, {\it showSensors}= True, {\it useItemNames}= False, {\it useItemTypes}= False, {\it addItemTypeNames}= True, {\it multiLine}= True, {\it fontSizeFactor}= 1., {\it layoutDistanceFactor}= 3., {\it layoutIterations}= 100, {\it showLegend}= True, {\it tightLayout}= True, {\it showGraph}= True, {\it addItemData}= False, {\it addAnnotations}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
@@ -621,15 +622,18 @@
 \item[]{\it useItemNames}: if True, object names are shown instead of basic object types (Node, Load, ...)
 \item[]{\it useItemTypes}: if True, object type names (MassPoint, JointRevolute, ...) are shown instead of basic object types (Node, Load, ...); Note that Node, Object, is omitted at the beginning of itemName (as compared to theDoc.pdf); item classes become clear from the legend
 \item[]{\it addItemTypeNames}: if True, type nymes (Node, Load, etc.) are added
-\item[]{\it multiLine}: if True, labels are multiline, improving readability
+\item[]{\it multiLine}: if True, labels are multiline, improving readability; ignored if showGraph = False
 \item[]{\it fontSizeFactor}: use this factor to scale fonts, allowing to fit larger graphs on the screen with values < 1
 \item[]{\it showLegend}: shows legend for different item types
 \item[]{\it layoutDistanceFactor}: this factor influences the arrangement of labels; larger distance values lead to circle-like results
 \item[]{\it layoutIterations}: more iterations lead to better arrangement of the layout, but need more time for larger systems (use 1000-10000 to get good results)
 \item[]{\it tightLayout}: if True, uses matplotlib plt.tight\_layout() which may raise warning
+\item[]{\it showGraph}: if True, graph is plotted with matplotlib
+\item[]{\it addItemData}: if True, specific data is added to the graph nodes, to be used for deeper analysis of system graphs
+\item[]{\it addAnnotations}: add data node graphs (not shown), except for graphics data, item numbers, names and types (which are already available in graph data or edges)
 \end{itemize}
 \item[--]
-{\bf output}: [Any, Any, Any]; returns [networkx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw\_networkx\_labels(...)
+{\bf output}: (type: [Any, Any, Any]) returns [networkx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw\_networkx\_labels(...)
 \vspace{12pt}\end{itemize}
 %
 

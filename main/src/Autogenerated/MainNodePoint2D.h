@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-03  15:35:20 (last modified)
+* @date         2026-02-05  22:13:55 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -46,7 +46,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainNodePoint2D
-* @brief        A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for second order differential equations.
+* @brief        A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for \ac{ODE2}.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

@@ -202,9 +202,9 @@ for i in range(nFlexBodies):
         from exudyn.interactive import AnimateModes
         mbs.Assemble()
         SC.visualizationSettings.nodes.show = False
-        SC.visualizationSettings.openGL.showFaceEdges = True
+        SC.visualizationSettings.view0.scene.showFaceEdges = True
         SC.visualizationSettings.openGL.multiSampling=4
-        #SC.visualizationSettings.window.renderWindowSize = [1600,1080]
+        #SC.visualizationSettings.view0.window.renderWindowSize = [1600,1080]
         # SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.DisplacementLocal
         # SC.visualizationSettings.contour.outputVariableComponent = 0 #component
         
@@ -506,9 +506,9 @@ simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
 SC.visualizationSettings.general.autoFitScene=False
-SC.visualizationSettings.window.renderWindowSize=[1200,1200]
-SC.visualizationSettings.openGL.shadow = 0.25
-SC.visualizationSettings.openGL.light0position = [-2,5,10,0]
+SC.visualizationSettings.view0.window.renderWindowSize=[1200,1200]
+SC.visualizationSettings.openGL.light0.shadow = 0.25
+SC.visualizationSettings.openGL.light0.position = [-2,5,10,0]
 useGraphics = True
 
 if useGraphics:

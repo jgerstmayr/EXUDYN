@@ -389,10 +389,10 @@ SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = 0.2
 
 SC.visualizationSettings.openGL.multiSampling = 4
-SC.visualizationSettings.openGL.shadow = 0.3*0
-SC.visualizationSettings.openGL.light0position = [-50,200,100,0]
+SC.visualizationSettings.openGL.light0.shadow = 0.3*0
+SC.visualizationSettings.openGL.light0.position = [-50,200,100,0]
 
-SC.visualizationSettings.window.renderWindowSize=[1920,1200]
+SC.visualizationSettings.view0.window.renderWindowSize=[1920,1200]
 #SC.visualizationSettings.general.autoFitScene = False #use loaded render state
 
 ## start renderer and dynamic simulation

@@ -442,7 +442,7 @@ The renderer is set up in a minimalistic way, just to ensure that you can check 
   \item For closing the render window, press key 'Q' or Escape or just close the window.
   \item There is no way to contruct models inside the renderer (no 'GUI').
   \item Try to avoid huge number of triangles in STL files or by creating large number of complex objects, such as spheres or cylinders.
-  \item After \texttt{visualizationSettings.window.reallyQuitTimeLimit} seconds a 'do you really want to quit' dialog opens for safety on pressing 'Q'; if no tkinter is available, you just have to press 'Q' twice. For closing the window, you need to click a second time on the close button of the window after \texttt{reallyQuitTimeLimit} seconds (usually 900 seconds).
+  \item After \texttt{visualizationSettings.general.reallyQuitTimeLimit} seconds a 'do you really want to quit' dialog opens for safety on pressing 'Q'; if no tkinter is available, you just have to press 'Q' twice. For closing the window, you need to click a second time on the close button of the window after \texttt{reallyQuitTimeLimit} seconds (usually 900 seconds).
 \ei
  
 \noindent Here are the \mybold{main features of the renderer}, using keyboard and mouse, for details see \refSection{sec:graphicsVisualization}:
@@ -527,9 +527,9 @@ The visualization settings structure can be accessed in the system container \te
 
   #change openGL parameters; current values can be obtained from SC.renderer.GetState()
   #change zoom factor:
-  SC.visualizationSettings.openGL.initialZoom = 0.2       
+  SC.visualizationSettings.openGL.advanced.initialZoom = 0.2       
   #set the center point of the scene (can be attached to moving object):
-  SC.visualizationSettings.openGL.initialCenterPoint = [0.192, -0.0039,-0.075]
+  SC.visualizationSettings.openGL.advanced.initialCenterPoint = [0.192, -0.0039,-0.075]
 
   #turn of auto-fit:
   SC.visualizationSettings.general.autoFitScene = False
@@ -538,7 +538,7 @@ The visualization settings structure can be accessed in the system container \te
   SC.visualizationSettings.general.cylinderTiling = 100
   
   #make round objects flat:
-  SC.visualizationSettings.openGL.shadeModelSmooth = False
+  SC.visualizationSettings.openGL.advanced.shadeModelSmooth = False
 
   #turn on coloured plot, using y-component of displacements:
   SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
@@ -661,10 +661,10 @@ The basic things to know are:
   ...
   #after computation, switch to raytracing
   SC.visualizationSettings.openGL.multiSampling = 1
-  #SC.visualizationSettings.openGL.imageSizeFactor = 4 #reduce resolution for first tests!
-  SC.visualizationSettings.openGL.enableLight1 = False
+  SC.visualizationSettings.openGL.imageSizeFactor = 3 #reduce resolution for first tests!
+  SC.visualizationSettings.openGL.light1.enable = False
   SC.visualizationSettings.raytracer.numberOfThreads = 16 #adjust to your n-threads
-  SC.visualizationSettings.raytracer.enable = True
+  SC.visualizationSettings.view0.camera.useRaytracer = True
   
   mbs.SolutionViewer()
 \end{lstlisting}
@@ -675,7 +675,26 @@ The basic things to know are:
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \mysubsubsectionlabel{Storing the model view}{sec:overview:basics:storingmodelview}
-There is a simple way to store the current view (zoom, centerpoint, orientation, etc.) by using \texttt{SC.renderer.GetState()} and \texttt{SC.renderer.SetState()},
+The \mybold{simplest way to store the model view} is to \mybold{press CTRL-F3} when the renderer is running, to get the code for setting the model view printed to the console, e.g., 
+\bi
+\item[] \texttt{Set current view: SC.renderer.SetModelView(zoom=8.8,rotationVector=}\\
+        \texttt{[-0.8120557,0.4727261,0.7176849],centerPoint=[1.562,-1.526,0])}
+\ei
+Then, just copy the code after \texttt{SC.renderer.Start}, see the following code snippet:
+\pythonstyle\begin{lstlisting}
+  import exudyn as exu
+  SC=exu.SystemContainer()
+  SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
+  SC.renderer.Start()
+  SC.renderer.SetModelView(zoom=8.8,rotationVector=[-0.8120557,0.4727261,0.7176849],centerPoint=[1.562,-1.526,0])
+  #+++++++++++++++
+  #do simulation here
+  #+++++++++++++++
+  SC.renderer.Stop()
+\end{lstlisting}
+\horizontalRuler
+
+If you are using an interactive Python, there is a automated way to store and restore the current view (zoom, centerpoint, orientation, etc.) by using \texttt{SC.renderer.GetState()} and \texttt{SC.renderer.SetState()},
 see also \refSection{sec:renderState}.
 %
 A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation\footnote{
@@ -696,7 +715,10 @@ note that \texttt{visualizationSettings.general.autoFitScene} should be set Fals
 \end{lstlisting}
 \horizontalRuler \\
 %
-Alternatively, you can obtain the current model view from the console after a simulation, e.g.,
+Whenever \texttt{SC.renderer.Start()} is called, the renderState is reset (because it is assumed that the model has been changed and the previous view is invalid). However, you always can store and restore the renderstate manually.
+Since version 1.10.98, the \texttt{ZoomAll} and \texttt{SetModelView} also work without starting the renderer (using only the raytracer). However, note that \texttt{ZoomAll} and \texttt{SetModelView} have to be called before the raytracer call RedrawAndGetImage(True) or after renderer.Start() using regular OpenGL.
+
+If you wish to include all details of your view, like to rotation, you can obtain the current model view from the console after a simulation, e.g., 
 \pythonstyle\begin{lstlisting}
   In[1] : SC.renderer.GetState()
   Out[1]: 
@@ -709,7 +731,7 @@ Alternatively, you can obtain the current model view from the console after a si
                      [-0.7198463 , -0.6427876 , 0.26200265]])}
 \end{lstlisting}
 %
-which contains the last state of the renderer.
+which contains the last state of the renderer (NOTE: here, only part of the render state is shown for simplicity!).
 Now copy the output and set this with \texttt{SC.renderer.SetState} in your Python code to have a fixed model view in every simulation (\texttt{SC.renderer.SetState} AFTER \texttt{SC.renderer.Start()}):
 \pythonstyle\begin{lstlisting}
   SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
@@ -810,10 +832,40 @@ An example for the \texttt{SolutionViewer} is integrated into the \texttt{Exampl
 %\mybold{Note}: The previous function \texttt{AnimateSolution} in \texttt{exudyn.utilities} allows to directly visualize the stored solution for according stored time frames without \texttt{tkinter} (useful for MacOS).
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-\mysubsubsectionlabel{Generating animations}{sec:overview:basics:animations}
+\mysubsubsectionlabel{Storing images and generating animations}{sec:overview:basics:animations}
 %
 In many dynamics simulations, it is very helpful to create animations in order to better understand the motion of bodies. Specifically, the animation can be used to visualize the model much slower or faster than the model is computed.
 
+Images can be stored conveniently either in the way shown below for series of images, or using the SolutionViewer, \refSection{sec:overview:basics:solutionviewer}.
+For single images, you can use 
+\bi
+  \item \texttt{SC.renderer.RedrawAndGetImage()}
+\ei
+to obtain single images at dedicated time instants.
+If the renderer is active, you directly get a snapshot of the current view. 
+
+\mysubsubsubsection{Software rendering}
+Setting the flag \texttt{useRaytracer=True} in \texttt{RedrawAndGetImage}, the software raytracer will be used -- see \refSection{sec:overview:basics:raytracing} for more details.
+If the renderer has not yet been started, you ONLY can use the raytracer for image retrieval, however, you should use \texttt{renderer.ZoomAll} and \texttt{renderer.SetModelView} to adjust the view previously.
+However, the pure raytracer capability allows to retrieve images without opening the render window, which may be annoying in automated image retrieval or on HPC environments where openGL may not be available.
+
+Retrieved images can be conveniently used with \texttt{matplotlib} for further manipulation or storing, also see examples:
+%
+\pythonstyle\begin{lstlisting}
+  import matplotlib.pyplot as plt
+
+  #zoom all or set model view first!
+  #...
+
+  image=SC.renderer.RedrawAndGetImage()
+  plt.imsave("testImage.jpg", image)
+  plt.imshow(image)
+  plt.axis('off')
+  plt.show()
+\end{lstlisting}
+
+
+\mysubsubsubsection{Generating Animations}
 Animations are created based on a series of images (frames, snapshots) taken during simulation. It is important, that the current view is used to record these images -- this means that the view should not be changed during the recording of images.
 The easiest way to create animations, is using the SolutionViewer with its integrated features, see \refSection{sec:overview:basics:solutionviewer}.
 
@@ -986,7 +1038,7 @@ Functionality may be extended but also removed in future
 For some models, it may be advantageous to track the translation and/or rotation of certain bodies, e.g., for cars, (wheeled) robots or bicycles. 
 Since \codeName 1.4.18 you can attach view to a marker, using the visualization setting
 \pythonstyle\begin{lstlisting}
-  SC.visualizationSettings.interactive.trackMarker = nMarker
+  SC.visualizationSettings.view0.camera.trackMarker = nMarker
 \end{lstlisting}
 in which \texttt{nMarker} represents the desired marker number to follow.
 See also related options in \texttt{SC.visualizationSettings.interactive} in \refSection{sec:VSettingsInteractive}.

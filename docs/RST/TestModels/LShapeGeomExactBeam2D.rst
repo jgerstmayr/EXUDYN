@@ -101,7 +101,7 @@ You can view and download this file on Github: `LShapeGeomExactBeam2D.py <https:
                                                     physicsBendingStiffness=EI,
                                                     physicsAxialStiffness=EA,
                                                     physicsShearStiffness=GA,
-                                                    includeReferenceRotations=False, #to connect beams at 90Â° at same node
+                                                    includeReferenceRotations=False, #to connect beams at 90° at same node
                                                     visualization=VObjectBeamGeometricallyExact2D(drawHeight = h) ))
        
    

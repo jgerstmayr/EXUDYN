@@ -26,7 +26,7 @@ py::object MainNode::GetOutputVariable(OutputVariableType variableType, Configur
 {
 	Vector value;
 	//check if type is valid:
-	if ((Index)GetCNode()->GetOutputVariableTypes() & (Index)variableType)
+	if ((Index64)GetCNode()->GetOutputVariableTypes() & (Index64)variableType)
 	{
 		GetCNode()->GetOutputVariable(variableType, configuration, value);
 
@@ -65,7 +65,7 @@ bool CMarker::GetOutputVariable(const CSystemData& cSystemData, OutputVariableTy
 	Vector3D value3D;
 
 	bool isSuccess = true;
-	if (EXUstd::IsOfType((Index)OutputVariableType::Coordinates + (Index)OutputVariableType::Coordinates_t, (Index)variableType))
+	if (EXUstd::IsOfType((Index64)OutputVariableType::Coordinates + (Index64)OutputVariableType::Coordinates_t, (Index64)variableType))
 	{
 		if (configuration != ConfigurationType::Current || 
             (((Index)GetType() & (Index)(Marker::Coordinates + Marker::Coordinate)) == 0)) //added 2023-05-01: otherwise, returns any data stored in markerData
@@ -173,26 +173,26 @@ bool CMarker::GetOutputVariable(const CSystemData& cSystemData, OutputVariableTy
 
 OutputVariableType CMarker::GetOutputVariableTypes() const
 {
-	Index ovt = 0;
+	Index64 ovt = 0;
 	if (EXUstd::IsOfType(GetType(), (Marker::Type)(Marker::Body + Marker::Object + Marker::Coordinate + Marker::Position + Marker::Orientation)) )
 	{
 		//a MarkerBodiesRelativeRotationCoordinate or MarkerBodiesRelativeTranslationCoordinate
-		ovt = (Index)OutputVariableType::Coordinates + (Index)OutputVariableType::Coordinates_t;
+		ovt = (Index64)OutputVariableType::Coordinates + (Index64)OutputVariableType::Coordinates_t;
 		return (OutputVariableType)ovt;
 	}
 
 	if (EXUstd::IsOfType(GetType(), Marker::Position))
 	{
-		ovt += (Index)OutputVariableType::Displacement + (Index)OutputVariableType::Position + (Index)OutputVariableType::Velocity;
+		ovt += (Index64)OutputVariableType::Displacement + (Index64)OutputVariableType::Position + (Index64)OutputVariableType::Velocity;
 	}
 	if (EXUstd::IsOfType(GetType(), Marker::Orientation))
 	{
-		ovt += (Index)OutputVariableType::AngularVelocity + (Index)OutputVariableType::AngularVelocityLocal + 
-			(Index)OutputVariableType::RotationMatrix + (Index)OutputVariableType::Rotation;
+		ovt += (Index64)OutputVariableType::AngularVelocity + (Index64)OutputVariableType::AngularVelocityLocal +
+			(Index64)OutputVariableType::RotationMatrix + (Index64)OutputVariableType::Rotation;
 	}
 	if (EXUstd::IsOfType(GetType(), Marker::Coordinate) || EXUstd::IsOfType(GetType(), Marker::Coordinates))
 	{
-		ovt += (Index)OutputVariableType::Coordinates + (Index)OutputVariableType::Coordinates_t; //via MarkerData
+		ovt += (Index64)OutputVariableType::Coordinates + (Index64)OutputVariableType::Coordinates_t; //via MarkerData
 	}
 
 	return (OutputVariableType)ovt;

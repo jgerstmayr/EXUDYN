@@ -275,7 +275,7 @@ You can view and download this file on Github: `ANCFgeneralContactCircle.py <htt
    simulationSettings.timeIntegration.verboseMode = 1 #otherwise, load steps are shown ...
    simulationSettings.timeIntegration.newton.useModifiedNewton = True
    
-   SC.visualizationSettings.general.drawWorldBasis=True
+   SC.visualizationSettings.view0.scene.drawWorldBasis=True
    SC.visualizationSettings.nodes.show = True
    SC.visualizationSettings.nodes.defaultSize = h*20
    SC.visualizationSettings.loads.show = False

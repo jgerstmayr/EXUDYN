@@ -139,7 +139,7 @@ simulationSettings.solutionSettings.solutionWritePeriod = 0.01 #store every 10 m
 # simulationSettings.timeIntegration.simulateInRealtime = True
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-SC.visualizationSettings.window.renderWindowSize=[1600,1200]
+SC.visualizationSettings.view0.window.renderWindowSize=[1600,1200]
 SC.visualizationSettings.openGL.multiSampling = 4
 
 SC.visualizationSettings.nodes.showBasis=True

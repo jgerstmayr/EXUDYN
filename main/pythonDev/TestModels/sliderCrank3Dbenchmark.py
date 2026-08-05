@@ -181,10 +181,12 @@ mbs.CreateGenericJoint(bodyNumbers=[b0, b1],
                        useGlobalFrame=False,
                        axesRadius=0.005, axesLength=0.02)
 
-mbs.CreateGenericJoint(bodyNumbers=[b2, b1],
-                       position=[0,0,0],
-                       constrainedAxes=[1,1,1,0,0,1],
-                       useGlobalFrame=False,
+# the case of two constrained axes, without joint rotations, constrains x-axis of first body (conrod) 
+#    to be perpendicular to y-axis of second body (slider), both defined in initial configuration
+mbs.CreateGenericJoint(bodyNumbers=[b1, b2],
+                       position=pC, #global reference position of joint
+                       constrainedAxes=[1,1,1,0,0,1], #constraints
+                       useGlobalFrame=True, #frame for definition of position and initial axes
                        axesRadius=0.005, axesLength=0.02)
 
 markerGroundA = mbs.AddMarker(MarkerBodyRigid(name='markerGroundA', bodyNumber=oGround, localPosition=pA))
@@ -338,7 +340,7 @@ if useGraphics:
     data1 = mbs.GetSensorStoredData(sCrankAngle)
     ax1.plot(data1[:,0], data1[:,1], 'b-', label='crank angle')  
     if True: #only if available ...
-        directory = '../../EXUDYN_git/docs/verification/'
+        directory = '../../../docs/verification/'
         data1 = np.loadtxt(directory+'Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masarati.txt', comments='#', delimiter=',')
         ax1.plot(data1[:,0], data1[:,2], 'r:', label='Ref Masarati: crank angle')  
         data1 = np.loadtxt(directory+'Slidercrank3DiftommBenchmark/Spatial_rigid_slider-crank_mechanism_Masoudi.txt', comments='#', delimiter='\t')

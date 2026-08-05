@@ -303,8 +303,8 @@ You can view and download this file on Github: `openAIgymNLinkAdvanced.py <https
            
            self.simulationSettings.timeIntegration.newton.useModifiedNewton = True
            
-           self.SC.visualizationSettings.general.drawWorldBasis=True
-           self.SC.visualizationSettings.general.drawCoordinateSystem = False
+           self.SC.visualizationSettings.view0.scene.drawWorldBasis=True
+           self.SC.visualizationSettings.view0.scene.drawCoordinateSystem = False
            self.SC.visualizationSettings.general.graphicsUpdateInterval = 0.01
            self.SC.visualizationSettings.openGL.multiSampling=4
            self.SC.visualizationSettings.bodies.kinematicTree.showCOMframes = False
@@ -550,7 +550,7 @@ You can view and download this file on Github: `openAIgymNLinkAdvanced.py <https
        else:
            verbose = 0 #turn on without tensorboard
        
-       # here the model is loaded (either for vectorized or scalar environmentÂ´using SAC or A2C).     
+       # here the model is loaded (either for vectorized or scalar environment´using SAC or A2C).     
        def getModel(flagContinuous, myEnv, modelType='SAC', learning_starts = 100,
                        learning_rate=8e-4, batch_size=128, use_sde = True, tau = 0.005, gamma = 0.99): 
    
@@ -704,9 +704,9 @@ You can view and download this file on Github: `openAIgymNLinkAdvanced.py <https
            #visualize (and make animations) in exudyn:
            from exudyn.interactive import SolutionViewer
            env.SC.visualizationSettings.general.autoFitScene = False
-           env.SC.visualizationSettings.window.renderWindowSize = [1600,1200]
-           env.SC.visualizationSettings.openGL.shadow = 0.25
-           env.SC.visualizationSettings.openGL.light0position = [3,8,4,0]
+           env.SC.visualizationSettings.view0.window.renderWindowSize = [1600,1200]
+           env.SC.visualizationSettings.openGL.light0.shadow = 0.25
+           env.SC.visualizationSettings.openGL.light0.position = [3,8,4,0]
            
            solution = LoadSolutionFile(solutionFile)
            

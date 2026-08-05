@@ -265,14 +265,14 @@ You can view and download this file on Github: `serialRobotURDF.py <https://gith
    
    simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
    
-   SC.visualizationSettings.general.drawWorldBasis = True
+   SC.visualizationSettings.view0.scene.drawWorldBasis = True
    SC.visualizationSettings.general.autoFitScene=False
-   SC.visualizationSettings.window.renderWindowSize=[1920,1200]
-   SC.visualizationSettings.openGL.perspective=1
-   # SC.visualizationSettings.openGL.shadow=0.25
-   SC.visualizationSettings.openGL.light0ambient = 0.5
-   SC.visualizationSettings.openGL.light0diffuse = 0.5
-   SC.visualizationSettings.openGL.light0position = [2,-4,8,0]
+   SC.visualizationSettings.view0.window.renderWindowSize=[1920,1200]
+   SC.visualizationSettings.view0.camera.perspective=1
+   # SC.visualizationSettings.openGL.light0.shadow=0.25
+   SC.visualizationSettings.openGL.lightModelAmbient = [0.5,0.5,0.5]
+   SC.visualizationSettings.openGL.light0.diffuse = 0.5
+   SC.visualizationSettings.openGL.light0.position = [2,-4,8,0]
    
    useGraphics = True
    

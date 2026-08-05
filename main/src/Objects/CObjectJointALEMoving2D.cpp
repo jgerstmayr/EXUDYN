@@ -192,21 +192,6 @@ void CObjectJointALEMoving2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, 
 	}
 }
 
-//JacobianType::Type CObjectJointALEMoving2D::GetAvailableJacobians() const ==> always compute jacobian and jacobian_AE independently of activeConnector
-
-////! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-//OutputVariableType CObjectJointALEMoving2D::GetOutputVariableTypes() const
-//{
-//	return (OutputVariableType)(
-//		(Index)OutputVariableType::Position +
-//		(Index)OutputVariableType::Velocity +
-//		(Index)OutputVariableType::Coordinates +
-//		(Index)OutputVariableType::Coordinates_t +
-//		(Index)OutputVariableType::SlidingCoordinate +
-//		(Index)OutputVariableType::Force);
-//	//return (OutputVariableType)((Index)OutputVariableType::Displacement); //Displacement represents drift in index2 case
-//}
-
 //! provide according output variable in "value"
 void CObjectJointALEMoving2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {

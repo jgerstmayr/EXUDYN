@@ -121,7 +121,7 @@ public:
 	//! stop render engine
 	void Stop();
 	//! check if render engine is activated
-	bool IsActive();
+	bool IsActive() const;
 	//! attach render engine to SystemContainer (automatically done for current (=newest) SystemContainer)
 	bool Attach();
 	//! detach render engine from SystemContainer
@@ -134,10 +134,39 @@ public:
 	bool DoIdleTasks(Real waitSeconds = -1., bool printPauseMessage = true);
 
 	//! send zoom all request for next scene redraw:
-	void ZoomAll();
+	void ZoomAll(bool computeMaxScene = true, Index viewID = VisualizationSystemContainer::mainViewID);
+
+	//! set model view with zoom for window height, (rotationVector & centerPoint) for model view
+	void SetModelView(float zoom, const std::vector<Real>& rotationVector, const std::vector<Real>& centerPoint,
+		Index viewID = VisualizationSystemContainer::mainViewID);
+
+	//! add subview which is either only activated (for raytracing), or activated and visible
+	void EnableView(Index viewID = VisualizationSystemContainer::mainViewID, bool visible = true);
+
+	//! remove/close subview
+	void DisableView(Index viewID = VisualizationSystemContainer::mainViewID);
 
 	//! redraw current view and save image
-	void RedrawAndSaveImage();
+	void RedrawAndSaveImage(Index viewID);
+
+	//! redraw current view and get image
+	py::array_t<uint8_t> RedrawAndGetImage(bool useRaytracer = false, Index viewID = VisualizationSystemContainer::mainViewID);
+
+	//! get render state dictionary
+	py::dict GetState(Index viewID = VisualizationSystemContainer::mainViewID) const;
+
+	//! set render state dictionary
+	void SetState(py::dict renderState, bool waitForRendererFullStartup = false,
+		Index viewID = VisualizationSystemContainer::mainViewID);
+
+	//! get OpenGL coordinates as list, faster than using render state
+	py::list GetMouseCoordinates(bool useOpenGLcoordinates = false, Index viewID = VisualizationSystemContainer::mainViewID) const;
+
+	//! get infor about item selection and reset selection if flag is set true
+	py::list GetItemSelection(bool resetSelection = true, Index viewID = VisualizationSystemContainer::mainViewID);
+
+	//! renderer functionality, to allow user to reset the RenderState using visulizationSettings
+	void ResetState();
 
 	//! send redraw signal for renderer (e.g. if no simulaiton runs, but graphicsData has changed)
 	void SendRedrawSignal();
@@ -145,19 +174,20 @@ public:
 	//! retrieve number of redraws, can be used to see whether renderer is fully started and first image drawn (zoom all)
 	Index GetRedrawCount() const;
 
-	//! get render state dictionary
-	py::dict GetState() const;
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-	//! set render state dictionary
-	void SetState(py::dict renderState, bool waitForRendererFullStartup = false);
+	//! check if renderer is active; if not, write error message
+	void RendererInActiveError(const char* functionName) const
+	{
+		if (!IsActive())
+		{
+			PyError(STDstring("Renderer function '") + functionName + "' has been called, but renderer was not active (call renderer.Start() first!)");
+		}
+	}
 
-	//! get OpenGL coordinates as list, faster than using render state
-	py::list GetMouseCoordinates(bool useOpenGLcoordinates = false) const;
-
-	//! get infor about item selection and reset selection if flag is set true
-	py::list GetItemSelection(bool resetSelection = true);
-
-
+	//! check if renderer is active; if not, write error message
+	//! implementation after definition of MainSystemContainer
+	void ViewDisabledError(Index viewID, const char* functionName) const;
 };
 
 //! This is the extension of SystemContainer, which contains all objects needed for management and in the Python world.
@@ -262,8 +292,16 @@ public:
 
 	//! return reference to a MainSystem
 	MainSystem& GetMainSystem(Index systemNumber);
-
-
 };
+
+inline void MainRenderer::ViewDisabledError(Index viewID, const char* functionName) const
+{
+	VisualizationSystemContainer& VSC = mainSystemContainer->GetVisualizationSystemContainer();
+	if (!VSC.GetRenderViewData(viewID).renderState.viewEnabled)
+	{
+		PyError(STDstring("Renderer function '") + functionName + "' has been called for view " + EXUstd::ToString(viewID) + ", view is not enabled (call renderer.EnableView(...) first)");
+	}
+}
+
 
 #endif

@@ -5,7 +5,7 @@
 NodeRigidBodyRxyz
 =================
 
-A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beams; all coordinates lead to second order differential equations; NOTE that this node has a singularity if the second rotation parameter reaches \ :math:`\psi_1 = (2k-1) \pi/2`\ , with \ :math:`k \in \Ncal`\  or \ :math:`-k \in \Ncal`\ .
+A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beams. All coordinates lead to second order differential equations; NOTE: this node has a singularity if the second rotation parameter reaches \ :math:`\psi_1 = (2k-1) \pi/2`\ , with \ :math:`k \in \Ncal`\  or \ :math:`-k \in \Ncal`\ .
 
 \ **Additional information for NodeRigidBodyRxyz**\ :
 

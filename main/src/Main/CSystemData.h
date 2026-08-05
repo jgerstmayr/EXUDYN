@@ -109,7 +109,7 @@ public: //
 
 	void Reset()
 	{
-		cData = CData();
+		cData = CData(); 
 		//mainSystemBacklink = nullptr; //should not be reset, as the back link is still needed!!!
 
 		for (auto item : cLoads) { delete item; }

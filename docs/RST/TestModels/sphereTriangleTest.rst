@@ -128,10 +128,10 @@ You can view and download this file on Github: `sphereTriangleTest.py <https://g
    simulationSettings.timeIntegration.verboseMode = 1
    
    SC.visualizationSettings.openGL.multiSampling = 1
-   SC.visualizationSettings.openGL.shadow = 0.2
-   SC.visualizationSettings.openGL.depthSorting = True
+   SC.visualizationSettings.openGL.light0.shadow = 0.2
+   SC.visualizationSettings.openGL.advanced.depthSorting = True
    
-   SC.visualizationSettings.window.renderWindowSize=[1600,1200]
+   SC.visualizationSettings.view0.window.renderWindowSize=[1600,1200]
    SC.visualizationSettings.nodes.showBasis = True
    SC.visualizationSettings.nodes.basisSize = radius*1.5
    

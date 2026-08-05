@@ -166,6 +166,7 @@ def PlotSensorDefaults():
 #  xLabel: string for text at x-axis
 #  yLabel: string for text at y-axis (default: None==> label is automatically computed from sensor value types)
 #  labels: string (for one sensor) or list of strings (according to number of sensors resp. components) representing the labels used in legend; if labels=[], automatically generated legend is used
+#  legendArgs: if string or tuple of floats, they are used for the loc arg of matplotlib legend; if dict, the replace all args of legend
 #  rangeX: default rangeX=[]: computes range automatically; otherwise use rangeX to set range (limits) for x-axis provided as sorted list of two floats, e.g., rangeX=[0,4]
 #  rangeY: default rangeY=[]: computes range automatically; otherwise use rangeY to set range (limits) for y-axis provided as sorted list of two floats, e.g., rangeY=[-1,1]
 #  figureName: optional name for figure, if newFigure=True
@@ -195,7 +196,7 @@ def PlotSensorDefaults():
 #        logScaleY: use log scale for y-axis
 #        fileCommentChar: if exists, defines the comment character in files (\#, %, ...)
 #        fileDelimiterChar: if exists, defines the character indicating the columns for data (',', ' ', ';', ...)
-#**output: [Any, Any, Any, Any]; plots the sensor data; returns [plt, fig, ax, line] in which plt is matplotlib.pyplot, fig is the figure (or None), ax is the axis (or None) and line is the return value of plt.plot (or None) which could be changed hereafter
+#**output::[Any, Any, Any, Any]: plots the sensor data; returns [plt, fig, ax, line] in which plt is matplotlib.pyplot, fig is the figure (or None), ax is the axis (or None) and line is the return value of plt.plot (or None) which could be changed hereafter
 #**notes: adjust default values by modifying the variables exudyn.plot.plotSensorDefault..., e.g., exudyn.plot.plotSensorDefaultFontSize
 #**belongsTo: MainSystem
 #**example: 
@@ -230,7 +231,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
                colors=[], lineStyles=[], lineWidths=[], markerStyles=[], markerSizes=[], markerDensity=0.08,
                rangeX=[], rangeY=[], majorTicksX=10, majorTicksY=10,
                offsets=[], factors=[], subPlot=[], sizeInches=[6.4,4.8],
-               fileName='', useXYZcomponents=True, **kwargs):
+               fileName='', useXYZcomponents=True, legendArgs=None, **kwargs):
     #could also be imported from exudyn.utilities import PlotLineCode
     #CC = ['k-','g-','b-','r-','c-','m-','y-','k:','g:','b:','r:','c:','m:','y:','k--','g--','b--','r--','c--','m--','y--','k-.','g-.','b-.','r-.','c-.','m-.','y-.']
     try:
@@ -652,8 +653,13 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
         if fig!=None:
             handle = fig #better to use fig; plt.tight_layout() gives warning
 
-        
-        handle.legend() #show labels as legend
+        if legendArgs is None:
+            handle.legend() #show labels as legend
+        elif isinstance(legendArgs,dict):
+            handle.legend(**legendArgs) #replaces all args
+        else:
+            handle.legend(loc=legendArgs) #only loc
+
         handle.tight_layout()
         if matplotlib.get_backend().lower() != 'agg': #this is used to avoid showing the figures, if they are just saved
             handle.show() 

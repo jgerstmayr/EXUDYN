@@ -162,10 +162,10 @@ simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
 #simulationSettings.timeIntegration.simulateInRealtime = True
 
-SC.visualizationSettings.general.drawWorldBasis = True
-SC.visualizationSettings.openGL.shadow = 0.25
+SC.visualizationSettings.view0.scene.drawWorldBasis = True
+SC.visualizationSettings.openGL.light0.shadow = 0.25
 SC.visualizationSettings.openGL.multiSampling = 4
-SC.visualizationSettings.window.renderWindowSize=[1600,1200]
+SC.visualizationSettings.view0.window.renderWindowSize=[1600,1200]
 
 if useGraphics:
     SC.renderer.Start()

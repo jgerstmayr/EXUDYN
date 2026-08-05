@@ -16,7 +16,7 @@ This section includes hierarchical structures for visualization settings, e.g., 
 VSettingsGeneral
 ----------------
 
-General settings for visualization.
+General settings for visualization that influence all windows, default values, autofit, multithreading, etc.
 
 VSettingsGeneral has the following items:
 
@@ -32,43 +32,49 @@ VSettingsGeneral has the following items:
 * | **backgroundColorBottom** [type = Float4, default = [0.8,0.8,1.0,1.0], size = 4]:
   | \ ``SC.visualizationSettings.general.backgroundColorBottom``\ 
   | red, green, blue and alpha values for bottom background color in case that useGradientBackground = True
+* | **boundingBoxZoomAllFactor** [type = PFloat, default = 1.2]:
+  | \ ``SC.visualizationSettings.general.boundingBoxZoomAllFactor``\ 
+  | factor on boundingBox for zoom all (without minimum offset)
+* | **boundingBoxZoomAllOffset** [type = UFloat, default = 0.01]:
+  | \ ``SC.visualizationSettings.general.boundingBoxZoomAllOffset``\ 
+  | minimum offset to bounding box of scene in window - width or height, whatever is smaller; adjust for very small or large scenes; may be negative
 * | **circleTiling** [type = PInt, default = 16]:
   | \ ``SC.visualizationSettings.general.circleTiling``\ 
   | global number of segments for circles; if smaller than 2, 2 segments are used (flat)
-* | **coordinateSystemSize** [type = float, default = 5.]:
+* | **coordinateSystemSize** [type = PFloat, default = 5.]:
   | \ ``SC.visualizationSettings.general.coordinateSystemSize``\ 
   | size of coordinate system relative to font size
 * | **cylinderTiling** [type = PInt, default = 16]:
   | \ ``SC.visualizationSettings.general.cylinderTiling``\ 
   | global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)
-* | **drawCoordinateSystem** [type = bool, default = True]:
-  | \ ``SC.visualizationSettings.general.drawCoordinateSystem``\ 
-  | false = no coordinate system shown
-* | **drawWorldBasis** [type = bool, default = False]:
-  | \ ``SC.visualizationSettings.general.drawWorldBasis``\ 
-  | true = draw world basis coordinate system at (0,0,0)
-* | **graphicsUpdateInterval** [type = float, default = 0.1]:
+* | **graphicsUpdateInterval** [type = UFloat, default = 0.1]:
   | \ ``SC.visualizationSettings.general.graphicsUpdateInterval``\ 
   | interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed
+* | **limitWindowToScreenSize** [type = bool, default = True]:
+  | \ ``SC.visualizationSettings.general.limitWindowToScreenSize``\ 
+  | True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize
 * | **linuxDisplayScaleFactor** [type = PFloat, default = 1.]:
   | \ ``SC.visualizationSettings.general.linuxDisplayScaleFactor``\ 
   | Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts
-* | **minSceneSize** [type = float, default = 0.1]:
+* | **minSceneSize** [type = PFloat, default = 0.1]:
   | \ ``SC.visualizationSettings.general.minSceneSize``\ 
   | minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO
-* | **pointSize** [type = float, default = 0.01]:
+* | **pointSize** [type = PFloat, default = 0.01]:
   | \ ``SC.visualizationSettings.general.pointSize``\ 
   | global point size (absolute)
+* | **reallyQuitTimeLimit** [type = UReal, default = 900]:
+  | \ ``SC.visualizationSettings.general.reallyQuitTimeLimit``\ 
+  | number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked
 * | **rendererPrecision** [type = PInt, default = 4]:
   | \ ``SC.visualizationSettings.general.rendererPrecision``\ 
   | precision of general floating point numbers shown in render window: total number of digits used  (max. 16)
+* | **rendererStartupTimeout** [type = PInt, default = 2500]:
+  | \ ``SC.visualizationSettings.general.rendererStartupTimeout``\ 
+  | OpenGL render windows startup timeout in ms (change might be necessary if CPU is very slow)
 * | **renderWindowString** [type = String, default = '']:
   | \ ``SC.visualizationSettings.general.renderWindowString``\ 
   | string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to solutionInformation in SimulationSettings.solutionSettings)
-* | **showComputationInfo** [type = bool, default = True]:
-  | \ ``SC.visualizationSettings.general.showComputationInfo``\ 
-  | true = show (hide) all computation information including Exudyn and version
-* | **showHelpOnStartup** [type = PInt, default = 5]:
+* | **showHelpOnStartup** [type = UInt, default = 5]:
   | \ ``SC.visualizationSettings.general.showHelpOnStartup``\ 
   | seconds to show help message on startup (0=deactivate)
 * | **showSolutionInformation** [type = bool, default = True]:
@@ -95,9 +101,6 @@ VSettingsGeneral has the following items:
 * | **textOffsetFactor** [type = UFloat, default = 0.005]:
   | \ ``SC.visualizationSettings.general.textOffsetFactor``\ 
   | This is an additional out of plane offset for item texts (node number, etc.); the factor is relative to the maximum scene size and is only used, if textAlwaysInFront=False; this factor allows to draw text, e.g., in front of nodes
-* | **textSize** [type = float, default = 12.]:
-  | \ ``SC.visualizationSettings.general.textSize``\ 
-  | general text size (font size) in pixels if not overwritten; if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)
 * | **threadSafeGraphicsUpdate** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.general.threadSafeGraphicsUpdate``\ 
   | true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations; may be improved in future by adding a safe visualizationUpdate state
@@ -109,13 +112,55 @@ VSettingsGeneral has the following items:
   | true = use vertical gradient for background; 
 * | **useMultiThreadedRendering** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.general.useMultiThreadedRendering``\ 
-  | true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); set this parameter before call to SC.renderer.Start(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW
+  | true = rendering is done in separate thread; false = no separate thread, which may be more stable but has lagging interaction for large models (do not interact with models during simulation); you MUST set this parameter BEFORE call to SC.renderer.Start(); MAC OS: uses always false, because MAC OS does not support multi threaded GLFW
 * | **useWindowsDisplayScaleFactor** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.general.useWindowsDisplayScaleFactor``\ 
   | the Windows display scaling (monitor scaling; content scaling) factor is used for increased visibility of texts on high resolution displays; based on GLFW glfwGetWindowContentScale; deactivated on linux compilation as it leads to crashes (adjust textSize manually!)
-* | **worldBasisSize** [type = float, default = 1.0]:
-  | \ ``SC.visualizationSettings.general.worldBasisSize``\ 
-  | size of world basis coordinate system
+* | **zoomAllUseBoundingBox** [type = bool, default = True]:
+  | \ ``SC.visualizationSettings.general.zoomAllUseBoundingBox``\ 
+  | if true, use exact scene bounding box (but not including texts) for zoom; does not include perspective effects!
+
+
+
+.. _sec-vsettingscontouradvanced:
+
+VSettingsContourAdvanced
+------------------------
+
+Advanced settings for contour plots.
+
+VSettingsContourAdvanced has the following items:
+
+* | **colorBarPrecision** [type = PInt, default = 4]:
+  | \ ``SC.visualizationSettings.contour.advanced.colorBarPrecision``\ 
+  | precision of floating point values shown in color bar; total number of digits used (max. 16)
+* | **colorBarTiling** [type = PInt, default = 12, size = 1]:
+  | \ ``SC.visualizationSettings.contour.advanced.colorBarTiling``\ 
+  | number of tiles (segements) shown in the colorbar for the contour plot
+* | **contourColor0** [type = Float4, default = [0.1,0.1,0.9,1.], size = 4]:
+  | \ ``SC.visualizationSettings.contour.advanced.contourColor0``\ 
+  | RGBA color for relative value 0 used for contour plot; alpha is ignored
+* | **contourColor1** [type = Float4, default = [0.1,0.9,0.9,1.], size = 4]:
+  | \ ``SC.visualizationSettings.contour.advanced.contourColor1``\ 
+  | RGBA color for relative value 0.25 used for contour plot; alpha is ignored
+* | **contourColor2** [type = Float4, default = [0.1,0.9,0.1,1.], size = 4]:
+  | \ ``SC.visualizationSettings.contour.advanced.contourColor2``\ 
+  | RGBA color for relative value 0.25 used for contour plot; alpha is ignored
+* | **contourColor3** [type = Float4, default = [0.9,0.9,0.1,1.], size = 4]:
+  | \ ``SC.visualizationSettings.contour.advanced.contourColor3``\ 
+  | RGBA color for relative value 0.25 used for contour plot; alpha is ignored
+* | **contourColor4** [type = Float4, default = [0.9,0.1,0.1,1.], size = 4]:
+  | \ ``SC.visualizationSettings.contour.advanced.contourColor4``\ 
+  | RGBA color for relative value 0.25 used for contour plot; alpha is ignored
+* | **contourColorMax** [type = Float4, default = [0.9,0.9,0.9,1.], size = 4]:
+  | \ ``SC.visualizationSettings.contour.advanced.contourColorMax``\ 
+  | RGBA color if relative value in contour plot is larger than 1 (if automaticRange=False); alpha is ignored
+* | **contourColorMin** [type = Float4, default = [0.1,0.1,0.1,1.], size = 4]:
+  | \ ``SC.visualizationSettings.contour.advanced.contourColorMin``\ 
+  | RGBA color if relative value in contour plot is smaller than 0 (if automaticRange=False); alpha is ignored
+* | **showColorBar** [type = bool, default = True]:
+  | \ ``SC.visualizationSettings.contour.advanced.showColorBar``\ 
+  | show the colour bar with minimum and maximum values for the contour plot
 
 
 
@@ -128,18 +173,15 @@ Settings for contour plots; use these options to visualize field data, such as d
 
 VSettingsContour has the following items:
 
+* | **advanced** [type = VSettingsContourAdvanced]:
+  | \ ``SC.visualizationSettings.contour.advanced``\ 
+  | advanced settings for contour
 * | **alphaTransparency** [type = float, default = 1, size = 1]:
   | \ ``SC.visualizationSettings.contour.alphaTransparency``\ 
   | default value for contour alpha transparency (RGB color computed from contour value)
 * | **automaticRange** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.contour.automaticRange``\ 
   | if true, the contour plot value range is chosen automatically to the maximum range
-* | **colorBarPrecision** [type = PInt, default = 4]:
-  | \ ``SC.visualizationSettings.contour.colorBarPrecision``\ 
-  | precision of floating point values shown in color bar; total number of digits used (max. 16)
-* | **colorBarTiling** [type = PInt, default = 12, size = 1]:
-  | \ ``SC.visualizationSettings.contour.colorBarTiling``\ 
-  | number of tiles (segements) shown in the colorbar for the contour plot
 * | **maxValue** [type = float, default = 1, size = 1]:
   | \ ``SC.visualizationSettings.contour.maxValue``\ 
   | maximum value for contour plot; set manually, if automaticRange == False
@@ -161,9 +203,6 @@ VSettingsContour has the following items:
 * | **rigidBodiesColored** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.contour.rigidBodiesColored``\ 
   | if true, the contour color is also applied to triangular faces of rigid bodies and mass points, otherwise the rigid body drawing are not influenced by contour settings; for general rigid bodies (except for ObjectGround), Position, Displacement, DisplacementLocal(=0), Velocity, VelocityLocal, AngularVelocity, and AngularVelocityLocal are available; may slow down visualization!
-* | **showColorBar** [type = bool, default = True]:
-  | \ ``SC.visualizationSettings.contour.showColorBar``\ 
-  | show the colour bar with minimum and maximum values for the contour plot
 
 
 
@@ -220,7 +259,7 @@ VSettingsBeams has the following items:
   | number of segments to discretise the beams axis
 * | **crossSectionFilled** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.bodies.beams.crossSectionFilled``\ 
-  | if implemented for element, cross section is drawn as solid (filled) instead of wire-frame; NOTE: some quantities may not be interpolated correctly over cross section in visualization
+  | if implemented for element, cross section is drawn as solid (filled) instead of wire-frame; NOTE: some quantities may not be interpolated correctly over cross section in visualization; equivalent to drawSolid of shells
 * | **crossSectionTiling** [type = PInt, default = 4]:
   | \ ``SC.visualizationSettings.bodies.beams.crossSectionTiling``\ 
   | number of quads drawn over height of beam, if drawn as flat objects; leads to higher accuracy of components drawn over beam height or with, but also to larger CPU costs for drawing
@@ -230,7 +269,7 @@ VSettingsBeams has the following items:
 * | **drawVerticalColor** [type = Float4, default = [0.2,0.2,0.2,1.], size = 4]:
   | \ ``SC.visualizationSettings.bodies.beams.drawVerticalColor``\ 
   | color for outputVariable to be drawn along cross section (vertically)
-* | **drawVerticalFactor** [type = float, default = 1.]:
+* | **drawVerticalFactor** [type = UFloat, default = 1.]:
   | \ ``SC.visualizationSettings.bodies.beams.drawVerticalFactor``\ 
   | factor for outputVariable to be drawn along cross section (vertically)
 * | **drawVerticalLines** [type = bool, default = True]:
@@ -244,7 +283,25 @@ VSettingsBeams has the following items:
   | show values at vertical lines; note that these numbers are interpolated values and may be different from values evaluated directly at this point!
 * | **reducedAxialInterploation** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.bodies.beams.reducedAxialInterploation``\ 
-  | if True, the interpolation along the beam axis may be lower than the beam element order; this may be, however, show more consistent values than a full interpolation, e.g. for strains or forces
+  | if True, the interpolation along the beam axis may be lower than the beam element order; this may, however, show more consistent values than a full interpolation, e.g. for strains or forces
+
+
+
+.. _sec-vsettingsshells:
+
+VSettingsShells
+---------------
+
+Visualization settings for plate/shell finite elements.
+
+VSettingsShells has the following items:
+
+* | **drawSolid** [type = bool, default = True]:
+  | \ ``SC.visualizationSettings.bodies.shells.drawSolid``\ 
+  | if true: to draw plates/shells as 3D objects; false: only the element surface is drawn; equivalent to crossSectionFilled in beams
+* | **thicknessFactor** [type = PFloat, default = 1.]:
+  | \ ``SC.visualizationSettings.bodies.shells.thicknessFactor``\ 
+  | a factor multiplied with the thickness of shells/plates only for visualization (e.g. to make some effects more visible)
 
 
 
@@ -287,6 +344,9 @@ VSettingsBodies has the following items:
 * | **kinematicTree** [type = VSettingsKinematicTree]:
   | \ ``SC.visualizationSettings.bodies.kinematicTree``\ 
   | visualization settings for kinematic tree
+* | **shells** [type = VSettingsShells]:
+  | \ ``SC.visualizationSettings.bodies.shells``\ 
+  | visualization settings for plates and shells
 * | **defaultColor** [type = Float4, default = [0.3,0.3,1.,1.], size = 4]:
   | \ ``SC.visualizationSettings.bodies.defaultColor``\ 
   | default RGBA color for bodies; 4th value is alpha-transparency
@@ -572,47 +632,159 @@ VSettingsContact has the following items:
 
 
 
+.. _sec-vsettingscamera:
+
+VSettingsCamera
+---------------
+
+Settings for camera like perspective, marker tracking, clipping plane, etc. Note that some options may also be found in openGL settings.
+
+VSettingsCamera has the following items:
+
+* | **cameraPosition** [type = Float3, default = [0.,0.,0.], size = 3]:
+  | \ ``SC.visualizationSettings.view0.camera.cameraPosition``\ , \ ``SC.visualizationSettings.view1.camera.cameraPosition``\ , \ ``SC.visualizationSettings.view2.camera.cameraPosition``\ , \ ``SC.visualizationSettings.view3.camera.cameraPosition``\ 
+  | if modelCentricView=True: offset to camera position in model view (and, if used, relative to tracked marker - instead of a tracked marker position, you could also just change the camera position in camera-centric views); camera rotation follows modelRotation in renderState
+* | **clippingPlaneDistance** [type = float, default = 0.]:
+  | \ ``SC.visualizationSettings.view0.camera.clippingPlaneDistance``\ , \ ``SC.visualizationSettings.view1.camera.clippingPlaneDistance``\ , \ ``SC.visualizationSettings.view2.camera.clippingPlaneDistance``\ , \ ``SC.visualizationSettings.view3.camera.clippingPlaneDistance``\ 
+  | distance of clipping plane on normal vector; see also clippingPlaneNormal and openGL.advanced.clippingPlaneColor
+* | **clippingPlaneNormal** [type = Float3, default = [0.,0.,0.], size = 3]:
+  | \ ``SC.visualizationSettings.view0.camera.clippingPlaneNormal``\ , \ ``SC.visualizationSettings.view1.camera.clippingPlaneNormal``\ , \ ``SC.visualizationSettings.view2.camera.clippingPlaneNormal``\ , \ ``SC.visualizationSettings.view3.camera.clippingPlaneNormal``\ 
+  | normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; the clipped half-space is in direction of the normal; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance and openGL.advanced.clippingPlaneColor
+* | **modelCentricView** [type = bool, default = True]:
+  | \ ``SC.visualizationSettings.view0.camera.modelCentricView``\ , \ ``SC.visualizationSettings.view1.camera.modelCentricView``\ , \ ``SC.visualizationSettings.view2.camera.modelCentricView``\ , \ ``SC.visualizationSettings.view3.camera.modelCentricView``\ 
+  | True: rotations and translations are applied to model, while camera stays far enough away from the model and always captures the whole model (everything is in front of camera plane); False: camera moves and rotates while model stays in physical space; only geometry in front of camera is visible; note that the behavior of trackMarker changes with modelCentricView and some features are not available in case of modelCentricView=False.
+* | **nearFarPlaneOffset** [type = Float3, default = [0.,0.,0.], size = 3]:
+  | \ ``SC.visualizationSettings.view0.camera.nearFarPlaneOffset``\ , \ ``SC.visualizationSettings.view1.camera.nearFarPlaneOffset``\ , \ ``SC.visualizationSettings.view2.camera.nearFarPlaneOffset``\ , \ ``SC.visualizationSettings.view3.camera.nearFarPlaneOffset``\ 
+  | the three values are [nearPlaneOffset, farPlaneOffset, flag]; if flag=0, the offsets are ignored and computed automatically, using x = 2 * maxSceneSize * zMaxSceneFactor, setting near plane to -x and far plane to +x in case of modelCentricView=True and setting near plane to 0.01 (minimal offset to eye point) and far plane to +x if modelCentricView=False; if flag=1, the near and far plane values are just overwritten; note that positive values for near plane make objects in front of the camera invisible while negative values make objects behind the camera plane visible; in case of camera-centric view, the eyepoint can be shifted backwards using cameraPosition accordingly.
+* | **perspective** [type = UFloat, default = 0.]:
+  | \ ``SC.visualizationSettings.view0.camera.perspective``\ , \ ``SC.visualizationSettings.view1.camera.perspective``\ , \ ``SC.visualizationSettings.view2.camera.perspective``\ , \ ``SC.visualizationSettings.view3.camera.perspective``\ 
+  | parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 1 (extreme: 5), where larger values are possible but should be used with care; NOTE that the relation to the common field of view (FOV) angle alpha, with alpha=90°, is given by perspective = tan(alpha/2) = 1; mouse coordinates (F3) can not be shown with perspective>0
+* | **trackMarker** [type = Int, default = -1]:
+  | \ ``SC.visualizationSettings.view0.camera.trackMarker``\ , \ ``SC.visualizationSettings.view1.camera.trackMarker``\ , \ ``SC.visualizationSettings.view2.camera.trackMarker``\ , \ ``SC.visualizationSettings.view3.camera.trackMarker``\ 
+  | if valid marker index is provided and marker provides position (and orientation), the centerpoint of the scene follows the marker (and orientation); depends on trackMarkerPosition and trackMarkerOrientation; by default, only position is tracked
+* | **trackMarkerMbsNumber** [type = Index, default = 0]:
+  | \ ``SC.visualizationSettings.view0.camera.trackMarkerMbsNumber``\ , \ ``SC.visualizationSettings.view1.camera.trackMarkerMbsNumber``\ , \ ``SC.visualizationSettings.view2.camera.trackMarkerMbsNumber``\ , \ ``SC.visualizationSettings.view3.camera.trackMarkerMbsNumber``\ 
+  | number of main system which is used to track marker; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number
+* | **trackMarkerOrientation** [type = Float3, default = [0.,0.,0.], size = 3]:
+  | \ ``SC.visualizationSettings.view0.camera.trackMarkerOrientation``\ , \ ``SC.visualizationSettings.view1.camera.trackMarkerOrientation``\ , \ ``SC.visualizationSettings.view2.camera.trackMarkerOrientation``\ , \ ``SC.visualizationSettings.view3.camera.trackMarkerOrientation``\ 
+  | choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one
+* | **trackMarkerPosition** [type = Float3, default = [1.,1.,1.], size = 3]:
+  | \ ``SC.visualizationSettings.view0.camera.trackMarkerPosition``\ , \ ``SC.visualizationSettings.view1.camera.trackMarkerPosition``\ , \ ``SC.visualizationSettings.view2.camera.trackMarkerPosition``\ , \ ``SC.visualizationSettings.view3.camera.trackMarkerPosition``\ 
+  | choose which coordinates or marker are tracked (x,y,z)
+* | **useRaytracer** [type = bool, default = False]:
+  | \ ``SC.visualizationSettings.view0.camera.useRaytracer``\ , \ ``SC.visualizationSettings.view1.camera.useRaytracer``\ , \ ``SC.visualizationSettings.view2.camera.useRaytracer``\ , \ ``SC.visualizationSettings.view3.camera.useRaytracer``\ 
+  | True: use (software) raytracer for this view; False: use standard OpenGL renderer
+
+
+
+.. _sec-vsettingsscene:
+
+VSettingsScene
+--------------
+
+Settings change scene representation (show edges, show faces, global transparency), adding world basis, etc., in particular settings that are individual to each view. Note that some scene settings that are global to all views may be found in general and in openGL settings. 
+
+VSettingsScene has the following items:
+
+* | **drawCoordinateSystem** [type = UInt, default = 2]:
+  | \ ``SC.visualizationSettings.view0.scene.drawCoordinateSystem``\ , \ ``SC.visualizationSettings.view1.scene.drawCoordinateSystem``\ , \ ``SC.visualizationSettings.view2.scene.drawCoordinateSystem``\ , \ ``SC.visualizationSettings.view3.scene.drawCoordinateSystem``\ 
+  | 0 = no coordinate system shown, 1 = draw lines with text, 2 = draw arrows, 3 = draw arrows with text
+* | **drawWorldBasis** [type = bool, default = False]:
+  | \ ``SC.visualizationSettings.view0.scene.drawWorldBasis``\ , \ ``SC.visualizationSettings.view1.scene.drawWorldBasis``\ , \ ``SC.visualizationSettings.view2.scene.drawWorldBasis``\ , \ ``SC.visualizationSettings.view3.scene.drawWorldBasis``\ 
+  | true = draw world basis coordinate system at (0,0,0)
+* | **facesTransparent** [type = bool, default = False, size = 1]:
+  | \ ``SC.visualizationSettings.view0.scene.facesTransparent``\ , \ ``SC.visualizationSettings.view1.scene.facesTransparent``\ , \ ``SC.visualizationSettings.view2.scene.facesTransparent``\ , \ ``SC.visualizationSettings.view3.scene.facesTransparent``\ 
+  | True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers
+* | **showFaceEdges** [type = bool, default = False, size = 1]:
+  | \ ``SC.visualizationSettings.view0.scene.showFaceEdges``\ , \ ``SC.visualizationSettings.view1.scene.showFaceEdges``\ , \ ``SC.visualizationSettings.view2.scene.showFaceEdges``\ , \ ``SC.visualizationSettings.view3.scene.showFaceEdges``\ 
+  | True: show edges of triangles; using the options showFaces=false and showFaceEdges=true gives are wire frame representation
+* | **showFaces** [type = bool, default = True, size = 1]:
+  | \ ``SC.visualizationSettings.view0.scene.showFaces``\ , \ ``SC.visualizationSettings.view1.scene.showFaces``\ , \ ``SC.visualizationSettings.view2.scene.showFaces``\ , \ ``SC.visualizationSettings.view3.scene.showFaces``\ 
+  | True: show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wireframe representation
+* | **showLines** [type = bool, default = True, size = 1]:
+  | \ ``SC.visualizationSettings.view0.scene.showLines``\ , \ ``SC.visualizationSettings.view1.scene.showLines``\ , \ ``SC.visualizationSettings.view2.scene.showLines``\ , \ ``SC.visualizationSettings.view3.scene.showLines``\ 
+  | True: show lines (other lines than face and mesh edges)
+* | **showMeshEdges** [type = bool, default = True, size = 1]:
+  | \ ``SC.visualizationSettings.view0.scene.showMeshEdges``\ , \ ``SC.visualizationSettings.view1.scene.showMeshEdges``\ , \ ``SC.visualizationSettings.view2.scene.showMeshEdges``\ , \ ``SC.visualizationSettings.view3.scene.showMeshEdges``\ 
+  | True: show edges of finite elements; independent of showFaceEdges
+* | **showMeshFaces** [type = bool, default = True, size = 1]:
+  | \ ``SC.visualizationSettings.view0.scene.showMeshFaces``\ , \ ``SC.visualizationSettings.view1.scene.showMeshFaces``\ , \ ``SC.visualizationSettings.view2.scene.showMeshFaces``\ , \ ``SC.visualizationSettings.view3.scene.showMeshFaces``\ 
+  | True: show faces of finite elements; independent of showFaces
+* | **worldBasisSize** [type = PFloat, default = 1.0]:
+  | \ ``SC.visualizationSettings.view0.scene.worldBasisSize``\ , \ ``SC.visualizationSettings.view1.scene.worldBasisSize``\ , \ ``SC.visualizationSettings.view2.scene.worldBasisSize``\ , \ ``SC.visualizationSettings.view3.scene.worldBasisSize``\ 
+  | size of world basis coordinate system
+
+
+
 .. _sec-vsettingswindow:
 
 VSettingsWindow
 ---------------
 
-OpenGL Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes.
+Settings for window that are individual to each view; in particular initial size, and behavior. Note that some of the settings are only used during creation of the window. 
 
 VSettingsWindow has the following items:
 
 * | **alwaysOnTop** [type = bool, default = False]:
-  | \ ``SC.visualizationSettings.window.alwaysOnTop``\ 
-  | True: OpenGL render window will be always on top of all other windows
-* | **ignoreKeys** [type = bool, default = False]:
-  | \ ``SC.visualizationSettings.window.ignoreKeys``\ 
-  | True: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'
-* | **keyPressUserFunction** [type = KeyPressUserFunction, default = 0]:
-  | \ ``SC.visualizationSettings.window.keyPressUserFunction``\ 
-  | add a Python function f(key, action, mods) here, which is called every time a key is pressed; function shall return true, if key has been processed; Example:  def f(key, action, mods): \phantom{XXX} print('key=',key); use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)
-* | **limitWindowToScreenSize** [type = bool, default = True]:
-  | \ ``SC.visualizationSettings.window.limitWindowToScreenSize``\ 
-  | True: render window size is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize
+  | \ ``SC.visualizationSettings.view0.window.alwaysOnTop``\ , \ ``SC.visualizationSettings.view1.window.alwaysOnTop``\ , \ ``SC.visualizationSettings.view2.window.alwaysOnTop``\ , \ ``SC.visualizationSettings.view3.window.alwaysOnTop``\ 
+  | True: render window of respective view will be always on top of all other windows
+* | **globalFontSize** [type = PFloat, default = 12.]:
+  | \ ``SC.visualizationSettings.view0.window.globalFontSize``\ , \ ``SC.visualizationSettings.view1.window.globalFontSize``\ , \ ``SC.visualizationSettings.view2.window.globalFontSize``\ , \ ``SC.visualizationSettings.view3.window.globalFontSize``\ 
+  | general text font size (roughly measured in pixels); if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)
+* | **lockModelView** [type = bool, default = False]:
+  | \ ``SC.visualizationSettings.view0.window.lockModelView``\ , \ ``SC.visualizationSettings.view1.window.lockModelView``\ , \ ``SC.visualizationSettings.view2.window.lockModelView``\ , \ ``SC.visualizationSettings.view3.window.lockModelView``\ 
+  | True: all movements (with mouse/keys), rotations, zoom are disabled; the view is either based on initial values (or on the current state) ==> initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value
 * | **maximize** [type = bool, default = False]:
-  | \ ``SC.visualizationSettings.window.maximize``\ 
-  | True: OpenGL render window will be maximized at startup
-* | **reallyQuitTimeLimit** [type = UReal, default = 900]:
-  | \ ``SC.visualizationSettings.window.reallyQuitTimeLimit``\ 
-  | number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked
+  | \ ``SC.visualizationSettings.view0.window.maximize``\ , \ ``SC.visualizationSettings.view1.window.maximize``\ , \ ``SC.visualizationSettings.view2.window.maximize``\ , \ ``SC.visualizationSettings.view3.window.maximize``\ 
+  | True: render window of respective view will be maximized at startup
 * | **renderWindowSize** [type = Index2, default = [1024,768], size = 2]:
-  | \ ``SC.visualizationSettings.window.renderWindowSize``\ 
-  | initial size of OpenGL render window in pixel
-* | **ResetKeyPressUserFunction()** [return type = void]:
-  | set keyPressUserFunction to zero (no function); because this cannot be assign to the variable itself
+  | \ ``SC.visualizationSettings.view0.window.renderWindowSize``\ , \ ``SC.visualizationSettings.view1.window.renderWindowSize``\ , \ ``SC.visualizationSettings.view2.window.renderWindowSize``\ , \ ``SC.visualizationSettings.view3.window.renderWindowSize``\ 
+  | initial size of render window of respective view for specific view in pixels for
+* | **showComputationInfo** [type = bool, default = True]:
+  | \ ``SC.visualizationSettings.view0.window.showComputationInfo``\ , \ ``SC.visualizationSettings.view1.window.showComputationInfo``\ , \ ``SC.visualizationSettings.view2.window.showComputationInfo``\ , \ ``SC.visualizationSettings.view3.window.showComputationInfo``\ 
+  | true = show (hide) all computation information including Exudyn and version
 * | **showMouseCoordinates** [type = bool, default = False]:
-  | \ ``SC.visualizationSettings.window.showMouseCoordinates``\ 
-  | True: show OpenGL coordinates and distance to last left mouse button pressed position; switched on/off with key 'F3'
+  | \ ``SC.visualizationSettings.view0.window.showMouseCoordinates``\ , \ ``SC.visualizationSettings.view1.window.showMouseCoordinates``\ , \ ``SC.visualizationSettings.view2.window.showMouseCoordinates``\ , \ ``SC.visualizationSettings.view3.window.showMouseCoordinates``\ 
+  | True: show OpenGL coordinates and distance to last left mouse button pressed position in renderer status message; switched on/off with key 'F3'; only works for axis-aligned ortho-projections
+* | **showRenderStateInfo** [type = bool, default = False]:
+  | \ ``SC.visualizationSettings.view0.window.showRenderStateInfo``\ , \ ``SC.visualizationSettings.view1.window.showRenderStateInfo``\ , \ ``SC.visualizationSettings.view2.window.showRenderStateInfo``\ , \ ``SC.visualizationSettings.view3.window.showRenderStateInfo``\ 
+  | True: show renderer.state infos regarding zoom, offset and rotation in renderer status message; switched on/off with 'CTRL-F3'
 * | **showWindow** [type = bool, default = True]:
-  | \ ``SC.visualizationSettings.window.showWindow``\ 
-  | True: OpenGL render window is shown on startup; False: window will be iconified at startup (e.g. if you are starting multiple computations automatically)
-* | **startupTimeout** [type = PInt, default = 2500]:
-  | \ ``SC.visualizationSettings.window.startupTimeout``\ 
-  | OpenGL render window startup timeout in ms (change might be necessary if CPU is very slow)
+  | \ ``SC.visualizationSettings.view0.window.showWindow``\ , \ ``SC.visualizationSettings.view1.window.showWindow``\ , \ ``SC.visualizationSettings.view2.window.showWindow``\ , \ ``SC.visualizationSettings.view3.window.showWindow``\ 
+  | True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically)
+
+
+
+.. _sec-vsettingsview:
+
+VSettingsView
+-------------
+
+Settings for view including camera, scene, window, and advanced options to setup a view or view window.
+
+VSettingsView has the following items:
+
+* | **camera** [type = VSettingsCamera]:
+  | \ ``SC.visualizationSettings.view0.camera``\ , \ ``SC.visualizationSettings.view1.camera``\ , \ ``SC.visualizationSettings.view2.camera``\ , \ ``SC.visualizationSettings.view3.camera``\ 
+  | settings for camera like perspective, marker tracking or clipping plane
+* | **scene** [type = VSettingsScene]:
+  | \ ``SC.visualizationSettings.view0.scene``\ , \ ``SC.visualizationSettings.view1.scene``\ , \ ``SC.visualizationSettings.view2.scene``\ , \ ``SC.visualizationSettings.view3.scene``\ 
+  | settings which change scene representation, showing edges, faces or world basis
+* | **window** [type = VSettingsWindow]:
+  | \ ``SC.visualizationSettings.view0.window``\ , \ ``SC.visualizationSettings.view1.window``\ , \ ``SC.visualizationSettings.view2.window``\ , \ ``SC.visualizationSettings.view3.window``\ 
+  | visualization settings for window that are individual to each view
+
+
+
+.. _sec-vsettingswindowdeprecated:
+
+VSettingsWindowDeprecated
+-------------------------
+
+OpenGL Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes.
+
+VSettingsWindowDeprecated has the following items:
+
 
 
 
@@ -636,7 +808,7 @@ VSettingsDialogs has the following items:
   | font scaling value for MacOS systems (on Windows, system display scaling is used)
 * | **multiThreadedDialogs** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.dialogs.multiThreadedDialogs``\ 
-  | True: During dialogs, the OpenGL render window will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed
+  | True: During dialogs, the OpenGL render windows will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed
 * | **openTreeView** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.dialogs.openTreeView``\ 
   | True: all sub-trees of the visusalization dialog are opened when opening the dialog; False: only some sub-trees are opened
@@ -679,6 +851,39 @@ VSettingsMaterial has the following items:
 
 
 
+.. _sec-vsettingsraytraceradvanced:
+
+VSettingsRaytracerAdvanced
+--------------------------
+
+Advanced settings for raytracer.
+
+VSettingsRaytracerAdvanced has the following items:
+
+* | **backgroundColorReflections** [type = Float4, default = [0.4,0.4,0.4,1.], size = 4]:
+  | \ ``SC.visualizationSettings.raytracer.advanced.backgroundColorReflections``\ 
+  | scene RGBA color for background that is hit by reflection material; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; this is generally needed, as our scenes are usually not inside a closed geometry (like inside a room); this color is also used if maxReflectionDepth is reached
+* | **searchTreeFactor** [type = PInt, default = 1]:
+  | \ ``SC.visualizationSettings.raytracer.advanced.searchTreeFactor``\ 
+  | This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128
+* | **shadowScalingFactor** [type = UInt, default = 3, size = 1]:
+  | \ ``SC.visualizationSettings.raytracer.advanced.shadowScalingFactor``\ 
+  | if lightRadiusVariations>1, this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries
+* | **shadowSmoothingSteps** [type = UInt, default = 3, size = 1]:
+  | \ ``SC.visualizationSettings.raytracer.advanced.shadowSmoothingSteps``\ 
+  | if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing  steps may cause artifacts at shadow boundaries; only works for directional lights with position (e.g. 4th component in light0Position should be 1)
+* | **showText** [type = bool, default = True]:
+  | \ ``SC.visualizationSettings.raytracer.advanced.showText``\ 
+  | True: show any kind of status text, node numbers, object numbers, etc. (depending on settings); False: do not show any text in raytracer, independently of settings
+* | **tilesPerThread** [type = PInt, default = 12]:
+  | \ ``SC.visualizationSettings.raytracer.advanced.tilesPerThread``\ 
+  | Total number of sub-tiles per thread, used to evenly distribute rendering load to threads
+* | **zBiasLines** [type = float, default = 1e-3]:
+  | \ ``SC.visualizationSettings.raytracer.advanced.zBiasLines``\ 
+  | offset for lines to draw in front of faces; relative to scene radius
+
+
+
 .. _sec-vsettingsraytracer:
 
 VSettingsRaytracer
@@ -688,6 +893,9 @@ Settings for raytracer (software renderer) which can be used as alternative to c
 
 VSettingsRaytracer has the following items:
 
+* | **advanced** [type = VSettingsRaytracerAdvanced]:
+  | \ ``SC.visualizationSettings.raytracer.advanced``\ 
+  | advanced settings for raytracer
 * | **material0** [type = VSettingsMaterial]:
   | \ ``SC.visualizationSettings.raytracer.material0``\ 
   | settings for material0
@@ -718,19 +926,10 @@ VSettingsRaytracer has the following items:
 * | **material9** [type = VSettingsMaterial]:
   | \ ``SC.visualizationSettings.raytracer.material9``\ 
   | settings for material9
-* | **ambientLightColor** [type = Float4, default = [0.6,0.6,0.6,1.], size = 4]:
-  | \ ``SC.visualizationSettings.raytracer.ambientLightColor``\ 
-  | scene RGBA color for ambient light effect (min. light for regions in shadow); same as openGL.materialAmbientAndDiffuse in OpenGL renderer
-* | **backgroundColorReflections** [type = Float4, default = [0.4,0.4,0.4,1.], size = 4]:
-  | \ ``SC.visualizationSettings.raytracer.backgroundColorReflections``\ 
-  | scene RGBA color for background that is hit by reflection; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; important, if scene is not inside a room.
-* | **enable** [type = bool, default = False]:
-  | \ ``SC.visualizationSettings.raytracer.enable``\ 
-  | True: use (software) raytracer; False: use standard OpenGL renderer
 * | **globalFogColor** [type = Float4, default = [0.5,0.5,0.5,1.], size = 4]:
   | \ ``SC.visualizationSettings.raytracer.globalFogColor``\ 
   | scene RGBA fog color
-* | **globalFogDensity** [type = Real, default = 0.]:
+* | **globalFogDensity** [type = UFloat, default = 0.]:
   | \ ``SC.visualizationSettings.raytracer.globalFogDensity``\ 
   | global fog density; fog is deactivated if fogDensity=0, otherwise it is a density relative to scene max size; as it is relative, the factor has to be relatively high to be visible (usually >1)
 * | **imageSizeFactor** [type = PInt, default = 1]:
@@ -739,36 +938,132 @@ VSettingsRaytracer has the following items:
 * | **keepWindowActive** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.raytracer.keepWindowActive``\ 
   | Special flag, handle with care; True: sends some glfw functions to keep window reactive for long render times (>2 seconds); otherwise, the rendering may not finish due to timeout
-* | **lightRadius** [type = float, default = 0.1, size = 1]:
-  | \ ``SC.visualizationSettings.raytracer.lightRadius``\ 
-  | if lightRadiusVariations>1, it uses the given radius for all lights, to convert point lights into distributed lights (slower)
 * | **lightRadiusVariations** [type = PInt, default = 1, size = 1]:
   | \ ``SC.visualizationSettings.raytracer.lightRadiusVariations``\ 
-  | if lightRadiusVariations>1, this defines the number of positions that are used to compute the effect of distributed lights (larger is slower but better quality); range=1..64
+  | if lightRadiusVariations>1, this defines the number of positions that are used to compute the effect of distributed lights (larger is slower but better quality); range=1..256; avoid squares of integers; good values: 1 (hard shadow boundaries), 6, 13, 20, 31, 72, 130, 240; for lower values, use shadowSmoothingSteps=2..8
 * | **maxReflectionDepth** [type = UInt, default = 2]:
   | \ ``SC.visualizationSettings.raytracer.maxReflectionDepth``\ 
   | Maximum number of reflections computed for one ray (note that for each transparent face passed, the reflection depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)
 * | **maxTransparencyDepth** [type = UInt, default = 2]:
   | \ ``SC.visualizationSettings.raytracer.maxTransparencyDepth``\ 
   | Maximum number of transparent faces that can be passed (note that for each reflection, the transparency depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)
+* | **multiSampling** [type = PInt, default = 1, size = 1]:
+  | \ ``SC.visualizationSettings.raytracer.multiSampling``\ 
+  | Multi-sampling used for rendering of faces, lines and text; increases image quality along edges (lines, etc.) but INCREASES rendering costs dramatically (multiSampling=3 => 3x3=9 times slower); also used for shadow if shadowScalingFactor=0; values only accepted in range [1..4]
 * | **numberOfThreads** [type = PInt, default = 8]:
   | \ ``SC.visualizationSettings.raytracer.numberOfThreads``\ 
   | Number of CPU-threads (max: 256) used for software rendering (should be approx. the number of available threads)
-* | **searchTreeFactor** [type = PInt, default = 1]:
-  | \ ``SC.visualizationSettings.raytracer.searchTreeFactor``\ 
-  | This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128
-* | **tilesPerThread** [type = PInt, default = 12]:
-  | \ ``SC.visualizationSettings.raytracer.tilesPerThread``\ 
-  | Total number of sub-tiles per thread, used to evenly distribute rendering load to threads
-* | **verbose** [type = bool, default = False]:
+* | **verbose** [type = Index, default = 0]:
   | \ ``SC.visualizationSettings.raytracer.verbose``\ 
-  | True: print out some debug information on rendering, in particular rendering timings and counter
-* | **zBiasLines** [type = Real, default = 1e-3]:
-  | \ ``SC.visualizationSettings.raytracer.zBiasLines``\ 
-  | offset for lines to draw in front of faces; relative to scene radius
-* | **zOffsetCamera** [type = Real, default = -0.01]:
-  | \ ``SC.visualizationSettings.raytracer.zOffsetCamera``\ 
-  | offset for for camera towards the scene; use positive factor put camera inside, e.g. of brick (like a room) or sphere; use (slightly) negative value to make whole scene visible
+  | 1: print out some debug information on rendering, in particular rendering timings and counter; 2 and higher: advanced debug information
+
+
+
+.. _sec-vsettingsopengladvanced:
+
+VSettingsOpenGLAdvanced
+-----------------------
+
+Advanced settings for openGL.
+
+VSettingsOpenGLAdvanced has the following items:
+
+* | **clippingPlaneColor** [type = Float4, default = [0.7,0.5,0.5,0.], size = 4]:
+  | \ ``SC.visualizationSettings.openGL.advanced.clippingPlaneColor``\ 
+  | RGBA color for clipping plane; if alpha-channel is 0, the cutting plane is not drawn; if alpha-channel is 1, the clippingPlaneColor is used; if alpha-channel is 2, the color of the object interior is used as clipping plane color (which may look strange in case of object-in-object); see also view.camera for clipping plane options
+* | **depthSorting** [type = bool, default = False, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.advanced.depthSorting``\ 
+  | True (slower): sort triangles by Z-depth to remove transparency artifacts: only works if triangles do not intersect or come close (you may like to refine triangle meshes); False: no depth-sort (faster)
+* | **enableLighting** [type = bool, default = True, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.advanced.enableLighting``\ 
+  | generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL_LIGHTING)
+* | **faceNormalsColor** [type = Float4, default = [0.8,0.2,0.2,1.], size = 4]:
+  | \ ``SC.visualizationSettings.openGL.advanced.faceNormalsColor``\ 
+  | global RGBA color for face normals
+* | **initialCenterPoint** [type = Float3, default = [0.,0.,0.], size = 3]:
+  | \ ``SC.visualizationSettings.openGL.advanced.initialCenterPoint``\ 
+  | centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True; only used in case that modelCentricView=True
+* | **initialMaxSceneSize** [type = PFloat, default = 1.]:
+  | \ ``SC.visualizationSettings.openGL.advanced.initialMaxSceneSize``\ 
+  | initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True
+* | **initialModelRotation** [type = StdArray33F, default = [Matrix3DF[3,3,1.,0.,0., 0.,1.,0., 0.,0.,1.]], size = 3x3]:
+  | \ ``SC.visualizationSettings.openGL.advanced.initialModelRotation``\ 
+  | initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]; only used in case that modelCentricView=True
+* | **initialZoom** [type = UFloat, default = 1.]:
+  | \ ``SC.visualizationSettings.openGL.advanced.initialZoom``\ 
+  | initial zoom of scene; overwritten/ignored if autoFitScene = True
+* | **lightModelLocalViewer** [type = bool, default = False, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.advanced.lightModelLocalViewer``\ 
+  | True: the camera origin is used to compute shininess effects (more realistic); maps to OpenGL glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,...)
+* | **lightModelTwoSide** [type = bool, default = False, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.advanced.lightModelTwoSide``\ 
+  | enlighten also backside of object; may cause problems on some graphics cards and lead to slower performance; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,...)
+* | **lineSmooth** [type = bool, default = True, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.advanced.lineSmooth``\ 
+  | draw lines smooth
+* | **polygonOffset** [type = float, default = 0.05]:
+  | \ ``SC.visualizationSettings.openGL.advanced.polygonOffset``\ 
+  | general polygon offset for polygons, except for shadows; use this parameter to draw polygons behind lines to reduce artifacts for very large or small models
+* | **shadeModelSmooth** [type = bool, default = True, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.advanced.shadeModelSmooth``\ 
+  | True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces
+* | **shadowPolygonOffset** [type = PFloat, default = 0.1]:
+  | \ ``SC.visualizationSettings.openGL.advanced.shadowPolygonOffset``\ 
+  | some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies
+* | **showBoundingBox** [type = bool, default = False, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.advanced.showBoundingBox``\ 
+  | show scene bounding box (red), as available in renderState.boundingBox; NOTE that the bounding box is only updated with ZoomAll or at startup; this is a debug flag and it may show reasongs for strange ZoomAll behavior, as ZoomAll should zoom to the bounding box; does only work for perspective=0
+* | **textLineSmooth** [type = bool, default = False, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.advanced.textLineSmooth``\ 
+  | draw lines for representation of text smooth
+* | **textLineWidth** [type = UFloat, default = 1., size = 1]:
+  | \ ``SC.visualizationSettings.openGL.advanced.textLineWidth``\ 
+  | width of lines used for representation of text
+* | **vertexNormalsColor** [type = Float4, default = [0.8,0.2,0.2,1.], size = 4]:
+  | \ ``SC.visualizationSettings.openGL.advanced.vertexNormalsColor``\ 
+  | global RGBA color for vertex normals
+
+
+
+.. _sec-vsettingslight:
+
+VSettingsLight
+--------------
+
+Settings for lights.
+
+VSettingsLight has the following items:
+
+* | **constantAttenuation** [type = float, default = 1.0, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.light.constantAttenuation``\ 
+  | constant attenuation coefficient of GL_LIGHT[0,1,2,3], this is a constant factor that attenuates the light source; attenuation factor = 1/(kc +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1
+* | **diffuse** [type = float, default = 0.5, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.light.diffuse``\ 
+  | diffuse value of GL_LIGHT[0,1,2,3]
+* | **enable** [type = bool, default = True, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.light.enable``\ 
+  | turn on/off light
+* | **lightRadius** [type = float, default = 0.1, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.light.lightRadius``\ 
+  | only used by raytracers: radius of light used to compute smooth shadows (approximated by raytracer.lightRadiusVariations); if lightRadiusVariations>1, this value defines the radius of the light, converting point lights into distributed lights (slower)
+* | **linearAttenuation** [type = float, default = 0.0, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.light.linearAttenuation``\ 
+  | linear attenuation coefficient of GL_LIGHT[0,1,2,3], this is a linear factor for attenuation of the light source with distance
+* | **position** [type = Float4, default = [2.,2.,10.,0.], size = 4]:
+  | \ ``SC.visualizationSettings.openGL.light.position``\ 
+  | 4D position vector of GL_LIGHT[0,1,2,3]; 4th value should be 0 for directional lights that are (almost) infinitely far away, like the sun, but 1 for position-based lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position to be located at a reasonable location; the openGL renderer uses shadow volumes and approximates directional lights by enlarging the direction to 200 times maxSceneSize, while the raytracer uses the correct direction; see opengl manuals
+* | **quadraticAttenuation** [type = float, default = 0.0, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.light.quadraticAttenuation``\ 
+  | quadratic attenuation coefficient of GL_LIGHT[0,1,2,3], this is a quadratic factor for attenuation of the light source with distance
+* | **shadow** [type = UFloat, default = 0.]:
+  | \ ``SC.visualizationSettings.openGL.light.shadow``\ 
+  | in OpenGL renderer, the shadow parameter \ :math:`\in [0 ... 1]`\  prescribes amount of shadow of light [0,1,2,3] that is added to the scene, using light position (or only direction), accumulating for each light; if this parameter is different from 0, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for each light if shadow>0, accumulating effects of each light source
+* | **specular** [type = float, default = 0.5, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.light.specular``\ 
+  | specular value of GL_LIGHT[0,1,2,3]
+* | **useCameraFrame** [type = bool, default = False, size = 1]:
+  | \ ``SC.visualizationSettings.openGL.light.useCameraFrame``\ 
+  | set False to set light positions and directions relative to model frame; True: lights are in camera frame, not following the visual transformations; this was True up to Exudyn 1.9.174
 
 
 
@@ -777,22 +1072,25 @@ VSettingsRaytracer has the following items:
 VSettingsOpenGL
 ---------------
 
-OpenGL settings for 2D and 2D rendering. For further details, see the OpenGL functionality. 
+OpenGL settings for 2D and 3D rendering - with many settings also used for raytracer. For further details and backgrounds also see OpenGL 1.3 functionality on the web.
 
 VSettingsOpenGL has the following items:
 
-* | **clippingPlaneColor** [type = Float4, default = [0.7,0.5,0.5,0.], size = 4]:
-  | \ ``SC.visualizationSettings.openGL.clippingPlaneColor``\ 
-  | RGBA color for clipping plane; if alpha-channel is 0, the cutting plane is not drawn; if alpha-channel is 1, the clippingPlaneColor is used; if alpha-channel is 2, the color of the object interior is used as clipping plane color (which may look strange in case of object-in-object)
-* | **clippingPlaneDistance** [type = float, default = 0.]:
-  | \ ``SC.visualizationSettings.openGL.clippingPlaneDistance``\ 
-  | distance of clipping plane on normal vector; see also clippingPlaneNormal
-* | **clippingPlaneNormal** [type = Float3, default = [0.,0.,0.], size = 3]:
-  | \ ``SC.visualizationSettings.openGL.clippingPlaneNormal``\ 
-  | normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; the clipped half-space is in direction of the normal; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance
-* | **depthSorting** [type = bool, default = False, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.depthSorting``\ 
-  | True (slower): sort triangles by Z-depth to remove transparency artifacts: only works if triangles do not intersect or come close (you may like to refine triangle meshes); False: no depth-sort (faster)
+* | **advanced** [type = VSettingsOpenGLAdvanced]:
+  | \ ``SC.visualizationSettings.openGL.advanced``\ 
+  | advanced settings for openGL
+* | **light0** [type = VSettingsLight]:
+  | \ ``SC.visualizationSettings.openGL.light0``\ 
+  | settings for light0 and shadow
+* | **light1** [type = VSettingsLight]:
+  | \ ``SC.visualizationSettings.openGL.light1``\ 
+  | settings for light1 and shadow
+* | **light2** [type = VSettingsLight]:
+  | \ ``SC.visualizationSettings.openGL.light2``\ 
+  | settings for light2 and shadow
+* | **light3** [type = VSettingsLight]:
+  | \ ``SC.visualizationSettings.openGL.light3``\ 
+  | settings for light3 and shadow
 * | **drawFaceNormals** [type = bool, default = False, size = 1]:
   | \ ``SC.visualizationSettings.openGL.drawFaceNormals``\ 
   | draws triangle normals, e.g. at center of triangles; used for debugging of faces
@@ -802,99 +1100,18 @@ VSettingsOpenGL has the following items:
 * | **drawVertexNormals** [type = bool, default = False, size = 1]:
   | \ ``SC.visualizationSettings.openGL.drawVertexNormals``\ 
   | draws vertex normals; used for debugging
-* | **enableLight0** [type = bool, default = True, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.enableLight0``\ 
-  | turn on/off light0
-* | **enableLight1** [type = bool, default = True, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.enableLight1``\ 
-  | turn on/off light1
-* | **enableLighting** [type = bool, default = True, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.enableLighting``\ 
-  | generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL_LIGHTING)
 * | **faceEdgesColor** [type = Float4, default = [0.2,0.2,0.2,1.], size = 4]:
   | \ ``SC.visualizationSettings.openGL.faceEdgesColor``\ 
   | global RGBA color for face edges
-* | **facesTransparent** [type = bool, default = False, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.facesTransparent``\ 
-  | True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers
 * | **faceTransparencyGlobal** [type = UFloat, default = 0.4, size = 1]:
   | \ ``SC.visualizationSettings.openGL.faceTransparencyGlobal``\ 
   | in case that facesTransparent=True this represents the max alpha-transparency
-* | **initialCenterPoint** [type = Float3, default = [0.,0.,0.], size = 3]:
-  | \ ``SC.visualizationSettings.openGL.initialCenterPoint``\ 
-  | centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True
-* | **initialMaxSceneSize** [type = PFloat, default = 1.]:
-  | \ ``SC.visualizationSettings.openGL.initialMaxSceneSize``\ 
-  | initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True
-* | **initialModelRotation** [type = StdArray33F, default = [Matrix3DF[3,3,1.,0.,0., 0.,1.,0., 0.,0.,1.]], size = 3x3]:
-  | \ ``SC.visualizationSettings.openGL.initialModelRotation``\ 
-  | initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]
-* | **initialZoom** [type = UFloat, default = 1.]:
-  | \ ``SC.visualizationSettings.openGL.initialZoom``\ 
-  | initial zoom of scene; overwritten/ignored if autoFitScene = True
-* | **light0ambient** [type = float, default = 0.3, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.light0ambient``\ 
-  | ambient value of GL_LIGHT0
-* | **light0constantAttenuation** [type = float, default = 1.0, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.light0constantAttenuation``\ 
-  | constant attenuation coefficient of GL_LIGHT0, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1
-* | **light0diffuse** [type = float, default = 0.6, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.light0diffuse``\ 
-  | diffuse value of GL_LIGHT0
-* | **light0linearAttenuation** [type = float, default = 0.0, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.light0linearAttenuation``\ 
-  | linear attenuation coefficient of GL_LIGHT0, this is a linear factor for attenuation of the light source with distance
-* | **light0position** [type = Float4, default = [0.2,0.2,10.,0.], size = 4]:
-  | \ ``SC.visualizationSettings.openGL.light0position``\ 
-  | 4D position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position; see opengl manuals
-* | **light0quadraticAttenuation** [type = float, default = 0.0, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.light0quadraticAttenuation``\ 
-  | quadratic attenuation coefficient of GL_LIGHT0, this is a quadratic factor for attenuation of the light source with distance
-* | **light0specular** [type = float, default = 0.5, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.light0specular``\ 
-  | specular value of GL_LIGHT0
-* | **light1ambient** [type = float, default = 0.0 , size = 1]:
-  | \ ``SC.visualizationSettings.openGL.light1ambient``\ 
-  | ambient value of GL_LIGHT1
-* | **light1constantAttenuation** [type = float, default = 1.0, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.light1constantAttenuation``\ 
-  | constant attenuation coefficient of GL_LIGHT1, this is a constant factor that attenuates the light source; attenuation factor = 1/(kx +kl*d + kq*d*d); only used for lights, where last component of light position is 1
-* | **light1diffuse** [type = float, default = 0.5, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.light1diffuse``\ 
-  | diffuse value of GL_LIGHT1
-* | **light1linearAttenuation** [type = float, default = 0.0, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.light1linearAttenuation``\ 
-  | linear attenuation coefficient of GL_LIGHT1, this is a linear factor for attenuation of the light source with distance
-* | **light1position** [type = Float4, default = [1.,1.,-10.,0.], size = 4]:
-  | \ ``SC.visualizationSettings.openGL.light1position``\ 
-  | 4D position vector of GL_LIGHT0; 4th value should be 0 for lights like sun, but 1 for directional lights (and for attenuation factor being calculated); see opengl manuals
-* | **light1quadraticAttenuation** [type = float, default = 0.0, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.light1quadraticAttenuation``\ 
-  | quadratic attenuation coefficient of GL_LIGHT1, this is a quadratic factor for attenuation of the light source with distance
-* | **light1specular** [type = float, default = 0.6, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.light1specular``\ 
-  | specular value of GL_LIGHT1
-* | **lightModelAmbient** [type = Float4, default = [0.,0.,0.,1.], size = 4]:
+* | **lightModelAmbient** [type = Float4, default = [0.4,0.4,0.4,1.], size = 4]:
   | \ ``SC.visualizationSettings.openGL.lightModelAmbient``\ 
-  | global ambient light; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_AMBIENT,[r,g,b,a])
-* | **lightModelLocalViewer** [type = bool, default = False, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.lightModelLocalViewer``\ 
-  | select local viewer for light; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,...)
-* | **lightModelTwoSide** [type = bool, default = False, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.lightModelTwoSide``\ 
-  | enlighten also backside of object; may cause problems on some graphics cards and lead to slower performance; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,...)
-* | **lightPositionsInCameraFrame** [type = bool, default = False, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.lightPositionsInCameraFrame``\ 
-  | set False to set light positions and directions relative to model frame; True: lights are in global (camera) frame; this is always False for raytracer; this was True up to Exudyn 1.9.174
-* | **lineSmooth** [type = bool, default = True, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.lineSmooth``\ 
-  | draw lines smooth
+  | global ambient light (needed for faces that are close to orthogonal to light or faces in shadow region); maps to OpenGL glLightModeli(GL_LIGHT_MODEL_AMBIENT,[r,g,b,a]); also used by raytracer
 * | **lineWidth** [type = UFloat, default = 1., size = 1]:
   | \ ``SC.visualizationSettings.openGL.lineWidth``\ 
   | width of lines used for representation of lines, circles, points, etc.
-* | **materialAmbientAndDiffuse** [type = Float4, default = [0.6,0.6,0.6,1.], size = 4]:
-  | \ ``SC.visualizationSettings.openGL.materialAmbientAndDiffuse``\ 
-  | RGBA ambient color of material
 * | **materialShininess** [type = float, default = 32., size = 1]:
   | \ ``SC.visualizationSettings.openGL.materialShininess``\ 
   | shininess of material
@@ -903,43 +1120,10 @@ VSettingsOpenGL has the following items:
   | RGBA specular color of material
 * | **multiSampling** [type = PInt, default = 1, size = 1]:
   | \ ``SC.visualizationSettings.openGL.multiSampling``\ 
-  | NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
-* | **perspective** [type = UFloat, default = 0.]:
-  | \ ``SC.visualizationSettings.openGL.perspective``\ 
-  | parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 0.5 (large amount of perspective); mouse coordinates will not work with perspective
-* | **polygonOffset** [type = float, default = 0.01]:
-  | \ ``SC.visualizationSettings.openGL.polygonOffset``\ 
-  | general polygon offset for polygons, except for shadows; use this parameter to draw polygons behind lines to reduce artifacts for very large or small models
-* | **shadeModelSmooth** [type = bool, default = True, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.shadeModelSmooth``\ 
-  | True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces
-* | **shadow** [type = UFloat, default = 0.]:
-  | \ ``SC.visualizationSettings.openGL.shadow``\ 
-  | parameter \ :math:`\in [0 ... 1]`\  prescribes amount of shadow for light0 (using light0position, etc.) in OpenGL renderer; if this parameter is different from 1, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for all lights if shadow>0
-* | **shadowPolygonOffset** [type = PFloat, default = 0.1]:
-  | \ ``SC.visualizationSettings.openGL.shadowPolygonOffset``\ 
-  | some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies
-* | **showFaceEdges** [type = bool, default = False, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.showFaceEdges``\ 
-  | show edges of faces; using the options showFaces=false and showFaceEdges=true gives are wire frame representation
-* | **showFaces** [type = bool, default = True, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.showFaces``\ 
-  | show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wire frame representation
-* | **showLines** [type = bool, default = True, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.showLines``\ 
-  | show lines (different from edges of faces)
-* | **showMeshEdges** [type = bool, default = True, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.showMeshEdges``\ 
-  | show edges of finite elements; independent of showFaceEdges
-* | **showMeshFaces** [type = bool, default = True, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.showMeshFaces``\ 
-  | show faces of finite elements; independent of showFaces
-* | **textLineSmooth** [type = bool, default = False, size = 1]:
-  | \ ``SC.visualizationSettings.openGL.textLineSmooth``\ 
-  | draw lines for representation of text smooth
-* | **textLineWidth** [type = UFloat, default = 1., size = 1]:
-  | \ ``SC.visualizationSettings.openGL.textLineWidth``\ 
-  | width of lines used for representation of text
+  | NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 3, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
+* | **zMaxSceneFactor** [type = PFloat, default = 2.]:
+  | \ ``SC.visualizationSettings.openGL.zMaxSceneFactor``\ 
+  | factor multiplied with maxSceneSize to avoid clipping of modelview; larger values reduce clipping of near or far objects, but may lead to artifacts (so-called Z-fighting)
 
 
 
@@ -948,7 +1132,7 @@ VSettingsOpenGL has the following items:
 VSettingsExportImages
 ---------------------
 
-Functionality to export images to files (PNG or TGA format) which can be used to create animations; to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly.
+Functionality to export images of view0 to files (PNG or TGA format) which can be used to create animations; in order to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly.
 
 VSettingsExportImages has the following items:
 
@@ -1012,87 +1196,102 @@ VSettingsOpenVR has the following items:
 
 
 
+.. _sec-vsettingsinteractiveadvanced:
+
+VSettingsInteractiveAdvanced
+----------------------------
+
+Advanced settings for interactive.
+
+VSettingsInteractiveAdvanced has the following items:
+
+* | **highlightColor** [type = Float4, default = [0.8,0.05,0.05,0.75], size = 4]:
+  | \ ``SC.visualizationSettings.interactive.advanced.highlightColor``\ 
+  | RGBA color for highlighted item; 4th value is alpha-transparency
+* | **highlightOtherColor** [type = Float4, default = [0.5,0.5,0.5,0.4], size = 4]:
+  | \ ``SC.visualizationSettings.interactive.advanced.highlightOtherColor``\ 
+  | RGBA color for other items (which are not highlighted); 4th value is alpha-transparency
+* | **joystickScaleRotation** [type = float, default = 200.]:
+  | \ ``SC.visualizationSettings.interactive.advanced.joystickScaleRotation``\ 
+  | rotation scaling factor for joystick input
+* | **joystickScaleTranslation** [type = float, default = 6.]:
+  | \ ``SC.visualizationSettings.interactive.advanced.joystickScaleTranslation``\ 
+  | translation scaling factor for joystick input
+* | **keypressRotationStep** [type = float, default = 5.]:
+  | \ ``SC.visualizationSettings.interactive.advanced.keypressRotationStep``\ 
+  | rotation increment per keypress in degree (full rotation = 360 degree)
+* | **keypressTranslationStep** [type = float, default = 0.1]:
+  | \ ``SC.visualizationSettings.interactive.advanced.keypressTranslationStep``\ 
+  | translation increment per keypress relative to window size
+* | **mouseMoveRotationFactor** [type = float, default = 1.]:
+  | \ ``SC.visualizationSettings.interactive.advanced.mouseMoveRotationFactor``\ 
+  | rotation increment per 1 pixel mouse movement in degree
+* | **pauseWithSpacebar** [type = bool, default = True]:
+  | \ ``SC.visualizationSettings.interactive.advanced.pauseWithSpacebar``\ 
+  | True: during simulation, space bar can be pressed to pause simulation
+* | **selectionHighlights** [type = bool, default = True]:
+  | \ ``SC.visualizationSettings.interactive.advanced.selectionHighlights``\ 
+  | True: enable mouse click to highlights item (default: red)
+* | **selectionLeftMouse** [type = bool, default = True]:
+  | \ ``SC.visualizationSettings.interactive.advanced.selectionLeftMouse``\ 
+  | True: enable left mouse click on items to show basic information
+* | **selectionLeftMouseItemTypes** [type = Index, default = 31]:
+  | \ ``SC.visualizationSettings.interactive.advanced.selectionLeftMouseItemTypes``\ 
+  | binary flags (1,2,4,8,16) for (Node,Object,Marker,Load,Sensor) that are identified with left mouse click selection
+* | **selectionRightMouse** [type = bool, default = True]:
+  | \ ``SC.visualizationSettings.interactive.advanced.selectionRightMouse``\ 
+  | True: enable right mouse click on items to show dictionary (read only!)
+* | **selectionRightMouseGraphicsData** [type = bool, default = False]:
+  | \ ``SC.visualizationSettings.interactive.advanced.selectionRightMouseGraphicsData``\ 
+  | True: right mouse click on items also shows GraphicsData information for inspectation (may sometimes be very large and may not fit into dialog for large graphics objects!)
+* | **zoomStepFactor** [type = float, default = 1.15]:
+  | \ ``SC.visualizationSettings.interactive.advanced.zoomStepFactor``\ 
+  | change of zoom per keypress (keypad +/-) or mouse wheel increment
+
+
+
 .. _sec-vsettingsinteractive:
 
 VSettingsInteractive
 --------------------
 
-Functionality to interact with render window; will include left and right mouse press actions and others in future.
+Functionality to interact with render window; includes special rotation and zoom factors, item-highlighting, marker tracking, item selection and keyPressUserFunction.
 
 VSettingsInteractive has the following items:
 
+* | **advanced** [type = VSettingsInteractiveAdvanced]:
+  | \ ``SC.visualizationSettings.interactive.advanced``\ 
+  | advanced interactive visualization settings
 * | **openVR** [type = VSettingsOpenVR]:
   | \ ``SC.visualizationSettings.interactive.openVR``\ 
   | openVR visualization settings
-* | **highlightColor** [type = Float4, default = [0.8,0.05,0.05,0.75], size = 4]:
-  | \ ``SC.visualizationSettings.interactive.highlightColor``\ 
-  | RGBA color for highlighted item; 4th value is alpha-transparency
+* | **autoRotateModelView** [type = bool, default = False]:
+  | \ ``SC.visualizationSettings.interactive.autoRotateModelView``\ 
+  | True: rotate model view with autorotation
+* | **autoRotationVelocity** [type = Float3, default = [0.,0.,1.047198], size = 3]:
+  | \ ``SC.visualizationSettings.interactive.autoRotationVelocity``\ 
+  | Angular velocity vector for auto-rotation of scene (only visualization view is rotated, not the model itself!)
 * | **highlightItemIndex** [type = Int, default = -1]:
   | \ ``SC.visualizationSettings.interactive.highlightItemIndex``\ 
-  | index of item that shall be highlighted (e.g., need to find item due to errors); if set -1, no item is highlighted
+  | index of item that shall be highlighted (e.g., to find item which cauess problems); if set -1, no item is highlighted
 * | **highlightItemType** [type = ItemType, default = ItemType::\_None]:
   | \ ``SC.visualizationSettings.interactive.highlightItemType``\ 
-  | item type (Node, Object, ...) that shall be highlighted (e.g., need to find item due to errors)
+  | item type (Node, Object, ...) that shall be highlighted (e.g., to find item which cauess problems)
 * | **highlightMbsNumber** [type = UInt, default = 0]:
   | \ ``SC.visualizationSettings.interactive.highlightMbsNumber``\ 
   | index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)
-* | **highlightOtherColor** [type = Float4, default = [0.5,0.5,0.5,0.4], size = 4]:
-  | \ ``SC.visualizationSettings.interactive.highlightOtherColor``\ 
-  | RGBA color for other items (which are not highlighted); 4th value is alpha-transparency
-* | **joystickScaleRotation** [type = float, default = 200.]:
-  | \ ``SC.visualizationSettings.interactive.joystickScaleRotation``\ 
-  | rotation scaling factor for joystick input
-* | **joystickScaleTranslation** [type = float, default = 6.]:
-  | \ ``SC.visualizationSettings.interactive.joystickScaleTranslation``\ 
-  | translation scaling factor for joystick input
-* | **keypressRotationStep** [type = float, default = 5.]:
-  | \ ``SC.visualizationSettings.interactive.keypressRotationStep``\ 
-  | rotation increment per keypress in degree (full rotation = 360 degree)
-* | **keypressTranslationStep** [type = float, default = 0.1]:
-  | \ ``SC.visualizationSettings.interactive.keypressTranslationStep``\ 
-  | translation increment per keypress relative to window size
-* | **lockModelView** [type = bool, default = False]:
-  | \ ``SC.visualizationSettings.interactive.lockModelView``\ 
-  | True: all movements (with mouse/keys), rotations, zoom are disabled; initial values are considered ==> initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value
-* | **mouseMoveRotationFactor** [type = float, default = 1.]:
-  | \ ``SC.visualizationSettings.interactive.mouseMoveRotationFactor``\ 
-  | rotation increment per 1 pixel mouse movement in degree
-* | **pauseWithSpacebar** [type = bool, default = True]:
-  | \ ``SC.visualizationSettings.interactive.pauseWithSpacebar``\ 
-  | True: during simulation, space bar can be pressed to pause simulation
-* | **selectionHighlights** [type = bool, default = True]:
-  | \ ``SC.visualizationSettings.interactive.selectionHighlights``\ 
-  | True: mouse click highlights item (default: red)
-* | **selectionLeftMouse** [type = bool, default = True]:
-  | \ ``SC.visualizationSettings.interactive.selectionLeftMouse``\ 
-  | True: left mouse click on items and show basic information
-* | **selectionLeftMouseItemTypes** [type = Index, default = 31]:
-  | \ ``SC.visualizationSettings.interactive.selectionLeftMouseItemTypes``\ 
-  | binary flags (1,2,4,8,16) for (Node,Object,Marker,Load,Sensor) that are identified with left mouse click selection
-* | **selectionRightMouse** [type = bool, default = True]:
-  | \ ``SC.visualizationSettings.interactive.selectionRightMouse``\ 
-  | True: right mouse click on items and show dictionary (read only!)
-* | **selectionRightMouseGraphicsData** [type = bool, default = False]:
-  | \ ``SC.visualizationSettings.interactive.selectionRightMouseGraphicsData``\ 
-  | True: right mouse click on items also shows GraphicsData information for inspectation (may sometimes be very large and may not fit into dialog for large graphics objects!)
-* | **trackMarker** [type = Int, default = -1]:
-  | \ ``SC.visualizationSettings.interactive.trackMarker``\ 
-  | if valid marker index is provided and marker provides position (and orientation), the centerpoint of the scene follows the marker (and orientation); depends on trackMarkerPosition and trackMarkerOrientation; by default, only position is tracked
-* | **trackMarkerMbsNumber** [type = Index, default = 0]:
-  | \ ``SC.visualizationSettings.interactive.trackMarkerMbsNumber``\ 
-  | number of main system which is used to track marker; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number
-* | **trackMarkerOrientation** [type = Float3, default = [0.,0.,0.], size = 3]:
-  | \ ``SC.visualizationSettings.interactive.trackMarkerOrientation``\ 
-  | choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one
-* | **trackMarkerPosition** [type = Float3, default = [1.,1.,1.], size = 3]:
-  | \ ``SC.visualizationSettings.interactive.trackMarkerPosition``\ 
-  | choose which coordinates or marker are tracked (x,y,z)
+* | **ignoreKeys** [type = bool, default = False]:
+  | \ ``SC.visualizationSettings.interactive.ignoreKeys``\ 
+  | True: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'; if ignoreKeys=True, then keyPressUserFunction can be used!
+* | **keyPressUserFunction** [type = KeyPressUserFunction, default = 0]:
+  | \ ``SC.visualizationSettings.interactive.keyPressUserFunction``\ 
+  | add a Python function f(key, action, mods) here, which is called every time a key is pressed; set this parameter to 0 (int) in order to deactivate it; the user function is only called if interactive.ignoreKeys=True; function shall return true, if key has been processed; Example:  def f(key, action, mods): \phantom{XXX} print('key=',key); use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)
+* | **logMouseCoordinates** [type = bool, default = True]:
+  | \ ``SC.visualizationSettings.interactive.logMouseCoordinates``\ 
+  | True: if showMouseCoordinates=True, also log mouse coordinates (transformed to model coordinates); only works for axis-aligned ortho-projections and shows the coordinates of the current plane
 * | **useJoystickInput** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.interactive.useJoystickInput``\ 
   | True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems ...
-* | **zoomStepFactor** [type = float, default = 1.15]:
-  | \ ``SC.visualizationSettings.interactive.zoomStepFactor``\ 
-  | change of zoom per keypress (keypad +/-) or mouse wheel increment
 
 
 
@@ -1101,53 +1300,158 @@ VSettingsInteractive has the following items:
 VisualizationSettings
 ---------------------
 
-Settings for visualization. 
+Top structure for all visualization settings in Exudyn. 
 
 VisualizationSettings has the following items:
 
 * | **bodies** [type = VSettingsBodies]:
-  | \ ``.visualizationSettings.bodies``\ 
+  | \ ``SC.visualizationSettings.bodies``\ 
   | body visualization settings
 * | **connectors** [type = VSettingsConnectors]:
-  | \ ``.visualizationSettings.connectors``\ 
+  | \ ``SC.visualizationSettings.connectors``\ 
   | connector visualization settings
 * | **contact** [type = VSettingsContact]:
-  | \ ``.visualizationSettings.contact``\ 
+  | \ ``SC.visualizationSettings.contact``\ 
   | contact visualization settings
 * | **contour** [type = VSettingsContour]:
-  | \ ``.visualizationSettings.contour``\ 
+  | \ ``SC.visualizationSettings.contour``\ 
   | contour plot visualization settings
 * | **dialogs** [type = VSettingsDialogs]:
-  | \ ``.visualizationSettings.dialogs``\ 
+  | \ ``SC.visualizationSettings.dialogs``\ 
   | dialogs settings
 * | **exportImages** [type = VSettingsExportImages]:
-  | \ ``.visualizationSettings.exportImages``\ 
+  | \ ``SC.visualizationSettings.exportImages``\ 
   | settings for exporting (saving) images to files in order to create animations
 * | **general** [type = VSettingsGeneral]:
-  | \ ``.visualizationSettings.general``\ 
+  | \ ``SC.visualizationSettings.general``\ 
   | general visualization settings
 * | **interactive** [type = VSettingsInteractive]:
-  | \ ``.visualizationSettings.interactive``\ 
+  | \ ``SC.visualizationSettings.interactive``\ 
   | Settings for interaction with renderer
 * | **loads** [type = VSettingsLoads]:
-  | \ ``.visualizationSettings.loads``\ 
+  | \ ``SC.visualizationSettings.loads``\ 
   | load visualization settings
 * | **markers** [type = VSettingsMarkers]:
-  | \ ``.visualizationSettings.markers``\ 
+  | \ ``SC.visualizationSettings.markers``\ 
   | marker visualization settings
 * | **nodes** [type = VSettingsNodes]:
-  | \ ``.visualizationSettings.nodes``\ 
+  | \ ``SC.visualizationSettings.nodes``\ 
   | node visualization settings
 * | **openGL** [type = VSettingsOpenGL]:
-  | \ ``.visualizationSettings.openGL``\ 
+  | \ ``SC.visualizationSettings.openGL``\ 
   | OpenGL rendering settings
 * | **raytracer** [type = VSettingsRaytracer]:
-  | \ ``.visualizationSettings.raytracer``\ 
+  | \ ``SC.visualizationSettings.raytracer``\ 
   | Raytracer settings (builds on OpenGL rendering settings)
 * | **sensors** [type = VSettingsSensors]:
-  | \ ``.visualizationSettings.sensors``\ 
+  | \ ``SC.visualizationSettings.sensors``\ 
   | sensor visualization settings
-* | **window** [type = VSettingsWindow]:
-  | \ ``.visualizationSettings.window``\ 
-  | visualization window and interaction settings
+* | **view0** [type = VSettingsView]:
+  | \ ``SC.visualizationSettings.view0``\ 
+  | Settings for main view 0
+* | **view1** [type = VSettingsView]:
+  | \ ``SC.visualizationSettings.view1``\ 
+  | Settings for sub-view 1
+* | **view2** [type = VSettingsView]:
+  | \ ``SC.visualizationSettings.view2``\ 
+  | Settings for sub-view 2
+* | **view3** [type = VSettingsView]:
+  | \ ``SC.visualizationSettings.view3``\ 
+  | Settings for sub-view 3
+
+The following parameter changes have been made:
+
+  - visualizationSettings.general.drawCoordinateSystem → visualizationSettings.view0.scene.drawCoordinateSystem (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.general.drawWorldBasis → visualizationSettings.view0.scene.drawWorldBasis (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.general.showComputationInfo → visualizationSettings.view0.window.showComputationInfo (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.general.textSize → visualizationSettings.view0.window.globalFontSize (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.general.worldBasisSize → visualizationSettings.view0.scene.worldBasisSize (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.contour.colorBarPrecision → visualizationSettings.contour.advanced.colorBarPrecision (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.contour.colorBarTiling → visualizationSettings.contour.advanced.colorBarTiling (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.contour.showColorBar → visualizationSettings.contour.advanced.showColorBar (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.window.alwaysOnTop → visualizationSettings.view0.window.alwaysOnTop (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.window.ignoreKeys → visualizationSettings.interactive.ignoreKeys (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.window.keyPressUserFunction → visualizationSettings.interactive.keyPressUserFunction (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.window.limitWindowToScreenSize → visualizationSettings.general.limitWindowToScreenSize (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.window.maximize → visualizationSettings.view0.window.maximize (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.window.reallyQuitTimeLimit → visualizationSettings.general.reallyQuitTimeLimit (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.window.renderWindowSize → visualizationSettings.view0.window.renderWindowSize (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.window.showMouseCoordinates → visualizationSettings.view0.window.showMouseCoordinates (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.window.showRenderStateInfo → visualizationSettings.view0.window.showRenderStateInfo (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.window.showWindow → visualizationSettings.view0.window.showWindow (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.window.startupTimeout → visualizationSettings.general.rendererStartupTimeout (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.raytracer.ambientLightColor → visualizationSettings.openGL.lightModelAmbient (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.raytracer.backgroundColorReflections → visualizationSettings.raytracer.advanced.backgroundColorReflections (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.raytracer.enable → visualizationSettings.view0.camera.useRaytracer (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.raytracer.lightRadius → visualizationSettings.openGL.light0.lightRadius (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.raytracer.searchTreeFactor → visualizationSettings.raytracer.advanced.searchTreeFactor (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.raytracer.shadowScalingFactor → visualizationSettings.raytracer.advanced.shadowScalingFactor (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.raytracer.shadowSmoothingSteps → visualizationSettings.raytracer.advanced.shadowSmoothingSteps (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.raytracer.showText → visualizationSettings.raytracer.advanced.showText (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.raytracer.tilesPerThread → visualizationSettings.raytracer.advanced.tilesPerThread (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.raytracer.zBiasLines → visualizationSettings.raytracer.advanced.zBiasLines (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.raytracer.zOffsetCamera → visualizationSettings.openGL.dummy (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.clippingPlaneColor → visualizationSettings.openGL.advanced.clippingPlaneColor (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.clippingPlaneDistance → visualizationSettings.view0.camera.clippingPlaneDistance (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.clippingPlaneNormal → visualizationSettings.view0.camera.clippingPlaneNormal (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.depthSorting → visualizationSettings.openGL.advanced.depthSorting (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.enableLight0 → visualizationSettings.openGL.light0.enable (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.enableLight1 → visualizationSettings.openGL.light1.enable (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.enableLighting → visualizationSettings.openGL.advanced.enableLighting (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.facesTransparent → visualizationSettings.view0.scene.facesTransparent (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.initialCenterPoint → visualizationSettings.openGL.advanced.initialCenterPoint (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.initialMaxSceneSize → visualizationSettings.openGL.advanced.initialMaxSceneSize (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.initialModelRotation → visualizationSettings.openGL.advanced.initialModelRotation (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.initialZoom → visualizationSettings.openGL.advanced.initialZoom (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.light0ambient → visualizationSettings.openGL.dummy (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.light0constantAttenuation → visualizationSettings.openGL.light0.constantAttenuation (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.light0diffuse → visualizationSettings.openGL.light0.diffuse (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.light0linearAttenuation → visualizationSettings.openGL.light0.linearAttenuation (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.light0position → visualizationSettings.openGL.light0.position (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.light0quadraticAttenuation → visualizationSettings.openGL.light0.quadraticAttenuation (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.light0specular → visualizationSettings.openGL.light0.specular (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.light1ambient → visualizationSettings.openGL.dummy (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.light1constantAttenuation → visualizationSettings.openGL.light1.constantAttenuation (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.light1diffuse → visualizationSettings.openGL.light1.diffuse (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.light1linearAttenuation → visualizationSettings.openGL.light1.linearAttenuation (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.light1position → visualizationSettings.openGL.light1.position (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.light1quadraticAttenuation → visualizationSettings.openGL.light1.quadraticAttenuation (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.light1specular → visualizationSettings.openGL.light1.specular (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.lightModelLocalViewer → visualizationSettings.openGL.advanced.lightModelLocalViewer (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.lightModelTwoSide → visualizationSettings.openGL.advanced.lightModelTwoSide (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.lightPositionsInCameraFrame → visualizationSettings.openGL.light0.useCameraFrame (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.lineSmooth → visualizationSettings.openGL.advanced.lineSmooth (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.materialAmbientAndDiffuse → visualizationSettings.openGL.materialSpecular (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.perspective → visualizationSettings.view0.camera.perspective (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.polygonOffset → visualizationSettings.openGL.advanced.polygonOffset (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.shadeModelSmooth → visualizationSettings.openGL.advanced.shadeModelSmooth (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.shadow → visualizationSettings.openGL.light0.shadow (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.shadowPolygonOffset → visualizationSettings.openGL.advanced.shadowPolygonOffset (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.showFaceEdges → visualizationSettings.view0.scene.showFaceEdges (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.showFaces → visualizationSettings.view0.scene.showFaces (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.showLines → visualizationSettings.view0.scene.showLines (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.showMeshEdges → visualizationSettings.view0.scene.showMeshEdges (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.showMeshFaces → visualizationSettings.view0.scene.showMeshFaces (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.textLineSmooth → visualizationSettings.openGL.advanced.textLineSmooth (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.openGL.textLineWidth → visualizationSettings.openGL.advanced.textLineWidth (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.highlightColor → visualizationSettings.interactive.advanced.highlightColor (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.highlightOtherColor → visualizationSettings.interactive.advanced.highlightOtherColor (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.joystickScaleRotation → visualizationSettings.interactive.advanced.joystickScaleRotation (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.joystickScaleTranslation → visualizationSettings.interactive.advanced.joystickScaleTranslation (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.keypressRotationStep → visualizationSettings.interactive.advanced.keypressRotationStep (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.keypressTranslationStep → visualizationSettings.interactive.advanced.keypressTranslationStep (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.lockModelView → visualizationSettings.view0.window.lockModelView (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.mouseMoveRotationFactor → visualizationSettings.interactive.advanced.mouseMoveRotationFactor (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.pauseWithSpacebar → visualizationSettings.interactive.advanced.pauseWithSpacebar (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.selectionHighlights → visualizationSettings.interactive.advanced.selectionHighlights (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.selectionLeftMouse → visualizationSettings.interactive.advanced.selectionLeftMouse (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.selectionLeftMouseItemTypes → visualizationSettings.interactive.advanced.selectionLeftMouseItemTypes (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.selectionRightMouse → visualizationSettings.interactive.advanced.selectionRightMouse (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.selectionRightMouseGraphicsData → visualizationSettings.interactive.advanced.selectionRightMouseGraphicsData (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.trackMarker → visualizationSettings.view0.camera.trackMarker (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.trackMarkerMbsNumber → visualizationSettings.view0.camera.trackMarkerMbsNumber (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.trackMarkerOrientation → visualizationSettings.view0.camera.trackMarkerOrientation (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.trackMarkerPosition → visualizationSettings.view0.camera.trackMarkerPosition (changed in version 1.10.80, expires: 2030)
+  - visualizationSettings.interactive.zoomStepFactor → visualizationSettings.interactive.advanced.zoomStepFactor (changed in version 1.10.80, expires: 2030)
+
 

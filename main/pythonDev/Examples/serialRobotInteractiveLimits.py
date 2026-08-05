@@ -201,7 +201,7 @@ markerGround0 =  mbs.AddMarker(MarkerBodyPosition(bodyNumber=objectGround))
 #     if mbs.variables['controlActive']:
 #         return [0,0,0]
 #     else:
-#         p = SC.GetCurrentMouseCoordinates(True) #True=OpenGL coordinates; 2D
+#         p = SC.renderer.GetMouseCoordinates(True) #True=OpenGL coordinates; 2D
 #         A = np.array(SC.renderer.GetState()['modelRotation'])
 #         # print('p=',p)
 #         # print('u=',displacement)
@@ -287,7 +287,7 @@ def PreStepUF(mbs, t):
 
     #additional static torque compensation; P and D control in TSD:
     if not mbs.variables['controlActive']:
-        p = SC.GetCurrentMouseCoordinates(True) #True=OpenGL coordinates; 2D
+        p = SC.renderer.GetMouseCoordinates(True) #True=OpenGL coordinates; 2D
         A = np.array(SC.renderer.GetState()['modelRotation'])
         p3D = A@np.array([p[0],p[1],0.])
         
@@ -423,8 +423,8 @@ SC.visualizationSettings.nodes.basisSize = 0.1
 SC.visualizationSettings.loads.show = False
 
 SC.visualizationSettings.openGL.multiSampling=4
-SC.visualizationSettings.openGL.shadow=0.3
-SC.visualizationSettings.openGL.perspective=0.7
+SC.visualizationSettings.openGL.light0.shadow=0.3
+SC.visualizationSettings.view0.camera.perspective=0.7
     
 tEnd = 1.25
 h = 0.0005
@@ -456,7 +456,7 @@ simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-SC.visualizationSettings.window.renderWindowSize=[1920,1200]
+SC.visualizationSettings.view0.window.renderWindowSize=[1920,1200]
 SC.visualizationSettings.general.graphicsUpdateInterval=0.005
 
 #this is an exemplariy simulation function, which adjusts some values for simulation

@@ -374,7 +374,7 @@ void PyProcessShowVisualizationSettingsDialog()
 {
 #ifdef USE_GLFW_GRAPHICS
     //open window to execute a python command ... 
-    std::string str = R"(
+    std::string str = R"PY(
 import exudyn
 import numpy as np
 try:
@@ -391,7 +391,7 @@ try:
 except:
     print("visualizationSettings dialog failed: cannot import exudyn.GUI / tkinter; tkinter probably missing")
 
-)";
+)PY";
     PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
 #endif // USE_GLFW_GRAPHICS
 }
@@ -403,14 +403,14 @@ void PyProcessShowHelpDialog()
 #ifdef USE_GLFW_GRAPHICS
 
     float alphaTransparency = GetGlfwRenderer().GetVisualizationSettings()->dialogs.alphaTransparency;
-    std::string str = R"(
+    std::string str = R"PY(
 import tkinter as tk
 import exudyn
 from exudyn.GUI import GetTkRootAndNewWindow
 
 [root, tkWindow, tkRuns] = GetTkRootAndNewWindow()
 
-)";
+)PY";
     if (GetGlfwRenderer().GetVisualizationSettings()->dialogs.alwaysTopmost)
     {
         str += "tkWindow.attributes('-topmost', True) #puts window topmost (permanent)\n";
@@ -419,7 +419,7 @@ from exudyn.GUI import GetTkRootAndNewWindow
     {
         str += "tkWindow.attributes('-alpha'," + EXUstd::ToString(alphaTransparency) + ") #transparency\n";
     }
-    str += R"(
+    str += R"PY(
 tkWindow.title("Help on keyboard commands and mouse")
 tkWindow.lift() #window has focus
 tkWindow.bind("<Escape>", lambda x: tkWindow.destroy())
@@ -458,8 +458,9 @@ KEYPAD 2/8,4/6,1/9    ... rotate scene about 1,2 or 3-axis (use CTRL for small r
 F2                    ... ignore all keyboard input, except for KeyPress user function, 
                           F2 and escape keys
 F3                    ... show mouse coordinates
+CTRL+F3               ... show model view parameters (zoom, rotationVector, centerPoint)
 Q      ... stop current solver and proceed to next simulation (or end of file); 
-           after window.reallyQuitTimeLimit (default:900) seconds a safety dialog opens
+           after general.reallyQuitTimeLimit (default:900) seconds a safety dialog opens
 A      ... zoom all
 C      ... show/hide connectors
 CTRL+C ... show/hide connector numbers
@@ -480,7 +481,7 @@ T      ... switch between faces transparent/ faces transparent + edges /
 X      ... execute command; dialog may appear in background! may crash simulation!
 V      ... visualization settings; dialog may appear behind the visualization window!
 ESCAPE ... close render window and stop all simulations (same as close window button); 
-           after window.reallyQuitTimeLimit seconds a dialog opens for safety
+           after general.reallyQuitTimeLimit seconds a dialog opens for safety
 SPACE  ... continue simulation
 """
 textW.insert(tk.END, msg)
@@ -489,21 +490,18 @@ if tkRuns:
     root.wait_window(tkWindow)
 else:
     tk.mainloop()
-)";
+)PY";
     PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
 #endif // USE_GLFW_GRAPHICS
 
 }
 
-void PyProcessShowPythonCommandDialog()
-{
-#ifdef USE_GLFW_GRAPHICS
-
-    //open window to execute a python command ... 
-    float alphaTransparency = GetGlfwRenderer().GetVisualizationSettings()->dialogs.alphaTransparency;
-    std::string str = R"(
+//define these strings outside of PyProcessShowPythonCommandDialog
+//otherwise, compiler gives "unexpected end of line" error!!!
+std::string strPythonCommandInit = R"PY(
 import exudyn
 import tkinter as tk
+import tkinter.font
 import traceback #for exception printing
 from tkinter import ttk
 from tkinter import scrolledtext
@@ -512,16 +510,9 @@ from exudyn.GUI import GetTkRootAndNewWindow
 [root, tkWindow, tkRuns] = GetTkRootAndNewWindow()
 commandString = ''
 tkWindow.title("Exudyn command window")
-)";
-    if (GetGlfwRenderer().GetVisualizationSettings()->dialogs.alwaysTopmost)
-    {
-        str += "tkWindow.attributes('-topmost', True) #puts window topmost (permanent)\n";
-    }
-    if (alphaTransparency < 1.f)
-    {
-        str += "tkWindow.attributes('-alpha'," + EXUstd::ToString(alphaTransparency) + ") #transparency\n";
-    }
-    str += R"(
+)PY";
+
+std::string strPythonCommandWork = R"PY(
 #resize grid columns/rows if window is resized:
 tkWindow.grid_columnconfigure(0, weight=1)
 tkWindow.grid_rowconfigure(1, weight=1)
@@ -537,7 +528,6 @@ label.grid(row=0, column=0, padx=15, pady=(15,0), sticky='W')
 
 text_area = scrolledtext.ScrolledText(tkWindow, wrap=tk.WORD,
                                       width=60, height=8,
-                                      #font=("Times New Roman", 15)
                                       )
 #configure tab size:
 font = tk.font.Font(font=text_area['font'])
@@ -631,11 +621,29 @@ if tkRuns:
     root.wait_window(tkWindow)
 else:
     tk.mainloop()
-)";
+)PY";
+
+
+void PyProcessShowPythonCommandDialog()
+{
+#ifdef USE_GLFW_GRAPHICS
+
+    //open window to execute a python command ... 
+    float alphaTransparency = GetGlfwRenderer().GetVisualizationSettings()->dialogs.alphaTransparency;
+	std::string str = strPythonCommandInit;
+    if (GetGlfwRenderer().GetVisualizationSettings()->dialogs.alwaysTopmost)
+    {
+        str += "tkWindow.attributes('-topmost', True) #puts window topmost (permanent)\n";
+    }
+    if (alphaTransparency < 1.f)
+    {
+        str += "tkWindow.attributes('-alpha'," + EXUstd::ToString(alphaTransparency) + ") #transparency\n";
+    }
+	str += strPythonCommandWork;
     PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
 #endif // USE_GLFW_GRAPHICS
-}
 
+}
 
 void PyProcessShowRightMouseSelectionDialog(Index itemID)
 {
@@ -668,7 +676,7 @@ void PyProcessAskQuit()
         //float alphaTransparency = GetGlfwRenderer().GetVisualizationSettings()->dialogs.alphaTransparency;
         PyWriteToSysDictionary("quitResponse", py::cast((int)1) );
 
-        std::string str = R"(
+        std::string str = R"PY(
 try:
     import exudyn
     import tkinter as tk
@@ -706,7 +714,7 @@ try:
     exudyn.sys['quitResponse'] = response+2 #2=do not quit, 3=quit
 except:
     pass #if fails, user shall not be notified
-)";
+)PY";
         PyProcessExecuteStringAsPython(str, !PyGetRendererMultiThreadedDialogs(), true);
         PyProcessSetResult((Index)PyReadRealFromSysDictionary("quitResponse"));
     }
@@ -763,3 +771,4 @@ void RendererDoSingleThreadedIdleTasks(Real waitSeconds)
 	}
 #endif // USE_GLFW_GRAPHICS
 }
+

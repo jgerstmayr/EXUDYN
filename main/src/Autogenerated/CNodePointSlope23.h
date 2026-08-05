@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-10-26  18:53:42 (last modified)
+* @date         2026-02-05  22:13:55 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CNodePointSlope23
-* @brief        A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements; the node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 \f$\times\f$ 3 for the slope vectors 'slopeY' and 'slopeZ'); all coordinates lead to second order differential equations; the slopeY vector defines the directional derivative w.r.t the local axial (y) coordinate, etc.; the slopeY vector reads \f$\rv_y^\prime=[0\;\;1\;\;0]^T\f$ and slopeZ gets \f$\rv_z^\prime=[0\;\;0\;\;1]^T\f$.
+* @brief        A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements. The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 \f$\times\f$ 3 for the slope vectors 'slopeY' and 'slopeZ'); all coordinates lead to second order differential equations; the slopeY vector defines the directional derivative w.r.t the local axial (y) coordinate, etc.; the slopeY vector reads \f$\rv_y^\prime=[0\;\;1\;\;0]^T\f$ and slopeZ gets \f$\rv_z^\prime=[0\;\;0\;\;1]^T\f$.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -125,18 +125,18 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
-            (Index)OutputVariableType::Position +
-            (Index)OutputVariableType::Displacement +
-            (Index)OutputVariableType::Velocity +
-            (Index)OutputVariableType::Acceleration +
-            (Index)OutputVariableType::CoordinatesTotal +
-            (Index)OutputVariableType::Coordinates +
-            (Index)OutputVariableType::Coordinates_t +
-            (Index)OutputVariableType::Coordinates_tt +
-            (Index)OutputVariableType::RotationMatrix +
-            (Index)OutputVariableType::Rotation +
-            (Index)OutputVariableType::AngularVelocity +
-            (Index)OutputVariableType::AngularVelocityLocal );
+            (Index64)OutputVariableType::Position +
+            (Index64)OutputVariableType::Displacement +
+            (Index64)OutputVariableType::Velocity +
+            (Index64)OutputVariableType::Acceleration +
+            (Index64)OutputVariableType::CoordinatesTotal +
+            (Index64)OutputVariableType::Coordinates +
+            (Index64)OutputVariableType::Coordinates_t +
+            (Index64)OutputVariableType::Coordinates_tt +
+            (Index64)OutputVariableType::RotationMatrix +
+            (Index64)OutputVariableType::Rotation +
+            (Index64)OutputVariableType::AngularVelocity +
+            (Index64)OutputVariableType::AngularVelocityLocal );
     }
 
 };

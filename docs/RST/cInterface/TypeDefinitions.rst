@@ -29,7 +29,7 @@ This section defines a couple of structures (C++: enum aka enumeration type), wh
 OutputVariableType
 ==================
 
-This section shows the OutputVariableType structure, which is used for selecting output values, e.g. for GetObjectOutput(...) or for selecting variables for contour plot.
+The enumeration type  OutputVariableType is used for selecting output values, e.g., for GetObjectOutput(...) or for selecting variables for contour plot.
 
 Available output variables and the interpreation of the output variable can be found at the object definitions. 
 The OutputVariableType does not provide information about the size of the output variable, which can be either scalar or a list (vector). For vector output quantities, the contour plot option offers an additional parameter for selection of the component of the OutputVariableType. The components are usually out of \{0,1,2\}, representing \{x,y,z\} components (e.g., of displacements, velocities, ...), or \{0,1,2,3,4,5\} representing \{xx,yy,zz,yz,xz,xy\} components (e.g., of strain or stress). In order to compute a norm, chose component=-1, which will result in the quadratic norm for other vectors and to a norm specified for stresses (if no norm is defined for an outputVariable, it does not compute anything)
@@ -46,11 +46,11 @@ The OutputVariableType does not provide information about the size of the output
 * | **Displacement**:
   | measure displacement; usually difference between current position and reference position
 * | **DisplacementLocal**:
-  | measure local displacement, e.g. in local joint coordinates
+  | measure local displacement, e.g., in local joint coordinates
 * | **Velocity**:
   | measure (translational) velocity of node or object
 * | **VelocityLocal**:
-  | measure local (translational) velocity, e.g. in local body or joint coordinates
+  | measure local (translational) velocity, e.g., in local body or joint coordinates
 * | **Acceleration**:
   | measure (translational) acceleration of node or object
 * | **AccelerationLocal**:
@@ -78,11 +78,11 @@ The OutputVariableType does not provide information about the size of the output
 * | **SlidingCoordinate**:
   | measure sliding coordinate in sliding joint
 * | **Director1**:
-  | measure a director (e.g. of a rigid body frame), or a slope vector in local 1 or x-direction
+  | measure a director (e.g., of a rigid body frame), or a slope vector in local 1 or x-direction
 * | **Director2**:
-  | measure a director (e.g. of a rigid body frame), or a slope vector in local 2 or y-direction
+  | measure a director (e.g., of a rigid body frame), or a slope vector in local 2 or y-direction
 * | **Director3**:
-  | measure a director (e.g. of a rigid body frame), or a slope vector in local 3 or z-direction
+  | measure a director (e.g., of a rigid body frame), or a slope vector in local 3 or z-direction
 * | **Force**:
   | measure global force, e.g., in joint or beam (resultant force), or generalized forces; see description of according object
 * | **ForceLocal**:
@@ -108,7 +108,7 @@ The OutputVariableType does not provide information about the size of the output
 ConfigurationType
 =================
 
-This section shows the ConfigurationType structure, which is used for selecting a configuration for reading or writing information to the module. Specifically, the ConfigurationType.Current configuration is usually used at the end of a solution process, to obtain result values, or the ConfigurationType.Initial is used to set initial values for a solution process.
+The enumeration type  ConfigurationType is used for selecting a configuration for reading or writing information to the module. Specifically, the ConfigurationType.Current configuration is usually used at the end of a solution process, to obtain result values, or the ConfigurationType.Initial is used to set initial values for a solution process.
 
 
 
@@ -137,7 +137,7 @@ This section shows the ConfigurationType structure, which is used for selecting 
 ItemType
 ========
 
-This section shows the ItemType structure, which is used for defining types of indices, e.g., in render window and will be also used in item dictionaries in future.
+The enumeration type  ItemType is used for defining types of indices, e.g., in render window and will be also used in item dictionaries in future.
 
 
 
@@ -164,7 +164,7 @@ This section shows the ItemType structure, which is used for defining types of i
 NodeType
 ========
 
-This section shows the NodeType structure, which is used for defining node types for 3D rigid bodies.
+The enumeration type  NodeType is used for defining node types for 3D rigid bodies.
 
 
 
@@ -217,7 +217,7 @@ This section shows the NodeType structure, which is used for defining node types
 JointType
 =========
 
-This section shows the JointType structure, which is used for defining joint types, used in KinematicTree.
+The enumeration type  JointType is used for defining joint types, used in KinematicTree.
 
 
 
@@ -246,7 +246,7 @@ This section shows the JointType structure, which is used for defining joint typ
 DynamicSolverType
 =================
 
-This section shows the DynamicSolverType structure, which is used for selecting dynamic solvers for simulation.
+The enumeration type  DynamicSolverType is used for selecting dynamic solvers for simulation.
 
 
 
@@ -283,7 +283,7 @@ This section shows the DynamicSolverType structure, which is used for selecting 
 CrossSectionType
 ================
 
-This section shows the CrossSectionType structure, which is used for defining beam cross section types.
+The enumeration type  CrossSectionType is used for defining beam cross section types.
 
 
 
@@ -302,7 +302,7 @@ This section shows the CrossSectionType structure, which is used for defining be
 KeyCode
 =======
 
-This section shows the KeyCode structure, which is used for special key codes in keyPressUserFunction.
+The enumeration type  KeyCode is used for special key codes in keyPressUserFunction.
 
 
 
@@ -355,7 +355,7 @@ This section shows the KeyCode structure, which is used for special key codes in
 LinearSolverType
 ================
 
-This section shows the LinearSolverType structure, which is used for selecting linear solver types, which are dense or sparse solvers.
+The enumeration type  LinearSolverType is used for selecting linear solver types, which are dense or sparse solvers.
 
 
 
@@ -370,7 +370,7 @@ This section shows the LinearSolverType structure, which is used for selecting l
 * | **EigenSparseSymmetric**:
   | use sparse matrices and according solvers; NOTE: this is the symmetric mode, which assumes symmetric system matrices; this is EXPERIMENTAL and should only be used of user knows that the system matrices are (nearly) symmetric; does not work with scaled GeneralizedAlpha matrices; does not work with constraints, as it must be symmetric positive definite
 * | **EigenDense**:
-  | use Eigen's LU factorization with partial pivoting (faster than EXUdense) or full pivot (if linearSolverSettings.ignoreSingularJacobian=True; is much slower)
+  | use Eigen's LU factorization with partial pivoting (faster than EXUdense) or full pivot (if linearSolverSettings.ignoreSingularJacobian=True; is much slower, but can resolve overdetermined and underdetermined problems!)
 
 
 
@@ -380,7 +380,7 @@ This section shows the LinearSolverType structure, which is used for selecting l
 ContactTypeIndex
 ================
 
-This section shows the ContactTypeIndex structure, which is in GeneralContact to select specific contact items, such as spheres, ANCFCable or triangle items.
+The enumeration type  ContactTypeIndex is used in GeneralContact to select specific contact items, such as spheres, ANCFCable or triangle items.
 
 
 

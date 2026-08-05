@@ -188,6 +188,8 @@ SolverOutputData has the following items:
 
 * | **cpuLastTimePrinted** [type = Real, default = 0.]:
   | CPU time when output has been printed last time
+* | **cpuSolverStartTime** [type = Real, default = 0.]:
+  | CPU start time of main solver (not including initial conditions); cpuSolverStartTime-cpuStartTime gives time for initialization
 * | **cpuStartTime** [type = Real, default = 0.]:
   | CPU start time of computation (starts counting at computation of initial conditions)
 * | **finishedSuccessfully** [type = bool, default = False]:
@@ -214,6 +216,12 @@ SolverOutputData has the following items:
   | multithreading mode that has been used: 0=None (serial), 1=multithreading, 2=multithreading with load balancing; (modes new since 2025-06, V1.9.198)
 * | **numberOfThreadsUsed** [type = Index, default = 1]:
   | number of threads that have been used in simulation
+* | **simulationStoppedByUser** [type = bool, default = False]:
+  | flag (initialized false) is set true when user stops the simulation (press Q, Escape, etc.)
+* | **simulationStoppedByUserFunction** [type = bool, default = False]:
+  | flag (initialized false) is set true when a user function (PreStep, PostNewton, etc.) sends termination signal
+* | **simulationTimeout** [type = bool, default = False]:
+  | flag (initialized false) is set true when exudyn.special.solver.timeout is reached (and timeout is >= 0)
 * | **stepInformation** [type = Index, default = 0]:
   | this is a copy of the solvers stepInformation used for console output
 * | **verboseMode** [type = Index, default = 0]:

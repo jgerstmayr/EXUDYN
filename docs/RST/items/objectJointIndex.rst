@@ -14,6 +14,7 @@ A Joint is a special Object, Connector and Constraint, which is attached to posi
    ObjectJointRollingDisc.rst
    ObjectJointRevolute2D.rst
    ObjectJointPrismatic2D.rst
+   ObjectJointSliding.rst
    ObjectJointSliding2D.rst
    ObjectJointALEMoving2D.rst
 

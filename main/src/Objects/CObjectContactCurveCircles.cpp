@@ -74,7 +74,7 @@ void CObjectContactCurveCircles::ComputeConnectorProperties(const MarkerDataStru
 	CHECKandTHROW(parameters.segmentsData.UseDenseMatrix(), "CObjectContactCurveCircles::ComputeConnectorProperties: segmentsData must be in dense matrix mode!");
 
 	const ResizableMatrix& segData = parameters.segmentsData.GetInternalDenseMatrix();
-	const ResizableMatrix& polyData = parameters.polynomialData.GetInternalDenseMatrix();
+	//const ResizableMatrix& polyData = parameters.polynomialData.GetInternalDenseMatrix();
 
 	//bool hasPolyData = polyData.NumberOfColumns() != 0;
 

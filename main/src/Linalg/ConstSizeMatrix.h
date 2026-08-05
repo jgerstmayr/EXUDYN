@@ -229,8 +229,8 @@ public:
 
 	Index NumberOfRows() const { return numberOfRows; };                            //!< number of columns (currently used)
 	Index NumberOfColumns() const { return numberOfColumns; };                      //!< number of rows (currently used)
-	const T* GetDataPointer() const { return data; }									//!< return pointer to first data containing T numbers; const needed for LinkedDataVectors.
-	T* GetDataPointer() { return data; }									//!< return pointer to first data containing T numbers
+	const T* GetDataPointer() const { return &data[0]; }									//!< return pointer to first data containing T numbers; const needed for LinkedDataVectors.
+	T* GetDataPointer() { return &data[0]; }									//!< return pointer to first data containing T numbers
 	bool IsConstSizeMatrix() const { return true; }						//!< for derived classes: determine, if matrix has constant size
 
 	constexpr Index MaxDataSize() const { return dataSize; }
@@ -314,7 +314,7 @@ public:
 	}
 
 	//Set Skew Matrix from vector v; only valid for dataSize=9; creates 3x3 matrix
-	void SetSkewMatrix(const Vector3D v)
+	void SetSkewMatrix(const SlimVectorBase<T, 3> v)
 	{
 		CHECKandTHROW((dataSize >= 9), "ConstSizeMatrixBase::SetSkewMatrix: only valid for dataSize >= 9");
 		SetMatrix(3,3,{ 0.,  -v[2], v[1],
@@ -742,6 +742,7 @@ public:
 	//! get fast inverse for 1D, 2D and 3D case
 	ConstSizeMatrixBase<T, dataSize> GetInverse() const
 	{
+		CHECKandTHROW(this->numberOfColumns == this->numberOfRows, "ConstSizeMatrixBase::GetInverse: only available if number of rows==number of columns!");
 		switch (this->numberOfColumns)
 		{
 			case 1:
@@ -803,6 +804,37 @@ public:
 		}
 	}
 
+	//! get fast determinant for 1D, 2D and 3D case
+	T GetDeterminant() const
+	{
+		CHECKandTHROW(this->numberOfColumns == this->numberOfRows, "ConstSizeMatrixBase::GetDeterminant: only available if number of rows==number of columns!");
+		switch (this->numberOfColumns)
+		{
+			case 1:
+			{
+				return (*this)(0, 0);
+			}
+			case 2:
+			{
+				// det = ad - bc
+				return (*this)(0, 0) * (*this)(1, 1) - (*this)(0, 1) * (*this)(1, 0);
+			}
+			case 3:
+			{
+				const ConstSizeMatrixBase<T, dataSize>& m = *this;
+				// efficient / stable:
+				return m(0, 0) * (m(1, 1) * m(2, 2) - m(2, 1) * m(1, 2)) -
+					m(0, 1) * (m(1, 0) * m(2, 2) - m(1, 2) * m(2, 0)) +
+					m(0, 2) * (m(1, 0) * m(2, 1) - m(1, 1) * m(2, 0));
+			}
+			default:
+			{
+				CHECKandTHROWstring("ConstSizeMatrixBase::GetDeterminant: only available for size up to 3x3!");
+				return (T)0.;
+			}
+		}
+	}
+
 	//! @brief Output operator << generates ostream "[m[0][0] m[0][1] ... m[0][m]; ... m[n][m]]" for a matrix m;
 	//! the FORMAT IS DIFFERENT TO HOTINT1
 	//! @todo check Vector/Matrix ostream output format to be compatible with Python / NumPy
@@ -846,7 +878,7 @@ public:
 	//! @todo check efficient implementation of tranpose for non-square matrices
 	void TransposeYourself()
 	{
-		CHECKandTHROW(IsSquare(), "ConstSizeMatrixBase::GetTransposed: matrix must be square!");
+		CHECKandTHROW(IsSquare(), "ConstSizeMatrixBase::TransposeYourself: matrix must be square!");
 
 		for (Index i = 0; i < numberOfRows; i++) {
 			for (Index j = 0; j < i; j++) { //operates only on lower left triangular matrix

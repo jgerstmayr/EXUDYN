@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-03  15:35:20 (last modified)
+* @date         2026-02-05  22:13:55 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -46,7 +46,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainNodeRigidBodyRxyz
-* @brief        A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beams; all coordinates lead to second order differential equations; NOTE that this node has a singularity if the second rotation parameter reaches \f$\psi_1 = (2k-1) \pi/2\f$, with \f$k \in \Ncal\f$ or \f$-k \in \Ncal\f$.
+* @brief        A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beams. All coordinates lead to second order differential equations; NOTE: this node has a singularity if the second rotation parameter reaches \f$\psi_1 = (2k-1) \pi/2\f$, with \f$k \in \Ncal\f$ or \f$-k \in \Ncal\f$.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

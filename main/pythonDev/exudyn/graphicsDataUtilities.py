@@ -293,40 +293,24 @@ def ComputeTriangularMesh(vertices, segments):
     
     #+++++++++++++++++++++++++++++++++
     #compute vertices2simplices list:
-    vertices2simplices = [[]]*nVertices
-    cnt = 0
-    for trig in trigs:
-        for i in trig:
-            alist=list(vertices2simplices[i])
-            alist.append(cnt)
-            vertices2simplices[i] = alist    
-        cnt += 1 #trig counter
-            
-    #+++++++++++++++++++++++++++++++++
-    #compute neighbors:
-    trigNeighbors = 0*trigs #-1 means no neighbor trig!
-    trigNeighbors[:,:] = -1
-    #run over all triangles
-    for i in range(len(trigs)):
-        for j in range(3):
-            i0 = trigs[i,j]
-            i1 = trigs[i,(j+1)%3]
-            #actSeg = [i0, i1]
-            listTest = vertices2simplices[i0] + vertices2simplices[i1]
-            for trigIndex in listTest:
-                if trigIndex < i:
-                    for k in range(3):
-                        t0 = trigs[trigIndex, k]
-                        t1 = trigs[trigIndex, (k+1)%3]
-                        if (i0 == t1) and (i1 == t0): #opposite trig orientation is reversed ...
-                            trigNeighbors[i,j] = trigIndex
-                            trigNeighbors[trigIndex,k] = i
+    vertices2simplices = [[] for _ in range(len(vertices))]
+
+    for i, trig in enumerate(trigs):
+        for vertex_idx in trig:
+            vertices2simplices[vertex_idx].append(i)
+
+    for s in vertices2simplices:
+        if len(s) == 0:
+            import exudyn as exu
+            exu.Print('WARNING: ComputeTriangularMesh: vertex with no relation to triangles found - this indicates duplicated vertices, e.g., in SolidExtrusion() vertices')
+            break
+
+    trigNeighbors = tri.neighbors 
 
     #+++++++++++++++++++++++++++++++++
     #compute inside triangles:
-    trianglesInside = [-1]*len(trigs) #-1 is undefined, 0=outside, 1=inside
-    
-    for seg in segments: #triangles left to segment are inside
+    trianglesInside = np.full(len(trigs), -1, dtype=int)
+    for iSeg, seg in enumerate(segments): #triangles left to segment are inside
         listTest = vertices2simplices[seg[0]] + vertices2simplices[seg[1]]
         for trigIndex in listTest:
             for k in range(3):

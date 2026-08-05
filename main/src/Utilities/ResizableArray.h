@@ -343,12 +343,22 @@ public:
     {
 		CHECKandTHROW((NumberOfItems() == array.NumberOfItems()), "ResizableArray::operator==: incompatible size of arrays");
         Index cnt = 0;
-        for (auto item : array)
-        {
+        for (const auto& item : array) //earlier: auto item (copy!)
+		{
             if (!(item == (*this)[cnt++])) { return false; }
         }
         return true;
     }
+
+	//! comparison operator for one element; returns true, if all components are equal to given value
+	bool operator== (const T& value) const
+	{
+		for (const auto& item : *this)
+		{
+			if (!(item == value)) { return false; }
+		}
+		return true;
+	}
 
 	//! conversion of ResizableArray into std::vector (e.g. for usage in pybind11)
 	operator std::vector<T>() const { return std::vector<T>(begin(), end()); }

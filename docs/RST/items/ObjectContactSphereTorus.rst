@@ -5,7 +5,7 @@
 ObjectContactSphereTorus
 ========================
 
-[UNDER DEVELOPMENT] A simple contact connector between a sphere (marker0) and a torus (marker1). The sphere is assumed to be placed inside of the torus (outer contact of sphere with torus currently not implemented!).
+A simple contact connector between a sphere (marker0) and a torus (marker1). The sphere is assumed to be placed inside of the torus (outer contact of sphere with torus currently not implemented!).
 
 Author: Gerstmayr Johannes
 

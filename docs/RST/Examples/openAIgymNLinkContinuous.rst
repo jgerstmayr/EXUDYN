@@ -227,7 +227,7 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            
            self.simulationSettings.timeIntegration.newton.useModifiedNewton = True
            
-           self.SC.visualizationSettings.general.drawWorldBasis=True
+           self.SC.visualizationSettings.view0.scene.drawWorldBasis=True
            self.SC.visualizationSettings.general.graphicsUpdateInterval = 0.01
            self.SC.visualizationSettings.openGL.multiSampling=4
            
@@ -420,7 +420,7 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
        else:
            verbose = 1 #turn on without tensorboard
        
-       # here the model is loaded (either for vectorized or scalar environmentÂ´using SAC or A2C).     
+       # here the model is loaded (either for vectorized or scalar environment´using SAC or A2C).     
        def GetModel(flagContinuous, myEnv, modelType='SAC'): 
    
            if flagContinuous : 

@@ -652,12 +652,12 @@ OutputVariableType CObjectFFRF::GetOutputVariableTypesSuperElement(Index meshNod
 	//the following types are available independent of node output capabilities, as the MeshNode functions are implemented here ...
 	//additional outputvariables could be added in future...
 	return (OutputVariableType)(
-		(Index)OutputVariableType::Position +
-		(Index)OutputVariableType::Displacement +
-		(Index)OutputVariableType::Velocity +
-		(Index)OutputVariableType::Acceleration +
-		(Index)OutputVariableType::DisplacementLocal +
-		(Index)OutputVariableType::VelocityLocal);
+		(Index64)OutputVariableType::Position +
+		(Index64)OutputVariableType::Displacement +
+		(Index64)OutputVariableType::Velocity +
+		(Index64)OutputVariableType::Acceleration +
+		(Index64)OutputVariableType::DisplacementLocal +
+		(Index64)OutputVariableType::VelocityLocal);
 }
 
 //! get extended output variables for multi-nodal objects with mesh nodes

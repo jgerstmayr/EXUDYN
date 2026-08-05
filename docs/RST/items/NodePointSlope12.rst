@@ -5,7 +5,7 @@
 NodePointSlope12
 ================
 
-A 3D point/slope vector node for thin ANCF (absolute nodal coordinate formulation) plate elements; the node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 \ :math:`\times`\  3 for the slope vectors 'slopeX' and 'slopeY'); all coordinates lead to second order differential equations; the slopeX vector defines the directional derivative w.r.t the local axial (x) coordinate, etc.; in straight configuration aligned at the global x-axis, the slopeY vector reads \ :math:`{\mathbf{r}}_y^\prime=[0\;\;1\;\;0]^T`\ .
+A 3D point/slope vector node for thin ANCF (absolute nodal coordinate formulation) plate elements. The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 \ :math:`\times`\  3 for the slope vectors 'slopeX' and 'slopeY'); all coordinates lead to second order differential equations; the slopeX vector defines the directional derivative w.r.t the local axial (x) coordinate, etc.; in straight configuration aligned at the global x-axis, the slopeY vector reads \ :math:`{\mathbf{r}}_y^\prime=[0\;\;1\;\;0]^T`\ .
 
 \ **Additional information for NodePointSlope12**\ :
 

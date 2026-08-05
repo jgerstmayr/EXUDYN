@@ -17,7 +17,7 @@
 
 import numpy as np
 from numpy.linalg import norm
-from math import sin, cos, tan, atan2, acos, sqrt
+from math import sin, cos, tan, atan2, sqrt
 
 #import exudyn as exu
 from exudyn.rigidBodyUtilities import EulerParameters2RotationMatrix, RotXYZ2RotationMatrix, HT2rotationMatrix, HT2translation, \

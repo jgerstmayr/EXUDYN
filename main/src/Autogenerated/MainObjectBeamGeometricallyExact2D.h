@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-03  15:35:22 (last modified)
+* @date         2026-01-08  19:00:15 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectBeamGeometricallyExact2D
-* @brief        A 2D geometrically exact beam finite element, currently using 2 nodes of type NodeRigidBody2D; FURTHER TESTS REQUIRED. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the \f$y\f$-axis, while and angle \f$\pi/2\f$ means that the cross section points in negative \f$x\f$-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[-L/2, L/2]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the \hac{EOM}).
+* @brief        A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the \f$y\f$-axis, while and angle \f$\pi/2\f$ means that the cross section points in negative \f$x\f$-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[-L/2, L/2]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the \hac{EOM}).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -107,11 +107,14 @@ public: // AUTO:
         return (Node::Type)(Node::Position2D + Node::Orientation2D);
     }
 
+    //! AUTO:  Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail
+    virtual bool CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const override;
+
 
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers = EPyUtils::GetNodeIndex2Safely(d["nodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers = EPyUtils::GetArrayNodeIndexSafely(d["nodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectBeamGeometricallyExact2D->GetParameters().physicsLength = py::cast<Real>(d["physicsLength"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectBeamGeometricallyExact2D->GetParameters().physicsMassPerLength = py::cast<Real>(d["physicsMassPerLength"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectBeamGeometricallyExact2D->GetParameters().physicsCrossSectionInertia = py::cast<Real>(d["physicsCrossSectionInertia"]); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -135,7 +138,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex(ArrayIndex(cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers)); //! AUTO: cast variables into python (not needed for standard types) 
+        d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex(cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsLength"] = (Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsLength; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsMassPerLength"] = (Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsMassPerLength; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsCrossSectionInertia"] = (Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsCrossSectionInertia; //! AUTO: cast variables into python (not needed for standard types) 
@@ -158,7 +161,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex(ArrayIndex(cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers)));} //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex(cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("physicsLength") == 0) { return py::cast((Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsLength);} //! AUTO: get parameter
         else if (parameterName.compare("physicsMassPerLength") == 0) { return py::cast((Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsMassPerLength);} //! AUTO: get parameter
         else if (parameterName.compare("physicsCrossSectionInertia") == 0) { return py::cast((Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsCrossSectionInertia);} //! AUTO: get parameter
@@ -182,7 +185,7 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
         if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers = EPyUtils::GetNodeIndex2Safely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers = EPyUtils::GetArrayNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsLength") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsMassPerLength") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsMassPerLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsCrossSectionInertia") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsCrossSectionInertia = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

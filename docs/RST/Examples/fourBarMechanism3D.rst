@@ -168,7 +168,7 @@ You can view and download this file on Github: `fourBarMechanism3D.py <https://g
        simulationSettings.solutionSettings.writeSolutionToFile = False
        #simulationSettings.solutionSettings.solutionWritePeriod = 0.005 #store every 5 ms
    
-       SC.visualizationSettings.window.renderWindowSize=[1200,1024]
+       SC.visualizationSettings.view0.window.renderWindowSize=[1200,1024]
        SC.visualizationSettings.openGL.multiSampling = 4
        SC.visualizationSettings.general.autoFitScene = False
    

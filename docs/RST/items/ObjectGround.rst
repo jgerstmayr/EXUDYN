@@ -5,7 +5,7 @@
 ObjectGround
 ============
 
-A ground object behaving like a rigid body, but having no degrees of freedom; used to attach body-connectors without an action. For examples see spring dampers and joints.
+A ground object behaving like a rigid body, but having no degrees of freedom. Used to attach body-connectors without an action. For examples see spring dampers and joints.
 
 \ **Additional information for ObjectGround**\ :
 

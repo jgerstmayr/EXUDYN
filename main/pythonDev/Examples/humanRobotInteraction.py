@@ -466,19 +466,19 @@ simulationSettings.timeIntegration.verboseMode = 1
 #simulationSettings.timeIntegration.simulateInRealtime = True
 simulationSettings.solutionSettings.solutionWritePeriod = 0.005 #store every 5 ms
 
-SC.visualizationSettings.window.renderWindowSize=[1600,1200]
+SC.visualizationSettings.view0.window.renderWindowSize=[1600,1200]
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.general.autoFitScene = False
 
 SC.visualizationSettings.nodes.drawNodesAsPoint=False
 SC.visualizationSettings.nodes.showBasis=True
-SC.visualizationSettings.general.drawWorldBasis=True
+SC.visualizationSettings.view0.scene.drawWorldBasis=True
 SC.visualizationSettings.bodies.kinematicTree.showJointFrames = False
 
 SC.visualizationSettings.openGL.multiSampling=4
 SC.visualizationSettings.openGL.lineWidth = 2
-# SC.visualizationSettings.openGL.shadow=0.3 #don't do this for fine meshes!
-SC.visualizationSettings.openGL.light0position=[-6,2,12,0]
+# SC.visualizationSettings.openGL.light0.shadow=0.3 #don't do this for fine meshes!
+SC.visualizationSettings.openGL.light0.position=[-6,2,12,0]
 
 SC.renderer.Start()
 if 'renderState' in exu.sys: #reload old view

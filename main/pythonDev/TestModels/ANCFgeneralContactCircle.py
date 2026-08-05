@@ -263,7 +263,7 @@ simulationSettings.timeIntegration.stepInformation= 3+128+256 #show step reducti
 simulationSettings.timeIntegration.verboseMode = 1 #otherwise, load steps are shown ...
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-SC.visualizationSettings.general.drawWorldBasis=True
+SC.visualizationSettings.view0.scene.drawWorldBasis=True
 SC.visualizationSettings.nodes.show = True
 SC.visualizationSettings.nodes.defaultSize = h*20
 SC.visualizationSettings.loads.show = False

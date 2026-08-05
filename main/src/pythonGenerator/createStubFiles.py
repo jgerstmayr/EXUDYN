@@ -31,11 +31,6 @@ filesParsed=[
             ]
 
 mergedFile=''
-# for fileName in filesParsed:
-#     file=open(sourceDir+fileName,'r') 
-#     # fileLines = file.readlines()
-#     mergedFile += file.read()
-#     file.close()
 
 #operate per class, to have only one structure per class!
 classData = {}          #dictionary of class data
@@ -43,8 +38,7 @@ classData = {}          #dictionary of class data
 #lineCnt = 0
 currentClass = ''
 for fileName in filesParsed:
-    #file=open(sourceDir+fileName,'r') 
-    with open(sourceDir+fileName, 'r') as file:
+    with open(sourceDir+fileName, 'r', encoding='utf8') as file:
         fileLines = file.readlines()
         for line in fileLines:
             if line[0:6] == 'class ':

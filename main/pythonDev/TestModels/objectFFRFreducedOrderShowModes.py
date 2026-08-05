@@ -72,9 +72,9 @@ mbs.Assemble()
 SC.visualizationSettings.nodes.show = False
 SC.visualizationSettings.bodies.deformationScaleFactor = 1 #use this factor to scale the deformation of modes
 
-SC.visualizationSettings.openGL.showFaceEdges = True
+SC.visualizationSettings.view0.scene.showFaceEdges = True
 SC.visualizationSettings.openGL.multiSampling=4
-SC.visualizationSettings.window.renderWindowSize = [1600,1080]
+SC.visualizationSettings.view0.window.renderWindowSize = [1600,1080]
 # SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.DisplacementLocal
 # SC.visualizationSettings.contour.outputVariableComponent = 0 #component
 

@@ -1293,10 +1293,34 @@ namespace EXUmath {
 			for (Index j = 0; j < m1.NumberOfRows(); j++)
 			{
 				//auto value = (decltype(result(0, 0)))0.; //in this way, we can determine double or float! ==> TEST
-				Real value = 0.; //in this way, we can determine double or float! ==> TEST
+				Real value = 0.;
 				for (Index k = 0; k < m1.NumberOfColumns(); k++)
 				{
-					value += m1.GetUnsafe(j, k)*m2.GetUnsafe(k, i);
+					value += m1.GetUnsafe(j, k) * m2.GetUnsafe(k, i);
+				}
+				result.GetUnsafe(j, i) = value;
+			}
+		}
+	}
+
+	//! generic matrix*matrix multiplication template
+	template<class TMatrix1, class TMatrix2, class TMatrixResult, class TOutput>
+	inline void MultMatrixMatrixTemplate2(const TMatrix1& m1, const TMatrix2& m2, TMatrixResult& result)
+	{
+		CHECKandTHROW(m1.NumberOfColumns() == m2.NumberOfRows(),
+			"MultMatrixMatrixTemplate(TMatrix1,TMatrix2,TMatrixResult): Size mismatch");
+
+		result.SetNumberOfRowsAndColumns(m1.NumberOfRows(), m2.NumberOfColumns());
+
+		for (Index i = 0; i < m2.NumberOfColumns(); i++)
+		{
+			for (Index j = 0; j < m1.NumberOfRows(); j++)
+			{
+				//auto value = (decltype(result(0, 0)))0.; //in this way, we can determine double or float! ==> TEST
+				TOutput value = (TOutput)0.;
+				for (Index k = 0; k < m1.NumberOfColumns(); k++)
+				{
+					value += (TOutput)(m1.GetUnsafe(j, k) * m2.GetUnsafe(k, i));
 				}
 				result.GetUnsafe(j, i) = value;
 			}

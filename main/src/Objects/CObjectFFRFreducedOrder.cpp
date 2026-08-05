@@ -921,19 +921,19 @@ OutputVariableType CObjectFFRFreducedOrder::GetOutputVariableTypesSuperElement(I
 	CHECKandTHROW(meshNodeNumber < GetNumberOfMeshNodes(), "CObjectFFRFreducedOrder::GetOutputVariableSuperElement: meshNodeNumber out of range ");
 	//independent of meshNodeNumber!!!
 	OutputVariableType ovt = (OutputVariableType)(
-		(Index)OutputVariableType::Position +
-		(Index)OutputVariableType::Displacement +
-		(Index)OutputVariableType::Velocity +
-		(Index)OutputVariableType::Acceleration +
-		(Index)OutputVariableType::DisplacementLocal +
-		(Index)OutputVariableType::VelocityLocal);
+		(Index64)OutputVariableType::Position +
+		(Index64)OutputVariableType::Displacement +
+		(Index64)OutputVariableType::Velocity +
+		(Index64)OutputVariableType::Acceleration +
+		(Index64)OutputVariableType::DisplacementLocal +
+		(Index64)OutputVariableType::VelocityLocal);
 	if (parameters.outputVariableTypeModeBasis == OutputVariableType::StressLocal) 
 	{
-		ovt = (OutputVariableType)((Index)ovt + (Index)OutputVariableType::StressLocal);
+		ovt = (OutputVariableType)((Index64)ovt + (Index64)OutputVariableType::StressLocal);
 	}
 	else if (parameters.outputVariableTypeModeBasis == OutputVariableType::StrainLocal)
 	{
-		ovt = (OutputVariableType)((Index)ovt + (Index)OutputVariableType::StrainLocal);
+		ovt = (OutputVariableType)((Index64)ovt + (Index64)OutputVariableType::StrainLocal);
 	}
 
 	return ovt;

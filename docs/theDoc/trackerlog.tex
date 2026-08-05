@@ -9,15 +9,1159 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.10.0, 
-  \item last change =  2025-07-09, 
-  \item Number of issues = 2139, 
-  \item Number of resolved issues = 1912 (0 in current version), 
+  \item Exudyn version = 1.11.0, 
+  \item last change =  2026-08-05, 
+  \item Number of issues = 2350, 
+  \item Number of resolved issues = 2073 (0 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.0}: {\bf \color{warningRed}  resolved BUG 2348}: {\bf StableBaselines}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: P. Manzl
+    \item {description: Importing exudyn.artificialIntelligence raises an error at to the old gym legacy flag with the latest stable-baselines3 versions due to non-numeric version numbers}
+    \item   date resolved: {\bf 2026-06-01 14:43},
+date raised: 2026-06-01 
+  \ei
+  \item[] {\bf Version 1.10.160}:  resolved Issue 2346: {\bf special.solver.timeout}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change start time for this timer to output.cpuSolverStartTime to more accurately handle timeouts and simulationInRealtime}
+    \item   date resolved: {\bf 2026-04-20 22:39},
+date raised: 2026-04-20 
+  \ei
+  \item[] {\bf Version 1.10.159}:  resolved Issue 2347: {\bf solver.output}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add distinguished flags for stopping simulation: simulationTimeout, simulationStoppedByUser and simulationStoppedByUserFunction to determine causes for stopped simulations (all giving finishedSuccessfully=True)}
+    \item   date resolved: {\bf 2026-04-20 22:38},
+date raised: 2026-04-20 
+  \ei
+  \item[] {\bf Version 1.10.158}:  resolved Issue 2345: {\bf Create functions}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: several parameters like CreateTorsionalSpringDamper offset, velocityOffset and torque require UReal but only Real needed}
+    \item   date resolved: {\bf 2026-04-19 14:39},
+date raised: 2026-04-19 
+  \ei
+  \item[] {\bf Version 1.10.157}:  resolved Issue 2341: {\bf CreateSphereTriangleContact}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: CreateSphereTriangleContact, CreateSphereQuadContact and CreateSphereSphereContact: adapt to make it work with mass points in case that there is no friction, similar to issue 2231}
+    \item   date resolved: {\bf 2026-04-07 20:15},
+date raised: 2026-04-07 
+  \ei
+  \item[] {\bf Version 1.10.156}:  resolved Issue 2231: {\bf CreateSphereSphereContact}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: if objects are mass points (2D, 3D), only add MarkerBodyPosition if dynamicFriction=0 (otherwise error); enable markers in bodyNumbers field}
+    \item   date resolved: {\bf 2026-04-07 20:13},
+date raised: 2026-01-19 
+  \ei
+  \item[] {\bf Version 1.10.155}:  resolved Issue 2340: {\bf CreateSphereTriangleContact}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: CreateSphereTriangleContact and CreateSphereQuadContact shall accept list of quadPoints or trianglePoints instead of Vector3DList}
+    \item   date resolved: {\bf 2026-04-07 20:01},
+date raised: 2026-04-07 
+  \ei
+  \item[] {\bf Version 1.10.154}:  resolved Issue 2339: {\bf ContactSphereTriangle}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: in case of frictionless contact, torques on triangle are neglected}
+    \item   date resolved: {\bf 2026-04-06 19:46},
+date raised: 2026-04-06 
+  \ei
+  \item[] {\bf Version 1.10.153}:  resolved Issue 2338: {\bf CreateContactSphereSphere}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: allow mass points with MarkerBodyPosition or MarkerNodePosition in friction-less case}
+    \item   date resolved: {\bf 2026-04-06 19:42},
+date raised: 2026-04-06 
+  \ei
+  \item[] {\bf Version 1.10.152}:  resolved Issue 2336: {\bf beams}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add new beams generate function GenerateBeamElementsAlongLine which is similar to GenerateStraightBeam, but has more readable args and a dict as return value}
+    \item   date resolved: {\bf 2026-04-06 15:53},
+date raised: 2026-04-06 
+  \ei
+  \item[] {\bf Version 1.10.151}:  resolved Issue 2335: {\bf shells}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add visualization setting shells.thicknessFactor for drawing larger thickness for visual inspectation}
+    \item   date resolved: {\bf 2026-04-03 14:03},
+date raised: 2026-04-03 
+  \ei
+  \item[] {\bf Version 1.10.150}:  resolved Issue 2334: {\bf VSettingsShells}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add visualization settings for plates and shells}
+    \item   date resolved: {\bf 2026-04-02 16:04},
+date raised: 2026-04-02 
+  \ei
+  \item[] {\bf Version 1.10.149}:  resolved Issue 2331: {\bf NumpyMatrix}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add option to silently convert scalar values into NumpyMatrix in object parameter initialization (e.g. height in ANCFThinPlate being either scalar or matrix)}
+    \item   date resolved: {\bf 2026-04-02 13:25},
+date raised: 2026-04-02 
+  \ei
+  \item[] {\bf Version 1.10.148}:  resolved Issue 2330: {\bf AddSystem}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add py::keep\_alive<0, 1>() to functions like AddSystem which return an object which depends on another object (SystemContainer); avoids severe problems when SystemContainer is destroyed}
+    \item   date resolved: {\bf 2026-03-31 19:03},
+date raised: 2026-03-31 
+  \ei
+  \item[] {\bf Version 1.10.147}:  resolved Issue 2329: {\bf InvoluteGear}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: in machines.InvoluteGear, add tolerance to avoid point duplications, leading to graphics problems}
+    \item   date resolved: {\bf 2026-03-25 09:33},
+date raised: 2026-03-25 
+  \ei
+  \item[] {\bf Version 1.10.146}:  resolved Issue 2327: {\bf ANCFBeam}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add implementation for damping similar to ANCFCable elements}
+    \item   date resolved: {\bf 2026-03-24 17:00},
+date raised: 2026-03-24 
+  \ei
+  \item[] {\bf Version 1.10.145}:  resolved Issue 2323: {\bf graphics}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add function LinkedCylinders which draws the convex hull of two cylinders with parallel axes, useful for levers in mechanisms}
+    \item   date resolved: {\bf 2026-03-05 16:21},
+date raised: 2026-03-05 
+  \ei
+  \item[] {\bf Version 1.10.144}:  resolved Issue 2324: {\bf SolidExtrusion}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add WARNING for unreferenced vertices in Delauney triangles, as this can indicate duplicated vertices in contour and often causes graphical issues}
+    \item   date resolved: {\bf 2026-03-05 16:20},
+date raised: 2026-03-05 
+  \ei
+  \item[] {\bf Version 1.10.143}:  resolved Issue 2322: {\bf SolidExtrusion}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: normals not correctly computed in case of smoothNormals=True}
+    \item   date resolved: {\bf 2026-03-05 12:48},
+date raised: 2026-03-05 
+  \ei
+  \item[] {\bf Version 1.10.142}:  resolved Issue 2320: {\bf clippingPlane}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add automatic normalization of clippingPlaneNormal in OpenGL renderer if norm is not 1 (except for 0 length)}
+    \item   date resolved: {\bf 2026-03-03 16:29},
+date raised: 2026-03-03 
+  \ei
+  \item[] {\bf Version 1.10.141}:  resolved Issue 2314: {\bf Add ObjectJointSliding}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: Add 3D SlidingJoint basic functionality}
+    \item   date resolved: {\bf 2026-03-02 09:48},
+date raised: 2026-03-02 
+  \ei
+  \item[] {\bf Version 1.10.140}:  resolved Issue 2313: {\bf Add MarkerBodyBeamShape}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: marker to be attached to beams for sliding joint and contact with beams}
+    \item   date resolved: {\bf 2026-03-02 09:46},
+date raised: 2026-03-02 
+  \ei
+  \item[] {\bf Version 1.10.139}:  resolved Issue 2312: {\bf Newton}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: newton.useNewtonSolver not used}
+    \item   date resolved: {\bf 2026-02-27 16:02},
+date raised: 2026-02-27 
+  \ei
+  \item[] {\bf Version 1.10.138}:  resolved Issue 2311: {\bf DrawSystemGraph}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: extend to add more information in graph, like type and name; add option to only retrieve graph but not to show; optionally add all item information}
+    \item   date resolved: {\bf 2026-02-25 10:34},
+date raised: 2026-02-25 
+  \ei
+  \item[] {\bf Version 1.10.137}:  resolved Issue 2310: {\bf FEM}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: ComputeHurtyCraigBamptonModes: for pure eigenmodes with no boundary lists, computation only works in sparse mode - extend to sparse mode and include optional exclusion of rigid body modes}
+    \item   date resolved: {\bf 2026-02-24 15:09},
+date raised: 2026-02-24 
+  \ei
+  \item[] {\bf Version 1.10.136}:  resolved Issue 2257: {\bf VisualizationSettings}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: check for all changed parameter names in .py and .tex files }
+    \item   date resolved: {\bf 2026-02-20 00:16},
+date raised: 2026-01-31 
+  \ei
+  \item[] {\bf Version 1.10.135}:  resolved Issue 2249: {\bf VisualizationSettings}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add feature to re-link outdated/changed settings and print warnings}
+    \item   date resolved: {\bf 2026-02-20 00:16},
+date raised: 2026-01-31 
+  \ei
+  \item[] {\bf Version 1.10.134}:  resolved Issue 2248: {\bf VisualizationSettings}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add backlink to top settings structure in every substructure and initialize in constructor}
+    \item   date resolved: {\bf 2026-02-20 00:16},
+date raised: 2026-01-31 
+  \ei
+  \item[] {\bf Version 1.10.133}:  resolved Issue 2285: {\bf visualizationSettings}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: adapt Examples and TestModels to new visualizationSettings introduced in Exudyn 1.10.103}
+    \item   date resolved: {\bf 2026-02-20 00:15},
+date raised: 2026-02-12 
+  \ei
+  \item[] {\bf Version 1.10.132}:  resolved Issue 2300: {\bf rotationCenterPoint}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: fix correct calculation of mouse coordinates, bounding box, etc. when changing rotationCenterPoint}
+    \item   date resolved: {\bf 2026-02-19 22:29},
+date raised: 2026-02-14 
+  \ei
+  \item[] {\bf Version 1.10.131}:  resolved Issue 2245: {\bf GLFWClient}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add camera position and orentation as alternative to current modelview; centerPoint adds up to it and modelRotation rotates the camera}
+    \item   date resolved: {\bf 2026-02-19 13:54},
+date raised: 2026-01-31 
+  \ei
+  \item[] {\bf Version 1.10.130}:  resolved Issue 2307: {\bf zOffsetCamera}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: removed raytracer.zOffsetCamera as the z-shift is now possible with camera.nearFarPlaneOffset}
+    \item   date resolved: {\bf 2026-02-17 15:55},
+date raised: 2026-02-17 
+  \ei
+  \item[] {\bf Version 1.10.129}:  resolved Issue 2306: {\bf trackMarker}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: include trackMarker in light position and further transformations during OpenGL rendering and raytracing}
+    \item   date resolved: {\bf 2026-02-16 23:06},
+date raised: 2026-02-16 
+  \ei
+  \item[] {\bf Version 1.10.128}:  resolved Issue 2294: {\bf views}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: raytracing bounding box (searchTree?) wrong for example unbalancedFlywheel.py}
+    \item {\bf notes: was due to NaN in numpy calculation for Bearing graphics; fixed}
+    \item   date resolved: {\bf 2026-02-16 22:46},
+date raised: 2026-02-13 
+  \ei
+  \item[] {\bf Version 1.10.127}:  resolved Issue 2299: {\bf light positions}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: Fix light positions for lights in camera frame - sync with lights initialization and with Raytracer}
+    \item   date resolved: {\bf 2026-02-16 22:45},
+date raised: 2026-02-14 
+  \ei
+  \item[] {\bf Version 1.10.126}:  resolved Issue 2296: {\bf openGL settings}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add option showBoundingBox, which shows the bounding box of the current scene (as available in renderState)}
+    \item   date resolved: {\bf 2026-02-16 22:45},
+date raised: 2026-02-14 
+  \ei
+  \item[] {\bf Version 1.10.125}:  resolved Issue 2303: {\bf boundingBox}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: bounding box calculation resets in case that nan is included in points; check for nan in points in graphicsData when reading!}
+    \item   date resolved: {\bf 2026-02-15 22:38},
+date raised: 2026-02-15 
+  \ei
+  \item[] {\bf Version 1.10.124}:  resolved Issue 2302: {\bf graphics}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: BallBearingRings leads to nan (not a number) for impossible geometries, thus grooves not being calculated; add error message}
+    \item   date resolved: {\bf 2026-02-15 22:37},
+date raised: 2026-02-15 
+  \ei
+  \item[] {\bf Version 1.10.123}:  resolved Issue 2301: {\bf ConstSizeMatrix}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: Fix wrong GetDataPointer function, which points to data instead of \&data[0]}
+    \item   date resolved: {\bf 2026-02-15 01:24},
+date raised: 2026-02-15 
+  \ei
+  \item[] {\bf Version 1.10.122}:  resolved Issue 2241: {\bf systemStructures.py}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add structure for ChildWindow (childWindow1-3)}
+    \item {\bf notes: added view1-3 already earlier; }
+    \item   date resolved: {\bf 2026-02-14 23:13},
+date raised: 2026-01-31 
+  \ei
+  \item[] {\bf Version 1.10.121}:  resolved Issue 2297: {\bf tkinter font}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: Exudyn Command dialog raises error due to AttributeError for tkinter.font}
+    \item   date resolved: {\bf 2026-02-14 22:52},
+date raised: 2026-02-14 
+  \ei
+  \item[] {\bf Version 1.10.120}:  resolved Issue 2291: {\bf FromPyMeshlabFile}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add option to check and normalize normals}
+    \item   date resolved: {\bf 2026-02-14 17:31},
+date raised: 2026-02-13 
+  \ei
+  \item[] {\bf Version 1.10.119}:  resolved Issue 2292: {\bf graphics.Move}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: remove explanation to scale, as it also scales normals; add function MoveAndScale, which does both and Move calls MoveAndScale}
+    \item   date resolved: {\bf 2026-02-14 17:30},
+date raised: 2026-02-13 
+  \ei
+  \item[] {\bf Version 1.10.118}:  resolved Issue 2295: {\bf AddEdgesAndSmoothenNormals}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: remove arg pointTolerance as it is unused (roundDigits was introduced earlier)}
+    \item   date resolved: {\bf 2026-02-13 15:53},
+date raised: 2026-02-13 
+  \ei
+  \item[] {\bf Version 1.10.117}:  resolved Issue 2293: {\bf graphics}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: functoin InvertTriangles: change arg invertVertexNormals to invertNormals for consistency reason with other functions}
+    \item   date resolved: {\bf 2026-02-13 15:02},
+date raised: 2026-02-13 
+  \ei
+  \item[] {\bf Version 1.10.116}:  resolved Issue 2283: {\bf raytracer}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: enable rendering of views with OpenGL or raytracer independently using flag view.camera.useRaytracer}
+    \item   date resolved: {\bf 2026-02-12 21:49},
+date raised: 2026-02-11 
+  \ei
+  \item[] {\bf Version 1.10.115}:  resolved Issue 2280: {\bf FromPyMeshlabFile}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add graphics.FromPyMeshlabFile to import arbitrary geometries, e.g., .stl, .obj, .dae, etc. which can be loaded with pymeshlab; note: currently no textures or materials are loaded}
+    \item   date resolved: {\bf 2026-02-12 21:48},
+date raised: 2026-02-11 
+  \ei
+  \item[] {\bf Version 1.10.114}:  resolved Issue 2254: {\bf RedrawAndGetImage}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add optional viewID=0 to enable offline rendering of window; use renderer.EnableView(viewID=...) before rendering to enable virtual camera and adjust settings with renderer.SetState(viewID=...) (without opening window)}
+    \item   date resolved: {\bf 2026-02-12 21:48},
+date raised: 2026-02-01 
+  \ei
+  \item[] {\bf Version 1.10.113}:  resolved Issue 2253: {\bf GLFWClient}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: homogenize functions that operate on modelRotation and modelTranslation}
+    \item   date resolved: {\bf 2026-02-12 21:45},
+date raised: 2026-02-01 
+  \ei
+  \item[] {\bf Version 1.10.112}:  resolved Issue 2252: {\bf VisualizationSettings}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add advanced subfolders to avoid large settings folders: general.advanced, contour.advanced, openGL.advanced, raytracer.advanced, interactive.advanced }
+    \item   date resolved: {\bf 2026-02-12 21:45},
+date raised: 2026-01-31 
+  \ei
+  \item[] {\bf Version 1.10.111}:  resolved Issue 2250: {\bf VisualizationSettings}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: put openGL.light0/1xyz data to settings.openGL.light0/1.xyz; add total of 4 lights both for OpenGL and raytracer; add shadow to all lights; put cameraPos/Rot, lockModelView, clippingPlaneDistance, clippingPlaneNormal, perspective, facesTransparent, showFaceEdges, showFaces, showMeshEdges, showMeshFaces, general.worldBasisSize, general.drawCoordinateSystem, general.drawWorldBasis, general.showComputationInfo, general.textSize, ... to scene, window or camera }
+    \item   date resolved: {\bf 2026-02-12 21:45},
+date raised: 2026-01-31 
+  \ei
+  \item[] {\bf Version 1.10.110}:  resolved Issue 2284: {\bf raytracer}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add separate multiSampling flag: raytracers.advanced.multiSampling which is independent from OpenGL multiSampling}
+    \item   date resolved: {\bf 2026-02-12 21:42},
+date raised: 2026-02-11 
+  \ei
+  \item[] {\bf Version 1.10.109}:  resolved Issue 2290: {\bf light position}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change default values for openGL.light0position to [2,2,10,0] leading to less spot lights in flat scenes in x-y plane; similar for light1position }
+    \item   date resolved: {\bf 2026-02-12 16:31},
+date raised: 2026-02-12 
+  \ei
+  \item[] {\bf Version 1.10.108}:  resolved Issue 2289: {\bf nodes markers loads}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: simplified drawing cannot be turned on any more if drawFaces=False, because drawFaces has now moved to view.scene; added flag drawNodesMarkersLoadsWithFaces in C++ code to mark changes}
+    \item   date resolved: {\bf 2026-02-12 15:44},
+date raised: 2026-02-12 
+  \ei
+  \item[] {\bf Version 1.10.107}:  resolved Issue 2288: {\bf nodes}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: drawNodesAsPoint together with showBasis: showBasis shall be drawn with lines if drawNodesAsPoint=True and with 3D faces otherwise}
+    \item   date resolved: {\bf 2026-02-12 15:41},
+date raised: 2026-02-12 
+  \ei
+  \item[] {\bf Version 1.10.106}:  resolved Issue 2287: {\bf lightModelAmbient}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: use openGL.lightModelAmbient throughout for ambient color both for OpenGL and raytracer; adapt to [0.4,0.4,0.4,1] being slightly lighter while diffuse light0 is reduced from 0.6 to 0.5; this should give better visibility; light ambient color removed}
+    \item   date resolved: {\bf 2026-02-12 14:02},
+date raised: 2026-02-12 
+  \ei
+  \item[] {\bf Version 1.10.105}:  resolved Issue 2286: {\bf ambientAndDiffuse}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: In OpenGL materialAmbientAndDiffuse is not used for colored materials, so remove the value (deprecated structure redirects now to materialSpecular but must not be used anymore)}
+    \item   date resolved: {\bf 2026-02-12 14:02},
+date raised: 2026-02-12 
+  \ei
+  \item[] {\bf Version 1.10.104}:  resolved Issue 2251: {\bf VisualizationSettings}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: relocate options and add new folders scene, camera, window in new folders view0 (standard view as before), view0, view2, etc. }
+    \item   date resolved: {\bf 2026-02-11 23:18},
+date raised: 2026-01-31 
+  \ei
+  \item[] {\bf Version 1.10.103}:  resolved Issue 2282: {\bf light0 position}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: changed from [0.2,0.2,10,0] to [2,2,10,0] to avoid specular effects of objects in x-y plane in initial configuration}
+    \item   date resolved: {\bf 2026-02-11 14:00},
+date raised: 2026-02-11 
+  \ei
+  \item[] {\bf Version 1.10.102}:  resolved Issue 2279: {\bf openGL.light0ambient}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: openGL.light0ambient and openGL.light1ambient are removed as they are redundant with openGL.lightModelAmbient which shall be used in future}
+    \item {\bf notes: for that reason, the default value of openGL.lightModelAmbient has been changed to [0.3,0.3,0.3,1] to stay consistent!}
+    \item   date resolved: {\bf 2026-02-10 22:34},
+date raised: 2026-02-10 
+  \ei
+  \item[] {\bf Version 1.10.101}:  resolved Issue 2276: {\bf charBitmap.h}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: split up into header and implementation to suppress warnings}
+    \item   date resolved: {\bf 2026-02-09 14:56},
+date raised: 2026-02-09 
+  \ei
+  \item[] {\bf Version 1.10.100}:  resolved Issue 2275: {\bf GLFWClient}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add new substructure RenderView which collects GLFWwindow and RenderState, allowing to open several windows; window0=main window as before}
+    \item   date resolved: {\bf 2026-02-08 00:15},
+date raised: 2026-02-08 
+  \ei
+  \item[] {\bf Version 1.10.99}:  resolved Issue 2243: {\bf GLFWClient}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add crosslines instead of mouse cursor when mouse coordinates are shown in renderer}
+    \item   date resolved: {\bf 2026-02-08 00:14},
+date raised: 2026-01-31 
+  \ei
+  \item[] {\bf Version 1.10.98}:  resolved Issue 2274: {\bf Raytracer}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: improve line drawing linewidth to comply with OpenGL renderer}
+    \item   date resolved: {\bf 2026-02-06 23:53},
+date raised: 2026-02-06 
+  \ei
+  \item[] {\bf Version 1.10.97}:  resolved Issue 2271: {\bf ZoomAll}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: allow call to ZoomAll with inactive renderer; add flag render=True; put current ZoomAll functionality from GLFWClient to accessible location}
+    \item   date resolved: {\bf 2026-02-06 23:53},
+date raised: 2026-02-06 
+  \ei
+  \item[] {\bf Version 1.10.96}:  resolved Issue 2273: {\bf RenderState}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: Initialize RenderState provisionally with default visualizationSettings at SystemContainer creation, then initialize with current SC.visualizationSettings at first call to any renderer function}
+    \item   date resolved: {\bf 2026-02-06 21:24},
+date raised: 2026-02-06 
+  \ei
+  \item[] {\bf Version 1.10.95}:  resolved Issue 2272: {\bf general.autoFitScene}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: already called at initialization of SystemContainer; needs to be overwritten at start of renderer or at first call to renderer/raytracer function - otherwise ZoomAll always called}
+    \item   date resolved: {\bf 2026-02-06 21:20},
+date raised: 2026-02-06 
+  \ei
+  \item[] {\bf Version 1.10.94}:  resolved Issue 2263: {\bf docstrings}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: similar to issue 0444, auto-convert comments to docstrings when creating wheels}
+    \item   date resolved: {\bf 2026-02-06 15:22},
+date raised: 2026-02-03 
+  \ei
+  \item[] {\bf Version 1.10.93}:  resolved Issue 0444: {\bf docstrings}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change function comments in .py files to PEP standardized docstrings}
+    \item   date resolved: {\bf 2026-02-06 15:21},
+date raised: 2020-09-06 
+  \ei
+  \item[] {\bf Version 1.10.92}:  resolved Issue 2270: {\bf Renderer}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: in mode showMouseCoordinates, enable logging of mouse coordinates in current axis-aligned plane; behavior switched with logMouseCoordinates; only in case that perspective=0}
+    \item   date resolved: {\bf 2026-02-05 23:20},
+date raised: 2026-02-04 
+  \ei
+  \item[] {\bf Version 1.10.91}:  resolved Issue 2258: {\bf showMouseCoordinates}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: make not available for perspective!=0 as it gives wrong values; disable zoom and mouse move as well}
+    \item   date resolved: {\bf 2026-02-05 23:20},
+date raised: 2026-02-02 
+  \ei
+  \item[] {\bf Version 1.10.90}:  resolved Issue 2268: {\bf docstrings}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add docstrings to itemInterface}
+    \item   date resolved: {\bf 2026-02-05 23:19},
+date raised: 2026-02-04 
+  \ei
+  \item[] {\bf Version 1.10.89}:  resolved Issue 2266: {\bf docstrings}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add docstrings for itemInterface items (\_\_init\_\_ function with all parameters)}
+    \item   date resolved: {\bf 2026-02-05 23:19},
+date raised: 2026-02-03 
+  \ei
+  \item[] {\bf Version 1.10.88}:  resolved Issue 2265: {\bf stub files (.pyi)}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add details (input, output, example) for functions created in autoGeneratePyBindings, using a common GoogleStyle generator}
+    \item   date resolved: {\bf 2026-02-05 23:19},
+date raised: 2026-02-03 
+  \ei
+  \item[] {\bf Version 1.10.87}:  resolved Issue 2269: {\bf Renderer}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: allow finer zoom  stepsstep with CTRL+mouse wheel}
+    \item   date resolved: {\bf 2026-02-04 20:27},
+date raised: 2026-02-04 
+  \ei
+  \item[] {\bf Version 1.10.86}:  resolved Issue 2262: {\bf stub files (.pyi)}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add description for objects created in autoGeneratePyBindings}
+    \item   date resolved: {\bf 2026-02-03 16:20},
+date raised: 2026-02-03 
+  \ei
+  \item[] {\bf Version 1.10.85}:  resolved Issue 2256: {\bf stub files (.pyi)}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add docstrings for better help, as .pyi information is prioritized in Spyder}
+    \item   date resolved: {\bf 2026-02-03 16:20},
+date raised: 2026-02-01 
+  \ei
+  \item[] {\bf Version 1.10.84}:  resolved Issue 2264: {\bf docstrings}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add docstrings for enums}
+    \item   date resolved: {\bf 2026-02-03 09:06},
+date raised: 2026-02-03 
+  \ei
+  \item[] {\bf Version 1.10.83}:  resolved Issue 2261: {\bf stub files (.pyi)}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add docstrings to system structures}
+    \item   date resolved: {\bf 2026-02-02 23:37},
+date raised: 2026-02-02 
+  \ei
+  \item[] {\bf Version 1.10.82}:  resolved Issue 2260: {\bf solvers}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change default value exu.SimulationSettings() to None, but keep default behavior internally; this improves in-editor help}
+    \item   date resolved: {\bf 2026-02-02 22:48},
+date raised: 2026-02-02 
+  \ei
+  \item[] {\bf Version 1.10.81}:  resolved Issue 2255: {\bf ResetKeyPressUserFunction}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: removed functionality as keyPressUserFunction can be reset by assigning it to 0}
+    \item {\bf notes: keyPressUserFunction can now be reset by setting it to 0}
+    \item   date resolved: {\bf 2026-02-01 17:02},
+date raised: 2026-02-01 
+  \ei
+  \item[] {\bf Version 1.10.80}:  resolved Issue 2242: {\bf GLFWClient}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add option for autorotation of scene, using a angular velocity vector; standard=[0,0,pi/2]; factor related to start time when timer is started}
+    \item   date resolved: {\bf 2026-02-01 12:13},
+date raised: 2026-01-31 
+  \ei
+  \item[] {\bf Version 1.10.79}:  resolved Issue 2246: {\bf GLFWClient}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: model translation currently only uses x and y components: glTranslatef(translationMV[0], translationMV[1], 0.f); => fix in order to avoid large offsets in large scenes}
+    \item {\bf notes: check graphics functionality in examples...}
+    \item   date resolved: {\bf 2026-01-31 22:12},
+date raised: 2026-01-31 
+  \ei
+  \item[] {\bf Version 1.10.78}:  resolved Issue 2233: {\bf computeInitialAccelerations}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: extend to sparse mode for initial velocities by simple global differentiation of sparse constraints}
+    \item   date resolved: {\bf 2026-01-23 00:29},
+date raised: 2026-01-21 
+  \ei
+  \item[] {\bf Version 1.10.77}:  resolved Issue 2232: {\bf storeInitialAlgebraicCoordinates}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: in case of computation of initial  accelerations, also store initial Lagrange multipliers in initial coordinates}
+    \item   date resolved: {\bf 2026-01-21 23:01},
+date raised: 2026-01-21 
+  \ei
+  \item[] {\bf Version 1.10.76}:  resolved Issue 2224: {\bf ANCFThinPlate}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add slopes scaling to elements}
+    \item   date resolved: {\bf 2026-01-18 23:07},
+date raised: 2026-01-16 
+  \ei
+  \item[] {\bf Version 1.10.75}:  resolved Issue 2222: {\bf Jacobian description}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: jacobians are computed e.g. as J = partial p/partial q and generalized forces are computed as J^T * f; fix this in item descriptions, in ObjectMassPoint2D and ObjectMassPoint where J * f is used; check }
+    \item   date resolved: {\bf 2026-01-15 11:04},
+date raised: 2026-01-15 
+  \ei
+  \item[] {\bf Version 1.10.74}:  resolved Issue 2221: {\bf CreateForce, CreateTorque}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: allow marker indices in bodyNumber}
+    \item   date resolved: {\bf 2026-01-14 13:57},
+date raised: 2026-01-14 
+  \ei
+  \item[] {\bf Version 1.10.73}:  resolved Issue 2220: {\bf AVX2 linux}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: enable AVX2 on linux and activate performance flags (O3)}
+    \item   date resolved: {\bf 2026-01-14 01:46},
+date raised: 2026-01-14 
+  \ei
+  \item[] {\bf Version 1.10.72}:  resolved Issue 2214: {\bf shells.py}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add shells module for plate and shell elements; add generator function for planar meshes}
+    \item   date resolved: {\bf 2026-01-13 22:25},
+date raised: 2026-01-11 
+  \ei
+  \item[] {\bf Version 1.10.71}:  resolved Issue 2199: {\bf ANCFThinPlate}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add access functions}
+    \item   date resolved: {\bf 2026-01-13 22:25},
+date raised: 2026-01-07 
+  \ei
+  \item[] {\bf Version 1.10.70}:  resolved Issue 2216: {\bf graphics.Sphere}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add option to draw only part of sphere using min and max axis length given by angles; add option to draw hollow sphere with innerRadius}
+    \item   date resolved: {\bf 2026-01-12 22:37},
+date raised: 2026-01-12 
+  \ei
+  \item[] {\bf Version 1.10.69}:  resolved Issue 2217: {\bf graphics.Sphere}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: double tiling of circles to obtain better visibility}
+    \item   date resolved: {\bf 2026-01-12 19:03},
+date raised: 2026-01-12 
+  \ei
+  \item[] {\bf Version 1.10.68}:  resolved Issue 2215: {\bf graphics.Basis}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add option to add text within arg labels}
+    \item   date resolved: {\bf 2026-01-12 18:37},
+date raised: 2026-01-12 
+  \ei
+  \item[] {\bf Version 1.10.67}:  resolved Issue 2198: {\bf ANCFThinPlate}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add position, velocity, ... computation}
+    \item   date resolved: {\bf 2026-01-11 17:25},
+date raised: 2026-01-07 
+  \ei
+  \item[] {\bf Version 1.10.66}:  resolved Issue 2197: {\bf ANCFThinPlate}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add correct element jacobian}
+    \item   date resolved: {\bf 2026-01-11 17:25},
+date raised: 2026-01-07 
+  \ei
+  \item[] {\bf Version 1.10.65}:  resolved Issue 2213: {\bf GeometricallyExactBeam2D}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: correct drawing with cross section and drawVertical}
+    \item   date resolved: {\bf 2026-01-09 20:43},
+date raised: 2026-01-09 
+  \ei
+  \item[] {\bf Version 1.10.64}: {\bf \color{warningRed}  resolved BUG 2212}: {\bf \_\_init\_\_.py, AVX2}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: error in \_\_init\_\_.py causes exudyn to always choose non-AVX2 version}
+    \item   date resolved: {\bf 2026-01-09 10:48},
+date raised: 2026-01-09 
+  \ei
+  \item[] {\bf Version 1.10.63}:  resolved Issue 2211: {\bf GeometricallyExactBeam2D}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add autodiff jacobian}
+    \item   date resolved: {\bf 2026-01-09 02:15},
+date raised: 2026-01-08 
+  \ei
+  \item[] {\bf Version 1.10.62}:  resolved Issue 2209: {\bf GeometricallyExactBeam2D}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add reference curvature and correct reference rotation for curved case}
+    \item   date resolved: {\bf 2026-01-08 23:10},
+date raised: 2026-01-08 
+  \ei
+  \item[] {\bf Version 1.10.61}:  resolved Issue 2210: {\bf GeometricallyExactBeam2D}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: flag includeReferenceRotations=False now refers to axial slopes rather to the direction of endpoints; this is identical for linear elements, but different for quadratic ones}
+    \item   date resolved: {\bf 2026-01-08 22:47},
+date raised: 2026-01-08 
+  \ei
+  \item[] {\bf Version 1.10.60}:  resolved Issue 2207: {\bf GeometricallyExactBeam2D}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: extend element for 3-node case with quadratic interpolation (just by providing a 3rd nodeNumber)}
+    \item   date resolved: {\bf 2026-01-08 21:42},
+date raised: 2026-01-08 
+  \ei
+  \item[] {\bf Version 1.10.59}:  resolved Issue 2206: {\bf Manylinux wheels}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: switch to docker, add compile manylinux wheels locally}
+    \item   date resolved: {\bf 2026-01-08 13:32},
+date raised: 2026-01-08 
+  \ei
+  \item[] {\bf Version 1.10.58}:  resolved Issue 2195: {\bf maxSceneSize}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add bounding box for scene for better adjustments}
+    \item   date resolved: {\bf 2026-01-08 00:07},
+date raised: 2026-01-06 
+  \ei
+  \item[] {\bf Version 1.10.57}:  resolved Issue 2201: {\bf OutputVariable}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change to 64bit}
+    \item   date resolved: {\bf 2026-01-07 19:03},
+date raised: 2026-01-07 
+  \ei
+  \item[] {\bf Version 1.10.56}:  resolved Issue 1662: {\bf ANCFThinPlate}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add ANCF plate element based on 2 inplane slope vectors Slope12, based on Dufva/Shabana}
+    \item   date resolved: {\bf 2026-01-07 19:00},
+date raised: 2023-10-15 
+  \ei
+  \item[] {\bf Version 1.10.55}:  resolved Issue 2190: {\bf perspective}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: find causes for raytracer artifacts in case of larger perspective values}
+    \item {\bf notes: adapted centerPoint; artifacts may still appear for very out of center models}
+    \item   date resolved: {\bf 2026-01-06 22:34},
+date raised: 2026-01-04 
+  \ei
+  \item[] {\bf Version 1.10.54}:  resolved Issue 2196: {\bf ZoomAll}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add parameters zoomAllUseBoundingBox, boundingBoxZoomAllOffset and boundingBoxZoomAllFactor to adjust to exact bounding box of scene in rotated coordinates }
+    \item   date resolved: {\bf 2026-01-06 18:30},
+date raised: 2026-01-06 
+  \ei
+  \item[] {\bf Version 1.10.53}:  resolved Issue 2193: {\bf store model view}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: print SetModelView code to console when pressing CTRL-F3}
+    \item {\bf notes: see also section 'Storing the model view' in the docu}
+    \item   date resolved: {\bf 2026-01-06 16:59},
+date raised: 2026-01-06 
+  \ei
+  \item[] {\bf Version 1.10.52}:  resolved Issue 2170: {\bf GLFWclient}
+(testing)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: Test new USE\_GLFW\_GRAPHICS settings in compilation with -noglfw}
+    \item   date resolved: {\bf 2026-01-06 11:46},
+date raised: 2025-12-25 
+  \ei
+  \item[] {\bf Version 1.10.51}:  resolved Issue 2192: {\bf coordinateSystem}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add option to draw coordinate system with arrows; change general.drawCoordinateSystem to integer where 2 and 3 represent drawing with arrows}
+    \item   date resolved: {\bf 2026-01-06 02:09},
+date raised: 2026-01-06 
+  \ei
+  \item[] {\bf Version 1.10.50}:  resolved Issue 2191: {\bf RedrawAndGetImage}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: UpdatePostProcessData needs to be called in case that renderer is not running}
+    \item   date resolved: {\bf 2026-01-05 10:44},
+date raised: 2026-01-05 
+  \ei
+  \item[] {\bf Version 1.10.49}:  resolved Issue 2153: {\bf raytracer}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add text using textures}
+    \item   date resolved: {\bf 2026-01-05 00:21},
+date raised: 2025-11-02 
+  \ei
+  \item[] {\bf Version 1.10.48}:  resolved Issue 2167: {\bf perspective}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: revise perspective model and synchronize raytracer with openGL implementation}
+    \item   date resolved: {\bf 2026-01-04 22:19},
+date raised: 2025-12-16 
+  \ei
+  \item[] {\bf Version 1.10.47}:  resolved Issue 2189: {\bf polygonOffset}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: increase openGL polygonOffset due to change in OpenGL projection method (zMaxSceneFactor changed from 100 to 2)}
+    \item   date resolved: {\bf 2026-01-04 20:34},
+date raised: 2026-01-04 
+  \ei
+  \item[] {\bf Version 1.10.46}:  resolved Issue 2188: {\bf zMaxSceneFactor}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add factor that previously was fixed to 100.; now defaulting to smaller default value, thus requiring adjustment in certain cases!}
+    \item   date resolved: {\bf 2026-01-04 14:17},
+date raised: 2026-01-04 
+  \ei
+  \item[] {\bf Version 1.10.45}:  resolved Issue 2187: {\bf MainSystemExtensions}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: JointPreCheckCalcBodyMarkers requires position even if not used}
+    \item   date resolved: {\bf 2026-01-04 12:44},
+date raised: 2026-01-04 
+  \ei
+  \item[] {\bf Version 1.10.44}:  resolved Issue 2185: {\bf Create functions}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: Add mbs.CreateFFRFReducedOrderObject}
+    \item   date resolved: {\bf 2026-01-04 11:42},
+date raised: 2026-01-04 (resolved by: S. Weyrer)
+  \ei
+  \item[] {\bf Version 1.10.43}:  resolved Issue 1196: {\bf ObjectFFRFreducedOrder sparse}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add sparse option for ObjectFFRFreducedOrder, filling in flexible-flexible mass terms into sparse mass matrix}
+    \item {\bf notes: partially resolved and moved to newer issues}
+    \item   date resolved: {\bf 2026-01-04 11:35},
+date raised: 2022-07-11 
+  \ei
+  \item[] {\bf Version 1.10.42}:  resolved Issue 0599: {\bf ObjectFFRFreducedOrder}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: compare Tait-Bryan and RotationVector cases with Euler parameters}
+    \item {\bf notes: already resolved earlier}
+    \item   date resolved: {\bf 2026-01-04 11:23},
+date raised: 2021-03-18 
+  \ei
+  \item[] {\bf Version 1.10.41}:  resolved Issue 0643: {\bf ObjectFFRFreducedOrder / CMS}
+(tutorial)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: create tutorial with two bodies (crank, connecting rod, rigid piston)}
+    \item {\bf notes: already resolved earlier with FFRF tutorial}
+    \item   date resolved: {\bf 2026-01-04 11:22},
+date raised: 2021-04-30 
+  \ei
+  \item[] {\bf Version 1.10.40}:  resolved Issue 2169: {\bf GLFWclient}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: decouple graphics settings from USE\_GLFW\_GRAPHICS if they do not require OpenGL and GLFW}
+    \item   date resolved: {\bf 2026-01-03 23:38},
+date raised: 2025-12-25 
+  \ei
+  \item[] {\bf Version 1.10.39}:  resolved Issue 2180: {\bf renderer.SetModelView}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add renderer function renderer.SetModelView(zoom, rotationVector, centerPoint) which adjusts the view to zoom, rotation and center point; in particular for raytracing}
+    \item   date resolved: {\bf 2026-01-03 01:51},
+date raised: 2026-01-03 
+  \ei
+  \item[] {\bf Version 1.10.38}:  resolved Issue 2177: {\bf renderer.RedrawAndGetImage}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: extended for software renderer (useRaytracer=True), to grab images of the 3D view completely without starting the renderer}
+    \item   date resolved: {\bf 2026-01-03 01:51},
+date raised: 2026-01-01 
+  \ei
+  \item[] {\bf Version 1.10.37}:  resolved Issue 2181: {\bf renderState}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: update visualizationSettings.window.renderWindowSize when renderState.currentWindowSize is prescribed in call to renderer.SetState(...)}
+    \item   date resolved: {\bf 2026-01-03 01:11},
+date raised: 2026-01-03 
+  \ei
+  \item[] {\bf Version 1.10.36}:  resolved Issue 2179: {\bf raytracer}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: check why raytracer does not render triangles at first run}
+    \item   date resolved: {\bf 2026-01-03 00:50},
+date raised: 2026-01-03 
+  \ei
+  \item[] {\bf Version 1.10.35}:  resolved Issue 2147: {\bf raytracer}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: export images without opening renderer; including view settings}
+    \item   date resolved: {\bf 2026-01-03 00:43},
+date raised: 2025-09-23 
+  \ei
+  \item[] {\bf Version 1.10.34}:  resolved Issue 2178: {\bf RendererInActiveError}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add error handling if a renderer function is called which requires the renderer to be active but it is not}
+    \item   date resolved: {\bf 2026-01-01 23:09},
+date raised: 2026-01-01 
+  \ei
+  \item[] {\bf Version 1.10.33}:  resolved Issue 2176: {\bf processing}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: useMPI is not used in GeneticOptimization and in ComputeSensitivities; add flag and pass through to ProcessParameterList}
+    \item   date resolved: {\bf 2025-12-31 16:31},
+date raised: 2025-12-31 (resolved by: Z. Zhang)
+  \ei
+  \item[] {\bf Version 1.10.32}:  resolved Issue 2175: {\bf GlfwRenderer}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change the way how interactive.lockModelView is realized, ignoring keys and mouse actions on model view}
+    \item   date resolved: {\bf 2025-12-29 23:57},
+date raised: 2025-12-29 
+  \ei
+  \item[] {\bf Version 1.10.31}:  resolved Issue 2174: {\bf GlfwRenderer}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change selectBufferSize during mouse select from 10000 to 1000 to reduce stack size problems}
+    \item   date resolved: {\bf 2025-12-29 23:57},
+date raised: 2025-12-29 
+  \ei
+  \item[] {\bf Version 1.10.30}:  resolved Issue 2173: {\bf GraphicsData}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add fontSize and offset to graphicsData text structure as well as to graphics.Text(...) function}
+    \item   date resolved: {\bf 2025-12-29 21:40},
+date raised: 2025-12-29 
+  \ei
+  \item[] {\bf Version 1.10.29}:  resolved Issue 2172: {\bf contour}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add contour colors to VisualizationSettings}
+    \item   date resolved: {\bf 2025-12-27 23:09},
+date raised: 2025-12-26 
+  \ei
+  \item[] {\bf Version 1.10.28}:  resolved Issue 2166: {\bf raytracer}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add shortkey to switch to raytracing}
+    \item {\bf notes: CTRL-R used for switching}
+    \item   date resolved: {\bf 2025-12-27 22:01},
+date raised: 2025-12-16 
+  \ei
+  \item[] {\bf Version 1.10.27}:  resolved Issue 2171: {\bf GLFWclient}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: decouple Raytracer from GlfwClient}
+    \item   date resolved: {\bf 2025-12-26 00:03},
+date raised: 2025-12-26 
+  \ei
+  \item[] {\bf Version 1.10.26}:  resolved Issue 2168: {\bf GLFWclient}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: decouple GlfwClientBitmapText.h from USE\_GLFW\_GRAPHICS as it does not require OpenGL and GLFW}
+    \item   date resolved: {\bf 2025-12-25 22:47},
+date raised: 2025-12-25 
+  \ei
+  \item[] {\bf Version 1.10.25}:  resolved Issue 2165: {\bf perspective}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: improve perspective for raytracer, accepting values > 1}
+    \item   date resolved: {\bf 2025-12-16 14:30},
+date raised: 2025-12-16 
+  \ei
+  \item[] {\bf Version 1.10.24}:  resolved Issue 2164: {\bf multiSampling}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: allow 3 as value for multisampling, in accordance with raytracer}
+    \item   date resolved: {\bf 2025-12-16 14:29},
+date raised: 2025-12-16 
+  \ei
+  \item[] {\bf Version 1.10.23}:  resolved Issue 2146: {\bf raytracer}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: improve performance of line-triangle cuts by skipping bounding boxes further away}
+    \item   date resolved: {\bf 2025-12-15 00:47},
+date raised: 2025-09-23 
+  \ei
+  \item[] {\bf Version 1.10.22}:  resolved Issue 2163: {\bf Create functions}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: extend Create functions in MainSystemExtensions to accept marker indices in bodyNumbers in connector and joint functions when useful for flexible bodies - CreateSpringDamper, CreateRevoluteJoint, etc.}
+    \item   date resolved: {\bf 2025-12-13 01:11},
+date raised: 2025-12-13 
+  \ei
+  \item[] {\bf Version 1.10.21}:  resolved Issue 2162: {\bf raytracer}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: lines: adjust functionality to openGL settings; currently mesh edges and face edges draw with same settings}
+    \item   date resolved: {\bf 2025-12-12 23:26},
+date raised: 2025-12-12 
+  \ei
+  \item[] {\bf Version 1.10.20}:  resolved Issue 2161: {\bf \_\_init\_\_.py, AVX2}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: remove numpy determination of AVX2 support and just use try-except approach; should work better with newer numpy versions}
+    \item   date resolved: {\bf 2025-12-08 17:08},
+date raised: 2025-12-08 
+  \ei
+  \item[] {\bf Version 1.10.19}:  resolved Issue 2160: {\bf FEMinterface}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add function Get BoundaryNodeSetsAsLists to retrieve boundary node sets as two lists containing nodes list and weights list}
+    \item   date resolved: {\bf 2025-11-27 10:11},
+date raised: 2025-11-27 (resolved by: S. Weyrer)
+  \ei
+  \item[] {\bf Version 1.10.18}:  resolved Issue 2159: {\bf FEMinterface}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: nodeSets receive additional "type" information, e.g. used to indicate boundary node sets in CreateNGsolveBoundaryNodeSets}
+    \item   date resolved: {\bf 2025-11-27 10:09},
+date raised: 2025-11-27 
+  \ei
+  \item[] {\bf Version 1.10.17}:  resolved Issue 2158: {\bf FEMinterface}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add metaData dictionary for optional information and source of mesh/model}
+    \item {\bf notes: switching to FEM fileVersion 4}
+    \item   date resolved: {\bf 2025-11-27 10:08},
+date raised: 2025-11-27 
+  \ei
+  \item[] {\bf Version 1.10.16}:  resolved Issue 2157: {\bf FEMinterface}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: ComputeHurtyCraigBamptonModesNGsolve: change dtype=np.int into dtype=int to comply with numpy}
+    \item   date resolved: {\bf 2025-11-27 10:06},
+date raised: 2025-11-27 (resolved by: S. Weyrer)
+  \ei
+  \item[] {\bf Version 1.10.15}:  resolved Issue 2156: {\bf Exudyn version}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: version shown as unknown in readthedocs page}
+    \item   date resolved: {\bf 2025-11-11 15:12},
+date raised: 2025-11-11 
+  \ei
+  \item[] {\bf Version 1.10.14}:  resolved Issue 2152: {\bf renderer}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add function RedrawAndGetImage to directly obtain numpy array with RGB image data to be used with matplotlib imshow}
+    \item   date resolved: {\bf 2025-10-17 18:38},
+date raised: 2025-10-17 
+  \ei
+  \item[] {\bf Version 1.10.13}:  resolved Issue 2151: {\bf general.showHelpOnStartup}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: only allows values >0 but 0 required to turn of message}
+    \item   date resolved: {\bf 2025-10-17 18:37},
+date raised: 2025-10-17 
+  \ei
+  \item[] {\bf Version 1.10.12}:  resolved Issue 2150: {\bf simulation}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add smiley and frowney for end of simulation}
+    \item   date resolved: {\bf 2025-10-17 09:14},
+date raised: 2025-10-17 
+  \ei
+  \item[] {\bf Version 1.10.11}:  resolved Issue 2149: {\bf UTF-8 encoding}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: unify internal character representation, add full greek letters and sub/super indices for numbers}
+    \item {\bf notes: some special characters may now appear differently!}
+    \item   date resolved: {\bf 2025-10-16 23:02},
+date raised: 2025-10-16 
+  \ei
+  \item[] {\bf Version 1.10.10}:  resolved Issue 2148: {\bf InteractiveDialog}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: problems showing marker as set\_data in matplotlib does not accept scalars any more}
+    \item   date resolved: {\bf 2025-10-13 10:14},
+date raised: 2025-10-13 
+  \ei
+  \item[] {\bf Version 1.10.9}:  resolved Issue 2145: {\bf raytracer}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add smoothing filter for shadows, only applied in case that values in kernel are not containing 0 and 1 (which could be real edges)}
+    \item {\bf notes: smoothing done at low resolution shadow map, using number of shadowSmoothingSteps}
+    \item   date resolved: {\bf 2025-09-30 15:17},
+date raised: 2025-09-23 
+  \ei
+  \item[] {\bf Version 1.10.8}:  resolved Issue 2144: {\bf raytracer}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: improve smooth shadows performance by precomputation of smoothed shadow map (without multisampling)}
+    \item {\bf notes: added raytracer options shadowScalingFactor and shadowSmoothingSteps; default values work well with lightRadiusVariations=31}
+    \item   date resolved: {\bf 2025-09-30 15:14},
+date raised: 2025-09-23 
+  \ei
+  \item[] {\bf Version 1.10.7}:  resolved Issue 2143: {\bf raytracer}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: improve smooth shadows by adding radius variations for lightRadius}
+    \item   date resolved: {\bf 2025-09-23 12:26},
+date raised: 2025-09-23 
+  \ei
+  \item[] {\bf Version 1.10.6}:  resolved Issue 2142: {\bf Lie group sigma}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: improve accuracy of implicit Lie group integrator; to activate set timeIntegration.generalizedAlpha.lieGroupSimplifiedKinematicRelations = False; see paper Holzinger, Arnold, Gerstmayr. Sigma-modified Lie group generalized alpha methods for constrained multibody systems, 2025 (to be sumitted)}
+    \item   date resolved: {\bf 2025-08-07 13:40},
+date raised: 2025-08-07 (resolved by: S. Holzinger)
+  \ei
+  \item[] {\bf Version 1.10.5}:  resolved Issue 1650: {\bf MacOS Rosetta}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: importing numpy gives Intel MKL Warning: Support of Intel Streaming SIMD Extensions 4.2 ... has been deprecated. Intel oneAPI Math Kernel Library 2025.0 will require AVX instructions}
+    \item {\bf notes: works at least with Exudyn 1.10.0;  Rosetta will be abandoned in future, if compilation does not work any more}
+    \item   date resolved: {\bf 2025-07-11 15:59},
+date raised: 2023-07-20 
+  \ei
+  \item[] {\bf Version 1.10.4}:  resolved Issue 1026: {\bf Save as PNG}
+(testing)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: check MacOS implementation if glfw works with saving PNG files}
+    \item {\bf notes: resolved earlier; works with Exudyn 1.10.0}
+    \item   date resolved: {\bf 2025-07-11 15:58},
+date raised: 2022-04-02 
+  \ei
+  \item[] {\bf Version 1.10.3}:  resolved Issue 0865: {\bf multithreaded solver}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: test TaskManager::SuspendWorkers() for non-parallel parts (e.g. linear solver); possibly measure time spent for these parts, which should be larger than 2 ms to make sense; add option parallel.stopThreadsInSerialSections=False}
+    \item {\bf notes: not relevant any more}
+    \item   date resolved: {\bf 2025-07-11 15:49},
+date raised: 2022-01-15 
+  \ei
+  \item[] {\bf Version 1.10.2}:  resolved Issue 2141: {\bf CreateDistanceSensor}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: args storeInternal and fileName not used}
+    \item   date resolved: {\bf 2025-07-10 16:53},
+date raised: 2025-07-10 (resolved by: P. Manzl)
+  \ei
+  \item[] {\bf Version 1.10.1}:  resolved Issue 2139: {\bf linux}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: time seems to be non-initilized in linux version}
+    \item   date resolved: {\bf 2025-07-10 01:56},
+date raised: 2025-07-10 
+  \ei
   \item[] {\bf Version 1.10.0}:  resolved Issue 2123: {\bf Mechanisms}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -702,7 +1846,7 @@ date raised: 2025-05-25
     \item   date resolved: {\bf 2025-05-22 16:35},
 date raised: 2025-05-22 
   \ei
-  \item[] {\bf Version 1.9.141}:  resolved Issue 2043: {\bf pyi / stub files}
+  \item[] {\bf Version 1.9.141}:  resolved Issue 2043: {\bf stub files (.pyi)}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: revise section for exudyn stubs in order to enable completion of exudyn.config and other exudyn functions}
@@ -2167,7 +3311,7 @@ date raised: 2024-04-21
     \item   date resolved: {\bf 2024-04-21 19:17},
 date raised: 2024-04-19 
   \ei
-  \item[] {\bf Version 1.8.19}:  resolved Issue 1823: {\bf stub files}
+  \item[] {\bf Version 1.8.19}:  resolved Issue 1823: {\bf stub files (.pyi)}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: change type in AddObject, AddMarker, AddSensor, AddLoad, AddNode from pyObject: dict to pyObject: Any in order to resolve typing errors}
@@ -2182,7 +3326,7 @@ date raised: 2024-04-19
     \item   date resolved: {\bf 2024-04-17 16:13},
 date raised: 2024-04-17 (resolved by: P. Manzl)
   \ei
-  \item[] {\bf Version 1.8.17}:  resolved Issue 1818: {\bf stub files}
+  \item[] {\bf Version 1.8.17}:  resolved Issue 1818: {\bf stub files (.pyi)}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add types for mainsystem extensions (e.g. SolutionViewer)}
@@ -2190,7 +3334,7 @@ date raised: 2024-04-17 (resolved by: P. Manzl)
     \item   date resolved: {\bf 2024-04-14 17:54},
 date raised: 2024-04-14 
   \ei
-  \item[] {\bf Version 1.8.16}:  resolved Issue 1817: {\bf stub files}
+  \item[] {\bf Version 1.8.16}:  resolved Issue 1817: {\bf stub files (.pyi)}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add types for system structures (mainly solver functions)}
@@ -2198,21 +3342,21 @@ date raised: 2024-04-14
     \item   date resolved: {\bf 2024-04-14 17:53},
 date raised: 2024-04-14 
   \ei
-  \item[] {\bf Version 1.8.15}:  resolved Issue 1816: {\bf stub files}
+  \item[] {\bf Version 1.8.15}:  resolved Issue 1816: {\bf stub files (.pyi)}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: fix a couple of wrong return types and similar wrong typings (in particular return types in SetODE2Coordinates, etc.}
     \item   date resolved: {\bf 2024-04-14 16:15},
 date raised: 2024-04-14 
   \ei
-  \item[] {\bf Version 1.8.14}:  resolved Issue 1814: {\bf stub files}
+  \item[] {\bf Version 1.8.14}:  resolved Issue 1814: {\bf stub files (.pyi)}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: .pyi files do not contain correct default args for C++ interfaces}
     \item   date resolved: {\bf 2024-04-14 16:15},
 date raised: 2024-04-14 
   \ei
-  \item[] {\bf Version 1.8.13}:  resolved Issue 1815: {\bf stub files}
+  \item[] {\bf Version 1.8.13}:  resolved Issue 1815: {\bf stub files (.pyi)}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: .pyi are missing backslash before underscore (for latex) documentation}
@@ -3560,14 +4704,14 @@ date raised: 2023-06-08
     \item   date resolved: {\bf 2023-06-08 17:42},
 date raised: 2023-06-08 
   \ei
-  \item[] {\bf Version 1.6.138}:  resolved Issue 1600: {\bf stub files}
+  \item[] {\bf Version 1.6.138}:  resolved Issue 1600: {\bf stub files (.pyi)}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: extend .pyi files for system structures functions, e.g., ComputeJacobianODE2RHS}
     \item   date resolved: {\bf 2023-06-08 17:17},
 date raised: 2023-06-08 
   \ei
-  \item[] {\bf Version 1.6.137}:  resolved Issue 1601: {\bf stub files}
+  \item[] {\bf Version 1.6.137}:  resolved Issue 1601: {\bf stub files (.pyi)}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: merge .pyi files to have classes such as MainSystem only appearing once}
@@ -3810,38 +4954,38 @@ date raised: 2023-05-09
     \item   date resolved: {\bf 2023-05-11 11:30},
 date raised: 2023-05-11 
   \ei
-  \item[] {\bf Version 1.6.103}:  resolved Issue 1561: {\bf stub files .pyi}
+  \item[] {\bf Version 1.6.103}:  resolved Issue 1561: {\bf stub files (.pyi)}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add .pyi files to setup\_tools, copying them from autogenerate folder; use try catch to avoid problems at other platforms}
     \item   date resolved: {\bf 2023-05-10 23:30},
 date raised: 2023-05-09 
   \ei
-  \item[] {\bf Version 1.6.102}:  resolved Issue 1560: {\bf stub files .pyi}
+  \item[] {\bf Version 1.6.102}:  resolved Issue 1560: {\bf stub files (.pyi)}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: automatically create stub file for C++ classes such as MainSystem, SystemContainer, GeneralContact, ... by adding return type information and creating .pyi file; use temporary .pyi files in autogenerate folder}
     \item   date resolved: {\bf 2023-05-10 23:19},
 date raised: 2023-05-09 
   \ei
-  \item[] {\bf Version 1.6.101}:  resolved Issue 1562: {\bf stub files .pyi}
+  \item[] {\bf Version 1.6.101}:  resolved Issue 1562: {\bf stub files (.pyi)}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: add .pyi files for enums from autoGeneratePyBindings}
     \item   date resolved: {\bf 2023-05-10 20:43},
 date raised: 2023-05-09 
   \ei
-  \item[] {\bf Version 1.6.100}:  resolved Issue 1559: {\bf stub files .pyi}
+  \item[] {\bf Version 1.6.100}:  resolved Issue 1559: {\bf stub files (.pyi)}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: automatically create stub file for settings to alleviate auto-completion; type completion now also works for functions, types and structures: tested in Spyder and Visual Studio Code}
     \item   date resolved: {\bf 2023-05-10 08:39},
 date raised: 2023-05-09 
   \ei
-  \item[] {\bf Version 1.6.99}:  resolved Issue 1557: {\bf stub files}
+  \item[] {\bf Version 1.6.99}:  resolved Issue 1557: {\bf stub files (.pyi)}
 (check)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: test creating stub files .pyi which are needed for MainSystem Python extensions}
+    \item {description: test creating stub files (.pyi) which are needed for MainSystem Python extensions}
     \item {\bf notes: tested with Spyder 5.1.5 and Visual Studio Code 1.78}
     \item   date resolved: {\bf 2023-05-10 08:39},
 date raised: 2023-05-07 
@@ -10171,7 +11315,7 @@ date raised: 2021-02-09
   \item[] {\bf Version 1.0.121}:  resolved Issue 0355: {\bf generalized alpha}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: implement version of Brüls and Arnold for generalized alpha solver}
+    \item {description: implement version of BrÃ¼ls and Arnold for generalized alpha solver}
     \item {\bf notes:  WARNING: switched to new solver based on displacement increments (Arnold/Bruls,2007), which leads to DIFFERENT (but improved) RESULTS than previous dynamic implicit integrator; new implicit solver now works with ODE1 variables}
     \item   date resolved: {\bf 2021-02-08 01:56},
 date raised: 2020-03-08 

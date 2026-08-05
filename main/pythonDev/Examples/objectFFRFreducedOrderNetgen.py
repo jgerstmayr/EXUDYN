@@ -160,8 +160,8 @@ if True: #now import mesh as mechanical model to EXUDYN
     SC.visualizationSettings.nodes.basisSize = 0.12
     SC.visualizationSettings.bodies.deformationScaleFactor = 1 #use this factor to scale the deformation of modes
     
-    SC.visualizationSettings.openGL.showFaceEdges = True
-    SC.visualizationSettings.openGL.showFaces = True
+    SC.visualizationSettings.view0.scene.showFaceEdges = True
+    SC.visualizationSettings.view0.scene.showFaces = True
     
     SC.visualizationSettings.sensors.show = True
     SC.visualizationSettings.sensors.drawSimplified = False

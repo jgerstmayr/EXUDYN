@@ -43,7 +43,7 @@ These are the access functions to the Exudyn module. General usage is explained 
 * | **Print**\ (): 
   | this allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: exu.Print('test=',42,sep=' ',end='',flush=True); allows to redirect all output to file given by SetWriteToFile(...); does not print to console in case that exudyn.config.printToConsole eis set to False
 * | **InvalidIndex**\ (): 
-  | This function provides the invalid index, which may depend on the kind of 32-bit, 64-bit signed or unsigned integer; e.g. node index or item index in list; currently, the InvalidIndex() gives -1, but it may be changed in future versions, therefore you should use this function
+  | This function provides the invalid index, which may depend on the kind of 32-bit, 64-bit signed or unsigned integer; e.g., node index or item index in list; currently, the InvalidIndex() gives -1, but it may be changed in future versions, therefore you should use this function
 * | **\_\_version\_\_**:
   | contains the current version of the Exudyn package
 * | **symbolic**:
@@ -57,7 +57,7 @@ These are the access functions to the Exudyn module. General usage is explained 
 * | **config.linalgOutputFormatPython**:
   | True (default): use Python format for output of vectors and matrices; False: use Matlab format
 * | **config.printDelayMilliSeconds**:
-  | add some delay (in milliSeconds) to printing to console (exudyn.Print), in order to let console (e.g. Spyder) process the output; default = 0
+  | add some delay (in milliSeconds) to printing to console (exudyn.Print), in order to let console (e.g., Spyder) process the output; default = 0
 * | **config.printFlushAlways**:
   | flush always buffers when using exudyn.Print(...) to write to file or console; this is needed if you are streaming text or showing counters in parameter variation; default=False
 * | **config.printToConsole**:
@@ -85,7 +85,7 @@ These are the access functions to the Exudyn module. General usage is explained 
 * | **variables**:
   | this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables["myvar"] = 42; can be used in particular to exchange data between different mbs or between packages by importing exudyn.variables wherever needed.
 * | **sys**:
-  | this dictionary is used and reserved by the system, e.g. for testsuite, graphics or system function to store module-wide data in order to avoid global Python variables; the variable exu.sys['renderState'] contains the last render state after SC.renderer.Stop() and can be used for subsequent simulations 
+  | this dictionary is used and reserved by the system, e.g., for testsuite, graphics or system function to store module-wide data in order to avoid global Python variables; the variable exu.sys['renderState'] contains the last render state after SC.renderer.Stop() and can be used for subsequent simulations 
 
 
 

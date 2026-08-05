@@ -99,7 +99,7 @@ void PyHelp()
 {
 	pout << "This is the exudyn Python module.\n";
 	pout << "For basic help, visit the github page and start reading: https://github.com/jgerstmayr/EXUDYN \n";
-	pout << "For tutorials, visit https://github.com/jgerstmayr/EXUDYN#tutorial \n";
+	pout << "For more information and tutorials, visit https://exudyn.readthedocs.io/en/stable \n";
 	pout << "For quick demos, just write exudyn.demos.Demo1() and exudyn.demos.Demo2() \n";
 	pout << "For many examples and test models, see https://github.com/jgerstmayr/EXUDYN/tree/master/main/pythonDev ; consider clone or .zip the repository\n";
 	pout << "For advanced information, read theDoc: https://github.com/jgerstmayr/EXUDYN/blob/master/docs/theDoc/theDoc.pdf \n";
@@ -290,14 +290,14 @@ bool PyStartOpenGLRenderer(Index verbose = true, bool deprecationWarning = false
 	py::exec(str.c_str(), scope);
 
 #endif
-	return glfwRenderer.SetupRenderer(verbose);
+	return glfwRenderer.StartRenderer(verbose);
 #else
 	PyWarning("SC.renderer.Start(): has no effect as GLFW_GRAPHICS is deactivated in your exudyn module (needs recompile or another version)");
 	return false;
 #endif
 }
 
-//! start glfw renderer; return true if successful
+//! stop glfw renderer; return true if successful
 void PyStopOpenGLRenderer(bool deprecationWarning = false)
 {
 	if (deprecationWarning) { PyWarning("exudyn.StopRenderer(): function is deprecated; for SystemContainer SC use set SC.renderer.Stop() instead"); }
@@ -306,9 +306,16 @@ void PyStopOpenGLRenderer(bool deprecationWarning = false)
 	try
 	{
 		glfwRenderer.StopRenderer();
-		py::dict d = MainSystemContainer::RenderState2PyDict(glfwRenderer.GetRenderState());
 		py::module exudynModule = py::module::import("exudyn");
-		exudynModule.attr("sys")["renderState"] = d;
+		for (Index viewID = 0; viewID < glfwRenderer.GetRenderViews()->NumberOfViews(); viewID++)
+		{
+			if (glfwRenderer.GetRenderViews()->IsWindowOpen(viewID))
+			{
+				py::dict d = MainSystemContainer::RenderState2PyDict(*glfwRenderer.GetRenderViews()->State(viewID));
+				if (viewID == 0) { exudynModule.attr("sys")["renderState"] = d; }
+				else { exudynModule.attr("sys")[(STDstring("renderState")+EXUstd::ToString(viewID)).c_str()] = d; }
+			}
+		}
 	}
 	catch (const EXUexception& ex)
 	{
@@ -324,6 +331,24 @@ void PyStopOpenGLRenderer(bool deprecationWarning = false)
 }
 
 //! start glfw renderer; return true if successful
+void PyOpenViewWindow(Index viewID)
+{
+#ifdef USE_GLFW_GRAPHICS
+	glfwRenderer.GetRenderViews()->SetWindowShouldBeCreated(viewID, true);
+	//glfwRenderer.CreateViewWindow(viewID); //this can only be called from GLFWClient thread
+#endif //no alternative, as already checked in caller if renderer is active!
+}
+
+//! start glfw renderer; return true if successful
+void PyCloseViewWindow(Index viewID)
+{
+#ifdef USE_GLFW_GRAPHICS
+	glfwRenderer.CloseViewWindow(viewID);
+#endif //no alternative, as already checked in caller if renderer is active!
+}
+
+
+//! start glfw renderer; return true if successful
 bool PyIsRendererActive(bool deprecationWarning = false)
 {
 	if (deprecationWarning) { PyWarning("exudyn.IsRendererActive(): function is deprecated; for SystemContainer SC use set SC.renderer.IsActive() instead"); }
@@ -337,7 +362,11 @@ bool PyIsRendererActive(bool deprecationWarning = false)
 //! wait until the first frame of the renderer has been drawn
 Index PyGetRendererUpdateCount()
 {
+#ifdef USE_GLFW_GRAPHICS
 	return GlfwRenderer::GetRendererTasksCount();
+#else
+	return 0;
+#endif
 }
 
 

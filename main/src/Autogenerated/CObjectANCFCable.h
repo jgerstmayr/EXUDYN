@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-06  23:48:38 (last modified)
+* @date         2026-02-28  23:01:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -56,7 +56,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectANCFCable
-* @brief        A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[0, L]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the \hac{EOM}). For description see ObjectANCFCable2D, which is almost identical to 3D case. Note that this element does not include torsion, therfore a torque cannot be applied along the local x-axis.
+* @brief        A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[0, L]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the \hac{EOM}). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -78,12 +78,14 @@ public: // AUTO:
 class CObjectANCFCable: public CObjectBody // AUTO: 
 {
 protected: // AUTO: 
-    static constexpr Index nODE2coordinates = 12; //!< fixed size of coordinates used e.g. for ConstSizeVectors
     mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set
-    mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation
+    mutable ConstSizeMatrix<12*12> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation
     CObjectANCFCableParameters parameters; //! AUTO: contains all parameters for CObjectANCFCable
 
 public: // AUTO: 
+    static constexpr Index nODE2coordinates = 12; //!< fixed size element coordinates used e.g. for ConstSizeVectors
+    static constexpr Index nShapeFunctions = 4; //!< number of shape functions
+    static constexpr Index nNodalCoordinates = 6; //!< number of nodal coordinates
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
@@ -245,15 +247,15 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
-            (Index)OutputVariableType::Position +
-            (Index)OutputVariableType::Displacement +
-            (Index)OutputVariableType::Velocity +
-            (Index)OutputVariableType::Director1 +
-            (Index)OutputVariableType::StrainLocal +
-            (Index)OutputVariableType::CurvatureLocal +
-            (Index)OutputVariableType::ForceLocal +
-            (Index)OutputVariableType::TorqueLocal +
-            (Index)OutputVariableType::Acceleration );
+            (Index64)OutputVariableType::Position +
+            (Index64)OutputVariableType::Displacement +
+            (Index64)OutputVariableType::Velocity +
+            (Index64)OutputVariableType::Director1 +
+            (Index64)OutputVariableType::StrainLocal +
+            (Index64)OutputVariableType::CurvatureLocal +
+            (Index64)OutputVariableType::ForceLocal +
+            (Index64)OutputVariableType::TorqueLocal +
+            (Index64)OutputVariableType::Acceleration );
     }
 
 };

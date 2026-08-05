@@ -53,7 +53,7 @@ public:
 	virtual int overflow(int c = EOF);
 
 	//! special overflow with option to flush, ignoring char
-	inline virtual int overflowFlush(int c = EOF, bool flushOnly=false, bool clearBuffer=false);
+	virtual int overflowFlush(int c = EOF, bool flushOnly=false, bool clearBuffer=false);
 
 	//! function which allows to write asynchronuously during visualization thread; requires lateron call of pout in main thread (to clear buffer!)
 	virtual void WriteVisualization(const STDstring& string);

@@ -108,7 +108,7 @@ You can view and download this file on Github: `ANCFcable2DuserFunction.py <http
    simulationSettings.timeIntegration.endTime = endTime
    simulationSettings.timeIntegration.newton.useModifiedNewton = True
    
-   SC.visualizationSettings.window.renderWindowSize=[1200,1024]
+   SC.visualizationSettings.view0.window.renderWindowSize=[1200,1024]
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    

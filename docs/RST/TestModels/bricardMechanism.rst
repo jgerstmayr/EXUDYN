@@ -156,9 +156,9 @@ You can view and download this file on Github: `bricardMechanism.py <https://git
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    
-   # SC.visualizationSettings.general.drawWorldBasis = True
-   SC.visualizationSettings.openGL.shadow = 0.3
-   SC.visualizationSettings.openGL.light0position = [2,12,3,0]
+   # SC.visualizationSettings.view0.scene.drawWorldBasis = True
+   SC.visualizationSettings.openGL.light0.shadow = 0.3
+   SC.visualizationSettings.openGL.light0.position = [2,12,3,0]
    SC.visualizationSettings.openGL.multiSampling = 4
    
    SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom

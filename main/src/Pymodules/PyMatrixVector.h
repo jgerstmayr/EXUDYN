@@ -45,6 +45,11 @@ public:
 				this->PyAppend((const py::object&)item);
 			}
 		}
+		else if (py::isinstance<py::array>(listOfArrays)) //also allow initialization of matrix list with single Vector3D (only numpy array);
+		{
+			this->SetNumberOfItems(1);
+			PySetItem(0, listOfArrays); //this is now a single matrix!
+		}
 		else
 		{
 			PyError(STDstring("Vector" + EXUstd::ToString(dataSize) + "DList: Expected empty list, None, or list of " + EXUstd::ToString(dataSize) + "D numpy arrays, but received '" +
@@ -166,7 +171,7 @@ public:
         {
             *this = MatrixList<numberOfRowsColumns>();
         }
-        else if (py::isinstance<py::list>(listOfArrays))
+        else if (py::isinstance<py::list>(listOfArrays)) //list of matrices
 		{
 			py::list pyList = py::cast<py::list>(listOfArrays);
 			this->SetMaxNumberOfItems((Index)pyList.size());
@@ -176,6 +181,15 @@ public:
 			{
 				this->PyAppend((const py::object&)item);
 			}
+		}
+		else if (py::isinstance<py::array>(listOfArrays)) //also allow initialization of matrix list with single Matrix3D (only numpy array);
+		{
+			//DELETE:
+			//Index i = this->Append(ConstSizeMatrix<numberOfRowsColumns * numberOfRowsColumns>(numberOfRowsColumns, numberOfRowsColumns, 0.));
+			//PySetItem(i, listOfArrays); //this is now a single matrix!
+			this->SetNumberOfItems(1);
+			PySetItem(0, listOfArrays); //this is now a single matrix!
+
 		}
 		else
 		{
@@ -277,7 +291,7 @@ namespace EPyUtils
                 destination.Flush();
                 rv = true;
             }
-            else if (py::isinstance<py::list>(value))
+			else if (py::isinstance<py::list>(value))
 			{
 				py::list pylist = py::cast<py::list>(value); //also works for numpy arrays (but gives different type!)
 
@@ -288,6 +302,14 @@ namespace EPyUtils
 					PyError(STDstring("Set " + listType + ": Either empty list [], None, or " + listType + " allowed, but received: ") +
 						STDstring(py::str(value))); //here we do not use py::cast<std::string>(value), because value may be Vector3DList directly, which cannot be casted to Python!
 				}
+				rv = true;
+			}
+			else if (py::isinstance<py::array>(value)) //also allow initialization of matrix list with single Matrix3D (only numpy array);
+			{
+				TPyList pyList;
+				pyList.SetNumberOfItems(1);
+				pyList.PySetItem(0, value); //this is now a single vector or matrix!
+				destination = (TList&)(pyList); //only casting necessary!
 				rv = true;
 			}
 			else if (py::isinstance<TPyList>(value)) //the py instance is e.g. PyVector3DList, but it is casted to the pure C++ type Vector3DList

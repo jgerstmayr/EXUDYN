@@ -76,7 +76,7 @@ You can view and download this file on Github: `universalJoint.py <https://githu
    
    
    #parameters for simulation
-   tEnd=20*np.pi/omega #simulation time (one rotation)
+   tEnd=int(20*np.pi/omega) #simulation time
    h=1e-3 #stepsize
    
    
@@ -207,7 +207,7 @@ You can view and download this file on Github: `universalJoint.py <https://githu
    gGround1 = [graphics.Arrow(pAxis = [0,0,0.02], vAxis=[rShow*1.2,0,0], radius=0.01, color=graphics.color.lawngreen)]
    oGroundBody1 = mbs.AddObject(ObjectGround(referencePosition=pShow, visualization=VObjectGround(graphicsData=gGround1)))
    
-   
+   #for visualization of arrows (no sync between two rotations ...)
    def PreStepUserFunction(mbs, t):
        phi0 = mbs.GetObjectOutputBody(b0, variableType=exu.OutputVariableType.Rotation)[2]
        A0 = RotationMatrixZ(phi0)
@@ -240,10 +240,7 @@ You can view and download this file on Github: `universalJoint.py <https://githu
    
    simulationSettings.timeIntegration.newton.useModifiedNewton = True
    simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
-   simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
-   
-   simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
-   simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints =  simulationSettings.timeIntegration.generalizedAlpha.useNewmark
+   simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True
    
    simulationSettings.timeIntegration.simulateInRealtime = True
    simulationSettings.timeIntegration.realtimeFactor = 0.2
@@ -254,10 +251,10 @@ You can view and download this file on Github: `universalJoint.py <https://githu
    SC.visualizationSettings.connectors.jointAxesLength = 0.03
    SC.visualizationSettings.connectors.jointAxesRadius = 0.008
    SC.visualizationSettings.openGL.lineWidth=2 #maximum
-   SC.visualizationSettings.openGL.lineSmooth=True
-   SC.visualizationSettings.openGL.shadow=0.15
+   
+   SC.visualizationSettings.openGL.light0.shadow=0.15
    SC.visualizationSettings.openGL.multiSampling = 4
-   SC.visualizationSettings.openGL.light0position = [8,8,10,0]
+   SC.visualizationSettings.openGL.light0.position = [8,8,10,0]
    simulationSettings.solutionSettings.solutionInformation = "Example universal joint"
    SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
    
@@ -269,9 +266,9 @@ You can view and download this file on Github: `universalJoint.py <https://githu
    
    
    if simulation:
+       SC.visualizationSettings.general.autoFitScene = False
        SC.renderer.Start()
-       if 'renderState' in exu.sys:
-           SC.renderer.SetState(exu.sys['renderState'])
+       SC.renderer.SetModelView(zoom=0.9022491,rotationVector=[0.7122599,0.116426,1.713679],centerPoint=[0.2592883,0.05991498,0])
        SC.renderer.DoIdleTasks()
        
        mbs.SolveDynamic(simulationSettings)

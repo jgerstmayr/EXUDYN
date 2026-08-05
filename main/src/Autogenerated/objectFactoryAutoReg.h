@@ -423,6 +423,17 @@ bool MainObjectBeamGeometricallyExactIsRegistered = ClassFactoryItemsSystemData<
 		return object;
 	});
 
+bool MainObjectANCFThinPlateIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ANCFThinPlate", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectANCFThinPlate();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectANCFThinPlate(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectANCFThinPlate* vObject = new VisualizationObjectANCFThinPlate();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
 bool MainObjectConnectorCartesianSpringDamperIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("ConnectorCartesianSpringDamper", [](CSystemData* cSystemData)
 	{ //AUTO: 
 		CObject* cObject = new CObjectConnectorCartesianSpringDamper();
@@ -731,6 +742,17 @@ bool MainObjectJointPrismatic2DIsRegistered = ClassFactoryItemsSystemData<MainOb
 		return object;
 	});
 
+bool MainObjectJointSlidingIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("JointSliding", [](CSystemData* cSystemData)
+	{ //AUTO: 
+		CObject* cObject = new CObjectJointSliding();
+		cObject->SetCSystemData(cSystemData);
+		MainObject* object = new MainObjectJointSliding(); //new main object
+		object->SetCObject(cObject);
+		VisualizationObjectJointSliding* vObject = new VisualizationObjectJointSliding();
+		object->SetVisualizationObject(vObject);
+		return object;
+	});
+
 bool MainObjectJointSliding2DIsRegistered = ClassFactoryItemsSystemData<MainObject>::Get().RegisterClass("JointSliding2D", [](CSystemData* cSystemData)
 	{ //AUTO: 
 		CObject* cObject = new CObjectJointSliding2D();
@@ -909,6 +931,16 @@ bool MainMarkerBodyCable2DCoordinatesIsRegistered = ClassFactoryItem<MainMarker>
 		MainMarker* item = new MainMarkerBodyCable2DCoordinates(); //new main item
 		item->SetCMarker(cItem);
 		VisualizationMarkerBodyCable2DCoordinates* vItem = new VisualizationMarkerBodyCable2DCoordinates();
+		item->SetVisualizationMarker(vItem);
+		return item;
+	});
+
+bool MainMarkerBodyBeamShapeIsRegistered = ClassFactoryItem<MainMarker>::Get().RegisterClass("BodyBeamShape", []
+	{ //AUTO: 
+		CMarkerBodyBeamShape* cItem = new CMarkerBodyBeamShape();							//new point Marker
+		MainMarker* item = new MainMarkerBodyBeamShape(); //new main item
+		item->SetCMarker(cItem);
+		VisualizationMarkerBodyBeamShape* vItem = new VisualizationMarkerBodyBeamShape();
 		item->SetVisualizationMarker(vItem);
 		return item;
 	});

@@ -30,9 +30,8 @@ destDir='../../../'
 #copy from issueTracker.py
 versionNames = {'1.0':'Abercrombie', '1.1':'Burton', '1.2':'Corea', '1.3':'Davis', '1.4':'Ellington', '1.5':'Fitzgerald', 
                 '1.6':'Gillespie', '1.7':'Hall', '1.8':'Jones', #Jim Hall, Elvin Jones; leave out 'I' as there are not many => two 'M'
-                '1.9':'Krall', '1.10': 'Lagrene', '2.1':'McLaughlin', '2.2':'Metheney'} #Bireli Lagrene
-                #(Phineas) Newborn, (Charlie) Parker, (Jaco) Pastorius, (Oscar) Peterson, #3xP for missing O and Q
-                #(Django) Reinhardt, Scofield, Thielemans, (Steve) Vai, (Sarah) Vaughan
+                '1.9':'Krall', '1.10': 'Lagrene', '1.11':'McLaughlin', '1.12':'Metheney', #Bireli Lagrene
+                '1.13':'Newborn', '1.14':'Parker'} #(Phineas) Newborn, (Charlie) Parker, (Jaco) Pastorius, (Oscar) Peterson, #3xP for missing O and Q
 
 #main files
 filesParsed=[
@@ -574,7 +573,7 @@ if True:
             #print('PROCESS '+fileType+ ' ' + fileName)
             pureName = fileName.replace('.py','')
             s=''
-            with open(folderSource+fileTypeS+'/'+fileName) as f:
+            with open(folderSource+fileTypeS+'/'+fileName, encoding='utf8') as f:
                 s = f.read()
                 
             sRST = ''

@@ -361,8 +361,8 @@ simulationSettings.linearSolverType=exu.LinearSolverType.EigenSparse
 simulationSettings.solutionSettings.solutionInformation = "Piston engine"
 
 SC.visualizationSettings.general.graphicsUpdateInterval = 0.01
-SC.visualizationSettings.general.drawWorldBasis = True
-SC.visualizationSettings.general.worldBasisSize = 0.1
+SC.visualizationSettings.view0.scene.drawWorldBasis = True
+SC.visualizationSettings.view0.scene.worldBasisSize = 0.1
 
 SC.visualizationSettings.loads.show = False
 SC.visualizationSettings.nodes.show = False
@@ -370,9 +370,9 @@ SC.visualizationSettings.connectors.show = False
 
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.lineWidth = 3
-SC.visualizationSettings.openGL.perspective = 0.5
-SC.visualizationSettings.openGL.light0position = [0.25,1,3,0]
-SC.visualizationSettings.window.renderWindowSize = [1600,1200]
+SC.visualizationSettings.view0.camera.perspective = 0.5
+SC.visualizationSettings.openGL.light0.position = [0.25,1,3,0]
+SC.visualizationSettings.view0.window.renderWindowSize = [1600,1200]
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

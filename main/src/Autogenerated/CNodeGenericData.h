@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-08-11  16:20:58 (last modified)
+* @date         2026-02-05  22:13:55 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CNodeGenericData
-* @brief        A node containing a number of data (history) variables; use e.g. for contact (active set), friction or plasticity (history variable).
+* @brief        A node containing a number of data (history) variables. Use this node e.g. for contact (active set), friction or plasticity (history variables).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -88,7 +88,7 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
-            (Index)OutputVariableType::Coordinates );
+            (Index64)OutputVariableType::Coordinates );
     }
 
 };

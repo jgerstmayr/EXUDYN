@@ -202,7 +202,7 @@ if TSScope.runTestExamples:
         exudynTestGlobals.testError = -1 #default value !=-1, if there is an error in the calculation
         exudynTestGlobals.testResult = TSScope.invalidResult #strange default value to see if there is a missing testResult
         try:
-            exec(open(TSScope.file).read(), globals())
+            exec(open(TSScope.file, encoding='utf8').read(), globals())
         except Exception as e:
             exu.Print('TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '") raised exception:\n'+str(e))
             print('TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '") raised exception:\n'+str(e), flush=True)
@@ -267,7 +267,7 @@ if TSScope.runMiniExamples:
         testError = -1
         fileDir = 'MiniExamples/'+file
         try:
-            exec(open(fileDir).read(), globals())
+            exec(open(fileDir, encoding='utf8').read(), globals())
         except Exception as e:
             exu.Print('MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e))
             print('MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '") raised exception:\n'+str(e), flush=True)

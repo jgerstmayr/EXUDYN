@@ -98,7 +98,7 @@ simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.solutionSettings.solutionWritePeriod = 0.04 #store every 5 ms
 # simulationSettings.displayComputationTime = True
 
-SC.visualizationSettings.window.renderWindowSize=[1600,1080]
+SC.visualizationSettings.view0.window.renderWindowSize=[1600,1080]
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.general.autoFitScene = False
 SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
@@ -106,7 +106,7 @@ SC.visualizationSettings.general.showSolutionInformation = 0
 SC.visualizationSettings.general.showSolverInformation = 0
 # SC.visualizationSettings.general.showSolverTime = 0
 SC.visualizationSettings.general.renderWindowString = 'gyro stability for rotation about axis with \nsmallest (red), middle (green), largest (blue) moment of inertia\ninitial angular velocity = '+str(angVel)+' rad/s, disturbed by '+str(eps*angVel)+' rad/s'
-SC.visualizationSettings.general.textSize = 16
+SC.visualizationSettings.view0.window.globalFontSize = 16
 
 SC.visualizationSettings.nodes.drawNodesAsPoint=False
 SC.visualizationSettings.nodes.showBasis=False

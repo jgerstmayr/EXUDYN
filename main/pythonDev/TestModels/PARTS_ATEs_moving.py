@@ -483,9 +483,9 @@ SC.visualizationSettings.nodes.show= False
 SC.visualizationSettings.markers.show= False
 
 SC.visualizationSettings.openGL.lineWidth=2 #maximum
-SC.visualizationSettings.openGL.lineSmooth=True
-SC.visualizationSettings.general.drawCoordinateSystem = False
-SC.visualizationSettings.window.renderWindowSize=[1600,1024]
+
+SC.visualizationSettings.view0.scene.drawCoordinateSystem = False
+SC.visualizationSettings.view0.window.renderWindowSize=[1600,1024]
 
 ##++++++++++++++++++++++++++++++
 ##ANIMATIONS

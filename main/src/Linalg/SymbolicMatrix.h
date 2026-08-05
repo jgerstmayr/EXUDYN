@@ -165,7 +165,7 @@ public:
 	}
 	virtual Real EvaluateComponent(Index row, Index column) const override
 	{ 
-		CHECKandTHROW(row < exprMatrix.size() && column < exprMatrix[0].size(), "MatrixExpressionSReal: invalid row/column");
+		CHECKandTHROW(row < (Index)exprMatrix.size() && column < (Index)exprMatrix[0].size(), "MatrixExpressionSReal: invalid row/column");
 		return exprMatrix[row][column]->Evaluate();
 	};
 	virtual STDstring ToString() const override

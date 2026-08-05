@@ -114,7 +114,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 simulationSettings.displayStatistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 
-SC.visualizationSettings.window.renderWindowSize=[1600,2000]
+SC.visualizationSettings.view0.window.renderWindowSize=[1600,2000]
 SC.visualizationSettings.openGL.multiSampling=4
 
 if useGraphics:

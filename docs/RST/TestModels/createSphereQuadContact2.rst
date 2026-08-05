@@ -182,12 +182,12 @@ You can view and download this file on Github: `createSphereQuadContact2.py <htt
    
    simulationSettings.displayStatistics = True
    simulationSettings.timeIntegration.verboseMode = 1
-   SC.visualizationSettings.general.drawCoordinateSystem = False
+   SC.visualizationSettings.view0.scene.drawCoordinateSystem = False
    SC.visualizationSettings.general.showSolverInformation = False
    SC.visualizationSettings.connectors.showContact = False
    SC.visualizationSettings.nodes.showBasis = True
    SC.visualizationSettings.nodes.basisSize = 1.5*radius
-   #SC.visualizationSettings.openGL.depthSorting = True
+   #SC.visualizationSettings.openGL.advanced.depthSorting = True
    
    if useGraphics:
        SC.renderer.Start()              #start graphics visualization

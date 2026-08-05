@@ -71,14 +71,6 @@ Vector3D CNodeRigidBody2D::GetAngularAcceleration(ConfigurationType configuratio
 }
 
 
-
-////! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
-//OutputVariableType CNodeRigidBody2D::GetOutputVariableTypes() const
-//{
-//	return (OutputVariableType)((Index)OutputVariableType::Position + (Index)OutputVariableType::Velocity +
-//		(Index)OutputVariableType::Coordinates + (Index)OutputVariableType::Coordinates_t);
-//}
-
 //! provide according output variable in "value"
 void CNodeRigidBody2D::GetOutputVariable(OutputVariableType variableType, ConfigurationType configuration, Vector& value) const
 {

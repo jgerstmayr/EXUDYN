@@ -525,7 +525,26 @@ namespace EXUmath
 		return res;
 	}
 
+	//untested!
+	//using std::atan2;
+	//template <int nDiff, typename TReal>
+	//inline AutoDiff<nDiff, TReal>
+	//	atan2(const AutoDiff<nDiff, TReal>& y, const AutoDiff<nDiff, TReal>& x)
+	//{
+	//	AutoDiff<nDiff, TReal> res;
 
+	//	const TReal xv = x.Value();
+	//	const TReal yv = y.Value();
+
+	//	res.Value() = std::atan2(yv, xv);
+
+	//	const TReal denom = xv * xv + yv * yv;
+	//	for (int k = 0; k < nDiff; ++k) {
+	//		res.DValue(k) = (xv * y.DValue(k) - yv * x.DValue(k)) / denom;
+	//	}
+
+	//	return res;
+	//}
 
 
 	template <int nDiff, typename TReal, typename TB, typename TC>

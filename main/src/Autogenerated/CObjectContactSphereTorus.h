@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-19  19:43:35 (last modified)
+* @date         2026-02-05  22:13:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -66,7 +66,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectContactSphereTorus
-* @brief        [UNDER DEVELOPMENT] A simple contact connector between a sphere (marker0) and a torus (marker1). The sphere is assumed to be placed inside of the torus (outer contact of sphere with torus currently not implemented!).
+* @brief        A simple contact connector between a sphere (marker0) and a torus (marker1). The sphere is assumed to be placed inside of the torus (outer contact of sphere with torus currently not implemented!).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -197,14 +197,14 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
-            (Index)OutputVariableType::Position +
-            (Index)OutputVariableType::Displacement +
-            (Index)OutputVariableType::DisplacementLocal +
-            (Index)OutputVariableType::Director1 +
-            (Index)OutputVariableType::Director2 +
-            (Index)OutputVariableType::Director3 +
-            (Index)OutputVariableType::Force +
-            (Index)OutputVariableType::Torque );
+            (Index64)OutputVariableType::Position +
+            (Index64)OutputVariableType::Displacement +
+            (Index64)OutputVariableType::DisplacementLocal +
+            (Index64)OutputVariableType::Director1 +
+            (Index64)OutputVariableType::Director2 +
+            (Index64)OutputVariableType::Director3 +
+            (Index64)OutputVariableType::Force +
+            (Index64)OutputVariableType::Torque );
     }
 
 };

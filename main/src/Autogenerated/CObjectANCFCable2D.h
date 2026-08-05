@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-06  23:48:38 (last modified)
+* @date         2026-02-28  22:53:57 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -91,6 +91,8 @@ protected: // AUTO:
     CObjectANCFCable2DParameters parameters; //! AUTO: contains all parameters for CObjectANCFCable2D
 
 public: // AUTO: 
+    static constexpr Index nODE2coordinates = 8; //!< fixed size of coordinates used e.g. for ConstSizeVectors    static constexpr Index nShapeFunctions = 4; //!< number of shape functions
+    static constexpr Index nNodalCoordinates = 4; //!< number of nodal coordinates
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
@@ -189,19 +191,19 @@ public: // AUTO:
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
         return (OutputVariableType)(
-            (Index)OutputVariableType::Position +
-            (Index)OutputVariableType::Displacement +
-            (Index)OutputVariableType::Velocity +
-            (Index)OutputVariableType::VelocityLocal +
-            (Index)OutputVariableType::Rotation +
-            (Index)OutputVariableType::Director1 +
-            (Index)OutputVariableType::StrainLocal +
-            (Index)OutputVariableType::CurvatureLocal +
-            (Index)OutputVariableType::ForceLocal +
-            (Index)OutputVariableType::TorqueLocal +
-            (Index)OutputVariableType::AngularVelocity +
-            (Index)OutputVariableType::Acceleration +
-            (Index)OutputVariableType::AngularAcceleration );
+            (Index64)OutputVariableType::Position +
+            (Index64)OutputVariableType::Displacement +
+            (Index64)OutputVariableType::Velocity +
+            (Index64)OutputVariableType::VelocityLocal +
+            (Index64)OutputVariableType::Rotation +
+            (Index64)OutputVariableType::Director1 +
+            (Index64)OutputVariableType::StrainLocal +
+            (Index64)OutputVariableType::CurvatureLocal +
+            (Index64)OutputVariableType::ForceLocal +
+            (Index64)OutputVariableType::TorqueLocal +
+            (Index64)OutputVariableType::AngularVelocity +
+            (Index64)OutputVariableType::Acceleration +
+            (Index64)OutputVariableType::AngularAcceleration );
     }
 
 };

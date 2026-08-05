@@ -459,13 +459,13 @@ SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = 0.015
 
 SC.visualizationSettings.openGL.lineWidth = 2
-SC.visualizationSettings.openGL.shadow = 0.3
+SC.visualizationSettings.openGL.light0.shadow = 0.3
 SC.visualizationSettings.openGL.multiSampling = 4
-SC.visualizationSettings.openGL.perspective = 0.7
+SC.visualizationSettings.view0.camera.perspective = 0.7
 
 #create animation:
 if useGraphics:
-    SC.visualizationSettings.window.renderWindowSize=[1920,1080]
+    SC.visualizationSettings.view0.window.renderWindowSize=[1920,1080]
     SC.visualizationSettings.openGL.multiSampling = 4
 
     if False: #save images

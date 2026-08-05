@@ -9,7 +9,7 @@ Data structures
 
 This section describes a set of special data structures which are used in the Python-C++ interface, 
 such as a MatrixContainer for dense/sparse matrices or a list of 3D vectors. 
-Note that there are many native data types, such as lists, dicts and numpy arrays (e.g. 3D vectors), 
+Note that there are many native data types, such as lists, dicts and numpy arrays (e.g., 3D vectors), 
 which are not described here as they are native to Pybind11, but can be passed as arguments when appropriate.
 
 .. _sec-matrixcontainer:
@@ -114,7 +114,7 @@ The GraphicsMaterialList contains the list of materials (material properties) fo
    #convert into dictionary for easier processing:
    matDict = mat0.GetDictionary()
    matDict['alpha'] = 0.5
-   #change material (e.g. using a data base):
+   #change material (e.g., using a data base):
    mat0.SetDictionary(matDict)
    #or directly update material
    mat0.name = 'new name'
@@ -288,6 +288,7 @@ Usage:
 +  Create empty \ ``Matrix3DList``\  with \ ``x = Matrix3DList()``\  
 +  Create \ ``Matrix3DList``\  with list of numpy arrays:
 \ ``x = Matrix3DList([ numpy.eye(3), numpy.array([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]) ])``\ 
++  Create \ ``Matrix3DList``\  with one matrix \ ``x = Matrix3DList(13.*numpy.eye(3))``\  
 +  Append item: \ ``x.Append(numpy.eye(3))``\ 
 +  Convert into list of numpy arrays: \ ``x.GetPythonObject()``\ 
 +  similar to Vector3DList !
