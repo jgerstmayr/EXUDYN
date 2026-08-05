@@ -19,10 +19,8 @@ jobs:
     strategy:
       fail-fast: false        # CHANGED: don't cancel siblings on first failure
       matrix:
-        # os: [ubuntu-24.04, ubuntu-24.04-arm, windows-2025, macos-15]
-        # python-version: ['10', '11', '12', '13', '14']
-        os: [macos-15]
-        python-version: ['13']
+        os: [ubuntu-24.04, ubuntu-24.04-arm, windows-2025, macos-15]
+        python-version: ['10', '11', '12', '13', '14']
 
     steps:
       - uses: actions/checkout@v6          # CHANGED: v4 -> v6
@@ -61,8 +59,8 @@ jobs:
           CIBW_TEST_REQUIRES: "numpy matplotlib scipy"
           CIBW_TEST_COMMAND_LINUX: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
           # CIBW_TEST_COMMAND_MACOS: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
+          CIBW_BEFORE_TEST_MACOS: "python -c \"import matplotlib.pyplot\""
           CIBW_TEST_COMMAND_MACOS: >-
-            python -c "import matplotlib.pyplot" &&
             cd {project}/main/pythonDev/TestModels &&
             mkdir -p ../TestSuiteLogs &&
             PYTHONFAULTHANDLER=1 python -u -X faulthandler runTestSuite.py -local

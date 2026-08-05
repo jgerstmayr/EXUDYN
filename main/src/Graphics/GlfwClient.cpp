@@ -2679,6 +2679,7 @@ void GlfwRenderer::SaveSceneToFile(Index viewID, const STDstring& filename)
 			heightAlignment = 2;
 			PrintDelayed("SaveImage ERROR: exportImages.heightAlignment illegal: must be 1, 2, 4 or 8; defaulting to 2");
 		}
+		widthAlignment = EXUstd::Clamp(widthAlignment, 1, 32); //exclude zero
 
 		windowWidth = widthAlignment * (Index)(windowWidth / widthAlignment); //make multiple of 4 to align with most animation converter ...
 

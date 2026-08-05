@@ -99,7 +99,12 @@ void VisualizationSystemContainer::RedrawAndSaveImage(Index viewID)
 	if (timerMilliseconds == 0) { timerMilliseconds = 1; } //min wait time per iteration
 
 #ifdef USE_GLFW_GRAPHICS
-	if (!glfwRenderer.UseMultiThreadedRendering()) //otherwise, user functions are anyway processed
+	bool useMultiThreadedRendering = glfwRenderer.UseMultiThreadedRendering();
+#if defined(__EXUDYN__APPLE__)
+	useMultiThreadedRendering = false;
+#endif
+
+	if (!useMultiThreadedRendering) //otherwise, user functions are anyway processed
 	{
 		//in this case, we need to update graphics, otherwise it is not saved
 
@@ -114,7 +119,7 @@ void VisualizationSystemContainer::RedrawAndSaveImage(Index viewID)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(timerMilliseconds));
 #ifdef USE_GLFW_GRAPHICS
-		if (glfwRenderer.UseMultiThreadedRendering()) //otherwise, user functions are anyway processed
+		if (useMultiThreadedRendering) //otherwise, user functions are anyway processed
 		{
 			//Needed ?: PyProcessExecuteQueue(); //use time to execute incoming python tasks
 			//process user functions

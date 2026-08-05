@@ -427,7 +427,7 @@ py::array_t<uint8_t> MainRenderer::RedrawAndGetImage(bool useRaytracer, Index vi
 		ViewDisabledError(viewID, "RedrawAndGetImage");
 		RendererInActiveError("RedrawAndGetImage");
 		RVD.saveImageAsData = true;
-		VSC.RedrawAndSaveImage();
+		VSC.RedrawAndSaveImage(viewID);
 		RVD.saveImageAsData = false;
 		return py::array_t<uint8_t>({ RVD.imageDataSize[1], RVD.imageDataSize[0], 3 }, //height, width, channels
 			RVD.imageData.GetDataPointer());
