@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.0, 
 +  last change =  2026-08-05, 
-+  Number of issues = 2350, 
++  Number of issues = 2351, 
 +  Number of resolved issues = 2073 (0 in current version), 
 
 ************
@@ -6737,6 +6737,10 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 2350:** MacOS               
+    - description:  fix problem in raytracerNOGLFWtest.py on MacOS
+    - date raised: 2026-08-05 
 
  * **open issue 2349:** shells              
     - description:  adjust comments to fit to internal exudyn format
