@@ -272,6 +272,15 @@ These were checked against the tree. Several correct earlier assumptions.
     before being treated as a real break.
 
 
+21. **Regeneration must run *after* `ResolveIssue`, not before.** `ResolveIssue` rewrites
+    `docs/theDoc/version.txt`, and `README.rst` plus `docs/RST/Exudyn.rst` embed the version string
+    (`Exudyn version = 1.11.4 (McLaughlin)`), refreshed only by `doc2rst.py`. Regenerating first
+    therefore leaves those two files one version behind and makes the next drift check report a
+    change unrelated to the work. This constrains step 2: `tools/regenerate.py` cannot be run as a
+    pre-commit hook independent of the tracker — either it runs after the version bump, or the
+    check must know that these two files legitimately trail. Simplest is to keep the ordering
+    explicit in the gate, which `docs/dev/WORKFLOW.md` now does.
+
 ### 3a. Python environments (measured)
 
 `python` is not on `PATH`. **`venvExuP313`** (created 2026-09-09) is the reference environment and

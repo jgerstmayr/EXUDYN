@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.4, 
+  \item Exudyn version = 1.11.5, 
   \item last change =  2026-09-09, 
-  \item Number of issues = 2355, 
-  \item Number of resolved issues = 2077 (4 in current version), 
+  \item Number of issues = 2356, 
+  \item Number of resolved issues = 2078 (5 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.5}:  resolved Issue 2355: {\bf Regeneration must run after ResolveIssue}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: ResolveIssue rewrites docs/theDoc/version.txt, but README.rst and docs/RST/Exudyn.rst embed the version string and are refreshed only by doc2rst.py. Regenerating before resolving leaves those two files one version behind, so the next drift check reports an unrelated change. Documented the required order in docs/dev/WORKFLOW.md and as a constraint on revision plan step 2.}
+    \item {\bf notes: Gate order is now: resolve issue, then regenerate, then commit}
+    \item   date resolved: {\bf 2026-09-09 18:49},
+date raised: 2026-09-09 
+  \ei
   \item[] {\bf Version 1.11.4}:  resolved Issue 2354: {\bf Track tools/issueTracker in the repository}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

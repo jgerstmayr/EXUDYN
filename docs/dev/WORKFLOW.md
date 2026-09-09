@@ -164,7 +164,15 @@ Required for any change to C++, `main/setup.py`, or `main/obj/cppsrc.vcxproj`. V
 `Debug|x64` or `Release|x64` from `main/main_sln_Template.sln`, or
 `tools/buildAndGenerate/buildInstallSingleVersion.bat`.
 
-### 2. Regeneration is clean
+### 2. Regeneration is clean — and runs *after* `ResolveIssue`
+
+> **Order matters.** `ResolveIssue` bumps the micro version and rewrites `docs/theDoc/version.txt`.
+> `README.rst` and `docs/RST/Exudyn.rst` **embed** the version string and are refreshed only by
+> `doc2rst.py`. Regenerating before resolving therefore always leaves those two files one version
+> behind, and the next run reports drift that has nothing to do with your change.
+>
+> The working order is: **resolve the issue first, then regenerate, then commit.** During
+> development, run the generators as often as you like; the run that matters is the last one.
 
 On a clean tree, run all six generators from `main/src/pythonGenerator/`:
 
@@ -238,7 +246,8 @@ with `tools/buildAndGenerate/runTestExamples.bat` for releases and large steps o
 After the gates pass:
 
 1. `ResolveIssue(issueNumber, notes='...')` — this bumps the micro version and rewrites the seven
-   generated files listed in §2.
+   generated files listed in §2. **Then re-run the generators** (at minimum `doc2rst.py`), because
+   `README.rst` and `docs/RST/Exudyn.rst` embed the version string — see gate 2.
 2. Present the maintainer with an overview: files changed, gate results (build, drift, test count),
    the issue resolved, and the proposed commit message.
 3. **Wait for explicit approval.** Claude commits only on a clear go-ahead.

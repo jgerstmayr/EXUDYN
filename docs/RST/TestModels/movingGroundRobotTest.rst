@@ -287,7 +287,7 @@ You can view and download this file on Github: `movingGroundRobotTest.py <https:
            exu.Print('sensor rot ',cnt, '=', mbs.GetSensorValues(sensorNumber))
    
    
-   fact=0.01 #to reach desired accuracy
+   fact=0.005 #to reach desired accuracy; #2026-09-09: switch 0.01->0.005 
    exu.Print("torques at tEnd=", fact*VSum(measuredTorques))
    
    #add larger test tolerance for 32/64bits difference
