@@ -1,0 +1,67 @@
+# Exudyn GitLab CI
+#
+# Purpose: keep the wheels and the test suite running while GitHub master is frozen at 1.11.0
+# (revision plan decision D6, step 11). GitHub Actions only fire on pushes to master and on pull
+# requests, so between now and the v2.0 release they never run. This covers the blind spot that
+# matters most: Linux, which nobody builds by hand day to day.
+#
+# NOT covered here, deliberately - see revision plan step 11:
+#   Windows  - this is the daily development machine, so breakage surfaces within hours anyway
+#   macOS    - runs at milestones on a real Mac; macOS failures arrive coupled with Linux ones,
+#              except visualization, which cannot be tested headlessly on any runner
+#   aarch64  - GitLab's shared runners are x86_64 and QEMU would take hours; returns with
+#              GitHub CI at release
+#
+# WHEN THIS RUNS: nothing is triggered by an ordinary push. Pipelines start from the weekly
+# schedule (Settings -> CI/CD -> Schedules, target branch v2-dev), from the "Run pipeline"
+# button, or from a tag. That cadence is a deliberate decision, not an oversight.
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "web"          # the "Run pipeline" button
+    - if: $CI_COMMIT_TAG
+
+stages:
+  - build
+  - docs
+
+# Build and test one manylinux wheel per Python version.
+#
+# The job image IS the manylinux image, so the build runs directly inside it: no
+# docker-in-docker, no privileged runner. tools/ci/buildManylinux.sh is the same script the
+# local docker path uses, so a failure here reproduces locally with one command.
+wheels_linux:
+  stage: build
+  image: quay.io/pypa/manylinux_2_28_x86_64
+  parallel:
+    matrix:
+      - PYTAG: [cp310, cp311, cp312, cp313, cp314]
+  variables:
+    # regular runs do not exercise the __FAST_EXUDYN_LINALG binary, and skipping it roughly
+    # halves compile time; release builds must NOT set this
+    EXUDYN_NOFAST: "1"
+  script:
+    - bash tools/ci/buildManylinux.sh "$PYTAG"
+  artifacts:
+    when: always                                # keep the logs from a failed run too
+    paths:
+      - main/dist/manylinux/*.whl
+      - main/pythonDev/TestModels/testSuiteLog_V*.txt
+    expire_in: 30 days
+  # No allow_failure. The GitHub workflow sets continue-on-error: true, which combined with a
+  # test suite that always exited 0 meant CI could not fail. runTestSuite.py --exit-code now
+  # returns non-zero on reproducible failures, and this job is allowed to go red.
+
+# Catch documentation breakage during the freeze. This does NOT deploy: GitHub Pages correctly
+# stays at 1.11.0 while the public release is 1.11.0.
+docs:
+  stage: docs
+  image: python:3.13
+  script:
+    - pip install --no-cache-dir -r docs/requirements.txt
+    - sphinx-build -b html . _build -E -W --keep-going
+  artifacts:
+    paths:
+      - _build
+    expire_in: 7 days

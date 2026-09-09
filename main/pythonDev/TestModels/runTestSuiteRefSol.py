@@ -166,6 +166,37 @@ def TestExamplesReferenceSolution():
     return refSol
 
 
+#%%+++++++++++++++++++++++++++++++++++++++
+#return per-test factors which are multiplied with the global test tolerance,
+#for tests which are known to be less reproducible than the rest
+def TestExamplesToleranceFactors():
+
+    tolFact = {
+        'serialRobotTest.py': 100,                                  #sparse eigenvalue solver
+        }
+
+    return tolFact
+
+#%%+++++++++++++++++++++++++++++++++++++++
+#return the set of tests which are not reproducible across machines by their nature:
+#  - contact and friction models, which are chaotic, so a different machine gives a
+#    materially different error and the size of that error says nothing about correctness
+#  - sparse eigenvalue problems solved with ARPACK, which starts from a random vector
+#    that cannot be seeded
+#These tests are still executed and their failures are reported prominently, but they do
+#NOT set the process exit code (see runTestSuite.py --exit-code), because an automated run
+#which goes red at random is an alarm nobody reads.
+#
+#POPULATE FROM EVIDENCE, NOT FROM FILE NAMES: run the suite on Windows, Linux and macOS and
+#compare the per-test ERROR values. Anything varying by orders of magnitude belongs here. A
+#name match on contact/friction/eigen hits about a third of the suite and is far too coarse.
+def SensitiveTests():
+
+    sensitive = set([
+        ])
+
+    return sensitive
+
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #return reference solutions for mini examples in dictionary
 def MiniExamplesReferenceSolution():

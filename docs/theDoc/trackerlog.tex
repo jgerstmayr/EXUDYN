@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.10, 
+  \item Exudyn version = 1.11.11, 
   \item last change =  2026-09-09, 
-  \item Number of issues = 2361, 
-  \item Number of resolved issues = 2083 (10 in current version), 
+  \item Number of issues = 2362, 
+  \item Number of resolved issues = 2084 (11 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.11}:  resolved Issue 2361: {\bf CI during the GitHub freeze}
+(testing)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: GitHub Actions only fire on pushes to master and pull requests, so no wheels or tests run while master is frozen at 1.11.0 (decision D6). Add GitLab CI for Linux x86\_64 across cp310-cp314 on the shared Docker runners, plus a docs build. Also fix that CI could not fail at all: wheels.yml sets continue-on-error and runTestSuite.py always exited 0. Revision plan step 11.}
+    \item {\bf notes: runTestSuite.py gains --exit-code and loses the -F<NN> log suffix; reproducible vs sensitive tests separated in runTestSuiteRefSol.py; manylinuxBuild.sh deduplicated into tools/ci/buildManylinux.sh. Verified by fault injection. First pipeline run and the weekly schedule are still pending}
+    \item   date resolved: {\bf 2026-09-09 23:22},
+date raised: 2026-09-09 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.10}:  resolved Issue 2360: {\bf Set up internal GitLab remote and sync v2-dev}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

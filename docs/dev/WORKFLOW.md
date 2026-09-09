@@ -173,6 +173,53 @@ and the normal thing to do. The internal repository carries **full history**; th
   only where `core.hooksPath` is set — see §0a, and tell anyone you add to the server.
 - Claude never pushes to any remote, under any circumstances, and announces network access first.
 
+## 2b. Continuous integration
+
+GitHub Actions only fire on pushes to `master` and on pull requests, so **while `master` is frozen
+at 1.11.0 nothing runs there**. `.gitlab-ci.yml` covers the gap.
+
+| leg | how it is covered |
+|---|---|
+| **Linux x86_64, cp310–314** | `.gitlab-ci.yml`, on the internal GitLab's shared Docker runners |
+| **Windows x64** | this development machine; `tools/buildAndGenerate/makeAndTestAllBinaries.bat` weekly |
+| **macOS** | a real Mac, at milestones |
+| **Linux aarch64** | not covered until GitHub CI resumes — accepted gap |
+| **docs** | `docs` job builds sphinx with `-W`; it does **not** deploy |
+
+**Nothing is triggered by an ordinary push.** Pipelines start from the weekly schedule, the
+*Run pipeline* button, or a tag. The schedule itself lives in the GitLab UI, not in the file:
+**Settings → CI/CD → Schedules**, target branch `v2-dev`. If that schedule is deleted, CI silently
+stops and the repository looks exactly the same — worth checking if the pipeline list goes quiet.
+
+The Linux job runs `tools/ci/buildManylinux.sh <pyTag>` **inside** the manylinux image, which is
+also what the local docker path uses, so a CI failure reproduces locally with one command:
+
+```bash
+tools/buildAndGenerate/makeUbuntuManyLinuxWheels.bat      # all five, via docker + WSL
+```
+
+Regular CI sets `EXUDYN_NOFAST=1`, which skips the `__FAST_EXUDYN_LINALG` binary and roughly halves
+build time. Ordinary test runs do not exercise that binary. **Release builds must not set it.**
+
+### Reproducible vs sensitive tests
+
+`runTestSuite.py --exit-code` returns non-zero when tests fail — CI depends on this, and without it
+CI cannot fail at all. But not every test is reproducible across machines:
+
+- **contact and friction models** are chaotic; a different machine gives a materially different
+  error, and the size of that error says nothing about correctness
+- **sparse eigenvalue problems** go through ARPACK from a random start vector that cannot be seeded
+
+Those are listed in `SensitiveTests()` in `runTestSuiteRefSol.py`. They still run, and their
+failures are reported prominently — but they **do not set the exit code**, because a scheduled run
+that goes red at random is an alarm nobody reads. Tests needing a looser but still meaningful
+tolerance go in `TestExamplesToleranceFactors()` instead.
+
+`SensitiveTests()` is currently **empty and needs populating from evidence**: run the suite on
+Windows, Linux and macOS and compare per-test `ERROR` values; anything varying by orders of
+magnitude belongs there. Do not populate it by matching file names — contact/friction/eigen matches
+about a third of the suite and would gut the gate.
+
 ## 3. Commit tiers
 
 | tier | when | gates |

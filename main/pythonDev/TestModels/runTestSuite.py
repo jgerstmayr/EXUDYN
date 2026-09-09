@@ -49,6 +49,7 @@ mbs = SC.AddSystem()
 writeToConsole = True  #do not output to console / shell
 outputLocal = False
 quietMode = False
+useExitCode = False     #--exit-code: return non-zero on reproducible failures, for CI
 #copyLog = False         #copy log to final TestSuiteLogs
 # if sys.version_info.major == 3 and sys.version_info.minor == 7:
 #     copyLog = True #for P3.7 tests always copy log to WorkingRelease
@@ -59,6 +60,8 @@ if len(sys.argv) > 1:
             quietMode = True
         elif sys.argv[i+1] == '-local':
             outputLocal = True
+        elif sys.argv[i+1] == '--exit-code':
+            useExitCode = True
         # elif sys.argv[i+1] == '-copylog': #not needed any more
         #     copyLog = True
         else:
@@ -96,10 +99,21 @@ dateStr = str(now.year) + '-' + NumTo2digits(now.month) + '-' + NumTo2digits(now
 #date and time of exudyn library:
 import os #for retrieving file information
 from datetime import datetime #datetime contains .fromtimestamp(...)
-import exudyn.exudynCPP as exuCPP #this is the cpp file, 
+#do NOT import exudyn.exudynCPP here: __init__.py may have selected exudynCPPfast or
+#exudynCPPnoAVX, and naming the default module would load a SECOND C++ binary into the
+#process and then report the wrong one as the module under test
+exuCPPfile = ''
+for exuCPPname in ['exudynCPP', 'exudynCPPfast', 'exudynCPPnoAVX']:
+    exuCPPmodule = sys.modules.get('exudyn.'+exuCPPname, None)
+    if exuCPPmodule is not None:
+        exuCPPfile = exuCPPmodule.__file__
+        break
 
-exu.Print("exudyn path=",exuCPP.__file__)
-fileInfo=os.stat(exuCPP.__file__)
+if exuCPPfile == '': #fallback: the package directory, so the date below is still meaningful
+    exuCPPfile = exu.__file__
+
+exu.Print("exudyn path=",exuCPPfile)
+fileInfo=os.stat(exuCPPfile)
 exuDate = datetime.fromtimestamp(fileInfo.st_mtime) 
 exuDateStr = str(exuDate.year) + '-' + NumTo2digits(exuDate.month) + '-' + NumTo2digits(exuDate.day) + ' ' + NumTo2digits(exuDate.hour) + ':' + NumTo2digits(exuDate.minute) + ':' + NumTo2digits(exuDate.second)
 
@@ -155,6 +169,7 @@ exu.config.printToConsole = writeToConsole #stop output from now on
 
 #TSScope.testFileList = ['Examples/fourBarMechanism.py']
 testsFailed = [] #list of numbers containing the test numbers of failed tests
+testsFailedSensitive = [] #subset of testsFailed which are known to be machine-sensitive
 exudynTestGlobals.useGraphics = False
 exudynTestGlobals.performTests = True
 
@@ -182,8 +197,10 @@ TSScope.examplesTestSolList={}
 TSScope.examplesTestErrorList={}
 TSScope.invalidResult = 1234567890123456 #should not happen occasionally
 if TSScope.runTestExamples:
-    from runTestSuiteRefSol import TestExamplesReferenceSolution
+    from runTestSuiteRefSol import TestExamplesReferenceSolution, TestExamplesToleranceFactors, SensitiveTests
     TSScope.examplesTestRefSol = TestExamplesReferenceSolution()
+    TSScope.testTolFactors = TestExamplesToleranceFactors()
+    TSScope.sensitiveTests = SensitiveTests()
     
     TSScope.testFileList=[] #automatically create list from reference solution ...
     for key in TSScope.examplesTestRefSol.keys():
@@ -210,14 +227,14 @@ if TSScope.runTestExamples:
             TSScope.examplesTestErrorList[TSScope.name] = exudynTestGlobals.testError
             TSScope.examplesTestSolList[TSScope.name] = exudynTestGlobals.testResult
             
-            TSScope.testTolFact = 1 #special factor for some examples which make problems, e.g., due to sparse eigenvalue solver
-            if TSScope.file == 'serialRobotTest.py':
-                TSScope.testTolFact = 100
-                if platform.architecture()[0] != '64bit':
-                    TSScope.testTolFact = 1e7 #32 bits makes problems (error=1e-7)
-    
-            if platform.architecture()[0] != '64bit':
-                if TSScope.file == 'ACNFslidingAndALEjointTest.py':
+            #special factor for some examples which make problems, e.g., due to sparse
+            #eigenvalue solver; maintained as data in runTestSuiteRefSol.py
+            TSScope.testTolFact = TSScope.testTolFactors.get(TSScope.file, 1)
+
+            if platform.architecture()[0] != '64bit': #32 bits makes problems
+                if TSScope.file == 'serialRobotTest.py':
+                    TSScope.testTolFact = 1e7 #error=1e-7
+                elif TSScope.file == 'ACNFslidingAndALEjointTest.py':
                     TSScope.testTolFact = 50
     
     
@@ -238,9 +255,14 @@ if TSScope.runTestExamples:
                 exu.Print('  TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '") *FAILED*')
                 exu.Print('  RESULT = ' + str(exudynTestGlobals.testResult))
                 exu.Print('  ERROR = ' + str(exudynTestGlobals.testError))
+                if TSScope.file in TSScope.sensitiveTests:
+                    exu.Print('  NOTE: this test is marked SENSITIVE (chaotic or unseeded);')
+                    exu.Print('        it is reported but does not affect the exit code')
                 exu.Print('******************************************')
                 testsFailed = testsFailed + [TSScope.testExamplesCnt]
-            
+                if TSScope.file in TSScope.sensitiveTests:
+                    testsFailedSensitive = testsFailedSensitive + [TSScope.testExamplesCnt]
+
             TSScope.testExamplesCnt += 1
 
     #create new reference values set for runTestSuiteRefSol.py:
@@ -378,9 +400,11 @@ else:
     exu.Print('CPP UNIT TESTS SKIPPED')
     # localFileName += '-nocpp'
 
-#create a filename which indicates the number of fails
-localFileName = localFileName+'-'+'F'+str(totalFails).zfill(2)+'.txt'
-# exu.Print('\n'+localFileName)
+#NOTE: the number of fails used to be appended to the file name as '-F<NN>'. It was dropped
+#2026-09-09: the exit code (--exit-code) now carries that information, and the varying name
+#made every run with a different failure count leave a NEW file instead of replacing the
+#previous one, which slowly filled the log directories.
+localFileName = localFileName+'.txt'
 
 exu.SetWriteToFile(filename='', flagWriteToFile=False, flagAppend=False) #stop writing to file, close file
 
@@ -393,5 +417,21 @@ if outputLocal:
         
     with open(localFileName, 'w') as f:
         f.write(allText)
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#exit code for automated runs; only requested explicitly, so interactive and Spyder use
+#is unchanged. Failures of tests listed in SensitiveTests() are reported above but do not
+#set the exit code: those models are chaotic or use an unseeded sparse eigenvalue solver,
+#so they differ between machines and would make a scheduled run fail at random.
+if useExitCode:
+    reproducibleFails = totalFails - len(testsFailedSensitive)
+    if len(testsFailedSensitive) != 0:
+        print('note: ' + str(len(testsFailedSensitive)) +
+              ' sensitive test(s) failed and are excluded from the exit code', flush=True)
+    if reproducibleFails > 0:
+        print('FAILED: ' + str(reproducibleFails) + ' reproducible test(s)', flush=True)
+        sys.exit(1)
+    print('PASSED: no reproducible test failed', flush=True)
+    sys.exit(0)
 
 

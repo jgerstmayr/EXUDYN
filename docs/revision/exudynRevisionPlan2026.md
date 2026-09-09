@@ -8,7 +8,7 @@ and their reasons, and the step list.
   https://claude.ai/code/artifact/06487a25-4feb-4262-b2aa-fc8907640fa3
 - **Baseline commit**: `e44aca1` — "final commit for Exudyn1.11.0", 2026-08-05
 - **Analysis date**: 2026-09
-- **Scope**: 72 steps, 9 phases (steps 64–72 added 2026-09, see §5). Performance tuning is explicitly *out of scope*
+- **Scope**: 73 steps, 9 phases (steps 64–73 added 2026-09, see §5). Performance tuning is explicitly *out of scope*
   (deferred to a later phase); the two exceptions are the alignment fix (step 22) and the
   variant consolidation (step 23), which are correctness and packaging decisions.
 
@@ -285,6 +285,34 @@ These were checked against the tree. Several correct earlier assumptions.
     longest tracked path is now 118 characters, leaving 142 for the clone directory. Keep it that
     way: a new path over roughly 150 characters is a portability bug for users, not a style matter.
 
+23. **CI could not fail, and had not been able to for as long as it existed** (found 2026-09-09
+    while building step 11). Two independent causes: `.github/workflows/wheels.yml:18` sets
+    `continue-on-error: true`, and `runTestSuite.py` contained no `sys.exit()` — it returned 0 even
+    when tests failed. The failure count reached a human only through the *log file name*
+    (`...-F<NN>`, `-F00` = clean). So a red suite produced a green workflow.
+
+    **Fixed 2026-09-09**: `runTestSuite.py --exit-code` returns non-zero on failure, and the
+    `-F<NN>` suffix is gone — the exit code carries that information, and the varying name meant
+    each differing failure count left a *new* log file instead of replacing the previous one,
+    slowly filling `TestSuiteLogs/`. The GitLab jobs set no `allow_failure`. Whenever GitHub CI
+    resumes, `continue-on-error: true` should go with it (see step 20).
+
+24. **Test reproducibility is not uniform, and one global tolerance cannot express that.** Contact
+    and friction models are chaotic, and sparse eigenvalue problems go through ARPACK from a random
+    start vector with no seeding hook. Both give materially different errors on different machines,
+    so the magnitude of the error carries no information about correctness. This is the root cause
+    of the `movingGroundRobotTest` failure in fact 20.
+
+    `runTestSuiteRefSol.py` now carries two data tables: `TestExamplesToleranceFactors()` (a
+    per-test multiplier on the global tolerance — this concept already existed, hard-coded inline
+    in `runTestSuite.py`, with a comment naming the sparse eigenvalue solver) and
+    `SensitiveTests()`, whose members are run and reported but **excluded from the exit code**.
+
+    `SensitiveTests()` is deliberately **empty**: it must be filled from cross-platform evidence,
+    not guessed. A file-name match on contact/friction/eigen hits 37 of the 106 tests and would
+    remove a third of the suite from the gate for no reason — most eigenvalue tests are dense and
+    deterministic. Fill it by comparing per-test `ERROR` values across Windows, Linux and macOS.
+
 ### 3a. Python environments (measured)
 
 `python` is not on `PATH`. **`venvExuP313`** (created 2026-09-09) is the reference environment and
@@ -556,9 +584,49 @@ Order: **Phase 0 → 2a → (1 + 2 together as v2.0) → 3 → 4 → 5 → 6 →
    repositories: `v2-dev`→github refused, `master`→github allowed, `v2-dev`→internal allowed,
    and the bare `github.com` URL form refused.
 10. One-time secret and PII scan of the tree to be published; fix `OpenVRinterface.cpp:19`.
-11. **Solve CI for the freeze before starting it.** Months of restructuring with no wheel matrix
-    is the largest avoidable risk here — 5 Python versions × 4 OS, all surfacing at once on the
-    release push. Run the matrix internally, or push `v2-dev` to a private mirror.
+11. **DONE 2026-09-09 (implementation); first run and the weekly schedule still pending.**
+    Solve CI for the freeze before starting it. Months of restructuring with no wheel matrix is the
+    largest avoidable risk here — 5 Python versions × 4 OS, all surfacing at once on the release
+    push.
+
+    Resolved on the internal GitLab rather than by a mirror: a public mirror is excluded by D6, and
+    a private one is not viable — private-repo Actions minutes bill Windows at 2× and macOS at 10×,
+    so a single full matrix run can exceed the monthly allowance.
+
+    `.gitlab-ci.yml` runs **Linux x86_64 × cp310–314** on the instance's shared Docker runners. The
+    manylinux image *is* the job image, so the build runs directly inside it — no docker-in-docker
+    and no privileged runner, which is the usual blocker for wheel building on shared runners. The
+    job calls `tools/ci/buildManylinux.sh <pyTag>`, the same script the local docker path uses, so
+    a CI failure reproduces locally with one command. That script replaces five copy-pasted blocks
+    in `manylinuxBuild.sh`. A second job builds the docs with `sphinx-build -W` and does **not**
+    deploy — GitHub Pages correctly stays at 1.11.0 while the public release is 1.11.0.
+
+    **Nothing runs on an ordinary push.** Pipelines start from the weekly schedule, the *Run
+    pipeline* button, or a tag. The schedule lives in the GitLab UI (Settings → CI/CD → Schedules,
+    target `v2-dev`), not in the file — if it is deleted, CI stops silently and the repository looks
+    unchanged.
+
+    Regular runs set `EXUDYN_NOFAST=1`, skipping the `__FAST_EXUDYN_LINALG` binary and roughly
+    halving build time, since ordinary tests do not exercise it. Release builds must not.
+
+    Scope was chosen from where the blind spots actually are: **Windows is the daily development
+    machine**, so breakage there surfaces within hours through normal work and needs no watchdog;
+    **macOS failures arrive coupled with Linux ones** except for visualization, which cannot be
+    tested headlessly on any runner and needs a real Mac regardless. Registering a runner on the
+    Windows workstation was rejected — one that is offline whenever the machine is off produces
+    failed scheduled pipelines meaning "laptop was closed", and an alarm that usually means nothing
+    is one nobody reads.
+
+    **Accepted gaps, so they are decisions rather than oversights:**
+    - **Linux aarch64 is uncovered during the freeze.** Shared runners are x86_64 and QEMU would
+      turn a ~30-minute job into hours. `ubuntu-24.04-arm` returns only when GitHub CI resumes; the
+      first post-freeze run must include it before release.
+    - **macOS universal2, and the x86_64 half of it**, are unverified between milestone runs.
+    - The fast and noAVX binaries remain untested until step 73.
+
+    Still to do: run the first pipeline manually (one Python version, to shake out whether the
+    runners may pull from `quay.io` and whether EPEL is reachable), then the full five, then enable
+    the schedule and confirm failure mail arrives.
 12. At v2.0: fast-forward `master`, push once with tags. Ordinary push; clones, permalinks and
     issue references stay valid; GitHub renders the layout change as renames.
 13. Retroactively tag past releases where the commits can be identified.
@@ -734,7 +802,7 @@ is needed — plugins inherit from `CObject` directly.
     dict-builder class stays an explicit `from myplugin import ObjectMyThing` rather than being
     injected into `exudyn.itemInterface`, so every script says where its item types came from.
 
-### Added 2026-09 — maintainer toolchain, test coverage, encoding (steps 64–72)
+### Added 2026-09 — maintainer toolchain, test coverage, encoding (steps 64–73)
 
 Added after `tools/` entered the working tree. Existing numbers are stable and are never
 renumbered, so these continue the sequence rather than slotting into their phases.
@@ -845,6 +913,27 @@ renumbered, so these continue the sequence rather than slotting into their phase
     an existing log unless `--force`, write incidental runs to an ignored scratch path and only
     promote on request, or append a run counter. Fold into step 40 if the pytest wrapper takes over
     logging anyway.
+
+73. *(Phase 4, release testing)* **Cover every compiled variant in the release tests.** Windows
+    release builds produce **three** modules — `exudynCPP`, `exudynCPPfast`
+    (`__FAST_EXUDYN_LINALG`) and `exudynCPPnoAVX` — and the suite exercises only whichever one
+    `__init__.py` selects. The fast and noAVX binaries therefore ship essentially untested, which
+    matters more after step 23 consolidates to two shipped variants selected by a CPUID check.
+
+    Selection is already scriptable: `__init__.py:35-42` reads `sys.exudynFast` and
+    `sys.exudynCPUhasAVX2` *before* the C++ module is imported, and `runTestSuite.py` imports `sys`
+    at line 15 but `exudyn` only at line 33 — so `-fast` / `-noavx` options can set them. Verified
+    2026-09-09 that this loads exactly one binary: with `sys.exudynFast=True`, `sys.modules` holds
+    `exudyn.exudynCPPfast` and no `exudyn.exudynCPP`.
+
+    The blocking obstacle is already removed: `runTestSuite.py` used to `import exudyn.exudynCPP`
+    unconditionally just to report the binary path and build date, which would have pulled the
+    default binary into the process alongside the intended one and then reported the wrong module
+    as the one under test. It now resolves whichever module `sys.modules` actually holds.
+
+    What remains: the `-fast` / `-noavx` options themselves, and a release procedure that runs all
+    three and keeps all three logs. Sequence after step 47 (rewriting binary selection) if that
+    lands first — the two touch the same logic.
 
 ---
 

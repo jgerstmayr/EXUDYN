@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.10, 
++  Exudyn version = 1.11.11, 
 +  last change =  2026-09-09, 
-+  Number of issues = 2361, 
-+  Number of resolved issues = 2083 (10 in current version), 
++  Number of issues = 2362, 
++  Number of resolved issues = 2084 (11 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.11: resolved Issue 2361: CI during the GitHub freeze (testing)
+    - issue author: Claude-JG
+    - description:  GitHub Actions only fire on pushes to master and pull requests, so no wheels or tests run while master is frozen at 1.11.0 (decision D6). Add GitLab CI for Linux x86_64 across cp310-cp314 on the shared Docker runners, plus a docs build. Also fix that CI could not fail at all: wheels.yml sets continue-on-error and runTestSuite.py always exited 0. Revision plan step 11.
+    - **notes:** runTestSuite.py gains --exit-code and loses the -F<NN> log suffix; reproducible vs sensitive tests separated in runTestSuiteRefSol.py; manylinuxBuild.sh deduplicated into tools/ci/buildManylinux.sh. Verified by fault injection. First pipeline run and the weekly schedule are still pending
+    - date resolved: **2026-09-09 23:22**\ , date raised: 2026-09-09 
+    - resolved by: Claude-JG
  * Version 1.11.10: resolved Issue 2360: Set up internal GitLab remote and sync v2-dev (change)
     - issue author: Claude-JG
     - description:  All v2.0 work needed an internal sync point so that GitHub master stays frozen at 1.11.0 (decision D6). Configure origin as the UIBK GitLab and github as the public remote; seed the server with full history and push v2-dev. Revision plan steps 5 and 7.
