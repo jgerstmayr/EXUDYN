@@ -238,7 +238,7 @@ sHEADER = sHEADERsmall
 def ParseFile(fileName, header = ''):
     sFile = header
     fileLines = []
-    file=open(fileName,'r') 
+    file=open(fileName,'r',encoding='utf8') 
     fileLines = file.readlines()
     file.close()
 
@@ -476,7 +476,7 @@ Indices and tables
 
     indexRST += undefLabels + '\n'
     
-    file=open(destDir+'index.rst','w')  #clear file by one write access
+    file=open(destDir+'index.rst','w',encoding='utf8')  #clear file by one write access
     file.write(indexRST)
     file.close()
 
@@ -655,7 +655,7 @@ for key, value in abbrvDict.items():
     abbrvRST += '\\ **'+key+'**\\ : '+ s + '\n\n'
 
 
-file=open(sourceDir+'abbreviations.tex','w')  
+file=open(sourceDir+'abbreviations.tex','w',encoding='utf8')  
 file.write(abbrvTex)
 file.close()
 

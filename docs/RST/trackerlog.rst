@@ -19,15 +19,19 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.1, 
++  Exudyn version = 1.11.2, 
 +  last change =  2026-09-09, 
 +  Number of issues = 2353, 
-+  Number of resolved issues = 2074 (1 in current version), 
++  Number of resolved issues = 2075 (2 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.2: resolved Issue 2352: Generators write output with platform default encoding (fix)
+    - description:  Twelve write sites and six paired read sites in the python generators used the platform default encoding (cp1252 on Windows) instead of UTF-8, corrupting non-ASCII output on every regeneration (e.g. degree sign in interfaces.tex). Blocks the regeneration drift gate. Also: pybind_manual_classes.h was rewritten unconditionally and StructuresAndSettingsIndex.rst had trailing spaces. Revision plan 2026 step 71.
+    - **notes:** All 12 write sites and 6 paired read sites now pass encoding=utf8; pybind_manual_classes.h routed through WriteTextIfDifferent; trailing spaces removed. Verified by two identical consecutive regenerations and a UTF-8 validity scan.
+    - date resolved: **2026-09-09 18:33**\ , date raised: 2026-09-09 
  * Version 1.11.1: resolved Issue 2351: Working setup for Claude sessions (docu)
     - description:  Add CLAUDE.md working contract, docs/dev (CODING_STYLE, WORKFLOW, README), docs/howTo/condaEnvironments.md and root .gitignore; untrack main/dist and cppsrc.vcxproj.user. Revision plan 2026 step 1.
     - **notes:** CLAUDE.md + docs/dev + condaEnvironments.md + root .gitignore; main/dist and cppsrc.vcxproj.user untracked
@@ -6741,10 +6745,6 @@ Version 0.1
 ***********
 Open issues
 ***********
-
- * :textred:`open issue 2352:` Generators write output with platform default encoding
-    - description:  Twelve write sites and six paired read sites in the python generators used the platform default encoding (cp1252 on Windows) instead of UTF-8, corrupting non-ASCII output on every regeneration (e.g. degree sign in interfaces.tex). Blocks the regeneration drift gate. Also: pybind_manual_classes.h was rewritten unconditionally and StructuresAndSettingsIndex.rst had trailing spaces. Revision plan 2026 step 71.
-    - date raised: 2026-09-09 
 
  * **open issue 2350:** MacOS               
     - description:  fix problem in raytracerNOGLFWtest.py on MacOS

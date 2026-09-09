@@ -351,7 +351,7 @@ def WriteMiniExample(className, miniExample):
     s+= 'exu.Print("example for ' + className + ' completed, test result =", exudynTestGlobals.testResult)\n'
     s+= '\n'
     
-    fileExample=open('../../pythonDev/TestModels/MiniExamples/'+className+'.py','w') 
+    fileExample=open('../../pythonDev/TestModels/MiniExamples/'+className+'.py','w',encoding='utf8') 
     fileExample.write(s)
     fileExample.close()
 
@@ -1785,7 +1785,7 @@ try: #still close file if crashes
     totalNumberOfLines = 0        #count number of lines generated automatically ...
     totalNumberOfFilesChanged = 0 #count how many files have been changed
 
-    file=open(filename,'r') 
+    file=open(filename,'r',encoding='utf8') 
     
     fileLines = file.readlines()
 
@@ -2059,7 +2059,7 @@ try: #still close file if crashes
                                 fileName = directoryString + 'C'+parseInfo['class']+'.h'
                                 fileText = 'INVALID'
                                 if os.path.isfile(fileName):
-                                    file=open(fileName,'r'); fileText = file.read();file.close()
+                                    file=open(fileName,'r',encoding='utf8'); fileText = file.read();file.close()
                                     
                                 if (CutLinesFromString(fileText,nLinesHeader) != CutLinesFromString(fileStr[0],nLinesHeader)):
                                     #write computational 'C' class
@@ -2071,7 +2071,7 @@ try: #still close file if crashes
                                 fileName = directoryString + 'Main'+parseInfo['class']+'.h'
                                 fileText = 'INVALID'
                                 if os.path.isfile(fileName):
-                                    file=open(fileName,'r'); fileText = file.read();file.close()
+                                    file=open(fileName,'r',encoding='utf8'); fileText = file.read();file.close()
                                 if (CutLinesFromString(fileText,nLinesHeader) != CutLinesFromString(fileStr[1],nLinesHeader)):
                                     #write Main class
                                     file=open(fileName,strFileMode) 
@@ -2082,7 +2082,7 @@ try: #still close file if crashes
                                 fileName = directoryString + 'Visu'+parseInfo['class']+'.h'
                                 fileText = 'INVALID'
                                 if os.path.isfile(fileName):
-                                    file=open(fileName,'r'); fileText = file.read();file.close()
+                                    file=open(fileName,'r',encoding='utf8'); fileText = file.read();file.close()
                                 if (CutLinesFromString(fileText,nLinesHeader) != CutLinesFromString(fileStr[2],nLinesHeader)):
                                     #write Visualization class
                                     file=open(fileName,strFileMode) 
@@ -2158,7 +2158,7 @@ try: #still close file if crashes
     for [pyStr, name] in incFiles:
         fileUserFunction = directoryString + name+'.h'
         totalNumberOfLines += pyStr.count('\n')
-        with open(fileUserFunction,'w') as f:
+        with open(fileUserFunction,'w',encoding='utf8') as f:
             f.write('    //include file for '+name+'\n')
             f.write('    //author: Johannes Gerstmayr\n')
             f.write('    //license: see Exudyn license\n')
@@ -2167,7 +2167,7 @@ try: #still close file if crashes
             
     
         if os.path.isfile(fileName):
-            file=open(fileUserFunction,'r'); fileText = file.read();file.close()
+            file=open(fileUserFunction,'r',encoding='utf8'); fileText = file.read();file.close()
 
     userFunctionArgsDict = CreateStringSymbolicUserFunctionArgs(symbolicUserFunctionSet)
     #print(str(userFunctionArgsDict))
@@ -2178,7 +2178,7 @@ try: #still close file if crashes
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #write latex
-    fileLatex=open('../../../docs/theDoc/itemDefinition.tex','w') 
+    fileLatex=open('../../../docs/theDoc/itemDefinition.tex','w',encoding='utf8') 
 #    fileLatex.write(sLatexItemList)
 
     sLatexIntro=r"""
@@ -2295,7 +2295,7 @@ def CheckForValidNumpyArray(value):
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #write Mini examples
-    fileExampleList=open('../../pythonDev/TestModels/MiniExamples/miniExamplesFileList.py','w') 
+    fileExampleList=open('../../pythonDev/TestModels/MiniExamples/miniExamplesFileList.py','w',encoding='utf8') 
     s = '#this file provides a list of file names for mini examples\n'
     s+= '\n'
     s+= 'miniExamplesFileList = ['
@@ -2387,7 +2387,7 @@ Reference manual for: objects, nodes, markers, loads and sensors
         sConfHelper += "'" + s + "'" + ', '
     sConfHelper += ']\n\n'
 
-    with open(exuDir+'confHelperItems.py', 'w') as f:
+    with open(exuDir+'confHelperItems.py', 'w',encoding='utf8') as f:
         f.write(sConfHelper)
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2451,7 +2451,7 @@ bool Main{itemType}{classNamePure}IsRegistered = ClassFactoryItemsSystemData<Mai
             
 
     fileAutoReg = '../Autogenerated/objectFactoryAutoReg.h'
-    with open(fileAutoReg,'w') as f:
+    with open(fileAutoReg,'w',encoding='utf8') as f:
         f.write('/** **************************************\n')
         f.write('* @brief        autogenerated registration variables for items\n')
         f.write('* @author       Gerstmayr Johannes\n')

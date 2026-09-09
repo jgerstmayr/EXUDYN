@@ -1329,7 +1329,7 @@ The data is auto-generated from the according interfaces in order to keep fully 
 """
     globalLatexStr += latexText
     
-    fileLatex=open(latexFile,'w')  #clear file by one write access
+    fileLatex=open(latexFile,'w',encoding='utf8')  #clear file by one write access
     fileLatex.write('% definition of structures\n')
     fileLatex.write(globalLatexStr)
     fileLatex.close()
@@ -1354,7 +1354,7 @@ Structures and Settings
     rstIndex += """
 .. toctree::
    :maxdepth: 2
-    
+
 """
     
     
