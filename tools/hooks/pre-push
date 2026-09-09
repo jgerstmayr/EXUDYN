@@ -1,0 +1,74 @@
+#!/bin/sh
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Exudyn pre-push hook
+#
+# Details:  Refuses to push anything to the public GitHub repository except master, release/*
+#           and tags. All v2.0 work happens on v2-dev and is pushed only to the internal remote;
+#           GitHub master stays at 1.11.0 until the v2.0 release (revision plan decision D6,
+#           steps 7 and 9).
+#
+#           Without this, a single "git push" from the wrong branch publishes months of
+#           restructuring, including WIP sync commits in knowingly broken states, into public
+#           history that cannot be quietly withdrawn.
+#
+# Install:  git config core.hooksPath tools/hooks
+#           (one setting for the whole repository; the hooks stay version controlled, unlike
+#           anything placed in .git/hooks/)
+#
+# Bypass:   git push --no-verify        - deliberate, and it should feel deliberate
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-09-09 (created)
+# Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+remoteName="$1"
+remoteUrl="$2"
+
+#does this push target the public repository? match on both the remote name and the URL, so
+#that "git push github ..." and "git push https://github.com/... ..." are both caught
+isPublic=0
+case "$remoteName" in
+    github|*github*) isPublic=1 ;;
+esac
+case "$remoteUrl" in
+    *github.com*) isPublic=1 ;;
+esac
+
+if [ "$isPublic" -eq 0 ]; then
+    exit 0          #internal remote: nothing to guard
+fi
+
+#stdin: <local ref> <local sha> <remote ref> <remote sha>, one line per ref being pushed
+refused=0
+while read -r localRef localSha remoteRef remoteSha; do
+    #an empty local ref means a branch deletion; judge it by the remote ref instead
+    checkedRef="$localRef"
+    if [ -z "$checkedRef" ] || [ "$checkedRef" = "(delete)" ]; then
+        checkedRef="$remoteRef"
+    fi
+
+    case "$checkedRef" in
+        refs/heads/master)      ;;      #allowed: the public branch
+        refs/heads/release/*)   ;;      #allowed: release preparation
+        refs/tags/*)            ;;      #allowed: release tags (step 12)
+        '')                     ;;      #nothing to check
+        *)
+            echo "pre-push: REFUSED  $checkedRef  ->  $remoteName ($remoteUrl)" >&2
+            refused=1
+            ;;
+    esac
+done
+
+if [ "$refused" -eq 1 ]; then
+    echo "" >&2
+    echo "Only master, release/* and tags may be pushed to the public GitHub repository." >&2
+    echo "v2.0 work belongs on v2-dev and is pushed to the internal remote only," >&2
+    echo "until the release (revision plan decision D6, steps 7 and 12)." >&2
+    echo "" >&2
+    echo "If you really mean it: git push --no-verify" >&2
+    exit 1
+fi
+
+exit 0

@@ -175,8 +175,16 @@ def DiffersIgnoringDates(repositoryRoot, fileName):
 
 #%%******************************************************************************************************
 def IsExcluded(fileName):
-    """True if the file is owned by a tool other than the generators."""
-    return fileName.replace('\\', '/') in excludedPaths
+    """True if the file is not generator output: owned by another tool, or a hand-placed note."""
+    normalized = fileName.replace('\\', '/')
+    if normalized in excludedPaths:
+        return True
+
+    #directory notes: the project marks folders with a '#what belongs here.txt' file. They live
+    #inside generated directories but are hand-maintained, so they are not generator output.
+    baseName = normalized.split('/')[-1]
+
+    return baseName.startswith('#')
 
 
 #%%******************************************************************************************************

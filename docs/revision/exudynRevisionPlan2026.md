@@ -289,6 +289,15 @@ These were checked against the tree. Several correct earlier assumptions.
     check must know that these two files legitimately trail. Simplest is to keep the ordering
     explicit in the gate, which `docs/dev/WORKFLOW.md` now does.
 
+22. **Long file names broke checkout on Windows** (found 2026-09-09 while testing the shallow
+    push). Several marker files carried their note *as the file name*, up to 140 characters —
+    `main/src/Solver/#linear solver - nonlinear solver - ... .txt` and five siblings. Cloning into
+    a moderately deep directory exceeded the Windows 260-character `MAX_PATH` and failed with
+    `Filename too long`, leaving **a broken checkout**, not merely a warning. Invisible to anyone
+    working from a short path such as `C:\DATA\cpp\`. Resolved by shortening or removing them; the
+    longest tracked path is now 118 characters, leaving 142 for the clone directory. Keep it that
+    way: a new path over roughly 150 characters is a portability bug for users, not a style matter.
+
 ### 3a. Python environments (measured)
 
 `python` is not on `PATH`. **`venvExuP313`** (created 2026-09-09) is the reference environment and
@@ -502,9 +511,15 @@ Order: **Phase 0 → 2a → (1 + 2 together as v2.0) → 3 → 4 → 5 → 6 →
 
 5. **DONE** — `C:\DATA\cpp\EXUDYN_git` *is* that clone: a `--depth 1` shallow clone of GitHub
    `master` at `e44aca1` (`.git/shallow` present), and it is where all current work happens.
-   Later commits therefore descend from public history — no graft, no force-push. Still open from
-   this step: **verify that pushing from a shallow clone works**, against a scratch repository,
-   before the first real push.
+   Later commits therefore descend from public history — no graft, no force-push.
+
+   **Shallow push verified 2026-09-09, and it needs a server-side setting.** A push from a shallow
+   clone is **rejected by default**: `! [remote rejected] v2-dev -> v2-dev (shallow update not
+   allowed)`. The receiving repository must set `receive.shallowUpdate true`. With that, the push
+   succeeds and the result is sound — `git fsck` clean on both the bare repository and a fresh
+   clone, all commits present with `e44aca1` as the root, the shallow boundary inherited, file
+   content byte-identical. So the shallow clone can stay; set that config when creating the
+   internal repository.
 6. **DONE** — the old local repository is archived read-only (zipped, with a copy on the
    university server). It remains the only copy of the fine-grained history.
 7. Two remotes: internal server `origin`, GitHub `github`. All v2.0 work on `v2-dev`, pushed
@@ -525,7 +540,15 @@ Order: **Phase 0 → 2a → (1 + 2 together as v2.0) → 3 → 4 → 5 → 6 →
    > Step 9's `pre-push` hook is the durable guard and should land as soon as the remotes are set.
 8. Move experimental folders out of the tracked tree — siblings, or nested independent repos
    inside ignored paths. Not submodules.
-9. `pre-push` hook refusing pushes to `github` from any ref but `master` / `release/*`.
+9. **DONE 2026-09-09** — `tools/hooks/pre-push` refuses any ref but `master`, `release/*` and
+   tags when the target is GitHub, matching on **both** the remote name and a `github.com` URL, so
+   `git push <url> v2-dev` is caught too, before any network access. Activated per clone with
+   `git config core.hooksPath tools/hooks` — hooks in `.git/hooks/` are not version controlled, so
+   `core.hooksPath` is what makes them travel with the repository; the setting itself is still
+   per-clone and is listed as one-time setup in `docs/dev/WORKFLOW.md`. `git push --no-verify`
+   remains the deliberate escape hatch. Verified with four cases against local throwaway
+   repositories: `v2-dev`→github refused, `master`→github allowed, `v2-dev`→internal allowed,
+   and the bare `github.com` URL form refused.
 10. One-time secret and PII scan of the tree to be published; fix `OpenVRinterface.cpp:19`.
 11. **Solve CI for the freeze before starting it.** Months of restructuring with no wheel matrix
     is the largest avoidable risk here — 5 Python versions × 4 OS, all surfacing at once on the

@@ -61,6 +61,7 @@ cd tools/issueTracker
 | call | effect |
 |---|---|
 | `RaiseIssue(issueName, description, issueType='EXTENSION', fileName='', lineNumber='', deadline='', author='JG', priority='')` | appends a `RAISED` issue; default deadline +180 days |
+
 | `RaiseIssueDict(issueDict)` | same, full control over fields |
 | `ResolveIssue(issueNumber, notes='', author='JG')` | marks `RESOLVED`, stamps date, **bumps the micro version** |
 | `ChangeIssue(issueNumber, key, value)` | change one field |
@@ -70,6 +71,11 @@ cd tools/issueTracker
 
 Fields: `number, issue, author, status, description, type, priority, date raised, deadline,
 date resolved, resolved author, file, line, notes`.
+
+> **Author attribution.** When Claude raises or resolves an issue on the maintainer's behalf, pass
+> `author='Claude-JG'` to **both** `RaiseIssue` and `ResolveIssue` — the two fields are separate
+> (`author` and `resolved author`), so both need it. `JG` alone means Johannes worked it himself.
+> This keeps the tracker honest about who did what without needing a separate audit trail.
 
 - `status`: `RAISED`, `WORK`, `TESTING`, `RESOLVED`
 - `type`: `BUG, FIX, NEW FEATURE, EXTENSION, CHANGE, PERFORMANCE, IDEA, CHECK, CLEANUP, DOCU,
@@ -125,6 +131,22 @@ Never edit any of those seven files by hand.
 two constants in `issueTracker.py`: append the current total resolved count as `version12xResolved`
 to the `versionResolved` list, and add the release name to `versionNames`. Claude asks first, every
 time. Plan step "issueTracker CLI" folds this into the tool later.
+
+## 0a. One-time setup per clone
+
+```bash
+git config core.hooksPath tools/hooks
+```
+
+This activates the tracked hooks in `tools/hooks/`, currently `pre-push`, which refuses to push
+anything but `master`, `release/*` and tags to the public GitHub repository. **Git hooks are not
+themselves version controlled** — `.git/hooks/` never travels with a clone — so this setting is
+per-clone and easy to forget. Without it there is no mechanical guard against publishing `v2-dev`.
+
+Also set `receive.shallowUpdate true` on the *internal server* repository. This clone is a
+`--depth 1` shallow clone, and a push from a shallow clone is rejected by default with
+`shallow update not allowed`. With that setting the push succeeds and the result is sound —
+verified with `git fsck` on both the bare repository and a fresh clone.
 
 ## 2a. Branches and remotes
 
