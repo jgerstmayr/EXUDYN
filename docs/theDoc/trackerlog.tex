@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.0, 
-  \item last change =  2026-08-05, 
-  \item Number of issues = 2351, 
-  \item Number of resolved issues = 2073 (0 in current version), 
+  \item Exudyn version = 1.11.1, 
+  \item last change =  2026-09-09, 
+  \item Number of issues = 2353, 
+  \item Number of resolved issues = 2074 (1 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.1}:  resolved Issue 2351: {\bf Working setup for Claude sessions}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: Add CLAUDE.md working contract, docs/dev (CODING\_STYLE, WORKFLOW, README), docs/howTo/condaEnvironments.md and root .gitignore; untrack main/dist and cppsrc.vcxproj.user. Revision plan 2026 step 1.}
+    \item {\bf notes: CLAUDE.md + docs/dev + condaEnvironments.md + root .gitignore; main/dist and cppsrc.vcxproj.user untracked}
+    \item   date resolved: {\bf 2026-09-09 18:33},
+date raised: 2026-09-09 
+  \ei
   \item[] {\bf Version 1.11.0}: {\bf \color{warningRed}  resolved BUG 2348}: {\bf StableBaselines}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: P. Manzl
@@ -11315,7 +11323,7 @@ date raised: 2021-02-09
   \item[] {\bf Version 1.0.121}:  resolved Issue 0355: {\bf generalized alpha}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: implement version of BrÃ¼ls and Arnold for generalized alpha solver}
+    \item {description: implement version of Brüls and Arnold for generalized alpha solver}
     \item {\bf notes:  WARNING: switched to new solver based on displacement increments (Arnold/Bruls,2007), which leads to DIFFERENT (but improved) RESULTS than previous dynamic implicit integrator; new implicit solver now works with ODE1 variables}
     \item   date resolved: {\bf 2021-02-08 01:56},
 date raised: 2020-03-08 
