@@ -174,7 +174,20 @@ Required for any change to C++, `main/setup.py`, or `main/obj/cppsrc.vcxproj`. V
 > The working order is: **resolve the issue first, then regenerate, then commit.** During
 > development, run the generators as often as you like; the run that matters is the last one.
 
-On a clean tree, run all six generators from `main/src/pythonGenerator/`:
+Use the tool:
+
+```bash
+python tools/regenerate.py --check
+```
+
+It runs the six generators from their required working directory and classifies every difference
+against HEAD: **Tier 1** (the API surface) fails with exit 1, **Tier 2** (documentation) warns,
+anything outside both tiers is reported as an unexpected gap in the manifest. `--no-run` checks
+without regenerating; `--python` selects the interpreter. It ignores modifications outside the two
+tiers as unrelated work, and ignores files that differ only in their `@date ... (last modified)`
+line — but never excuses a real change inside a tier, however the file got that way.
+
+The manual equivalent, if you need it — on a clean tree, from `main/src/pythonGenerator/`:
 
 ```
 pythonAutoGenerateObjects.py

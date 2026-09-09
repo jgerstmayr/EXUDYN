@@ -19,15 +19,19 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.6, 
++  Exudyn version = 1.11.7, 
 +  last change =  2026-09-09, 
-+  Number of issues = 2357, 
-+  Number of resolved issues = 2079 (6 in current version), 
++  Number of issues = 2358, 
++  Number of resolved issues = 2080 (7 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.7: resolved Issue 2357: Add tools/regenerate.py drift gate (testing)
+    - description:  No automated check existed for whether the committed generated files still match what the generators produce, so generator drift was silent. Add tools/regenerate.py: runs the six generators from their required cwd and classifies differences against HEAD, Tier 1 hard fail and Tier 2 warning. Must compare with IsEqualIgnoringDateStrings rather than raw git status, because the last-modified line otherwise produces permanent phantom drift. Revision plan step 2; CI wiring still open.
+    - **notes:** Verified by fault injection: perturbed generator input gives exit 1 with correct tier classification; hand edit to an already-dirty tier file gives exit 1; date-only difference gives exit 0
+    - date resolved: **2026-09-09 19:00**\ , date raised: 2026-09-09 
  * Version 1.11.6: resolved Issue 2356: Golden file snapshot from a verified-current generated set (testing)
     - description:  The archived golden files were taken at e44aca1, where the committed generated set was already stale and where generator output was still cp1252-corrupted. Re-cut the reference with git archive from the current commit so it is provably identical to committed content. Revision plan step 3.
     - **notes:** goldenFiles_V1.11.5_910e2b5.zip, 871 files; full regeneration on that commit produces no drift, so the commit itself is the reference

@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.6, 
+  \item Exudyn version = 1.11.7, 
   \item last change =  2026-09-09, 
-  \item Number of issues = 2357, 
-  \item Number of resolved issues = 2079 (6 in current version), 
+  \item Number of issues = 2358, 
+  \item Number of resolved issues = 2080 (7 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.7}:  resolved Issue 2357: {\bf Add tools/regenerate.py drift gate}
+(testing)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: No automated check existed for whether the committed generated files still match what the generators produce, so generator drift was silent. Add tools/regenerate.py: runs the six generators from their required cwd and classifies differences against HEAD, Tier 1 hard fail and Tier 2 warning. Must compare with IsEqualIgnoringDateStrings rather than raw git status, because the last-modified line otherwise produces permanent phantom drift. Revision plan step 2; CI wiring still open.}
+    \item {\bf notes: Verified by fault injection: perturbed generator input gives exit 1 with correct tier classification; hand edit to an already-dirty tier file gives exit 1; date-only difference gives exit 0}
+    \item   date resolved: {\bf 2026-09-09 19:00},
+date raised: 2026-09-09 
+  \ei
   \item[] {\bf Version 1.11.6}:  resolved Issue 2356: {\bf Golden file snapshot from a verified-current generated set}
 (testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
