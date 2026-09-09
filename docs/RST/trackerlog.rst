@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.9, 
++  Exudyn version = 1.11.10, 
 +  last change =  2026-09-09, 
-+  Number of issues = 2360, 
-+  Number of resolved issues = 2082 (9 in current version), 
++  Number of issues = 2361, 
++  Number of resolved issues = 2083 (10 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.10: resolved Issue 2360: Set up internal GitLab remote and sync v2-dev (change)
+    - issue author: Claude-JG
+    - description:  All v2.0 work needed an internal sync point so that GitHub master stays frozen at 1.11.0 (decision D6). Configure origin as the UIBK GitLab and github as the public remote; seed the server with full history and push v2-dev. Revision plan steps 5 and 7.
+    - **notes:** GitLab rejects shallow pushes and caps packs at 1.17 GiB; seeded master from an existing full clone in 50-commit chunks, then v2-dev pushed from the shallow clone in 373 KB. Verified 30 refs matching by SHA. Local .git stays at 65 MB
+    - date resolved: **2026-09-09 22:27**\ , date raised: 2026-09-09 
+    - resolved by: Claude-JG
  * Version 1.11.9: resolved Issue 2359: Add pre-push hook guarding the public repository (new feature)
     - issue author: Claude-JG
     - description:  Nothing mechanically prevented pushing v2-dev to public GitHub; only memory. Add tools/hooks/pre-push refusing any ref but master, release/\* and tags when the target is GitHub, matched on both remote name and github.com URL. Activated per clone with git config core.hooksPath tools/hooks. Also verified that pushing from this shallow clone requires receive.shallowUpdate=true on the receiving repository. Revision plan steps 9 and 5.

@@ -158,15 +158,20 @@ Full picture in plan §2a. The short version, which is what matters day to day:
 | `v2-dev` | all v2.0 work; the working branch |
 | `release/*` | release preparation |
 
-**`origin` currently points at GitHub, and `master` tracks it.** The internal server does not exist
-yet, so the names stay as they are until the first internal sync (step 7) — renaming the only real
-remote before then buys nothing. Consequence: a bare `git push` from `master` would publish to the
-public repository.
+```
+origin  →  git@git.uibk.ac.at:c8501009/exudyn.git   internal   (v2-dev tracks origin/v2-dev)
+github  →  git@github.com:jgerstmayr/EXUDYN.git     public     (master tracks github/master)
+```
 
-Therefore, until step 7 and step 9's `pre-push` hook are in place:
+`origin` is the internal server, so a bare `git push` from `v2-dev` syncs there — the safe default,
+and the normal thing to do. The internal repository carries **full history**; this clone is still
+`--depth 1` and stays small.
 
 - Work on `v2-dev`; never commit on `master`.
-- **Do not push at all.** Claude never pushes to any remote, under any circumstances.
+- Push `v2-dev` to `origin` freely.
+- **Nothing reaches GitHub before the v2.0 release.** `tools/hooks/pre-push` enforces this, but
+  only where `core.hooksPath` is set — see §0a, and tell anyone you add to the server.
+- Claude never pushes to any remote, under any circumstances, and announces network access first.
 
 ## 3. Commit tiers
 

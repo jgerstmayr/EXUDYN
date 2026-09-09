@@ -38,7 +38,7 @@ and their reasons, and the step list.
 | Python package | 27 modules + `robotics/` in `main/pythonDev/exudyn/` |
 | Tests | 142 TestModel files, **106 executed** (list in `runTestSuiteRefSol.py`) + 23 MiniExamples, ~22 s **with scipy pinned to 1.15.2** (fact 19); 177 Examples; driven by `runTestSuite.py` |
 | Build | `main/setup.py`, 956 lines; VS2022 solution; CMake files are dead |
-| Clone | 203 MB, `--depth 1` shallow clone of GitHub `master` at `e44aca1` (step 5 done); root `.gitignore` added 2026-09-09 (step 1). **`origin` = GitHub; `master` tracks it — see step 7.** |
+| Clone | 203 MB working tree, 65 MB `.git`; `--depth 1` shallow clone of GitHub `master` at `e44aca1`. `origin` = internal GitLab (full history), `github` = public. See §2a. |
 | Maintainer tools | `tools/issueTracker/` (998-line tracker; **the version source of truth**) and `tools/buildAndGenerate/` (15 build/test/release batch scripts). Added to the working tree 2026-09; **never published to GitHub**. |
 
 ### Key file locations
@@ -62,66 +62,53 @@ docs/theDoc/theDoc.pdf                       committed build output
 
 ## 2a. Places and branches
 
-Where the code lives, which branch is which, and how they relate. **This section describes the
-current, real state and the intended end state separately** — they differ, and the difference is
-the main operational risk until step 7 completes.
+Where the code lives, which branch is which, and how they relate. Established 2026-09-09
+(steps 5, 6, 7, 9).
 
 ### Places
 
 | place | what it holds | status |
 |---|---|---|
-| `C:\DATA\cpp\EXUDYN_git` | the working clone — `--depth 1` of GitHub `master` at `e44aca1` | **active**; all v2.0 work happens here |
+| `C:\DATA\cpp\EXUDYN_git` | the working clone — `--depth 1` of GitHub `master` at `e44aca1`, 65 MB `.git` | **active**; all v2.0 work happens here |
+| `git.uibk.ac.at:c8501009/exudyn` | internal server, **full history** plus `v2-dev` | **active**; the sync point for the group |
 | GitHub `jgerstmayr/EXUDYN` | the public repository | frozen at 1.11.0 until v2.0 (decision D6) |
+| `C:\DATA\cpp\EXUDYN_github_git` | full 446-commit clone of GitHub, used once to seed the server | keep; not a working repository |
 | Archived old local repo | the only copy of the fine-grained internal history | zipped, read-only, plus a copy on the university server (step 6) |
-| Golden-file archive | generated set as committed at `e44aca1` | zipped (step 3, first half) |
-| Internal server | intended home of `v2-dev` | **does not exist yet** — step 7 |
+| Golden-file archives | generated set at `e44aca1`, and `goldenFiles_V1.11.5_910e2b5.zip` | zipped (step 3) |
 
 ### Branches
 
 | branch | purpose | pushed to |
 |---|---|---|
 | `master` | mirrors public GitHub `master`; stays at 1.11.0 | GitHub, only at v2.0 release (step 12) |
-| `v2-dev` | **all v2.0 work**; may carry `WIP:` sync commits | internal `origin` only, once it exists |
+| `v2-dev` | **all v2.0 work**; may carry `WIP:` sync commits | internal `origin` |
 | `release/*` | release preparation | GitHub |
 
-### Remotes — current vs intended
-
-**Current (2026-09-09):**
+### Remotes
 
 ```
-origin  →  git@github.com:jgerstmayr/EXUDYN.git      (GitHub)
-master  →  tracks origin/master
-v2-dev  →  no upstream          ← created 2026-09-09, current working branch
+origin  →  git@git.uibk.ac.at:c8501009/exudyn.git      internal   (v2-dev tracks origin/v2-dev)
+github  →  git@github.com:jgerstmayr/EXUDYN.git        public     (master tracks github/master)
 ```
 
-**Intended (step 7):**
+`origin` is the internal server, so a bare `git push` from `v2-dev` goes there — the safe default.
+`master` still tracks `github/master`, which is correct: it exists to mirror public state, not to
+be developed on.
 
-```
-origin  →  internal server        (v2-dev lives here)
-github  →  GitHub                 (master, release/* only)
-```
-
-**The names are not renamed yet, deliberately.** `origin`/`master` keep pointing at GitHub until
-the internal server exists and the first sync has actually happened — renaming a remote that is
-still the only real one buys nothing and breaks muscle memory and any tooling that assumes
-`origin`. The rename is a single deliberate operation performed at that sync point:
-
-```bash
-git remote rename origin github      # repoints master's tracking automatically
-git remote add origin <internal-url> # then: git push -u origin v2-dev
-```
-
-Note that `git remote rename` silently repoints every tracking branch, so `master` will follow to
-`github/master` — which is correct — and `v2-dev` must then get its upstream set explicitly. Doing
-this *before* `v2-dev` has an upstream is the simplest ordering.
-
-### The rule until then
-
-`origin` is GitHub, so a bare `git push` from `master` publishes to the public repository. Therefore:
+### The rules
 
 - **Work on `v2-dev`. Never commit on `master`.** `master` is a read-only mirror of public state.
-- **Never push at all** until the internal server exists and step 9's `pre-push` hook is in place.
-- Claude never pushes to any remote under any circumstances.
+- Push `v2-dev` to `origin` freely; that is the point of having it.
+- Nothing reaches GitHub before the v2.0 release (D6). `tools/hooks/pre-push` enforces this
+  mechanically — see step 9 — but it only works where `core.hooksPath` is set, which is per clone.
+- Claude never pushes to any remote under any circumstances, and announces any network access
+  before it happens (GitHub 2FA is released by hand and otherwise times out silently).
+
+### Seeding another clone or another server
+
+The internal server holds full history, so an ordinary `git clone` of it gives a complete
+repository. To seed a *new* empty server from a shallow clone, see step 5: push the full history
+first from a full clone, in chunks under GitLab's 1.17 GiB pack limit, then push `v2-dev`.
 
 ---
 
@@ -513,31 +500,50 @@ Order: **Phase 0 → 2a → (1 + 2 together as v2.0) → 3 → 4 → 5 → 6 →
    `master` at `e44aca1` (`.git/shallow` present), and it is where all current work happens.
    Later commits therefore descend from public history — no graft, no force-push.
 
-   **Shallow push verified 2026-09-09, and it needs a server-side setting.** A push from a shallow
-   clone is **rejected by default**: `! [remote rejected] v2-dev -> v2-dev (shallow update not
-   allowed)`. The receiving repository must set `receive.shallowUpdate true`. With that, the push
-   succeeds and the result is sound — `git fsck` clean on both the bare repository and a fresh
-   clone, all commits present with `e44aca1` as the root, the shallow boundary inherited, file
-   content byte-identical. So the shallow clone can stay; set that config when creating the
-   internal repository.
+   **Shallow push needs a server-side setting, and the UIBK GitLab rejects it.** Measured
+   2026-09-09, first against a local throwaway repository and then confirmed against the real
+   server: `! [remote rejected] v2-dev -> v2-dev (shallow update not allowed)`. The receiving
+   repository must have `receive.shallowUpdate true`, which GitLab does not expose in its web UI —
+   it is a per-repository server-side git config.
+
+   With that setting the result **is sound**, not a compromise: `git fsck` clean on both the bare
+   repository and a fresh clone, all commits present with `e44aca1` as root, the shallow boundary
+   inherited correctly, file content byte-identical. The only real limitation is that the internal
+   repository can never serve history older than `e44aca1` — which matters little, since that
+   history exists both on GitHub and in the step 6 archive.
+
+   **Resolved 2026-09-09 without changing any server setting, and D1's small-clone benefit
+   survived.** The rejection is not about the client being shallow as such — it is about the
+   *server* being asked to create a ref whose ancestry it does not have. Seed the server with the
+   full history once, and the shallow clone pushes normally ever after.
+
+   What was done:
+
+   1. Seeded `origin` from an existing full clone of GitHub, pushing with an explicit URL so that
+      repository's own remotes and branches were never touched.
+   2. **GitLab rejects any pack over 1.17 GiB** (`pack exceeds maximum allowed size`), and the full
+      history is about 1.5 GB, so `git push --mirror` fails outright. Pushed `master` in chunks of
+      50 commits instead — `git push <url> <sha>:refs/heads/master` walked over
+      `git rev-list --reverse master` — then the tags. Each chunk is a fast-forward of the previous
+      one, so the sequence is resumable and completed chunks re-run as cheap no-ops.
+   3. Verified by comparing `git ls-remote` against `git show-ref`: 30 refs on both sides, no
+      missing refs, no SHA mismatches. That is proof rather than evidence — `receive-pack` runs a
+      connectivity check and refuses to create a ref unless every reachable object is present, so a
+      matching SHA cannot be produced by a partial history.
+   4. `git push -u origin v2-dev` from the shallow clone then transferred **373 KB** and succeeded.
+
+   End state: `.git` stays at 65 MB here, the internal server carries full history, and GitHub was
+   never touched. Anyone seeding a fresh internal server repeats steps 1-2.
 6. **DONE** — the old local repository is archived read-only (zipped, with a copy on the
    university server). It remains the only copy of the fine-grained history.
-7. Two remotes: internal server `origin`, GitHub `github`. All v2.0 work on `v2-dev`, pushed
-   only to `origin`. GitHub `master` stays at 1.11.0 until release.
+7. **DONE 2026-09-09** — two remotes as intended: `origin` is the internal GitLab
+   (`git@git.uibk.ac.at:c8501009/exudyn.git`), `github` is the public repository. `v2-dev` tracks
+   `origin/v2-dev`; `master` tracks `github/master`. GitHub stays at 1.11.0 until release.
 
-   > **Current state contradicts this and is the main risk right now (measured 2026-09-09):**
-   > `origin` is **GitHub** (`git@github.com:jgerstmayr/EXUDYN.git`), and local `master` tracks
-   > `origin/master`. So a bare `git push` from `master` today publishes straight to the public
-   > repository — precisely what decision D6 forbids until v2.0. Two consequences:
-   >
-   > - **Create `v2-dev` and switch to it before the first commit** (see §11). This needs no
-   >   server and is reversible; it removes the accident entirely.
-   > - When the internal server exists, do the rename deliberately:
-   >   `git remote rename origin github`, then add the internal one as `origin`. Renaming
-   >   afterwards silently repoints every existing tracking branch, so do it before `v2-dev`
-   >   acquires an upstream — or re-point it explicitly with `git branch -u`.
-   >
-   > Step 9's `pre-push` hook is the durable guard and should land as soon as the remotes are set.
+   The rename was done in the planned order — `git remote rename origin github` (which repoints
+   `master`'s tracking automatically) then `git remote add origin <internal>` — while `v2-dev`
+   still had no upstream, so nothing had to be re-pointed by hand afterwards. Current layout and
+   the standing rules are in §2a.
 8. Move experimental folders out of the tracked tree — siblings, or nested independent repos
    inside ignored paths. Not submodules.
 9. **DONE 2026-09-09** — `tools/hooks/pre-push` refuses any ref but `master`, `release/*` and
@@ -950,6 +956,6 @@ detail is `docs/dev/WORKFLOW.md`. In short:
 5. Sync commits on `v2-dev` may be knowingly non-working; they carry a `WIP:` prefix and skip the
    gates. Releases (minor version advances) add the full `Examples` run and the wheel matrix.
 
-> **Until the remotes are sorted (step 7): `origin` is GitHub and `master` tracks it.** Work on
-> `v2-dev`, never commit to `master`, and never push. Create the branch with
-> `git switch -c v2-dev` — do not set an upstream yet.
+> **Remotes (step 7, done): `origin` is the internal GitLab, `github` is public.** Work on
+> `v2-dev`, never commit to `master`. Pushing `v2-dev` to `origin` is the normal sync; nothing
+> reaches GitHub before the v2.0 release, and `tools/hooks/pre-push` enforces that. See §2a.
