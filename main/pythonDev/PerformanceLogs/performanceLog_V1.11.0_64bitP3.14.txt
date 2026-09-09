@@ -1,0 +1,275 @@
+
++++++++++++++++++++++++++++++++++++++++++++
++++++    EXUDYN PERFORMANCE TESTS     +++++
++++++++++++++++++++++++++++++++++++++++++++
+EXUDYN version      = 1.11.0
+EXUDYN build date   = 2026-08-05 13:54:51
+platform            = 64bit
+system              = win32
+processor           = AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD
+python version      = 3.14.0
+test tolerance      =  1e-10
+test date (now)     = 2026-08-05 13:58:43
+CPU usage (%/thread)= [0.0, 100.0, 0.0, 3.2, 1.6, 0.0, 4.7, 6.2, 3.1, 4.7, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
++++++++++++++++++++++++++++++++++++++++++++
+
+
+****************************************************
+  START PERFORMANCE TEST 0 ("generalContactSpheresTest.py"):
+****************************************************
+create mass 0
+create mass 20000
+create mass 40000
+generalContactSpheresTest: create bodies: 0.9993393421173096 seconds
+treesize= 32000
+generalContactSpheresTest: gContact: 0.06826066970825195 seconds
+finish gContact
++++++++++++++++++++++++++++++++
+EXUDYN V1.11.0 solver: explicit time integration (ExplicitEuler)
+Start multi-threading with 8 threads (multithreading & load balancing)
+STEP163, t = 0.0326s, timeToGo = 1.0686s, Nit/step = 0
+STEP250, t = 0.05s, timeToGo = 1.24598e-14s, Nit/step = 0
+Solver terminated successfully after 3.27638 seconds.
+====================
+CPU-time statistics:
+  total time   = 3.28 seconds
+  measured time= 3.19 seconds (=97.4%) 
+  non-zero timer [__ sub-timer]:
+  newtonIncrement   = 1.26%
+  integrationFormula= 0.196%
+  ODE2RHS           = 90.6%
+  writeSolution     = 7.59%
+  overhead          = 0.354%
+  visualization/user= 0.00217%
+special timers:
+  Contact:BoundingBoxes = 0.64824s (20.3%)
+  Contact:SearchTree = 0.32471s (10.2%)
+  Contact:Overall = 1.9608s (61.4%)
+
+Stop multi-threading
+u = [-0.32997587 -1.66819281 -3.98608453]
+solution of generalContactSpheresTest= -5.98425321233869
+****************************************************
+  PERFORMANCE TEST 0 ("generalContactSpheresTest.py") FINISHED SUCCESSFUL
+  RESULT   = -5.98425321233869
+  ERROR    = 2.9904967391303217e-12
+  CPU TIME = 4.6004674434661865
+****************************************************
+
+
+****************************************************
+  START PERFORMANCE TEST 1 ("perf3DRigidBodies.py"):
+****************************************************
++++++++++++++++++++++++++++++++
+EXUDYN V1.11.0 solver: implicit second order time integration
+Start multi-threading with 4 threads (multithreading & load balancing)
+STEP366, t = 0.366s, timeToGo = 3.46673s, Nit/step = 6.90437
+STEP610, t = 0.61s, timeToGo = 2.56058s, Nit/step = 7
+STEP854, t = 0.854s, timeToGo = 1.0259s, Nit/step = 7
+STEP1000, t = 1s, timeToGo = 0s, Nit/step = 7
+Solver terminated successfully after 7.19273 seconds.
+====================
+CPU-time statistics:
+  total time   = 7.19 seconds
+  measured time= 7.15 seconds (=99.5%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 52.2%
+  newtonIncrement   = 14.4%
+  integrationFormula= 0.246%
+  ODE2RHS           = 4.06%
+  ODE1RHS           = 0.00291%
+  AERHS             = 3.09%
+  totalJacobian     = 10.8%
+  __jacobianODE2    = 6.24%
+  __jacobianODE1    = 0.00138%
+  __jacobianAE      = 4.45%
+  massMatrix        = 3.03%
+  reactionForces    = 12.1%
+  Python          = 0.000429%
+  overhead          = 0.00585%
+  visualization/user= 0.000773%
+Solver iteration statistics:
+total number of steps:        1000
+total number of Newton iterations: 6965
+total number of Newton Jacobians:  820
+Stop multi-threading
+u0= [-0.25907236 -0.43030816  1.09168392] , rot0= [0.40213238 0.8653121  2.25943439]
+solution of perf3DRigidBodies= 5.307943301443361
+****************************************************
+  PERFORMANCE TEST 1 ("perf3DRigidBodies.py") FINISHED SUCCESSFUL
+  RESULT   = 5.307943301443361
+  ERROR    = -3.348432642269472e-12
+  CPU TIME = 7.2632598876953125
+****************************************************
+
+
+****************************************************
+  START PERFORMANCE TEST 2 ("perfObjectFFRFreducedOrder.py"):
+****************************************************
++++++++++++++++++++++++++++++++
+EXUDYN V1.11.0 solver: implicit second order time integration
+STEP11079, t = 1.1079s, timeToGo = 1.61047s, Nit/step = 8.13711
+STEP20000, t = 2s, timeToGo = 3.63773e-13s, Nit/step = 8.15884
+Solver terminated successfully after 3.56927 seconds.
+====================
+CPU-time statistics:
+  total time   = 3.57 seconds
+  measured time= 3.53 seconds (=98.9%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 0.31%
+  newtonIncrement   = 1%
+  integrationFormula= 0.254%
+  ODE2RHS           = 46.2%
+  ODE1RHS           = 0.114%
+  AERHS             = 0.221%
+  totalJacobian     = 41.7%
+  __jacobianODE2    = 41.6%
+  __jacobianODE1    = 0.00542%
+  __jacobianAE      = 0.0137%
+  massMatrix        = 9.87%
+  reactionForces    = 0.309%
+  Python          = 0.0036%
+  writeSolution     = 0.015%
+  overhead          = 0.017%
+  visualization/user= 0.0131%
+Solver iteration statistics:
+total number of steps:        20000
+total number of Newton iterations: 162936
+total number of Newton Jacobians:  5526
+solution of perfObjectFFRFreducedOrder= 21.008631024252697
+****************************************************
+  PERFORMANCE TEST 2 ("perfObjectFFRFreducedOrder.py") FINISHED SUCCESSFUL
+  RESULT   = 21.008631024252697
+  ERROR    = -2.1316282072803006e-12
+  CPU TIME = 3.743619918823242
+****************************************************
+
+
+****************************************************
+  START PERFORMANCE TEST 3 ("perfRigidPendulum.py"):
+****************************************************
++++++++++++++++++++++++++++++++
+EXUDYN V1.11.0 solver: implicit second order time integration
+STEP394810, t = 789.62s, timeToGo = 3.06573s, Nit/step = 5.71416
+STEP788156, t = 1576.31s, timeToGo = 1.07514s, Nit/step = 5.71548
+STEP1000001, t = 2000s, timeToGo = 0s, Nit/step = 5.71148
+Solver terminated successfully after 5.08113 seconds.
+====================
+CPU-time statistics:
+  total time   = 5.08 seconds
+  measured time= 3.98 seconds (=78.3%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 0.263%
+  newtonIncrement   = 5.5%
+  integrationFormula= 6.2%
+  ODE2RHS           = 31.4%
+  ODE1RHS           = 3.68%
+  AERHS             = 22.3%
+  totalJacobian     = 0.823%
+  __jacobianODE2    = 0.0521%
+  __jacobianODE1    = 0.046%
+  __jacobianAE      = 0.388%
+  massMatrix        = 0.0617%
+  reactionForces    = 28.5%
+  Python          = 0.0381%
+  overhead          = 0.678%
+  visualization/user= 0.544%
+Solver iteration statistics:
+total number of steps:        1000001
+total number of Newton iterations: 5714119
+total number of Newton Jacobians:  71291
+solution of perfRigidPendulum= 2.4735499200766586
+****************************************************
+  PERFORMANCE TEST 3 ("perfRigidPendulum.py") FINISHED SUCCESSFUL
+  RESULT   = 2.4735499200766586
+  ERROR    = 0.0
+  CPU TIME = 5.082396745681763
+****************************************************
+
+
+****************************************************
+  START PERFORMANCE TEST 4 ("perfSpringDamperExplicit.py"):
+****************************************************
+Run perfSpringDamperExplicit WITHOUT CPU timing:
++++++++++++++++++++++++++++++++
+EXUDYN V1.11.0 solver: explicit time integration (ExplicitEuler)
+STEP5000001, t = 500s, timeToGo = 0s, Nit/step = 0
+Solver terminated successfully after 1.19732 seconds.
+Run perfSpringDamperExplicit WITH CPU timing:
++++++++++++++++++++++++++++++++
+EXUDYN V1.11.0 solver: explicit time integration (ExplicitEuler)
+STEP4401204, t = 440.12s, timeToGo = 0.272106s, Nit/step = 0
+STEP5000001, t = 500s, timeToGo = 0s, Nit/step = 0
+Solver terminated successfully after 2.27192 seconds.
+====================
+CPU-time statistics:
+  total time   = 2.27 seconds
+  measured time= 1.2 seconds (=52.7%) 
+  non-zero timer [__ sub-timer]:
+  newtonIncrement   = 12.1%
+  integrationFormula= 20.2%
+  ODE2RHS           = 48.2%
+  overhead          = 11%
+  visualization/user= 8.4%
+Solver iteration statistics:
+total number of steps:        5000001
+total number of Newton iterations: 0
+total number of Newton Jacobians:  0
+solution of perfSpringDamperExplicit= 0.52
+****************************************************
+  PERFORMANCE TEST 4 ("perfSpringDamperExplicit.py") FINISHED SUCCESSFUL
+  RESULT   = 0.52
+  ERROR    = 0.0
+  CPU TIME = 3.470539093017578
+****************************************************
+
+
+****************************************************
+  START PERFORMANCE TEST 5 ("perfSpringDamperUserFunction.py"):
+****************************************************
++++++++++++++++++++++++++++++++
+EXUDYN V1.11.0 solver: implicit second order time integration
+STEP305657, t = 30.5657s, timeToGo = 1.27164s, Nit/step = 1
+STEP500000, t = 50s, timeToGo = 0s, Nit/step = 1
+Solver terminated successfully after 3.26722 seconds.
+====================
+CPU-time statistics:
+  total time   = 3.27 seconds
+  measured time= 3.04 seconds (=93%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 1.24%
+  newtonIncrement   = 0.463%
+  integrationFormula= 1.57%
+  ODE2RHS           = 48.1%
+  ODE1RHS           = 0.721%
+  AERHS             = 0.752%
+  totalJacobian     = 43.7%
+  __jacobianODE2    = 39.9%
+  __jacobianODE1    = 0.432%
+  __jacobianAE      = 0.394%
+  massMatrix        = 0.492%
+  reactionForces    = 0.784%
+  Python          = 0.33%
+  writeSolution     = 1.09%
+  overhead          = 0.4%
+  visualization/user= 0.338%
+Solver iteration statistics:
+total number of steps:        500000
+total number of Newton iterations: 500000
+total number of Newton Jacobians:  500000
+result perfSpringDamperUserFunction= 0.5065575310984188
+****************************************************
+  PERFORMANCE TEST 5 ("perfSpringDamperUserFunction.py") FINISHED SUCCESSFUL
+  RESULT   = 0.5065575310984188
+  ERROR    = 3.108624468950438e-14
+  CPU TIME = 3.268890857696533
+****************************************************
+
+
+CPU usage (%/thread)= [19.7, 15.4, 0.0, 3.1, 1.6, 0.0, 23.4, 14.1, 10.9, 6.2, 1.6, 0.0, 0.0, 0.0, 1.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.5, 1.5, 0.0, 0.0]
+****************************************************
+ALL 6 PERFORMANCE TESTS SUCCESSFUL
+TOTAL PERFORMANCE TEST TIME = 27.429173946380615 seconds
+Reference value (i9, 2023-12, Windows)= 48 - 51 seconds (regular) / 39.5 seconds  (exudynFast)
+Reference value (i9, 2023-12, Linux  )= 42 - 44 seconds (regular) / 34 - 36 seconds (exudynFast)
+****************************************************

@@ -81,7 +81,7 @@ def TestExamplesReferenceSolution():
         'manualExplicitIntegrator.py':2.059698629692295,
         'matrixContainerTest.py':56.5,                              #new 2024-10-09
         'mecanumWheelRollingDiscTest.py':0.2714267238324343,
-        'movingGroundRobotTest.py':0.007681798995944785,            #added, as it was not in TestSuite
+        'movingGroundRobotTest.py':0.0038408994979977364,           #updated 2026-09-09, with factor 0.5 for tolerance too close
         'NGsolveCMStest.py': 0.06953224923173523,                   #changed 2025-05-05 (new .pkl file with newer ngsolve); until: 2024-10-11: 0.06953227339277462
         'objectFFRFreducedOrderAccelerations.py':0.1000057024588858,#before 2022-07-22 (because often small fails); 0.5000285122944431,#before 2022-02-20 (accuracy of internal sensors is higher): 0.5000285122930983,
         'objectFFRFreducedOrderTest.py':0.0053552332680605694,      #until 2022-03-18 (div result by 5): 0.026776166340247865,

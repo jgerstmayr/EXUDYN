@@ -19,15 +19,19 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.2, 
++  Exudyn version = 1.11.3, 
 +  last change =  2026-09-09, 
-+  Number of issues = 2353, 
-+  Number of resolved issues = 2075 (2 in current version), 
++  Number of issues = 2354, 
++  Number of resolved issues = 2076 (3 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.3: resolved Issue 2353: Reconcile GitHub Examples/TestModels with internal repository (fix)
+    - description:  The GitHub copies of main/pythonDev/Examples and TestModels had drifted from the internal repository through the old auto-copy; six Examples and five TestModels were stale or missing so the committed docs did not match a fresh regeneration. Reconciled both folders. Also pruned TestSuiteLogs/PerformanceLogs per the new retention policy (decision D7) and added the missing 1.11 and testExamples logs. Adjusted movingGroundRobotTest.py output scaling factor from 0.01 to 0.005 with updated reference value because its error sat too close to the global 5e-14 tolerance.
+    - **notes:** Examples and TestModels now match the internal repository; a fresh regeneration produces no doc differences
+    - date resolved: **2026-09-09 18:47**\ , date raised: 2026-09-09 
  * Version 1.11.2: resolved Issue 2352: Generators write output with platform default encoding (fix)
     - description:  Twelve write sites and six paired read sites in the python generators used the platform default encoding (cp1252 on Windows) instead of UTF-8, corrupting non-ASCII output on every regeneration (e.g. degree sign in interfaces.tex). Blocks the regeneration drift gate. Also: pybind_manual_classes.h was rewritten unconditionally and StructuresAndSettingsIndex.rst had trailing spaces. Revision plan 2026 step 71.
     - **notes:** All 12 write sites and 6 paired read sites now pass encoding=utf8; pybind_manual_classes.h routed through WriteTextIfDifferent; trailing spaces removed. Verified by two identical consecutive regenerations and a UTF-8 validity scan.

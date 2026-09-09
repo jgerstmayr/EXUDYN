@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.2, 
+  \item Exudyn version = 1.11.3, 
   \item last change =  2026-09-09, 
-  \item Number of issues = 2353, 
-  \item Number of resolved issues = 2075 (2 in current version), 
+  \item Number of issues = 2354, 
+  \item Number of resolved issues = 2076 (3 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.3}:  resolved Issue 2353: {\bf Reconcile GitHub Examples/TestModels with internal repository}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: The GitHub copies of main/pythonDev/Examples and TestModels had drifted from the internal repository through the old auto-copy; six Examples and five TestModels were stale or missing so the committed docs did not match a fresh regeneration. Reconciled both folders. Also pruned TestSuiteLogs/PerformanceLogs per the new retention policy (decision D7) and added the missing 1.11 and testExamples logs. Adjusted movingGroundRobotTest.py output scaling factor from 0.01 to 0.005 with updated reference value because its error sat too close to the global 5e-14 tolerance.}
+    \item {\bf notes: Examples and TestModels now match the internal repository; a fresh regeneration produces no doc differences}
+    \item   date resolved: {\bf 2026-09-09 18:47},
+date raised: 2026-09-09 
+  \ei
   \item[] {\bf Version 1.11.2}:  resolved Issue 2352: {\bf Generators write output with platform default encoding}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

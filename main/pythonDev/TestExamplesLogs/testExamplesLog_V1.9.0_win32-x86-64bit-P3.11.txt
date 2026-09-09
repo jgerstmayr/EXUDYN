@@ -1,0 +1,4603 @@
+
++++++++++++++++++++++++++++++++++++++++++++ 
++++++      EXUDYN TEST EXAMPLES       +++++ 
++++++++++++++++++++++++++++++++++++++++++++ 
+EXUDYN version      = 1.9.0 
+EXUDYN build date   = 2024-10-09 18:24:25 
+architecture        = 64bit 
+processor           = x86 
+platform            = win32 
+python version      = 3.11.8 
+test date (now)     = 2024-10-09 18:30:13 
++++++++++++++++++++++++++++++++++++++++++++ 
+
+
+****************************************** 
+EXAMPLE 0 ("3SpringsDistance.py"): 
+****************************************** 
+<systemData: 
+  Number of nodes= 1
+  Number of objects = 7
+  Number of markers = 4
+  Number of loads = 1
+  Number of sensors = 0
+  Number of ODE2 coordinates = 0
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 0
+  Number of data coordinates   = 0
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP483765, t = 2418.83s, timeToGo = 411.424s, Nit/step = 1.00004
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP973793, t = 4868.97s, timeToGo = 406.767s, Nit/step = 1
+STEP973794 (stopped), t = 4868.97s, tCPU=4.00002s, Nit/step = 1.00002
+solver stopped by user after 3.9999 seconds.
+====================
+CPU-time statistics:
+  total time   = 4 seconds
+  measured time= 3.42 seconds (=85.5%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 4.39e-05%
+  newtonIncrement   = 1.56%
+  integrationFormula= 3.47%
+  ODE2RHS           = 55.6%
+  ODE1RHS           = 1.56%
+  AERHS             = 16.5%
+  totalJacobian     = 0.000412%
+  __jacobianODE2    = 0.000345%
+  __jacobianODE1    = 1.17e-05%
+  __jacobianAE      = 2.93e-05%
+  massMatrix        = 1.17e-05%
+  reactionForces    = 18.4%
+  writeSolution     = 1.01%
+  overhead          = 1.22%
+  visualization/user= 0.761%
+Solver iteration statistics:
+total number of steps:        973793
+total number of Newton iterations: 973811
+total number of Newton Jacobians:  1
+
+
+****************************************** 
+EXAMPLE 1 ("addPrismaticJoint.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP2000, t = 2s, timeToGo = 0s, Nit/step = 2
+solver finished after 0.0676594 seconds.
+u0= [-7.77156117e-16 -1.26128571e+01  2.22044605e-16] , rot0= [-1.57079633e+00 -7.20833047e-17 -1.82792293e-16] 
+solution of addPrismaticJoint= 14.183653469652057 
+
+
+****************************************** 
+EXAMPLE 2 ("addRevoluteJoint.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP2000, t = 2s, timeToGo = 1.38495e-14s, Nit/step = 7.315
+solver finished after 0.253031 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.253 seconds
+  measured time= 0.248 seconds (=98%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 13.4%
+  newtonIncrement   = 23.3%
+  integrationFormula= 0.488%
+  ODE2RHS           = 12.1%
+  ODE1RHS           = 0.164%
+  AERHS             = 5.51%
+  totalJacobian     = 3.66%
+  __jacobianODE2    = 1.77%
+  __jacobianODE1    = 0.0131%
+  __jacobianAE      = 1.42%
+  massMatrix        = 7.99%
+  reactionForces    = 27.1%
+  writeSolution     = 6.22%
+  overhead          = 0.0355%
+  visualization/user= 0.0207%
+Solver iteration statistics:
+total number of steps:        2000
+total number of Newton iterations: 14630
+total number of Newton Jacobians:  810
+rejected modified Newton steps:      1
+u0= [ 0.41796443 -0.59991354  0.06783754] , rot0= [-2.84054441 -0.46403096 -0.21834678] 
+solution of addRevoluteJoint= 4.608637670143002 
+
+
+****************************************** 
+EXAMPLE 3 ("ALEANCFpipe.py"): 
+****************************************** 
+L=1 
+EI=10 
+EA=1000000 
+rhoA=10 
+<systemData: 
+  Number of nodes= 19
+  Number of objects = 21
+  Number of markers = 40
+  Number of loads = 16
+  Number of sensors = 0
+  Number of ODE2 coordinates = 69
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 4
+  Number of data coordinates   = 0
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP1772, t = 1.772s, timeToGo = 20.5819s, Nit/step = 2.23758
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP3656, t = 3.656s, timeToGo = 17.8843s, Nit/step = 2.25265
+STEP3657 (stopped), t = 3.656s, tCPU=4.00056s, Nit/step = 2.24474
+solver stopped by user after 4.00025 seconds.
+====================
+CPU-time statistics:
+  total time   = 4 seconds
+  measured time= 4.03 seconds (=101%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 29.9%
+  newtonIncrement   = 1.74%
+  integrationFormula= 0.041%
+  ODE2RHS           = 7.53%
+  ODE1RHS           = 0.0089%
+  AERHS             = 0.0939%
+  totalJacobian     = 55.5%
+  __jacobianODE2    = 54.2%
+  __jacobianODE1    = 0.0119%
+  __jacobianAE      = 0.129%
+  massMatrix        = 3.27%
+  reactionForces    = 0.158%
+  writeSolution     = 1.7%
+  overhead          = 0.00571%
+  visualization/user= 0.00346%
+Solver iteration statistics:
+total number of steps:        3656
+total number of Newton iterations: 8209
+total number of Newton Jacobians:  8209
+
+
+****************************************** 
+EXAMPLE 4 ("ANCFALEtest.py"): 
+****************************************** 
+
+
+****************************************** 
+EXAMPLE 5 ("ANCFcableCantilevered.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+Start multi-threading with 8 threads
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP1, t = 0.0005s, timeToGo = 2.07363 days, Nit/step = 3
+STEP2 (stopped), t = 0.0005s, tCPU=8.95855s, Nit/step = 1.5
+solver stopped by user after 7.08458 seconds.
+====================
+CPU-time statistics:
+  total time   = 7.08 seconds
+  measured time= 7.1 seconds (=100%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 24.4%
+  newtonIncrement   = 5.19%
+  integrationFormula= 0.0822%
+  ODE2RHS           = 4.51%
+  ODE1RHS           = 1.69e-05%
+  AERHS             = 0.143%
+  totalJacobian     = 62.3%
+  __jacobianODE2    = 61.6%
+  __jacobianODE1    = 8.45e-06%
+  __jacobianAE      = 0.215%
+  massMatrix        = 0.451%
+  reactionForces    = 0.319%
+  writeSolution     = 2.67%
+  overhead          = 0.000847%
+  visualization/user= 5.63e-06%
+Solver iteration statistics:
+total number of steps:        1
+total number of Newton iterations: 3
+total number of Newton Jacobians:  1
+Stop multi-threading
+
+
+****************************************** 
+EXAMPLE 6 ("ANCFcantileverTest.py"): 
+****************************************** 
+load f=1293750.0000000002 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 336125, time = 0.0001
+  Solve steps: adaptive reduction to step size = 5e-05, time = 0
+  Newton (time/load step #1): convergence failed after 25 iterations; relative error = 8839.28, time = 5e-05
+  Solve steps: adaptive reduction to step size = 2.5e-05, time = 0
+  Newton (time/load step #17): convergence failed after 25 iterations; relative error = 373751, time = 0.00045
+  Solve steps: adaptive reduction to step size = 2.5e-05, time = 0.0004
+  Newton (time/load step #45): convergence failed after 25 iterations; relative error = 860905, time = 0.001475
+  Solve steps: adaptive reduction to step size = 5e-05, time = 0.001375
+STEP1039, t = 0.1s, timeToGo = 0s, Nit/step = 7.92589
+solver finished after 1.19915 seconds.
+====================
+CPU-time statistics:
+  total time   = 1.2 seconds
+  measured time= 1.19 seconds (=99.5%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 9.04%
+  newtonIncrement   = 6.93%
+  integrationFormula= 0.208%
+  ODE2RHS           = 26.1%
+  ODE1RHS           = 0.0215%
+  AERHS             = 0.177%
+  totalJacobian     = 10.7%
+  __jacobianODE2    = 10.4%
+  __jacobianODE1    = 0.00477%
+  __jacobianAE      = 0.0311%
+  massMatrix        = 0.205%
+  reactionForces    = 0.327%
+  writeSolution     = 46.3%
+  overhead          = 0.0092%
+  visualization/user= 0.00421%
+Solver iteration statistics:
+total number of steps:        1039
+total number of Newton iterations: 8235
+total number of Newton Jacobians:  467
+rejected modified Newton steps:      9
+
+
+****************************************** 
+EXAMPLE 7 ("ANCFcantileverTestDyn.py"): 
+****************************************** 
+load f=1293750.0000000002 
+<systemData: 
+  Number of nodes= 18
+  Number of objects = 20
+  Number of markers = 4
+  Number of loads = 0
+  Number of sensors = 0
+  Number of ODE2 coordinates = 68
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 3
+  Number of data coordinates   = 0
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP7497, t = 0.187425s, timeToGo = 3.33562s, Nit/step = 4.00587
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP15737, t = 0.393425s, timeToGo = 1.08357s, Nit/step = 3.95667
+STEP15738 (stopped), t = 0.393425s, tCPU=4.00017s, Nit/step = 3.97986
+solver stopped by user after 4 seconds.
+====================
+CPU-time statistics:
+  total time   = 4 seconds
+  measured time= 3.96 seconds (=99.1%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 0.284%
+  newtonIncrement   = 12.2%
+  integrationFormula= 0.277%
+  ODE2RHS           = 26.9%
+  ODE1RHS           = 0.0519%
+  AERHS             = 0.413%
+  totalJacobian     = 0.235%
+  __jacobianODE2    = 0.208%
+  __jacobianODE1    = 0.00117%
+  __jacobianAE      = 0.00318%
+  massMatrix        = 0.0183%
+  reactionForces    = 0.743%
+  Python          = 1.74%
+  writeSolution     = 57.1%
+  overhead          = 0.0216%
+  visualization/user= 0.0138%
+Solver iteration statistics:
+total number of steps:        15737
+total number of Newton iterations: 62635
+total number of Newton Jacobians:  133
+
+
+****************************************** 
+EXAMPLE 8 ("ANCFcontactCircle.py"): 
+****************************************** 
+load f=0.012937500000000003 
+EI=0.01725 
+<systemData: 
+  Number of nodes= 26
+  Number of objects = 28
+  Number of markers = 23
+  Number of loads = 9
+  Number of sensors = 0
+  Number of ODE2 coordinates = 36
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 3
+  Number of data coordinates   = 64
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: nonlinear static solver
+*********************
+Static solver (40 load steps):
+*********************
+
+Start steps solving loop
+
+Write initial step to solution file and visualize ...
+STEP0, factor = 0, timeToGo = 0s
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 0.025, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0106806; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 30160.5: relTol = 2.82386e+06: contr. = 2.82386e+06
+    update initial residual with current residual; initial residual = 30160.5
+    NEWTON STEP 2: residual = 1.06708: relTol = 3.53799e-05: contr. = 3.53799e-05
+    NEWTON STEP 3: residual = 6771.07: relTol = 0.224501: contr. = 6345.45
+    NEWTON STEP 4: residual = 4.5442: relTol = 0.000150667: contr. = 0.00067112
+    NEWTON STEP 5: residual = 2373.91: relTol = 0.0787093: contr. = 522.405
+    NEWTON STEP 6: residual = 0.948126: relTol = 3.1436e-05: contr. = 0.000399394
+    NEWTON STEP 7: residual = 1174.01: relTol = 0.0389255: contr. = 1238.25
+    NEWTON STEP 8: residual = 13.7762: relTol = 0.000456762: contr. = 0.0117343
+    NEWTON STEP 9: residual = 175.694: relTol = 0.0058253: contr. = 12.7535
+    NEWTON STEP 10: residual = 5.56936: relTol = 0.000184657: contr. = 0.0316992
+    NEWTON STEP 11: residual = 161.009: relTol = 0.0053384: contr. = 28.9098
+    NEWTON STEP 12: residual = 30.5471: relTol = 0.00101282: contr. = 0.189723
+    NEWTON STEP 13: residual = 105975: relTol = 3.5137: contr. = 3469.23
+    NEWTON STEP 14: residual = 2378.23: relTol = 0.0788523: contr. = 0.0224414
+    NEWTON STEP 15: residual = 1650.13: relTol = 0.0547116: contr. = 0.693849
+    NEWTON STEP 16: residual = 717.811: relTol = 0.0237997: contr. = 0.435003
+    NEWTON STEP 17: residual = 1194.19: relTol = 0.0395946: contr. = 1.66366
+    NEWTON STEP 18: residual = 41.5739: relTol = 0.00137842: contr. = 0.0348134
+    NEWTON STEP 19: residual = 2886.14: relTol = 0.0956926: contr. = 69.4218
+    NEWTON STEP 20: residual = 30.5477: relTol = 0.00101284: contr. = 0.0105843
+  Newton (time/load step #1): convergence failed after 20 iterations; relative error = 0.00101284, load factor = 0.025
+  Solve steps: adaptive reduction to step size = 0.00625, load factor = 0.025
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 0.00625, step size = 0.00625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.00267015; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 1995.29: relTol = 747257: contr. = 747257
+    update initial residual with current residual; initial residual = 1995.29
+    NEWTON STEP 2: residual = 0.0158742: relTol = 7.95587e-06: contr. = 7.95587e-06
+    NEWTON STEP 3: residual = 0.148341: relTol = 7.43457e-05: contr. = 9.34476
+    NEWTON STEP 4: residual = 0.0224189: relTol = 1.1236e-05: contr. = 0.151131
+    NEWTON STEP 5: residual = 0.0134799: relTol = 6.75589e-06: contr. = 0.601274
+    NEWTON STEP 6: residual = 0.000201144: relTol = 1.0081e-07: contr. = 0.0149217
+    NEWTON STEP 7: residual = 5.90243e-05: relTol = 2.95819e-08: contr. = 0.293443
+  Newton: converged after 7 steps; relative error = 2.95819e-08
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP1, factor = 0.00625, timeToGo = 0s, Nit/step = 27
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP2, factor = 0.0125, step size = 0.00625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.00783098; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 4822.41: relTol = 615811: contr. = 615811
+    update initial residual with current residual; initial residual = 4822.41
+    NEWTON STEP 2: residual = 0.00772541: relTol = 1.60198e-06: contr. = 1.60198e-06
+    NEWTON STEP 3: residual = 1.25914: relTol = 0.000261103: contr. = 162.987
+    NEWTON STEP 4: residual = 1.15285e-05: relTol = 2.39062e-09: contr. = 9.15584e-06
+  Newton: converged after 4 steps; relative error = 2.39062e-09
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 619.241 (disc.it.=0, error goal = 0.001)
+  START discontinuous iteration 1:
+Newton: initial residual = 609.102; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 64448: relTol = 105.808: contr. = 105.808
+    update initial residual with current residual; initial residual = 64448
+    NEWTON STEP 2: residual = 603.79: relTol = 0.00936864: contr. = 0.00936864
+    NEWTON STEP 3: residual = 162487: relTol = 2.52121: contr. = 269.112
+    NEWTON STEP 4: residual = 17049.9: relTol = 0.264552: contr. = 0.104931
+    NEWTON STEP 5: residual = 33144.3: relTol = 0.514281: contr. = 1.94397
+    NEWTON STEP 6: residual = 4225.63: relTol = 0.0655665: contr. = 0.127492
+    NEWTON STEP 7: residual = 51457.8: relTol = 0.79844: contr. = 12.1776
+    NEWTON STEP 8: residual = 631.118: relTol = 0.00979268: contr. = 0.0122648
+    NEWTON STEP 9: residual = 8970.19: relTol = 0.139185: contr. = 14.2132
+    NEWTON STEP 10: residual = 409.656: relTol = 0.00635639: contr. = 0.0456687
+    NEWTON STEP 11: residual = 999.548: relTol = 0.0155094: contr. = 2.43997
+    NEWTON STEP 12: residual = 89.5559: relTol = 0.00138958: contr. = 0.0895964
+    NEWTON STEP 13: residual = 800.89: relTol = 0.0124269: contr. = 8.9429
+    NEWTON STEP 14: residual = 15.8898: relTol = 0.000246552: contr. = 0.0198402
+    NEWTON STEP 15: residual = 5838.39: relTol = 0.0905908: contr. = 367.431
+    NEWTON STEP 16: residual = 66.4804: relTol = 0.00103154: contr. = 0.0113868
+    NEWTON STEP 17: residual = 295.129: relTol = 0.00457933: contr. = 4.43933
+    NEWTON STEP 18: residual = 3172.41: relTol = 0.0492243: contr. = 10.7492
+    NEWTON STEP 19: residual = 5970.39: relTol = 0.0926389: contr. = 1.88197
+    NEWTON STEP 20: residual = 206.554: relTol = 0.00320497: contr. = 0.0345964
+  Newton (time/load step #2): convergence failed after 20 iterations; relative error = 0.00320497, load factor = 0.0125
+  Solve steps: adaptive reduction to step size = 0.0015625, load factor = 0.0125
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP2, factor = 0.0078125, step size = 0.0015625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0068779; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 1344.86: relTol = 195534: contr. = 195534
+    update initial residual with current residual; initial residual = 1344.86
+    NEWTON STEP 2: residual = 0.00169891: relTol = 1.26326e-06: contr. = 1.26326e-06
+    NEWTON STEP 3: residual = 0.0623186: relTol = 4.63383e-05: contr. = 36.6814
+    NEWTON STEP 4: residual = 8.87066e-07: relTol = 6.59597e-10: contr. = 1.42344e-05
+  Newton: converged after 4 steps; relative error = 6.59597e-10
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP2, factor = 0.0078125, timeToGo = 0s, Nit/step = 28
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP3, factor = 0.009375, step size = 0.0015625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0104915; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 915.487: relTol = 87260: contr. = 87260
+    update initial residual with current residual; initial residual = 915.487
+    NEWTON STEP 2: residual = 0.000431446: relTol = 4.71274e-07: contr. = 4.71274e-07
+    NEWTON STEP 3: residual = 0.113145: relTol = 0.00012359: contr. = 262.247
+    NEWTON STEP 4: residual = 2.4612e-08: relTol = 2.68841e-11: contr. = 2.17526e-07
+  Newton: converged after 4 steps; relative error = 2.68841e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 579.496 (disc.it.=0, error goal = 0.001)
+  START discontinuous iteration 1:
+Newton: initial residual = 182.445; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 970395: relTol = 5318.84: contr. = 5318.84
+    update initial residual with current residual; initial residual = 970395
+    NEWTON STEP 2: residual = 23332.5: relTol = 0.0240443: contr. = 0.0240443
+    NEWTON STEP 3: residual = 47067.2: relTol = 0.0485031: contr. = 2.01724
+    NEWTON STEP 4: residual = 4932.6: relTol = 0.00508309: contr. = 0.104799
+    NEWTON STEP 5: residual = 15559.8: relTol = 0.0160345: contr. = 3.15448
+    NEWTON STEP 6: residual = 1259.74: relTol = 0.00129818: contr. = 0.0809617
+    NEWTON STEP 7: residual = 1629.41: relTol = 0.00167912: contr. = 1.29345
+    NEWTON STEP 8: residual = 1312.38: relTol = 0.00135241: contr. = 0.805429
+    NEWTON STEP 9: residual = 2045.24: relTol = 0.00210764: contr. = 1.55843
+    NEWTON STEP 10: residual = 1177.66: relTol = 0.00121358: contr. = 0.575803
+    NEWTON STEP 11: residual = 372.259: relTol = 0.000383616: contr. = 0.316102
+    NEWTON STEP 12: residual = 123.903: relTol = 0.000127683: contr. = 0.33284
+    NEWTON STEP 13: residual = 230.037: relTol = 0.000237055: contr. = 1.8566
+    NEWTON STEP 14: residual = 69.1331: relTol = 7.12422e-05: contr. = 0.300531
+    NEWTON STEP 15: residual = 19.6611: relTol = 2.0261e-05: contr. = 0.284395
+    NEWTON STEP 16: residual = 2047.74: relTol = 0.00211022: contr. = 104.152
+    NEWTON STEP 17: residual = 256.509: relTol = 0.000264334: contr. = 0.125264
+    NEWTON STEP 18: residual = 12820.2: relTol = 0.0132113: contr. = 49.9796
+    NEWTON STEP 19: residual = 195.55: relTol = 0.000201516: contr. = 0.0152533
+    NEWTON STEP 20: residual = 2061.84: relTol = 0.00212475: contr. = 10.5438
+  Newton (time/load step #3): convergence failed after 20 iterations; relative error = 0.00212475, load factor = 0.009375
+  Solve steps: adaptive reduction to step size = 0.000390625, load factor = 0.009375
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP3, factor = 0.00820313, step size = 0.000390625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0103714; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 495.386: relTol = 47764.8: contr. = 47764.8
+    update initial residual with current residual; initial residual = 495.386
+    NEWTON STEP 2: residual = 0.000242843: relTol = 4.90209e-07: contr. = 4.90209e-07
+    NEWTON STEP 3: residual = 0.0198181: relTol = 4.00053e-05: contr. = 81.6087
+    NEWTON STEP 4: residual = 4.86933e-09: relTol = 9.82935e-12: contr. = 2.45701e-07
+  Newton: converged after 4 steps; relative error = 9.82935e-12
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 476.854 (disc.it.=0, error goal = 0.001)
+  START discontinuous iteration 1:
+Newton: initial residual = 181.642; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 971832: relTol = 5350.26: contr. = 5350.26
+    update initial residual with current residual; initial residual = 971832
+    NEWTON STEP 2: residual = 18280.9: relTol = 0.0188107: contr. = 0.0188107
+    NEWTON STEP 3: residual = 45325.6: relTol = 0.0466394: contr. = 2.4794
+    NEWTON STEP 4: residual = 2745.04: relTol = 0.0028246: contr. = 0.0605626
+    NEWTON STEP 5: residual = 21075.5: relTol = 0.0216864: contr. = 7.67767
+    NEWTON STEP 6: residual = 1505.64: relTol = 0.00154928: contr. = 0.0714404
+    NEWTON STEP 7: residual = 7476.73: relTol = 0.00769343: contr. = 4.9658
+    NEWTON STEP 8: residual = 540.36: relTol = 0.000556022: contr. = 0.0722723
+    NEWTON STEP 9: residual = 901.794: relTol = 0.000927932: contr. = 1.66888
+    NEWTON STEP 10: residual = 313.702: relTol = 0.000322795: contr. = 0.347865
+    NEWTON STEP 11: residual = 366.1: relTol = 0.000376711: contr. = 1.16703
+    NEWTON STEP 12: residual = 16.4062: relTol = 1.68817e-05: contr. = 0.0448133
+    NEWTON STEP 13: residual = 992.614: relTol = 0.00102138: contr. = 60.5025
+    NEWTON STEP 14: residual = 52.818: relTol = 5.43489e-05: contr. = 0.053211
+    NEWTON STEP 15: residual = 7342.01: relTol = 0.00755481: contr. = 139.006
+    NEWTON STEP 16: residual = 53.8359: relTol = 5.53963e-05: contr. = 0.00733258
+    NEWTON STEP 17: residual = 685.168: relTol = 0.000705027: contr. = 12.727
+    NEWTON STEP 18: residual = 887.826: relTol = 0.000913559: contr. = 1.29578
+    NEWTON STEP 19: residual = 668.941: relTol = 0.00068833: contr. = 0.753459
+    NEWTON STEP 20: residual = 95.5537: relTol = 9.83233e-05: contr. = 0.142843
+  Newton (time/load step #3): convergence failed after 20 iterations; relative error = 9.83233e-05, load factor = 0.00820313
+  Solve steps: adaptive reduction to step size = 9.76563e-05, load factor = 0.00820313
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP3, factor = 0.00791016, step size = 9.76563e-05
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0103449; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 410.357: relTol = 39667.5: contr. = 39667.5
+    update initial residual with current residual; initial residual = 410.357
+    NEWTON STEP 2: residual = 0.000205204: relTol = 5.00062e-07: contr. = 5.00062e-07
+    NEWTON STEP 3: residual = 0.0107653: relTol = 2.6234e-05: contr. = 52.4615
+    NEWTON STEP 4: residual = 3.44176e-09: relTol = 8.38725e-12: contr. = 3.19709e-07
+  Newton: converged after 4 steps; relative error = 8.38725e-12
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 354.148 (disc.it.=0, error goal = 0.001)
+  START discontinuous iteration 1:
+Newton: initial residual = 100.624; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 839.853: relTol = 8.34645: contr. = 8.34645
+    update initial residual with current residual; initial residual = 839.853
+    NEWTON STEP 2: residual = 38.3814: relTol = 0.0457001: contr. = 0.0457001
+    NEWTON STEP 3: residual = 16.5761: relTol = 0.0197369: contr. = 0.431879
+    NEWTON STEP 4: residual = 19.0231: relTol = 0.0226506: contr. = 1.14762
+    NEWTON STEP 5: residual = 36.9721: relTol = 0.0440222: contr. = 1.94353
+    NEWTON STEP 6: residual = 130.802: relTol = 0.155744: contr. = 3.53785
+    NEWTON STEP 7: residual = 97.0293: relTol = 0.115531: contr. = 0.741803
+    NEWTON STEP 8: residual = 86.0323: relTol = 0.102437: contr. = 0.886663
+    NEWTON STEP 9: residual = 11.3845: relTol = 0.0135553: contr. = 0.132328
+    NEWTON STEP 10: residual = 13.134: relTol = 0.0156384: contr. = 1.15368
+    NEWTON STEP 11: residual = 0.710106: relTol = 0.000845512: contr. = 0.0540663
+    NEWTON STEP 12: residual = 0.68468: relTol = 0.000815239: contr. = 0.964195
+    NEWTON STEP 13: residual = 0.00167978: relTol = 2.00009e-06: contr. = 0.00245338
+    NEWTON STEP 14: residual = 0.00032591: relTol = 3.88056e-07: contr. = 0.194019
+    NEWTON STEP 15: residual = 2.19339e-10: relTol = 2.61164e-13: contr. = 6.73006e-07
+  Newton: converged after 15 steps; relative error = 2.61164e-13
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 35.9474 (disc.it.=1, error goal = 0.001)
+  START discontinuous iteration 2:
+Newton: initial residual = 33.4418; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 349.493: relTol = 10.4508: contr. = 10.4508
+    update initial residual with current residual; initial residual = 349.493
+    NEWTON STEP 2: residual = 6.19592: relTol = 0.0177283: contr. = 0.0177283
+    NEWTON STEP 3: residual = 106.3: relTol = 0.304154: contr. = 17.1564
+    NEWTON STEP 4: residual = 15.0436: relTol = 0.0430442: contr. = 0.141521
+    NEWTON STEP 5: residual = 0.156971: relTol = 0.000449141: contr. = 0.0104344
+    NEWTON STEP 6: residual = 24.5801: relTol = 0.0703307: contr. = 156.589
+    NEWTON STEP 7: residual = 0.00429575: relTol = 1.22914e-05: contr. = 0.000174765
+    NEWTON STEP 8: residual = 14.9702: relTol = 0.0428341: contr. = 3484.9
+    NEWTON STEP 9: residual = 5.03422e-05: relTol = 1.44044e-07: contr. = 3.36282e-06
+    NEWTON STEP 10: residual = 0.00560872: relTol = 1.60482e-05: contr. = 111.412
+    NEWTON STEP 11: residual = 7.51342e-10: relTol = 2.14981e-12: contr. = 1.3396e-07
+  Newton: converged after 11 steps; relative error = 2.14981e-12
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=2, error goal = 0.001 ... REACHED)
+STEP3, factor = 0.00791016, timeToGo = 0s, Nit/step = 78
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP4, factor = 0.00800781, step size = 9.76563e-05
+  START discontinuous iteration 0:
+Newton: initial residual = 0.011573; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.0592751: relTol = 5.12185: contr. = 5.12185
+    update initial residual with current residual; initial residual = 0.0592751
+    NEWTON STEP 2: residual = 4.87561e-08: relTol = 8.22539e-07: contr. = 8.22539e-07
+    NEWTON STEP 3: residual = 6.37256e-10: relTol = 1.07508e-08: contr. = 0.0130703
+  Newton: converged after 3 steps; relative error = 1.07508e-08
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP4, factor = 0.00800781, timeToGo = 0s, Nit/step = 3
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP5, factor = 0.00810547, step size = 9.76563e-05
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0117168; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.00448075: relTol = 0.382421: contr. = 0.382421
+    NEWTON STEP 2: residual = 1.10134e-09: relTol = 9.39965e-08: contr. = 2.45793e-07
+  Newton: converged after 2 steps; relative error = 9.39965e-08
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP5, factor = 0.00810547, timeToGo = 0s, Nit/step = 2
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP6, factor = 0.00820312, step size = 9.76563e-05
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0117747; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.00418636: relTol = 0.355539: contr. = 0.355539
+    NEWTON STEP 2: residual = 1.27354e-09: relTol = 1.08159e-07: contr. = 3.04213e-07
+    NEWTON STEP 3: residual = 1.36264e-09: relTol = 1.15726e-07: contr. = 1.06996
+    NEWTON STEP 4: residual = 1.09399e-09: relTol = 9.29101e-08: contr. = 0.802846
+  Newton: converged after 4 steps; relative error = 9.29101e-08
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP6, factor = 0.00820312, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP7, factor = 0.00839844, step size = 0.000195313
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0118371; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.0162288: relTol = 1.37101: contr. = 1.37101
+    update initial residual with current residual; initial residual = 0.0162288
+    NEWTON STEP 2: residual = 1.05473e-08: relTol = 6.49911e-07: contr. = 6.49911e-07
+    NEWTON STEP 3: residual = 3.42519e-10: relTol = 2.11056e-08: contr. = 0.0324746
+  Newton: converged after 3 steps; relative error = 2.11056e-08
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP7, factor = 0.00839844, timeToGo = 0s, Nit/step = 3
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP8, factor = 0.00859375, step size = 0.000195313
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0119494; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.0166395: relTol = 1.39249: contr. = 1.39249
+    update initial residual with current residual; initial residual = 0.0166395
+    NEWTON STEP 2: residual = 1.07985e-08: relTol = 6.48965e-07: contr. = 6.48965e-07
+    NEWTON STEP 3: residual = 3.54028e-10: relTol = 2.12764e-08: contr. = 0.0327851
+  Newton: converged after 3 steps; relative error = 2.12764e-08
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP8, factor = 0.00859375, timeToGo = 0s, Nit/step = 3
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP9, factor = 0.00878906, step size = 0.000195313
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0120628; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.0166123: relTol = 1.37715: contr. = 1.37715
+    update initial residual with current residual; initial residual = 0.0166123
+    NEWTON STEP 2: residual = 1.12023e-08: relTol = 6.74337e-07: contr. = 6.74337e-07
+    NEWTON STEP 3: residual = 5.51012e-10: relTol = 3.31689e-08: contr. = 0.0491874
+  Newton: converged after 3 steps; relative error = 3.31689e-08
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP9, factor = 0.00878906, timeToGo = 0s, Nit/step = 3
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP10, factor = 0.00898437, step size = 0.000195313
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0121765; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.0165727: relTol = 1.36104: contr. = 1.36104
+    update initial residual with current residual; initial residual = 0.0165727
+    NEWTON STEP 2: residual = 1.09642e-08: relTol = 6.61579e-07: contr. = 6.61579e-07
+    NEWTON STEP 3: residual = 5.71182e-10: relTol = 3.44651e-08: contr. = 0.0520953
+  Newton: converged after 3 steps; relative error = 3.44651e-08
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP10, factor = 0.00898437, timeToGo = 0s, Nit/step = 3
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP11, factor = 0.009375, step size = 0.000390625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0123028; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.0643082: relTol = 5.2271: contr. = 5.2271
+    update initial residual with current residual; initial residual = 0.0643082
+    NEWTON STEP 2: residual = 9.29538e-08: relTol = 1.44544e-06: contr. = 1.44544e-06
+    NEWTON STEP 3: residual = 2.88991e-08: relTol = 4.49385e-07: contr. = 0.310898
+    NEWTON STEP 4: residual = 7.31445e-10: relTol = 1.13741e-08: contr. = 0.0253103
+  Newton: converged after 4 steps; relative error = 1.13741e-08
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP11, factor = 0.009375, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP12, factor = 0.00976562, step size = 0.000390625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0125297; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.0657753: relTol = 5.24954: contr. = 5.24954
+    update initial residual with current residual; initial residual = 0.0657753
+    NEWTON STEP 2: residual = 9.22234e-08: relTol = 1.4021e-06: contr. = 1.4021e-06
+    NEWTON STEP 3: residual = 3.03476e-08: relTol = 4.61383e-07: contr. = 0.329066
+    NEWTON STEP 4: residual = 6.70002e-10: relTol = 1.01862e-08: contr. = 0.0220776
+  Newton: converged after 4 steps; relative error = 1.01862e-08
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP12, factor = 0.00976562, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP13, factor = 0.0101562, step size = 0.000390625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0127591; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.065518: relTol = 5.135: contr. = 5.135
+    update initial residual with current residual; initial residual = 0.065518
+    NEWTON STEP 2: residual = 9.14248e-08: relTol = 1.39541e-06: contr. = 1.39541e-06
+    NEWTON STEP 3: residual = 2.92632e-08: relTol = 4.46644e-07: contr. = 0.320079
+    NEWTON STEP 4: residual = 6.39673e-10: relTol = 9.76332e-09: contr. = 0.0218593
+  Newton: converged after 4 steps; relative error = 9.76332e-09
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP13, factor = 0.0101562, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP14, factor = 0.0105469, step size = 0.000390625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0129893; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.0652164: relTol = 5.02076: contr. = 5.02076
+    update initial residual with current residual; initial residual = 0.0652164
+    NEWTON STEP 2: residual = 8.97963e-08: relTol = 1.3769e-06: contr. = 1.3769e-06
+    NEWTON STEP 3: residual = 2.82939e-08: relTol = 4.33847e-07: contr. = 0.31509
+    NEWTON STEP 4: residual = 1.72153e-10: relTol = 2.63972e-09: contr. = 0.00608445
+  Newton: converged after 4 steps; relative error = 2.63972e-09
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP14, factor = 0.0105469, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP15, factor = 0.0113281, step size = 0.00078125
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0132472; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.252596: relTol = 19.0679: contr. = 19.0679
+    update initial residual with current residual; initial residual = 0.252596
+    NEWTON STEP 2: residual = 4.53266e-07: relTol = 1.79443e-06: contr. = 1.79443e-06
+    NEWTON STEP 3: residual = 1.49796e-06: relTol = 5.93026e-06: contr. = 3.30482
+    NEWTON STEP 4: residual = 7.74864e-10: relTol = 3.0676e-09: contr. = 0.000517279
+  Newton: converged after 4 steps; relative error = 3.0676e-09
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP15, factor = 0.0113281, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP16, factor = 0.0121094, step size = 0.00078125
+  START discontinuous iteration 0:
+Newton: initial residual = 0.013708; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.257178: relTol = 18.7611: contr. = 18.7611
+    update initial residual with current residual; initial residual = 0.257178
+    NEWTON STEP 2: residual = 4.50931e-07: relTol = 1.75338e-06: contr. = 1.75338e-06
+    NEWTON STEP 3: residual = 1.50954e-06: relTol = 5.86965e-06: contr. = 3.34761
+    NEWTON STEP 4: residual = 5.11922e-10: relTol = 1.99054e-09: contr. = 0.000339124
+  Newton: converged after 4 steps; relative error = 1.99054e-09
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0.190208 (disc.it.=0, error goal = 0.001)
+  START discontinuous iteration 1:
+Newton: initial residual = 0.287746; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.133177: relTol = 0.462827: contr. = 0.462827
+    NEWTON STEP 2: residual = 0.000581707: relTol = 0.0020216: contr. = 0.00436793
+    NEWTON STEP 3: residual = 0.000108184: relTol = 0.000375969: contr. = 0.185976
+    NEWTON STEP 4: residual = 5.00975e-10: relTol = 1.74103e-09: contr. = 4.63077e-06
+  Newton: converged after 4 steps; relative error = 1.74103e-09
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=1, error goal = 0.001 ... REACHED)
+STEP16, factor = 0.0121094, timeToGo = 0s, Nit/step = 8
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP17, factor = 0.0128906, step size = 0.00078125
+  START discontinuous iteration 0:
+Newton: initial residual = 0.014021; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.0176444: relTol = 1.25842: contr. = 1.25842
+    update initial residual with current residual; initial residual = 0.0176444
+    NEWTON STEP 2: residual = 1.14878e-08: relTol = 6.51072e-07: contr. = 6.51072e-07
+    NEWTON STEP 3: residual = 4.57709e-10: relTol = 2.59408e-08: contr. = 0.0398432
+  Newton: converged after 3 steps; relative error = 2.59408e-08
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP17, factor = 0.0128906, timeToGo = 0s, Nit/step = 3
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP18, factor = 0.0136719, step size = 0.00078125
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0140847; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.0172126: relTol = 1.22208: contr. = 1.22208
+    update initial residual with current residual; initial residual = 0.0172126
+    NEWTON STEP 2: residual = 1.0122e-08: relTol = 5.88057e-07: contr. = 5.88057e-07
+    NEWTON STEP 3: residual = 7.00365e-10: relTol = 4.0689e-08: contr. = 0.0691923
+  Newton: converged after 3 steps; relative error = 4.0689e-08
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP18, factor = 0.0136719, timeToGo = 0s, Nit/step = 3
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP19, factor = 0.0152344, step size = 0.0015625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0142127; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.0684864: relTol = 4.81867: contr. = 4.81867
+    update initial residual with current residual; initial residual = 0.0684864
+    NEWTON STEP 2: residual = 1.38732e-07: relTol = 2.02568e-06: contr. = 2.02568e-06
+    NEWTON STEP 3: residual = 1.34168e-09: relTol = 1.95905e-08: contr. = 0.00967106
+  Newton: converged after 3 steps; relative error = 1.95905e-08
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP19, factor = 0.0152344, timeToGo = 0s, Nit/step = 3
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP20, factor = 0.0167969, step size = 0.0015625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0143585; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.0684719: relTol = 4.76873: contr. = 4.76873
+    update initial residual with current residual; initial residual = 0.0684719
+    NEWTON STEP 2: residual = 1.29752e-07: relTol = 1.89497e-06: contr. = 1.89497e-06
+    NEWTON STEP 3: residual = 1.35414e-09: relTol = 1.97765e-08: contr. = 0.0104363
+  Newton: converged after 3 steps; relative error = 1.97765e-08
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP20, factor = 0.0167969, timeToGo = 0s, Nit/step = 3
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP21, factor = 0.0183594, step size = 0.0015625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0145159; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.0682393: relTol = 4.701: contr. = 4.701
+    update initial residual with current residual; initial residual = 0.0682393
+    NEWTON STEP 2: residual = 1.21766e-07: relTol = 1.7844e-06: contr. = 1.7844e-06
+    NEWTON STEP 3: residual = 1.32716e-09: relTol = 1.94486e-08: contr. = 0.0108992
+  Newton: converged after 3 steps; relative error = 1.94486e-08
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP21, factor = 0.0183594, timeToGo = 0s, Nit/step = 3
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP22, factor = 0.0199219, step size = 0.0015625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0146849; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.0680136: relTol = 4.63153: contr. = 4.63153
+    update initial residual with current residual; initial residual = 0.0680136
+    NEWTON STEP 2: residual = 1.1339e-07: relTol = 1.66716e-06: contr. = 1.66716e-06
+    NEWTON STEP 3: residual = 1.75418e-09: relTol = 2.57915e-08: contr. = 0.0154703
+  Newton: converged after 3 steps; relative error = 2.57915e-08
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP22, factor = 0.0199219, timeToGo = 0s, Nit/step = 3
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP23, factor = 0.0230469, step size = 0.003125
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0150055; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.270302: relTol = 18.0135: contr. = 18.0135
+    update initial residual with current residual; initial residual = 0.270302
+    NEWTON STEP 2: residual = 1.35366e-06: relTol = 5.00797e-06: contr. = 5.00797e-06
+    NEWTON STEP 3: residual = 9.49633e-08: relTol = 3.51323e-07: contr. = 0.0701529
+    NEWTON STEP 4: residual = 4.55668e-10: relTol = 1.68578e-09: contr. = 0.00479836
+  Newton: converged after 4 steps; relative error = 1.68578e-09
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP23, factor = 0.0230469, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP24, factor = 0.0261719, step size = 0.003125
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0153974; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.269542: relTol = 17.5057: contr. = 17.5057
+    update initial residual with current residual; initial residual = 0.269542
+    NEWTON STEP 2: residual = 1.26671e-06: relTol = 4.69948e-06: contr. = 4.69948e-06
+    NEWTON STEP 3: residual = 8.14607e-08: relTol = 3.02219e-07: contr. = 0.064309
+    NEWTON STEP 4: residual = 7.03948e-10: relTol = 2.61164e-09: contr. = 0.00864157
+  Newton: converged after 4 steps; relative error = 2.61164e-09
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP24, factor = 0.0261719, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP25, factor = 0.0292969, step size = 0.003125
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0158285; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.268041: relTol = 16.9341: contr. = 16.9341
+    update initial residual with current residual; initial residual = 0.268041
+    NEWTON STEP 2: residual = 1.20396e-06: relTol = 4.49169e-06: contr. = 4.49169e-06
+    NEWTON STEP 3: residual = 7.14802e-08: relTol = 2.66676e-07: contr. = 0.059371
+    NEWTON STEP 4: residual = 5.36218e-10: relTol = 2.00051e-09: contr. = 0.00750163
+  Newton: converged after 4 steps; relative error = 2.00051e-09
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP25, factor = 0.0292969, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP26, factor = 0.0324219, step size = 0.003125
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0162966; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 0.266656: relTol = 16.3627: contr. = 16.3627
+    update initial residual with current residual; initial residual = 0.266656
+    NEWTON STEP 2: residual = 1.15148e-06: relTol = 4.31824e-06: contr. = 4.31824e-06
+    NEWTON STEP 3: residual = 6.33011e-08: relTol = 2.37389e-07: contr. = 0.0549735
+    NEWTON STEP 4: residual = 7.3096e-10: relTol = 2.74121e-09: contr. = 0.0115473
+  Newton: converged after 4 steps; relative error = 2.74121e-09
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP26, factor = 0.0324219, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP27, factor = 0.0386719, step size = 0.00625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0171396; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 1.05815: relTol = 61.7373: contr. = 61.7373
+    update initial residual with current residual; initial residual = 1.05815
+    NEWTON STEP 2: residual = 1.53614e-05: relTol = 1.45171e-05: contr. = 1.45171e-05
+    NEWTON STEP 3: residual = 2.79339e-06: relTol = 2.63987e-06: contr. = 0.181845
+    NEWTON STEP 4: residual = 4.86277e-10: relTol = 4.59552e-10: contr. = 0.000174081
+  Newton: converged after 4 steps; relative error = 4.59552e-10
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP27, factor = 0.0386719, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP28, factor = 0.0449219, step size = 0.00625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0182235; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 1.05209: relTol = 57.7325: contr. = 57.7325
+    update initial residual with current residual; initial residual = 1.05209
+    NEWTON STEP 2: residual = 1.33428e-05: relTol = 1.26821e-05: contr. = 1.26821e-05
+    NEWTON STEP 3: residual = 3.22446e-06: relTol = 3.06482e-06: contr. = 0.241664
+    NEWTON STEP 4: residual = 6.10483e-10: relTol = 5.80257e-10: contr. = 0.000189328
+  Newton: converged after 4 steps; relative error = 5.80257e-10
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP28, factor = 0.0449219, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP29, factor = 0.0511719, step size = 0.00625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.019411; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 1.04288: relTol = 53.7264: contr. = 53.7264
+    update initial residual with current residual; initial residual = 1.04288
+    NEWTON STEP 2: residual = 1.1739e-05: relTol = 1.12563e-05: contr. = 1.12563e-05
+    NEWTON STEP 3: residual = 4.66892e-06: relTol = 4.47693e-06: contr. = 0.397726
+    NEWTON STEP 4: residual = 5.99494e-10: relTol = 5.74843e-10: contr. = 0.000128401
+  Newton: converged after 4 steps; relative error = 5.74843e-10
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP29, factor = 0.0511719, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP30, factor = 0.0574219, step size = 0.00625
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0206872; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 1.03261: relTol = 49.9155: contr. = 49.9155
+    update initial residual with current residual; initial residual = 1.03261
+    NEWTON STEP 2: residual = 1.20453e-05: relTol = 1.16649e-05: contr. = 1.16649e-05
+    NEWTON STEP 3: residual = 7.69788e-06: relTol = 7.45477e-06: contr. = 0.639078
+    NEWTON STEP 4: residual = 4.96362e-10: relTol = 4.80686e-10: contr. = 6.44803e-05
+  Newton: converged after 4 steps; relative error = 4.80686e-10
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP30, factor = 0.0574219, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP31, factor = 0.0699219, step size = 0.0125
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0228386; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 4.06938: relTol = 178.18: contr. = 178.18
+    update initial residual with current residual; initial residual = 4.06938
+    NEWTON STEP 2: residual = 6.72153e-05: relTol = 1.65173e-05: contr. = 1.65173e-05
+    NEWTON STEP 3: residual = 0.000371624: relTol = 9.13222e-05: contr. = 5.52886
+    NEWTON STEP 4: residual = 3.20174e-10: relTol = 7.86788e-11: contr. = 8.61552e-07
+  Newton: converged after 4 steps; relative error = 7.86788e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP31, factor = 0.0699219, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP32, factor = 0.0824219, step size = 0.0125
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0256569; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 3.95716: relTol = 154.234: contr. = 154.234
+    update initial residual with current residual; initial residual = 3.95716
+    NEWTON STEP 2: residual = 0.000136249: relTol = 3.4431e-05: contr. = 3.4431e-05
+    NEWTON STEP 3: residual = 0.000596142: relTol = 0.000150649: contr. = 4.37539
+    NEWTON STEP 4: residual = 4.87307e-10: relTol = 1.23146e-10: contr. = 8.17435e-07
+  Newton: converged after 4 steps; relative error = 1.23146e-10
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP32, factor = 0.0824219, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP33, factor = 0.0949219, step size = 0.0125
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0286698; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 3.81848: relTol = 133.188: contr. = 133.188
+    update initial residual with current residual; initial residual = 3.81848
+    NEWTON STEP 2: residual = 0.000230493: relTol = 6.03626e-05: contr. = 6.03626e-05
+    NEWTON STEP 3: residual = 0.000627693: relTol = 0.000164383: contr. = 2.72326
+    NEWTON STEP 4: residual = 4.53198e-10: relTol = 1.18686e-10: contr. = 7.22007e-07
+  Newton: converged after 4 steps; relative error = 1.18686e-10
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP33, factor = 0.0949219, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP34, factor = 0.107422, step size = 0.0125
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0318302; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 3.6917: relTol = 115.981: contr. = 115.981
+    update initial residual with current residual; initial residual = 3.6917
+    NEWTON STEP 2: residual = 0.000242935: relTol = 6.58056e-05: contr. = 6.58056e-05
+    NEWTON STEP 3: residual = 0.00050042: relTol = 0.000135553: contr. = 2.05989
+    NEWTON STEP 4: residual = 8.53657e-10: relTol = 2.31237e-10: contr. = 1.70588e-06
+  Newton: converged after 4 steps; relative error = 2.31237e-10
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP34, factor = 0.107422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP35, factor = 0.132422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0368226; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 14.3198: relTol = 388.886: contr. = 388.886
+    update initial residual with current residual; initial residual = 14.3198
+    NEWTON STEP 2: residual = 0.00144355: relTol = 0.000100808: contr. = 0.000100808
+    NEWTON STEP 3: residual = 0.00727679: relTol = 0.000508163: contr. = 5.04088
+    NEWTON STEP 4: residual = 3.58535e-08: relTol = 2.50377e-09: contr. = 4.9271e-06
+  Newton: converged after 4 steps; relative error = 2.50377e-09
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP35, factor = 0.132422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP36, factor = 0.157422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0433912; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 13.7426: relTol = 316.715: contr. = 316.715
+    update initial residual with current residual; initial residual = 13.7426
+    NEWTON STEP 2: residual = 0.000823442: relTol = 5.99188e-05: contr. = 5.99188e-05
+    NEWTON STEP 3: residual = 0.00361536: relTol = 0.000263076: contr. = 4.39054
+    NEWTON STEP 4: residual = 5.25108e-09: relTol = 3.82102e-10: contr. = 1.45244e-06
+  Newton: converged after 4 steps; relative error = 3.82102e-10
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP36, factor = 0.157422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP37, factor = 0.182422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0502198; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 13.3507: relTol = 265.846: contr. = 265.846
+    update initial residual with current residual; initial residual = 13.3507
+    NEWTON STEP 2: residual = 0.000396898: relTol = 2.97286e-05: contr. = 2.97286e-05
+    NEWTON STEP 3: residual = 0.00141159: relTol = 0.000105731: contr. = 3.55655
+    NEWTON STEP 4: residual = 1.35505e-09: relTol = 1.01496e-10: contr. = 9.59942e-07
+  Newton: converged after 4 steps; relative error = 1.01496e-10
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP37, factor = 0.182422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP38, factor = 0.207422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0572336; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 13.0678: relTol = 228.324: contr. = 228.324
+    update initial residual with current residual; initial residual = 13.0678
+    NEWTON STEP 2: residual = 0.000181212: relTol = 1.38671e-05: contr. = 1.38671e-05
+    NEWTON STEP 3: residual = 0.000566119: relTol = 4.33218e-05: contr. = 3.12407
+    NEWTON STEP 4: residual = 7.26355e-10: relTol = 5.55837e-11: contr. = 1.28304e-06
+  Newton: converged after 4 steps; relative error = 5.55837e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP38, factor = 0.207422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP39, factor = 0.232422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0643901; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 12.8117: relTol = 198.97: contr. = 198.97
+    update initial residual with current residual; initial residual = 12.8117
+    NEWTON STEP 2: residual = 0.000183514: relTol = 1.43239e-05: contr. = 1.43239e-05
+    NEWTON STEP 3: residual = 0.000439938: relTol = 3.43387e-05: contr. = 2.3973
+    NEWTON STEP 4: residual = 6.45158e-10: relTol = 5.03568e-11: contr. = 1.46648e-06
+  Newton: converged after 4 steps; relative error = 5.03568e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP39, factor = 0.232422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP40, factor = 0.257422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0716646; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 12.5516: relTol = 175.143: contr. = 175.143
+    update initial residual with current residual; initial residual = 12.5516
+    NEWTON STEP 2: residual = 0.000200243: relTol = 1.59536e-05: contr. = 1.59536e-05
+    NEWTON STEP 3: residual = 0.000505234: relTol = 4.02526e-05: contr. = 2.5231
+    NEWTON STEP 4: residual = 4.33579e-10: relTol = 3.45438e-11: contr. = 8.58176e-07
+  Newton: converged after 4 steps; relative error = 3.45438e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP40, factor = 0.257422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP41, factor = 0.282422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0790394; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 12.2938: relTol = 155.54: contr. = 155.54
+    update initial residual with current residual; initial residual = 12.2938
+    NEWTON STEP 2: residual = 0.0001923: relTol = 1.5642e-05: contr. = 1.5642e-05
+    NEWTON STEP 3: residual = 0.000530627: relTol = 4.31622e-05: contr. = 2.75937
+    NEWTON STEP 4: residual = 3.4051e-10: relTol = 2.76977e-11: contr. = 6.41712e-07
+  Newton: converged after 4 steps; relative error = 2.76977e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP41, factor = 0.282422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP42, factor = 0.307422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0865001; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 12.0465: relTol = 139.266: contr. = 139.266
+    update initial residual with current residual; initial residual = 12.0465
+    NEWTON STEP 2: residual = 0.000171228: relTol = 1.42139e-05: contr. = 1.42139e-05
+    NEWTON STEP 3: residual = 0.000492606: relTol = 4.0892e-05: contr. = 2.8769
+    NEWTON STEP 4: residual = 4.32481e-10: relTol = 3.59009e-11: contr. = 8.77944e-07
+  Newton: converged after 4 steps; relative error = 3.59009e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP42, factor = 0.307422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP43, factor = 0.332422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.0940352; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 11.8106: relTol = 125.598: contr. = 125.598
+    update initial residual with current residual; initial residual = 11.8106
+    NEWTON STEP 2: residual = 0.000149288: relTol = 1.26402e-05: contr. = 1.26402e-05
+    NEWTON STEP 3: residual = 0.000428557: relTol = 3.62858e-05: contr. = 2.87067
+    NEWTON STEP 4: residual = 4.45931e-10: relTol = 3.77569e-11: contr. = 1.04054e-06
+  Newton: converged after 4 steps; relative error = 3.77569e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP43, factor = 0.332422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP44, factor = 0.357422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.101635; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 11.5827: relTol = 113.963: contr. = 113.963
+    update initial residual with current residual; initial residual = 11.5827
+    NEWTON STEP 2: residual = 0.000130635: relTol = 1.12785e-05: contr. = 1.12785e-05
+    NEWTON STEP 3: residual = 0.000363503: relTol = 3.13833e-05: contr. = 2.78257
+    NEWTON STEP 4: residual = 8.08595e-10: relTol = 6.98108e-11: contr. = 2.22445e-06
+  Newton: converged after 4 steps; relative error = 6.98108e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP44, factor = 0.357422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP45, factor = 0.382422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.109292; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 11.3581: relTol = 103.924: contr. = 103.924
+    update initial residual with current residual; initial residual = 11.3581
+    NEWTON STEP 2: residual = 0.000115752: relTol = 1.01911e-05: contr. = 1.01911e-05
+    NEWTON STEP 3: residual = 0.000308457: relTol = 2.71574e-05: contr. = 2.66481
+    NEWTON STEP 4: residual = 2.22715e-10: relTol = 1.96084e-11: contr. = 7.22029e-07
+  Newton: converged after 4 steps; relative error = 1.96084e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP45, factor = 0.382422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP46, factor = 0.407422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.117; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 11.1355: relTol = 95.1756: contr. = 95.1756
+    update initial residual with current residual; initial residual = 11.1355
+    NEWTON STEP 2: residual = 0.000103083: relTol = 9.25712e-06: contr. = 9.25712e-06
+    NEWTON STEP 3: residual = 0.000266058: relTol = 2.38927e-05: contr. = 2.581
+    NEWTON STEP 4: residual = 5.30122e-10: relTol = 4.76063e-11: contr. = 1.99251e-06
+  Newton: converged after 4 steps; relative error = 4.76063e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP46, factor = 0.407422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP47, factor = 0.432422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.124752; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 10.9113: relTol = 87.4639: contr. = 87.4639
+    update initial residual with current residual; initial residual = 10.9113
+    NEWTON STEP 2: residual = 9.35245e-05: relTol = 8.57132e-06: contr. = 8.57132e-06
+    NEWTON STEP 3: residual = 0.000243991: relTol = 2.23612e-05: contr. = 2.60884
+    NEWTON STEP 4: residual = 5.98336e-10: relTol = 5.48362e-11: contr. = 2.45229e-06
+  Newton: converged after 4 steps; relative error = 5.48362e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP47, factor = 0.432422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP48, factor = 0.457422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.132545; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 10.6855: relTol = 80.6181: contr. = 80.6181
+    update initial residual with current residual; initial residual = 10.6855
+    NEWTON STEP 2: residual = 8.55435e-05: relTol = 8.00557e-06: contr. = 8.00557e-06
+    NEWTON STEP 3: residual = 0.000244099: relTol = 2.28439e-05: contr. = 2.85351
+    NEWTON STEP 4: residual = 5.54362e-10: relTol = 5.18799e-11: contr. = 2.27106e-06
+  Newton: converged after 4 steps; relative error = 5.18799e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP48, factor = 0.457422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP49, factor = 0.482422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.140372; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 10.4568: relTol = 74.4941: contr. = 74.4941
+    update initial residual with current residual; initial residual = 10.4568
+    NEWTON STEP 2: residual = 7.90787e-05: relTol = 7.56239e-06: contr. = 7.56239e-06
+    NEWTON STEP 3: residual = 0.000263318: relTol = 2.51814e-05: contr. = 3.32982
+    NEWTON STEP 4: residual = 6.41828e-10: relTol = 6.13787e-11: contr. = 2.43746e-06
+  Newton: converged after 4 steps; relative error = 6.13787e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP49, factor = 0.482422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP50, factor = 0.507422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.148229; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 10.2255: relTol = 68.9845: contr. = 68.9845
+    update initial residual with current residual; initial residual = 10.2255
+    NEWTON STEP 2: residual = 7.27613e-05: relTol = 7.11566e-06: contr. = 7.11566e-06
+    NEWTON STEP 3: residual = 0.000295578: relTol = 2.8906e-05: contr. = 4.0623
+    NEWTON STEP 4: residual = 7.02781e-10: relTol = 6.87282e-11: contr. = 2.37765e-06
+  Newton: converged after 4 steps; relative error = 6.87282e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP50, factor = 0.507422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP51, factor = 0.532422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.156113; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 9.99234: relTol = 64.007: contr. = 64.007
+    update initial residual with current residual; initial residual = 9.99234
+    NEWTON STEP 2: residual = 6.83207e-05: relTol = 6.83731e-06: contr. = 6.83731e-06
+    NEWTON STEP 3: residual = 0.000340161: relTol = 3.40422e-05: contr. = 4.97889
+    NEWTON STEP 4: residual = 4.72584e-10: relTol = 4.72946e-11: contr. = 1.38929e-06
+  Newton: converged after 4 steps; relative error = 4.72946e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP51, factor = 0.532422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP52, factor = 0.557422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.164019; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 9.75705: relTol = 59.4872: contr. = 59.4872
+    update initial residual with current residual; initial residual = 9.75705
+    NEWTON STEP 2: residual = 6.41864e-05: relTol = 6.57846e-06: contr. = 6.57846e-06
+    NEWTON STEP 3: residual = 0.000385938: relTol = 3.95548e-05: contr. = 6.01277
+    NEWTON STEP 4: residual = 4.64045e-10: relTol = 4.756e-11: contr. = 1.20238e-06
+  Newton: converged after 4 steps; relative error = 4.756e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP52, factor = 0.557422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP53, factor = 0.582422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.171944; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 9.5209: relTol = 55.372: contr. = 55.372
+    update initial residual with current residual; initial residual = 9.5209
+    NEWTON STEP 2: residual = 6.06008e-05: relTol = 6.36503e-06: contr. = 6.36503e-06
+    NEWTON STEP 3: residual = 0.000437614: relTol = 4.59635e-05: contr. = 7.22126
+    NEWTON STEP 4: residual = 2.81769e-10: relTol = 2.95948e-11: contr. = 6.43876e-07
+  Newton: converged after 4 steps; relative error = 2.95948e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP53, factor = 0.582422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP54, factor = 0.607422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.179884; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 9.28435: relTol = 51.613: contr. = 51.613
+    update initial residual with current residual; initial residual = 9.28435
+    NEWTON STEP 2: residual = 5.78584e-05: relTol = 6.23182e-06: contr. = 6.23182e-06
+    NEWTON STEP 3: residual = 0.00048571: relTol = 5.2315e-05: contr. = 8.39482
+    NEWTON STEP 4: residual = 1.72254e-10: relTol = 1.85532e-11: contr. = 3.54644e-07
+  Newton: converged after 4 steps; relative error = 1.85532e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP54, factor = 0.607422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP55, factor = 0.632422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.187834; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 9.04904: relTol = 48.1757: contr. = 48.1757
+    update initial residual with current residual; initial residual = 9.04904
+    NEWTON STEP 2: residual = 5.57517e-05: relTol = 6.16106e-06: contr. = 6.16106e-06
+    NEWTON STEP 3: residual = 0.000542927: relTol = 5.99983e-05: contr. = 9.7383
+    NEWTON STEP 4: residual = 4.19695e-10: relTol = 4.638e-11: contr. = 7.73022e-07
+  Newton: converged after 4 steps; relative error = 4.638e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP55, factor = 0.632422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP56, factor = 0.657422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.195792; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 8.81518: relTol = 45.0232: contr. = 45.0232
+    update initial residual with current residual; initial residual = 8.81518
+    NEWTON STEP 2: residual = 5.43238e-05: relTol = 6.16253e-06: contr. = 6.16253e-06
+    NEWTON STEP 3: residual = 0.000598328: relTol = 6.78747e-05: contr. = 11.0141
+    NEWTON STEP 4: residual = 2.99077e-10: relTol = 3.39274e-11: contr. = 4.99854e-07
+  Newton: converged after 4 steps; relative error = 3.39274e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP56, factor = 0.657422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP57, factor = 0.682422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.203753; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 8.58348: relTol = 42.1269: contr. = 42.1269
+    update initial residual with current residual; initial residual = 8.58348
+    NEWTON STEP 2: residual = 5.29053e-05: relTol = 6.16363e-06: contr. = 6.16363e-06
+    NEWTON STEP 3: residual = 0.000640365: relTol = 7.46044e-05: contr. = 12.104
+    NEWTON STEP 4: residual = 3.91238e-10: relTol = 4.55803e-11: contr. = 6.1096e-07
+  Newton: converged after 4 steps; relative error = 4.55803e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP57, factor = 0.682422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP58, factor = 0.707422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.211713; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 8.35648: relTol = 39.4707: contr. = 39.4707
+    update initial residual with current residual; initial residual = 8.35648
+    NEWTON STEP 2: residual = 5.11603e-05: relTol = 6.12224e-06: contr. = 6.12224e-06
+    NEWTON STEP 3: residual = 0.000699965: relTol = 8.37631e-05: contr. = 13.6818
+    NEWTON STEP 4: residual = 3.07346e-10: relTol = 3.67794e-11: contr. = 4.39088e-07
+  Newton: converged after 4 steps; relative error = 3.67794e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP58, factor = 0.707422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP59, factor = 0.732422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.21967; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 8.13498: relTol = 37.0328: contr. = 37.0328
+    update initial residual with current residual; initial residual = 8.13498
+    NEWTON STEP 2: residual = 5.0978e-05: relTol = 6.26652e-06: contr. = 6.26652e-06
+    NEWTON STEP 3: residual = 0.000763035: relTol = 9.37968e-05: contr. = 14.9679
+    NEWTON STEP 4: residual = 2.8904e-10: relTol = 3.55305e-11: contr. = 3.78803e-07
+  Newton: converged after 4 steps; relative error = 3.55305e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP59, factor = 0.732422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP60, factor = 0.757422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.227618; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 7.91897: relTol = 34.7907: contr. = 34.7907
+    update initial residual with current residual; initial residual = 7.91897
+    NEWTON STEP 2: residual = 5.06645e-05: relTol = 6.39786e-06: contr. = 6.39786e-06
+    NEWTON STEP 3: residual = 0.00080266: relTol = 0.000101359: contr. = 15.8427
+    NEWTON STEP 4: residual = 2.39212e-10: relTol = 3.02075e-11: contr. = 2.98025e-07
+  Newton: converged after 4 steps; relative error = 3.02075e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP60, factor = 0.757422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP61, factor = 0.782422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.235554; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 7.71172: relTol = 32.7387: contr. = 32.7387
+    update initial residual with current residual; initial residual = 7.71172
+    NEWTON STEP 2: residual = 5.03317e-05: relTol = 6.52665e-06: contr. = 6.52665e-06
+    NEWTON STEP 3: residual = 0.000858822: relTol = 0.000111366: contr. = 17.0633
+    NEWTON STEP 4: residual = 8.73409e-10: relTol = 1.13257e-10: contr. = 1.01698e-06
+  Newton: converged after 4 steps; relative error = 1.13257e-10
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP61, factor = 0.782422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP62, factor = 0.807422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.243474; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 7.5139: relTol = 30.8612: contr. = 30.8612
+    update initial residual with current residual; initial residual = 7.5139
+    NEWTON STEP 2: residual = 5.05307e-05: relTol = 6.72496e-06: contr. = 6.72496e-06
+    NEWTON STEP 3: residual = 0.000908996: relTol = 0.000120975: contr. = 17.989
+    NEWTON STEP 4: residual = 3.7637e-10: relTol = 5.00898e-11: contr. = 4.1405e-07
+  Newton: converged after 4 steps; relative error = 5.00898e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP62, factor = 0.807422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP63, factor = 0.832422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.251374; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 7.32749: relTol = 29.1498: contr. = 29.1498
+    update initial residual with current residual; initial residual = 7.32749
+    NEWTON STEP 2: residual = 5.14761e-05: relTol = 7.02507e-06: contr. = 7.02507e-06
+    NEWTON STEP 3: residual = 0.000963805: relTol = 0.000131533: contr. = 18.7233
+    NEWTON STEP 4: residual = 4.41422e-10: relTol = 6.0242e-11: contr. = 4.57999e-07
+  Newton: converged after 4 steps; relative error = 6.0242e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP63, factor = 0.832422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP64, factor = 0.857422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.25925; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 7.15371: relTol = 27.5939: contr. = 27.5939
+    update initial residual with current residual; initial residual = 7.15371
+    NEWTON STEP 2: residual = 5.22139e-05: relTol = 7.29886e-06: contr. = 7.29886e-06
+    NEWTON STEP 3: residual = 0.00100178: relTol = 0.000140037: contr. = 19.1861
+    NEWTON STEP 4: residual = 3.61079e-10: relTol = 5.04744e-11: contr. = 3.60436e-07
+  Newton: converged after 4 steps; relative error = 5.04744e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP64, factor = 0.857422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP65, factor = 0.882422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.267097; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 6.99406: relTol = 26.1855: contr. = 26.1855
+    update initial residual with current residual; initial residual = 6.99406
+    NEWTON STEP 2: residual = 5.37464e-05: relTol = 7.68458e-06: contr. = 7.68458e-06
+    NEWTON STEP 3: residual = 0.00104568: relTol = 0.00014951: contr. = 19.4558
+    NEWTON STEP 4: residual = 6.05708e-10: relTol = 8.66033e-11: contr. = 5.79248e-07
+  Newton: converged after 4 steps; relative error = 8.66033e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP65, factor = 0.882422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP66, factor = 0.907422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.274911; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 6.85157: relTol = 24.9228: contr. = 24.9228
+    update initial residual with current residual; initial residual = 6.85157
+    NEWTON STEP 2: residual = 5.60022e-05: relTol = 8.17364e-06: contr. = 8.17364e-06
+    NEWTON STEP 3: residual = 0.00108912: relTol = 0.000158959: contr. = 19.4477
+    NEWTON STEP 4: residual = 3.15445e-10: relTol = 4.60398e-11: contr. = 2.89634e-07
+  Newton: converged after 4 steps; relative error = 4.60398e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP66, factor = 0.907422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP67, factor = 0.932422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.282688; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 6.72596: relTol = 23.7928: contr. = 23.7928
+    update initial residual with current residual; initial residual = 6.72596
+    NEWTON STEP 2: residual = 5.80794e-05: relTol = 8.63511e-06: contr. = 8.63511e-06
+    NEWTON STEP 3: residual = 0.00112396: relTol = 0.000167108: contr. = 19.3522
+    NEWTON STEP 4: residual = 4.08247e-10: relTol = 6.06972e-11: contr. = 3.63221e-07
+  Newton: converged after 4 steps; relative error = 6.06972e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP67, factor = 0.932422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP68, factor = 0.957422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.290424; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 6.62135: relTol = 22.7989: contr. = 22.7989
+    update initial residual with current residual; initial residual = 6.62135
+    NEWTON STEP 2: residual = 6.18813e-05: relTol = 9.34572e-06: contr. = 9.34572e-06
+    NEWTON STEP 3: residual = 0.00116762: relTol = 0.000176342: contr. = 18.8687
+    NEWTON STEP 4: residual = 4.75896e-10: relTol = 7.18729e-11: contr. = 4.07577e-07
+  Newton: converged after 4 steps; relative error = 7.18729e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP68, factor = 0.957422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP69, factor = 0.982422, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.298113; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 6.53685: relTol = 21.9274: contr. = 21.9274
+    update initial residual with current residual; initial residual = 6.53685
+    NEWTON STEP 2: residual = 6.61344e-05: relTol = 1.01172e-05: contr. = 1.01172e-05
+    NEWTON STEP 3: residual = 0.00119797: relTol = 0.000183264: contr. = 18.1142
+    NEWTON STEP 4: residual = 6.50002e-10: relTol = 9.94366e-11: contr. = 5.42586e-07
+  Newton: converged after 4 steps; relative error = 9.94366e-11
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP69, factor = 0.982422, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP70, factor = 1, step size = 0.025
+  START discontinuous iteration 0:
+Newton: initial residual = 0.30541; goals: relTol=1e-07, absTol=1e-10
+    NEWTON STEP 1: residual = 3.20097: relTol = 10.4809: contr. = 10.4809
+    update initial residual with current residual; initial residual = 3.20097
+    NEWTON STEP 2: residual = 3.24175e-05: relTol = 1.01274e-05: contr. = 1.01274e-05
+    NEWTON STEP 3: residual = 0.000236998: relTol = 7.40394e-05: contr. = 7.3108
+    NEWTON STEP 4: residual = 5.53212e-10: relTol = 1.72826e-10: contr. = 2.33425e-06
+  Newton: converged after 4 steps; relative error = 1.72826e-10
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 0.001 ... REACHED)
+STEP70, factor = 1, timeToGo = 0s, Nit/step = 4
++++++++++++++++ STEP FINISHED ++++++++++++++
+
+solver finished after 0.0562648 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.0563 seconds
+  measured time= 0.0568 seconds (=101%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 17.1%
+  newtonIncrement   = 1.47%
+  ODE2RHS           = 8.77%
+  ODE1RHS           = 0.0253%
+  AERHS             = 0.204%
+  totalJacobian     = 55.9%
+  __jacobianODE2    = 53.4%
+  __jacobianODE1    = 0.022%
+  __jacobianAE      = 0.325%
+  massMatrix        = 6.06%
+  reactionForces    = 0.297%
+  postNewton    = 0.871%
+  writeSolution     = 7.42%
+  overhead          = 1.93%
+  visualization/user= 0.00334%
+Solver iteration statistics:
+total number of steps:        70
+total number of Newton iterations: 392
+total number of Newton Jacobians:  392
+tip displacement: x=-0.10206972473850914, y=-0.48426561043424476 
+
+
+****************************************** 
+EXAMPLE 9 ("ANCFcontactCircle2.py"): 
+****************************************** 
+load f=0.012937500000000003 
+EI=0.01725 
+<systemData: 
+  Number of nodes= 98
+  Number of objects = 100
+  Number of markers = 71
+  Number of loads = 33
+  Number of sensors = 0
+  Number of ODE2 coordinates = 132
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 3
+  Number of data coordinates   = 512
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: nonlinear static solver
+
+Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP311\Lib\site-packages\exudyn-1.9.0-py3.11-win-amd64.egg\exudyn\solver.py', line 166]: 
+CSolverBase::InitializeSolverPreChecks: staticSolver.adaptiveStep is not possible for staticSolver.loadStepGeometric; adaptiveStep will be ignored
+
+STEP40, factor = 1, timeToGo = 0s, Nit/step = 4.6
+solver finished after 0.164154 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.164 seconds
+  measured time= 0.171 seconds (=104%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 29.3%
+  newtonIncrement   = 3.44%
+  ODE2RHS           = 7.18%
+  ODE1RHS           = 0.0048%
+  AERHS             = 0.0585%
+  totalJacobian     = 41.1%
+  __jacobianODE2    = 37.9%
+  __jacobianODE1    = 0.00533%
+  __jacobianAE      = 0.062%
+  massMatrix        = 10.1%
+  reactionForces    = 0.0715%
+  postNewton    = 1.74%
+  writeSolution     = 7.03%
+  overhead          = 0.0157%
+  visualization/user= 0.00176%
+Solver iteration statistics:
+total number of steps:        40
+total number of Newton iterations: 184
+total number of Newton Jacobians:  184
+
+
+****************************************** 
+EXAMPLE 10 ("ANCFmovingRigidbody.py"): 
+****************************************** 
+L=2 
+EI=0.276 
+EA=828000.0 
+rhoA=0.0312 
+<systemData: 
+  Number of nodes= 37
+  Number of objects = 41
+  Number of markers = 73
+  Number of loads = 1
+  Number of sensors = 0
+  Number of ODE2 coordinates = 136
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 8
+  Number of data coordinates   = 1
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP695, t = 0.695s, timeToGo = 2.31707s, Nit/step = 2.01151
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP1335, t = 1.335s, timeToGo = 0.494671s, Nit/step = 2
+STEP1336 (stopped), t = 1.335s, tCPU=4.00266s, Nit/step = 2.00449
+solver stopped by user after 4.00128 seconds.
+====================
+CPU-time statistics:
+  total time   = 4 seconds
+  measured time= 4.05 seconds (=101%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 28.7%
+  newtonIncrement   = 2.65%
+  integrationFormula= 0.0336%
+  ODE2RHS           = 6.76%
+  ODE1RHS           = 0.00333%
+  AERHS             = 0.0857%
+  totalJacobian     = 47.8%
+  __jacobianODE2    = 34.7%
+  __jacobianODE1    = 0.00606%
+  __jacobianAE      = 11.5%
+  massMatrix        = 3.18%
+  reactionForces    = 0.199%
+  postNewton    = 0.0349%
+  writeSolution     = 10.5%
+  overhead          = 0.00528%
+  visualization/user= 0.00233%
+Solver iteration statistics:
+total number of steps:        1335
+total number of Newton iterations: 2678
+total number of Newton Jacobians:  2678
+
+
+****************************************** 
+EXAMPLE 11 ("ANCFrotatingCable2D.py"): 
+****************************************** 
+load f=125.00000000000001 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP5000, t = 10s, timeToGo = 0s, Nit/step = 5.0396
+solver finished after 0.998127 seconds.
+
+
+****************************************** 
+EXAMPLE 12 ("ANCFslidingJoint2D.py"): 
+****************************************** 
+load f=0.012937500000000003 
+EI=0.01725 
+<systemData: 
+  Number of nodes= 7
+  Number of objects = 9
+  Number of markers = 16
+  Number of loads = 4
+  Number of sensors = 0
+  Number of ODE2 coordinates = 19
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 6
+  Number of data coordinates   = 2
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP1000, t = 0.5s, timeToGo = 0s, Nit/step = 2.506
+solver finished after 0.120274 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.12 seconds
+  measured time= 0.12 seconds (=99.8%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 19.8%
+  newtonIncrement   = 1.56%
+  integrationFormula= 0.293%
+  ODE2RHS           = 7.57%
+  ODE1RHS           = 0.0763%
+  AERHS             = 1.44%
+  totalJacobian     = 27%
+  __jacobianODE2    = 23.2%
+  __jacobianODE1    = 0.0808%
+  __jacobianAE      = 2.37%
+  massMatrix        = 1.01%
+  reactionForces    = 2.75%
+  postNewton    = 0.451%
+  writeSolution     = 38%
+  overhead          = 0.0508%
+  visualization/user= 0.0243%
+Solver iteration statistics:
+total number of steps:        1000
+total number of Newton iterations: 2506
+total number of Newton Jacobians:  2506
+
+
+****************************************** 
+EXAMPLE 13 ("ANCFslidingJoint2Drigid.py"): 
+****************************************** 
+load f=0.012937500000000003 
+EI=0.01725 
+<systemData: 
+  Number of nodes= 36
+  Number of objects = 38
+  Number of markers = 103
+  Number of loads = 33
+  Number of sensors = 0
+  Number of ODE2 coordinates = 135
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 6
+  Number of data coordinates   = 2
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP1132, t = 0.566s, timeToGo = 0.120186s, Nit/step = 8.16696
+STEP1200, t = 0.6s, timeToGo = 4.02071e-14s, Nit/step = 10.0588
+solver finished after 2.26324 seconds.
+====================
+CPU-time statistics:
+  total time   = 2.26 seconds
+  measured time= 2.29 seconds (=101%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 26%
+  newtonIncrement   = 17.3%
+  integrationFormula= 0.113%
+  ODE2RHS           = 28.3%
+  ODE1RHS           = 0.0147%
+  AERHS             = 0.294%
+  totalJacobian     = 9.43%
+  __jacobianODE2    = 7.78%
+  __jacobianODE1    = 0.00632%
+  __jacobianAE      = 0.113%
+  massMatrix        = 1.36%
+  reactionForces    = 0.666%
+  postNewton    = 0.0485%
+  writeSolution     = 16.4%
+  overhead          = 0.00696%
+  visualization/user= 0.00295%
+Solver iteration statistics:
+total number of steps:        1200
+total number of Newton iterations: 9929
+total number of Newton Jacobians:  1407
+rejected modified Newton steps:      21
+
+
+****************************************** 
+EXAMPLE 14 ("ANCFswitchingSlidingJoint2D.py"): 
+****************************************** 
+EXUDYN version=1.9.0 
+load f=0.0025875000000000004 
+EI=0.003450000000000001 
+<systemData: 
+  Number of nodes= 261
+  Number of objects = 266
+  Number of markers = 523
+  Number of loads = 256
+  Number of sensors = 0
+  Number of ODE2 coordinates = 1031
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 9
+  Number of data coordinates   = 2
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+
+Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP311\Lib\site-packages\exudyn-1.9.0-py3.11-win-amd64.egg\exudyn\solver.py', line 250]: 
+Generalized alpha: initial accelerations due to initial velocities can only be computed in dense matrix mode!
+
+STEP383, t = 0.1915s, timeToGo = 8.44967s, Nit/step = 6.93734
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP943, t = 0.4715s, timeToGo = 4.48445s, Nit/step = 6.54464
+STEP944 (stopped), t = 0.4715s, tCPU=4.00254s, Nit/step = 6.69703
+solver stopped by user after 4.00087 seconds.
+
+
+****************************************** 
+EXAMPLE 15 ("ANCFtestHalfcircle.py"): 
+****************************************** 
+load f=129.37500000000003 
+EI=172.50000000000003 
+<systemData: 
+  Number of nodes= 258
+  Number of objects = 260
+  Number of markers = 5
+  Number of loads = 1
+  Number of sensors = 0
+  Number of ODE2 coordinates = 1028
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 3
+  Number of data coordinates   = 0
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: nonlinear static solver
+STEP1, factor = 1, timeToGo = 0s, Nit/step = 32
+solver finished after 0.0455413 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.0455 seconds
+  measured time= 0.0455 seconds (=99.8%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 37.8%
+  newtonIncrement   = 2%
+  ODE2RHS           = 6.74%
+  ODE1RHS           = 0.0033%
+  AERHS             = 0.0424%
+  totalJacobian     = 51.3%
+  __jacobianODE2    = 51.2%
+  __jacobianODE1    = 0.0044%
+  __jacobianAE      = 0.0468%
+  reactionForces    = 0.0292%
+  writeSolution     = 2.04%
+  overhead          = 0.0317%
+  visualization/user= 0.00022%
+Solver iteration statistics:
+total number of steps:        1
+total number of Newton iterations: 32
+total number of Newton Jacobians:  32
+
+
+****************************************** 
+EXAMPLE 16 ("ANCFtests2.py"): 
+****************************************** 
+load f=1293750.0000000002 
+EI=1725000.0000000005 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP1000, t = 2s, timeToGo = 0s, Nit/step = 13.486
+solver finished after 0.696537 seconds.
+Solver iteration statistics:
+total number of steps:        1000
+total number of Newton iterations: 13486
+total number of Newton Jacobians:  13486
+
+
+****************************************** 
+EXAMPLE 17 ("basicTutorial2024.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP500, t = 10s, timeToGo = 0s, Nit/step = 1.996
+solver finished after 0.0034084 seconds.
+
+
+****************************************** 
+EXAMPLE 18 ("beamTutorial.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP2000, t = 10s, timeToGo = 0s, Nit/step = 6.799
+solver finished after 0.936422 seconds.
+
+
+****************************************** 
+EXAMPLE 19 ("beltDriveALE.py"): 
+****************************************** 
+preStretch= -0.05 
+Reeving system total length= 1.2566370614359172 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: nonlinear static solver
+STEP10, factor = 1, timeToGo = 0s, Nit/step = 3.7
+solver finished after 0.175204 seconds.
+Solver iteration statistics:
+total number of steps:        10
+total number of Newton iterations: 37
+total number of Newton Jacobians:  37
+Force x in support of left pulley =  -798.0398607085998 
+Belt pre-tension= -400.0 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP2760, t = 0.0345s, dt = 1.25e-05s, timeToGo = 140.043s, tCPU=2.0002s, Nit/step = 1.00399, jac/step = 0.000724638, Dit/step = 1.00072
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP5136, t = 0.0642s, dt = 1.25e-05s, timeToGo = 148.663s, tCPU=4.00039s, Nit/step = 1.383, jac/step = 0, Dit/step = 1
+STEP5137 (stopped), t = 0.0642s, tCPU=4.00041s, Nit/step = 1.17909 Dit/step = 1.00019 jac/step = 0.000389332
+solver stopped by user after 3.99773 seconds.
+Solver iteration statistics:
+total number of steps:        5136
+total number of Newton iterations: 6057
+total number of Newton Jacobians:  2
+
+
+****************************************** 
+EXAMPLE 20 ("beltDriveReevingSystem.py"): 
+****************************************** 
+factorStriplen = 0.9756038058062941 
+preStretch= -0.05 
+Reeving system total length= 1.2566370614359172 
+cFact= 0.00020943951023931953 , lElem= 0.005235987755982988 
+auto computed searchTree box={[-0.09995,-0.09995,-0.09995], [0.414109,0.09995,0.09995]}
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: nonlinear static solver
+STEP10, factor = 1, timeToGo = 0s, Nit/step = 4.6
+solver finished after 0.332233 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.332 seconds
+  measured time= 0.338 seconds (=102%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 27.1%
+  newtonIncrement   = 0.956%
+  ODE2RHS           = 7.9%
+  ODE1RHS           = 0.00151%
+  AERHS             = 0.0255%
+  totalJacobian     = 53.3%
+  __jacobianODE2    = 52.4%
+  __jacobianODE1    = 0.00228%
+  __jacobianAE      = 0.0329%
+  massMatrix        = 2.68%
+  reactionForces    = 0.0266%
+  postNewton    = 1.42%
+  writeSolution     = 6.56%
+  overhead          = 0.00578%
+  visualization/user= 0.000563%
+special timers:
+  Contact:BoundingBoxes = 9.844e-05s
+  Contact:SearchTree = 1.529e-05s
+  Contact:ODE2RHS = 0.00010062s
+  Contact:Jacobian = 8.463e-05s
+  Contact:PostNewton = 8.279e-05s
+
+Solver iteration statistics:
+total number of steps:        10
+total number of Newton iterations: 46
+total number of Newton Jacobians:  46
+Force x in support of left pulley =  -799.8095344652288 
+Belt pre-tension= -400.0 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP652, t = 0.0652s, dt = 0.0001s, timeToGo = 73.2327s, tCPU=2.00217s, Nit/step = 4.62117, jac/step = 0.00460123, Dit/step = 1.0092
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP1082, t = 0.1082s, dt = 0.0001s, timeToGo = 86.9034s, tCPU=4.01525s, Nit/step = 7.59302, jac/step = 0.0139535, Dit/step = 1.08605
+STEP1083 (stopped), t = 0.1082s, tCPU=4.01527s, Nit/step = 5.79686 Dit/step = 1.03878 jac/step = 0.00831025
+solver stopped by user after 4.01314 seconds.
+====================
+CPU-time statistics:
+  total time   = 4.01 seconds
+  measured time= 4 seconds (=99.6%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 0.402%
+  newtonIncrement   = 8.74%
+  integrationFormula= 0.119%
+  ODE2RHS           = 74.8%
+  ODE1RHS           = 0.00396%
+  AERHS             = 0.193%
+  totalJacobian     = 1.52%
+  __jacobianODE2    = 1.51%
+  __jacobianODE1    = 0.000123%
+  __jacobianAE      = 0.000863%
+  massMatrix        = 0.00786%
+  reactionForces    = 0.158%
+  postNewton    = 7.48%
+  writeSolution     = 6.61%
+  overhead          = 0.00293%
+  visualization/user= 0.0015%
+special timers:
+  Contact:BoundingBoxes = 0.0030085s
+  Contact:SearchTree = 0.00082777s
+  Contact:ODE2RHS = 0.004463s
+  Contact:Jacobian = 3.5295e-05s
+  Contact:PostNewton = 0.0035108s
+
+Solver iteration statistics:
+total number of steps:        1082
+total number of Newton iterations: 6278
+total number of Newton Jacobians:  9
+WARNING: implicit second order time integration detected large amount (211229) of memory allocations, which seem to occur in every time step; this may be due to user functions; solver may be slow 
+
+
+****************************************** 
+EXAMPLE 21 ("beltDrivesComparison.py"): 
+****************************************** 
+Reeving system total length= 2.7707963267948967 
+Reeving system total length= 3.2192320682037225 
+Reeving system total length= 2.4042343525924075 
+Reeving system total length= 2.4249719169160286 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: nonlinear static solver
+STEP10, factor = 1, timeToGo = 0s, Nit/step = 9.9
+solver finished after 1.04333 seconds.
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+  Solve steps: adaptive increase to step size = 0.00025 due to fast convergence, time = 0.00125
+STEP64, t = 0.01475s, timeToGo = 2711.44s, tCPU=2.00116s, Nit/step = 6.90625, Dit/step = 1.03125
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP328, t = 0.08075s, timeToGo = 989.022s, tCPU=4.00935s, Nit/step = 4.93182, Dit/step = 1
+STEP329 (stopped), t = 0.08075s, tCPU=4.00937s, Nit/step = 5.30091
+solver stopped by user after 4.00682 seconds.
+
+
+****************************************** 
+EXAMPLE 22 ("bicycleIftommBenchmark.py"): 
+****************************************** 
+pR= [0.  0.  0.3] 
+pB1= [0.  0.  0.3] 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP5000, t = 5s, timeToGo = 0s, Nit/step = 6.937
+solver finished after 0.593114 seconds.
+
+
+****************************************** 
+EXAMPLE 23 ("bungeeJump.py"): 
+****************************************** 
+Reeving system total length= 81.57079632679489 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: nonlinear static solver
+STEP10, factor = 1, timeToGo = 0s, Nit/step = 4.7
+solver finished after 0.041819 seconds.
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+
+Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP311\Lib\site-packages\exudyn-1.9.0-py3.11-win-amd64.egg\exudyn\solver.py', line 250]: 
+Generalized alpha: initial accelerations due to initial velocities can only be computed in dense matrix mode!
+
+STEP1863, t = 3.726s, timeToGo = 14.105s, Nit/step = 7.64466
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP3292, t = 6.584s, timeToGo = 14.2265s, Nit/step = 8.38628
+STEP3293 (stopped), t = 6.584s, tCPU=4.00016s, Nit/step = 7.96417
+solver stopped by user after 3.99946 seconds.
+
+
+****************************************** 
+EXAMPLE 24 ("cartesianSpringDamper.py"): 
+****************************************** 
+refSol= 0.01183198678754692 
+error exact-numerical= -2.9177910088051817e-12 
+
+
+****************************************** 
+EXAMPLE 25 ("cartesianSpringDamperUserFunction.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: explicit time integration (ExplicitMidpoint)
+STEP68106, t = 0.68106s, timeToGo = 3.87323s, Nit/step = 0
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP129364, t = 1.29364s, timeToGo = 2.18412s, Nit/step = 0
+STEP129365 (stopped), t = 1.29364s, tCPU=4.00004s, Nit/step = 0
+solver stopped by user after 4.00004 seconds.
+u= [0.69751376 0.         0.        ] 
+
+
+****************************************** 
+EXAMPLE 26 ("chatGPTupdate.py"): 
+****************************************** 
+
+
+****************************************** 
+EXAMPLE 27 ("chatGPTupdate2.py"): 
+****************************************** 
+
+
+****************************************** 
+EXAMPLE 28 ("CMSexampleCourse.py"): 
+****************************************** 
+number of nodes =  6179 
+pMid= [0.125, 0.010142135623730952, -0.01] , nMid= 426 
+pTip= [0.266, 0, -0.01] , nTip= 477 
+compute modes...  
+computation of modes needed 1.237 seconds 
+eigen freq.= [107.2385878  108.12996635 281.01268201 281.57534357 398.95235853
+ 502.251668   516.06753408 598.71419584] 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP336, t = 0.336s, timeToGo = 9.91162s, Nit/step = 5.79167
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP667, t = 0.667s, timeToGo = 7.99894s, Nit/step = 5.86707
+STEP668 (stopped), t = 0.667s, tCPU=4.00253s, Nit/step = 5.82036
+solver stopped by user after 4.00188 seconds.
+====================
+CPU-time statistics:
+  total time   = 4 seconds
+  measured time= 4 seconds (=99.9%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 0.0398%
+  newtonIncrement   = 0.0984%
+  integrationFormula= 0.0156%
+  ODE2RHS           = 1.34%
+  ODE1RHS           = 0.00337%
+  AERHS             = 31.8%
+  totalJacobian     = 2.03%
+  __jacobianODE2    = 0.878%
+  __jacobianODE1    = 0.00046%
+  __jacobianAE      = 1.15%
+  massMatrix        = 0.896%
+  reactionForces    = 62.6%
+  writeSolution     = 1.21%
+  overhead          = 0.00222%
+  visualization/user= 0.000875%
+nModes= 8 , mid displacement= [-2.15217255e-01 -1.14020454e-01  2.39368055e-05] 
+
+
+****************************************** 
+EXAMPLE 29 ("ComputeSensitivitiesExample.py"): 
+****************************************** 
+--- 0.015629053115844727 seconds --- 
+
+
+****************************************** 
+EXAMPLE 30 ("coordinateSpringDamper.py"): 
+****************************************** 
+EXUDYN version=1.9.0 
+static value = 0.02 
+<systemData: 
+  Number of nodes= 2
+  Number of objects = 5
+  Number of markers = 4
+  Number of loads = 1
+  Number of sensors = 0
+  Number of ODE2 coordinates = 0
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 0
+  Number of data coordinates   = 0
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
+error cartesianSpringDamper= -4.884981308350689e-15 
+refSol= 0.01183198678754692 
+error exact-numerical= -2.9466195147348495e-06 
+
+
+****************************************** 
+EXAMPLE 31 ("craneReevingSystem.py"): 
+****************************************** 
+EArope= 1963495.4084936208 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+Start multi-threading with 4 threads
+STEP10542, t = 10.542s, timeToGo = 13.1778s, Nit/step = 5.47183
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP20865, t = 20.865s, timeToGo = 11.3372s, Nit/step = 5.23172
+STEP20866 (stopped), t = 20.865s, tCPU=4.00018s, Nit/step = 5.35277
+solver stopped by user after 4.00007 seconds.
+====================
+CPU-time statistics:
+  total time   = 4 seconds
+  measured time= 3.93 seconds (=98.3%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 0.0333%
+  newtonIncrement   = 16.1%
+  integrationFormula= 0.421%
+  ODE2RHS           = 51.6%
+  ODE1RHS           = 0.111%
+  AERHS             = 4.88%
+  totalJacobian     = 0.212%
+  __jacobianODE2    = 0.207%
+  __jacobianODE1    = 0.000145%
+  __jacobianAE      = 0.0032%
+  massMatrix        = 5.96%
+  reactionForces    = 18.6%
+  Python          = 1.66%
+  writeSolution     = 0.411%
+  overhead          = 0.0354%
+  visualization/user= 0.0191%
+Stop multi-threading
+
+
+****************************************** 
+EXAMPLE 32 ("dispyParameterVariationExample.py"): 
+****************************************** 
+your hostname is:  c850-lt-0670 
+--- 4.442664861679077 seconds --- 
+
+
+****************************************** 
+EXAMPLE 33 ("doublePendulum2D.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP1989, t = 1.989s, timeToGo = 8.06674s, Nit/step = 1.98492
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP3994, t = 3.994s, timeToGo = 6.02681s, Nit/step = 2
+STEP3995 (stopped), t = 3.994s, tCPU=4.00785s, Nit/step = 1.99199
+solver stopped by user after 4.00782 seconds.
+
+
+****************************************** 
+EXAMPLE 34 ("finiteSegmentMethod.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP1006, t = 1.006s, timeToGo = 5.95503s, Nit/step = 6.15507
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP1961, t = 1.961s, timeToGo = 4.16268s, Nit/step = 6.65445
+STEP1962 (stopped), t = 1.961s, tCPU=4.00345s, Nit/step = 6.39501
+solver stopped by user after 4.00218 seconds.
+Solver iteration statistics:
+total number of steps:        1961
+total number of Newton iterations: 12547
+total number of Newton Jacobians:  151
+
+
+****************************************** 
+EXAMPLE 35 ("flexiblePendulumANCF.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+Start multi-threading with 4 threads
+STEP27982, t = 2.7982s, timeToGo = 0.144241s, Nit/step = 6.02251
+STEP30000, t = 3s, timeToGo = 0s, Nit/step = 5.11001
+solver finished after 2.12425 seconds.
+Solver iteration statistics:
+total number of steps:        30000
+total number of Newton iterations: 178834
+total number of Newton Jacobians:  91
+Stop multi-threading
+
+
+****************************************** 
+EXAMPLE 36 ("flexibleRotor3Dtest.py"): 
+****************************************** 
+EXUDYN version=1.9.0 
+resonance frequency (rad/s)= 28.284271247461902 
+[0. 0. 0. 0.] 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP10000, t = 30s, timeToGo = 0s, Nit/step = 8.9574
+solver finished after 0.81371 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.814 seconds
+  measured time= 0.794 seconds (=97.5%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 1.65%
+  newtonIncrement   = 2.45%
+  integrationFormula= 0.598%
+  ODE2RHS           = 46.6%
+  ODE1RHS           = 0.233%
+  AERHS             = 0.954%
+  totalJacobian     = 9.87%
+  __jacobianODE2    = 9.56%
+  __jacobianODE1    = 0.0266%
+  __jacobianAE      = 0.0771%
+  massMatrix        = 5.72%
+  reactionForces    = 1.2%
+  writeSolution     = 30.6%
+  overhead          = 0.0424%
+  visualization/user= 0.0264%
+Solver iteration statistics:
+total number of steps:        10000
+total number of Newton iterations: 89574
+total number of Newton Jacobians:  5139
+omega= [ 5.88216329e+01  7.10744547e-02 -5.85339645e-02] 
+
+
+****************************************** 
+EXAMPLE 37 ("fourBarMechanism3D.py"): 
+****************************************** 
+
+
+************************************************ 
+run four bar mechanism with case:
+  redundant constraints 
+************************************************ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+
+=========================================
+SYSTEM ERROR [file 'C:\Users\c8501009\Anaconda\envs\venvP311\Lib\site-packages\exudyn-1.9.0-py3.11-win-amd64.egg\exudyn\solver.py', line 250]: 
+CSolverBase::Newton: System Jacobian seems to be singular / not invertible!
+  time/load step #1217, time = 2.434
+  causing system equation number (coordinate number) = 45
+
+=========================================
+
+
+=========================================
+SYSTEM ERROR [file 'C:\Users\c8501009\Anaconda\envs\venvP311\Lib\site-packages\exudyn-1.9.0-py3.11-win-amd64.egg\exudyn\solver.py', line 250]: 
+EXUDYN raised internal error in 'CSolverBase::SolveSteps':
+Exudyn: parsing of Python file terminated due to system error
+=========================================
+
+
+******************************
+DYNAMIC SOLVER FAILED:
+  use showHints=True to show helpful information
+******************************
+The causing system equation 45 belongs to a algebraic variable (Lagrange multiplier)
+Potential object number(s) causing linear solver to fail: [7]
+    object 7, name='object7', type=JointGeneric
+ 
+
+
+************************************************ 
+run four bar mechanism with case:
+  redundant constraints with improved solver 
+************************************************ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+
+=========================================
+SYSTEM ERROR [file 'C:\Users\c8501009\Anaconda\envs\venvP311\Lib\site-packages\exudyn-1.9.0-py3.11-win-amd64.egg\exudyn\solver.py', line 250]: 
+CSolverBase::Newton: System Jacobian seems to be singular / not invertible!
+  time/load step #1217, time = 2.434
+  causing system equation number (coordinate number) = 45
+
+=========================================
+
+
+=========================================
+SYSTEM ERROR [file 'C:\Users\c8501009\Anaconda\envs\venvP311\Lib\site-packages\exudyn-1.9.0-py3.11-win-amd64.egg\exudyn\solver.py', line 250]: 
+EXUDYN raised internal error in 'CSolverBase::SolveSteps':
+Exudyn: parsing of Python file terminated due to system error
+=========================================
+
+
+******************************
+DYNAMIC SOLVER FAILED:
+  use showHints=True to show helpful information
+******************************
+The causing system equation 45 belongs to a algebraic variable (Lagrange multiplier)
+Potential object number(s) causing linear solver to fail: [7]
+    object 7, name='object7', type=JointGeneric
+ 
+
+
+************************************************ 
+run four bar mechanism with case:
+  non-redundant constraints 
+************************************************ 
+use non-redundant constraints for last joint: [1, 1, 0, 0, 0, 0] 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP5000, t = 10s, timeToGo = 0s, Nit/step = 6.2836
+solver finished after 0.333648 seconds.
+
+
+****************************************** 
+EXAMPLE 38 ("geneticOptimizationSliderCrank.py"): 
+****************************************** 
+
+
+****************************************** 
+EXAMPLE 39 ("graphicsDataExample.py"): 
+****************************************** 
+<systemData: 
+  Number of nodes= 1
+  Number of objects = 2
+  Number of markers = 0
+  Number of loads = 0
+  Number of sensors = 0
+  Number of ODE2 coordinates = 7
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 1
+  Number of data coordinates   = 0
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP101, t = 2.02s, timeToGo = 2011.5s, Nit/step = 2
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP201, t = 4.02s, timeToGo = 2000.18s, Nit/step = 2
+STEP202 (stopped), t = 4.02s, tCPU=4.02863s, Nit/step = 1.9901
+solver stopped by user after 4.02861 seconds.
+
+
+****************************************** 
+EXAMPLE 40 ("gyroStability.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP40000, t = 20s, timeToGo = 4.25929e-14s, Nit/step = 1.5205
+solver finished after 0.675448 seconds.
+omega 0 =  [ 4.99999982e+00  1.71951574e-03 -2.99996368e-04] 
+omega 1 =  [ 9.02633972e-04 -5.00000002e+00  9.51329111e-04] 
+omega 2 =  [-8.74797945e-04  1.12194375e-03  4.99999999e+00] 
+
+
+****************************************** 
+EXAMPLE 41 ("humanRobotInteraction.py"): 
+****************************************** 
+loading took 6.354092836380005 seconds 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP5000, t = 1.25s, timeToGo = 0s, Nit/step = 1.8524
+solver finished after 0.81656 seconds.
+
+
+****************************************** 
+EXAMPLE 42 ("HydraulicActuator2Arms.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP30000, t = 30s, timeToGo = 0s, Nit/step = 5.9571
+solver finished after 0.86816 seconds.
+Solver iteration statistics:
+total number of steps:        30000
+total number of Newton iterations: 178713
+total number of Newton Jacobians:  545
+
+
+****************************************** 
+EXAMPLE 43 ("HydraulicActuatorStaticInitialization.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: nonlinear static solver
+
+Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP311\Lib\site-packages\exudyn-1.9.0-py3.11-win-amd64.egg\exudyn\solver.py', line 166]: 
+StaticSolver: system contains ODE1 equations, which is untested
+
+STEP1, factor = 1, timeToGo = 0s, Nit/step = 1
+solver finished after 3.59e-05 seconds.
+Solver iteration statistics:
+total number of steps:        1
+total number of Newton iterations: 1
+total number of Newton Jacobians:  1
+initial force= 3329.6244112512154 
+sysODE1= [2000000. 2000000.] 
+p0,p1= 2332962.4411251214 2000000.0 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP1000, t = 1s, timeToGo = 0s, Nit/step = 3.746
+solver finished after 0.0121854 seconds.
+Solver iteration statistics:
+total number of steps:        1000
+total number of Newton iterations: 3746
+total number of Newton Jacobians:  5
+hydraulics C++: 
+pressures= [10234929.69414996  9748436.01882128] 
+velocity= [-0.00609557  0.00724805  0.        ] 
+
+
+****************************************** 
+EXAMPLE 44 ("HydraulicsUserFunction.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP400, t = 0.4s, timeToGo = 0s, Nit/step = 5.0475
+solver finished after 0.0614696 seconds.
+Solver iteration statistics:
+total number of steps:        400
+total number of Newton iterations: 2019
+total number of Newton Jacobians:  21
+rejected modified Newton steps:      1
+hydraulics user function: 
+pressures= [6443436.86191245 2988660.89290891] 
+velocity= [-0.00506709  0.20480679  0.        ] 
+
+
+****************************************** 
+EXAMPLE 45 ("interactiveTutorial.py"): 
+****************************************** 
+
+
+****************************************** 
+EXAMPLE 46 ("InverseKinematicsNumericalExample.py"): 
+****************************************** 
+success = False
+q = [-0.086 -3.025  1.59   3.006  1.571 -1.657] rad 
+
+
+****************************************** 
+EXAMPLE 47 ("kinematicTreeAndMBS.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: explicit time integration (ExplicitEuler)
+STEP100, t = 1s, timeToGo = 0s, Nit/step = 0
+solver finished after 0.0701449 seconds.
+joint angles = [-1.34104992 -0.04603818 -0.13745839 -0.49759959  0.7356457 ] , case   KT T66 
+joint angles = [-1.34104992 -0.04603818 -0.13745839 -0.49759959  0.7356457 ] , case   KT cpp 
+
+
+****************************************** 
+EXAMPLE 48 ("kinematicTreePendulum.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: explicit time integration (ExplicitMidpoint)
+STEP200001, t = 2000s, timeToGo = 0s, Nit/step = 0
+solver finished after 0.420417 seconds.
+
+
+****************************************** 
+EXAMPLE 49 ("lavalRotor2Dtest.py"): 
+****************************************** 
+EXUDYN version=1.9.0 
+resonance frequency = 7.957747154594767Hz 
+<systemData: 
+  Number of nodes= 2
+  Number of objects = 3
+  Number of markers = 6
+  Number of loads = 4
+  Number of sensors = 0
+  Number of ODE2 coordinates = 0
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 0
+  Number of data coordinates   = 0
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
+displacement= 0.012949179479174762 
+
+
+****************************************** 
+EXAMPLE 50 ("leggedRobot.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP7810, t = 1.56211s, timeToGo = 1.58517s, Nit/step = 3.04366
+  Newton (time/load step #11076): convergence failed after 25 iterations; relative error = 0.0219085, time = 2.21536
+  Solve steps: adaptive reduction to step size = 0.000100007, time = 2.21516
+  Newton (time/load step #11076): convergence failed after 25 iterations; relative error = 0.0526854, time = 2.21526
+  Solve steps: adaptive reduction to step size = 5.00036e-05, time = 2.21516
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP11649, t = 2.32747s, timeToGo = 0.81215s, Nit/step = 6.41417
+STEP11650 (stopped), t = 2.32747s, tCPU=4.00025s, Nit/step = 4.15408
+solver stopped by user after 4.00012 seconds.
+WARNING: implicit second order time integration detected large amount (501974) of memory allocations, which seem to occur in every time step; this may be due to user functions; solver may be slow 
+
+
+****************************************** 
+EXAMPLE 51 ("lugreFrictionODE1.py"): 
+****************************************** 
+EXUDYN version=1.9.0 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: explicit time integration (ODE23)
+STEP235733, t = 23.5732s, timeToGo = 0.121052s, Nit/step = 0
+STEP250001, t = 25s, timeToGo = 0s, Nit/step = 0
+solver finished after 2.11629 seconds.
+WARNING: explicit time integration (ODE23) detected large amount (2550055) of memory allocations, which seem to occur in every time step; this may be due to user functions; solver may be slow 
+
+
+****************************************** 
+EXAMPLE 52 ("lugreFrictionTest.py"): 
+****************************************** 
+EXUDYN version=1.9.0 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP42620, t = 21.31s, timeToGo = 0.346316s, Nit/step = 1.09045
+STEP50000, t = 25s, timeToGo = 1.20932e-12s, Nit/step = 1.01599
+solver finished after 2.34104 seconds.
+WARNING: implicit second order time integration detected large amount (1855663) of memory allocations, which seem to occur in every time step; this may be due to user functions; solver may be slow 
+coords1= [1.9088315731325838, 9.424605971329613e-06, 1.1816947970316562e-05] 
+
+
+****************************************** 
+EXAMPLE 53 ("massSpringFrictionInteractive.py"): 
+****************************************** 
+  ... "massSpringFrictionInteractive.py" skipped 
+
+
+****************************************** 
+EXAMPLE 54 ("minimizeExample.py"): 
+****************************************** 
+refval = 0.0 
+--- 5.5200724601745605 seconds --- 
+optimum parameters= {'mass': 1.5999925848742385, 'spring': 3999.9858732714056, 'force': 79.9997943483354} 
+minimum value= 5.3759821998619474e-09 
+
+
+****************************************** 
+EXAMPLE 55 ("mobileMecanumWheelRobotWithLidar.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+  Solve steps: adaptive reduction to step size = 0.0025, time = 3.17
+  Solve steps: adaptive reduction to step size = 0.00125, time = 3.1775
+  Solve steps: adaptive reduction to step size = 0.00125, time = 3.205
+  Solve steps: adaptive reduction to step size = 0.0025, time = 8.95875
+  Solve steps: adaptive reduction to step size = 0.0025, time = 8.98375
+  Solve steps: adaptive reduction to step size = 0.00125, time = 9.00125
+  Solve steps: adaptive reduction to step size = 0.00125, time = 9.01375
+  Solve steps: adaptive reduction to step size = 0.0025, time = 13.1313
+  Solve steps: adaptive reduction to step size = 0.00125, time = 13.1488
+  Solve steps: adaptive reduction to step size = 0.00125, time = 13.1613
+STEP3639, t = 16.7688s, timeToGo = 2.17528s, Nit/step = 11.3825
+  Solve steps: adaptive reduction to step size = 0.0025, time = 17.3888
+  Solve steps: adaptive reduction to step size = 0.0025, time = 17.4563
+  Solve steps: adaptive reduction to step size = 0.00125, time = 17.4588
+  Solve steps: adaptive reduction to step size = 0.0025, time = 21
+  Solve steps: adaptive reduction to step size = 0.00125, time = 21.0675
+  Solve steps: adaptive reduction to step size = 0.00125, time = 21.08
+  Solve steps: adaptive reduction to step size = 0.00125, time = 21.0925
+  Solve steps: adaptive reduction to step size = 0.00125, time = 21.105
+  Solve steps: adaptive reduction to step size = 0.00125, time = 21.1175
+  Solve steps: adaptive reduction to step size = 0.00125, time = 21.1313
+  Solve steps: adaptive reduction to step size = 0.0025, time = 25.265
+  Solve steps: adaptive reduction to step size = 0.00125, time = 25.275
+  Solve steps: adaptive reduction to step size = 0.0025, time = 25.315
+  Solve steps: adaptive reduction to step size = 0.00125, time = 25.315
+  Solve steps: adaptive reduction to step size = 0.00125, time = 25.3275
+  Solve steps: adaptive reduction to step size = 0.0025, time = 29.3175
+  Solve steps: adaptive reduction to step size = 0.0025, time = 29.3425
+  Solve steps: adaptive reduction to step size = 0.0025, time = 29.3975
+  Solve steps: adaptive reduction to step size = 0.00125, time = 29.3975
+  Solve steps: adaptive reduction to step size = 0.0025, time = 29.6212
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP7078, t = 32.3862s, timeToGo = 0.32346s, Nit/step = 13.3236
+STEP7079 (stopped), t = 32.3862s, tCPU=4.00026s, Nit/step = 12.3239
+solver stopped by user after 3.99869 seconds.
+WARNING: implicit second order time integration detected large amount (219704) of memory allocations, which seem to occur in every time step; this may be due to user functions; solver may be slow 
+
+
+****************************************** 
+EXAMPLE 56 ("mouseInteractionExample.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP2000, t = 2s, timeToGo = 2.79467h, Nit/step = 2.066
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP3993, t = 3.993s, timeToGo = 2.78168h, Nit/step = 2.2278
+STEP3994 (stopped), t = 3.993s, tCPU=4.00021s, Nit/step = 2.14622
+solver stopped by user after 3.99999 seconds.
+
+
+****************************************** 
+EXAMPLE 57 ("mpi4pyExample.py"): 
+****************************************** 
+parameter variation with MPI 
+--- 26.406333923339844 seconds --- 
+sum= 149311628802.25964 
+
+
+****************************************** 
+EXAMPLE 58 ("multiMbsTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP1997, t = 1.997s, timeToGo = 0.00301742s, Nit/step = 2.28793
+STEP2000, t = 2s, timeToGo = 1.09954e-13s, Nit/step = 2
+solver finished after 2.00897 seconds.
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP1991, t = 1.991s, timeToGo = 0.00904082s, Nit/step = 2.2888
+STEP2000, t = 2s, timeToGo = 1.09532e-13s, Nit/step = 2
+solver finished after 2.00125 seconds.
+
+
+****************************************** 
+EXAMPLE 59 ("multiprocessingTest.py"): 
+****************************************** 
+  ... "multiprocessingTest.py" skipped 
+
+
+****************************************** 
+EXAMPLE 60 ("myFirstExample.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP100, t = 1s, timeToGo = 0s, Nit/step = 1
+solver finished after 0.0003892 seconds.
+
+
+****************************************** 
+EXAMPLE 61 ("netgenSTLtest.py"): 
+****************************************** 
+  ... "netgenSTLtest.py" skipped 
+
+
+****************************************** 
+EXAMPLE 62 ("NGsolveCMStutorial.py"): 
+****************************************** 
+nNodes= 1209 
+compute eigen modes...  
+eigen modes computation needed 0.063 seconds 
+eigen freq.= [ 20.78646994  21.8350937   40.26467693  60.142412    60.98126209
+  97.19145887 112.03178578 133.31325086] 
+ComputePostProcessingModes ... (may take a while) 
+   ... needed 0.125 seconds 
+create CMS element ... 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP1517, t = 1.517s, timeToGo = 0.636861s, Nit/step = 6.12657
+STEP2000, t = 2s, timeToGo = 1.46236e-13s, Nit/step = 6.48447
+solver finished after 2.67161 seconds.
+====================
+CPU-time statistics:
+  total time   = 2.67 seconds
+  measured time= 2.67 seconds (=99.8%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 0.0963%
+  newtonIncrement   = 0.228%
+  integrationFormula= 0.044%
+  ODE2RHS           = 2.03%
+  ODE1RHS           = 0.0117%
+  AERHS             = 30.6%
+  totalJacobian     = 2.33%
+  __jacobianODE2    = 1.02%
+  __jacobianODE1    = 0.00104%
+  __jacobianAE      = 1.31%
+  massMatrix        = 1.56%
+  reactionForces    = 60.5%
+  writeSolution     = 2.57%
+  overhead          = 0.00365%
+  visualization/user= 0.0022%
+max von-Mises stress= 32631.425987392675 
+
+
+****************************************** 
+EXAMPLE 63 ("NGsolveCraigBampton.py"): 
+****************************************** 
+nNodes= 2435 
+compute HCB modes...  
+HCB modes needed 0.141 seconds 
+create CMS element ... 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP4000, t = 4s, timeToGo = 1.27133e-13s, Nit/step = 5.79275
+solver finished after 1.54322 seconds.
+====================
+CPU-time statistics:
+  total time   = 1.54 seconds
+  measured time= 1.53 seconds (=99.4%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 0.183%
+  newtonIncrement   = 0.786%
+  integrationFormula= 0.145%
+  ODE2RHS           = 7.13%
+  ODE1RHS           = 0.0414%
+  AERHS             = 27.3%
+  totalJacobian     = 2.89%
+  __jacobianODE2    = 2.18%
+  __jacobianODE1    = 0.00186%
+  __jacobianAE      = 0.699%
+  massMatrix        = 5.35%
+  reactionForces    = 54.2%
+  writeSolution     = 1.97%
+  overhead          = 0.0108%
+  visualization/user= 0.00729%
+nModes= 8 , tip displacement= -0.12117779837961984 
+
+
+****************************************** 
+EXAMPLE 64 ("NGsolveGeometry.py"): 
+****************************************** 
+
+
+****************************************** 
+EXAMPLE 65 ("NGsolveLinearFEM.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP4000, t = 2s, timeToGo = 1.03476e-13s, Nit/step = 1
+solver finished after 1.25436 seconds.
+====================
+CPU-time statistics:
+  total time   = 1.25 seconds
+  measured time= 1.24 seconds (=99.2%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 0.149%
+  newtonIncrement   = 11.4%
+  integrationFormula= 0.327%
+  ODE2RHS           = 44.4%
+  ODE1RHS           = 0.0157%
+  AERHS             = 7.81%
+  totalJacobian     = 3.71%
+  __jacobianODE2    = 3.7%
+  __jacobianODE1    = 4.82e-05%
+  __jacobianAE      = 0.00516%
+  massMatrix        = 0.00158%
+  reactionForces    = 32.2%
+  overhead          = 0.0144%
+  visualization/user= 0.0104%
+
+
+****************************************** 
+EXAMPLE 66 ("NGsolvePistonEngine.py"): 
+****************************************** 
+NGsolve mode computation needed 1.341 seconds 
+eigen freq. crank= [ 114.44732108  121.47810061  276.35830397  300.22563133  325.71787277
+  341.34015718  507.97944597  561.41122757  593.66061104  717.80772529
+  742.72693351  803.17974813  895.24347923  973.19217137  994.03839761
+ 1097.91728941 1185.04232582 1208.84575012 1245.50334629 1490.59190091] 
+ComputePostProcessingModes femCrank ...  
+--- 0.8434545993804932 seconds --- 
+ComputePostProcessingModes femConrod ...  
+--- 0.05379509925842285 seconds --- 
+ComputePostProcessingModes femPiston ...  
+--- 0.10980749130249023 seconds --- 
+
+total elapsed time= 6.256327400000373 
+totalFEcoordinates= 10197 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+
+Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP311\Lib\site-packages\exudyn-1.9.0-py3.11-win-amd64.egg\exudyn\solver.py', line 250]: 
+Generalized alpha: initial accelerations due to initial velocities can only be computed in dense matrix mode!
+
+STEP372, t = 0.0186s, timeToGo = 213.6s, Nit/step = 6.88172
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP748, t = 0.0374s, timeToGo = 210.113s, Nit/step = 6.99202
+STEP749 (stopped), t = 0.0374s, tCPU=4.00399s, Nit/step = 6.9279
+solver stopped by user after 4.0027 seconds.
+Solver iteration statistics:
+total number of steps:        748
+total number of Newton iterations: 5189
+total number of Newton Jacobians:  18
+
+
+****************************************** 
+EXAMPLE 67 ("NGsolvePostProcessingStresses.py"): 
+****************************************** 
+nNodes= 9645 
+ComputePostProcessingModes ... (may take a while) 
+--- 2.08854341506958 seconds --- 
+create CMS element ... 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP200, t = 0.05s, timeToGo = 0s, Nit/step = 3.57
+solver finished after 0.0267574 seconds.
+
+
+****************************************** 
+EXAMPLE 68 ("nMassOscillator.py"): 
+****************************************** 
+omegas (rad/s)= [ 3.55196817 10.59988786 17.48064098 24.08571395 30.31094082 36.05814605
+ 41.23669278 45.76491223 49.57139167 52.59610065 54.79133771 56.12248264] 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP1000, t = 5s, timeToGo = 0s, Nit/step = 1
+solver finished after 0.0149987 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.015 seconds
+  measured time= 0.0143 seconds (=95.6%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 0.0216%
+  newtonIncrement   = 1.46%
+  integrationFormula= 1.03%
+  ODE2RHS           = 72.2%
+  ODE1RHS           = 0.354%
+  AERHS             = 0.402%
+  totalJacobian     = 0.0872%
+  __jacobianODE2    = 0.0781%
+  __jacobianODE1    = 0.0014%
+  __jacobianAE      = 0.000698%
+  massMatrix        = 0.00349%
+  reactionForces    = 0.404%
+  writeSolution     = 23.6%
+  overhead          = 0.255%
+  visualization/user= 0.171%
+
+
+****************************************** 
+EXAMPLE 69 ("nMassOscillatorEigenmodes.py"): 
+****************************************** 
+  ... "nMassOscillatorEigenmodes.py" skipped 
+
+
+****************************************** 
+EXAMPLE 70 ("nMassOscillatorInteractive.py"): 
+****************************************** 
+  ... "nMassOscillatorInteractive.py" skipped 
+
+
+****************************************** 
+EXAMPLE 71 ("ObjectFFRFconvergenceTestBeam.py"): 
+****************************************** 
+nNodes= 1662 
+compute HCB modes...  
+eigen freq.= [  5.36954377   5.41547455  32.15443455  32.43005628  50.46889692
+  79.4108131   84.58654535  85.32818167 151.80297696 153.73075596] 
+HCB modes needed 0.172 seconds 
+create CMS element ... 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: nonlinear static solver
+STEP1, factor = 1, timeToGo = 0s, Nit/step = 1
+solver finished after 0.0004427 seconds.
+uTipNumerical= 0.014210346044474326 , uTipAnalytical= 0.014714999999999999 
+
+
+****************************************** 
+EXAMPLE 72 ("ObjectFFRFconvergenceTestHinge.py"): 
+****************************************** 
+nNodes= 1209 
+compute HCB single modes...  
+eigen freq.= [  3.27673798   3.71706498  22.76025596  27.74682258  28.31169627
+  63.67265336  74.64928474  77.5247489  136.13619933 144.06000243
+ 163.78155339 200.3786139  210.97213118 252.35895459 255.50822133
+ 307.84518158 315.62076781 338.40111557 376.88982918 404.61040154
+ 453.64022176 489.59490743 492.04975366 496.71836764 571.95671062
+ 580.57722926 620.68399189 654.77546313 657.21061345 666.45508818
+ 683.0183497  716.86890744] 
+HCB modes needed 0.158 seconds 
+create CMS element ... 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP4000, t = 1s, timeToGo = 5.51344e-14s, Nit/step = 1
+solver finished after 0.66914 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.669 seconds
+  measured time= 0.665 seconds (=99.4%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 0.00721%
+  newtonIncrement   = 1.36%
+  integrationFormula= 0.173%
+  ODE2RHS           = 65.4%
+  ODE1RHS           = 0.0313%
+  AERHS             = 0.0984%
+  totalJacobian     = 0.631%
+  __jacobianODE2    = 0.631%
+  __jacobianODE1    = 4.51e-05%
+  __jacobianAE      = 3.01e-05%
+  massMatrix        = 32.2%
+  reactionForces    = 0.123%
+  overhead          = 0.0296%
+  visualization/user= 0.0178%
+
+
+****************************************** 
+EXAMPLE 73 ("objectFFRFreducedOrderNetgen.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP368, t = 0.184s, timeToGo = 30.6096s, Nit/step = 5.5
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP707, t = 0.3535s, timeToGo = 29.959s, Nit/step = 6.70501
+STEP708 (stopped), t = 0.3535s, tCPU=4.00176s, Nit/step = 6.06921
+solver stopped by user after 4.00129 seconds.
+
+
+****************************************** 
+EXAMPLE 74 ("openAIgymInterfaceTest.py"): 
+****************************************** 
+  ... "openAIgymInterfaceTest.py" skipped 
+
+
+****************************************** 
+EXAMPLE 75 ("openAIgymNLinkAdvanced.py"): 
+****************************************** 
+  ... "openAIgymNLinkAdvanced.py" skipped 
+
+
+****************************************** 
+EXAMPLE 76 ("openAIgymNLinkContinuous.py"): 
+****************************************** 
+  ... "openAIgymNLinkContinuous.py" skipped 
+
+
+****************************************** 
+EXAMPLE 77 ("openAIgymTriplePendulum.py"): 
+****************************************** 
+  ... "openAIgymTriplePendulum.py" skipped 
+
+
+****************************************** 
+EXAMPLE 78 ("openVRengine.py"): 
+****************************************** 
+window size= [1024  768] (check that this is according to needs of Head Mounted Display) 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP998, t = 1.996s, timeToGo = 1.00175h, Nit/step = 3.18637
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP1999, t = 3.998s, timeToGo = 3598.39s, Nit/step = 3.42657
+STEP2000 (stopped), t = 3.998s, tCPU=4.00066s, Nit/step = 3.305
+solver stopped by user after 4.00066 seconds.
+
+
+****************************************** 
+EXAMPLE 79 ("parameterVariationExample.py"): 
+****************************************** 
+--- 0.3548715114593506 seconds --- 
+values[-1]= 3.8418270115121276 
+values2[-1]= 1.894320824564279 
+
+
+****************************************** 
+EXAMPLE 80 ("particleClusters.py"): 
+****************************************** 
+auto computed searchTree box={[-0.7,-0.6,-2.1], [11.5,11.5,2.1]}
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: explicit time integration (ExplicitEuler)
+Start multi-threading with 8 threads
+STEP1940, t = 0.194s, timeToGo = 8.30985s, Nit/step = 0
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP3657, t = 0.3657s, timeToGo = 6.93898s, Nit/step = 0
+STEP3658 (stopped), t = 0.3657s, tCPU=4.00061s, Nit/step = 0
+solver stopped by user after 3.99998 seconds.
+====================
+CPU-time statistics:
+  total time   = 4 seconds
+  measured time= 3.96 seconds (=98.9%) 
+  non-zero timer [__ sub-timer]:
+  newtonIncrement   = 2.03%
+  integrationFormula= 2.07%
+  ODE2RHS           = 95%
+  writeSolution     = 0.736%
+  overhead          = 0.195%
+  visualization/user= 0.00802%
+special timers:
+  Contact:BoundingBoxes = 0.84927s
+  Contact:SearchTree = 0.24601s
+  Contact:ODE2RHS = 3.552s
+
+Stop multi-threading
+p= [0.9697038191223364, 0.7118160321847197, -0.9291081958256692] 
+
+
+****************************************** 
+EXAMPLE 81 ("particlesSilo.py"): 
+****************************************** 
+start create: number of masses = 8000 
+create mass 0 
+auto computed searchTree box={[-3.35,-3.35,-0.125], [3.35,3.35,10.9848]}
+finish gContact 
+n spheres= 8000 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: explicit time integration (ExplicitEuler)
+Start multi-threading with 8 threads
+STEP140, t = 0.014s, timeToGo = 1.99399h, Nit/step = 0
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP298, t = 0.0298s, timeToGo = 1.86331h, Nit/step = 0
+STEP299 (stopped), t = 0.0298s, tCPU=4.00032s, Nit/step = 0
+solver stopped by user after 3.97391 seconds.
+====================
+CPU-time statistics:
+  total time   = 3.97 seconds
+  measured time= 3.85 seconds (=96.9%) 
+  non-zero timer [__ sub-timer]:
+  newtonIncrement   = 14.1%
+  integrationFormula= 3.28%
+  ODE2RHS           = 77.9%
+  writeSolution     = 3.89%
+  overhead          = 0.816%
+  visualization/user= 0.00165%
+special timers:
+  Contact:BoundingBoxes = 0.43476s
+  Contact:SearchTree = 0.65667s
+  Contact:ODE2RHS = 2.3423s
+
+Stop multi-threading
+
+
+****************************************** 
+EXAMPLE 82 ("particlesTest.py"): 
+****************************************** 
+start create: number of masses = 4000 
+create mass 0 
+finish create 
+
+Python WARNING [file '<string>', line 113]: 
+FinalizeContact(...): sphereMarkerBased: friction coefficients are != 0, but some sphere/circle markers contain position based markers (no orientation), which will not work as intended with friction!
+
+finish gContact 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: explicit time integration (ExplicitMidpoint)
+Start multi-threading with 8 threads
+STEP616, t = 0.308s, timeToGo = 128.042s, Nit/step = 0
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP1152, t = 0.576s, timeToGo = 135.001s, Nit/step = 0
+STEP1153 (stopped), t = 0.576s, tCPU=4.00332s, Nit/step = 0
+solver stopped by user after 3.99997 seconds.
+====================
+CPU-time statistics:
+  total time   = 4 seconds
+  measured time= 3.86 seconds (=96.4%) 
+  non-zero timer [__ sub-timer]:
+  newtonIncrement   = 10.7%
+  integrationFormula= 0.709%
+  ODE2RHS           = 73.3%
+  writeSolution     = 14.9%
+  overhead          = 0.429%
+  visualization/user= 0.00297%
+special timers:
+  Contact:BoundingBoxes = 0.80488s
+  Contact:SearchTree = 0.34997s
+  Contact:ODE2RHS = 1.9815s
+
+Stop multi-threading
+
+
+****************************************** 
+EXAMPLE 83 ("particlesTest3D.py"): 
+****************************************** 
+start create: number of masses = 8000 
+create mass 0 
+finish create 
+treesize= 80000 
+
+Python WARNING [file '<string>', line 161]: 
+FinalizeContact(...): sphereMarkerBased: friction coefficients are != 0, but some sphere/circle markers contain position based markers (no orientation), which will not work as intended with friction!
+
+finish gContact 
+start SolutionViewer 
+
+
+****************************************** 
+EXAMPLE 84 ("particlesTest3D2.py"): 
+****************************************** 
+start create: number of masses = 50000 
+create mass 0 
+create mass 20000 
+create mass 40000 
+finish create 
+treesize= 80000 
+
+Python WARNING [file '<string>', line 136]: 
+FinalizeContact(...): sphereMarkerBased: friction coefficients are != 0, but some sphere/circle markers contain position based markers (no orientation), which will not work as intended with friction!
+
+finish gContact 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: explicit time integration (ExplicitEuler)
+Start multi-threading with 4 threads
+STEP54, t = 0.00135s, timeToGo = 4.15659h, Nit/step = 0
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP112, t = 0.0028s, timeToGo = 3.99095h, Nit/step = 0
+STEP113 (stopped), t = 0.0028s, tCPU=4.02401s, Nit/step = 0
+solver stopped by user after 3.98171 seconds.
+====================
+CPU-time statistics:
+  total time   = 3.98 seconds
+  measured time= 3.89 seconds (=97.7%) 
+  non-zero timer [__ sub-timer]:
+  newtonIncrement   = 9.96%
+  integrationFormula= 0.322%
+  ODE2RHS           = 87.1%
+  writeSolution     = 2.35%
+  overhead          = 0.288%
+  visualization/user= 0.00046%
+special timers:
+  Contact:BoundingBoxes = 0.58879s
+  Contact:SearchTree = 0.24141s
+  Contact:ODE2RHS = 2.5664s
+
+Stop multi-threading
+
+
+****************************************** 
+EXAMPLE 85 ("pendulum.py"): 
+****************************************** 
+<systemData: 
+  Number of nodes= 1
+  Number of objects = 3
+  Number of markers = 2
+  Number of loads = 1
+  Number of sensors = 0
+  Number of ODE2 coordinates = 0
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 0
+  Number of data coordinates   = 0
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
+Linalg stats:
+  array_new_counts:   2247479
+  array_delete_counts:694747
+  vector_new_counts:   7324741
+  vector_delete_counts:7324671
+  matrix_new_counts:   159870
+  matrix_delete_counts:109346
+  linkedDataVec_counts:0
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP403143, t = 2015.72s, timeToGo = 19.8285s, Nit/step = 1.99857
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP826036, t = 4130.18s, timeToGo = 17.3066s, Nit/step = 1.99738
+STEP826037 (stopped), t = 4130.18s, tCPU=4.00001s, Nit/step = 1.99796
+solver stopped by user after 3.99998 seconds.
+====================
+CPU-time statistics:
+  total time   = 4 seconds
+  measured time= 3.42 seconds (=85.4%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 4.72%
+  newtonIncrement   = 1.73%
+  integrationFormula= 4%
+  ODE2RHS           = 41.1%
+  ODE1RHS           = 1.65%
+  AERHS             = 1.87%
+  totalJacobian     = 39.1%
+  __jacobianODE2    = 29.1%
+  __jacobianODE1    = 1.45%
+  __jacobianAE      = 1.2%
+  massMatrix        = 1.75%
+  reactionForces    = 1.88%
+  writeSolution     = 0.971%
+  overhead          = 0.677%
+  visualization/user= 0.535%
+Solver iteration statistics:
+total number of steps:        826036
+total number of Newton iterations: 1650386
+total number of Newton Jacobians:  1650386
+Linalg stats:
+  array_new_counts:   2247484
+  array_delete_counts:694749
+  vector_new_counts:   7324752
+  vector_delete_counts:7324673
+  matrix_new_counts:   159879
+  matrix_delete_counts:109346
+  linkedDataVec_counts:0
+
+
+****************************************** 
+EXAMPLE 86 ("pendulum2Dconstraint.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP1000000, t = 1000s, timeToGo = 0s, Nit/step = 1.97582
+solver finished after 1.87511 seconds.
+Solver iteration statistics:
+total number of steps:        1000000
+total number of Newton iterations: 1975819
+total number of Newton Jacobians:  1000000
+ODE2= 2 
+
+
+****************************************** 
+EXAMPLE 87 ("pendulumGeomExactBeam2D.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP2000, t = 5s, timeToGo = 0s, Nit/step = 8.1405
+solver finished after 0.258994 seconds.
+
+
+****************************************** 
+EXAMPLE 88 ("pendulumGeomExactBeam2Dsimple.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP400, t = 1s, timeToGo = 0s, Nit/step = 7.9825
+solver finished after 0.055441 seconds.
+
+
+****************************************** 
+EXAMPLE 89 ("pendulumIftommBenchmark.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP12500, t = 10s, timeToGo = 0s, Nit/step = 1.96392
+solver finished after 0.0247749 seconds.
+Solver iteration statistics:
+total number of steps:        12500
+total number of Newton iterations: 24549
+total number of Newton Jacobians:  12500
+
+
+****************************************** 
+EXAMPLE 90 ("pendulumVerify.py"): 
+****************************************** 
+mesh h= 2 
+V= 12800  (mm^3), mass= 0.03456 (kg) 
+tip displ (weight)= 0.2270314285714286 
+nNodes= 3563 
+compute HCB modes...  
+eigen freq.= [ 157.48242285  276.27176796  434.22188555  758.36071571  850.08705498
+ 1400.78383478 1479.28576832 2091.61884602 2431.28376444 2907.48968785] 
+HCB modes needed 0.268 seconds 
+create CMS element ... 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: nonlinear static solver
+STEP1, factor = 1, timeToGo = 0s, Nit/step = 1
+solver finished after 0.0005298 seconds.
+tip disp= [ 0.00272643 -0.20326075 -0.00199498] 
+
+
+****************************************** 
+EXAMPLE 91 ("performanceMultiThreadingNG.py"): 
+****************************************** 
+  ... "performanceMultiThreadingNG.py" skipped 
+
+
+****************************************** 
+EXAMPLE 92 ("pistonEngine.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP996, t = 1.992s, timeToGo = 40.7541s, Nit/step = 7.77209
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP1996, t = 3.992s, timeToGo = 38.6392s, Nit/step = 7.864
+STEP1997 (stopped), t = 3.992s, tCPU=4.00561s, Nit/step = 7.81422
+solver stopped by user after 4.00558 seconds.
+
+
+****************************************** 
+EXAMPLE 93 ("plotSensorExamples.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: explicit time integration (ExplicitEuler)
+STEP2000, t = 4s, timeToGo = 0s, Nit/step = 0
+solver finished after 0.0111347 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.0111 seconds
+  measured time= 0.0103 seconds (=92.5%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 16.3%
+  newtonIncrement   = 3.33%
+  integrationFormula= 0.987%
+  ODE2RHS           = 13.9%
+  massMatrix        = 12.9%
+  writeSolution     = 51.4%
+  overhead          = 0.843%
+  visualization/user= 0.353%
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP2000, t = 4s, timeToGo = 0s, Nit/step = 2
+solver finished after 0.0232757 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.0233 seconds
+  measured time= 0.0223 seconds (=95.7%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 7.31%
+  newtonIncrement   = 1.68%
+  integrationFormula= 1.24%
+  ODE2RHS           = 10.8%
+  ODE1RHS           = 0.471%
+  AERHS             = 0.556%
+  totalJacobian     = 45.6%
+  __jacobianODE2    = 41.2%
+  __jacobianODE1    = 0.43%
+  __jacobianAE      = 0.337%
+  massMatrix        = 10.1%
+  reactionForces    = 0.525%
+  writeSolution     = 21.4%
+  overhead          = 0.209%
+  visualization/user= 0.164%
+displacement= [0.51999887 0.         0.        ] 
+
+
+****************************************** 
+EXAMPLE 94 ("reevingSystem.py"): 
+****************************************** 
+Reeving system total length= 20.34528808903546 
+auto computed searchTree box={[-0.4,-1.4,-0.4], [5.4,1.4,0.4]}
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+  solution did not converge with full Newton
+  Solve steps: adaptive increase to step size = 0.0005 due to fast convergence, time = 0.06675
+  Solve steps: adaptive increase to step size = 0.001 due to fast convergence, time = 0.07175
+  Solve steps: adaptive increase to step size = 0.002 due to fast convergence, time = 0.08175
+STEP317, t = 0.14175s, timeToGo = 281.294s, Nit/step = 9.41009
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP465, t = 0.43775s, timeToGo = 179.117s, Nit/step = 13.0878
+STEP466 (stopped), t = 0.43775s, tCPU=4.00819s, Nit/step = 10.5579
+solver stopped by user after 4.00713 seconds.
+Solver iteration statistics:
+total number of steps:        465
+total number of Newton iterations: 4920
+total number of Newton Jacobians:  442
+rejected modified Newton steps:      7
+
+
+****************************************** 
+EXAMPLE 95 ("reevingSystemOpen.py"): 
+****************************************** 
+Reeving system total length= 12.080696804562574 
+auto computed searchTree box={[-0.45,-3,-0.45], [1.45,0.45,0.45]}
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+Start multi-threading with 4 threads
+STEP1079, t = 0.455s, timeToGo = 41.9863s, tCPU=2.00144s, Nit/step = 8.54958, jac/step = 1.96478
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP3017, t = 1.424s, timeToGo = 24.0953s, tCPU=4.00089s, Nit/step = 3.21001, jac/step = 1.01187
+STEP3018 (stopped), t = 1.424s, tCPU=4.00093s, Nit/step = 5.11796 Dit/step = 1.18091 jac/step = 1.35222
+solver stopped by user after 4.00059 seconds.
+Solver iteration statistics:
+total number of steps:        3017
+total number of Newton iterations: 15446
+total number of Newton Jacobians:  4081
+rejected modified Newton steps:      400
+Stop multi-threading
+
+
+****************************************** 
+EXAMPLE 96 ("reinforcementLearningRobot.py"): 
+****************************************** 
+  ... "reinforcementLearningRobot.py" skipped 
+
+
+****************************************** 
+EXAMPLE 97 ("rigid3Dexample.py"): 
+****************************************** 
+EXUDYN version=1.9.0 
+<systemData: 
+  Number of nodes= 20
+  Number of objects = 41
+  Number of markers = 61
+  Number of loads = 20
+  Number of sensors = 0
+  Number of ODE2 coordinates = 140
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 20
+  Number of data coordinates   = 0
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP5001, t = 10.002s, timeToGo = 5.99887s, Nit/step = 8.38832
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP9111, t = 18.222s, timeToGo = 4.78075s, Nit/step = 9.01387
+STEP9112 (stopped), t = 18.222s, tCPU=4.00013s, Nit/step = 8.66956
+solver stopped by user after 4 seconds.
+
+
+****************************************** 
+EXAMPLE 98 ("rigidBodyIMUtest.py"): 
+****************************************** 
+EXUDYN version=1.9.0 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP134249, t = 1.34249s, timeToGo = 3.95941s, Nit/step = 6.64865
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP269045, t = 2.69046s, timeToGo = 1.94695s, Nit/step = 6.92762
+STEP269046 (stopped), t = 2.69046s, tCPU=4.00002s, Nit/step = 6.78839
+solver stopped by user after 3.99997 seconds.
+
+
+****************************************** 
+EXAMPLE 99 ("rigidBodyTutorial.py"): 
+****************************************** 
+mass = 50.0
+COM = [0. 0. 0.]
+inertiaTensorAtOrigin = 
+[[0.08333333 0.         0.        ]
+ [0.         4.20833333 0.        ]
+ [0.         0.         4.20833333]]
+inertiaTensorAtCOM = 
+[[0.08333333 0.         0.        ]
+ [0.         4.20833333 0.        ]
+ [0.         0.         4.20833333]] 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP40000, t = 4s, timeToGo = 0s, Nit/step = 2.22
+solver finished after 0.518093 seconds.
+
+
+****************************************** 
+EXAMPLE 100 ("rigidBodyTutorial2.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP1992, t = 1.992s, timeToGo = 2.01621s, Nit/step = 2.50452
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP3992, t = 3.992s, timeToGo = 0.00801974s, Nit/step = 2.3785
+STEP3993 (stopped), t = 3.992s, tCPU=4.00185s, Nit/step = 2.44077
+solver stopped by user after 4.00182 seconds.
+
+
+****************************************** 
+EXAMPLE 101 ("rigidBodyTutorial3.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP4000, t = 4s, timeToGo = 0s, Nit/step = 2.38125
+solver finished after 0.1908 seconds.
+
+
+****************************************** 
+EXAMPLE 102 ("rigidBodyTutorial3withMarkers.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP4000, t = 4s, timeToGo = 1.76746e-14s, Nit/step = 2.38225
+solver finished after 0.214612 seconds.
+
+
+****************************************** 
+EXAMPLE 103 ("rigidPendulum.py"): 
+****************************************** 
+<systemData: 
+  Number of nodes= 1
+  Number of objects = 3
+  Number of markers = 3
+  Number of loads = 1
+  Number of sensors = 0
+  Number of ODE2 coordinates = 3
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 2
+  Number of data coordinates   = 0
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP463617, t = 927.234s, timeToGo = 2.31391s, Nit/step = 1.81364
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP915141, t = 1830.28s, timeToGo = 0.370912s, Nit/step = 1.814
+STEP915142 (stopped), t = 1830.28s, tCPU=4.00002s, Nit/step = 1.81381
+solver stopped by user after 4 seconds.
+Solver iteration statistics:
+total number of steps:        915141
+total number of Newton iterations: 1659897
+total number of Newton Jacobians:  1659897
+
+
+****************************************** 
+EXAMPLE 104 ("rigidRotor3DbasicBehaviour.py"): 
+****************************************** 
+EXUDYN version=1.9.0 
+symmetric rotor resonance frequency (Hz)= 4.501581580785531 
+omega intial (Hz)= 9.003163161571061 
+[ 0.         28.28427125  0.          0.        ] 
+omega final (Hz)= [9.00316316 0.         0.        ] 
+nc= [ 0.         -0.00778493  0.00249617 -1.39637515  0.91808863  0.
+  0.        ] 
+nc_t= [  0.          -0.14115708   0.12608409 -25.96746793 -11.21118233
+   0.           0.        ] 
+
+
+****************************************** 
+EXAMPLE 105 ("rigidRotor3DFWBW.py"): 
+****************************************** 
+EXUDYN version=1.9.0 
+symmetric rotor resonance frequency (Hz)= 4.501581580785531 
+[0. 0. 0. 0.] 
+omega final (Hz)= [2.26350835 0.         0.        ] 
+
+
+****************************************** 
+EXAMPLE 106 ("rigidRotor3Dnutation.py"): 
+****************************************** 
+EXUDYN version=1.9.0 
+resonance frequency (rad/s)= 89.44271909999159 
+[0.         4.47213595 0.         0.        ] 
+[0.3, 0.2, 0.1] 
+[0.3, 0.2, 0.1] 
+[0.3, 0.2, 0.1] 
+[0.3, 0.2, 0.1] 
+[0.3, 0.2, 0.1] 
+[0.3, 0.2, 0.1] 
+[0.3, 0.2, 0.1] 
+
+
+****************************************** 
+EXAMPLE 107 ("rigidRotor3Drunup.py"): 
+****************************************** 
+EXUDYN version=1.9.0 
+symmetric rotor resonance frequency (Hz)= 4.501581580785531 
+[0. 0. 0. 0.] 
+omega= [68.12699404  0.          0.        ] 
+
+
+****************************************** 
+EXAMPLE 108 ("ROSMassPoint.py"): 
+****************************************** 
+  ... "ROSMassPoint.py" skipped 
+
+
+****************************************** 
+EXAMPLE 109 ("ROSMobileManipulator.py"): 
+****************************************** 
+  ... "ROSMobileManipulator.py" skipped 
+
+
+****************************************** 
+EXAMPLE 110 ("ROSTurtle.py"): 
+****************************************** 
+  ... "ROSTurtle.py" skipped 
+
+
+****************************************** 
+EXAMPLE 111 ("serialRobotFlexible.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP1000, t = 2s, timeToGo = 0s, Nit/step = 6.224
+solver finished after 0.521039 seconds.
+Solver iteration statistics:
+total number of steps:        1000
+total number of Newton iterations: 6224
+total number of Newton Jacobians:  79
+torques at tEnd= 37.23143830136824 
+
+
+****************************************** 
+EXAMPLE 112 ("serialRobotInteractiveLimits.py"): 
+****************************************** 
+
+
+****************************************** 
+EXAMPLE 113 ("serialRobotInverseKinematics.py"): 
+****************************************** 
+
+Warning: use at least exudyn verion 1.6.31.dev1 
+You can install the latest development version with
+pip install -U exudyn --pre
+
+ 
+[q, success]= [None, False] 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP2500, t = 5s, timeToGo = 2.46114e-14s, Nit/step = 3.6424
+solver finished after 0.374455 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.374 seconds
+  measured time= 0.371 seconds (=99.2%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 0.00116%
+  newtonIncrement   = 0.145%
+  integrationFormula= 0.183%
+  ODE2RHS           = 5.99%
+  ODE1RHS           = 0.0623%
+  AERHS             = 0.0743%
+  totalJacobian     = 0.0314%
+  __jacobianODE2    = 0.0303%
+  __jacobianODE1    = 0.000458%
+  __jacobianAE      = 2.69e-05%
+  massMatrix        = 9.37%
+  reactionForces    = 0.0762%
+  Python          = 82.3%
+  writeSolution     = 1.73%
+  overhead          = 0.0215%
+  visualization/user= 0.0171%
+rotations at tEnd= 2.2168174951369775 , [ 0.67340818 -0.87627779  0.48795655  1.04443958  2.10666638 -1.21937541] 
+
+
+****************************************** 
+EXAMPLE 114 ("serialRobotKinematicTree.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP1250, t = 1.25s, timeToGo = 8.88068e-15s, Nit/step = 7.1128
+solver finished after 0.413143 seconds.
+Solver iteration statistics:
+total number of steps:        1250
+total number of Newton iterations: 8891
+total number of Newton Jacobians:  35
+rotations at tEnd= 2.865412213809964e-09 , [ 2.60731701e-09 -3.84487269e-10  3.84369310e-11  6.73555041e-10
+ -2.42116547e-10  1.72707047e-10] 
+torques at tEnd= -2.34972400605752e-05 , [-3.57294772e-05  8.60293419e-06  3.63553411e-06 -2.25713233e-08
+  1.69184023e-08 -5.78231924e-10] 
+
+
+****************************************** 
+EXAMPLE 115 ("serialRobotKinematicTreeDigging.py"): 
+****************************************** 
+tree cells x= 22 
+step size= 5e-05 
+LL= 1 ,npx= 22 ,r= 0.010528351648351648 
+create mass 0 
+create mass 20000 
+total particles added= 34425 
+trajectory cycle time= 3 
+auto computed searchTree box={[-1.01,-0.51,-0.37], [1.11,1.11,0.4865]}
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: explicit time integration (ExplicitEuler)
+Start multi-threading with 8 threads
+STEP106, t = 0.0053s, timeToGo = 21.0646h, tCPU=2.00962s
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP205, t = 0.01025s, timeToGo = 21.6834h, tCPU=4.00076s
+STEP206 (stopped), t = 0.01025s, tCPU=4.00081s
+solver stopped by user after 3.99979 seconds.
+Stop multi-threading
+
+
+****************************************** 
+EXAMPLE 116 ("serialRobotTSD.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP625, t = 1.25s, timeToGo = 0s, Nit/step = 7.6096
+solver finished after 0.537873 seconds.
+Solver iteration statistics:
+total number of steps:        625
+total number of Newton iterations: 4756
+total number of Newton Jacobians:  102
+torques at tEnd= 37.719241721242746 
+
+
+****************************************** 
+EXAMPLE 117 ("shapeOptimization.py"): 
+****************************************** 
+--- 54.265610694885254 seconds --- 
+[pOpt, vOpt]= [{'r0': 0.08209109719409513, 'r1': 0.09560913601775908, 'r2': 0.08647452430582106, 'x0': 0.2612207957492242, 'x1': 0.5889784249586816, 'x2': 0.830736764133332}, 40.0] 
+optimized eigenfrequency= -40.0 
+nNodes= 3287 
+total mass= 62.50469249044763 
+smallest Eigenfrequency= 87.4983737934892 
+create CMS element ... 
+
+
+****************************************** 
+EXAMPLE 118 ("simple4linkPendulumBing.py"): 
+****************************************** 
+
+
+****************************************** 
+EXAMPLE 119 ("simulateInteractively.py"): 
+****************************************** 
+resonance frequency = 7.957747154594767 
+
+
+****************************************** 
+EXAMPLE 120 ("SliderCrank.py"): 
+****************************************** 
+global ODE2 coordinate index of mass: 6 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP117374, t = 1.17374s, timeToGo = 1.40793s, Nit/step = 4.5697
+STEP200000, t = 2s, timeToGo = 0s, Nit/step = 5.22092
+solver finished after 3.53949 seconds.
+error errorSliderCrankIndex3= -0.8501728082240383 
+
+
+****************************************** 
+EXAMPLE 121 ("sliderCrank3DwithANCFbeltDrive.py"): 
+****************************************** 
+EXUDYN version=1.9.0 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP176, t = 0.176s, timeToGo = 21.497s, Nit/step = 3.01705
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP225, t = 0.225s, timeToGo = 31.999s, Nit/step = 9.12245
+STEP226 (stopped), t = 0.225s, tCPU=4.05621s, Nit/step = 4.32743
+solver stopped by user after 4.054 seconds.
+Solver iteration statistics:
+total number of steps:        225
+total number of Newton iterations: 978
+total number of Newton Jacobians:  978
+
+
+****************************************** 
+EXAMPLE 122 ("sliderCrank3DwithANCFbeltDrive2.py"): 
+****************************************** 
+Exudyn used: 1.9.0 
+Belt length:  1.476243077261245  and after preload force:  1.4024309233981826 
+epsilon:  -0.05 
+Belt length from element length sum:  1.4762430772612443 
+<systemData: 
+  Number of nodes= 157
+  Number of objects = 166
+  Number of markers = 69
+  Number of loads = 4
+  Number of sensors = 4
+  Number of ODE2 coordinates = 227
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 14
+  Number of data coordinates   = 2400
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
+
+
+****************************************** 
+EXAMPLE 123 ("slidercrankWithMassSpring.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: nonlinear static solver
+STEP1, factor = 1, timeToGo = 0s, Nit/step = 4
+solver finished after 0.0001023 seconds.
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP200, t = 1s, timeToGo = 0s, Nit/step = 2.91
+solver finished after 0.0118972 seconds.
+sol = 0.8678410490101576 
+solutionSliderCrankIndex2= 0.8678410490101576 
+
+
+****************************************** 
+EXAMPLE 124 ("solutionViewerMultipleSimulations.py"): 
+****************************************** 
+load= 207000.00000000003 , tip: x=-0.029414578870495357, y=-0.3119765402855648 
+load= 414000.00000000006 , tip: x=-0.10513769397044664, y=-0.5834049112852807 
+load= 621000.0000000001 , tip: x=-0.20295321408013348, y=-0.7989975789185887 
+load= 828000.0000000001 , tip: x=-0.30451067217706373, y=-0.9639240813280608 
+load= 1035000.0000000001 , tip: x=-0.40066225234205555, y=-1.0896034335180966 
+load= 1242000.0000000002 , tip: x=-0.48811989644690945, y=-1.1865181770080089 
+load= 1449000.0000000002 , tip: x=-0.5663795650292311, y=-1.2625814171281555 
+load= 1656000.0000000002 , tip: x=-0.6360514831190942, y=-1.3234136967717363 
+load= 1863000.0000000002 , tip: x=-0.6980979226574613, y=-1.3729536100851014 
+load= 2070000.0000000002 , tip: x=-0.7535159838633478, y=-1.413976183647619 
+load= 2277000.0000000005 , tip: x=-0.8032189423572828, y=-1.448462411084104 
+load= 2484000.0000000005 , tip: x=-0.848002037969052, y=-1.4778490813491745 
+load= 2691000.0000000005 , tip: x=-0.8885423140203605, y=-1.5031955575290101 
+load= 2898000.0000000005 , tip: x=-0.9254107507338549, y=-1.5252955376240986 
+load= 3105000.0000000005 , tip: x=-0.959087538463384, y=-1.5447527699730486 
+load= 3312000.0000000005 , tip: x=-0.9899768428829223, y=-1.562033067828677 
+load= 3519000.0000000005 , tip: x=-1.0184197957877983, y=-1.5775005796513413 
+load= 3726000.0000000005 , tip: x=-1.044705447518914, y=-1.591443462104227 
+load= 3933000.0000000005 , tip: x=-1.0690798112366247, y=-1.6040923177026851 
+load= 4140000.0000000005 , tip: x=-1.0917532585657086, y=-1.6156336207122974 
+load= 4347000.000000001 , tip: x=-1.1129065440523378, y=-1.6262196221684138 
+load= 4554000.000000001 , tip: x=-1.1326957108940732, y=-1.6359757476082906 
+load= 4761000.000000001 , tip: x=-1.1512560925126414, y=-1.645006186127725 
+load= 4968000.000000001 , tip: x=-1.1687055862670002, y=-1.6533981587021644 
+load= 5175000.000000001 , tip: x=-1.185147341625688, y=-1.6612252109216736 
+
+
+****************************************** 
+EXAMPLE 125 ("solutionViewerTest.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP970, t = 0.485s, timeToGo = 2.12407s, Nit/step = 7.21443
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP1601, t = 0.8005s, timeToGo = 0.997107s, Nit/step = 5.31854
+STEP1602 (stopped), t = 0.8005s, tCPU=4.00093s, Nit/step = 6.46317
+solver stopped by user after 3.99882 seconds.
+u0= [-1.55796629 -0.5578709   1.81863129] , rot0= [ 0.12516448 -0.00873749  0.33684577] 
+solution of addRevoluteJoint= 4.405216225304585 
+
+
+****************************************** 
+EXAMPLE 126 ("solverFunctionsTestEigenvalues.py"): 
+****************************************** 
+
+
+++++++++++++++++++++++++++
+Start EXUDYN version 1.9.0
+ 
+load f=129.37500000000003 
+EI=172.50000000000003 
+rhoA=0.78 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: nonlinear static solver
+eigvals= [-9.50102713e-07 -3.91354466e-07 -1.18132754e-07  6.91885658e+03
+  5.25731917e+04  2.02050446e+05  5.52136625e+05  1.23218280e+06
+  2.40394871e+06  4.26178341e+06  6.54810292e+06  7.03286417e+06
+  1.09775712e+07  1.63900307e+07  2.35988659e+07  2.61924117e+07
+  3.29681957e+07  4.48989194e+07  5.89329274e+07  5.98303241e+07
+  7.82420458e+07  1.00656403e+08  1.04769658e+08  1.27641110e+08
+  1.59812348e+08  1.63702639e+08  1.97838117e+08  2.35731979e+08
+  2.42441730e+08  2.94405128e+08  3.20857949e+08  3.54571418e+08
+  4.19081117e+08  4.23845421e+08  5.03189691e+08  5.30402543e+08
+  5.93610412e+08  6.54824034e+08  6.96119816e+08  7.92348454e+08
+  8.11639886e+08  9.40741676e+08  9.42980091e+08  1.08284638e+09
+  1.10672507e+09  1.23328211e+09  1.28359182e+09  1.37085679e+09
+  1.47359158e+09  1.67673893e+09  1.81576957e+09  1.89305240e+09
+  2.00684858e+09  2.12255514e+09  2.25813097e+09  2.36527557e+09
+  2.55164661e+09  2.62124823e+09  2.88473119e+09  2.89051465e+09
+  3.17312431e+09  3.25903307e+09  3.46913581e+09  3.67784667e+09
+  3.77861809e+09  4.10165183e+09  4.14539736e+09  4.43833073e+09
+  4.66662793e+09  4.78876249e+09  5.15306794e+09  5.24713949e+09
+  5.53137334e+09  5.89318384e+09  5.92377004e+09  6.33001006e+09
+  6.61166803e+09  6.71380293e+09  7.19254059e+09  7.41014916e+09
+  7.64388431e+09  8.11162892e+09  8.29680084e+09  8.59579310e+09
+  9.09684959e+09  9.28032991e+09  9.61542843e+09  1.01522860e+10
+  1.03698155e+10  1.07083077e+10  1.12845176e+10  1.15744333e+10
+  1.18820891e+10  1.25023520e+10  1.29030155e+10  1.31467945e+10
+  1.38170544e+10  1.43633835e+10  1.45148943e+10  1.52421533e+10
+  1.59613752e+10  1.60006640e+10  1.67921215e+10  1.76178867e+10
+  1.76994786e+10  1.84787025e+10  1.93742981e+10  1.95749858e+10
+  2.03028577e+10  2.12603332e+10  2.15776028e+10  2.22396012e+10
+  2.32295007e+10  2.36865216e+10  2.42138550e+10  2.51706806e+10
+  2.58670908e+10  2.60719076e+10  2.68840349e+10  2.75701373e+10
+  2.80674475e+10  2.80934200e+10  2.84220273e+10  3.02158009e+10
+  3.22195103e+10  3.39676474e+10  3.53392854e+10  3.62196618e+10
+  5.19642396e+10  5.19642397e+10  6.19403678e+10  6.19403678e+10] 
+omega numerical = [ 83.17966445 229.28844646 449.50021798 743.05896467] 
+omega analytical = [ 83.17963697 229.28787233 449.4959069  743.03956742] 
+
+
+****************************************** 
+EXAMPLE 127 ("SpringDamperMasspointSystem.py"): 
+****************************************** 
+EXUDYN version=1.9.0 
+499999 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: explicit time integration (ODE23)
+STEP12840, t = 0.1284s, timeToGo = 75.8826s, Nit/step = 0
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP25570, t = 0.255701s, timeToGo = 74.2168s, Nit/step = 0
+STEP25571 (stopped), t = 0.255701s, tCPU=4.00003s, Nit/step = 0
+solver stopped by user after 4.00001 seconds.
+====================
+CPU-time statistics:
+  total time   = 4 seconds
+  measured time= 3.97 seconds (=99.4%) 
+  non-zero timer [__ sub-timer]:
+  newtonIncrement   = 10.8%
+  integrationFormula= 0.243%
+  ODE2RHS           = 88.6%
+  errorEstimator    = 0.27%
+  overhead          = 0.0427%
+  visualization/user= 0.0181%
+
+
+****************************************** 
+EXAMPLE 128 ("SpringDamperMassUserFunction.py"): 
+****************************************** 
+<systemData: 
+  Number of nodes= 70
+  Number of objects = 235
+  Number of markers = 74
+  Number of loads = 69
+  Number of sensors = 0
+  Number of ODE2 coordinates = 138
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 0
+  Number of data coordinates   = 0
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: explicit time integration (ExplicitMidpoint)
+STEP14957, t = 149.57s, timeToGo = 0.674359s, Nit/step = 0
+STEP20000, t = 200s, timeToGo = 4.8788e-13s, Nit/step = 0
+solver finished after 2.64287 seconds.
+====================
+CPU-time statistics:
+  total time   = 2.64 seconds
+  measured time= 2.62 seconds (=99.3%) 
+  non-zero timer [__ sub-timer]:
+  newtonIncrement   = 3.07%
+  integrationFormula= 0.17%
+  ODE2RHS           = 96.7%
+  overhead          = 0.0606%
+  visualization/user= 0.0233%
+Solver iteration statistics:
+total number of steps:        20000
+total number of Newton iterations: 0
+total number of Newton Jacobians:  0
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: nonlinear static solver
+STEP1, factor = 1, timeToGo = 0s, Nit/step = 2
+solver finished after 0.0009456 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.000946 seconds
+  measured time= 0.000942 seconds (=99.6%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 37.3%
+  newtonIncrement   = 1.47%
+  ODE2RHS           = 14.4%
+  ODE1RHS           = 0.0106%
+  AERHS             = 0.0425%
+  totalJacobian     = 42.1%
+  __jacobianODE2    = 42%
+  __jacobianODE1    = 0.0106%
+  __jacobianAE      = 0.0425%
+  reactionForces    = 0.0425%
+  overhead          = 4.58%
+  visualization/user= 0.0212%
+Solver iteration statistics:
+total number of steps:        1
+total number of Newton iterations: 2
+total number of Newton Jacobians:  2
+static tip displacement (y)= -0.35098388837272965 
+
+
+****************************************** 
+EXAMPLE 129 ("springDamperTutorial.py"): 
+****************************************** 
+EXUDYN version=1.9.0; Python3.11.8; Windows AVX2 FLOAT64 
+resonance frequency = 50.0 
+static displacement = 0.02 
+<systemData: 
+  Number of nodes= 2
+  Number of objects = 2
+  Number of markers = 2
+  Number of loads = 1
+  Number of sensors = 1
+  Number of ODE2 coordinates = 0
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 0
+  Number of data coordinates   = 0
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP1000, t = 1s, timeToGo = 0s, Nit/step = 1
+solver finished after 0.0036957 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.0037 seconds
+  measured time= 0.00308 seconds (=83.5%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 3.2%
+  newtonIncrement   = 1.19%
+  integrationFormula= 4.29%
+  ODE2RHS           = 15%
+  ODE1RHS           = 1.58%
+  AERHS             = 1.72%
+  totalJacobian     = 14%
+  __jacobianODE2    = 6.88%
+  __jacobianODE1    = 1.03%
+  __jacobianAE      = 1.02%
+  massMatrix        = 1.18%
+  reactionForces    = 1.64%
+  writeSolution     = 54.3%
+  overhead          = 1.07%
+  visualization/user= 0.765%
+displacement= [0.51183493 0.         0.        ] 
+
+
+****************************************** 
+EXAMPLE 130 ("springDamperTutorialNew.py"): 
+****************************************** 
+EXUDYN version=1.9.0 
+resonance frequency = 50.0 
+static displacement = 0.02 
+<systemData: 
+  Number of nodes= 1
+  Number of objects = 3
+  Number of markers = 3
+  Number of loads = 1
+  Number of sensors = 2
+  Number of ODE2 coordinates = 0
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 0
+  Number of data coordinates   = 0
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
+displacement= [0.51183493 0.         0.        ] 
+
+
+****************************************** 
+EXAMPLE 131 ("springDamperUserFunctionNumbaJIT.py"): 
+****************************************** 
+running WITH JIT 
+EXUDYN version=1.9.0 
+resonance frequency = 50.0 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP239761, t = 11.988s, timeToGo = 6.34166s, Nit/step = 1.80434
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP444141, t = 22.2071s, timeToGo = 5.00618s, Nit/step = 1.89366
+STEP444142 (stopped), t = 22.2071s, tCPU=4.00003s, Nit/step = 1.84544
+solver stopped by user after 4 seconds.
+====================
+CPU-time statistics:
+  total time   = 4 seconds
+  measured time= 3.63 seconds (=90.7%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 1.93e-05%
+  newtonIncrement   = 1.08%
+  integrationFormula= 2.69%
+  ODE2RHS           = 92.2%
+  ODE1RHS           = 0.918%
+  AERHS             = 1.08%
+  totalJacobian     = 0.000984%
+  __jacobianODE2    = 0.000943%
+  __jacobianODE1    = 1.65e-05%
+  __jacobianAE      = 2.76e-06%
+  massMatrix        = 1.38e-05%
+  reactionForces    = 1.25%
+  overhead          = 0.413%
+  visualization/user= 0.343%
+Solver iteration statistics:
+total number of steps:        444141
+total number of Newton iterations: 819638
+total number of Newton Jacobians:  1
+displacement= 0.855449971660786 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP126385, t = 6.31925s, timeToGo = 13.8247s, Nit/step = 1.78194
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP447535, t = 22.3768s, timeToGo = 4.93787s, Nit/step = 1.8714
+STEP447536 (stopped), t = 22.3768s, tCPU=4.00002s, Nit/step = 1.84613
+solver stopped by user after 2.832 seconds.
+====================
+CPU-time statistics:
+  total time   = 2.83 seconds
+  measured time= 2.37 seconds (=83.8%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 2.95e-05%
+  newtonIncrement   = 1.92%
+  integrationFormula= 4.87%
+  ODE2RHS           = 86.1%
+  ODE1RHS           = 1.74%
+  AERHS             = 2.01%
+  totalJacobian     = 0.000657%
+  __jacobianODE2    = 0.000565%
+  __jacobianODE1    = 1.69e-05%
+  __jacobianAE      = 1.26e-05%
+  massMatrix        = 4.21e-05%
+  reactionForces    = 2.02%
+  overhead          = 0.766%
+  visualization/user= 0.619%
+Solver iteration statistics:
+total number of steps:        447535
+total number of Newton iterations: 826210
+total number of Newton Jacobians:  1
+JIT, displacement= 0.06301752692615109 
+
+
+****************************************** 
+EXAMPLE 132 ("springMassFriction.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: explicit time integration (ExplicitMidpoint)
+STEP10000, t = 1s, timeToGo = 0s, Nit/step = 0
+solver finished after 0.0923512 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.0924 seconds
+  measured time= 0.0864 seconds (=93.6%) 
+  non-zero timer [__ sub-timer]:
+  newtonIncrement   = 1.5%
+  integrationFormula= 1.51%
+  ODE2RHS           = 93.6%
+  writeSolution     = 2.48%
+  overhead          = 0.671%
+  visualization/user= 0.276%
+
+
+****************************************** 
+EXAMPLE 133 ("springsDeactivateConnectors.py"): 
+****************************************** 
+dynamic tip displacement (y)= -0.001999999999999995 
+
+
+****************************************** 
+EXAMPLE 134 ("SpringWithConstraints.py"): 
+****************************************** 
+<systemData: 
+  Number of nodes= 3
+  Number of objects = 6
+  Number of markers = 9
+  Number of loads = 1
+  Number of sensors = 0
+  Number of ODE2 coordinates = 6
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 5
+  Number of data coordinates   = 0
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: nonlinear static solver
+number of steps = 1
+start time = 0
+end time = 1
+minStepSize = 1e-08
+maxStepSize = 1
+adaptiveStep = 1
+*********************
+Static solver (1 load steps):
+*********************
+
+Start steps solving loop
+
+Write initial step to solution file and visualize ...
+STEP0, factor = 0, timeToGo = 0s
++++++++++++++++ STEP FINISHED ++++++++++++++
+
++++++++++++++++ COMPUTE STEP +++++++++++++++
+STEP1, factor = 1, step size = 1
+  START discontinuous iteration 0:
+Newton: initial residual = 10; goals: relTol=1e-08, absTol=1e-10
+  Newton: STEP 1:
+    systemResidual = [0,0,0,10,0,0,0,0,0,0,0]
+    update Jacobian: Jac    = [[-1000,0,0,1000,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,0,0,1,0],[0,0,0,0,0,0,0,0,0,0,1],[1000,0,0,-1000,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,1,0,0,0],[0,0,0,0,0,0,1,0,0,0,0],[0,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,1,0,0,0,0,0,0],[1,0,0,0,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0,0,0,0],[0,0,1,0,0,0,0,0,0,0,0]]
+    newtonIncrement = [0,0,0,-0.01,0,0,0,0,10,0,0]
+    ... compute new residual
+    NEWTON STEP 1: residual = 1.25607e-14: relTol = 1.25607e-15: contr. = 1.25607e-15
+    Newton solU         = [0,0,0,0.01,0,0]
+    Newton solData      = []
+    Newton solLambda    = [0,0,-10,0,0]
+    Newton RESIDUAL     = [8.88178e-15,0,0,-8.88178e-15,0,0,0,0,0,0,0]
+  Newton: converged after 1 steps; relative error = 1.25607e-15
+  PostNewton step: run with 8 threads
+  discontinuous iteration error = 0 (disc.it.=0, error goal = 1 ... REACHED)
+    disc.it. solU      = [0,0,0,0.01,0,0]
+    disc.it. solData   = []
+    disc.it. solLambda = [0,0,-10,0,0]
+STEP1, factor = 1, timeToGo = 0s, Nit/step = 1
++++++++++++++++ STEP FINISHED ++++++++++++++
+
+solver finished after 0.0001832 seconds.
+====================
+CPU-time statistics:
+  total time   = 0.000183 seconds
+  measured time= 0.000136 seconds (=74%) 
+  non-zero timer [__ sub-timer]:
+  factorization     = 1.92%
+  newtonIncrement   = 0.221%
+  ODE2RHS           = 4.06%
+  ODE1RHS           = 0.148%
+  AERHS             = 2.36%
+  totalJacobian     = 55.9%
+  __jacobianODE2    = 5.39%
+  __jacobianODE1    = 0.0738%
+  __jacobianAE      = 0.959%
+  reactionForces    = 1.7%
+  writeSolution     = 10.7%
+  overhead          = 22.9%
+  visualization/user= 0.0738%
+Solver iteration statistics:
+total number of steps:        1
+total number of Newton iterations: 1
+total number of Newton Jacobians:  1
+
+
+****************************************** 
+EXAMPLE 135 ("stiffFlyballGovernor2.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP15530, t = 0.310601s, timeToGo = 62.393s, Nit/step = 1.21938
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP25174, t = 0.503481s, timeToGo = 75.4478s, Nit/step = 2
+STEP25175 (stopped), t = 0.503481s, tCPU=4.00005s, Nit/step = 1.51837
+solver stopped by user after 3.99983 seconds.
+<SolverIterationData:
+SolverIterationData:
+  adaptiveStep = 1
+  automaticStepSize = 0
+  automaticStepSizeError = 0
+  currentStepIndex = 25175
+  currentStepSize = 2e-05
+  currentTime = 0.503481
+  discontinuousIteration = 1
+  discontinuousIterationsCount = 25174
+  endTime = 10
+  initialStepSize = 2e-05
+  lastStepSize = 2e-05
+  maxStepSize = 2e-05
+  minStepSize = 1e-08
+  newtonJacobiCount = 38225
+  newtonSteps = 2
+  newtonStepsCount = 38225
+  numberOfSteps = 499999
+  recommendedStepSize = -1
+  rejectedAutomaticStepSizeSteps = 0
+  rejectedModifiedNewtonSteps = 0
+  startTime = 0
+
+ > 
+solution of stiffFlyballGovernor= -0.5763602883049371 
+
+
+****************************************** 
+EXAMPLE 136 ("stiffFlyballGovernorKT.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP20000, t = 10s, timeToGo = 0s, Nit/step = 2.9152
+solver finished after 0.645722 seconds.
+Solver iteration statistics:
+total number of steps:        20000
+total number of Newton iterations: 58304
+total number of Newton Jacobians:  461
+velocity of slider= -0.7476025025635852 
+position of slider= 0.6196290867043189 
+
+
+****************************************** 
+EXAMPLE 137 ("stlFileImport.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP4000, t = 4s, timeToGo = 0s, Nit/step = 2.25875
+solver finished after 0.0848651 seconds.
+
+
+****************************************** 
+EXAMPLE 138 ("switchingConstraintsPendulum.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP4000, t = 2s, timeToGo = 0s, Nit/step = 1
+solver finished after 0.0303846 seconds.
+Solver iteration statistics:
+total number of steps:        4000
+total number of Newton iterations: 4000
+total number of Newton Jacobians:  4000
+end time = 1.9999999999998352 
+
+
+****************************************** 
+EXAMPLE 139 ("symbolicUserFunctionMasses.py"): 
+****************************************** 
+start simulation 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: explicit time integration (RK44)
+Start multi-threading with 8 threads
+STEP597, t = 0.2985s, timeToGo = 65.0965s, Nit/step = 0
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP1149, t = 0.5745s, timeToGo = 65.6541s, Nit/step = 0
+STEP1150 (stopped), t = 0.5745s, tCPU=4.00175s, Nit/step = 0
+solver stopped by user after 4.00133 seconds.
+Stop multi-threading
+finished:  3.996398448944092 seconds 
+
+
+****************************************** 
+EXAMPLE 140 ("TCPIPclientTest.py"): 
+****************************************** 
+  ... "TCPIPclientTest.py" skipped 
+
+
+****************************************** 
+EXAMPLE 141 ("TCPIPexudynMatlab.py"): 
+****************************************** 
+  ... "TCPIPexudynMatlab.py" skipped 
+
+
+****************************************** 
+EXAMPLE 142 ("TCPIPserverTest.py"): 
+****************************************** 
+  ... "TCPIPserverTest.py" skipped 
+
+
+****************************************** 
+EXAMPLE 143 ("testGymCartpole.py"): 
+****************************************** 
+  ... "testGymCartpole.py" skipped 
+
+
+****************************************** 
+EXAMPLE 144 ("testGymCartpoleEnv.py"): 
+****************************************** 
+  ... "testGymCartpoleEnv.py" skipped 
+
+
+****************************************** 
+EXAMPLE 145 ("testGymDoublePendulum.py"): 
+****************************************** 
+  ... "testGymDoublePendulum.py" skipped 
+
+
+****************************************** 
+EXAMPLE 146 ("testGymDoublePendulumEnv.py"): 
+****************************************** 
+  ... "testGymDoublePendulumEnv.py" skipped 
+
+
+****************************************** 
+EXAMPLE 147 ("tippeTop.py"): 
+****************************************** 
+auto computed searchTree box={[-2.5,-2.5,-0.04], [2.5,2.5,0.48]}
+<systemData: 
+  Number of nodes= 1
+  Number of objects = 2
+  Number of markers = 5
+  Number of loads = 1
+  Number of sensors = 0
+  Number of ODE2 coordinates = 6
+  Number of ODE1 coordinates = 0
+  Number of AE coordinates   = 0
+  Number of data coordinates   = 0
+
+For details see mbs.systemData, mbs.sys and mbs.variables
+>
+ 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: explicit time integration (ExplicitEuler)
+STEP200000, t = 40s, timeToGo = 3.02928e-12s, Nit/step = 0
+solver finished after 1.82087 seconds.
+Solver iteration statistics:
+total number of steps:        200000
+total number of Newton iterations: 0
+total number of Newton Jacobians:  0
+
+
+****************************************** 
+EXAMPLE 148 ("tutorialNeuralNetwork.py"): 
+****************************************** 
+
+
+****************************************** 
+EXAMPLE 149 ("universalJoint.py"): 
+****************************************** 
++++++++++++++++++++++++++++++++
+EXUDYN V1.9.0 solver: implicit second order time integration
+STEP401, t = 0.401012s, timeToGo = 29.4843s, Nit/step = 7.95012
+
+++++++++++++++++++++++++++++++
+exudyn.special.solver.timeout=4 seconds reached
+simulation receives stop signal
+
+STEP801, t = 0.801024s, timeToGo = 27.4769s, Nit/step = 8.0125
+STEP802 (stopped), t = 0.801024s, tCPU=4.01487s, Nit/step = 7.97132
+solver stopped by user after 4.01474 seconds.
+
+ 
+****************************************** 
+
+TEST EXAMPLES SUMMARY: 
+time elapsed = 455.207 seconds 
+ALL 150 Examples SUCCESSFUL 
+Skipped 21 examples 
+****************************************** 
