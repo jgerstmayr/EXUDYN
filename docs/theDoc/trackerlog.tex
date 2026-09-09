@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.7, 
+  \item Exudyn version = 1.11.8, 
   \item last change =  2026-09-09, 
-  \item Number of issues = 2358, 
-  \item Number of resolved issues = 2080 (7 in current version), 
+  \item Number of issues = 2359, 
+  \item Number of resolved issues = 2081 (8 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.8}:  resolved Issue 2358: {\bf Add .gitattributes for line endings and binary files}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: The repository had no .gitattributes, so line endings depended on each contributor core.autocrlf setting and generation under a different shell could produce whole-file diffs. All generation and building so far has been on Windows; CI will run on Linux. Normalise text to LF in the repository with native checkout, and mark binary types explicitly. Revision plan step 70.}
+    \item {\bf notes: Index was already fully LF-normalised so no renormalisation was introduced (git add --renormalize stages zero files). Two extension traps found: testData/rotorAnsys.rst is an ANSYS result file not reStructuredText, and *.eps/*.stl have ASCII variants so they are left to text=auto}
+    \item   date resolved: {\bf 2026-09-09 20:13},
+date raised: 2026-09-09 
+  \ei
   \item[] {\bf Version 1.11.7}:  resolved Issue 2357: {\bf Add tools/regenerate.py drift gate}
 (testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

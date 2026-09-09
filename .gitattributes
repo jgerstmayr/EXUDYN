@@ -1,0 +1,84 @@
+# Exudyn .gitattributes
+#
+# Line endings: text files are stored LF in the repository and checked out in the platform's
+# native form. All generation and building has happened on Windows so far, so this is what keeps
+# a generator run on Linux from producing whole-file diffs (revision plan step 70, fact 18).
+#
+# The index was already fully LF-normalised when this file was added (2003 text files), so it
+# introduced no renormalisation. If that ever changes, `git add --renormalize .` fixes it in one
+# reviewable commit.
+#
+# WARNING: do not add a blanket `*.rst text` rule.
+# main/pythonDev/TestModels/testData/rotorAnsys.rst is an ANSYS *result* file, not
+# reStructuredText — binary, with several hundred thousand NUL bytes. It is marked below.
+
+* text=auto
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Explicit end-of-line requirements
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# shell scripts must be LF or they fail under sh/bash, including in WSL and docker
+*.sh            text eol=lf
+
+# Windows batch files: CRLF avoids trouble with labels and goto on some shells
+*.bat           text eol=crlf
+*.cmd           text eol=crlf
+
+# Visual Studio writes and expects CRLF; VS2022 is the primary development environment
+*.sln           text eol=crlf
+*.vcxproj       text eol=crlf
+*.vcxproj.*     text eol=crlf
+*.pyproj        text eol=crlf
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Binary — never convert, never diff as text
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# ANSYS result files; note the .rst extension clash with reStructuredText
+main/pythonDev/TestModels/testData/*.rst    binary
+
+# images
+# NOTE: *.eps and *.stl are deliberately NOT listed. Both have ASCII variants —
+# docs/theDoc/figures/triangleNormal.eps is plain PostScript with no NUL bytes, and forcing
+# it binary would store its CRLFs and show a spurious 1197-byte change. text=auto detects
+# the binary variants (DOS-preview EPS, binary STL) correctly by their NUL bytes.
+*.png           binary
+*.PNG           binary
+*.jpg           binary
+*.jpeg          binary
+*.gif           binary
+*.bmp           binary
+*.ico           binary
+*.cdr           binary
+
+# documents and media
+*.pdf           binary
+*.mp4           binary
+*.avi           binary
+*.mov           binary
+
+# numerical and mesh data
+*.npy           binary
+*.npz           binary
+*.pkl           binary
+*.h5            binary
+*.hdf5          binary
+*.slx           binary
+
+# compiled artefacts
+*.lib           binary
+*.a             binary
+*.dll           binary
+*.dylib         binary
+*.so            binary
+*.pyd           binary
+*.pdb           binary
+*.obj           binary
+*.exe           binary
+*.zip           binary
+*.whl           binary
+
+# fonts
+*.ttf           binary
+*.otf           binary
+*.woff          binary
+*.woff2         binary

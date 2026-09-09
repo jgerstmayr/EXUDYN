@@ -19,15 +19,19 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.7, 
++  Exudyn version = 1.11.8, 
 +  last change =  2026-09-09, 
-+  Number of issues = 2358, 
-+  Number of resolved issues = 2080 (7 in current version), 
++  Number of issues = 2359, 
++  Number of resolved issues = 2081 (8 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.8: resolved Issue 2358: Add .gitattributes for line endings and binary files (fix)
+    - description:  The repository had no .gitattributes, so line endings depended on each contributor core.autocrlf setting and generation under a different shell could produce whole-file diffs. All generation and building so far has been on Windows; CI will run on Linux. Normalise text to LF in the repository with native checkout, and mark binary types explicitly. Revision plan step 70.
+    - **notes:** Index was already fully LF-normalised so no renormalisation was introduced (git add --renormalize stages zero files). Two extension traps found: testData/rotorAnsys.rst is an ANSYS result file not reStructuredText, and *.eps/*.stl have ASCII variants so they are left to text=auto
+    - date resolved: **2026-09-09 20:13**\ , date raised: 2026-09-09 
  * Version 1.11.7: resolved Issue 2357: Add tools/regenerate.py drift gate (testing)
     - description:  No automated check existed for whether the committed generated files still match what the generators produce, so generator drift was silent. Add tools/regenerate.py: runs the six generators from their required cwd and classifies differences against HEAD, Tier 1 hard fail and Tier 2 warning. Must compare with IsEqualIgnoringDateStrings rather than raw git status, because the last-modified line otherwise produces permanent phantom drift. Revision plan step 2; CI wiring still open.
     - **notes:** Verified by fault injection: perturbed generator input gives exit 1 with correct tier classification; hand edit to an already-dirty tier file gives exit 1; date-only difference gives exit 0

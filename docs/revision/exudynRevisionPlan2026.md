@@ -774,12 +774,28 @@ renumbered, so these continue the sequence rather than slotting into their phase
     exclusion list. Without that check the set silently rots again. Do this *before* step 40 wraps
     the suite in pytest, so the collector wraps a known-complete set.
 
-70. *(Phase 0/2)* **Add a `.gitattributes`.** The repository has none, so line endings depend on
-    each contributor's `core.autocrlf` and generators run under different shells produce spurious
-    whole-file diffs. Normalise text files to LF in the repository with CRLF checkout on Windows,
-    and mark the binary assets (`*.pdf`, `*.png`, `*.jpg`, `*.npy`, `*.hdf5`, `*.stl`) explicitly.
-    Cheap now; after Phase 2's flattening it would be one more confounding factor in a large
-    rename commit.
+70. **DONE 2026-09-09.** *(Phase 0/2)* **Add a `.gitattributes`.** `* text=auto` (LF in the
+    repository, native on checkout), explicit `eol=crlf` for `.bat`/`.cmd` and the VS project files,
+    `eol=lf` for `.sh`, and explicit `binary` for image, media, numerical and compiled types.
+
+    **It introduced no renormalisation**: the index was already fully LF-normalised — 2003 text
+    files at `i/lf`, 156 auto-detected binary, verified by `git add --renormalize .` staging zero
+    files. Doing this before Phase 2's flattening was the right order; afterwards it would have been
+    one more confounding factor inside a large rename commit.
+
+    Two extension traps found while writing it, both worth remembering:
+
+    - **`main/pythonDev/TestModels/testData/rotorAnsys.rst` is an ANSYS *result* file, not
+      reStructuredText** — 917 KB of binary with ~395k NUL bytes. A blanket `*.rst text` rule would
+      corrupt it. It is marked `binary` by path, and the file carries a warning comment.
+    - **`*.eps` and `*.stl` are deliberately *not* marked binary.** Both have ASCII variants:
+      `docs/theDoc/figures/triangleNormal.eps` is plain PostScript with no NUL bytes, and forcing
+      it binary made git want to store its 1197 CR bytes — a spurious change to a correctly stored
+      file. `text=auto` detects the genuinely binary variants (DOS-preview EPS, binary STL) by
+      their NUL bytes.
+
+    The general lesson, which applies to every rule added later: **an extension is not a format.**
+    Check for NUL bytes before forcing a type.
 
 71. **DONE 2026-09-09.** *(Phase 0, hard prerequisite for step 2)* **Give every generator write site
     an explicit `encoding='utf8'`**, and remove the four trailing spaces at
