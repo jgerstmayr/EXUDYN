@@ -107,3 +107,16 @@ docs/_build/
 Thumbs.db
 desktop.ini
 .DS_Store
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Maintainer tools
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Build/test batch scripts: still carry hard-coded local paths and stale
+# directory references. Committed only after the cleanup in revision plan
+# step 68 — remove this entry in that same commit.
+tools/buildAndGenerate/
+
+# Regenerated on every issueTracker write; the same content is tracked as
+# docs/RST/trackerlog.rst and docs/theDoc/trackerlog.tex
+tools/issueTracker/trackerlog.html
+tools/issueTracker/trackerlog_backup.txt

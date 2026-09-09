@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.3, 
+  \item Exudyn version = 1.11.4, 
   \item last change =  2026-09-09, 
-  \item Number of issues = 2354, 
-  \item Number of resolved issues = 2076 (3 in current version), 
+  \item Number of issues = 2355, 
+  \item Number of resolved issues = 2077 (4 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.4}:  resolved Issue 2354: {\bf Track tools/issueTracker in the repository}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: issueTracker.py and trackerlog.txt are the source of truth for the version number and the issue history but were local-only and never on GitHub. Commit them so the version derivation and the issue log live with the code. trackerlog.html and trackerlog\_backup.txt stay ignored as regenerated output. tools/buildAndGenerate stays ignored until the cleanup in revision plan step 68 because it still contains hard-coded local paths.}
+    \item {\bf notes: Scanned trackerlog.txt for step 10 first: no credentials, no email addresses, no absolute local paths}
+    \item   date resolved: {\bf 2026-09-09 18:47},
+date raised: 2026-09-09 
+  \ei
   \item[] {\bf Version 1.11.3}:  resolved Issue 2353: {\bf Reconcile GitHub Examples/TestModels with internal repository}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

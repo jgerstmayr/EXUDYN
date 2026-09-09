@@ -19,15 +19,19 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.3, 
++  Exudyn version = 1.11.4, 
 +  last change =  2026-09-09, 
-+  Number of issues = 2354, 
-+  Number of resolved issues = 2076 (3 in current version), 
++  Number of issues = 2355, 
++  Number of resolved issues = 2077 (4 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.4: resolved Issue 2354: Track tools/issueTracker in the repository (change)
+    - description:  issueTracker.py and trackerlog.txt are the source of truth for the version number and the issue history but were local-only and never on GitHub. Commit them so the version derivation and the issue log live with the code. trackerlog.html and trackerlog_backup.txt stay ignored as regenerated output. tools/buildAndGenerate stays ignored until the cleanup in revision plan step 68 because it still contains hard-coded local paths.
+    - **notes:** Scanned trackerlog.txt for step 10 first: no credentials, no email addresses, no absolute local paths
+    - date resolved: **2026-09-09 18:47**\ , date raised: 2026-09-09 
  * Version 1.11.3: resolved Issue 2353: Reconcile GitHub Examples/TestModels with internal repository (fix)
     - description:  The GitHub copies of main/pythonDev/Examples and TestModels had drifted from the internal repository through the old auto-copy; six Examples and five TestModels were stale or missing so the committed docs did not match a fresh regeneration. Reconciled both folders. Also pruned TestSuiteLogs/PerformanceLogs per the new retention policy (decision D7) and added the missing 1.11 and testExamples logs. Adjusted movingGroundRobotTest.py output scaling factor from 0.01 to 0.005 with updated reference value because its error sat too close to the global 5e-14 tolerance.
     - **notes:** Examples and TestModels now match the internal repository; a fresh regeneration produces no doc differences

@@ -690,8 +690,19 @@ renumbered, so these continue the sequence rather than slotting into their phase
     `C:\Users\c8501009\Anaconda\scripts\activate.bat`, and `execWithPythonVersion.bat` still ends
     with a `cd` into the long-gone `tools\makeWindowsBinaries\` — and add a README describing what
     each remaining script is for. Only then does step 54's `tools/release.py` absorb them; it must
-    port these scripts, not reimplement alongside them. `trackerlog.txt` carries seven years of
-    internal notes and falls under step 10's scan.
+    port these scripts, not reimplement alongside them.
+
+    **Until this step runs, `tools/buildAndGenerate/` stays out of the repository.** It is listed in
+    `.gitignore` with a pointer back here, so it neither clutters `git status` nor gets committed by
+    accident with the hard-coded local paths still in it. **Committing it is part of this step** —
+    remove the `.gitignore` entry at the same time as the cleanup, in the same commit.
+
+    `tools/issueTracker/` is the opposite case and was committed on 2026-09-09 despite this step
+    still being open, because it is *already in use* as the version source of truth (steps 65–67
+    will restructure it). Its `trackerlog.txt` was scanned for step 10 first: no credentials, no
+    email addresses, no absolute local paths. `trackerlog.html` and `trackerlog_backup.txt` are
+    regenerated on every tracker write and are ignored — `docs/RST/trackerlog.rst` and
+    `docs/theDoc/trackerlog.tex` already carry the same content in tracked form.
 
     Related: `generateSetupFile.py` existed internally to generate `setup.py` by extracting the
     `.cpp` file names. It is deliberately **not** brought into this repository — step 17's
