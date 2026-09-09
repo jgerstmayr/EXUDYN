@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.5, 
+  \item Exudyn version = 1.11.6, 
   \item last change =  2026-09-09, 
-  \item Number of issues = 2356, 
-  \item Number of resolved issues = 2078 (5 in current version), 
+  \item Number of issues = 2357, 
+  \item Number of resolved issues = 2079 (6 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.6}:  resolved Issue 2356: {\bf Golden file snapshot from a verified-current generated set}
+(testing)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: The archived golden files were taken at e44aca1, where the committed generated set was already stale and where generator output was still cp1252-corrupted. Re-cut the reference with git archive from the current commit so it is provably identical to committed content. Revision plan step 3.}
+    \item {\bf notes: goldenFiles\_V1.11.5\_910e2b5.zip, 871 files; full regeneration on that commit produces no drift, so the commit itself is the reference}
+    \item   date resolved: {\bf 2026-09-09 18:50},
+date raised: 2026-09-09 
+  \ei
   \item[] {\bf Version 1.11.5}:  resolved Issue 2355: {\bf Regeneration must run after ResolveIssue}
 (docu)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

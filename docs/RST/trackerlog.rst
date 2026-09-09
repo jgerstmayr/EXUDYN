@@ -19,15 +19,19 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.5, 
++  Exudyn version = 1.11.6, 
 +  last change =  2026-09-09, 
-+  Number of issues = 2356, 
-+  Number of resolved issues = 2078 (5 in current version), 
++  Number of issues = 2357, 
++  Number of resolved issues = 2079 (6 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.6: resolved Issue 2356: Golden file snapshot from a verified-current generated set (testing)
+    - description:  The archived golden files were taken at e44aca1, where the committed generated set was already stale and where generator output was still cp1252-corrupted. Re-cut the reference with git archive from the current commit so it is provably identical to committed content. Revision plan step 3.
+    - **notes:** goldenFiles_V1.11.5_910e2b5.zip, 871 files; full regeneration on that commit produces no drift, so the commit itself is the reference
+    - date resolved: **2026-09-09 18:50**\ , date raised: 2026-09-09 
  * Version 1.11.5: resolved Issue 2355: Regeneration must run after ResolveIssue (docu)
     - description:  ResolveIssue rewrites docs/theDoc/version.txt, but README.rst and docs/RST/Exudyn.rst embed the version string and are refreshed only by doc2rst.py. Regenerating before resolving leaves those two files one version behind, so the next drift check reports an unrelated change. Documented the required order in docs/dev/WORKFLOW.md and as a constraint on revision plan step 2.
     - **notes:** Gate order is now: resolve issue, then regenerate, then commit
