@@ -220,6 +220,22 @@ Windows, Linux and macOS and compare per-test `ERROR` values; anything varying b
 magnitude belongs there. Do not populate it by matching file names — contact/friction/eigen matches
 about a third of the suite and would gut the gate.
 
+### The third list: known platform differences
+
+`UnresolvedOnLinux()` holds tests that fail on Linux against the Windows reference values for a
+**reproducible** reason that has not been found yet — currently eight contact and friction models,
+measured 2026-09-10. They are excluded from the exit code **on Linux only**; on Windows they must
+still pass, since that is where the reference values come from. Marked `L` in the overview table,
+against `*` for sensitive.
+
+The distinction matters: sensitive tests are non-deterministic and can never be pinned down;
+these have a cause and are scheduled for investigation in revision plan **Phase 9, step 76**. The
+list should shrink, and every entry removed is a real fix — treat it as a debt register, not an
+exemption.
+
+`sphereTriangleTest.py` is in that list but is not like the others: reference 3.8226, Linux
+59370.97. Four orders of magnitude is a divergence, not an accuracy difference.
+
 ## 3. Commit tiers
 
 | tier | when | gates |

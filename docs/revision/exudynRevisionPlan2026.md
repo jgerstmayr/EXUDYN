@@ -8,7 +8,7 @@ and their reasons, and the step list.
   https://claude.ai/code/artifact/06487a25-4feb-4262-b2aa-fc8907640fa3
 - **Baseline commit**: `e44aca1` — "final commit for Exudyn1.11.0", 2026-08-05
 - **Analysis date**: 2026-09
-- **Scope**: 75 steps, 9 phases (steps 64–75 added 2026-09, see §5). Performance tuning is explicitly *out of scope*
+- **Scope**: 76 steps, 10 phases (steps 64–76 added 2026-09, see §5). Performance tuning is explicitly *out of scope*
   (deferred to a later phase); the two exceptions are the alignment fix (step 22) and the
   variant consolidation (step 23), which are correctness and packaging decisions.
 
@@ -462,7 +462,7 @@ step 33; until then the runner script must set cwd explicitly.
 
 ## 5. The plan — 63 steps
 
-Order: **Phase 0 → 2a → (1 + 2 together as v2.0) → 3 → 4 → 5 → 6 → 7 → 8.**
+Order: **Phase 0 → 2a → (1 + 2 together as v2.0) → 3 → 4 → 5 → 6 → 7 → 8 → 9.**
 
 ### Phase 0 — Freeze current behaviour (~1 week) — do first
 
@@ -977,6 +977,46 @@ renumbered, so these continue the sequence rather than slotting into their phase
     models get their own directory as well; a model used for both performance and TestModels moves
     to performance. Sequence with step 69 — a completeness check over a directory of models only
     is far simpler than one that must know which files to ignore.
+
+### Phase 9 — Deeper implementation problems (last)
+
+A holding phase for problems that are real, reproducible, and too deep to fix while the
+restructuring is in flight. They are recorded here rather than worked around silently, so the
+debt stays visible and each item can be closed on evidence.
+
+76. **Resolve the Windows/Linux differences in contact and friction models.** Measured 2026-09-10
+    on manylinux_2_28 / cp313 / numpy 2.4.6, against the Windows reference values (Linux tolerance
+    `3e-11`), relative error:
+
+    | test | relative error |
+    |---|---|
+    | `coordinateSpringDamperExt.py` | 3.4e-11 |
+    | `rigidBodySpringDamperIntrinsic.py` | 1.9e-10 |
+    | `rollingDiscTangentialForces.py` | 1.5e-09 |
+    | `contactSphereSphereTest.py` | 6.2e-09 |
+    | `sphereTriangleTest2.py` | 1.7e-05 |
+    | `generalContactCylinderTest.py` | 2.2e-05 |
+    | `generalContactFrictionTests.py` | 4.9e-04 |
+    | **`sphereTriangleTest.py`** | **1.6e+04** |
+
+    These are **reproducible**, which distinguishes them from the non-deterministic tests of
+    fact 24: they are not chaos, they are a difference with a cause that has not been found. The
+    spread suggests more than one cause — four sit just above a very tight tolerance and look like
+    ordinary floating-point divergence, three are 1e-5..1e-3 and are plausibly contact-state
+    decisions taken differently, and **`sphereTriangleTest.py` is in another category entirely**:
+    reference 3.8226, Linux 59370.97. Four orders of magnitude is a divergence or a blow-up, not
+    an accuracy difference, and it should be looked at first and separately.
+
+    Held in `UnresolvedOnLinux()` in `runTestSuiteRefSol.py`, excluded from the exit code **on
+    Linux only** — the reference values are the Windows ones, and Windows must keep passing them
+    (verified: 106/106 with the list active). Marked `L` in the per-test overview so a reader sees
+    why a failure did not fail the run. **The list should shrink; every entry removed is a real
+    fix.**
+
+    Note what this nearly cost: a file-name based sensitive-test list would have swept
+    `sphereTriangleTest.py` in with the chaotic contact tests, excluded it from the exit code
+    permanently, and hidden a four-order-of-magnitude divergence behind a policy decision. That is
+    the argument for populating these lists from measurement, restated as a concrete near miss.
 ---
 
 ## 6. Decisions taken

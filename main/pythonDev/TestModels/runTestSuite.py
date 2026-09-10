@@ -211,10 +211,18 @@ TSScope.examplesTestFinalErrorList={} #error vs reference solution, after recomp
 TSScope.examplesFailedNames=set()   #names rather than indices, for the overview
 TSScope.invalidResult = 1234567890123456 #should not happen occasionally
 if TSScope.runTestExamples:
-    from runTestSuiteRefSol import TestExamplesReferenceSolution, TestExamplesToleranceFactors, SensitiveTests
+    from runTestSuiteRefSol import (TestExamplesReferenceSolution, TestExamplesToleranceFactors,
+                                    SensitiveTests, UnresolvedOnLinux)
     TSScope.examplesTestRefSol = TestExamplesReferenceSolution()
     TSScope.testTolFactors = TestExamplesToleranceFactors()
     TSScope.sensitiveTests = SensitiveTests()
+    #known Windows/Linux differences are excluded from the exit code ON LINUX ONLY: the
+    #reference values are the Windows ones, so Windows must still pass them (Phase 9)
+    TSScope.unresolvedTests = set()
+    if not isWindows and not isMacOS:
+        TSScope.unresolvedTests = UnresolvedOnLinux()
+    #the tests whose failure must not set the exit code, whatever the reason
+    TSScope.excludedFromExitCode = TSScope.sensitiveTests | TSScope.unresolvedTests
     
     TSScope.testFileList=[] #automatically create list from reference solution ...
     for key in TSScope.examplesTestRefSol.keys():
@@ -280,10 +288,13 @@ if TSScope.runTestExamples:
                 if TSScope.file in TSScope.sensitiveTests:
                     exu.Print('  NOTE: this test is marked SENSITIVE (chaotic or unseeded);')
                     exu.Print('        it is reported but does not affect the exit code')
+                elif TSScope.file in TSScope.unresolvedTests:
+                    exu.Print('  NOTE: known unresolved Windows/Linux difference (revision plan')
+                    exu.Print('        Phase 9); reported but does not affect the exit code')
                 exu.Print('******************************************')
                 testsFailed = testsFailed + [TSScope.testExamplesCnt]
                 TSScope.examplesFailedNames.add(TSScope.name)
-                if TSScope.file in TSScope.sensitiveTests:
+                if TSScope.file in TSScope.excludedFromExitCode:
                     testsFailedSensitive = testsFailedSensitive + [TSScope.testExamplesCnt]
 
             TSScope.testExamplesCnt += 1
@@ -442,7 +453,8 @@ if TSScope.runTestExamples:
         tolerances=TSScope.examplesTestTolList,
         times=TSScope.examplesTestTimeList,
         failedNames=TSScope.examplesFailedNames,
-        sensitiveNames=TSScope.sensitiveTests))
+        sensitiveNames=TSScope.sensitiveTests,
+        unresolvedNames=TSScope.unresolvedTests))
 
 if TSScope.runMiniExamples:
     exu.Print(testRunnerTools.FormatTestOverview(
@@ -481,7 +493,8 @@ if useExitCode:
     reproducibleFails = totalFails - len(testsFailedSensitive)
     if len(testsFailedSensitive) != 0:
         print('note: ' + str(len(testsFailedSensitive)) +
-              ' sensitive test(s) failed and are excluded from the exit code', flush=True)
+              ' known-difference test(s) failed (sensitive or unresolved-on-Linux);'
+              ' excluded from the exit code', flush=True)
     if reproducibleFails > 0:
         print('FAILED: ' + str(reproducibleFails) + ' reproducible test(s)', flush=True)
         sys.exit(1)

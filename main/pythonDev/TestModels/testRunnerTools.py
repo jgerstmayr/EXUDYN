@@ -119,7 +119,7 @@ def CpuInfoString():
 
 #%%******************************************************************************************************
 def FormatTestOverview(title, names, results, errors, tolerances=None, times=None,
-                       failedNames=None, sensitiveNames=None):
+                       failedNames=None, sensitiveNames=None, unresolvedNames=None):
     """
     One fixed-width line per test: value, error, effective tolerance and runtime.
 
@@ -130,6 +130,7 @@ def FormatTestOverview(title, names, results, errors, tolerances=None, times=Non
     """
     failedNames = failedNames if failedNames is not None else set()
     sensitiveNames = sensitiveNames if sensitiveNames is not None else set()
+    unresolvedNames = unresolvedNames if unresolvedNames is not None else set()
 
     s = '\n+++++ ' + title + ' +++++\n'
     s += '{:<44s}{:<9s}{:<28s}{:<13s}{:<13s}{:>9s}\n'.format(
@@ -139,6 +140,8 @@ def FormatTestOverview(title, names, results, errors, tolerances=None, times=Non
         status = 'FAILED' if name in failedNames else 'ok'
         if name in sensitiveNames:
             status += '*'   #sensitive: reported, but excluded from the exit code
+        elif name in unresolvedNames:
+            status += 'L'   #known Windows/Linux difference, excluded on Linux only
 
         result = results.get(name, None)
         error = errors.get(name, None)
@@ -156,5 +159,9 @@ def FormatTestOverview(title, names, results, errors, tolerances=None, times=Non
     if len(sensitiveNames) != 0:
         s += '* marked SENSITIVE in runTestSuiteRefSol.py: chaotic or unseeded, so a failure is\n'
         s += '  reported but does not set the exit code\n'
+    if len(unresolvedNames) != 0:
+        s += 'L marked UnresolvedOnLinux in runTestSuiteRefSol.py: a known, reproducible\n'
+        s += '  Windows/Linux difference awaiting investigation (revision plan Phase 9).\n'
+        s += '  Excluded from the exit code on Linux only - on Windows these must pass.\n'
 
     return s
