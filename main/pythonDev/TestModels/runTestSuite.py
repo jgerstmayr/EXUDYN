@@ -207,6 +207,7 @@ TSScope.examplesTestSolList={}
 TSScope.examplesTestErrorList={}
 TSScope.examplesTestTimeList={}     #per-test runtime, for the overview at the end of the log
 TSScope.examplesTestTolList={}      #effective tolerance actually applied, varies per test
+TSScope.examplesTestFinalErrorList={} #error vs reference solution, after recomputation
 TSScope.examplesFailedNames=set()   #names rather than indices, for the overview
 TSScope.invalidResult = 1234567890123456 #should not happen occasionally
 if TSScope.runTestExamples:
@@ -260,6 +261,10 @@ if TSScope.runTestExamples:
                 exu.Print("tol=", TSScope.testTolerance*TSScope.testTolFact)
     
             TSScope.examplesTestTolList[TSScope.name] = TSScope.testTolerance*TSScope.testTolFact
+            #NOTE: examplesTestErrorList above is captured BEFORE the error is recomputed from
+            #the reference solution, so for most models it holds the default -1 rather than the
+            #comparison error. Keep that dictionary as it was, and record the final error here.
+            TSScope.examplesTestFinalErrorList[TSScope.name] = exudynTestGlobals.testError
 
             if abs(exudynTestGlobals.testError) < TSScope.testTolerance*TSScope.testTolFact:
                 exu.Print('******************************************')
@@ -433,7 +438,7 @@ if TSScope.runTestExamples:
         'TESTMODEL OVERVIEW',
         names=TSScope.testFileList,
         results=TSScope.examplesTestSolList,
-        errors=TSScope.examplesTestErrorList,
+        errors=TSScope.examplesTestFinalErrorList,
         tolerances=TSScope.examplesTestTolList,
         times=TSScope.examplesTestTimeList,
         failedNames=TSScope.examplesFailedNames,

@@ -256,8 +256,10 @@ def Main():
     changed = set([f for f in candidates if DiffersIgnoringDates(repositoryRoot, f)])
     dateOnly = candidates - changed
     if dateOnly and verbose:
+        #either a volatile '@date ... (last modified)' line, or line endings only - the latter
+        #happens when a Linux container rebuilds generated files inside a Windows working tree
         print('note             : ' + str(len(dateOnly))
-              + ' file(s) differ only in their "last modified" line; not drift')
+              + ' file(s) differ only in date lines or line endings; not drift')
 
     tier1Drift = SelectDrift(changed, tier1Paths)
     tier2Drift = SelectDrift(changed, tier2Paths)
