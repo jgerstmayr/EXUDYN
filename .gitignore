@@ -136,3 +136,14 @@ main/setuppy.output.txt
 # collection; the release copy in TestSuiteLogs/ is the one that is kept
 main/pythonDev/TestModels/testSuiteLog_V*.txt
 main/pythonDev/TestModels/testExamplesLog_V*.txt
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Experimental / internal-only work
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Listed BEFORE any such directory exists, on purpose: git does not recurse into a directory
+# that holds its own .git, so an unignored nested repository is recorded by 'git add -A' as a
+# GITLINK - a bare commit pointer with no content, which looks like a broken submodule to
+# anyone cloning. Development-only Python material belongs in the second internal GitLab
+# repository (revision plan step 8), not here.
+experimental/
+Experimental/

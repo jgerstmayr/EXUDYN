@@ -127,6 +127,29 @@ docs/theDoc/versionName.txt                the jazz-musician release name
 
 Never edit any of those seven files by hand.
 
+### Release mode vs development mode
+
+`versionDev` in `tools/issueTracker/issueTracker.py` (lines 56-57) selects one of two intended
+modes. Both are kept; this is not a leftover switch.
+
+| mode | `versionDev` | version | modules built | cp313 build |
+|---|---|---|---|---|
+| **release** | `''` | `1.11.14` | `exudynCPP` **+** `exudynCPPfast` **+** `exudynCPPnoAVX` (Windows) | **168.9 s** |
+| **development** | `'.dev1'` | `1.11.14.dev1` | one `exudynCPP`, except the Python versions kept for fast-variant speedup tests | **58.1 s** |
+
+Switch by editing the line and running `UpdateFiles()` from `tools/issueTracker/`. Step 65 turns
+this into `--release` / `--dev`.
+
+Two things follow from a switch:
+
+- **The version string changes**, so `README.rst` and `docs/RST/Exudyn.rst` pick up (or lose) the
+  `.dev1` suffix at the next regeneration — expect Tier 2 drift, and see §4 gate 2 on ordering.
+- **A `.dev1` version is not installed by a plain `pip install exudyn`** — only with `--pre` or an
+  exact version. A development build therefore cannot reach users by accident.
+
+Use development mode for ordinary work: it builds one module instead of three and is roughly 3×
+faster. Switch to release only when producing a release.
+
 **Minor bumps (1.11 → 1.12) are manual and are the maintainer's decision.** They require editing
 two constants in `issueTracker.py`: append the current total resolved count as `version12xResolved`
 to the `versionResolved` list, and add the release name to `versionNames`. Claude asks first, every

@@ -6,6 +6,7 @@ Developer-facing notes. Users start at [`README.rst`](../../README.rst) and
 
 | document | contents |
 |---|---|
+| [ARCHITECTURE.md](ARCHITECTURE.md) | the C++ internals: items, the C/Main/Visualization split, the object factory, modules, solvers |
 | [CODING_STYLE.md](CODING_STYLE.md) | naming, abbreviations, file headers, what is deprecated |
 | [WORKFLOW.md](WORKFLOW.md) | issue tracker, versioning, the four commit gates |
 | [../revision/exudynRevisionPlan2026.md](../revision/exudynRevisionPlan2026.md) | the v1.11.0 → v2.0 restructuring plan, 63 numbered steps |
@@ -52,18 +53,23 @@ Entry points worth knowing:
 
 ## How-to notes
 
-`docs/howTo/` holds 26 loose `.txt` files predating this structure. Plan step 30 consolidates them
-into `docs/dev/`; until then, by topic:
+`docs/howTo/` was cut from 26 loose `.txt` files to 8 in the 2026-09 cleanup. Anything referring to
+VS2017/VS2019, 32-bit builds, Python ≤ 3.7 or the pre-WSLg X-server era was deleted; the specifics
+worth keeping were lifted into `buildQuirks.md`. The originals remain in git history, in the
+archived internal repository and on GitHub.
 
-- **IDE**: `VS2022howto.txt`, `VS2019python37_64bit.txt`, `VS2017howto.txt`, `VScode.txt`,
-  `Python_spyder.txt`, `how to install python-C++ module in spyder.txt`, `PythonJupyter.txt`
-- **Platform**: `WSL.txt`, `ubuntuPythonSetup.txt`, `macHowTo.txt`, `changesForGCC.txt`,
-  `gitLinux.txt`, `git_tortoise.txt`, `tortoise_git.txt`
-- **Build and packaging**: `setupToolsHowTo.txt`, `intelMKL.txt`,
-  `cleanup_C++_python_directories.txt`
-- **External libraries**: `pybind howto.txt`, `glfw with VS2017 how to.txt`, `openVR.txt`
-- **Documentation and misc**: `sphinx.txt`, `pythonHowTo.txt`, `matplotlibExamples.txt`,
-  `python_symPy.py`, `sympyTests.py`, `convert videos ffmpeg.txt`
+| file | what it is for |
+|---|---|
+| [condaEnvironments.md](../howTo/condaEnvironments.md) | environment recipes, the package→feature map, the scipy pin |
+| [buildFromSource.md](../howTo/buildFromSource.md) | the canonical build reference, Windows and Linux |
+| [buildQuirks.md](../howTo/buildQuirks.md) | traps that cost real time: MSVC↔GCC flags, `/bigobj`, ABI tags, debugging a startup crash |
+| [gccVsMsvcTraps.md](../howTo/gccVsMsvcTraps.md) | the MSVC→GCC porting logbook — what broke and why |
+| [visualStudio2022.md](../howTo/visualStudio2022.md) | VS2022 install specifics and `dumpbin /version` |
+| [sphinxDocs.md](../howTo/sphinxDocs.md) | building the documentation locally |
+| [convertVideosFfmpeg.md](../howTo/convertVideosFfmpeg.md) | producing the demo animations |
+| [matplotlibExamples.md](../howTo/matplotlibExamples.md) | plotting recipes used in examples |
+
+macOS setup is covered in `docs/theDoc/introduction.tex`, not here.
 
 ## Invariants
 

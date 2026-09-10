@@ -8,7 +8,7 @@ and their reasons, and the step list.
   https://claude.ai/code/artifact/06487a25-4feb-4262-b2aa-fc8907640fa3
 - **Baseline commit**: `e44aca1` — "final commit for Exudyn1.11.0", 2026-08-05
 - **Analysis date**: 2026-09
-- **Scope**: 76 steps, 10 phases (steps 64–76 added 2026-09, see §5). Performance tuning is explicitly *out of scope*
+- **Scope**: 79 steps, 10 phases (steps 64–79 added 2026-09, see §5). Performance tuning is explicitly *out of scope*
   (deferred to a later phase); the two exceptions are the alignment fix (step 22) and the
   variant consolidation (step 23), which are correctness and packaging decisions.
 
@@ -321,6 +321,41 @@ These were checked against the tree. Several correct earlier assumptions.
     remove a third of the suite from the gate for no reason — most eigenvalue tests are dense and
     deterministic. Fill it by comparing per-test `ERROR` values across Windows, Linux and macOS.
 
+25. **`main/src/Main/Experimental.h` is a feature-flag mechanism, not stray debug code.**
+    `class PyExperimental`, exposed to Python via `PybindModule.cpp`, exists so a method can *ship
+    behind a switch* while incomplete — needed for a paper, or waiting on a "part B". Flags default
+    to off, so a release carries the code without advertising it, and a small group can enable it.
+
+    Recorded because the step 8 name-based scan flagged it as experimental leftover and proposed
+    raising an issue to remove it. That would have deleted a deliberate mechanism and changed the
+    public Python API. **A name scan finds candidates, not conclusions** — every hit needs a human
+    read before action. Described in `docs/dev/ARCHITECTURE.md` so it is discoverable rather than
+    folklore.
+
+26. **There are two build modes, switched by one line in `issueTracker.py`.** `versionDev` at
+    `issueTracker.py:56-57` selects:
+
+    | mode | `versionDev` | version string | modules built |
+    |---|---|---|---|
+    | **release** | `''` | `1.11.14` | all — `exudynCPP` **plus** `exudynCPPfast`, plus `exudynCPPnoAVX` on Windows |
+    | **development** | `'.dev1'` | `1.11.14.dev1` | one `exudynCPP`, **except** the Python versions used to measure the fast-variant speedup |
+
+    `setup.py` reads the version string and gates on it: `compileExudynFast` builds for all Python
+    versions on a release but only for Python 3.10 on a `.dev1` version, and `exudynCPPnoAVX`
+    likewise. The effect is large — measured on Windows/cp313, **168.9 s release against 58.1 s
+    development** (step 4).
+
+    The `.dev1` suffix also changes what pip does: such a version is not installed by a plain
+    `pip install exudyn`, only with `--pre` or an exact version, so a development build cannot
+    reach users by accident.
+
+    **Both modes are intended and must be kept.** Switching is currently a hand edit followed by
+    `UpdateFiles()`; step 65 should make it a command (`--release` / `--dev`), and a small Tkinter
+    front-end is wanted later. Two consequences worth remembering: a mode switch changes the
+    version string, so it propagates into `README.rst` and `docs/RST/Exudyn.rst` on the next
+    regeneration (fact 21); and any build-time comparison is meaningless unless both sides are in
+    the same mode.
+
 ### 3a. Python environments (measured)
 
 `python` is not on `PATH`. **`venvExuP313`** (created 2026-09-09) is the reference environment and
@@ -531,11 +566,23 @@ Order: **Phase 0 → 2a → (1 + 2 together as v2.0) → 3 → 4 → 5 → 6 →
    Record a baseline: per-platform wheel build time, and verify empirically whether the
    parallel-compile monkeypatch is still active on Python 3.12+.
 
-   | | 32-core workstation, docker | GitLab shared runner (6 cores) |
+   | cp313 build | modules | time |
    |---|---|---|
-   | `setup.py` build, cp313, one `.so` (`EXUDYN_NOFAST=1`) | 201–208 s | **372.6 s** |
+   | **Windows**, Ryzen 9 9950X (16 cores), release mode | 2 `.pyd` | **168.9 s** |
+   | **Windows**, same machine, `.dev1` mode | 1 `.pyd` | **58.1 s** |
+   | **Linux**, 32-core workstation under docker, `EXUDYN_NOFAST=1` | 1 `.so` | 201–208 s |
+   | **Linux**, GitLab shared runner (6 cores), `EXUDYN_NOFAST=1` | 1 `.so` | **372.6 s** |
+
+   | | Windows | Linux runner |
+   |---|---|---|
    | test suite | ~20 s | **106.4 s** (60 s of it `abaqusImportTest.py`, fact 19a) |
    | docs job | — | **60 s** |
+
+   **Linux is roughly 3.5× slower than Windows for the same single module** — 201 s on 32 cores
+   against 58 s on 16. Not a parallelism problem (fact: the monkeypatch is active on both), so it
+   is the compiler: MSVC with `/MP` and `/GL` against `g++ -O3` on heavy templates. Worth a look
+   before anyone concludes the Linux CI runner is the bottleneck; the runner accounts for only part
+   of the gap.
 
    **The monkeypatch is active on cp312+ and does not fall back.** The build emits the
    `completed NNN/135` progress lines that only `parallelCCompile` prints, and never
@@ -596,8 +643,30 @@ Order: **Phase 0 → 2a → (1 + 2 together as v2.0) → 3 → 4 → 5 → 6 →
    `master`'s tracking automatically) then `git remote add origin <internal>` — while `v2-dev`
    still had no upstream, so nothing had to be re-pointed by hand afterwards. Current layout and
    the standing rules are in §2a.
-8. Move experimental folders out of the tracked tree — siblings, or nested independent repos
-   inside ignored paths. Not submodules.
+8. **DONE 2026-09-10 — and there was nothing to move.** Move experimental folders out of the
+   tracked tree. A survey of all 2195 tracked files found **no** path matching `experimental`,
+   `scratch`, `tmp`, `backup`, `draft`, `unused`, `deprecated` or `archive`, and **no gitlinks**
+   (`git ls-files -s | grep ^160000` empty), so no accidental submodule either. The Python-models
+   `Experimental` folder was removed before `e44aca1` and is invisible from this depth-1 clone.
+
+   What was done instead:
+   - **Prevention.** `experimental/` and `Experimental/` added to `.gitignore` *before* any such
+     directory exists. Git does not recurse into a directory holding its own `.git`, so an
+     unignored nested repository is recorded by `git add -A` as a **gitlink** — a bare commit
+     pointer with no content, which clones as a broken submodule. Ignoring first makes the nested
+     shape safe.
+   - **Destination decided**: development-only Python material goes to a **second internal GitLab
+     repository**, not to siblings and not to nested repos. That supersedes this step's original
+     wording, which predates that decision. See step 77.
+   - **`main/src/Main/Experimental.h` stays.** The name-based scan flagged it; it is in fact a
+     deliberate feature-flag mechanism (fact 25). Recorded so the next cleanup does not repeat the
+     mistake this one nearly made.
+
+   Two publish-size findings that belong to no step yet, both larger than they look:
+   - `main/pythonDev/Examples/publications/testData/sliderCrankACME/` — **25.8 MB** of Abaqus
+     matrix dumps, *larger than* `docs/demo` which step 29 already singles out at 22.4 MB.
+   - `main/libs/` — 5.1 MB of prebuilt binaries including a `.pdb` debug database; `openvr_api.*`
+     within it goes away with step 78.
 9. **DONE 2026-09-09** — `tools/hooks/pre-push` refuses any ref but `master`, `release/*` and
    tags when the target is GitHub, matching on **both** the remote name and a `github.com` URL, so
    `git push <url> v2-dev` is caught too, before any network access. Activated per clone with
@@ -725,7 +794,21 @@ Editing the vcxproj in the same commit is fine — it is modified, not moved.
 28. Single version source at the root; generate `docs/theDoc/version.txt` from it; delete the
     four-level path cascade in `exudynVersion.py`.
 29. Move `docs/demo` (22 MB) to release assets or git-lfs.
-30. Consolidate `docs/howTo/*.txt` into `docs/dev/`; drop the obsolete files.
+30. **DONE 2026-09-10.** Consolidate `docs/howTo/*.txt`; drop the obsolete files. Cut from 26 files
+    to 8, all `.md`. Deleted: everything referring to VS2017/VS2019, 32-bit, Python <= 3.7, the
+    pre-WSLg X-server era, plus generic walkthroughs and two exact duplicates. The rule applied was
+    "does this contain something you could not rederive in five minutes" — build quirks and crash
+    causes kept, installation walkthroughs dropped, since git history, the archived internal
+    repository and GitHub all still hold the originals.
+
+    Survivors: `condaEnvironments.md`, `buildFromSource.md` (was `setupToolsHowTo.txt`, pruned of
+    130 lines of six-year-old benchmark console dumps), `gccVsMsvcTraps.md` (was
+    `changesForGCC.txt`, pruned of the already-fixed bug list), `visualStudio2022.md`,
+    `sphinxDocs.md` (pruned of an embedded workflow copy that had **already drifted** from
+    `.github/workflows/documentation.yaml`), `convertVideosFfmpeg.md`, `matplotlibExamples.md`,
+    and a new **`buildQuirks.md`** holding the specifics salvaged from the deleted files.
+
+    `docs/howTo/openVR.txt` went with them — see step 78. macOS setup stays in `introduction.tex`.
 
 ### Phase 3 — Code generation and docstrings (~6–8 weeks)
 
@@ -789,6 +872,18 @@ The core investment. Every step is validated byte-for-byte by step 2.
 
 50. Make RST/Sphinx primary and generate the PDF via `latexpdf`. Deletes `latexConverter.py` and
     `doc2rst.py`.
+
+    **Include the Markdown documentation in the published build.** `docs/dev/*.md`
+    (`ARCHITECTURE`, `CODING_STYLE`, `WORKFLOW`, `README`) and the surviving `docs/howTo/*.md` are
+    being written *now* on the assumption they become visible on readthedocs — so Sphinx needs
+    `myst-parser` (or equivalent) and toctree entries for them. Without that they stay
+    repository-only files that nobody outside the clone ever reads, which defeats the point of
+    writing them as documentation rather than as notes.
+
+    This also resolves the duplication `CODING_STYLE.md` currently warns about: once Markdown is
+    published, the LaTeX copies of the coding rules and the C++ structure can be deleted rather
+    than kept in sync. `introduction.tex` already points at `ARCHITECTURE.md` instead of the
+    removed doxygen (step 79).
 51. Stop committing generated RST and `theDoc.pdf`; build in CI, publish the PDF as a release
     asset.
 52. Convert `trackerlog.tex` into `CHANGELOG.md`.
@@ -853,7 +948,10 @@ renumbered, so these continue the sequence rather than slotting into their phase
 
 65. *(Phase 7)* **Give `issueTracker.py` a CLI.** Today it is driven by importing the module and
     calling functions from its own directory. Add argparse — `raise`, `resolve`, `list`, `show`,
-    `modify` — remove the cwd dependency and the hard-coded Windows path separators
+    `modify`, and **`--release` / `--dev` to switch the build mode** (fact 26), which is currently a
+    hand edit of `versionDev` at line 56-57 followed by `UpdateFiles()`. A small Tkinter front-end
+    over the same commands is wanted afterwards. Remove the cwd dependency and the hard-coded
+    Windows path separators
     (`'..\\..\\main\\src\\Autogenerated\\'`), and add tests around
     `ResolvedIssues2Version`/`GetMajorMinorMicroVersion`, which no test covers today despite being
     the version's only definition. Fix the known inconsistencies listed in `docs/dev/WORKFLOW.md`
@@ -1055,6 +1153,32 @@ debt stays visible and each item can be closed on evidence.
     `sphereTriangleTest.py` in with the chaotic contact tests, excluded it from the exit code
     permanently, and hidden a four-order-of-magnitude divergence behind a policy decision. That is
     the argument for populating these lists from measurement, restated as a concrete near miss.
+
+77. *(Phase 2a, when there is material)* **Second internal GitLab repository for development-only
+    Python.** Models that never make it to `Examples`, one-off study scripts, and internal
+    experiments live there rather than in the public tree. Not created yet — do it when there is
+    something to put in it, not before. Note the consequence for step 8: with a destination that
+    is a *repository*, the sibling-directory and nested-repo shapes stop being the answer, and
+    `experimental/` in `.gitignore` is only a safety net for work in progress.
+
+78. *(before the rendering revision)* **Remove OpenVR.** It **blocks the rendering revision**, it
+    is not testable in CI or by most users, and it carries a vendored SDK and a prebuilt binary.
+    Scope: `main/src/Graphics/OpenVRinterface.cpp` and its header, every `__EXUDYN_USE_OPENVR`
+    guard, the `--openvr` flag and `-lopenvr_api` in `setup.py`, `main/include/openVR/`, and
+    `main/libs/openvr_api.dll` + `.lib`. Users needing OpenVR take Exudyn <= 1.11; say so in the
+    release notes rather than leaving them to discover it. `docs/howTo/openVR.txt` was already
+    removed with step 30.
+
+79. **DONE 2026-09-10.** **Remove `docs/doxygen/`.** Four tracked files, 126 KB, no generated output
+    committed. It broke on project size, the PDF path never worked from the first day, and
+    `HAVE_DOT` had already been switched to `NO` after graph generation stopped working — so by the
+    end it produced neither the PDF nor the graphs, only HTML class pages duplicating what
+    `theDoc.pdf` generates better from `objectDefinition.py`. Reviving it would mean reviving a tool
+    to consume Doxygen comments the project has already deprecated.
+
+    The config stays in GitHub history for anyone who wants it back. `docs/dev/ARCHITECTURE.md` is
+    the replacement for the one thing it was wanted for — the overall idea — and is the thing
+    doxygen was *least* able to give. `introduction.tex` and `CODING_STYLE.md` now point there.
 ---
 
 ## 6. Decisions taken

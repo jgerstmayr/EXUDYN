@@ -54,50 +54,12 @@ sphinx-build -b html . _build
 #github pages:
 https://www.sphinx-doc.org/en/master/tutorial/deploying.html#id5
 
-#current workflow 2023-02-11:
-#  workflow for building GitHub Pages
-name: Deploy GitHub Pages
 
-on:
-  # Runs on pushes targeting the default branch
-  push:
-    branches: ["master"]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Allow one concurrent deployment
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
-
-jobs:
-  docs:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-      - name: Install dependencies
-        run: |
-          pip install sphinx sphinx_rtd_theme
-      - name: Sphinx build
-        run: |
-          sphinx-build . _build
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-        with:
-          publish_branch: gh-pages
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: _build/
-          force_orphan: true
-          
-
-
-
+#The GitHub Pages workflow used to be copied here verbatim. Removed 2026-09-10: the copy had
+#already drifted from the real file (it still named ubuntu-20.04, actions/checkout@v2 and
+#peaceiris/actions-gh-pages@v3, while the live workflow uses ubuntu-latest, checkout@v3 and
+#JamesIves/github-pages-deploy-action@v4). A stale copy of a config is worse than no copy.
+#
+#The workflow itself:            .github/workflows/documentation.yaml
+#The GitLab docs job (during the GitHub freeze, builds with -W but does not deploy):
+#                                .gitlab-ci.yml

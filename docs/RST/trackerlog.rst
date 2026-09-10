@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.14, 
++  Exudyn version = 1.11.15.dev1, 
 +  last change =  2026-09-10, 
-+  Number of issues = 2365, 
-+  Number of resolved issues = 2087 (14 in current version), 
++  Number of issues = 2366, 
++  Number of resolved issues = 2088 (15 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.15: resolved Issue 2365: Clean up docs/howTo and remove the doxygen configuration (cleanup)
+    - issue author: Claude-JG
+    - description:  docs/howTo held 26 loose .txt files, most describing VS2017/VS2019, 32-bit builds, Python 3.6/3.7 or the pre-WSLg X-server era, plus two exact duplicates. docs/doxygen held a 111 KB Doxyfile for a tool that broke on project size, whose PDF path never worked and whose graph generation had already been switched off. Also: no experimental folder remains in the tracked tree, so revision plan step 8 has nothing to move. Steps 8, 30, 79.
+    - **notes:** howTo cut 26 files to 8 all in .md, with the hard-won specifics salvaged into buildQuirks.md; doxygen removed; new docs/dev/ARCHITECTURE.md replaces what doxygen was wanted for. Experimental.h identified as a deliberate feature-flag mechanism and kept
+    - date resolved: **2026-09-10 18:53**\ , date raised: 2026-09-10 
+    - resolved by: Claude-JG
  * Version 1.11.14: resolved Issue 2364: Verify the GitLab CI pipeline on the shared runners (testing)
     - issue author: Claude-JG
     - description:  The GitLab CI configuration was written and tested locally under docker, but two environment questions could only be answered on the real runners: whether they may pull the manylinux image from quay.io, and whether EPEL is reachable for the GLFW and X11 packages. Revision plan step 11.

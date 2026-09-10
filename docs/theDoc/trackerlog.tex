@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.14, 
+  \item Exudyn version = 1.11.15.dev1, 
   \item last change =  2026-09-10, 
-  \item Number of issues = 2365, 
-  \item Number of resolved issues = 2087 (14 in current version), 
+  \item Number of issues = 2366, 
+  \item Number of resolved issues = 2088 (15 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.15}:  resolved Issue 2365: {\bf Clean up docs/howTo and remove the doxygen configuration}
+(cleanup)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: docs/howTo held 26 loose .txt files, most describing VS2017/VS2019, 32-bit builds, Python 3.6/3.7 or the pre-WSLg X-server era, plus two exact duplicates. docs/doxygen held a 111 KB Doxyfile for a tool that broke on project size, whose PDF path never worked and whose graph generation had already been switched off. Also: no experimental folder remains in the tracked tree, so revision plan step 8 has nothing to move. Steps 8, 30, 79.}
+    \item {\bf notes: howTo cut 26 files to 8 all in .md, with the hard-won specifics salvaged into buildQuirks.md; doxygen removed; new docs/dev/ARCHITECTURE.md replaces what doxygen was wanted for. Experimental.h identified as a deliberate feature-flag mechanism and kept}
+    \item   date resolved: {\bf 2026-09-10 18:53},
+date raised: 2026-09-10 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.14}:  resolved Issue 2364: {\bf Verify the GitLab CI pipeline on the shared runners}
 (testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

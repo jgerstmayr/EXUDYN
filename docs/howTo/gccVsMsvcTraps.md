@@ -127,33 +127,7 @@ static constexpr Index maxNumberOfSegments = 12;
 
 ===============================================
 
-===============================================
-VARIOUS, some bugs (not necessary for GCC):
 
-CSystem.h, line 213:
-if (flag == false) { postProcessData.postProcessDataReady = flag; }	//do not draw system anymore
-==> flag == false
-
-
-CObjectConnectorRollingDiscPenalty.cpp:
-==>corrected line 275 (no brackets!!!):
-if ((currentGap > 0 && dataGapState <= 0) || (currentGap <= 0 && dataGapState > 0)) //action: state1=dataGapState, error = |currentGap*k|
-
-CObjectContactCoordinate.cpp:
-==>corrected line 149 (no brackets!!!):
-if ((currentGap > 0 && currentState <= 0) || (currentGap <= 0 && currentState > 0)) //action: state1=currentGapState, error = |currentGap*k|
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#end of file: the "various bugs" section was removed 2026-09-10 - those bugs are fixed,
+#and a list of already-corrected line numbers only misleads. The GCC-vs-MSVC traps above are
+#what this file is for.
