@@ -562,47 +562,50 @@ Order: **Phase 0 → 2a → (1 + 2 together as v2.0) → 3 → 4 → 5 → 6 →
    Regenerating the reference: `git archive --format=zip -o goldenFiles_V<ver>_<sha>.zip HEAD --
    <Tier 1 and Tier 2 paths>`. Re-cut it whenever the generators change shape, and name it with
    the version and commit so a stale zip is recognisable.
-4. **PARTLY DONE 2026-09-10 — Linux half measured, and the monkeypatch question answered.**
-   Record a baseline: per-platform wheel build time, and verify empirically whether the
-   parallel-compile monkeypatch is still active on Python 3.12+.
+4. **DONE 2026-09-10** — baseline measured on every platform in active use, and the monkeypatch
+   question answered. Record a baseline: per-platform wheel build time, and verify empirically
+   whether the parallel-compile monkeypatch is still active on Python 3.12+.
 
    All workstation figures are the **same machine**: Ryzen 9 9950X, **16 cores / 32 threads**.
    (Python reports 32 — `multiprocessing.cpu_count()` counts logical processors, not cores. Do not
    read a thread count as a core count when comparing machines.)
 
-   | cp313 build | modules | time |
-   |---|---|---|
-   | **Windows**, release mode | 2 `.pyd` | **168.9 s** |
-   | **Windows**, `.dev1` mode | 1 `.pyd` | **58.1 s** |
-   | **Linux**, same machine via WSL + docker, `EXUDYN_NOFAST=1` | 1 `.so` | 201–208 s |
-   | **Linux**, GitLab shared runner (6 logical), `EXUDYN_NOFAST=1` | 1 `.so` | **372.6 s** |
+   | cp313 build | modules | time | vs Windows |
+   |---|---|---|---|
+   | **Windows**, release mode | 2 `.pyd` | **168.9 s** | — |
+   | **Windows**, `.dev1` mode | 1 `.pyd` | **58.1 s** | — |
+   | **Linux**, native WSL filesystem, `--parallel --quiet` | 1 `.so` | **98.9 s** | 1.7× |
+   | **Linux**, docker with the repo mounted from `/mnt/c` | 1 `.so` | 201–208 s | 3.5× |
+   | **Linux**, GitLab shared runner (6 logical) | 1 `.so` | **372.6 s** | — |
 
    | | Windows | Linux runner |
    |---|---|---|
    | test suite | ~20 s | **106.4 s** (60 s of it `abaqusImportTest.py`, fact 19a) |
    | docs job | — | **60 s** |
 
-   **Linux takes ~3.5× longer than Windows on identical hardware** — 201 s against 58 s for one
-   module, same CPU, same 16 cores. Not a parallelism problem: the monkeypatch is confirmed active
-   on both (fact 11). Two candidate causes, worth separating before anyone optimises the wrong one:
+   **The `/mnt/c` mount costs about 2×, not the compiler.** Linux first appeared ~3.5× slower than
+   Windows on identical hardware; the native WSL build isolates it. Building across the Windows
+   filesystem through WSL is slow for the many-small-file I/O a 135-file C++ build does. The real
+   toolchain difference is **1.7×** — MSVC `/MP` `/GL` against `g++ -O3` on heavy templates — which
+   is unremarkable. Do not chase compiler flags for a gap that is mostly I/O.
 
-   - **the toolchain** — MSVC with `/MP` and `/GL` against `g++ -O3` on heavy templates;
-   - **the filesystem** — the docker run mounts the repository from `/mnt/c/...`, i.e. the Windows
-     filesystem through WSL. That path is notoriously slow for many-small-file I/O, which is
-     exactly what a 135-file C++ build is. A build against a repository *inside* the WSL ext4
-     filesystem would isolate this, and costs one clone to test.
-
-   Until that is separated, do not conclude the GitLab runner is the bottleneck — it is a 6-logical
-   machine doing 372.6 s where a 32-thread one does 201 s, which is roughly proportionate.
+   Two practical consequences:
+   - **CI is unaffected.** GitLab runners clone into their own filesystem, never a Windows mount,
+     so 372.6 s on a 6-logical runner compares against the 98.9 s native figure: a 3.8× spread for
+     ~5.3× fewer threads, slightly better than linear. The runner is not a bottleneck.
+   - **Local manylinux builds could be ~2× faster** by cloning into WSL's own ext4 instead of
+     building across `/mnt/c`. The container itself is not avoidable — `auditwheel` needs it to
+     produce a *manylinux* wheel, whereas a native WSL build yields only `linux_x86_64`. A mount
+     question, not a container question.
 
    **The monkeypatch is active on cp312+ and does not fall back.** The build emits the
    `completed NNN/135` progress lines that only `parallelCCompile` prints, and never
-   `parallel compile FAILED`. The earlier suspicion that "Linux is not running in parallel" is
-   not supported: the runner is simply a 6-core machine, and 372.6 s against 201 s on 32 cores
-   is about what that predicts.
+   `parallel compile FAILED`. The earlier suspicion that "Linux is not running in parallel" is not
+   supported.
 
-   Consequence for scheduling: a five-way matrix is ~8 min per job, concurrent across the six
-   shared runners. Still open: Windows and macOS build times, and re-measurement after step 22.
+   Scheduling: a five-way matrix is ~8 min per job, concurrent across the six shared runners.
+   **macOS is the only platform not measured**, deferred to the arrival of the new Mac — the same
+   treatment macOS gets in steps 11 and 30. Re-measure after step 22.
 
 ### Phase 2a — Repository restart (~1 week, then a long freeze)
 
