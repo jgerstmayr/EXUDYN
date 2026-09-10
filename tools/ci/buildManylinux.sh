@@ -99,7 +99,11 @@ echo "=== repaired wheel: $repairedWheel"
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #test the wheel that would actually ship, not the source tree
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-"$pyBin/pip" install --no-cache-dir numpy scipy matplotlib
+#scipy is PINNED: newer releases have a much slower sparse eigenvalue solver. Measured on the
+#GitLab runner 2026-09-10 with an unpinned scipy, abaqusImportTest.py alone took 60.0 s of the
+#106 s test suite - 56% of the whole run for one otherwise unremarkable test. See revision
+#plan fact 19. Raise this pin deliberately, and re-measure when doing so.
+"$pyBin/pip" install --no-cache-dir numpy "scipy==1.15.2" matplotlib
 "$pyBin/pip" install --no-cache-dir --force-reinstall --no-deps "$repairedWheel"
 
 cd "$mainDir/pythonDev/TestModels"

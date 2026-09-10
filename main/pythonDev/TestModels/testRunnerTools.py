@@ -23,7 +23,7 @@ tmpLogDir = '../logsTmp/'
 
 #packages whose version can change test results; taken from what the TestModels and Examples
 #import, plus the optional extras documented in docs/howTo/condaEnvironments.md
-relevantPackages = ['numpy', 'scipy', 'matplotlib', 'ngsolve', 'netgen', 'h5py',
+relevantPackages = ['numpy', 'scipy', 'matplotlib', 'ngsolve', 'h5py',
                     'numpy-stl', 'numba', 'torch', 'stable-baselines3', 'mpi4py',
                     'pybind11', 'setuptools']
 

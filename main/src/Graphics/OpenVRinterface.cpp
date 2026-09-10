@@ -16,8 +16,6 @@
 //set preprocessor flag:__EXUDYN_USE_OPENVR
 //add lib: openvr_api.lib
 
-//#include "C:/Users/c8501009/Desktop/delete/openvr-master/samples/thirdparty/glew/glew-1.11.0/include/GL/glew.h"
-
 #include "Graphics/GlfwClient.h"
 
 //#undef __EXUDYN_USE_OPENVR

@@ -167,7 +167,7 @@ tol= 5e-14
 EXUDYN V1.9.0 solver: nonlinear static solver
 WARNING: JointALEMoving2D: sliding coordinate < 0; further warnings suppressed!
 
-Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP310\lib\site-packages\exudyn\solver.py', line 166]: 
+Python WARNING [file 'C:\Users\username\Anaconda\envs\venvP310\lib\site-packages\exudyn\solver.py', line 166]: 
 WARNING: SlidingJoint2D: sliding coordinate < 0; further warnings suppressed!
 
 

@@ -1621,7 +1621,7 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 +++++++++++++++++++++++++++++++
 EXUDYN V1.11.0 solver: nonlinear static solver
 
-Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 187]: 
+Python WARNING [file 'C:\Users\username\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 187]: 
 CSolverBase::InitializeSolverPreChecks: staticSolver.adaptiveStep is not possible for staticSolver.loadStepGeometric; adaptiveStep will be ignored
 
 STEP40, factor = 1, timeToGo = 0s, Nit/step = 4.6
@@ -2538,7 +2538,7 @@ run four bar mechanism with case:
 EXUDYN V1.11.0 solver: implicit second order time integration
 
 =========================================
-SYSTEM ERROR [file 'C:\Users\c8501009\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 287]: 
+SYSTEM ERROR [file 'C:\Users\username\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 287]: 
 CSolverBase::Newton: System Jacobian seems to be singular / not invertible!
   time/load step #1217, time = 2.434
   causing system equation number (coordinate number) = 45
@@ -2547,7 +2547,7 @@ CSolverBase::Newton: System Jacobian seems to be singular / not invertible!
 
 
 =========================================
-SYSTEM ERROR [file 'C:\Users\c8501009\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 287]: 
+SYSTEM ERROR [file 'C:\Users\username\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 287]: 
 EXUDYN raised internal error in 'CSolverBase::SolveSteps':
 Exudyn: parsing of Python file terminated due to system error
 =========================================
@@ -2571,7 +2571,7 @@ run four bar mechanism with case:
 EXUDYN V1.11.0 solver: implicit second order time integration
 
 =========================================
-SYSTEM ERROR [file 'C:\Users\c8501009\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 287]: 
+SYSTEM ERROR [file 'C:\Users\username\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 287]: 
 CSolverBase::Newton: System Jacobian seems to be singular / not invertible!
   time/load step #1217, time = 2.434
   causing system equation number (coordinate number) = 45
@@ -2580,7 +2580,7 @@ CSolverBase::Newton: System Jacobian seems to be singular / not invertible!
 
 
 =========================================
-SYSTEM ERROR [file 'C:\Users\c8501009\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 287]: 
+SYSTEM ERROR [file 'C:\Users\username\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 287]: 
 EXUDYN raised internal error in 'CSolverBase::SolveSteps':
 Exudyn: parsing of Python file terminated due to system error
 =========================================
@@ -2707,7 +2707,7 @@ EXAMPLE 49 ("HydraulicActuatorStaticInitialization.py"):
 +++++++++++++++++++++++++++++++
 EXUDYN V1.11.0 solver: nonlinear static solver
 
-Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 187]: 
+Python WARNING [file 'C:\Users\username\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 187]: 
 StaticSolver: system contains ODE1 equations, which is untested
 
 STEP1, factor = 1, timeToGo = 0s, Nit/step = 1

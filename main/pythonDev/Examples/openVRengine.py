@@ -424,7 +424,7 @@ for engine in engines:
         SC.visualizationSettings.interactive.openVR.enable = True
         SC.visualizationSettings.view0.window.lockModelView = True #lock rotation/translation/zoom of model
         SC.visualizationSettings.interactive.openVR.logLevel = 3
-        SC.visualizationSettings.interactive.openVR.actionManifestFileName = "C:/DATA/cpp/DocumentationAndInformation/openVR/hellovr_actions.json"
+        SC.visualizationSettings.interactive.openVR.actionManifestFileName = "testData/hellovr_actions.json"
 
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     

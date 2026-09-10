@@ -1620,7 +1620,7 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 +++++++++++++++++++++++++++++++
 EXUDYN V1.10.0 solver: nonlinear static solver
 
-Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 174]: 
+Python WARNING [file 'C:\Users\username\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 174]: 
 CSolverBase::InitializeSolverPreChecks: staticSolver.adaptiveStep is not possible for staticSolver.loadStepGeometric; adaptiveStep will be ignored
 
 STEP40, factor = 1, timeToGo = 0s, Nit/step = 4.6
@@ -1842,7 +1842,7 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 +++++++++++++++++++++++++++++++
 EXUDYN V1.10.0 solver: implicit second order time integration
 
-Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 260]: 
+Python WARNING [file 'C:\Users\username\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 260]: 
 Generalized alpha: initial accelerations due to initial velocities can only be computed in dense matrix mode!
 
 STEP756, t = 0.378s, timeToGo = 3.29324s, Nit/step = 6.70899
@@ -1925,7 +1925,7 @@ EXAMPLE 17 ("ballBearningModel.py"):
 +++++++++++++++++++++++++++++++
 EXUDYN V1.10.0 solver: implicit second order time integration
 
-Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 260]: 
+Python WARNING [file 'C:\Users\username\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 260]: 
 Generalized alpha: initial accelerations due to initial velocities can only be computed in dense matrix mode!
 
   Newton (time/load step #2): convergence failed after 25 iterations; relative error = 0.00834992, time = 0.0002
@@ -2174,7 +2174,7 @@ Solver terminated successfully after 0.0239214 seconds.
 +++++++++++++++++++++++++++++++
 EXUDYN V1.10.0 solver: implicit second order time integration
 
-Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 260]: 
+Python WARNING [file 'C:\Users\username\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 260]: 
 Generalized alpha: initial accelerations due to initial velocities can only be computed in dense matrix mode!
 
 STEP3326, t = 6.652s, timeToGo = 7.02042s, Nit/step = 7.96272
@@ -2501,7 +2501,7 @@ run four bar mechanism with case:
 EXUDYN V1.10.0 solver: implicit second order time integration
 
 =========================================
-SYSTEM ERROR [file 'C:\Users\c8501009\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 260]: 
+SYSTEM ERROR [file 'C:\Users\username\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 260]: 
 CSolverBase::Newton: System Jacobian seems to be singular / not invertible!
   time/load step #1217, time = 2.434
   causing system equation number (coordinate number) = 45
@@ -2510,7 +2510,7 @@ CSolverBase::Newton: System Jacobian seems to be singular / not invertible!
 
 
 =========================================
-SYSTEM ERROR [file 'C:\Users\c8501009\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 260]: 
+SYSTEM ERROR [file 'C:\Users\username\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 260]: 
 EXUDYN raised internal error in 'CSolverBase::SolveSteps':
 Exudyn: parsing of Python file terminated due to system error
 =========================================
@@ -2534,7 +2534,7 @@ run four bar mechanism with case:
 EXUDYN V1.10.0 solver: implicit second order time integration
 
 =========================================
-SYSTEM ERROR [file 'C:\Users\c8501009\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 260]: 
+SYSTEM ERROR [file 'C:\Users\username\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 260]: 
 CSolverBase::Newton: System Jacobian seems to be singular / not invertible!
   time/load step #1217, time = 2.434
   causing system equation number (coordinate number) = 45
@@ -2543,7 +2543,7 @@ CSolverBase::Newton: System Jacobian seems to be singular / not invertible!
 
 
 =========================================
-SYSTEM ERROR [file 'C:\Users\c8501009\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 260]: 
+SYSTEM ERROR [file 'C:\Users\username\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 260]: 
 EXUDYN raised internal error in 'CSolverBase::SolveSteps':
 Exudyn: parsing of Python file terminated due to system error
 =========================================
@@ -2670,7 +2670,7 @@ EXAMPLE 48 ("HydraulicActuatorStaticInitialization.py"):
 +++++++++++++++++++++++++++++++
 EXUDYN V1.10.0 solver: nonlinear static solver
 
-Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 174]: 
+Python WARNING [file 'C:\Users\username\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 174]: 
 StaticSolver: system contains ODE1 equations, which is untested
 
 STEP1, factor = 1, timeToGo = 0s, Nit/step = 1
@@ -3248,7 +3248,7 @@ totalFEcoordinates= 10128
 +++++++++++++++++++++++++++++++
 EXUDYN V1.10.0 solver: implicit second order time integration
 
-Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 260]: 
+Python WARNING [file 'C:\Users\username\Anaconda\envs\venvP312\Lib\site-packages\exudyn\solver.py', line 260]: 
 Generalized alpha: initial accelerations due to initial velocities can only be computed in dense matrix mode!
 
 STEP532, t = 0.0266s, timeToGo = 148.548s, Nit/step = 6.90602

@@ -167,7 +167,7 @@ tol= 5e-14
 EXUDYN V1.10.0 solver: nonlinear static solver
 WARNING: JointALEMoving2D: sliding coordinate < 0; further warnings suppressed!
 
-Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP313\Lib\site-packages\exudyn\solver.py', line 174]: 
+Python WARNING [file 'C:\Users\username\Anaconda\envs\venvP313\Lib\site-packages\exudyn\solver.py', line 174]: 
 WARNING: SlidingJoint2D: sliding coordinate < 0; further warnings suppressed!
 
 
@@ -200,7 +200,7 @@ tol= 5e-14
 +++++++++++++++++++++++++++++++
 EXUDYN V1.10.0 solver: implicit second order time integration
 
-Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP313\Lib\site-packages\exudyn\solver.py', line 260]: 
+Python WARNING [file 'C:\Users\username\Anaconda\envs\venvP313\Lib\site-packages\exudyn\solver.py', line 260]: 
 Generalized alpha: initial accelerations due to initial velocities can only be computed in dense matrix mode!
 
   Newton (time/load step #2): convergence failed after 25 iterations; relative error = 0.0132784, time = 0.0002
@@ -722,7 +722,7 @@ tol= 5e-14
 +++++++++++++++++++++++++++++++
 EXUDYN V1.10.0 solver: implicit second order time integration
 
-Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP313\Lib\site-packages\exudyn\solver.py', line 260]: 
+Python WARNING [file 'C:\Users\username\Anaconda\envs\venvP313\Lib\site-packages\exudyn\solver.py', line 260]: 
 Generalized alpha: initial accelerations due to initial velocities can only be computed in dense matrix mode!
 
 STEP3400, t = 0.65s, timeToGo = 0s, Nit/step = 6.16912
@@ -741,7 +741,7 @@ rejected modified Newton steps:      11
 +++++++++++++++++++++++++++++++
 EXUDYN V1.10.0 solver: implicit second order time integration
 
-Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP313\Lib\site-packages\exudyn\solver.py', line 260]: 
+Python WARNING [file 'C:\Users\username\Anaconda\envs\venvP313\Lib\site-packages\exudyn\solver.py', line 260]: 
 Generalized alpha: initial accelerations due to initial velocities can only be computed in dense matrix mode!
 
 STEP3400, t = 0.65s, timeToGo = 0s, Nit/step = 6.16912
@@ -772,7 +772,7 @@ tol= 5e-14
 +++++++++++++++++++++++++++++++
 EXUDYN V1.10.0 solver: implicit second order time integration
 
-Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP313\Lib\site-packages\exudyn\solver.py', line 260]: 
+Python WARNING [file 'C:\Users\username\Anaconda\envs\venvP313\Lib\site-packages\exudyn\solver.py', line 260]: 
 Generalized alpha: initial accelerations due to initial velocities can only be computed in dense matrix mode!
 
 STEP2035, t = 1s, timeToGo = 0s, Nit/step = 5.44668
@@ -2219,7 +2219,7 @@ tol= 5e-14
 +++++++++++++++++++++++++++++++
 EXUDYN V1.10.0 solver: implicit second order time integration
 
-Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP313\Lib\site-packages\exudyn\solver.py', line 260]: 
+Python WARNING [file 'C:\Users\username\Anaconda\envs\venvP313\Lib\site-packages\exudyn\solver.py', line 260]: 
 Generalized alpha: initial accelerations due to initial velocities can only be computed in dense matrix mode!
 
   Solve steps: adaptive reduction to step size = 0.000120982, time = 0.0446
@@ -2257,7 +2257,7 @@ tol= 5e-14
 +++++++++++++++++++++++++++++++
 EXUDYN V1.10.0 solver: implicit second order time integration
 
-Python WARNING [file 'C:\Users\c8501009\Anaconda\envs\venvP313\Lib\site-packages\exudyn\solver.py', line 260]: 
+Python WARNING [file 'C:\Users\username\Anaconda\envs\venvP313\Lib\site-packages\exudyn\solver.py', line 260]: 
 Generalized alpha: initial accelerations due to initial velocities can only be computed in dense matrix mode!
 
 STEP1365, t = 0.25s, timeToGo = 0s, Nit/step = 6.80952

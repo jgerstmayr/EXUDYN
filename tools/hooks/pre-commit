@@ -1,0 +1,68 @@
+#!/bin/sh
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Exudyn pre-commit hook
+#
+# Details:  Refuses a commit whose staged content contains a university account ID, a personal
+#           Windows user path, or something shaped like a credential. Everything committed here
+#           becomes public at the v2.0 release, and once published it cannot be withdrawn -
+#           rewriting history does not help, because clones, forks and crawlers already have it.
+#
+#           Group account IDs all begin 'c8501', which is what makes this checkable at all.
+#
+# Install:  git config core.hooksPath tools/hooks
+#
+# Bypass:   git commit --no-verify        - for a deliberate, considered exception
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-09-10 (created)
+# Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+found=0
+
+Report() {
+    if [ "$found" -eq 0 ]; then
+        echo "" >&2
+        echo "pre-commit: REFUSED - the staged changes contain something that should not be" >&2
+        echo "            published. Everything here becomes public at the v2.0 release." >&2
+        echo "" >&2
+    fi
+    found=1
+    echo "  $1" >&2
+    echo "$2" | sed 's/^/      /' >&2
+    echo "" >&2
+}
+
+#only added/modified files, and only their added lines: an existing occurrence elsewhere in a
+#file should not block an unrelated change
+stagedDiff=$(git diff --cached --no-color --diff-filter=ACM -U0 | grep '^+' | grep -v '^+++')
+
+#--- university account IDs -----------------------------------------------------------------
+# the whole group shares the 'c8501' prefix; use 'username' as the placeholder, matching the
+# convention already used in autoGeneratePyBindings.py
+hits=$(echo "$stagedDiff" | grep -oE '\bc8501[0-9]+\b' | sort -u)
+if [ -n "$hits" ]; then
+    Report "account ID (use 'username', or %USERPROFILE% / \$env:USERPROFILE in a path):" "$hits"
+fi
+
+#--- personal Windows user paths ------------------------------------------------------------
+hits=$(echo "$stagedDiff" | grep -oiE '[a-z]:[\\/]+users[\\/]+[a-z0-9._-]+' \
+       | grep -viE '[\\/](username|<username>|%USERPROFILE%|public|default|all users)$' | sort -u)
+if [ -n "$hits" ]; then
+    Report "personal user path (use %USERPROFILE% or \$env:USERPROFILE):" "$hits"
+fi
+
+#--- things shaped like credentials ----------------------------------------------------------
+hits=$(echo "$stagedDiff" | grep -oE 'BEGIN [A-Z ]*PRIVATE KEY|ssh-rsa AAAA[A-Za-z0-9+/]{20,}|ssh-ed25519 AAAA[A-Za-z0-9+/]{20,}|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{30,}|glpat-[A-Za-z0-9_-]{20,}|xox[baprs]-[A-Za-z0-9-]{10,}' | sort -u)
+if [ -n "$hits" ]; then
+    Report "possible credential:" "$hits"
+fi
+
+if [ "$found" -eq 1 ]; then
+    echo "  Fix the staged content, or commit deliberately with: git commit --no-verify" >&2
+    echo "" >&2
+    exit 1
+fi
+
+exit 0

@@ -53,8 +53,8 @@ versionResolved=[0,version0xResolved, version1xResolved, version2xResolved, vers
                  version4xResolved, version5xResolved, version6xResolved, version7xResolved, version8xResolved,
                  version9xResolved, version10xResolved, version11xResolved] #also adapt trackerlog.txt release 
 
-versionDev = '' #release (works in pip)
-# versionDev = '.dev1' #(development version, get with pip install exudyn --pre)
+# versionDev = '' #release (works in pip)
+versionDev = '.dev1' #(development version, get with pip install exudyn --pre)
 
 #subversions use names of jazz legends ... #https://www.britannica.com/topic/list-of-jazz-musicians-2030466
 # +++++++++++++++++++++++++++++++++++++++++++++

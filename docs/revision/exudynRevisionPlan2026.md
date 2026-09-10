@@ -70,7 +70,7 @@ Where the code lives, which branch is which, and how they relate. Established 20
 | place | what it holds | status |
 |---|---|---|
 | `C:\DATA\cpp\EXUDYN_git` | the working clone — `--depth 1` of GitHub `master` at `e44aca1`, 65 MB `.git` | **active**; all v2.0 work happens here |
-| `git.uibk.ac.at:c8501009/exudyn` | internal server, **full history** plus `v2-dev` | **active**; the sync point for the group |
+| `<internal-gitlab>/exudyn` | internal server, **full history** plus `v2-dev` | **active**; the sync point for the group |
 | GitHub `jgerstmayr/EXUDYN` | the public repository | frozen at 1.11.0 until v2.0 (decision D6) |
 | `C:\DATA\cpp\EXUDYN_github_git` | full 446-commit clone of GitHub, used once to seed the server | keep; not a working repository |
 | Archived old local repo | the only copy of the fine-grained internal history | zipped, read-only, plus a copy on the university server (step 6) |
@@ -87,7 +87,7 @@ Where the code lives, which branch is which, and how they relate. Established 20
 ### Remotes
 
 ```
-origin  →  git@git.uibk.ac.at:c8501009/exudyn.git      internal   (v2-dev tracks origin/v2-dev)
+origin  →  git@<internal-gitlab>:<group>/exudyn.git      internal   (v2-dev tracks origin/v2-dev)
 github  →  git@github.com:jgerstmayr/EXUDYN.git        public     (master tracks github/master)
 ```
 
@@ -234,6 +234,14 @@ These were checked against the tree. Several correct earlier assumptions.
     line endings. Any *new* file IO in the generators or tools must pass `encoding='utf8'`
     explicitly — never rely on the platform default. Worth a lint rule when step 43 adds ruff
     (`PLW1514` / `flake8-encodings`).
+19a. **The scipy slowdown localised to one test (2026-09-10).** On the GitLab runner with an
+    unpinned scipy, `abaqusImportTest.py` alone took **60.0 s of the 106 s** suite — 56% of the
+    whole run for one otherwise unremarkable test, against 1.1 s for the comparable
+    `compareAbaqusAnsysRotorEigenfrequencies.py`. Consistent with fact 19: it is the sparse
+    eigenvalue solver. `tools/ci/buildManylinux.sh` now pins `scipy==1.15.2`; raise that pin
+    deliberately and re-measure. This is also a **user-facing** performance regression, not only a
+    CI annoyance — anyone on current scipy pays it in their own eigenvalue work.
+
 19. **scipy 1.18.0 causes a large test suite slowdown** — attributed to the eigensolver path.
     Measured on the same machine and the same Exudyn 1.11.0: `venvP312` (scipy 1.15.2 /
     numpy 2.2.4) runs the suite in **24.3 s**, `venvExuP313` with scipy 1.18.0 / numpy 2.5.2 took
@@ -519,8 +527,24 @@ Order: **Phase 0 → 2a → (1 + 2 together as v2.0) → 3 → 4 → 5 → 6 →
    Regenerating the reference: `git archive --format=zip -o goldenFiles_V<ver>_<sha>.zip HEAD --
    <Tier 1 and Tier 2 paths>`. Re-cut it whenever the generators change shape, and name it with
    the version and commit so a stale zip is recognisable.
-4. Record a baseline: per-platform wheel build time, and verify empirically whether the
+4. **PARTLY DONE 2026-09-10 — Linux half measured, and the monkeypatch question answered.**
+   Record a baseline: per-platform wheel build time, and verify empirically whether the
    parallel-compile monkeypatch is still active on Python 3.12+.
+
+   | | 32-core workstation, docker | GitLab shared runner (6 cores) |
+   |---|---|---|
+   | `setup.py` build, cp313, one `.so` (`EXUDYN_NOFAST=1`) | 201–208 s | **372.6 s** |
+   | test suite | ~20 s | **106.4 s** (60 s of it `abaqusImportTest.py`, fact 19a) |
+   | docs job | — | **60 s** |
+
+   **The monkeypatch is active on cp312+ and does not fall back.** The build emits the
+   `completed NNN/135` progress lines that only `parallelCCompile` prints, and never
+   `parallel compile FAILED`. The earlier suspicion that "Linux is not running in parallel" is
+   not supported: the runner is simply a 6-core machine, and 372.6 s against 201 s on 32 cores
+   is about what that predicts.
+
+   Consequence for scheduling: a five-way matrix is ~8 min per job, concurrent across the six
+   shared runners. Still open: Windows and macOS build times, and re-measurement after step 22.
 
 ### Phase 2a — Repository restart (~1 week, then a long freeze)
 
@@ -565,7 +589,7 @@ Order: **Phase 0 → 2a → (1 + 2 together as v2.0) → 3 → 4 → 5 → 6 →
 6. **DONE** — the old local repository is archived read-only (zipped, with a copy on the
    university server). It remains the only copy of the fine-grained history.
 7. **DONE 2026-09-09** — two remotes as intended: `origin` is the internal GitLab
-   (`git@git.uibk.ac.at:c8501009/exudyn.git`), `github` is the public repository. `v2-dev` tracks
+   (`git@<internal-gitlab>:<group>/exudyn.git`), `github` is the public repository. `v2-dev` tracks
    `origin/v2-dev`; `master` tracks `github/master`. GitHub stays at 1.11.0 until release.
 
    The rename was done in the planned order — `git remote rename origin github` (which repoints
@@ -856,7 +880,7 @@ renumbered, so these continue the sequence rather than slotting into their phase
     the directory structure and move them with `git mv` in the Phase 2 flattening commit (so the
     moves stay tracked), **then** check which scripts still work, keep only what is useful, strip
     what does not belong on GitHub — several contain hard-coded local paths such as
-    `C:\Users\c8501009\Anaconda\scripts\activate.bat`, and `execWithPythonVersion.bat` still ends
+    `%USERPROFILE%\Anaconda\scripts\activate.bat`, and `execWithPythonVersion.bat` still ends
     with a `cd` into the long-gone `tools\makeWindowsBinaries\` — and add a README describing what
     each remaining script is for. Only then does step 54's `tools/release.py` absorb them; it must
     port these scripts, not reimplement alongside them.

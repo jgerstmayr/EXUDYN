@@ -9,7 +9,7 @@ Python is **not** on `PATH` under a plain shell. Use the named conda environment
 
 | purpose | interpreter |
 |---|---|
-| **default — generators, docs and tests** | `C:\Users\c8501009\Anaconda\envs\venvExuP313\python.exe` |
+| **default — generators, docs and tests** | `%USERPROFILE%\Anaconda\envs\venvExuP313\python.exe` |
 | **per-version test matrix** | `...\envs\venvP31x\python.exe`, x in 0–4 |
 
 `venvExuP313` carries Exudyn, scipy, ngsolve/h5py and the full sphinx toolchain, so one environment
@@ -106,7 +106,7 @@ Answer in this order:
 
 ```bash
 cd tools/issueTracker
-C:/Users/c8501009/Anaconda/envs/venvP312/python.exe -c "import issueTracker as it; [print(i['number'], i['priority'], i['type'], i['issue']) for i in it.GetIssues() if i['status'].strip()!='RESOLVED' and i['priority'].strip().lower()=='high']"
+$env:USERPROFILE/Anaconda/envs/venvP312/python.exe -c "import issueTracker as it; [print(i['number'], i['priority'], i['type'], i['issue']) for i in it.GetIssues() if i['status'].strip()!='RESOLVED' and i['priority'].strip().lower()=='high']"
 ```
 
 ## 2. Versioning
@@ -159,7 +159,7 @@ Full picture in plan §2a. The short version, which is what matters day to day:
 | `release/*` | release preparation |
 
 ```
-origin  →  git@git.uibk.ac.at:c8501009/exudyn.git   internal   (v2-dev tracks origin/v2-dev)
+origin  →  git@<internal-gitlab>:<group>/exudyn.git   internal   (v2-dev tracks origin/v2-dev)
 github  →  git@github.com:jgerstmayr/EXUDYN.git     public     (master tracks github/master)
 ```
 
@@ -307,7 +307,7 @@ Two measured caveats (2026-09-09, plan §3 facts 11 and 13):
 
 ```bash
 cd main/pythonDev/TestModels
-C:/Users/c8501009/Anaconda/envs/venvP312/python.exe runTestSuite.py -quiet
+$env:USERPROFILE/Anaconda/envs/venvP312/python.exe runTestSuite.py -quiet
 ```
 
 About 22 s serially — far shorter than the compile — so it runs **in full, before every commit,
