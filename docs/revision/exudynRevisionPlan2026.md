@@ -624,9 +624,23 @@ Order: **Phase 0 → 2a → (1 + 2 together as v2.0) → 3 → 4 → 5 → 6 →
     - **macOS universal2, and the x86_64 half of it**, are unverified between milestone runs.
     - The fast and noAVX binaries remain untested until step 73.
 
-    Still to do: run the first pipeline manually (one Python version, to shake out whether the
-    runners may pull from `quay.io` and whether EPEL is reachable), then the full five, then enable
-    the schedule and confirm failure mail arrives.
+    **First pipeline run 2026-09-10: all six jobs passed** — `wheels_linux` across cp310–cp314 and
+    the `docs` job. That settles the two environment unknowns: the shared runners **can** pull from
+    `quay.io`, and EPEL **is** reachable from the runner network. It also confirms the whole chain
+    works on a machine that is not the maintainer's: wheel built, `auditwheel repair` applied, the
+    suite run against the repaired wheel, and the exit code propagated out of the container.
+
+    Two things the green run quietly proves:
+    - `UnresolvedOnLinux()` (step 76) was **necessary**, not cautious. Without it all five wheel
+      jobs would have failed on the eight known contact/friction differences, and a permanently red
+      pipeline is one nobody looks at.
+    - `sphinx-build -W` passes on Linux. Every documentation build until now had been on Windows,
+      so this is the first cross-platform confirmation for fact 18.
+
+    **Remaining: enable the weekly schedule** (Settings → CI/CD → Schedules, target `v2-dev`) and
+    confirm a failing pipeline actually sends mail. An unnoticed red pipeline is the same as no
+    pipeline, and the schedule lives only in the GitLab UI — if it is deleted, CI stops silently and
+    the repository looks unchanged.
 12. At v2.0: fast-forward `master`, push once with tags. Ordinary push; clones, permalinks and
     issue references stay valid; GitHub renders the layout change as renames.
 13. Retroactively tag past releases where the commits can be identified.

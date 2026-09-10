@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.13, 
++  Exudyn version = 1.11.14, 
 +  last change =  2026-09-10, 
-+  Number of issues = 2364, 
-+  Number of resolved issues = 2086 (13 in current version), 
++  Number of issues = 2365, 
++  Number of resolved issues = 2087 (14 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.14: resolved Issue 2364: Verify the GitLab CI pipeline on the shared runners (testing)
+    - issue author: Claude-JG
+    - description:  The GitLab CI configuration was written and tested locally under docker, but two environment questions could only be answered on the real runners: whether they may pull the manylinux image from quay.io, and whether EPEL is reachable for the GLFW and X11 packages. Revision plan step 11.
+    - **notes:** First run 2026-09-10: all six jobs passed - wheels_linux cp310 to cp314 plus docs. quay.io reachable, EPEL reachable, and sphinx-build -W passes on Linux for the first time. Remaining: enable the weekly schedule and confirm failure mail
+    - date resolved: **2026-09-10 14:21**\ , date raised: 2026-09-10 
+    - resolved by: Claude-JG
  * Version 1.11.13: resolved Issue 2363: Known unresolved Windows/Linux differences in contact and friction tests (check)
     - issue author: Claude-JG
     - description:  Eight contact and friction test models give different results on Linux than the Windows reference values: relative errors from 3.4e-11 up to 1.6e+04 (sphereTriangleTest.py: reference 3.8226 vs Linux 59370.97). These are reproducible, so they are not the non-deterministic class - there is a cause that has not been found. Track them in UnresolvedOnLinux() and exclude from the exit code on Linux only, so Linux CI is usable while Windows stays strict. Investigation scheduled as revision plan Phase 9 step 76.

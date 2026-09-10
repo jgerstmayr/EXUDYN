@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.13, 
+  \item Exudyn version = 1.11.14, 
   \item last change =  2026-09-10, 
-  \item Number of issues = 2364, 
-  \item Number of resolved issues = 2086 (13 in current version), 
+  \item Number of issues = 2365, 
+  \item Number of resolved issues = 2087 (14 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.14}:  resolved Issue 2364: {\bf Verify the GitLab CI pipeline on the shared runners}
+(testing)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: The GitLab CI configuration was written and tested locally under docker, but two environment questions could only be answered on the real runners: whether they may pull the manylinux image from quay.io, and whether EPEL is reachable for the GLFW and X11 packages. Revision plan step 11.}
+    \item {\bf notes: First run 2026-09-10: all six jobs passed - wheels\_linux cp310 to cp314 plus docs. quay.io reachable, EPEL reachable, and sphinx-build -W passes on Linux for the first time. Remaining: enable the weekly schedule and confirm failure mail}
+    \item   date resolved: {\bf 2026-09-10 14:21},
+date raised: 2026-09-10 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.13}:  resolved Issue 2363: {\bf Known unresolved Windows/Linux differences in contact and friction tests}
 (check)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
