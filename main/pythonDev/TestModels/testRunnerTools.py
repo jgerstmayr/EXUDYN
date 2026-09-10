@@ -108,13 +108,16 @@ def CpuInfoString():
     if cpuName is None or cpuName.strip() == '':
         cpuName = platform.machine() #at least the architecture
 
+    #NOTE: cpu_count() reports LOGICAL processors (threads), not physical cores - a 16-core
+    #machine with SMT reports 32. Label it as threads, so a log is not misread as a core count
+    #when build times from different machines are compared.
     try:
         import multiprocessing
-        cores = str(multiprocessing.cpu_count())
+        threads = str(multiprocessing.cpu_count())
     except Exception:
-        cores = '?'
+        threads = '?'
 
-    return cpuName.strip() + ' (' + cores + ' logical cores)'
+    return cpuName.strip() + ' (' + threads + ' threads)'
 
 
 #%%******************************************************************************************************

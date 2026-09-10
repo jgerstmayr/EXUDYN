@@ -566,23 +566,34 @@ Order: **Phase 0 → 2a → (1 + 2 together as v2.0) → 3 → 4 → 5 → 6 →
    Record a baseline: per-platform wheel build time, and verify empirically whether the
    parallel-compile monkeypatch is still active on Python 3.12+.
 
+   All workstation figures are the **same machine**: Ryzen 9 9950X, **16 cores / 32 threads**.
+   (Python reports 32 — `multiprocessing.cpu_count()` counts logical processors, not cores. Do not
+   read a thread count as a core count when comparing machines.)
+
    | cp313 build | modules | time |
    |---|---|---|
-   | **Windows**, Ryzen 9 9950X (16 cores), release mode | 2 `.pyd` | **168.9 s** |
-   | **Windows**, same machine, `.dev1` mode | 1 `.pyd` | **58.1 s** |
-   | **Linux**, 32-core workstation under docker, `EXUDYN_NOFAST=1` | 1 `.so` | 201–208 s |
-   | **Linux**, GitLab shared runner (6 cores), `EXUDYN_NOFAST=1` | 1 `.so` | **372.6 s** |
+   | **Windows**, release mode | 2 `.pyd` | **168.9 s** |
+   | **Windows**, `.dev1` mode | 1 `.pyd` | **58.1 s** |
+   | **Linux**, same machine via WSL + docker, `EXUDYN_NOFAST=1` | 1 `.so` | 201–208 s |
+   | **Linux**, GitLab shared runner (6 logical), `EXUDYN_NOFAST=1` | 1 `.so` | **372.6 s** |
 
    | | Windows | Linux runner |
    |---|---|---|
    | test suite | ~20 s | **106.4 s** (60 s of it `abaqusImportTest.py`, fact 19a) |
    | docs job | — | **60 s** |
 
-   **Linux is roughly 3.5× slower than Windows for the same single module** — 201 s on 32 cores
-   against 58 s on 16. Not a parallelism problem (fact: the monkeypatch is active on both), so it
-   is the compiler: MSVC with `/MP` and `/GL` against `g++ -O3` on heavy templates. Worth a look
-   before anyone concludes the Linux CI runner is the bottleneck; the runner accounts for only part
-   of the gap.
+   **Linux takes ~3.5× longer than Windows on identical hardware** — 201 s against 58 s for one
+   module, same CPU, same 16 cores. Not a parallelism problem: the monkeypatch is confirmed active
+   on both (fact 11). Two candidate causes, worth separating before anyone optimises the wrong one:
+
+   - **the toolchain** — MSVC with `/MP` and `/GL` against `g++ -O3` on heavy templates;
+   - **the filesystem** — the docker run mounts the repository from `/mnt/c/...`, i.e. the Windows
+     filesystem through WSL. That path is notoriously slow for many-small-file I/O, which is
+     exactly what a 135-file C++ build is. A build against a repository *inside* the WSL ext4
+     filesystem would isolate this, and costs one clone to test.
+
+   Until that is separated, do not conclude the GitLab runner is the bottleneck — it is a 6-logical
+   machine doing 372.6 s where a 32-thread one does 201 s, which is roughly proportionate.
 
    **The monkeypatch is active on cp312+ and does not fall back.** The build emits the
    `completed NNN/135` progress lines that only `parallelCCompile` prints, and never
