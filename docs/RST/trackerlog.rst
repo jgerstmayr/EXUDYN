@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.11, 
-+  last change =  2026-09-09, 
-+  Number of issues = 2362, 
-+  Number of resolved issues = 2084 (11 in current version), 
++  Exudyn version = 1.11.12, 
++  last change =  2026-09-10, 
++  Number of issues = 2363, 
++  Number of resolved issues = 2085 (12 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.12: :textred:`resolved BUG 2362` : Test runners truncate committed release logs at startup 
+    - issue author: Claude-JG
+    - description:  runTestSuite.py, runTestExamples.py and runPerformanceTests.py each call SetWriteToFile with flagAppend=False on a release-named file in a tracked directory at script start, before any test runs, with no existence check. An interrupted run leaves the committed release log half-written. 55 tracked log files are exposed. Filenames encode version, platform and Python but nothing machine-specific, so a second machine with the same configuration silently overwrites the first. Revision plan step 72.
+    - **notes:** testRunnerTools.ResolveLogFile diverts to logsTmp when the target exists; --overwrite-log replaces deliberately. Also added package versions and CPU to the header, a per-test overview with runtimes at the end, and EXUDYN_MACHINE_ID for performance logs. Verified: divert leaves the tracked log byte-identical, override replaces it, absent target writes normally
+    - date resolved: **2026-09-10 09:44**\ , date raised: 2026-09-10 
+    - resolved by: Claude-JG
  * Version 1.11.11: resolved Issue 2361: CI during the GitHub freeze (testing)
     - issue author: Claude-JG
     - description:  GitHub Actions only fire on pushes to master and pull requests, so no wheels or tests run while master is frozen at 1.11.0 (decision D6). Add GitLab CI for Linux x86_64 across cp310-cp314 on the shared Docker runners, plus a docs build. Also fix that CI could not fail at all: wheels.yml sets continue-on-error and runTestSuite.py always exited 0. Revision plan step 11.

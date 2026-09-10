@@ -23,6 +23,7 @@ isWindows = (sys.platform == 'win32')
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #include right exudyn module now:
 import numpy as np
+import testRunnerTools
 if (sys.version_info.major == 3 and 
     #(sys.version_info.minor == 7 or sys.version_info.minor == 10)): #for these versions, we use exudynFast; since 2022-12-19/exudynV1.4.53: 3.7 and 3.10 in performance tests
     (sys.version_info.minor == 10)): #for these versions, we use exudynFast; since 2022-12-19/exudynV1.4.53: 3.7 and 3.10 in performance tests
@@ -55,6 +56,7 @@ mbs = SC.AddSystem()
 #parse command line arguments:
 # -quiet
 writeToConsole = True  #do not output to console / shell
+overwriteLog = False   #--overwrite-log: replace an existing log instead of diverting to tmp
 #copyLog = False         #copy log to final TestSuiteLogs
 # if sys.version_info.major == 3 and sys.version_info.minor == 7:
 #     copyLog = True #for P3.7 tests always copy log to WorkingRelease
@@ -63,6 +65,8 @@ if len(sys.argv) > 1:
         #print("arg", i+1, "=", sys.argv[i+1])
         if sys.argv[i+1] == '-quiet':
             writeToConsole = False
+        elif sys.argv[i+1] == '--overwrite-log':
+            overwriteLog = True
         # elif sys.argv[i+1] == '-copylog': #not needed any more
         #     copyLog = True
         else:
@@ -97,12 +101,26 @@ if isMacOS:
 elif not isWindows: #add linux, to distinguish linux tests from windows tests!
     platformString += sys.platform
 
+#performance logs are collected per machine, because timings from a mobile CPU are not
+#comparable with a workstation. Set EXUDYN_MACHINE_ID once per machine (e.g. 'i7-1370P') and
+#its logs land in that subfolder.
 subFolder = ''
-#only works on Windows: if platform.processor() == 'Intel64 Family 6 Model 142 Stepping 10, GenuineIntel':
-if multiprocessing.cpu_count() == 20:
-    subFolder = 'i7-1370P/' #this is for internal use only!
-    
+machineId = os.environ.get('EXUDYN_MACHINE_ID', '').strip()
+if machineId != '':
+    #keep the subfolder name usable as a path
+    machineId = ''.join([c if (c.isalnum() or c in '-_.') else '_' for c in machineId])
+    subFolder = machineId + '/'
+elif multiprocessing.cpu_count() == 20:
+    #LEGACY fallback, kept so existing behaviour does not change silently; any 20-core machine
+    #lands here, which is why EXUDYN_MACHINE_ID exists. Remove once it is set on all machines.
+    subFolder = 'i7-1370P/'
+
+if subFolder != '' and not os.path.exists('../PerformanceLogs/'+subFolder):
+    os.makedirs('../PerformanceLogs/'+subFolder, exist_ok=True)
+
 logFileName = '../PerformanceLogs/'+subFolder+'performanceLog_V'+exu.config.Version()+'_'+platformString+'.txt'
+#never truncate an existing (committed) log by accident; see testRunnerTools.ResolveLogFile
+logFileName = testRunnerTools.ResolveLogFile(logFileName, allowOverwrite=overwriteLog)
 exu.SetWriteToFile(filename=logFileName, flagWriteToFile=True, flagAppend=False) #write all testSuite logs to files
 
 exu.config.printToConsole = writeToConsole #stop output from now on
@@ -119,6 +137,8 @@ exu.Print('system              = '+sys.platform)
 exu.Print('processor           = '+platform.processor()) 
 
 exu.Print('python version      = '+str(sys.version_info.major)+'.'+str(sys.version_info.minor)+'.'+str(sys.version_info.micro))
+#timings depend on these; record them so runs can be compared across machines and dates
+exu.Print(testRunnerTools.PackageVersionReport())
 exu.Print('test tolerance      = ',testTolerance)
 exu.Print('test date (now)     = '+dateStr)
 if psutilExists:

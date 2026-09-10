@@ -308,15 +308,37 @@ Two things that will otherwise look like breakage:
   break (plan fact 20). Compare the reported `RESULT` and `refsol` before treating it as one.
   Per-model tolerances are plan step 40.
 
-**The suite overwrites a tracked file.** `runTestSuite.py` writes
-`main/pythonDev/TestSuiteLogs/testSuiteLog_<version>_<platform>-P<x.y>.txt`, which is committed
-per release (decision D7). In normal use this is harmless: the suite runs *after* a micro-version
-change, so the filename carries the new version and the previous log is kept, not replaced. The
-log that matters for a version is therefore the one from **its first micro-version change**.
+**Committed logs are protected — the runner diverts rather than overwriting.** All three runners
+(`runTestSuite.py`, `runTestExamples.py`, `runPerformanceTests.py`) write a release-named log into a
+tracked directory, truncating it at startup *before any test runs*. Since 2026-09-10 they check
+first:
 
-It does bite when the suite is run *without* a version change — an incidental gate run overwrites
-that version's existing log in place. Check the file before committing and keep the release run.
-A backup mechanism would remove the hazard entirely (step 72).
+- target does not exist → written normally (the release flow: the version was just bumped)
+- target exists → the log is **diverted to `main/pythonDev/logsTmp/`** (gitignored), the tests run
+  as usual, and a message names the override
+- `--overwrite-log` → the existing log is replaced deliberately
+
+Existence is the test, so this also covers the multi-machine case: the committed log from another
+machine with the same platform and Python is present, and is not clobbered.
+
+`logsTmp/` is one shared directory for all three runners, so clearing it is a single delete.
+
+### What is in a log
+
+The header records what results depend on: Exudyn version and build date, CPU and core count, and
+the installed versions of the relevant packages (`numpy`, `scipy`, `matplotlib`, `ngsolve`, …,
+listed as `not installed` when absent). scipy 1.18 vs 1.15 already changed suite runtime by more
+than an order of magnitude, so this is not decoration.
+
+The log ends with a per-test overview — one fixed-width line per test with result, error, effective
+tolerance and runtime, for both TestModels and MiniExamples, with sensitive tests marked `*`. That
+table is how `SensitiveTests()` gets populated: diff two of them from different machines and the
+non-reproducible tests stand out.
+
+**Performance logs are per machine.** Set `EXUDYN_MACHINE_ID` once per machine (e.g. `i7-1370P`)
+and `runPerformanceTests.py` files its logs in that subfolder, since timings from a laptop and a
+workstation are not comparable. Without it, a legacy fallback still routes any 20-core machine to
+`i7-1370P/`; that fallback goes away once the variable is set everywhere.
 
 `Examples` are **not** run here: they take many minutes and only check that scripts do not crash
 (they time out after a few seconds each, and are not compared for identical results). Run them

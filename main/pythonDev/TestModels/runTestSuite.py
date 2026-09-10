@@ -30,6 +30,7 @@ if platform.processor().find('arm') != -1:
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #include right exudyn module now:
 import numpy as np
+import testRunnerTools
 import exudyn as exu
 from modelUnitTests import RunAllModelUnitTests, TestInterface, ExudynTestStructure, exudynTestGlobals
 import time
@@ -50,6 +51,7 @@ writeToConsole = True  #do not output to console / shell
 outputLocal = False
 quietMode = False
 useExitCode = False     #--exit-code: return non-zero on reproducible failures, for CI
+overwriteLog = False    #--overwrite-log: replace an existing log instead of diverting to tmp
 #copyLog = False         #copy log to final TestSuiteLogs
 # if sys.version_info.major == 3 and sys.version_info.minor == 7:
 #     copyLog = True #for P3.7 tests always copy log to WorkingRelease
@@ -62,6 +64,8 @@ if len(sys.argv) > 1:
             outputLocal = True
         elif sys.argv[i+1] == '--exit-code':
             useExitCode = True
+        elif sys.argv[i+1] == '--overwrite-log':
+            overwriteLog = True
         # elif sys.argv[i+1] == '-copylog': #not needed any more
         #     copyLog = True
         else:
@@ -147,6 +151,9 @@ localFileName = 'testSuiteLog_V'+exu.config.Version()+'_'+platformString
 
 #logFileName = '../TestSuiteLogs/testSuiteLog_V'+exu.config.Version()+'_'+platformString+'.txt'
 logFileName = '../TestSuiteLogs/'+localFileName+'.txt'
+#never truncate an existing (committed) log by accident: SetWriteToFile below wipes the target
+#immediately, before any test runs, so an interrupted run would leave it half-written
+logFileName = testRunnerTools.ResolveLogFile(logFileName, allowOverwrite=overwriteLog)
 exu.SetWriteToFile(filename=logFileName, flagWriteToFile=True, flagAppend=False) #write all testSuite logs to files
 
 
@@ -158,9 +165,12 @@ exu.Print('EXUDYN version      = '+exu.config.Version())
 exu.Print('EXUDYN build date   = '+exuDateStr)
 exu.Print('architecture        = '+platform.architecture()[0])
 exu.Print('processor           = '+processorString)
+exu.Print('CPU                 = '+testRunnerTools.CpuInfoString())
 exu.Print('platform            = '+sys.platform)
 exu.Print('Python version      = '+pythonVersion)
 exu.Print('NumPy version       = '+np.__version__)
+#test results depend on these; scipy 1.18 vs 1.15 is already a recorded factor
+exu.Print(testRunnerTools.PackageVersionReport())
 exu.Print('test tolerance      =',TSScope.testTolerance)
 exu.Print('testsuite date (now)= '+dateStr)
 exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
@@ -195,6 +205,9 @@ SC.Reset()
 #use TSScope. to avoid that variables in testsuite are overwritten by test models!
 TSScope.examplesTestSolList={}
 TSScope.examplesTestErrorList={}
+TSScope.examplesTestTimeList={}     #per-test runtime, for the overview at the end of the log
+TSScope.examplesTestTolList={}      #effective tolerance actually applied, varies per test
+TSScope.examplesFailedNames=set()   #names rather than indices, for the overview
 TSScope.invalidResult = 1234567890123456 #should not happen occasionally
 if TSScope.runTestExamples:
     from runTestSuiteRefSol import TestExamplesReferenceSolution, TestExamplesToleranceFactors, SensitiveTests
@@ -218,12 +231,14 @@ if TSScope.runTestExamples:
         SC.Reset() #??needed
         exudynTestGlobals.testError = -1 #default value !=-1, if there is an error in the calculation
         exudynTestGlobals.testResult = TSScope.invalidResult #strange default value to see if there is a missing testResult
+        TSScope.testTimeStart = time.perf_counter()
         try:
             exec(open(TSScope.file, encoding='utf8').read(), globals())
         except Exception as e:
             exu.Print('TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '") raised exception:\n'+str(e))
             print('TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '") raised exception:\n'+str(e), flush=True)
         finally:
+            TSScope.examplesTestTimeList[TSScope.name] = time.perf_counter() - TSScope.testTimeStart
             TSScope.examplesTestErrorList[TSScope.name] = exudynTestGlobals.testError
             TSScope.examplesTestSolList[TSScope.name] = exudynTestGlobals.testResult
             
@@ -244,6 +259,8 @@ if TSScope.runTestExamples:
                 exu.Print("refsol=",TSScope.examplesTestRefSol[TSScope.name])
                 exu.Print("tol=", TSScope.testTolerance*TSScope.testTolFact)
     
+            TSScope.examplesTestTolList[TSScope.name] = TSScope.testTolerance*TSScope.testTolFact
+
             if abs(exudynTestGlobals.testError) < TSScope.testTolerance*TSScope.testTolFact:
                 exu.Print('******************************************')
                 exu.Print('  TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '") FINISHED SUCCESSFUL')
@@ -260,6 +277,7 @@ if TSScope.runTestExamples:
                     exu.Print('        it is reported but does not affect the exit code')
                 exu.Print('******************************************')
                 testsFailed = testsFailed + [TSScope.testExamplesCnt]
+                TSScope.examplesFailedNames.add(TSScope.name)
                 if TSScope.file in TSScope.sensitiveTests:
                     testsFailedSensitive = testsFailedSensitive + [TSScope.testExamplesCnt]
 
@@ -280,6 +298,9 @@ if TSScope.runMiniExamples:
     testExamplesCnt = 0
     miniExamplesTestSolList={}
     miniExamplesTestErrorList={}
+    miniExamplesTestTimeList={}     #for the overview at the end of the log
+    miniExamplesTestTolList={}
+    miniExamplesFailedNames=set()
 
     for file in miniExamplesFileList:
         name = file
@@ -288,6 +309,7 @@ if TSScope.runMiniExamples:
         SC.Reset()
         testError = -1
         fileDir = 'MiniExamples/'+file
+        miniTimeStart = time.perf_counter()
         try:
             exec(open(fileDir, encoding='utf8').read(), globals())
         except Exception as e:
@@ -306,8 +328,11 @@ if TSScope.runMiniExamples:
                 exu.Print('  ERROR  = ' + str(exudynTestGlobals.testError))
                 exu.Print('******************************************')
                 miniExamplesFailed += [testExamplesCnt]
+                miniExamplesFailedNames.add(name)
             miniExamplesTestSolList[name] = exudynTestGlobals.testResult #this list contains reference solutions, can be used for miniExamplesRefSol
             miniExamplesTestErrorList[name] = exudynTestGlobals.testError #this list contains errors
+            miniExamplesTestTimeList[name] = time.perf_counter() - miniTimeStart
+            miniExamplesTestTolList[name] = TSScope.testTolerance
             testExamplesCnt+=1
 
     if TSScope.printTestResults: #print reference solution list:
@@ -399,6 +424,30 @@ if TSScope.runCppUnitTests:
 else:
     exu.Print('CPP UNIT TESTS SKIPPED')
     # localFileName += '-nocpp'
+
+#per-test overview at the end of the log: value, error, effective tolerance and runtime, one
+#fixed-width line each. Comparing these across machines is how SensitiveTests() has to be
+#populated (runTestSuiteRefSol.py), which is impractical while the numbers only appear in prose.
+if TSScope.runTestExamples:
+    exu.Print(testRunnerTools.FormatTestOverview(
+        'TESTMODEL OVERVIEW',
+        names=TSScope.testFileList,
+        results=TSScope.examplesTestSolList,
+        errors=TSScope.examplesTestErrorList,
+        tolerances=TSScope.examplesTestTolList,
+        times=TSScope.examplesTestTimeList,
+        failedNames=TSScope.examplesFailedNames,
+        sensitiveNames=TSScope.sensitiveTests))
+
+if TSScope.runMiniExamples:
+    exu.Print(testRunnerTools.FormatTestOverview(
+        'MINI EXAMPLE OVERVIEW',
+        names=miniExamplesFileList,
+        results=miniExamplesTestSolList,
+        errors=miniExamplesTestErrorList,
+        tolerances=miniExamplesTestTolList,
+        times=miniExamplesTestTimeList,
+        failedNames=miniExamplesFailedNames))
 
 #NOTE: the number of fails used to be appended to the file name as '-F<NN>'. It was dropped
 #2026-09-09: the exit code (--exit-code) now carries that information, and the varying name

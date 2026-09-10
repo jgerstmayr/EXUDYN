@@ -28,6 +28,7 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #include right exudyn module now:
     import numpy as np
+    import testRunnerTools
     import exudyn as exu
     import time
     
@@ -53,6 +54,7 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
     writeToConsole = True #do not output to console / shell
     quietMode = True
     writeFileNames = False
+    overwriteLog = False    #--overwrite-log: replace an existing log instead of diverting to tmp
     #copyLog = False         #copy log to final TestSuiteLogs
     # if sys.version_info.major == 3 and sys.version_info.minor == 7:
     #     copyLog = True #for P3.7 tests always copy log to WorkingRelease
@@ -61,6 +63,8 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
             #print("arg", i+1, "=", sys.argv[i+1])
             if sys.argv[i+1] == '-quiet':
                 quietMode = True
+            elif sys.argv[i+1] == '--overwrite-log':
+                overwriteLog = True
             else:
                 print("ERROR in runTestExamples: unknown command line argument '"+sys.argv[i+1]+"'")
     
@@ -139,6 +143,8 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
     
     #logFileName = '../TestSuiteLogs/testSuiteLog_V'+exu.config.Version()+'_'+platformString+'.txt'
     logFileName = '../TestExamplesLogs/'+localFileName+'.txt'
+    #never truncate an existing (committed) log by accident; see testRunnerTools.ResolveLogFile
+    logFileName = testRunnerTools.ResolveLogFile(logFileName, allowOverwrite=overwriteLog)
     exu.SetWriteToFile(filename=logFileName, flagWriteToFile=True, flagAppend=False) #write all testSuite logs to files
     
     
@@ -150,8 +156,11 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
     exu.Print('EXUDYN build date   = '+exuDateStr)
     exu.Print('architecture        = '+platform.architecture()[0])
     exu.Print('processor           = '+processorString)
+    exu.Print('CPU                 = '+testRunnerTools.CpuInfoString())
     exu.Print('platform            = '+sys.platform)
     exu.Print('python version      = '+pythonVersion)
+    #results depend on these; record them so runs can be compared across machines
+    exu.Print(testRunnerTools.PackageVersionReport())
     exu.Print('test date (now)     = '+dateStr)
     exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
     

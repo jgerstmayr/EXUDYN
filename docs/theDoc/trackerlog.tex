@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.11, 
-  \item last change =  2026-09-09, 
-  \item Number of issues = 2362, 
-  \item Number of resolved issues = 2084 (11 in current version), 
+  \item Exudyn version = 1.11.12, 
+  \item last change =  2026-09-10, 
+  \item Number of issues = 2363, 
+  \item Number of resolved issues = 2085 (12 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.12}: {\bf \color{warningRed}  resolved BUG 2362}: {\bf Test runners truncate committed release logs at startup}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: runTestSuite.py, runTestExamples.py and runPerformanceTests.py each call SetWriteToFile with flagAppend=False on a release-named file in a tracked directory at script start, before any test runs, with no existence check. An interrupted run leaves the committed release log half-written. 55 tracked log files are exposed. Filenames encode version, platform and Python but nothing machine-specific, so a second machine with the same configuration silently overwrites the first. Revision plan step 72.}
+    \item {\bf notes: testRunnerTools.ResolveLogFile diverts to logsTmp when the target exists; --overwrite-log replaces deliberately. Also added package versions and CPU to the header, a per-test overview with runtimes at the end, and EXUDYN\_MACHINE\_ID for performance logs. Verified: divert leaves the tracked log byte-identical, override replaces it, absent target writes normally}
+    \item   date resolved: {\bf 2026-09-10 09:44},
+date raised: 2026-09-10 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.11}:  resolved Issue 2361: {\bf CI during the GitHub freeze}
 (testing)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

@@ -8,7 +8,7 @@ and their reasons, and the step list.
   https://claude.ai/code/artifact/06487a25-4feb-4262-b2aa-fc8907640fa3
 - **Baseline commit**: `e44aca1` — "final commit for Exudyn1.11.0", 2026-08-05
 - **Analysis date**: 2026-09
-- **Scope**: 73 steps, 9 phases (steps 64–73 added 2026-09, see §5). Performance tuning is explicitly *out of scope*
+- **Scope**: 75 steps, 9 phases (steps 64–75 added 2026-09, see §5). Performance tuning is explicitly *out of scope*
   (deferred to a later phase); the two exceptions are the alignment fix (step 22) and the
   variant consolidation (step 23), which are correctness and packaging decisions.
 
@@ -802,7 +802,7 @@ is needed — plugins inherit from `CObject` directly.
     dict-builder class stays an explicit `from myplugin import ObjectMyThing` rather than being
     injected into `exudyn.itemInterface`, so every script says where its item types came from.
 
-### Added 2026-09 — maintainer toolchain, test coverage, encoding (steps 64–73)
+### Added 2026-09 — maintainer toolchain, test coverage, encoding (steps 64–75)
 
 Added after `tools/` entered the working tree. Existing numbers are stable and are never
 renumbered, so these continue the sequence rather than slotting into their phases.
@@ -905,14 +905,39 @@ renumbered, so these continue the sequence rather than slotting into their phase
     point. Verify by regenerating twice on a clean tree and by grepping the output for U+FFFD and
     for lone bytes in the 0x80–0xFF range.
 
-72. *(Phase 4, small)* **Stop the test suite from overwriting a tracked release log.**
-    `runTestSuite.py` writes `TestSuiteLogs/testSuiteLog_<version>_<platform>-P<x.y>.txt` in place.
-    Normally safe — the suite runs after a micro-version bump, so the name changes — but a gate run
-    without a version change silently replaces that version's committed log, and the log from a
-    version's *first* micro-version change is the one worth keeping. Options: refuse to overwrite
-    an existing log unless `--force`, write incidental runs to an ignored scratch path and only
-    promote on request, or append a run counter. Fold into step 40 if the pytest wrapper takes over
-    logging anyway.
+72. **DONE 2026-09-10.** *(Phase 4, small)* **Stop the test suite from overwriting a tracked release
+    log.** All three runners — `runTestSuite.py`, `runTestExamples.py`, `runPerformanceTests.py` —
+    called `SetWriteToFile(..., flagAppend=False)` on a release-named file in a tracked directory
+    **at script start, before any test ran**, with no existence check anywhere. An interrupted run
+    therefore left a committed release record not merely overwritten but **half-written**. 55
+    tracked log files were exposed: 32 in `TestSuiteLogs/`, 20 in `PerformanceLogs/`, 3 in
+    `TestExamplesLogs/`. It happened twice on 2026-09-09 during unrelated verification, once
+    against the 1.11.0 release log — within an hour of the hazard being written down here.
+
+    `testRunnerTools.ResolveLogFile()` now decides the target before the first write: absent → use
+    it; present → **divert to `main/pythonDev/logsTmp/`** (gitignored, one shared directory for all
+    three runners so it is trivial to clear) and print a message naming `--overwrite-log`; with
+    that flag → replace deliberately. Diverting rather than aborting is the point: a run that
+    refuses to start until a flag is typed trains people to always type the flag.
+
+    **Existence, not git-tracking, is the test.** No git needed, and it covers the multi-machine
+    case for free — filenames encode version, platform and Python but nothing machine-specific, so
+    two machines with the same configuration produce the identical name and the second must not
+    clobber the first.
+
+    Folded in, since they touch the same log and the same code:
+    - the header now records the **installed versions of the relevant packages** (fact 19 showed
+      scipy alone changes suite runtime by more than an order of magnitude) and the CPU with its
+      core count;
+    - the log ends with a **per-test overview** — result, error, effective tolerance and runtime,
+      one fixed-width line each, for TestModels and MiniExamples, sensitive tests marked. Per-test
+      runtime did not exist before. This is what makes fact 24 actionable: populating
+      `SensitiveTests()` means diffing per-test errors between machines, which was impractical
+      while the numbers only appeared in prose;
+    - `runPerformanceTests.py` routed logs to an `i7-1370P/` subfolder whenever
+      `cpu_count() == 20`, catching any 20-core machine. Replaced by an explicit
+      `EXUDYN_MACHINE_ID`, with the old branch kept as a documented fallback so nothing changes
+      destination silently before the variable is set.
 
 73. *(Phase 4, release testing)* **Cover every compiled variant in the release tests.** Windows
     release builds produce **three** modules — `exudynCPP`, `exudynCPPfast`
@@ -935,6 +960,23 @@ renumbered, so these continue the sequence rather than slotting into their phase
     three and keeps all three logs. Sequence after step 47 (rewriting binary selection) if that
     lands first — the two touch the same logic.
 
+
+74. *(Phase 2, with the flattening)* **Give the logs their own directory.** Today they sit in three
+    sibling directories next to the models — `TestSuiteLogs/`, `TestExamplesLogs/`,
+    `PerformanceLogs/` — plus the `logsTmp/` added by step 72. Consolidate into a top-level `logs/`
+    with one subdirectory per kind (`testmodels`, `examples`, `performance`) and a single shared
+    `logs/tmp/`, which is what makes clearing scratch logs one delete. Do it inside the Phase 2
+    `git mv` commit so the moves stay tracked, and update the three `logFileName` expressions plus
+    `testRunnerTools.tmpLogDir` in the same commit.
+
+75. *(Phase 2, with the flattening)* **Move runners and helpers out of the model directories.**
+    `TestModels/` currently mixes the models with `runTestSuite.py`, `runTestExamples.py`,
+    `runPerformanceTests.py`, `runUnitTests.py`, `runTestSuiteRefSol.py`, `modelUnitTests.py` and
+    `testRunnerTools.py`, which is why step 69's coverage check has to special-case seven files
+    that are not tests. Separate them so the model directories contain models only. Performance
+    models get their own directory as well; a model used for both performance and TestModels moves
+    to performance. Sequence with step 69 — a completeness check over a directory of models only
+    is far simpler than one that must know which files to ignore.
 ---
 
 ## 6. Decisions taken
