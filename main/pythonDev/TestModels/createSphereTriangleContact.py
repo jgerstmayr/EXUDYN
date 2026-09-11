@@ -106,7 +106,8 @@ for methodNum, method in enumerate(methodList):
     impactModel = 2
 
     isExplicitSolver = False
-    tEnd = 0.65     #end time of simulation
+    tEnd = 0.25     #end time of simulation; 2026-09-11 (step 69): was 0.65, shortened for the
+                    #test suite with the step size unchanged
     stepSize = 2e-4 #*10
 
     g = 9.81
@@ -272,6 +273,6 @@ exudynTestGlobals.testResult = testSolution
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-if useGraphics and False:
-    mbs.SolutionViewer()
+#NOTE: the SolutionViewer call that used to sit here was guarded by 'useGraphics and False',
+#so it could never run; removed 2026-09-11 (step 69).
 

@@ -7,7 +7,8 @@ Instructions for Claude Code sessions on this repository. Humans: see
 
 | file | what it is |
 |---|---|
-| [docs/revision/exudynRevisionPlan2026.md](docs/revision/exudynRevisionPlan2026.md) | **Standing context.** The v1.11.0 → v2.0 plan: measured facts, decisions taken, 63 numbered steps. Load it; cite steps by number; correct it in place if a fact turns out wrong. |
+| [docs/revision/exudynRevisionPlan2026.md](docs/revision/exudynRevisionPlan2026.md) | **Standing context.** The v1.11.0 → v2.0 plan: measured facts, decisions taken, 79 numbered steps. Load it; cite steps by number; correct it in place if a fact turns out wrong. |
+| [docs/revision/exudynRevisionLog2026.md](docs/revision/exudynRevisionLog2026.md) | **What was already done.** The closed steps with their full findings. Consult it before re-deriving something; **never edit a closed entry** — if it turns out wrong, correct the plan's facts and append a dated note. |
 | [docs/dev/CODING_STYLE.md](docs/dev/CODING_STYLE.md) | Naming, abbreviations, headers, what is deprecated |
 | [docs/dev/WORKFLOW.md](docs/dev/WORKFLOW.md) | Issue tracker, versioning, commit gates |
 

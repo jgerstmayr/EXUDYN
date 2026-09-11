@@ -212,7 +212,9 @@ TSScope.examplesFailedNames=set()   #names rather than indices, for the overview
 TSScope.invalidResult = 1234567890123456 #should not happen occasionally
 if TSScope.runTestExamples:
     from runTestSuiteRefSol import (TestExamplesReferenceSolution, TestExamplesToleranceFactors,
-                                    SensitiveTests, UnresolvedOnLinux)
+                                    SensitiveTests, UnresolvedOnLinux,
+                                    NotTestModels, DeliberatelyNotRun,
+                                    PerformanceTestsReferenceSolution)
     TSScope.examplesTestRefSol = TestExamplesReferenceSolution()
     TSScope.testTolFactors = TestExamplesToleranceFactors()
     TSScope.sensitiveTests = SensitiveTests()
@@ -224,6 +226,21 @@ if TSScope.runTestExamples:
     #the tests whose failure must not set the exit code, whatever the reason
     TSScope.excludedFromExitCode = TSScope.sensitiveTests | TSScope.unresolvedTests
     
+    #the reference lists ARE the run manifest, so a model missing from them is never executed.
+    #Check that against the folder before running anything, and report it in the log where the
+    #next reader will see it (revision plan step 69).
+    TSScope.coverageText, TSScope.coverageFailed = testRunnerTools.CheckTestCoverage(
+        modelsDir='.',
+        #MiniExamples are deliberately absent: they live in MiniExamples/, not here, and have
+        #their own generated manifest. raytracerNOGLFWtest.py is added back because
+        #TestExamplesReferenceSolution() pops it on macOS only - the file still exists there.
+        refSolNames=(set(TSScope.examplesTestRefSol.keys())
+                     | set(PerformanceTestsReferenceSolution().keys())
+                     | set(['raytracerNOGLFWtest.py'])),
+        notTestModels=NotTestModels(),
+        deliberatelyNotRun=DeliberatelyNotRun())
+    exu.Print(TSScope.coverageText)
+
     TSScope.testFileList=[] #automatically create list from reference solution ...
     for key in TSScope.examplesTestRefSol.keys():
         TSScope.testFileList+=[key]
@@ -491,6 +508,11 @@ if outputLocal:
 #so they differ between machines and would make a scheduled run fail at random.
 if useExitCode:
     reproducibleFails = totalFails - len(testsFailedSensitive)
+    #a coverage gap is a failure of the suite itself, not of a test: the list no longer
+    #describes the folder, so a passing run no longer means what it says
+    if TSScope.runTestExamples and TSScope.coverageFailed:
+        print('FAILED: test coverage - see the TEST COVERAGE section of the log', flush=True)
+        sys.exit(1)
     if len(testsFailedSensitive) != 0:
         print('note: ' + str(len(testsFailedSensitive)) +
               ' known-difference test(s) failed (sensitive or unresolved-on-Linux);'

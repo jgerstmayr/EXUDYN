@@ -44,16 +44,20 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/createRollingDiscTest
    TestModels/createSphereQuadContact
    TestModels/createSphereQuadContact2
+   TestModels/createSphereTriangleContact
    TestModels/deleteItemsTest
    TestModels/distanceSensor
    TestModels/driveTrainTest
    TestModels/explicitLieGroupIntegratorPythonTest
    TestModels/explicitLieGroupIntegratorTest
+   TestModels/explicitLieGroupMBSTest
    TestModels/fourBarMechanismTest
    TestModels/fourBarMechanismIftomm
    TestModels/generalContactCylinderTest
    TestModels/generalContactCylinderTrigsTest
    TestModels/generalContactFrictionTests
+   TestModels/generalContactImplicit1
+   TestModels/generalContactImplicit2
    TestModels/generalContactSpheresTest
    TestModels/genericJointUserFunctionTest
    TestModels/genericODE2test
@@ -102,6 +106,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/scissorPrismaticRevolute2D
    TestModels/sensorUserFunctionTest
    TestModels/serialRobotTest
+   TestModels/sliderCrank3Dbenchmark
    TestModels/sliderCrank3Dtest
    TestModels/sliderCrankFloatingTest
    TestModels/solverExplicitODE1ODE2test

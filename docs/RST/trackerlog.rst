@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.15.dev1, 
-+  last change =  2026-09-10, 
-+  Number of issues = 2366, 
-+  Number of resolved issues = 2088 (15 in current version), 
++  Exudyn version = 1.11.17.dev1, 
++  last change =  2026-09-11, 
++  Number of issues = 2370, 
++  Number of resolved issues = 2090 (17 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.17: resolved Issue 2367: test suite does not notice models that are in no reference list (testing)
+    - issue author: Claude-JG
+    - description:  runTestSuite.py builds its run list from the keys of TestExamplesReferenceSolution() and never lists the directory; a model on disk but in no list is therefore silently never executed. 19 models were in that state.
+    - **notes:** testRunnerTools.CheckTestCoverage() added; runs at suite start-up; uncovered file or stale key fails under --exit-code. Verified by fault injection.
+    - date resolved: **2026-09-10 22:31**\ , date raised: 2026-09-10 
+    - resolved by: Claude-JG
+ * Version 1.11.16: :textred:`resolved BUG 2366` : Python 3.6 non-AVX reference override never applied 
+    - issue author: Claude-JG
+    - description:  replaceRefSol in runTestSuiteRefSol.py spelled revoluteJointprismaticJointTest.py with a lowercase p while the file and the base dictionary use revoluteJointPrismaticJointTest.py. The overlay is applied by iterating the base keys; a key matching nothing is silently ignored; so this correction never applied on Python 3.6 without AVX.
+    - **notes:** Overlay hoisted into Python36NonAVXOverrides() so its keys can be validated; spelling fixed; CheckTestCoverage reports any future dead override.
+    - date resolved: **2026-09-10 22:31**\ , date raised: 2026-09-10 
+    - resolved by: Claude-JG
  * Version 1.11.15: resolved Issue 2365: Clean up docs/howTo and remove the doxygen configuration (cleanup)
     - issue author: Claude-JG
     - description:  docs/howTo held 26 loose .txt files, most describing VS2017/VS2019, 32-bit builds, Python 3.6/3.7 or the pre-WSLg X-server era, plus two exact duplicates. docs/doxygen held a 111 KB Doxyfile for a tool that broke on project size, whose PDF path never worked and whose graph generation had already been switched off. Also: no experimental folder remains in the tracked tree, so revision plan step 8 has nothing to move. Steps 8, 30, 79.
@@ -7907,6 +7919,16 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2369:` relativeRotationTranslationMechanism now ends at rest at the origin
+    - issue author: Claude-JG
+    - description:  norm(GetODE2Coordinates()) at the end of the run is 2.087948914872922e-12 while the reference recorded in the file is 4.172189649307425 (2023-06-12). The mechanism produces essentially zero motion. Found while triaging the unlisted TestModels for revision plan step 69. Not added to the test suite.
+    - date raised: 2026-09-11 
+
+ * :textred:`open BUG 2368:` ANCFbeltDrive result contradicts its own recorded reference
+    - issue author: Claude-JG
+    - description:  Run headless the model yields 0.0 while the reference in the file comment is -0.4842656133238705 (2021-05-07). The model was retuned to a 10s dynamic run (tEnd = 10 ; h = 0.5e-3) and the reference was not updated. Found while triaging the unlisted TestModels for revision plan step 69. Not added to the test suite: adding the measured value would enshrine whatever changed.
+    - date raised: 2026-09-11 
 
  * :textred:`open BUG 2127:` ContactSphereTorus  
     - description:  check torques on both bodies, as there seems to be momentum conservation issues in ball bearings

@@ -9,15 +9,32 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.15.dev1, 
-  \item last change =  2026-09-10, 
-  \item Number of issues = 2366, 
-  \item Number of resolved issues = 2088 (15 in current version), 
+  \item Exudyn version = 1.11.17.dev1, 
+  \item last change =  2026-09-11, 
+  \item Number of issues = 2370, 
+  \item Number of resolved issues = 2090 (17 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.17}:  resolved Issue 2367: {\bf test suite does not notice models that are in no reference list}
+(testing)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: runTestSuite.py builds its run list from the keys of TestExamplesReferenceSolution() and never lists the directory; a model on disk but in no list is therefore silently never executed. 19 models were in that state.}
+    \item {\bf notes: testRunnerTools.CheckTestCoverage() added; runs at suite start-up; uncovered file or stale key fails under --exit-code. Verified by fault injection.}
+    \item   date resolved: {\bf 2026-09-10 22:31},
+date raised: 2026-09-10 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.16}: {\bf \color{warningRed}  resolved BUG 2366}: {\bf Python 3.6 non-AVX reference override never applied}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: replaceRefSol in runTestSuiteRefSol.py spelled revoluteJointprismaticJointTest.py with a lowercase p while the file and the base dictionary use revoluteJointPrismaticJointTest.py. The overlay is applied by iterating the base keys; a key matching nothing is silently ignored; so this correction never applied on Python 3.6 without AVX.}
+    \item {\bf notes: Overlay hoisted into Python36NonAVXOverrides() so its keys can be validated; spelling fixed; CheckTestCoverage reports any future dead override.}
+    \item   date resolved: {\bf 2026-09-10 22:31},
+date raised: 2026-09-10 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.15}:  resolved Issue 2365: {\bf Clean up docs/howTo and remove the doxygen configuration}
 (cleanup)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -12314,6 +12331,18 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 2369}:  {\bf relativeRotationTranslationMechanism now ends at rest at the origin}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: norm(GetODE2Coordinates()) at the end of the run is 2.087948914872922e-12 while the reference recorded in the file is 4.172189649307425 (2023-06-12). The mechanism produces essentially zero motion. Found while triaging the unlisted TestModels for revision plan step 69. Not added to the test suite.}
+    \item date raised: 2026-09-11 
+  \ei
+  \item open {\bf BUG 2368}:  {\bf ANCFbeltDrive result contradicts its own recorded reference}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Run headless the model yields 0.0 while the reference in the file comment is -0.4842656133238705 (2021-05-07). The model was retuned to a 10s dynamic run (tEnd = 10 ; h = 0.5e-3) and the reference was not updated. Found while triaging the unlisted TestModels for revision plan step 69. Not added to the test suite: adding the measured value would enshrine whatever changed.}
+    \item date raised: 2026-09-11 
+  \ei
   \item open {\bf BUG 2127}:  {\bf ContactSphereTorus}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: check torques on both bodies, as there seems to be momentum conservation issues in ball bearings}

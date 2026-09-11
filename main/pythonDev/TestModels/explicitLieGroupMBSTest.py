@@ -232,9 +232,12 @@ exu.Print(val)
 
 dynamicSolver = exu.MainSolverImplicitSecondOrder()
 
-fact = 16000
-simulationSettings.timeIntegration.numberOfSteps = fact #1000 steps for test suite/error
-simulationSettings.timeIntegration.endTime = 1              #1s for test suite / error
+#2026-09-11 (revision plan step 69): shortened from 1s/16000 steps to 0.1s/1600 steps when the
+#model was added to the test suite. The STEP SIZE is unchanged, so the integrator is exercised
+#exactly as before - only less simulated time. Reference value taken from the shortened model.
+fact = 1600
+simulationSettings.timeIntegration.numberOfSteps = fact
+simulationSettings.timeIntegration.endTime = 0.1
 
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True

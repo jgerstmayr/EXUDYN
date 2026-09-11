@@ -121,6 +121,71 @@ def CpuInfoString():
 
 
 #%%******************************************************************************************************
+def CheckTestCoverage(modelsDir, refSolNames, notTestModels, deliberatelyNotRun):
+    """
+    Verify that the reference lists and the files on disk still describe the same set of tests.
+
+    runTestSuite.py builds its run list purely from the keys of TestExamplesReferenceSolution():
+    there is no listdir anywhere in the suite. A model which exists but is in no list is
+    therefore never executed, and is indistinguishable from a file which does not exist. That
+    is how 19 models came to be silently unrun (revision plan fact 14, step 69).
+
+    Three checks, covering every direction in which the two can drift apart:
+
+      1. UNCOVERED   - a .py in the folder which is in no reference list and on no exclusion
+                       list. Fails: this is the rot the check exists to stop.
+      2. STALE KEY   - a name in a reference list with no file on disk. Fails. The suite would
+                       catch this too, but only as a confusing 'raised exception' mid-run.
+      3. DEAD EXCLUSION - a name in deliberatelyNotRun with no file on disk. Reported only:
+                       deleting a test must not break the suite for whoever deleted it.
+
+    Returns (message, isFailure). The message is always printed; isFailure is what a caller
+    with --exit-code folds into the process exit code - report prominently, fail selectively,
+    as with SensitiveTests().
+    """
+    onDisk = set(f for f in os.listdir(modelsDir)
+                 if f.endswith('.py') and os.path.isfile(os.path.join(modelsDir, f)))
+
+    covered = set(refSolNames)
+    excluded = set(notTestModels) | set(deliberatelyNotRun)
+
+    uncovered = sorted(onDisk - covered - excluded)
+    staleKeys = sorted(covered - onDisk)
+    deadExclusions = sorted(set(deliberatelyNotRun) - onDisk)
+
+    isFailure = (len(uncovered) != 0) or (len(staleKeys) != 0)
+
+    s = '\n+++++ TEST COVERAGE +++++\n'
+    s += ('{:d} .py files in {:s}: {:d} referenced, {:d} infrastructure, '
+          '{:d} deliberately not run\n').format(
+          len(onDisk), modelsDir, len(covered & onDisk),
+          len(set(notTestModels) & onDisk), len(set(deliberatelyNotRun) & onDisk))
+
+    if len(uncovered) != 0:
+        s += '\nUNCOVERED - in no reference list and on no exclusion list:\n'
+        for name in uncovered:
+            s += '    ' + name + '\n'
+        s += ('  These are never executed. Add each to a reference list with a reference value,\n'
+              '  or to DeliberatelyNotRun() in runTestSuiteRefSol.py with a reason.\n')
+
+    if len(staleKeys) != 0:
+        s += '\nSTALE KEY - named in a reference list, but no such file:\n'
+        for name in staleKeys:
+            s += '    ' + name + '\n'
+        s += '  Remove the entry, or restore the file.\n'
+
+    if len(deadExclusions) != 0:
+        s += '\nnote: dead exclusion(s) - listed in DeliberatelyNotRun() but no such file:\n'
+        for name in deadExclusions:
+            s += '    ' + name + '\n'
+
+    if not isFailure and len(deadExclusions) == 0:
+        s += 'OK: every .py in the folder is either referenced or explicitly excluded\n'
+
+    return s, isFailure
+
+
+#%%******************************************************************************************************
 def FormatTestOverview(title, names, results, errors, tolerances=None, times=None,
                        failedNames=None, sensitiveNames=None, unresolvedNames=None):
     """

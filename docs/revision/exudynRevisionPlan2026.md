@@ -4,6 +4,11 @@ Working document for the v1.11.0 → v2.0 restructuring. Written to be loaded as
 context in a Claude Code session: it carries the measured facts, the decisions already taken
 and their reasons, and the step list.
 
+**This file is what is still to do.** What was already done — the closed steps with their full
+findings — lives in [`exudynRevisionLog2026.md`](exudynRevisionLog2026.md), which only grows and
+is *kept* after v2.0 as the revision / migration record. This plan is discarded at that point. When
+a step closes, move its narrative there and leave a one-line stub with a link.
+
 - **Companion artifact** (same content, tickable checklist):
   https://claude.ai/code/artifact/06487a25-4feb-4262-b2aa-fc8907640fa3
 - **Baseline commit**: `e44aca1` — "final commit for Exudyn1.11.0", 2026-08-05
@@ -24,6 +29,9 @@ and their reasons, and the step list.
 
 5. Coding rules are §9, and the session working contract is §11 — both now point at `CLAUDE.md`
    and `docs/dev/`, which are the files to edit when a rule changes.
+6. **Closing a step**: move its findings into `exudynRevisionLog2026.md` under an
+   `<a id="step-N"></a>` anchor, and leave one or two lines here — status, date, outcome, link. Load
+   the log only when a closed step is actually relevant; that is the point of the split.
 
 ---
 
@@ -36,7 +44,7 @@ and their reasons, and the step list.
 | Generators | 6 scripts, ~25k LOC, in `main/src/pythonGenerator/` |
 | Item definitions | `objectDefinition.py` 1.4 MB / 11,300 lines; `systemStructuresDefinition.py` 256 KB |
 | Python package | 27 modules + `robotics/` in `main/pythonDev/exudyn/` |
-| Tests | 142 TestModel files, **106 executed** (list in `runTestSuiteRefSol.py`) + 23 MiniExamples, ~22 s **with scipy pinned to 1.15.2** (fact 19); 177 Examples; driven by `runTestSuite.py` |
+| Tests | 137 TestModel files, **106 executed** (list in `runTestSuiteRefSol.py`) + 23 MiniExamples, ~22 s **with scipy pinned to 1.15.2** (fact 19); 177 Examples; driven by `runTestSuite.py` |
 | Build | `main/setup.py`, 956 lines; VS2022 solution; CMake files are dead |
 | Clone | 203 MB working tree, 65 MB `.git`; `--depth 1` shallow clone of GitHub `master` at `e44aca1`. `origin` = internal GitLab (full history), `github` = public. See §2a. |
 | Maintainer tools | `tools/issueTracker/` (998-line tracker; **the version source of truth**) and `tools/buildAndGenerate/` (15 build/test/release batch scripts). Added to the working tree 2026-09; **never published to GitHub**. |
@@ -184,17 +192,17 @@ These were checked against the tree. Several correct earlier assumptions.
     future difference is a real signal. Note also that generation must be run under the **base
     Anaconda** environment (§3a) — running elsewhere produced spurious line-ending differences.
 
-14. **The test suite runs 106 of 142 TestModel files.** `runTestSuite.py -quiet` executes 106
-    TestModels plus 23 MiniExamples in 24.3 s (measured on venvP312 / Python 3.12.9 /
-    NumPy 2.2.4, all passing), and confirms "UNIT TESTS SKIPPED" / "CPP UNIT TESTS SKIPPED" as
-    step 42 assumes. The executed set is defined by `TestExamplesReferenceSolution()` in
-    `main/pythonDev/TestModels/runTestSuiteRefSol.py`, which names 136 files across its three
-    reference-value functions. **26 `.py` files in the folder appear in no list**; five of those are
-    the runners themselves (`runTestSuite.py`, `runTestSuiteRefSol.py`, `runTestExamples.py`,
-    `runPerformanceTests.py`, `runUnitTests.py`) and two are infrastructure (`modelUnitTests.py`,
-    `interfaceTest.py`), leaving roughly 19 genuine models that are never executed — among them
-    `ANCFThinPlateTests.py`, `NGsolveCrankShaftTest.py`, `generalContactImplicit1/2.py` and
-    `explicitLieGroupMBSTest.py`. See step 69.
+14. **The test suite runs 111 of 137 TestModel files, and the gap can no longer widen
+    silently.** `TestExamplesReferenceSolution()` in `runTestSuiteRefSol.py` is the run manifest as
+    well as the reference-value store: `runTestSuite.py` builds `testFileList` from its keys and
+    there is **no `listdir` anywhere in the suite**, so a model on disk but not in the dict is
+    never executed and is indistinguishable from a file that does not exist. That is how 19 models
+    came to be unrun. Since 2026-09-11 `testRunnerTools.CheckTestCoverage()` fails the suite when a
+    `.py` is in neither a reference list nor `DeliberatelyNotRun()`.
+
+    Current state: **116 referenced, 7 infrastructure, 14 deliberately not run**; 111 TestModels
+    plus 23 MiniExamples execute in **23.3 s**. Each of the 14 carries its reason in
+    `DeliberatelyNotRun()`. See step 69.
 
 15. **The test suite writes into the tracked tree**: `TestModels/coordinatesSolution.txt`,
     `TestModels/solution/`, three `TestModels/testData/netgenTestMesh*` files, a
@@ -204,29 +212,13 @@ These were checked against the tree. Several correct earlier assumptions.
     committed `testData/*.npy` reference meshes. The single shared `coordinatesSolution.txt` at the
     TestModels root remains the concrete obstacle for step 64 (parallelisation).
 
-16. **RESOLVED 2026-09-09 (step 71).** Several generators wrote output without specifying an
-    encoding, which on Windows meant
-    cp1252 instead of UTF-8 and silently corrupts non-ASCII characters. Confirmed case:
-    `pythonAutoGenerateSystemStructures.py:1332` writes `docs/theDoc/interfaces.tex` with
-    `open(latexFile,'w')`. The input `systemStructuresDefinition.py` *is* read as UTF-8, so the
-    degree sign in "alpha=90°" arrives correctly as `C2 B0` and is written back as a bare `B0` —
-    the committed file is correct UTF-8, and **regenerating corrupts it**. The same pattern appears
-    at roughly nine other write sites producing tracked output, among them
-    `pythonAutoGenerateObjects.py:2181` (`itemDefinition.tex`), `:2454` (`objectFactoryAutoReg.h`),
-    `:2298` and `:354` (MiniExamples), `utilitiesDocuGenerator.py:983`
-    (`pythonUtilitiesDescription.tex`), `autoGeneratePyBindings.py:4417`
-    (`manual_interfaces.tex`), and `doc2rst.py:479`/`:658` (`index.rst`, `abbreviations.tex`).
-    All 12 write sites and the 6 paired read sites now pass `encoding='utf8'` explicitly.
-    The repair changed committed bytes in one place, as expected: `pythonUtilitiesDescription.tex`
-    had "Wörnle" and "Mehrkörpersysteme" stored as cp1252 and they are now correct UTF-8.
-    Verified by two consecutive regeneration runs producing identical output, and by an
-    `iconv -f UTF-8` validity scan plus a U+FFFD grep over `docs/theDoc/*.tex`, `docs/RST/`,
-    `main/src/Autogenerated/` and the MiniExamples — all clean.
+16. **RESOLVED 2026-09-09 (step 71).** Generator write sites without an explicit encoding fell
+    back to cp1252 on Windows and corrupted non-ASCII output on regeneration. All 12 write sites
+    and 6 read sites now pass `encoding='utf8'`. → [log](exudynRevisionLog2026.md#fact-16)
 
-17. **RESOLVED 2026-09-09 (step 71).** `pythonAutoGenerateSystemStructures.py:1357` emitted four
-    trailing spaces after `:maxdepth: 2` in `StructuresAndSettingsIndex.rst`, where the committed
-    file has an empty line — harmless to Sphinx but drifting on every run. Fixed in the
-    triple-quoted literal.
+17. **RESOLVED 2026-09-09 (step 71).** Four trailing spaces emitted into
+    `StructuresAndSettingsIndex.rst` drifted on every run. →
+    [log](exudynRevisionLog2026.md#fact-17)
 
 18. **Multi-platform text handling is a standing concern, not a one-off.** Everything to date has
     been generated and built on Windows, so encoding and line-ending defaults have never been
@@ -234,14 +226,6 @@ These were checked against the tree. Several correct earlier assumptions.
     line endings. Any *new* file IO in the generators or tools must pass `encoding='utf8'`
     explicitly — never rely on the platform default. Worth a lint rule when step 43 adds ruff
     (`PLW1514` / `flake8-encodings`).
-19a. **The scipy slowdown localised to one test (2026-09-10).** On the GitLab runner with an
-    unpinned scipy, `abaqusImportTest.py` alone took **60.0 s of the 106 s** suite — 56% of the
-    whole run for one otherwise unremarkable test, against 1.1 s for the comparable
-    `compareAbaqusAnsysRotorEigenfrequencies.py`. Consistent with fact 19: it is the sparse
-    eigenvalue solver. `tools/ci/buildManylinux.sh` now pins `scipy==1.15.2`; raise that pin
-    deliberately and re-measure. This is also a **user-facing** performance regression, not only a
-    CI annoyance — anyone on current scipy pays it in their own eigenvalue work.
-
 19. **scipy 1.18.0 causes a large test suite slowdown** — attributed to the eigensolver path.
     Measured on the same machine and the same Exudyn 1.11.0: `venvP312` (scipy 1.15.2 /
     numpy 2.2.4) runs the suite in **24.3 s**, `venvExuP313` with scipy 1.18.0 / numpy 2.5.2 took
@@ -252,6 +236,14 @@ These were checked against the tree. Several correct earlier assumptions.
     scipy call and reporting upstream if it reproduces standalone; until then, pin scipy in the
     reference environment and record the scipy/numpy versions alongside the timing in
     `TestSuiteLogs/`.
+
+19a. **The scipy slowdown localised to one test (2026-09-10).** On the GitLab runner with an
+    unpinned scipy, `abaqusImportTest.py` alone took **60.0 s of the 106 s** suite — 56% of the
+    whole run for one otherwise unremarkable test, against 1.1 s for the comparable
+    `compareAbaqusAnsysRotorEigenfrequencies.py`. Consistent with fact 19: it is the sparse
+    eigenvalue solver. `tools/ci/buildManylinux.sh` now pins `scipy==1.15.2`; raise that pin
+    deliberately and re-measure. This is also a **user-facing** performance regression, not only a
+    CI annoyance — anyone on current scipy pays it in their own eigenvalue work.
 
 20. **The 5e-14 test tolerance is too tight to be environment-independent.** In the scipy 1.15.2 /
     numpy 2.4.6 / Python 3.13.15 run, `movingGroundRobotTest.py` fails at
@@ -503,251 +495,66 @@ step 33; until then the runner script must set cwd explicitly.
 
 ---
 
-## 5. The plan — 63 steps
+## 5. The plan — 79 steps
 
 Order: **Phase 0 → 2a → (1 + 2 together as v2.0) → 3 → 4 → 5 → 6 → 7 → 8 → 9.**
 
 ### Phase 0 — Freeze current behaviour (~1 week) — do first
 
-1. **DONE 2026-09-09** — root `.gitignore` added (VS, Python build output, generator scratch, test
-   suite output; `PerformanceLogs/`, `TestSuiteLogs/` and `testData/*.npy` deliberately kept
-   tracked per decision D7, as are `TestExamplesLogs/`). `main/dist/` and
-   `main/obj/cppsrc.vcxproj.user` untracked; the `.user` file stays on disk for VS, and
-   `main/obj/cppsrc.vcxproj` itself remains tracked. **Step complete.**
-2. **PARTLY DONE 2026-09-09** — `tools/regenerate.py` written and verified; **CI wiring still
-   open** (needs a decision on `.github/workflows/`, see below).
-
-   Runs the six generators from their required cwd, then classifies every difference against HEAD:
-   Tier 1 fails (exit 1), Tier 2 warns, anything outside both tiers is reported as an unexpected
-   manifest gap. `--check` for CI, `--no-run` to check without regenerating, `--python` to select
-   the interpreter. It deliberately does not run `makeAllBinariesScripts.py` (volatile build date),
-   `autoGenerateDocstrings.py` (step 39 removes it), or `issueTracker.py` (different tool, different
-   trigger — it owns the version files and `trackerlog.*`, which are excluded from both tiers).
-
-   Two things were learned by testing it, both now in fact 11 and fact 21:
-   - It must compare with `IsEqualIgnoringDateStrings`, not raw `git status`, or the `@date (last
-     modified)` line produces permanent phantom drift.
-   - Files inside a tier are never excused by being dirty beforehand — that is precisely what the
-     gate exists to catch. Only modifications *outside* both tiers are ignored as unrelated work.
-
-   Verified by deliberate fault injection, not just by passing: perturbing a description in
-   `objectDefinition.py` produced exit 1 with the correct classification
-   (Tier 1: `CObjectMassPoint.h`, `itemInterface.py`; Tier 2: `ObjectMassPoint.rst`,
-   `itemDefinition.tex`); a hand edit to an already-dirty Tier 1 file also produced exit 1; a
-   date-only difference correctly produced exit 0.
+1. **DONE 2026-09-09** — root `.gitignore` added; `PerformanceLogs/`, `TestSuiteLogs/`,
+   `TestExamplesLogs/` and `testData/*.npy` deliberately kept tracked (D7). →
+   [log](exudynRevisionLog2026.md#step-1)
+2. **PARTLY DONE 2026-09-09** — `tools/regenerate.py` written and verified by deliberate fault
+   injection; Tier 1 fails, Tier 2 warns. **CI wiring still open.** →
+   [log](exudynRevisionLog2026.md#step-2)
 
    **Remaining: wire into CI.** Needs its own conda/pip environment on Linux (sphinx toolchain plus
-   the packages the generators import) and must run on a clean checkout. Adding it also means
-   deciding whether it blocks pull requests. Note that CI runs on Linux while all generation to
-   date has happened on Windows, so the first CI run doubles as the multi-platform test for
-   fact 18 — expect line-ending noise until step 70's `.gitattributes` lands, and do that first.
-3. **DONE 2026-09-09.** Two snapshots exist and they mean different things:
-
-   - The zip of the set **as committed at `e44aca1`** — the historical reference. Keep it, but do
-     not compare against it: fact 13 showed it was already stale, and step 71 has since changed
-     `pythonUtilitiesDescription.tex`.
-   - **`goldenFiles_V1.11.5_910e2b5.zip`** — the current reference, built with `git archive` from
-     commit `910e2b5` so it is provably identical to committed content, not to a working tree.
-     871 files, 3.1 MB: Tier 1 (`Autogenerated/*.h` + `versionCpp.cpp`, `itemInterface.py`,
-     `mainSystemExtensions.py`, the `.pyi` stubs, `pythonGenerator/generated/`, MiniExamples) and
-     Tier 2 (the six generated `.tex` files, all of `docs/RST/`, `index.rst`, `README.rst`).
-
-   **The real result of this step is not the zip.** Since the generated set is committed and a full
-   regeneration on commit `910e2b5` produces *no* drift, **the commit itself is the golden
-   snapshot** — verified 2026-09-09 by running all six generators and getting an empty
-   `git status`. That is the first time this has been true in the project, and it is the
-   precondition step 2 needs. The zip is an out-of-band convenience for comparison without a
-   working clone.
-
-   Regenerating the reference: `git archive --format=zip -o goldenFiles_V<ver>_<sha>.zip HEAD --
-   <Tier 1 and Tier 2 paths>`. Re-cut it whenever the generators change shape, and name it with
-   the version and commit so a stale zip is recognisable.
-4. **DONE 2026-09-10** — baseline measured on every platform in active use, and the monkeypatch
-   question answered. Record a baseline: per-platform wheel build time, and verify empirically
-   whether the parallel-compile monkeypatch is still active on Python 3.12+.
-
-   All workstation figures are the **same machine**: Ryzen 9 9950X, **16 cores / 32 threads**.
-   (Python reports 32 — `multiprocessing.cpu_count()` counts logical processors, not cores. Do not
-   read a thread count as a core count when comparing machines.)
-
-   | cp313 build | modules | time | vs Windows |
-   |---|---|---|---|
-   | **Windows**, release mode | 2 `.pyd` | **168.9 s** | — |
-   | **Windows**, `.dev1` mode | 1 `.pyd` | **58.1 s** | — |
-   | **Linux**, native WSL filesystem, `--parallel --quiet` | 1 `.so` | **98.9 s** | 1.7× |
-   | **Linux**, docker with the repo mounted from `/mnt/c` | 1 `.so` | 201–208 s | 3.5× |
-   | **Linux**, GitLab shared runner (6 logical) | 1 `.so` | **372.6 s** | — |
-
-   | | Windows | Linux runner |
-   |---|---|---|
-   | test suite | ~20 s | **106.4 s** (60 s of it `abaqusImportTest.py`, fact 19a) |
-   | docs job | — | **60 s** |
-
-   **The `/mnt/c` mount costs about 2×, not the compiler.** Linux first appeared ~3.5× slower than
-   Windows on identical hardware; the native WSL build isolates it. Building across the Windows
-   filesystem through WSL is slow for the many-small-file I/O a 135-file C++ build does. The real
-   toolchain difference is **1.7×** — MSVC `/MP` `/GL` against `g++ -O3` on heavy templates — which
-   is unremarkable. Do not chase compiler flags for a gap that is mostly I/O.
-
-   Two practical consequences:
-   - **CI is unaffected.** GitLab runners clone into their own filesystem, never a Windows mount,
-     so 372.6 s on a 6-logical runner compares against the 98.9 s native figure: a 3.8× spread for
-     ~5.3× fewer threads, slightly better than linear. The runner is not a bottleneck.
-   - **Local manylinux builds could be ~2× faster** by cloning into WSL's own ext4 instead of
-     building across `/mnt/c`. The container itself is not avoidable — `auditwheel` needs it to
-     produce a *manylinux* wheel, whereas a native WSL build yields only `linux_x86_64`. A mount
-     question, not a container question.
-
-   **The monkeypatch is active on cp312+ and does not fall back.** The build emits the
-   `completed NNN/135` progress lines that only `parallelCCompile` prints, and never
-   `parallel compile FAILED`. The earlier suspicion that "Linux is not running in parallel" is not
-   supported.
-
-   Scheduling: a five-way matrix is ~8 min per job, concurrent across the six shared runners.
-   **macOS is the only platform not measured**, deferred to the arrival of the new Mac — the same
-   treatment macOS gets in steps 11 and 30. Re-measure after step 22.
-
+   the packages the generators import) and must run on a clean checkout. `.gitlab-ci.yml` does
+   **not** yet call it - verified 2026-09-10, the file has only `wheels_linux` and `docs`. Adding
+   it also means deciding whether it blocks pull requests. Note that CI runs on Linux while all
+   generation to date has happened on Windows, so the first CI run doubles as the multi-platform
+   test for fact 18.
+3. **DONE 2026-09-09** — the *commit itself* is the golden snapshot: a full regeneration on
+   `910e2b5` produces no drift, the first time this has been true. `goldenFiles_V1.11.5_910e2b5.zip`
+   is the out-of-band convenience copy. → [log](exudynRevisionLog2026.md#step-3)
+4. **DONE 2026-09-10** — baseline measured on every platform in active use. The Windows/Linux gap
+   is the `/mnt/c` mount (~2×), not the compiler; the real toolchain difference is 1.7×. The
+   parallel-compile monkeypatch is active on cp312+ and does not fall back. macOS deferred to the
+   new Mac. → [log](exudynRevisionLog2026.md#step-4)
 ### Phase 2a — Repository restart (~1 week, then a long freeze)
 
-5. **DONE** — `C:\DATA\cpp\EXUDYN_git` *is* that clone: a `--depth 1` shallow clone of GitHub
-   `master` at `e44aca1` (`.git/shallow` present), and it is where all current work happens.
-   Later commits therefore descend from public history — no graft, no force-push.
+5. **DONE 2026-09-09** — this working clone *is* that clone (depth-1 of GitHub `master` at
+   `e44aca1`). GitLab rejected the shallow push; resolved by seeding the server with full history
+   in 50-commit chunks, after which the shallow clone pushes normally. `.git` stays at 65 MB. →
+   [log](exudynRevisionLog2026.md#step-5)
+6. **DONE** — the old local repository is archived read-only (zipped, copy on the university
+   server). It remains the only copy of the fine-grained history. →
+   [log](exudynRevisionLog2026.md#step-6)
+7. **DONE 2026-09-09** — `origin` is the internal GitLab, `github` the public repository; `v2-dev`
+   tracks `origin/v2-dev`, `master` tracks `github/master`. Current layout and rules in section 2a.
+    [log](exudynRevisionLog2026.md#step-7)
+8. **DONE 2026-09-10 - and there was nothing to move.** No tracked path matched `experimental`,
+   `scratch`, `tmp`, `backup`, `draft`, `unused`, `deprecated` or `archive`, and no gitlinks.
+   `.gitignore` now blocks the shape pre-emptively; the destination for development-only material
+   is the second internal repository (step 77). `main/src/Main/Experimental.h` stays (fact 25). →
+   [log](exudynRevisionLog2026.md#step-8)
+9. **DONE 2026-09-09** — `tools/hooks/pre-push` refuses any ref but `master`, `release/*` and tags
+   when the target is GitHub, matching on both remote name and URL. Activated per clone with
+   `git config core.hooksPath tools/hooks`. → [log](exudynRevisionLog2026.md#step-9)
+10. **DONE 2026-09-10** — one-time secret and PII scan of the tree to be published; the dead
+    absolute include at `OpenVRinterface.cpp:19` removed, the personal account identifier purged,
+    and `tools/hooks/pre-commit` added so it cannot return. →
+    [log](exudynRevisionLog2026.md#step-10)
+11. **PARTLY DONE 2026-09-09 (implementation), 2026-09-10 (first green pipeline).**
+    `.gitlab-ci.yml` builds and tests manylinux wheels cp310-cp314 on the shared runners plus a
+    `sphinx-build -W` docs job; all six jobs passed on the first run. Windows, macOS and aarch64
+    are deliberately out of scope. → [log](exudynRevisionLog2026.md#step-11)
 
-   **Shallow push needs a server-side setting, and the UIBK GitLab rejects it.** Measured
-   2026-09-09, first against a local throwaway repository and then confirmed against the real
-   server: `! [remote rejected] v2-dev -> v2-dev (shallow update not allowed)`. The receiving
-   repository must have `receive.shallowUpdate true`, which GitLab does not expose in its web UI —
-   it is a per-repository server-side git config.
-
-   With that setting the result **is sound**, not a compromise: `git fsck` clean on both the bare
-   repository and a fresh clone, all commits present with `e44aca1` as root, the shallow boundary
-   inherited correctly, file content byte-identical. The only real limitation is that the internal
-   repository can never serve history older than `e44aca1` — which matters little, since that
-   history exists both on GitHub and in the step 6 archive.
-
-   **Resolved 2026-09-09 without changing any server setting, and D1's small-clone benefit
-   survived.** The rejection is not about the client being shallow as such — it is about the
-   *server* being asked to create a ref whose ancestry it does not have. Seed the server with the
-   full history once, and the shallow clone pushes normally ever after.
-
-   What was done:
-
-   1. Seeded `origin` from an existing full clone of GitHub, pushing with an explicit URL so that
-      repository's own remotes and branches were never touched.
-   2. **GitLab rejects any pack over 1.17 GiB** (`pack exceeds maximum allowed size`), and the full
-      history is about 1.5 GB, so `git push --mirror` fails outright. Pushed `master` in chunks of
-      50 commits instead — `git push <url> <sha>:refs/heads/master` walked over
-      `git rev-list --reverse master` — then the tags. Each chunk is a fast-forward of the previous
-      one, so the sequence is resumable and completed chunks re-run as cheap no-ops.
-   3. Verified by comparing `git ls-remote` against `git show-ref`: 30 refs on both sides, no
-      missing refs, no SHA mismatches. That is proof rather than evidence — `receive-pack` runs a
-      connectivity check and refuses to create a ref unless every reachable object is present, so a
-      matching SHA cannot be produced by a partial history.
-   4. `git push -u origin v2-dev` from the shallow clone then transferred **373 KB** and succeeded.
-
-   End state: `.git` stays at 65 MB here, the internal server carries full history, and GitHub was
-   never touched. Anyone seeding a fresh internal server repeats steps 1-2.
-6. **DONE** — the old local repository is archived read-only (zipped, with a copy on the
-   university server). It remains the only copy of the fine-grained history.
-7. **DONE 2026-09-09** — two remotes as intended: `origin` is the internal GitLab
-   (`git@<internal-gitlab>:<group>/exudyn.git`), `github` is the public repository. `v2-dev` tracks
-   `origin/v2-dev`; `master` tracks `github/master`. GitHub stays at 1.11.0 until release.
-
-   The rename was done in the planned order — `git remote rename origin github` (which repoints
-   `master`'s tracking automatically) then `git remote add origin <internal>` — while `v2-dev`
-   still had no upstream, so nothing had to be re-pointed by hand afterwards. Current layout and
-   the standing rules are in §2a.
-8. **DONE 2026-09-10 — and there was nothing to move.** Move experimental folders out of the
-   tracked tree. A survey of all 2195 tracked files found **no** path matching `experimental`,
-   `scratch`, `tmp`, `backup`, `draft`, `unused`, `deprecated` or `archive`, and **no gitlinks**
-   (`git ls-files -s | grep ^160000` empty), so no accidental submodule either. The Python-models
-   `Experimental` folder was removed before `e44aca1` and is invisible from this depth-1 clone.
-
-   What was done instead:
-   - **Prevention.** `experimental/` and `Experimental/` added to `.gitignore` *before* any such
-     directory exists. Git does not recurse into a directory holding its own `.git`, so an
-     unignored nested repository is recorded by `git add -A` as a **gitlink** — a bare commit
-     pointer with no content, which clones as a broken submodule. Ignoring first makes the nested
-     shape safe.
-   - **Destination decided**: development-only Python material goes to a **second internal GitLab
-     repository**, not to siblings and not to nested repos. That supersedes this step's original
-     wording, which predates that decision. See step 77.
-   - **`main/src/Main/Experimental.h` stays.** The name-based scan flagged it; it is in fact a
-     deliberate feature-flag mechanism (fact 25). Recorded so the next cleanup does not repeat the
-     mistake this one nearly made.
-
-   Two publish-size findings that belong to no step yet, both larger than they look:
-   - `main/pythonDev/Examples/publications/testData/sliderCrankACME/` — **25.8 MB** of Abaqus
-     matrix dumps, *larger than* `docs/demo` which step 29 already singles out at 22.4 MB.
-   - `main/libs/` — 5.1 MB of prebuilt binaries including a `.pdb` debug database; `openvr_api.*`
-     within it goes away with step 78.
-9. **DONE 2026-09-09** — `tools/hooks/pre-push` refuses any ref but `master`, `release/*` and
-   tags when the target is GitHub, matching on **both** the remote name and a `github.com` URL, so
-   `git push <url> v2-dev` is caught too, before any network access. Activated per clone with
-   `git config core.hooksPath tools/hooks` — hooks in `.git/hooks/` are not version controlled, so
-   `core.hooksPath` is what makes them travel with the repository; the setting itself is still
-   per-clone and is listed as one-time setup in `docs/dev/WORKFLOW.md`. `git push --no-verify`
-   remains the deliberate escape hatch. Verified with four cases against local throwaway
-   repositories: `v2-dev`→github refused, `master`→github allowed, `v2-dev`→internal allowed,
-   and the bare `github.com` URL form refused.
-10. One-time secret and PII scan of the tree to be published; fix `OpenVRinterface.cpp:19`.
-11. **DONE 2026-09-09 (implementation); first run and the weekly schedule still pending.**
-    Solve CI for the freeze before starting it. Months of restructuring with no wheel matrix is the
-    largest avoidable risk here — 5 Python versions × 4 OS, all surfacing at once on the release
-    push.
-
-    Resolved on the internal GitLab rather than by a mirror: a public mirror is excluded by D6, and
-    a private one is not viable — private-repo Actions minutes bill Windows at 2× and macOS at 10×,
-    so a single full matrix run can exceed the monthly allowance.
-
-    `.gitlab-ci.yml` runs **Linux x86_64 × cp310–314** on the instance's shared Docker runners. The
-    manylinux image *is* the job image, so the build runs directly inside it — no docker-in-docker
-    and no privileged runner, which is the usual blocker for wheel building on shared runners. The
-    job calls `tools/ci/buildManylinux.sh <pyTag>`, the same script the local docker path uses, so
-    a CI failure reproduces locally with one command. That script replaces five copy-pasted blocks
-    in `manylinuxBuild.sh`. A second job builds the docs with `sphinx-build -W` and does **not**
-    deploy — GitHub Pages correctly stays at 1.11.0 while the public release is 1.11.0.
-
-    **Nothing runs on an ordinary push.** Pipelines start from the weekly schedule, the *Run
-    pipeline* button, or a tag. The schedule lives in the GitLab UI (Settings → CI/CD → Schedules,
-    target `v2-dev`), not in the file — if it is deleted, CI stops silently and the repository looks
-    unchanged.
-
-    Regular runs set `EXUDYN_NOFAST=1`, skipping the `__FAST_EXUDYN_LINALG` binary and roughly
-    halving build time, since ordinary tests do not exercise it. Release builds must not.
-
-    Scope was chosen from where the blind spots actually are: **Windows is the daily development
-    machine**, so breakage there surfaces within hours through normal work and needs no watchdog;
-    **macOS failures arrive coupled with Linux ones** except for visualization, which cannot be
-    tested headlessly on any runner and needs a real Mac regardless. Registering a runner on the
-    Windows workstation was rejected — one that is offline whenever the machine is off produces
-    failed scheduled pipelines meaning "laptop was closed", and an alarm that usually means nothing
-    is one nobody reads.
-
-    **Accepted gaps, so they are decisions rather than oversights:**
-    - **Linux aarch64 is uncovered during the freeze.** Shared runners are x86_64 and QEMU would
-      turn a ~30-minute job into hours. `ubuntu-24.04-arm` returns only when GitHub CI resumes; the
-      first post-freeze run must include it before release.
-    - **macOS universal2, and the x86_64 half of it**, are unverified between milestone runs.
-    - The fast and noAVX binaries remain untested until step 73.
-
-    **First pipeline run 2026-09-10: all six jobs passed** — `wheels_linux` across cp310–cp314 and
-    the `docs` job. That settles the two environment unknowns: the shared runners **can** pull from
-    `quay.io`, and EPEL **is** reachable from the runner network. It also confirms the whole chain
-    works on a machine that is not the maintainer's: wheel built, `auditwheel repair` applied, the
-    suite run against the repaired wheel, and the exit code propagated out of the container.
-
-    Two things the green run quietly proves:
-    - `UnresolvedOnLinux()` (step 76) was **necessary**, not cautious. Without it all five wheel
-      jobs would have failed on the eight known contact/friction differences, and a permanently red
-      pipeline is one nobody looks at.
-    - `sphinx-build -W` passes on Linux. Every documentation build until now had been on Windows,
-      so this is the first cross-platform confirmation for fact 18.
-
-    **Remaining: enable the weekly schedule** (Settings → CI/CD → Schedules, target `v2-dev`) and
-    confirm a failing pipeline actually sends mail. An unnoticed red pipeline is the same as no
-    pipeline, and the schedule lives only in the GitLab UI — if it is deleted, CI stops silently and
-    the repository looks unchanged.
+    **Remaining: confirm a failing pipeline actually sends mail.** The weekly schedule is set
+    (Settings → CI/CD  Schedules, target `v2-dev`, Sat 03:33) but lives only in the GitLab UI -
+    if it is deleted, CI stops silently and the repository looks unchanged. An unnoticed red
+    pipeline is the same as no pipeline, so this cannot be closed until a deliberate failure has
+    been seen to arrive by mail.
 12. At v2.0: fast-forward `master`, push once with tags. Ordinary push; clones, permalinks and
     issue references stay valid; GitHub renders the layout change as renames.
 13. Retroactively tag past releases where the commits can be identified.
@@ -808,21 +615,9 @@ Editing the vcxproj in the same commit is fine — it is modified, not moved.
 28. Single version source at the root; generate `docs/theDoc/version.txt` from it; delete the
     four-level path cascade in `exudynVersion.py`.
 29. Move `docs/demo` (22 MB) to release assets or git-lfs.
-30. **DONE 2026-09-10.** Consolidate `docs/howTo/*.txt`; drop the obsolete files. Cut from 26 files
-    to 8, all `.md`. Deleted: everything referring to VS2017/VS2019, 32-bit, Python <= 3.7, the
-    pre-WSLg X-server era, plus generic walkthroughs and two exact duplicates. The rule applied was
-    "does this contain something you could not rederive in five minutes" — build quirks and crash
-    causes kept, installation walkthroughs dropped, since git history, the archived internal
-    repository and GitHub all still hold the originals.
-
-    Survivors: `condaEnvironments.md`, `buildFromSource.md` (was `setupToolsHowTo.txt`, pruned of
-    130 lines of six-year-old benchmark console dumps), `gccVsMsvcTraps.md` (was
-    `changesForGCC.txt`, pruned of the already-fixed bug list), `visualStudio2022.md`,
-    `sphinxDocs.md` (pruned of an embedded workflow copy that had **already drifted** from
-    `.github/workflows/documentation.yaml`), `convertVideosFfmpeg.md`, `matplotlibExamples.md`,
-    and a new **`buildQuirks.md`** holding the specifics salvaged from the deleted files.
-
-    `docs/howTo/openVR.txt` went with them — see step 78. macOS setup stays in `introduction.tex`.
+30. **DONE 2026-09-10.** `docs/howTo/` cut from 26 `.txt` files to 8 `.md`. Rule applied: keep what
+    could not be rederived in five minutes. Survivors and the new `buildQuirks.md` are listed in
+    `docs/dev/README.md`. → [log](exudynRevisionLog2026.md#step-30)
 
 ### Phase 3 — Code generation and docstrings (~6–8 weeks)
 
@@ -1013,81 +808,26 @@ renumbered, so these continue the sequence rather than slotting into their phase
     `.cpp` file names. It is deliberately **not** brought into this repository — step 17's
     `tools/gen_sources.py` supersedes it.
 
-69. *(Phase 4, before 40)* **Complete and verify the test list.** `runTestSuiteRefSol.py` is the
-    real definition of what runs; 26 files in `main/pythonDev/TestModels/` appear in none of its
-    three lists, of which about 19 are genuine models (fact 14). Two tasks: decide per file whether
-    it should be added with reference values or deleted, and add an automated **coverage check**
-    that fails when a `.py` in the folder is neither in a reference list nor on an explicit
-    exclusion list. Without that check the set silently rots again. Do this *before* step 40 wraps
-    the suite in pytest, so the collector wraps a known-complete set.
+69. **DONE 2026-09-11.** *(Phase 4, before 40)* **Complete and verify the test list.**
+    `CheckTestCoverage()` closes the hole; the 19 unlisted models were triaged by running each one;
+    five were trimmed and added (111 executed, up from 106) and 14 are excluded with a reason each.
+    Two drifted models became issues #2368 and #2369 rather than tests. →
+    [log](exudynRevisionLog2026.md#step-69)
 
-70. **DONE 2026-09-09.** *(Phase 0/2)* **Add a `.gitattributes`.** `* text=auto` (LF in the
-    repository, native on checkout), explicit `eol=crlf` for `.bat`/`.cmd` and the VS project files,
-    `eol=lf` for `.sh`, and explicit `binary` for image, media, numerical and compiled types.
+70. **DONE 2026-09-09.** *(Phase 0/2)* `.gitattributes` added: `* text=auto`, `eol=crlf` for
+    `.bat`/`.cmd` and the VS project files, `eol=lf` for `.sh`, explicit `binary` by type. It
+    introduced **no** renormalisation - the index was already fully LF-normalised. →
+    [log](exudynRevisionLog2026.md#step-70)
 
-    **It introduced no renormalisation**: the index was already fully LF-normalised — 2003 text
-    files at `i/lf`, 156 auto-detected binary, verified by `git add --renormalize .` staging zero
-    files. Doing this before Phase 2's flattening was the right order; afterwards it would have been
-    one more confounding factor inside a large rename commit.
+71. **DONE 2026-09-09.** *(Phase 0, hard prerequisite for step 2)* All 12 generator write sites and
+    6 read sites given an explicit `encoding='utf8'`, and the four trailing spaces at
+    `pythonAutoGenerateSystemStructures.py:1357` removed (facts 16 and 17). →
+    [log](exudynRevisionLog2026.md#step-71)
 
-    Two extension traps found while writing it, both worth remembering:
-
-    - **`main/pythonDev/TestModels/testData/rotorAnsys.rst` is an ANSYS *result* file, not
-      reStructuredText** — 917 KB of binary with ~395k NUL bytes. A blanket `*.rst text` rule would
-      corrupt it. It is marked `binary` by path, and the file carries a warning comment.
-    - **`*.eps` and `*.stl` are deliberately *not* marked binary.** Both have ASCII variants:
-      `docs/theDoc/figures/triangleNormal.eps` is plain PostScript with no NUL bytes, and forcing
-      it binary made git want to store its 1197 CR bytes — a spurious change to a correctly stored
-      file. `text=auto` detects the genuinely binary variants (DOS-preview EPS, binary STL) by
-      their NUL bytes.
-
-    The general lesson, which applies to every rule added later: **an extension is not a format.**
-    Check for NUL bytes before forcing a type.
-
-71. **DONE 2026-09-09.** *(Phase 0, hard prerequisite for step 2)* **Give every generator write site
-    an explicit `encoding='utf8'`**, and remove the four trailing spaces at
-    `pythonAutoGenerateSystemStructures.py:1357` (facts 16 and 17). Roughly ten sites across five
-    generators currently fall back to the Windows ANSI codepage, so regeneration corrupts every
-    non-ASCII character in the committed output — today visibly in `docs/theDoc/interfaces.tex`.
-    Until this is fixed, step 2's gate cannot tell real drift from locale-dependent corruption,
-    and step 3's golden snapshot would freeze whichever locale happened to generate it. Expect the
-    reviewed diff to *change* committed bytes wherever corruption is already present; that is the
-    point. Verify by regenerating twice on a clean tree and by grepping the output for U+FFFD and
-    for lone bytes in the 0x80–0xFF range.
-
-72. **DONE 2026-09-10.** *(Phase 4, small)* **Stop the test suite from overwriting a tracked release
-    log.** All three runners — `runTestSuite.py`, `runTestExamples.py`, `runPerformanceTests.py` —
-    called `SetWriteToFile(..., flagAppend=False)` on a release-named file in a tracked directory
-    **at script start, before any test ran**, with no existence check anywhere. An interrupted run
-    therefore left a committed release record not merely overwritten but **half-written**. 55
-    tracked log files were exposed: 32 in `TestSuiteLogs/`, 20 in `PerformanceLogs/`, 3 in
-    `TestExamplesLogs/`. It happened twice on 2026-09-09 during unrelated verification, once
-    against the 1.11.0 release log — within an hour of the hazard being written down here.
-
-    `testRunnerTools.ResolveLogFile()` now decides the target before the first write: absent → use
-    it; present → **divert to `main/pythonDev/logsTmp/`** (gitignored, one shared directory for all
-    three runners so it is trivial to clear) and print a message naming `--overwrite-log`; with
-    that flag → replace deliberately. Diverting rather than aborting is the point: a run that
-    refuses to start until a flag is typed trains people to always type the flag.
-
-    **Existence, not git-tracking, is the test.** No git needed, and it covers the multi-machine
-    case for free — filenames encode version, platform and Python but nothing machine-specific, so
-    two machines with the same configuration produce the identical name and the second must not
-    clobber the first.
-
-    Folded in, since they touch the same log and the same code:
-    - the header now records the **installed versions of the relevant packages** (fact 19 showed
-      scipy alone changes suite runtime by more than an order of magnitude) and the CPU with its
-      core count;
-    - the log ends with a **per-test overview** — result, error, effective tolerance and runtime,
-      one fixed-width line each, for TestModels and MiniExamples, sensitive tests marked. Per-test
-      runtime did not exist before. This is what makes fact 24 actionable: populating
-      `SensitiveTests()` means diffing per-test errors between machines, which was impractical
-      while the numbers only appeared in prose;
-    - `runPerformanceTests.py` routed logs to an `i7-1370P/` subfolder whenever
-      `cpu_count() == 20`, catching any 20-core machine. Replaced by an explicit
-      `EXUDYN_MACHINE_ID`, with the old branch kept as a documented fallback so nothing changes
-      destination silently before the variable is set.
+72. **DONE 2026-09-10.** *(Phase 4, small)* `testRunnerTools.ResolveLogFile()` decides the log
+    target before the first write and diverts to `main/pythonDev/logsTmp/` rather than clobbering
+    a committed log; `--overwrite-log` replaces deliberately. Folded in: package versions and CPU
+    in the header, and a per-test overview table. → [log](exudynRevisionLog2026.md#step-72)
 
 73. *(Phase 4, release testing)* **Cover every compiled variant in the release tests.** Windows
     release builds produce **three** modules — `exudynCPP`, `exudynCPPfast`
@@ -1122,8 +862,9 @@ renumbered, so these continue the sequence rather than slotting into their phase
 75. *(Phase 2, with the flattening)* **Move runners and helpers out of the model directories.**
     `TestModels/` currently mixes the models with `runTestSuite.py`, `runTestExamples.py`,
     `runPerformanceTests.py`, `runUnitTests.py`, `runTestSuiteRefSol.py`, `modelUnitTests.py` and
-    `testRunnerTools.py`, which is why step 69's coverage check has to special-case seven files
-    that are not tests. Separate them so the model directories contain models only. Performance
+    `testRunnerTools.py`, which is why step 69's coverage check needs
+    `NotTestModels()` to name seven files that are not tests. Separate them so the model
+    directories contain models only. Performance
     models get their own directory as well; a model used for both performance and TestModels moves
     to performance. Sequence with step 69 — a completeness check over a directory of models only
     is far simpler than one that must know which files to ignore.
@@ -1183,16 +924,10 @@ debt stays visible and each item can be closed on evidence.
     release notes rather than leaving them to discover it. `docs/howTo/openVR.txt` was already
     removed with step 30.
 
-79. **DONE 2026-09-10.** **Remove `docs/doxygen/`.** Four tracked files, 126 KB, no generated output
-    committed. It broke on project size, the PDF path never worked from the first day, and
-    `HAVE_DOT` had already been switched to `NO` after graph generation stopped working — so by the
-    end it produced neither the PDF nor the graphs, only HTML class pages duplicating what
-    `theDoc.pdf` generates better from `objectDefinition.py`. Reviving it would mean reviving a tool
-    to consume Doxygen comments the project has already deprecated.
-
-    The config stays in GitHub history for anyone who wants it back. `docs/dev/ARCHITECTURE.md` is
-    the replacement for the one thing it was wanted for — the overall idea — and is the thing
-    doxygen was *least* able to give. `introduction.tex` and `CODING_STYLE.md` now point there.
+79. **DONE 2026-09-10.** `docs/doxygen/` removed - four tracked files, 126 KB, no generated output
+    committed, and by the end it produced neither the PDF nor the graphs. `docs/dev/ARCHITECTURE.md`
+    is the replacement for the one thing it was wanted for. →
+    [log](exudynRevisionLog2026.md#step-79)
 ---
 
 ## 6. Decisions taken
