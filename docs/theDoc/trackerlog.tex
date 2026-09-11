@@ -9,15 +9,42 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.20.dev1, 
+  \item Exudyn version = 1.11.23.dev1, 
   \item last change =  2026-09-11, 
-  \item Number of issues = 2373, 
-  \item Number of resolved issues = 2093 (20 in current version), 
+  \item Number of issues = 2378, 
+  \item Number of resolved issues = 2096 (23 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.23}:  resolved Issue 2375: {\bf optional-dependency extras with a drift checker}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: there was no way to install the packages needed for the tests or referred to internally; and no mechanism to notice when the code starts importing something that no declared list installs. Revision plan step 80}
+    \item {\bf notes: [project.optional-dependencies] adds tests / all / rl; all built on the PEP 508 self-reference exudyn[tests]. tools/checkExtras.py AST-scans TestModels; exudyn and Examples and fails when an import is installed by no extra; run in CI as check\_extras. Verified by fault injection: a fake import; a removed extra entry and a deleted name-mapping entry each reported with exit 1. rl is deliberately not part of all (torch size and the --index-url CUDA choice); confirmed that allExudynModulesTest.py announces the resulting skip rather than passing vacuously}
+    \item   date resolved: {\bf 2026-09-11 20:12},
+date raised: 2026-09-11 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.22}:  resolved Issue 2374: {\bf package metadata drift: classifiers and MANIFEST.in}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: classifiers claimed Python 3.9-3.13 while CI builds cp310-cp314; and MANIFEST.in contained include ../LICENSE.txt which points outside the sdist root and is a silent no-op; so the licence has not been in the sdist. Revision plan step 24}
+    \item {\bf notes: classifiers now 3.10-3.14; matching the wheels CI actually builds. requires-python deliberately left at >=3.6 for step 19. The unreachable MANIFEST.in include was replaced by a comment stating why the licence is absent and that step 25 is what makes the include possible}
+    \item   date resolved: {\bf 2026-09-11 20:12},
+date raised: 2026-09-11 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.21}:  resolved Issue 2373: {\bf pybind11 into build-system.requires}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: setup\_requires is deprecated and was the only thing fetching the pybind11 headers (into main/.eggs). The documented include path include/pybind11 does not exist and the vendored copy at include/pybind11local is inert; so an undeclared download was load-bearing. Revision plan step 15}
+    \item {\bf notes: pybind11<3.0 moved to build-system.requires; setup\_requires removed; the dead include/pybind11 path deleted; and get\_pybind\_include now raises an actionable ImportError naming the install command. Verified by moving main/.eggs away: the build failed with the new message; after pip install pybind11 the wheel built in 55 s and .eggs was NOT recreated. condaEnvironments.md now installs pybind11 explicitly; because build-system.requires is honoured only under build isolation and setup.py bdist\_wheel has none}
+    \item   date resolved: {\bf 2026-09-11 20:12},
+date raised: 2026-09-11 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.20}:  resolved Issue 2371: {\bf PEP 621 metadata}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -12356,6 +12383,18 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 2377}:  {\bf three imports refer to modules that exist nowhere}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: found by tools/checkExtras.py (revision plan step 80). Examples/FurtherExamples/spotReinforcementLearning.py does "import RL\_Spot" and no such file is in the repository; TestModels/LieGroupIntegrationUnitTests.py does "from timeIntegrationOfRotationVectorFormulas import *" and no such file is in the repository; Examples/ROSMassPoint.py imports rosInterface by bare name although the module is exudyn/robotics/rosInterface.py; so it only works if that directory happens to be on sys.path. All three are currently listed in knownMissingLocalModules in checkExtras.py so the checker reports them as broken imports rather than as packaging gaps}
+    \item date raised: 2026-09-11 
+  \ei
+  \item open {\bf BUG 2376}:  {\bf setup.py leaves the working directory changed when stub generation fails}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: the block around setup.py line 24 does os.chdir into src/pythonGenerator and restores the directory INSIDE the try; the bare except then swallows the failure; so if createStubFiles.py raises; the rest of setup.py runs in the wrong working directory and every later relative path is wrong. Restore belongs in a finally. Found during revision plan step 15}
+    \item date raised: 2026-09-11 
+  \ei
   \item open {\bf BUG 2368}:  {\bf ANCFbeltDrive result contradicts its own recorded reference}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

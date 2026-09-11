@@ -410,6 +410,114 @@ file is the custom *EXUDYN General License*, not any OSI-approved BSD, which is 
 `License :: OSI Approved :: BSD License` classifier was dropped earlier. Raised as issue #2372
 so the deadline is tracked rather than rediscovered.
 
+<a id="step-15"></a>
+
+### Step 15 — pybind11 into `build-system.requires`
+
+**DONE 2026-09-11.** `"pybind11<3.0"` moved from `setup_requires` into
+`build-system.requires`; the `setup_requires_pybind11` variable, its commented version ladder and
+the `setup_requires=[...]` argument to `setup()` are gone.
+
+**The survey overturned the premise of the step.** The include path contained
+`"include/pybind11"` with the comment *"already includes everything that is needed"* — that
+**directory does not exist**. pybind11 was **not installed** in `venvExuP313`. The vendored copy
+lives at `include/pybind11local/` (2.12.1) and is marked, in its own filename,
+`pybind11-2.12localCopy_ignoredInSetupTools.txt`. What actually compiled the project was
+`main/.eggs/pybind11-2.13.6-py3.13.egg`, fetched by `setup_requires` and placed **first** in
+`include_dirs` by `get_pybind_include`, so it won over everything else. A dead path was documented
+as the source, a complete vendored copy was inert, and an undeclared download into `.eggs/` was
+load-bearing.
+
+So the step is not a string move. Three things changed together:
+
+- the dead `"include/pybind11"` entry was deleted and the comment replaced with where the headers
+  really come from;
+- `get_pybind_include.__str__` no longer lets a bare `import pybind11` fail. Without
+  `setup_requires` a missing pybind11 would otherwise surface as a raw `ModuleNotFoundError` from
+  inside `gen_preprocess_options`, four frames below the cause. It now names the package, the
+  install command, and the fact that `pip wheel .` / `python -m build` do it automatically;
+- `docs/howTo/condaEnvironments.md` installs `pybind11<3.0` explicitly, with the reason:
+  `build-system.requires` is honoured under **build isolation** only, and the daily Windows path
+  `python setup.py bdist_wheel` has none.
+
+**Verified by removing the thing that used to do the work.** `main/.eggs/` was moved away and a
+build attempted with no pybind11 installed: it failed with the new message, at the right place.
+pybind11 2.13.6 was then installed and the wheel built — `exudyn-1.11.20.dev1-cp313-cp313-win_amd64.whl`,
+**55 s**, and `.eggs/` was **not** recreated. The egg is no longer load-bearing.
+
+`include/pybind11local/` was deliberately left alone. Whether a vendored copy should exist at all
+now that pybind11 is a declared build dependency is a separate question, and it belongs with
+step 68 rather than here.
+
+<a id="step-24"></a>
+
+### Step 24 — metadata drift
+
+**DONE 2026-09-11.** Step 14 had already done half of this step: the concatenated
+`long_description` was deleted and the readme moved into `[project.readme]`. What remained:
+
+- **Classifiers** claimed 3.9–3.13 while CI builds **cp310–cp314**. They now say 3.10–3.14, which
+  is the set of wheels that actually exists. `requires-python = ">=3.6"` was deliberately *not*
+  touched: that is a user-visible install constraint and settling it is step 19's business
+  (dropping `ReleaseP37` and the 32-bit configurations), not something to smuggle into a metadata
+  tidy.
+- **`MANIFEST.in`'s `include ../LICENSE.txt`** could never have worked: it points outside the
+  sdist root, which setuptools cannot reach, so it was a silent no-op — the licence has simply not
+  been in the sdist. Rather than leave a directive that looks functional, the line was replaced
+  with a comment saying why it is absent and that **step 25** (flattening the packaging root to
+  the repository root) is what makes the `../` unnecessary and lets the include come back.
+
+<a id="step-80"></a>
+
+### Step 80 — installable extras, and a checker that keeps them honest
+
+**DONE 2026-09-11.** `pip install exudyn[tests]` and `pip install exudyn[all]` now exist, via
+`[project.optional-dependencies]` in `main/pyproject.toml`. `[all]` uses the PEP 508
+self-reference `"exudyn[tests]"`, so it is a superset of `[tests]` by construction rather than by
+a second copy of the list that could drift.
+
+The point of the step is not the lists — it is `tools/checkExtras.py`, which makes them
+falsifiable. It is an **AST scan**: it imports nothing, builds nothing, does not need exudyn
+installed, and needs only the standard library. It walks `TestModels/`, `exudyn/` and `Examples/`,
+collects every top-level import, removes the standard library (`sys.stdlib_module_names`) and
+everything that resolves to a file inside the repository, maps import names to distribution names,
+and then makes four comparisons: an import no extra installs **fails**; a declared package that
+nothing imports, and an exemption that covers nothing, are **reported**.
+
+**What the first run measured, against what had been assumed:**
+
+| assumed | measured |
+|---|---|
+| `exudyn/` should be covered by `[tests]` | it must be `[all]`. The shipped package imports `mpi4py`, `dispy`, `pymeshlab`, `ffmpeg` and `roboticstoolbox` — all optional **by design** (CLAUDE.md invariant 6). Requiring a test environment to install MPI would have been wrong, and would have made the checker's own rule the thing that was wrong. |
+| the mapping table is the fragile part | it is, and the failure mode is *guessing*. An unmapped name is compared under its own spelling and therefore reports as uncovered — never silently accepted. Removing the `stl -> numpy-stl` entry as a test produced exactly that. |
+| two exemption categories (ROS, RL) | four. `pyansys` is imported inside a function behind a flag that is `False`, and the distribution has since been renamed; `mkl` sits in a `try/except` with a working fallback and the right build depends on the environment's BLAS. Both are exempt **with the reason recorded in the file**, because an exemption without a reason is indistinguishable from an oversight. |
+
+**Three imports refer to modules that exist nowhere** — not on PyPI, and not in this repository:
+`RL_Spot` (`Examples/FurtherExamples/spotReinforcementLearning.py`, the model module was never
+committed), `timeIntegrationOfRotationVectorFormulas`
+(`TestModels/LieGroupIntegrationUnitTests.py`), and `rosInterface`, which `Examples/ROSMassPoint.py`
+imports by bare name although the module is `exudyn/robotics/rosInterface.py`. These are broken
+imports, not packaging gaps, so the checker reports them as a distinct warning instead of
+demanding an extra for them. Raised as an issue rather than fixed here (rule 8).
+
+**RL is excluded from `[all]` on purpose.** torch is multi-GB and the CPU/CUDA choice is made with
+an `--index-url`, which cannot be expressed in wheel metadata. The cost is real and was checked
+rather than assumed: `exudyn/artificialIntelligence.py` imports `stable_baselines3` at **module
+level with no guard**, so `TestModels/allExudynModulesTest.py` cannot exercise that module in a
+plain `[tests]` environment. Running it confirmed that it *announces* the gap —
+`stable-baselines3 not available: skip artificialIntelligence.py` — rather than passing vacuously,
+which is the failure mode step 69 closed.
+
+**Verified by fault injection, not by a green run.** A fake `import pandas` added to a TestModel
+was reported uncovered with exit 1; removing `psutil` from `[tests]` was reported with exit 1;
+deleting a mapping entry produced the import name as uncovered rather than a silent pass. Each was
+reverted. The extras were then confirmed to reach the real metadata: `setup.py egg_info` emits
+`Provides-Extra: tests/all/rl` and the matching `Requires-Dist: ...; extra == "..."` lines,
+including `exudyn[tests]; extra == "all"`.
+
+CI runs it as `check_extras` (`python:3.13`, no install step at all), in the `build` stage
+alongside the wheels — a stale extras list and a broken build are independent failures.
+
 <a id="step-30"></a>
 
 ### Step 30 — consolidate `docs/howTo/`

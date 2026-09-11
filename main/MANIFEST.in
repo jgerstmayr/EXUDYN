@@ -1,5 +1,7 @@
 # Include the README
 include *.md
 
-# Include the license file
-include ../LICENSE.txt
+# The license file is NOT included: it lives at the repository root, one level above the sdist
+# root, and setuptools cannot reach outside that - 'include ../LICENSE.txt' was a silent no-op.
+# Revision plan step 25 moves the packaging root up, which makes the '../' unnecessary; the
+# include comes back then.

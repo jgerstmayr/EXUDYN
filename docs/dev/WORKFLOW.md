@@ -300,6 +300,19 @@ without regenerating; `--python` selects the interpreter. It ignores modificatio
 tiers as unrelated work, and ignores files that differ only in their `@date ... (last modified)`
 line — but never excuses a real change inside a tier, however the file got that way.
 
+If your change added an `import` of a third-party package anywhere in `exudyn/`, `TestModels/` or
+`Examples/`, also run:
+
+```bash
+python tools/checkExtras.py --check
+```
+
+It compares the `[project.optional-dependencies]` extras in `main/pyproject.toml` against the
+imports actually present in the code and fails if something is installed by no extra — so
+`pip install exudyn[tests]` and `pip install exudyn[all]` cannot quietly stop being sufficient.
+A fresh environment is set up with those extras rather than a hand-written package list; see
+[../howTo/condaEnvironments.md](../howTo/condaEnvironments.md).
+
 The manual equivalent, if you need it — on a clean tree, from `main/src/pythonGenerator/`:
 
 ```

@@ -251,20 +251,23 @@ else:
 
 
 
-#set according pybind11 requirement
-setup_requires_pybind11='pybind11<3.0' #pybind11 3.0 since July 2025 currently not compatible! => uses version 2.13.6
-#setup_requires_pybind11='pybind11>=2.12' #numpy2.0 requires pybind11>=2.12
-
-# if sys.version_info.major >= 3 and sys.version_info.minor >= 11:
-#     setup_requires_pybind11='pybind11>=2.10' #Python 3.11 only supported since Pybind11 2.10
-# if sys.version_info.major == 3 and sys.version_info.minor >= 9:
-#     setup_requires_pybind11='pybind11>=2.9' #Python 3.10: some issues fixed in since Pybind11 2.9
-# else: #other versions up to now worked well with 2.6.0 ==> never change a running system ...
-#     setup_requires_pybind11='pybind11==2.6.0' #replaced previous require>=2.5.0, because compilation with VS2017 fails with pybind11 2.7.0 version of 2021-10-04: setup_requires=['pybind11>=2.5.0'],
-
+#the pybind11 requirement lives in build-system.requires in pyproject.toml since revision plan
+#step 15; setup_requires (which used to fetch it into main/.eggs) is deprecated and was removed.
+#That works out of the box for 'pip wheel .' and 'python -m build', which honour build-system
+#under build isolation. A direct 'python setup.py bdist_wheel' does NOT - there pybind11 has to
+#be present in the environment, see docs/howTo/condaEnvironments.md.
 class get_pybind_include(object):
     def __str__(self):
-        import pybind11
+        try:
+            import pybind11
+        except ImportError:
+            raise ImportError(
+                'exudyn needs the pybind11 headers to compile, and pybind11 is not installed in '
+                'this environment.\n'
+                "    pip install 'pybind11<3.0'\n"
+                'This used to be fetched automatically by setup_requires; that mechanism was '
+                'removed (revision plan step 15). Building with "pip wheel ." or "python -m '
+                'build" instead installs it automatically from build-system.requires.')
         return pybind11.get_include()
 
 cppFiles = [
@@ -413,7 +416,9 @@ if not config["minimalCppFiles"]:
 myIncludeDirs += [
         			"src",
         			"include",
-        			"include/pybind11", #already includes everything that is needed
+        			#the pybind11 headers are NOT here - they come from the installed pybind11
+        			#package via get_pybind_include() below, which is put first in include_dirs.
+        			#(include/pybind11local/ is an inert vendored copy, see revision plan step 15.)
         			"include/lest",
                  ]
 
@@ -896,7 +901,7 @@ if config['compileParallel']:
 #  classifiers     - the Development Status entry follows the '.dev1' suffix of that version
 #  packages        - BuildPy rebuilds the tree in a temporary directory and re-finds them there
 #  package_data    - grows an openvr_api.dll entry when config['useOpenVR'] is set
-#  ext_modules / setup_requires / cmdclass - the compilation itself
+#  ext_modules / cmdclass - the compilation itself
 setup(
     version=__version__,
 #
@@ -905,19 +910,17 @@ setup(
     package_data=addPackageData,
 #
     ext_modules=ext_modules,
-    setup_requires=[setup_requires_pybind11],
     cmdclass={'build_py': BuildPy, 'build_ext': BuildExt},
     classifiers=[
         developmentStatus,
         "Programming Language :: Python :: 3",
-        # "Programming Language :: Python :: 3.6",
-        # "Programming Language :: Python :: 3.7",
-        # "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
+        #these follow the wheels that CI actually builds (cp310-cp314), not requires-python,
+        #which still says >=3.6 until revision plan step 19 settles the real floor
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Intended Audience :: Science/Research",
         #"License :: OSI Approved :: BSD License", #deprecated since 2025-10!
         "Operating System :: Microsoft :: Windows", #allow Windows 11

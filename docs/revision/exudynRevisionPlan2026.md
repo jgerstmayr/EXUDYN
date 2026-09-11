@@ -570,12 +570,33 @@ promise for no gain.
     block of the wheel metadata went from ten entries to one. `build-system.requires`
     needed setuptools **>=61** for the table to be read at all. →
     [log](exudynRevisionLog2026.md#step-14)
-15. `pybind11` into `build-system.requires`; drop `setup_requires`. (The floor there is
-    already `setuptools>=61` after step 14; only the `pybind11<3.0` pin still has to move
-    out of `setup.py`.)
-16. Replace the distutils monkeypatch (setup.py:735-880) with setuptools' supported parallel
-    `build_ext`. Remove the bare `except` — fail loudly, or make serial an explicit opt-in.
-17. `tools/gen_sources.py`: derive a committed `sources.json` from the `ClCompile` entries of
+15. **DONE 2026-09-11.** `pybind11<3.0` moved into `build-system.requires`;
+    `setup_requires` removed. The step was bigger than it looked: the documented include
+    path `include/pybind11` **does not exist**, the vendored copy at `include/pybind11local/`
+    is inert, and the headers actually came from an undeclared `main/.eggs/` download.
+    Verified by deleting `.eggs/` and rebuilding. →
+    [log](exudynRevisionLog2026.md#step-15)
+16. **RESCOPED 2026-09-11 — the original premise was wrong.** setuptools' parallel
+    `build_ext --parallel` parallelises **across extensions**, not across the source files
+    *within* one. Exudyn compiles 133 `.cpp` files in a single extension, so the supported
+    mechanism gives at most 3x on a release build and **nothing** on a `.dev1` build, against
+    the monkeypatch's measured ~13x. There is no like-for-like replacement, and the ~1 min
+    wheel is an invariant (§7). So the monkeypatch **stays**, and this step becomes fixing
+    its four real defects:
+    - `quietCompile` (766-769) rebinds the **global** `sys.stdout` from N worker threads,
+      each truncating the same `setuppy.output.txt`; output interleaves and the restore races.
+    - the outer bare `except` (882-886) also swallows `KeyboardInterrupt`/`SystemExit`, and
+      its message *"trying serial compilation"* is misleading: it wraps only the patching,
+      not the compile, so a compilation failure is not what it reports.
+    - the Windows `except: raise ValueError(...)` (858-859) **destroys the compiler
+      diagnostic**, replacing a real `CompileError` with an argv dump.
+    - `nObjects = len(objects)+2` (761) is a fudge — it is why the progress counter reports
+      135 for 133 files.
+17. *(measured starting point: the source list is a literal Python list — `cppFiles` at
+    `setup.py:270-325` (54 entries) plus `327-408` (79) = **133**; `minimalCppFiles` cuts the
+    second block and also defines `EXUDYN_MINIMAL_COMPILATION`, so the file list and the C++
+    `#ifdef`s are kept in sync by hand today.)*
+    `tools/gen_sources.py`: derive a committed `sources.json` from the `ClCompile` entries of
     `cppsrc.vcxproj`; `setup.py` reads the JSON (no XML parsing at build time). A `--check` mode
     fails CI when vcxproj, JSON and filesystem disagree. Only `ItemGroup` blocks are read — every
     `PropertyGroup` setting stays hand-maintained.
@@ -602,8 +623,11 @@ promise for no gain.
     linker keep one copy of an inline template instantiation and call AVX2 code on a baseline
     CPU. The current performance suite does not resolve AVX2 on/off, so the benchmark must first
     become able to show a difference; re-measure after step 22.
-24. Fix metadata drift: classifiers through 3.14, one README via `readme =`, delete the
-    concatenated `long_description`, repair `MANIFEST.in`'s `../LICENSE.txt`.
+24. **DONE 2026-09-11.** Classifiers now 3.10–3.14, matching the wheels CI actually builds;
+    the README and `long_description` were already handled by step 14.
+    `MANIFEST.in`'s `include ../LICENSE.txt` could never work — it points outside the sdist
+    root — so it is now a comment pointing at step 25, which is what makes the include
+    possible. →  [log](exudynRevisionLog2026.md#step-24)
 
 ### Phase 2 — Repository shape (~1 week, one commit)
 
@@ -934,6 +958,14 @@ debt stays visible and each item can be closed on evidence.
     committed, and by the end it produced neither the PDF nor the graphs. `docs/dev/ARCHITECTURE.md`
     is the replacement for the one thing it was wanted for. →
     [log](exudynRevisionLog2026.md#step-79)
+
+80. **DONE 2026-09-11.** Installable extras — `pip install exudyn[tests]`,
+    `exudyn[all]`, `exudyn[rl]` — in `[project.optional-dependencies]`, `[all]` built on
+    the PEP 508 self-reference `"exudyn[tests]"`. The substance is `tools/checkExtras.py`:
+    an AST scan of `TestModels/`, `exudyn/` and `Examples/` that **fails** when an import
+    is installed by no extra, so the lists cannot quietly go stale. Run as the
+    `check_extras` CI job. Verified by fault injection. →
+    [log](exudynRevisionLog2026.md#step-80)
 ---
 
 ## 6. Decisions taken

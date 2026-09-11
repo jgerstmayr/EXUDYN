@@ -92,6 +92,21 @@ regenerated_files:
       - main/pythonDev/exudyn/mainSystemExtensions.py
     expire_in: 7 days
 
+# Keep 'pip install exudyn[tests]' and '[all]' honest: the extras in main/pyproject.toml are
+# compared against the imports that actually occur in the code (revision plan step 80). This is a
+# pure AST scan - no build, no install, not even numpy - so it is cheap and independent of the
+# wheels, which is why it sits in the same stage rather than after them.
+check_extras:
+  stage: build
+  image: python:3.13                            # tomllib needs 3.11+
+  variables:
+    GIT_DEPTH: "1"
+  before_script:
+    # same uid mismatch as regenerated_files; the tool shells out to git rev-parse
+    - git config --global --add safe.directory "$CI_PROJECT_DIR"
+  script:
+    - python tools/checkExtras.py --check
+
 # Catch documentation breakage during the freeze. This does NOT deploy: GitHub Pages correctly
 # stays at 1.11.0 while the public release is 1.11.0.
 docs:

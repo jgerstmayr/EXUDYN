@@ -38,7 +38,14 @@ build.
 conda create -n venvExuP313 python=3.13 numpy scipy=1.15.2 matplotlib ipywidgets tqdm spyder-kernels=3.0 ipykernel psutil -y
 conda activate venvExuP313
 pip install exudyn ngsolve h5py sphinx readthedocs-sphinx-search sphinx-copybutton sphinx_rtd_theme
+pip install "pybind11<3.0"
 ```
+
+> **Why `pybind11` explicitly?** It is declared in `build-system.requires`, so `pip wheel .` and
+> `python -m build` install it themselves under build isolation. A direct
+> `python setup.py bdist_wheel` — the daily Windows path — does **not** use build isolation, so
+> there it has to be present in the environment. Until revision plan step 15 it was fetched
+> behind the scenes by the deprecated `setup_requires` into `main/.eggs/`; that is gone.
 
 > **Pin scipy to 1.15.2.** scipy 1.18.0 slows the Exudyn test suite from ~22 s to over 10 minutes,
 > apparently in the eigensolver path. Measured 2026-09-09 on the same machine and the same Exudyn
@@ -61,16 +68,31 @@ Build the HTML documentation from the repository root:
 sphinx-build -b html . _build -E
 ```
 
-### Advanced examples
+### Optional packages via the Exudyn extras
+
+The optional dependencies are declared in `main/pyproject.toml`, so they can be installed by name
+instead of being listed by hand:
+
+| command | installs |
+|---|---|
+| `pip install exudyn[tests]` | what `TestModels/` needs: scipy, matplotlib, h5py, networkx, psutil, ngsolve |
+| `pip install exudyn[all]` | the above plus everything the package and the Examples refer to: numpy-stl, tqdm, pymeshlab, roboticstoolbox-python, spatialmath-python, ffmpeg-python, numba, dispy, mpi4py |
+| `pip install exudyn[rl]` | reinforcement learning: torch, stable-baselines3, gymnasium, gym, tensorboard |
+
+`[rl]` is deliberately **not** part of `[all]`: torch is multi-GB and the CPU/CUDA choice is made
+with an `--index-url`, which cannot be expressed in wheel metadata. For a CUDA build, install it
+separately first:
 
 ```bash
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 pip install stable-baselines3[extra]
-pip install mpi4py
-pip install numpy-stl numba
 ```
 
 The `--index-url` above selects the CUDA 11.8 build of PyTorch; drop it for a CPU-only install.
+
+These lists are not maintained by hand. `python tools/checkExtras.py` scans every import in
+`exudyn/`, `TestModels/` and `Examples/` and fails if one of them is installed by no extra, so the
+table above cannot silently fall behind the code; CI runs it as the `check_extras` job.
 
 ## Spyder kernel versions
 

@@ -1,8 +1,11 @@
 [build-system]
 #setuptools>=61 is what makes the [project] table below authoritative; on anything older it is
 #silently ignored and the wheel ends up with no metadata at all (revision plan step 14).
-#pybind11 belongs here too, but it still comes in through setup_requires - see step 15.
-requires = ["setuptools>=61", "wheel"]
+#pybind11<3.0: 3.0 (July 2025) is not yet compatible - a deliberate pin, not a stale one. It moved
+#here from setup_requires in step 15; note that this is honoured under build isolation ('pip
+#wheel .', 'python -m build') but NOT by a direct 'python setup.py bdist_wheel', where pybind11
+#must already be installed - see docs/howTo/condaEnvironments.md.
+requires = ["setuptools>=61", "wheel", "pybind11<3.0"]
 build-backend = "setuptools.build_meta"
 
 #Static package metadata. Everything here used to be keyword arguments to setup(); what is left
@@ -57,6 +60,45 @@ For CHANGES (section Issues and Bugs), detailed DOCUMENTATION on theory, usage, 
 https://github.com/jgerstmayr/EXUDYN/tree/master/docs/theDoc/theDoc.pdf
 
 """
+
+#Optional dependency groups, checked against the imports actually present in the code by
+#'python tools/checkExtras.py' (revision plan step 80) - so these lists cannot quietly go stale.
+#  pip install exudyn[tests]   everything TestModels/ needs to run the test suite
+#  pip install exudyn[all]     the above plus everything the package and the Examples refer to
+#  pip install exudyn[rl]      reinforcement learning; deliberately NOT part of [all], see below
+[project.optional-dependencies]
+tests = [
+    "scipy",
+    "matplotlib",
+    "h5py",
+    "networkx",
+    "psutil",
+    "ngsolve",          #also provides the 'netgen' import used by the NGsolve tests
+    ]
+all = [
+    "exudyn[tests]",    #PEP 508 self-reference: [all] is a superset of [tests] by construction
+    "numpy-stl",        #imported as 'stl'
+    "tqdm",
+    "pymeshlab",
+    "roboticstoolbox-python",
+    "spatialmath-python",
+    "ffmpeg-python",
+    "numba",
+    "dispy",
+    "mpi4py",
+    ]
+#torch is multi-GB and the CPU/CUDA choice is made with an --index-url, which cannot be expressed
+#in wheel metadata - so this stays opt-in and is NOT pulled in by [all]. The consequence is
+#recorded rather than hidden: exudyn/artificialIntelligence.py imports stable_baselines3 at module
+#level with no guard, so TestModels/allExudynModulesTest.py skips its RL part in a plain [tests]
+#environment.
+rl = [
+    "torch",
+    "stable-baselines3",
+    "gymnasium",
+    "gym",
+    "tensorboard",
+    ]
 
 [tool.setuptools]
 zip-safe = false

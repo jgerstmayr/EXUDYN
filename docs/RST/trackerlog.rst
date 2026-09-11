@@ -19,15 +19,33 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.20.dev1, 
++  Exudyn version = 1.11.23.dev1, 
 +  last change =  2026-09-11, 
-+  Number of issues = 2373, 
-+  Number of resolved issues = 2093 (20 in current version), 
++  Number of issues = 2378, 
++  Number of resolved issues = 2096 (23 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.23: resolved Issue 2375: optional-dependency extras with a drift checker (extension)
+    - issue author: Claude-JG
+    - description:  there was no way to install the packages needed for the tests or referred to internally; and no mechanism to notice when the code starts importing something that no declared list installs. Revision plan step 80
+    - **notes:** [project.optional-dependencies] adds tests / all / rl; all built on the PEP 508 self-reference exudyn[tests]. tools/checkExtras.py AST-scans TestModels; exudyn and Examples and fails when an import is installed by no extra; run in CI as check_extras. Verified by fault injection: a fake import; a removed extra entry and a deleted name-mapping entry each reported with exit 1. rl is deliberately not part of all (torch size and the --index-url CUDA choice); confirmed that allExudynModulesTest.py announces the resulting skip rather than passing vacuously
+    - date resolved: **2026-09-11 20:12**\ , date raised: 2026-09-11 
+    - resolved by: Claude-JG
+ * Version 1.11.22: resolved Issue 2374: package metadata drift: classifiers and MANIFEST.in (change)
+    - issue author: Claude-JG
+    - description:  classifiers claimed Python 3.9-3.13 while CI builds cp310-cp314; and MANIFEST.in contained include ../LICENSE.txt which points outside the sdist root and is a silent no-op; so the licence has not been in the sdist. Revision plan step 24
+    - **notes:** classifiers now 3.10-3.14; matching the wheels CI actually builds. requires-python deliberately left at >=3.6 for step 19. The unreachable MANIFEST.in include was replaced by a comment stating why the licence is absent and that step 25 is what makes the include possible
+    - date resolved: **2026-09-11 20:12**\ , date raised: 2026-09-11 
+    - resolved by: Claude-JG
+ * Version 1.11.21: resolved Issue 2373: pybind11 into build-system.requires (change)
+    - issue author: Claude-JG
+    - description:  setup_requires is deprecated and was the only thing fetching the pybind11 headers (into main/.eggs). The documented include path include/pybind11 does not exist and the vendored copy at include/pybind11local is inert; so an undeclared download was load-bearing. Revision plan step 15
+    - **notes:** pybind11<3.0 moved to build-system.requires; setup_requires removed; the dead include/pybind11 path deleted; and get_pybind_include now raises an actionable ImportError naming the install command. Verified by moving main/.eggs away: the build failed with the new message; after pip install pybind11 the wheel built in 55 s and .eggs was NOT recreated. condaEnvironments.md now installs pybind11 explicitly; because build-system.requires is honoured only under build isolation and setup.py bdist_wheel has none
+    - date resolved: **2026-09-11 20:12**\ , date raised: 2026-09-11 
+    - resolved by: Claude-JG
  * Version 1.11.20: resolved Issue 2371: PEP 621 metadata (change)
     - issue author: Claude-JG
     - description:  move static package metadata from setup(...) into a [project] table in main/pyproject.toml; setup.py keeps only version; classifiers; packages; package_data; ext_modules and cmdclass. build-system.requires floor raised to setuptools>=61; below that a [project] table is silently ignored. Revision plan step 14
@@ -7942,6 +7960,16 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2377:` three imports refer to modules that exist nowhere
+    - issue author: Claude-JG
+    - description:  found by tools/checkExtras.py (revision plan step 80). Examples/FurtherExamples/spotReinforcementLearning.py does "import RL_Spot" and no such file is in the repository; TestModels/LieGroupIntegrationUnitTests.py does "from timeIntegrationOfRotationVectorFormulas import \*" and no such file is in the repository; Examples/ROSMassPoint.py imports rosInterface by bare name although the module is exudyn/robotics/rosInterface.py; so it only works if that directory happens to be on sys.path. All three are currently listed in knownMissingLocalModules in checkExtras.py so the checker reports them as broken imports rather than as packaging gaps
+    - date raised: 2026-09-11 
+
+ * :textred:`open BUG 2376:` setup.py leaves the working directory changed when stub generation fails
+    - issue author: Claude-JG
+    - description:  the block around setup.py line 24 does os.chdir into src/pythonGenerator and restores the directory INSIDE the try; the bare except then swallows the failure; so if createStubFiles.py raises; the rest of setup.py runs in the wrong working directory and every later relative path is wrong. Restore belongs in a finally. Found during revision plan step 15
+    - date raised: 2026-09-11 
 
  * :textred:`open BUG 2368:` ANCFbeltDrive result contradicts its own recorded reference
     - issue author: Claude-JG
