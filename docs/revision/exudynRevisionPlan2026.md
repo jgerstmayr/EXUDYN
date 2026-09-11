@@ -602,7 +602,12 @@ promise for no gain.
     runs in CI as `check_sources`. Its first run found a live bug: the vcxproj said
     `src\tests\UnitTestBase.cpp`, which resolves on Windows and fails on Linux. →
     [log](exudynRevisionLog2026.md#step-17)
-18. Delete `main/CMakeLists.txt`, `main/src/CMakeLists.txt`, `main/obj/autoCMakeLists.txt`.
+18. **DONE 2026-09-11.** All three deleted (405 lines). None could configure: the complete
+    one referenced a `pybind11/` directory that does not exist, and the other two listed 63
+    of 133 files and still named sources deleted years ago. The complete one was also a
+    *fourth* copy of the source list, which step 17 had just consolidated. Vendored
+    `include/Eigen/CMakeLists.txt` left untouched. →
+    [log](exudynRevisionLog2026.md#step-18)
 19. Drop the `ReleaseP37` configuration and all `Win32`/`x86` configurations from the solution
     and vcxproj.
 20. Move cibuildwheel config into `[tool.cibuildwheel]`; drop `continue-on-error`.

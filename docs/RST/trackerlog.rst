@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.26.dev1, 
++  Exudyn version = 1.11.27.dev1, 
 +  last change =  2026-09-11, 
-+  Number of issues = 2385, 
-+  Number of resolved issues = 2099 (26 in current version), 
++  Number of issues = 2386, 
++  Number of resolved issues = 2100 (27 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.27: resolved Issue 2385: remove the three dead CMakeLists files (cleanup)
+    - issue author: Claude-JG
+    - description:  none of the three could configure; let alone build. main/CMakeLists.txt was a fourth complete copy of the 133 file source list and called add_subdirectory(pybind11) on a directory that does not exist; its own header said "CMakeLists for Exudyn are not complete". main/src/CMakeLists.txt and main/obj/autoCMakeLists.txt listed 63 of 133 files; missed 74; referenced sources deleted years ago (StaticSolver.cpp; CNodeRigidBody.cpp; solver/TimeIntegrationSolver.cpp) and used add_executable although exudyn is a Python module. Decision D3 keeps the .sln and .vcxproj and drops CMake. Revision plan step 18
+    - **notes:** all three deleted (405 lines). main/include/Eigen/CMakeLists.txt is vendored third-party and was left untouched. No generator recreates them. The only reference in the documentation was one passing mention in docs/theDoc/gettingStarted.tex; which now names scikit-build-core alone rather than pointing at files that no longer exist. This also removes the last duplicate of the source list that revision plan step 17 consolidated into main/sources.json
+    - date resolved: **2026-09-11 23:52**\ , date raised: 2026-09-11 
+    - resolved by: Claude-JG
  * Version 1.11.26: :textred:`resolved BUG 2382` : cppsrc.vcxproj listed src/tests/UnitTestBase with the wrong case 
     - issue author: Claude-JG
     - description:  the vcxproj had ClCompile ..\src\tests\UnitTestBase.cpp and ClInclude for the header; while the tracked directory is src/Tests. Windows resolves both to the same file so it was invisible there; Linux does not. It did not break the manylinux build only because setup.py had its own list with the correct case. Found by tools/gen_sources.py; revision plan step 17

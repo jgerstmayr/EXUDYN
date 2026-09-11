@@ -399,5 +399,5 @@ In order to make full usage of the C++ code and extending it, you can use:
 +  link it to your own code
 +  NOTE: on Linux systems, you mostly need to replace '\ :math:`/`\ ' with '\ :math:`\backslash`\ '
   
-+  Linux, etc.: Use the build methods described above; Visual Studio Code may allow native Python and C++ debugging; switching to other build mechanisms (CMakeLists or scikit-build-core).
++  Linux, etc.: Use the build methods described above; Visual Studio Code may allow native Python and C++ debugging; switching to other build mechanisms (e.g. scikit-build-core).
 

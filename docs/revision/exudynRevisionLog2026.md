@@ -552,6 +552,36 @@ the packaging root, so the version degrades to `'unknown'` and setuptools reject
 That is the same `../` problem as the licence file and it is step 25 that removes it —
 recorded as plan step 81, verified by trying to build the tarball in a clean container.
 
+<a id="step-18"></a>
+
+### Step 18 — the CMake files removed
+
+**DONE 2026-09-11.** `main/CMakeLists.txt`, `main/src/CMakeLists.txt` and
+`main/obj/autoCMakeLists.txt` deleted — 405 lines. Decision D3 keeps the `.sln` and `.vcxproj`,
+because mixed Python/native debugging is the most valuable capability in the project and MSVC
+cannot load `pyproject.toml`; CMake was a third build description that nothing kept current.
+
+**"Nothing kept current" is measurable, and worth recording before the files disappear:**
+
+| file | .cpp listed | state |
+|---|---|---|
+| `main/CMakeLists.txt` | 133 — a *complete* fourth copy of the source list | calls `add_subdirectory(pybind11)` on a directory that does not exist, so it cannot configure. Its own header said *"CMakeLists for Exudyn are not complete! ... You need to configure the rest manually!"* |
+| `main/src/CMakeLists.txt` | 63 | 74 files missing; still lists `src/Solver/StaticSolver.cpp`, `src/Objects/CNodeRigidBody.cpp` and `src/solver/TimeIntegrationSolver.cpp` — sources deleted years ago, the last with a lowercase `solver/` that would not resolve on Linux either |
+| `main/obj/autoCMakeLists.txt` | 63 | the same stale list, and `add_executable(cppsrc ...)` — exudyn is a Python extension module, not an executable |
+
+So none of the three could build, two had been wrong for years, and the one that was complete was
+a *fourth* copy of the file list — after `setup.py`, the vcxproj and `sources.json`. Step 17 had
+just reduced that to one; this removes the copy it could not see.
+
+**Checked before deleting:** no generator or script recreates them (nothing under
+`main/src/pythonGenerator/` or `tools/` mentions CMake), and the only reference in the
+documentation was a single passing clause in `docs/theDoc/gettingStarted.tex` — *"switching to
+other build mechanisms (CMakeLists or scikit-build-core)"* — which now names scikit-build-core
+alone rather than pointing at files that no longer exist.
+
+`main/include/Eigen/CMakeLists.txt` is part of the vendored Eigen and was deliberately left
+alone; it is third-party content, not an Exudyn build description.
+
 <a id="step-24"></a>
 
 ### Step 24 — metadata drift
