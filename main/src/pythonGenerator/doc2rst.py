@@ -544,7 +544,10 @@ if True:
     from os.path import isfile, join
 
     dirPath = '../../pythonDev/Examples/'
-    examplesFileList = [f for f in listdir(dirPath) if isfile(join(dirPath, f)) and '.py' in f]
+    #sorted(): see ExtractExamplesWithKeyword in autoGenerateHelper.py - listdir() order is
+    #filesystem dependent and made the generated docs differ between Windows and Linux
+    examplesFileList = sorted([f for f in listdir(dirPath) if isfile(join(dirPath, f)) and '.py' in f],
+                              key=str.lower)
     
     fileLists={'TestModels':testFileList,
                'Examples':examplesFileList}

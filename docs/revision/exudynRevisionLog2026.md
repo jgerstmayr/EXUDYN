@@ -34,8 +34,7 @@ tracked per decision D7, as are `TestExamplesLogs/`). `main/dist/` and
 
 ### Step 2 — `tools/regenerate.py`, the generated-file drift gate
 
-**Tool written and verified 2026-09-09.** The step is not closed: the CI wiring is still open and
-lives in the plan.
+**Tool written and verified 2026-09-09; wired into CI and closed 2026-09-11.**
 
 Runs the six generators from their required cwd, then classifies every difference against HEAD:
 Tier 1 fails (exit 1), Tier 2 warns, anything outside both tiers is reported as an unexpected
@@ -55,6 +54,40 @@ Verified by deliberate fault injection, not just by passing: perturbing a descri
 (Tier 1: `CObjectMassPoint.h`, `itemInterface.py`; Tier 2: `ObjectMassPoint.rst`,
 `itemDefinition.tex`); a hand edit to an already-dirty Tier 1 file also produced exit 1; a
 date-only difference correctly produced exit 0.
+
+### Step 2, second half — the CI wiring, and what it found
+
+The `regenerated_files` job in `.gitlab-ci.yml` runs `tools/regenerate.py --check` on
+`python:3.13`. Two things were measured rather than assumed before writing it:
+
+- **It needs numpy and nothing else.** Verified by running the six generators in a venv containing
+  only numpy. Every `import exudyn` in the generators sits inside a *string literal being written
+  out*, not at module level — an AST scan suggests otherwise because the template files in
+  `pythonGenerator/` are themselves valid Python. So the job needs no built wheel and does not
+  wait for one; it runs in the `build` stage in parallel with `wheels_linux`, because a drifted
+  generated file and a broken build are independent failures.
+- **git needs `safe.directory`.** The checkout is owned by a different uid than the container user,
+  and the tool shells out to `git rev-parse` / `status` / `show`.
+
+**The wiring immediately earned its keep.** Run in a `python:3.13` container against a clean clone,
+the gate failed: **2 Tier 1 files and 96 Tier 2 files** differed from the commit. Not line endings,
+which is what fact 18 had predicted — **`os.listdir` order**. `ExtractExamplesWithKeyword()` in
+`autoGenerateHelper.py` and the Examples listing in `doc2rst.py` enumerated directories without
+sorting; NTFS returns alphabetical order and ext4 returns hash order. Because the
+"Relevant Examples and TestModels" lists are **truncated to the first few entries**, a different
+enumeration order changes *which* examples are documented, not merely their order — which is why
+it reached Tier 1 through `main/src/pythonGenerator/generated/MainSystemExt.rst`.
+
+The fix is `sorted(..., key=str.lower)` in both places (issue #2370). Case-insensitive matters:
+plain `sorted()` is ASCII order, which puts `ANCFCableBeamDampingTest.py` before
+`ANCFbeltDrive.py` and would have reshuffled 57 documentation files as a side effect of a
+determinism fix. `key=str.lower` reproduces the case-insensitive order NTFS had been giving all
+along, so **Tier 1 is byte-identical on Windows** and the change is invisible except where it was
+wrong.
+
+Verified end to end: the same container, with the fix applied, now exits 0 with Tier 1 clean. That
+is the first proof that generation is platform-independent, and from now on every scheduled
+pipeline re-proves it.
 
 <a id="step-3"></a>
 

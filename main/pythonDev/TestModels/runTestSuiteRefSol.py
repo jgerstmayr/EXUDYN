@@ -99,6 +99,7 @@ def TestExamplesReferenceSolution():
         'postNewtonStepContactTest.py':0.057286638346409235,
         'raytracerNOGLFWtest.py':0.28151013387134,                  #new 2026-01-03
         'reevingSystemSpringsTest.py':2.2155575717433007,           #new 2023-07-17 (old solution contained compression forces: 2.213190117855691),
+        'relativeRotationTranslationMechanism.py': 1.509631854432179,#new 2026-09-11
         'revoluteJointPrismaticJointTest.py':1.2538806799249342,    #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver (modified Newton restart, etc.); before 2022-01-18: 1.2538806799243265,
         'rigidBody2Dtest.py': -0.5055295700922415,                  #new 2025-02-05: added arbitrary COM to 2D rigid body
         'rigidBodyAsUserFunctionTest.py':8.950865271552148,
@@ -203,9 +204,6 @@ def DeliberatelyNotRun():
         'ANCFbeltDrive.py':
             'result 0.0 against the recorded -0.4842656133238705; the model was retuned to a '
             'dynamic run and the reference in the comment was not; also 28s',
-        'relativeRotationTranslationMechanism.py':
-            'result 2.09e-12 against the recorded 4.172189649307425 (2023-06-12): the model now '
-            'ends at rest at the origin. Investigate before using any value as a reference',
         'LieGroupIntegrationUnitTests.py':
             'imports timeIntegrationOfRotationVectorFormulas, which no longer exists',
         'createContactSphereSphere.py':

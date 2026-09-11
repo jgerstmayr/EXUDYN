@@ -130,7 +130,7 @@ def CheckTestCoverage(modelsDir, refSolNames, notTestModels, deliberatelyNotRun)
     therefore never executed, and is indistinguishable from a file which does not exist. That
     is how 19 models came to be silently unrun (revision plan fact 14, step 69).
 
-    Three checks, covering every direction in which the two can drift apart:
+    Four checks, covering every direction in which the two can drift apart:
 
       1. UNCOVERED   - a .py in the folder which is in no reference list and on no exclusion
                        list. Fails: this is the rot the check exists to stop.
@@ -138,6 +138,9 @@ def CheckTestCoverage(modelsDir, refSolNames, notTestModels, deliberatelyNotRun)
                        catch this too, but only as a confusing 'raised exception' mid-run.
       3. DEAD EXCLUSION - a name in deliberatelyNotRun with no file on disk. Reported only:
                        deleting a test must not break the suite for whoever deleted it.
+      4. BOTH        - a name which is in a reference list AND on an exclusion list. Reported:
+                       it runs, so nothing breaks, but the exclusion and its reason are stale
+                       and the next reader is told two contradictory things.
 
     Returns (message, isFailure). The message is always printed; isFailure is what a caller
     with --exit-code folds into the process exit code - report prominently, fail selectively,
@@ -152,6 +155,7 @@ def CheckTestCoverage(modelsDir, refSolNames, notTestModels, deliberatelyNotRun)
     uncovered = sorted(onDisk - covered - excluded)
     staleKeys = sorted(covered - onDisk)
     deadExclusions = sorted(set(deliberatelyNotRun) - onDisk)
+    listedTwice = sorted(covered & excluded)
 
     isFailure = (len(uncovered) != 0) or (len(staleKeys) != 0)
 
@@ -179,7 +183,12 @@ def CheckTestCoverage(modelsDir, refSolNames, notTestModels, deliberatelyNotRun)
         for name in deadExclusions:
             s += '    ' + name + '\n'
 
-    if not isFailure and len(deadExclusions) == 0:
+    if len(listedTwice) != 0:
+        s += '\nnote: listed twice - referenced AND excluded; the exclusion is stale:\n'
+        for name in listedTwice:
+            s += '    ' + name + '\n'
+
+    if not isFailure and len(deadExclusions) == 0 and len(listedTwice) == 0:
         s += 'OK: every .py in the folder is either referenced or explicitly excluded\n'
 
     return s, isFailure

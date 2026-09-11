@@ -220,12 +220,18 @@ These were checked against the tree. Several correct earlier assumptions.
     `StructuresAndSettingsIndex.rst` drifted on every run. →
     [log](exudynRevisionLog2026.md#fact-17)
 
-18. **Multi-platform text handling is a standing concern, not a one-off.** Everything to date has
-    been generated and built on Windows, so encoding and line-ending defaults have never been
-    exercised elsewhere. Step 71 fixed the encoding defaults; step 70 (`.gitattributes`) covers
-    line endings. Any *new* file IO in the generators or tools must pass `encoding='utf8'`
-    explicitly — never rely on the platform default. Worth a lint rule when step 43 adds ruff
-    (`PLW1514` / `flake8-encodings`).
+18. **RESOLVED 2026-09-11 (step 2).** Multi-platform text handling was a standing concern:
+    everything had been generated and built on Windows, so encoding and line-ending defaults had
+    never been exercised elsewhere. Step 71 fixed the encoding defaults, step 70
+    (`.gitattributes`) the line endings, and the first Linux generation run — the CI job added in
+    step 2 — confirmed both. What it *did* find was a third axis nobody had listed: **`os.listdir`
+    order**, which is alphabetical on NTFS and hash order on ext4 (issue #2370). Generation is now
+    verified platform-independent on every run.
+
+    Still true as a rule: any *new* file IO in the generators or tools must pass `encoding='utf8'`
+    explicitly, and any directory listing that reaches generated output must be sorted. Worth lint
+    rules when step 43 adds ruff (`PLW1514` / `flake8-encodings`).
+
 19. **scipy 1.18.0 causes a large test suite slowdown** — attributed to the eigensolver path.
     Measured on the same machine and the same Exudyn 1.11.0: `venvP312` (scipy 1.15.2 /
     numpy 2.2.4) runs the suite in **24.3 s**, `venvExuP313` with scipy 1.18.0 / numpy 2.5.2 took
@@ -504,16 +510,11 @@ Order: **Phase 0 → 2a → (1 + 2 together as v2.0) → 3 → 4 → 5 → 6 →
 1. **DONE 2026-09-09** — root `.gitignore` added; `PerformanceLogs/`, `TestSuiteLogs/`,
    `TestExamplesLogs/` and `testData/*.npy` deliberately kept tracked (D7). →
    [log](exudynRevisionLog2026.md#step-1)
-2. **PARTLY DONE 2026-09-09** — `tools/regenerate.py` written and verified by deliberate fault
-   injection; Tier 1 fails, Tier 2 warns. **CI wiring still open.** →
+2. **DONE 2026-09-11.** `tools/regenerate.py` written and verified by fault injection, and now
+   wired into CI as the `regenerated_files` job. Wiring it found that generation was **not
+   platform-independent** (issue #2370); that is fixed, so the gate passes on Linux. →
    [log](exudynRevisionLog2026.md#step-2)
 
-   **Remaining: wire into CI.** Needs its own conda/pip environment on Linux (sphinx toolchain plus
-   the packages the generators import) and must run on a clean checkout. `.gitlab-ci.yml` does
-   **not** yet call it - verified 2026-09-10, the file has only `wheels_linux` and `docs`. Adding
-   it also means deciding whether it blocks pull requests. Note that CI runs on Linux while all
-   generation to date has happened on Windows, so the first CI run doubles as the multi-platform
-   test for fact 18.
 3. **DONE 2026-09-09** — the *commit itself* is the golden snapshot: a full regeneration on
    `910e2b5` produces no drift, the first time this has been true. `goldenFiles_V1.11.5_910e2b5.zip`
    is the out-of-band convenience copy. → [log](exudynRevisionLog2026.md#step-3)

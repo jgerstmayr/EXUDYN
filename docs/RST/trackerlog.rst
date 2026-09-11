@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.17.dev1, 
++  Exudyn version = 1.11.19.dev1, 
 +  last change =  2026-09-11, 
-+  Number of issues = 2370, 
-+  Number of resolved issues = 2090 (17 in current version), 
++  Number of issues = 2371, 
++  Number of resolved issues = 2092 (19 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.19: :textred:`resolved BUG 2370` : generated documentation depends on the filesystem listing order 
+    - issue author: Claude-JG
+    - description:  ExtractExamplesWithKeyword in autoGenerateHelper.py and the Examples listing in doc2rst.py used os.listdir() without sorting. NTFS returns alphabetical order and ext4 returns hash order; the Relevant-Examples lists are truncated to the first few entries; so the generated docs and two Tier 1 files under main/src/pythonGenerator/generated differed between Windows and Linux. Found by the first CI run of tools/regenerate.py on Linux (revision plan step 2 and fact 18).
+    - **notes:** Both listings now use sorted(..., key=str.lower). Case-insensitive reproduces the NTFS order the committed output was generated in, so Tier 1 is unchanged on Windows. Verified in a python:3.13 container: Linux and Windows now produce identical generated files.
+    - date resolved: **2026-09-11 11:03**\ , date raised: 2026-09-11 
+    - resolved by: Claude-JG
+ * Version 1.11.18: :textred:`resolved BUG 2369` : relativeRotationTranslationMechanism now ends at rest at the origin 
+    - issue author: Claude-JG
+    - description:  norm(GetODE2Coordinates()) at the end of the run is 2.087948914872922e-12 while the reference recorded in the file is 4.172189649307425 (2023-06-12). The mechanism produces essentially zero motion. Found while triaging the unlisted TestModels for revision plan step 69. Not added to the test suite.
+    - **notes:** Fixed by the maintainer: endTime reduced from 2s to 0.2s. At 2s the mechanism was back in its initial configuration with no displacements, so the norm was ~0. Added to the test suite with reference 1.509631854432179.
+    - date resolved: **2026-09-11 11:03**\ , date raised: 2026-09-11 
+    - resolved by: Claude-JG
  * Version 1.11.17: resolved Issue 2367: test suite does not notice models that are in no reference list (testing)
     - issue author: Claude-JG
     - description:  runTestSuite.py builds its run list from the keys of TestExamplesReferenceSolution() and never lists the directory; a model on disk but in no list is therefore silently never executed. 19 models were in that state.
@@ -7919,11 +7931,6 @@ Open issues
 **********
 Known bugs
 **********
-
- * :textred:`open BUG 2369:` relativeRotationTranslationMechanism now ends at rest at the origin
-    - issue author: Claude-JG
-    - description:  norm(GetODE2Coordinates()) at the end of the run is 2.087948914872922e-12 while the reference recorded in the file is 4.172189649307425 (2023-06-12). The mechanism produces essentially zero motion. Found while triaging the unlisted TestModels for revision plan step 69. Not added to the test suite.
-    - date raised: 2026-09-11 
 
  * :textred:`open BUG 2368:` ANCFbeltDrive result contradicts its own recorded reference
     - issue author: Claude-JG
