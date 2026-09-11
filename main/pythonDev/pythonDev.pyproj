@@ -37,11 +37,6 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <OutputPath>bin\Release64\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'ReleaseP37' ">
-    <DebugSymbols>true</DebugSymbols>
-    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-    <OutputPath>bin\ReleaseP37\</OutputPath>
-  </PropertyGroup>
   <ItemGroup>
     <Compile Include="pytest.py" />
   </ItemGroup>

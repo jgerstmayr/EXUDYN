@@ -608,8 +608,15 @@ promise for no gain.
     *fourth* copy of the source list, which step 17 had just consolidated. Vendored
     `include/Eigen/CMakeLists.txt` left untouched. →
     [log](exudynRevisionLog2026.md#step-18)
-19. Drop the `ReleaseP37` configuration and all `Win32`/`x86` configurations from the solution
-    and vcxproj.
+19. **DONE 2026-09-12.** Six configurations reduced to two, `Debug|x64` and `Release|x64`:
+    `cppsrc.vcxproj` 853 → 660 lines, both solution `GlobalSection`s rewritten, and the
+    `ReleaseP37` group dropped from `pythonDev.pyproj`. MSBuild evaluates both survivors
+    cleanly. `requires-python` also went `>=3.6` → `>=3.10`, which step 24 deferred to here.
+    **32-bit support removed too** (maintainer's call, beyond the original step text):
+    `main/libs/libs32/` and `setup.py`'s bitness branch are gone, and a 32-bit interpreter
+    now fails with an explicit message instead of linking 64-bit libraries. The install
+    guide still describes 32-bit and is issue #2389.
+    →  [log](exudynRevisionLog2026.md#step-19)
 20. Move cibuildwheel config into `[tool.cibuildwheel]`; drop `continue-on-error`.
 21. Validate `setupPyConfig.json` against a schema; fail on unknown keys.
 22. **Fix the vector alignment bug.** `BasicDefinitions.h:78` has

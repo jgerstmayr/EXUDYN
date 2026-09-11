@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.27.dev1, 
-+  last change =  2026-09-11, 
-+  Number of issues = 2386, 
-+  Number of resolved issues = 2100 (27 in current version), 
++  Exudyn version = 1.11.29.dev1, 
++  last change =  2026-09-12, 
++  Number of issues = 2390, 
++  Number of resolved issues = 2102 (29 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.29: resolved Issue 2389: remove 32 bit support: libs/libs32 and the bitness branch in setup.py (cleanup)
+    - issue author: Claude-JG
+    - description:  follow up to issue 2386; whose resolution note still says setup.py keeps its is32bits branch - that is no longer true. On the maintainer instruction the 32 bit support is removed outright: main/libs/libs32 (glfw.pdb; glfw3.lib; glfw3_d.lib; openvr_api.dll; openvr_api.lib) and the is32bits/is64bits branch in setup.py; whose only remaining effect was to choose that directory. Revision plan step 19
+    - **notes:** the five libs32 files deleted and the bitness branch replaced by an explicit failure: a 32 bit interpreter now raises immediately with the reason; instead of falling through to the 64 bit import libraries and producing "DLL load failed: 
+    - date resolved: **2026-09-12 00:08**\ , date raised: 2026-09-12 
+    - resolved by: Claude-JG
+ * Version 1.11.28: resolved Issue 2386: drop the ReleaseP37 and Win32/x86 build configurations (cleanup)
+    - issue author: Claude-JG
+    - description:  the solution and cppsrc.vcxproj carried six configurations: Debug; Release and ReleaseP37 times Win32 and x64. ReleaseP37 is the last artefact of Python 3.7 support and no 32 bit wheel has been built for years; so four of the six were dead weight that every vcxproj edit had to be repeated in. Revision plan step 19
+    - **notes:** six configurations reduced to two; Debug|x64 and Release|x64. Removed from cppsrc.vcxproj the four ProjectConfiguration declarations and every PropertyGroup; ImportGroup and ItemDefinitionGroup conditioned on them (853 -> 660 lines); rewrote both GlobalSections of main_sln_Template.sln; and dropped the ReleaseP37 PropertyGroup from pythonDev.pyproj. Verified: all three files still parse as XML; the 133 ClCompile entries are untouched and still match sources.json; and MSBuild evaluates both surviving configurations without error - Release|x64 resolving to ConfigurationType DynamicLibrary; TargetExt .pyd; PlatformToolset v143 and OutDir bin/x64/Release. requires-python also moved from >=3.6 to >=3.10; which step 24 had deferred to here: CI builds cp310-cp314 and no 3.6 wheel has existed for years. setup.py keeps its is32bits branch; it reacts to the running interpreter rather than to a VS configuration; and removing 32 bit support outright is not part of this step
+    - date resolved: **2026-09-12 00:01**\ , date raised: 2026-09-12 
+    - resolved by: Claude-JG
  * Version 1.11.27: resolved Issue 2385: remove the three dead CMakeLists files (cleanup)
     - issue author: Claude-JG
     - description:  none of the three could configure; let alone build. main/CMakeLists.txt was a fourth complete copy of the 133 file source list and called add_subdirectory(pybind11) on a directory that does not exist; its own header said "CMakeLists for Exudyn are not complete". main/src/CMakeLists.txt and main/obj/autoCMakeLists.txt listed 63 of 133 files; missed 74; referenced sources deleted years ago (StaticSolver.cpp; CNodeRigidBody.cpp; solver/TimeIntegrationSolver.cpp) and used add_executable although exudyn is a Python module. Decision D3 keeps the .sln and .vcxproj and drops CMake. Revision plan step 18
@@ -6900,6 +6912,11 @@ Version 0.1
 Open issues
 ***********
 
+ * **open issue 2388:** the installation documentation is years out of date
+    - issue author: Claude-JG
+    - description:  docs/theDoc/gettingStarted.tex still instructs users with Python 3.6 and 3.7; 32 bit Anaconda; Spyder 4.1.3 and wheel names like exudyn-1.0.20-cp36-cp36m-win32.whl; and it discusses choosing between 32 and 64 bit installations. None of that has been built for years and after revision plan step 19 the 32 bit build configurations no longer exist at all. The install section needs rewriting against the versions that are actually shipped (cp310-cp314; 64 bit only). Found during revision plan step 19
+    - date raised: 2026-09-12 
+
  * :textblue:`open issue 2380:` quietCompile does not actually quieten the compiler on Linux
     - issue author: Claude-JG
     - description:  the quiet path redirects sys.stdout; but on Linux _compile spawns the compiler as a subprocess that writes to file descriptor 1 directly; so the compiler output bypasses the redirection and setuppy.output.txt stays empty (measured: 0 bytes after a full 133 file build). Suppressing it would need the subprocess stdout to be captured; not sys.stdout rebinding. Pre-existing; found while fixing the thread-safety defects of revision plan step 16
@@ -7989,6 +8006,11 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2387:` 20 ClInclude entries in cppsrc.vcxproj have the wrong case; 5 entries do not exist
+    - issue author: Claude-JG
+    - description:  the vcxproj lists headers as src/utilities/...; src/linalg/...; src/system/...; src/tests/... and src/autogenerated/SimulationSettings.h while the tracked directories are Utilities; Linalg; System; Tests and Autogenerated - 20 entries in total. It also lists two headers that do not exist (src/Autogenerated/VisuObjectBeamGeometricallyExact3D.h and src/System/MainObjectFactory.h) and three missing ClassDiagram .cd files. These are IDE browsing entries; the compiler finds headers through the include path; so nothing is broken today - but the same class of defect in a ClCompile entry was a real Linux hazard (see issue 2382) and these would trip any move or flattening step. tools/gen_sources.py --check should be extended to cover ClInclude and None entries. Found during revision plan step 19
+    - date raised: 2026-09-12 
 
  * :textred:`open BUG 2384:` setup.py sdist drops an untracked copy of LICENSE.txt into main/
     - issue author: Claude-JG

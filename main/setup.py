@@ -153,46 +153,31 @@ if sys.platform == 'darwin':
     #platform.processor() returns 'arm' in M1 mode and 'i386' under rosetta 2 (Intel mode)
     config['compileExudynFast'] = False #try to reduce compilation time for MacOS
 
-is64bits = False
-is32bits = False
-if platform.architecture()[0] == '64bit':
-    is64bits = True
-else:
-    is32bits = True
+#Exudyn is 64-bit only since revision plan step 19: the Win32 build configurations and the
+#libs/libs32 import libraries are gone, and no 32-bit wheel has been built for years. Fail here
+#rather than silently linking the 64-bit libraries into a 32-bit interpreter, which produces a
+#'%1 is not a valid Win32 application' DLL error much later and much further from the cause.
+if platform.architecture()[0] != '64bit':
+    raise RuntimeError('exudyn builds 64-bit only; this interpreter is '
+                       + platform.architecture()[0]
+                       + '. Use a 64-bit Python (revision plan step 19).')
 
 addLibrary_dirs = []
 
 addPackageData = {'':['__init__.pyi']}
 
-#find whether 32 or 64 bits are used
 if isWindows:
-    if is32bits:
-        addLibrary_dirs=['libs/libs32' ]
-        print("architecture==32bits")
-        if config['useOpenVR']:
-            #remove this warning in future:
-            print('**********************')
-            print('WARNING: setup.py: openVR not tested for 32bits case; may work!')
-            print(' **********************') 
-            
-            #addPackageData['']+=['../../../libs/libs32/openvr_api.dll'], #relative to exudyn; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
-            import shutil
-            shutil.copy2('libs/libs64/openvr_api.dll', 'pythonDev/exudyn/')
+    if config['useOpenVR']:
+        #this does not work without wildcard *; but does not add the .dll
+        #addPackageData['']+=['../../../libs/libs64/openvr*.dll'] #relative to exudyn; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
+        import shutil
+        shutil.copy2('libs/libs64/openvr_api.dll', 'pythonDev/exudyn/')
 
-            addPackageData['']+=['openvr_api.dll'] #relative to exudyn, copied there; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
-            print('add package data for openVR:', addPackageData)
-    else:
-        if config['useOpenVR']:
-            #this does not work without wildcard *; but does not add the .dll
-            #addPackageData['']+=['../../../libs/libs64/openvr*.dll'] #relative to exudyn; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
-            import shutil
-            shutil.copy2('libs/libs64/openvr_api.dll', 'pythonDev/exudyn/')
+        addPackageData['']+=['openvr_api.dll'] #relative to exudyn, copied there; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
+        print('add package data for openVR:', addPackageData)
 
-            addPackageData['']+=['openvr_api.dll'] #relative to exudyn, copied there; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
-            print('add package data for openVR:', addPackageData)
-        
-        addLibrary_dirs=['libs/libs64' ]
-        print("architecture==64bits")
+    addLibrary_dirs=['libs/libs64' ]
+    print("architecture==64bits")
 
 if isMacOS:
     addLibrary_dirs=['libs/libsmacos' ] #should contain glfw-libraries

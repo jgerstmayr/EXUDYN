@@ -15,8 +15,12 @@ build-backend = "setuptools.build_meta"
 name = "exudyn"
 description = "EXUDYN flexible multibody dynamics simulation in C++ and Python"
 #the minimum Python version needed by THIS exudyn version, not the versions that are tested -
-#pypi.org uses it to pick which wheel to offer, so a too-high bound hides the package
-requires-python = ">=3.6"
+#pypi.org uses it to pick which wheel to offer, so a too-high bound hides the package.
+#3.10 is the real floor since revision plan step 19: CI builds cp310-cp314, the classifiers say
+#3.10-3.14, and the last artefact of 3.7 support (the ReleaseP37 configuration) is gone. ">=3.6"
+#claimed wheels that have not existed for years; pip then offered an old release to a 3.6 user
+#instead of telling them the truth.
+requires-python = ">=3.10"
 dependencies = ["numpy"]
 #numpy is the only mandatory dependency and stays that way (CLAUDE.md, invariant)
 
