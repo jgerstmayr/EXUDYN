@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.19.dev1, 
+  \item Exudyn version = 1.11.20.dev1, 
   \item last change =  2026-09-11, 
-  \item Number of issues = 2371, 
-  \item Number of resolved issues = 2092 (19 in current version), 
+  \item Number of issues = 2373, 
+  \item Number of resolved issues = 2093 (20 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.20}:  resolved Issue 2371: {\bf PEP 621 metadata}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: move static package metadata from setup(...) into a [project] table in main/pyproject.toml; setup.py keeps only version; classifiers; packages; package\_data; ext\_modules and cmdclass. build-system.requires floor raised to setuptools>=61; below that a [project] table is silently ignored. Revision plan step 14}
+    \item {\bf notes: verified by diffing PKG-INFO from setup.py egg\_info before and after: only the PEP 621 spellings changed (Author/Home-page -> Author-email/Project-URL) and the Dynamic: block shrank from ten entries to one. A full wheel built in 54 s with the .pyd and both .pyi stubs present}
+    \item   date resolved: {\bf 2026-09-11 18:24},
+date raised: 2026-09-11 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.19}: {\bf \color{warningRed}  resolved BUG 2370}: {\bf generated documentation depends on the filesystem listing order}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

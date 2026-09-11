@@ -102,6 +102,7 @@ docs/_build/
 # Editors and OS
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 .idea/
+.vscode/
 .spyproject/
 .ipynb_checkpoints/
 Thumbs.db

@@ -354,6 +354,62 @@ Two things the green run quietly proves:
 - `sphinx-build -W` passes on Linux. Every documentation build until now had been on Windows,
   so this is the first cross-platform confirmation for fact 18.
 
+<a id="step-14"></a>
+
+### Step 14 — static metadata into a PEP 621 `[project]` table
+
+**DONE 2026-09-11.** `main/pyproject.toml` grew a `[project]` table holding name, description,
+authors, URL, readme, licence, `requires-python` and `dependencies`; `setup(...)` in
+`main/setup.py` lost those twelve keyword arguments and the twelve-line `long_description`
+string concatenation, and now passes only what the build computes.
+
+The floor in `build-system.requires` had to move **42 → 61**. That is not cosmetic: on
+setuptools < 61 a `[project]` table is *silently ignored*, so an old builder would have produced
+a wheel with no metadata at all rather than an error. The CI wheel job installs `-U setuptools`,
+so it is satisfied there.
+
+**What stayed in `setup.py`, and why** - none of it is static:
+
+| kept | depends on |
+|---|---|
+| `version` | `docs/theDoc/version.txt`, which `issueTracker.py` writes |
+| `classifiers` | the Development Status entry follows the `.dev1` suffix of that version |
+| `packages`, `package_dir` | `BuildPy` rebuilds the tree under `build/tempExudyn` and re-finds them there |
+| `package_data` | grows an `openvr_api.dll` entry when `config['useOpenVR']` is set |
+| `ext_modules`, `setup_requires`, `cmdclass` | the compilation itself |
+
+`dynamic = ["version", "classifiers"]` declares the first two. Classifiers are declared dynamic
+rather than moved because PEP 621 has no conditional and setuptools does not *merge* a
+`setup()` list with a `[project]` one - it replaces it, so the list cannot be split across the
+two files. Moving it would mean dropping the Beta/Stable switch. That is a small, purely
+cosmetic pypi.org badge and it may well be worth dropping later, but it is a maintainer's call,
+not a side effect of a packaging refactor.
+
+**Verified by metadata diff, not by inspection.** `setup.py egg_info` was run before and after
+the change and the two `PKG-INFO` files diffed. The only differences are the ones PEP 621
+*defines*:
+
+- `Author` + `Author-email` collapse into the single `Author-email: Johannes Gerstmayr
+  <reply.exudyn@gmail.com>` form, and `Home-page` becomes `Project-URL: Homepage, ...`. Both are
+  the modern spellings of the same facts; pypi.org renders them in the same places.
+- three trailing spaces vanish from the long description.
+- the `Dynamic:` block shrinks from **ten entries to one**. That block is the machine-readable
+  statement of how much of the metadata could only be known by running a build script, so
+  10 → 1 is the measurement of what this step actually achieved.
+
+`SOURCES.txt` is identical apart from the output directory, and a real wheel was built
+(`exudyn-1.11.19.dev1-cp313-cp313-win_amd64.whl`, 54 s, 43 files, `exudynCPP.cp313-win_amd64.pyd`
+and both `.pyi` stubs present) - so `BuildPy`, `BuildExt` and the parallel-compile monkeypatch
+all still see what they expect.
+
+**Left alone deliberately:** `requires-python = ">=3.6"` was moved verbatim although the
+classifiers only claim 3.9+; correcting it is step 19's business, not a metadata move.
+`license = { text = "BSD" }` is the TOML-table form, which setuptools now deprecates with a
+2027-Feb-18 deadline. The replacement is an SPDX expression, and there is no honest one: the
+file is the custom *EXUDYN General License*, not any OSI-approved BSD, which is also why the
+`License :: OSI Approved :: BSD License` classifier was dropped earlier. Raised as issue #2372
+so the deadline is tracked rather than rediscovered.
+
 <a id="step-30"></a>
 
 ### Step 30 — consolidate `docs/howTo/`

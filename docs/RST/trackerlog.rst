@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.19.dev1, 
++  Exudyn version = 1.11.20.dev1, 
 +  last change =  2026-09-11, 
-+  Number of issues = 2371, 
-+  Number of resolved issues = 2092 (19 in current version), 
++  Number of issues = 2373, 
++  Number of resolved issues = 2093 (20 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.20: resolved Issue 2371: PEP 621 metadata (change)
+    - issue author: Claude-JG
+    - description:  move static package metadata from setup(...) into a [project] table in main/pyproject.toml; setup.py keeps only version; classifiers; packages; package_data; ext_modules and cmdclass. build-system.requires floor raised to setuptools>=61; below that a [project] table is silently ignored. Revision plan step 14
+    - **notes:** verified by diffing PKG-INFO from setup.py egg_info before and after: only the PEP 621 spellings changed (Author/Home-page -> Author-email/Project-URL) and the Dynamic: block shrank from ten entries to one. A full wheel built in 54 s with the .pyd and both .pyi stubs present
+    - date resolved: **2026-09-11 18:24**\ , date raised: 2026-09-11 
+    - resolved by: Claude-JG
  * Version 1.11.19: :textred:`resolved BUG 2370` : generated documentation depends on the filesystem listing order 
     - issue author: Claude-JG
     - description:  ExtractExamplesWithKeyword in autoGenerateHelper.py and the Examples listing in doc2rst.py used os.listdir() without sorting. NTFS returns alphabetical order and ext4 returns hash order; the Relevant-Examples lists are truncated to the first few entries; so the generated docs and two Tier 1 files under main/src/pythonGenerator/generated differed between Windows and Linux. Found by the first CI run of tools/regenerate.py on Linux (revision plan step 2 and fact 18).
@@ -6851,6 +6857,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * :textblue:`open issue 2372:` project.license TOML table deprecated
+    - issue author: Claude-JG
+    - description:  setuptools deprecates license = { text = ... } with deadline 2027-Feb-18; the replacement is an SPDX expression. There is no honest one: LICENSE.txt is the custom EXUDYN General License; not an OSI-approved BSD - which is also why the License :: OSI Approved :: BSD License classifier was dropped. Needs a decision on what the licence identifier should be
+    - date raised: 2026-09-11 
 
  * **open issue 2350:** MacOS               
     - description:  fix problem in raytracerNOGLFWtest.py on MacOS

@@ -565,9 +565,14 @@ Order: **Phase 0 → 2a → (1 + 2 together as v2.0) → 3 → 4 → 5 → 6 →
 Stay on setuptools. scikit-build-core or meson would cost the fast build and the zero-dependency
 promise for no gain.
 
-14. Move static metadata to a PEP 621 `[project]` table; reduce `setup.py` to a thin
-    `ext_modules` shim.
-15. `pybind11` into `build-system.requires`; drop `setup_requires`.
+14. **DONE 2026-09-11.** Static metadata moved to a `[project]` table in
+    `main/pyproject.toml`; `setup()` keeps only what the build computes. The `Dynamic:`
+    block of the wheel metadata went from ten entries to one. `build-system.requires`
+    needed setuptools **>=61** for the table to be read at all. →
+    [log](exudynRevisionLog2026.md#step-14)
+15. `pybind11` into `build-system.requires`; drop `setup_requires`. (The floor there is
+    already `setuptools>=61` after step 14; only the `pybind11<3.0` pin still has to move
+    out of `setup.py`.)
 16. Replace the distutils monkeypatch (setup.py:735-880) with setuptools' supported parallel
     `build_ext`. Remove the bare `except` — fail loudly, or make serial an explicit opt-in.
 17. `tools/gen_sources.py`: derive a committed `sources.json` from the `ClCompile` entries of

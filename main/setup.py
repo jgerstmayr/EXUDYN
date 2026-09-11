@@ -890,42 +890,23 @@ if config['compileParallel']:
 
 
 
-long_description=''
-long_description += '==========\n'
-long_description += '**Exudyn**\n'
-long_description += '==========\n\n'
-long_description += 'A flexible multibody dynamics systems simulation code with Python and C++\n\n'
-long_description += 'Exudyn is hosted on `Github <https://github.com/jgerstmayr/EXUDYN>`_ which provides full documentation, tutorial, examples, etc.\n\n'
-long_description += 'See `License on github <https://github.com/jgerstmayr/EXUDYN/blob/master/LICENSE.txt>`_ .\n'
-long_description += 'Pre-compiled wheels available on PyPI via pip install.\n\n'
-long_description += 'For more information, installation and tutorials see: \n\n'
-long_description += 'https://github.com/jgerstmayr/EXUDYN \n\n'
-long_description += 'For CHANGES (section Issues and Bugs), detailed DOCUMENTATION on theory, usage, and REFERENCE MANUAL on **600+** pages: \n\n'
-long_description += 'https://github.com/jgerstmayr/EXUDYN/tree/master/docs/theDoc/theDoc.pdf\n\n'
-
-
-    
+#name, description, author, urls, readme, licence, dependencies and requires-python now live in
+#pyproject.toml (revision plan step 14). What stays here is what the build computes:
+#  version         - read from docs/theDoc/version.txt, which issueTracker.py writes
+#  classifiers     - the Development Status entry follows the '.dev1' suffix of that version
+#  packages        - BuildPy rebuilds the tree in a temporary directory and re-finds them there
+#  package_data    - grows an openvr_api.dll entry when config['useOpenVR'] is set
+#  ext_modules / setup_requires / cmdclass - the compilation itself
 setup(
-    name='exudyn',
     version=__version__,
-    author='Johannes Gerstmayr',
-    author_email='reply.exudyn@gmail.com',
-    url='https://github.com/jgerstmayr/EXUDYN',
-    description='EXUDYN flexible multibody dynamics simulation in C++ and Python',
-    long_description = long_description,
-    long_description_content_type='text/x-rst',
 #
     package_dir={'':'pythonDev'},   #only add packages from that dir; must include a __init__.py file
     packages=find_namespace_packages(where='pythonDev', include=('exudyn', 'exudyn.robotics')),
     package_data=addPackageData,
 #
     ext_modules=ext_modules,
-    setup_requires=[setup_requires_pybind11], 
-    install_requires=['numpy'],
+    setup_requires=[setup_requires_pybind11],
     cmdclass={'build_py': BuildPy, 'build_ext': BuildExt},
-    zip_safe=False,
-    license = 'BSD',
-    platforms='any', #2022-03-20: used in numpy - may improve behavior in pypi.org?
     classifiers=[
         developmentStatus,
         "Programming Language :: Python :: 3",
@@ -944,8 +925,6 @@ setup(
         "Operating System :: MacOS",
         "Topic :: Scientific/Engineering",
     ],
-    #OLD: '==' makes problems with pypi? python_requires='=='+pyVersionString+'.*', #'.*' required on UBUNTU/Windows in order to accept any Python minor Version (e.g. 3.6.x) during installation
-    python_requires='>=3.6', #for pypi.org, do only specify the minimum Python version which is needed for this exudyn version
 )
 
 if config['useOpenVR'] and isWindows: #delete copied file

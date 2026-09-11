@@ -1,4 +1,63 @@
 [build-system]
-requires = ["setuptools>=42", "wheel"] #,"pybind11"
+#setuptools>=61 is what makes the [project] table below authoritative; on anything older it is
+#silently ignored and the wheel ends up with no metadata at all (revision plan step 14).
+#pybind11 belongs here too, but it still comes in through setup_requires - see step 15.
+requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
 
+#Static package metadata. Everything here used to be keyword arguments to setup(); what is left
+#in setup.py is what genuinely depends on the build (version, packages, package_data,
+#ext_modules, cmdclass). See revision plan step 14.
+[project]
+name = "exudyn"
+description = "EXUDYN flexible multibody dynamics simulation in C++ and Python"
+#the minimum Python version needed by THIS exudyn version, not the versions that are tested -
+#pypi.org uses it to pick which wheel to offer, so a too-high bound hides the package
+requires-python = ">=3.6"
+dependencies = ["numpy"]
+#numpy is the only mandatory dependency and stays that way (CLAUDE.md, invariant)
+
+#derived from the version string in setup.py: '.dev1' switches the Development Status classifier
+dynamic = ["version", "classifiers"]
+
+#a table, not an SPDX expression: the licence is the custom 'EXUDYN General License', not any
+#OSI-approved BSD, so "BSD-3-Clause" would be a false claim. The corresponding
+#'License :: OSI Approved :: BSD License' classifier was already dropped as deprecated.
+license = { text = "BSD" }
+
+[[project.authors]]
+name = "Johannes Gerstmayr"
+email = "reply.exudyn@gmail.com"
+
+[project.urls]
+Homepage = "https://github.com/jgerstmayr/EXUDYN"
+
+#text/x-rst, shown as the project page on pypi.org. Inline rather than a file because README.md
+#is markdown and is aimed at the repository, not at pypi.
+[project.readme]
+content-type = "text/x-rst"
+text = """
+==========
+**Exudyn**
+==========
+
+A flexible multibody dynamics systems simulation code with Python and C++
+
+Exudyn is hosted on `Github <https://github.com/jgerstmayr/EXUDYN>`_ which provides full documentation, tutorial, examples, etc.
+
+See `License on github <https://github.com/jgerstmayr/EXUDYN/blob/master/LICENSE.txt>`_ .
+Pre-compiled wheels available on PyPI via pip install.
+
+For more information, installation and tutorials see:
+
+https://github.com/jgerstmayr/EXUDYN
+
+For CHANGES (section Issues and Bugs), detailed DOCUMENTATION on theory, usage, and REFERENCE MANUAL on **600+** pages:
+
+https://github.com/jgerstmayr/EXUDYN/tree/master/docs/theDoc/theDoc.pdf
+
+"""
+
+[tool.setuptools]
+zip-safe = false
+platforms = ["any"] #2022-03-20: used in numpy - may improve behavior in pypi.org?
