@@ -576,7 +576,7 @@ promise for no gain.
     is inert, and the headers actually came from an undeclared `main/.eggs/` download.
     Verified by deleting `.eggs/` and rebuilding. →
     [log](exudynRevisionLog2026.md#step-15)
-16. **RESCOPED 2026-09-11 — the original premise was wrong.** setuptools' parallel
+16. **DONE 2026-09-11 — rescoped first; the original premise was wrong.** setuptools' parallel
     `build_ext --parallel` parallelises **across extensions**, not across the source files
     *within* one. Exudyn compiles 133 `.cpp` files in a single extension, so the supported
     mechanism gives at most 3x on a release build and **nothing** on a `.dev1` build, against
@@ -592,6 +592,10 @@ promise for no gain.
       diagnostic**, replacing a real `CompileError` with an argv dump.
     - `nObjects = len(objects)+2` (761) is a fudge — it is why the progress counter reports
       135 for 133 files.
+    All four are fixed; the patch is kept and now carries a comment saying why it cannot be
+    replaced. Verified on Windows (56.8 s wheel, unchanged) and in manylinux cp313 (full
+    build + test suite, plus a quiet build reporting `completed 133/133`). →
+    [log](exudynRevisionLog2026.md#step-16)
 17. *(measured starting point: the source list is a literal Python list — `cppFiles` at
     `setup.py:270-325` (54 entries) plus `327-408` (79) = **133**; `minimalCppFiles` cuts the
     second block and also defines `EXUDYN_MINIMAL_COMPILATION`, so the file list and the C++

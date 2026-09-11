@@ -449,6 +449,53 @@ pybind11 2.13.6 was then installed and the wheel built — `exudyn-1.11.20.dev1-
 now that pybind11 is a declared build dependency is a separate question, and it belongs with
 step 68 rather than here.
 
+<a id="step-16"></a>
+
+### Step 16 — the parallel-compile monkeypatch: kept, and repaired
+
+**DONE 2026-09-11.** The step as written said *replace the distutils monkeypatch with setuptools'
+supported parallel `build_ext`*. That is not possible, and the plan entry has been corrected
+rather than the code forced.
+
+**Why the mechanism stays.** setuptools' `build_ext --parallel` parallelises **across
+extensions**, not across the source files *within* one. Exudyn compiles 133 `.cpp` files into a
+single extension, so the supported mechanism would give at most one thread per extension — and a
+development build has exactly one extension, so it would give nothing at all. Against the
+monkeypatch's measured ~13x, and with the ~1 min wheel listed as an invariant (§7), there is no
+like-for-like replacement. So the patch is kept and a comment at the patch site now says why, so
+that the next reader does not re-open the same question.
+
+**The four defects, all fixed:**
+
+| # | defect | why it mattered |
+|---|---|---|
+| 1 | the Linux quiet path did `with open('setuppy.output.txt','w') as sys.stdout:` **inside** `_single_compile` | that rebinds the **global** `sys.stdout` from every worker thread, each opening the same file with mode `w`. The threads truncated one another and the restore raced with workers still running. Replaced by a single `contextlib.redirect_stdout` around the whole pool — the shape the Windows branch already had. |
+| 2 | the outer `except:` | bare, so it also swallowed `KeyboardInterrupt` and `SystemExit` — Ctrl+C looked like a patching failure. Its message *"trying serial compilation"* described the compile, but the block only wraps **installing** the patch; a compilation failure never reaches it. Now `except Exception`, printing the exception type and text and saying what it actually covers. |
+| 3 | the Windows `except: raise ValueError('failed to exucute: '+str(args))` | replaced a real `CompileError` — the compiler's own diagnostic — with an argv dump, so the error text was never seen. Now prints the command line and **re-raises**. |
+| 4 | `nObjects = len(objects)+2` | a fudge for "two extra files added by system". It is why the progress counter reported 135 for 133 files. Now `len(objects)`, matching the Windows branch. |
+
+Also fixed while in there: the Windows quiet path restored `sys.stdout` with an assignment *after*
+the `with` block, which does not run when a compile raises — every later message then went into a
+closed file. `contextlib` restores on the exception path too. And the Linux progress line now
+writes to `sys.__stdout__`, so it stays on the console instead of landing inside
+`setuppy.output.txt` with the compiler noise.
+
+**Verified on both platforms, which this step needed.** Windows: wheel in **56.8 s** against 55 s
+before — unchanged within noise. Linux, in `manylinux_2_28_x86_64` cp313: a full
+`buildManylinux.sh` run built and tested the wheel, and a separate quiet build reported
+`completed 001/133` … `completed 133/133` — the corrected count, on the console.
+
+**Two reproducible Linux test failures were found and proved pre-existing.**
+`generalContactImplicit1.py` (−5.310e-08) and `sliderCrank3Dbenchmark.py` (−5.037e-10) fail on
+Linux and are *not* on the `UnresolvedOnLinux` list, so the Linux build exits non-zero. They are
+not caused by this step: the same container build at the previous commit produced **bit-identical**
+values for both. Raised as an issue rather than absorbed into this one.
+
+A third finding, also raised separately: `quietCompile` does not actually quieten anything on
+Linux. `_compile` spawns the compiler as a subprocess writing to file descriptor 1, which no
+`sys.stdout` rebinding can intercept — `setuppy.output.txt` was **0 bytes** after a complete
+133-file build. That is pre-existing and orthogonal to the thread-safety defects fixed here.
+
 <a id="step-24"></a>
 
 ### Step 24 — metadata drift

@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.23.dev1, 
++  Exudyn version = 1.11.24.dev1, 
 +  last change =  2026-09-11, 
-+  Number of issues = 2378, 
-+  Number of resolved issues = 2096 (23 in current version), 
++  Number of issues = 2381, 
++  Number of resolved issues = 2097 (24 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.24: :textred:`resolved BUG 2378` : parallel-compile monkeypatch: thread-unsafe output and swallowed errors 
+    - issue author: Claude-JG
+    - description:  four defects in the parallel compile patch in setup.py. (1) on Linux the quiet path rebound the GLOBAL sys.stdout from every worker thread; each opening setuppy.output.txt with mode w; so threads truncated each other and the restore raced. (2) the outer bare except also swallowed KeyboardInterrupt/SystemExit and its message "trying serial compilation" described the compile; although it only wraps installing the patch. (3) the Windows handler did "raise ValueError(args)"; destroying the compiler CompileError and its message. (4) nObjects = len(objects)+2 made the progress counter report 135 for 133 files. Revision plan step 16
+    - **notes:** the per-file redirect is replaced by one contextlib.redirect_stdout around the whole thread pool (the shape the Windows branch already used); and contextlib also restores sys.stdout when a compile raises; which the old "sys.stdout = sys.__stdout__" after the with-block did not. Progress now goes to sys.__stdout__ so it stays on the console rather than in the log. The Windows handler prints the command line and re-raises; keeping the compiler diagnostic. The outer except is now except Exception and says what it actually covers. nObjects = len(objects). The monkeypatch itself is KEPT: setuptools parallelises build_ext across extensions; not across sources within one; and exudyn has 133 sources in a single extension. Verified on both platforms: Windows wheel 56.8 s (unchanged); manylinux cp313 build plus test suite bit-identical to the previous commit; and a quiet Linux build reporting completed 001/133 .. 133/133
+    - date resolved: **2026-09-11 21:27**\ , date raised: 2026-09-11 
+    - resolved by: Claude-JG
  * Version 1.11.23: resolved Issue 2375: optional-dependency extras with a drift checker (extension)
     - issue author: Claude-JG
     - description:  there was no way to install the packages needed for the tests or referred to internally; and no mechanism to notice when the code starts importing something that no declared list installs. Revision plan step 80
@@ -6876,6 +6882,11 @@ Version 0.1
 Open issues
 ***********
 
+ * :textblue:`open issue 2380:` quietCompile does not actually quieten the compiler on Linux
+    - issue author: Claude-JG
+    - description:  the quiet path redirects sys.stdout; but on Linux _compile spawns the compiler as a subprocess that writes to file descriptor 1 directly; so the compiler output bypasses the redirection and setuppy.output.txt stays empty (measured: 0 bytes after a full 133 file build). Suppressing it would need the subprocess stdout to be captured; not sys.stdout rebinding. Pre-existing; found while fixing the thread-safety defects of revision plan step 16
+    - date raised: 2026-09-11 
+
  * :textblue:`open issue 2372:` project.license TOML table deprecated
     - issue author: Claude-JG
     - description:  setuptools deprecates license = { text = ... } with deadline 2027-Feb-18; the replacement is an SPDX expression. There is no honest one: LICENSE.txt is the custom EXUDYN General License; not an OSI-approved BSD - which is also why the License :: OSI Approved :: BSD License classifier was dropped. Needs a decision on what the licence identifier should be
@@ -7960,6 +7971,11 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2379:` two TestModels fail reproducibly on Linux and are not marked UnresolvedOnLinux
+    - issue author: Claude-JG
+    - description:  generalContactImplicit1.py (error -5.310e-08) and sliderCrank3Dbenchmark.py (-5.037e-10) fail under manylinux_2_28 cp313 while the 8 other Linux differences are marked UnresolvedOnLinux and excluded. So the Linux build exits non-zero. Confirmed PRE-EXISTING and unrelated to revision plan step 16: a build at the previous commit produced bit-identical values. Either the two belong on the UnresolvedOnLinux list with a reason; or the underlying difference needs investigation
+    - date raised: 2026-09-11 
 
  * :textred:`open BUG 2377:` three imports refer to modules that exist nowhere
     - issue author: Claude-JG

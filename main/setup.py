@@ -15,6 +15,7 @@ from pathlib import Path
 #for Docstring conversion:
 import importlib.util
 import shutil
+import contextlib     #redirect_stdout for the quiet parallel compile (revision plan step 16)
 
 
 #from src.pythonGenerator.exudynVersion import exudynVersionString #does not run under MacOS
@@ -739,6 +740,13 @@ class BuildExt(_build_ext):
 # http://stackoverflow.com/a/13176803
 # monkey-patch for parallel compilation
 # reduces compile time on 4-core machine by factor >2
+#
+# WHY THIS IS STILL A MONKEYPATCH (revision plan step 16): setuptools does have a supported
+# 'build_ext --parallel', but it parallelises across EXTENSIONS, not across the source files
+# within one. Exudyn compiles 133 .cpp files into a single extension, so the supported mechanism
+# would give at most one thread per extension - and nothing at all for a development build, which
+# has one. There is no like-for-like replacement, and the ~1 min wheel is a project invariant.
+# The patch therefore stays; step 16 fixed its defects instead of removing it.
 if config['compileParallel']:
     try:
         import multiprocessing
@@ -763,17 +771,16 @@ if config['compileParallel']:
                 with exudynCompileCnt.get_lock():
                     exudynCompileCnt.value = 0
                 
-                nObjects = len(objects)+2 #two extra files added by system
+                nObjects = len(objects)
                 def _single_compile(obj):
 
                     try: src, ext = build[obj]
                     except KeyError: return
-                    if config['quietCompile']:
-                        with open('setuppy.output.txt', 'w') as sys.stdout:
-                            self._compile(obj, src, ext, cc_args, extra_postargs, pp_opts)
-                        sys.stdout = sys.__stdout__
-                    else:
-                        self._compile(obj, src, ext, cc_args, extra_postargs, pp_opts)
+                    #NOTE: sys.stdout is redirected ONCE around the whole pool below, not here.
+                    #Doing it per file rebound the GLOBAL sys.stdout from every worker thread,
+                    #each opening 'setuppy.output.txt' with mode 'w' - so the threads truncated
+                    #each other's output and the restore raced with the other workers.
+                    self._compile(obj, src, ext, cc_args, extra_postargs, pp_opts)
 
                     if config['quietCompile']:
                         #reduced output just showing file name and counter:
@@ -785,11 +792,23 @@ if config['compileParallel']:
                         startSRC = obj.find('src/')
                         if startSRC == -1: startSRC = -4
                         objName = obj[startSRC+4:-2]+'.cpp'
-                        print('completed '+str(cnt).zfill(3)+'/'+str(nObjects)+ ': '+ objName)
+                        #to the real console, not to the redirected sys.stdout - otherwise the
+                        #progress would end up inside setuppy.output.txt with the compiler noise
+                        sys.__stdout__.write('completed '+str(cnt).zfill(3)+'/'
+                                             +str(nObjects)+ ': '+ objName+'\n')
+                        sys.__stdout__.flush()
 
                 # convert to list, imap is evaluated on-demand
                 N_cores = multiprocessing.cpu_count() #better to use all threads, not only cpus
-                list(multiprocessing.pool.ThreadPool(N_cores).imap(_single_compile,objects))
+                if config['quietCompile']:
+                    #opened ONCE, around the whole pool, exactly as the Windows branch does
+                    with open('setuppy.output.txt', 'w') as compileLog:
+                        with contextlib.redirect_stdout(compileLog):
+                            list(multiprocessing.pool.ThreadPool(N_cores).imap(_single_compile,
+                                                                               objects))
+                else:
+                    list(multiprocessing.pool.ThreadPool(N_cores).imap(_single_compile,objects))
+
                 return objects
         
             import distutils.ccompiler
@@ -860,16 +879,25 @@ if config['compileParallel']:
                             sys.__stdout__.flush() #needed to immediately write to console
                         #the following command still outputs the compiled file and CR in Windows:
                         self.spawn(args)
-                    except:
-                        raise ValueError('failed to exucute: '+str(args))
+                    except Exception:
+                        #report the command line, but RE-RAISE: this used to be
+                        #'raise ValueError(args)', which replaced the compiler's own CompileError
+                        #with an argv dump, so the actual error text was never shown
+                        sys.__stdout__.write('\nFAILED to compile: ' + ' '.join(args) + '\n')
+                        sys.__stdout__.flush()
+                        raise
             
                 N_cores = multiprocessing.cpu_count() #better to use all threads, not only cpus
                 # N_cores = 1
                 # convert to list, imap is evaluated on-demand
                 if config['quietCompile']:
-                    with open('setuppy.output.txt', 'w') as sys.stdout:
-                        list(multiprocessing.pool.ThreadPool(N_cores).imap(_single_compile,objects))
-                    sys.stdout = sys.__stdout__
+                    #contextlib restores sys.stdout even when a compile raises; the previous
+                    #'sys.stdout = sys.__stdout__' after the with-block did not run on failure,
+                    #leaving every later message going into the closed log file
+                    with open('setuppy.output.txt', 'w') as compileLog:
+                        with contextlib.redirect_stdout(compileLog):
+                            list(multiprocessing.pool.ThreadPool(N_cores).imap(_single_compile,
+                                                                               objects))
                 else:
                     list(multiprocessing.pool.ThreadPool(N_cores).imap(_single_compile,objects))
     
@@ -884,10 +912,15 @@ if config['compileParallel']:
             distutils._msvccompiler.MSVCCompiler.compile = parallelCCompile #for newer MSVC, the same way as with linux does not work!
             #distutils.msvc9compiler.MSVCCompiler.compile = parallelCCompile
             #distutils.msvccompiler.MSVCCompiler.compile = parallelCCompile
-    except:
+    except Exception as e:
+        #NOTE this only wraps INSTALLING the patch - the imports and the assignment above. The
+        #compilation itself happens later, inside build_ext, and is NOT covered here; the old
+        #message 'trying serial compilation' claimed otherwise. A bare 'except' also swallowed
+        #KeyboardInterrupt and SystemExit, so Ctrl+C looked like a patching failure.
         print('************************************************')
-        print('parallel compile FAILED; remove --parallel flag!')
-        print('... trying serial compilation')
+        print('could not install the parallel-compile patch:')
+        print('  ' + type(e).__name__ + ': ' + str(e))
+        print('the build continues with the standard serial compiler')
         print('************************************************')
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++

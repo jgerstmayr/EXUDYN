@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.23.dev1, 
+  \item Exudyn version = 1.11.24.dev1, 
   \item last change =  2026-09-11, 
-  \item Number of issues = 2378, 
-  \item Number of resolved issues = 2096 (23 in current version), 
+  \item Number of issues = 2381, 
+  \item Number of resolved issues = 2097 (24 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.24}: {\bf \color{warningRed}  resolved BUG 2378}: {\bf parallel-compile monkeypatch: thread-unsafe output and swallowed errors}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: four defects in the parallel compile patch in setup.py. (1) on Linux the quiet path rebound the GLOBAL sys.stdout from every worker thread; each opening setuppy.output.txt with mode w; so threads truncated each other and the restore raced. (2) the outer bare except also swallowed KeyboardInterrupt/SystemExit and its message "trying serial compilation" described the compile; although it only wraps installing the patch. (3) the Windows handler did "raise ValueError(args)"; destroying the compiler CompileError and its message. (4) nObjects = len(objects)+2 made the progress counter report 135 for 133 files. Revision plan step 16}
+    \item {\bf notes: the per-file redirect is replaced by one contextlib.redirect\_stdout around the whole thread pool (the shape the Windows branch already used); and contextlib also restores sys.stdout when a compile raises; which the old "sys.stdout = sys.\_\_stdout\_\_" after the with-block did not. Progress now goes to sys.\_\_stdout\_\_ so it stays on the console rather than in the log. The Windows handler prints the command line and re-raises; keeping the compiler diagnostic. The outer except is now except Exception and says what it actually covers. nObjects = len(objects). The monkeypatch itself is KEPT: setuptools parallelises build\_ext across extensions; not across sources within one; and exudyn has 133 sources in a single extension. Verified on both platforms: Windows wheel 56.8 s (unchanged); manylinux cp313 build plus test suite bit-identical to the previous commit; and a quiet Linux build reporting completed 001/133 .. 133/133}
+    \item   date resolved: {\bf 2026-09-11 21:27},
+date raised: 2026-09-11 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.23}:  resolved Issue 2375: {\bf optional-dependency extras with a drift checker}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -12383,6 +12391,12 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 2379}:  {\bf two TestModels fail reproducibly on Linux and are not marked UnresolvedOnLinux}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: generalContactImplicit1.py (error -5.310e-08) and sliderCrank3Dbenchmark.py (-5.037e-10) fail under manylinux\_2\_28 cp313 while the 8 other Linux differences are marked UnresolvedOnLinux and excluded. So the Linux build exits non-zero. Confirmed PRE-EXISTING and unrelated to revision plan step 16: a build at the previous commit produced bit-identical values. Either the two belong on the UnresolvedOnLinux list with a reason; or the underlying difference needs investigation}
+    \item date raised: 2026-09-11 
+  \ei
   \item open {\bf BUG 2377}:  {\bf three imports refer to modules that exist nowhere}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
