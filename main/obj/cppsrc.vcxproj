@@ -429,7 +429,7 @@
     <ClCompile Include="..\src\System\CSensor.cpp" />
     <ClCompile Include="..\src\System\MainNode.cpp" />
     <ClCompile Include="..\src\System\MainObject.cpp" />
-    <ClCompile Include="..\src\tests\UnitTestBase.cpp" />
+    <ClCompile Include="..\src\Tests\UnitTestBase.cpp" />
     <ClCompile Include="..\src\Utilities\BasicFunctions.cpp" />
     <ClCompile Include="..\src\Utilities\Threading.cpp" />
   </ItemGroup>
@@ -826,7 +826,7 @@
     <ClInclude Include="..\src\tests\AllMatrixUnitTests.h" />
     <ClInclude Include="..\src\tests\AllVectorUnitTests.h" />
     <ClInclude Include="..\src\tests\TemplatedVectorArrayUnitTests.h" />
-    <ClInclude Include="..\src\tests\UnitTestBase.h" />
+    <ClInclude Include="..\src\Tests\UnitTestBase.h" />
     <ClInclude Include="..\src\Utilities\AdvancedMath.h" />
     <ClInclude Include="..\src\Utilities\AdvancedStuff.h" />
     <ClInclude Include="..\src\Utilities\AutomaticDifferentiation.h" />

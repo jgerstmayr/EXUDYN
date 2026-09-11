@@ -596,14 +596,12 @@ promise for no gain.
     replaced. Verified on Windows (56.8 s wheel, unchanged) and in manylinux cp313 (full
     build + test suite, plus a quiet build reporting `completed 133/133`). →
     [log](exudynRevisionLog2026.md#step-16)
-17. *(measured starting point: the source list is a literal Python list — `cppFiles` at
-    `setup.py:270-325` (54 entries) plus `327-408` (79) = **133**; `minimalCppFiles` cuts the
-    second block and also defines `EXUDYN_MINIMAL_COMPILATION`, so the file list and the C++
-    `#ifdef`s are kept in sync by hand today.)*
-    `tools/gen_sources.py`: derive a committed `sources.json` from the `ClCompile` entries of
-    `cppsrc.vcxproj`; `setup.py` reads the JSON (no XML parsing at build time). A `--check` mode
-    fails CI when vcxproj, JSON and filesystem disagree. Only `ItemGroup` blocks are read — every
-    `PropertyGroup` setting stays hand-maintained.
+17. **DONE 2026-09-11.** `tools/gen_sources.py` derives `main/sources.json` from the
+    `ClCompile` entries of `cppsrc.vcxproj`; `setup.py` reads the JSON and no longer holds a
+    source list. `--check` compares vcxproj, JSON and the files on disk **case-exactly** and
+    runs in CI as `check_sources`. Its first run found a live bug: the vcxproj said
+    `src\tests\UnitTestBase.cpp`, which resolves on Windows and fails on Linux. →
+    [log](exudynRevisionLog2026.md#step-17)
 18. Delete `main/CMakeLists.txt`, `main/src/CMakeLists.txt`, `main/obj/autoCMakeLists.txt`.
 19. Drop the `ReleaseP37` configuration and all `Win32`/`x86` configurations from the solution
     and vcxproj.
@@ -970,6 +968,19 @@ debt stays visible and each item can be closed on evidence.
     is installed by no extra, so the lists cannot quietly go stale. Run as the
     `check_extras` CI job. Verified by fault injection. →
     [log](exudynRevisionLog2026.md#step-80)
+
+81. **The source distribution cannot be built — partially fixed, blocked on step 25.**
+    `setup.py sdist` shipped all 133 `.cpp` files and **none of the 432 headers**, so nobody could
+    compile the sdist on pypi.org. `MANIFEST.in` now ships the headers, `include/` (Eigen is really
+    used, by `src/Linalg/LinearSolver.h`), `libs/`, `setupPyConfig.json` and
+    `src/pythonGenerator/exudynVersion.py` — 200 entries → 1098, 5.0 MB.
+    It still does **not** build, and the remaining blocker is structural rather than a manifest
+    entry: `exudynVersion.py` reads `docs/theDoc/version.txt`, which lives *above* the packaging
+    root, so an sdist rooted at `main/` can never contain it. The version silently degrades to
+    `'unknown'`, which setuptools then rejects with `InvalidVersion`. This is the same `../`
+    problem as the licence file in step 24. **Step 25's flattening is what unblocks it**; finish
+    this immediately afterwards and verify by building the tarball in a clean container, which is
+    how the failure above was found. Issue #2383 stays open until then.
 ---
 
 ## 6. Decisions taken

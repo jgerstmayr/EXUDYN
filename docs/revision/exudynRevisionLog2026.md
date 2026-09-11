@@ -496,6 +496,62 @@ Linux. `_compile` spawns the compiler as a subprocess writing to file descriptor
 `sys.stdout` rebinding can intercept — `setuppy.output.txt` was **0 bytes** after a complete
 133-file build. That is pre-existing and orthogonal to the thread-safety defects fixed here.
 
+<a id="step-17"></a>
+
+### Step 17 — the compile list comes from the vcxproj
+
+**DONE 2026-09-11.** `setup.py` no longer contains a source list. `tools/gen_sources.py` derives
+`main/sources.json` from the `ClCompile` entries of `main/obj/cppsrc.vcxproj`, and `setup.py`
+reads that JSON. The Visual Studio project is now the single source of truth, which is what it
+already was in practice — the difference is that the second copy is gone and a checker enforces
+the agreement.
+
+Only `<ItemGroup>` blocks are read. `ClCompile` also appears inside `<ItemDefinitionGroup>`, where
+it carries compiler *settings* rather than a file; everything in a `PropertyGroup` — the
+configurations, the defines, the optimisation flags — stays hand-maintained in the vcxproj and is
+untouched.
+
+**No XML is parsed at build time.** The wheel must build from an sdist, which need not contain a
+Visual Studio project, and a build should not depend on the layout of a `.vcxproj`. The JSON is
+the contract; `MANIFEST.in` ships it; `gen_sources.py --check` is what keeps it true.
+
+**The minimal subset cannot come from the vcxproj.** `--minimal` compiles a reduced list *and*
+defines `EXUDYN_MINIMAL_COMPILATION`, so the list and the C++ `#ifdef`s have to agree — a
+setup.py concept Visual Studio has no way to express. It is therefore carried in the JSON
+(seeded from the 54 entries of the former base block) and only *validated* by the tool, which
+requires it to be a subset of `all`. The hand-sync with the `#ifdef`s remains, and is stated in
+the file rather than left to be rediscovered.
+
+**The first run found a real bug, which is the point of the step.** The vcxproj listed
+`..\src\tests\UnitTestBase.cpp` — lowercase `tests` — while the tracked directory is
+`src/Tests`. Windows resolves both to the same file, so it was invisible on the machine that
+builds daily; Linux does not. It had not broken the manylinux build only because `setup.py`
+carried its *own* list, with the correct case — exactly the duplication this step removes. Making
+the vcxproj authoritative without noticing this would have broken the Linux build on the next
+release. The tool **refused to write** `sources.json` until it was corrected; the entry and its
+`ClInclude` counterpart are now `src\Tests\`. Raised and resolved as its own issue so the
+correction is visible in the tracker rather than buried in a refactor.
+
+Comparisons are therefore **case-exact**, against the real on-disk spelling collected with
+`os.walk` — `os.path.isfile` is case-insensitive on Windows and would have hidden precisely this
+defect.
+
+**Verified.** Wheel built in **57.3 s** with `compile 133 C++ source files` and the full
+`runTestSuite.py` green. `sources.json` confirmed present in the sdist. The checker was fault
+injected twice — an entry deleted from the JSON (reported as stale, exit 1) and a nonexistent
+`src/Ghost.cpp` added to the vcxproj (reported as listed-but-not-on-disk, exit 1) — besides
+catching the wrong-case entry for real. CI runs it as `check_sources`.
+
+**A separate defect found while adding the JSON to the sdist:** the sdist contains all 133 `.cpp`
+files and **none of the 432 `.h` files**, so the source distribution on pypi.org cannot be
+compiled by anyone. `MANIFEST.in` has no recursive include for the headers and setuptools does not
+add them for an `Extension`. `MANIFEST.in` now ships the headers, `include/`, `libs/`,
+`setupPyConfig.json` and `exudynVersion.py` (200 entries -> 1098, 5.0 MB), but the sdist
+still does not build: `exudynVersion.py` reads `docs/theDoc/version.txt`, which is *above*
+the packaging root, so the version degrades to `'unknown'` and setuptools rejects it.
+That is the same `../` problem as the licence file and it is step 25 that removes it —
+recorded as plan step 81, verified by trying to build the tarball in a clean container.
+
 <a id="step-24"></a>
 
 ### Step 24 — metadata drift

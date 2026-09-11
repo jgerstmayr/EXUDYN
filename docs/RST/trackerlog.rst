@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.24.dev1, 
++  Exudyn version = 1.11.26.dev1, 
 +  last change =  2026-09-11, 
-+  Number of issues = 2381, 
-+  Number of resolved issues = 2097 (24 in current version), 
++  Number of issues = 2385, 
++  Number of resolved issues = 2099 (26 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.26: :textred:`resolved BUG 2382` : cppsrc.vcxproj listed src/tests/UnitTestBase with the wrong case 
+    - issue author: Claude-JG
+    - description:  the vcxproj had ClCompile ..\src\tests\UnitTestBase.cpp and ClInclude for the header; while the tracked directory is src/Tests. Windows resolves both to the same file so it was invisible there; Linux does not. It did not break the manylinux build only because setup.py had its own list with the correct case. Found by tools/gen_sources.py; revision plan step 17
+    - **notes:** corrected to src\Tests\UnitTestBase for both the ClCompile and the ClInclude entry. tools/gen_sources.py --check now fails on any case mismatch; so this cannot silently return
+    - date resolved: **2026-09-11 22:46**\ , date raised: 2026-09-11 
+    - resolved by: Claude-JG
+ * Version 1.11.25: resolved Issue 2381: derive the compile list from the vcxproj instead of duplicating it in setup.py (change)
+    - issue author: Claude-JG
+    - description:  setup.py carried a hand-maintained list of 133 .cpp paths in two literal Python lists; a second copy of the ClCompile entries of main/obj/cppsrc.vcxproj with nothing keeping the two in agreement. Revision plan step 17
+    - **notes:** tools/gen_sources.py derives main/sources.json from the ClCompile entries of cppsrc.vcxproj; reading only ItemGroup blocks so every PropertyGroup setting stays hand-maintained. setup.py reads the JSON and no longer contains a source list; no XML is parsed at build time and the JSON ships in the sdist via MANIFEST.in. --check compares vcxproj; JSON and the files on disk and is run in CI as check_sources; the comparison is case-exact; because a wrong-case entry resolves on Windows and fails on Linux. The minimal subset cannot be expressed in the vcxproj; so it is carried in the JSON and validated as a subset. Verified: wheel builds in 57.3 s with 133 files and the full test suite passes; the checker was fault injected with a stale JSON entry and a nonexistent vcxproj entry; and it caught a real wrong-case entry on its first run (issue #2382)
+    - date resolved: **2026-09-11 22:46**\ , date raised: 2026-09-11 
+    - resolved by: Claude-JG
  * Version 1.11.24: :textred:`resolved BUG 2378` : parallel-compile monkeypatch: thread-unsafe output and swallowed errors 
     - issue author: Claude-JG
     - description:  four defects in the parallel compile patch in setup.py. (1) on Linux the quiet path rebound the GLOBAL sys.stdout from every worker thread; each opening setuppy.output.txt with mode w; so threads truncated each other and the restore raced. (2) the outer bare except also swallowed KeyboardInterrupt/SystemExit and its message "trying serial compilation" described the compile; although it only wraps installing the patch. (3) the Windows handler did "raise ValueError(args)"; destroying the compiler CompileError and its message. (4) nObjects = len(objects)+2 made the progress counter report 135 for 133 files. Revision plan step 16
@@ -7971,6 +7983,16 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2384:` setup.py sdist drops an untracked copy of LICENSE.txt into main/
+    - issue author: Claude-JG
+    - description:  running python setup.py sdist creates main/LICENSE.txt; byte-identical to the repository root LICENSE.txt and not tracked; so it shows up as an untracked file after every sdist and is easy to commit by accident. Reproduced by deleting it and running sdist again. It is either a build artifact that belongs in .gitignore; or a second copy of the licence that should not exist at all - which revision plan step 25 (flattening the packaging root) would settle. Found during revision plan step 17
+    - date raised: 2026-09-11 
+
+ * :textred:`open BUG 2383:` the source distribution contains no C++ headers and cannot build
+    - issue author: Claude-JG
+    - description:  python setup.py sdist produces an archive with all 133 .cpp files but ZERO of the 432 .h files under main/src (measured on 1.11.24.dev1: 200 entries total). So the sdist on pypi.org cannot be compiled by anyone. MANIFEST.in has no graft/recursive-include for the headers; and setuptools does not add them automatically for an Extension. Pre-existing; found while adding sources.json to the sdist for revision plan step 17
+    - date raised: 2026-09-11 
 
  * :textred:`open BUG 2379:` two TestModels fail reproducibly on Linux and are not marked UnresolvedOnLinux
     - issue author: Claude-JG

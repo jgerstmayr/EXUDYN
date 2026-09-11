@@ -313,6 +313,21 @@ imports actually present in the code and fails if something is installed by no e
 A fresh environment is set up with those extras rather than a hand-written package list; see
 [../howTo/condaEnvironments.md](../howTo/condaEnvironments.md).
 
+If you **added, removed or renamed a `.cpp` file**, do it in `main/obj/cppsrc.vcxproj` — the
+Visual Studio project is the source of truth for the compile list — and then regenerate the list
+`setup.py` actually builds from:
+
+```bash
+python tools/gen_sources.py          # rewrites main/sources.json
+python tools/gen_sources.py --check  # CI mode: fails on any disagreement
+```
+
+It compares the vcxproj, `main/sources.json` and the files on disk **case-exactly**, because
+`src/tests/X.cpp` and `src/Tests/X.cpp` are the same file on Windows and two different ones on
+Linux. Commit `sources.json` with the change; an sdist without it cannot build. The `minimal`
+list in that file is *not* derived — `--minimal` also defines `EXUDYN_MINIMAL_COMPILATION`, so it
+still has to be kept in sync with the C++ `#ifdef`s by hand.
+
 The manual equivalent, if you need it — on a clean tree, from `main/src/pythonGenerator/`:
 
 ```

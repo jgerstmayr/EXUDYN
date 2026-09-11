@@ -107,6 +107,18 @@ check_extras:
   script:
     - python tools/checkExtras.py --check
 
+# Keep the compile list honest: main/sources.json is generated from the ClCompile entries of
+# cppsrc.vcxproj, and setup.py builds from the JSON (revision plan step 17). This fails when the
+# vcxproj, the JSON and the files on disk disagree - including on CASE, which is invisible on the
+# Windows development machine and fatal here.
+check_sources:
+  stage: build
+  image: python:3.13
+  variables:
+    GIT_DEPTH: "1"
+  script:
+    - python tools/gen_sources.py --check
+
 # Catch documentation breakage during the freeze. This does NOT deploy: GitHub Pages correctly
 # stays at 1.11.0 while the public release is 1.11.0.
 docs:

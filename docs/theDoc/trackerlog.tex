@@ -9,15 +9,32 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.24.dev1, 
+  \item Exudyn version = 1.11.26.dev1, 
   \item last change =  2026-09-11, 
-  \item Number of issues = 2381, 
-  \item Number of resolved issues = 2097 (24 in current version), 
+  \item Number of issues = 2385, 
+  \item Number of resolved issues = 2099 (26 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.26}: {\bf \color{warningRed}  resolved BUG 2382}: {\bf cppsrc.vcxproj listed src/tests/UnitTestBase with the wrong case}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: the vcxproj had ClCompile ..\src\tests\UnitTestBase.cpp and ClInclude for the header; while the tracked directory is src/Tests. Windows resolves both to the same file so it was invisible there; Linux does not. It did not break the manylinux build only because setup.py had its own list with the correct case. Found by tools/gen\_sources.py; revision plan step 17}
+    \item {\bf notes: corrected to src\Tests\UnitTestBase for both the ClCompile and the ClInclude entry. tools/gen\_sources.py --check now fails on any case mismatch; so this cannot silently return}
+    \item   date resolved: {\bf 2026-09-11 22:46},
+date raised: 2026-09-11 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.25}:  resolved Issue 2381: {\bf derive the compile list from the vcxproj instead of duplicating it in setup.py}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: setup.py carried a hand-maintained list of 133 .cpp paths in two literal Python lists; a second copy of the ClCompile entries of main/obj/cppsrc.vcxproj with nothing keeping the two in agreement. Revision plan step 17}
+    \item {\bf notes: tools/gen\_sources.py derives main/sources.json from the ClCompile entries of cppsrc.vcxproj; reading only ItemGroup blocks so every PropertyGroup setting stays hand-maintained. setup.py reads the JSON and no longer contains a source list; no XML is parsed at build time and the JSON ships in the sdist via MANIFEST.in. --check compares vcxproj; JSON and the files on disk and is run in CI as check\_sources; the comparison is case-exact; because a wrong-case entry resolves on Windows and fails on Linux. The minimal subset cannot be expressed in the vcxproj; so it is carried in the JSON and validated as a subset. Verified: wheel builds in 57.3 s with 133 files and the full test suite passes; the checker was fault injected with a stale JSON entry and a nonexistent vcxproj entry; and it caught a real wrong-case entry on its first run (issue \#2382)}
+    \item   date resolved: {\bf 2026-09-11 22:46},
+date raised: 2026-09-11 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.24}: {\bf \color{warningRed}  resolved BUG 2378}: {\bf parallel-compile monkeypatch: thread-unsafe output and swallowed errors}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
@@ -12391,6 +12408,18 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 2384}:  {\bf setup.py sdist drops an untracked copy of LICENSE.txt into main/}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: running python setup.py sdist creates main/LICENSE.txt; byte-identical to the repository root LICENSE.txt and not tracked; so it shows up as an untracked file after every sdist and is easy to commit by accident. Reproduced by deleting it and running sdist again. It is either a build artifact that belongs in .gitignore; or a second copy of the licence that should not exist at all - which revision plan step 25 (flattening the packaging root) would settle. Found during revision plan step 17}
+    \item date raised: 2026-09-11 
+  \ei
+  \item open {\bf BUG 2383}:  {\bf the source distribution contains no C++ headers and cannot build}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: python setup.py sdist produces an archive with all 133 .cpp files but ZERO of the 432 .h files under main/src (measured on 1.11.24.dev1: 200 entries total). So the sdist on pypi.org cannot be compiled by anyone. MANIFEST.in has no graft/recursive-include for the headers; and setuptools does not add them automatically for an Extension. Pre-existing; found while adding sources.json to the sdist for revision plan step 17}
+    \item date raised: 2026-09-11 
+  \ei
   \item open {\bf BUG 2379}:  {\bf two TestModels fail reproducibly on Linux and are not marked UnresolvedOnLinux}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
