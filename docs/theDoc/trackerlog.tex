@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.37.dev1, 
+  \item Exudyn version = 1.11.38.dev1, 
   \item last change =  2026-09-12, 
-  \item Number of issues = 2403, 
-  \item Number of resolved issues = 2110 (37 in current version), 
+  \item Number of issues = 2404, 
+  \item Number of resolved issues = 2111 (38 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.38}:  resolved Issue 2403: {\bf stale project naming and no way to keep an experimental pytest.py out of commits}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: after the flatten the Python project was still called pythonDev (python/pythonDev.pyproj, Name and RootNamespace pythonDev) although the directory is python/, its SearchPath pointed at ..\pythonDev which no longer exists, and it listed a Content item requirements.txt that has never existed in that directory (Visual Studio shows it with an exclamation mark). Separately: pytest.py is the scratch file used to try out features in MSVC with mixed debugging, the old practice was to overwrite the experimental version with the default one before committing, which is easy to forget and invisible in review. The solution file was likewise committed under the name main\_sln\_Template.sln while being the file actually opened. Maintainer request; found during revision plan step 25}
+    \item {\bf notes: project renamed to python/exudynPython.pyproj with Name and RootNamespace exudynPython, SearchPath corrected to ., the dangling requirements.txt Content item removed - the dependency lists are the extras in pyproject.toml and a second source would only go stale. The template/local pattern now covers both scratch files: exudynTemplate.sln and python/pytestTemplate.py are committed, exudyn.sln and python/pytest.py are in .gitignore, and tools/setupLocalWorkspace.py creates the local copies from the templates without ever overwriting an existing file. An experiment therefore cannot be committed by accident. Documented in docs/dev/WORKFLOW.md section 0a and in docs/dev/README.md}
+    \item   date resolved: {\bf 2026-09-12 16:54},
+date raised: 2026-09-12 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.37}:  resolved Issue 2402: {\bf flatten the repository: remove the main/ level}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

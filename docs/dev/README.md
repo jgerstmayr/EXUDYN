@@ -18,7 +18,7 @@ Developer-facing notes. Users start at [`README.rst`](../../README.rst) and
 
 ```
 main/setup.py                             the real build
-main/main_sln_Template.sln                VS2022 solution (pythonDev.pyproj + cppsrc.vcxproj)
+exudynTemplate.sln                        VS2022 solution template (exudynPython.pyproj + cppsrc.vcxproj)
 main/obj/cppsrc.vcxproj                   the de-facto C++ source list, 133 ClCompile entries
 main/src/                                 hand-written C++: Graphics Linalg Main Objects
                                           Pymodules Solver System Tests Utilities
@@ -40,7 +40,9 @@ Visual Studio 2022 is the primary development environment; mixed Python/native d
 (stepping from a Python script into a C++ item's `ComputeODE2LHS`) is the project's most valuable
 capability and is protected by design.
 
-- **IDE**: open `main/main_sln_Template.sln`, build `Debug|x64` or `Release|x64`.
+- **IDE**: run `python tools/setupLocalWorkspace.py` once, then open the `exudyn.sln` it
+  creates and build `Debug|x64` or `Release|x64`. That solution and `python/pytest.py` are
+  untracked scratch copies of committed templates, so experiments cannot be committed.
 - **Wheel**: `main/setup.py`, about one minute. Also protected by design.
 - **Scripts**: see the table at the end of [WORKFLOW.md](WORKFLOW.md) for all 15 scripts in
   `tools/buildAndGenerate/`.

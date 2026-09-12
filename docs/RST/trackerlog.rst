@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.37.dev1, 
++  Exudyn version = 1.11.38.dev1, 
 +  last change =  2026-09-12, 
-+  Number of issues = 2403, 
-+  Number of resolved issues = 2110 (37 in current version), 
++  Number of issues = 2404, 
++  Number of resolved issues = 2111 (38 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.38: resolved Issue 2403: stale project naming and no way to keep an experimental pytest.py out of commits (change)
+    - issue author: Claude-JG
+    - description:  after the flatten the Python project was still called pythonDev (python/pythonDev.pyproj, Name and RootNamespace pythonDev) although the directory is python/, its SearchPath pointed at ..\pythonDev which no longer exists, and it listed a Content item requirements.txt that has never existed in that directory (Visual Studio shows it with an exclamation mark). Separately: pytest.py is the scratch file used to try out features in MSVC with mixed debugging, the old practice was to overwrite the experimental version with the default one before committing, which is easy to forget and invisible in review. The solution file was likewise committed under the name main_sln_Template.sln while being the file actually opened. Maintainer request; found during revision plan step 25
+    - **notes:** project renamed to python/exudynPython.pyproj with Name and RootNamespace exudynPython, SearchPath corrected to ., the dangling requirements.txt Content item removed - the dependency lists are the extras in pyproject.toml and a second source would only go stale. The template/local pattern now covers both scratch files: exudynTemplate.sln and python/pytestTemplate.py are committed, exudyn.sln and python/pytest.py are in .gitignore, and tools/setupLocalWorkspace.py creates the local copies from the templates without ever overwriting an existing file. An experiment therefore cannot be committed by accident. Documented in docs/dev/WORKFLOW.md section 0a and in docs/dev/README.md
+    - date resolved: **2026-09-12 16:54**\ , date raised: 2026-09-12 
+    - resolved by: Claude-JG
  * Version 1.11.37: resolved Issue 2402: flatten the repository: remove the main/ level (change)
     - issue author: Claude-JG
     - description:  everything lived under main/ - src; include; libs; obj; pythonDev and the packaging files - so every path in every tool carried a main/ prefix; the packaging root was one level below the repository root (which is why the sdist cannot find version.txt; issue 2383) and the generators addressed the root as ../../../. Revision plan steps 25 and 26

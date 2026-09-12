@@ -5,11 +5,11 @@
     <ProjectGuid>b54ec0eb-2813-43b2-9799-52a0cf2a77af</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>pytest.py</StartupFile>
-    <SearchPath>..\pythonDev</SearchPath>
+    <SearchPath>.</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>pythonDev</Name>
-    <RootNamespace>pythonDev</RootNamespace>
+    <Name>exudynPython</Name>
+    <RootNamespace>exudynPython</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <EnableNativeCodeDebugging>True</EnableNativeCodeDebugging>
     <IsWindowsApplication>False</IsWindowsApplication>
@@ -53,7 +53,6 @@
     <InterpreterReference Include="Global|PythonCore|3.9" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="requirements.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

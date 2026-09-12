@@ -149,3 +149,11 @@ python/TestModels/testExamplesLog_V*.txt
 experimental/
 Experimental/
 /tmp
+
+# Local working files, created from their committed templates by
+# 'python tools/setupLocalWorkspace.py'. They are scratch space: the solution collects
+# per-machine state, and python/pytest.py is where features are tried out in Visual Studio with
+# mixed Python/C++ debugging. Keeping the working copies untracked means an experiment cannot be
+# committed by accident - which used to rely on remembering to restore the default file first.
+/exudyn.sln
+/python/pytest.py
