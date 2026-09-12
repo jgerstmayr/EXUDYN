@@ -1290,22 +1290,18 @@ detail is `docs/dev/WORKFLOW.md`. In short:
 ## 12. Open issues raised during this revision (#2368 onwards)
 
 Number and name only, exactly as they stand in `tools/issueTracker/trackerlog.txt`.
-This is a **snapshot**, taken 2026-09-12 (refreshed after the nightly CI review).
+This is a **snapshot**, taken 2026-09-12 (refreshed 2026-09-12 after steps 28 and 81).
 The type is shown because `BUG` and `FIX` now mean different things - see WORKFLOW.md; the tracker is the authority and the
 only place these are maintained. Do not edit this list by hand - regenerate it, or read
 the tracker.
 
 - **#2368** (BUG) ANCFbeltDrive result contradicts its own recorded reference
 - **#2372** (CHECK) project.license TOML table deprecated
-- **#2376** (FIX) setup.py leaves the working directory changed when stub generation fails
 - **#2377** (BUG) three imports refer to modules that exist nowhere
 - **#2380** (CHECK) quietCompile does not actually quieten the compiler on Linux
-- **#2383** (FIX) the source distribution contains no C++ headers and cannot build
-- **#2384** (FIX) setup.py sdist drops an untracked copy of LICENSE.txt into main/
 - **#2387** (FIX) 20 ClInclude entries in cppsrc.vcxproj have the wrong case; 5 entries do not exist
 - **#2388** (DOCU) the installation documentation is years out of date
 - **#2396** (CHECK) enabling AVX2 on Linux shifts results by 1e-9..1e-6 through FMA contraction
 - **#2397** (CHECK) the only benchmark that resolves AVX2 is commented out inside exu.Test()
 - **#2398** (BUG) explicit integration costs O(N^2) per step with the default dense linear solver
 - **#2400** (CHECK) computeMassMatrixInversePerBody does not reduce cost unless a sparse solver is also selected
-- **#2401** (FIX) issue text ending a word with an underscore breaks the generated RST and the docs CI job

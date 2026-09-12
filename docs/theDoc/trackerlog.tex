@@ -9,15 +9,33 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.44.dev1, 
+  \item Exudyn version = 1.11.46.dev1, 
   \item last change =  2026-09-12, 
   \item Number of issues = 2407, 
-  \item Number of resolved issues = 2117 (44 in current version), 
+  \item Number of resolved issues = 2119 (46 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.46}:  resolved Issue 2384: {\bf setup.py sdist drops an untracked copy of LICENSE.txt into main/}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: running python setup.py sdist creates main/LICENSE.txt; byte-identical to the repository root LICENSE.txt and not tracked; so it shows up as an untracked file after every sdist and is easy to commit by accident. Reproduced by deleting it and running sdist again. It is either a build artifact that belongs in .gitignore; or a second copy of the licence that should not exist at all - which revision plan step 25 (flattening the packaging root) would settle. Found during revision plan step 17}
+    \item {\bf notes: no longer reproduces: it was setup.py reaching for ../LICENSE.txt and dropping the copy inside main/, and the flatten removed that level. setup.py now contains no LICENSE handling at all; MANIFEST.in includes the one file at the repository root, which is where it belongs and where the sdist picks it up. Confirmed after three sdist builds in this session: exactly one LICENSE.txt exists in the working tree, tracked, unmodified since e44aca1, and no untracked copy appears anywhere}
+    \item   date resolved: {\bf 2026-09-12 19:52},
+date raised: 2026-09-11 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.45}:  resolved Issue 2401: {\bf issue text ending a word with an underscore breaks the generated RST and the docs CI job}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: docs/RST/trackerlog.rst is generated from the tracker; and RST reads a trailing underscore as a link reference. The description of issue 2390 contains CIBW followed by an underscore; so sphinx reports ERROR: Unknown target name "cibw" at trackerlog.rst line 69. The docs CI job runs sphinx-build with -W --keep-going; so this fails the nightly pipeline. Introduced by my own issue text in commit 422ab48. The conversion should escape trailing underscores when writing issue descriptions rather than relying on issue authors to avoid them. Found while verifying the docs build for revision plan step 25}
+    \item {\bf notes: EscapeRSTmarkup in issueTracker.py now escapes what the shared LatexString2RST does not: a word-final underscore, which RST reads as a link reference, and an unpaired backtick. The notes field additionally now passes replaceMarkups=True like description already did, which is what let a lone asterisk through - the flatten issue mentioned *.md and opened an inline emphasis that never closed. Applied only at the five RST seams of the tracker, so the shared generator behaviour the rest of the documentation depends on is unchanged. Verified with the CI setting itself: sphinx-build -W --keep-going now exits 0 with no warning at all, where it previously reported Unknown target name cibw and an emphasis start-string}
+    \item   date resolved: {\bf 2026-09-12 19:50},
+date raised: 2026-09-12 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.44}:  resolved Issue 2406: {\bf version.txt moved from docs/theDoc to the repository root}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

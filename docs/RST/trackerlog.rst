@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.44.dev1, 
++  Exudyn version = 1.11.46.dev1, 
 +  last change =  2026-09-12, 
 +  Number of issues = 2407, 
-+  Number of resolved issues = 2117 (44 in current version), 
++  Number of resolved issues = 2119 (46 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.46: resolved Issue 2384: setup.py sdist drops an untracked copy of LICENSE.txt into main/ (fix)
+    - issue author: Claude-JG
+    - description:  running python setup.py sdist creates main/LICENSE.txt; byte-identical to the repository root LICENSE.txt and not tracked; so it shows up as an untracked file after every sdist and is easy to commit by accident. Reproduced by deleting it and running sdist again. It is either a build artifact that belongs in .gitignore; or a second copy of the licence that should not exist at all - which revision plan step 25 (flattening the packaging root) would settle. Found during revision plan step 17
+    - **notes:** no longer reproduces: it was setup.py reaching for ../LICENSE.txt and dropping the copy inside main/, and the flatten removed that level. setup.py now contains no LICENSE handling at all; MANIFEST.in includes the one file at the repository root, which is where it belongs and where the sdist picks it up. Confirmed after three sdist builds in this session: exactly one LICENSE.txt exists in the working tree, tracked, unmodified since e44aca1, and no untracked copy appears anywhere
+    - date resolved: **2026-09-12 19:52**\ , date raised: 2026-09-11 
+    - resolved by: Claude-JG
+ * Version 1.11.45: resolved Issue 2401: issue text ending a word with an underscore breaks the generated RST and the docs CI job (fix)
+    - issue author: Claude-JG
+    - description:  docs/RST/trackerlog.rst is generated from the tracker; and RST reads a trailing underscore as a link reference. The description of issue 2390 contains CIBW followed by an underscore; so sphinx reports ERROR: Unknown target name "cibw" at trackerlog.rst line 69. The docs CI job runs sphinx-build with -W --keep-going; so this fails the nightly pipeline. Introduced by my own issue text in commit 422ab48. The conversion should escape trailing underscores when writing issue descriptions rather than relying on issue authors to avoid them. Found while verifying the docs build for revision plan step 25
+    - **notes:** EscapeRSTmarkup in issueTracker.py now escapes what the shared LatexString2RST does not: a word-final underscore, which RST reads as a link reference, and an unpaired backtick. The notes field additionally now passes replaceMarkups=True like description already did, which is what let a lone asterisk through - the flatten issue mentioned \*.md and opened an inline emphasis that never closed. Applied only at the five RST seams of the tracker, so the shared generator behaviour the rest of the documentation depends on is unchanged. Verified with the CI setting itself: sphinx-build -W --keep-going now exits 0 with no warning at all, where it previously reported Unknown target name cibw and an emphasis start-string
+    - date resolved: **2026-09-12 19:50**\ , date raised: 2026-09-12 
+    - resolved by: Claude-JG
  * Version 1.11.44: resolved Issue 2406: version.txt moved from docs/theDoc to the repository root (change)
     - issue author: Claude-JG
     - description:  the single version source sat inside the documentation tree; a build input buried among LaTeX chapters and - before the flatten - above the packaging root. It is now version.txt at the repository root; exudynVersion.py is the only code that resolves it and doc2rst.py keeps parsing it as a documentation input. Revision plan step 28
@@ -73,7 +85,7 @@ Version 1.11
  * Version 1.11.37: resolved Issue 2402: flatten the repository: remove the main/ level (change)
     - issue author: Claude-JG
     - description:  everything lived under main/ - src; include; libs; obj; pythonDev and the packaging files - so every path in every tool carried a main/ prefix; the packaging root was one level below the repository root (which is why the sdist cannot find version.txt; issue 2383) and the generators addressed the root as ../../../. Revision plan steps 25 and 26
-    - **notes:** 1477 tracked files moved with git mv; recorded as 1475 pure renames: main/src->src; main/include->include; main/libs->libs; main/obj->msvc; main/pythonDev->python and the packaging files to the root. The vcxproj needed NO change - all 541 of its ClCompile/ClInclude entries are ..\src\... and msvc/ and src/ remain siblings; so only the two project references in the .sln moved. Repaired: 26 relative paths in the generators (the root went from ../../../ to ../../); doc2rst destDir; the autoGenerateHelper import path in issueTracker.py; regenerate.py; gen_sources.py; checkExtras.py; setup.py; MANIFEST.in; pyproject.toml; conf.py; .gitlab-ci.yml; wheels.yml and buildManylinux.sh. MANIFEST.in include *.md became include README.md; because at the root the wildcard would have swept CLAUDE.md into the sdist. VERIFIED: wheel builds in 58.9 s with 133 sources and the correct package layout, full test suite passes, gen_sources --check and checkExtras --check pass, sphinx builds the documentation. NOTE regenerate.py --check cannot be meaningful until the move is in HEAD; because it compares each file against HEAD:<path> and every path is new - the regenerated content was confirmed byte identical to HEAD at the old paths instead
+    - **notes:** 1477 tracked files moved with git mv; recorded as 1475 pure renames: main/src->src; main/include->include; main/libs->libs; main/obj->msvc; main/pythonDev->python and the packaging files to the root. The vcxproj needed NO change - all 541 of its ClCompile/ClInclude entries are ..\src\... and msvc/ and src/ remain siblings; so only the two project references in the .sln moved. Repaired: 26 relative paths in the generators (the root went from ../../../ to ../../); doc2rst destDir; the autoGenerateHelper import path in issueTracker.py; regenerate.py; gen_sources.py; checkExtras.py; setup.py; MANIFEST.in; pyproject.toml; conf.py; .gitlab-ci.yml; wheels.yml and buildManylinux.sh. MANIFEST.in include \*.md became include README.md; because at the root the wildcard would have swept CLAUDE.md into the sdist. VERIFIED: wheel builds in 58.9 s with 133 sources and the correct package layout, full test suite passes, gen_sources --check and checkExtras --check pass, sphinx builds the documentation. NOTE regenerate.py --check cannot be meaningful until the move is in HEAD; because it compares each file against HEAD:<path> and every path is new - the regenerated content was confirmed byte identical to HEAD at the old paths instead
     - date resolved: **2026-09-12 16:06**\ , date raised: 2026-09-12 
     - resolved by: Claude-JG
  * Version 1.11.36: resolved Issue 2399: performance suite reports only a single total and had no large system test (change)
@@ -91,7 +103,7 @@ Version 1.11
  * Version 1.11.34: :textred:`resolved BUG 2394` : misaligned __m256d load in ResizableVectorParallel MultAdd with a LinkedDataVector 
     - issue author: Claude-JG
     - description:  REPRODUCED 2026-09-12 in manylinux_2_28 cp313 with g++ 14 and -mavx2 -mfma -fsanitize=alignment -fno-sanitize-recover=alignment: src/Linalg/ResizableVectorParallel.h:309:28 runtime error: load of misaligned address for type __m256d which requires 32 byte alignment; in ResizableVectorParallelBase<double>::MultAdd<LinkedDataVectorParallelBase<double>> called from CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate. Column 28 is the ptrVector[i] operand; that is the LinkedDataVector; not the ResizableVector. The cause is NOT the allocator: EXUDYN_USE_ALIGNED_VECTORS is enabled and VectorBase allocates through _aligned_malloc/posix_memalign; but a LinkedDataVector points into another buffer at an arbitrary element offset; so no allocator can make the sub-range 32 byte aligned. The observed pointer was 8 byte aligned. Latent today because AVX2 is only enabled on Windows (setup.py:230-233); it is what blocks enabling AVX2 on Linux. Fix is to use unaligned intrinsics (_mm256_loadu_pd/_mm256_storeu_pd) on the linked operands; which cost nothing on aligned data on Haswell and later. Revision plan step 22
-    - **notes:** fixed by replacing aligned PReal* dereference with explicit unaligned load/store in every AVX loop whose pointer can come from a LinkedDataVector: all 40 casts in LinkedDataVectorParallel.h and ResizableVectorParallel.h; plus the six ParallelPReal* helpers in Vector.cpp; whose PReal* parameters had the same problem without a cast to find them by. Use_avx.h gained _mm_store_u for all four AVX variants (only _mm_load_u existed) and both for the scalar fallback; the arithmetic still uses operators; which work for __m256d and for plain Real alike. VERIFIED: (1) the manylinux cp313 build with -mavx2 -mfma -fsanitize=alignment -fno-sanitize-recover=alignment previously aborted at ResizableVectorParallel.h:309 and now reports ZERO misalignment errors and runs the suite to completion, (2) the same build without -mavx2 reproduces the previous Linux results BIT FOR BIT - same two known failures with identical values - so the change is numerically neutral, (3) on Windows; where AVX2 is live today; the full test suite passes and runPerformanceTests gives 33.33 s against a 33.04-34.16 s baseline measured twice before the change; i.e. inside the run to run noise
+    - **notes:** fixed by replacing aligned PReal\* dereference with explicit unaligned load/store in every AVX loop whose pointer can come from a LinkedDataVector: all 40 casts in LinkedDataVectorParallel.h and ResizableVectorParallel.h; plus the six ParallelPReal\* helpers in Vector.cpp; whose PReal\* parameters had the same problem without a cast to find them by. Use_avx.h gained _mm_store_u for all four AVX variants (only _mm_load_u existed) and both for the scalar fallback; the arithmetic still uses operators; which work for __m256d and for plain Real alike. VERIFIED: (1) the manylinux cp313 build with -mavx2 -mfma -fsanitize=alignment -fno-sanitize-recover=alignment previously aborted at ResizableVectorParallel.h:309 and now reports ZERO misalignment errors and runs the suite to completion, (2) the same build without -mavx2 reproduces the previous Linux results BIT FOR BIT - same two known failures with identical values - so the change is numerically neutral, (3) on Windows; where AVX2 is live today; the full test suite passes and runPerformanceTests gives 33.33 s against a 33.04-34.16 s baseline measured twice before the change; i.e. inside the run to run noise
     - date resolved: **2026-09-12 12:48**\ , date raised: 2026-09-12 
     - resolved by: Claude-JG
  * Version 1.11.33: resolved Issue 2393: setupPyConfig.json is not validated: a typo silently changes the build (change)
@@ -114,7 +126,7 @@ Version 1.11
     - resolved by: Claude-JG
  * Version 1.11.30: resolved Issue 2390: move the cibuildwheel configuration into [tool.cibuildwheel] (change)
     - issue author: Claude-JG
-    - description:  the wheel matrix was configured through eleven CIBW_ environment variables in .github/workflows/wheels.yml; where nothing validates them: a lost newline had swallowed CIBW_BUILD_VERBOSITY: 1 into the trailing comment of the CIBW_TEST_SKIP line; so build verbosity was silently never set. Revision plan step 20
+    - description:  the wheel matrix was configured through eleven CIBW\_ environment variables in .github/workflows/wheels.yml; where nothing validates them: a lost newline had swallowed CIBW_BUILD_VERBOSITY: 1 into the trailing comment of the CIBW_TEST_SKIP line; so build verbosity was silently never set. Revision plan step 20
     - **notes:** the ten static settings moved to [tool.cibuildwheel] in main/pyproject.toml; with linux; macos and windows subtables for the per platform test-command; before-all and environment. Only CIBW_BUILD stays in the workflow; because it is built from the matrix entry. build-verbosity = 1 now actually applies. Verified with the pinned cibuildwheel 3.4.1: --print-build-identifiers returns the same set for all three platforms as the old environment variables did (cp313-manylinux_x86_64, cp313-macosx_universal2, cp313-win_amd64), the resolved options show build-verbosity 1, the test requirements, the dnf before-all on linux only and the cd /d form of the test command on windows, and a deliberately misspelled key is rejected with "Option build-verbosityy not supported in a config file" instead of being ignored
     - date resolved: **2026-09-12 10:01**\ , date raised: 2026-09-12 
     - resolved by: Claude-JG
@@ -247,7 +259,7 @@ Version 1.11
  * Version 1.11.8: resolved Issue 2358: Add .gitattributes for line endings and binary files (fix)
     - issue author: Claude-JG
     - description:  The repository had no .gitattributes, so line endings depended on each contributor core.autocrlf setting and generation under a different shell could produce whole-file diffs. All generation and building so far has been on Windows; CI will run on Linux. Normalise text to LF in the repository with native checkout, and mark binary types explicitly. Revision plan step 70.
-    - **notes:** Index was already fully LF-normalised so no renormalisation was introduced (git add --renormalize stages zero files). Two extension traps found: testData/rotorAnsys.rst is an ANSYS result file not reStructuredText, and *.eps/*.stl have ASCII variants so they are left to text=auto
+    - **notes:** Index was already fully LF-normalised so no renormalisation was introduced (git add --renormalize stages zero files). Two extension traps found: testData/rotorAnsys.rst is an ANSYS result file not reStructuredText, and \*.eps/\*.stl have ASCII variants so they are left to text=auto
     - date resolved: **2026-09-09 20:13**\ , date raised: 2026-09-09 
     - resolved by: Claude-JG
  * Version 1.11.7: resolved Issue 2357: Add tools/regenerate.py drift gate (testing)
@@ -1827,7 +1839,7 @@ Version 1.8
     - date resolved: **2024-03-17 19:05**\ , date raised: 2024-03-17 
  * Version 1.8.8: :textred:`resolved BUG 1807` : GeneralContact 
     - description:  sphere-shpere contact causes spurious internal torque
-    - **notes:** fixed by adding 0.5*penetration in lever arm; adjusted also documentation; gives new test suite results
+    - **notes:** fixed by adding 0.5\*penetration in lever arm; adjusted also documentation; gives new test suite results
     - date resolved: **2024-03-17 10:56**\ , date raised: 2024-03-17 
  * Version 1.8.7: :textred:`resolved BUG 1805` : CreateRigidBody 
     - description:  raises exception in case that initialRotationMatrix is not None; SOLUTION: replace == None for ALL cases (check other functions) with is None or is not Note!
@@ -1835,7 +1847,7 @@ Version 1.8
     - date resolved: **2024-03-17 10:55**\ , date raised: 2024-03-16 
  * Version 1.8.6: :textred:`resolved BUG 1806` : CreateRigidBody 
     - description:  initialRotationMatrix has no effect at least in explicit integration
-    - **notes:** wrong operator* used for multiplication of reference rotation matrix and initial rotation matrix; FIXED
+    - **notes:** wrong operator\* used for multiplication of reference rotation matrix and initial rotation matrix; FIXED
     - date resolved: **2024-03-17 10:54**\ , date raised: 2024-03-16 
  * Version 1.8.5: resolved Issue 1808: advanced utilities (extension)
     - description:  added function to check for None and not None: IsNone(x), IsNotNone(x)
@@ -3745,7 +3757,7 @@ Version 1.3
     - date resolved: **2022-07-06 15:30**\ , date raised: 2022-07-06 
  * Version 1.3.34: resolved Issue 1183: star imports (change)
     - description:  remove \* imports from all .py modules except utilities.py
-    - **notes:** also fixed some undetected bugs in unused functions in exudyn.* utilities
+    - **notes:** also fixed some undetected bugs in unused functions in exudyn.\* utilities
     - date resolved: **2022-07-06 11:56**\ , date raised: 2022-07-06 
  * Version 1.3.33: resolved Issue 1184: exudyn.utilities (change)
     - description:  remove import of time and copy; needs to be included separately into models
@@ -5252,7 +5264,7 @@ Version 1.0
     - date resolved: **2021-05-02 21:26**\ , date raised: 2021-05-01 
  * Version 1.0.197: resolved Issue 0658: add VisualizationSettings() interactive (change)
     - description:  move visualizationSettings window functions keypressRotationStep, mouseMoveRotationFactor, keypressTranslationStep, zoomStepFactor to new substructure "interactive"
-    - **notes:** \ **adapt your models if you used these options!**\ 
+    - **notes:** \ \*\*adapt your models if you used these options!\*\*\ 
     - date resolved: **2021-05-01 23:36**\ , date raised: 2021-05-01 
  * Version 1.0.196: resolved Issue 0654: coordinates sizes (extension)
     - description:  add function ODE2Size(...), ODE1Size(...), SystemSize(...) to mbs.systemData to retrieve number of ODE2,ODE1,AE and Data coordinates for certain configurationType; only works after mbs.Assemble()
@@ -5290,7 +5302,7 @@ Version 1.0
     - date resolved: **2021-04-27 18:20**\ , date raised: 2021-04-25 
  * Version 1.0.186: resolved Issue 0640: MarkerSuperElementRigid (extension)
     - description:  remove referencePosition and add offset instead (to correct errors of midpoint due to small mesh-unsymmetries)
-    - **notes:** \ **CHANGED interface**\ : MarkerSuperElementRigid does not have a referencePosition anymore, but adds a parameter offset
+    - **notes:** \ \*\*CHANGED interface\*\*\ : MarkerSuperElementRigid does not have a referencePosition anymore, but adds a parameter offset
     - date resolved: **2021-04-27 18:18**\ , date raised: 2021-04-26 
  * Version 1.0.185: :textred:`resolved BUG 0639` : ObjectFFRFreducedOrder 
     - description:  incorrect AccessFunction AccessFunctionType::AngularVelocity_qt, missing correct reference point = midpoint for computation of rotation
@@ -5370,11 +5382,11 @@ Version 1.0
     - date resolved: **2021-03-20 23:23**\ , date raised: 2021-03-19 
  * Version 1.0.161: resolved Issue 0337: local quantities beam (change)
     - description:  change beam output of Force, Torque, Curvature, Stress and Strain to ForceLocal, TorqueLocal, CurvatureLocal, StressLocal, and StrainLocal
-    - **notes:** \ **WARNING**\ : you need to adapt force, torque and stress, strain and curvature output variables accordingly as they may have changed specifically for ANCF beams; adapt all your model files regarding Force, Torque, etc.
+    - **notes:** \ \*\*WARNING\*\*\ : you need to adapt force, torque and stress, strain and curvature output variables accordingly as they may have changed specifically for ANCF beams; adapt all your model files regarding Force, Torque, etc.
     - date resolved: **2021-03-20 23:22**\ , date raised: 2020-02-18 
  * Version 1.0.160: resolved Issue 0139: Index (change)
     - description:  change Index to (signed) int and use UIndex in python interface for unsigned parameters
-    - **notes:** \ **ATTENTION**\ : this change affects many routines. All TestSuite examples passed the change but there may still be open problems due to this major change.
+    - **notes:** \ \*\*ATTENTION\*\*\ : this change affects many routines. All TestSuite examples passed the change but there may still be open problems due to this major change.
     - date resolved: **2021-03-20 23:21**\ , date raised: 2019-05-20 
  * Version 1.0.159: resolved Issue 0606: resolve errors 32bit testsuite (test)
     - description:  add extra tolerances for 32bit
@@ -7002,11 +7014,6 @@ Version 0.1
 Open issues
 ***********
 
- * **open issue 2401:** issue text ending a word with an underscore breaks the generated RST and the docs CI job
-    - issue author: Claude-JG
-    - description:  docs/RST/trackerlog.rst is generated from the tracker; and RST reads a trailing underscore as a link reference. The description of issue 2390 contains CIBW followed by an underscore; so sphinx reports ERROR: Unknown target name "cibw" at trackerlog.rst line 69. The docs CI job runs sphinx-build with -W --keep-going; so this fails the nightly pipeline. Introduced by my own issue text in commit 422ab48. The conversion should escape trailing underscores when writing issue descriptions rather than relying on issue authors to avoid them. Found while verifying the docs build for revision plan step 25
-    - date raised: 2026-09-12 
-
  * **open issue 2400:** computeMassMatrixInversePerBody does not reduce cost unless a sparse solver is also selected
     - issue author: Claude-JG
     - description:  the flag is documented as computing the inverse of the mass matrix per body so that explicit integration does not need a global solve; and it is the intended answer to the O(N^2) cost of issue 2398 (it cannot be the default; because it gives wrong results when bodies share nodes - a beam or an FEM body - as its own documentation and the maintainer both state). Measured 2026-09-12 on a chain of independent point masses; with the flag value read back from the settings to confirm it was applied: with the DEFAULT DENSE solver the flag changes nothing. At nMasses=1000 and 200 steps: ExplicitEuler 8.43 s off against 8.57 s on, RK44 20.5 against 20.4, DOPRI5 33.0 against 32.7 - all within noise. Selecting EigenSparse is what removes the cost (0.070 s); and only then is the flag worth a further 10 to 15 percent (0.058 s). So on its own the flag does not do what it promises; the user still has to know to change the linear solver. Either the flag should bypass the solver path; or its documentation should say that it must be combined with a sparse solver. Found while building the large system performance test for revision plan step 23
@@ -7031,11 +7038,6 @@ Open issues
     - issue author: Claude-JG
     - description:  the vcxproj lists headers as src/utilities/...; src/linalg/...; src/system/...; src/tests/... and src/autogenerated/SimulationSettings.h while the tracked directories are Utilities; Linalg; System; Tests and Autogenerated - 20 entries in total. It also lists two headers that do not exist (src/Autogenerated/VisuObjectBeamGeometricallyExact3D.h and src/System/MainObjectFactory.h) and three missing ClassDiagram .cd files. These are IDE browsing entries; the compiler finds headers through the include path; so nothing is broken today - but the same class of defect in a ClCompile entry was a real Linux hazard (see issue 2382) and these would trip any move or flattening step. tools/gen_sources.py --check should be extended to cover ClInclude and None entries. Found during revision plan step 19
     - date raised: 2026-09-12 
-
- * :textblue:`open issue 2384:` setup.py sdist drops an untracked copy of LICENSE.txt into main/
-    - issue author: Claude-JG
-    - description:  running python setup.py sdist creates main/LICENSE.txt; byte-identical to the repository root LICENSE.txt and not tracked; so it shows up as an untracked file after every sdist and is easy to commit by accident. Reproduced by deleting it and running sdist again. It is either a build artifact that belongs in .gitignore; or a second copy of the licence that should not exist at all - which revision plan step 25 (flattening the packaging root) would settle. Found during revision plan step 17
-    - date raised: 2026-09-11 
 
  * :textblue:`open issue 2380:` quietCompile does not actually quieten the compiler on Linux
     - issue author: Claude-JG

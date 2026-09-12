@@ -16,6 +16,7 @@
 
 import datetime # for current date
 import os
+import re
 import io
 import sys
 
@@ -424,6 +425,33 @@ def UpdateDateAndVersion(updateVersion = True):
         # file.close()
 
 #%%******************************************************************************************************
+#Escape the RST markup characters that free-text issue fields keep producing by accident.
+#
+#Issue text is written by people describing code, so it naturally contains characters RST reads as
+#markup - and docs/RST/trackerlog.rst is GENERATED from it, while the docs CI job runs
+#sphinx-build with -W, so a single such character fails the nightly pipeline. Asking issue authors
+#to avoid punctuation is not a mechanism; escaping on conversion is (#2401).
+#
+#Handled, all three observed in real issue text:
+#  CIBW_   a word ending in '_' is an RST link reference          -> ERROR: Unknown target name
+#  *.md    a lone '*' opens inline emphasis that never closes     -> WARNING: start-string
+#  `       an odd number of backticks opens an inline literal     -> WARNING: start-string
+#
+#LatexString2RST already escapes '*' when called with replaceMarkups=True; this adds the two it
+#does not cover. It is applied ONLY to the tracker's own free-text fields, so the shared generator
+#behaviour that the rest of the documentation depends on is untouched.
+def EscapeRSTmarkup(s):
+    #a trailing underscore is a reference only where the word actually ends
+    s = re.sub(r'([A-Za-z0-9])_(?=[\s,.;:)\]]|$)', r'\1\\_', s)
+
+    #an unpaired backtick: escape them all when the count is odd, which is the accidental case
+    if s.count('`') % 2 == 1:
+        s = s.replace('`', '\\`')
+
+    return s
+
+
+#%%******************************************************************************************************
 def ConvertToHTML(): #convert all issues to a .html file
     fileRead=open(trackerFile+'.txt','r', encoding='utf-8') 
     fileLines = fileRead.readlines()
@@ -693,11 +721,11 @@ def ConvertToLatex(): #convert resolved issues of current release to latex
             #+++++++++++++++++        
             #description
             si += IDS+'  \\item {description:'+ToLatex(issue['description'])+'}\n'
-            rst += rstSpace+'description: '+LatexString2RST(issue['description'], replaceMarkups=True)+'\n'
+            rst += rstSpace+'description: '+EscapeRSTmarkup(LatexString2RST(issue['description'], replaceMarkups=True))+'\n'
             
             if len(issue['notes'].strip(' ')) != 0:
                 si += IDS+'  \\item {\\bf notes: '+ToLatex(issue['notes'])+'}\n'
-                rst += rstSpace+'**notes:** '+LatexString2RST(issue['notes'])+'\n'
+                rst += rstSpace+'**notes:** '+EscapeRSTmarkup(LatexString2RST(issue['notes'], replaceMarkups=True))+'\n'
     
             #+++++++++++++++++
             #resolved
@@ -737,7 +765,7 @@ def ConvertToLatex(): #convert resolved issues of current release to latex
                     s2 += '  resolved Issue '
                     rst2 += 'resolved Issue '
                 s2 += issue['number']+attrPost+': {\\bf '+ToLatex(issue['issue']).strip(' ')+'}\n'
-                rst2 += issue['number']+attrPostRST+': '+LatexString2RST(issue['issue'], replaceMarkups=True).strip(' ')+' '
+                rst2 += issue['number']+attrPostRST+': '+EscapeRSTmarkup(LatexString2RST(issue['issue'], replaceMarkups=True).strip(' '))+' '
                 if issue['type'] != 'BUG':
                     s2 += '('+issue['type'].lower()+')\n'
                     rst2 += '('+issue['type'].lower()+')'
@@ -752,7 +780,7 @@ def ConvertToLatex(): #convert resolved issues of current release to latex
                 bugstr += '  \\item open {\\bf BUG '+issue['number'] + '}: '
                 bugstr += ' {\\bf '+ToLatex(issue['issue']).strip(' ')+'}\n'
                 bugstr += si
-                bugRST += ' * :textred:`open BUG '+issue['number'] +':` ' + LatexString2RST(issue['issue'], replaceMarkups=True) + '\n'
+                bugRST += ' * :textred:`open BUG '+issue['number'] +':` ' + EscapeRSTmarkup(LatexString2RST(issue['issue'], replaceMarkups=True)) + '\n'
                 bugRST += rst + '\n'
             elif issue['status'] != 'RESOLVED':
                 preRST = '**'
@@ -768,7 +796,7 @@ def ConvertToLatex(): #convert resolved issues of current release to latex
                     preRST = ':textblue:`'
                     postRST = '`'
 
-                openRST += ' * '+preRST+'open issue '+issue['number'] + ':' + postRST + ' ' + LatexString2RST(issue['issue'], replaceMarkups=True) + '\n'
+                openRST += ' * '+preRST+'open issue '+issue['number'] + ':' + postRST + ' ' + EscapeRSTmarkup(LatexString2RST(issue['issue'], replaceMarkups=True)) + '\n'
                 openRST += rst + '\n'
                 
             if issue['status'] == 'RESOLVED':
