@@ -149,14 +149,36 @@ exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-testFileList = [
-                'generalContactSpheresTest.py',
-                'perf3DRigidBodies.py',
-                'perfObjectFFRFreducedOrder.py',
+#Tests are grouped by what they actually measure, because the two groups answer different
+#questions and mixing them hides both (revision plan step 23, issue #2397):
+#
+#  'small'  few coordinates, ~1e6 steps -> measures PER-STEP OVERHEAD. The system vectors are
+#           3-20 elements long, so vectorized linear algebra (AVX2) cannot show up here at all.
+#  'large'  many coordinates, comparatively few steps -> measures the cost of the work per step,
+#           where long vectors, AVX2 and multithreading are visible.
+#
+#A change that speeds up one group and not the other is the normal case, not an anomaly; the
+#summary at the end therefore reports the groups separately as well as the total.
+testGroups = {
+    'small': [
                 'perfRigidPendulum.py',
                 'perfSpringDamperExplicit.py',
                 'perfSpringDamperUserFunction.py',
-                ]
+             ],
+    'large': [
+                'generalContactSpheresTest.py',
+                'perf3DRigidBodies.py',
+                'perfObjectFFRFreducedOrder.py',
+                'perfLargeMassSpringChain.py',
+             ],
+    }
+
+testFileList = []
+testFileGroup = {}      #file name -> group, for the summary
+for groupName in ['small', 'large']:
+    for fileName in testGroups[groupName]:
+        testFileList.append(fileName)
+        testFileGroup[fileName] = groupName
 
 
 totalTests = len(testFileList)
@@ -172,6 +194,7 @@ examplesTestSolList={}
 examplesTestErrorList={}
 invalidResult = 1234567890123456 #should not happen occasionally
 totalTime = 0
+testTimings = {}    #file name -> CPU time, for the grouped summary at the end
 
 from runTestSuiteRefSol import PerformanceTestsReferenceSolution
 performanceTestRefSol = PerformanceTestsReferenceSolution()
@@ -213,7 +236,8 @@ for file in testFileList:
     exu.Print('  ERROR    = ' + str(exudynTestGlobals.testError))
     exu.Print('  CPU TIME = ' + str(timeStart))
     exu.Print('****************************************************')
-    
+
+    testTimings[name] = timeStart
     testExamplesCnt += 1
 
 exu.Print('\n')
@@ -230,6 +254,25 @@ else:
     exu.Print(str(len(testsFailed)) + ' PERFORMANCE TEST(S) OUT OF '+ str(totalTests) + ' FAILED: ')
     for i in testsFailed:
         exu.Print('  PERFORMANCE TEST ' + str(i) + ' (' + testFileList[i] + ') FAILED')
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#per-test timings, grouped. The group subtotals are the point: 'small' measures per-step
+#overhead and 'large' measures the work per step, so a change that moves only one of them is
+#telling you which of the two it affected. A single total cannot show that.
+exu.Print('')
+exu.Print('+++++ PERFORMANCE TEST TIMINGS +++++')
+exu.Print('%-40s %8s %12s %9s' % ('name', 'group', 'time[s]', '% of total'))
+for groupName in ['small', 'large']:
+    groupTime = 0
+    for fileName in testGroups[groupName]:
+        t = testTimings.get(fileName, float('nan'))
+        groupTime += t if t == t else 0     #skip a test that did not run
+        percent = 100*t/totalTime if totalTime > 0 else 0
+        exu.Print('%-40s %8s %12.3f %8.1f%%' % (fileName, groupName, t, percent))
+    percent = 100*groupTime/totalTime if totalTime > 0 else 0
+    exu.Print('%-40s %8s %12.3f %8.1f%%' % ('  --> subtotal ' + groupName, '', groupTime, percent))
+exu.Print('%-40s %8s %12.3f %8.1f%%' % ('  ==> TOTAL', '', totalTime, 100.0))
+exu.Print('')
 
 exu.Print('TOTAL PERFORMANCE TEST TIME = ' + str(totalTime) + ' seconds')
 #exu.Print('Reference value (i9)        = 88.12 seconds (32bit) / 74.11 seconds (regular) / 57.30 seconds (exudynFast)')

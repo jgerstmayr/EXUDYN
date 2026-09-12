@@ -341,6 +341,7 @@ def PerformanceTestsReferenceSolution():
         'perfRigidPendulum.py':2.4735499200766586, #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 2.4745344452543323,
         'perfSpringDamperExplicit.py':0.52,
         'perfSpringDamperUserFunction.py':0.5065575310983877,
+        'perfLargeMassSpringChain.py':0.03136079550415616, #2026-09-12, Windows cp313; explicit Euler, deterministic (repeated runs bit-identical)
         }
 
     return refSol

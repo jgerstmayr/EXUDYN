@@ -675,10 +675,34 @@ promise for no gain.
     of it today, and the numbers can be neither reproduced nor trusted. (Its six `(PReal*)` casts
     are dead code for the same reason, which is why step 22 left them alone.)
 
-    So step 23 has a concrete first deliverable before any variant work: **a maintained benchmark
-    over vector length** that shows the AVX2 difference and can be re-run — either by reviving
-    that sweep as a real test, or by adding a large-DOF model to the performance suite. Without it
-    there is no way to tell whether the *fast* variant earns its place in the wheel.
+    **The suite now reports per-test timings in two groups (2026-09-12).** `small` = few
+    coordinates run for ~1e6 steps, which measures per-step overhead; `large` = many coordinates
+    and few steps, where long vectors are visible. A new `perfLargeMassSpringChain.py` fills the
+    large group properly: 2000 point masses, **6000 ODE2 coordinates**, explicit Euler,
+    deterministic and ~4.8 s on Windows.
+
+    Re-running the Linux A/B with the grouped suite:
+
+    | group | no AVX2 | AVX2 + FMA | change |
+    |---|---|---|---|
+    | small | 9.715 s | 9.711 s | 0.0 % |
+    | large | 13.512 s | 13.432 s | −0.6 % |
+    | `perfLargeMassSpringChain` alone | 3.378 s | 3.184 s | **−5.7 %** |
+
+    So the grouping does what it was meant to: the only test that moves is the one built for long
+    vectors, and it moves in the right direction. But the effect is **single-digit percent on one
+    test**, not the 3–4× the commented-out micro-benchmark claims — because real models spend
+    their time in object evaluation and the solver, not in long-vector arithmetic. This is one A/B
+    run and per-test noise is a few percent, so treat the −5.7 % as indicative, not settled.
+
+    **What that implies for step 23**: if AVX2 buys a few percent on realistic models, the case
+    for shipping a second whole module rests on `__FAST_EXUDYN_LINALG` (dropping range checks),
+    not on AVX2 — and those two must therefore be measured *separately* before the variants are
+    designed. The micro-benchmark of issue #2397 is still needed to bound what AVX2 can do at all.
+
+    **Tolerance (decision 2026-09-12, maintainer):** the FMA-rounding differences of #2396 are
+    **not** to be handled by per-test tolerance patches here; they are resolved together with the
+    consolidated test suite. Until then AVX2 stays off on Linux and #2396 stays open.
 24. **DONE 2026-09-11.** Classifiers now 3.10–3.14, matching the wheels CI actually builds;
     the README and `long_description` were already handled by step 14.
     `MANIFEST.in`'s `include ../LICENSE.txt` could never work — it points outside the sdist
@@ -1193,3 +1217,4 @@ the tracker.
 - **#2388** the installation documentation is years out of date
 - **#2396** enabling AVX2 on Linux shifts results by 1e-9..1e-6 through FMA contraction
 - **#2397** the only benchmark that resolves AVX2 is commented out inside exu.Test()
+- **#2398** explicit integration costs O(N^2) per step with the default dense linear solver

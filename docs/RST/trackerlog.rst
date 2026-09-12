@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.35.dev1, 
++  Exudyn version = 1.11.36.dev1, 
 +  last change =  2026-09-12, 
-+  Number of issues = 2398, 
-+  Number of resolved issues = 2108 (35 in current version), 
++  Number of issues = 2400, 
++  Number of resolved issues = 2109 (36 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.36: resolved Issue 2399: performance suite reports only a single total and had no large system test (change)
+    - issue author: Claude-JG
+    - description:  the suite printed CPU TIME per test scattered through the output and one total at the end; so it was impossible to see which kind of work a change had affected. All six tests were also overhead dominated or mid sized; four of them are a handful of coordinates run for about 1e6 steps. Revision plan step 23; maintainer request
+    - **notes:** tests are now grouped as small (few coordinates; ~1e6 steps; measures per step overhead) and large (many coordinates; few steps; measures the work per step where long vectors and AVX2 are visible); and the suite prints a table of every test with its group; its time and its share of the total; plus a subtotal per group. A new large test perfLargeMassSpringChain.py was added: 2000 point masses; 6000 ODE2 coordinates; explicit Euler; deterministic (repeated runs bit identical) and about 4.8 s on Windows. All 7 performance tests pass
+    - date resolved: **2026-09-12 14:29**\ , date raised: 2026-09-12 
+    - resolved by: Claude-JG
  * Version 1.11.35: resolved Issue 2395: the comment claiming -mavx2 does not compile on Linux is stale (docu)
     - issue author: Claude-JG
     - description:  setup.py:146 says "-mavx2 (does not compile)" and suspects memory alignment. Measured 2026-09-12: the full extension builds cleanly in manylinux_2_28 with -mavx2 -mfma on g++ 14; 567 vfmadd instructions are present in the resulting .so. What actually fails is at runtime and is a genuine alignment defect; see the LinkedDataVector issue. The comment should be corrected so the next reader does not conclude the toolchain is at fault
@@ -8052,6 +8058,11 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2398:` explicit integration costs O(N^2) per step with the default dense linear solver
+    - issue author: Claude-JG
+    - description:  measured 2026-09-12 on a chain of point masses coupled by coordinate spring dampers; explicit Euler; 200 steps: nMasses 250/500/1000/2000 gives 2.5/10.1/42/168 ms per step - the per step cost quadruples on every doubling; so it is O(N^2) although an explicit step on a chain should be O(N). Setting simulationSettings.linearSolverType to EigenSparse makes it linear and 400 times faster at nMasses=2000 (0.084 s against 33.5 s for 200 steps). The dense default is reasonable for small systems; but nothing warns at large N and explicit integration does not obviously need a linear solver at all; so the trap is invisible. Found while building a large system performance test for revision plan step 23
+    - date raised: 2026-09-12 
 
  * :textred:`open BUG 2387:` 20 ClInclude entries in cppsrc.vcxproj have the wrong case; 5 entries do not exist
     - issue author: Claude-JG

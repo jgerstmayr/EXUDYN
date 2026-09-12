@@ -798,6 +798,52 @@ variant-dependent, or the tolerance must admit FMA-level differences. Raised as 
 **AVX2 is deliberately still not enabled on Linux.** That is step 23's decision and needs its own
 benchmark; this step removed the defect that made it impossible, nothing more.
 
+<a id="step-23-prep"></a>
+
+### Step 23 (preparation) — the performance suite grows a grouped timing table
+
+**DONE 2026-09-12** — the step itself is *not* done; this is its stated prerequisite.
+
+`runPerformanceTests.py` printed a `CPU TIME` line scattered through the output and a single total
+at the end, so it could not show *which kind of work* a change had affected. Tests are now grouped:
+
+- **small** — few coordinates, ~1e6 steps: measures per-step overhead. The system vectors are
+  3–20 elements long, so vectorized arithmetic cannot appear here at all.
+- **large** — many coordinates, few steps: measures the work per step, where long vectors, AVX2
+  and multithreading are visible.
+
+and the suite prints every test with its group, time and share of the total, plus a subtotal per
+group. A group that moves while the other does not is the useful signal; one total hides it.
+
+The large group had nothing genuinely large in it, so `perfLargeMassSpringChain.py` was added:
+2000 point masses coupled by coordinate spring-dampers, **6000 ODE2 coordinates**, explicit Euler,
+~4.8 s on Windows, and deterministic — repeated runs are bit-identical, which is what makes it
+usable as a reference-checked test rather than only a timer.
+
+**Building it turned up a real defect (#2398).** With the *default dense* linear solver this model
+costs **O(N²) per step** under explicit integration: 250/500/1000/2000 masses give 2.5/10.1/42/168
+ms per step — the cost quadruples on every doubling, where an explicit step on a chain should be
+linear. `linearSolverType = EigenSparse` makes it linear and **400× faster** at 2000 masses
+(0.084 s against 33.5 s for 200 steps). The test sets it explicitly and says why; the underlying
+trap — an explicit integrator paying for a dense linear solver, with no warning at large N — is
+raised separately.
+
+**The AVX2 A/B, re-run with the grouped suite** (same container, `-O3`, only `-mavx2 -mfma`
+differing): small 9.715 → 9.711 s (0.0 %), large 13.512 → 13.432 s (−0.6 %), and
+`perfLargeMassSpringChain` alone 3.378 → 3.184 s (**−5.7 %**). The grouping works — the only test
+that moves is the one built for long vectors — but the effect is single-digit percent on one test,
+against the 3–4× the commented-out micro-benchmark of #2397 claims for raw vector operations. Real
+models spend their time in object evaluation and the solver. One A/B run, per-test noise a few
+percent: indicative, not settled.
+
+That matters for step 23's actual decision: if AVX2 is worth a few percent, then the case for
+shipping a second whole module rests on `__FAST_EXUDYN_LINALG` rather than on AVX2, and the two
+have to be measured apart before the variants are designed.
+
+**Tolerance:** the maintainer decided the FMA-rounding differences (#2396) are resolved together
+with the consolidated test suite, not by per-test tolerance patches here. AVX2 stays off on Linux
+until then.
+
 <a id="step-24"></a>
 
 ### Step 24 — metadata drift
