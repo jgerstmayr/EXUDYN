@@ -829,7 +829,7 @@ if config['compileParallel']:
 
 #name, description, author, urls, readme, licence, dependencies and requires-python now live in
 #pyproject.toml (revision plan step 14). What stays here is what the build computes:
-#  version         - read from docs/theDoc/version.txt, which issueTracker.py writes
+#  version         - read from version.txt at the repository root, which issueTracker.py writes
 #  classifiers     - the Development Status entry follows the '.dev1' suffix of that version
 #  packages        - BuildPy rebuilds the tree in a temporary directory and re-finds them there
 #  package_data    - grows an openvr_api.dll entry when config['useOpenVR'] is set

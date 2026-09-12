@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.43.dev1, 
+  \item Exudyn version = 1.11.44.dev1, 
   \item last change =  2026-09-12, 
-  \item Number of issues = 2406, 
-  \item Number of resolved issues = 2116 (43 in current version), 
+  \item Number of issues = 2407, 
+  \item Number of resolved issues = 2117 (44 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.44}:  resolved Issue 2406: {\bf version.txt moved from docs/theDoc to the repository root}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: the single version source sat inside the documentation tree; a build input buried among LaTeX chapters and - before the flatten - above the packaging root. It is now version.txt at the repository root; exudynVersion.py is the only code that resolves it and doc2rst.py keeps parsing it as a documentation input. Revision plan step 28}
+    \item {\bf notes: moved with git mv. exudynVersion.py resolves it by walking up for a directory holding both pyproject.toml and version.txt; issueTracker.py writes it there; doc2rst.py special-cases it in the parsed-file loop because every other entry in that list is a LaTeX chapter under docs/theDoc/. regenerate.py excludedPaths, MANIFEST.in and the seven untracked build scripts follow. versionName.txt deliberately stays in docs/theDoc/: nothing builds from it}
+    \item   date resolved: {\bf 2026-09-12 19:36},
+date raised: 2026-09-12 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.43}:  resolved Issue 2405: {\bf exudynVersion.py guessed four relative paths and fell back to the version string unknown}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

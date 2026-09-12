@@ -38,5 +38,5 @@ include setupPyConfig.json
 # version.txt is the single version source. Without it exudynVersion.py raises, and before that
 # rewrite the version silently degraded to the string 'unknown' - which is exactly why the sdist
 # on pypi.org could not be built (#2383).
-include docs/theDoc/version.txt
+include version.txt
 include LICENSE.txt

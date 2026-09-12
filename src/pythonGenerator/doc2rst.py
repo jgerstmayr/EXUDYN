@@ -280,7 +280,12 @@ sFile += '\\mysection{Exudyn}\n' #add header for .rst file
 sFile += '\n**A flexible multibody dynamics systems simulation code with Python and C++**\n\n'
 
 for fileName in filesParsed:
-    sFile = ParseFile(sourceDir+fileName, sFile)
+    #version.txt is the single version source and lives at the REPOSITORY ROOT (revision plan
+    #step 28); every other entry is a LaTeX chapter under docs/theDoc/. It stays in this list
+    #because it is also a documentation input - ParseFile turns it into the version line of the
+    #generated RST.
+    parsedPath = destDir+fileName if fileName == 'version.txt' else sourceDir+fileName
+    sFile = ParseFile(parsedPath, sFile)
     sRST += ConvertFile(sFile)
 
     sFile = ''

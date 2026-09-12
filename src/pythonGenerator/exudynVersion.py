@@ -28,7 +28,7 @@
 import os
 
 #the version file, relative to the repository root
-versionFileRelativePath = 'docs/theDoc/version.txt'
+versionFileRelativePath = 'version.txt'
 
 #files that identify the repository root; both must be present, so that a stray version.txt
 #somewhere above the repository cannot be mistaken for it

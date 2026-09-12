@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.43.dev1, 
++  Exudyn version = 1.11.44.dev1, 
 +  last change =  2026-09-12, 
-+  Number of issues = 2406, 
-+  Number of resolved issues = 2116 (43 in current version), 
++  Number of issues = 2407, 
++  Number of resolved issues = 2117 (44 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.44: resolved Issue 2406: version.txt moved from docs/theDoc to the repository root (change)
+    - issue author: Claude-JG
+    - description:  the single version source sat inside the documentation tree; a build input buried among LaTeX chapters and - before the flatten - above the packaging root. It is now version.txt at the repository root; exudynVersion.py is the only code that resolves it and doc2rst.py keeps parsing it as a documentation input. Revision plan step 28
+    - **notes:** moved with git mv. exudynVersion.py resolves it by walking up for a directory holding both pyproject.toml and version.txt; issueTracker.py writes it there; doc2rst.py special-cases it in the parsed-file loop because every other entry in that list is a LaTeX chapter under docs/theDoc/. regenerate.py excludedPaths, MANIFEST.in and the seven untracked build scripts follow. versionName.txt deliberately stays in docs/theDoc/: nothing builds from it
+    - date resolved: **2026-09-12 19:36**\ , date raised: 2026-09-12 
+    - resolved by: Claude-JG
  * Version 1.11.43: resolved Issue 2405: exudynVersion.py guessed four relative paths and fell back to the version string unknown (fix)
     - issue author: Claude-JG
     - description:  it tried ../../../, ../../, ../ and ./ in sequence for docs/theDoc/version.txt and set version = unknown when all four missed. unknown is not a version: setuptools rejects it much later with an InvalidVersion naming neither this file nor version.txt, and a generator run would stamp it into generated sources instead of failing. Revision plan step 28
