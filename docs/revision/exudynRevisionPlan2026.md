@@ -650,8 +650,35 @@ promise for no gain.
     step 22 lands; macOS builds a single variant with no switches. Per fact 6, the variants must
     remain **whole separate modules** — compiling only part of the module twice would let the
     linker keep one copy of an inline template instantiation and call AVX2 code on a baseline
-    CPU. The current performance suite does not resolve AVX2 on/off, so the benchmark must first
-    become able to show a difference; re-measure after step 22.
+    CPU.
+
+    **The prerequisite is now measured, not assumed (2026-09-12).** Step 22 made a Linux A/B
+    possible for the first time. Same container, same toolchain, `-O3`, only `-mavx2 -mfma`
+    differing, `runPerformanceTests.py`:
+
+    | build | total |
+    |---|---|
+    | baseline (no AVX2) | **20.118 s** |
+    | AVX2 + FMA | **20.137 s** |
+
+    **0.1 %** — the suite cannot resolve AVX2 at all, and the per-test times differ in both
+    directions, so even the sign is noise. The reason is visible in the models: four of the six
+    tests are *tiny systems run for ~1e6 steps* (`perfRigidPendulum` is a single rigid body,
+    `perfSpringDamperExplicit`/`UserFunction` a spring-damper), so the vectors are 3-20 elements
+    long and per-step overhead dominates. AVX2 only pays on long vectors, which these never have.
+
+    **A benchmark that does resolve it already exists — and is commented out.** `PyTest()` in
+    `src/Pymodules/pythonTests.cpp`, exposed as `exu.Test()` ("internal test, do not use"),
+    contains a vector add/MultAdd sweep whose *recorded* results sit in the source as comments:
+    *"speedup for n=502: 3.1, n=1002: 3.5"*, plus a table of AVX vs multithreaded vs serial for
+    sizes from 16 to 200002. All of it is inside `/* */` and `if (0)`, so `exu.Test()` runs none
+    of it today, and the numbers can be neither reproduced nor trusted. (Its six `(PReal*)` casts
+    are dead code for the same reason, which is why step 22 left them alone.)
+
+    So step 23 has a concrete first deliverable before any variant work: **a maintained benchmark
+    over vector length** that shows the AVX2 difference and can be re-run — either by reviving
+    that sweep as a real test, or by adding a large-DOF model to the performance suite. Without it
+    there is no way to tell whether the *fast* variant earns its place in the wheel.
 24. **DONE 2026-09-11.** Classifiers now 3.10–3.14, matching the wheels CI actually builds;
     the README and `long_description` were already handled by step 14.
     `MANIFEST.in`'s `include ../LICENSE.txt` could never work — it points outside the sdist
@@ -1165,3 +1192,4 @@ the tracker.
 - **#2387** 20 ClInclude entries in cppsrc.vcxproj have the wrong case; 5 entries do not exist
 - **#2388** the installation documentation is years out of date
 - **#2396** enabling AVX2 on Linux shifts results by 1e-9..1e-6 through FMA contraction
+- **#2397** the only benchmark that resolves AVX2 is commented out inside exu.Test()

@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.35.dev1, 
 +  last change =  2026-09-12, 
-+  Number of issues = 2397, 
++  Number of issues = 2398, 
 +  Number of resolved issues = 2108 (35 in current version), 
 
 ************
@@ -6947,6 +6947,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 2397:** the only benchmark that resolves AVX2 is commented out inside exu.Test()
+    - issue author: Claude-JG
+    - description:  measured 2026-09-12: runPerformanceTests.py gives 20.118 s without AVX2 and 20.137 s with -mavx2 -mfma in the same container - 0.1 percent; with per test differences in both directions. Four of the six performance tests are tiny systems run for about 1e6 steps; so the vectors are 3 to 20 elements long and per step overhead dominates; AVX2 only pays on long vectors. A sweep that does resolve it exists in PyTest() in src/Pymodules/pythonTests.cpp (exposed as exu.Test()); with recorded results in comments (speedup 3.1 for n=502; 3.5 for n=1002; plus an AVX/multithreaded/serial table for sizes 16 to 200002) - but it is entirely inside comment blocks and if (0); so exu.Test() runs none of it and the numbers cannot be reproduced. Revision plan step 23 cannot judge whether the fast variant earns its place in the wheel until there is a maintained benchmark over vector length
+    - date raised: 2026-09-12 
 
  * **open issue 2396:** enabling AVX2 on Linux shifts results by 1e-9..1e-6 through FMA contraction
     - issue author: Claude-JG
