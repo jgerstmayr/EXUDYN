@@ -360,7 +360,6 @@ def UpdateDateAndVersion(updateVersion = True):
     cppVersionFile = directoryString + 'versionCpp.cpp'
     texVersionFile = '..\\..\\version.txt'   #at the repository ROOT since revision plan step 28; versionName.txt stays in docs/theDoc/
     texVersionNameFile = '..\\..\\docs\\theDoc\\versionName.txt'
-    #batVersionFile = '..\\..\\tools\\makeWindowsBinaries\\version.txt' #pure version number for file names
 
     #pyVersionFile = '..\\..\\src\\pythonGenerator\\exudynVersion.py'
     #[release,version] = GetReleaseAndVersion()
