@@ -82,6 +82,27 @@ date resolved, resolved author, file, line, notes`.
   TUTORIAL, TESTING, EXAMPLE, DISCUSSION`
 - `priority`: `''`, `LOW`, `MED`, `HIGH`
 
+#### `BUG` vs `FIX` — the distinction is user-facing
+
+`BUG` is not "anything broken". It is reserved for defects a *package user* has to know about,
+because they explain why something silently did the wrong thing:
+
+- a solver, formulation or model gives **wrong results**;
+- something **crashes** during a simulation;
+- a documented feature does not work at all, with no clear message.
+
+`FIX` covers everything that is merely annoying to *us*: a build that does not compile, a
+packaging or CI defect, documentation drift, a feature unavailable in some mode. These are
+visibly failing with the cause in the message, so a user never mistakes one for correct output.
+
+Why it matters mechanically: `ConvertToLatex`/`ConvertToHTML` select on `type == 'BUG'` to build
+the open-bug list and the "resolved BUG" lines of the release notes. Anything typed `BUG` is
+therefore published to users. Mistyping a build defect as `BUG` costs them attention for
+something that could never have affected their results; mistyping a wrong-result defect as `FIX`
+hides it.
+
+When the cause is not yet known, prefer `BUG` — it is the safe direction.
+
 > **Never hand-edit `trackerlog.txt`.** Text fields may not contain a literal `,`; the tool escapes
 > it to `\;` on write and unescapes on read. Editing by hand corrupts the column count and every
 > reader then reports "inconsistent line definition".

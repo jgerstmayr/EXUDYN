@@ -747,9 +747,11 @@ Editing the vcxproj in the same commit is fine — it is modified, not moved.
 26. **DONE 2026-09-12** with step 25. *(Corrected 2026-09-12: there are **no** vcxproj relative
     paths to fix — all 541 are `..\src\…` and stay valid as long as `msvc/` and `src/` are
     siblings at the root. Only the two project references in the `.sln` change.)*
-27. **Acceptance gate before pushing**: solution opens in VS2022, `Debug|x64` builds, and a
-    mixed-mode breakpoint in a C++ item's `ComputeODE2LHS` is hit from a Python script. CI cannot
-    verify this.
+27. **DONE 2026-09-12.** Acceptance gate, checked by the maintainer by hand — CI cannot verify
+    any of it: both projects load in VS2022, `Debug|x64` *and* `Release|x64` build, Exudyn runs,
+    and mixed-mode breakpoints hit in **both** `python/pytest.py` and
+    `CSystem::ComputeSystemODE2RHS`. So the flattened layout is confirmed for the primary
+    development environment, not only for the wheel build.
 28. **Homogenise the version handling.** *(restated 2026-09-12 — there is no duplicated
     truth to merge.)* `docs/theDoc/version.txt`, written by `issueTracker.py`, is already
     the single source; `versionName.txt`, `versionCpp.cpp`, the version line in
@@ -761,7 +763,12 @@ Editing the vcxproj in the same commit is fine — it is modified, not moved.
     rejects with `InvalidVersion`; and **seven** batch scripts under
     `tools/buildAndGenerate/` each parse it their own way. So: move the source to the
     repository root, give it one accessor, and let everything else keep being generated.
-29. Move `docs/demo` (22 MB) to release assets or git-lfs.
+29. **DEFERRED 2026-09-12 — the maintainer's own work.** The original proposal (move `docs/demo`,
+    22 MB, to release assets or git-lfs) is **withdrawn**: the `.gif` files are embedded in the
+    GitHub front page, so moving them out of the repository would break it, and git-lfs would add
+    a clone-time dependency for something the front page needs unconditionally. Instead the
+    maintainer resizes the images and animations in place and commits them. Nothing for this plan
+    to do; re-open only if the directory grows again.
 30. **DONE 2026-09-10.** `docs/howTo/` cut from 26 `.txt` files to 8 `.md`. Rule applied: keep what
     could not be rederived in five minutes. Survivors and the new `buildQuirks.md` are listed in
     `docs/dev/README.md`. → [log](exudynRevisionLog2026.md#step-30)
@@ -807,10 +814,32 @@ The core investment. Every step is validated byte-for-byte by step 2.
 41. Mark fast vs slow: ~2-minute PR subset, full nightly.
 42. Wire the `lest` C++ unit tests into the VS `Debug` configuration. They are currently gated on
     `PERFORM_UNIT_TESTS`, enabled only for Python 3.7, so they never run anywhere.
+
+42a. **Close the coverage hole the lest suite has in exactly the classes AVX touches.** Measured
+    2026-09-12 by listing the `CASE(...)` names in `src/Tests/*.h` against the headers in
+    `src/Linalg/`. Covered today: `Vector`, `ResizableVector`, `ConstSizeVector`,
+    `LinkedDataVector`, `SlimVector`, `Matrix`, plus `ResizableArray`, `SlimArray` and
+    `ObjectContainer`. **Not covered at all:**
+
+    - `ResizableVectorParallel.h`, `LinkedDataVectorParallel.h` — the two AVX classes. #2394 (a
+      misaligned `__m256d` load on a `LinkedDataVector` sub-range) lived here and was found by a
+      sanitizer on a whole test model, not by a unit test. Every AVX path needs cases that run
+      **both** code paths: an aligned buffer and a deliberately offset sub-range, at lengths
+      around the `AVXRealSize` boundary (n-1, n, n+1), compared against the scalar result.
+    - `ResizableMatrix.h`, `ConstSizeMatrix.h`, `LinkedDataMatrix.h`, `MatrixContainer.h`
+    - `RigidBodyMath.h`, `KinematicsBasics.h`, `Geometry.h`, `BoundingBox.h`, `SearchTree.h`
+    - `Symbolic.h`, `SymbolicVector.h`, `SymbolicMatrix.h`, `LinearSolver.h`
+
+    The AVX ones come first: they are the only place where a defect is *invisible* in the
+    TestModels on Windows and can silently change results, and where the build flag differs per
+    platform. The rest is ordinary backfill and can follow.
 43. Add ruff, plus a pyright or mypy pass validating the `.pyi` against the package.
 44. Add an ASan/UBSan Linux job. For a C++ library invoking arbitrary user callbacks this catches
     the class of bug users report as "it crashed with no message".
-45. Rename `main/pythonDev/pytest.py` — it is a pendulum example and shadows the `pytest` package.
+45. ~~Rename `main/pythonDev/pytest.py`~~ — done differently in step 25: the file is now the
+    untracked local scratch copy `python/pytest.py`, created from `python/pytestTemplate.py` by
+    `tools/setupLocalWorkspace.py` (#2403). It no longer ships, so it cannot shadow the `pytest`
+    package in any installed environment.
 
 ### Phase 5 — Error handling and UX (ongoing, after Phase 1)
 
@@ -1229,21 +1258,22 @@ detail is `docs/dev/WORKFLOW.md`. In short:
 ## 12. Open issues raised during this revision (#2368 onwards)
 
 Number and name only, exactly as they stand in `tools/issueTracker/trackerlog.txt`.
-This is a **snapshot**, taken 2026-09-12; the tracker is the authority and the
+This is a **snapshot**, taken 2026-09-12 (refreshed after the nightly CI review).
+The type is shown because `BUG` and `FIX` now mean different things - see WORKFLOW.md; the tracker is the authority and the
 only place these are maintained. Do not edit this list by hand - regenerate it, or read
 the tracker.
 
-- **#2368** ANCFbeltDrive result contradicts its own recorded reference
-- **#2372** project.license TOML table deprecated
-- **#2376** setup.py leaves the working directory changed when stub generation fails
-- **#2377** three imports refer to modules that exist nowhere
-- **#2379** two TestModels fail reproducibly on Linux and are not marked UnresolvedOnLinux
-- **#2380** quietCompile does not actually quieten the compiler on Linux
-- **#2383** the source distribution contains no C++ headers and cannot build
-- **#2384** setup.py sdist drops an untracked copy of LICENSE.txt into main/
-- **#2387** 20 ClInclude entries in cppsrc.vcxproj have the wrong case; 5 entries do not exist
-- **#2388** the installation documentation is years out of date
-- **#2396** enabling AVX2 on Linux shifts results by 1e-9..1e-6 through FMA contraction
-- **#2397** the only benchmark that resolves AVX2 is commented out inside exu.Test()
-- **#2398** explicit integration costs O(N^2) per step with the default dense linear solver
-- **#2400** computeMassMatrixInversePerBody does not reduce cost unless a sparse solver is also selected
+- **#2368** (BUG) ANCFbeltDrive result contradicts its own recorded reference
+- **#2372** (CHECK) project.license TOML table deprecated
+- **#2376** (FIX) setup.py leaves the working directory changed when stub generation fails
+- **#2377** (BUG) three imports refer to modules that exist nowhere
+- **#2380** (CHECK) quietCompile does not actually quieten the compiler on Linux
+- **#2383** (FIX) the source distribution contains no C++ headers and cannot build
+- **#2384** (FIX) setup.py sdist drops an untracked copy of LICENSE.txt into main/
+- **#2387** (FIX) 20 ClInclude entries in cppsrc.vcxproj have the wrong case; 5 entries do not exist
+- **#2388** (DOCU) the installation documentation is years out of date
+- **#2396** (CHECK) enabling AVX2 on Linux shifts results by 1e-9..1e-6 through FMA contraction
+- **#2397** (CHECK) the only benchmark that resolves AVX2 is commented out inside exu.Test()
+- **#2398** (BUG) explicit integration costs O(N^2) per step with the default dense linear solver
+- **#2400** (CHECK) computeMassMatrixInversePerBody does not reduce cost unless a sparse solver is also selected
+- **#2401** (FIX) issue text ending a word with an underscore breaks the generated RST and the docs CI job

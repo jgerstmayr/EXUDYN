@@ -281,6 +281,11 @@ def UnresolvedOnLinux():
         'sphereTriangleTest2.py',               #rel. 1.7e-05
         'generalContactCylinderTest.py',        #rel. 2.2e-05
         'generalContactFrictionTests.py',       #rel. 4.9e-04
+        #added 2026-09-12 from the nightly GitLab run of 1.11.31.dev1 (manylinux_2_28 / cp313).
+        #These two were the reason the Linux job exited non-zero while every other difference was
+        #already excluded; they are the same kind of reproducible platform difference (#2379).
+        'sliderCrank3Dbenchmark.py',            #rel. 2.0e-10
+        'generalContactImplicit1.py',           #rel. 6.8e-08
         #the outlier by far: reference 3.8226, Linux gives 59370.97 - four orders of
         #magnitude, so this is a divergence rather than an accuracy difference
         'sphereTriangleTest.py',                #rel. 1.6e+04

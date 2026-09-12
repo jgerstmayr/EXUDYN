@@ -103,7 +103,10 @@ echo "=== repaired wheel: $repairedWheel"
 #GitLab runner 2026-09-10 with an unpinned scipy, abaqusImportTest.py alone took 60.0 s of the
 #106 s test suite - 56% of the whole run for one otherwise unremarkable test. See revision
 #plan fact 19. Raise this pin deliberately, and re-measure when doing so.
-"$pyBin/pip" install --no-cache-dir numpy "scipy==1.15.2" matplotlib
+#The pin applies only where a cp<3.14 wheel exists. On 3.14 there is no scipy 1.15.2 wheel, so
+#pip fell back to building it from source and the job died on a missing OpenBLAS - BEFORE exudyn
+#was ever compiled. Unpinned there; re-pin once a 3.14 wheel of a fast-enough scipy is published.
+"$pyBin/pip" install --no-cache-dir numpy matplotlib     "scipy==1.15.2; python_version < '3.14'"     "scipy; python_version >= '3.14'"
 "$pyBin/pip" install --no-cache-dir --force-reinstall --no-deps "$repairedWheel"
 
 cd "$mainDir/python/TestModels"
