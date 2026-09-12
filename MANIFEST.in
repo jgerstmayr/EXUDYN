@@ -27,10 +27,6 @@ include src/pythonGenerator/createStubFiles.py
 include src/pythonGenerator/stubHeader.pyi
 recursive-include src/pythonGenerator/generated *.pyi
 
-# build options; setup.py falls back to defaults when it is missing, but then a source build
-# silently differs from the one the maintainer runs
-include setupPyConfig.json
-
 # Both of these were unreachable before the flatten, because they sat ABOVE the sdist root and
 # setuptools cannot follow a '../'. Step 25 moved the packaging root up to the repository root,
 # so they are now ordinary includes (revision plan steps 24, 25, 81).

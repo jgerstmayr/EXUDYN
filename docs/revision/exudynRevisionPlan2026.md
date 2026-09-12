@@ -796,8 +796,31 @@ Editing the vcxproj in the same commit is fine — it is modified, not moved.
 
 The core investment. Every step is validated byte-for-byte by step 2.
 
-31. Convert `objectDefinition.py` / `systemStructuresDefinition.py` into structured data — one
-    file per item, ~200 small reviewable files instead of one 1.4 MB blob.
+31. Convert `objectDefinition.py` / `systemStructuresDefinition.py` into structured data - 
+    the format to be defined, but preferably Python code, the structures defined in dicts,
+    thus allowing copy operations for derived objects and definition of enums, default strings,
+    values, etc., that could also be defined in a common file that is included in several
+    definition files and thus allows synchronization.
+
+    The structures shall be split into one file for ALL simulation settings, one for ALL
+    visualization settings, one for ALL solver settings, one for ALL solvers, and one for 
+    remaining structures. This simplifies search/replace and synchronization of similar
+    structures.
+    The objects shall be put into single files per each item category: Node, Object, Marker,
+    Load and Sensor.
+
+    The documentation in code-generation tools such as systemStructuresDefinition.py, 
+    objectDefinition.py, etc. as well as in comments of Python code are latex-based. This means 
+    that a conversion to .rst is first needed. It would be a good idea to convert all these comments
+    into markdown (possibly just using the present way it is done) - with a good proposal how 
+    to treat formulas (the $y=f(x)$ format is really handy). 
+    Also note that there are several latex macros that could be checked first, in particular
+    regarding tables, which are widely used for description of parameters (name, type, formula, 
+    description) - see also theDoc/docincludes.sty, which is not a style but a macro defs file,
+    just named such for the outdated doxygen workflow.
+
+    As step 31 is larger, it may be good to split into 31a, b, c, ...
+
 32. Define a schema and validate on load with file- and line-accurate messages.
 33. Split the monolith into an IR plus independent emitters — C++ headers, pybind, stubs, item
     interface, RST, LaTeX. Each gets `main()` + argparse + explicit `--output`; none reads by
@@ -888,6 +911,19 @@ The core investment. Every step is validated byte-for-byte by step 2.
     published, the LaTeX copies of the coding rules and the C++ structure can be deleted rather
     than kept in sync. `introduction.tex` already points at `ARCHITECTURE.md` instead of the
     removed doxygen (step 79).
+
+    Note that the .tex files were the original sources and .rst files do not contain all 
+    information, which means that the .tex files in docs/theDoc, which are not auto-generated, 
+    need to be converted "manually" to a .md version. 
+    The PDF had a specific front page which could be kept similarly in the final 
+    generated PDF and the TOC in the PDF was good to get an impression of the material contained -
+    questioning if any of this can survive in the pdf compiled from .md.
+
+    After latex has been abandoned, as well as the doc2rst.py (check if there is something that 
+    will be still needed from the old latex converters, like the abbreviation list at the end of
+    doc2rst, etc.). Further, the autoGenerateHelper.py - which is in a terrible state, probably 
+    most terrible in the project - will not require most of its functions, so cleanup is needed.
+
 51. Stop committing generated RST and `theDoc.pdf`; build in CI, publish the PDF as a release
     asset.
 52. Convert `trackerlog.tex` into `CHANGELOG.md`.
@@ -1158,19 +1194,38 @@ debt stays visible and each item can be closed on evidence.
     `exudyn-1.11.43.dev1-cp313-cp313-win_amd64.whl` → installed to a separate target → `import
     exudyn` reports the right version and a `SystemContainer` runs. #2383 resolved.
 
-82. **Retire `setupPyConfig.json` — after step 25.** The six build switches (`USEGLFW`,
-    `compileParallel`, `quietCompile`, `minimalCppFiles`, `useOpenVR`, `compileExudynFast`) have
-    **three** sources today: defaults in `setup.py`, the committed JSON, and CLI flags — with no
-    written precedence. The JSON being *tracked and mutable* is the real defect: it is why
-    `tools/ci/buildManylinux.sh` rewrites it with `sed` and restores it with a `trap` (a failed
-    restore leaves the repository dirty), and why step 17 ended up shipping the maintainer's local
-    toggles inside the sdist. Target: defaults in `[tool.exudyn]` in `pyproject.toml` (real
-    booleans, so the `"True"`-as-a-string schema of step 21 disappears with it), per-build
-    overrides by environment variable, the CLI flags kept, and **nothing rewritten on disk during
-    a build**. Deliberately **after step 25**: the flattening moves `pyproject.toml` to the
-    repository root, so doing this first would touch the same file twice. Moving the JSON verbatim
-    into `pyproject.toml` would be worse than the status quo — CI would then be editing the
-    packaging metadata.
+82. **DONE 2026-09-12.** `setupPyConfig.json` retired. The six switches (`USEGLFW`,
+    `compileParallel`, `quietCompile`, `minimalCppFiles`, `useOpenVR`, `compileExudynFast`) had
+    **three** sources with no written precedence, and the file being *tracked and mutable* cost
+    three separate things:
+
+    - `tools/ci/buildManylinux.sh` rewrote it with `sed -i` and restored it from a `trap`, so CI
+      wrote into a tracked file mid-build and a failed restore left the tree dirty — and it is
+      why step 17 shipped the maintainer’s local toggles inside the sdist;
+    - **the defaults disagreed with the committed file**: `compileParallel` and `quietCompile`
+      were `False` in `setup.py` and `"True"` in the JSON, so a build *without* it — an sdist
+      build, legitimately — silently took a slower, louder path than the maintainer runs;
+    - the CLI could only turn switches **on**. With `quietCompile` committed as true there was
+      no way to ask for a verbose build.
+
+    Now: defaults in `[tool.exudyn]` in `pyproject.toml` as real booleans (the `"True"`-as-a-
+    string schema of step 21 went with the file that needed it), and four explicit layers —
+    **command line > environment > `[tool.exudyn]` > built-in default**. CI exports
+    `EXUDYN_COMPILE_EXUDYN_FAST=0`; **nothing is written to disk during a build**. Every flag has
+    both forms (`--quiet` / `--no-quiet`), keeping the historical `--noglfw` and `--nofast`.
+
+    One constraint worth remembering: `requires-python = ">=3.10"` and CI builds cp310, but
+    `tomllib` is stdlib only from **3.11**. `tomli` is in `build-system.requires` behind a
+    marker, and a missing parser raises an `ImportError` naming the install command — the same
+    shape as the pybind11 fix (#2373), because `python setup.py bdist_wheel` has no build
+    isolation. A silent fallback to built-in defaults was rejected: it recreates the second
+    defect above in a new place.
+
+    Verified layer by layer rather than asserted: table alone, environment beating the table,
+    CLI beating the environment, and `--no-quiet --nofast` turning off values committed as true;
+    plus the four error paths (unknown key, `"True"` as a string, conflicting flags, bad
+    environment value). The working-tree fingerprint is byte-identical before and after a build
+    with the CI override, and the sdist now carries the maintainer’s switches. #2407.
 ---
 
 ## 6. Decisions taken

@@ -5,7 +5,11 @@
 #here from setup_requires in step 15; note that this is honoured under build isolation ('pip
 #wheel .', 'python -m build') but NOT by a direct 'python setup.py bdist_wheel', where pybind11
 #must already be installed - see docs/howTo/condaEnvironments.md.
-requires = ["setuptools>=61", "wheel", "pybind11<3.0"]
+#tomli: setup.py reads [tool.exudyn] below, and tomllib is stdlib only from 3.11 while
+#requires-python allows 3.10 and CI builds cp310. Same caveat as pybind11 - under a direct
+#'python setup.py bdist_wheel' this is NOT installed for you, so setup.py raises an ImportError
+#naming the install command rather than silently falling back to different defaults (step 82).
+requires = ["setuptools>=61", "wheel", "pybind11<3.0", "tomli; python_version < '3.11'"]
 build-backend = "setuptools.build_meta"
 
 #Static package metadata. Everything here used to be keyword arguments to setup(); what is left
@@ -141,6 +145,28 @@ test-command = "cd {project}/python/TestModels && python runTestSuite.py -quiet 
 [tool.cibuildwheel.windows]
 #re-enabled 2026-08-05 after a strange exit code on Windows had disabled it since 2024-10-09
 test-command = "cd /d {project}/python/TestModels && python runTestSuite.py -quiet -local"
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#Build switches, read by setup.py. These are the DEFAULTS; they are never rewritten during a
+#build. Resolution order, highest first (revision plan step 82):
+#
+#  1. command line     --parallel / --no-parallel, --quiet / --no-quiet, ...
+#  2. environment      EXUDYN_COMPILE_PARALLEL=0|1, EXUDYN_QUIET_COMPILE=0|1, ...
+#  3. [tool.exudyn]    this table
+#  4. built-in default in setup.py, used only when this table is absent
+#
+#This replaces setupPyConfig.json, which was TRACKED AND MUTABLE: tools/ci/buildManylinux.sh had
+#to rewrite it with sed and restore it from a trap, so a failed build left the working tree dirty,
+#and step 17 ended up shipping the maintainer's local toggles inside the sdist. The environment
+#layer exists precisely so CI can override a switch without touching a file. The old file also
+#used the strings "True"/"False" because JSON was being hand-edited; these are real booleans.
+[tool.exudyn]
+USEGLFW = true              #compile with GLFW/OpenGL graphics; false e.g. for a compute cluster
+compileParallel = true      #compile the 133 sources with all available threads
+quietCompile = true         #print a counter instead of every compiler command line
+minimalCppFiles = false     #compile the 54-file minimal set - for testing only
+useOpenVR = false           #compile with the OpenVR library
+compileExudynFast = true    #additionally build the exudynCPPfast variant (no range checks)
 
 [tool.setuptools]
 zip-safe = false

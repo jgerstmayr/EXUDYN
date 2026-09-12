@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.46.dev1, 
++  Exudyn version = 1.11.47.dev1, 
 +  last change =  2026-09-12, 
-+  Number of issues = 2407, 
-+  Number of resolved issues = 2119 (46 in current version), 
++  Number of issues = 2408, 
++  Number of resolved issues = 2120 (47 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.47: resolved Issue 2407: setupPyConfig.json was tracked and mutable: CI rewrote it mid-build and an sdist build used different switches (change)
+    - issue author: Claude-JG
+    - description:  the six build switches had three sources with no written precedence: defaults in setup.py; the committed JSON; and CLI flags. Three consequences. tools/ci/buildManylinux.sh had to rewrite the tracked file with sed and restore it from a trap; so a failed build left the working tree dirty - and step 17 shipped the maintainers local toggles inside the sdist. The defaults disagreed with the committed file (compileParallel and quietCompile were False in setup.py and True in the JSON); so a build WITHOUT the file - an sdist build; legitimately - silently took a slower and louder path than the maintainer runs. And the CLI could only turn switches ON; with quietCompile committed as True there was no way to ask for a verbose build. Revision plan step 82
+    - **notes:** the file is deleted. Defaults now live in [tool.exudyn] in pyproject.toml as real booleans - the True-as-a-string schema of step 21 went with the JSON that needed it - and resolution is four explicit layers: command line > environment > [tool.exudyn] > built-in default. buildManylinux.sh exports EXUDYN_COMPILE_EXUDYN_FAST=0 instead of sed plus trap; nothing is written to disk during a build. Every flag now has both forms (--quiet/--no-quiet etc.); the historical --noglfw and --nofast spellings are kept. tomli is in build-system.requires with a python_version < 3.11 marker because CI builds cp310 and tomllib is stdlib only from 3.11; a missing TOML parser raises an ImportError naming the install command rather than falling back to different defaults. All four layers were proven separately; the working-tree fingerprint is byte-identical before and after a build with the CI override; and the sdist now carries the maintainers switches instead of the old silent fallback
+    - date resolved: **2026-09-12 22:52**\ , date raised: 2026-09-12 
+    - resolved by: Claude-JG
  * Version 1.11.46: resolved Issue 2384: setup.py sdist drops an untracked copy of LICENSE.txt into main/ (fix)
     - issue author: Claude-JG
     - description:  running python setup.py sdist creates main/LICENSE.txt; byte-identical to the repository root LICENSE.txt and not tracked; so it shows up as an untracked file after every sdist and is easy to commit by accident. Reproduced by deleting it and running sdist again. It is either a build artifact that belongs in .gitignore; or a second copy of the licence that should not exist at all - which revision plan step 25 (flattening the packaging root) would settle. Found during revision plan step 17

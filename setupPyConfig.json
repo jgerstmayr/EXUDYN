@@ -1,8 +1,0 @@
-{
-	"USEGLFW": "True",
-	"compileParallel": "True",
-	"quietCompile": "True",
-	"minimalCppFiles": "False",
-	"useOpenVR": "False",
-	"compileExudynFast": "True"
-}

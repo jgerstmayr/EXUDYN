@@ -57,25 +57,14 @@ unset LD_LIBRARY_PATH
 cd "$mainDir"
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#optionally disable the fast variant. setup.py reads setupPyConfig.json from the working
-#directory, and 'pip wheel' gives no way to pass --nofast through, so the file is edited and
-#restored. The trap guarantees restoration even if the build fails.
+#optionally disable the fast variant. 'pip wheel' gives no way to pass --nofast through, so this
+#used to edit setupPyConfig.json with sed and restore it from a trap - CI writing into a TRACKED
+#file mid-build, with a dirty working tree whenever the restore did not run. setup.py now reads
+#the same switch from the environment, so nothing is written to disk (revision plan step 82).
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-configFile="$mainDir/setupPyConfig.json"
-configBackup=""
-RestoreConfig() {
-    if [ -n "$configBackup" ] && [ -f "$configBackup" ]; then
-        mv -f "$configBackup" "$configFile"
-        echo "    restored setupPyConfig.json"
-    fi
-}
-trap RestoreConfig EXIT
-
 if [ "${EXUDYN_NOFAST:-0}" = "1" ]; then
     echo "    fast variant: DISABLED (EXUDYN_NOFAST=1)"
-    configBackup="$(mktemp)"
-    cp "$configFile" "$configBackup"
-    sed -i 's/"compileExudynFast"[[:space:]]*:[[:space:]]*"True"/"compileExudynFast": "False"/' "$configFile"
+    export EXUDYN_COMPILE_EXUDYN_FAST=0
 else
     echo "    fast variant: enabled"
 fi
