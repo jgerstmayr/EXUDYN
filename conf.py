@@ -12,7 +12,7 @@
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #create exudynVersionString
 exudynVersionString=''
-file='main/src/pythonGenerator/exudynVersion.py'
+file='src/pythonGenerator/exudynVersion.py'
 exec(open(file).read(), globals())
 
 # print('version='+exudynVersionString)
@@ -78,7 +78,11 @@ numfig = True #uses numbers for figures, see https://www.sphinx-doc.org/en/maste
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 templates_path = ['_templates']
-exclude_patterns = ['README.rst','rotorAnsys.rst','main/*','tools/*']
+#everything that is not documentation; before the flatten a single 'main/*' covered src,
+#include, libs, obj and pythonDev, so each of them has to be named individually now
+exclude_patterns = ['README.rst','rotorAnsys.rst',
+                    'src/*','msvc/*','include/*','libs/*','python/*','tools/*',
+                    '_build/*','build/*','dist/*']
 
 #for google search index file, placed into root folder
 html_extra_path = ['docs/extraHtml/googleeeca4e2177bc5628.html']

@@ -192,7 +192,7 @@ if isWindows:
         #this does not work without wildcard *; but does not add the .dll
         #addPackageData['']+=['../../../libs/libs64/openvr*.dll'] #relative to exudyn; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
         import shutil
-        shutil.copy2('libs/libs64/openvr_api.dll', 'pythonDev/exudyn/')
+        shutil.copy2('libs/libs64/openvr_api.dll', 'python/exudyn/')
 
         addPackageData['']+=['openvr_api.dll'] #relative to exudyn, copied there; if this does not work on other platforms, copy .dll or .so file directly into exudyn directory
         print('add package data for openVR:', addPackageData)
@@ -259,7 +259,7 @@ else:
 
 
 #the pybind11 requirement lives in build-system.requires in pyproject.toml since revision plan
-#step 15; setup_requires (which used to fetch it into main/.eggs) is deprecated and was removed.
+#step 15; setup_requires (which used to fetch it into .eggs) is deprecated and was removed.
 #That works out of the box for 'pip wheel .' and 'python -m build', which honour build-system
 #under build isolation. A direct 'python setup.py bdist_wheel' does NOT - there pybind11 has to
 #be present in the environment, see docs/howTo/condaEnvironments.md.
@@ -277,8 +277,8 @@ class get_pybind_include(object):
                 'build" instead installs it automatically from build-system.requires.')
         return pybind11.get_include()
 
-#The compile list is NOT maintained here. main/sources.json is generated from the ClCompile
-#entries of main/obj/cppsrc.vcxproj by tools/gen_sources.py, so the Visual Studio project stays
+#The compile list is NOT maintained here. sources.json is generated from the ClCompile
+#entries of msvc/cppsrc.vcxproj by tools/gen_sources.py, so the Visual Studio project stays
 #the single source of truth and this file cannot drift from it (revision plan step 17).
 #  'all'     - every .cpp that is compiled
 #  'minimal' - the reduced list for --minimal, which ALSO defines EXUDYN_MINIMAL_COMPILATION,
@@ -399,7 +399,7 @@ def cpp_flag(compiler):
                        'is needed!')
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#convert .py files in pythonDev/exudyn
+#convert .py files in python/exudyn
 
 def load_converter():
     project_root = Path(__file__).resolve().parent
@@ -450,7 +450,7 @@ def TreeConvert2Temp(sourcePath: Path, destPath: Path):
 class BuildPy(_build_py):
     def run(self):
         print('------- Exudyn: BuildPy -----------')
-        src_root = Path("pythonDev")
+        src_root = Path("python")
         build_cmd = self.get_finalized_command("build")
         
         tmp_root = Path(build_cmd.build_base) / 'tempExudyn' # tempfile.mkdtemp()
@@ -830,8 +830,8 @@ if config['compileParallel']:
 setup(
     version=__version__,
 #
-    package_dir={'':'pythonDev'},   #only add packages from that dir; must include a __init__.py file
-    packages=find_namespace_packages(where='pythonDev', include=('exudyn', 'exudyn.robotics')),
+    package_dir={'':'python'},      #only add packages from that dir; must include a __init__.py file
+    packages=find_namespace_packages(where='python', include=('exudyn', 'exudyn.robotics')),
     package_data=addPackageData,
 #
     ext_modules=ext_modules,
@@ -857,7 +857,7 @@ setup(
 
 if config['useOpenVR'] and isWindows: #delete copied file
     import os
-    os.remove('pythonDev/exudyn/openvr_api.dll')
+    os.remove('python/exudyn/openvr_api.dll')
 
 print('*** setup.py: DURATION =', round(time.time()-startTime,2), 'seconds')
 

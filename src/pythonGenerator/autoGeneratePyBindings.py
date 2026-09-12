@@ -24,8 +24,8 @@ from autoGenerateHelper import localListFunctionNames, localListClassNames, loca
 
 ADD_DOCSTRINGS = True
 
-theDocDir = '../../../docs/theDoc/'
-rstDir='../../../docs/RST/'
+theDocDir = '../../docs/theDoc/'
+rstDir='../../docs/RST/'
 
 
 localListFunctionNames.clear()
@@ -4424,8 +4424,8 @@ file.close()
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #RST files
-#rstFile = '../../../docs/RST/cInterface/exudyn.rst'
-rstDirInt = '../../../docs/RST/cInterface/'
+#rstFile = '../../docs/RST/cInterface/exudyn.rst'
+rstDirInt = '../../docs/RST/cInterface/'
 rstIndexFile = 'CInterfaceIndex.rst'
 #create primary toc
 indexRST = """
@@ -4474,7 +4474,7 @@ file.close()
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #write function, class, ... names for conf.py
-exuDir = '../../../docs/RST/'
+exuDir = '../../docs/RST/'
 
 sConfHelper = ''
 sConfHelper += '#this is a helper file to define additional keywords for examples\n'

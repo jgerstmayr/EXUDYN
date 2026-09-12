@@ -76,9 +76,9 @@ localListClassNames = [] #string list for highlighting
 
 writeRST = True
 addExampleReferences = True #costs lot of time
-theDocDir = '../../../docs/theDoc/'
-rstDir='../../../docs/RST/'
-fileDir='../../pythonDev/exudyn/'
+theDocDir = '../../docs/theDoc/'
+rstDir='../../docs/RST/'
+fileDir='../../python/exudyn/'
 filesParsed=[
              'advancedUtilities.py',
              'artificialIntelligence.py',
@@ -1103,7 +1103,7 @@ if False: #test docstrings conversion
     print('convert to docstrings:')
     
     sourcePath = fileDir
-    destPath = fileDir.replace('pythonDev/exudyn/','build/tempExudyn/')
+    destPath = fileDir.replace('python/exudyn/','build/tempExudyn/')
 
     if sourcePath!=destPath:
         for fileName in filesParsed:

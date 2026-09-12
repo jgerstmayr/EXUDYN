@@ -38,7 +38,7 @@ fi
 #locate the repository regardless of the current working directory
 scriptDir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repoRoot="$(cd "$scriptDir/../.." && pwd)"
-mainDir="$repoRoot/main"
+mainDir="$repoRoot"       #the packaging root is the repository root since the flatten (step 25)
 
 echo "=== exudyn manylinux build: $pyTag"
 echo "    repository : $repoRoot"
@@ -106,7 +106,7 @@ echo "=== repaired wheel: $repairedWheel"
 "$pyBin/pip" install --no-cache-dir numpy "scipy==1.15.2" matplotlib
 "$pyBin/pip" install --no-cache-dir --force-reinstall --no-deps "$repairedWheel"
 
-cd "$mainDir/pythonDev/TestModels"
+cd "$mainDir/python/TestModels"
 "$pyBin/python" runTestSuite.py -quiet -local --exit-code
 
 echo "=== $pyTag OK"

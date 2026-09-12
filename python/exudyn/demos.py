@@ -2,7 +2,7 @@
 # This is an EXUDYN python utility library
 #
 # Details:  The demos library includes basic demos which are available directly after installation;
-#           For advanced demos, see main/pythonDev/Examples and main/pythonDev/TestModels
+#           For advanced demos, see python/Examples and python/TestModels
 #
 # Authors:  Johannes Gerstmayr
 # Date:     2023-01-12
@@ -17,8 +17,8 @@ def DemoInfo():
     exudyn.Print('\n************************************')
     exudyn.Print('for advanced demos github page:')
     exudyn.Print('https://github.com/jgerstmayr/EXUDYN')
-    exudyn.Print('look under main/pythonDev/Examples')
-    exudyn.Print('and main/pythonDev/TestModels')
+    exudyn.Print('look under python/Examples')
+    exudyn.Print('and python/TestModels')
     exudyn.Print('************************************\n')
     
 

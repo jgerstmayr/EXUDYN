@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN maintainer tool
 #
-# Details:  Compares the optional-dependency extras declared in main/pyproject.toml against the
+# Details:  Compares the optional-dependency extras declared in pyproject.toml against the
 #           third-party packages that the code actually imports, so that 'pip install exudyn[tests]'
 #           and 'pip install exudyn[all]' cannot quietly go stale. The comparison is a pure AST
 #           scan: nothing is imported, nothing is built, and exudyn itself need not be installed.
@@ -48,9 +48,9 @@ import tomllib
 #                         'everything referred to internally', which is what covers them.
 #  Examples   -> [all].
 scanTargets = [
-    ('main/pythonDev/TestModels', 'tests'),
-    ('main/pythonDev/exudyn',     'all'),
-    ('main/pythonDev/Examples',   'all'),
+    ('python/TestModels', 'tests'),
+    ('python/exudyn',     'all'),
+    ('python/Examples',   'all'),
     ]
 
 #import name -> PyPI distribution name, for the cases where the two differ. Only real mismatches
@@ -175,11 +175,11 @@ def ReadExtras(pyprojectPath):
 def LocalModuleNames(repositoryRoot, scanDirectory):
     """
     Top-level names that resolve inside the project rather than to a third-party package: the
-    shipped packages under main/pythonDev, and the sibling modules of the scanned directory
+    shipped packages under python/, and the sibling modules of the scanned directory
     (TestModels and Examples import their own helpers by bare name).
     """
     localNames = set()
-    pythonDev = os.path.join(repositoryRoot, 'main', 'pythonDev')
+    pythonDev = os.path.join(repositoryRoot, 'python')
     for entry in os.listdir(pythonDev):
         if entry.endswith('.py'):
             localNames.add(entry[:-3])
@@ -272,7 +272,7 @@ def Main():
 
     verbose = not args.quiet
     repositoryRoot = GetRepositoryRoot()
-    pyprojectPath = os.path.join(repositoryRoot, 'main', 'pyproject.toml')
+    pyprojectPath = os.path.join(repositoryRoot, 'pyproject.toml')
     extras = ReadExtras(pyprojectPath)
 
     with open(pyprojectPath, 'rb') as f:
@@ -357,7 +357,7 @@ def Main():
 
     if uncovered:
         print('')
-        print('Add each package to the right extra in main/pyproject.toml, or - if its import name')
+        print('Add each package to the right extra in pyproject.toml, or - if its import name')
         print('differs from its distribution name - add it to importToDistribution in this file.')
         print('If it can never be installed from PyPI, add it to exemptImports WITH a reason.')
 

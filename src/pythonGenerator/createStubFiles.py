@@ -19,7 +19,7 @@ import io   #for utf-8 encoding
 rstFolder = 'docs/RST/' #folder where generated .rst files are stored
 
 sourceDir=''
-destFile=  '../../../main/pythonDev/exudyn/__init__.pyi'
+destFile=  '../../python/exudyn/__init__.pyi'
 
 #main files
 filesParsed=[
@@ -79,7 +79,7 @@ if True:
 
 
 if True: 
-    destFile2=  '../../../main/pythonDev/exudyn/symbolic.pyi'
+    destFile2=  '../../python/exudyn/symbolic.pyi'
 
     file=io.open('stubHeader.pyi','r',encoding='utf8')  
     mergedText = file.read()

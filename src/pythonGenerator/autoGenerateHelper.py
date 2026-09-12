@@ -1756,7 +1756,7 @@ def GenerateLatexStrKeywordExamples(itemType, itemName, itemShortName, useLatex 
     
         fileListOrig = []
         for kw in keywords:
-            dirPath = '../../pythonDev/'+folder
+            dirPath = '../../python/'+folder
             fileListOrig += ExtractExamplesWithKeyword(keyword = kw,
                                                   dirPath = dirPath)
         

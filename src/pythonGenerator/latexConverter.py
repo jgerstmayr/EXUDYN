@@ -814,7 +814,7 @@ files = [
 
 testText = ''
 for filename in files:
-    with open('../../../docs/theDoc/'+filename, 'r', encoding='utf-8') as file:
+    with open('../../docs/theDoc/'+filename, 'r', encoding='utf-8') as file:
         testText += file.read()
 
 converter = LatexConverter()

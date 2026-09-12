@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.36.dev1, 
++  Exudyn version = 1.11.37.dev1, 
 +  last change =  2026-09-12, 
-+  Number of issues = 2401, 
-+  Number of resolved issues = 2109 (36 in current version), 
++  Number of issues = 2403, 
++  Number of resolved issues = 2110 (37 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.37: resolved Issue 2402: flatten the repository: remove the main/ level (change)
+    - issue author: Claude-JG
+    - description:  everything lived under main/ - src; include; libs; obj; pythonDev and the packaging files - so every path in every tool carried a main/ prefix; the packaging root was one level below the repository root (which is why the sdist cannot find version.txt; issue 2383) and the generators addressed the root as ../../../. Revision plan steps 25 and 26
+    - **notes:** 1477 tracked files moved with git mv; recorded as 1475 pure renames: main/src->src; main/include->include; main/libs->libs; main/obj->msvc; main/pythonDev->python and the packaging files to the root. The vcxproj needed NO change - all 541 of its ClCompile/ClInclude entries are ..\src\... and msvc/ and src/ remain siblings; so only the two project references in the .sln moved. Repaired: 26 relative paths in the generators (the root went from ../../../ to ../../); doc2rst destDir; the autoGenerateHelper import path in issueTracker.py; regenerate.py; gen_sources.py; checkExtras.py; setup.py; MANIFEST.in; pyproject.toml; conf.py; .gitlab-ci.yml; wheels.yml and buildManylinux.sh. MANIFEST.in include *.md became include README.md; because at the root the wildcard would have swept CLAUDE.md into the sdist. VERIFIED: wheel builds in 58.9 s with 133 sources and the correct package layout, full test suite passes, gen_sources --check and checkExtras --check pass, sphinx builds the documentation. NOTE regenerate.py --check cannot be meaningful until the move is in HEAD; because it compares each file against HEAD:<path> and every path is new - the regenerated content was confirmed byte identical to HEAD at the old paths instead
+    - date resolved: **2026-09-12 16:06**\ , date raised: 2026-09-12 
+    - resolved by: Claude-JG
  * Version 1.11.36: resolved Issue 2399: performance suite reports only a single total and had no large system test (change)
     - issue author: Claude-JG
     - description:  the suite printed CPU TIME per test scattered through the output and one total at the end; so it was impossible to see which kind of work a change had affected. All six tests were also overhead dominated or mid sized; four of them are a handful of coordinates run for about 1e6 steps. Revision plan step 23; maintainer request
@@ -8063,6 +8069,11 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2401:` issue text ending a word with an underscore breaks the generated RST and the docs CI job
+    - issue author: Claude-JG
+    - description:  docs/RST/trackerlog.rst is generated from the tracker; and RST reads a trailing underscore as a link reference. The description of issue 2390 contains CIBW followed by an underscore; so sphinx reports ERROR: Unknown target name "cibw" at trackerlog.rst line 69. The docs CI job runs sphinx-build with -W --keep-going; so this fails the nightly pipeline. Introduced by my own issue text in commit 422ab48. The conversion should escape trailing underscores when writing issue descriptions rather than relying on issue authors to avoid them. Found while verifying the docs build for revision plan step 25
+    - date raised: 2026-09-12 
 
  * :textred:`open BUG 2398:` explicit integration costs O(N^2) per step with the default dense linear solver
     - issue author: Claude-JG

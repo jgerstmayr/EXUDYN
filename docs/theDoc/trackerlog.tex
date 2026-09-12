@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.36.dev1, 
+  \item Exudyn version = 1.11.37.dev1, 
   \item last change =  2026-09-12, 
-  \item Number of issues = 2401, 
-  \item Number of resolved issues = 2109 (36 in current version), 
+  \item Number of issues = 2403, 
+  \item Number of resolved issues = 2110 (37 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.37}:  resolved Issue 2402: {\bf flatten the repository: remove the main/ level}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: everything lived under main/ - src; include; libs; obj; pythonDev and the packaging files - so every path in every tool carried a main/ prefix; the packaging root was one level below the repository root (which is why the sdist cannot find version.txt; issue 2383) and the generators addressed the root as ../../../. Revision plan steps 25 and 26}
+    \item {\bf notes: 1477 tracked files moved with git mv; recorded as 1475 pure renames: main/src->src; main/include->include; main/libs->libs; main/obj->msvc; main/pythonDev->python and the packaging files to the root. The vcxproj needed NO change - all 541 of its ClCompile/ClInclude entries are ..\src\... and msvc/ and src/ remain siblings; so only the two project references in the .sln moved. Repaired: 26 relative paths in the generators (the root went from ../../../ to ../../); doc2rst destDir; the autoGenerateHelper import path in issueTracker.py; regenerate.py; gen\_sources.py; checkExtras.py; setup.py; MANIFEST.in; pyproject.toml; conf.py; .gitlab-ci.yml; wheels.yml and buildManylinux.sh. MANIFEST.in include *.md became include README.md; because at the root the wildcard would have swept CLAUDE.md into the sdist. VERIFIED: wheel builds in 58.9 s with 133 sources and the correct package layout, full test suite passes, gen\_sources --check and checkExtras --check pass, sphinx builds the documentation. NOTE regenerate.py --check cannot be meaningful until the move is in HEAD; because it compares each file against HEAD:<path> and every path is new - the regenerated content was confirmed byte identical to HEAD at the old paths instead}
+    \item   date resolved: {\bf 2026-09-12 16:06},
+date raised: 2026-09-12 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.36}:  resolved Issue 2399: {\bf performance suite reports only a single total and had no large system test}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -12496,6 +12505,12 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 2401}:  {\bf issue text ending a word with an underscore breaks the generated RST and the docs CI job}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: docs/RST/trackerlog.rst is generated from the tracker; and RST reads a trailing underscore as a link reference. The description of issue 2390 contains CIBW followed by an underscore; so sphinx reports ERROR: Unknown target name "cibw" at trackerlog.rst line 69. The docs CI job runs sphinx-build with -W --keep-going; so this fails the nightly pipeline. Introduced by my own issue text in commit 422ab48. The conversion should escape trailing underscores when writing issue descriptions rather than relying on issue authors to avoid them. Found while verifying the docs build for revision plan step 25}
+    \item date raised: 2026-09-12 
+  \ei
   \item open {\bf BUG 2398}:  {\bf explicit integration costs O(N^2) per step with the default dense linear solver}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

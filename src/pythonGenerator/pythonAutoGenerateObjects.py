@@ -351,7 +351,7 @@ def WriteMiniExample(className, miniExample):
     s+= 'exu.Print("example for ' + className + ' completed, test result =", exudynTestGlobals.testResult)\n'
     s+= '\n'
     
-    fileExample=open('../../pythonDev/TestModels/MiniExamples/'+className+'.py','w',encoding='utf8') 
+    fileExample=open('../../python/TestModels/MiniExamples/'+className+'.py','w',encoding='utf8') 
     fileExample.write(s)
     fileExample.close()
 
@@ -2178,7 +2178,7 @@ try: #still close file if crashes
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #write latex
-    fileLatex=open('../../../docs/theDoc/itemDefinition.tex','w',encoding='utf8') 
+    fileLatex=open('../../docs/theDoc/itemDefinition.tex','w',encoding='utf8') 
 #    fileLatex.write(sLatexItemList)
 
     sLatexIntro=r"""
@@ -2199,7 +2199,7 @@ For description of types (e.g., the meaning of \texttt{Vector3D} or \texttt{Nump
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #write Python itemInterface
-    filePython=open('../../pythonDev/exudyn/itemInterface.py','w',encoding='utf8') 
+    filePython=open('../../python/exudyn/itemInterface.py','w',encoding='utf8') 
     s = '''#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is the Exudyn item interface
 # 
@@ -2295,7 +2295,7 @@ def CheckForValidNumpyArray(value):
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #write Mini examples
-    fileExampleList=open('../../pythonDev/TestModels/MiniExamples/miniExamplesFileList.py','w',encoding='utf8') 
+    fileExampleList=open('../../python/TestModels/MiniExamples/miniExamplesFileList.py','w',encoding='utf8') 
     s = '#this file provides a list of file names for mini examples\n'
     s+= '\n'
     s+= 'miniExamplesFileList = ['
@@ -2312,7 +2312,7 @@ def CheckForValidNumpyArray(value):
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #write RST files
 
-    rstDir = '../../../docs/RST/items/'
+    rstDir = '../../docs/RST/items/'
     rstIndex = RSTlabelString('sec-item-reference-manual')
     rstIndex += """
 ======================
@@ -2375,7 +2375,7 @@ Reference manual for: objects, nodes, markers, loads and sensors
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #write class names for confHelperItems.py
-    exuDir = '../../../docs/RST/'
+    exuDir = '../../docs/RST/'
     
     sConfHelper = ''
     sConfHelper += '#this is a helper file to define additional keywords for examples\n'

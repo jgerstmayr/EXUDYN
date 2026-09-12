@@ -44,9 +44,9 @@ jobs:
         run: python -m pip install "cibuildwheel==3.4.1"   # CHANGED: pinned
 
       - name: Build wheels
-        run: python -m cibuildwheel --output-dir wheelhouse main
+        run: python -m cibuildwheel --output-dir wheelhouse .
         env:
-          # everything else lives in [tool.cibuildwheel] in main/pyproject.toml (revision plan
+          # everything else lives in [tool.cibuildwheel] in pyproject.toml (revision plan
           # step 20). Only this one is here, because it is built from the matrix entry.
           CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
 
@@ -61,7 +61,7 @@ jobs:
         if: always()                        # CHANGED: keep logs even if tests fail
         with:
           name: uploaddata-tests-${{ matrix.os }}-cp3${{ matrix.python-version }}
-          path: main/pythonDev/TestModels/testSuiteLog_V*.txt
+          path: python/TestModels/testSuiteLog_V*.txt
           if-no-files-found: ignore
 
   mergeArtifacts:

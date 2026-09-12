@@ -114,8 +114,9 @@ rl = [
     ]
 
 #cibuildwheel settings that do not depend on the CI matrix (revision plan step 20). cibuildwheel
-#reads this table from the package directory it is pointed at, which is main/ - the same directory
-#as this file. Only CIBW_BUILD stays in the workflow, because it is built from the matrix entry.
+#reads this table from the package directory it is pointed at, which since the flatten (step 25)
+#is the repository root - the same directory as this file. Only CIBW_BUILD stays in the workflow,
+#because it is built from the matrix entry.
 #Keeping them here rather than in workflow env: they are checked into the same file as the rest of
 #the packaging metadata, they can be exercised locally with 'cibuildwheel --print-build-identifiers',
 #and a typo is a TOML parse error instead of a silently unset variable - which is not hypothetical,
@@ -130,16 +131,16 @@ test-requires = ["numpy", "matplotlib", "scipy"]
 
 [tool.cibuildwheel.linux]
 before-all = "dnf install -y epel-release && dnf install -y mesa-libGL-devel mesa-libGLU-devel glfw-devel freeglut-devel libX11-devel"
-test-command = "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
+test-command = "cd {project}/python/TestModels && python runTestSuite.py -quiet -local"
 
 [tool.cibuildwheel.macos]
 archs = ["universal2"]
 environment = { MACOSX_DEPLOYMENT_TARGET = "11.0" }
-test-command = "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
+test-command = "cd {project}/python/TestModels && python runTestSuite.py -quiet -local"
 
 [tool.cibuildwheel.windows]
 #re-enabled 2026-08-05 after a strange exit code on Windows had disabled it since 2024-10-09
-test-command = "cd /d {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
+test-command = "cd /d {project}/python/TestModels && python runTestSuite.py -quiet -local"
 
 [tool.setuptools]
 zip-safe = false

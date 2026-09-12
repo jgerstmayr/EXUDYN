@@ -716,9 +716,36 @@ byte-identical in that commit. Git stores no rename information; it infers renam
 similarity at display time, so a file both moved and edited in one commit shows as delete+add.
 Editing the vcxproj in the same commit is fine — it is modified, not moved.
 
-25. Flatten with `git mv`: root `pyproject.toml`, `src/`, `python/exudyn/`, `docs/`, `tools/`,
-    `msvc/`.
-26. Rename `main/obj/` → `msvc/` and fix all vcxproj relative paths in the same commit.
+25. **DONE 2026-09-12.** Flattened: 1475 pure renames in one commit, repairs in the next.
+    `main/` is gone. Four breakages showed up only by running, not by inspection - see the
+    log. Step 27's acceptance gate passed in VS2022. →
+    [log](exudynRevisionLog2026.md#step-25)
+
+    **Path-dependency inventory (measured 2026-09-12, before any move).** 2172 tracked files, of
+    which **1477 are under `main/`**. What actually breaks is not the moving — `git mv` is
+    cheap — but everything that hard-codes a path:
+
+    | what | count | effect of the flatten |
+    |---|---|---|
+    | `cppsrc.vcxproj` file references | **541**, all `..\src\…` | **none — they survive unchanged.** They are relative to `main/obj/`; with `main/obj/` → `msvc/` and `main/src/` → `src/` the two stay siblings, so `..\src\…` still resolves. Step 26's "fix all vcxproj relative paths" is therefore **wrong**: nothing to fix. |
+    | `main_sln_Template.sln` project refs | 2 | `obj\cppsrc.vcxproj` → `msvc\…`, `pythonDev\pythonDev.pyproj` → `python\…` |
+    | generator relative paths | **31** in `main/src/pythonGenerator/*.py` | **all change depth**: the generators sit 3 levels below the root today (`../../../docs/…`) and 2 after (`../../docs/…`). This is the real work. |
+    | `exudynVersion.py` | 4-path cascade | step 28; the flatten is what makes a single path possible |
+    | `tools/regenerate.py` | 8 | `main/…` prefixes in the tier lists |
+    | `tools/gen_sources.py` | 12 | `main/obj/cppsrc.vcxproj`, `main/sources.json`, `main/src` |
+    | `tools/checkExtras.py` | 6 | `scanTargets`, and `main/pyproject.toml` |
+    | `.gitlab-ci.yml` | 7 | artifact paths and the `main` package dir |
+    | `.github/workflows/wheels.yml` | 1 | `cibuildwheel … main` → `.` |
+    | `conf.py` | 2 | `main/src/pythonGenerator/exudynVersion.py`, `exclude_patterns` |
+    | `MANIFEST.in`, `setup.py` | several | `src/`, `include/`, `libs/` become root-relative; `package_dir` changes |
+
+    So the order that minimises risk is: **move, then repair the 31 generator paths, then the
+    tooling, then regenerate and diff** — and the acceptance gate of step 27 (VS2022 opens,
+    `Debug|x64` builds, mixed-mode breakpoint hit) can only be done by the maintainer, so the
+    commit is prepared and held until that passes.
+26. **DONE 2026-09-12** with step 25. *(Corrected 2026-09-12: there are **no** vcxproj relative
+    paths to fix — all 541 are `..\src\…` and stay valid as long as `msvc/` and `src/` are
+    siblings at the root. Only the two project references in the `.sln` change.)*
 27. **Acceptance gate before pushing**: solution opens in VS2022, `Debug|x64` builds, and a
     mixed-mode breakpoint in a C++ item's `ComputeODE2LHS` is hit from a Python script. CI cannot
     verify this.

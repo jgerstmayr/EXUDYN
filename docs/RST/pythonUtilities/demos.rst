@@ -5,7 +5,7 @@ Module: demos
 =============
 
 The demos library includes basic demos which are available directly after installation;
-For advanced demos, see main/pythonDev/Examples and main/pythonDev/TestModels
+For advanced demos, see python/Examples and python/TestModels
 
 - Date:      2023-01-12 
 

@@ -21,7 +21,7 @@ buildDateString += '  ' + NumTo2digits(now.hour) + ':' + NumTo2digits(now.minute
 buildDateString = 'build date and time='+buildDateString
 
 #current directory is main/src/pythonGenerator
-fileDate =open('../../../docs/theDoc/buildDate.tex','w',encoding='utf8')  #clear file by one write access
+fileDate =open('../../docs/theDoc/buildDate.tex','w',encoding='utf8')  #clear file by one write access
 fileDate.write(buildDateString)
 fileDate.close()
 
