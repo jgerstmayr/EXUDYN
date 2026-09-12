@@ -71,6 +71,12 @@ https://github.com/jgerstmayr/EXUDYN/tree/master/docs/theDoc/theDoc.pdf
 #  pip install exudyn[all]     the above plus everything the package and the Examples refer to
 #  pip install exudyn[rl]      reinforcement learning; deliberately NOT part of [all], see below
 [project.optional-dependencies]
+#The three sets nest: tests < common < all, each built on the previous with a PEP 508
+#self-reference so no package is ever listed twice.
+#Note the direction: [tests] is the INNERMOST set, not the outermost. It is the one with a hard
+#definition - exactly what TestModels/ needs to run - so it stays minimal and stable. [common] is
+#where packages land once a frequently used feature depends on them, and is the set that grows as
+#things migrate down from [all]. Do not "simplify" this by folding common into tests.
 tests = [
     "scipy",
     "matplotlib",
@@ -79,14 +85,17 @@ tests = [
     "psutil",
     "ngsolve",          #also provides the 'netgen' import used by the NGsolve tests
     ]
+common = [
+    "exudyn[tests]",
+    "numpy-stl",        #imported as 'stl'; STL import in graphics.py
+    "tqdm",             #progress reporting, e.g. in the optimization routines
+    "ffmpeg-python",    #video export from interactive.py
+    ]
 all = [
-    "exudyn[tests]",    #PEP 508 self-reference: [all] is a superset of [tests] by construction
-    "numpy-stl",        #imported as 'stl'
-    "tqdm",
+    "exudyn[common]",
     "pymeshlab",
     "roboticstoolbox-python",
     "spatialmath-python",
-    "ffmpeg-python",
     "numba",
     "dispy",
     "mpi4py",

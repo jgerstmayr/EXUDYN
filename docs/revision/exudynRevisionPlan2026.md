@@ -630,26 +630,20 @@ promise for no gain.
     defaults — an sdist legitimately has none. Verified by fault injection, and the `sed`
     rewrite in `buildManylinux.sh` still validates. `issueTracker.py` now also reports the
     issue number it assigns. →  [log](exudynRevisionLog2026.md#step-21)
-22. **Fix the vector alignment bug.** **CORRECTED 2026-09-12 — the cause below is wrong;
-    see the measured version in [the log](exudynRevisionLog2026.md#step-22).** Aligned
-    allocation *is* enabled (`#undef` is immediately followed by `#define`) and
-    `VectorBase` uses `_aligned_malloc`/`posix_memalign`. The real defect is a
-    **`LinkedDataVector` sub-range**, which starts at an arbitrary element offset inside
-    another buffer, so no allocator can align it: reproduced at
-    `ResizableVectorParallel.h:309`, operand `ptrVector[i]`, under
-    `-mavx2 -fsanitize=alignment` (issue #2394). It is latent only because AVX2 is
-    Windows-only today, and it is what blocks enabling AVX2 on Linux. The original text
-    follows for reference:
-    `BasicDefinitions.h:78` has
-    `#undef EXUDYN_USE_ALIGNED_VECTORS` with the comment "for AVX2 on linux required", so
-    `VectorBase` allocates via plain `new T[]` at 16-byte alignment, while the hot loops
-    (`Vector.cpp:162`, `LinkedDataVectorParallel.h:349`, `ResizableVectorParallel.h:309`) cast to
-    `PReal*` (`__m256d*`) and dereference — emitted as 32-byte-aligned `vmovapd`. glibc returns
-    16-byte alignment consistently, so it faults whenever an allocation misses a 32-byte
-    boundary; MSVC's heap hides it often enough to look like a compiler quirk. Either enable the
-    aligned path already written at `Vector.h:174-195`, or switch to unaligned intrinsics — on
-    Haswell and later, unaligned loads cost nothing on aligned data. Step 44's UBSan job finds
-    this class of bug.
+22. **DONE 2026-09-12.** Unaligned load/store in every AVX loop that can see a
+    `LinkedDataVector`: 40 casts in the two parallel-vector headers plus the six
+    `ParallelPReal*` helpers in `Vector.cpp`, and `_mm_store_u` added to `Use_avx.h`.
+    The sanitizer run that aborted now reports zero misalignments; the non-AVX2 build is
+    bit-identical to before; Windows timing unchanged within noise. Enabling AVX2 on
+    Linux remains step 23's call, and now has measured FMA-rounding data (#2396). →
+    [log](exudynRevisionLog2026.md#step-22)
+    *(Historical note: the cause originally recorded here was wrong. It said
+    `BasicDefinitions.h:78` leaves `EXUDYN_USE_ALIGNED_VECTORS` undefined so `VectorBase`
+    allocates with plain `new T[]`. In fact the `#undef` is immediately followed by a `#define`,
+    aligned allocation was already active, and `VectorBase` used `_aligned_malloc`/
+    `posix_memalign` with a matching free. The real defect was a `LinkedDataVector` sub-range,
+    which starts at an arbitrary element offset inside another buffer and which no allocator can
+    align. Starting from the fix proposed here would have changed code that was already correct.)*
 23. **Consolidate to two shipped variants**: *default* (baseline ISA, all checks active) and
     *fast* (AVX2 together with `__FAST_EXUDYN_LINALG`), both in one wheel, selected at import by
     a CPUID check that also verifies OS XSAVE/YMM state. Identical on Windows and Linux once
@@ -677,8 +671,17 @@ Editing the vcxproj in the same commit is fine — it is modified, not moved.
 27. **Acceptance gate before pushing**: solution opens in VS2022, `Debug|x64` builds, and a
     mixed-mode breakpoint in a C++ item's `ComputeODE2LHS` is hit from a Python script. CI cannot
     verify this.
-28. Single version source at the root; generate `docs/theDoc/version.txt` from it; delete the
-    four-level path cascade in `exudynVersion.py`.
+28. **Homogenise the version handling.** *(restated 2026-09-12 — there is no duplicated
+    truth to merge.)* `docs/theDoc/version.txt`, written by `issueTracker.py`, is already
+    the single source; `versionName.txt`, `versionCpp.cpp`, the version line in
+    `README.rst`/`docs/RST/Exudyn.rst` and `trackerlog.{tex,rst,html}` are all generated
+    from it. What is wrong is **where it lives and how it is read**: it sits inside the
+    documentation tree and *above* the packaging root, which is why an sdist cannot
+    determine its own version (#2383, step 81); `exudynVersion.py` finds it by trying
+    **four** relative paths and falling back to the string `unknown`, which setuptools
+    rejects with `InvalidVersion`; and **seven** batch scripts under
+    `tools/buildAndGenerate/` each parse it their own way. So: move the source to the
+    repository root, give it one accessor, and let everything else keep being generated.
 29. Move `docs/demo` (22 MB) to release assets or git-lfs.
 30. **DONE 2026-09-10.** `docs/howTo/` cut from 26 `.txt` files to 8 `.md`. Rule applied: keep what
     could not be rederived in five minutes. Survivors and the new `buildQuirks.md` are listed in
@@ -1014,6 +1017,20 @@ debt stays visible and each item can be closed on evidence.
     problem as the licence file in step 24. **Step 25's flattening is what unblocks it**; finish
     this immediately afterwards and verify by building the tarball in a clean container, which is
     how the failure above was found. Issue #2383 stays open until then.
+
+82. **Retire `setupPyConfig.json` — after step 25.** The six build switches (`USEGLFW`,
+    `compileParallel`, `quietCompile`, `minimalCppFiles`, `useOpenVR`, `compileExudynFast`) have
+    **three** sources today: defaults in `setup.py`, the committed JSON, and CLI flags — with no
+    written precedence. The JSON being *tracked and mutable* is the real defect: it is why
+    `tools/ci/buildManylinux.sh` rewrites it with `sed` and restores it with a `trap` (a failed
+    restore leaves the repository dirty), and why step 17 ended up shipping the maintainer's local
+    toggles inside the sdist. Target: defaults in `[tool.exudyn]` in `pyproject.toml` (real
+    booleans, so the `"True"`-as-a-string schema of step 21 disappears with it), per-build
+    overrides by environment variable, the CLI flags kept, and **nothing rewritten on disk during
+    a build**. Deliberately **after step 25**: the flattening moves `pyproject.toml` to the
+    repository root, so doing this first would touch the same file twice. Moving the JSON verbatim
+    into `pyproject.toml` would be worse than the status quo — CI would then be editing the
+    packaging metadata.
 ---
 
 ## 6. Decisions taken
@@ -1147,5 +1164,4 @@ the tracker.
 - **#2384** setup.py sdist drops an untracked copy of LICENSE.txt into main/
 - **#2387** 20 ClInclude entries in cppsrc.vcxproj have the wrong case; 5 entries do not exist
 - **#2388** the installation documentation is years out of date
-- **#2394** misaligned __m256d load in ResizableVectorParallel MultAdd with a LinkedDataVector
-- **#2395** the comment claiming -mavx2 does not compile on Linux is stale
+- **#2396** enabling AVX2 on Linux shifts results by 1e-9..1e-6 through FMA contraction

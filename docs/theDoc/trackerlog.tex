@@ -9,15 +9,32 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.33.dev1, 
+  \item Exudyn version = 1.11.35.dev1, 
   \item last change =  2026-09-12, 
-  \item Number of issues = 2396, 
-  \item Number of resolved issues = 2106 (33 in current version), 
+  \item Number of issues = 2397, 
+  \item Number of resolved issues = 2108 (35 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.35}:  resolved Issue 2395: {\bf the comment claiming -mavx2 does not compile on Linux is stale}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: setup.py:146 says "-mavx2 (does not compile)" and suspects memory alignment. Measured 2026-09-12: the full extension builds cleanly in manylinux\_2\_28 with -mavx2 -mfma on g++ 14; 567 vfmadd instructions are present in the resulting .so. What actually fails is at runtime and is a genuine alignment defect; see the LinkedDataVector issue. The comment should be corrected so the next reader does not conclude the toolchain is at fault}
+    \item {\bf notes: comment at setup.py:146 corrected: -mavx2 does compile; the failure was at runtime and was the alignment defect of issue 2394. The comment now says so and points at step 23 for the decision to enable AVX2 on Linux; and at the FMA rounding issue}
+    \item   date resolved: {\bf 2026-09-12 12:48},
+date raised: 2026-09-12 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.34}: {\bf \color{warningRed}  resolved BUG 2394}: {\bf misaligned \_\_m256d load in ResizableVectorParallel MultAdd with a LinkedDataVector}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: REPRODUCED 2026-09-12 in manylinux\_2\_28 cp313 with g++ 14 and -mavx2 -mfma -fsanitize=alignment -fno-sanitize-recover=alignment: src/Linalg/ResizableVectorParallel.h:309:28 runtime error: load of misaligned address for type \_\_m256d which requires 32 byte alignment; in ResizableVectorParallelBase<double>::MultAdd<LinkedDataVectorParallelBase<double>> called from CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate. Column 28 is the ptrVector[i] operand; that is the LinkedDataVector; not the ResizableVector. The cause is NOT the allocator: EXUDYN\_USE\_ALIGNED\_VECTORS is enabled and VectorBase allocates through \_aligned\_malloc/posix\_memalign; but a LinkedDataVector points into another buffer at an arbitrary element offset; so no allocator can make the sub-range 32 byte aligned. The observed pointer was 8 byte aligned. Latent today because AVX2 is only enabled on Windows (setup.py:230-233); it is what blocks enabling AVX2 on Linux. Fix is to use unaligned intrinsics (\_mm256\_loadu\_pd/\_mm256\_storeu\_pd) on the linked operands; which cost nothing on aligned data on Haswell and later. Revision plan step 22}
+    \item {\bf notes: fixed by replacing aligned PReal* dereference with explicit unaligned load/store in every AVX loop whose pointer can come from a LinkedDataVector: all 40 casts in LinkedDataVectorParallel.h and ResizableVectorParallel.h; plus the six ParallelPReal* helpers in Vector.cpp; whose PReal* parameters had the same problem without a cast to find them by. Use\_avx.h gained \_mm\_store\_u for all four AVX variants (only \_mm\_load\_u existed) and both for the scalar fallback; the arithmetic still uses operators; which work for \_\_m256d and for plain Real alike. VERIFIED: (1) the manylinux cp313 build with -mavx2 -mfma -fsanitize=alignment -fno-sanitize-recover=alignment previously aborted at ResizableVectorParallel.h:309 and now reports ZERO misalignment errors and runs the suite to completion, (2) the same build without -mavx2 reproduces the previous Linux results BIT FOR BIT - same two known failures with identical values - so the change is numerically neutral, (3) on Windows; where AVX2 is live today; the full test suite passes and runPerformanceTests gives 33.33 s against a 33.04-34.16 s baseline measured twice before the change; i.e. inside the run to run noise}
+    \item   date resolved: {\bf 2026-09-12 12:48},
+date raised: 2026-09-12 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.33}:  resolved Issue 2393: {\bf setupPyConfig.json is not validated: a typo silently changes the build}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -12470,12 +12487,6 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
-  \item open {\bf BUG 2394}:  {\bf misaligned \_\_m256d load in ResizableVectorParallel MultAdd with a LinkedDataVector}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item issue author: Claude-JG
-    \item {description: REPRODUCED 2026-09-12 in manylinux\_2\_28 cp313 with g++ 14 and -mavx2 -mfma -fsanitize=alignment -fno-sanitize-recover=alignment: src/Linalg/ResizableVectorParallel.h:309:28 runtime error: load of misaligned address for type \_\_m256d which requires 32 byte alignment; in ResizableVectorParallelBase<double>::MultAdd<LinkedDataVectorParallelBase<double>> called from CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate. Column 28 is the ptrVector[i] operand; that is the LinkedDataVector; not the ResizableVector. The cause is NOT the allocator: EXUDYN\_USE\_ALIGNED\_VECTORS is enabled and VectorBase allocates through \_aligned\_malloc/posix\_memalign; but a LinkedDataVector points into another buffer at an arbitrary element offset; so no allocator can make the sub-range 32 byte aligned. The observed pointer was 8 byte aligned. Latent today because AVX2 is only enabled on Windows (setup.py:230-233); it is what blocks enabling AVX2 on Linux. Fix is to use unaligned intrinsics (\_mm256\_loadu\_pd/\_mm256\_storeu\_pd) on the linked operands; which cost nothing on aligned data on Haswell and later. Revision plan step 22}
-    \item date raised: 2026-09-12 
-  \ei
   \item open {\bf BUG 2387}:  {\bf 20 ClInclude entries in cppsrc.vcxproj have the wrong case; 5 entries do not exist}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

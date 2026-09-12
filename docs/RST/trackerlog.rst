@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.33.dev1, 
++  Exudyn version = 1.11.35.dev1, 
 +  last change =  2026-09-12, 
-+  Number of issues = 2396, 
-+  Number of resolved issues = 2106 (33 in current version), 
++  Number of issues = 2397, 
++  Number of resolved issues = 2108 (35 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.35: resolved Issue 2395: the comment claiming -mavx2 does not compile on Linux is stale (docu)
+    - issue author: Claude-JG
+    - description:  setup.py:146 says "-mavx2 (does not compile)" and suspects memory alignment. Measured 2026-09-12: the full extension builds cleanly in manylinux_2_28 with -mavx2 -mfma on g++ 14; 567 vfmadd instructions are present in the resulting .so. What actually fails is at runtime and is a genuine alignment defect; see the LinkedDataVector issue. The comment should be corrected so the next reader does not conclude the toolchain is at fault
+    - **notes:** comment at setup.py:146 corrected: -mavx2 does compile; the failure was at runtime and was the alignment defect of issue 2394. The comment now says so and points at step 23 for the decision to enable AVX2 on Linux; and at the FMA rounding issue
+    - date resolved: **2026-09-12 12:48**\ , date raised: 2026-09-12 
+    - resolved by: Claude-JG
+ * Version 1.11.34: :textred:`resolved BUG 2394` : misaligned __m256d load in ResizableVectorParallel MultAdd with a LinkedDataVector 
+    - issue author: Claude-JG
+    - description:  REPRODUCED 2026-09-12 in manylinux_2_28 cp313 with g++ 14 and -mavx2 -mfma -fsanitize=alignment -fno-sanitize-recover=alignment: src/Linalg/ResizableVectorParallel.h:309:28 runtime error: load of misaligned address for type __m256d which requires 32 byte alignment; in ResizableVectorParallelBase<double>::MultAdd<LinkedDataVectorParallelBase<double>> called from CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate. Column 28 is the ptrVector[i] operand; that is the LinkedDataVector; not the ResizableVector. The cause is NOT the allocator: EXUDYN_USE_ALIGNED_VECTORS is enabled and VectorBase allocates through _aligned_malloc/posix_memalign; but a LinkedDataVector points into another buffer at an arbitrary element offset; so no allocator can make the sub-range 32 byte aligned. The observed pointer was 8 byte aligned. Latent today because AVX2 is only enabled on Windows (setup.py:230-233); it is what blocks enabling AVX2 on Linux. Fix is to use unaligned intrinsics (_mm256_loadu_pd/_mm256_storeu_pd) on the linked operands; which cost nothing on aligned data on Haswell and later. Revision plan step 22
+    - **notes:** fixed by replacing aligned PReal* dereference with explicit unaligned load/store in every AVX loop whose pointer can come from a LinkedDataVector: all 40 casts in LinkedDataVectorParallel.h and ResizableVectorParallel.h; plus the six ParallelPReal* helpers in Vector.cpp; whose PReal* parameters had the same problem without a cast to find them by. Use_avx.h gained _mm_store_u for all four AVX variants (only _mm_load_u existed) and both for the scalar fallback; the arithmetic still uses operators; which work for __m256d and for plain Real alike. VERIFIED: (1) the manylinux cp313 build with -mavx2 -mfma -fsanitize=alignment -fno-sanitize-recover=alignment previously aborted at ResizableVectorParallel.h:309 and now reports ZERO misalignment errors and runs the suite to completion, (2) the same build without -mavx2 reproduces the previous Linux results BIT FOR BIT - same two known failures with identical values - so the change is numerically neutral, (3) on Windows; where AVX2 is live today; the full test suite passes and runPerformanceTests gives 33.33 s against a 33.04-34.16 s baseline measured twice before the change; i.e. inside the run to run noise
+    - date resolved: **2026-09-12 12:48**\ , date raised: 2026-09-12 
+    - resolved by: Claude-JG
  * Version 1.11.33: resolved Issue 2393: setupPyConfig.json is not validated: a typo silently changes the build (change)
     - issue author: Claude-JG
     - description:  setup.py warned about an unknown key or an illegal value and then continued with the default. So "compileParallell": "True" produced a serial build minutes slower with nothing in the output explaining why; and the outer bare except also swallowed genuine read errors. Revision plan step 21
@@ -6936,9 +6948,9 @@ Version 0.1
 Open issues
 ***********
 
- * :textblue:`open issue 2395:` the comment claiming -mavx2 does not compile on Linux is stale
+ * **open issue 2396:** enabling AVX2 on Linux shifts results by 1e-9..1e-6 through FMA contraction
     - issue author: Claude-JG
-    - description:  setup.py:146 says "-mavx2 (does not compile)" and suspects memory alignment. Measured 2026-09-12: the full extension builds cleanly in manylinux_2_28 with -mavx2 -mfma on g++ 14; 567 vfmadd instructions are present in the resulting .so. What actually fails is at runtime and is a genuine alignment defect; see the LinkedDataVector issue. The comment should be corrected so the next reader does not conclude the toolchain is at fault
+    - description:  measured 2026-09-12 once the alignment defect was fixed: a manylinux cp313 build with -mavx2 -mfma runs the whole suite; but four tests that pass without AVX2 then fail against the 3e-11 tolerance - ANCFcontactCircleTest (-2.185e-08); ANCFslidingAndALEjointTest (2.236e-06); connectorGravityTest (-1.956e-07) and raytracerNOGLFWtest (-1.368e-06). All are rounding scale: a fused multiply-add rounds once where a separate multiply and add round twice. The same build WITHOUT -mavx2 reproduces the previous results bit for bit; so this is a property of AVX2; not of the alignment fix. Relevant to revision plan step 23 (two shipped variants) and to the tolerance discussion in fact 24: either the reference values are variant dependent; or the tolerance has to admit FMA level differences
     - date raised: 2026-09-12 
 
  * **open issue 2388:** the installation documentation is years out of date
@@ -8035,11 +8047,6 @@ Open issues
 **********
 Known bugs
 **********
-
- * :textred:`open BUG 2394:` misaligned __m256d load in ResizableVectorParallel MultAdd with a LinkedDataVector
-    - issue author: Claude-JG
-    - description:  REPRODUCED 2026-09-12 in manylinux_2_28 cp313 with g++ 14 and -mavx2 -mfma -fsanitize=alignment -fno-sanitize-recover=alignment: src/Linalg/ResizableVectorParallel.h:309:28 runtime error: load of misaligned address for type __m256d which requires 32 byte alignment; in ResizableVectorParallelBase<double>::MultAdd<LinkedDataVectorParallelBase<double>> called from CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate. Column 28 is the ptrVector[i] operand; that is the LinkedDataVector; not the ResizableVector. The cause is NOT the allocator: EXUDYN_USE_ALIGNED_VECTORS is enabled and VectorBase allocates through _aligned_malloc/posix_memalign; but a LinkedDataVector points into another buffer at an arbitrary element offset; so no allocator can make the sub-range 32 byte aligned. The observed pointer was 8 byte aligned. Latent today because AVX2 is only enabled on Windows (setup.py:230-233); it is what blocks enabling AVX2 on Linux. Fix is to use unaligned intrinsics (_mm256_loadu_pd/_mm256_storeu_pd) on the linked operands; which cost nothing on aligned data on Haswell and later. Revision plan step 22
-    - date raised: 2026-09-12 
 
  * :textred:`open BUG 2387:` 20 ClInclude entries in cppsrc.vcxproj have the wrong case; 5 entries do not exist
     - issue author: Claude-JG

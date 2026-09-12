@@ -39,12 +39,12 @@
 
 #include "Linalg/Use_avx.h" //include before NGsolve includes!!
 
-extern void ParallelPRealCopyFrom(Index nAVX, PReal* ptrData, PReal* ptrVector);
-extern void ParallelPRealAdd(Index nAVX, PReal* ptrData, PReal* ptrVector);
-extern void ParallelPRealSub(Index nAVX, PReal* ptrData, PReal* ptrVector);
-extern void ParallelPRealMult(Index nAVX, PReal* ptrData, const PReal& scalarPD);
-extern void ParallelPRealDiv(Index nAVX, PReal* ptrData, const PReal& scalarPD);
-extern void ParallelPRealMultAdd(Index nAVX, PReal* ptrData, PReal* ptrVector, const PReal& scalarPD);
+extern void ParallelPRealCopyFrom(Index nAVX, Real* ptrData, const Real* ptrVector);
+extern void ParallelPRealAdd(Index nAVX, Real* ptrData, const Real* ptrVector);
+extern void ParallelPRealSub(Index nAVX, Real* ptrData, const Real* ptrVector);
+extern void ParallelPRealMult(Index nAVX, Real* ptrData, const PReal& scalarPD);
+extern void ParallelPRealDiv(Index nAVX, Real* ptrData, const PReal& scalarPD);
+extern void ParallelPRealMultAdd(Index nAVX, Real* ptrData, const Real* ptrVector, const PReal& scalarPD);
 extern Index ParallelGetNumThreads(); //returns number of Threads without including NGS
 
 template<typename T>
@@ -149,17 +149,18 @@ public:
 		if (nItems < multithreadingLimit || ParallelGetNumThreads() == 1)
 		{
 
-			PReal* ptrData = (PReal*)(this->data);
-			PReal* ptrVector = (PReal*)(vector.GetDataPointer());
+			Real* ptrData = (Real*)(this->data);
+			const Real* ptrVector = (const Real*)(vector.GetDataPointer());
 			for (Index i = 0; i < nAVX; i++)
 			{
-				ptrData[i] = ptrVector[i]; //AVX operation, gives ~4 time speedup for AVX2 in chached operations
+				const Index k = i * AVXRealSize;
+				_mm_store_u(ptrData + k, _mm_load_u(ptrVector + k)); //AVX operation, gives ~4 time speedup for AVX2 in chached operations
 			}
 		}
 		else
 		{
-			PReal* ptrData = (PReal*)(this->data);
-			PReal* ptrVector = (PReal*)(vector.GetDataPointer());
+			Real* ptrData = (Real*)(this->data);
+			const Real* ptrVector = (const Real*)(vector.GetDataPointer());
 
 			ParallelPRealCopyFrom(nAVX, ptrData, ptrVector);
 		}
@@ -214,17 +215,18 @@ public:
 		Index nAVX = nItems >> AVXRealShift;
 		if (nItems < multithreadingLimit || ParallelGetNumThreads() == 1)
 		{
-			PReal* ptrData = (PReal*)(this->data);
-			PReal* ptrVector = (PReal*)(vector.GetDataPointer());
+			Real* ptrData = (Real*)(this->data);
+			const Real* ptrVector = (const Real*)(vector.GetDataPointer());
 			for (Index i = 0; i < nAVX; i++)
 			{
-				ptrData[i] += ptrVector[i]; //AVX operation, gives ~4 time speedup for AVX2 in chached operations
+				const Index k = i * AVXRealSize;
+				_mm_store_u(ptrData + k, _mm_load_u(ptrData + k) + _mm_load_u(ptrVector + k)); //AVX operation, gives ~4 time speedup for AVX2 in chached operations
 			}
 		}
 		else
 		{
-			PReal* ptrData = (PReal*)(this->data);
-			PReal* ptrVector = (PReal*)(vector.GetDataPointer());
+			Real* ptrData = (Real*)(this->data);
+			const Real* ptrVector = (const Real*)(vector.GetDataPointer());
 
 			ParallelPRealAdd(nAVX, ptrData, ptrVector);
 		}
@@ -246,17 +248,18 @@ public:
 		Index nAVX = nItems >> AVXRealShift;
 		if (nItems < multithreadingLimit || ParallelGetNumThreads() == 1)
 		{
-			PReal* ptrData = (PReal*)(this->data);
-			PReal* ptrVector = (PReal*)(vector.GetDataPointer());
+			Real* ptrData = (Real*)(this->data);
+			const Real* ptrVector = (const Real*)(vector.GetDataPointer());
 			for (Index i = 0; i < nAVX; i++)
 			{
-				ptrData[i] -= ptrVector[i]; //AVX operation, gives ~4 time speedup for AVX2 in chached operations
+				const Index k = i * AVXRealSize;
+				_mm_store_u(ptrData + k, _mm_load_u(ptrData + k) - _mm_load_u(ptrVector + k)); //AVX operation, gives ~4 time speedup for AVX2 in chached operations
 			}
 		}
 		else
 		{
-			PReal* ptrData = (PReal*)(this->data);
-			PReal* ptrVector = (PReal*)(vector.GetDataPointer());
+			Real* ptrData = (Real*)(this->data);
+			const Real* ptrVector = (const Real*)(vector.GetDataPointer());
 
 			ParallelPRealSub(nAVX, ptrData, ptrVector);
 		}
@@ -279,15 +282,16 @@ public:
 		PReal scalarPD = _mm_set1_(scalar);
 		if (nItems < multithreadingLimit || ParallelGetNumThreads() == 1)
 		{
-			PReal* ptrData = (PReal*)(this->data);
+			Real* ptrData = (Real*)(this->data);
 			for (Index i = 0; i < nAVX; i++)
 			{
-				ptrData[i] *= scalarPD; //AVX operation, gives ~4 time speedup for AVX2 in chached operations
+				const Index k = i * AVXRealSize;
+				_mm_store_u(ptrData + k, _mm_load_u(ptrData + k) * scalarPD); //AVX operation, gives ~4 time speedup for AVX2 in chached operations
 			}
 		}
 		else
 		{
-			PReal* ptrData = (PReal*)(this->data);
+			Real* ptrData = (Real*)(this->data);
 			ParallelPRealMult(nAVX, ptrData, scalarPD);
 
 		}
@@ -309,15 +313,16 @@ public:
 		PReal scalarPD = _mm_set1_(scalar);
 		if (nItems < multithreadingLimit || ParallelGetNumThreads() == 1)
 		{
-			PReal* ptrData = (PReal*)(this->data);
+			Real* ptrData = (Real*)(this->data);
 			for (Index i = 0; i < nAVX; i++)
 			{
-				ptrData[i] /= scalarPD; //AVX operation, gives ~4 time speedup for AVX2 in chached operations
+				const Index k = i * AVXRealSize;
+				_mm_store_u(ptrData + k, _mm_load_u(ptrData + k) / scalarPD); //AVX operation, gives ~4 time speedup for AVX2 in chached operations
 			}
 		}
 		else
 		{
-			PReal* ptrData = (PReal*)(this->data);
+			Real* ptrData = (Real*)(this->data);
 
 			ParallelPRealDiv(nAVX, ptrData, scalarPD);
 		}
@@ -342,18 +347,19 @@ public:
 
 		if (nItems < multithreadingLimit || ParallelGetNumThreads() == 1)
 		{
-			PReal* ptrData = (PReal*)(this->data);
-			PReal* ptrVector = (PReal*)(vector.GetDataPointer());
+			Real* ptrData = (Real*)(this->data);
+			const Real* ptrVector = (const Real*)(vector.GetDataPointer());
 			for (Index i = 0; i < nAVX; i++)
 			{
-				ptrData[i] = _mm_fmadd_(scalarPD, ptrVector[i], ptrData[i]);
+				const Index k = i * AVXRealSize;
+				_mm_store_u(ptrData + k, _mm_fmadd_(scalarPD, _mm_load_u(ptrVector + k), _mm_load_u(ptrData + k)));
 				//ptrData[i] += scalar * ptrVector[i]; //AVX operation, gives ~4 time speedup for AVX2 in chached operations
 			}
 		}
 		else
 		{
-			PReal* ptrData = (PReal*)(this->data);
-			PReal* ptrVector = (PReal*)(vector.GetDataPointer());
+			Real* ptrData = (Real*)(this->data);
+			const Real* ptrVector = (const Real*)(vector.GetDataPointer());
 
 			ParallelPRealMultAdd(nAVX, ptrData, ptrVector, scalarPD);
 		}

@@ -143,7 +143,15 @@ msvcGLFWlibs =[] #add only if flag set
 unixGLFWlibs = [] #add only if flag set
 msvcCppGLFWflag = ['/D', '__NOGLFW'] #indicates, that no GLFW shall be used
 unixCppGLFWflag = ['-D__NOGLFW'] #indicates, that no GLFW shall be used
-#unixCppGLFWflag += ['-march=haswell'] #problem may be due to memory inappropriate alignement on linux! #alternative: ['-mavx2'] (does not compile)  ['-march=skylake'] (seg fault; same with ['-march=native']); optimization for this architecture in case of no graphics / noglfw; 
+#unixCppGLFWflag += ['-march=haswell'] #['-march=skylake'] (seg fault; same with ['-march=native']); optimization for this architecture in case of no graphics / noglfw;
+#NOTE (revision plan step 22, 2026-09-12): this line used to say that '-mavx2' "does not compile"
+#and suspected memory alignment. Both halves were wrong in different ways. It DOES compile: the
+#full extension builds with -mavx2 -mfma on g++ 14 and the .so then carries 567 vfmadd
+#instructions. The alignment suspicion was right, but the failure was at RUNTIME, in
+#ResizableVectorParallel/LinkedDataVectorParallel dereferencing a LinkedDataVector sub-range as
+#__m256d* - fixed by using unaligned load/store (issue #2394). Enabling AVX2 on Linux is now a
+#decision for step 23, not a compiler problem; note that it shifts results by 1e-9..1e-6 through
+#FMA contraction, which the 3e-11 test tolerance flags (issue #2396).
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #check system and platform

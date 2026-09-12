@@ -48,6 +48,7 @@
 		#define _mm_fmadd_ _mm256_fmadd_pd
 		#define _mm_load_ _mm256_load_pd
 		#define _mm_load_u _mm256_loadu_pd
+		#define _mm_store_u _mm256_storeu_pd   //unaligned store: the pointer may come from a LinkedDataVector, whose sub-range cannot be aligned by any allocator (revision plan step 22)
 		#define _mm_set1_ _mm256_set1_pd
 		#define _mm_fmadd_ _mm256_fmadd_pd
 		#define _mm_xor_ _mm256_xor_pd
@@ -64,6 +65,7 @@
 		#define _mm_store_ _mm256_store_ps
 		#define _mm_load_ _mm256_load_ps
 		#define _mm_load_u _mm256_loadu_ps
+		#define _mm_store_u _mm256_storeu_ps   //unaligned store: the pointer may come from a LinkedDataVector, whose sub-range cannot be aligned by any allocator (revision plan step 22)
 		#define _mm_fmadd_ _mm256_fmadd_ps
 		#define _mm_set1_ _mm256_set1_ps
 		#define _mm_fmadd_ _mm256_fmadd_ps
@@ -84,6 +86,7 @@
 		#define _mm_store_ _mm512_store_pd
 		#define _mm_load_ _mm512_load_pd
 		#define _mm_load_u _mm512_loadu_pd
+		#define _mm_store_u _mm512_storeu_pd   //unaligned store: the pointer may come from a LinkedDataVector, whose sub-range cannot be aligned by any allocator (revision plan step 22)
 		#define _mm_fmadd_ _mm512_fmadd_pd
 		#define _mm_set1_ _mm512_set1_pd
 		#define _mm_fmadd_ _mm512_fmadd_pd
@@ -101,6 +104,7 @@
 		#define _mm_store_ _mm512_store_ps
 		#define _mm_load_ _mm512_load_ps
 		#define _mm_load_u _mm512_loadu_ps
+		#define _mm_store_u _mm512_storeu_ps   //unaligned store: the pointer may come from a LinkedDataVector, whose sub-range cannot be aligned by any allocator (revision plan step 22)
 		#define _mm_fmadd_ _mm512_fmadd_ps
 		#define _mm_set1_ _mm512_set1_ps
 		#define _mm_fmadd_ _mm512_fmadd_ps
@@ -112,6 +116,9 @@
 	#define PReal Real		// packed Real = Real (may be float or double)
 	#define _mm_set1_ Real  //
 	EXUINLINE Real _mm_fmadd_(Real a, Real b, Real c) { return a * b + c; }
+	//the vectorized loops are written with explicit load/store and compile in this mode too
+	EXUINLINE Real _mm_load_u(const Real* p) { return *p; }
+	EXUINLINE void _mm_store_u(Real* p, Real v) { *p = v; }
 	#undef useAVX
 #endif
 

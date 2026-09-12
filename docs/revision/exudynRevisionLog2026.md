@@ -761,13 +761,42 @@ alignment. It compiles: the full extension built cleanly with `-mavx2 -mfma`, an
 `.so` contains 567 `vfmadd` instructions. What fails is at runtime, and it is this defect. Raised
 separately so the comment gets corrected rather than deterring the next attempt.
 
-**Why the fix is not in this commit.** It is the one the plan already names — unaligned intrinsics
-(`_mm256_loadu_pd`/`_mm256_storeu_pd`) on the linked operands, which cost nothing on aligned data
-on Haswell and later — but it changes the innermost loops of the solver across several files, and
-it needs a performance measurement on Windows (where AVX2 is live today) as well as the sanitizer
-run coming back clean. That deserves its own focused pass rather than being appended to a batch
-that already carries three other changes. Raised as an issue with the full reproduction recipe, so
-the next pass starts from a failing case rather than from a description.
+**FIXED 2026-09-12** in the following pass, once the reproduction existed.
+
+Every AVX loop whose pointer can come from a `LinkedDataVector` now uses explicit unaligned
+load/store: all 40 pointer casts in `LinkedDataVectorParallel.h` and `ResizableVectorParallel.h`,
+**plus the six `ParallelPReal*` helpers in `Vector.cpp`** — those take `PReal*` as *parameters*, so
+they carried the identical defect with no cast to find them by, and a search for `(PReal*)` would
+have missed them entirely.
+
+`Use_avx.h` had `_mm_load_u` for all four AVX variants but **no unaligned store**; `_mm_store_u`
+was added to each, and both to the scalar `#else` fallback, which these loops also compile under.
+The arithmetic keeps using operators (`+`, `-`, `*`, `/`) rather than `_mm_add_` and friends,
+because those work for `__m256d` and plain `Real` alike — which is why the original code was
+written that way, and changing it would have broken the non-AVX build.
+
+**Verified three ways, because "the sanitizer is quiet now" alone would not have been enough:**
+
+| check | result |
+|---|---|
+| manylinux cp313, `-mavx2 -mfma -fsanitize=alignment -fno-sanitize-recover=alignment` | previously aborted at `ResizableVectorParallel.h:309`; now **zero** misalignment reports and the suite runs to completion |
+| the same build **without** `-mavx2` (the shipping Linux configuration) | reproduces the previous results **bit for bit** — the same two known failures with identical values — so the change is numerically neutral |
+| Windows, where AVX2 is live today | full `runTestSuite.py` passes; `runPerformanceTests.py` **33.33 s** against a **33.04–34.16 s** baseline measured twice beforehand, i.e. inside the run-to-run noise |
+
+The middle row is the one that matters most: it separates "the fix works" from "the fix changed
+the numbers", and it is the reason the third row's timing can be read as noise rather than hope.
+
+**A new fact fell out, and it belongs to step 23.** With AVX2 enabled on Linux the suite now
+*runs*, but four tests that pass without it then fail against the 3e-11 tolerance —
+`ANCFcontactCircleTest` (−2.185e-08), `ANCFslidingAndALEjointTest` (2.236e-06),
+`connectorGravityTest` (−1.956e-07), `raytracerNOGLFWtest` (−1.368e-06). All are rounding-scale: a
+fused multiply-add rounds once where a separate multiply and add round twice. This is a property
+of AVX2, not of the fix — the control run above pins that down. It is exactly the evidence fact 24
+asks for, and step 23 cannot be decided without it: either the reference values become
+variant-dependent, or the tolerance must admit FMA-level differences. Raised as #2396.
+
+**AVX2 is deliberately still not enabled on Linux.** That is step 23's decision and needs its own
+benchmark; this step removed the defect that made it impossible, nothing more.
 
 <a id="step-24"></a>
 
