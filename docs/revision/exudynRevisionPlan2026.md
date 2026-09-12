@@ -752,23 +752,41 @@ Editing the vcxproj in the same commit is fine — it is modified, not moved.
     and mixed-mode breakpoints hit in **both** `python/pytest.py` and
     `CSystem::ComputeSystemODE2RHS`. So the flattened layout is confirmed for the primary
     development environment, not only for the wheel build.
-28. **Homogenise the version handling.** *(restated 2026-09-12 — there is no duplicated
-    truth to merge.)* `docs/theDoc/version.txt`, written by `issueTracker.py`, is already
-    the single source; `versionName.txt`, `versionCpp.cpp`, the version line in
-    `README.rst`/`docs/RST/Exudyn.rst` and `trackerlog.{tex,rst,html}` are all generated
-    from it. What is wrong is **where it lives and how it is read**: it sits inside the
-    documentation tree and *above* the packaging root, which is why an sdist cannot
-    determine its own version (#2383, step 81); `exudynVersion.py` finds it by trying
-    **four** relative paths and falling back to the string `unknown`, which setuptools
-    rejects with `InvalidVersion`; and **seven** batch scripts under
-    `tools/buildAndGenerate/` each parse it their own way. So: move the source to the
-    repository root, give it one accessor, and let everything else keep being generated.
+28. **PARTLY DONE 2026-09-12; one decision left.** *(Restated 2026-09-11, and corrected again
+    after measuring.)* There is no duplicated truth to merge: `docs/theDoc/version.txt`, written
+    by `issueTracker.py`, is already the single source and everything else is generated from it.
+    Two of the three stated defects are fixed (#2405):
+
+    - `exudynVersion.py` guessed **four** relative paths and fell back to the string `'unknown'`.
+      It now anchors on the repository root — walking upwards for a directory holding both
+      `pyproject.toml` and the version file — and **raises** when it cannot find it. `'unknown'`
+      is not a version: setuptools rejected it much later with an `InvalidVersion` naming neither
+      file, and the generators would have stamped it into generated sources.
+    - the sdist could not read it. Fixed with step 81; the file is now inside the packaging root.
+
+    **Corrected fact:** the claim that "seven batch scripts under `tools/buildAndGenerate/` each
+    parse it their own way" is true but **out of scope** — that whole directory is *gitignored*
+    (`.gitignore:118`) and untracked, deliberately, until the step 68 cleanup. They are local
+    maintainer scripts, not part of the repository. One of them
+    (`buildInstallSingleVersion.bat:11`) does read a path one level short, but it is reached
+    through `execWithPythonVersion.bat`'s `cd ..\tools\makeWindowsBinaries\` — a directory that
+    no longer exists — so the correct relative path cannot be determined without first fixing the
+    caller. Left for step 68, together with the rest.
+
+    **Open decision:** whether to move `version.txt` from `docs/theDoc/` to the repository root.
+    The original reason (it sat above the packaging root) is gone. Against moving: `doc2rst.py`
+    parses it as the first entry of the `docs/theDoc` chapter list and injects the version line
+    into the generated RST, so it is genuinely a documentation input too. For moving: the root is
+    where a version source is conventionally looked for. Either way the accessor above is the only
+    code that needs to know, so this is now cosmetics, not structure.
+
 29. **DEFERRED 2026-09-12 — the maintainer's own work.** The original proposal (move `docs/demo`,
     22 MB, to release assets or git-lfs) is **withdrawn**: the `.gif` files are embedded in the
     GitHub front page, so moving them out of the repository would break it, and git-lfs would add
     a clone-time dependency for something the front page needs unconditionally. Instead the
-    maintainer resizes the images and animations in place and commits them. Nothing for this plan
-    to do; re-open only if the directory grows again.
+    maintainer resized the images and animations in place and committed them on 2026-09-12
+    (`57633e9`): 22 MB down to 11 MB, references in the docs and the landing page intact. Nothing
+    for this plan to do; re-open only if the directory grows again.
 30. **DONE 2026-09-10.** `docs/howTo/` cut from 26 `.txt` files to 8 `.md`. Rule applied: keep what
     could not be rederived in five minutes. Survivors and the new `buildQuirks.md` are listed in
     `docs/dev/README.md`. → [log](exudynRevisionLog2026.md#step-30)
@@ -1113,18 +1131,31 @@ debt stays visible and each item can be closed on evidence.
     `check_extras` CI job. Verified by fault injection. →
     [log](exudynRevisionLog2026.md#step-80)
 
-81. **The source distribution cannot be built — partially fixed, blocked on step 25.**
-    `setup.py sdist` shipped all 133 `.cpp` files and **none of the 432 headers**, so nobody could
-    compile the sdist on pypi.org. `MANIFEST.in` now ships the headers, `include/` (Eigen is really
-    used, by `src/Linalg/LinearSolver.h`), `libs/`, `setupPyConfig.json` and
-    `src/pythonGenerator/exudynVersion.py` — 200 entries → 1098, 5.0 MB.
-    It still does **not** build, and the remaining blocker is structural rather than a manifest
-    entry: `exudynVersion.py` reads `docs/theDoc/version.txt`, which lives *above* the packaging
-    root, so an sdist rooted at `main/` can never contain it. The version silently degrades to
-    `'unknown'`, which setuptools then rejects with `InvalidVersion`. This is the same `../`
-    problem as the licence file in step 24. **Step 25's flattening is what unblocks it**; finish
-    this immediately afterwards and verify by building the tarball in a clean container, which is
-    how the failure above was found. Issue #2383 stays open until then.
+81. **DONE 2026-09-12 — the source distribution builds and installs.** It shipped all 133 `.cpp`
+    files and **none** of the 432 headers, so nobody could compile it from pypi.org. `MANIFEST.in`
+    now ships the headers, `include/` (Eigen really is used, by `src/Linalg/LinearSolver.h`),
+    `libs/`, `sources.json` and `setupPyConfig.json` — and, once step 25 made them reachable,
+    `docs/theDoc/version.txt` and `LICENSE.txt`, which had both been *above* the old packaging
+    root where setuptools cannot follow a `../`.
+
+    Two further blockers only appeared once the tarball was actually built, which is the whole
+    argument for testing this rather than reasoning about the manifest:
+
+    - `src/pythonGenerator/autoGenerateDocstrings.py` was missing. `setup.py`'s `load_converter()`
+      raises `FileNotFoundError('Converter not found at …')` — a hard stop, not a warning. Added,
+      along with `stubHeader.pyi` and the five generated `.pyi` inputs, without which every sdist
+      install shipped an unmerged `__init__.pyi`.
+    - **the real one, #2376:** `createStubFiles.py` failed on the missing `stubHeader.pyi`, and
+      the bare `except` around it swallowed the failure *and left the process in
+      `src/pythonGenerator/`*. Everything after that is relative to the packaging root, so the
+      build then reported "no setupPyConfig.json found" and
+      `src/Autogenerated/versionCpp.cpp: No such file or directory`, and the metadata degraded to
+      the package name `UNKNOWN` — three misleading symptoms from one unrelated cause. The chdir
+      is now in a `finally` and the exception is printed.
+
+    Verified end to end: `setup.py sdist` → `pip wheel` from the tarball in a clean directory →
+    `exudyn-1.11.43.dev1-cp313-cp313-win_amd64.whl` → installed to a separate target → `import
+    exudyn` reports the right version and a `SystemContainer` runs. #2383 resolved.
 
 82. **Retire `setupPyConfig.json` — after step 25.** The six build switches (`USEGLFW`,
     `compileParallel`, `quietCompile`, `minimalCppFiles`, `useOpenVR`, `compileExudynFast`) have
