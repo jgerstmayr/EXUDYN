@@ -81,8 +81,17 @@ simulationSettings.timeIntegration.explicitIntegration.useLieGroupIntegration = 
 #EigenSparse is ESSENTIAL here, not a tuning detail: with the default dense linear solver this
 #model costs O(N^2) per step even under explicit integration - measured 2026-09-12, per-step time
 #quadruples on every doubling of nMasses (250/500/1000/2000 -> 2.5/10.1/42/168 ms) and nMasses=2000
-#runs 400x slower than with EigenSparse (33.5 s against 0.084 s for 200 steps). See issue #2398.
+#runs ~280x slower than with EigenSparse (32.6 s against 0.115 s for 200 steps). See issue #2398.
 simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+
+#NOTE explicitIntegration.computeMassMatrixInversePerBody is the flag intended for exactly this
+#case - it inverts the mass matrix per body instead of solving a system - and it is deliberately
+#NOT set here. Two reasons. It is only correct when bodies do not share nodes, which holds for
+#this chain but is a precondition a later edit could silently break (it is wrong for a beam or an
+#FEM body). And measured on this model it does not remove the cost by itself: with the dense
+#solver it changes nothing (8.57 s against 8.43 s at nMasses=1000, identical within noise, for
+#ExplicitEuler, RK44 and DOPRI5 alike); it is worth a further ~10-15% only once EigenSparse has
+#removed the dominant term. See issue #2400.
 
 mbs.SolveDynamic(simulationSettings,
                  solverType=exu.DynamicSolverType.ExplicitEuler)

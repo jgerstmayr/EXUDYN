@@ -1218,3 +1218,4 @@ the tracker.
 - **#2396** enabling AVX2 on Linux shifts results by 1e-9..1e-6 through FMA contraction
 - **#2397** the only benchmark that resolves AVX2 is commented out inside exu.Test()
 - **#2398** explicit integration costs O(N^2) per step with the default dense linear solver
+- **#2400** computeMassMatrixInversePerBody does not reduce cost unless a sparse solver is also selected

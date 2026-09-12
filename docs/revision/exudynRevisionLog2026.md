@@ -820,13 +820,30 @@ The large group had nothing genuinely large in it, so `perfLargeMassSpringChain.
 ~4.8 s on Windows, and deterministic — repeated runs are bit-identical, which is what makes it
 usable as a reference-checked test rather than only a timer.
 
-**Building it turned up a real defect (#2398).** With the *default dense* linear solver this model
-costs **O(N²) per step** under explicit integration: 250/500/1000/2000 masses give 2.5/10.1/42/168
-ms per step — the cost quadruples on every doubling, where an explicit step on a chain should be
-linear. `linearSolverType = EigenSparse` makes it linear and **400× faster** at 2000 masses
-(0.084 s against 33.5 s for 200 steps). The test sets it explicitly and says why; the underlying
-trap — an explicit integrator paying for a dense linear solver, with no warning at large N — is
-raised separately.
+**Building it turned up a cost the defaults hide (#2398).** With the *default dense* linear solver
+this model costs **O(N²) per step** under explicit integration: 250/500/1000/2000 masses give
+2.5/10.1/42/168 ms per step — the cost quadruples on every doubling, where an explicit step on a
+chain should be linear. `linearSolverType = EigenSparse` makes it linear and **~280× faster** at
+2000 masses (0.115 s against 32.6 s for 200 steps).
+
+**Corrected after maintainer feedback.** Exudyn has a flag for exactly this —
+`explicitIntegration.computeMassMatrixInversePerBody`, which inverts the mass matrix per body
+instead of solving a system, and which cannot be the default because it gives wrong results when
+bodies share nodes (a beam, an FEM body). So the dense default is a deliberate general-purpose
+fallback, not an oversight, and the first framing of #2398 as a plain defect was too strong.
+
+Measuring the flag, though, gives a sharper finding (#2400). With the flag value **read back from
+the settings** to prove it was applied, and the dense solver still selected, it changes nothing:
+at 1000 masses and 200 steps, `ExplicitEuler` 8.43 s off against 8.57 s on, `RK44` 20.5 against
+20.4, `DOPRI5` 33.0 against 32.7 — all inside noise, across every explicit solver tried. Selecting
+`EigenSparse` is what removes the cost (0.070 s), and only *then* is the flag worth a further
+10–15 % (0.058 s). On its own the flag does not avoid the solver, so the user still has to know to
+change `linearSolverType` as well — which is either a gap in the flag or a gap in its
+documentation.
+
+The test therefore sets `EigenSparse` and deliberately does **not** set the per-body flag: it is
+worth ~10 % here, and its correctness precondition — no shared nodes — is exactly the kind of
+property a later edit to the model could silently break.
 
 **The AVX2 A/B, re-run with the grouped suite** (same container, `-O3`, only `-mavx2 -mfma`
 differing): small 9.715 → 9.711 s (0.0 %), large 13.512 → 13.432 s (−0.6 %), and
