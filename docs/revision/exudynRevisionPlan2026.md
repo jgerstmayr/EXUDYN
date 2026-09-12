@@ -821,6 +821,82 @@ The core investment. Every step is validated byte-for-byte by step 2.
 
     As step 31 is larger, it may be good to split into 31a, b, c, ...
 
+    ### Groundwork, measured 2026-09-12 (design only — nothing executed)
+
+    | | |
+    |---|---|
+    | `objectDefinition.py` | 1.43 MB, 11 300 lines, **97 items** — Object 51 (1.06 MB), Marker 18, Node 16, Sensor 8, Load 4 |
+    | `systemStructuresDefinition.py` | 254 KB, 1 758 lines, **53 structures** |
+    | LaTeX macros across both | **247 distinct**, 16 863 occurrences, 130 of them custom |
+    | consumers | exactly **one** parser each (`pythonAutoGenerateObjects.py:1784`, `pythonAutoGenerateSystemStructures.py:1091`) |
+
+    Despite the `.py` extension these are **not Python**: a line DSL of `key = value` headers, a
+    LaTeX `equations = … /end` block, and a 10-column comma table per member whose 9th column is
+    a flag string (`R M N C U I D O P X`) carrying the semantics. Fields are split by
+    `SplitString` (`autoGenerateHelper.py:1584`), a hand-written scanner that keeps commas inside
+    `"…"` — which is exactly why the format resists ordinary tooling.
+
+    **The generators already build the intermediate representation.** When a class block ends,
+    `pythonAutoGenerateObjects.py` holds `parseInfo` (the header keys) and `parameterList` — one
+    dict per member, keyed by the 10 names in `lineDefinition` (`:1828`);
+    `pythonAutoGenerateSystemStructures.py` assembles `classDict` (`:1262`). So **there is
+    nothing to text-split**: the new files are *emitted* from the parsed structure, which
+    collapses the split and the reformat into one act and makes a byte-for-byte round-trip the
+    natural gate.
+
+    **31a — emit real Python dicts from that representation.** One file per category: items →
+    Node / Object / Marker / Load / Sensor; structures → simulation settings (11), visualization
+    settings (31), solver data (6), solvers (3), remaining (2). Those five groups cover the
+    existing 53 with no leftovers. Then a loader for the new format replaces `SplitString` and
+    the line parser. **Gate: `regenerate.py --check` Tier 1 clean — zero change in generated
+    output.** Ordering is load-bearing: the generators emit in file order, so each group keeps an
+    explicit ordered list.
+
+    The emitted files must be **readable and editable by hand** — that is the point of the step.
+    The text is long: 2 821 member lines at median 245 characters (max 876), 97
+    `classDescription`s at median 302 (max 1 054), 62 `equations` blocks at median 3.5 KB (max
+    24.7 KB). So descriptions and equations are emitted as **raw** triple-quoted strings
+    (`r"""…"""`) — raw because the content is LaTeX: a non-raw string would double every one of
+    the 16 863 backslash macros and make the files unreadable and unsafe to edit. Emit one
+    category first, read the result, and refine the emitter over a few rounds; iterating on the
+    output is the expected path, not a sign of a wrong design.
+
+    **31b — factor the emitted data**: shared enums, default strings, and copy-for-derived-items
+    in one common module. Only possible once the data is real Python; still byte-identical output.
+
+    **31c — the documentation format**, scheduled *with* step 50, since both need the same
+    converter and the same macro decision.
+
+    ### Decisions taken
+
+    - **Formulas: MyST-Parser, keeping `$…$` and `$$…$$`.** MyST is a Sphinx parser, so `conf.py`,
+      the MathJax macro config and the existing directives survive, and the PDF path stays open
+      through sphinx-latexpdf. The `$y=f(x)$` spelling keeps working.
+    - **Most of the conversion already exists.** `autoGenerateHelper.py` expands the custom LaTeX
+      and emits math through exactly two functions: `RSTinlineMath` (`:523`) produces
+      `\ :math:`X`\ ` and `RSTmathEq` (`:531`) produces `.. math::`. Markdown means swapping
+      those two for `$X$` and `$$X$$`; the macro expansion (`convLatexMath`, `ReplaceWords`) is
+      reused unchanged. `\startTable` / `\rowTable` (709 uses) already map to an RST `list-table`
+      at `:447-448` and map more simply onto a markdown table.
+    - **One macro source, generating the rest.** Five hand-synced tables exist today: **196**
+      `\newcommand`s in `docs/theDoc/docincludes.sty`, **98** in `conf.py`’s `mathjax3_config`,
+      and `convLatexMath` 56 / `convLatexCommands` 48 / `convLatexWords` 47 in
+      `autoGenerateHelper.py`. Nothing checks they agree and one has already slipped —
+      `\addExampleImage` reaches the generated RST with no MathJax definition. Make one table the
+      source, generate the `.sty` and the `conf.py` block from it, and add a check gate.
+      *Measured, against an earlier suspicion:* custom macros are **not** leaking into `.. math::`
+      wholesale — of 251 distinct macros in the generated RST, exactly **one** custom macro is
+      undeclared. The hand-syncing is the defect, not the output.
+    - **`latexConverter.py` (833 lines) is dead and is deleted with 31a.** Nothing imports it, it
+      is unrelated to the LaTeX conversion (which lives in `autoGenerateHelper.py`), and the
+      maintainer keeps it in the old repository.
+    - **The two `.npy` dumps go with 31a.** `pythonAutoGenerateSystemStructures.py:1381` and
+      `utilitiesDocuGenerator.py:977` pickle the structured data for external tools wanting an
+      AST-like view; nothing in the repository reads them and both readers are commented out one
+      line below. 31a supersedes them — the new format is clearer, almost native Python, and can
+      be read directly with accessor functions (interpreting enums, resolving defaults). They are
+      **not** kept in parallel: two representations of the same data is what this step removes.
+
 32. Define a schema and validate on load with file- and line-accurate messages.
 33. Split the monolith into an IR plus independent emitters — C++ headers, pybind, stubs, item
     interface, RST, LaTeX. Each gets `main()` + argparse + explicit `--output`; none reads by
