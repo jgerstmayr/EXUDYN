@@ -617,7 +617,13 @@ promise for no gain.
     now fails with an explicit message instead of linking 64-bit libraries. The install
     guide still describes 32-bit and is issue #2389.
     →  [log](exudynRevisionLog2026.md#step-19)
-20. Move cibuildwheel config into `[tool.cibuildwheel]`; drop `continue-on-error`.
+20. **DONE 2026-09-12.** Ten of eleven `CIBW_*` variables moved into `[tool.cibuildwheel]`
+    in `main/pyproject.toml`; only `CIBW_BUILD` stays, being built from the matrix.
+    `continue-on-error` removed — `fail-fast: false` is what keeps siblings running, while
+    `continue-on-error` made a red build report green. The old form had silently swallowed
+    `CIBW_BUILD_VERBOSITY` into a YAML comment; a config file validates keys. Verified by
+    identical `--print-build-identifiers` output before and after. →
+    [log](exudynRevisionLog2026.md#step-20)
 21. Validate `setupPyConfig.json` against a schema; fail on unknown keys.
 22. **Fix the vector alignment bug.** `BasicDefinitions.h:78` has
     `#undef EXUDYN_USE_ALIGNED_VECTORS` with the comment "for AVX2 on linux required", so

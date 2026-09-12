@@ -640,6 +640,49 @@ extended to cover `ClInclude` and `None`. Separately, `gettingStarted.tex` still
 with Python 3.6/3.7, 32-bit Anaconda and wheel names like `exudyn-1.0.20-cp36-cp36m-win32.whl`;
 after this step those configurations do not exist at all.
 
+<a id="step-20"></a>
+
+### Step 20 — cibuildwheel configured in `[tool.cibuildwheel]`
+
+**DONE 2026-09-12.** Ten of the eleven `CIBW_*` environment variables moved out of
+`.github/workflows/wheels.yml` into a `[tool.cibuildwheel]` table in `main/pyproject.toml`, with
+`linux`, `macos` and `windows` subtables for the settings that differ per platform. Only
+`CIBW_BUILD` stays in the workflow, because it is assembled from the matrix entry
+(`cp3${{ matrix.python-version }}-*`).
+
+**This was not only tidiness — the old form had silently lost a setting.** Line 51 read:
+
+```yaml
+CIBW_TEST_SKIP: "*universal2:x86_64"   # x86_64 half can't run on arm64 runner          CIBW_BUILD_VERBOSITY: 1
+```
+
+A lost newline had pulled `CIBW_BUILD_VERBOSITY: 1` into the trailing comment, so build verbosity
+had never been set. YAML accepted it, because to YAML it is just a longer comment. In a TOML
+config file cibuildwheel *validates* every key: the same mistake is now an error, which was
+checked rather than assumed — a deliberately misspelled `build-verbosityy` is rejected with
+*"Option 'build-verbosityy' not supported in a config file. Perhaps you meant 'build-verbosity'?"*.
+That validation also means the table parsing cleanly is itself proof that every key used is a
+supported one.
+
+**`continue-on-error: true` removed** from `build_wheels`. `fail-fast: false`, which is kept, is
+what actually lets the other wheels finish when one fails; `continue-on-error` only made a red
+build report green. The two are routinely confused, which is presumably how it got there.
+
+**Verified with the pinned cibuildwheel 3.4.1, by comparison rather than inspection.**
+`--print-build-identifiers` was run against the new table and against the old environment
+variables (with an empty config file), for each platform in turn. The selected sets are
+identical — `cp313-manylinux_x86_64`, `cp313-macosx_universal2`, `cp313-win_amd64`, so
+`*musllinux*`, `*-win32` and `*-win_arm64` are still skipped. Dumping the resolved options then
+confirmed `build-verbosity = 1` (the setting that used to be lost), the test requirements, the
+`dnf` `before-all` on Linux only, and the `cd /d` form of the test command on Windows only. The
+workflow file was re-parsed as YAML to confirm `continue-on-error` is gone and `fail-fast: false`
+is not.
+
+**Left verbatim:** the `{project}/main/pythonDev/TestModels` paths in the test commands were moved
+across unchanged. Their substitution behaves the same from a config file as from the environment,
+so moving them cannot alter behaviour — and whether `{project}` resolves as intended when
+cibuildwheel is pointed at `main/` is a separate question that only a real CI run can answer.
+
 <a id="step-24"></a>
 
 ### Step 24 — metadata drift

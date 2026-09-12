@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.29.dev1, 
++  Exudyn version = 1.11.31.dev1, 
 +  last change =  2026-09-12, 
-+  Number of issues = 2390, 
-+  Number of resolved issues = 2102 (29 in current version), 
++  Number of issues = 2392, 
++  Number of resolved issues = 2104 (31 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.31: :textred:`resolved BUG 2391` : continue-on-error made failing wheel builds report success 
+    - issue author: Claude-JG
+    - description:  build_wheels carried continue-on-error: true; so a job that failed to build or whose test suite failed did not fail the workflow. fail-fast: false is what actually keeps the sibling jobs running; continue-on-error only hid the result. Revision plan step 20
+    - **notes:** continue-on-error removed. fail-fast: false is kept; so one failing wheel still does not cancel the others - but the workflow now reports the failure
+    - date resolved: **2026-09-12 10:01**\ , date raised: 2026-09-12 
+    - resolved by: Claude-JG
+ * Version 1.11.30: resolved Issue 2390: move the cibuildwheel configuration into [tool.cibuildwheel] (change)
+    - issue author: Claude-JG
+    - description:  the wheel matrix was configured through eleven CIBW_ environment variables in .github/workflows/wheels.yml; where nothing validates them: a lost newline had swallowed CIBW_BUILD_VERBOSITY: 1 into the trailing comment of the CIBW_TEST_SKIP line; so build verbosity was silently never set. Revision plan step 20
+    - **notes:** the ten static settings moved to [tool.cibuildwheel] in main/pyproject.toml; with linux; macos and windows subtables for the per platform test-command; before-all and environment. Only CIBW_BUILD stays in the workflow; because it is built from the matrix entry. build-verbosity = 1 now actually applies. Verified with the pinned cibuildwheel 3.4.1: --print-build-identifiers returns the same set for all three platforms as the old environment variables did (cp313-manylinux_x86_64, cp313-macosx_universal2, cp313-win_amd64), the resolved options show build-verbosity 1, the test requirements, the dnf before-all on linux only and the cd /d form of the test command on windows, and a deliberately misspelled key is rejected with "Option build-verbosityy not supported in a config file" instead of being ignored
+    - date resolved: **2026-09-12 10:01**\ , date raised: 2026-09-12 
+    - resolved by: Claude-JG
  * Version 1.11.29: resolved Issue 2389: remove 32 bit support: libs/libs32 and the bitness branch in setup.py (cleanup)
     - issue author: Claude-JG
     - description:  follow up to issue 2386; whose resolution note still says setup.py keeps its is32bits branch - that is no longer true. On the maintainer instruction the 32 bit support is removed outright: main/libs/libs32 (glfw.pdb; glfw3.lib; glfw3_d.lib; openvr_api.dll; openvr_api.lib) and the is32bits/is64bits branch in setup.py; whose only remaining effect was to choose that directory. Revision plan step 19

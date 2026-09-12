@@ -15,7 +15,9 @@ jobs:
   build_wheels:
     name: cp3${{ matrix.python-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    continue-on-error: true   # keep: other wheels still get built
+    # NO continue-on-error: a failed wheel job must fail the workflow (revision plan step 20).
+    # fail-fast: false below already keeps the other jobs running, which is what was actually
+    # wanted; continue-on-error additionally made a red build report green.
     strategy:
       fail-fast: false        # CHANGED: don't cancel siblings on first failure
       matrix:
@@ -44,24 +46,9 @@ jobs:
       - name: Build wheels
         run: python -m cibuildwheel --output-dir wheelhouse main
         env:
+          # everything else lives in [tool.cibuildwheel] in main/pyproject.toml (revision plan
+          # step 20). Only this one is here, because it is built from the matrix entry.
           CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
-          CIBW_SKIP: "*-win32 *-win_arm64 *musllinux*"
-          CIBW_ARCHS: "auto64"
-          CIBW_ARCHS_MACOS: "universal2"
-          CIBW_TEST_SKIP: "*universal2:x86_64"   # x86_64 half can't run on arm64 runner          CIBW_BUILD_VERBOSITY: 1
-
-          CIBW_BEFORE_ALL_LINUX: >-
-            dnf install -y epel-release &&
-            dnf install -y mesa-libGL-devel mesa-libGLU-devel
-            glfw-devel freeglut-devel libX11-devel
-
-          CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=11.0"
-
-          CIBW_TEST_REQUIRES: "numpy matplotlib scipy"
-          CIBW_TEST_COMMAND_LINUX: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
-          CIBW_TEST_COMMAND_MACOS: "cd {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
-          # CHECK again 2026-08-05: (was disabled before: strange exit code on Windows since 2024-10-09)
-          CIBW_TEST_COMMAND_WINDOWS: "cd /d {project}/main/pythonDev/TestModels && python runTestSuite.py -quiet -local"
 
       - uses: actions/upload-artifact@v7    # CHANGED: v4 -> v7
         with:
