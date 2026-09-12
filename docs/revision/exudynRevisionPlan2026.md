@@ -615,7 +615,7 @@ promise for no gain.
     **32-bit support removed too** (maintainer's call, beyond the original step text):
     `main/libs/libs32/` and `setup.py`'s bitness branch are gone, and a 32-bit interpreter
     now fails with an explicit message instead of linking 64-bit libraries. The install
-    guide still describes 32-bit and is issue #2389.
+    guide still describes 32-bit and is issue #2388.
     →  [log](exudynRevisionLog2026.md#step-19)
 20. **DONE 2026-09-12.** Ten of eleven `CIBW_*` variables moved into `[tool.cibuildwheel]`
     in `main/pyproject.toml`; only `CIBW_BUILD` stays, being built from the matrix.
@@ -624,8 +624,23 @@ promise for no gain.
     `CIBW_BUILD_VERBOSITY` into a YAML comment; a config file validates keys. Verified by
     identical `--print-build-identifiers` output before and after. →
     [log](exudynRevisionLog2026.md#step-20)
-21. Validate `setupPyConfig.json` against a schema; fail on unknown keys.
-22. **Fix the vector alignment bug.** `BasicDefinitions.h:78` has
+21. **DONE 2026-09-12.** The default `config` dict is the schema; an unknown key, a value
+    other than `"True"`/`"False"`, a non-object document or malformed JSON now **fail**,
+    naming the key and listing the valid ones. A *missing* file stays a warning with
+    defaults — an sdist legitimately has none. Verified by fault injection, and the `sed`
+    rewrite in `buildManylinux.sh` still validates. `issueTracker.py` now also reports the
+    issue number it assigns. →  [log](exudynRevisionLog2026.md#step-21)
+22. **Fix the vector alignment bug.** **CORRECTED 2026-09-12 — the cause below is wrong;
+    see the measured version in [the log](exudynRevisionLog2026.md#step-22).** Aligned
+    allocation *is* enabled (`#undef` is immediately followed by `#define`) and
+    `VectorBase` uses `_aligned_malloc`/`posix_memalign`. The real defect is a
+    **`LinkedDataVector` sub-range**, which starts at an arbitrary element offset inside
+    another buffer, so no allocator can align it: reproduced at
+    `ResizableVectorParallel.h:309`, operand `ptrVector[i]`, under
+    `-mavx2 -fsanitize=alignment` (issue #2394). It is latent only because AVX2 is
+    Windows-only today, and it is what blocks enabling AVX2 on Linux. The original text
+    follows for reference:
+    `BasicDefinitions.h:78` has
     `#undef EXUDYN_USE_ALIGNED_VECTORS` with the comment "for AVX2 on linux required", so
     `VectorBase` allocates via plain `new T[]` at 16-byte alignment, while the hot loops
     (`Vector.cpp:162`, `LinkedDataVectorParallel.h:349`, `ResizableVectorParallel.h:309`) cast to
@@ -1112,3 +1127,25 @@ detail is `docs/dev/WORKFLOW.md`. In short:
 > **Remotes (step 7, done): `origin` is the internal GitLab, `github` is public.** Work on
 > `v2-dev`, never commit to `master`. Pushing `v2-dev` to `origin` is the normal sync; nothing
 > reaches GitHub before the v2.0 release, and `tools/hooks/pre-push` enforces that. See §2a.
+
+---
+
+## 12. Open issues raised during this revision (#2368 onwards)
+
+Number and name only, exactly as they stand in `tools/issueTracker/trackerlog.txt`.
+This is a **snapshot**, taken 2026-09-12; the tracker is the authority and the
+only place these are maintained. Do not edit this list by hand - regenerate it, or read
+the tracker.
+
+- **#2368** ANCFbeltDrive result contradicts its own recorded reference
+- **#2372** project.license TOML table deprecated
+- **#2376** setup.py leaves the working directory changed when stub generation fails
+- **#2377** three imports refer to modules that exist nowhere
+- **#2379** two TestModels fail reproducibly on Linux and are not marked UnresolvedOnLinux
+- **#2380** quietCompile does not actually quieten the compiler on Linux
+- **#2383** the source distribution contains no C++ headers and cannot build
+- **#2384** setup.py sdist drops an untracked copy of LICENSE.txt into main/
+- **#2387** 20 ClInclude entries in cppsrc.vcxproj have the wrong case; 5 entries do not exist
+- **#2388** the installation documentation is years out of date
+- **#2394** misaligned __m256d load in ResizableVectorParallel MultAdd with a LinkedDataVector
+- **#2395** the comment claiming -mavx2 does not compile on Linux is stale

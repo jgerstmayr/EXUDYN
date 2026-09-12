@@ -871,6 +871,12 @@ def RaiseIssueDict(issueDict): #raise a new issue into list (append to end of li
     ConvertToHTML() #update html version of issue tracker
     ConvertToLatex() #update latex issues in docu (only contains resolved issues in version and bugs)
 
+    #report the number that was actually assigned, and return it: it is needed for the commit
+    #message and the documentation, and reconstructing it by hand afterwards gets it wrong
+    print('issue raised: #' + str(int(numStr)) + ' "' + str(issueDict['issue']).strip() + '"')
+
+    return int(numStr)
+
 #%%******************************************************************************************************
 #modify an existing issue
 def ModifyDictIssue(issueDict): #raise a new issue into list (append to end of list)
@@ -948,8 +954,8 @@ def ResolveIssue(issueNumber, notes='', author='JG'): #raise a new issue into li
 
     if not((issueNumber >= 0) and (issueNumber < NumberOfIssues())):
         print('Issue: invalid number! Nothing done')
-        return
-    
+        return None
+
     d = GetIssue(issueNumber)
     
     d['status'] = 'RESOLVED'
@@ -961,12 +967,15 @@ def ResolveIssue(issueNumber, notes='', author='JG'): #raise a new issue into li
     
     ModifyDictIssue(d)
     
-    print('issue resolved:')
+    #state the number first, so it can be copied into the commit message without recomputing it
+    print('issue resolved: #' + str(issueNumber) + ' "' + str(d['issue']).strip() + '"')
     print(d)
-    
+
     UpdateDateAndVersion()
     ConvertToHTML() #update html version of issue tracker
     ConvertToLatex() #update html version of issue tracker
+
+    return issueNumber
 
 #%%******************************************************************************************************
 #use this to quickly raise a new issue
@@ -990,7 +999,7 @@ def RaiseIssue(issueName, description, issueType='EXTENSION', fileName='', lineN
        'line': lineNumber, 
        'deadline': deadline,
        'priority': priority}
-    RaiseIssueDict(d)
+    return RaiseIssueDict(d) #the assigned issue number
     #['number', 'issue', 'author', 'description', 'type', 'status', 'priority', 'date raised', 'deadline', 'date resolved', 'resolved author', 'notes']
 
     print(GetIssue(NumberOfIssues()-1))

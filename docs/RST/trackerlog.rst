@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.31.dev1, 
++  Exudyn version = 1.11.33.dev1, 
 +  last change =  2026-09-12, 
-+  Number of issues = 2392, 
-+  Number of resolved issues = 2104 (31 in current version), 
++  Number of issues = 2396, 
++  Number of resolved issues = 2106 (33 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.33: resolved Issue 2393: setupPyConfig.json is not validated: a typo silently changes the build (change)
+    - issue author: Claude-JG
+    - description:  setup.py warned about an unknown key or an illegal value and then continued with the default. So "compileParallell": "True" produced a serial build minutes slower with nothing in the output explaining why; and the outer bare except also swallowed genuine read errors. Revision plan step 21
+    - **notes:** setupPyConfig.json is now validated against the default config dict; which IS the schema: unknown key; value other than the strings "True"/"False"; a non object document or malformed JSON each raise with the offending key named and the valid keys listed. A MISSING file remains a warning using defaults; because building from an sdist legitimately has no config file - only a file that is present but wrong is fatal. The bare except is narrowed to OSError/JSONDecodeError. Verified by fault injection: unknown key, lowercase "true", malformed JSON each exit 1 with a specific message, a missing file still builds, the committed file builds a wheel in 55.7 s, and the sed rewrite that tools/ci/buildManylinux.sh applies to compileExudynFast still validates
+    - date resolved: **2026-09-12 11:56**\ , date raised: 2026-09-12 
+    - resolved by: Claude-JG
+ * Version 1.11.32: resolved Issue 2392: issueTracker does not report the number it assigned (change)
+    - issue author: Claude-JG
+    - description:  RaiseIssue and ResolveIssue printed no issue number; so the number had to be reconstructed by hand for the commit message and the documentation. That produced five wrong numbers in the revision plan; the log and two commit messages on 2026-09-12 (the ClInclude defect was written as 2388 but is 2387; and four following issues were likewise one too high). Maintainer request
+    - **notes:** RaiseIssue now returns the assigned number and RaiseIssueDict prints "issue raised: #NNNN title"; ResolveIssue prints "issue resolved: #NNNN title" before the dict and returns the number. So the number never has to be guessed again
+    - date resolved: **2026-09-12 11:56**\ , date raised: 2026-09-12 
+    - resolved by: Claude-JG
  * Version 1.11.31: :textred:`resolved BUG 2391` : continue-on-error made failing wheel builds report success 
     - issue author: Claude-JG
     - description:  build_wheels carried continue-on-error: true; so a job that failed to build or whose test suite failed did not fail the workflow. fail-fast: false is what actually keeps the sibling jobs running; continue-on-error only hid the result. Revision plan step 20
@@ -6924,6 +6936,11 @@ Version 0.1
 Open issues
 ***********
 
+ * :textblue:`open issue 2395:` the comment claiming -mavx2 does not compile on Linux is stale
+    - issue author: Claude-JG
+    - description:  setup.py:146 says "-mavx2 (does not compile)" and suspects memory alignment. Measured 2026-09-12: the full extension builds cleanly in manylinux_2_28 with -mavx2 -mfma on g++ 14; 567 vfmadd instructions are present in the resulting .so. What actually fails is at runtime and is a genuine alignment defect; see the LinkedDataVector issue. The comment should be corrected so the next reader does not conclude the toolchain is at fault
+    - date raised: 2026-09-12 
+
  * **open issue 2388:** the installation documentation is years out of date
     - issue author: Claude-JG
     - description:  docs/theDoc/gettingStarted.tex still instructs users with Python 3.6 and 3.7; 32 bit Anaconda; Spyder 4.1.3 and wheel names like exudyn-1.0.20-cp36-cp36m-win32.whl; and it discusses choosing between 32 and 64 bit installations. None of that has been built for years and after revision plan step 19 the 32 bit build configurations no longer exist at all. The install section needs rewriting against the versions that are actually shipped (cp310-cp314; 64 bit only). Found during revision plan step 19
@@ -8018,6 +8035,11 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2394:` misaligned __m256d load in ResizableVectorParallel MultAdd with a LinkedDataVector
+    - issue author: Claude-JG
+    - description:  REPRODUCED 2026-09-12 in manylinux_2_28 cp313 with g++ 14 and -mavx2 -mfma -fsanitize=alignment -fno-sanitize-recover=alignment: src/Linalg/ResizableVectorParallel.h:309:28 runtime error: load of misaligned address for type __m256d which requires 32 byte alignment; in ResizableVectorParallelBase<double>::MultAdd<LinkedDataVectorParallelBase<double>> called from CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate. Column 28 is the ptrVector[i] operand; that is the LinkedDataVector; not the ResizableVector. The cause is NOT the allocator: EXUDYN_USE_ALIGNED_VECTORS is enabled and VectorBase allocates through _aligned_malloc/posix_memalign; but a LinkedDataVector points into another buffer at an arbitrary element offset; so no allocator can make the sub-range 32 byte aligned. The observed pointer was 8 byte aligned. Latent today because AVX2 is only enabled on Windows (setup.py:230-233); it is what blocks enabling AVX2 on Linux. Fix is to use unaligned intrinsics (_mm256_loadu_pd/_mm256_storeu_pd) on the linked operands; which cost nothing on aligned data on Haswell and later. Revision plan step 22
+    - date raised: 2026-09-12 
 
  * :textred:`open BUG 2387:` 20 ClInclude entries in cppsrc.vcxproj have the wrong case; 5 entries do not exist
     - issue author: Claude-JG

@@ -49,26 +49,39 @@ config['minimalCppFiles'] = False
 config['useOpenVR'] = False
 config['compileExudynFast'] = True    #not for all Python versions
 
-#load the configuration file, overriding default parameters
-try:
-    with open('setupPyConfig.json') as configFile:
-        try:
+#Load setupPyConfig.json, overriding the defaults above. The schema IS the 'config' dict: its keys
+#are the only permitted keys and every value must be the string "True" or "False".
+#
+#A file that is PRESENT but WRONG is a hard error (revision plan step 21). It used to warn and
+#carry on with the default, which is the worst of both: a typo such as "compileParallell" produced
+#a silent serial build - minutes slower, with nothing in the output saying why. A MISSING file is
+#still fine and still uses the defaults: building from an sdist legitimately has no config file.
+configFileName = 'setupPyConfig.json'
+if not os.path.isfile(configFileName):
+    print('\n*****WARNING: no ' + configFileName + ' found; using default parameters\n*****')
+else:
+    try:
+        with open(configFileName, 'r', encoding='utf8') as configFile:
             configJson = json.load(configFile)
-            for key, value in configJson.items():
-                if key not in config:
-                    print('\n*****WARNING: found illegal key "'+key+'" in setupPyConfig.json; IGNORED \n*****')
-                elif value != "True" and value != "False":
-                    print('\n*****WARNING: found illegal value "'+value+'" for "'+key+'" in setupPyConfig.json; IGNORED \n*****')
-                else:
-                    config[key] = ("True" == value)
-    
-        except json.JSONDecodeError as e:
-            print("\n********************************")
-            print(f"JSON Decode Error with setupPyConfig.json:\n {e.msg}")
-            print(f"Error at line {e.lineno}, column {e.colno}")
-            print("********************************\n")
-except:
-    print('\n*****WARNING: no setupPyConfig.json found or errors when loading; using default parameters\n*****')
+    except json.JSONDecodeError as e:
+        raise ValueError(configFileName + ' is not valid JSON: ' + e.msg
+                         + ' (line ' + str(e.lineno) + ', column ' + str(e.colno) + ')')
+    except OSError as e:
+        raise OSError('could not read ' + configFileName + ': ' + str(e))
+
+    if not isinstance(configJson, dict):
+        raise ValueError(configFileName + ' must contain a JSON object, not '
+                         + type(configJson).__name__)
+
+    validKeys = sorted(config.keys())
+    for key, value in configJson.items():
+        if key not in config:
+            raise ValueError('unknown key "' + key + '" in ' + configFileName
+                             + '\n  valid keys are: ' + ', '.join(validKeys))
+        if value not in ("True", "False"):
+            raise ValueError('illegal value ' + repr(value) + ' for "' + key + '" in '
+                             + configFileName + '\n  expected the string "True" or "False"')
+        config[key] = ("True" == value)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #add help

@@ -626,7 +626,7 @@ message. Falling through to the 64-bit import libraries would have produced
 `openVR` path also loses its dead 32-bit half, which had copied the **64-bit** DLL while printing
 a warning that 32-bit openVR was untested.
 
-The installation guide was deliberately **not** touched here (issue #2389): it still describes
+The installation guide was deliberately **not** touched here (issue #2388): it still describes
 choosing between 32- and 64-bit Anaconda, and rewriting that section is documentation work of its
 own rather than a side effect of deleting import libraries.
 
@@ -636,11 +636,22 @@ wrong case** — `src/utilities/`, `src/linalg/`, `src/system/`, `src/tests/`,
 plus two headers and three `.cd` files that do not exist. These are IDE browsing entries and the
 compiler finds headers through the include path, so nothing is broken today; but the same defect
 in a `ClCompile` entry was a real Linux hazard (step 17), and `gen_sources.py --check` should be
-extended to cover `ClInclude` and `None`. Separately, `gettingStarted.tex` still instructs users
+extended to cover `ClInclude` and `None` (issue #2387). Separately, `gettingStarted.tex` still
+instructs users
 with Python 3.6/3.7, 32-bit Anaconda and wheel names like `exudyn-1.0.20-cp36-cp36m-win32.whl`;
 after this step those configurations do not exist at all.
 
 <a id="step-20"></a>
+
+> **Correction 2026-09-12.** Five issue numbers were written one too high when these entries and
+> their commit messages were composed: the ClInclude case defect is **#2387** (not #2388), the
+> installation documentation **#2388** (not #2389), the removal of 32-bit support **#2389** (not
+> #2390), the cibuildwheel move **#2390** (not #2391) and the `continue-on-error` removal
+> **#2391** (not #2392). The cause was writing an assumed number instead of the one computed from
+> the tracker; the `ResolveIssue()` calls themselves used the computed value and closed the right
+> issues, so only the prose was wrong. Commits `6cadab3` and `422ab48` are already pushed and keep
+> the wrong numbers in their messages — `trackerlog.txt` is the authority.
+
 
 ### Step 20 — cibuildwheel configured in `[tool.cibuildwheel]`
 
@@ -682,6 +693,81 @@ is not.
 across unchanged. Their substitution behaves the same from a config file as from the environment,
 so moving them cannot alter behaviour — and whether `{project}` resolves as intended when
 cibuildwheel is pointed at `main/` is a separate question that only a real CI run can answer.
+
+<a id="step-21"></a>
+
+### Step 21 — `setupPyConfig.json` is validated, and a wrong file is fatal
+
+**DONE 2026-09-12.** The reader in `setup.py` warned about an unknown key or an illegal value and
+then **carried on with the default**. So `"compileParallell": "True"` produced a serial build —
+minutes slower, with nothing in the output saying why — and the surrounding bare `except:`
+swallowed genuine read errors along with the expected missing file.
+
+The default `config` dict *is* the schema: its keys are the only permitted keys, and every value
+must be the string `"True"` or `"False"`. An unknown key, a wrong value, a non-object document or
+malformed JSON now raise, naming the offending key and listing the valid ones.
+
+**A missing file stays a warning** and still uses the defaults — building from an sdist
+legitimately has no config file. Only a file that is *present but wrong* is fatal. That asymmetry
+is the whole design: the fatal case is the one where a human wrote something and was ignored.
+
+**Verified by fault injection**, four ways: an unknown key, a lowercase `"true"`, and malformed
+JSON each exit 1 with a message naming the problem; a missing file still builds. Each was reverted
+from a backup copy rather than with `git checkout`. Then the committed file built a wheel in
+**55.7 s**, and the `sed` rewrite that `tools/ci/buildManylinux.sh` applies to `compileExudynFast`
+was checked to still validate — a stricter reader that broke the Linux build would have been a
+poor trade.
+
+**Also, at the maintainer's request:** `issueTracker.py` now reports the number it assigns.
+`RaiseIssue` returns it and `RaiseIssueDict` prints `issue raised: #NNNN "title"`; `ResolveIssue`
+prints `issue resolved: #NNNN "title"` and returns it. Reconstructing that number by hand is what
+produced five wrong issue references on 2026-09-12 (see the correction note above).
+
+<a id="step-22"></a>
+
+### Step 22 — the alignment bug is real, and now located exactly
+
+**INVESTIGATED 2026-09-12; the fix is scoped but deliberately not yet applied.**
+
+**The recorded cause was wrong.** Fact 22 said `BasicDefinitions.h:78` leaves
+`EXUDYN_USE_ALIGNED_VECTORS` undefined, so `VectorBase` allocates with plain `new T[]`. The file
+actually reads `#undef` immediately followed by `#define`, so aligned allocation **is** enabled;
+`Vector.h` uses `_aligned_malloc`/`posix_memalign` with a matching `EXUstd::AlignedFree`. Starting
+from the fix the plan proposed would have changed code that was already correct.
+
+**The bug is nevertheless real.** Built in `manylinux_2_28` cp313 with g++ 14 and
+`-mavx2 -mfma -fsanitize=alignment -fno-sanitize-recover=alignment`, the first solver call aborts:
+
+```
+src/Linalg/ResizableVectorParallel.h:309:28: runtime error: load of misaligned address
+0x000038994168 for type '__m256d', which requires 32 byte alignment
+    #0 ResizableVectorParallelBase<double>::MultAdd<LinkedDataVectorParallelBase<double>>(...)
+    #1 CSolverImplicitSecondOrderTimeInt::ComputeNewtonUpdate(...)
+```
+
+Column 28 is the `ptrVector[i]` operand — the **LinkedDataVector**, not the ResizableVector. That
+is the case no allocator can fix: a `LinkedDataVector` points into *another* buffer at an
+arbitrary element offset, so the base allocation being 32-byte aligned says nothing about the
+sub-range. The observed pointer was 8-byte aligned.
+
+**Why it has never been seen.** AVX2 is enabled **only on Windows** (`setup.py:230-233`); on Linux
+and macOS no `-mavx2` is passed, so `use_AVX2` is undefined, `PReal` is a plain `Real` and these
+loops compile as scalar code. A first sanitizer run *without* `-mavx2` was therefore clean and
+proved nothing — worth recording, because that clean run is exactly the kind of evidence that
+would have closed the step wrongly.
+
+**A second fact falls out.** `setup.py:146` says `-mavx2` *"does not compile"* and suspects
+alignment. It compiles: the full extension built cleanly with `-mavx2 -mfma`, and the resulting
+`.so` contains 567 `vfmadd` instructions. What fails is at runtime, and it is this defect. Raised
+separately so the comment gets corrected rather than deterring the next attempt.
+
+**Why the fix is not in this commit.** It is the one the plan already names — unaligned intrinsics
+(`_mm256_loadu_pd`/`_mm256_storeu_pd`) on the linked operands, which cost nothing on aligned data
+on Haswell and later — but it changes the innermost loops of the solver across several files, and
+it needs a performance measurement on Windows (where AVX2 is live today) as well as the sanitizer
+run coming back clean. That deserves its own focused pass rather than being appended to a batch
+that already carries three other changes. Raised as an issue with the full reproduction recipe, so
+the next pass starts from a failing case rather than from a description.
 
 <a id="step-24"></a>
 
