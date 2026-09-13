@@ -1527,6 +1527,88 @@ Generated drift is exactly the two new values: tier 1 in `__init__.pyi`, `stubEn
 Still open as 31d second commit: the item `outputVariables`, which are still one raw string
 holding a dict literal per item.
 
+**Done 2026-09-13, 31d second of two - `outputVariables` becomes data.** Each item stored its
+output variables as ONE string holding a Python dict literal, which both generators then
+`eval()`ed after two rounds of backslash substitution
+(`pythonAutoGenerateObjects.py:759` and `:1394`). It is now a list:
+
+```python
+outputVariables=[
+    ItemOutputVariable(OVPosition, r'$...$global 3D position vector of node'),
+    ItemOutputVariable(OVAcceleration, OVDAccelerationNode),
+    ],
+```
+
+`OV...` is one constant per output variable, generated in a loop at the end of
+`definitions/outputVariableTypes.py` so there is no second list to keep - a typo is a `NameError`
+at load instead of a key that silently never matches. The emitter additionally refuses a key that
+the registrator does not declare. Measured: all 413 entries across 63 items use a declared key,
+so nothing was wrong today; the check is what keeps it so.
+
+**The 69-repeated-descriptions idea was measured and mostly rejected.** 413 entries hold 287
+distinct (key, description) pairs and 283 distinct description texts; naming every text that
+repeats would need **69 constants to save 130 lines**, and would force a lookup to read any
+description. The texts are strongly item-specific - `Velocity` has 32 different texts for 44
+uses. Only texts shared by **four or more** items are named, in
+`definitions/outputVariableDescriptions.py`: **15 constants covering 81 entries**, and they are
+exactly the generic ones - `$[0,0,0]$ (only for completeness)` (15 uses, under three different
+keys), `identity matrix (only for completeness)` (5), the row-major rotation matrix text (6).
+
+**Why the round trip now compares the dict and not the string.** The old spelling is not uniform:
+the separator is `', '` in some definitions and `','` in others, and three descriptions are quoted
+with `"` because they contain an apostrophe (`ObjectANCFCable.Director1` and two in
+`ObjectANCFCable2D`). Both generators `eval()` the string, so the meaning is the dict - the
+harness compares the dict and, separately, the key ORDER, which is what the documentation tables
+follow.
+
+Gates: round trip lossless (30 193 item + 8 530 structure fields, zero problems),
+`regenerate.py --check` a **no-op in both tiers**, full `runTestSuite.py` PASSED.
+
+Noted while reading the texts, not changed here: `AngularVelocityLocal` carries the description
+*"local (body-fixed) 3D velocity vector of node"* in four items - it describes an angular
+velocity, so the word is missing. Changing it would move documentation, so it is a separate fix.
+
+**Done 2026-09-13, 31d second of two - `outputVariables` becomes data.** Each item stored its
+output variables as ONE string holding a Python dict literal, which both generators then
+`eval()`ed after two rounds of backslash substitution
+(`pythonAutoGenerateObjects.py:759` and `:1394`). It is now a list:
+
+```python
+outputVariables=[
+    ItemOutputVariable(OVPosition, r'$...$global 3D position vector of node'),
+    ItemOutputVariable(OVAcceleration, OVDAccelerationNode),
+    ],
+```
+
+`OV...` is one constant per output variable, generated in a loop at the end of
+`definitions/outputVariableTypes.py` so there is no second list to keep - a typo is a `NameError`
+at load instead of a key that silently never matches. The emitter additionally refuses a key that
+the registrator does not declare. Measured: all 413 entries across 63 items use a declared key,
+so nothing was wrong today; the check is what keeps it so.
+
+**The 69-repeated-descriptions idea was measured and mostly rejected.** 413 entries hold 287
+distinct (key, description) pairs and 283 distinct description texts; naming every text that
+repeats would need **69 constants to save 130 lines**, and would force a lookup to read any
+description. The texts are strongly item-specific - `Velocity` has 32 different texts for 44
+uses. Only texts shared by **four or more** items are named, in
+`definitions/outputVariableDescriptions.py`: **15 constants covering 81 entries**, and they are
+exactly the generic ones - `$[0,0,0]$ (only for completeness)` (15 uses, under three different
+keys), `identity matrix (only for completeness)` (5), the row-major rotation matrix text (6).
+
+**Why the round trip now compares the dict and not the string.** The old spelling is not uniform:
+the separator is `', '` in some definitions and `','` in others, and three descriptions are quoted
+with `"` because they contain an apostrophe (`ObjectANCFCable.Director1` and two in
+`ObjectANCFCable2D`). Both generators `eval()` the string, so the meaning is the dict - the
+harness compares the dict and, separately, the key ORDER, which is what the documentation tables
+follow.
+
+Gates: round trip lossless (30 193 item + 8 530 structure fields, zero problems),
+`regenerate.py --check` a **no-op in both tiers**, full `runTestSuite.py` PASSED.
+
+Noted while reading the texts, not changed here: `AngularVelocityLocal` carries the description
+*"local (body-fixed) 3D velocity vector of node"* in four items - it describes an angular
+velocity, so the word is missing. Changing it would move documentation, so it is a separate fix.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving

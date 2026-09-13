@@ -22,6 +22,8 @@
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 from definitionTypes import *
+from outputVariableTypes import *
+from outputVariableDescriptions import *
 
 definitions = []
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -95,7 +97,13 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeBody,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv} = \pRefG + \LU{0b}{\Rot} \pLocB$global position vector of translated local position', 'Displacement':'$\Null$global displacement vector of local position', 'Velocity':'$\Null$global velocity vector of local position', 'AngularVelocity':'$\Null$angular velocity of body', 'RotationMatrix':'$\LU{0b}{\Rot}$rotation matrix in vector form (stored in row-major order)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv} = \pRefG + \LU{0b}{\Rot} \pLocB$global position vector of translated local position"""),
+        ItemOutputVariable(OVDisplacement, r'$\Null$global displacement vector of local position'),
+        ItemOutputVariable(OVVelocity, r'$\Null$global velocity vector of local position'),
+        ItemOutputVariable(OVAngularVelocity, r'$\Null$angular velocity of body'),
+        ItemOutputVariable(OVRotationMatrix, r"""$\LU{0b}{\Rot}$rotation matrix in vector form (stored in row-major order)"""),
+        ],
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
         ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
@@ -273,7 +281,16 @@ definitions.append(ItemDefinition(
     #final x-coordinate of position shall be 2
 """,
     objectType=ObjectTypeBody,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\ImThree}\pLocB$global position vector of translated local position; local (body) coordinate system = global coordinate system', 'Displacement':'$\LU{0}{\uv}\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp$global displacement vector of mass point', 'Velocity':'$\LU{0}{\vv}\cConfig = \LU{0}{\dot\uv}\cConfig = [\dot q_0,\;\dot q_1,\;\dot q_2]\cConfig\tp$global velocity vector of mass point', 'Acceleration':'$\LU{0}{\av}\cConfig = \LU{0}{\ddot\uv}\cConfig = [\ddot q_0,\;\ddot q_1,\;\ddot q_2]\cConfig\tp$global acceleration vector of mass point', 'RotationMatrix':'identity matrix (only for completeness)', 'Rotation':'$[0,0,0]$ (only for completeness)', 'AngularVelocity':'$[0,0,0]$ (only for completeness)', 'AngularVelocityLocal':'$[0,0,0]$ (only for completeness)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\ImThree}\pLocB$global position vector of translated local position; local (body) coordinate system = global coordinate system"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv}\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp$global displacement vector of mass point"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}\cConfig = \LU{0}{\dot\uv}\cConfig = [\dot q_0,\;\dot q_1,\;\dot q_2]\cConfig\tp$global velocity vector of mass point"""),
+        ItemOutputVariable(OVAcceleration, r"""$\LU{0}{\av}\cConfig = \LU{0}{\ddot\uv}\cConfig = [\ddot q_0,\;\ddot q_1,\;\ddot q_2]\cConfig\tp$global acceleration vector of mass point"""),
+        ItemOutputVariable(OVRotationMatrix, OVDIdentityMatrixForCompleteness),
+        ItemOutputVariable(OVRotation, OVDZeroVectorForCompleteness),
+        ItemOutputVariable(OVAngularVelocity, OVDZeroVectorForCompleteness),
+        ItemOutputVariable(OVAngularVelocityLocal, OVDZeroVectorForCompleteness),
+        ],
     pythonShortName='MassPoint',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -435,7 +452,16 @@ definitions.append(ItemDefinition(
     #final x-coordinate of position shall be 2
 """,
     objectType=ObjectTypeBody,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\ImTwo}\pLocB$global position vector of translated local position; local (body) coordinate system = global coordinate system', 'Displacement':'$\LU{0}{\uv}\cConfig = [q_0,\;q_1,\;0]\cConfig\tp$global displacement vector of mass point', 'Velocity':'$\LU{0}{\vv}\cConfig = \LU{0}{\dot\uv}\cConfig = [\dot q_0,\;\dot q_1,\;0]\cConfig\tp$global velocity vector of mass point', 'Acceleration':'$\LU{0}{\av}\cConfig = \LU{0}{\ddot\uv}\cConfig = [\ddot q_0,\;\ddot q_1,\;0]\cConfig\tp$global acceleration vector of mass point', 'RotationMatrix':'identity matrix (only for completeness)', 'Rotation':'$[0,0,0]$ (only for completeness)', 'AngularVelocity':'$[0,0,0]$ (only for completeness)', 'AngularVelocityLocal':'$[0,0,0]$ (only for completeness)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\ImTwo}\pLocB$global position vector of translated local position; local (body) coordinate system = global coordinate system"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv}\cConfig = [q_0,\;q_1,\;0]\cConfig\tp$global displacement vector of mass point"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}\cConfig = \LU{0}{\dot\uv}\cConfig = [\dot q_0,\;\dot q_1,\;0]\cConfig\tp$global velocity vector of mass point"""),
+        ItemOutputVariable(OVAcceleration, r"""$\LU{0}{\av}\cConfig = \LU{0}{\ddot\uv}\cConfig = [\ddot q_0,\;\ddot q_1,\;0]\cConfig\tp$global acceleration vector of mass point"""),
+        ItemOutputVariable(OVRotationMatrix, OVDIdentityMatrixForCompleteness),
+        ItemOutputVariable(OVRotation, OVDZeroVectorForCompleteness),
+        ItemOutputVariable(OVAngularVelocity, OVDZeroVectorForCompleteness),
+        ItemOutputVariable(OVAngularVelocityLocal, OVDZeroVectorForCompleteness),
+        ],
     pythonShortName='MassPoint2D',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -599,7 +625,15 @@ definitions.append(ItemDefinition(
     #final x-coordinate of position shall be 2
 """,
     objectType=ObjectTypeBody,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}\cConfig$global position vector; for interpretation see intermediate variables', 'Displacement':'$\LU{0}{\uv}\cConfig$global displacement vector; for interpretation see intermediate variables', 'Velocity':'$\LU{0}{\vv}\cConfig $global velocity vector; for interpretation see intermediate variables', 'RotationMatrix':'$\LU{0b}{\Rot}$vector with 9 components of the rotation matrix (row-major format)', 'Rotation':'vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix $\LU{0b}{\Rot}$', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig$angular velocity of body', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig$local (body-fixed) 3D velocity vector of node'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig$global position vector; for interpretation see intermediate variables"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv}\cConfig$global displacement vector; for interpretation see intermediate variables"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}\cConfig $global velocity vector; for interpretation see intermediate variables"""),
+        ItemOutputVariable(OVRotationMatrix, r"""$\LU{0b}{\Rot}$vector with 9 components of the rotation matrix (row-major format)"""),
+        ItemOutputVariable(OVRotation, r"""vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix $\LU{0b}{\Rot}$"""),
+        ItemOutputVariable(OVAngularVelocity, OVDAngularVelocityBody),
+        ItemOutputVariable(OVAngularVelocityLocal, OVDAngularVelocityLocalBody),
+        ],
     pythonShortName='Mass1D',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -785,7 +819,15 @@ definitions.append(ItemDefinition(
     #final z-angle of rotor shall be 2
 """,
     objectType=ObjectTypeBody,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}\cConfig= \pRefG$global position vector; for interpretation see intermediate variables', 'Displacement':'$\LU{0}{\uv}\cConfig$global displacement vector; for interpretation see intermediate variables', 'Velocity':'$\LU{0}{\vv}\cConfig $global velocity vector; for interpretation see intermediate variables', 'RotationMatrix':'$\LU{0b}{\Rot}$vector with 9 components of the rotation matrix (row-major format)', 'Rotation':'$\theta$scalar rotation angle obtained from underlying node', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig$angular velocity of body', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig$local (body-fixed) 3D velocity vector of node'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig= \pRefG$global position vector; for interpretation see intermediate variables"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv}\cConfig$global displacement vector; for interpretation see intermediate variables"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}\cConfig $global velocity vector; for interpretation see intermediate variables"""),
+        ItemOutputVariable(OVRotationMatrix, r"""$\LU{0b}{\Rot}$vector with 9 components of the rotation matrix (row-major format)"""),
+        ItemOutputVariable(OVRotation, r'$\theta$scalar rotation angle obtained from underlying node'),
+        ItemOutputVariable(OVAngularVelocity, OVDAngularVelocityBody),
+        ItemOutputVariable(OVAngularVelocityLocal, OVDAngularVelocityLocalBody),
+        ],
     pythonShortName='Rotor1D',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -1074,7 +1116,20 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeBody,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\Rot}\pLocB$global position vector of body-fixed point given by local position vector $\pLocB$', 'Displacement':'$\LU{0}{\uv}\cConfig + \LU{0b}{\Rot}\pLocB$global displacement vector of body-fixed point given by local position vector $\pLocB$', 'Velocity':'$\LU{0}{\vv}\cConfig(\pLocB) = \LU{0}{\dot\uv}\cConfig + \LU{0b}{\Rot}(\LU{b}{\tomega} \times \pLocB\cConfig)$global velocity vector of body-fixed point given by local position vector $\pLocB$', 'VelocityLocal':'$\LU{b}{\vv}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{\vv}\cConfig(\pLocB)$local (body-fixed) velocity vector of body-fixed point given by local position vector $\pLocB$', 'RotationMatrix':'$\mathrm{vec}(\LU{0b}{\Rot})=[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix (row-major format)', 'Rotation':'vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz), recomputed from rotation matrix', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig$angular velocity of body', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig$local (body-fixed) 3D velocity vector of node', 'Acceleration':'$\LU{0}{\av}\cConfig(\pLocB) = \LU{0}{\ddot\uv} + \LU{0}{\talpha} \times (\LU{0b}{\Rot} \pLocB) +  \LU{0}{\tomega} \times ( \LU{0}{\tomega} \times(\LU{0b}{\Rot} \pLocB))$global acceleration vector of body-fixed point given by local position vector $\pLocB$', 'AccelerationLocal':'$\LU{b}{\av}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{\av}\cConfig(\pLocB)$local (body-fixed) acceleration vector of body-fixed point given by local position vector $\pLocB$', 'AngularAcceleration':'$\LU{0}{\talpha}\cConfig$angular acceleration vector of body', 'AngularAccelerationLocal':'$\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talpha}\cConfig$local angular acceleration vector of body'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\Rot}\pLocB$global position vector of body-fixed point given by local position vector $\pLocB$"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv}\cConfig + \LU{0b}{\Rot}\pLocB$global displacement vector of body-fixed point given by local position vector $\pLocB$"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}\cConfig(\pLocB) = \LU{0}{\dot\uv}\cConfig + \LU{0b}{\Rot}(\LU{b}{\tomega} \times \pLocB\cConfig)$global velocity vector of body-fixed point given by local position vector $\pLocB$"""),
+        ItemOutputVariable(OVVelocityLocal, r"""$\LU{b}{\vv}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{\vv}\cConfig(\pLocB)$local (body-fixed) velocity vector of body-fixed point given by local position vector $\pLocB$"""),
+        ItemOutputVariable(OVRotationMatrix, r"""$\mathrm{vec}(\LU{0b}{\Rot})=[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix (row-major format)"""),
+        ItemOutputVariable(OVRotation, 'vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz), recomputed from rotation matrix'),
+        ItemOutputVariable(OVAngularVelocity, OVDAngularVelocityBody),
+        ItemOutputVariable(OVAngularVelocityLocal, OVDAngularVelocityLocalBody),
+        ItemOutputVariable(OVAcceleration, r"""$\LU{0}{\av}\cConfig(\pLocB) = \LU{0}{\ddot\uv} + \LU{0}{\talpha} \times (\LU{0b}{\Rot} \pLocB) +  \LU{0}{\tomega} \times ( \LU{0}{\tomega} \times(\LU{0b}{\Rot} \pLocB))$global acceleration vector of body-fixed point given by local position vector $\pLocB$"""),
+        ItemOutputVariable(OVAccelerationLocal, r"""$\LU{b}{\av}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{\av}\cConfig(\pLocB)$local (body-fixed) acceleration vector of body-fixed point given by local position vector $\pLocB$"""),
+        ItemOutputVariable(OVAngularAcceleration, r'$\LU{0}{\talpha}\cConfig$angular acceleration vector of body'),
+        ItemOutputVariable(OVAngularAccelerationLocal, r"""$\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talpha}\cConfig$local angular acceleration vector of body"""),
+        ],
     pythonShortName='RigidBody',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -1322,7 +1377,20 @@ definitions.append(ItemDefinition(
     #final x-coordinate of position shall be 2, angle theta shall be np.pi
 """,
     objectType=ObjectTypeBody,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\Rot}\pLocB$global position vector of body-fixed point given by local position vector $\pLocB$', 'Displacement':'$\LU{0}{\uv}\cConfig + \LU{0b}{\Rot}\pLocB$global displacement vector of body-fixed point given by local position vector $\pLocB$', 'Velocity':'$\LU{0}{\vv}\cConfig(\pLocB) = \LU{0}{\dot\uv}\cConfig + \LU{0b}{\Rot}(\LU{b}{\tomega} \times \pLocB\cConfig)$global velocity vector of body-fixed point given by local position vector $\pLocB$', 'VelocityLocal':'$\LU{b}{\vv}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{\vv}\cConfig(\pLocB)$local (body-fixed) velocity vector of body-fixed point given by local position vector $\pLocB$', 'RotationMatrix':'$\mathrm{vec}(\LU{0b}{\Rot})=[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix (row-major format)', 'Rotation':'$\theta_{0\mathrm{config}}$scalar rotation angle of body', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig$angular velocity of body', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig$local (body-fixed) 3D velocity vector of node', 'Acceleration':'$\LU{0}{\av}\cConfig(\pLocB) = \LU{0}{\ddot\uv} + \LU{0}{\talpha} \times (\LU{0b}{\Rot} \pLocB) +  \LU{0}{\tomega} \times ( \LU{0}{\tomega} \times(\LU{0b}{\Rot} \pLocB))$global acceleration vector of body-fixed point given by local position vector $\pLocB$', 'AccelerationLocal':'$\LU{b}{\av}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{\av}\cConfig(\pLocB)$local (body-fixed) acceleration vector of body-fixed point given by local position vector $\pLocB$', 'AngularAcceleration':'$\LU{0}{\talpha}\cConfig$angular acceleration vector of body', 'AngularAccelerationLocal':'$\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talpha}\cConfig$local angular acceleration vector of body'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\Rot}\pLocB$global position vector of body-fixed point given by local position vector $\pLocB$"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv}\cConfig + \LU{0b}{\Rot}\pLocB$global displacement vector of body-fixed point given by local position vector $\pLocB$"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}\cConfig(\pLocB) = \LU{0}{\dot\uv}\cConfig + \LU{0b}{\Rot}(\LU{b}{\tomega} \times \pLocB\cConfig)$global velocity vector of body-fixed point given by local position vector $\pLocB$"""),
+        ItemOutputVariable(OVVelocityLocal, r"""$\LU{b}{\vv}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{\vv}\cConfig(\pLocB)$local (body-fixed) velocity vector of body-fixed point given by local position vector $\pLocB$"""),
+        ItemOutputVariable(OVRotationMatrix, r"""$\mathrm{vec}(\LU{0b}{\Rot})=[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix (row-major format)"""),
+        ItemOutputVariable(OVRotation, r'$\theta_{0\mathrm{config}}$scalar rotation angle of body'),
+        ItemOutputVariable(OVAngularVelocity, OVDAngularVelocityBody),
+        ItemOutputVariable(OVAngularVelocityLocal, OVDAngularVelocityLocalBody),
+        ItemOutputVariable(OVAcceleration, r"""$\LU{0}{\av}\cConfig(\pLocB) = \LU{0}{\ddot\uv} + \LU{0}{\talpha} \times (\LU{0b}{\Rot} \pLocB) +  \LU{0}{\tomega} \times ( \LU{0}{\tomega} \times(\LU{0b}{\Rot} \pLocB))$global acceleration vector of body-fixed point given by local position vector $\pLocB$"""),
+        ItemOutputVariable(OVAccelerationLocal, r"""$\LU{b}{\av}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{\av}\cConfig(\pLocB)$local (body-fixed) acceleration vector of body-fixed point given by local position vector $\pLocB$"""),
+        ItemOutputVariable(OVAngularAcceleration, r'$\LU{0}{\talpha}\cConfig$angular acceleration vector of body'),
+        ItemOutputVariable(OVAngularAccelerationLocal, r"""$\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talpha}\cConfig$local angular acceleration vector of body"""),
+        ],
     pythonShortName='RigidBody2D',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -1656,7 +1724,13 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0]
 """,
     objectType=ObjectTypeSuperElement,
-    outputVariables=r"""{'CoordinatesTotal':'all \hac{ODE2} displacement plus reference coordinates of object', 'Coordinates':'all \hac{ODE2} (displacement) coordinates', 'Coordinates_t':'all \hac{ODE2} velocity coordinates', 'Coordinates_tt':'all \hac{ODE2} acceleration coordinates', 'Force':'generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVCoordinatesTotal, r"""all \hac{ODE2} displacement plus reference coordinates of object"""),
+        ItemOutputVariable(OVCoordinates, r'all \hac{ODE2} (displacement) coordinates'),
+        ItemOutputVariable(OVCoordinates_t, OVDVelocityCoordinatesODE2),
+        ItemOutputVariable(OVCoordinates_tt, r'all \hac{ODE2} acceleration coordinates'),
+        ItemOutputVariable(OVForce, OVDGeneralizedForces),
+        ],
     visuParentClass=VisuParentClassVisualizationObjectSuperElement,
     members=[
         ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
@@ -2003,7 +2077,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nODE1, exu.OutputVariableType.Coordinates)[0]
 """,
     objectType=ObjectTypeObject,
-    outputVariables=r"""{'CoordinatesTotal':'all \hac{ODE2} displacement plus reference coordinates of object', 'Coordinates':'all \hac{ODE1} coordinates', 'Coordinates_t':'all \hac{ODE1} velocity coordinates'}""",
+    outputVariables=[
+        ItemOutputVariable(OVCoordinatesTotal, r"""all \hac{ODE2} displacement plus reference coordinates of object"""),
+        ItemOutputVariable(OVCoordinates, r'all \hac{ODE1} coordinates'),
+        ItemOutputVariable(OVCoordinates_t, r'all \hac{ODE1} velocity coordinates'),
+        ],
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
         ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
@@ -2424,7 +2502,12 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     exudynTestGlobals.testResult = q0 #-3.134018551808591; RigidBody2D with 2e6 time steps gives: -3.134018551809384
 """,
     objectType=ObjectTypeSuperElement,
-    outputVariables=r"""{'Coordinates':'all \hac{ODE2} joint coordinates, including reference values (which is slightly inconsistent with CoordinatesTotal used in nodes); if you need values without reference part, read out the node; these are the minimal coordinates of the object', 'Coordinates_t':'all \hac{ODE2} velocity coordinates', 'Coordinates_tt':'all \hac{ODE2} acceleration coordinates', 'Force':'generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVCoordinates, r"""all \hac{ODE2} joint coordinates, including reference values (which is slightly inconsistent with CoordinatesTotal used in nodes); if you need values without reference part, read out the node; these are the minimal coordinates of the object"""),
+        ItemOutputVariable(OVCoordinates_t, OVDVelocityCoordinatesODE2),
+        ItemOutputVariable(OVCoordinates_tt, r'all \hac{ODE2} acceleration coordinates'),
+        ItemOutputVariable(OVForce, OVDGeneralizedForces),
+        ],
     pythonShortName='KinematicTree',
     visuParentClass=VisuParentClassVisualizationObjectSuperElement,
     members=[
@@ -3017,7 +3100,12 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeSuperElement,
-    outputVariables=r"""{'Coordinates':'all \hac{ODE2} coordinates', 'Coordinates_t':'all \hac{ODE2} velocity coordinates', 'Coordinates_tt':'all \hac{ODE2} acceleration coordinates', 'Force':'generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVCoordinates, r'all \hac{ODE2} coordinates'),
+        ItemOutputVariable(OVCoordinates_t, OVDVelocityCoordinatesODE2),
+        ItemOutputVariable(OVCoordinates_tt, r'all \hac{ODE2} acceleration coordinates'),
+        ItemOutputVariable(OVForce, OVDGeneralizedForces),
+        ],
     visuParentClass=VisuParentClassVisualizationObjectSuperElement,
     members=[
         ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
@@ -3604,7 +3692,11 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeSuperElement,
-    outputVariables=r"""{'Coordinates':'all \hac{ODE2} coordinates', 'Coordinates_t':'all \hac{ODE2} velocity coordinates', 'Force':'generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVCoordinates, r'all \hac{ODE2} coordinates'),
+        ItemOutputVariable(OVCoordinates_t, OVDVelocityCoordinatesODE2),
+        ItemOutputVariable(OVForce, OVDGeneralizedForces),
+        ],
     pythonShortName='CMSobject',
     visuParentClass=VisuParentClassVisualizationObjectSuperElement,
     members=[
@@ -3975,7 +4067,17 @@ definitions.append(ItemDefinition(
     #ux=-0.5013058140308901
 """,
     objectType=ObjectTypeFiniteElement,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv\cConfig(x,0,0)} = \rv\cConfig(x) + y\cdot \nv\cConfig(x)$global position vector of local position $[x,0,0]$', 'Displacement':'$\LU{0}{\uv\cConfig(x,0,0)} = \LU{0}{\pv\cConfig(x,0,0)} - \LU{0}{\pv\cRef(x,0,0)}$global displacement vector of local position', 'Velocity':'$\LU{0}{\vv(x,0,0)} = \LU{0}{\dot \rv(x)}$global velocity vector of local position', 'Director1':"$\rv'(x)$(axial) slope vector of local axis position (at $y$=0)", 'StrainLocal':'$\varepsilon$axial strain (scalar) of local axis position (at Y=Z=0)', 'CurvatureLocal':'$[K_x, K_y, K_z]\tp$local curvature vector', 'ForceLocal':'$N$ (local) section normal force (scalar, including reference strains) (at $y$=$z$=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint', 'TorqueLocal':'$M$ (local) bending moment (scalar) (at $y$=$z$=0), which are bending moments as there is no torque', 'Acceleration':'$\LU{0}{\av(x,0,0)} = \LU{0}{\ddot \rv(x)}$global acceleration vector of local position'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv\cConfig(x,0,0)} = \rv\cConfig(x) + y\cdot \nv\cConfig(x)$global position vector of local position $[x,0,0]$"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv\cConfig(x,0,0)} = \LU{0}{\pv\cConfig(x,0,0)} - \LU{0}{\pv\cRef(x,0,0)}$global displacement vector of local position"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv(x,0,0)} = \LU{0}{\dot \rv(x)}$global velocity vector of local position"""),
+        ItemOutputVariable(OVDirector1, r"""$\rv'(x)$(axial) slope vector of local axis position (at $y$=0)"""),
+        ItemOutputVariable(OVStrainLocal, r"""$\varepsilon$axial strain (scalar) of local axis position (at Y=Z=0)"""),
+        ItemOutputVariable(OVCurvatureLocal, r'$[K_x, K_y, K_z]\tp$local curvature vector'),
+        ItemOutputVariable(OVForceLocal, '$N$ (local) section normal force (scalar, including reference strains) (at $y$=$z$=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint'),
+        ItemOutputVariable(OVTorqueLocal, '$M$ (local) bending moment (scalar) (at $y$=$z$=0), which are bending moments as there is no torque'),
+        ItemOutputVariable(OVAcceleration, r"""$\LU{0}{\av(x,0,0)} = \LU{0}{\ddot \rv(x)}$global acceleration vector of local position"""),
+        ],
     pythonShortName='Cable',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -4552,7 +4654,21 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     #ux=-0.5013058140308901
 """,
     objectType=ObjectTypeFiniteElement,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv\cConfig(x,y,0)} = \rv\cConfig(x) + y\cdot \nv\cConfig(x)$global position vector of local position $[x,y,0]$', 'Displacement':'$\LU{0}{\uv\cConfig(x,y,0)} = \LU{0}{\pv\cConfig(x,y,0)} - \LU{0}{\pv\cRef(x,y,0)}$global displacement vector of local position', 'Velocity':'$\LU{0}{\vv(x,y,0)} = \LU{0}{\dot \rv(x)} - y \cdot \omega_2 \cdot\LU{0}{\tv(x)} $global velocity vector of local position', 'VelocityLocal':'$\LU{b}{\vv(x,y,0)} = \LU{b0}{\Rot}\LU{0}{\vv(x,y,0)}$local velocity vector of local position', 'Rotation':"$\varphi = \mathrm{atan2}(r'_y, r'_x)$(scalar) rotation angle of axial slope vector (relative to global $x$-axis)", 'Director1':"$\rv'(x)$(axial) slope vector of local axis position (at $y$=0)", 'StrainLocal':'$\varepsilon$axial strain (scalar) of local axis position (at Y=0)', 'CurvatureLocal':'$K$axial strain (scalar)', 'ForceLocal':'$N$ (local) section normal force (scalar, including reference strains) (at $y$=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint', 'TorqueLocal':'$M$ (local) bending moment (scalar) (at $y$=0)', 'AngularVelocity':'$\tomega = [0,\, ,0,\, \omega_2]$angular velocity of local axis position (at $y$=0)', 'Acceleration':'$\LU{0}{\av(x,y,0)} = \LU{0}{\ddot \rv(x)} - y \cdot \dot\omega_2 \cdot\LU{0}{\tv(x)}- y \cdot \omega_2 \cdot\LU{0}{\dot\tv(x)} $global acceleration vector of local position', 'AngularAcceleration':'$\talpha = [0,\, ,0,\, \dot\omega_2]$angular acceleration of local axis position'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv\cConfig(x,y,0)} = \rv\cConfig(x) + y\cdot \nv\cConfig(x)$global position vector of local position $[x,y,0]$"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv\cConfig(x,y,0)} = \LU{0}{\pv\cConfig(x,y,0)} - \LU{0}{\pv\cRef(x,y,0)}$global displacement vector of local position"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv(x,y,0)} = \LU{0}{\dot \rv(x)} - y \cdot \omega_2 \cdot\LU{0}{\tv(x)} $global velocity vector of local position"""),
+        ItemOutputVariable(OVVelocityLocal, r"""$\LU{b}{\vv(x,y,0)} = \LU{b0}{\Rot}\LU{0}{\vv(x,y,0)}$local velocity vector of local position"""),
+        ItemOutputVariable(OVRotation, r"""$\varphi = \mathrm{atan2}(r'_y, r'_x)$(scalar) rotation angle of axial slope vector (relative to global $x$-axis)"""),
+        ItemOutputVariable(OVDirector1, r"""$\rv'(x)$(axial) slope vector of local axis position (at $y$=0)"""),
+        ItemOutputVariable(OVStrainLocal, r"""$\varepsilon$axial strain (scalar) of local axis position (at Y=0)"""),
+        ItemOutputVariable(OVCurvatureLocal, '$K$axial strain (scalar)'),
+        ItemOutputVariable(OVForceLocal, '$N$ (local) section normal force (scalar, including reference strains) (at $y$=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint'),
+        ItemOutputVariable(OVTorqueLocal, '$M$ (local) bending moment (scalar) (at $y$=0)'),
+        ItemOutputVariable(OVAngularVelocity, r"""$\tomega = [0,\, ,0,\, \omega_2]$angular velocity of local axis position (at $y$=0)"""),
+        ItemOutputVariable(OVAcceleration, r"""$\LU{0}{\av(x,y,0)} = \LU{0}{\ddot \rv(x)} - y \cdot \dot\omega_2 \cdot\LU{0}{\tv(x)}- y \cdot \omega_2 \cdot\LU{0}{\dot\tv(x)} $global acceleration vector of local position"""),
+        ItemOutputVariable(OVAngularAcceleration, r"""$\talpha = [0,\, ,0,\, \dot\omega_2]$angular acceleration of local axis position"""),
+        ],
     pythonShortName='Cable2D',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -4744,7 +4860,18 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeFiniteElement,
-    outputVariables=r"""{'Position':'global position vector of local position (in X/Y beam coordinates)', 'Displacement':'global displacement vector of local position', 'Velocity':'global velocity vector of local position', 'VelocityLocal':'local velocity vector of local position', 'Rotation':'(scalar) rotation angle of axial slope vector (relative to global x-axis)', 'Director1':'(axial) slope vector of local axis position (at Y=0)', 'StrainLocal':'$\varepsilon$axial strain (scalar) of local axis position (at Y=0)', 'CurvatureLocal':'$K$axial strain (scalar)', 'ForceLocal':'$N$ (local) section normal force (scalar, including reference strains) (at Y=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint', 'TorqueLocal':'$M$ (local) bending moment (scalar) (at Y=0)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, 'global position vector of local position (in X/Y beam coordinates)'),
+        ItemOutputVariable(OVDisplacement, 'global displacement vector of local position'),
+        ItemOutputVariable(OVVelocity, 'global velocity vector of local position'),
+        ItemOutputVariable(OVVelocityLocal, 'local velocity vector of local position'),
+        ItemOutputVariable(OVRotation, '(scalar) rotation angle of axial slope vector (relative to global x-axis)'),
+        ItemOutputVariable(OVDirector1, '(axial) slope vector of local axis position (at Y=0)'),
+        ItemOutputVariable(OVStrainLocal, r"""$\varepsilon$axial strain (scalar) of local axis position (at Y=0)"""),
+        ItemOutputVariable(OVCurvatureLocal, '$K$axial strain (scalar)'),
+        ItemOutputVariable(OVForceLocal, '$N$ (local) section normal force (scalar, including reference strains) (at Y=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint'),
+        ItemOutputVariable(OVTorqueLocal, '$M$ (local) bending moment (scalar) (at Y=0)'),
+        ],
     pythonShortName='ALECable2D',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -4940,7 +5067,17 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeFiniteElement,
-    outputVariables=r"{'Position':'global position vector of local position vector', 'Displacement':'global displacement vector of local position vector', 'Velocity':'global velocity vector of local position vector', 'VelocityLocal':'global velocity vector of local position vector', 'AngularVelocity':'global angular velocity vector of local (axis) position vector', 'AngularVelocityLocal':'local angular velocity vector of local (axis) position vector', 'Acceleration':'global acceleration vector of local position vector', 'Rotation':'3D Tait-Bryan rotation components of cross section rotation', 'RotationMatrix':'rotation matrix of cross section rotation as 9D vector'}",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, 'global position vector of local position vector'),
+        ItemOutputVariable(OVDisplacement, 'global displacement vector of local position vector'),
+        ItemOutputVariable(OVVelocity, 'global velocity vector of local position vector'),
+        ItemOutputVariable(OVVelocityLocal, 'global velocity vector of local position vector'),
+        ItemOutputVariable(OVAngularVelocity, 'global angular velocity vector of local (axis) position vector'),
+        ItemOutputVariable(OVAngularVelocityLocal, 'local angular velocity vector of local (axis) position vector'),
+        ItemOutputVariable(OVAcceleration, 'global acceleration vector of local position vector'),
+        ItemOutputVariable(OVRotation, '3D Tait-Bryan rotation components of cross section rotation'),
+        ItemOutputVariable(OVRotationMatrix, 'rotation matrix of cross section rotation as 9D vector'),
+        ],
     pythonShortName='ANCFBeam',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -5182,7 +5319,16 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeFiniteElement,
-    outputVariables=r"{'Position':'global position vector of local axis (X) and cross section (Y) position', 'Displacement':'global displacement vector of local axis (X) and cross section (Y) position', 'Velocity':'global velocity vector of local axis (X) and cross section (Y) position', 'Rotation':'3D Tait-Bryan rotation components, containing rotation around $Z$-axis only', 'StrainLocal':'6 (local) strain components, containing only axial ($XX$, index 0) and shear strain ($XY$, index 5); evaluated at beam axis ONLY', 'CurvatureLocal':'3D vector of (local) curvature, only $Z$ component is non-zero', 'ForceLocal':'3D vector of (local) section normal force, containing axial (X) and shear force (Y)', 'TorqueLocal':'3D vector of (local) torques, containing only bending moment (Z)'}",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, 'global position vector of local axis (X) and cross section (Y) position'),
+        ItemOutputVariable(OVDisplacement, 'global displacement vector of local axis (X) and cross section (Y) position'),
+        ItemOutputVariable(OVVelocity, 'global velocity vector of local axis (X) and cross section (Y) position'),
+        ItemOutputVariable(OVRotation, '3D Tait-Bryan rotation components, containing rotation around $Z$-axis only'),
+        ItemOutputVariable(OVStrainLocal, '6 (local) strain components, containing only axial ($XX$, index 0) and shear strain ($XY$, index 5); evaluated at beam axis ONLY'),
+        ItemOutputVariable(OVCurvatureLocal, '3D vector of (local) curvature, only $Z$ component is non-zero'),
+        ItemOutputVariable(OVForceLocal, '3D vector of (local) section normal force, containing axial (X) and shear force (Y)'),
+        ItemOutputVariable(OVTorqueLocal, '3D vector of (local) torques, containing only bending moment (Z)'),
+        ],
     pythonShortName='Beam2D',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -5412,7 +5558,14 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeFiniteElement,
-    outputVariables=r"{'Position':'global position vector of local axis (1) and cross section (2) position', 'Displacement':'global displacement vector of local axis (1) and cross section (2) position', 'Velocity':'global velocity vector of local axis (1) and cross section (2) position', 'Rotation':'3D Tait-Bryan rotation components, containing rotation around $z$-axis only', 'StrainLocal':'6 strain components, containing only axial ($xx$) and shear strain ($xy$)', 'CurvatureLocal':'3D vector of curvature, containing only curvature w.r.t. $z$-axis'}",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, 'global position vector of local axis (1) and cross section (2) position'),
+        ItemOutputVariable(OVDisplacement, 'global displacement vector of local axis (1) and cross section (2) position'),
+        ItemOutputVariable(OVVelocity, 'global velocity vector of local axis (1) and cross section (2) position'),
+        ItemOutputVariable(OVRotation, '3D Tait-Bryan rotation components, containing rotation around $z$-axis only'),
+        ItemOutputVariable(OVStrainLocal, '6 strain components, containing only axial ($xx$) and shear strain ($xy$)'),
+        ItemOutputVariable(OVCurvatureLocal, '3D vector of curvature, containing only curvature w.r.t. $z$-axis'),
+        ],
     pythonShortName='Beam3D',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -5593,7 +5746,19 @@ definitions.append(ItemDefinition(
     exudynTestGlobals.testResult = 0
 """,
     objectType=ObjectTypeFiniteElement,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv\cConfig(x,y,z)}$global position vector of local position $[x,y,z]$', 'Displacement':'$\LU{0}{\uv\cConfig(x,y,z)} = \LU{0}{\pv\cConfig(x,y,z)} - \LU{0}{\pv\cRef(x,y,z)}$global displacement vector of local position', 'Velocity':'$\LU{0}{\vv(x,y,z)} = \LU{0}{\dot \rv(x,y,z)}$global velocity vector of local position', 'Director1':"$\rv_x(x,y,z)$(axial) slope vector of local position (at $z$=0)", 'Director2':"$\rv_y(x,y,z)$(axial) slope vector of local position (at $z$=0)", 'StrainLocal':'$\varepsilon$axial strain (scalar) of local axis position (at Z=0)', 'CurvatureLocal':'$[K_x, K_y, K_z]\tp$local curvature vector', 'ForceLocal':'$N$ (local) section normal force per length (scalar, including reference strains) (at $z$=0)', 'TorqueLocal':'$M$ (local) bending moment per length (scalar) (at $z$=0), which are bending moments as there is no torque', 'StressLocal':'local inplane stress components', 'Acceleration':'$\LU{0}{\av(x,y,z)} = \LU{0}{\ddot \rv(x,y,z)}$global acceleration vector of local position'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv\cConfig(x,y,z)}$global position vector of local position $[x,y,z]$"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv\cConfig(x,y,z)} = \LU{0}{\pv\cConfig(x,y,z)} - \LU{0}{\pv\cRef(x,y,z)}$global displacement vector of local position"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv(x,y,z)} = \LU{0}{\dot \rv(x,y,z)}$global velocity vector of local position"""),
+        ItemOutputVariable(OVDirector1, r"""$\rv_x(x,y,z)$(axial) slope vector of local position (at $z$=0)"""),
+        ItemOutputVariable(OVDirector2, r"""$\rv_y(x,y,z)$(axial) slope vector of local position (at $z$=0)"""),
+        ItemOutputVariable(OVStrainLocal, r"""$\varepsilon$axial strain (scalar) of local axis position (at Z=0)"""),
+        ItemOutputVariable(OVCurvatureLocal, r'$[K_x, K_y, K_z]\tp$local curvature vector'),
+        ItemOutputVariable(OVForceLocal, '$N$ (local) section normal force per length (scalar, including reference strains) (at $z$=0)'),
+        ItemOutputVariable(OVTorqueLocal, '$M$ (local) bending moment per length (scalar) (at $z$=0), which are bending moments as there is no torque'),
+        ItemOutputVariable(OVStressLocal, 'local inplane stress components'),
+        ItemOutputVariable(OVAcceleration, r"""$\LU{0}{\av(x,y,z)} = \LU{0}{\ddot \rv(x,y,z)}$global acceleration vector of local position"""),
+        ],
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
         ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
@@ -6033,7 +6198,13 @@ definitions.append(ItemDefinition(
     exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
 """,
     objectType=ObjectTypeConnector,
-    outputVariables=r"""{'Distance':'distance between both points', 'Displacement':'relative displacement between both points', 'Velocity':'relative velocity between both points', 'Force':'$\fv$3D spring-damper force vector', 'ForceLocal':'$f_{SD}$scalar spring-damper force'}""",
+    outputVariables=[
+        ItemOutputVariable(OVDistance, 'distance between both points'),
+        ItemOutputVariable(OVDisplacement, 'relative displacement between both points'),
+        ItemOutputVariable(OVVelocity, 'relative velocity between both points'),
+        ItemOutputVariable(OVForce, r'$\fv$3D spring-damper force vector'),
+        ItemOutputVariable(OVForceLocal, '$f_{SD}$scalar spring-damper force'),
+        ],
     pythonShortName='SpringDamper',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -6303,7 +6474,12 @@ definitions.append(ItemDefinition(
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[1]
 """,
     objectType=ObjectTypeConnector,
-    outputVariables=r"""{'Displacement':'$\Delta\! \LU{0}{\pv} = \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$relative displacement in global coordinates', 'Distance':'$L=|\Delta\! \LU{0}{\pv}|$scalar distance between both marker points', 'Velocity':'$\Delta\! \LU{0}{\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$relative translational velocity in global coordinates', 'Force':'$\fv_{SD}$joint force in global coordinates, see equations'}""",
+    outputVariables=[
+        ItemOutputVariable(OVDisplacement, r"""$\Delta\! \LU{0}{\pv} = \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$relative displacement in global coordinates"""),
+        ItemOutputVariable(OVDistance, r"""$L=|\Delta\! \LU{0}{\pv}|$scalar distance between both marker points"""),
+        ItemOutputVariable(OVVelocity, r"""$\Delta\! \LU{0}{\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$relative translational velocity in global coordinates"""),
+        ItemOutputVariable(OVForce, r'$\fv_{SD}$joint force in global coordinates, see equations'),
+        ],
     pythonShortName='CartesianSpringDamper',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -6564,7 +6740,14 @@ definitions.append(ItemDefinition(
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displacement)[1] 
 """,
     objectType=ObjectTypeConnector,
-    outputVariables=r"""{'DisplacementLocal':'$\LU{J0}{\Delta\pv}$relative displacement in local joint0 coordinates', 'VelocityLocal':'$\LU{J0}{\Delta\vv}$relative translational velocity in local joint0 coordinates', 'Rotation':'$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$relative rotation parameters (Tait Bryan Rxyz); these are the angles used for calculation of joint torques (e.g. if cX is the diagonal rotational stiffness, the moment for axis X reads mX=cX*phiX, etc.)', 'AngularVelocityLocal':'$\LU{J0}{\Delta\tomega}$relative angular velocity in local joint0 coordinates', 'ForceLocal':'$\LU{J0}{\fv}$joint force in local joint0 coordinates', 'TorqueLocal':'$\LU{J0}{\mv}$joint torque in in local joint0 coordinates'}""",
+    outputVariables=[
+        ItemOutputVariable(OVDisplacementLocal, r"""$\LU{J0}{\Delta\pv}$relative displacement in local joint0 coordinates"""),
+        ItemOutputVariable(OVVelocityLocal, OVDVelocityLocalJoint),
+        ItemOutputVariable(OVRotation, r"""$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$relative rotation parameters (Tait Bryan Rxyz); these are the angles used for calculation of joint torques (e.g. if cX is the diagonal rotational stiffness, the moment for axis X reads mX=cX*phiX, etc.)"""),
+        ItemOutputVariable(OVAngularVelocityLocal, r"""$\LU{J0}{\Delta\tomega}$relative angular velocity in local joint0 coordinates"""),
+        ItemOutputVariable(OVForceLocal, r'$\LU{J0}{\fv}$joint force in local joint0 coordinates'),
+        ItemOutputVariable(OVTorqueLocal, r'$\LU{J0}{\mv}$joint torque in in local joint0 coordinates'),
+        ],
     pythonShortName='RigidBodySpringDamper',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -6831,7 +7014,11 @@ definitions.append(ItemDefinition(
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displacement)[0]
 """,
     objectType=ObjectTypeConnector,
-    outputVariables=r"""{'DisplacementLocal':'$\Delta x$(scalar) relative displacement of the spring-damper', 'VelocityLocal':'$\Delta v$(scalar) relative velocity of spring-damper', 'ForceLocal':'$f_{SD}$(scalar) spring-damper force'}""",
+    outputVariables=[
+        ItemOutputVariable(OVDisplacementLocal, r"""$\Delta x$(scalar) relative displacement of the spring-damper"""),
+        ItemOutputVariable(OVVelocityLocal, r'$\Delta v$(scalar) relative velocity of spring-damper'),
+        ItemOutputVariable(OVForceLocal, '$f_{SD}$(scalar) spring-damper force'),
+        ],
     pythonShortName='LinearSpringDamper',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -7064,7 +7251,11 @@ definitions.append(ItemDefinition(
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation)[2]
 """,
     objectType=ObjectTypeConnector,
-    outputVariables=r"""{'Rotation':'$\Delta\theta$relative rotation around the spring-damper Z-coordinate, enhanced to a continuous rotation (infinite rotations $>+\pi$ and $<-\pi$) if a NodeGeneric with 1 coordinate as added', 'AngularVelocityLocal':'$\Delta\omega$scalar relative angular velocity around joint0 Z-axis', 'TorqueLocal':'$\tau_{SD}$scalar spring-damper torque around the local joint0 Z-axis'}""",
+    outputVariables=[
+        ItemOutputVariable(OVRotation, r"""$\Delta\theta$relative rotation around the spring-damper Z-coordinate, enhanced to a continuous rotation (infinite rotations $>+\pi$ and $<-\pi$) if a NodeGeneric with 1 coordinate as added"""),
+        ItemOutputVariable(OVAngularVelocityLocal, r"""$\Delta\omega$scalar relative angular velocity around joint0 Z-axis"""),
+        ItemOutputVariable(OVTorqueLocal, r"""$\tau_{SD}$scalar spring-damper torque around the local joint0 Z-axis"""),
+        ],
     pythonShortName='TorsionalSpringDamper',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -7328,7 +7519,11 @@ definitions.append(ItemDefinition(
                                                  exu.OutputVariableType.Displacement)[0]
 """,
     objectType=ObjectTypeConnector,
-    outputVariables=r"""{'Displacement':'$\Delta q$relative scalar displacement of marker coordinates', 'Velocity':'$\Delta v$difference of scalar marker velocity coordinates', 'Force':'$f_{SD}$scalar force in connector'}""",
+    outputVariables=[
+        ItemOutputVariable(OVDisplacement, r'$\Delta q$relative scalar displacement of marker coordinates'),
+        ItemOutputVariable(OVVelocity, r'$\Delta v$difference of scalar marker velocity coordinates'),
+        ItemOutputVariable(OVForce, '$f_{SD}$scalar force in connector'),
+        ],
     pythonShortName='CoordinateSpringDamper',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -7609,7 +7804,11 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
-    outputVariables=r"""{'Displacement':'$\Delta q$relative scalar displacement of marker coordinates', 'Velocity':'$\Delta v$difference of scalar marker velocity coordinates', 'Force':'$f_{SD}$scalar spring force'}""",
+    outputVariables=[
+        ItemOutputVariable(OVDisplacement, r'$\Delta q$relative scalar displacement of marker coordinates'),
+        ItemOutputVariable(OVVelocity, r'$\Delta v$difference of scalar marker velocity coordinates'),
+        ItemOutputVariable(OVForce, '$f_{SD}$scalar spring force'),
+        ],
     pythonShortName='CoordinateSpringDamperExt',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -7925,7 +8124,11 @@ definitions.append(ItemDefinition(
     exudynTestGlobals.testResult = mbs.GetNodeOutput(node1, exu.OutputVariableType.Position)[1]/100000
 """,
     objectType=ObjectTypeConnector,
-    outputVariables=r"""{'Distance':'$L$distance between both points', 'Displacement':'$\Delta\! \LU{0}{\pv}$relative displacement between both points', 'Force':'$\fv$gravity force vector, pointing from marker $m0$ to marker $m1$'}""",
+    outputVariables=[
+        ItemOutputVariable(OVDistance, '$L$distance between both points'),
+        ItemOutputVariable(OVDisplacement, r"""$\Delta\! \LU{0}{\pv}$relative displacement between both points"""),
+        ItemOutputVariable(OVForce, r"""$\fv$gravity force vector, pointing from marker $m0$ to marker $m1$"""),
+        ],
     pythonShortName='ConnectorGravity',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -8150,7 +8353,13 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
-    outputVariables=r"""{'Distance':'$L = |\Delta\! \LU{0}{\pv}|$distance between both marker points (usually the actuator bushings); current actuator length', 'Displacement':'relative displacement between both marker points', 'Velocity':'$\Delta\! \LU{0}{\vv}$relative velocity between both points', 'VelocityLocal':'$\dot L$actuator velocity, the derivative of actuator length', 'Force':'force in actuator resulting as the difference of both pressures times according cross sections'}""",
+    outputVariables=[
+        ItemOutputVariable(OVDistance, r"""$L = |\Delta\! \LU{0}{\pv}|$distance between both marker points (usually the actuator bushings); current actuator length"""),
+        ItemOutputVariable(OVDisplacement, 'relative displacement between both marker points'),
+        ItemOutputVariable(OVVelocity, r'$\Delta\! \LU{0}{\vv}$relative velocity between both points'),
+        ItemOutputVariable(OVVelocityLocal, r'$\dot L$actuator velocity, the derivative of actuator length'),
+        ItemOutputVariable(OVForce, 'force in actuator resulting as the difference of both pressures times according cross sections'),
+        ],
     pythonShortName='HydraulicActuatorSimple',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -8502,7 +8711,11 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
-    outputVariables=r"""{'Distance':'$L$current total length of rope', 'VelocityLocal':'$\dot L$scalar time derivative of current total length of rope', 'ForceLocal':'$F$scalar force in reeving system (constant over length of rope)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVDistance, '$L$current total length of rope'),
+        ItemOutputVariable(OVVelocityLocal, r"""$\dot L$scalar time derivative of current total length of rope"""),
+        ItemOutputVariable(OVForceLocal, '$F$scalar force in reeving system (constant over length of rope)'),
+        ],
     pythonShortName='ReevingSystemSprings',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -8708,7 +8921,12 @@ definitions.append(ItemDefinition(
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0]
 """,
     objectType=ObjectTypeConstraint,
-    outputVariables=r"""{'Displacement':'$\LU{0}{\Delta\pv}$relative displacement in global coordinates', 'Velocity':'$\LU{0}{\Delta\vv}$relative translational velocity in global coordinates', 'Distance':'$|\LU{0}{\Delta\pv}|$distance between markers (should stay constant; shows constraint deviation)', 'Force':'$\lambda_0$joint force (=scalar Lagrange multiplier)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\Delta\pv}$relative displacement in global coordinates"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\Delta\vv}$relative translational velocity in global coordinates"""),
+        ItemOutputVariable(OVDistance, r"""$|\LU{0}{\Delta\pv}|$distance between markers (should stay constant; shows constraint deviation)"""),
+        ItemOutputVariable(OVForce, r'$\lambda_0$joint force (=scalar Lagrange multiplier)'),
+        ],
     pythonShortName='DistanceConstraint',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -8935,7 +9153,12 @@ definitions.append(ItemDefinition(
     exudynTestGlobals.testResult  = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[0]
 """,
     objectType=ObjectTypeConstraint,
-    outputVariables=r"""{'Displacement':'$\Delta q$relative scalar displacement of marker coordinates, not including factorValue1', 'Velocity':'$\Delta v$difference of scalar marker velocity coordinates, not including factorValue1', 'ConstraintEquation':'$\cv$(residuum of) constraint equation', 'Force':'$\lambda_0$scalar constraint force (Lagrange multiplier)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVDisplacement, r"""$\Delta q$relative scalar displacement of marker coordinates, not including factorValue1"""),
+        ItemOutputVariable(OVVelocity, r"""$\Delta v$difference of scalar marker velocity coordinates, not including factorValue1"""),
+        ItemOutputVariable(OVConstraintEquation, r'$\cv$(residuum of) constraint equation'),
+        ItemOutputVariable(OVForce, r'$\lambda_0$scalar constraint force (Lagrange multiplier)'),
+        ],
     pythonShortName='CoordinateConstraint',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -9181,7 +9404,12 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConstraint,
-    outputVariables=r"""{'Displacement':'$\Delta \qv$relative scalar displacement of marker coordinates, not including scaling matrices', 'Velocity':'$\Delta \vv$difference of scalar marker velocity coordinates, not including scaling matrices', 'ConstraintEquation':'$\cv$(residuum of) constraint equations', 'Force':'$\tlambda$constraint force vector (vector of Lagrange multipliers), resulting from action of constraint equations'}""",
+    outputVariables=[
+        ItemOutputVariable(OVDisplacement, r"""$\Delta \qv$relative scalar displacement of marker coordinates, not including scaling matrices"""),
+        ItemOutputVariable(OVVelocity, r"""$\Delta \vv$difference of scalar marker velocity coordinates, not including scaling matrices"""),
+        ItemOutputVariable(OVConstraintEquation, r'$\cv$(residuum of) constraint equations'),
+        ItemOutputVariable(OVForce, r"""$\tlambda$constraint force vector (vector of Lagrange multipliers), resulting from action of constraint equations"""),
+        ],
     pythonShortName='CoordinateVectorConstraint',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -9483,7 +9711,13 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}_{G}$current global position of contact point between rolling disc and ground', 'Velocity':'$\LU{0}{\vv}_{trail}$current velocity of the trail (according to motion of the contact point along the trail!) in global coordinates; this is not the velocity of the contact point!', 'VelocityLocal':'$\LU{J1}{\vv}$relative slip velocity at contact point in special $J1$ joint coordinates', 'ForceLocal':'$\LU{J1}{\fv} = \LU{0}{[f_{t,x},\, f_{t,y},\, f_{n}]\tp}$contact forces acting on disc, in special $J1$ joint coordinates, see section Connector Forces, $f_{t,x}$ being the lateral force (parallel to ground plane), $f_{t,y}$ being the longitudinal force and $f_{n}$ being the contact normal force', 'RotationMatrix': '$\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}{\vv_{PN}}]$transformation matrix of special joint coordinates $J1$ to global coordinates'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}_{G}$current global position of contact point between rolling disc and ground"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}_{trail}$current velocity of the trail (according to motion of the contact point along the trail!) in global coordinates; this is not the velocity of the contact point!"""),
+        ItemOutputVariable(OVVelocityLocal, r"""$\LU{J1}{\vv}$relative slip velocity at contact point in special $J1$ joint coordinates"""),
+        ItemOutputVariable(OVForceLocal, r"""$\LU{J1}{\fv} = \LU{0}{[f_{t,x},\, f_{t,y},\, f_{n}]\tp}$contact forces acting on disc, in special $J1$ joint coordinates, see section Connector Forces, $f_{t,x}$ being the lateral force (parallel to ground plane), $f_{t,y}$ being the longitudinal force and $f_{n}$ being the contact normal force"""),
+        ItemOutputVariable(OVRotationMatrix, r"""$\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}{\vv_{PN}}]$transformation matrix of special joint coordinates $J1$ to global coordinates"""),
+        ],
     pythonShortName='RollingDiscPenalty',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -9763,7 +9997,12 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}_{C}$current global position of contact point between roller and ground', 'Velocity':'$\LU{0}{\vv}_{C}$current velocity of the trail (contact) point in global coordinates; this is the velocity with which the contact moves over the ground plane', 'Force':'$\LU{0}{\fv}$Roll-ground force in ground coordinates', 'Torque':'$\LU{0}{\mv}$Roll-ground torque in ground coordinates'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}_{C}$current global position of contact point between roller and ground"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}_{C}$current velocity of the trail (contact) point in global coordinates; this is the velocity with which the contact moves over the ground plane"""),
+        ItemOutputVariable(OVForce, r'$\LU{0}{\fv}$Roll-ground force in ground coordinates'),
+        ItemOutputVariable(OVTorque, r'$\LU{0}{\mv}$Roll-ground torque in ground coordinates'),
+        ],
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
         ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
@@ -10676,7 +10915,11 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
-    outputVariables=r"""{'Coordinates':'$[u_{t,0},\, g_0,\, u_{t,1},\, g_1,\, \ldots,\, u_{t,n_{cs}},\, g_{n_{cs}}]\tp$local (relative) displacement in tangential ($\tv$) and normal ($\nv$) direction per segment ($n_{cs}$); values are only provided in case of contact, otherwise zero; tangential displacement is only non-zero in case of sticking!', 'Coordinates_t':'$[v_{t,0},\, v_{n,0},\, v_{t,1},\, v_{n,1},\, \ldots,\, v_{t,n_{cs}},\, v_{n,n_{cs}}]\tp$local (relative) velocity in tangential ($\tv$) and normal ($\nv$) direction per segment ($n_{cs}$); values are only provided in case of contact, otherwise zero', 'ForceLocal':'$[f_{t,0},\, f_{n,0},\, f_{t,1},\, f_{n,1},\, \ldots,\, f_{t,n_{cs}},\, f_{n,n_{cs}}]\tp$local contact forces in tangential ($\tv$) and normal ($\nv$) direction per segment ($n_{cs}$)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVCoordinates, r"""$[u_{t,0},\, g_0,\, u_{t,1},\, g_1,\, \ldots,\, u_{t,n_{cs}},\, g_{n_{cs}}]\tp$local (relative) displacement in tangential ($\tv$) and normal ($\nv$) direction per segment ($n_{cs}$); values are only provided in case of contact, otherwise zero; tangential displacement is only non-zero in case of sticking!"""),
+        ItemOutputVariable(OVCoordinates_t, r"""$[v_{t,0},\, v_{n,0},\, v_{t,1},\, v_{n,1},\, \ldots,\, v_{t,n_{cs}},\, v_{n,n_{cs}}]\tp$local (relative) velocity in tangential ($\tv$) and normal ($\nv$) direction per segment ($n_{cs}$); values are only provided in case of contact, otherwise zero"""),
+        ItemOutputVariable(OVForceLocal, r"""$[f_{t,0},\, f_{n,0},\, f_{t,1},\, f_{n,1},\, \ldots,\, f_{t,n_{cs}},\, f_{n,n_{cs}}]\tp$local contact forces in tangential ($\tv$) and normal ($\nv$) direction per segment ($n_{cs}$)"""),
+        ],
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
         ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
@@ -11011,7 +11254,15 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
-    outputVariables=r"""{'Position':'contact center point (also given for positive gap, when no contact occurs)', 'Displacement':'global displacement vector between the two spheres midpoints', 'DisplacementLocal':'1D Vector, containing only gap', 'Velocity':'global relative velocity between the two spheres midpoints', 'Force':'global contact force vector', 'Director1':'contains normalized vector from marker 0 to marker 1', 'Torque':'global torque due to friction on marker 0; to obetain torque on marker 1, multiply the torque with the factor $\frac{r_1+g/2}{r_0+g/2}$'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, 'contact center point (also given for positive gap, when no contact occurs)'),
+        ItemOutputVariable(OVDisplacement, 'global displacement vector between the two spheres midpoints'),
+        ItemOutputVariable(OVDisplacementLocal, '1D Vector, containing only gap'),
+        ItemOutputVariable(OVVelocity, 'global relative velocity between the two spheres midpoints'),
+        ItemOutputVariable(OVForce, 'global contact force vector'),
+        ItemOutputVariable(OVDirector1, 'contains normalized vector from marker 0 to marker 1'),
+        ItemOutputVariable(OVTorque, r"""global torque due to friction on marker 0; to obetain torque on marker 1, multiply the torque with the factor $\frac{r_1+g/2}{r_0+g/2}$"""),
+        ],
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
         ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
@@ -11223,7 +11474,16 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
-    outputVariables=r"{'Position':'contact center point (also given for positive gap, when no contact occurs)', 'Displacement':'global displacement vector between the two spheres midpoints', 'DisplacementLocal':'1D Vector, containing only gap', 'Director1':'normalized vector from marker 0 to marker 1', 'Director2':'the normalized vector from marker 0 to marker 1 projected into the plane of the torus major circle', 'Director3':'normalized vector from the projected point on the major circle (center of the minor circle) to marker 1, being in direction of the contact and normal to the surface', 'Force':'global contact force vector', 'Torque':'global torque due to friction on marker 0'}",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, 'contact center point (also given for positive gap, when no contact occurs)'),
+        ItemOutputVariable(OVDisplacement, 'global displacement vector between the two spheres midpoints'),
+        ItemOutputVariable(OVDisplacementLocal, '1D Vector, containing only gap'),
+        ItemOutputVariable(OVDirector1, 'normalized vector from marker 0 to marker 1'),
+        ItemOutputVariable(OVDirector2, 'the normalized vector from marker 0 to marker 1 projected into the plane of the torus major circle'),
+        ItemOutputVariable(OVDirector3, 'normalized vector from the projected point on the major circle (center of the minor circle) to marker 1, being in direction of the contact and normal to the surface'),
+        ItemOutputVariable(OVForce, 'global contact force vector'),
+        ItemOutputVariable(OVTorque, 'global torque due to friction on marker 0'),
+        ],
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
         ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
@@ -11427,7 +11687,14 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
-    outputVariables=r"{'Position':'contact center point (also given for positive gap, when no contact occurs)', 'Displacement':'global displacement vector between the two spheres midpoints', 'DisplacementLocal':'1D Vector, containing only gap', 'Director1':'normalized vector from sphere midpoint (marker 0) to triangle contact point', 'Force':'global contact force vector', 'Torque':'global torque due to friction on marker 0'}",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, 'contact center point (also given for positive gap, when no contact occurs)'),
+        ItemOutputVariable(OVDisplacement, 'global displacement vector between the two spheres midpoints'),
+        ItemOutputVariable(OVDisplacementLocal, '1D Vector, containing only gap'),
+        ItemOutputVariable(OVDirector1, 'normalized vector from sphere midpoint (marker 0) to triangle contact point'),
+        ItemOutputVariable(OVForce, 'global contact force vector'),
+        ItemOutputVariable(OVTorque, 'global torque due to friction on marker 0'),
+        ],
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
         ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
@@ -11626,7 +11893,11 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
-    outputVariables=r"{'DisplacementLocal':'vector containing the minimum distance to segments per circle midpoint (< 0 in case of contact, and -1 if not computed: if not in according vicinity in search tree)', 'VelocityLocal':'vector containing relative (normal) velocity per circle midpoint (or NaN if not computed)', 'ForceLocal':'pairs of normal and tangential forces per circle or (Nan,Nan) if not computed'}",
+    outputVariables=[
+        ItemOutputVariable(OVDisplacementLocal, 'vector containing the minimum distance to segments per circle midpoint (< 0 in case of contact, and -1 if not computed: if not in according vicinity in search tree)'),
+        ItemOutputVariable(OVVelocityLocal, 'vector containing relative (normal) velocity per circle midpoint (or NaN if not computed)'),
+        ItemOutputVariable(OVForceLocal, 'pairs of normal and tangential forces per circle or (Nan,Nan) if not computed'),
+        ],
     pythonShortName='CamFollowerContactPlanar',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -11969,7 +12240,16 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeJoint,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}_{m0}$current global position of position marker $m0$', 'Velocity':'$\LU{0}{\vv}_{m0}$current global velocity of position marker $m0$', 'DisplacementLocal':'$\LU{J0}{\Delta\pv}$relative displacement in local joint0 coordinates; uses local J0 coordinates even for spherical joint configuration', 'VelocityLocal':'$\LU{J0}{\Delta\vv}$relative translational velocity in local joint0 coordinates', 'Rotation':'$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$relative rotation parameters (Tait Bryan Rxyz); if all axes are fixed, this output represents the rotational drift; for a revolute joint with free Z-axis, it contains the rotation in the Z-component', 'AngularVelocityLocal':'$\LU{J0}{\Delta\tomega}$relative angular velocity in local joint0 coordinates; if all axes are fixed, this output represents the angular velocity constraint error; for a revolute joint, it contains the angular velocity of this axis', 'ForceLocal':'$\LU{J0}{\fv}$joint force in local $J0$ coordinates', 'TorqueLocal':'$\LU{J0}{\mv}$joint torque in local $J0$ coordinates; depending on joint configuration, the result may not be the according torque vector'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, OVDPositionMarker0),
+        ItemOutputVariable(OVVelocity, OVDVelocityMarker0),
+        ItemOutputVariable(OVDisplacementLocal, r"""$\LU{J0}{\Delta\pv}$relative displacement in local joint0 coordinates; uses local J0 coordinates even for spherical joint configuration"""),
+        ItemOutputVariable(OVVelocityLocal, OVDVelocityLocalJoint),
+        ItemOutputVariable(OVRotation, r"""$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$relative rotation parameters (Tait Bryan Rxyz); if all axes are fixed, this output represents the rotational drift; for a revolute joint with free Z-axis, it contains the rotation in the Z-component"""),
+        ItemOutputVariable(OVAngularVelocityLocal, r"""$\LU{J0}{\Delta\tomega}$relative angular velocity in local joint0 coordinates; if all axes are fixed, this output represents the angular velocity constraint error; for a revolute joint, it contains the angular velocity of this axis"""),
+        ItemOutputVariable(OVForceLocal, r'$\LU{J0}{\fv}$joint force in local $J0$ coordinates'),
+        ItemOutputVariable(OVTorqueLocal, r"""$\LU{J0}{\mv}$joint torque in local $J0$ coordinates; depending on joint configuration, the result may not be the according torque vector"""),
+        ],
     pythonShortName='GenericJoint',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -12186,7 +12466,16 @@ definitions.append(ItemDefinition(
     exudynTestGlobals.testResult = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation)[2]
 """,
     objectType=ObjectTypeJoint,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}_{m0}$current global position of position marker $m0$', 'Velocity':'$\LU{0}{\vv}_{m0}$current global velocity of position marker $m0$', 'DisplacementLocal':'$\LU{J0}{\Delta\pv}$relative displacement in local joint0 coordinates; uses local J0 coordinates even for spherical joint configuration', 'VelocityLocal':'$\LU{J0}{\Delta\vv}$relative translational velocity in local joint0 coordinates', 'Rotation':'$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$relative rotation parameters (Tait Bryan Rxyz); Z component represents rotation of joint, other components represent constraint drift', 'AngularVelocityLocal':'$\LU{J0}{\Delta\tomega}$relative angular velocity in joint J0 coordinates, giving a vector with Z-component only', 'ForceLocal':'$\LU{J0}{\fv}$joint force in local $J0$ coordinates', 'TorqueLocal':'$\LU{J0}{\mv}$joint torques in local $J0$ coordinates; torque around Z is zero'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, OVDPositionMarker0),
+        ItemOutputVariable(OVVelocity, OVDVelocityMarker0),
+        ItemOutputVariable(OVDisplacementLocal, r"""$\LU{J0}{\Delta\pv}$relative displacement in local joint0 coordinates; uses local J0 coordinates even for spherical joint configuration"""),
+        ItemOutputVariable(OVVelocityLocal, OVDVelocityLocalJoint),
+        ItemOutputVariable(OVRotation, r"""$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$relative rotation parameters (Tait Bryan Rxyz); Z component represents rotation of joint, other components represent constraint drift"""),
+        ItemOutputVariable(OVAngularVelocityLocal, r"""$\LU{J0}{\Delta\tomega}$relative angular velocity in joint J0 coordinates, giving a vector with Z-component only"""),
+        ItemOutputVariable(OVForceLocal, r'$\LU{J0}{\fv}$joint force in local $J0$ coordinates'),
+        ItemOutputVariable(OVTorqueLocal, r"""$\LU{J0}{\mv}$joint torques in local $J0$ coordinates; torque around Z is zero"""),
+        ],
     pythonShortName='RevoluteJointZ',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -12361,7 +12650,16 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeJoint,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}_{m0}$current global position of position marker $m0$', 'Velocity':'$\LU{0}{\vv}_{m0}$current global velocity of position marker $m0$', 'DisplacementLocal':'$\LU{J0}{\Delta\pv}$relative displacement in local joint0 coordinates; uses local J0 coordinates even for spherical joint configuration', 'VelocityLocal':'$\LU{J0}{\Delta\vv}$relative translational velocity in local joint0 coordinates', 'Rotation':'$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$relative rotation parameters (Tait Bryan Rxyz); if all axes are fixed, this output represents the rotational drift; for a revolute joint, it contains the rotation of this axis', 'AngularVelocityLocal':'$\LU{J0}{\Delta\tomega}$relative angular velocity in local joint0 coordinates; if all axes are fixed, this output represents the angular velocity constraint error; for a revolute joint, it contains the angular velocity of this axis', 'ForceLocal':'$\LU{J0}{\fv}$joint force in local $J0$ coordinates', 'TorqueLocal':'$\LU{J0}{\mv}$joint torque in local $J0$ coordinates; depending on joint configuration, the result may not be the according torque vector'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, OVDPositionMarker0),
+        ItemOutputVariable(OVVelocity, OVDVelocityMarker0),
+        ItemOutputVariable(OVDisplacementLocal, r"""$\LU{J0}{\Delta\pv}$relative displacement in local joint0 coordinates; uses local J0 coordinates even for spherical joint configuration"""),
+        ItemOutputVariable(OVVelocityLocal, OVDVelocityLocalJoint),
+        ItemOutputVariable(OVRotation, r"""$\LU{J0}{\ttheta}= [\theta_0,\theta_1,\theta_2]\tp$relative rotation parameters (Tait Bryan Rxyz); if all axes are fixed, this output represents the rotational drift; for a revolute joint, it contains the rotation of this axis"""),
+        ItemOutputVariable(OVAngularVelocityLocal, r"""$\LU{J0}{\Delta\tomega}$relative angular velocity in local joint0 coordinates; if all axes are fixed, this output represents the angular velocity constraint error; for a revolute joint, it contains the angular velocity of this axis"""),
+        ItemOutputVariable(OVForceLocal, r'$\LU{J0}{\fv}$joint force in local $J0$ coordinates'),
+        ItemOutputVariable(OVTorqueLocal, r"""$\LU{J0}{\mv}$joint torque in local $J0$ coordinates; depending on joint configuration, the result may not be the according torque vector"""),
+        ],
     pythonShortName='PrismaticJointX',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -12541,7 +12839,12 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeJoint,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}_{m0}$current global position of position marker $m0$', 'Velocity':'$\LU{0}{\vv}_{m0}$current global velocity of position marker $m0$', 'Displacement':'$\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$constraint drift or relative motion, if not all axes fixed', 'Force':'$\LU{0}{\fv}$joint force in global coordinates'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, OVDPositionMarker0),
+        ItemOutputVariable(OVVelocity, OVDVelocityMarker0),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$constraint drift or relative motion, if not all axes fixed"""),
+        ItemOutputVariable(OVForce, r'$\LU{0}{\fv}$joint force in global coordinates'),
+        ],
     pythonShortName='SphericalJoint',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -12725,7 +13028,12 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeJoint,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}_{G}$current global position of contact point between rolling disc and ground', 'Velocity':'$\LU{0}{\vv}_{trail}$current velocity of the trail (according to motion of the contact point along the trail!) in global coordinates; this is not the velocity of the contact point; needs further testing for general case of relative moving bodies', 'ForceLocal':'$\LU{J1}{\fv} = \LU{0}{[f_0,\, f_1,\, f_2]\tp}= [-\zv^T \LU{0}{\wv_{lat}}, \, -\zv^T \LU{0}{\wv_2}, \, -\zv^T \LU{0}{\vv_{PN}}]\tp$contact forces acting on disc, in special $J1$ joint coordinates, $f_0$ being the lateral force (parallel to ground plane), $f_1$ being the longitudinal force and $f_2$ being the normal force', 'RotationMatrix': '$\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}{\vv_{PN}}]$transformation matrix of special joint coordinates $J1$ to global coordinates'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}_{G}$current global position of contact point between rolling disc and ground"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}_{trail}$current velocity of the trail (according to motion of the contact point along the trail!) in global coordinates; this is not the velocity of the contact point; needs further testing for general case of relative moving bodies"""),
+        ItemOutputVariable(OVForceLocal, r"""$\LU{J1}{\fv} = \LU{0}{[f_0,\, f_1,\, f_2]\tp}= [-\zv^T \LU{0}{\wv_{lat}}, \, -\zv^T \LU{0}{\wv_2}, \, -\zv^T \LU{0}{\vv_{PN}}]\tp$contact forces acting on disc, in special $J1$ joint coordinates, $f_0$ being the lateral force (parallel to ground plane), $f_1$ being the longitudinal force and $f_2$ being the normal force"""),
+        ItemOutputVariable(OVRotationMatrix, r"""$\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}{\vv_{PN}}]$transformation matrix of special joint coordinates $J1$ to global coordinates"""),
+        ],
     pythonShortName='RollingDiscJoint',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -13182,7 +13490,12 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeJoint,
-    outputVariables=r"{'Position':'position vector of joint given by marker0', 'Velocity':'velocity vector of joint given by marker0', 'SlidingCoordinate':'global sliding coordinate along all elements; the maximum sliding coordinate is equivalent to the reference lengths of all sliding elements', 'Force':'joint force vector (3D)'}",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, 'position vector of joint given by marker0'),
+        ItemOutputVariable(OVVelocity, 'velocity vector of joint given by marker0'),
+        ItemOutputVariable(OVSlidingCoordinate, 'global sliding coordinate along all elements; the maximum sliding coordinate is equivalent to the reference lengths of all sliding elements'),
+        ItemOutputVariable(OVForce, 'joint force vector (3D)'),
+        ],
     pythonShortName='SlidingJoint',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -13469,7 +13782,12 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeJoint,
-    outputVariables=r"{'Position':'position vector of joint given by marker0', 'Velocity':'velocity vector of joint given by marker0', 'SlidingCoordinate':'global sliding coordinate along all elements; the maximum sliding coordinate is equivalent to the reference lengths of all sliding elements', 'Force':'joint force vector (3D)'}",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, 'position vector of joint given by marker0'),
+        ItemOutputVariable(OVVelocity, 'velocity vector of joint given by marker0'),
+        ItemOutputVariable(OVSlidingCoordinate, 'global sliding coordinate along all elements; the maximum sliding coordinate is equivalent to the reference lengths of all sliding elements'),
+        ItemOutputVariable(OVForce, 'joint force vector (3D)'),
+        ],
     pythonShortName='SlidingJoint2D',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[
@@ -13734,7 +14052,14 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeJoint,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}_{m0}$current global position of position marker $m0$', 'Velocity':'$\LU{0}{\vv}_{m0}$current global velocity of position marker $m0$', 'SlidingCoordinate':'$s_g = q_{ALE} + s_\mathrm{off}$current value of the global sliding ALE coordinate, including offset; note that reference coordinate of $q_{ALE}$ is ignored!', 'Coordinates':'$[x_{data0},\,q_{ALE}]\tp$provides two values: [0] = current sliding marker index, [1] = ALE sliding coordinate', 'Coordinates_t':'$[\dot q_{ALE}]\tp$provides ALE sliding velocity', 'Force':'$\fv$joint force vector (3D)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, OVDPositionMarker0),
+        ItemOutputVariable(OVVelocity, OVDVelocityMarker0),
+        ItemOutputVariable(OVSlidingCoordinate, r"""$s_g = q_{ALE} + s_\mathrm{off}$current value of the global sliding ALE coordinate, including offset; note that reference coordinate of $q_{ALE}$ is ignored!"""),
+        ItemOutputVariable(OVCoordinates, r"""$[x_{data0},\,q_{ALE}]\tp$provides two values: [0] = current sliding marker index, [1] = ALE sliding coordinate"""),
+        ItemOutputVariable(OVCoordinates_t, r'$[\dot q_{ALE}]\tp$provides ALE sliding velocity'),
+        ItemOutputVariable(OVForce, r'$\fv$joint force vector (3D)'),
+        ],
     pythonShortName='ALEMovingJoint2D',
     visuParentClass=VisuParentClassVisualizationObject,
     members=[

@@ -22,6 +22,8 @@
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 from definitionTypes import *
+from outputVariableTypes import *
+from outputVariableDescriptions import *
 
 definitions = []
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -41,7 +43,20 @@ definitions.append(ItemDefinition(
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainNode,
-    outputVariables=r"""{'Position':'$\pv\cConfig = [p_0,\,p_1,\,p_2]\cConfig\tp= \uv\cConfig + \pv\cRef$global 3D position vector of node; $\uv\cRef=0$', 'Displacement':'$\uv\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$global 3D displacement vector of node', 'Velocity':'$\vv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node', 'Acceleration':'$\av\cConfig = \ddot \qv\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp$global 3D acceleration vector of node', 'CoordinatesTotal':'$\cv\cConfig = \uv\cConfig + \pv\cRef$ displacement plus reference coordinates of node', 'Coordinates':'$\cv\cConfig = \uv\cConfig = [q_0,\,q_1,\,q_2]\tp\cConfig$ coordinate vector of node', 'Coordinates_t':'$\dot\cv\cConfig = \vv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\tp\cConfig$ velocity coordinates vector of node', 'Coordinates_tt':'$\ddot\cv\cConfig = \av\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\tp\cConfig$ acceleration coordinates vector of node', 'RotationMatrix':'identity matrix (only for completeness)', 'Rotation':'$[0,0,0]$ (only for completeness)', 'AngularVelocity':'$[0,0,0]$ (only for completeness)', 'AngularVelocityLocal':'$[0,0,0]$ (only for completeness)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\pv\cConfig = [p_0,\,p_1,\,p_2]\cConfig\tp= \uv\cConfig + \pv\cRef$global 3D position vector of node; $\uv\cRef=0$"""),
+        ItemOutputVariable(OVDisplacement, r"""$\uv\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$global 3D displacement vector of node"""),
+        ItemOutputVariable(OVVelocity, r"""$\vv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node"""),
+        ItemOutputVariable(OVAcceleration, r"""$\av\cConfig = \ddot \qv\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp$global 3D acceleration vector of node"""),
+        ItemOutputVariable(OVCoordinatesTotal, r"""$\cv\cConfig = \uv\cConfig + \pv\cRef$ displacement plus reference coordinates of node"""),
+        ItemOutputVariable(OVCoordinates, r"""$\cv\cConfig = \uv\cConfig = [q_0,\,q_1,\,q_2]\tp\cConfig$ coordinate vector of node"""),
+        ItemOutputVariable(OVCoordinates_t, r"""$\dot\cv\cConfig = \vv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\tp\cConfig$ velocity coordinates vector of node"""),
+        ItemOutputVariable(OVCoordinates_tt, r"""$\ddot\cv\cConfig = \av\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\tp\cConfig$ acceleration coordinates vector of node"""),
+        ItemOutputVariable(OVRotationMatrix, OVDIdentityMatrixForCompleteness),
+        ItemOutputVariable(OVRotation, OVDZeroVectorForCompleteness),
+        ItemOutputVariable(OVAngularVelocity, OVDZeroVectorForCompleteness),
+        ItemOutputVariable(OVAngularVelocityLocal, OVDZeroVectorForCompleteness),
+        ],
     pythonShortName='Point',
     visuParentClass=VisuParentClassVisualizationNode,
     members=[
@@ -148,7 +163,20 @@ definitions.append(ItemDefinition(
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainNode,
-    outputVariables=r"""{'Position':'$\pv\cConfig = [p_0,\,p_1,\,0]\cConfig\tp= \uv\cConfig + \pv\cRef$global 3D position vector of node; $\uv\cRef=0$', 'Displacement':'$\uv\cConfig = [q_0,\,q_1,\,0]\cConfig\tp$global 3D displacement vector of node', 'Velocity':'$\vv\cConfig = [\dot q_0,\,\dot q_1,\,0]\cConfig\tp$global 3D velocity vector of node', 'Acceleration':'$\av\cConfig = [\ddot q_0,\,\ddot q_1,\,0]\cConfig\tp$global 3D acceleration vector of node', 'CoordinatesTotal':'$\cv\cConfig = \uv\cConfig + \pv\cRef$ displacement plus reference coordinates of node', 'Coordinates':'$\cv\cConfig = [q_0,\,q_1]\tp\cConfig$ coordinate vector of node', 'Coordinates_t':'$\dot\cv\cConfig = [\dot q_0,\,\dot q_1]\tp\cConfig$ velocity coordinates vector of node', 'Coordinates_tt':'$\ddot\cv\cConfig = \av\cConfig = [\ddot q_0,\,\ddot q_1]\tp\cConfig$ acceleration coordinates vector of node', 'RotationMatrix':'identity matrix (only for completeness)', 'Rotation':'$[0,0,0]$ (only for completeness)', 'AngularVelocity':'$[0,0,0]$ (only for completeness)', 'AngularVelocityLocal':'$[0,0,0]$ (only for completeness)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\pv\cConfig = [p_0,\,p_1,\,0]\cConfig\tp= \uv\cConfig + \pv\cRef$global 3D position vector of node; $\uv\cRef=0$"""),
+        ItemOutputVariable(OVDisplacement, r"""$\uv\cConfig = [q_0,\,q_1,\,0]\cConfig\tp$global 3D displacement vector of node"""),
+        ItemOutputVariable(OVVelocity, r"""$\vv\cConfig = [\dot q_0,\,\dot q_1,\,0]\cConfig\tp$global 3D velocity vector of node"""),
+        ItemOutputVariable(OVAcceleration, r"""$\av\cConfig = [\ddot q_0,\,\ddot q_1,\,0]\cConfig\tp$global 3D acceleration vector of node"""),
+        ItemOutputVariable(OVCoordinatesTotal, r"""$\cv\cConfig = \uv\cConfig + \pv\cRef$ displacement plus reference coordinates of node"""),
+        ItemOutputVariable(OVCoordinates, r"""$\cv\cConfig = [q_0,\,q_1]\tp\cConfig$ coordinate vector of node"""),
+        ItemOutputVariable(OVCoordinates_t, r"""$\dot\cv\cConfig = [\dot q_0,\,\dot q_1]\tp\cConfig$ velocity coordinates vector of node"""),
+        ItemOutputVariable(OVCoordinates_tt, r"""$\ddot\cv\cConfig = \av\cConfig = [\ddot q_0,\,\ddot q_1]\tp\cConfig$ acceleration coordinates vector of node"""),
+        ItemOutputVariable(OVRotationMatrix, OVDIdentityMatrixForCompleteness),
+        ItemOutputVariable(OVRotation, OVDZeroVectorForCompleteness),
+        ItemOutputVariable(OVAngularVelocity, OVDZeroVectorForCompleteness),
+        ItemOutputVariable(OVAngularVelocityLocal, OVDZeroVectorForCompleteness),
+        ],
     pythonShortName='Point2D',
     visuParentClass=VisuParentClassVisualizationNode,
     members=[
@@ -295,7 +323,21 @@ definitions.append(ItemDefinition(
     %                                    -2.*ep[3], 2.*ep[2],-2.*ep[1], 2.*ep[0] });
 """,
     mainParentClass=MainParentClassMainNode,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$', 'Displacement':'$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$global 3D displacement vector of node','Velocity':'$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node', 'Acceleration':'$\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp$global 3D acceleration vector of node', 'CoordinatesTotal':'displacement/rotation coordinates of node including reference configuration', 'Coordinates':'$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cConfig$ coordinate vector of node, having 3 displacement coordinates and 4 Euler parameters', 'Coordinates_t':'$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2,\,\dot \psi_3]\tp\cConfig$ velocity coordinates vector of node', 'Coordinates_tt':'$\ddot\cv\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2, \,\ddot \psi_0,\,\ddot \psi_1,\,\ddot \psi_2,\,\ddot \psi_3]\tp\cConfig$ acceleration coordinates vector of node', 'RotationMatrix':'$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates', 'Rotation':'$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$global 3D angular velocity vector of node', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$local (body-fixed)  3D angular velocity vector of node', 'AngularAcceleration':'$\LU{0}{\talpha}\cConfig = \LU{0}{[\alpha_0,\,\alpha_1,\,\alpha_2]}\cConfig\tp$global 3D angular acceleration vector of node'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$global 3D displacement vector of node"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node"""),
+        ItemOutputVariable(OVAcceleration, OVDAccelerationNode),
+        ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNodeRotation),
+        ItemOutputVariable(OVCoordinates, r"""$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cConfig$ coordinate vector of node, having 3 displacement coordinates and 4 Euler parameters"""),
+        ItemOutputVariable(OVCoordinates_t, r"""$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2,\,\dot \psi_3]\tp\cConfig$ velocity coordinates vector of node"""),
+        ItemOutputVariable(OVCoordinates_tt, r"""$\ddot\cv\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2, \,\ddot \psi_0,\,\ddot \psi_1,\,\ddot \psi_2,\,\ddot \psi_3]\tp\cConfig$ acceleration coordinates vector of node"""),
+        ItemOutputVariable(OVRotationMatrix, OVDRotationMatrixRowMajor),
+        ItemOutputVariable(OVRotation, r"""$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix"""),
+        ItemOutputVariable(OVAngularVelocity, OVDAngularVelocityNode),
+        ItemOutputVariable(OVAngularVelocityLocal, OVDAngularVelocityLocalNode),
+        ItemOutputVariable(OVAngularAcceleration, r"""$\LU{0}{\talpha}\cConfig = \LU{0}{[\alpha_0,\,\alpha_1,\,\alpha_2]}\cConfig\tp$global 3D angular acceleration vector of node"""),
+        ],
     pythonShortName='RigidEP',
     visuParentClass=VisuParentClassVisualizationNode,
     members=[
@@ -528,7 +570,21 @@ definitions.append(ItemDefinition(
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainNode,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$', 'Displacement':'$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$global 3D displacement vector of node','Velocity':'$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node', 'Acceleration':'$\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp$global 3D acceleration vector of node', 'CoordinatesTotal':'displacement/rotation coordinates of node including reference configuration', 'Coordinates':'$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\psi_0,\,\psi_1,\,\psi_2]\tp\cConfig$ coordinate vector of node, having 3 displacement coordinates and 3 Euler angles', 'Coordinates_t':'$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2]\tp\cConfig$ velocity coordinates vector of node', 'Coordinates_tt':'$\ddot\cv\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2, \,\ddot \psi_0,\,\ddot \psi_1,\,\ddot \psi_2]\tp\cConfig$ acceleration coordinates vector of node', 'RotationMatrix':'$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates', 'Rotation':'$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig = [\psi_0,\,\psi_1,\,\psi_2]\tp\cRef + [\psi_0,\,\psi_1,\,\psi_2]\tp\cConfig$vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$)', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$global 3D angular velocity vector of node', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$local (body-fixed)  3D angular velocity vector of node', 'AngularAcceleration':'$\LU{0}{\talpha}\cConfig = \LU{0}{[\alpha_0,\,\alpha_1,\,\alpha_2]}\cConfig\tp$global 3D angular acceleration vector of node'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$global 3D displacement vector of node"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node"""),
+        ItemOutputVariable(OVAcceleration, OVDAccelerationNode),
+        ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNodeRotation),
+        ItemOutputVariable(OVCoordinates, r"""$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\psi_0,\,\psi_1,\,\psi_2]\tp\cConfig$ coordinate vector of node, having 3 displacement coordinates and 3 Euler angles"""),
+        ItemOutputVariable(OVCoordinates_t, r"""$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2]\tp\cConfig$ velocity coordinates vector of node"""),
+        ItemOutputVariable(OVCoordinates_tt, r"""$\ddot\cv\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2, \,\ddot \psi_0,\,\ddot \psi_1,\,\ddot \psi_2]\tp\cConfig$ acceleration coordinates vector of node"""),
+        ItemOutputVariable(OVRotationMatrix, OVDRotationMatrixRowMajor),
+        ItemOutputVariable(OVRotation, r"""$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig = [\psi_0,\,\psi_1,\,\psi_2]\tp\cRef + [\psi_0,\,\psi_1,\,\psi_2]\tp\cConfig$vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$)"""),
+        ItemOutputVariable(OVAngularVelocity, OVDAngularVelocityNode),
+        ItemOutputVariable(OVAngularVelocityLocal, OVDAngularVelocityLocalNode),
+        ItemOutputVariable(OVAngularAcceleration, r"""$\LU{0}{\talpha}\cConfig = \LU{0}{[\alpha_0,\,\alpha_1,\,\alpha_2]}\cConfig\tp$global 3D angular acceleration vector of node"""),
+        ],
     pythonShortName='RigidRxyz',
     visuParentClass=VisuParentClassVisualizationNode,
     members=[
@@ -738,7 +794,19 @@ definitions.append(ItemDefinition(
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainNode,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$', 'Displacement':'$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$global 3D displacement vector of node','Velocity':'$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node', 'Acceleration':'$\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp$global 3D acceleration vector of node', 'CoordinatesTotal':'displacement/rotation coordinates of node including reference configuration', 'Coordinates':'$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\nu_0,\,\nu_1,\,\nu_2]\tp\cConfig$ coordinate vector of node, having 3 displacement coordinates and 3 Euler angles', 'Coordinates_t':'$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cConfig$ velocity coordinates vector of node', 'RotationMatrix':'$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates', 'Rotation':'$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$global 3D angular velocity vector of node', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$local (body-fixed)  3D angular velocity vector of node'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp$global 3D displacement vector of node"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node"""),
+        ItemOutputVariable(OVAcceleration, OVDAccelerationNode),
+        ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNodeRotation),
+        ItemOutputVariable(OVCoordinates, r"""$\cv\cConfig = [q_0,\,q_1,\,q_2, \,\nu_0,\,\nu_1,\,\nu_2]\tp\cConfig$ coordinate vector of node, having 3 displacement coordinates and 3 Euler angles"""),
+        ItemOutputVariable(OVCoordinates_t, r"""$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2, \,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cConfig$ velocity coordinates vector of node"""),
+        ItemOutputVariable(OVRotationMatrix, OVDRotationMatrixRowMajor),
+        ItemOutputVariable(OVRotation, r"""$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix"""),
+        ItemOutputVariable(OVAngularVelocity, OVDAngularVelocityNode),
+        ItemOutputVariable(OVAngularVelocityLocal, OVDAngularVelocityLocalNode),
+        ],
     pythonShortName='RigidRotVecLG',
     visuParentClass=VisuParentClassVisualizationNode,
     members=[
@@ -924,7 +992,21 @@ definitions.append(ItemDefinition(
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainNode,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,0]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$', 'Displacement':'$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,0]\cConfig\tp$global 3D displacement vector of node', 'Velocity':'$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,0]\cConfig\tp$global 3D velocity vector of node', 'Acceleration':'$\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,0]\cConfig\tp$global 3D acceleration vector of node', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig = \LU{0}{[0,\,0,\,\dot \psi_0]}\cConfig\tp$global 3D angular velocity vector of node', 'CoordinatesTotal':'displacement/rotation coordinates of node including reference configuration', 'Coordinates':'$\cv\cConfig = [q_0,\,q_1,\,\psi_0]\tp\cConfig$ coordinate vector of node, having 2 displacement coordinates and 1 angle', 'Coordinates_t':'$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot \psi_0]\tp\cConfig$ velocity coordinates vector of node', 'Coordinates_tt':'$\ddot\cv\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot \psi_0]\tp\cConfig$ acceleration coordinates vector of node', 'RotationMatrix':'$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates', 'Rotation':'$[0,\,0,\,\theta_0]\tp\cConfig = [0,\,0,\,\psi_0]\tp\cRef + [0,\,0,\,\psi_0]\tp\cConfig$vector with 3rd angle around out of plane axis', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig = \LU{0}{[0,\,0,\,\dot \psi_0]}\cConfig\tp$global 3D angular velocity vector of node', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig = \LU{b}{[0,\,0,\,\dot \psi_0]}\cConfig\tp$local (body-fixed)  3D angular velocity vector of node', 'AngularAcceleration':'$\LU{0}{\talpha}\cConfig = \LU{0}{[0,\,0,\,\ddot \psi_0]}\cConfig\tp$global 3D angular acceleration vector of node'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,0]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv}\cConfig = [q_0,\,q_1,\,0]\cConfig\tp$global 3D displacement vector of node"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,0]\cConfig\tp$global 3D velocity vector of node"""),
+        ItemOutputVariable(OVAcceleration, r"""$\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,0]\cConfig\tp$global 3D acceleration vector of node"""),
+        ItemOutputVariable(OVAngularVelocity, r"""$\LU{0}{\tomega}\cConfig = \LU{0}{[0,\,0,\,\dot \psi_0]}\cConfig\tp$global 3D angular velocity vector of node"""),
+        ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNodeRotation),
+        ItemOutputVariable(OVCoordinates, r"""$\cv\cConfig = [q_0,\,q_1,\,\psi_0]\tp\cConfig$ coordinate vector of node, having 2 displacement coordinates and 1 angle"""),
+        ItemOutputVariable(OVCoordinates_t, r"""$\dot\cv\cConfig = [\dot q_0,\,\dot q_1,\,\dot \psi_0]\tp\cConfig$ velocity coordinates vector of node"""),
+        ItemOutputVariable(OVCoordinates_tt, r"""$\ddot\cv\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot \psi_0]\tp\cConfig$ acceleration coordinates vector of node"""),
+        ItemOutputVariable(OVRotationMatrix, OVDRotationMatrixRowMajor),
+        ItemOutputVariable(OVRotation, r"""$[0,\,0,\,\theta_0]\tp\cConfig = [0,\,0,\,\psi_0]\tp\cRef + [0,\,0,\,\psi_0]\tp\cConfig$vector with 3rd angle around out of plane axis"""),
+        ItemOutputVariable(OVAngularVelocityLocal, r"""$\LU{b}{\tomega}\cConfig = \LU{b}{[0,\,0,\,\dot \psi_0]}\cConfig\tp$local (body-fixed)  3D angular velocity vector of node"""),
+        ItemOutputVariable(OVAngularAcceleration, r"""$\LU{0}{\talpha}\cConfig = \LU{0}{[0,\,0,\,\ddot \psi_0]}\cConfig\tp$global 3D angular acceleration vector of node"""),
+        ],
     pythonShortName='Rigid2D',
     visuParentClass=VisuParentClassVisualizationNode,
     members=[
@@ -1058,7 +1140,12 @@ definitions.append(ItemDefinition(
     %%RSTCOMPATIBLE
 """,
     mainParentClass=MainParentClassMainNode,
-    outputVariables=r"""{'CoordinatesTotal':'displacement plus reference coordinates of node', 'Coordinates':'$\qv\cConfig = [q_0]\tp\cConfig$\hac{ODE2} coordinate of node (in vector form)', 'Coordinates_t':'$\dot \qv\cConfig = [\dot q_0]\tp\cConfig$\hac{ODE2} velocity coordinate of node (in vector form)', 'Coordinates_tt':'$\ddot \qv\cConfig = [\ddot q_0]\tp\cConfig$\hac{ODE2} acceleration coordinate of node (in vector form)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNode),
+        ItemOutputVariable(OVCoordinates, r"""$\qv\cConfig = [q_0]\tp\cConfig$\hac{ODE2} coordinate of node (in vector form)"""),
+        ItemOutputVariable(OVCoordinates_t, r"""$\dot \qv\cConfig = [\dot q_0]\tp\cConfig$\hac{ODE2} velocity coordinate of node (in vector form)"""),
+        ItemOutputVariable(OVCoordinates_tt, r"""$\ddot \qv\cConfig = [\ddot q_0]\tp\cConfig$\hac{ODE2} acceleration coordinate of node (in vector form)"""),
+        ],
     visuParentClass=VisuParentClassVisualizationNode,
     members=[
         ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
@@ -1138,7 +1225,16 @@ definitions.append(ItemDefinition(
     classDescription=r"""A 2D point/slope vector node for planar Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements. The node has 4 displacement degrees of freedom (2 for displacement of point node and 2 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime]^T=[1\;\;0]^T$.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}\cConfig = [p_0,\, p_1,\,0]\cConfig\tp$global 3D position vector of node (=displacement+reference position)', 'Displacement':'$\LU{0}{\uv}\cConfig = [q_0,\, q_1,\,0]\cConfig\tp$global 3D displacement vector of node', 'Velocity':'$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,0]\cConfig\tp$global 3D velocity vector of node', 'Acceleration':'$\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,0]\cConfig\tp$global 3D acceleration vector of node', 'CoordinatesTotal':'displacement plus reference coordinates of node', 'Coordinates':'coordinates vector of node (2 displacement coordinates + 2 slope vector coordinates)', 'Coordinates_t':'velocity coordinates vector of node (derivative of the 2 displacement coordinates + 2 slope vector coordinates)', 'Coordinates_tt':'acceleration coordinates vector of node (derivative of the 2 displacement coordinates + 2 slope vector coordinates)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = [p_0,\, p_1,\,0]\cConfig\tp$global 3D position vector of node (=displacement+reference position)"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv}\cConfig = [q_0,\, q_1,\,0]\cConfig\tp$global 3D displacement vector of node"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv}\cConfig = [\dot q_0,\,\dot q_1,\,0]\cConfig\tp$global 3D velocity vector of node"""),
+        ItemOutputVariable(OVAcceleration, r"""$\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,0]\cConfig\tp$global 3D acceleration vector of node"""),
+        ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNode),
+        ItemOutputVariable(OVCoordinates, 'coordinates vector of node (2 displacement coordinates + 2 slope vector coordinates)'),
+        ItemOutputVariable(OVCoordinates_t, 'velocity coordinates vector of node (derivative of the 2 displacement coordinates + 2 slope vector coordinates)'),
+        ItemOutputVariable(OVCoordinates_tt, 'acceleration coordinates vector of node (derivative of the 2 displacement coordinates + 2 slope vector coordinates)'),
+        ],
     pythonShortName='Point2DS1',
     visuParentClass=VisuParentClassVisualizationNode,
     members=[
@@ -1254,7 +1350,16 @@ definitions.append(ItemDefinition(
     classDescription=r"""A 3D point/slope vector node for spatial Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements. The node has 6 displacement degrees of freedom (3 for displacement of point node and 3 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime\;\;r_z^\prime]^T=[1\;\;0]^T$.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}\cConfig = [p_0,\, p_1,\, p_2]\cConfig\tp$global 3D position vector of node (=displacement+reference position)', 'Displacement':'$\LU{0}{\uv}\cConfig = [q_0,\, q_1,\, q_2]\cConfig\tp$global 3D displacement vector of node', 'Velocity':'$\LU{0}{\av}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node', 'Acceleration':'$\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_2]\cConfig\tp$global 3D acceleration vector of node', 'CoordinatesTotal':'displacement plus reference coordinates of node', 'Coordinates':'coordinates vector of node (3 displacement coordinates + 3 slope vector coordinates)', 'Coordinates_t':'velocity coordinates vector of node (derivative of the 3 displacement coordinates + 3 slope vector coordinates)', 'Coordinates_tt':'acceleration coordinates vector of node (derivative of the 3 displacement coordinates + 3 slope vector coordinates)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = [p_0,\, p_1,\, p_2]\cConfig\tp$global 3D position vector of node (=displacement+reference position)"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv}\cConfig = [q_0,\, q_1,\, q_2]\cConfig\tp$global 3D displacement vector of node"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\av}\cConfig = [\dot q_0,\,\dot q_1,\,\dot q_2]\cConfig\tp$global 3D velocity vector of node"""),
+        ItemOutputVariable(OVAcceleration, OVDAccelerationNode),
+        ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNode),
+        ItemOutputVariable(OVCoordinates, 'coordinates vector of node (3 displacement coordinates + 3 slope vector coordinates)'),
+        ItemOutputVariable(OVCoordinates_t, 'velocity coordinates vector of node (derivative of the 3 displacement coordinates + 3 slope vector coordinates)'),
+        ItemOutputVariable(OVCoordinates_tt, 'acceleration coordinates vector of node (derivative of the 3 displacement coordinates + 3 slope vector coordinates)'),
+        ],
     visuParentClass=VisuParentClassVisualizationNode,
     members=[
         ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
@@ -1352,7 +1457,20 @@ definitions.append(ItemDefinition(
     classDescription=r"""A 3D point/slope vector node for thin ANCF (absolute nodal coordinate formulation) plate elements. The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopeX' and 'slopeY'); all coordinates lead to second order differential equations; the slopeX vector defines the directional derivative w.r.t the local axial (x) coordinate, etc.; in straight configuration aligned at the global x-axis, the slopeY vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\, p_1,\, p_2]}\cConfig\tp$global 3D position vector of node (=displacement+reference position)', 'Displacement':'$\LU{0}{\uv}\cConfig = \LU{0}{[q_0,\, q_1,\, q_2]}\cConfig\tp$global 3D displacement vector of node', 'Velocity':'$\LU{0}{\av}\cConfig = \LU{0}{[\dot q_0,\,\dot q_1,\,\dot q_2]}\cConfig\tp$global 3D velocity vector of node', 'Acceleration':'$\LU{0}{\av}\cConfig = \LU{0}{[\ddot q_0,\,\ddot q_1,\,\ddot q_2]}\cConfig\tp$global 3D acceleration vector of node', 'CoordinatesTotal':'displacement plus reference coordinates of node', 'Coordinates':'coordinate vector of node (relative to reference configuration)', 'Coordinates_t':'velocity coordinates vector of node', 'Coordinates_tt':'acceleration coordinates vector of node', 'RotationMatrix':'$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates', 'Rotation':'$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$global 3D angular velocity vector of node', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$local (body-fixed)  3D angular velocity vector of node'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\, p_1,\, p_2]}\cConfig\tp$global 3D position vector of node (=displacement+reference position)"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv}\cConfig = \LU{0}{[q_0,\, q_1,\, q_2]}\cConfig\tp$global 3D displacement vector of node"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\av}\cConfig = \LU{0}{[\dot q_0,\,\dot q_1,\,\dot q_2]}\cConfig\tp$global 3D velocity vector of node"""),
+        ItemOutputVariable(OVAcceleration, r"""$\LU{0}{\av}\cConfig = \LU{0}{[\ddot q_0,\,\ddot q_1,\,\ddot q_2]}\cConfig\tp$global 3D acceleration vector of node"""),
+        ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNode),
+        ItemOutputVariable(OVCoordinates, 'coordinate vector of node (relative to reference configuration)'),
+        ItemOutputVariable(OVCoordinates_t, 'velocity coordinates vector of node'),
+        ItemOutputVariable(OVCoordinates_tt, 'acceleration coordinates vector of node'),
+        ItemOutputVariable(OVRotationMatrix, OVDRotationMatrixRowMajor),
+        ItemOutputVariable(OVRotation, r"""$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence"""),
+        ItemOutputVariable(OVAngularVelocity, OVDAngularVelocityNode),
+        ItemOutputVariable(OVAngularVelocityLocal, OVDAngularVelocityLocalNode),
+        ],
     visuParentClass=VisuParentClassVisualizationNode,
     members=[
         ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
@@ -1470,7 +1588,20 @@ definitions.append(ItemDefinition(
     classDescription=r"""A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements. The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopeY' and 'slopeZ'); all coordinates lead to second order differential equations; the slopeY vector defines the directional derivative w.r.t the local axial (y) coordinate, etc.; the slopeY vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$ and slopeZ gets $\rv_z^\prime=[0\;\;0\;\;1]^T$.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
-    outputVariables=r"""{'Position':'$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\, p_1,\, p_2]}\cConfig\tp$global 3D position vector of node (=displacement+reference position)', 'Displacement':'$\LU{0}{\uv}\cConfig = \LU{0}{[q_0,\, q_1,\, q_2]}\cConfig\tp$global 3D displacement vector of node', 'Velocity':'$\LU{0}{\av}\cConfig = \LU{0}{[\dot q_0,\,\dot q_1,\,\dot q_2]}\cConfig\tp$global 3D velocity vector of node', 'Acceleration':'$\LU{0}{\av}\cConfig = \LU{0}{[\ddot q_0,\,\ddot q_1,\,\ddot q_2]}\cConfig\tp$global 3D acceleration vector of node', 'CoordinatesTotal':'displacement plus reference coordinates of node', 'Coordinates':'coordinate vector of node (relative to reference configuration)', 'Coordinates_t':'velocity coordinates vector of node', 'Coordinates_tt':'acceleration coordinates vector of node', 'RotationMatrix':'$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates', 'Rotation':'$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence', 'AngularVelocity':'$\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$global 3D angular velocity vector of node', 'AngularVelocityLocal':'$\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$local (body-fixed)  3D angular velocity vector of node'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\, p_1,\, p_2]}\cConfig\tp$global 3D position vector of node (=displacement+reference position)"""),
+        ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\uv}\cConfig = \LU{0}{[q_0,\, q_1,\, q_2]}\cConfig\tp$global 3D displacement vector of node"""),
+        ItemOutputVariable(OVVelocity, r"""$\LU{0}{\av}\cConfig = \LU{0}{[\dot q_0,\,\dot q_1,\,\dot q_2]}\cConfig\tp$global 3D velocity vector of node"""),
+        ItemOutputVariable(OVAcceleration, r"""$\LU{0}{\av}\cConfig = \LU{0}{[\ddot q_0,\,\ddot q_1,\,\ddot q_2]}\cConfig\tp$global 3D acceleration vector of node"""),
+        ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNode),
+        ItemOutputVariable(OVCoordinates, 'coordinate vector of node (relative to reference configuration)'),
+        ItemOutputVariable(OVCoordinates_t, 'velocity coordinates vector of node'),
+        ItemOutputVariable(OVCoordinates_tt, 'acceleration coordinates vector of node'),
+        ItemOutputVariable(OVRotationMatrix, OVDRotationMatrixRowMajor),
+        ItemOutputVariable(OVRotation, r"""$[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence"""),
+        ItemOutputVariable(OVAngularVelocity, OVDAngularVelocityNode),
+        ItemOutputVariable(OVAngularVelocityLocal, OVDAngularVelocityLocalNode),
+        ],
     visuParentClass=VisuParentClassVisualizationNode,
     members=[
         ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
@@ -1586,7 +1717,12 @@ definitions.append(ItemDefinition(
     classDescription=r"""A node containing a number of \hac{ODE2} variables. Use this node e.g. for scalar dynamic equations (Mass1D), for ObjectGenericODE2 or for the Eulerian coordinate in the ALECable element. NOTE: referenceCoordinates and all initialCoordinates(\_t) must be initialized, because no default values exist.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
-    outputVariables=r"""{'CoordinatesTotal':'displacement plus reference coordinates of node', 'Coordinates':'$\qv\cConfig = [q_0,\,\ldots,\,q_{nc}]\tp\cConfig$coordinates vector of node', 'Coordinates_t':'$\dot \qv\cConfig = [\dot q_0,\,\ldots,\,\dot q_{nc}]\tp\cConfig$velocity coordinates vector of node', 'Coordinates_tt':'$\ddot \qv\cConfig = [\ddot q_0,\,\ldots,\,\ddot q_{nc}]\tp\cConfig$acceleration coordinates vector of node'}""",
+    outputVariables=[
+        ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNode),
+        ItemOutputVariable(OVCoordinates, r"""$\qv\cConfig = [q_0,\,\ldots,\,q_{nc}]\tp\cConfig$coordinates vector of node"""),
+        ItemOutputVariable(OVCoordinates_t, r"""$\dot \qv\cConfig = [\dot q_0,\,\ldots,\,\dot q_{nc}]\tp\cConfig$velocity coordinates vector of node"""),
+        ItemOutputVariable(OVCoordinates_tt, r"""$\ddot \qv\cConfig = [\ddot q_0,\,\ldots,\,\ddot q_{nc}]\tp\cConfig$acceleration coordinates vector of node"""),
+        ],
     visuParentClass=VisuParentClassVisualizationNode,
     members=[
         ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
@@ -1676,7 +1812,11 @@ definitions.append(ItemDefinition(
     classDescription=r"""A node containing a number of \hac{ODE1} variables. Use this node e.g. for linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
-    outputVariables=r"""{'CoordinatesTotal':'displacement plus reference coordinates of node', 'Coordinates':'$\yv\cConfig = [y_0,\,\ldots,\,y_{nc}]\tp\cConfig$\hac{ODE1} coordinates vector of node', 'Coordinates_t':'$\dot \yv\cConfig = [\dot y_0,\,\ldots,\,\dot y_{nc}]\tp\cConfig$\hac{ODE1} velocity coordinates vector of node' }""",
+    outputVariables=[
+        ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNode),
+        ItemOutputVariable(OVCoordinates, r"""$\yv\cConfig = [y_0,\,\ldots,\,y_{nc}]\tp\cConfig$\hac{ODE1} coordinates vector of node"""),
+        ItemOutputVariable(OVCoordinates_t, r"""$\dot \yv\cConfig = [\dot y_0,\,\ldots,\,\dot y_{nc}]\tp\cConfig$\hac{ODE1} velocity coordinates vector of node"""),
+        ],
     visuParentClass=VisuParentClassVisualizationNode,
     members=[
         ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
@@ -1743,7 +1883,9 @@ definitions.append(ItemDefinition(
     classDescription=r"""A node containing a number of \hac{AE} variables. Use e.g. linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
-    outputVariables=r"""{'Coordinates':'$\yv\cConfig = [y_0,\,\ldots,\,y_{nc}]\tp\cConfig$\hac{AE} coordinates vector of node'}""",
+    outputVariables=[
+        ItemOutputVariable(OVCoordinates, r"""$\yv\cConfig = [y_0,\,\ldots,\,y_{nc}]\tp\cConfig$\hac{AE} coordinates vector of node"""),
+        ],
     visuParentClass=VisuParentClassVisualizationNode,
     members=[
         ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
@@ -1810,7 +1952,9 @@ definitions.append(ItemDefinition(
     classDescription=r'A node containing a number of data (history) variables. Use this node e.g. for contact (active set), friction or plasticity (history variables).',
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
-    outputVariables=r"""{'Coordinates':'$\xv\cConfig = [x_0,\,\ldots,\,x_{nc}]\tp\cConfig$data coordinates (history variables) vector of node'}""",
+    outputVariables=[
+        ItemOutputVariable(OVCoordinates, r"""$\xv\cConfig = [x_0,\,\ldots,\,x_{nc}]\tp\cConfig$data coordinates (history variables) vector of node"""),
+        ],
     visuParentClass=VisuParentClassVisualizationNode,
     members=[
         ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
@@ -1869,7 +2013,18 @@ definitions.append(ItemDefinition(
     classDescription=r"""A 3D point node fixed to ground which is similar to NodePoint, but it does not generate coordinates. Applied or reaction forces do not have any effect. This node can be used for 'blind' or 'dummy' \hac{ODE2} and \hac{ODE1} coordinates to which CoordinateSpringDamper or CoordinateConstraint objects are attached to.""",
     classType=ClassTypeNode,
     mainParentClass=MainParentClassMainNode,
-    outputVariables=r"""{'Position':'$\pv\cConfig = [p_0,\,p_1,\,p_2]\cConfig\tp = \pv\cRef$global 3D position vector of node (=reference position)', 'Displacement':'$\uv\cConfig = [0,\,0,\,0]\cConfig\tp$zero 3D vector', 'Velocity':'$\vv\cConfig = [0,\,0,\,0]\cConfig\tp$zero 3D vector', 'CoordinatesTotal':'$\cv\cConfig =[]$vector of length zero', 'Coordinates':'$\cv\cConfig =[]$vector of length zero', 'Coordinates_t':'$\dot\cv\cConfig =[]$vector of length zero', 'RotationMatrix':'identity matrix (only for completeness)', 'Rotation':'$[0,0,0]$ (only for completeness)', 'AngularVelocity':'$[0,0,0]$ (only for completeness)', 'AngularVelocityLocal':'$[0,0,0]$ (only for completeness)'}""",
+    outputVariables=[
+        ItemOutputVariable(OVPosition, r"""$\pv\cConfig = [p_0,\,p_1,\,p_2]\cConfig\tp = \pv\cRef$global 3D position vector of node (=reference position)"""),
+        ItemOutputVariable(OVDisplacement, r'$\uv\cConfig = [0,\,0,\,0]\cConfig\tp$zero 3D vector'),
+        ItemOutputVariable(OVVelocity, r'$\vv\cConfig = [0,\,0,\,0]\cConfig\tp$zero 3D vector'),
+        ItemOutputVariable(OVCoordinatesTotal, r'$\cv\cConfig =[]$vector of length zero'),
+        ItemOutputVariable(OVCoordinates, r'$\cv\cConfig =[]$vector of length zero'),
+        ItemOutputVariable(OVCoordinates_t, r'$\dot\cv\cConfig =[]$vector of length zero'),
+        ItemOutputVariable(OVRotationMatrix, OVDIdentityMatrixForCompleteness),
+        ItemOutputVariable(OVRotation, OVDZeroVectorForCompleteness),
+        ItemOutputVariable(OVAngularVelocity, OVDZeroVectorForCompleteness),
+        ItemOutputVariable(OVAngularVelocityLocal, OVDZeroVectorForCompleteness),
+        ],
     pythonShortName='PointGround',
     visuParentClass=VisuParentClassVisualizationNode,
     members=[

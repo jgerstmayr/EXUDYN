@@ -871,10 +871,79 @@ The core investment. Every step is validated byte-for-byte by step 2.
       `types=[MarkerPosition], conditional=[(MarkerOrientation, 'dynamicFriction != 0')]`.
       **Survey first** whether any case in the tree needs more than one condition; if none does,
       that is the whole grammar.
-    - **`outputVariables` as real data.** Open, and belongs with 31d rather than with 31b:
-      195 of 409 entries are verbatim repeats of 69 distinct (key, description) pairs. The key
-      becomes a constant, so a typo is a `NameError` instead of an output variable that silently
-      never matches, and the repeated descriptions are defined once.
+    - **31g - values become values.** Open; to be done before Phase 3 closes. Every value in the
+      definition files is still a string, so `defaultValue=DVZeroReal` reads as text where a
+      number is meant and neither search-and-replace nor a type checker can see through it.
+      `DVTrue`/`DVFalse` become `True`/`False`, `DVZeroReal` becomes `0.`, `DVZeroIndex` becomes
+      `0`, and integers and floats in both the item and the structure files are written as
+      numbers. Measured over 1695 parameter defaults: 373 C++ constructor calls, 371 `true`/`false`
+      (all on `bool`/`Bool` - **except one on a `UInt`**, which is worth a look), 250 floats, 226
+      empty, 173 integers, 55 named C++ constants.
+
+      The emitter renders them back with a **C++-faithful formatter**, so the generated set stays
+      byte-identical: integral floats as `0.` / `1.`, small magnitudes in exponent form, no `+`
+      and no leading zero in the exponent, and the `f` suffix re-added from the declared type -
+      derivable, because all 112 suffixed defaults are on a float type (`float` 84, `UFloat` 17,
+      `PFloat` 11). Three spellings cannot be recovered from the value and are normalised once:
+      `6.67430e-11`, `0.90` and `1.e-3`. Without this the alternative was ~239 respelt literals in
+      the generated C++ and in `itemInterface.py`, which would blunt the golden gate.
+
+      `DVInvalidIndex`, `DVDefaultColor` and `DVZeroVector3D` become a small **class** rather than
+      a string constant, knowing its three renderings - the C++ literal, the Python value and the
+      readable form for the documentation - which is the same three-way split the number formatter
+      needs, so both share one interface.
+
+      Also here: `'1.10.80;EXP=2030'` is stored in `defaultValue` on **93 deprecated structure
+      members**. It is a version and an expiry date, not a default value, and gets its own field.
+
+    - **31h - a function declaration library.** Open; to be done before Phase 3 closes. The item
+      files are dominated by functions that are copies: **1850 functions against 985 parameters**,
+      and **64% of the functions are verbatim repeats** of another declaration -
+      `CheckPreAssembleConsistency` 49 times identically, `GetOutputVariableBody` 16 times,
+      `UpdateGraphics` 93 times in 3 variants. They exist only because the C++ header generator
+      needs a declaration for a body written by hand in the `.cpp`; they are not documented
+      anywhere - **verified: a function description reaches only the generated C++ header as a
+      `//! AUTO:` comment**, and appears in no `.rst`, no `.tex` and not in `itemInterface.py`.
+
+      Keying the shared declarations, measured three ways:
+
+      | key | unambiguous keys | uses covered |
+      |---|---|---|
+      | name only | 183 of 240 | 865 of 1850 (47%) |
+      | category + name | 224 of 282 | 1169 (63%) |
+      | category + parent class + name | 365 of 423 | 1356 (73%) |
+
+      So the helper is **per item category** - `DefineObjectFunction`, `DefineNodeFunction`,
+      `DefineMarkerFunction`, `DefineLoadFunction`, `DefineSensorFunction` - keyed by the C++
+      method name, resolved against the class's declared `cParentClass` where the name alone is
+      ambiguous within the category, with `parentClass=` as the explicit override. `GetPosition`
+      is the example: its 11 declarations collapse to five (category, parent) groups, three of
+      which are already unique.
+
+      The residual 58 ambiguous keys (494 uses) are almost all two-declaration groups, and the
+      commonest reason is a **const/non-const accessor pair under one name** - `GetMarkerNumbers`
+      is declared 32 times as `const ArrayIndex&` and 32 times as `ArrayIndex&`, and the parent
+      (`src/System/CObjectConnector.h:69,71`) declares it as a pair too. One call emitting both
+      halves removes that class of ambiguity.
+
+      `implementation=` carries the per-class body, which is what actually varies (1025 of 1850
+      functions have one; 825 are declaration only). `description=` is given **only where it
+      genuinely differs**: 57 names carry drifting descriptions today for no reason -
+      `UpdateGraphics` has two texts for 93 uses (88 versus 5), and `SetNodeNumber`'s most common
+      description reads *"Get global node number"*, a copy-paste error in the generated comment of
+      a setter.
+
+      **On the duplication this introduces:** the library still states what the parent's C++
+      header declares. Rather than parse C++ to remove it, step 32 turns it into a *checked*
+      invariant - a validation pass confirms each library declaration exists in the parent class
+      header (`src/System/CObject*.h`, `CNode*.h`, `CMarker*.h`), so a parent signature that
+      changes without the library following is a generator error rather than silent drift. That is
+      the reason to run 32 after 31h.
+
+    - **`outputVariables` as real data. DONE 2026-09-13** with 31d: a list of
+      `ItemOutputVariable(OVPosition, description)` in place of one string holding a dict literal
+      that both generators had to `eval()`. Only the 15 texts shared by four or more items are
+      named; naming all 69 repeated texts would have cost 69 constants to save 130 lines.
 
 32. **Validate the definitions on load.** Step 31a changed what this step has to do. Because
     the definitions are now Python, a large part of the schema validates itself at import time,
@@ -890,7 +959,9 @@ The core investment. Every step is validated byte-for-byte by step 2.
     - shape versus default value - a `TVectorND(3)` whose default has six entries;
     - the size/type agreement that was checkable **nowhere** before 31b (the
       `#future: also add size check ...` note at `pythonAutoGenerateObjects.py:904`); #2410 was
-      exactly this defect and was found by hand.
+      exactly this defect and was found by hand;
+    - **every shared function declaration really exists in the parent class header** (31h) - the
+      check that makes the declaration library a stated invariant instead of a silent second copy.
 
     Deliverable: a `ValidateDefinitions()` pass over the loaded modules, called by
     `tools/regenerate.py` before the generators run, reporting every violation rather than the

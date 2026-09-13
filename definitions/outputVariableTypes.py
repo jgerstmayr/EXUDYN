@@ -116,3 +116,11 @@ reservedBits = [
     OutputVariable('Strain', 26, 'considered for finite elements or fluids; never implemented', reserved=True),
     OutputVariable('Stress', 27, 'considered for finite elements or fluids; never implemented', reserved=True),
     ]
+
+#one module-level constant per variable - OVPosition, OVForceLocal, ... - so an item definition
+#names an output variable instead of spelling it as a string. A typo is then a NameError at load
+#time rather than a key that silently never matches. Written as a loop and not as 34 hand-kept
+#lines, because a second list is exactly what this file exists to remove.
+for _variable in outputVariableTypes:
+    globals()['OV' + _variable.name] = _variable
+del _variable

@@ -331,6 +331,16 @@ def StructureFunction(type, pythonName, cFlags='', implementation='', args='',
 
 
 #%%************************************************************************************************
+def ItemOutputVariable(outputVariable, description):
+    """One output variable an item provides. outputVariable is a constant from
+    outputVariableTypes.py (OVPosition, OVForceLocal, ...), so a typo is a NameError here rather
+    than a key that silently never matches; description is the text shown in the reference
+    tables, and may be one of the shared texts in outputVariableDescriptions.py."""
+
+    return {'outputVariable': outputVariable, 'description': description}
+
+
+#%%************************************************************************************************
 def ItemDefinition(className, members, **header):
     header['className'] = className
     header['members'] = members

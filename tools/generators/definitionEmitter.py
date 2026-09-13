@@ -50,6 +50,8 @@ collectedDefinitions = []      #in FILE ORDER, which is load-bearing for byte-id
 #needs. A value the data uses but the module does not define is an ERROR naming what to add.
 sys.path.insert(0, outputDirectory)
 import definitionTypes
+import outputVariableDescriptions
+import outputVariableTypes
 
 
 def ConstantsWithPrefix(prefix, skipPrefixes=()):
@@ -498,6 +500,38 @@ def Banner(className):
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the description texts several items share verbatim, inverted so the emitter can name them
+sharedDescriptions = {}
+for _name in dir(outputVariableDescriptions):
+    if _name.startswith('OVD'):
+        sharedDescriptions[getattr(outputVariableDescriptions, _name)] = _name
+
+knownOutputVariables = set(v.name for v in outputVariableTypes.outputVariableTypes)
+
+
+def EmitOutputVariables(text, className):
+    """The old format stores the output variables as ONE string holding a Python dict literal,
+    which both generators then eval(). Here it becomes a list of real entries: the key is a
+    constant, so a typo is a NameError instead of a variable that silently never matches, and
+    nothing has to eval() a string that was assembled with backslash gymnastics."""
+    table = eval(text.replace(chr(10), chr(92) + 'n').replace(chr(92), chr(92) * 2))
+
+    lines = ['    outputVariables=[']
+    for key, description in table.items():
+        if key not in knownOutputVariables:
+            raise ValueError(className + ': output variable ' + repr(key) + ' is not declared in'
+                             + ' definitions/outputVariableTypes.py')
+        if description in sharedDescriptions:
+            value = sharedDescriptions[description]
+        else:
+            value = StringLiteral(description, raw=(chr(92) in description))
+        lines.append('        ItemOutputVariable(OV' + key + ', ' + value + '),')
+    lines.append('        ],')
+
+    return lines
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def EmitDefinition(definition):
     parseInfo = definition['parseInfo']
     source = definition['source']
@@ -527,6 +561,9 @@ def EmitDefinition(definition):
             lines.append('    ' + key + '=' + table[value] + ',')
             continue
         text = UnmangleNewlines(str(value), key, source)
+        if key == 'outputVariables':
+            lines += EmitOutputVariables(text, className)
+            continue
         lines.append('    ' + key + '=' + StringLiteral(text, raw=(key in rawTextKeys)) + ',')
 
     lines.append('    members=[')
@@ -570,6 +607,10 @@ def WriteGroup(moduleName, title, sourceFile, definitions):
     L.append('#' + '+' * 98)
     L.append('')
     L.append('from definitionTypes import *')
+    if sourceFile == 'objectDefinition.py':
+        #OV... names the output variables, OVD... the descriptions shared by several items
+        L.append('from outputVariableTypes import *')
+        L.append('from outputVariableDescriptions import *')
     L.append('')
     L.append('definitions = []')
     L.append('')
