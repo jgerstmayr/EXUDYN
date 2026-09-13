@@ -826,7 +826,7 @@ The core investment. Every step is validated byte-for-byte by step 2.
     Detail - the measured groundwork, the decisions taken and the per-commit reports - lives in
     the revision log, [Step 31](exudynRevisionLog2026.md#step-31). Only the state is kept here.
 
-    **DONE: 31a, 31b, 31d, 31g. OPEN: 31c (with step 50), 31e (partly done), 31f, 31h.**
+    **DONE: 31a, 31b, 31d, 31g, 31h. OPEN: 31c (with step 50), 31e (partly done), 31f.**
 
     - **31a - emit real Python from the parsed representation. DONE 2026-09-13** (`a78d969`).
       Items go to `definitions/itemDefs{Nodes,Objects,Markers,Loads,Sensors}.py`, structures to
@@ -898,7 +898,7 @@ The core investment. Every step is validated byte-for-byte by step 2.
       Also here: `'1.10.80;EXP=2030'` is stored in `defaultValue` on **93 deprecated structure
       members**. It is a version and an expiry date, not a default value, and gets its own field.
 
-    - **31h - a function declaration library.** Open; to be done before Phase 3 closes. The item
+    - **31h - a function declaration library. DONE 2026-09-14.** The item
       files are dominated by functions that are copies: **1850 functions against 985 parameters**,
       and **64% of the functions are verbatim repeats** of another declaration -
       `CheckPreAssembleConsistency` 49 times identically, `GetOutputVariableBody` 16 times,
@@ -934,6 +934,14 @@ The core investment. Every step is validated byte-for-byte by step 2.
       `UpdateGraphics` has two texts for 93 uses (88 versus 5), and `SetNodeNumber`'s most common
       description reads *"Get global node number"*, a copy-paste error in the generated comment of
       a setter.
+
+      **Result: `definitions/itemFunctions.py`, 162 entries standing for 1463 declarations.** The
+      resolution keys are `classType` and `cParentClass`, but BOTH default to `None` and are named
+      only where the classes genuinely change the declaration - 144 of 161 (classType, name) pairs
+      have one signature across all their parents, and five names have one across all item types.
+      That took the library from 273 entries to 162 at a cost of 23 extra `description=` overrides
+      (579 to 602). The library is six lists - `sharedFunctions`, then one per item type - so the
+      part a maintainer has to keep in sync with the C++ stays small and grouped.
 
       **On the duplication this introduces:** the library still states what the parent's C++
       header declares. Rather than parse C++ to remove it, step 32 turns it into a *checked*
@@ -1547,3 +1555,4 @@ the tracker.
 - **#2413** (EXTENSION) ObjectContactConvexRoll.pContact is computed state stored in parameters
 - **#2414** (DOCU) AngularVelocityLocal output variable description says velocity not angular velocity
 - **#2415** (BUG) a changed class description never reaches the generated headers
+- **#2417** (CLEANUP) remove the CFOptional flag once phase 3 is done

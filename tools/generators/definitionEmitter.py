@@ -452,7 +452,49 @@ def TypeExpression(typeString, size='', isFunction=False, owner=''):
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-def EmitMember(parameter, source, className=chr(39)+chr(39)):
+#the shared function declarations. A member that matches one is emitted as ItemFunctionDef(...)
+#and the declaration is not restated; anything else is written out in full.
+import itemFunctions
+
+functionLibrary = itemFunctions.itemFunctionLibrary
+
+
+def VisibleEntries(pythonName, classType, parentClass):
+    """The entries a use site in this class can reach - the same wildcard rule the resolver in
+    definitionTypes.py applies: an entry with classType or parentClass None fits every class."""
+    return [e for e in functionLibrary
+            if e['pythonName'] == pythonName
+            and (e['classType'] is None or e['classType'] == classType)
+            and (e['parentClass'] is None or e['parentClass'] == parentClass)]
+
+
+def LibraryEntry(parameter, classType, parentClass, cleanedFlags):
+    """The single library entry this member stands for, or None."""
+    candidates = [e for e in VisibleEntries(parameter.get('pythonName', ''),
+                                            classType, parentClass)
+                  if str(e['type']) == str(parameter.get('type', ''))
+                  and e['destination'] == str(parameter.get('destination', ''))
+                  and e['cFlags'] == cleanedFlags
+                  and e['args'] == (parameter.get('args', '') or '')]
+    if len(candidates) != 1:
+        return None
+
+    return candidates[0]
+
+
+def DisambiguatingFields(entry, classType, parentClass):
+    """Which of destination/cFlags/args the use site has to give, because the name alone does not
+    identify the entry. Only the fields that actually differ are named, so the call stays short."""
+    same = VisibleEntries(entry['pythonName'], classType, parentClass)
+    if len(same) < 2:
+        return []
+
+    return [field for field in ('destination', 'cFlags', 'args')
+            if len(set(str(e[field]) for e in same)) > 1]
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def EmitMember(parameter, source, className=chr(39)+chr(39), classType='', parentClass=''):
     """One member as a constructor call. type / destination / flags go on the FIRST line, because
     together they classify the member; everything else follows one per line so that a changed
     description stays a one-line diff."""
@@ -474,6 +516,26 @@ def EmitMember(parameter, source, className=chr(39)+chr(39)):
     typeString = parameter.get('type', '')
     cFlags = parameter.get('cFlags', '') or ''
 
+    #the interface flag is INVERTED for parameters and DROPPED for functions. Inverted because
+    #947 of 985 parameters are in the Python interface and 38 are not, so the exception is what
+    #is worth writing down. Dropped for functions because it has no effect there: the generator
+    #reads it only inside a block guarded by lineType 'V'
+    #(pythonAutoGenerateObjects.py:1123), and 1755 of 1850 function rows carried it anyway.
+    #'declaration only' is DERIVED: a function with no implementation is a declaration, one with
+    #an implementation gets a body, and an EMPTY implementation is an empty body - three states
+    #that a flag beside a text field could only ever restate. 53 item functions carried the flag
+    #AND an implementation of ';', which the generator ignored: dead text, dropped here.
+    if isFunction:
+        cFlags = cFlags.replace('D', '')
+
+    if source == 'items':
+        if isFunction:
+            cFlags = cFlags.replace('I', '')
+        elif 'I' in cFlags:
+            cFlags = cFlags.replace('I', '')
+        else:
+            cFlags = cFlags + 'n'
+
     #SFSubstructure is DERIVED, not written: for a structure it says exactly "the type is one of
     #the classes defined here", which holds for all 71 of them. Writing it again is a second
     #statement of the same fact, and two statements can disagree. The assertion below is what a
@@ -493,11 +555,51 @@ def EmitMember(parameter, source, className=chr(39)+chr(39)):
     if source == 'items':
         head.append('destination=' + FlagExpression(parameter.get('destination', ''),
                                                     itemDestinations))
-    head.append('cFlags=' + FlagExpression(cFlags, flagTable))
-    for name, active in (('isVirtual', isVirtual), ('isStatic', isStatic),
+    #an empty flag set is written as nothing at all: with the interface flag inverted, most
+    #parameters carry no flag, and 'cFlags=' + two quotes is noise
+    flagExpression = FlagExpression(cFlags, flagTable)
+    if flagExpression != chr(39) * 2:
+        head.append('cFlags=' + flagExpression)
+    #isVirtual defaults to True, so it is written only for the minority that do NOT override a
+    #parent function - 195 of 1850 item functions
+    if isFunction and not isVirtual:
+        head.append('isVirtual=False')
+    for name, active in (('isStatic', isStatic),
                          ('isLinked', isLinked), ('fromParent', fromParent)):
         if active:
             head.append(name + '=True')
+
+    entry = None
+    if source == 'items' and isFunction and not isStatic:
+        entry = LibraryEntry(parameter, classType, parentClass, cFlags)
+    if entry is not None:
+        short = ['        ItemFunctionDef(' + StringLiteral(parameter['pythonName'], raw=False)]
+        for field in DisambiguatingFields(entry, classType, parentClass):
+            if field == 'destination':
+                short.append('destination='
+                             + FlagExpression(entry['destination'], itemDestinations))
+            elif field == 'cFlags':
+                short.append('cFlags=' + (FlagExpression(entry['cFlags'], itemFlags)
+                                          if entry['cFlags'] else chr(39) * 2))
+            else:
+                short.append('args=' + StringLiteral(entry['args'], raw=False))
+        implementation = parameter.get('defaultValue', '')
+        if 'D' not in (parameter.get('cFlags', '') or ''):
+            implementation = implementation or ''
+            short.append('implementation='
+                         + StringLiteral(implementation, raw=(chr(92) in implementation)))
+        description = parameter.get('parameterDescription', '')
+        if description != entry['description']:
+            short.append('description='
+                         + StringLiteral(description, raw=(chr(92) in description)))
+        if parameter.get('cplusplusName', '') != parameter.get('pythonName', ''):
+            short.append('cplusplusName='
+                         + StringLiteral(parameter.get('cplusplusName', ''), raw=False))
+
+        return '        ItemFunctionDef(' + (',\n            '
+                                             .join([StringLiteral(parameter['pythonName'],
+                                                                  raw=False)]
+                                                   + short[1:])) + '),'
 
     lines = ['        ' + constructor + '(' + ', '.join(head) + ',']
 
@@ -517,11 +619,14 @@ def EmitMember(parameter, source, className=chr(39)+chr(39)):
     if isFunction:
         if parameter.get('args', ''):
             body.append(('args', StringLiteral(parameter['args'], raw=False)))
-        if parameter.get('defaultValue', ''):
-            #a function's 'defaultValue' is its C++ body, which is code and never a value
+        #a function's 'defaultValue' is its C++ body. None means "declaration only", which the
+        #old format said with the D flag; '' means an empty body, which 98 functions have.
+        if 'D' in (parameter.get('cFlags', '') or ''):
+            pass                                   #declaration only: implementation stays None
+        else:
+            implementation = parameter.get('defaultValue', '') or ''
             body.append(('implementation',
-                         StringLiteral(parameter['defaultValue'],
-                                       raw=(chr(92) in parameter['defaultValue']))))
+                         StringLiteral(implementation, raw=(chr(92) in implementation))))
     else:
         #a deprecated member has no default value, so the old format stored the deprecation
         #version and expiry year there as 'version;EXP=year'. That is two facts in one string and
@@ -533,8 +638,7 @@ def EmitMember(parameter, source, className=chr(39)+chr(39)):
                          'Deprecated(' + StringLiteral(since, raw=False) + ', ' + expires + ')'))
             rawDefault = ''
         default = DefaultValueExpression(rawDefault, typeString)
-        if default is not None:
-            body.append(('defaultValue', default))
+        body.append(('defaultValue', default if default is not None else 'NoDefaultValue'))
         if parameter.get('args', ''):
             body.append(('args', StringLiteral(parameter['args'], raw=False)))
 
@@ -632,7 +736,9 @@ def EmitDefinition(definition):
 
     lines.append('    members=[')
     for parameter in definition['parameters']:
-        lines.append(EmitMember(parameter, source, parseInfo.get("class", "")))
+        lines.append(EmitMember(parameter, source, parseInfo.get("class", ""),
+                                parseInfo.get('classType', ''),
+                                parseInfo.get('cParentClass', '')))
     lines.append('        ],')
     lines.append('    ))')
     lines.append('')

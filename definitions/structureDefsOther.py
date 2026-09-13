@@ -85,6 +85,7 @@ definitions.append(StructureDefinition(
             description=r'$c_Z\,$ [SI:m] $Z$ radius for circular cross section'),
         StructureParameter(type=TVector2DList, cFlags=SFNoDictType+SFPybind,
             pythonName='polygonalPoints',
+            defaultValue=NoDefaultValue,
             description=r"""$\pv_{pg}\,$ [SI: (m,m) ] list of polygonal ($Y,Z$) points in local beam cross section coordinates, defined in positive rotation direction"""),
         ],
     ))

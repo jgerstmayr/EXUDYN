@@ -1691,6 +1691,108 @@ range check - so Python accepts any non-negative integer where only 0 and 1 mean
 dialog offers a number field instead of a checkbox. It is the **only** boolean default in the whole
 definition set that does not sit on a `bool` type; 370 of 371 do.
 
+**Done 2026-09-13, 31h preparation - three flags removed and the required fields enforced.**
+The maintainer's review of the function form produced four observations; three held and one did
+not, and the measurements are what decided each.
+
+- **`CFInterface` is inverted to `CFNoInterface`.** 947 of 985 parameters are in the Python
+  dictionary interface and **38 are not** - every one of them a temporary or computed value
+  (`ObjectKinematicTree.tempVector`, `tempMatrix`, `jointForces`, ...). Naming the exception is
+  shorter and says more than repeating the rule 947 times.
+- **`CFInterface` is dropped from functions, where it never had an effect.** All four sites that
+  read the flag (`pythonAutoGenerateObjects.py:551`, `:629`, `:853`, `:1181`) sit inside a block
+  guarded by `lineType.find('V')` at `:1123`, so a function's `I` is unreachable. **1755 of 1850**
+  function rows carried it.
+- **`CFDeclarationOnly` is gone, derived from `implementation`.** Three states, one field: `None`
+  is a declaration, a text is a body, and `''` is an empty body - which 98 functions genuinely
+  have. Measured before removing: 53 item functions carried the flag **and** an implementation of
+  `';'`, which the generator ignores (`:1383` writes `;` when the flag is present) - dead text,
+  now gone.
+- **`isVirtual` defaults to True**, written only for the 195 of 1850 item functions that override
+  nothing.
+- **`CFOptional` was NOT removed**, against the maintainer's first reading, because it still
+  catches: items can be created from raw dicts, and the project's own test suite does it -
+  `modelUnitTests.py:184` calls `mbs.AddObject({'objectType': 'Ground', 'referencePosition': ...})`
+  while `ObjectGround` has four optional parameters that the call omits. Without the flag the
+  generated read is unconditional and that line fails. Recorded as **#2417** for after phase 3,
+  with the maintainer's reasoning - the behaviour is practically untested, so the flag guarantees
+  nothing, and a parameter that truly cannot be omitted should fail on its default value rather
+  than on a hand-written flag - and with the note that the raw-dict path needs tests first.
+
+**Required fields are now required.** `type`, `destination`, `pythonName` and `description`, plus
+`defaultValue` on parameters, default to a `Required` sentinel and raise at import naming the
+constructor and the member. Measured first: those four are empty **nowhere** in the current data,
+and `defaultValue` is empty on 319 parameters that genuinely have none, which now say so with
+`NoDefaultValue` instead of an empty string. A forgotten field can no longer reach the generated
+code as an empty string.
+
+Gates: `regenerate.py --check` a **no-op in both tiers**; round trip lossless (30 193 item + 8 530
+structure fields), with the two unreconstructible normalisations counted and named rather than
+hidden - 1755 dropped function interface flags and 53 dead semicolons. `itemDefsObjects.py` fell
+from 1 134 484 to 1 096 069 bytes before the function library has even been introduced.
+
+**Done 2026-09-14, 31h - the function declaration library.** The item files were dominated by
+declarations that several items each restated. `definitions/itemFunctions.py` now holds them once:
+**162 entries standing for 1463 declarations**, and an item writes
+
+```python
+ItemFunctionDef('ComputeODE2LHS'),
+ItemFunctionDef('GetNumberOfNodes', implementation='return 1;'),
+ItemFunctionDef('GetMarkerNumbers', cFlags=CFConst),
+```
+
+The entry is found from the class the member belongs to - its `classType` and `cParentClass` -
+plus the name, resolved in `ItemDefinition(...)`, which is the first point where the owning class
+is known. **1463 of 1850 item functions** now come from the library; 387 are written out in full.
+The five item files plus the new library total **1 209 579 bytes against 1 545 536 before: 22%
+smaller**, and `itemDefsObjects.py` alone falls from 1 096 069 to 879 715.
+
+**Both keys are wildcards, and that halved the library.** A first cut keyed every entry on a
+concrete `classType` and `cParentClass`, which produced 273 entries - but the declaration usually
+does not depend on either. Measured over those 273: **144 of the 161 (classType, name) pairs have
+one single signature across all their parent classes**, and 5 function names have one signature
+across all *item types* as well. Both keys therefore default to `None` and are named only where
+the classes genuinely disagree:
+
+| | entries |
+|---|---|
+| keyed on a concrete classType and parentClass | 273 |
+| `parentClass=None` wherever the parents agree | 172 |
+| `classType=None` as well, for `CheckPreAssembleConsistency`, `UpdateGraphics`, `GetMarkerNumber`, `GetRequestedMarkerType`, `GetAlgebraicEquationsSize` | **162** |
+
+The cost is paid in `description=` overrides at the use sites, and it is small: **579 before, 602
+after** - 23 more overrides for 111 fewer library entries, each of which would otherwise have to
+be maintained by hand and kept in sync with the C++. Where a merge has to choose a description it
+takes the one the most ITEMS carry, so the fewest use sites need an override.
+
+For maintenance the library is **six lists** - `sharedFunctions` first, then one per item type -
+appended into `itemFunctionLibrary` at the end of the file. Inside a list the entries with no
+declared parent come first, then the parent-specific ones grouped by parent.
+
+**Disambiguation is an error, not a guess.** Six keys are not unique, and the use site names the field that actually differs - `cFlags` for the const and
+non-const halves of `GetMarkerNumbers`, `args` for the two `ComputeAlgebraicEquations` and the two
+`SetObjectNumber`, `destination` for `HasUserFunction`, which exists as both a computation and a
+visualization function. Those arguments default to `None`, so a forgotten one raises and lists the
+alternatives instead of silently picking one.
+
+**The library STORES the declaration; it does not derive it - and the earlier plan said otherwise.**
+Measured against the hand-written base headers: of 1507 computational item functions, 1067 match a
+base signature exactly, **169 differ in the PARAMETER NAMES alone** (`ComputeMassMatrix` takes
+`massMatrixC` in the definitions and `massMatrix` in `CObjectBody.h`), and 271 names are not found
+in the parent chain by a line-based parse at all. Deriving would therefore rewrite the generated
+headers' argument names. So the duplication is removed *within the definition files* - 1463 down
+to 162 - and the remaining library-to-header duplication becomes a **check**, which is what plan
+step 32 now owns. The claim in the ABC evaluation that the declaration could simply be looked up
+was too strong; this corrects it.
+
+**The unified descriptions are in the library but not yet applied.** An item whose text differs
+still carries a `description=` override, because the generated C++ comment has to stay
+byte-identical in this commit. Applying the unification is a separate, reviewable change - it
+touches only `//! AUTO:` comments in the generated headers.
+
+Gates: `regenerate.py --check` a **no-op in both tiers**; round trip lossless over 30 193 item and
+8 530 structure fields; full `runTestSuite.py` PASSED.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving

@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.50.dev1, 
 +  last change =  2026-09-13, 
-+  Number of issues = 2417, 
++  Number of issues = 2418, 
 +  Number of resolved issues = 2123 (50 in current version), 
 
 ************
@@ -7037,6 +7037,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 2417:** remove the CFOptional flag once phase 3 is done
+    - issue author: Claude-JG
+    - description:  CFOptional marks 448 of 985 item parameters and generates if (EPyUtils::DictItemExists(d; "x")) around the dictionary read; so a parameter that is absent keeps its C++ default. It still catches today - the test suite creates items from raw dicts; e.g. modelUnitTests.py:184 calls mbs.AddObject with objectType Ground and referencePosition only; and ObjectGround has four optional parameters that the call omits. Maintainer decision 2026-09-13: remove it after phase 3 anyway. The reasoning: there are practically no tests for this behaviour; so the flag is worthless as a guarantee; and the dict path works if every parameter is optional. Where a parameter really cannot be omitted; the failing default value is the right place to say so - a construction that cannot produce a usable object should fail on its default; not on a hand-written flag that nothing checks. Do this AFTER phase 3; and add tests for the raw-dict creation path at the same time; since that is what the flag silently protects today.
+    - date raised: 2026-09-13 
 
  * **open issue 2414:** AngularVelocityLocal output variable description says velocity not angular velocity
     - issue author: Claude-JG

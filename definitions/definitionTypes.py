@@ -34,8 +34,15 @@ DestParam            = 'P'   #parameter structure
 CFReadOnly           = 'R'   #read only; functions are always read only
 CFConst              = 'C'   #const member function
 CFMutable            = 'U'   #mutable: may be modified in const functions (temporary vectors)
-CFInterface          = 'I'   #dictionary interface
-CFDeclarationOnly    = 'D'   #declaration only; implementation written by hand in the .cpp
+CFNoInterface        = 'n'   #EXCLUDED from the Python dictionary interface. Inverted on
+                             #purpose: 947 of 985 parameters are in the interface and 38
+                             #are not - all of them temporaries or computed state - so
+                             #stating the exception is shorter and says more. The letter
+                             #is not one of the old format's; the emitter translates.
+                             #NOTE: this flag is meaningless on a function. The generator
+                             #reads the interface flag only inside a block guarded by
+                             #lineType 'V' (pythonAutoGenerateObjects.py:1123), so the 'I'
+                             #that 1755 of 1850 function rows carried never had an effect.
 CFOptional           = 'O'   #optional parameter in the dictionary; otherwise the default
 
 #--------------------------------------------------------------------- flags (structures)
@@ -131,6 +138,30 @@ def CppLiteral(value, typeName=''):
         return str(value)
 
     return str(value)
+
+
+class _Required:
+    """The value of a field that has to be given. It is the DEFAULT of every required argument, so
+    a forgotten field is an error naming the class and the member, instead of an empty string that
+    quietly reaches the generated code."""
+
+    def __repr__(self):
+        return 'REQUIRED'
+
+
+Required = _Required()
+
+
+class _NoDefaultValue:
+    """Stated explicitly where a parameter genuinely has no default value - 319 of them, mostly
+    substructures and strings. Being a value rather than an empty string, it cannot be confused
+    with a default somebody forgot to write."""
+
+    def __repr__(self):
+        return 'NoDefaultValue'
+
+
+NoDefaultValue = _NoDefaultValue()
 
 
 class Deprecated:
@@ -390,10 +421,15 @@ Tvoid                              = TypeSpec('void')
 
 #%%************************************************************************************************
 def _member(kind, fields):
-    """Common body: record which constructor was used, and default cplusplusName to pythonName -
-    which is what the old format meant by leaving that column empty."""
+    """Common body: check the required fields, record which constructor was used, and default
+    cplusplusName to pythonName - which is what the old format meant by leaving that column
+    empty."""
     fields = dict(fields)
     fields['kind'] = kind
+    for name, value in sorted(fields.items()):
+        if isinstance(value, _Required):
+            raise ValueError(kind + ' ' + repr(fields.get('pythonName', '?')) + ': '
+                             + name + ' is required and was not given')
     if not fields.get('cplusplusName', ''):
         fields['cplusplusName'] = fields.get('pythonName', '')
 
@@ -401,30 +437,33 @@ def _member(kind, fields):
 
 
 #%%************************************************************************************************
-def ItemParameter(type, destination, pythonName, cFlags='', defaultValue='',
-                  size='', args='', cplusplusName='',
-                  description='', fromParent=False, deprecated=None):
+def ItemParameter(type=Required, destination=Required, pythonName=Required,
+                  defaultValue=Required, description=Required,
+                  cFlags='', size='', args='', cplusplusName='',
+                  fromParent=False, deprecated=None):
     return _member('ItemParameter', locals())
 
 
 #%%************************************************************************************************
-def ItemFunction(type, destination, pythonName, cFlags='', implementation='',
-                 args='', size='', cplusplusName='',
-                 description='', isVirtual=False, isStatic=False):
+def ItemFunction(type=Required, destination=Required, pythonName=Required,
+                 description=Required,
+                 cFlags='', implementation=None, args='', size='', cplusplusName='',
+                 isVirtual=True, isStatic=False):
     return _member('ItemFunction', locals())
 
 
 #%%************************************************************************************************
-def StructureParameter(type, pythonName, cFlags='', defaultValue='', size='',
-                       args='', cplusplusName='',
-                       description='', isLinked=False, fromParent=False, deprecated=None):
+def StructureParameter(type=Required, pythonName=Required, defaultValue=Required,
+                       description=Required,
+                       cFlags='', size='', args='', cplusplusName='',
+                       isLinked=False, fromParent=False, deprecated=None):
     return _member('StructureParameter', locals())
 
 
 #%%************************************************************************************************
-def StructureFunction(type, pythonName, cFlags='', implementation='', args='',
-                      size='', cplusplusName='',
-                      description='', isVirtual=False, isLinked=False):
+def StructureFunction(type=Required, pythonName=Required, description=Required,
+                      cFlags='', implementation=None, args='', size='', cplusplusName='',
+                      isVirtual=True, isLinked=False):
     return _member('StructureFunction', locals())
 
 
@@ -439,7 +478,102 @@ def ItemOutputVariable(outputVariable, description):
 
 
 #%%************************************************************************************************
+def ItemFunctionLib(pythonName, type, destination, classType=None, parentClass=None,
+                    description=Required, cFlags='', args='', implementation=None,
+                    isVirtual=True, isStatic=False):
+    """One entry of definitions/itemFunctions.py: the declaration that items sharing this function
+    would otherwise each restate, plus the description they share.
+
+    classType is None where the declaration is the same for every item type - UpdateGraphics and
+    CheckPreAssembleConsistency - and parentClass is None where it is the same for every parent
+    within that item type, which is the usual case. Either is named only where the item type or
+    the parent actually changes the declaration."""
+
+    if isinstance(description, _Required):
+        raise ValueError('ItemFunctionLib ' + repr(pythonName) + ': description is required'
+                         + ' and was not given')
+
+    return {'classType': classType, 'parentClass': parentClass, 'pythonName': pythonName,
+            'type': type, 'destination': destination, 'description': description,
+            'cFlags': cFlags, 'args': args, 'implementation': implementation,
+            'isVirtual': isVirtual, 'isStatic': isStatic}
+
+
+#%%************************************************************************************************
+def ItemFunctionDef(pythonName, implementation=None, description=None,
+                    destination=None, cFlags=None, args=None, cplusplusName=''):
+    """Use site: this item overrides a function whose declaration is in the library. The entry is
+    found from the class this member belongs to - its classType and cParentClass - and the name.
+
+    destination and cFlags default to None and are given only where the name alone is ambiguous,
+    which is 12 of 273 entries: the const and non-const halves of an accessor pair, and the names
+    used for both a computation and a visualization function. A missing one is an error listing
+    the alternatives, not a silent pick.
+
+    description is None unless the text is genuinely item-specific; implementation is None for a
+    declaration the .cpp defines, '' for an empty body, and a string for a body."""
+
+    return {'kind': 'ItemFunctionRef', 'pythonName': pythonName,
+            'implementation': implementation, 'description': description,
+            'destination': destination, 'cFlags': cFlags, 'args': args,
+            'cplusplusName': cplusplusName}
+
+
+_functionLibrary = None
+
+
+def _Library():
+    """Loaded on first use, so definitionTypes.py and itemFunctions.py do not import each other."""
+    global _functionLibrary
+    if _functionLibrary is None:
+        import itemFunctions
+        _functionLibrary = itemFunctions.itemFunctionLibrary
+
+    return _functionLibrary
+
+
+def _ResolveFunctionReference(reference, className, classType, parentClass):
+    candidates = [e for e in _Library()
+                  if e['pythonName'] == reference['pythonName']
+                  and (e['classType'] is None or e['classType'] == classType)
+                  and (e['parentClass'] is None or e['parentClass'] == parentClass)]
+    for field in ('destination', 'cFlags', 'args'):
+        if reference[field] is not None:
+            candidates = [e for e in candidates if e[field] == reference[field]]
+
+    where = className + '.' + reference['pythonName']
+    if not candidates:
+        raise ValueError(where + ': no entry in definitions/itemFunctions.py for classType '
+                         + repr(classType) + ' and parent class ' + repr(parentClass)
+                         + ' - add one, or write the function out with ItemFunction(...)')
+    if len(candidates) > 1:
+        raise ValueError(where + ': ' + str(len(candidates)) + ' library entries match; say which'
+                         + ' with destination=, cFlags= or args=. Alternatives: '
+                         + '; '.join(repr(e['type']) + ' destination='
+                                     + repr(e['destination']) + ' cFlags=' + repr(e['cFlags'])
+                                     + ' args=' + repr(e['args']) for e in candidates))
+
+    entry = candidates[0]
+    member = dict(entry)
+    member.pop('classType')
+    member.pop('parentClass')
+    member['kind'] = 'ItemFunction'
+    member['implementation'] = reference['implementation']
+    if reference['description'] is not None:
+        member['description'] = reference['description']
+    member['cplusplusName'] = reference['cplusplusName'] or reference['pythonName']
+
+    return member
+
+
+#%%************************************************************************************************
 def ItemDefinition(className, members, **header):
+    #a member written as ItemFunctionDef(...) is expanded here, where the class this member
+    #belongs to is known - the library entry is found from its classType and cParentClass
+    members = [_ResolveFunctionReference(m, className, header.get('classType', ''),
+                                         header.get('cParentClass', ''))
+               if m.get('kind') == 'ItemFunctionRef' else m
+               for m in members]
     header['className'] = className
     header['members'] = members
 
