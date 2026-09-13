@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.48.dev1, 
+  \item Exudyn version = 1.11.49.dev1, 
   \item last change =  2026-09-13, 
   \item Number of issues = 2414, 
-  \item Number of resolved issues = 2121 (48 in current version), 
+  \item Number of resolved issues = 2122 (49 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.49}: {\bf \color{warningRed}  resolved BUG 2408}: {\bf GetOutputVariableTypeString has no case for CoordinatesTotal}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: OutputVariableType::CoordinatesTotal (bit 14) is in the C++ enum; it is exposed to Python via AddEnumValue and it is used by 7 item definitions. But GetOutputVariableTypeString() in src/Main/OutputVariable.h has no case for it; it falls through to default: which raises SysError("invalid variable type") and returns "Invalid". Reachable from user-facing paths: CSolverBase.cpp:1960 writes "\#OutputVariableType = Invalid" into the sensor solution file header; VisualizationSettings.h:486 prints it in the settings dump. Found while measuring the four hand-synced OutputVariableType lists for revision plan step 31; the planned registrator step makes this class of drift impossible. Also noted: KineticEnergy and PotentialEnergy exist in the enum and in GetOutputVariableTypeString but are NOT exposed via AddEnumValue - a question for the maintainer rather than a defect.}
+    \item {\bf notes: fixed by the OutputVariableType registrator (revision plan step 31d): the enum, GetOutputVariableTypeString(); IsOutputVariableTypeForReferenceConfiguration() and the Python enum are now all generated from definitions/outputVariableTypes.py; so a value can no longer exist without a string. Verified: a sensor on CoordinatesTotal writes OutputVariableType = CoordinatesTotal into its solution file header instead of Invalid.}
+    \item   date resolved: {\bf 2026-09-13 18:28},
+date raised: 2026-09-13 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.48}:  resolved Issue 2410: {\bf NodeRigidBodyRotVecLG documents size 3 for three Vector6D parameters}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -12605,12 +12613,6 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
-  \item open {\bf BUG 2408}:  {\bf GetOutputVariableTypeString has no case for CoordinatesTotal}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item issue author: Claude-JG
-    \item {description: OutputVariableType::CoordinatesTotal (bit 14) is in the C++ enum; it is exposed to Python via AddEnumValue and it is used by 7 item definitions. But GetOutputVariableTypeString() in src/Main/OutputVariable.h has no case for it; it falls through to default: which raises SysError("invalid variable type") and returns "Invalid". Reachable from user-facing paths: CSolverBase.cpp:1960 writes "\#OutputVariableType = Invalid" into the sensor solution file header; VisualizationSettings.h:486 prints it in the settings dump. Found while measuring the four hand-synced OutputVariableType lists for revision plan step 31; the planned registrator step makes this class of drift impossible. Also noted: KineticEnergy and PotentialEnergy exist in the enum and in GetOutputVariableTypeString but are NOT exposed via AddEnumValue - a question for the maintainer rather than a defect.}
-    \item date raised: 2026-09-13 
-  \ei
   \item open {\bf BUG 2398}:  {\bf explicit integration costs O(N^2) per step with the default dense linear solver}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

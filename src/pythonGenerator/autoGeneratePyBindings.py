@@ -295,6 +295,13 @@ plrmain.AddDocu('Be careful in reading and interpreting such error messages. You
 #structures and enums:
 
 
+import os
+import sys
+#the OutputVariableType registrator lives with the new generators; it owns the
+#enum and hands the same table to the C++ header and to the Python enum below
+sys.path.append(os.path.join('..', '..', 'tools', 'generators'))
+import outputVariableEmitter
+
 plr = PyLatexRST('','', '') #PythonLatexRST
 
 plr.AddDocu(text='This section defines a couple of structures (C++: enum aka enumeration type), which are used to select, e.g., a configuration type or a variable type. In the background, these types are integer numbers, but for safety, the types should be used as type variables. See this examples:\n\n', 
@@ -330,48 +337,12 @@ plr.DefStartEnumClass(className = pyClass,
                         subSection=True, labelName='sec:'+pyClass)
 plr.DefLatexStartTable(pyClass)
 
-#keep this list synchronized with the accoring enum structure in C++!!!
-plr.AddEnumValue(pyClass, '_None', 'no value; used, e.g., to select no output variable in contour plot')
-plr.AddEnumValue(pyClass, 'Distance', 'e.g., measure distance in spring damper connector')
-plr.AddEnumValue(pyClass, 'Position', 'measure 3D position, e.g., of node or body')
-plr.AddEnumValue(pyClass, 'Displacement', 'measure displacement; usually difference between current position and reference position')
-plr.AddEnumValue(pyClass, 'DisplacementLocal', 'measure local displacement, e.g., in local joint coordinates')
-plr.AddEnumValue(pyClass, 'Velocity', 'measure (translational) velocity of node or object')
-plr.AddEnumValue(pyClass, 'VelocityLocal', 'measure local (translational) velocity, e.g., in local body or joint coordinates')
-plr.AddEnumValue(pyClass, 'Acceleration', 'measure (translational) acceleration of node or object')
-plr.AddEnumValue(pyClass, 'AccelerationLocal', 'measure (translational) acceleration of node or object in local coordinates')
-
-plr.AddEnumValue(pyClass, 'RotationMatrix', 'measure rotation matrix of rigid body node or object')
-plr.AddEnumValue(pyClass, 'Rotation', 'measure, e.g., scalar rotation of 2D body, Euler angles of a 3D object or rotation within a joint')
-plr.AddEnumValue(pyClass, 'AngularVelocity', 'measure angular velocity of node or object')
-plr.AddEnumValue(pyClass, 'AngularVelocityLocal', 'measure local (body-fixed) angular velocity of node or object')
-plr.AddEnumValue(pyClass, 'AngularAcceleration', 'measure angular acceleration of node or object')
-plr.AddEnumValue(pyClass, 'AngularAccelerationLocal', 'measure angular acceleration of node or object in local coordinates')
-
-plr.AddEnumValue(pyClass, 'CoordinatesTotal', 'measure the total coordinates (including reference configuration) of a node or object; otherwise the same as Coordinates')
-plr.AddEnumValue(pyClass, 'Coordinates', 'measure the coordinates of a node or object; coordinates just contain displacements, but not the reference (position or rotation) values - see also definition of respective nodes or objects')
-plr.AddEnumValue(pyClass, 'Coordinates_t', 'measure the time derivative of coordinates (= velocity coordinates) of a node or object')
-plr.AddEnumValue(pyClass, 'Coordinates_tt', 'measure the second time derivative of coordinates (= acceleration coordinates) of a node or object')
-
-plr.AddEnumValue(pyClass, 'SlidingCoordinate', 'measure sliding coordinate in sliding joint')
-plr.AddEnumValue(pyClass, 'Director1', 'measure a director (e.g., of a rigid body frame), or a slope vector in local 1 or x-direction')
-plr.AddEnumValue(pyClass, 'Director2', 'measure a director (e.g., of a rigid body frame), or a slope vector in local 2 or y-direction')
-plr.AddEnumValue(pyClass, 'Director3', 'measure a director (e.g., of a rigid body frame), or a slope vector in local 3 or z-direction')
-
-plr.AddEnumValue(pyClass, 'Force', 'measure global force, e.g., in joint or beam (resultant force), or generalized forces; see description of according object')
-plr.AddEnumValue(pyClass, 'ForceLocal', 'measure local force, e.g., in joint or beam (resultant force)')
-plr.AddEnumValue(pyClass, 'Torque', 'measure torque, e.g., in joint or beam (resultant couple/moment)')
-plr.AddEnumValue(pyClass, 'TorqueLocal', 'measure local torque, e.g., in joint or beam (resultant couple/moment)')
-# unused for now, maybe later on in finite elements, fluid, etc.
-# plr.AddEnumValue(pyClass, 'Strain', 'measure strain, e.g., axial strain in beam')
-# plr.AddEnumValue(pyClass, 'Stress', 'measure stress, e.g., axial stress in beam')
-# plr.AddEnumValue(pyClass, 'Curvature', 'measure curvature; may be scalar or vectorial: twist and curvature')
-
-plr.AddEnumValue(pyClass, 'StrainLocal', 'measure local strain, e.g., axial strain in cross section frame of beam or Green-Lagrange strain')
-plr.AddEnumValue(pyClass, 'StressLocal', 'measure local stress, e.g., axial stress in cross section frame of beam or Second Piola-Kirchoff stress; choosing component==-1 will result in the computation of the Mises stress')
-plr.AddEnumValue(pyClass, 'CurvatureLocal', 'measure local curvature; may be scalar or vectorial: twist and curvature of beam in cross section frame')
-
-plr.AddEnumValue(pyClass, 'ConstraintEquation', 'evaluates constraint equation (=current deviation or drift of constraint equation)')
+#the enum, its bit positions, the two C++ helper functions and this Python/documentation
+#table all come from definitions/outputVariableTypes.py - nothing is left to keep
+#synchronized by hand (revision plan step 31d)
+outputVariableEmitter.EmitHeader()
+for outputVariable in outputVariableEmitter.outputVariableTypes:
+    plr.AddEnumValue(pyClass, outputVariable.name, outputVariable.description)
 
 plr.sPy +=	'		'+enumExportValues+';\n\n'
 plr.DefLatexFinishTable()

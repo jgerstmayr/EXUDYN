@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.48.dev1, 
++  Exudyn version = 1.11.49.dev1, 
 +  last change =  2026-09-13, 
 +  Number of issues = 2414, 
-+  Number of resolved issues = 2121 (48 in current version), 
++  Number of resolved issues = 2122 (49 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.49: :textred:`resolved BUG 2408` : GetOutputVariableTypeString has no case for CoordinatesTotal 
+    - issue author: Claude-JG
+    - description:  OutputVariableType::CoordinatesTotal (bit 14) is in the C++ enum; it is exposed to Python via AddEnumValue and it is used by 7 item definitions. But GetOutputVariableTypeString() in src/Main/OutputVariable.h has no case for it; it falls through to default: which raises SysError("invalid variable type") and returns "Invalid". Reachable from user-facing paths: CSolverBase.cpp:1960 writes "#OutputVariableType = Invalid" into the sensor solution file header; VisualizationSettings.h:486 prints it in the settings dump. Found while measuring the four hand-synced OutputVariableType lists for revision plan step 31; the planned registrator step makes this class of drift impossible. Also noted: KineticEnergy and PotentialEnergy exist in the enum and in GetOutputVariableTypeString but are NOT exposed via AddEnumValue - a question for the maintainer rather than a defect.
+    - **notes:** fixed by the OutputVariableType registrator (revision plan step 31d): the enum, GetOutputVariableTypeString(); IsOutputVariableTypeForReferenceConfiguration() and the Python enum are now all generated from definitions/outputVariableTypes.py; so a value can no longer exist without a string. Verified: a sensor on CoordinatesTotal writes OutputVariableType = CoordinatesTotal into its solution file header instead of Invalid.
+    - date resolved: **2026-09-13 18:28**\ , date raised: 2026-09-13 
+    - resolved by: Claude-JG
  * Version 1.11.48: resolved Issue 2410: NodeRigidBodyRotVecLG documents size 3 for three Vector6D parameters (fix)
     - issue author: Claude-JG
     - description:  referenceCoordinates, initialCoordinates and initialVelocities of NodeRigidBodyRotVecLG are declared with type Vector6D but size 3, so the generated reference tables publish "type = Vector6D, size = 3". Everything else says 6: the class description ("3 displacement coordinates and three rotation coordinates"), GetNumberOfODE2Coordinates returns 6, the default value has six entries, and the LaTeX symbol lists six components. The size column is simply wrong in the published documentation. Note that size is currently used for documentation only and is validated nowhere - see the generator note "future: also add size check ..." at pythonAutoGenerateObjects.py:904 - which is why this could go unnoticed. Found during revision plan step 31b, where shape becomes part of the type and the two can no longer disagree.
@@ -8160,11 +8166,6 @@ Open issues
 **********
 Known bugs
 **********
-
- * :textred:`open BUG 2408:` GetOutputVariableTypeString has no case for CoordinatesTotal
-    - issue author: Claude-JG
-    - description:  OutputVariableType::CoordinatesTotal (bit 14) is in the C++ enum; it is exposed to Python via AddEnumValue and it is used by 7 item definitions. But GetOutputVariableTypeString() in src/Main/OutputVariable.h has no case for it; it falls through to default: which raises SysError("invalid variable type") and returns "Invalid". Reachable from user-facing paths: CSolverBase.cpp:1960 writes "#OutputVariableType = Invalid" into the sensor solution file header; VisualizationSettings.h:486 prints it in the settings dump. Found while measuring the four hand-synced OutputVariableType lists for revision plan step 31; the planned registrator step makes this class of drift impossible. Also noted: KineticEnergy and PotentialEnergy exist in the enum and in GetOutputVariableTypeString but are NOT exposed via AddEnumValue - a question for the maintainer rather than a defect.
-    - date raised: 2026-09-13 
 
  * :textred:`open BUG 2398:` explicit integration costs O(N^2) per step with the default dense linear solver
     - issue author: Claude-JG

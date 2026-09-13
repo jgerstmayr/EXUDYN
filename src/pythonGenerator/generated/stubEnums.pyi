@@ -71,6 +71,10 @@ Available output variables and the interpreation of the output variable can be f
     """measure local curvature; may be scalar or vectorial: twist and curvature of beam in cross section frame"""
     ConstraintEquation = int
     """evaluates constraint equation (=current deviation or drift of constraint equation)"""
+    KineticEnergy = int
+    """measure kinetic energy of a body, position independent"""
+    PotentialEnergy = int
+    """measure potential (=elastic) energy of a body or connector, position independent"""
 
 class ConfigurationType(Enum):
     """The enumeration type  ConfigurationType is used for selecting a configuration for reading or writing information to the module.

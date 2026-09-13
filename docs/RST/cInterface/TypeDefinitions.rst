@@ -99,6 +99,10 @@ The OutputVariableType does not provide information about the size of the output
   | measure local curvature; may be scalar or vectorial: twist and curvature of beam in cross section frame
 * | **ConstraintEquation**:
   | evaluates constraint equation (=current deviation or drift of constraint equation)
+* | **KineticEnergy**:
+  | measure kinetic energy of a body, position independent
+* | **PotentialEnergy**:
+  | measure potential (=elastic) energy of a body or connector, position independent
 
 
 
