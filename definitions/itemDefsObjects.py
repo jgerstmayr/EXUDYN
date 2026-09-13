@@ -9825,7 +9825,7 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
             pythonName='rBoundingSphere',
             defaultValue=DVZeroIndex,
             description=r'The  radius of the bounding sphere for the contact pre-check, calculated from the polynomial coefficients of the hull'),
-        ItemParameter(type=TVectorND(3), destination=DestComp, cFlags=CFInterface+CFVisualization+CFReadOnly,
+        ItemParameter(type=TVectorND(3), destination=DestComp, cFlags=CFInterface+CFReadOnly,
             pythonName='pContact',
             defaultValue='Vector3D({0,0,0})',
             description=r'The  current potential contact point. Contact occures if pContact[2] < 0. '),

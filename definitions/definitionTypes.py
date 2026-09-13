@@ -37,7 +37,6 @@ CFMutable            = 'U'   #mutable: may be modified in const functions (tempo
 CFInterface          = 'I'   #dictionary interface
 CFDeclarationOnly    = 'D'   #declaration only; implementation written by hand in the .cpp
 CFOptional           = 'O'   #optional parameter in the dictionary; otherwise the default
-CFVisualization      = 'V'   #UNDOCUMENTED in the legend; one single use, in NodeRigidBodyEP
 
 #--------------------------------------------------------------------- flags (structures)
 SFNoDictType         = 'D'   #no dictionary with type info - NOTE: the legend gives D twice, also
@@ -198,10 +197,16 @@ def _sized(table, key, what):
 
 
 def TVectorND(n):
+    """A fixed-size vector; only sizes with a C++ type are allowed - see vectorSizes above.
+    Any other size raises, so a Vector5D fails here rather than in the compiler."""
+
     return TypeSpec(_sized(vectorSizes, n, "vector size"), size=n)
 
 
 def TMatrixND(rows, columns):
+    """A fixed-size matrix; only shapes with a C++ type are allowed - see matrixSizes above.
+    Any other shape raises."""
+
     return TypeSpec(_sized(matrixSizes, (rows, columns), "matrix shape"),
                     size=(rows, columns))
 

@@ -7139,7 +7139,7 @@ V,      CP,     coefficientsHull,               ,               ,       NumpyVec
 V,      C,      coefficientsHullDerivative,     ,               ,       NumpyVector,"Vector()",                ,       IUR,    "$\kv^\prime \in \Rcal^{n_p}$polynomial coefficients of the polynomial $\mathrm{hull}^\prime(x)$"
 V,      C,      coefficientsHullDDerivative,    ,               ,       NumpyVector,"Vector()",                 ,       IUR,    "second derivative of the hull polynomial."
 V,      C,      rBoundingSphere,                ,               ,       UReal,"0",                                                    ,       IO,     "The  radius of the bounding sphere for the contact pre-check, calculated from the polynomial coefficients of the hull"
-V,      C,      pContact,                       ,               ,       Vector3D,"Vector3D({0,0,0})",                                 ,       IVR,     "The  current potential contact point. Contact occures if pContact[2] < 0. "
+V,      C,      pContact,                       ,               ,       Vector3D,"Vector3D({0,0,0})",                                 ,       IR,     "The  current potential contact point. Contact occures if pContact[2] < 0. "
 # V,      C,      kBoundary,                      ,               ,       ConstSizeVector<2>,"ConstSizeVector<2>(0,0)",                 ,       IO,     "The maximum values the tangent to the polynomial can have, used to detect the edge and save iterations. "
 
 #
