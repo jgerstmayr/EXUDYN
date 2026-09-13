@@ -20,8 +20,8 @@ BUG numbers refer to the according issue numbers.
 General information on current version:
  
 +  Exudyn version = 1.11.47.dev1, 
-+  last change =  2026-09-12, 
-+  Number of issues = 2408, 
++  last change =  2026-09-13, 
++  Number of issues = 2409, 
 +  Number of resolved issues = 2120 (47 in current version), 
 
 ************
@@ -8134,6 +8134,11 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2408:` GetOutputVariableTypeString has no case for CoordinatesTotal
+    - issue author: Claude-JG
+    - description:  OutputVariableType::CoordinatesTotal (bit 14) is in the C++ enum; it is exposed to Python via AddEnumValue and it is used by 7 item definitions. But GetOutputVariableTypeString() in src/Main/OutputVariable.h has no case for it; it falls through to default: which raises SysError("invalid variable type") and returns "Invalid". Reachable from user-facing paths: CSolverBase.cpp:1960 writes "#OutputVariableType = Invalid" into the sensor solution file header; VisualizationSettings.h:486 prints it in the settings dump. Found while measuring the four hand-synced OutputVariableType lists for revision plan step 31; the planned registrator step makes this class of drift impossible. Also noted: KineticEnergy and PotentialEnergy exist in the enum and in GetOutputVariableTypeString but are NOT exposed via AddEnumValue - a question for the maintainer rather than a defect.
+    - date raised: 2026-09-13 
 
  * :textred:`open BUG 2398:` explicit integration costs O(N^2) per step with the default dense linear solver
     - issue author: Claude-JG

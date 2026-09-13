@@ -861,8 +861,57 @@ The core investment. Every step is validated byte-for-byte by step 2.
     category first, read the result, and refine the emitter over a few rounds; iterating on the
     output is the expected path, not a sign of a wrong design.
 
-    **31b — factor the emitted data**: shared enums, default strings, and copy-for-derived-items
-    in one common module. Only possible once the data is real Python; still byte-identical output.
+    **Settled in the second review round (2026-09-13).** Layout: the data lives in `definitions/`
+    at the repository root, the new generators in `tools/generators/`; the old generators stay in
+    `src/pythonGenerator/` until they are retired. Format: constructor calls
+    (`ItemParameter` / `ItemFunction` / `StructureParameter` / `StructureFunction`), with
+    `type` / `destination` / `cFlags` on the first line, real Python booleans, `cplusplusName`
+    omitted when it equals `pythonName`, flags combined with `+`, raw strings only on
+    descriptions, LaTeX and C++ code, and a three-line `#+++ ClassName +++` banner before every
+    definition so one can be found by eye in a 1 MB file.
+
+    **`definitions/definitionTypes.py` is HAND-WRITTEN, not generated** — the one structural
+    decision of this round. The flag letters previously had *no* central definition anywhere:
+    `pythonAutoGenerateObjects.py` tests them as bare literals at **16 sites**
+    (`parameter['cFlags'].find('I')` at `:1181`, `.find('R')` at `:1266`, `.find('O')` at
+    `:1268` and `:1304`, `.find('U')` at `:990`, `.find('X')` at `:1366`, `.find('D')` at
+    `:1382`, `destination.find('P')` at `:1165`, …), so the emitter's own table was an
+    independent second transcription and a drift between the two would have been invisible.
+    Ownership is now inverted: the module is the single source, the emitter imports it and owns
+    no table, and a letter, type or closed-set value the data uses with no constant there stops
+    the emit naming what to add. The new generators will import the same module, which gives
+    the flag letters one definition for the first time.
+
+    Five header keys became constants because their value sets are **closed** — a new value
+    needs hand-written C++ as well, so a free string could only ever hide a typo: `cParentClass`
+    (14 values), `mainParentClass` (7), `visuParentClass` (6), `classType` (5), `objectType` (7).
+
+    Two defects the round-trip caught, both silent: `Bool` and `bool` are different types that
+    collided on one constant when the first letter was upper-cased (names now keep the type's own
+    spelling, and a collision raises); and the old parser turns every literal `\n` into a real
+    newline, which also breaks the five LaTeX macros starting with n (`\nu`, `\nv`, `\nonumber`,
+    `\noindent`, `\neq`) - these are distinguishable from real line breaks by a macro-boundary
+    test, so macros keep their backslash and line breaks stay newlines.
+
+    Verified: round-trip **lossless** (30 193 item fields + 8 530 structure fields, zero
+    problems), all 11 modules import, `regenerate.py --check` a no-op. `definitions/` holds
+    11 files, 1.87 MB, against 1.68 MB for the two old files.
+
+    **Deferred to the end of the phase:** a `README.md` in `definitions/`, `tools/generators/`
+    and the other new directories — written once the structure is fixed, not while it moves.
+
+    **31b — factor the emitted data**: shared enums, default strings, and
+    copy-for-derived-items in one common module. Only possible once the data is real Python;
+    still byte-identical output.
+
+    Its main piece is **`outputVariables`, which is still a dict pickled into a single string**.
+    63 items carry it, **409 entries**, **30 distinct keys** — every one of them a real
+    `OutputVariableType`. Measured: **195 of the 409 entries (48%) are verbatim duplicates** of
+    just **69 distinct (key, description) pairs**; `CoordinatesTotal` appears identically 7x,
+    `RotationMatrix` 6x, and `Position` / `Velocity` / `Rotation` / `AngularVelocity` 5x each.
+    So the shared descriptions become named constants defined once, and the key becomes a
+    constant — a typo is then a `NameError` instead of an output variable that silently
+    never matches.
 
     **31c — the documentation format**, scheduled *with* step 50, since both need the same
     converter and the same macro decision.
@@ -896,6 +945,40 @@ The core investment. Every step is validated byte-for-byte by step 2.
       line below. 31a supersedes them — the new format is clearer, almost native Python, and can
       be read directly with accessor functions (interpreting enums, resolving defaults). They are
       **not** kept in parallel: two representations of the same data is what this step removes.
+
+    **31d — an `OutputVariableType` registrator.** Scheduled after 31b, because it changes
+    generated C++ and the pybind surface rather than only the definition data.
+
+    `OutputVariableType` is hand-numbered in `src/Main/OutputVariable.h:221`
+    (`Distance = 1ull << 0` … `PotentialEnergy = 1ull << 33`): **32 entries, bits 26 and 27
+    dead**, already past the 32-bit border. It is `Index64` **already** and the generated C++
+    already casts to `Index64`, so the 64-bit requirement is met today and only needs to be
+    *locked in*, not migrated.
+
+    Four places are kept in sync by hand, and the file says so itself
+    (`//keep this list synchronized with function GetOutputVariableTypeString(...) !!!` at
+    `OutputVariable.h:268`, and the same warning at `autoGeneratePyBindings.py:330`):
+
+    1. the enum and its bit positions (`OutputVariable.h:221`)
+    2. `GetOutputVariableTypeString()` (`OutputVariable.h:301`) — 35 cases
+    3. `IsOutputVariableTypeForReferenceConfiguration()` (`:273`) — the reference-config subset
+    4. `plr.AddEnumValue(...)` x34 in `autoGeneratePyBindings.py:337-379` — pybind **and** the
+       docs
+
+    One registrator table replaces all four: name, description, reference-config flag, and an
+    **allocated** bit — so nobody picks a bit position by hand, and bits 26/27 are reclaimed
+    deliberately rather than by accident.
+
+    *The drift is not hypothetical.* **#2408 (BUG)**: `CoordinatesTotal` is in the enum, is
+    exposed to Python and is used by 7 items, but has no `case` in `GetOutputVariableTypeString()`
+    — it falls through to `default:`, which raises `SysError("invalid variable type")` and
+    returns `"Invalid"`. It reaches users at `CSolverBase.cpp:1960`, which writes
+    `#OutputVariableType = Invalid` into the sensor solution file header, and at
+    `VisualizationSettings.h:486`. Fixed as part of this step, not before, since the registrator
+    is what makes the whole class of drift impossible. *Open question for the maintainer:*
+    `KineticEnergy` and `PotentialEnergy` exist in the enum and in
+    `GetOutputVariableTypeString()` but are **not** exposed via `AddEnumValue`, so they are
+    unreachable from Python — deliberate, or a fifth drift?
 
 32. Define a schema and validate on load with file- and line-accurate messages.
 33. Split the monolith into an IR plus independent emitters — C++ headers, pybind, stubs, item
@@ -1421,7 +1504,7 @@ detail is `docs/dev/WORKFLOW.md`. In short:
 ## 12. Open issues raised during this revision (#2368 onwards)
 
 Number and name only, exactly as they stand in `tools/issueTracker/trackerlog.txt`.
-This is a **snapshot**, taken 2026-09-12 (refreshed 2026-09-12 after steps 28 and 81).
+This is a **snapshot**, taken 2026-09-12 (refreshed 2026-09-13 after the step 31a review round).
 The type is shown because `BUG` and `FIX` now mean different things - see WORKFLOW.md; the tracker is the authority and the
 only place these are maintained. Do not edit this list by hand - regenerate it, or read
 the tracker.
@@ -1436,3 +1519,4 @@ the tracker.
 - **#2397** (CHECK) the only benchmark that resolves AVX2 is commented out inside exu.Test()
 - **#2398** (BUG) explicit integration costs O(N^2) per step with the default dense linear solver
 - **#2400** (CHECK) computeMassMatrixInversePerBody does not reduce cost unless a sparse solver is also selected
+- **#2408** (BUG) GetOutputVariableTypeString has no case for CoordinatesTotal

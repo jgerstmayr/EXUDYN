@@ -17,6 +17,13 @@ import copy
 import os
 import io #RST files written as UTF-8
 from exudynVersion import exudynVersionString
+#revision plan step 31a: collects the parsed representation for the NEW format; a no-op
+#unless EXUDYN_EMIT_DEFINITIONS is set, so a normal run is completely unaffected. The
+#emitter lives with the NEW generators in tools/generators/, which is where generation
+#moves as the old generators here are retired.
+import sys
+sys.path.append(os.path.join('..', '..', 'tools', 'generators'))
+from definitionEmitter import CollectDefinition, WriteItemDefinitions
 
 ADD_DOCSTRINGS = True
 
@@ -1994,6 +2001,9 @@ try: #still close file if crashes
                         if (defName == "writeFile"):
                             if (mode == 1):
                                 mode = 0
+                                #the parsed representation of this class is complete HERE, before
+                                #WriteFile touches it and before the reset further below
+                                CollectDefinition(parseInfo, parameterList, lineDefinition, 'items')
                                 #++++++++++++++++++++++++++++++
                                 #now write C++ header file for defined class
                                 #print(parseInfo)
@@ -2468,4 +2478,7 @@ finally:
     file.close()
 
 print('total parameters converted:', parameterCnt)
+
+#no-op unless EXUDYN_EMIT_DEFINITIONS is set (revision plan step 31a)
+WriteItemDefinitions()
 

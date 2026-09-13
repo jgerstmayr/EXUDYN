@@ -17,6 +17,13 @@ import io
 import os
 import numpy as np
 from exudynVersion import exudynVersionString
+#revision plan step 31a: collects the parsed representation for the NEW format; a no-op
+#unless EXUDYN_EMIT_DEFINITIONS is set, so a normal run is completely unaffected. The
+#emitter lives with the NEW generators in tools/generators/, which is where generation
+#moves as the old generators here are retired.
+import sys
+sys.path.append(os.path.join('..', '..', 'tools', 'generators'))
+from definitionEmitter import CollectDefinition, WriteStructureDefinitions
 
 SHOW_PARAMETER_CHANGES = False
 sortStructures = True
@@ -1208,6 +1215,9 @@ try: #still close file if crashes
                             if (defName == "writeFile"):
                                 if (mode == 1):
                                     mode = 0
+                                    #the parsed representation of this class is complete HERE,
+                                    #before WriteFile touches it and before the reset below
+                                    CollectDefinition(parseInfo, parameterList, lineDefinition, 'structures')
                                     #++++++++++++++++++++++++++++++
                                     #now write C++ header file for defined class
                                     [fileStr, latexStr, getSetDict, rstStr, stubStr, parameterInfo, 
@@ -1380,6 +1390,9 @@ Structures and Settings
 
     np.save('generated/systemStructuresData.npy', dictSystemStructures)
     #utilitiesData = np.load('generated/systemStructuresData.npy', allow_pickle=True).item()
+
+    #no-op unless EXUDYN_EMIT_DEFINITIONS is set (revision plan step 31a)
+    WriteStructureDefinitions()
 
 finally:    
     file.close()

@@ -1,0 +1,443 @@
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Load item definitions
+#
+# Details:  4 definitions, emitted from objectDefinition.py (revision plan step 31a).
+#           This IS Python: import it and read "definitions", a list of dicts.
+#
+#           ORDER MATTERS. The generators emit in the order the definitions appear,
+#           and the generated C++/pybind/RST is compared byte-for-byte, so
+#           reordering this list changes generated files. Append at the end unless
+#           you mean to reorder.
+#
+#           Only descriptions, LaTeX and C++ code are raw strings; every other field
+#           is a name, a flag constant or a short literal and needs no escaping.
+#
+#           The constants come from definitionTypes.py, which is hand-written: a
+#           value used here with no constant there stops the emit and says what to
+#           add, so the two can never drift apart silently.
+#
+# Contents: LoadForceVector, LoadTorqueVector, LoadMassProportional, LoadCoordinate
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+from definitionTypes import *
+
+definitions = []
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++   LoadForceVector   +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+definitions.append(ItemDefinition(
+    className='LoadForceVector',
+    addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
+""",
+    cParentClass=ParentClassCLoad,
+    classDescription=r'Load with (3D) force vector; attached to position-based marker.',
+    classType=ClassTypeLoad,
+    equations=r"""    \mysubsubsubsection{Details}
+    The load vector acts on a body or node via the local (\texttt{bodyFixed = True}) or global coordinates of a body or at a node. 
+    The marker transforms the (translational) force via the according jacobian matrix of the object (or node) to object (or node) coordinates.
+    %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{loadVectorUserFunction(mbs, t, loadVector)}
+    A user function, which computes the force vector depending on time and object parameters, which is hereafter applied to object or node.
+    %
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which load belongs}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
+      \rowTable{\texttt{loadVector}}{Vector3D}{$\fv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time}
+      \rowTable{\returnValue}{Vector3D}{computed force vector}
+    \finishTable
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle\begin{lstlisting}
+        from math import sin, cos, pi
+        def UFforce(mbs, t, loadVector): 
+            return [loadVector[0]*sin(t*10*2*pi),0,0]
+    \end{lstlisting}
+    %%RSTCOMPATIBLE
+""",
+    mainParentClass=MainParentClassMainLoad,
+    pythonShortName='Force',
+    visuParentClass=VisuParentClassVisualizationLoad,
+    members=[
+        ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
+            pythonName='name',
+            description=r"load's unique name"),
+        ItemParameter(type=TMarkerIndex, destination=DestComp+DestParam, cFlags=CFInterface,
+            pythonName='markerNumber',
+            defaultValue=DVInvalidIndex,
+            description=r"marker's number to which load is applied"),
+        ItemParameter(type=TVector3D, destination=DestComp+DestParam, cFlags=CFInterface,
+            pythonName='loadVector',
+            defaultValue=DVZeroVector3D,
+            description=r"""$\fv$vector-valued load [SI:N]; in case of a user function, this vector is ignored"""),
+        ItemParameter(type=TBool, destination=DestComp+DestParam, cFlags=CFInterface+CFOptional,
+            pythonName='bodyFixed',
+            defaultValue=DVFalse,
+            description=r'if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower force; if false: global coordinates are used'),
+        ItemParameter(type=TPyFunctionVector3DmbsScalarVector3D, destination=DestComp+DestParam, cFlags=CFInterface+CFOptional,
+            pythonName='loadVectorUserFunction',
+            defaultValue=DVZeroIndex,
+            description=r"""$\mathrm{UF} \in \Rcal^3$A Python function which defines the time-dependent load and replaces loadVector; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); NOTE that forces are drawn using the value of loadVector; thus the current values according to the user function are NOT shown in the render window; however, a sensor (SensorLoad) returns the user function force which is applied to the object; to draw forces with current user function values, use a graphicsDataUserFunction of a ground object"""),
+        ItemFunction(type=TIndex, destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='GetMarkerNumber',
+            implementation='return parameters.markerNumber;',
+            description=r'get according marker number where load is applied'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFInterface, isVirtual=True,
+            pythonName='SetMarkerNumber',
+            args='Index markerNumberInit',
+            implementation='parameters.markerNumber = markerNumberInit;',
+            description=r'set according marker number where load is applied'),
+        ItemFunction(type='Marker::Type', destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='GetRequestedMarkerType',
+            implementation='return Marker::Position;',
+            description=r'provide requested markerType for connector'),
+        ItemFunction(type=TLoadType, destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='GetType',
+            implementation='return (LoadType)((Index)LoadType::Force);',
+            description=r'return force type'),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='IsVector',
+            implementation='return true;',
+            description=r'true = load is of vector type'),
+        ItemFunction(type=TVector3D, destination=DestComp, cFlags=CFConst+CFDeclarationOnly+CFInterface, isVirtual=True,
+            pythonName='GetLoadVector',
+            args='const MainSystemBase& mbs, Real t',
+            description=r'read access for force vector; returns user function result in case it is defined'),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='IsBodyFixed',
+            implementation='return parameters.bodyFixed;',
+            description=r'per default, forces/torques/... are applied in global coordinates; if IsBodyFixed()=true, the marker needs to provide a rotation (orientation) and forces/torques/... are applied in the local coordinate system'),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='HasUserFunction',
+            implementation='return parameters.loadVectorUserFunction != 0;',
+            description=r'tells system if loadFactor is used in static computation or if load is time dependent (assumed for any load user function)'),
+        ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='GetTypeName',
+            implementation='return "ForceVector";',
+            description=r"Get type name of load (without keyword 'Load'...!); could also be realized via a string -> type conversion?"),
+        ItemParameter(type=TBool, destination=DestVisu, cFlags=CFInterface+CFOptional, fromParent=True,
+            pythonName='show',
+            defaultValue=DVTrue,
+            description=r'set true, if item is shown in visualization and false if it is not shown'),
+        ItemFunction(type=Tvoid, destination=DestVisu, cFlags=CFDeclarationOnly+CFInterface, isVirtual=True,
+            pythonName='UpdateGraphics',
+            args='const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber',
+            implementation=';',
+            description=r'Update visualizationSystem -> graphicsData for item; index shows item Number in CData'),
+        ],
+    ))
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++   LoadTorqueVector   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+definitions.append(ItemDefinition(
+    className='LoadTorqueVector',
+    addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
+""",
+    cParentClass=ParentClassCLoad,
+    classDescription=r'Load with (3D) torque vector; attached to rigidbody-based marker.',
+    classType=ClassTypeLoad,
+    equations=r"""    \mysubsubsubsection{Details}
+    The torque vector acts on a body or node via the local (\texttt{bodyFixed = True}) or global coordinates of a body or at a node. 
+    The marker transforms the torque via the according jacobian matrix of the object (or node) to object (or node) coordinates.
+    %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{loadVectorUserFunction(mbs, t, loadVector)}
+    A user function, which computes the torque vector depending on time and object parameters, which is hereafter applied to object or node.
+    %
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which load belongs}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
+      \rowTable{\texttt{loadVector}}{Vector3D}{$\ttau$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time}
+      \rowTable{\returnValue}{Vector3D}{computed torque vector}
+    \finishTable
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle\begin{lstlisting}
+        from math import sin, cos, pi
+        def UFforce(mbs, t, loadVector): 
+            return [loadVector[0]*sin(t*10*2*pi),0,0]
+    \end{lstlisting}
+    %%RSTCOMPATIBLE
+""",
+    mainParentClass=MainParentClassMainLoad,
+    pythonShortName='Torque',
+    visuParentClass=VisuParentClassVisualizationLoad,
+    members=[
+        ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
+            pythonName='name',
+            description=r"load's unique name"),
+        ItemParameter(type=TMarkerIndex, destination=DestComp+DestParam, cFlags=CFInterface,
+            pythonName='markerNumber',
+            defaultValue=DVInvalidIndex,
+            description=r"marker's number to which load is applied"),
+        ItemParameter(type=TVector3D, destination=DestComp+DestParam, cFlags=CFInterface,
+            pythonName='loadVector',
+            defaultValue=DVZeroVector3D,
+            description=r"""$\ttau$vector-valued load [SI:N]; in case of a user function, this vector is ignored"""),
+        ItemParameter(type=TBool, destination=DestComp+DestParam, cFlags=CFInterface+CFOptional,
+            pythonName='bodyFixed',
+            defaultValue=DVFalse,
+            description=r'if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower torque; if false: global coordinates are used'),
+        ItemParameter(type=TPyFunctionVector3DmbsScalarVector3D, destination=DestComp+DestParam, cFlags=CFInterface+CFOptional,
+            pythonName='loadVectorUserFunction',
+            defaultValue=DVZeroIndex,
+            description=r"""$\mathrm{UF} \in \Rcal^3$A Python function which defines the time-dependent load and replaces loadVector; see description below; see also notes on loadFactor and drawing in LoadForceVector! Example for Python function: def f(mbs, t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]"""),
+        ItemFunction(type=TIndex, destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='GetMarkerNumber',
+            implementation='return parameters.markerNumber;',
+            description=r'get according marker number where load is applied'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFInterface, isVirtual=True,
+            pythonName='SetMarkerNumber',
+            args='Index markerNumberInit',
+            implementation='parameters.markerNumber = markerNumberInit;',
+            description=r'set according marker number where load is applied'),
+        ItemFunction(type='Marker::Type', destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='GetRequestedMarkerType',
+            implementation='return Marker::Orientation;',
+            description=r'provide requested markerType for connector'),
+        ItemFunction(type=TLoadType, destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='GetType',
+            implementation='return (LoadType)((Index)LoadType::Torque);',
+            description=r'return load type'),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='IsVector',
+            implementation='return true;',
+            description=r'true = load is of vector type'),
+        ItemFunction(type=TVector3D, destination=DestComp, cFlags=CFConst+CFDeclarationOnly+CFInterface, isVirtual=True,
+            pythonName='GetLoadVector',
+            args='const MainSystemBase& mbs, Real t',
+            description=r'read access for load vector'),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='IsBodyFixed',
+            implementation='return parameters.bodyFixed;',
+            description=r'per default, forces/torques/... are applied in global coordinates; if IsBodyFixed()=true, the marker needs to provide a rotation (orientation) and forces/torques/... are applied in the local coordinate system'),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='HasUserFunction',
+            implementation='return parameters.loadVectorUserFunction != 0;',
+            description=r'tells system if loadFactor is used in static computation or if load is time dependent (assumed for any load user function)'),
+        ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='GetTypeName',
+            implementation='return "TorqueVector";',
+            description=r"Get type name of load (without keyword 'Load'...!); could also be realized via a string -> type conversion?"),
+        ItemParameter(type=TBool, destination=DestVisu, cFlags=CFInterface+CFOptional, fromParent=True,
+            pythonName='show',
+            defaultValue=DVTrue,
+            description=r'set true, if item is shown in visualization and false if it is not shown'),
+        ItemFunction(type=Tvoid, destination=DestVisu, cFlags=CFDeclarationOnly+CFInterface, isVirtual=True,
+            pythonName='UpdateGraphics',
+            args='const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber',
+            implementation=';',
+            description=r'Update visualizationSystem -> graphicsData for item; index shows item Number in CData'),
+        ],
+    ))
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++   LoadMassProportional   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+definitions.append(ItemDefinition(
+    className='LoadMassProportional',
+    addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
+""",
+    cParentClass=ParentClassCLoad,
+    classDescription=r'Load attached to MarkerBodyMass marker, applying a 3D vector load (e.g. the vector [0,-g,0] is used to apply gravitational loading of size g in negative y-direction).',
+    classType=ClassTypeLoad,
+    equations=r"""    \mysubsubsubsection{Details}
+    The load applies a (translational) and distributed load proportional to the distributed body's density.
+    The marker of type \texttt{MarkerBodyMass} transforms the loadVector via an according jacobian matrix to object coordinates.
+    %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{loadVectorUserFunction(mbs, t, loadVector)}
+    A user function, which computes the mass proporitional load vector depending on time and object parameters, which is hereafter applied to object or node.
+    %
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which load belongs}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
+      \rowTable{\texttt{loadVector}}{Vector3D}{$\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time}
+      \rowTable{\returnValue}{Vector3D}{computed load vector}
+    \finishTable
+    Example of user function: functionality same as in \texttt{LoadForceVector}
+    %%RSTCOMPATIBLE
+""",
+    mainParentClass=MainParentClassMainLoad,
+    miniExample=r"""    node = mbs.AddNode(NodePoint(referenceCoordinates = [1,0,0]))
+    body = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=2))
+    mMass = mbs.AddMarker(MarkerBodyMass(bodyNumber=body))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mMass, loadVector=[0,0,-9.81]))
+
+    #assemble and solve system for default parameters
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #check result
+    exudynTestGlobals.testResult = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2]
+    #final z-coordinate of position shall be -g/2 due to constant acceleration with g=-9.81
+    #result independent of mass
+""",
+    pythonShortName='Gravity',
+    visuParentClass=VisuParentClassVisualizationLoad,
+    members=[
+        ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
+            pythonName='name',
+            description=r"load's unique name"),
+        ItemParameter(type=TMarkerIndex, destination=DestComp+DestParam, cFlags=CFInterface,
+            pythonName='markerNumber',
+            defaultValue=DVInvalidIndex,
+            description=r"marker's number to which load is applied"),
+        ItemParameter(type=TVector3D, destination=DestComp+DestParam, cFlags=CFInterface,
+            pythonName='loadVector',
+            defaultValue=DVZeroVector3D,
+            description=r"""$\bv$vector-valued load [SI:N/kg = m/s$^2$]; typically, this will be the gravity vector in global coordinates; in case of a user function, this v is ignored"""),
+        ItemParameter(type=TPyFunctionVector3DmbsScalarVector3D, destination=DestComp+DestParam, cFlags=CFInterface+CFOptional,
+            pythonName='loadVectorUserFunction',
+            defaultValue=DVZeroIndex,
+            description=r"""$\mathrm{UF} \in \Rcal^3$A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector!"""),
+        ItemFunction(type=TIndex, destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='GetMarkerNumber',
+            implementation='return parameters.markerNumber;',
+            description=r'get according marker number where load is applied'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFInterface, isVirtual=True,
+            pythonName='SetMarkerNumber',
+            args='Index markerNumberInit',
+            implementation='parameters.markerNumber = markerNumberInit;',
+            description=r'set according marker number where load is applied'),
+        ItemFunction(type='Marker::Type', destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='GetRequestedMarkerType',
+            implementation='return Marker::BodyMass;',
+            description=r'provide requested markerType for connector'),
+        ItemFunction(type=TLoadType, destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='GetType',
+            implementation='return (LoadType)((Index)LoadType::ForcePerMass);',
+            description=r'return load type'),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='IsVector',
+            implementation='return true;',
+            description=r'true = load is of vector type'),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='HasUserFunction',
+            implementation='return parameters.loadVectorUserFunction != 0;',
+            description=r'tells system if loadFactor is used in static computation or if load is time dependent (assumed for any load user function)'),
+        ItemFunction(type=TVector3D, destination=DestComp, cFlags=CFConst+CFDeclarationOnly+CFInterface, isVirtual=True,
+            pythonName='GetLoadVector',
+            args='const MainSystemBase& mbs, Real t',
+            description=r'read access for force vector'),
+        ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='GetTypeName',
+            implementation='return "MassProportional";',
+            description=r"Get type name of load (without keyword 'Load'...!); could also be realized via a string -> type conversion?"),
+        ItemParameter(type=TBool, destination=DestVisu, cFlags=CFInterface+CFOptional, fromParent=True,
+            pythonName='show',
+            defaultValue=DVTrue,
+            description=r'set true, if item is shown in visualization and false if it is not shown'),
+        ItemFunction(type=Tvoid, destination=DestVisu, cFlags=CFDeclarationOnly+CFInterface, isVirtual=True,
+            pythonName='UpdateGraphics',
+            args='const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber',
+            implementation=';',
+            description=r'Update visualizationSystem -> graphicsData for item; index shows item Number in CData'),
+        ],
+    ))
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++   LoadCoordinate   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+definitions.append(ItemDefinition(
+    className='LoadCoordinate',
+    addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
+""",
+    cParentClass=ParentClassCLoad,
+    classDescription=r'Load with scalar value, which is attached to a coordinate-based marker; the load can be used e.g. to apply a force to a single axis of a body, a nodal coordinate of a finite element  or a torque to the rotatory DOF of a rigid body.',
+    classType=ClassTypeLoad,
+    equations=r"""    \mysubsubsubsection{Details}
+    The scalar \texttt{load} is applied on a coordinate defined by a Marker of type 'Coordinate', e.g., \texttt{MarkerNodeCoordinate}.
+    This can be used to create simple 1D problems, or to simply apply a translational force on a Node or even a torque
+    on a rotation coordinate (but take care for its meaning).
+    %
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunction{loadUserFunction(mbs, t, load)}
+    A user function, which computes the scalar load depending on time and the object's \texttt{load} parameter.
+    \startTable{arguments / return}{type or size}{description}
+      \rowTable{\texttt{mbs}}{MainSystem}{provides MainSystem mbs to which load belongs}
+      \rowTable{\texttt{t}}{Real}{current time in mbs} %use t instead time in order to avoid possible conflicts with Python time
+      \rowTable{\texttt{load}}{Real}{$\bv$ copied from object; WARNING: this parameter does not work in combination with static computation, as it is changed by the solver over step time}
+      \rowTable{\returnValue}{Real}{computed load}
+    \finishTable
+    %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    \userFunctionExample{}
+    \pythonstyle\begin{lstlisting}
+        from math import sin, cos, pi
+        #this example uses the object's stored parameter load to compute a time-dependent load
+        def UFload(mbs, t, load): 
+            return load*sin(10*(2*pi)*t)
+
+        n0=mbs.AddNode(Point())
+        nodeMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0,coordinate=0))
+        mbs.AddLoad(LoadCoordinate(markerNumber = markerCoordinate,
+                                   load = 10,
+                                   loadUserFunction = UFload))
+    \end{lstlisting}
+    %%RSTCOMPATIBLE
+""",
+    mainParentClass=MainParentClassMainLoad,
+    visuParentClass=VisuParentClassVisualizationLoad,
+    members=[
+        ItemParameter(type=TString, destination=DestMain, cFlags=CFInterface, fromParent=True,
+            pythonName='name',
+            description=r"load's unique name"),
+        ItemParameter(type=TMarkerIndex, destination=DestComp+DestParam, cFlags=CFInterface,
+            pythonName='markerNumber',
+            defaultValue=DVInvalidIndex,
+            description=r"marker's number to which load is applied"),
+        ItemParameter(type=TReal, destination=DestComp+DestParam, cFlags=CFInterface,
+            pythonName='load',
+            defaultValue=DVZeroReal,
+            description=r'$f$scalar load [SI:N]; in case of a user function, this value is ignored'),
+        ItemParameter(type=TPyFunctionMbsScalar2, destination=DestComp+DestParam, cFlags=CFInterface+CFOptional,
+            pythonName='loadUserFunction',
+            defaultValue=DVZeroIndex,
+            description=r"""$\mathrm{UF} \in \Rcal$A Python function which defines the time-dependent load and replaces the load; see description below; see also notes on loadFactor and drawing in LoadForceVector!"""),
+        ItemFunction(type=TIndex, destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='GetMarkerNumber',
+            implementation='return parameters.markerNumber;',
+            description=r'get according marker number where load is applied'),
+        ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFInterface, isVirtual=True,
+            pythonName='SetMarkerNumber',
+            args='Index markerNumberInit',
+            implementation='parameters.markerNumber = markerNumberInit;',
+            description=r'set according marker number where load is applied'),
+        ItemFunction(type='Marker::Type', destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='GetRequestedMarkerType',
+            implementation='return Marker::Coordinate;',
+            description=r'provide requested markerType for connector'),
+        ItemFunction(type=TLoadType, destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='GetType',
+            implementation='return (LoadType)((Index)LoadType::Coordinate);',
+            description=r'return load type'),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='IsVector',
+            implementation='return false;',
+            description=r'true = load is of vector type'),
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='HasUserFunction',
+            implementation='return parameters.loadUserFunction != 0;',
+            description=r'tells system if loadFactor is used in static computation or if load is time dependent (assumed for any load user function)'),
+        ItemFunction(type=TReal, destination=DestComp, cFlags=CFConst+CFDeclarationOnly+CFInterface, isVirtual=True,
+            pythonName='GetLoadValue',
+            args='const MainSystemBase& mbs, Real t',
+            description=r'read access for load value (IsVector=false)'),
+        ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst+CFInterface, isVirtual=True,
+            pythonName='GetTypeName',
+            implementation='return "Coordinate";',
+            description=r"Get type name of load (without keyword 'Load'...!); could also be realized via a string -> type conversion?"),
+        ItemParameter(type=TBool, destination=DestVisu, cFlags=CFInterface+CFOptional, fromParent=True,
+            pythonName='show',
+            defaultValue=DVTrue,
+            description=r'set true, if item is shown in visualization and false if it is not shown'),
+        ItemFunction(type=Tvoid, destination=DestVisu, cFlags=CFInterface, isVirtual=True,
+            pythonName='UpdateGraphics',
+            args='const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber',
+            implementation=';',
+            description=r'Update visualizationSystem -> graphicsData for item; index shows item Number in CData'),
+        ],
+    ))
