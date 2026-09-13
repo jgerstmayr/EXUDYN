@@ -1156,6 +1156,330 @@ doxygen was *least* able to give. `introduction.tex` and `CODING_STYLE.md` now p
 
 ---
 
+<a id="step-31"></a>
+
+### Step 31 - the definition format (in progress)
+
+Moved here from the plan 2026-09-13, so the plan keeps the step statement and a status
+list only. 31a and 31b are done; 31c, 31d and 31e are open - see the plan for their
+state. What follows is the material as it was recorded while the work was done.
+
+### Groundwork, measured 2026-09-12 (design only — nothing executed)
+
+| | |
+|---|---|
+| `objectDefinition.py` | 1.43 MB, 11 300 lines, **97 items** — Object 51 (1.06 MB), Marker 18, Node 16, Sensor 8, Load 4 |
+| `systemStructuresDefinition.py` | 254 KB, 1 758 lines, **53 structures** |
+| LaTeX macros across both | **247 distinct**, 16 863 occurrences, 130 of them custom |
+| consumers | exactly **one** parser each (`pythonAutoGenerateObjects.py:1784`, `pythonAutoGenerateSystemStructures.py:1091`) |
+
+Despite the `.py` extension these are **not Python**: a line DSL of `key = value` headers, a
+LaTeX `equations = … /end` block, and a 10-column comma table per member whose 9th column is
+a flag string (`R M N C U I D O P X`) carrying the semantics. Fields are split by
+`SplitString` (`autoGenerateHelper.py:1584`), a hand-written scanner that keeps commas inside
+`"…"` — which is exactly why the format resists ordinary tooling.
+
+**The generators already build the intermediate representation.** When a class block ends,
+`pythonAutoGenerateObjects.py` holds `parseInfo` (the header keys) and `parameterList` — one
+dict per member, keyed by the 10 names in `lineDefinition` (`:1828`);
+`pythonAutoGenerateSystemStructures.py` assembles `classDict` (`:1262`). So **there is
+nothing to text-split**: the new files are *emitted* from the parsed structure, which
+collapses the split and the reformat into one act and makes a byte-for-byte round-trip the
+natural gate.
+
+**31a — emit real Python dicts from that representation.** One file per category: items →
+Node / Object / Marker / Load / Sensor; structures → simulation settings (11), visualization
+settings (31), solver data (6), solvers (3), remaining (2). Those five groups cover the
+existing 53 with no leftovers. Then a loader for the new format replaces `SplitString` and
+the line parser. **Gate: `regenerate.py --check` Tier 1 clean — zero change in generated
+output.** Ordering is load-bearing: the generators emit in file order, so each group keeps an
+explicit ordered list.
+
+The emitted files must be **readable and editable by hand** — that is the point of the step.
+The text is long: 2 821 member lines at median 245 characters (max 876), 97
+`classDescription`s at median 302 (max 1 054), 62 `equations` blocks at median 3.5 KB (max
+24.7 KB). So descriptions and equations are emitted as **raw** triple-quoted strings
+(`r"""…"""`) — raw because the content is LaTeX: a non-raw string would double every one of
+the 16 863 backslash macros and make the files unreadable and unsafe to edit. Emit one
+category first, read the result, and refine the emitter over a few rounds; iterating on the
+output is the expected path, not a sign of a wrong design.
+
+**Settled in the second review round (2026-09-13).** Layout: the data lives in `definitions/`
+at the repository root, the new generators in `tools/generators/`; the old generators stay in
+`src/pythonGenerator/` until they are retired. Format: constructor calls
+(`ItemParameter` / `ItemFunction` / `StructureParameter` / `StructureFunction`), with
+`type` / `destination` / `cFlags` on the first line, real Python booleans, `cplusplusName`
+omitted when it equals `pythonName`, flags combined with `+`, raw strings only on
+descriptions, LaTeX and C++ code, and a three-line `#+++ ClassName +++` banner before every
+definition so one can be found by eye in a 1 MB file.
+
+**`definitions/definitionTypes.py` is HAND-WRITTEN, not generated** — the one structural
+decision of this round. The flag letters previously had *no* central definition anywhere:
+`pythonAutoGenerateObjects.py` tests them as bare literals at **16 sites**
+(`parameter['cFlags'].find('I')` at `:1181`, `.find('R')` at `:1266`, `.find('O')` at
+`:1268` and `:1304`, `.find('U')` at `:990`, `.find('X')` at `:1366`, `.find('D')` at
+`:1382`, `destination.find('P')` at `:1165`, …), so the emitter's own table was an
+independent second transcription and a drift between the two would have been invisible.
+Ownership is now inverted: the module is the single source, the emitter imports it and owns
+no table, and a letter, type or closed-set value the data uses with no constant there stops
+the emit naming what to add. The new generators will import the same module, which gives
+the flag letters one definition for the first time.
+
+Five header keys became constants because their value sets are **closed** — a new value
+needs hand-written C++ as well, so a free string could only ever hide a typo: `cParentClass`
+(14 values), `mainParentClass` (7), `visuParentClass` (6), `classType` (5), `objectType` (7).
+
+Two defects the round-trip caught, both silent: `Bool` and `bool` are different types that
+collided on one constant when the first letter was upper-cased (names now keep the type's own
+spelling, and a collision raises); and the old parser turns every literal `\n` into a real
+newline, which also breaks the five LaTeX macros starting with n (`\nu`, `\nv`, `\nonumber`,
+`\noindent`, `\neq`) - these are distinguishable from real line breaks by a macro-boundary
+test, so macros keep their backslash and line breaks stay newlines.
+
+Verified: round-trip **lossless** (30 193 item fields + 8 530 structure fields, zero
+problems), all 11 modules import, `regenerate.py --check` a no-op. `definitions/` holds
+11 files, 1.87 MB, against 1.68 MB for the two old files.
+
+**Deferred to the end of the phase:** a `README.md` in `definitions/`, `tools/generators/`
+and the other new directories — written once the structure is fixed, not while it moves.
+
+**31b — factor the emitted data**: shared enums, default strings, and
+copy-for-derived-items in one common module. Only possible once the data is real Python;
+still byte-identical output.
+
+Its main piece is **`outputVariables`, which is still a dict pickled into a single string**.
+63 items carry it, **409 entries**, **30 distinct keys** — every one of them a real
+`OutputVariableType`. Measured: **195 of the 409 entries (48%) are verbatim duplicates** of
+just **69 distinct (key, description) pairs**; `CoordinatesTotal` appears identically 7x,
+`RotationMatrix` 6x, and `Position` / `Velocity` / `Rotation` / `AngularVelocity` 5x each.
+So the shared descriptions become named constants defined once, and the key becomes a
+constant — a typo is then a `NameError` instead of an output variable that silently
+never matches.
+
+**Done 2026-09-13, first of three commits — subtraction only.** The 8 zero-use flags are
+removed, with the dead generator code they guarded: `CreatePybindHeaders` in
+`pythonAutoGenerateObjects.py` had its only call site commented out, so the whole function
+went (39 lines) rather than just its two unreachable branches; the `X` guard on `override`
+was always true and is now unconditional; the `A` branch in
+`pythonAutoGenerateSystemStructures.py` never ran. 47 lines in all, with **byte-identical
+generated output**.
+
+45 type constants that only named a structure defined in the same files are gone too: such a
+type now refers to the definition, and the emitter checks that the name exists - a stronger
+check than a constant, which only verifies spelling. `SFSubstructure` is **derived** rather
+than declared, since it means exactly "the type names a structure defined here". *Measured
+before deriving:* that equivalence holds for all 71 structure members with **zero**
+exceptions; the two items typed `BeamSectionGeometry` are not counter-examples, because `S`
+is a structure flag and items never carry it. The emitter now raises if the two ever
+disagree.
+
+Raised **#2409 (EXTENSION)** on maintainer request: `PReal` / `UReal` / `PInt` / `UInt` are
+mapped onto plain `Real` / `Index` by `typeConversion` (`pythonAutoGenerateObjects.py:1801`),
+so the intent that makes a bad parameter fail early in `itemInterface` is lost at the C++
+boundary; typedefs would preserve it in the core.
+
+**Done 2026-09-13, second of three commits — constraints move into the type.** A type is now
+a `str` subclass carrying its constraints, so it compares and hashes exactly like the plain
+name the generators already look up and nothing downstream changes, while `minimum`,
+`greaterThan` and `size` travel with it. 32 flat names fold into six constructors:
+`TReal(minimum=0)` / `TReal(greaterThan=0)` for `UReal` / `PReal` (and the same for
+`Tfloat`, `TIndex`), `TIndex(ItemNode)` for the five `*Index` types, `TArrayIndex(ItemMarker,
+size=2)` for the five array types, `TVectorND(n)` for `Vector2D..Vector9D`, `TMatrixND(r, c)`
+and `TIndexND(n)`. Only sizes for which a C++ type exists are accepted, so `TVectorND(5)`
+fails at emit time rather than at the compiler.
+
+**`size=` is gone as a field** — it was never validated anywhere (`:904` still says *"future:
+also add size check ..."*) and it was populated inconsistently: 34 of 225 structure `bool`
+members declared `size=1`, and 124 of 240 item `Vector3D` members declared nothing. Folding
+the shape into the type normalises that. Every one of the 338 declared sizes is accounted for,
+with **zero unexplained losses**:
+
+| | |
+|---|---|
+| 116 | dropped from **functions**, where the legend's own wording (`:1839`) says size applies to "variables and vectors and matrices only" |
+| 103 | **gained** — the shape is now stated where nothing was declared (this will add size to those documentation rows once the new generators read these files) |
+| 73 | scalar `size=1` dropped — provably a no-op, since `systemStructures:697` already emits `{1}` for an absent size |
+| 3 | **corrected**: #2410 |
+| 1 | `size=-1` on `ArrayFloat` kept explicit, because dropping it would make the dialog report `{1}` instead of `{-1}` |
+
+Raised **#2410 (FIX)**: `NodeRigidBodyRotVecLG` declares `referenceCoordinates`,
+`initialCoordinates` and `initialVelocities` as `Vector6D` with `size=3`, so the published
+reference tables say "type = Vector6D, size = 3". Everything else says 6 — the class
+description, `GetNumberOfODE2Coordinates`, the six-entry default and the LaTeX symbol. The
+new form cannot express the contradiction, which is how it surfaced.
+
+Verified: the round-trip is lossless on **every field except size**, size is reported
+category by category instead of being silently normalised, and all **11 154** lookups through
+`typeConversion`, `typeCasts` and `type2PyTyping` resolve identically to the old flat names.
+
+**31c — the documentation format**, scheduled *with* step 50, since both need the same
+converter and the same macro decision.
+
+### Decisions taken
+
+- **Formulas: MyST-Parser, keeping `$…$` and `$$…$$`.** MyST is a Sphinx parser, so `conf.py`,
+  the MathJax macro config and the existing directives survive, and the PDF path stays open
+  through sphinx-latexpdf. The `$y=f(x)$` spelling keeps working.
+- **Most of the conversion already exists.** `autoGenerateHelper.py` expands the custom LaTeX
+  and emits math through exactly two functions: `RSTinlineMath` (`:523`) produces
+  `\ :math:`X`\ ` and `RSTmathEq` (`:531`) produces `.. math::`. Markdown means swapping
+  those two for `$X$` and `$$X$$`; the macro expansion (`convLatexMath`, `ReplaceWords`) is
+  reused unchanged. `\startTable` / `\rowTable` (709 uses) already map to an RST `list-table`
+  at `:447-448` and map more simply onto a markdown table.
+- **One macro source, generating the rest.** Five hand-synced tables exist today: **196**
+  `\newcommand`s in `docs/theDoc/docincludes.sty`, **98** in `conf.py`’s `mathjax3_config`,
+  and `convLatexMath` 56 / `convLatexCommands` 48 / `convLatexWords` 47 in
+  `autoGenerateHelper.py`. Nothing checks they agree and one has already slipped —
+  `\addExampleImage` reaches the generated RST with no MathJax definition. Make one table the
+  source, generate the `.sty` and the `conf.py` block from it, and add a check gate.
+  *Measured, against an earlier suspicion:* custom macros are **not** leaking into `.. math::`
+  wholesale — of 251 distinct macros in the generated RST, exactly **one** custom macro is
+  undeclared. The hand-syncing is the defect, not the output.
+- **`latexConverter.py` (833 lines) is dead and is deleted with 31a.** Nothing imports it, it
+  is unrelated to the LaTeX conversion (which lives in `autoGenerateHelper.py`), and the
+  maintainer keeps it in the old repository.
+- **The two `.npy` dumps go with 31a.** `pythonAutoGenerateSystemStructures.py:1381` and
+  `utilitiesDocuGenerator.py:977` pickle the structured data for external tools wanting an
+  AST-like view; nothing in the repository reads them and both readers are commented out one
+  line below. 31a supersedes them — the new format is clearer, almost native Python, and can
+  be read directly with accessor functions (interpreting enums, resolving defaults). They are
+  **not** kept in parallel: two representations of the same data is what this step removes.
+
+**31d — an `OutputVariableType` registrator.** Scheduled after 31b, because it changes
+generated C++ and the pybind surface rather than only the definition data.
+
+`OutputVariableType` is hand-numbered in `src/Main/OutputVariable.h:221`
+(`Distance = 1ull << 0` … `PotentialEnergy = 1ull << 33`): **32 entries, bits 26 and 27
+dead**, already past the 32-bit border. It is `Index64` **already** and the generated C++
+already casts to `Index64`, so the 64-bit requirement is met today and only needs to be
+*locked in*, not migrated.
+
+Four places are kept in sync by hand, and the file says so itself
+(`//keep this list synchronized with function GetOutputVariableTypeString(...) !!!` at
+`OutputVariable.h:268`, and the same warning at `autoGeneratePyBindings.py:330`):
+
+1. the enum and its bit positions (`OutputVariable.h:221`)
+2. `GetOutputVariableTypeString()` (`OutputVariable.h:301`) — 35 cases
+3. `IsOutputVariableTypeForReferenceConfiguration()` (`:273`) — the reference-config subset
+4. `plr.AddEnumValue(...)` x34 in `autoGeneratePyBindings.py:337-379` — pybind **and** the
+   docs
+
+One registrator table replaces all four: name, description, reference-config flag, and an
+**allocated** bit — so nobody picks a bit position by hand, and bits 26/27 are reclaimed
+deliberately rather than by accident.
+
+*The drift is not hypothetical.* **#2408 (BUG)**: `CoordinatesTotal` is in the enum, is
+exposed to Python and is used by 7 items, but has no `case` in `GetOutputVariableTypeString()`
+— it falls through to `default:`, which raises `SysError("invalid variable type")` and
+returns `"Invalid"`. It reaches users at `CSolverBase.cpp:1960`, which writes
+`#OutputVariableType = Invalid` into the sensor solution file header, and at
+`VisualizationSettings.h:486`. Fixed as part of this step, not before, since the registrator
+is what makes the whole class of drift impossible.
+
+**Decided:** `KineticEnergy` and `PotentialEnergy` are kept and **exposed to
+Python** as part of this step. They exist in the enum (bits 32 and 33) and in
+`GetOutputVariableTypeString()` but have no `AddEnumValue`, so they are unreachable
+from Python today. Usage is currently little to none, but they are needed in future,
+and the registrator table is the natural place to add them once rather than in four.
+
+**31e - simplify and group the type and flag vocabulary.** The format review ended with
+the maintainer's observation that 172 distinct types is more than a reader can cope with.
+Measured from the emitted definitions (a lossless round-trip, so these are the real data):
+
+**Items and structures barely share a vocabulary.** 172 distinct types: **95 used by
+items, 95 by structures, only 18 by both**. So the two sets should be documented and
+grouped separately; a single flat list is what makes it look unmanageable.
+
+**44 of the 172 types are not types at all - they are structure class names.** Every one
+of the 71 `SFSubstructure` members has as its type a class defined in the same definition
+files, and 35 of those types are used exactly once. `VSettingsBeams` ... 
+`VSettingsWindowDeprecated` are the visible case, and the maintainer's recollection that
+they are local and self-syncing is exactly right. They need no `T` constant: the
+definition itself is the reference. That removes about a quarter of the vocabulary, and
+the `SFSubstructure` flag becomes **derivable** rather than declared - it is precisely
+'the type is a class defined here', with a perfect 1:1 match today.
+
+**Eight flags have ZERO uses.** Items: `CFModifiable` (M), `CFNeedsReset` (N),
+`CFNoOverride` (X), `CFPybind` (P). Structures: `SFAddAccess` (A), `SFModifiable` (M),
+`SFReadOnly` (R), `SFReturnMove` (O). Four generator branches are therefore provably
+dead: `pythonAutoGenerateObjects.py:1366`, `:1493`, `:1500` and
+`pythonAutoGenerateSystemStructures.py:594`. Remove the flags and the branches together.
+Two more are near-zero and worth a decision rather than a habit: `CFVisualization` (V) has
+**one** use, in NodeRigidBodyEP, and is undocumented in the legend; `CFReadOnly` has 28.
+
+**`TReal` / `TUReal` / `TPReal` are not three types - they are one type with a range
+constraint.** All three become `Real` in C++ and `float` in the Python stubs; what the U
+and P prefixes actually do is make `IsTypeWithRangeCheck`
+(`pythonAutoGenerateObjects.py:256`) true, which emits a `CheckForValidUReal` /
+`CheckForValidPReal` guard into the Python item interface (`:2246-2272`). Same for
+`UInt` / `PInt` against `Index`. So the unification is a constrained type - `TReal`,
+`TReal(minimum=0)`, `TReal(exclusiveMinimum=0)` - not four more names; and it generalises,
+since a range is what several parameters would want anyway.
+
+**The index family collapses the same way.** `NodeIndex`, `ObjectIndex`, `MarkerIndex`,
+`LoadIndex`, `SensorIndex` are all `Index` in C++ (the generator says so in its own
+comment at `:1802`: 'in C++, all indices are the same!!!'), and the five Array* variants
+are all `ArrayIndex`. They differ only in the Python type they present. That is
+`TIndex(Node)` / `TArrayIndex(Node)`, one function with a checked argument.
+
+**The vector and matrix families are the maintainer's `TVectorND(3)` case.** Items use
+`Vector2D/3D/4D/6D/7D/9D` (280 uses, `Vector3D` alone 240) plus `Float3`/`Float4`,
+`Vector2DList`/`Vector3DList`/`Vector6DList`, `Matrix2D/3D/6D`. A `TVectorND(n)` /
+`TMatrixND(n)` that accepts only the sizes for which a C++ type actually exists is both
+fewer names and a real check - today a typo like `Vector5D` would reach the compiler.
+
+**What stays irreducible:** 19 distinct `PyFunction*` user-function signatures (34 uses,
+11 used exactly once) and 10 types that are C++ template expressions (24 uses). These are
+signatures, not a vocabulary; they are already excluded from the constants and stay
+strings.
+
+So the target shape is roughly **a dozen grouped constructors** - scalars with optional
+ranges, indices by item kind, fixed-size vectors and matrices, lists, the handful of
+genuine C++ types, and function signatures as strings - in place of 172 flat names, with
+the item and structure groups documented apart. **Prerequisite for the analysis:** each
+candidate must be checked against `typeConversion` (`pythonAutoGenerateObjects.py:1801`),
+`typeCasts` (`:417`) and `type2PyTyping` (`:109`), which are what actually decide the C++
+and Python spelling - a unification that does not reproduce those three is not correct.
+
+**Done 2026-09-13, closing 31b - the review round after the two commits.** The maintainer's
+review produced subtractions, not new machinery.
+
+- **`CFVisualization` removed entirely.** The maintainer's reading was that it makes no
+  difference whether it is set, and grep confirms it: `pythonAutoGenerateObjects.py` never tests
+  `cFlags` for `'V'` - every `find('V')` in that file is `lineType` (member versus function) or
+  `destination` (the visualization class). The only `cFlags.find('V')` in the tree is
+  `pythonAutoGenerateSystemStructures.py:946`, which is `SFReturnCopy` on *structures*. The flag
+  had exactly one use, `ObjectContactConvexRoll.pContact`. Removed from the constant table, from
+  the emitted definition and from the `IVR` flag string at `objectDefinition.py:7142`; generated
+  output byte-identical. That member is itself a design problem - computed state kept in
+  `parameters`, so it has no history and no per-configuration value - raised as **#2413** rather
+  than fixed here.
+- **#2410 fixed at the source rather than carried.** `NodeRigidBodyRotVecLG` declared size `3`
+  for three `Vector6D` members while the sibling `NodeRigidBodyEP` block correctly says `6`, so
+  the published tables read *"type = Vector6D, size = 3"*. The maintainer's call: a wrong number
+  has no business being frozen in a golden file. Corrected at `objectDefinition.py:397-399`.
+  Regeneration confirmed the reach of `size` exactly as measured - **tier 1 byte-identical**,
+  tier 2 exactly six lines in two files (`docs/RST/items/NodeRigidBodyRotVecLG.rst` and
+  `docs/theDoc/itemDefinition.tex`), nothing else. No new golden zip is needed: per step 3 the
+  commit *is* the snapshot. The emitted `definitions/` files did not change, because commit 2 had
+  already classified these three as `CORRECTED: declared size contradicted the type` - the two
+  inputs now agree.
+- **`TVectorND` already fails on an unknown size**, in `_sized`
+  (`definitions/definitionTypes.py:192`), shared by `TVectorND`, `TMatrixND` and `TIndexND`:
+  `TVectorND(5)` raises `ValueError: vector size 5 has no C++ type; available: 2, 3, 4, 6, 7, 9`.
+  Only the discoverability was missing, so `TVectorND` and `TMatrixND` gained the docstring that
+  `TIndexND` already had.
+- **`exudyn/types/` deferred**, on the maintainer's instruction: raised as **#2411** and recorded
+  as plan step 31f, including the second half - `requestedNodeType` / `requestedMarkerType` as
+  declared type lists from which the accessor is generated. The hard case is recorded with it so
+  the grammar is designed rather than discovered: `ObjectContactSphereSphere` returns a base type
+  plus one conditional term governed by one parameter (`dynamicFriction != 0`,
+  `src/Autogenerated/CObjectContactSphereSphere.h:184`).
+
+Gates: round-trip lossless (30 193 item + 8 530 structure fields, zero problems, zero unexplained
+size losses) against a refreshed baseline; 11 154 conversion-table lookups unchanged; full
+`runTestSuite.py` PASSED; `sphinx-build -W` clean.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving
