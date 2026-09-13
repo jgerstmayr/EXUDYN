@@ -44,7 +44,7 @@ The item \ **ObjectConnectorCoordinateSpringDamperExt**\  with type = 'Connector
   | stiffness of bristles in sticking case  [SI:N/m]
 * | **stickingDamping** [\ :math:`d_\mu`\ , type = UReal, default = 0.]:
   | damping of bristles in sticking case  [SI:N/(m/s)]
-* | **exponentialDecayStatic** [\ :math:`v_\mathrm{exp}`\ , type = PReal, default = 1.e-3]:
+* | **exponentialDecayStatic** [\ :math:`v_\mathrm{exp}`\ , type = PReal, default = 0.001]:
   | relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at \ :math:`\Delta v = v_\mathrm{exp}`\ , the static friction offset force is reduced to 36.8\%
 * | **fViscousFriction** [\ :math:`f_{\mu,\mathrm{v}}`\ , type = Real, default = 0.]:
   | viscous friction force part [SI:N/(m s)], acting against relative velocity in sliding case

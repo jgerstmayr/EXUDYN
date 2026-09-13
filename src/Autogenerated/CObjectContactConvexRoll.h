@@ -4,7 +4,7 @@
 *
 * @author       Manzl Peter
 * @date         2019-07-01 (generated)
-* @date         2026-01-07  23:36:17 (last modified)
+* @date         2026-09-13  20:45:49 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -52,8 +52,8 @@ public: // AUTO:
         dynamicFriction = 0.;
         staticFrictionOffset = 0.;
         viscousFriction = 0.;
-        exponentialDecayStatic = 1e-3;
-        frictionProportionalZone = 1e-3;
+        exponentialDecayStatic = 0.001;
+        frictionProportionalZone = 0.001;
         rollLength = 0.;
         coefficientsHull =  Vector();
         activeConnector = true;

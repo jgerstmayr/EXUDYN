@@ -8187,7 +8187,7 @@ The item \mybold{ObjectConnectorCoordinateSpringDamperExt} with type = 'Connecto
     fStaticFrictionOffset &     UReal &      &     0. &     static (dry) friction offset force [SI:N]; assuming a normal force $f_N$, the friction force is limited by $f_\mu \le (\mu_{so} + \mu_d) f_N = f_{\mu_d} + f_{\mu_{so}}$\\ \hline
     stickingStiffness &     UReal &      &     0. &     stiffness of bristles in sticking case  [SI:N/m]\\ \hline
     stickingDamping &     UReal &      &     0. &     damping of bristles in sticking case  [SI:N/(m/s)]\\ \hline
-    exponentialDecayStatic &     PReal &      &     1.e-3 &     relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at $\Delta v = v_\mathrm{exp}$, the static friction offset force is reduced to 36.8\%\\ \hline
+    exponentialDecayStatic &     PReal &      &     0.001 &     relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at $\Delta v = v_\mathrm{exp}$, the static friction offset force is reduced to 36.8\%\\ \hline
     fViscousFriction &     Real &      &     0. &     viscous friction force part [SI:N/(m s)], acting against relative velocity in sliding case\\ \hline
     frictionProportionalZone &     UReal &      &     0. &     if non-zero, a regularized Stribeck model is used, regularizing friction force around zero velocity - leading to zero friction force in case of zero velocity; this does not require a data node at all; if zero, the bristle model is used, which requires a data node which contains previous friction state and last sticking position\\ \hline
     limitStopsUpper &     Real &      &     0. &     upper (maximum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates\\ \hline
@@ -8444,7 +8444,7 @@ The item \mybold{ObjectConnectorGravity} with type = 'ConnectorGravity' has the 
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
     markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
-    gravitationalConstant &     Real &      &     6.67430e-11 &     gravitational constant [SI:m$^3$kg$^{-1}$s$^{-2}$)]; while not recommended, a negative constant gan represent a repulsive force\\ \hline
+    gravitationalConstant &     Real &      &     6.6743e-11 &     gravitational constant [SI:m$^3$kg$^{-1}$s$^{-2}$)]; while not recommended, a negative constant gan represent a repulsive force\\ \hline
     mass0 &     UReal &      &     0. &     mass [SI:kg] of object attached to marker $m0$\\ \hline
     mass1 &     UReal &      &     0. &     mass [SI:kg] of object attached to marker $m1$\\ \hline
     minDistanceRegularization &     UReal &      &     0. &     distance [SI:m] at which a regularization is added in order to avoid singularities, if objects come close\\ \hline
@@ -8655,9 +8655,9 @@ The item \mybold{ObjectConnectorHydraulicActuatorSimple} with type = 'ConnectorH
     rodRadius &     float &      &     0.03 &     radius for drawing of rod\\ \hline
     pistonRadius &     float &      &     0.04 &     radius for drawing of piston (if drawn transparent)\\ \hline
     pistonLength &     float &      &     0.001 &     radius for drawing of piston (if drawn transparent)\\ \hline
-    rodMountRadius &     float &      &     0.0 &     radius for drawing of rod mount sphere\\ \hline
-    baseMountRadius &     float &      &     0.0 &     radius for drawing of base mount sphere\\ \hline
-    baseMountLength &     float &      &     0.0 &     radius for drawing of base mount sphere\\ \hline
+    rodMountRadius &     float &      &     0. &     radius for drawing of rod mount sphere\\ \hline
+    baseMountRadius &     float &      &     0. &     radius for drawing of base mount sphere\\ \hline
+    baseMountLength &     float &      &     0. &     radius for drawing of base mount sphere\\ \hline
     colorCylinder &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA cylinder color; if R==-1, use default connector color\\ \hline
     colorPiston &     Float4 &      &     [0.8,0.8,0.8,1.] &     \tabnewline RGBA piston color\\ \hline
 \end{longtable}
@@ -9342,8 +9342,8 @@ The item \mybold{ObjectContactConvexRoll} with type = 'ContactConvexRoll' has th
     dynamicFriction &     UReal &      &     0. &     dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}\\ \hline
     staticFrictionOffset &     UReal &      &     0. &     static friction offset for friction model (static friction = dynamic friction + static offset), see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}\\ \hline
     viscousFriction &     UReal &      &     0. &     viscous friction coefficient (velocity dependent part) for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}\\ \hline
-    exponentialDecayStatic &     PReal &      &     1e-3 &     exponential decay of static friction offset (must not be zero!), see StribeckFunction in exudyn.physics (named expVel there!), \refSection{sec:module:physics}\\ \hline
-    frictionProportionalZone &     UReal &      &     1e-3 &     limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}\\ \hline
+    exponentialDecayStatic &     PReal &      &     0.001 &     exponential decay of static friction offset (must not be zero!), see StribeckFunction in exudyn.physics (named expVel there!), \refSection{sec:module:physics}\\ \hline
+    frictionProportionalZone &     UReal &      &     0.001 &     limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}\\ \hline
     rollLength &     UReal &      &     0. &     roll length [m], symmetric w.r.t.\ centerpoint\\ \hline
     coefficientsHull &     NumpyVector &      &      [] &     a vector of polynomial coefficients, which provides the polynomial of the CONVEX hull of the roll; $\mathrm{hull}(x) = k_0 x^{n_p-1} + k x^{n_p-2} + \ldots + k_{n_p-2} x  + k_{n_p-1}$\\ \hline
     coefficientsHullDerivative &     NumpyVector &      &     [] &     polynomial coefficients of the polynomial $\mathrm{hull}^\prime(x)$\\ \hline
@@ -10141,7 +10141,7 @@ The item \mybold{ObjectContactSphereSphere} with type = 'ContactSphereSphere' ha
     spheresRadii &     Vector2D &     2 &     [-1.,-1.] &     \tabnewline list containing radius of sphere 0 and radius of sphere 1 [SI:m].\\ \hline
     isHollowSphere1 &     Bool &      &     False &     flag, which determines, if sphere attached to marker 1 (radius 1) is a hollow sphere.\\ \hline
     dynamicFriction &     UReal &      &     0. &     dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}\\ \hline
-    frictionProportionalZone &     UReal &      &     1e-3 &     limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}\\ \hline
+    frictionProportionalZone &     UReal &      &     0.001 &     limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}\\ \hline
     contactStiffness &     UReal &      &     0. &     normal contact stiffness [SI:N/m] (units in case that $n_\mathrm{exp}=1$)\\ \hline
     contactDamping &     UReal &      &     0. &     linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.\\ \hline
     contactStiffnessExponent &     PReal &      &     1. &     exponent in normal contact model [SI:1]\\ \hline
@@ -10411,7 +10411,7 @@ The item \mybold{ObjectContactSphereTorus} with type = 'ContactSphereTorus' has 
     torusMinorRadius &     PReal &      &     0. &      minor radius of torus [SI:m], representing radius of circle of ring\\ \hline
     torusAxis &     Vector3D &     3 &     [0,0,0] &     Vector containing rotation axis of torus; must be a unit vector.\\ \hline
     dynamicFriction &     UReal &      &     0. &     dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}\\ \hline
-    frictionProportionalZone &     UReal &      &     1e-3 &     limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}\\ \hline
+    frictionProportionalZone &     UReal &      &     0.001 &     limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}\\ \hline
     contactStiffness &     UReal &      &     0. &     normal contact stiffness [SI:N/m] (units in case that $n_\mathrm{exp}=1$)\\ \hline
     contactDamping &     UReal &      &     0. &     linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.\\ \hline
     contactStiffnessExponent &     PReal &      &     1. &     exponent in normal contact model [SI:1]\\ \hline
@@ -10521,7 +10521,7 @@ The item \mybold{ObjectContactSphereTriangle} with type = 'ContactSphereTriangle
     trianglePoints &     Vector3DList &      &     [] &      triangle points, defined in marker 1 local coordinates\\ \hline
     includeEdges &     UInt &      &     7 &     Binary flag, where 1 defines contact with edges 0, 2 with edge 1 and 4 with edge 2; 7 means that contact with all edges is included; edge 0 is the edge between node 0 and node 1\\ \hline
     dynamicFriction &     UReal &      &     0. &     dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}\\ \hline
-    frictionProportionalZone &     UReal &      &     1e-3 &     limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}\\ \hline
+    frictionProportionalZone &     UReal &      &     0.001 &     limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}\\ \hline
     contactStiffness &     UReal &      &     0. &     normal contact stiffness [SI:N/m] (units in case that $n_\mathrm{exp}=1$)\\ \hline
     contactDamping &     UReal &      &     0. &     linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.\\ \hline
     contactStiffnessExponent &     PReal &      &     1. &     exponent in normal contact model [SI:1]\\ \hline
@@ -10637,7 +10637,7 @@ The item \mybold{ObjectContactCurveCircles} with type = 'ContactCurveCircles' ha
     polynomialData &     PyMatrixContainer &     \tabnewline  &     PyMatrixContainer[] &     \tabnewline matrix containing coefficients for special polynomial enhancements of the linear segments; each row contains coefficients for polynomials for the according segment, prescribing slopes at beginning and end of segment as well as curvature at beginning and end of segment; slopes and curvatures are defined in a local x/y coordinate system where x is the segment axis (start: x=0; x-axis points towards end point) and the segment normal is in y-direction; MatrixContainer has to be provided in dense mode!\\ \hline
     rotationMarker0 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker 0; used to rotate marker coordinates such that the curve lies in the $x-y$-plane\\ \hline
     dynamicFriction &     UReal &      &     0. &     dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}\\ \hline
-    frictionProportionalZone &     UReal &      &     1e-3 &     limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}\\ \hline
+    frictionProportionalZone &     UReal &      &     0.001 &     limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}\\ \hline
     contactStiffness &     Real &      &     0. &     normal contact stiffness [SI:N/(m*m)]\\ \hline
     contactDamping &     Real &      &     0. &     linear normal contact damping [SI:N/(m s)]; this damping is a simplification of real contact dissipation and should be used with care.\\ \hline
     contactModel &     UInt &      &     0 &     number of contact model: 0) linear model for stiffness and damping, only proportional to penetration; contact force is computed from $l_\mathrm{seg}\left(p \cdot  \cdot k_c + \dot p \cdot d_c \right)$ as long as $p>0$; while this is numerically more stable, it gives jumps in forces when sliding over contact geometry 1) contact force proportional to integral over penetration area of circle with segments, giving a smoother contact force when sliding over geometry;\\ \hline

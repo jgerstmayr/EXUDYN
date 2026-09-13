@@ -131,7 +131,7 @@ NumericalDifferentiationSettings has the following items:
 * | **jacobianConnectorDerivative** [type = bool, default = True]:
   | \ ``simulationSettings.timeIntegration.newton.numericalDifferentiation.jacobianConnectorDerivative``\ , \ ``simulationSettings.staticSolver.newton.numericalDifferentiation.jacobianConnectorDerivative``\ 
   | True: for analytic Jacobians of connectors, the Jacobian derivative is computed, causing additional CPU costs and not beeing available for all connectors or markers (thus switching to numerical differentiation); False: Jacobian derivative is neglected in analytic Jacobians (but included in numerical Jacobians), which often has only minor influence on convergence
-* | **minimumCoordinateSize** [type = UReal, default = 1e-2]:
+* | **minimumCoordinateSize** [type = UReal, default = 0.01]:
   | \ ``simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize``\ , \ ``simulationSettings.staticSolver.newton.numericalDifferentiation.minimumCoordinateSize``\ 
   | minimum size of coordinates in relative differentiation parameter
 * | **relativeEpsilon** [type = UReal, default = 1e-7]:
@@ -368,7 +368,7 @@ TimeIntegrationSettings has the following items:
 * | **stepSizeMaxIncrease** [type = UReal, default = 2]:
   | \ ``simulationSettings.timeIntegration.stepSizeMaxIncrease``\ 
   | \ :math:`f\_{maxInc}`\ : if automaticStepSize=True, maximum increase of step size per step, see Section :ref:`sec-explicitsolver`\ ; make this factor smaller (but \ :math:`> 1`\ ) if too many rejected steps
-* | **stepSizeSafety** [type = UReal, default = 0.90]:
+* | **stepSizeSafety** [type = UReal, default = 0.9]:
   | \ ``simulationSettings.timeIntegration.stepSizeSafety``\ 
   | \ :math:`r\_{sfty}`\ : if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see Section :ref:`sec-explicitsolver`\ . Make this factor smaller if many steps are rejected.
 * | **verboseMode** [type = UInt, default = 0]:

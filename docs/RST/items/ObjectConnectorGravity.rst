@@ -21,7 +21,7 @@ The item \ **ObjectConnectorGravity**\  with type = 'ConnectorGravity' has the f
   | connector's unique name
 * | **markerNumbers** [\ :math:`[m0,m1]\tp`\ , type = ArrayMarkerIndex, default = [ invalid [-1], invalid [-1] ]]:
   | list of markers used in connector
-* | **gravitationalConstant** [\ :math:`G`\ , type = Real, default = 6.67430e-11]:
+* | **gravitationalConstant** [\ :math:`G`\ , type = Real, default = 6.6743e-11]:
   | gravitational constant [SI:m\ :math:`^3`\ kg\ :math:`^{-1}`\ s\ :math:`^{-2}`\ )]; while not recommended, a negative constant gan represent a repulsive force
 * | **mass0** [\ :math:`mass_0`\ , type = UReal, default = 0.]:
   | mass [SI:kg] of object attached to marker \ :math:`m0`\ 

@@ -30,7 +30,7 @@ The item \ **ObjectContactSphereSphere**\  with type = 'ContactSphereSphere' has
   | flag, which determines, if sphere attached to marker 1 (radius 1) is a hollow sphere.
 * | **dynamicFriction** [\ :math:`\mu_d`\ , type = UReal, default = 0.]:
   | dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, Section :ref:`sec-module-physics`\ 
-* | **frictionProportionalZone** [\ :math:`v_{reg}`\ , type = UReal, default = 1e-3]:
+* | **frictionProportionalZone** [\ :math:`v_{reg}`\ , type = UReal, default = 0.001]:
   | limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), Section :ref:`sec-module-physics`\ 
 * | **contactStiffness** [\ :math:`k_c`\ , type = UReal, default = 0.]:
   | normal contact stiffness [SI:N/m] (units in case that \ :math:`n_\mathrm{exp}=1`\ )

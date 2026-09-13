@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-02-05  22:13:57 (last modified)
+* @date         2026-09-13  20:45:49 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -37,7 +37,7 @@ public: // AUTO:
     CObjectConnectorGravityParameters()
     {
         markerNumbers = ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex });
-        gravitationalConstant = 6.67430e-11;
+        gravitationalConstant = 6.6743e-11;
         mass0 = 0.;
         mass1 = 0.;
         minDistanceRegularization = 0.;

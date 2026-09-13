@@ -34,7 +34,7 @@ The item \ **ObjectContactCurveCircles**\  with type = 'ContactCurveCircles' has
   | local rotation matrix for marker 0; used to rotate marker coordinates such that the curve lies in the \ :math:`x-y`\ -plane
 * | **dynamicFriction** [\ :math:`\mu_d`\ , type = UReal, default = 0.]:
   | dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, Section :ref:`sec-module-physics`\ 
-* | **frictionProportionalZone** [\ :math:`v_{reg}`\ , type = UReal, default = 1e-3]:
+* | **frictionProportionalZone** [\ :math:`v_{reg}`\ , type = UReal, default = 0.001]:
   | limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), Section :ref:`sec-module-physics`\ 
 * | **contactStiffness** [\ :math:`k_c`\ , type = Real, default = 0.]:
   | normal contact stiffness [SI:N/(m*m)]

@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
 * @class        VisualizationObjectConnectorHydraulicActuatorSimple
-* @brief        A basic hydraulic actuator with pressure build up equations. The actuator follows a valve input value, which results in a in- or outflow of fluid depending on the pressure difference. Valve values can be prescribed by user functions (not yet available) or with the MainSystem PreStepUserFunction(...).
+* @brief        A basic hydraulic actuator with pressure build up equations. The actuator follows a valve input value, which results in a in- or outflow of fluid depending on the pressure difference. Valve values can be prescribed by user functions (not yet available) or with the \texttt{MainSystem} \texttt{PreStepUserFunction(...)}.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-03  15:27:07 (last modified)
+* @date         2026-09-13  20:45:49 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -44,9 +44,9 @@ public: // AUTO:
         rodRadius = 0.03f;
         pistonRadius = 0.04f;
         pistonLength = 0.001f;
-        rodMountRadius = 0.0f;
-        baseMountRadius = 0.0f;
-        baseMountLength = 0.0f;
+        rodMountRadius = 0.f;
+        baseMountRadius = 0.f;
+        baseMountLength = 0.f;
         colorCylinder = Float4({-1.f,-1.f,-1.f,-1.f});
         colorPiston = Float4({0.8f,0.8f,0.8f,1.f});
     };

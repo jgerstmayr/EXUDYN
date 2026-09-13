@@ -1543,3 +1543,5 @@ the tracker.
 - **#2411** (EXTENSION) expose item type and shape information to Python
 - **#2412** (DOCU) Google style docstrings are mandatory project wide
 - **#2413** (EXTENSION) ObjectContactConvexRoll.pContact is computed state stored in parameters
+- **#2414** (DOCU) AngularVelocityLocal output variable description says velocity not angular velocity
+- **#2415** (BUG) a changed class description never reaches the generated headers

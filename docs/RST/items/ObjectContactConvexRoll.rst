@@ -34,9 +34,9 @@ The item \ **ObjectContactConvexRoll**\  with type = 'ContactConvexRoll' has the
   | static friction offset for friction model (static friction = dynamic friction + static offset), see StribeckFunction in exudyn.physics, Section :ref:`sec-module-physics`\ 
 * | **viscousFriction** [\ :math:`\mu_v`\ , type = UReal, default = 0.]:
   | viscous friction coefficient (velocity dependent part) for friction model, see StribeckFunction in exudyn.physics, Section :ref:`sec-module-physics`\ 
-* | **exponentialDecayStatic** [\ :math:`v_{exp}`\ , type = PReal, default = 1e-3]:
+* | **exponentialDecayStatic** [\ :math:`v_{exp}`\ , type = PReal, default = 0.001]:
   | exponential decay of static friction offset (must not be zero!), see StribeckFunction in exudyn.physics (named expVel there!), Section :ref:`sec-module-physics`\ 
-* | **frictionProportionalZone** [\ :math:`v_{reg}`\ , type = UReal, default = 1e-3]:
+* | **frictionProportionalZone** [\ :math:`v_{reg}`\ , type = UReal, default = 0.001]:
   | limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), Section :ref:`sec-module-physics`\ 
 * | **rollLength** [\ :math:`L`\ , type = UReal, default = 0.]:
   | roll length [m], symmetric w.r.t.\ centerpoint

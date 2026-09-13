@@ -710,7 +710,7 @@ VSettingsScene has the following items:
 * | **showMeshFaces** [type = bool, default = True, size = 1]:
   | \ ``SC.visualizationSettings.view0.scene.showMeshFaces``\ , \ ``SC.visualizationSettings.view1.scene.showMeshFaces``\ , \ ``SC.visualizationSettings.view2.scene.showMeshFaces``\ , \ ``SC.visualizationSettings.view3.scene.showMeshFaces``\ 
   | True: show faces of finite elements; independent of showFaces
-* | **worldBasisSize** [type = PFloat, default = 1.0]:
+* | **worldBasisSize** [type = PFloat, default = 1.]:
   | \ ``SC.visualizationSettings.view0.scene.worldBasisSize``\ , \ ``SC.visualizationSettings.view1.scene.worldBasisSize``\ , \ ``SC.visualizationSettings.view2.scene.worldBasisSize``\ , \ ``SC.visualizationSettings.view3.scene.worldBasisSize``\ 
   | size of world basis coordinate system
 
@@ -878,7 +878,7 @@ VSettingsRaytracerAdvanced has the following items:
 * | **tilesPerThread** [type = PInt, default = 12]:
   | \ ``SC.visualizationSettings.raytracer.advanced.tilesPerThread``\ 
   | Total number of sub-tiles per thread, used to evenly distribute rendering load to threads
-* | **zBiasLines** [type = float, default = 1e-3]:
+* | **zBiasLines** [type = float, default = 0.001]:
   | \ ``SC.visualizationSettings.raytracer.advanced.zBiasLines``\ 
   | offset for lines to draw in front of faces; relative to scene radius
 
@@ -1034,7 +1034,7 @@ Settings for lights.
 
 VSettingsLight has the following items:
 
-* | **constantAttenuation** [type = float, default = 1.0, size = 1]:
+* | **constantAttenuation** [type = float, default = 1., size = 1]:
   | \ ``SC.visualizationSettings.openGL.light.constantAttenuation``\ 
   | constant attenuation coefficient of GL_LIGHT[0,1,2,3], this is a constant factor that attenuates the light source; attenuation factor = 1/(kc +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1
 * | **diffuse** [type = float, default = 0.5, size = 1]:
@@ -1046,13 +1046,13 @@ VSettingsLight has the following items:
 * | **lightRadius** [type = float, default = 0.1, size = 1]:
   | \ ``SC.visualizationSettings.openGL.light.lightRadius``\ 
   | only used by raytracers: radius of light used to compute smooth shadows (approximated by raytracer.lightRadiusVariations); if lightRadiusVariations>1, this value defines the radius of the light, converting point lights into distributed lights (slower)
-* | **linearAttenuation** [type = float, default = 0.0, size = 1]:
+* | **linearAttenuation** [type = float, default = 0., size = 1]:
   | \ ``SC.visualizationSettings.openGL.light.linearAttenuation``\ 
   | linear attenuation coefficient of GL_LIGHT[0,1,2,3], this is a linear factor for attenuation of the light source with distance
 * | **position** [type = Float4, default = [2.,2.,10.,0.], size = 4]:
   | \ ``SC.visualizationSettings.openGL.light.position``\ 
   | 4D position vector of GL_LIGHT[0,1,2,3]; 4th value should be 0 for directional lights that are (almost) infinitely far away, like the sun, but 1 for position-based lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position to be located at a reasonable location; the openGL renderer uses shadow volumes and approximates directional lights by enlarging the direction to 200 times maxSceneSize, while the raytracer uses the correct direction; see opengl manuals
-* | **quadraticAttenuation** [type = float, default = 0.0, size = 1]:
+* | **quadraticAttenuation** [type = float, default = 0., size = 1]:
   | \ ``SC.visualizationSettings.openGL.light.quadraticAttenuation``\ 
   | quadratic attenuation coefficient of GL_LIGHT[0,1,2,3], this is a quadratic factor for attenuation of the light source with distance
 * | **shadow** [type = UFloat, default = 0.]:

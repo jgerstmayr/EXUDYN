@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-01-07  23:36:17 (last modified)
+* @date         2026-09-13  20:45:50 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -51,7 +51,7 @@ public: // AUTO:
         polynomialData = PyMatrixContainer();
         rotationMarker0 = EXUmath::unitMatrix3D;
         dynamicFriction = 0.;
-        frictionProportionalZone = 1e-3;
+        frictionProportionalZone = 0.001;
         contactStiffness = 0.;
         contactDamping = 0.;
         contactModel = 0;

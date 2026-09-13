@@ -75,11 +75,11 @@ The item VObjectConnectorHydraulicActuatorSimple has the following parameters:
   | radius for drawing of piston (if drawn transparent)
 * | **pistonLength** [type = float, default = 0.001]:
   | radius for drawing of piston (if drawn transparent)
-* | **rodMountRadius** [type = float, default = 0.0]:
+* | **rodMountRadius** [type = float, default = 0.]:
   | radius for drawing of rod mount sphere
-* | **baseMountRadius** [type = float, default = 0.0]:
+* | **baseMountRadius** [type = float, default = 0.]:
   | radius for drawing of base mount sphere
-* | **baseMountLength** [type = float, default = 0.0]:
+* | **baseMountLength** [type = float, default = 0.]:
   | radius for drawing of base mount sphere
 * | **colorCylinder** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA cylinder color; if R==-1, use default connector color

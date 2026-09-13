@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-02-05  22:13:57 (last modified)
+* @date         2026-09-13  20:45:49 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -67,7 +67,7 @@ public: // AUTO:
         fStaticFrictionOffset = 0.;
         stickingStiffness = 0.;
         stickingDamping = 0.;
-        exponentialDecayStatic = 1.e-3;
+        exponentialDecayStatic = 0.001;
         fViscousFriction = 0.;
         frictionProportionalZone = 0.;
         limitStopsUpper = 0.;

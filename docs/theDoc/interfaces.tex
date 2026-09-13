@@ -114,7 +114,7 @@ Settings for numerical differentiation of a function (needed for computation of 
     forODE2 &     bool &      &     False &     flag (true/false); false = perform direct computation (e.g., using autodiff) of jacobian for ODE2 equations, true = use numerical differentiation; numerical differentiation is less efficient and may lead to numerical problems, but may smoothen problems of analytical derivatives; sometimes the analytical derivative may neglect terms\\ \hline
     forODE2connectors &     bool &      &     False &     flag (true/false); false: if also forODE2==false, perform direct computation of jacobian for ODE2 terms for connectors; else: use numerical differentiation; NOTE: THIS FLAG IS FOR DEVELOPMENT AND WILL BE ERASED IN FUTURE\\ \hline
     jacobianConnectorDerivative &     bool &      &     True &     True: for analytic Jacobians of connectors, the Jacobian derivative is computed, causing additional CPU costs and not beeing available for all connectors or markers (thus switching to numerical differentiation); False: Jacobian derivative is neglected in analytic Jacobians (but included in numerical Jacobians), which often has only minor influence on convergence\\ \hline
-    minimumCoordinateSize &     UReal &      &     1e-2 &     minimum size of coordinates in relative differentiation parameter\\ \hline
+    minimumCoordinateSize &     UReal &      &     0.01 &     minimum size of coordinates in relative differentiation parameter\\ \hline
     relativeEpsilon &     UReal &      &     1e-7 &     relative differentiation parameter epsilon; the numerical differentiation parameter $\varepsilon$ follows from the formula ($\varepsilon = \varepsilon\_\mathrm{relative}*max(q\_{min}, |q\_i + [q^{Ref}\_i]|)$, with $\varepsilon\_\mathrm{relative}$=relativeEpsilon, $q\_{min} = $minimumCoordinateSize, $q\_i$ is the current coordinate which is differentiated, and $qRef\_i$ is the reference coordinate of the current coordinate\\ \hline
 	  \end{longtable}
 	\end{center}
@@ -258,7 +258,7 @@ General parameters used in time integration; specific parameters are provided in
     startTime &     UReal &      &     0 &     $t\_{start}$: start time of time integration (usually set to zero)\\ \hline
     stepInformation &     UInt &      &     67 &     add up the following binary flags: 0 ... show only step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step or period, 4 ... show Newton jacobians (jac) per step or period, 8 ... show discontinuous iterations (Dit) per step or period, 16 ... show step size (dt), 32 ... show CPU time spent; 64 ... show adaptive step reduction warnings; 128 ... show step increase information; 1024 ... show every time step; time is usually shown in fractions of seconds (s), hours (h), or days\\ \hline
     stepSizeMaxIncrease &     UReal &      &     2 &     $f\_{maxInc}$: if automaticStepSize=True, maximum increase of step size per step, see \refSection{sec:ExplicitSolver}; make this factor smaller (but $> 1$) if too many rejected steps\\ \hline
-    stepSizeSafety &     UReal &      &     0.90 &     $r\_{sfty}$: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see \refSection{sec:ExplicitSolver}. Make this factor smaller if many steps are rejected.\\ \hline
+    stepSizeSafety &     UReal &      &     0.9 &     $r\_{sfty}$: if automaticStepSize=True, a safety factor added to estimated optimal step size, in order to prevent from many rejected steps, see \refSection{sec:ExplicitSolver}. Make this factor smaller if many steps are rejected.\\ \hline
     verboseMode &     UInt &      &     0 &     0 ... no output, 1 ... show short step information every 2 seconds (every 30 seconds after 1 hour CPU time), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)\\ \hline
     verboseModeFile &     UInt &      &     0 &     same behaviour as verboseMode, but outputs all solver information to file\\ \hline
 	  \end{longtable}
@@ -819,7 +819,7 @@ Settings change scene representation (show edges, show faces, global transparenc
     showLines &     bool &     1 &     True &     True: show lines (other lines than face and mesh edges)\\ \hline
     showMeshEdges &     bool &     1 &     True &     True: show edges of finite elements; independent of showFaceEdges\\ \hline
     showMeshFaces &     bool &     1 &     True &     True: show faces of finite elements; independent of showFaces\\ \hline
-    worldBasisSize &     PFloat &      &     1.0 &     size of world basis coordinate system\\ \hline
+    worldBasisSize &     PFloat &      &     1. &     size of world basis coordinate system\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -953,7 +953,7 @@ Advanced settings for raytracer.
     shadowSmoothingSteps &     UInt &     1 &     3 &     if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing  steps may cause artifacts at shadow boundaries; only works for directional lights with position (e.g. 4th component in light0Position should be 1)\\ \hline
     showText &     bool &      &     True &     True: show any kind of status text, node numbers, object numbers, etc. (depending on settings); False: do not show any text in raytracer, independently of settings\\ \hline
     tilesPerThread &     PInt &      &     12 &     Total number of sub-tiles per thread, used to evenly distribute rendering load to threads\\ \hline
-    zBiasLines &     float &      &     1e-3 &     offset for lines to draw in front of faces; relative to scene radius\\ \hline
+    zBiasLines &     float &      &     0.001 &     offset for lines to draw in front of faces; relative to scene radius\\ \hline
 	  \end{longtable}
 	\end{center}
 
@@ -1044,13 +1044,13 @@ Settings for lights.
   \begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}
     \hline
     \bf Name & \bf type / function return type & \bf size & \bf default value / function args & \bf description \\ \hline
-    constantAttenuation &     float &     1 &     1.0 &     constant attenuation coefficient of GL\_LIGHT[0,1,2,3], this is a constant factor that attenuates the light source; attenuation factor = 1/(kc +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1\\ \hline
+    constantAttenuation &     float &     1 &     1. &     constant attenuation coefficient of GL\_LIGHT[0,1,2,3], this is a constant factor that attenuates the light source; attenuation factor = 1/(kc +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1\\ \hline
     diffuse &     float &     1 &     0.5 &     diffuse value of GL\_LIGHT[0,1,2,3]\\ \hline
     enable &     bool &     1 &     True &     turn on/off light\\ \hline
     lightRadius &     float &     1 &     0.1 &     only used by raytracers: radius of light used to compute smooth shadows (approximated by raytracer.lightRadiusVariations); if lightRadiusVariations>1, this value defines the radius of the light, converting point lights into distributed lights (slower)\\ \hline
-    linearAttenuation &     float &     1 &     0.0 &     linear attenuation coefficient of GL\_LIGHT[0,1,2,3], this is a linear factor for attenuation of the light source with distance\\ \hline
+    linearAttenuation &     float &     1 &     0. &     linear attenuation coefficient of GL\_LIGHT[0,1,2,3], this is a linear factor for attenuation of the light source with distance\\ \hline
     position &     Float4 &     4 &     [2.,2.,10.,0.] &     \tabnewline 4D position vector of GL\_LIGHT[0,1,2,3]; 4th value should be 0 for directional lights that are (almost) infinitely far away, like the sun, but 1 for position-based lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position to be located at a reasonable location; the openGL renderer uses shadow volumes and approximates directional lights by enlarging the direction to 200 times maxSceneSize, while the raytracer uses the correct direction; see opengl manuals\\ \hline
-    quadraticAttenuation &     float &     1 &     0.0 &     quadratic attenuation coefficient of GL\_LIGHT[0,1,2,3], this is a quadratic factor for attenuation of the light source with distance\\ \hline
+    quadraticAttenuation &     float &     1 &     0. &     quadratic attenuation coefficient of GL\_LIGHT[0,1,2,3], this is a quadratic factor for attenuation of the light source with distance\\ \hline
     shadow &     UFloat &      &     0. &     in OpenGL renderer, the shadow parameter $\in [0 ... 1]$ prescribes amount of shadow of light [0,1,2,3] that is added to the scene, using light position (or only direction), accumulating for each light; if this parameter is different from 0, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for each light if shadow>0, accumulating effects of each light source\\ \hline
     specular &     float &     1 &     0.5 &     specular value of GL\_LIGHT[0,1,2,3]\\ \hline
     useCameraFrame &     bool &     1 &     False &     set False to set light positions and directions relative to model frame; True: lights are in camera frame, not following the visual transformations; this was True up to Exudyn 1.9.174\\ \hline
