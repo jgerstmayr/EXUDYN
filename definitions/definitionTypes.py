@@ -113,111 +113,176 @@ ObjectTypeSuperElement  = 'SuperElement'
 #A type that NAMES A STRUCTURE defined in these files gets no constant: it refers to
 #the definition itself, which the emitter checks exists. That is a stronger check than
 #a constant (which only verifies spelling) and it removed 45 single-use names.
-#Only identifier-shaped types get a constant; a type that is a C++ expression stays a plain
-#string, because naming "template<class TReal> void" would give a single-use constant longer
-#than the thing it names. The name keeps the type's own spelling: 'Bool' and 'bool' are BOTH
-#used and are different types, so upper-casing the first letter collided and one silently
-#overwrote the other.
-TAccessFunctionType                = 'AccessFunctionType'
-TArrayFloat                        = 'ArrayFloat'
-TArrayIndex                        = 'ArrayIndex'
-TArrayMarkerIndex                  = 'ArrayMarkerIndex'
-TArrayNodeIndex                    = 'ArrayNodeIndex'
-TArrayObjectIndex                  = 'ArrayObjectIndex'
-TArraySensorIndex                  = 'ArraySensorIndex'
-TBeamSection                       = 'BeamSection'
-TBodyGraphicsData                  = 'BodyGraphicsData'
-TBodyGraphicsDataList              = 'BodyGraphicsDataList'
-TBool                              = 'Bool'
-TCNodeGroup                        = 'CNodeGroup'
-TCObjectType                       = 'CObjectType'
-TCSolverExplicitTimeInt            = 'CSolverExplicitTimeInt'
-TCSolverImplicitSecondOrderTimeIntUserFunction = 'CSolverImplicitSecondOrderTimeIntUserFunction'
-TCSolverStatic                     = 'CSolverStatic'
-TCrossSectionType                  = 'CrossSectionType'
-TDynamicSolverType                 = 'DynamicSolverType'
-TFileName                          = 'FileName'
-TFloat3                            = 'Float3'
-TFloat4                            = 'Float4'
-TGeneralMatrixEXUdense             = 'GeneralMatrixEXUdense'
-TGeneralMatrixEigenSparse          = 'GeneralMatrixEigenSparse'
-THomogeneousTransformation         = 'HomogeneousTransformation'
-TIndex                             = 'Index'
-TIndex2                            = 'Index2'
-TIndex4                            = 'Index4'
-TInertiaList                       = 'InertiaList'
-TInt                               = 'Int'
-TItemType                          = 'ItemType'
-TJointTypeList                     = 'JointTypeList'
-TKeyPressUserFunction              = 'KeyPressUserFunction'
-TLinearSolverType                  = 'LinearSolverType'
-TLinkedDataVector                  = 'LinkedDataVector'
-TLoadIndex                         = 'LoadIndex'
-TLoadType                          = 'LoadType'
-TMarkerIndex                       = 'MarkerIndex'
-TMatrix2D                          = 'Matrix2D'
-TMatrix3D                          = 'Matrix3D'
-TMatrix3DList                      = 'Matrix3DList'
-TMatrix6D                          = 'Matrix6D'
-TNodeIndex                         = 'NodeIndex'
-TNodeIndex2                        = 'NodeIndex2'
-TNodeIndex3                        = 'NodeIndex3'
-TNodeIndex4                        = 'NodeIndex4'
-TNumpyMatrix                       = 'NumpyMatrix'
-TNumpyMatrixI                      = 'NumpyMatrixI'
-TNumpyVector                       = 'NumpyVector'
-TObjectIndex                       = 'ObjectIndex'
-TOutputVariableType                = 'OutputVariableType'
-TPFloat                            = 'PFloat'
-TPInt                              = 'PInt'
-TPReal                             = 'PReal'
-TPyFunctionGraphicsData            = 'PyFunctionGraphicsData'
-TPyFunctionMatrixContainerMbsScalarIndex2Vector = 'PyFunctionMatrixContainerMbsScalarIndex2Vector'
-TPyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar = 'PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar'
-TPyFunctionMatrixContainerMbsScalarIndex2VectorBool = 'PyFunctionMatrixContainerMbsScalarIndex2VectorBool'
-TPyFunctionMatrixMbsScalarIndex2Vector = 'PyFunctionMatrixMbsScalarIndex2Vector'
-TPyFunctionMbsScalar2              = 'PyFunctionMbsScalar2'
-TPyFunctionMbsScalarIndexScalar    = 'PyFunctionMbsScalarIndexScalar'
-TPyFunctionMbsScalarIndexScalar11  = 'PyFunctionMbsScalarIndexScalar11'
-TPyFunctionMbsScalarIndexScalar5   = 'PyFunctionMbsScalarIndexScalar5'
-TPyFunctionMbsScalarIndexScalar9   = 'PyFunctionMbsScalarIndexScalar9'
-TPyFunctionVector3DmbsScalarIndexScalar4Vector3D = 'PyFunctionVector3DmbsScalarIndexScalar4Vector3D'
-TPyFunctionVector3DmbsScalarVector3D = 'PyFunctionVector3DmbsScalarVector3D'
-TPyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D = 'PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D'
-TPyFunctionVector6DmbsScalarIndexVector6D = 'PyFunctionVector6DmbsScalarIndexVector6D'
-TPyFunctionVectorMbsScalarArrayIndexVectorConfiguration = 'PyFunctionVectorMbsScalarArrayIndexVectorConfiguration'
-TPyFunctionVectorMbsScalarIndex2Vector = 'PyFunctionVectorMbsScalarIndex2Vector'
-TPyFunctionVectorMbsScalarIndex2VectorBool = 'PyFunctionVectorMbsScalarIndex2VectorBool'
-TPyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D = 'PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D'
-TPyFunctionVectorMbsScalarIndexVector = 'PyFunctionVectorMbsScalarIndexVector'
-TPyMatrixContainer                 = 'PyMatrixContainer'
-TReal                              = 'Real'
-TResizableMatrix                   = 'ResizableMatrix'
-TResizableVector                   = 'ResizableVector'
-TResizableVectorParallel           = 'ResizableVectorParallel'
-TSTDstring                         = 'STDstring'
-TSensorType                        = 'SensorType'
-TStdArray33F                       = 'StdArray33F'
-TString                            = 'String'
-TTemporaryComputationData          = 'TemporaryComputationData'
-TTemporaryComputationDataArray     = 'TemporaryComputationDataArray'
-TTransformation66List              = 'Transformation66List'
-TUFloat                            = 'UFloat'
-TUInt                              = 'UInt'
-TUReal                             = 'UReal'
-TVector                            = 'Vector'
-TVector2D                          = 'Vector2D'
-TVector2DList                      = 'Vector2DList'
-TVector3D                          = 'Vector3D'
-TVector3DList                      = 'Vector3DList'
-TVector4D                          = 'Vector4D'
-TVector6D                          = 'Vector6D'
-TVector6DList                      = 'Vector6DList'
-TVector7D                          = 'Vector7D'
-TVector9D                          = 'Vector9D'
-Tbool                              = 'bool'
-Tfloat                             = 'float'
-Tvoid                              = 'void'
+#
+#A type is a str SUBCLASS carrying its constraints, so it compares and hashes exactly like
+#the plain name the generators already look up in typeConversion / typeCasts / type2PyTyping
+#- nothing downstream has to change - while minimum, greaterThan and size travel with it.
+#Calling a base type applies a constraint and yields the constrained type:
+#
+#   TReal                  -> Real          TIndex                -> Index
+#   TReal(minimum=0)       -> UReal         TIndex(minimum=0)     -> UInt
+#   TReal(greaterThan=0)   -> PReal         TIndex(greaterThan=0) -> PInt
+#   TVectorND(3)           -> Vector3D      TIndex(ItemNode)      -> NodeIndex
+#   TMatrixND(3, 3)        -> Matrix3D      TArrayIndex(ItemMarker, size=2)
+#
+#Both range predicates are needed and stay distinct: >= 0 and > 0 are both in use, and the
+#generators select CheckForValidUReal vs CheckForValidPReal on exactly that difference.
+#Only sizes for which a C++ type exists are accepted, so TVectorND(5) fails at emit time
+#instead of reaching the compiler; the same call also states the shape, which is why members
+#no longer carry a separate size= - it was never checked anyway, see the generator's own note
+#"future: also add size check ..." at pythonAutoGenerateObjects.py:904.
+
+
+class TypeSpec(str):
+    """A type name plus the constraints that belong to it."""
+
+    def __new__(cls, name, minimum=None, greaterThan=None, size=None, itemKind=None,
+                constrained=None):
+        self = str.__new__(cls, name)
+        self.minimum = minimum
+        self.greaterThan = greaterThan
+        self.size = size
+        self.itemKind = itemKind
+        self.constrainedForms = constrained or {}
+
+        return self
+
+    def __call__(self, itemKind=None, minimum=None, greaterThan=None, size=None):
+        if minimum is not None and greaterThan is not None:
+            raise ValueError(str(self) + ": give minimum or greaterThan, not both")
+
+        key = itemKind
+        if minimum is not None:
+            key = "minimum"
+        elif greaterThan is not None:
+            key = "greaterThan"
+        if key is not None and key not in self.constrainedForms:
+            raise ValueError(str(self) + " has no " + repr(key) + " form; available: "
+                             + ", ".join(sorted(self.constrainedForms)))
+        name = self.constrainedForms[key] if key is not None else str(self)
+
+        return TypeSpec(name, minimum=minimum, greaterThan=greaterThan, size=size,
+                        itemKind=itemKind, constrained=self.constrainedForms)
+
+
+#--------------------------------------------------------------------- item kinds
+#which index family a type belongs to; an ObjectIndex converts to Index in Python but not
+#to a NodeIndex, which is what stops the most common class of user mistake
+ItemNode             = 'Node'
+ItemObject           = 'Object'
+ItemMarker           = 'Marker'
+ItemLoad             = 'Load'
+ItemSensor           = 'Sensor'
+
+#--------------------------------------------------------------------- scalars with ranges
+TReal                = TypeSpec('Real', constrained={'greaterThan': 'PReal', 'minimum': 'UReal'})
+Tfloat               = TypeSpec('float', constrained={'greaterThan': 'PFloat', 'minimum': 'UFloat'})
+TIndex               = TypeSpec('Index', constrained={'Load': 'LoadIndex', 'Marker': 'MarkerIndex', 'Node': 'NodeIndex', 'Object': 'ObjectIndex', 'Sensor': 'SensorIndex', 'greaterThan': 'PInt', 'minimum': 'UInt'})
+TArrayIndex          = TypeSpec('ArrayIndex', constrained={'Marker': 'ArrayMarkerIndex', 'Node': 'ArrayNodeIndex', 'Object': 'ArrayObjectIndex', 'Sensor': 'ArraySensorIndex'})
+
+#--------------------------------------------------------------------- shapes
+#the sizes for which a C++ type actually exists; anything else is a typo
+vectorSizes          = {2: 'Vector2D', 3: 'Vector3D', 4: 'Vector4D',
+                        6: 'Vector6D', 7: 'Vector7D', 9: 'Vector9D'}
+matrixSizes          = {(2, 2): 'Matrix2D', (3, 3): 'Matrix3D', (6, 6): 'Matrix6D'}
+indexTupleSizes      = {2: 'Index2', 4: 'Index4'}
+nodeIndexTupleSizes  = {2: 'NodeIndex2', 3: 'NodeIndex3', 4: 'NodeIndex4'}
+
+
+def _sized(table, key, what):
+    if key not in table:
+        raise ValueError(what + " " + repr(key) + " has no C++ type; available: "
+                         + ", ".join([repr(k) for k in sorted(table)]))
+
+    return table[key]
+
+
+def TVectorND(n):
+    return TypeSpec(_sized(vectorSizes, n, "vector size"), size=n)
+
+
+def TMatrixND(rows, columns):
+    return TypeSpec(_sized(matrixSizes, (rows, columns), "matrix shape"),
+                    size=(rows, columns))
+
+
+def TIndexND(n, itemKind=None):
+    """A fixed-size tuple of indices: Index2/Index4, or NodeIndex2/3/4 for node numbers."""
+    table = nodeIndexTupleSizes if itemKind == ItemNode else indexTupleSizes
+
+    return TypeSpec(_sized(table, n, "index tuple size"), size=n, itemKind=itemKind)
+
+
+#--------------------------------------------------------------------- remaining C++ types
+#one-off types with no family: user-function signatures, containers and EXUDYN structs
+TAccessFunctionType                = TypeSpec('AccessFunctionType')
+TArrayFloat                        = TypeSpec('ArrayFloat')
+TBeamSection                       = TypeSpec('BeamSection')
+TBodyGraphicsData                  = TypeSpec('BodyGraphicsData')
+TBodyGraphicsDataList              = TypeSpec('BodyGraphicsDataList')
+TBool                              = TypeSpec('Bool')
+TCNodeGroup                        = TypeSpec('CNodeGroup')
+TCObjectType                       = TypeSpec('CObjectType')
+TCSolverExplicitTimeInt            = TypeSpec('CSolverExplicitTimeInt')
+TCSolverImplicitSecondOrderTimeIntUserFunction = TypeSpec('CSolverImplicitSecondOrderTimeIntUserFunction')
+TCSolverStatic                     = TypeSpec('CSolverStatic')
+TCrossSectionType                  = TypeSpec('CrossSectionType')
+TDynamicSolverType                 = TypeSpec('DynamicSolverType')
+TFileName                          = TypeSpec('FileName')
+TFloat3                            = TypeSpec('Float3')
+TFloat4                            = TypeSpec('Float4')
+TGeneralMatrixEXUdense             = TypeSpec('GeneralMatrixEXUdense')
+TGeneralMatrixEigenSparse          = TypeSpec('GeneralMatrixEigenSparse')
+THomogeneousTransformation         = TypeSpec('HomogeneousTransformation')
+TInertiaList                       = TypeSpec('InertiaList')
+TInt                               = TypeSpec('Int')
+TItemType                          = TypeSpec('ItemType')
+TJointTypeList                     = TypeSpec('JointTypeList')
+TKeyPressUserFunction              = TypeSpec('KeyPressUserFunction')
+TLinearSolverType                  = TypeSpec('LinearSolverType')
+TLinkedDataVector                  = TypeSpec('LinkedDataVector')
+TLoadType                          = TypeSpec('LoadType')
+TMatrix3DList                      = TypeSpec('Matrix3DList')
+TNumpyMatrix                       = TypeSpec('NumpyMatrix')
+TNumpyMatrixI                      = TypeSpec('NumpyMatrixI')
+TNumpyVector                       = TypeSpec('NumpyVector')
+TOutputVariableType                = TypeSpec('OutputVariableType')
+TPyFunctionGraphicsData            = TypeSpec('PyFunctionGraphicsData')
+TPyFunctionMatrixContainerMbsScalarIndex2Vector = TypeSpec('PyFunctionMatrixContainerMbsScalarIndex2Vector')
+TPyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar = TypeSpec('PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar')
+TPyFunctionMatrixContainerMbsScalarIndex2VectorBool = TypeSpec('PyFunctionMatrixContainerMbsScalarIndex2VectorBool')
+TPyFunctionMatrixMbsScalarIndex2Vector = TypeSpec('PyFunctionMatrixMbsScalarIndex2Vector')
+TPyFunctionMbsScalar2              = TypeSpec('PyFunctionMbsScalar2')
+TPyFunctionMbsScalarIndexScalar    = TypeSpec('PyFunctionMbsScalarIndexScalar')
+TPyFunctionMbsScalarIndexScalar11  = TypeSpec('PyFunctionMbsScalarIndexScalar11')
+TPyFunctionMbsScalarIndexScalar5   = TypeSpec('PyFunctionMbsScalarIndexScalar5')
+TPyFunctionMbsScalarIndexScalar9   = TypeSpec('PyFunctionMbsScalarIndexScalar9')
+TPyFunctionVector3DmbsScalarIndexScalar4Vector3D = TypeSpec('PyFunctionVector3DmbsScalarIndexScalar4Vector3D')
+TPyFunctionVector3DmbsScalarVector3D = TypeSpec('PyFunctionVector3DmbsScalarVector3D')
+TPyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D = TypeSpec('PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D')
+TPyFunctionVector6DmbsScalarIndexVector6D = TypeSpec('PyFunctionVector6DmbsScalarIndexVector6D')
+TPyFunctionVectorMbsScalarArrayIndexVectorConfiguration = TypeSpec('PyFunctionVectorMbsScalarArrayIndexVectorConfiguration')
+TPyFunctionVectorMbsScalarIndex2Vector = TypeSpec('PyFunctionVectorMbsScalarIndex2Vector')
+TPyFunctionVectorMbsScalarIndex2VectorBool = TypeSpec('PyFunctionVectorMbsScalarIndex2VectorBool')
+TPyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D = TypeSpec('PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D')
+TPyFunctionVectorMbsScalarIndexVector = TypeSpec('PyFunctionVectorMbsScalarIndexVector')
+TPyMatrixContainer                 = TypeSpec('PyMatrixContainer')
+TResizableMatrix                   = TypeSpec('ResizableMatrix')
+TResizableVector                   = TypeSpec('ResizableVector')
+TResizableVectorParallel           = TypeSpec('ResizableVectorParallel')
+TSTDstring                         = TypeSpec('STDstring')
+TSensorType                        = TypeSpec('SensorType')
+TStdArray33F                       = TypeSpec('StdArray33F')
+TString                            = TypeSpec('String')
+TTemporaryComputationData          = TypeSpec('TemporaryComputationData')
+TTemporaryComputationDataArray     = TypeSpec('TemporaryComputationDataArray')
+TTransformation66List              = TypeSpec('Transformation66List')
+TVector                            = TypeSpec('Vector')
+TVector2DList                      = TypeSpec('Vector2DList')
+TVector3DList                      = TypeSpec('Vector3DList')
+TVector6DList                      = TypeSpec('Vector6DList')
+Tbool                              = TypeSpec('bool')
+Tvoid                              = TypeSpec('void')
 
 
 #%%************************************************************************************************

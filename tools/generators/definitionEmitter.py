@@ -308,16 +308,97 @@ def DefaultValueExpression(value):
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-def TypeExpression(typeString):
+#the families that definitionTypes.py folds into constructors. Built by INVERTING the tables in
+#that module, so the emitter still states nothing of its own: if a size is added there, it is
+#emittable here on the next run without touching this file.
+rangeForms = {}
+for _base in ('TReal', 'Tfloat', 'TIndex'):
+    for _key, _name in getattr(definitionTypes, _base).constrainedForms.items():
+        _argument = ({'minimum': 'minimum=0', 'greaterThan': 'greaterThan=0'}
+                     .get(_key, 'Item' + _key))
+        rangeForms[_name] = _base + '(' + _argument + ')'
+
+arrayForms = {'ArrayIndex': 'TArrayIndex'}
+for _key, _name in definitionTypes.TArrayIndex.constrainedForms.items():
+    arrayForms[_name] = 'TArrayIndex(Item' + _key + ')'
+
+shapeForms = {}
+for _n, _name in definitionTypes.vectorSizes.items():
+    shapeForms[_name] = ('TVectorND(' + str(_n) + ')', str(_n))
+for (_r, _c), _name in definitionTypes.matrixSizes.items():
+    shapeForms[_name] = ('TMatrixND(' + str(_r) + ', ' + str(_c) + ')', str(_r * _c))
+for _n, _name in definitionTypes.indexTupleSizes.items():
+    shapeForms[_name] = ('TIndexND(' + str(_n) + ')', str(_n))
+for _n, _name in definitionTypes.nodeIndexTupleSizes.items():
+    shapeForms[_name] = ('TIndexND(' + str(_n) + ', ItemNode)', str(_n))
+
+#Float3/Float4 and StdArray33F are fixed-shape but have no ND family of their own
+fixedShapes = {'Float3': '3', 'Float4': '4', 'StdArray33F': '3x3', 'Matrix6D': '36'}
+
+#a variable-length container: the old format wrote size=-1 to say "any length"
+variableLength = set(['Vector', 'NumpyVector', 'NumpyMatrix', 'ArrayFloat'] + list(arrayForms))
+
+#three parameters declared Vector6D with size=3, which contradicts their own type, default value,
+#description and GetNumberOfODE2Coordinates - a published documentation error (#2410). The new
+#form cannot express the contradiction, so the stale size is dropped here.
+knownWrongSizes = set([('NodeRigidBodyRotVecLG', 'referenceCoordinates'),
+                       ('NodeRigidBodyRotVecLG', 'initialCoordinates'),
+                       ('NodeRigidBodyRotVecLG', 'initialVelocities')])
+
+
+def TypeExpression(typeString, size='', isFunction=False, owner=''):
+    """The type as a constructor call carrying its shape and range, or a plain name.
+
+    Returns (expression, leftoverSize). leftoverSize is always '' today: every declared size is
+    either implied by the type or becomes an argument of it - measured over all 338 members that
+    carry one. It is returned rather than asserted away so that a future size the type cannot
+    express is reported instead of silently lost."""
+    size = (size or '').strip()
+
+    #a function's size was never meaningful - the legend says size is "used for variables and
+    #vectors and matrices only", and the 4 that carry one are all 'void' with a size
+    if isFunction:
+        size = ''
+
+    if typeString in shapeForms:
+        expression, implied = shapeForms[typeString]
+        if size and size != implied and (owner not in knownWrongSizes):
+            raise ValueError(str(owner) + ': type ' + typeString + ' implies size ' + implied
+                             + ' but size=' + size + ' is declared')
+        return expression, ''
+
+    if typeString in rangeForms:
+        return rangeForms[typeString], ''
+
+    if typeString in arrayForms:
+        #a real length constraint (2 markers on a connector, 3 constrained axes) belongs in the
+        #type. -1 is kept explicit rather than treated as "absent": the structures dialog turns an
+        #absent size into {1}, so dropping it would change what the dialog reports.
+        argument = '' if size == '' else 'size=' + size
+        expression = arrayForms[typeString]
+        if argument:
+            expression = (expression + '(' + argument + ')' if '(' not in expression
+                          else expression[:-1] + ', ' + argument + ')')
+        return expression, ''
+
+    if size:
+        if typeString in fixedShapes and size == fixedShapes[typeString]:
+            size = ''                      #implied by the type
+        elif size == '1':
+            #a scalar: says nothing, and the structures dialog emits {1} for an absent size anyway
+            size = ''
+        #size=-1 ("any length") on a container that is not in the ArrayIndex family falls through
+        #to leftoverSize and stays written, because dropping it would make the dialog report {1}
+
     name = TypeConstantName(typeString)
     if name is not None:
-        return name
+        return name, size
 
-    return StringLiteral(typeString, raw=False)
+    return StringLiteral(typeString, raw=False), size
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-def EmitMember(parameter, source):
+def EmitMember(parameter, source, className=chr(39)+chr(39)):
     """One member as a constructor call. type / destination / flags go on the FIRST line, because
     together they classify the member; everything else follows one per line so that a changed
     description stays a one-line diff."""
@@ -351,7 +432,10 @@ def EmitMember(parameter, source):
                                 else ' has the S flag but is not a structure defined here'))
         cFlags = cFlags.replace('S', '')
 
-    head = ['type=' + TypeExpression(typeString)]
+    typeExpression, leftoverSize = TypeExpression(
+        typeString, parameter.get('size', ''), isFunction,
+        (className, parameter.get('pythonName', '')))
+    head = ['type=' + typeExpression]
     if source == 'items':
         head.append('destination=' + FlagExpression(parameter.get('destination', ''),
                                                     itemDestinations))
@@ -371,8 +455,10 @@ def EmitMember(parameter, source):
     if cpp and cpp != parameter.get('pythonName', ''):
         body.append(('cplusplusName', StringLiteral(cpp, raw=False)))
 
-    if parameter.get('size', ''):
-        body.append(('size', StringLiteral(parameter['size'], raw=False)))
+    if leftoverSize:
+        #nothing reaches this today; it exists so a size the type cannot express is written out
+        #and visible, rather than dropped
+        body.append(('size', StringLiteral(leftoverSize, raw=False)))
 
     if isFunction:
         if parameter.get('args', ''):
@@ -445,7 +531,7 @@ def EmitDefinition(definition):
 
     lines.append('    members=[')
     for parameter in definition['parameters']:
-        lines.append(EmitMember(parameter, source))
+        lines.append(EmitMember(parameter, source, parseInfo.get("class", "")))
     lines.append('        ],')
     lines.append('    ))')
     lines.append('')

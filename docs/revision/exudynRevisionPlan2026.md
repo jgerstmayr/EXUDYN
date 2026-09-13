@@ -935,6 +935,40 @@ The core investment. Every step is validated byte-for-byte by step 2.
     so the intent that makes a bad parameter fail early in `itemInterface` is lost at the C++
     boundary; typedefs would preserve it in the core.
 
+    **Done 2026-09-13, second of three commits — constraints move into the type.** A type is now
+    a `str` subclass carrying its constraints, so it compares and hashes exactly like the plain
+    name the generators already look up and nothing downstream changes, while `minimum`,
+    `greaterThan` and `size` travel with it. 32 flat names fold into six constructors:
+    `TReal(minimum=0)` / `TReal(greaterThan=0)` for `UReal` / `PReal` (and the same for
+    `Tfloat`, `TIndex`), `TIndex(ItemNode)` for the five `*Index` types, `TArrayIndex(ItemMarker,
+    size=2)` for the five array types, `TVectorND(n)` for `Vector2D..Vector9D`, `TMatrixND(r, c)`
+    and `TIndexND(n)`. Only sizes for which a C++ type exists are accepted, so `TVectorND(5)`
+    fails at emit time rather than at the compiler.
+
+    **`size=` is gone as a field** — it was never validated anywhere (`:904` still says *"future:
+    also add size check ..."*) and it was populated inconsistently: 34 of 225 structure `bool`
+    members declared `size=1`, and 124 of 240 item `Vector3D` members declared nothing. Folding
+    the shape into the type normalises that. Every one of the 338 declared sizes is accounted for,
+    with **zero unexplained losses**:
+
+    | | |
+    |---|---|
+    | 116 | dropped from **functions**, where the legend's own wording (`:1839`) says size applies to "variables and vectors and matrices only" |
+    | 103 | **gained** — the shape is now stated where nothing was declared (this will add size to those documentation rows once the new generators read these files) |
+    | 73 | scalar `size=1` dropped — provably a no-op, since `systemStructures:697` already emits `{1}` for an absent size |
+    | 3 | **corrected**: #2410 |
+    | 1 | `size=-1` on `ArrayFloat` kept explicit, because dropping it would make the dialog report `{1}` instead of `{-1}` |
+
+    Raised **#2410 (FIX)**: `NodeRigidBodyRotVecLG` declares `referenceCoordinates`,
+    `initialCoordinates` and `initialVelocities` as `Vector6D` with `size=3`, so the published
+    reference tables say "type = Vector6D, size = 3". Everything else says 6 — the class
+    description, `GetNumberOfODE2Coordinates`, the six-entry default and the LaTeX symbol. The
+    new form cannot express the contradiction, which is how it surfaced.
+
+    Verified: the round-trip is lossless on **every field except size**, size is reported
+    category by category instead of being silently normalised, and all **11 154** lookups through
+    `typeConversion`, `typeCasts` and `type2PyTyping` resolve identically to the old flat names.
+
     **31c — the documentation format**, scheduled *with* step 50, since both need the same
     converter and the same macro decision.
 

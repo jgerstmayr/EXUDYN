@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.47.dev1, 
 +  last change =  2026-09-13, 
-+  Number of issues = 2410, 
++  Number of issues = 2411, 
 +  Number of resolved issues = 2120 (47 in current version), 
 
 ************
@@ -7019,6 +7019,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 2410:** NodeRigidBodyRotVecLG documents size 3 for three Vector6D parameters
+    - issue author: Claude-JG
+    - description:  referenceCoordinates, initialCoordinates and initialVelocities of NodeRigidBodyRotVecLG are declared with type Vector6D but size 3, so the generated reference tables publish "type = Vector6D, size = 3". Everything else says 6: the class description ("3 displacement coordinates and three rotation coordinates"), GetNumberOfODE2Coordinates returns 6, the default value has six entries, and the LaTeX symbol lists six components. The size column is simply wrong in the published documentation. Note that size is currently used for documentation only and is validated nowhere - see the generator note "future: also add size check ..." at pythonAutoGenerateObjects.py:904 - which is why this could go unnoticed. Found during revision plan step 31b, where shape becomes part of the type and the two can no longer disagree.
+    - date raised: 2026-09-13 
 
  * **open issue 2409:** the constrained parameter types PReal UReal PInt UInt are lost at the C++ boundary
     - issue author: Claude-JG
