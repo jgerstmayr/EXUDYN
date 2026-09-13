@@ -975,10 +975,72 @@ The core investment. Every step is validated byte-for-byte by step 2.
     returns `"Invalid"`. It reaches users at `CSolverBase.cpp:1960`, which writes
     `#OutputVariableType = Invalid` into the sensor solution file header, and at
     `VisualizationSettings.h:486`. Fixed as part of this step, not before, since the registrator
-    is what makes the whole class of drift impossible. *Open question for the maintainer:*
-    `KineticEnergy` and `PotentialEnergy` exist in the enum and in
-    `GetOutputVariableTypeString()` but are **not** exposed via `AddEnumValue`, so they are
-    unreachable from Python — deliberate, or a fifth drift?
+    is what makes the whole class of drift impossible.
+
+    **Decided:** `KineticEnergy` and `PotentialEnergy` are kept and **exposed to
+    Python** as part of this step. They exist in the enum (bits 32 and 33) and in
+    `GetOutputVariableTypeString()` but have no `AddEnumValue`, so they are unreachable
+    from Python today. Usage is currently little to none, but they are needed in future,
+    and the registrator table is the natural place to add them once rather than in four.
+
+    **31e - simplify and group the type and flag vocabulary.** The format review ended with
+    the maintainer's observation that 172 distinct types is more than a reader can cope with.
+    Measured from the emitted definitions (a lossless round-trip, so these are the real data):
+
+    **Items and structures barely share a vocabulary.** 172 distinct types: **95 used by
+    items, 95 by structures, only 18 by both**. So the two sets should be documented and
+    grouped separately; a single flat list is what makes it look unmanageable.
+
+    **44 of the 172 types are not types at all - they are structure class names.** Every one
+    of the 71 `SFSubstructure` members has as its type a class defined in the same definition
+    files, and 35 of those types are used exactly once. `VSettingsBeams` ... 
+    `VSettingsWindowDeprecated` are the visible case, and the maintainer's recollection that
+    they are local and self-syncing is exactly right. They need no `T` constant: the
+    definition itself is the reference. That removes about a quarter of the vocabulary, and
+    the `SFSubstructure` flag becomes **derivable** rather than declared - it is precisely
+    'the type is a class defined here', with a perfect 1:1 match today.
+
+    **Eight flags have ZERO uses.** Items: `CFModifiable` (M), `CFNeedsReset` (N),
+    `CFNoOverride` (X), `CFPybind` (P). Structures: `SFAddAccess` (A), `SFModifiable` (M),
+    `SFReadOnly` (R), `SFReturnMove` (O). Four generator branches are therefore provably
+    dead: `pythonAutoGenerateObjects.py:1366`, `:1493`, `:1500` and
+    `pythonAutoGenerateSystemStructures.py:594`. Remove the flags and the branches together.
+    Two more are near-zero and worth a decision rather than a habit: `CFVisualization` (V) has
+    **one** use, in NodeRigidBodyEP, and is undocumented in the legend; `CFReadOnly` has 28.
+
+    **`TReal` / `TUReal` / `TPReal` are not three types - they are one type with a range
+    constraint.** All three become `Real` in C++ and `float` in the Python stubs; what the U
+    and P prefixes actually do is make `IsTypeWithRangeCheck`
+    (`pythonAutoGenerateObjects.py:256`) true, which emits a `CheckForValidUReal` /
+    `CheckForValidPReal` guard into the Python item interface (`:2246-2272`). Same for
+    `UInt` / `PInt` against `Index`. So the unification is a constrained type - `TReal`,
+    `TReal(minimum=0)`, `TReal(exclusiveMinimum=0)` - not four more names; and it generalises,
+    since a range is what several parameters would want anyway.
+
+    **The index family collapses the same way.** `NodeIndex`, `ObjectIndex`, `MarkerIndex`,
+    `LoadIndex`, `SensorIndex` are all `Index` in C++ (the generator says so in its own
+    comment at `:1802`: 'in C++, all indices are the same!!!'), and the five Array* variants
+    are all `ArrayIndex`. They differ only in the Python type they present. That is
+    `TIndex(Node)` / `TArrayIndex(Node)`, one function with a checked argument.
+
+    **The vector and matrix families are the maintainer's `TVectorND(3)` case.** Items use
+    `Vector2D/3D/4D/6D/7D/9D` (280 uses, `Vector3D` alone 240) plus `Float3`/`Float4`,
+    `Vector2DList`/`Vector3DList`/`Vector6DList`, `Matrix2D/3D/6D`. A `TVectorND(n)` /
+    `TMatrixND(n)` that accepts only the sizes for which a C++ type actually exists is both
+    fewer names and a real check - today a typo like `Vector5D` would reach the compiler.
+
+    **What stays irreducible:** 19 distinct `PyFunction*` user-function signatures (34 uses,
+    11 used exactly once) and 10 types that are C++ template expressions (24 uses). These are
+    signatures, not a vocabulary; they are already excluded from the constants and stay
+    strings.
+
+    So the target shape is roughly **a dozen grouped constructors** - scalars with optional
+    ranges, indices by item kind, fixed-size vectors and matrices, lists, the handful of
+    genuine C++ types, and function signatures as strings - in place of 172 flat names, with
+    the item and structure groups documented apart. **Prerequisite for the analysis:** each
+    candidate must be checked against `typeConversion` (`pythonAutoGenerateObjects.py:1801`),
+    `typeCasts` (`:417`) and `type2PyTyping` (`:109`), which are what actually decide the C++
+    and Python spelling - a unification that does not reproduce those three is not correct.
 
 32. Define a schema and validate on load with file- and line-accurate messages.
 33. Split the monolith into an IR plus independent emitters — C++ headers, pybind, stubs, item
