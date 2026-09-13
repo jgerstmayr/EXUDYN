@@ -591,15 +591,6 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                 refChar = ''
 
             accessWritten = False
-            if parameter['cFlags'].find('A') != -1 and not IDPNS:
-                accessWritten = True
-                s+='  //! AUTO: Read (Reference) access to: ' + Str2Doxygen(ParameterDescription(parameter)) + '\n'
-                s+='  const ' + typeStr + refChar + ' '
-                s+='Get' + functionStr + '() const { return '+paramAccessStr+'; }\n'
-    
-                s+='  //! AUTO: Write (Reference) access to: ' + Str2Doxygen(ParameterDescription(parameter)) + '\n'
-                s+='  '+typeStr + '&' + ' '
-                s+='Get' + functionStr + '() { return ' + paramAccessStr + '; }\n'
 
             typeWithRangeCheck = IsTypeWithRangeCheck(origType)
             typeWithGetSetFunction = IsTypeWithSetGetFunction(origType) or IDPNS

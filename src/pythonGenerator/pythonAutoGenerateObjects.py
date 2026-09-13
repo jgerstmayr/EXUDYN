@@ -1363,8 +1363,9 @@ def WriteFile(parseInfo, parameterList, typeConversion):
             if (parameter['lineType'].find('F') != -1):
                 if (parameter['lineType'].find('v') != -1):
                     strVirtual = 'virtual '
-                    if parameter['cFlags'].find('X') == -1:
-                        strOverride = ' override'
+                    #every virtual function overrides a parent function; the 'X' flag that used
+                    #to suppress this was never set by any definition and has been removed
+                    strOverride = ' override'
                 if (parameter['lineType'].find('s') != -1): #static
                     strVirtual = 'static ' + strVirtual
                 
@@ -1468,45 +1469,6 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     s = [sList[0]+sList[2], sList[1]+sList[3], sList[4], plr.sLatex, sLatexItemList, 
          classTypeStr, sPythonClass, plr.sRST, [symbolicUserFunctionSet]] #s[7] = plr string, s[5]=class type (e.g. Node)
     #,symbolicUserFunctionArgs]] 
-
-    return s
-
-#**************************************************************************************
-#**************************************************************************************
-#**************************************************************************************
-#create string containing the pybind11 headers/modules for a class
-def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
-    #print ('Create Pybind11 includes')
-
-    spaces1 = space4            #first level
-    spaces2 = spaces1+space4    #second level
-
-    s = spaces1 + '//++++++++++++++++++++++++++++++++\n' #create empty string
-    #************************************
-    #class definition:
-    s += spaces1 + 'py::class_<' + parseInfo['class'] + '>(m, "' + parseInfo['class'] + '") // #\n'
-    s += spaces2 + '.def(py::init<>())\n'
-	
-    #************************************
-    #member variables access:
-    for parameter in parameterList:
-        if ((parameter['lineType'] == 'V') | (parameter['lineType'] == 'V')) & (parameter['cFlags'].find('P') != -1): #only if it is a member variable
-            s += spaces2 + '.def_readwrite("' + parameter['pythonName'] + '", &' + parseInfo['class'] + '::' + parameter['pythonName'] + ')\n' #extend this to incorporate 'read only' and other flags
-
-    #s += '\n'
-    s += spaces2 + '// # access functions for ' + parseInfo['class'] + '\n'
-            
-    for parameter in parameterList:
-        if (parameter['lineType'].find('F') != -1) & (parameter['cFlags'].find('P') != -1): #only if it is a member variable
-            s += spaces2 + '.def("' + parameter['pythonName']
-            s += '", &' + parseInfo['class'] + '::' + parameter['pythonName']
-            s += ', py::return_value_policy::reference)\n' #extend this to incorporate 'read only' and other flags
-    
-    s += spaces2 + '; // # end of class definition!!!\n'
-    s += '\n'
-
-    s += spaces1 + '//++++++++++++++++++++++++++++++++\n' #end of pybind11 definition
-
 
     return s
 
@@ -2104,14 +2066,6 @@ try: #still close file if crashes
                                     miniExamplesList += [parseInfo['class']+'.py']
 
                                 #++++++++++++++++++++++++++++++
-                                #write Python/pybind11 includes
-# not needed now:
-#                                    if parseInfo['writePybindIncludes'] == 'True':
-#                                        pybindStr = CreatePybindHeaders(parseInfo, parameterList, typeConversion)
-#                                        file=open(pybindFile,'a')  #always append to pybind file
-#                                        file.write(pybindStr)
-#                                        file.close()
-                                
                                 #++++++++++++++++++++++++++++++
                                 #reset structures for next file
                                 totalNumberOfLines += CountLines(fileStr[0]) + CountLines(fileStr[1]) + CountLines(fileStr[2])

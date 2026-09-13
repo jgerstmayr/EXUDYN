@@ -144,6 +144,15 @@ structureGroups = [
         'PyBeamSection', 'BeamSectionGeometry']),
     ]
 
+#every structure class, from the groups above - which WriteStructureDefinitions already checks
+#both ways (a named class that was not parsed, and a parsed class in no group), so this is not a
+#second list to maintain. A member whose TYPE is one of these names refers to the definition
+#itself and needs no constant; the emitter checks the name exists, which is stronger than a
+#constant, since a constant only verifies spelling.
+structureClassNames = set()
+for _, _classNames in structureGroups:
+    structureClassNames.update(_classNames)
+
 plainIdentifier = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
 
 
@@ -225,6 +234,10 @@ def TypeConstantName(typeString):
     An identifier-shaped type with no constant is an ERROR, not a fallback to a bare string: that
     is exactly the silent drift definitionTypes.py exists to prevent."""
     if not plainIdentifier.match(typeString or ''):
+        return None
+
+    #a structure name is not vocabulary - it points at a definition in these same files
+    if typeString in structureClassNames:
         return None
 
     if typeString not in typeConstants:
@@ -323,11 +336,26 @@ def EmitMember(parameter, source):
         constructor = 'StructureFunction' if isFunction else 'StructureParameter'
         flagTable = structureFlags
 
-    head = ['type=' + TypeExpression(parameter.get('type', ''))]
+    typeString = parameter.get('type', '')
+    cFlags = parameter.get('cFlags', '') or ''
+
+    #SFSubstructure is DERIVED, not written: for a structure it says exactly "the type is one of
+    #the classes defined here", which holds for all 71 of them. Writing it again is a second
+    #statement of the same fact, and two statements can disagree. The assertion below is what a
+    #future disagreement hits instead of the reader.
+    if source == 'structures':
+        isSubstructure = typeString in structureClassNames
+        if isSubstructure != ('S' in cFlags):
+            raise ValueError(parameter.get('pythonName', '?') + ': type ' + repr(typeString)
+                             + (' names a structure but has no S flag' if isSubstructure
+                                else ' has the S flag but is not a structure defined here'))
+        cFlags = cFlags.replace('S', '')
+
+    head = ['type=' + TypeExpression(typeString)]
     if source == 'items':
         head.append('destination=' + FlagExpression(parameter.get('destination', ''),
                                                     itemDestinations))
-    head.append('cFlags=' + FlagExpression(parameter.get('cFlags', ''), flagTable))
+    head.append('cFlags=' + FlagExpression(cFlags, flagTable))
     for name, active in (('isVirtual', isVirtual), ('isStatic', isStatic),
                          ('isLinked', isLinked), ('fromParent', fromParent)):
         if active:

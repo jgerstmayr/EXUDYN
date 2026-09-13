@@ -913,6 +913,28 @@ The core investment. Every step is validated byte-for-byte by step 2.
     constant — a typo is then a `NameError` instead of an output variable that silently
     never matches.
 
+    **Done 2026-09-13, first of three commits — subtraction only.** The 8 zero-use flags are
+    removed, with the dead generator code they guarded: `CreatePybindHeaders` in
+    `pythonAutoGenerateObjects.py` had its only call site commented out, so the whole function
+    went (39 lines) rather than just its two unreachable branches; the `X` guard on `override`
+    was always true and is now unconditional; the `A` branch in
+    `pythonAutoGenerateSystemStructures.py` never ran. 47 lines in all, with **byte-identical
+    generated output**.
+
+    45 type constants that only named a structure defined in the same files are gone too: such a
+    type now refers to the definition, and the emitter checks that the name exists - a stronger
+    check than a constant, which only verifies spelling. `SFSubstructure` is **derived** rather
+    than declared, since it means exactly "the type names a structure defined here". *Measured
+    before deriving:* that equivalence holds for all 71 structure members with **zero**
+    exceptions; the two items typed `BeamSectionGeometry` are not counter-examples, because `S`
+    is a structure flag and items never carry it. The emitter now raises if the two ever
+    disagree.
+
+    Raised **#2409 (EXTENSION)** on maintainer request: `PReal` / `UReal` / `PInt` / `UInt` are
+    mapped onto plain `Real` / `Index` by `typeConversion` (`pythonAutoGenerateObjects.py:1801`),
+    so the intent that makes a bad parameter fail early in `itemInterface` is lost at the C++
+    boundary; typedefs would preserve it in the core.
+
     **31c — the documentation format**, scheduled *with* step 50, since both need the same
     converter and the same macro decision.
 

@@ -32,27 +32,21 @@ DestParam            = 'P'   #parameter structure
 
 #--------------------------------------------------------------------- flags (items)
 CFReadOnly           = 'R'   #read only; functions are always read only
-CFModifiable         = 'M'   #modifiable during simulation
-CFNeedsReset         = 'N'   #parameter change needs object reset
 CFConst              = 'C'   #const member function
 CFMutable            = 'U'   #mutable: may be modified in const functions (temporary vectors)
 CFInterface          = 'I'   #dictionary interface
 CFDeclarationOnly    = 'D'   #declaration only; implementation written by hand in the .cpp
 CFOptional           = 'O'   #optional parameter in the dictionary; otherwise the default
-CFPybind             = 'P'   #write the pybind11 interface
-CFNoOverride         = 'X'   #does not override the parent function
 CFVisualization      = 'V'   #UNDOCUMENTED in the legend; one single use, in NodeRigidBodyEP
 
 #--------------------------------------------------------------------- flags (structures)
-SFAddAccess          = 'A'   #add access functions, e.g. const Real& / Real&
 SFNoDictType         = 'D'   #no dictionary with type info - NOTE: the legend gives D twice, also
                              #as "definition only"; the generator decides by context
-SFSubstructure       = 'S'   #substructure, e.g. Newton
+#NOTE: there is no SFSubstructure constant. 'substructure' is DERIVED - it means exactly
+#      'the type names one of the structures defined in these files', which held for all 71
+#      of them, so declaring it as well was a second statement of the same fact.
 SFReturnCopy         = 'V'   #return value policy: copy
-SFReturnMove         = 'O'   #move return policy
 SFPybindArgs         = 'G'   #add args for pybind
-SFReadOnly           = 'R'   #read only
-SFModifiable         = 'M'   #modifiable during simulation
 SFConst              = 'C'   #const function
 SFPybind             = 'P'   #write the pybind11 interface
 SFDeprecated         = 'X'   #deprecated; the description links to the relocated value
@@ -116,6 +110,9 @@ ObjectTypeFiniteElement = 'FiniteElement'
 ObjectTypeSuperElement  = 'SuperElement'
 
 #--------------------------------------------------------------------- types
+#A type that NAMES A STRUCTURE defined in these files gets no constant: it refers to
+#the definition itself, which the emitter checks exists. That is a stronger check than
+#a constant (which only verifies spelling) and it removed 45 single-use names.
 #Only identifier-shaped types get a constant; a type that is a C++ expression stays a plain
 #string, because naming "template<class TReal> void" would give a single-use constant longer
 #than the thing it names. The name keeps the type's own spelling: 'Bool' and 'bool' are BOTH
@@ -129,7 +126,6 @@ TArrayNodeIndex                    = 'ArrayNodeIndex'
 TArrayObjectIndex                  = 'ArrayObjectIndex'
 TArraySensorIndex                  = 'ArraySensorIndex'
 TBeamSection                       = 'BeamSection'
-TBeamSectionGeometry               = 'BeamSectionGeometry'
 TBodyGraphicsData                  = 'BodyGraphicsData'
 TBodyGraphicsDataList              = 'BodyGraphicsDataList'
 TBool                              = 'Bool'
@@ -138,17 +134,13 @@ TCObjectType                       = 'CObjectType'
 TCSolverExplicitTimeInt            = 'CSolverExplicitTimeInt'
 TCSolverImplicitSecondOrderTimeIntUserFunction = 'CSolverImplicitSecondOrderTimeIntUserFunction'
 TCSolverStatic                     = 'CSolverStatic'
-TCSolverTimer                      = 'CSolverTimer'
 TCrossSectionType                  = 'CrossSectionType'
-TDiscontinuousSettings             = 'DiscontinuousSettings'
 TDynamicSolverType                 = 'DynamicSolverType'
-TExplicitIntegrationSettings       = 'ExplicitIntegrationSettings'
 TFileName                          = 'FileName'
 TFloat3                            = 'Float3'
 TFloat4                            = 'Float4'
 TGeneralMatrixEXUdense             = 'GeneralMatrixEXUdense'
 TGeneralMatrixEigenSparse          = 'GeneralMatrixEigenSparse'
-TGeneralizedAlphaSettings          = 'GeneralizedAlphaSettings'
 THomogeneousTransformation         = 'HomogeneousTransformation'
 TIndex                             = 'Index'
 TIndex2                            = 'Index2'
@@ -158,7 +150,6 @@ TInt                               = 'Int'
 TItemType                          = 'ItemType'
 TJointTypeList                     = 'JointTypeList'
 TKeyPressUserFunction              = 'KeyPressUserFunction'
-TLinearSolverSettings              = 'LinearSolverSettings'
 TLinearSolverType                  = 'LinearSolverType'
 TLinkedDataVector                  = 'LinkedDataVector'
 TLoadIndex                         = 'LoadIndex'
@@ -168,12 +159,10 @@ TMatrix2D                          = 'Matrix2D'
 TMatrix3D                          = 'Matrix3D'
 TMatrix3DList                      = 'Matrix3DList'
 TMatrix6D                          = 'Matrix6D'
-TNewtonSettings                    = 'NewtonSettings'
 TNodeIndex                         = 'NodeIndex'
 TNodeIndex2                        = 'NodeIndex2'
 TNodeIndex3                        = 'NodeIndex3'
 TNodeIndex4                        = 'NodeIndex4'
-TNumericalDifferentiationSettings  = 'NumericalDifferentiationSettings'
 TNumpyMatrix                       = 'NumpyMatrix'
 TNumpyMatrixI                      = 'NumpyMatrixI'
 TNumpyVector                       = 'NumpyVector'
@@ -182,7 +171,6 @@ TOutputVariableType                = 'OutputVariableType'
 TPFloat                            = 'PFloat'
 TPInt                              = 'PInt'
 TPReal                             = 'PReal'
-TParallel                          = 'Parallel'
 TPyFunctionGraphicsData            = 'PyFunctionGraphicsData'
 TPyFunctionMatrixContainerMbsScalarIndex2Vector = 'PyFunctionMatrixContainerMbsScalarIndex2Vector'
 TPyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar = 'PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar'
@@ -209,50 +197,14 @@ TResizableVector                   = 'ResizableVector'
 TResizableVectorParallel           = 'ResizableVectorParallel'
 TSTDstring                         = 'STDstring'
 TSensorType                        = 'SensorType'
-TSolutionSettings                  = 'SolutionSettings'
-TSolverConvergenceData             = 'SolverConvergenceData'
-TSolverIterationData               = 'SolverIterationData'
-TSolverOutputData                  = 'SolverOutputData'
-TStaticSolverSettings              = 'StaticSolverSettings'
 TStdArray33F                       = 'StdArray33F'
 TString                            = 'String'
 TTemporaryComputationData          = 'TemporaryComputationData'
 TTemporaryComputationDataArray     = 'TemporaryComputationDataArray'
-TTimeIntegrationSettings           = 'TimeIntegrationSettings'
 TTransformation66List              = 'Transformation66List'
 TUFloat                            = 'UFloat'
 TUInt                              = 'UInt'
 TUReal                             = 'UReal'
-TVSettingsBeams                    = 'VSettingsBeams'
-TVSettingsBodies                   = 'VSettingsBodies'
-TVSettingsCamera                   = 'VSettingsCamera'
-TVSettingsConnectors               = 'VSettingsConnectors'
-TVSettingsContact                  = 'VSettingsContact'
-TVSettingsContour                  = 'VSettingsContour'
-TVSettingsContourAdvanced          = 'VSettingsContourAdvanced'
-TVSettingsDialogs                  = 'VSettingsDialogs'
-TVSettingsExportImages             = 'VSettingsExportImages'
-TVSettingsGeneral                  = 'VSettingsGeneral'
-TVSettingsInteractive              = 'VSettingsInteractive'
-TVSettingsInteractiveAdvanced      = 'VSettingsInteractiveAdvanced'
-TVSettingsKinematicTree            = 'VSettingsKinematicTree'
-TVSettingsLight                    = 'VSettingsLight'
-TVSettingsLoads                    = 'VSettingsLoads'
-TVSettingsMarkers                  = 'VSettingsMarkers'
-TVSettingsMaterial                 = 'VSettingsMaterial'
-TVSettingsNodes                    = 'VSettingsNodes'
-TVSettingsOpenGL                   = 'VSettingsOpenGL'
-TVSettingsOpenGLAdvanced           = 'VSettingsOpenGLAdvanced'
-TVSettingsOpenVR                   = 'VSettingsOpenVR'
-TVSettingsRaytracer                = 'VSettingsRaytracer'
-TVSettingsRaytracerAdvanced        = 'VSettingsRaytracerAdvanced'
-TVSettingsScene                    = 'VSettingsScene'
-TVSettingsSensors                  = 'VSettingsSensors'
-TVSettingsShells                   = 'VSettingsShells'
-TVSettingsTraces                   = 'VSettingsTraces'
-TVSettingsView                     = 'VSettingsView'
-TVSettingsWindow                   = 'VSettingsWindow'
-TVSettingsWindowDeprecated         = 'VSettingsWindowDeprecated'
 TVector                            = 'Vector'
 TVector2D                          = 'Vector2D'
 TVector2DList                      = 'Vector2DList'

@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.47.dev1, 
 +  last change =  2026-09-13, 
-+  Number of issues = 2409, 
++  Number of issues = 2410, 
 +  Number of resolved issues = 2120 (47 in current version), 
 
 ************
@@ -7019,6 +7019,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 2409:** the constrained parameter types PReal UReal PInt UInt are lost at the C++ boundary
+    - issue author: Claude-JG
+    - description:  PReal, UReal, PInt and UInt exist so that a bad parameter fails where the item is created - in itemInterface, through the generated CheckForValid\* guards - instead of surfacing later as a division by zero or a bad size deep in the solver. But typeConversion in pythonAutoGenerateObjects.py:1801 maps all of them onto plain Real resp. Index, so in the C++ core the intent is gone and a reader of the header cannot tell a positive-only quantity from any other Real. Proposal: add typedefs (PReal -> Real, UReal -> Real, PInt -> Index, UInt -> Index) and emit the constrained name into the generated C++, so the documentation value survives into the core. Purely additive; no behaviour change. Raised on maintainer request during revision plan step 31b.
+    - date raised: 2026-09-13 
 
  * **open issue 2400:** computeMassMatrixInversePerBody does not reduce cost unless a sparse solver is also selected
     - issue author: Claude-JG
