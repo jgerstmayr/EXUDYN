@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.47.dev1, 
++  Exudyn version = 1.11.48.dev1, 
 +  last change =  2026-09-13, 
-+  Number of issues = 2411, 
-+  Number of resolved issues = 2120 (47 in current version), 
++  Number of issues = 2414, 
++  Number of resolved issues = 2121 (48 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.48: resolved Issue 2410: NodeRigidBodyRotVecLG documents size 3 for three Vector6D parameters (fix)
+    - issue author: Claude-JG
+    - description:  referenceCoordinates, initialCoordinates and initialVelocities of NodeRigidBodyRotVecLG are declared with type Vector6D but size 3, so the generated reference tables publish "type = Vector6D, size = 3". Everything else says 6: the class description ("3 displacement coordinates and three rotation coordinates"), GetNumberOfODE2Coordinates returns 6, the default value has six entries, and the LaTeX symbol lists six components. The size column is simply wrong in the published documentation. Note that size is currently used for documentation only and is validated nowhere - see the generator note "future: also add size check ..." at pythonAutoGenerateObjects.py:904 - which is why this could go unnoticed. Found during revision plan step 31b, where shape becomes part of the type and the two can no longer disagree.
+    - **notes:** corrected at the source: objectDefinition.py lines 397-399 declared size 3 for three Vector6D members of NodeRigidBodyRotVecLG; the sibling NodeRigidBodyEP block correctly says 6. Regenerated; only the documentation tables changed (tier 1 API surface byte-identical).
+    - date resolved: **2026-09-13 16:38**\ , date raised: 2026-09-13 
+    - resolved by: Claude-JG
  * Version 1.11.47: resolved Issue 2407: setupPyConfig.json was tracked and mutable: CI rewrote it mid-build and an sdist build used different switches (change)
     - issue author: Claude-JG
     - description:  the six build switches had three sources with no written precedence: defaults in setup.py; the committed JSON; and CLI flags. Three consequences. tools/ci/buildManylinux.sh had to rewrite the tracked file with sed and restore it from a trap; so a failed build left the working tree dirty - and step 17 shipped the maintainers local toggles inside the sdist. The defaults disagreed with the committed file (compileParallel and quietCompile were False in setup.py and True in the JSON); so a build WITHOUT the file - an sdist build; legitimately - silently took a slower and louder path than the maintainer runs. And the CLI could only turn switches ON; with quietCompile committed as True there was no way to ask for a verbose build. Revision plan step 82
@@ -7020,9 +7026,19 @@ Version 0.1
 Open issues
 ***********
 
- * **open issue 2410:** NodeRigidBodyRotVecLG documents size 3 for three Vector6D parameters
+ * **open issue 2413:** ObjectContactConvexRoll.pContact is computed state stored in parameters
     - issue author: Claude-JG
-    - description:  referenceCoordinates, initialCoordinates and initialVelocities of NodeRigidBodyRotVecLG are declared with type Vector6D but size 3, so the generated reference tables publish "type = Vector6D, size = 3". Everything else says 6: the class description ("3 displacement coordinates and three rotation coordinates"), GetNumberOfODE2Coordinates returns 6, the default value has six entries, and the LaTeX symbol lists six components. The size column is simply wrong in the published documentation. Note that size is currently used for documentation only and is validated nowhere - see the generator note "future: also add size check ..." at pythonAutoGenerateObjects.py:904 - which is why this could go unnoticed. Found during revision plan step 31b, where shape becomes part of the type and the two can no longer disagree.
+    - description:  pContact is the currently computed contact point; written by the computation and read by the visualization (src/Objects/VisuNodePoint.cpp:2756 via GetPContact()). It lives in the parameter structure; so it is neither part of the system state nor kept per configuration and no history exists. It should be a data variable; which would also make the value available in the visualization configuration rather than whatever the last computation left behind. Found while removing the inert V flag from this member (step 31b).
+    - date raised: 2026-09-13 
+
+ * **open issue 2412:** Google style docstrings are mandatory project wide
+    - issue author: Claude-JG
+    - description:  The convention is nowhere stated; the revision plan even said NumPy style. Decision: Google style docstrings MUST be used throughout for consistency. The rule has to be written into docs/dev/CODING_STYLE.md; CONTRIBUTING.md and CLAUDE.md; and mentioned early in the user documentation so contributors meet it before writing code. griffe and pydoclint both parse Google style; so the planned docstring toolchain (plan steps 36-39) is unaffected apart from a parser argument.
+    - date raised: 2026-09-13 
+
+ * **open issue 2411:** expose item type and shape information to Python
+    - issue author: Claude-JG
+    - description:  Structures have a generated GetDictionaryWithTypeInfo() (pythonAutoGenerateSystemStructures.py:531) that feeds the settings dialog (GUI.py:323). Items have no equivalent; the items dialog therefore shows no types. Proposal: a generated exudyn/types/ subpackage carrying per parameter the type; shape and range; plus nodeType; requestedNodeType and requestedMarkerType (95 / 34 / 36 C-destination members today; none visible from Python). It must not go into itemInterface.py: that module is 390 KB and sits on the exudyn.utilities import path. setup.py:530 already uses find_namespace_packages; so packaging needs no change. Second part: requestedNodeType and requestedMarkerType are written as C++ in the definition today and should become declared type lists from which the accessor is generated. The additive case is the common one; the known hard case is ObjectContactSphereSphere; where the requested marker type is a base list plus one conditional term governed by one parameter (dynamicFriction != 0) - see src/Autogenerated/CObjectContactSphereSphere.h:184. Survey first whether any case needs more than one condition.
     - date raised: 2026-09-13 
 
  * **open issue 2409:** the constrained parameter types PReal UReal PInt UInt are lost at the C++ boundary

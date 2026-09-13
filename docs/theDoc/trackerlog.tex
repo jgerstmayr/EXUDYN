@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.47.dev1, 
+  \item Exudyn version = 1.11.48.dev1, 
   \item last change =  2026-09-13, 
-  \item Number of issues = 2411, 
-  \item Number of resolved issues = 2120 (47 in current version), 
+  \item Number of issues = 2414, 
+  \item Number of resolved issues = 2121 (48 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.48}:  resolved Issue 2410: {\bf NodeRigidBodyRotVecLG documents size 3 for three Vector6D parameters}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: referenceCoordinates, initialCoordinates and initialVelocities of NodeRigidBodyRotVecLG are declared with type Vector6D but size 3, so the generated reference tables publish "type = Vector6D, size = 3". Everything else says 6: the class description ("3 displacement coordinates and three rotation coordinates"), GetNumberOfODE2Coordinates returns 6, the default value has six entries, and the LaTeX symbol lists six components. The size column is simply wrong in the published documentation. Note that size is currently used for documentation only and is validated nowhere - see the generator note "future: also add size check ..." at pythonAutoGenerateObjects.py:904 - which is why this could go unnoticed. Found during revision plan step 31b, where shape becomes part of the type and the two can no longer disagree.}
+    \item {\bf notes: corrected at the source: objectDefinition.py lines 397-399 declared size 3 for three Vector6D members of NodeRigidBodyRotVecLG; the sibling NodeRigidBodyEP block correctly says 6. Regenerated; only the documentation tables changed (tier 1 API surface byte-identical).}
+    \item   date resolved: {\bf 2026-09-13 16:38},
+date raised: 2026-09-13 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.47}:  resolved Issue 2407: {\bf setupPyConfig.json was tracked and mutable: CI rewrote it mid-build and an sdist build used different switches}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

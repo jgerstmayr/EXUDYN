@@ -20,11 +20,11 @@ The item \ **NodeRigidBodyRotVecLG**\  with type = 'RigidBodyRotVecLG' has the f
 
 * | **name** [type = String, default = '']:
   | node's unique name
-* | **referenceCoordinates** [\ :math:`{\mathbf{q}}\cRef = [q_0,\,q_1,\,q_2,\,\nu_0,\,\nu_1,\,\nu_2]\tp\cRef = [{\mathbf{p}}\tp\cRef,\,\tnu\tp\cRef]\tp`\ , type = Vector6D, size = 3, default = [0.,0.,0., 0.,0.,0.]]:
+* | **referenceCoordinates** [\ :math:`{\mathbf{q}}\cRef = [q_0,\,q_1,\,q_2,\,\nu_0,\,\nu_1,\,\nu_2]\tp\cRef = [{\mathbf{p}}\tp\cRef,\,\tnu\tp\cRef]\tp`\ , type = Vector6D, size = 6, default = [0.,0.,0., 0.,0.,0.]]:
   | reference coordinates (position and rotation vector \ :math:`\tnu`\ ) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)
-* | **initialCoordinates** [\ :math:`{\mathbf{q}}\cIni = [q_0,\,q_1,\,q_2,\,\nu_0,\,\nu_1,\,\nu_2]\tp\cIni = [{\mathbf{u}}\tp\cIni,\,\tnu\tp\cIni]\tp`\ , type = Vector6D, size = 3, default = [0.,0.,0., 0.,0.,0.]]:
+* | **initialCoordinates** [\ :math:`{\mathbf{q}}\cIni = [q_0,\,q_1,\,q_2,\,\nu_0,\,\nu_1,\,\nu_2]\tp\cIni = [{\mathbf{u}}\tp\cIni,\,\tnu\tp\cIni]\tp`\ , type = Vector6D, size = 6, default = [0.,0.,0., 0.,0.,0.]]:
   | initial displacement coordinates \ :math:`{\mathbf{u}}`\  and rotation vector \ :math:`\tnu`\  relative to reference coordinates
-* | **initialVelocities** [\ :math:`\dot {\mathbf{q}}\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cIni = [\dot {\mathbf{u}}\tp\cIni,\,\dot \tnu\tp\cIni]\tp`\ , type = Vector6D, size = 3, default = [0.,0.,0., 0.,0.,0.]]:
+* | **initialVelocities** [\ :math:`\dot {\mathbf{q}}\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cIni = [\dot {\mathbf{u}}\tp\cIni,\,\dot \tnu\tp\cIni]\tp`\ , type = Vector6D, size = 6, default = [0.,0.,0., 0.,0.,0.]]:
   | initial velocity coordinate: time derivatives of displacement and angular velocity vector
 * | **visualization** [type = VNodeRigidBodyRotVecLG]:
   | parameters for visualization of item

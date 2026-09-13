@@ -516,9 +516,9 @@ The item \mybold{NodeRigidBodyRotVecLG} with type = 'RigidBodyRotVecLG' has the 
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     node's unique name\\ \hline
-    referenceCoordinates &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     \tabnewline reference coordinates (position and rotation vector $\tnu$) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)\\ \hline
-    initialCoordinates &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     \tabnewline initial displacement coordinates $\uv$ and rotation vector $\tnu$ relative to reference coordinates\\ \hline
-    initialVelocities &     Vector6D &     3 &     [0.,0.,0., 0.,0.,0.] &     \tabnewline initial velocity coordinate: time derivatives of displacement and angular velocity vector\\ \hline
+    referenceCoordinates &     Vector6D &     6 &     [0.,0.,0., 0.,0.,0.] &     \tabnewline reference coordinates (position and rotation vector $\tnu$) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)\\ \hline
+    initialCoordinates &     Vector6D &     6 &     [0.,0.,0., 0.,0.,0.] &     \tabnewline initial displacement coordinates $\uv$ and rotation vector $\tnu$ relative to reference coordinates\\ \hline
+    initialVelocities &     Vector6D &     6 &     [0.,0.,0., 0.,0.,0.] &     \tabnewline initial velocity coordinate: time derivatives of displacement and angular velocity vector\\ \hline
     visualization &     VNodeRigidBodyRotVecLG &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
 \end{center}
