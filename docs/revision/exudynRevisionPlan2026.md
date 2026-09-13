@@ -871,7 +871,7 @@ The core investment. Every step is validated byte-for-byte by step 2.
       `types=[MarkerPosition], conditional=[(MarkerOrientation, 'dynamicFriction != 0')]`.
       **Survey first** whether any case in the tree needs more than one condition; if none does,
       that is the whole grammar.
-    - **31g - values become values.** Open; to be done before Phase 3 closes. Every value in the
+    - **31g - values become values. DONE 2026-09-13.** Every value in the
       definition files is still a string, so `defaultValue=DVZeroReal` reads as text where a
       number is meant and neither search-and-replace nor a type checker can see through it.
       `DVTrue`/`DVFalse` become `True`/`False`, `DVZeroReal` becomes `0.`, `DVZeroIndex` becomes
@@ -1545,3 +1545,4 @@ the tracker.
 - **#2413** (EXTENSION) ObjectContactConvexRoll.pContact is computed state stored in parameters
 - **#2414** (DOCU) AngularVelocityLocal output variable description says velocity not angular velocity
 - **#2415** (BUG) a changed class description never reaches the generated headers
+- **#2416** (CHECK) VSettingsNodes.showNodalSlopes is a boolean flag declared as UInt

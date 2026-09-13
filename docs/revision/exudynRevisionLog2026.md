@@ -1648,6 +1648,49 @@ Generated result of this commit: the 19 literals in the C++ headers and `itemInt
 19 in the reference tables, and that one `@brief`. Windows wheel built, full `runTestSuite.py`
 PASSED.
 
+**Done 2026-09-13, 31g - default values become values.** 1045 of 1695 parameter defaults are now
+real Python values instead of strings: **371 booleans, 359 floats, 173 integers and 142 named
+constants**. `defaultValue=DVZeroReal` reads `defaultValue=0.`, `DVTrue` reads `True`, and a
+search-and-replace or a type checker can finally see through them.
+
+**The C++ spelling is computed, and the computation is checked rather than trusted.**
+`CppFloatLiteral` in `definitions/definitionTypes.py` writes an integral float with a trailing dot
+and no zero (`0.`, `1.`, `-1.`), uses exponent form exactly where Python's `repr()` does - with the
+`+` and any leading exponent zeros stripped, so `1e+38` and `1e-08` become `1e38` and `1e-8` - and
+takes the `f` suffix from the **declared type**, never from the value, which works because every
+suffixed default sits on a float type. The emitter writes a number only when it renders back to the
+original text character for character; anything it cannot reproduce stays a string and stays
+visible. That is why `VSettingsTraces.triadSize` is still `'0.1f '`: the stored value has a
+trailing space, which a number cannot carry.
+
+**The composite defaults are a class, not a string.** `DVInvalidIndex`, `DVDefaultColor` and
+`DVZeroVector3D` are `CppValue` objects carrying three renderings - the C++ literal, the Python
+value and a readable form for documentation - because these cannot be derived from one another:
+the Python form of `Float4({-1.f,-1.f,-1.f,-1.f})` is `[-1.,-1.,-1.,-1.]`, which no rule produces
+from the C++ text. The Python renderings were taken from what `DefaultValue2Python`
+(`autoGenerateHelper.py:201`) produces today, not invented.
+
+**The deprecation marker got its own field.** `'1.10.80;EXP=2030'` sat in `defaultValue` on **93
+deprecated structure members** - a deprecated member has no default, so the field was free - and
+the generator reading it says so itself: *"workaround; contains 'version;EXP=....'"*
+(`pythonAutoGenerateSystemStructures.py:149`). It is now
+`deprecated=Deprecated('1.10.80', 2030)`. All 93 carry the same version and year, and no item
+carries the flag at all.
+
+424 defaults remain strings, and they should: they are C++ code, not values - `Vector()`,
+`ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex })`, `EXUmath::unitMatrix3D`,
+`OutputVariableType::_None`.
+
+**Gate: `regenerate.py --check` a no-op in both tiers** - the whole point of the faithful
+formatter, and it held once the 19 ambiguous spellings had been normalised in the preceding commit.
+Round trip lossless (30 193 item + 8 530 structure fields), full `runTestSuite.py` PASSED.
+
+Raised **#2416**: `VSettingsNodes.showNodalSlopes` is a boolean flag declared `UInt` and
+initialised with `false`, generated as `Index showNodalSlopes = false;` with a `GetSafelyUInt`
+range check - so Python accepts any non-negative integer where only 0 and 1 mean anything, and the
+dialog offers a number field instead of a checkbox. It is the **only** boolean default in the whole
+definition set that does not sit on a `bool` type; 370 of 371 do.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving

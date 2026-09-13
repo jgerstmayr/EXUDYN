@@ -50,14 +50,112 @@ SFConst              = 'C'   #const function
 SFPybind             = 'P'   #write the pybind11 interface
 SFDeprecated         = 'X'   #deprecated; the description links to the relocated value
 
-#--------------------------------------------------------------------- repeated default values
-DVInvalidIndex       = 'EXUstd::InvalidIndex'          #an unset index
-DVDefaultColor       = 'Float4({-1.f,-1.f,-1.f,-1.f})' #RGBA -1 means "use the default"
-DVZeroVector3D       = 'Vector3D({0.,0.,0.})'
-DVTrue               = 'true'                          #the C++ literal, not Python True
-DVFalse              = 'false'                         #the C++ literal, not Python False
-DVZeroReal           = '0.'
-DVZeroIndex          = '0'
+#--------------------------------------------------------------------- default values
+#A default value is a real Python value: True, False, 0., 0, 1.5 - not the string '0.'. Three
+#renderings are needed and they differ, so they are computed rather than stored:
+#
+#   C++        the literal written into the generated header      true   0.   -1.f
+#   Python     the value written into itemInterface.py            True   0.   -1.
+#   document   the readable form for the reference tables         True   0.   -1.
+#
+#CppFloatLiteral() is the C++ side for numbers. It has to reproduce the spelling the definitions
+#used, because the generated set is compared byte for byte: an integral float is written with a
+#trailing dot and no zero (0., 1., -1.), exponent form is used exactly where Python's repr() uses
+#it (with the + and any leading exponent zeros stripped, so 1e+38 and 1e-08 become 1e38 and 1e-8),
+#and the f suffix comes from the DECLARED TYPE, never from the value - which is possible because
+#every default carrying a suffix sits on a float type.
+#
+#Values that are neither a number nor a bool - a C++ constructor call or a named C++ constant -
+#are a CppValue, which carries all three renderings explicitly. They cannot be derived: the
+#Python form of Float4({-1.f,-1.f,-1.f,-1.f}) is [-1.,-1.,-1.,-1.], which no rule produces from
+#the C++ text.
+
+
+class CppValue:
+    """A default value that is not a plain Python number or bool: it knows its three renderings."""
+
+    def __init__(self, cpp, python, document=None):
+        self.cpp = cpp
+        self.python = python
+        self.document = document if document is not None else python
+
+    def ToCpp(self):
+        return self.cpp
+
+    def ToPython(self):
+        return self.python
+
+    def ToDocument(self):
+        return self.document
+
+    def __repr__(self):
+        return 'CppValue(' + repr(self.cpp) + ')'
+
+    def __eq__(self, other):
+        return isinstance(other, CppValue) and self.cpp == other.cpp
+
+    def __hash__(self):
+        return hash(self.cpp)
+
+
+#the C++ types whose literals carry an f suffix; the suffix is a property of the type, not of the
+#value, which is why it is never stored with the number
+floatTypeNames = set(['float', 'UFloat', 'PFloat', 'Float3', 'Float4', 'StdArray33F'])
+
+
+def CppFloatLiteral(value, typeName=''):
+    """The C++ spelling of a Python float: 0. / 1. / -1., exponent form only where repr() uses it,
+    and the f suffix taken from the declared type."""
+    suffix = 'f' if str(typeName) in floatTypeNames else ''
+    if value == int(value) and abs(value) < 1e16:
+        return str(int(value)) + '.' + suffix
+
+    text = repr(float(value))
+    if 'e' in text:
+        mantissa, exponent = text.split('e')
+        sign = '-' if exponent.startswith('-') else ''
+        text = mantissa + 'e' + sign + str(int(exponent.lstrip('+-')))
+
+    return text + suffix
+
+
+def CppLiteral(value, typeName=''):
+    """The C++ literal for any default value."""
+    if isinstance(value, CppValue):
+        return value.ToCpp()
+    if isinstance(value, bool):
+        return 'true' if value else 'false'
+    if isinstance(value, float):
+        return CppFloatLiteral(value, typeName)
+    if isinstance(value, int):
+        return str(value)
+
+    return str(value)
+
+
+class Deprecated:
+    """When a member was deprecated and when it is to be removed. This used to be stored in
+    defaultValue as the string 'version;EXP=year' - a deprecated member has no default value, so
+    the field was free - and the generator that reads it says "workaround" in its own comment
+    (pythonAutoGenerateSystemStructures.py:149). Two facts in one string, parsed by splitting on
+    a semicolon, are now two fields."""
+
+    def __init__(self, since, expires):
+        self.since = since
+        self.expires = expires
+
+    def ToCpp(self):
+        """the single string the old format stored"""
+        return str(self.since) + ';EXP=' + str(self.expires)
+
+    def __repr__(self):
+        return 'Deprecated(' + repr(self.since) + ', ' + repr(self.expires) + ')'
+
+
+DVInvalidIndex = CppValue('EXUstd::InvalidIndex', 'exudyn.InvalidIndex()', 'invalid index')
+DVDefaultColor = CppValue('Float4({-1.f,-1.f,-1.f,-1.f})', '[-1.,-1.,-1.,-1.]',
+                          'default colour (RGBA -1 means: use the default)')
+DVZeroVector3D = CppValue('Vector3D({0.,0.,0.})', '[0.,0.,0.]')
 
 #--------------------------------------------------------------------- parent classes (items)
 #CLOSED SETS. A new parent class cannot be introduced by editing a definition file: it needs
@@ -305,7 +403,7 @@ def _member(kind, fields):
 #%%************************************************************************************************
 def ItemParameter(type, destination, pythonName, cFlags='', defaultValue='',
                   size='', args='', cplusplusName='',
-                  description='', fromParent=False):
+                  description='', fromParent=False, deprecated=None):
     return _member('ItemParameter', locals())
 
 
@@ -319,7 +417,7 @@ def ItemFunction(type, destination, pythonName, cFlags='', implementation='',
 #%%************************************************************************************************
 def StructureParameter(type, pythonName, cFlags='', defaultValue='', size='',
                        args='', cplusplusName='',
-                       description='', isLinked=False, fromParent=False):
+                       description='', isLinked=False, fromParent=False, deprecated=None):
     return _member('StructureParameter', locals())
 
 

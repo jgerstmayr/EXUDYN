@@ -75,7 +75,18 @@ def ConstantsWithPrefix(prefix, skipPrefixes=()):
 itemDestinations = ConstantsWithPrefix('Dest')
 itemFlags = ConstantsWithPrefix('CF')
 structureFlags = ConstantsWithPrefix('SF')
-namedDefaultValues = ConstantsWithPrefix('DV')
+#the named composite defaults are CppValue objects now, not strings, so they are collected by
+#their C++ rendering - which is what the old format stored
+namedDefaultValues = {}
+for _name in sorted(vars(definitionTypes).keys()):
+    if _name.startswith('DV'):
+        _value = getattr(definitionTypes, _name)
+        if isinstance(_value, definitionTypes.CppValue):
+            if _value.ToCpp() in namedDefaultValues:
+                raise ValueError('definitionTypes.py: ' + _name + ' and '
+                                 + namedDefaultValues[_value.ToCpp()] + ' both stand for '
+                                 + repr(_value.ToCpp()) + ' - one could never be emitted')
+            namedDefaultValues[_value.ToCpp()] = _name
 typeConstants = ConstantsWithPrefix('T')
 
 #header keys whose value is one of a CLOSED set: a new value needs hand-written C++ as well, so a
@@ -300,11 +311,52 @@ def FlagExpression(flagString, table):
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-def DefaultValueExpression(value):
+def NumberExpression(value, typeName):
+    """The Python literal for a C++ numeric default, or None if it is not a number. The literal is
+    the C++ spelling with the f suffix removed, which is always valid Python and keeps the
+    definition file reading exactly like the value it stands for (0., -1., 1e-8, 0.001).
+
+    It is emitted ONLY if it renders back to the original text. So the check is not a rule that
+    has to be trusted: a spelling the formatter cannot reproduce stays a string and is visible.
+    """
+    #surrounding whitespace is part of the stored value (VSettingsTraces.triadSize is '0.1f '
+    #with a trailing space), and a number cannot carry it, so such a value stays a string
+    if value != value.strip() or not value:
+        return None
+    text = value
+    core = text[:-1] if text.endswith('f') and not text.endswith('lf') else text
+
+    try:
+        number = int(core)
+    except ValueError:
+        try:
+            number = float(core)
+        except ValueError:
+            return None
+
+    if definitionTypes.CppLiteral(number, typeName) != text:
+        return None
+
+    return core
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def DefaultValueExpression(value, typeName=''):
+    """A default value as a real Python value wherever it is one: True/False for the C++ literals,
+    a number for a number, a named constant for the composite ones, a string for the rest (C++
+    constructor calls such as Vector3D({1.,0.,0.}), which are code, not values)."""
     if value == '':
         return None
     if value in namedDefaultValues:
         return namedDefaultValues[value]
+    if value == 'true':
+        return 'True'
+    if value == 'false':
+        return 'False'
+
+    number = NumberExpression(value, typeName)
+    if number is not None:
+        return number
 
     return StringLiteral(value, raw=(chr(92) in value))
 
@@ -466,9 +518,21 @@ def EmitMember(parameter, source, className=chr(39)+chr(39)):
         if parameter.get('args', ''):
             body.append(('args', StringLiteral(parameter['args'], raw=False)))
         if parameter.get('defaultValue', ''):
-            body.append(('implementation', DefaultValueExpression(parameter['defaultValue'])))
+            #a function's 'defaultValue' is its C++ body, which is code and never a value
+            body.append(('implementation',
+                         StringLiteral(parameter['defaultValue'],
+                                       raw=(chr(92) in parameter['defaultValue']))))
     else:
-        default = DefaultValueExpression(parameter.get('defaultValue', ''))
+        #a deprecated member has no default value, so the old format stored the deprecation
+        #version and expiry year there as 'version;EXP=year'. That is two facts in one string and
+        #it is not a default, so it gets its own field.
+        rawDefault = parameter.get('defaultValue', '')
+        if 'X' in cFlags and ';EXP=' in str(rawDefault):
+            since, expires = str(rawDefault).split(';EXP=', 1)
+            body.append(('deprecated',
+                         'Deprecated(' + StringLiteral(since, raw=False) + ', ' + expires + ')'))
+            rawDefault = ''
+        default = DefaultValueExpression(rawDefault, typeString)
         if default is not None:
             body.append(('defaultValue', default))
         if parameter.get('args', ''):

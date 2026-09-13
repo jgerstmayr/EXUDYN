@@ -330,7 +330,7 @@ and hereafter you can access all data and functions via 'solver'.
             description=r'locally computed parameter from generalizedAlpha parameters'),
         StructureParameter(type=Tbool, cFlags='',
             pythonName='isInitialized',
-            defaultValue=DVFalse,
+            defaultValue=False,
             description=r'variable is used to see, if system is initialized ==> avoid crashes; DO not change these variables: can easily lead to crash! '),
         StructureParameter(type=TIndexND(4), cFlags='',
             pythonName='initializedSystemSizes',
