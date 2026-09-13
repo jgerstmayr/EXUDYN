@@ -522,7 +522,7 @@ public: // AUTO:
   bool drawNodesAsPoint;                          //!< AUTO: simplified/faster drawing of nodes; uses general->pointSize as drawing size; if drawNodesAsPoint==True, the basis of the node will be drawn with lines
   bool show;                                      //!< AUTO: flag to decide, whether the nodes are shown
   bool showBasis;                                 //!< AUTO: show basis (three axes) of coordinate system in 3D nodes
-  Index showNodalSlopes;                          //!< AUTO: draw nodal slope vectors, e.g. in ANCF beam finite elements
+  bool showNodalSlopes;                           //!< AUTO: draw nodal slope vectors, e.g. in ANCF beam finite elements
   bool showNumbers;                               //!< AUTO: flag to decide, whether the node number is shown
   Index tiling;                                   //!< AUTO: tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4
 
@@ -555,11 +555,6 @@ public: // AUTO:
   void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
   //! AUTO: Read (Copy) access to: default RGBA color for nodes; 4th value is alpha-transparency
   std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
-
-  //! AUTO: Set function (needed in pybind) for: draw nodal slope vectors, e.g. in ANCF beam finite elements
-  void PySetShowNodalSlopes(const Index& showNodalSlopesInit) { showNodalSlopes = EXUstd::GetSafelyUInt(showNodalSlopesInit,"showNodalSlopes"); }
-  //! AUTO: Read (Copy) access to: draw nodal slope vectors, e.g. in ANCF beam finite elements
-  Index PyGetShowNodalSlopes() const { return Index(showNodalSlopes); }
 
   //! AUTO: Set function (needed in pybind) for: tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4
   void PySetTiling(const Index& tilingInit) { tiling = EXUstd::GetSafelyPInt(tilingInit,"tiling"); }

@@ -358,7 +358,7 @@ definitions.append(StructureDefinition(
             pythonName='defaultColor',
             defaultValue='Float4({0.2f,0.2f,1.f,1.f})',
             description=r'default RGBA color for nodes; 4th value is alpha-transparency'),
-        StructureParameter(type=TIndex(minimum=0), cFlags=SFPybind,
+        StructureParameter(type=Tbool, cFlags=SFPybind,
             pythonName='showNodalSlopes',
             defaultValue=False,
             description=r'draw nodal slope vectors, e.g. in ANCF beam finite elements'),

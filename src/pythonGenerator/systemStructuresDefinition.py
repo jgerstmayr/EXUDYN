@@ -481,7 +481,7 @@ V,      basisSize,                  ,                  ,     float,        "0.2f
 V,      tiling,                     ,                  ,     PInt,         "4",                      , P,      "tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4"
 V,      defaultSize,                ,                  ,     float,        "-1.f",                   , P,      "global node size; if -1.f, node size is relative to openGL.initialMaxSceneSize"
 V,      defaultColor,               ,                  4,    Float4,       "Float4({0.2f,0.2f,1.f,1.f})",, P,  "default RGBA color for nodes; 4th value is alpha-transparency"
-V,      showNodalSlopes,            ,                  ,     UInt,         false,                    , P,      "draw nodal slope vectors, e.g. in ANCF beam finite elements"
+V,      showNodalSlopes,            ,                  ,     bool,         false,                    , P,      "draw nodal slope vectors, e.g. in ANCF beam finite elements"
 #
 writeFile=VisualizationSettings.h
 

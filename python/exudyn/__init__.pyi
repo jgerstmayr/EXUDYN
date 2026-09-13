@@ -1039,7 +1039,7 @@ class VSettingsNodes:
     """flag to decide, whether the nodes are shown."""
     showBasis: bool
     """show basis (three axes) of coordinate system in 3D nodes."""
-    showNodalSlopes: int
+    showNodalSlopes: bool
     """draw nodal slope vectors, e.g. in ANCF beam finite elements."""
     showNumbers: bool
     """flag to decide, whether the node number is shown."""

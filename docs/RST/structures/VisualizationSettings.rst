@@ -233,7 +233,7 @@ VSettingsNodes has the following items:
 * | **showBasis** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.nodes.showBasis``\ 
   | show basis (three axes) of coordinate system in 3D nodes
-* | **showNodalSlopes** [type = UInt, default = False]:
+* | **showNodalSlopes** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.nodes.showNodalSlopes``\ 
   | draw nodal slope vectors, e.g. in ANCF beam finite elements
 * | **showNumbers** [type = bool, default = False]:
