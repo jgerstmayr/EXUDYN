@@ -1059,7 +1059,11 @@ The core investment. Every step is validated byte-for-byte by step 2.
          fragments and the documentation. Enum values go the way `OutputVariableType` went in
          31d. `definitionValidator.py` gains the checks that apply (duplicate names, argument
          lists vs defaults).
-       - **2e - utilitiesDocuGenerator.py is split by concern.** It does three unrelated jobs:
+       - **2e - utilitiesDocuGenerator.py is split by concern. DONE 2026-09-14; the script is
+         deleted.** `utilityDocsModel.py` (the `#**` parser and helpers),
+         `mainSystemExtensionsEmitter.py` (i), `mainSystemExtensionDocsEmitter.py` (ii, now run
+         before `pybindEmitter.py`, which reads its RST), `utilityDocsEmitter.py` (iii);
+         `utilitiesDocuData.npy` is no longer written. Original scope: it does three unrelated jobs:
          (i) it **assembles a shipped module**, `mainSystemExtensions.py`, by copying
          `mainSystemExtensionsHeader.py` (3100 lines of real package code) and appending - that part is replaced by step 35
          (`@extends` registry; the module becomes ordinary package code), so 2e only isolates it;

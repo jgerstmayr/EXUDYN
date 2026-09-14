@@ -10,8 +10,8 @@
 #           output is byte-identical.
 #
 #           Reads src/pythonGenerator/generated/MainSystemCreateExt.rst and MainSystemExt.rst,
-#           written by utilitiesDocuGenerator.py - which tools/regenerate.py runs AFTER this emitter,
-#           so a previous run's files are read; step 33 part 2f makes the order explicit.
+#           written by mainSystemExtensionDocsEmitter.py, which tools/regenerate.py runs before this
+#           emitter (step 33 part 2e; part 2f makes such inputs explicit).
 #
 # Usage:    python tools/generators/pybindEmitter.py
 #

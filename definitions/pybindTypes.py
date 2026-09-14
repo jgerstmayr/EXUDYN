@@ -32,7 +32,7 @@ steeringCalls = {
     'EndNoStub': '',
     'EndStubSection': 'close the stub text of one class; the sections are written in reverse order',
     'CppFinishClass': 'finish the pybind class definition only, without the documentation side',
-    'ExtensionRST': 'append a generated RST file (MainSystem extensions, written by utilitiesDocuGenerator.py)',
+    'ExtensionRST': 'append a generated RST file (MainSystem extensions, written by mainSystemExtensionDocsEmitter.py)',
     }
 
 

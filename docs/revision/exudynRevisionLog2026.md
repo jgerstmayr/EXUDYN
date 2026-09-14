@@ -2028,6 +2028,24 @@ named `Marker::` in its error; `Node::GetTypeString` omitted `GenericODE1` and `
 also names `EndOfEnumList`. Gates: wheel built (`pip wheel`, recompiled), installed, full test
 suite PASSED, regeneration otherwise a no-op.
 
+**Done 2026-09-14, step 33 part 2e - `utilitiesDocuGenerator.py` is deleted.** Its parser and
+helpers (lines 1-690, unchanged) became `tools/generators/utilityDocsModel.py`; the main loop,
+which did three jobs in one pass over the 30 parsed modules, became three emitters, each with its
+own pass (about 5 s together, as before): `mainSystemExtensionsEmitter.py` assembles the shipped
+`mainSystemExtensions.py` (header copy, then one `exu.<Class>.<Function>=...` link per
+`#**belongsTo` function; the header is still written before parsing, because the module parses
+itself), `mainSystemExtensionDocsEmitter.py` writes `MainSystemExt`/`MainSystemCreateExt` `.rst`
+and `.tex` and `stubAutoBindingsExt.pyi`, and `utilityDocsEmitter.py` writes the utility RST,
+`pythonUtilitiesDescription.tex` and `confHelperPyUtilities.py`. The export dictionary for
+`utilitiesDocuData.npy` (no reader) was dropped. The hand-off found in 2d is fixed:
+`regenerate.py` runs `mainSystemExtensionDocsEmitter.py` before `pybindEmitter.py`, so a change of a
+MainSystem extension reaches the C++ interface documentation in one run. Measured: the committed
+script and the three emitters (run from an unrelated directory) write byte-identical
+`mainSystemExtensions.py`, the four extension files, the stub fragment, the tex, the confHelper and
+all 32 RST files; `--check` no-op with the script deleted; full test suite PASSED. Left as found:
+the stub loop writes `stubAutoBindingsExt.pyi` with mode `'w'` per extended class (twice), so a
+second extended class would overwrite the first - only `MainSystem` exists.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving

@@ -46,9 +46,13 @@ generatorScripts = [
     '../../tools/generators/structureHeaderEmitter.py',
     '../../tools/generators/structureStubEmitter.py',
     '../../tools/generators/structureDocsEmitter.py',
+    #the three emitters replacing utilitiesDocuGenerator.py (step 33, part 2e); the MainSystem extension
+    #documentation is read by pybindEmitter.py and must be written before it
+    '../../tools/generators/mainSystemExtensionsEmitter.py',
+    '../../tools/generators/mainSystemExtensionDocsEmitter.py',
+    '../../tools/generators/utilityDocsEmitter.py',
     #replaces autoGeneratePyBindings.py (step 33, part 2d)
     '../../tools/generators/pybindEmitter.py',
-    'utilitiesDocuGenerator.py',
     'createStubFiles.py',
     'doc2rst.py',
     ]

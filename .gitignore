@@ -57,7 +57,7 @@ dist/
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Generator scratch output
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# cached intermediate data written by utilitiesDocuGenerator.py
+# intermediate data formerly written by the generators (no longer written since step 33)
 src/pythonGenerator/generated/*.npy
 # generator scratch file
 test.txt

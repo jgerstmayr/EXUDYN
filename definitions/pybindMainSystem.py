@@ -336,7 +336,7 @@ b1=mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, sideLengths=[0.1,0.
 
 pb.LatexCode('\\input{MainSystemCreateExt.tex}\n\n')
 
-pb.ExtensionRST('MainSystemCreateExt') #written by utilitiesDocuGenerator.py
+pb.ExtensionRST('MainSystemCreateExt') #written by tools/generators/mainSystemExtensionDocsEmitter.py
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -361,7 +361,7 @@ mbs.PlotSensor(...)
 
 pb.LatexCode('\\input{MainSystemExt.tex}\n\n')
 
-pb.ExtensionRST('MainSystemExt') #written by utilitiesDocuGenerator.py
+pb.ExtensionRST('MainSystemExt') #written by tools/generators/mainSystemExtensionDocsEmitter.py
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
