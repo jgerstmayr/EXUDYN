@@ -36,7 +36,7 @@ python/exudyn/                            the shipped Python package
 python/TestModels/runTestSuite.py         the test suite (~20 s, run it in full)
 python/pytestTemplate.py                  template for python/pytest.py, the untracked scratch file
 tools/issueTracker/issueTracker.py        issue tracker AND version source of truth
-tools/buildAndGenerate/                   build / test / release batch scripts
+tools/buildAndGenerate/                   build / test / docs batch scripts (portable; README.md)
 version.txt                               version — an OUTPUT of issueTracker.py
 ```
 

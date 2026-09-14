@@ -1074,10 +1074,8 @@ The core investment. Every step is validated byte-for-byte by step 2.
          `utilitiesDocuData.npy` is dropped.
        - **2f - one driver, explicit intermediates.** *Driver DONE 2026-09-14:*
          `tools/generators/generate.py` declares 13 stages with the paths each reads and writes and
-         derives the run order (cycles refused); `regenerate.py` calls it. *Open:* bringing
-         `tools/buildAndGenerate/` under version control - its scripts carry machine-specific paths
-         (`C:\Users\<user>\Anaconda`, `/mnt/c/.../Exudyn_git/main/...`, the latter stale since the
-         `main/` level was removed), to be made portable first (maintainer decision).
+         derives the run order (cycles refused); `regenerate.py` calls it. *Scripts DONE 2026-09-14:*
+         `tools/buildAndGenerate/` is portable and under version control (step 68). **2f complete.**
          Original scope: today the scripts hand data to each other
          through `src/pythonGenerator/generated/` in an order only `tools/regenerate.py` knows
          (`utilitiesDocuGenerator` must run before `createStubFiles`, and its `MainSystem*Ext.rst`
@@ -1351,7 +1349,11 @@ renumbered, so these continue the sequence rather than slotting into their phase
     what step 52 wants from `CHANGELOG.md`, so **one mechanism should produce both** rather than
     two diverging ones. Sequence 67 after 52, or merge them.
 
-68. *(Phase 2, then 1/7)* **Revise `tools/buildAndGenerate/`.** The 15 Windows/WSL batch scripts
+68. *(Phase 2, then 1/7)* **Revise `tools/buildAndGenerate/`.** **Cleanup DONE 2026-09-14 (with step 33
+    part 2f):** all scripts rewritten portable (`condaActivate.bat`, paths from `%~dp0`), stale
+    `main\` paths removed, `makeSphinxDoc.bat` added, `README.md` written, directory committed and
+    the `.gitignore` entry removed. *Open:* absorption by step 54's `tools/release.py`.
+    Original text: the 15 Windows/WSL batch scripts
     entered the tree in 2026-09 and were never on GitHub. Sequence deliberately: **first** decide
     the directory structure and move them with `git mv` in the Phase 2 flattening commit (so the
     moves stay tracked), **then** check which scripts still work, keep only what is useful, strip

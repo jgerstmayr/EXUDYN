@@ -2060,6 +2060,24 @@ and was refused as a cycle with `createStubFiles` (which writes `__init__.pyi` t
 `*.py` only. Not done: `tools/buildAndGenerate/` stays untracked; its scripts contain the local
 user path and stale `main/` paths, left to the maintainer.
 
+**Done 2026-09-14, step 33 part 2f (scripts) and step 68 (cleanup) - `tools/buildAndGenerate/` is
+committed.** All batch scripts were rewritten portable: `condaActivate.bat` finds conda through
+`EXUDYN_CONDA_ROOT`, else `CONDA_EXE` (set by `conda init`), else `conda` on `PATH` - the local
+`C:\Users\<user>\Anaconda` path is gone; every script locates the repository from `%~dp0..\..`
+and uses `pushd`/`popd` instead of `cd` chains. Stale references removed: `main\` (build dirs,
+`pythonDev\TestModels`, the docker working directory `/work/main`, the WSL wheel paths), the hard
+`cd C:\DATA\...` in `makeDoc.bat`, the `version.txt` read one level short. `runPythonScripts.bat`
+now only calls `tools/regenerate.py` (and `makeAllBinariesScripts.py` with `makeAll`), then the new
+`makeSphinxDoc.bat` (`sphinx-build -b html . _build -E`). `makeUbuntuWheels.bat` is one loop over
+the versions instead of eleven copied blocks; `makeUbuntuManyLinuxWheels.bat` derives the WSL
+mount path with `wslpath`; `removeBuildsAndEggs.bat` removes the build directories by pattern.
+`README.md` lists every script. Tried: `runPythonScripts.bat nodoc` (regeneration no-op),
+`makeSphinxDoc.bat` (build succeeded), `runTestSuite.bat P313` (ran in `venvP313` from
+`python\TestModels`; the suite failed because that environment still has exudyn 1.11.14 installed
+- the stale-install caveat of WORKFLOW.md, not the script), `condaActivate.bat` with
+`EXUDYN_CONDA_ROOT`, with `CONDA_EXE`, and with neither (clear error). Not tried: the wheel builds
+for all versions, the WSL/docker scripts and `makeDoc.bat` (pdflatex).
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving

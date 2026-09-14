@@ -469,17 +469,7 @@ Example: `BUG #2107: fix 32-byte alignment of VectorBase under AVX2`
 
 ## 6. Build and release scripts
 
-`tools/buildAndGenerate/` (Windows batch; never pushed to GitHub so far):
-
-| script | purpose |
-|---|---|
-| `runPythonScripts.bat` | run the generators (everything except the system-structures update) |
-| `runTestSuite.bat` | test suite, one or all Python versions |
-| `runTestExamples.bat` | the Examples set — slow, releases only |
-| `runPerformanceTests.bat` | performance suite |
-| `buildInstallSingleVersion.bat` | wheel + msi for one Python version, uninstall and reinstall |
-| `makeWindowsBinaries.bat`, `makeInstallBinaries.bat`, `makeAndTestAllBinaries.bat` | the full Windows binary path |
-| `makeUbuntuWheels.bat`, `makeUbuntuManyLinuxWheels.bat`, `manylinuxBuild.sh` | Linux wheels |
-| `makeDoc.bat` | assemble the documentation release directory |
-| `removeBuildsAndEggs.bat` | clean wheels and build directories |
-| `execWithPythonVersion.bat`, `execWithAllPythonVersions.bat` | conda environment wrappers |
+`tools/buildAndGenerate/` (Windows batch, portable - conda located by `condaActivate.bat`, paths
+relative to the scripts). The table of scripts and their arguments is in
+[`tools/buildAndGenerate/README.md`](../../tools/buildAndGenerate/README.md); the html
+documentation is built with `makeSphinxDoc.bat`, regeneration plus docs with `runPythonScripts.bat`.
