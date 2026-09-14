@@ -50,6 +50,10 @@ When adding code: a new *optional* dependency behind a clear failure is acceptab
 version number**. Data lives in `tools/issueTracker/trackerlog.txt` (2351 issues, 278 open as of
 1.11.0).
 
+**Every new issue becomes a step in the revision plan** — a new step, or part of an existing step
+where it belongs; small issues may share a step. The tracker describes the issue, the plan says
+when and together with what it is done (plan §12).
+
 Run it from its own directory — it uses relative and Windows-style paths:
 
 ```bash

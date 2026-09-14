@@ -1307,6 +1307,75 @@ renumbered, so these continue the sequence rather than slotting into their phase
     to performance. Sequence with step 69 — a completeness check over a directory of models only
     is far simpler than one that must know which files to ignore.
 
+### Added 2026-09-14 — steps from the open issues (steps 84–93)
+
+Every open issue has a plan step (see §12). Small issues with little code are bundled into one
+step; larger ones get their own. #2411 is step 83 and #2412 belongs to step 36.
+
+84. *(Phase 1, small)* **Build and packaging hygiene** (#2372, #2380, #2387).
+    `pyproject.toml` uses the `license = { text = ... }` table that setuptools removes after
+    2027-02-18; the replacement is an SPDX expression, and `LICENSE.txt` is a custom licence, so
+    this needs a decision on the identifier (#2372). `quietCompile` rebinds `sys.stdout`, which the
+    compiler subprocess on Linux bypasses - capture the subprocess output instead (#2380). 20
+    `ClInclude` entries in `cppsrc.vcxproj` have the wrong directory case and 5 do not exist;
+    browse-only today, but the same defect in a `ClCompile` entry breaks the build (#2387).
+
+85. *(Phase 4, small)* **Test and example hygiene** (#2368, #2377). `ANCFbeltDrive.py` yields 0.0
+    against its recorded reference -0.484 since it was retuned to a 10 s run - find which is
+    right before it enters the suite (#2368). Three imports name modules that exist nowhere or
+    only by accident of `sys.path` (`RL_Spot`, `timeIntegrationOfRotationVectorFormulas`, a bare
+    `rosInterface`); fix or remove them and shrink `knownMissingLocalModules` in
+    `tools/checkExtras.py` accordingly (#2377).
+
+86. *(Phase 3, before 33, small)* **Generator correctness** (#2414, #2415). The generator compares
+    a C/Main/Visu header after cutting 7 lines, which removes `@class` and `@brief` as well as the
+    two `@date` lines - so a changed class description is never written and `regenerate.py
+    --check` cannot see it (#2415, `pythonAutoGenerateObjects.py:2029`); compare with
+    `IsEqualIgnoringDateStrings` instead. Four items describe `AngularVelocityLocal` as a "3D
+    velocity vector"; fix the text, check the neighbouring `AngularVelocity` texts (#2414). Both
+    move published documentation, so they are gated as documentation changes.
+
+87. *(Phase 3, with 33)* **Keep the constrained types at the C++ boundary** (#2409). `PReal`,
+    `UReal`, `PInt`, `UInt` are mapped to plain `Real` / `Index` in `typeConversion`, so the
+    generated headers lose the intent that the Python-side `CheckForValid*` guards enforce. Add the
+    four typedefs and emit the constrained name; no behaviour changes, the headers say more.
+
+88. *(Phase 3, after it)* **Remove `CFOptional`** (#2417). It wraps 448 parameter reads in
+    `DictItemExists`, but nothing tests the behaviour, so it guarantees nothing. Parameters whose
+    default value is not usable are the place where "required" belongs - as a checked property,
+    not a hand-set flag. Update `modelUnitTests.py:184`, which relies on omitted parameters.
+
+89. *(Phase 9)* **`ObjectContactConvexRoll.pContact` becomes a data variable** (#2413). The
+    computed contact point is stored in the parameter structure and read by the visualization, so
+    it is neither system state nor configuration-dependent and keeps no history.
+
+90. *(Phase 6)* **Rewrite the installation documentation** (#2388). `gettingStarted.tex` still
+    describes Python 3.6/3.7, 32-bit Anaconda and wheel names from 2020; rewrite against what is
+    shipped (cp310-cp314, 64-bit only). With step 50 this moves to the RST side.
+
+91. *(Phase 1, with 23)* **Decide AVX2 on Linux with a benchmark that can resolve it** (#2396,
+    #2397). With `-mavx2 -mfma` four tests shift by 1e-9..1e-6 through FMA contraction, and the
+    performance suite cannot show any gain (0.1 %) because its vectors are 3-20 elements long. The
+    long-vector sweep that does resolve it is commented out in `PyTest()`
+    (`src/Pymodules/pythonTests.cpp`); revive it as a benchmark, then decide - enable with a
+    tolerance, or `-ffp-contract=off`, or keep AVX2 off.
+
+92. *(Phase 9)* **Explicit integration cost** (#2398, #2400). With the default dense linear solver
+    an explicit step on a chain of point masses costs O(N^2) (168 ms per step at N=2000; 400 times
+    faster with `EigenSparse`), and `computeMassMatrixInversePerBody` changes nothing unless a
+    sparse solver is selected as well. At least warn at large N; better, avoid the global solve
+    in explicit integration where the flag makes it unnecessary.
+
+93. *(Phase 4, with 64 and 69)* **Test-suite output goes to `solution/`** (#2418). Models write
+    solution and sensor files next to themselves (`coordinatesSolution.txt` and friends), which
+    litters `TestModels/` and makes runs collide - the blocker for running the suite in parallel.
+    In the test suite every model writes into `solution/` with unique per-model file names, and
+    file writes are **avoided widely**: sensors mostly `storeInternal=True`,
+    `writeSolutionToFile` mostly `False`. Files are written only sparsely, so writing stays
+    tested, and those tests re-read the written solution and sensor files and check them.
+    `TestExamples` stay serial: they only check that the examples still run against the current
+    API, raising on e.g. a changed argument or function.
+
 ### Phase 9 — Deeper implementation problems (last)
 
 A holding phase for problems that are real, reproducible, and too deep to fix while the
@@ -1534,7 +1603,8 @@ detail is `docs/dev/WORKFLOW.md`. In short:
 
 1. Work one step at a time and cite it by number.
 2. Every non-trivial change is an issue in `tools/issueTracker/trackerlog.txt`, raised through
-   `issueTracker.py` — never by hand-editing the file.
+   `issueTracker.py` — never by hand-editing the file. **Every new issue is added to this plan as
+   a step**, or into an existing step where it belongs (§12).
 3. Before a normal commit: the build succeeds, regeneration produces no drift, the **full**
    `runTestSuite.py` passes (~20 s — never a subset), and docs plus this plan are updated.
 4. `ResolveIssue()` closes the issue and bumps the micro version, rewriting seven files. Then a
@@ -1549,28 +1619,10 @@ detail is `docs/dev/WORKFLOW.md`. In short:
 
 ---
 
-## 12. Open issues raised during this revision (#2368 onwards)
+## 12. Open issues
 
-Number, type and name, exactly as they stand in `tools/issueTracker/trackerlog.txt`.
-This is a **snapshot**, taken 2026-09-13. The type is shown because `BUG` and `FIX` now
-mean different things - see WORKFLOW.md; the tracker is the authority and the
-only place these are maintained. Do not edit this list by hand - regenerate it, or read
-the tracker.
-
-- **#2368** (BUG) ANCFbeltDrive result contradicts its own recorded reference
-- **#2372** (CHECK) project.license TOML table deprecated
-- **#2377** (BUG) three imports refer to modules that exist nowhere
-- **#2380** (CHECK) quietCompile does not actually quieten the compiler on Linux
-- **#2387** (FIX) 20 ClInclude entries in cppsrc.vcxproj have the wrong case; 5 entries do not exist
-- **#2388** (DOCU) the installation documentation is years out of date
-- **#2396** (CHECK) enabling AVX2 on Linux shifts results by 1e-9..1e-6 through FMA contraction
-- **#2397** (CHECK) the only benchmark that resolves AVX2 is commented out inside exu.Test()
-- **#2398** (BUG) explicit integration costs O(N^2) per step with the default dense linear solver
-- **#2400** (CHECK) computeMassMatrixInversePerBody does not reduce cost unless a sparse solver is also selected
-- **#2409** (EXTENSION) the constrained parameter types PReal UReal PInt UInt are lost at the C++ boundary
-- **#2411** (EXTENSION) expose item type and shape information to Python
-- **#2412** (DOCU) Google style docstrings are mandatory project wide
-- **#2413** (EXTENSION) ObjectContactConvexRoll.pContact is computed state stored in parameters
-- **#2414** (DOCU) AngularVelocityLocal output variable description says velocity not angular velocity
-- **#2415** (BUG) a changed class description never reaches the generated headers
-- **#2417** (CLEANUP) remove the CFOptional flag once phase 3 is done
+**Every open issue has a plan step.** Raising an issue includes adding it to the plan - as a new
+step, or into an existing step where it belongs. Small issues with little code may share a step;
+larger ones get their own. The tracker (`tools/issueTracker/trackerlog.txt`) is the authority for
+the issue itself; the plan says when and with what it is done. The issues open on 2026-09-14 became
+steps 83-93, see *Added 2026-09-14 — steps from the open issues* in §5.

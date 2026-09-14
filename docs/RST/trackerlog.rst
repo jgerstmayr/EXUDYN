@@ -20,8 +20,8 @@ BUG numbers refer to the according issue numbers.
 General information on current version:
  
 +  Exudyn version = 1.11.50.dev1, 
-+  last change =  2026-09-13, 
-+  Number of issues = 2418, 
++  last change =  2026-09-14, 
++  Number of issues = 2419, 
 +  Number of resolved issues = 2123 (50 in current version), 
 
 ************
@@ -7037,6 +7037,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 2418:** test suite models write output files into TestModels instead of solution/
+    - issue author: Claude-JG
+    - description:  models write solution and sensor files next to themselves (coordinatesSolution.txt and others) so TestModels/ fills with output and runs collide on the same file names - which blocks running the suite in parallel (plan step 64). In the test suite all output goes to solution/ with unique per-model names; file writes are avoided widely (sensors storeInternal and writeSolutionToFile False) and done only sparsely so writing stays tested - those tests re-read the written files and check them. TestExamples stay serial: they only check that examples still run against the current API. Plan step 93.
+    - date raised: 2026-09-14 
 
  * **open issue 2417:** remove the CFOptional flag once phase 3 is done
     - issue author: Claude-JG

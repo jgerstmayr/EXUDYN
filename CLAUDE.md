@@ -84,7 +84,7 @@ version.txt                               version — an OUTPUT of issueTracker.
 
 ## The loop
 
-Raise or pick an issue → make the change → pass the four gates (build, regeneration clean, full
+Raise or pick an issue → **add a new issue to the plan as a step** (or into the step it belongs to) → make the change → pass the four gates (build, regeneration clean, full
 `runTestSuite.py`, docs + plan updated) → `ResolveIssue(...)` → present a commit overview and wait
 for approval. Details and the commit tiers are in [docs/dev/WORKFLOW.md](docs/dev/WORKFLOW.md).
 
