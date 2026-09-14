@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.52.dev1, 
 +  last change =  2026-09-14, 
-+  Number of issues = 2421, 
++  Number of issues = 2423, 
 +  Number of resolved issues = 2125 (52 in current version), 
 
 ************
@@ -7049,6 +7049,16 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 2422:** switch to disable parameter range checks at runtime
+    - issue author: Claude-JG
+    - description:  Range checks on item and structure parameters (UReal - PReal - UInt - PInt) raise in both the normal and the fast build. A release can carry a wrong range limit that is hard to test for; a flag in exudyn.special could let a user switch the checks off manually. Needs the checks in one place first (plan step 34c). Plan step 95.
+    - date raised: 2026-09-14 
+
+ * **open issue 2421:** one Python/C++ conversion layer for item and structure parameters
+    - issue author: Claude-JG
+    - description:  The generated Main headers convert every item parameter twice (SetWithDictionary and SetParameter) through about 40 differently named PybindUtilities helpers (Get<Kind>IndexSafely - Set<Type>Safely - dict and value overloads); the generators pick the helper name from hand-written typeCasts/convertToDict tables. Item range checks exist only in itemInterface.py (165 CheckForValid calls) - so mbs.SetObjectParameter and mbs.AddObject with a raw dict bypass them - while structures check in C++ (EXUstd::GetSafelyUReal). Plan step 34c: behaviour test first; new header src/Pymodules/PyConversion.h (FromPython/ToPython) kept separate from PybindUtilities.h; one destination-based type model in the generators; items and structures switch to it; range checks move to C++ with current behaviour kept (also in the fast build); return shapes kept (Real vectors numpy - Float4 and index arrays lists).
+    - date raised: 2026-09-14 
 
  * **open issue 2418:** test suite models write output files into TestModels instead of solution/
     - issue author: Claude-JG

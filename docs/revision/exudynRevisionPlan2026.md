@@ -1117,12 +1117,45 @@ The core investment. Every step is validated byte-for-byte by step 2.
     - **34a - direct member access.** The emitters stop reading the string records of the old
       representation (`lineType`, `cFlags` letters, rendered `defaultValue`) and ask the members
       through named predicates in `itemModel.py` / `structureModel.py`. A template needs exactly
-      this view of a member, so it comes first. *`itemHeaderEmitter.py` DONE 2026-09-14.* Then
-      `structureHeaderEmitter.py`, `structureStubEmitter.py`; the docs emitters
+      this view of a member, so it comes first. *`itemHeaderEmitter.py` DONE 2026-09-14.* The
+      structure emitters are not done separately: 34c5 rewrites that code anyway. The docs emitters
       (`itemDocsEmitter.py`, `structureDocsEmitter.py`) only if step 50 is not first. When the last
       consumer is gone, `definitionLoader.py`, `itemModel.LegacyItems()` and
       `structureModel.LegacyStructures()` are deleted.
-    - **34b - Jinja2 per emitter**, as above, starting with `itemHeaderEmitter.py` (the largest).
+    - **34c - one conversion layer between Python and C++** (#2421, decided 2026-09-14), before
+      34b, because it makes each member one uniform line and removes most of what a template would
+      otherwise have to choose. Measured: the generated Main headers convert every item parameter
+      twice (`SetWithDictionary` and `SetParameter`, e.g. `MainObjectConnectorSpringDamper.h`
+      lines 109 and 168) through about 40 differently named helpers of `PybindUtilities.h` (1104
+      lines; ~700 generated calls, led by `SetStringSafely` 217, `SetSlimVectorTemplateSafely` 152,
+      `GetArrayMarkerIndexSafely` 72; ~60 hand-written calls, 36 in `MainSystem.cpp`). The
+      generators choose the helper from eight hand-written type tables that overlap and disagree
+      (`Float4`: `std::vector<float>` for items, `std::array<float,4>` for structures; `Int`:
+      `int` vs `Index`). Item range checks exist only in `itemInterface.py` (165 `CheckForValid...`
+      calls), so `mbs.SetObjectParameter` and `mbs.AddObject` with a raw dict bypass them;
+      structures check in C++ (`EXUstd::GetSafelyUReal`, raises). Neither is switched off in the
+      fast build.
+
+      **Behaviour kept, recorded by 34c1:** a range violation raises, for items and structures, in
+      both builds (a user switch is step 95); Real vectors and matrices (`Vector`, `Vector3D`,
+      `NumpyMatrix`, ...) are accepted as list or numpy and returned as numpy; `Float4` (colours)
+      and index arrays are returned as lists - colours are split and appended, not added; single
+      indices are returned as `NodeIndex`/`ObjectIndex`/.... Anything that looks inconsistent is
+      listed and decided by the maintainer, never unified silently.
+
+      | sub-step | changes generated C++ | gate |
+      |---|---|---|
+      | **34c1 behaviour test first**: one valid and several invalid values per type family through dict creation, `SetObjectParameter`/`GetObjectParameter` and settings structures; records acceptance, returned value and type (numpy vs list), exception type | no | passes on the current code |
+      | **34c2 `src/Pymodules/PyConversion.h`**: `EPyUtils::FromPython(object, destination, context)` / `ToPython(value)` per C++ type; index kinds as tag types; fixed and dynamic sizes as templates; range forms as a check parameter. A new header, kept apart from `PybindUtilities.h`, which only gains marked one-line forwarding wrappers | no | wheel, test suite, 34c1 |
+      | **34c3 one type model** in the generators: facts (family, element, size, item kind, user-function signature) on `TypeSpec` in `definitions/definitionTypes.py`; `typeModel.Render(type, destination)` for `cppStorage`, `python`, `docs` (docs keep the definition name: `Int`, `UReal`, `NodeIndex`); the eight tables, `ConvertParameter2Python`, `IsAVector`/`IsASafelyVector` go; a type without a rule fails at generation. Definition names or default strings may change where that makes the rules simpler | no | byte-identity per emitter |
+      | **34c4 items** use `FromPython`/`ToPython`; `SetWithDictionary` goes through the same code as `SetParameter`; range checks move from `itemInterface.py` into C++ | yes | wheel, test suite, 34c1 (intended differences only: the bypass paths now check; messages name item and parameter), item-creation timing |
+      | **34c5 structures** likewise; `definitionLoader`/`Legacy*()` deleted at the end | yes | same |
+      | **34c6 clean up**: helpers of `PybindUtilities.h` with no remaining caller are deleted; the hand-written callers (`MainSystem.cpp`, `PyGeneralContact.h`, ...) switch to `FromPython`/`ToPython` first (maintainer decision 2026-09-14), so the old helpers lose their last callers | yes | same |
+
+      The later rewrite of `PybindUtilities.h` itself (reduce to what is still needed, unify, fewer
+      templates) is not part of 34c.
+    - **34b - Jinja2 per emitter**, as above, starting with `itemHeaderEmitter.py` (the largest),
+      after 34c.
 35. Replace the copy-and-append scheme for `mainSystemExtensionsHeader.py` with an
     `@extends(exu.MainSystem, 'CreateMassPoint')` registry decorator binding at the definition
     site, plus an explicit `install()` that raises on collision with an existing C++ method. The
@@ -1523,6 +1556,11 @@ step; larger ones get their own. #2411 is step 83 and #2412 belongs to step 36.
     tested, and those tests re-read the written solution and sensor files and check them.
     `TestExamples` stay serial: they only check that the examples still run against the current
     API, raising on e.g. a changed argument or function.
+95. *(Phase 5, after 34c)* **A user switch for parameter range checks** (#2422). Range checks on
+    item and structure parameters (`UReal`, `PReal`, `UInt`, `PInt`) raise in the normal and in
+    the fast build. A release can carry a wrong range limit that is hard to test for; a flag in
+    `exudyn.special` would let the user switch the checks off. Needs the checks in one place first,
+    which 34c provides.
 
 ### Phase 9 — Deeper implementation problems (last)
 
