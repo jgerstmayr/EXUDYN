@@ -1015,7 +1015,9 @@ The core investment. Every step is validated byte-for-byte by step 2.
        Sub-steps, each its own commit behind the byte-identity gate:
        - **2a - no cwd dependency. DONE 2026-09-14.** `generatorPaths.py`; all generators run
          from any directory (verified from an unrelated one: no drift, nothing written there).
-       - **2b - item emitters.** Split `pythonAutoGenerateObjects.py` (one `WriteFile`
+       - **2b - item emitters.** *In progress:* `itemInterface.py` DONE 2026-09-14
+         (`tools/generators/itemInterfaceEmitter.py`, shared facts in `itemModel.py`). Split
+         `pythonAutoGenerateObjects.py` (one `WriteFile`
          returning nine strings) by output: C/Main/Visu C++ headers, `itemInterface.py`, item
          RST + LaTeX, mini examples, `objectFactoryAutoReg.h`. Each reads `definitions/`
          directly; `itemInterface.py` first, as the smallest self-contained output with the

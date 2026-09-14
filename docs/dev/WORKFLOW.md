@@ -362,22 +362,13 @@ Linux. Commit `sources.json` with the change; an sdist without it cannot build. 
 list in that file is *not* derived — `--minimal` also defines `EXUDYN_MINIMAL_COMPILATION`, so it
 still has to be kept in sync with the C++ `#ifdef`s by hand.
 
-The manual equivalent, if you need it — on a clean tree, from `main/src/pythonGenerator/`:
-
-```
-pythonAutoGenerateObjects.py
-pythonAutoGenerateSystemStructures.py
-autoGeneratePyBindings.py
-utilitiesDocuGenerator.py
-createStubFiles.py
-doc2rst.py
-```
-
-`makeAllBinariesScripts.py` is **not** part of this — it writes only a volatile build date.
-Then `git status --porcelain` on the Tier 1 paths (plan §4.2) must be **empty**; Tier 2 paths
-(plan §4.3) should be empty and otherwise warn. Most generators skip unchanged files
-(`WriteTextIfDifferent`, ignoring `@date` and `last modified` lines), so `git status` is a usable
-drift signal. Once plan step 2 lands, this is `tools/regenerate.py`.
+Regenerate with `python tools/regenerate.py` (add `--check` to fail on Tier 1 drift). It validates
+`definitions/`, runs every generator and emitter in the required order from any directory, and
+reports Tier 1 (plan §4.2) and Tier 2 (plan §4.3) differences. The order lives in one place, its
+`generatorScripts` list — do not run the scripts by hand: step 33 is moving outputs from the old
+generators to separate emitters (`itemInterface.py` is already written by
+`tools/generators/itemInterfaceEmitter.py`, no longer by `pythonAutoGenerateObjects.py`).
+`makeAllBinariesScripts.py` is not part of it; it writes only a volatile build date.
 
 Two measured caveats (2026-09-09, plan §3 facts 11 and 13):
 
