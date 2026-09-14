@@ -22,6 +22,7 @@ if toolsDirectory not in sys.path:
     sys.path.insert(0, toolsDirectory)
 
 from structureModel import *                                            # noqa: E402,F403
+import typeModel as tm                                                  # noqa: E402
 
 
 def StructureStub(parseInfo, parameterList):
@@ -45,7 +46,7 @@ def StructureStub(parseInfo, parameterList):
             parameter['cFlags'].find('P') != -1 and
             parameter['type'].find('ResizableVector') == -1): #only if it is a member variable
             stubStr += spaces4+parameter['pythonName']+': '
-            stubStr += TypeConversion(parameter['type'], typeConversionStub) + '\n'
+            stubStr += tm.Render(parameter['type'], 'stub', 'structures') + '\n'
             if ADD_DOCSTRINGS: 
                 stubStr += DocStringGoogleFromPlainText(text=ParameterDescription2DocString(parameter['parameterDescription']),
                                                         addSpaces=' '*4, multiline=False)
@@ -64,7 +65,7 @@ def StructureStub(parseInfo, parameterList):
                     argStr += argSep + argName.replace('=true','=True').replace('=false','=False')
                     argSep = ', '
             stubStr += spaces4+'@overload\n'
-            stubStr += spaces4+'def '+functionName+'('+argStr.replace('\\_','_')+')'+' -> '+TypeConversion(parameter['type'], typeConversionStub)+': ...\n'
+            stubStr += spaces4+'def '+functionName+'('+argStr.replace('\\_','_')+')'+' -> '+tm.Render(parameter['type'], 'stub', 'structures')+': ...\n'
     return stubStr
 
 

@@ -148,7 +148,7 @@ NoDefaultValue = _NoDefaultValue()
 #a constant (which only verifies spelling) and it removed 45 single-use names.
 #
 #A type is a str SUBCLASS carrying its constraints, so it compares and hashes exactly like
-#the plain name the generators already look up in typeConversion / typeCasts / type2PyTyping
+#the plain name the generators look up (tools/generators/typeModel.py since step 34c3)
 #- nothing downstream has to change - while minimum, greaterThan and size travel with it.
 #Calling a base type applies a constraint and yields the constrained type:
 #
@@ -404,6 +404,36 @@ TPyFunctionVectorMbsScalarIndex2VectorBool = TypeSpec('PyFunctionVectorMbsScalar
 TPyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D = TypeSpec('PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D')
 TPyFunctionVectorMbsScalarIndexVector = TypeSpec('PyFunctionVectorMbsScalarIndexVector')
 TSTDstring                         = TypeSpec('STDstring')
+
+#--------------------------------------------------------------------- user-function signatures
+#the C++ std::function each PyFunction... type stands for; the generators render the stored
+#member (PythonUserFunctionBase< ... >), the Python interface and the docs from it. Names must
+#start with 'PyFunction' (revision plan step 34c3: moved here from tools/generators/itemModel.py)
+userFunctionSignatures = {#for MainSystem => see other MainSystemUserFunctions
+                          'PyFunctionBoolMbsScalar': 'std::function<bool(const MainSystem&,Real)>',#PreStepUserFunction, PostStepUserFunction
+                          'PyFunctionVector2DMbsScalar': 'std::function<StdVector2D(const MainSystem&,Real)>',#PreStepUserFunction, PostStepUserFunction
+                          #for items:
+                          'PyFunctionGraphicsData': 'std::function<py::object(const MainSystem&,Index)>',
+                          'PyFunctionMbsScalar2': 'std::function<Real(const MainSystem&,Real,Real)>',#LoadCoordinate
+                          'PyFunctionVector3DmbsScalarVector3D': 'std::function<StdVector3D(const MainSystem&,Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
+                          'PyFunctionMbsScalarIndexScalar': 'std::function<Real(const MainSystem&,Real,Index,Real)>', #ConnectorCoordinate
+                          'PyFunctionMbsScalarIndexScalar5': 'std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)>', #ConnectorSpringDamper, CoordinateSpringDamper, several others
+                          'PyFunctionMbsScalarIndexScalar9': 'std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real)>', #ANCFCable2D
+                          'PyFunctionMbsScalarIndexScalar11': 'std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real)>', #CoordinateSpringDamperExt
+                          'PyFunctionVector6DmbsScalarIndexVector6D': 'std::function<StdVector6D(const MainSystem&,Real,Index,StdVector6D)>', #GenericJoint
+                          'PyFunctionVector3DmbsScalarIndexScalar4Vector3D': 'std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>', #CartesianSpringDamper
+                          'PyFunctionVectorMbsScalarIndex2Vector': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>', #ObjectGenericODE2, ObjectFFRF...
+                          'PyFunctionMatrixMbsScalarIndex2Vector': 'std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)>', #ObjectGenericODE2, ObjectFFRF...
+                          'PyFunctionMatrixContainerMbsScalarIndex2Vector': 'std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector)>', #ObjectGenericODE2 #changed from PyFunctionMatrixMbsScalarIndex2Vector 2021-09-27
+                          'PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar': 'std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector,Real,Real)>', #ObjectGenericODE2 #Jacobian
+                          'PyFunctionVectorMbsScalarIndexVector': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector)>', #ObjectGenericODE1
+                          'PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D': 'std::function<StdVector6D(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix6D,StdMatrix6D,StdMatrix3D,StdMatrix3D,StdVector6D)>', #RigidBodySpringDamper
+                          'PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix6D,StdMatrix6D,StdMatrix3D,StdMatrix3D,StdVector6D)>', #RigidBodySpringDamper, postNewtonStep
+                          'PyFunctionVectorMbsScalarIndex2VectorBool' : 'std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector,bool)>', #CoordinateVectorConstraint
+                          'PyFunctionMatrixContainerMbsScalarIndex2VectorBool': 'std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector,bool)>', #CoordinateVectorConstraint
+                          'PyFunctionVectorMbsScalarArrayIndexVectorConfiguration': 'std::function<StdVector(const MainSystem&,Real,StdArrayIndex,StdVector,ConfigurationType)>', #SensorUserFunction
+#StdVector3D=std::array<Real,3> does not accept numpy::array                            'PyFunctionVector3DScalarVector3D': 'std::function<StdVector3D(Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
+                          }
 
 
 #%%************************************************************************************************

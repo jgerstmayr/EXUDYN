@@ -24,11 +24,12 @@ if toolsDirectory not in sys.path:
 import copy                                                             # noqa: E402
 
 from structureModel import *                                            # noqa: E402,F403
+import typeModel as tm                                                  # noqa: E402
 
 
 #************************************************
 #create the C++ header text of one structure
-def StructureCppHeader(parseInfo, parameterList, typeConversion):
+def StructureCppHeader(parseInfo, parameterList):
     """returns [header text, dictionary get/set text, implementation text]"""
     dateStr = GetDateStr()
     yearStr = dateStr.split('-')[0]
@@ -107,7 +108,7 @@ def StructureCppHeader(parseInfo, parameterList, typeConversion):
             (parameter['lineType'].find('L') == -1) and 
             (parameter['cplusplusName'].find('.') == -1) and 
             (not IsDeprecatedParameter(parameter) or IsStructureParameter(parameter)) ): #only if it is a member variable, but not linked
-            typeStr = TypeConversion(parameter['type'], typeConversion)
+            typeStr = tm.Render(parameter['type'], 'cppStorage', 'structures')
             temp = '  ' + typeStr + ' ' + parameter['cplusplusName']+ ';'
             nChar = len(temp)
             alignment = 50
@@ -235,7 +236,7 @@ def StructureCppHeader(parseInfo, parameterList, typeConversion):
                 
                 
             origType = parameter['type']
-            typeStr = TypeConversion(parameter['type'], typeConversion)
+            typeStr = tm.Render(parameter['type'], 'cppStorage', 'structures')
             paramStr = parameter['cplusplusName']
             paramAccessStr = paramStr if not IDPNS else 'backlink->'+parameter['parameterDescription']
 
@@ -262,7 +263,7 @@ def StructureCppHeader(parseInfo, parameterList, typeConversion):
             getFunction = [] #return type, function decl, impl
             setFunction = [] #return type, function decl, impl
                 
-            typeCastStr = TypeConversion(parameter['type'], typeCasts)
+            typeCastStr = tm.Render(parameter['type'], 'cppExchange', 'structures')
             if (((typeCastStr.find('std::vector') != -1 or typeCastStr.find('std::array') != -1) and 
                  typeCastStr.find('std::ofstream') == -1 and typeCastStr.find('ExuFile::BinaryFileSettings') == -1) or 
                 typeWithRangeCheck or typeWithGetSetFunction or
@@ -338,7 +339,7 @@ def StructureCppHeader(parseInfo, parameterList, typeConversion):
                         cValueStr = 'PyGet' + functionStr + '()'
 
                     #convert type:
-                    pType = TypeConversion(parameter['type'], convertToDict)
+                    pType = tm.Render(parameter['type'], 'dictType', 'structures')
                     #convert size
                     pSize = parameter['size']
                     if pSize.find('x') != -1: #e.g., 3x3, also 2x2x2 would be possible
@@ -360,7 +361,7 @@ def StructureCppHeader(parseInfo, parameterList, typeConversion):
                         pSize = '{'+pSize+'}'
                         
                     descrStr = ParameterDescription(parameter).replace("\\_","_").replace("\\","\\\\").replace('$','')
-                    typeCastStr = TypeConversion(parameter['type'], typeCasts)
+                    typeCastStr = tm.Render(parameter['type'], 'cppExchange', 'structures')
                     
                     if parameter['type'] != 'KeyPressUserFunction' and not IsDeprecatedParameter(parameter): #this would not work for editing dictionary
                         #get functions:
@@ -390,7 +391,7 @@ def StructureCppHeader(parseInfo, parameterList, typeConversion):
                     strVirtual = 'virtual '
                     strOverride = ' override'
                 
-                typeStr = TypeConversion(parameter['type'], typeConversion)
+                typeStr = tm.Render(parameter['type'], 'cppStorage', 'structures')
                 functionStr = parameter['cplusplusName']
                 argsStr = parameter['args']
                 strConst = ""
@@ -444,7 +445,7 @@ def StructureCppHeader(parseInfo, parameterList, typeConversion):
         (parameter['type'].find('userFunction')==-1) and (parameter['type'].find('UserFunction')==-1) and
         not IsDeprecatedParameter(parameter)): #only if it is a member variable; some types not printable
             paramStr = parameter['cplusplusName']
-            typeStr = TypeConversion(parameter['type'], typeConversion)
+            typeStr = tm.Render(parameter['type'], 'cppStorage', 'structures')
             refChar = ''
             preStr = ''
             postStr = ''
@@ -481,7 +482,7 @@ def StructureCppHeader(parseInfo, parameterList, typeConversion):
 
 #**************************************************************************************
 #create string containing the pybind11 headers/modules for a class
-def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
+def CreatePybindHeaders(parseInfo, parameterList):
     #print ('Create Pybind11 includes')
 
     #remove some \ and other texts from strings written into pybind interface
@@ -537,7 +538,7 @@ def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
             ISP = bool(IsStructureParameter(parameter))
             IDP = bool(IsDeprecatedParameter(parameter))
 
-            typeCastStr = TypeConversion(parameter['type'], typeCasts)
+            typeCastStr = tm.Render(parameter['type'], 'cppExchange', 'structures')
             linkedClassStr = ''
             if (len(parseInfo['linkedClass']) != 0):
                 linkedClassStr = parseInfo['linkedClass'] + '.'
@@ -677,7 +678,7 @@ def main():
     globalImplementationGetSetStr = '' #implementation part added at end of each structure (visualization, etc.)
 
     for parseInfo, parameterList in LegacyStructures():
-        [fileStr, getSetDict, implementationGetSetStr] = StructureCppHeader(parseInfo, parameterList, typeConversion)
+        [fileStr, getSetDict, implementationGetSetStr] = StructureCppHeader(parseInfo, parameterList)
         globalImplementationGetSetStr += implementationGetSetStr
         strFileMode = 'w'
 
@@ -697,7 +698,7 @@ def main():
         #write Python/pybind11 includes
         pybindStr = ''
         if parseInfo['writePybindIncludes'] == 'True':
-            pybindStr = CreatePybindHeaders(parseInfo, parameterList, typeConversion)
+            pybindStr = CreatePybindHeaders(parseInfo, parameterList)
             WriteFileDict(writeFilesDict, fileName=pybindFile, text=pybindStr, fileMode='a')
             WriteFileDict(writeFilesDict, fileName=getSetFile, text=getSetDict, fileMode='a')
 

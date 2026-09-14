@@ -25,7 +25,8 @@ if toolsDirectory not in sys.path:
     sys.path.insert(0, toolsDirectory)
 
 import itemModel as im                                                              # noqa: E402
-from itemModel import (pyFunctionTypeConversion, Type2PythonType, IsAVector,        # noqa: E402
+import typeModel as tm                                                              # noqa: E402
+from itemModel import (pyFunctionTypeConversion, IsAVector,                         # noqa: E402
                        IsASimpleMatrix, IsAArrayIndex, IsTypeWithRangeCheck, ExtractLatexSymbol,
                        possibleTypes)
 from autoGenerateHelper import (DefaultValue2Python, GetTypesStringLatex,           # noqa: E402
@@ -89,7 +90,7 @@ def ItemDocstrings(definition):
             thisDataDocString = dataDocstringV if 'V' in im.Destination(member) else dataDocstring
             thisDataDocString['inputs'].append({'name': member['pythonName'],
                                                 'description': CleanStringForPyiDescription(parameterDescription),
-                                                'type_hint': Type2PythonType(im.TypeName(member))
+                                                'type_hint': tm.Render(im.TypeName(member), 'pyTyping', 'items')
                                                 })
         elif member['pythonName'] == 'GetRequestedMarkerType':
             requestedMarkerString = GetTypesStringLatex(im.DefaultValueString(member), 'Marker',

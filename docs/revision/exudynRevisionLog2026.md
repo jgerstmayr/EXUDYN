@@ -2176,6 +2176,49 @@ binary. After deleting `build/temp.win-amd64-cpython-313` the full compile ran (
 `parameterConversionTest.py` 0 differences, full suite PASSED 19.0 s; `regenerate.py --check` is
 not affected (no generator change).
 
+**Done 2026-09-14, step 34c3 - one type model in the generators.** New
+`tools/generators/typeModel.py` (227 lines) with one entry point,
+`Render(typeName, destination, context)`:
+- destinations `cppStorage`, `cppExchange` (temporary, until 34c4/34c5), `dictType`, `stub` and
+  `pyTyping`; context `items` or `structures`;
+- `CppMemberType` adds the `PythonUserFunctionBase< >` wrapper that items store.
+
+The rules take their facts from `definitions/definitionTypes.py`:
+- the range and item-kind forms of `TReal`/`Tfloat`/`TIndex`/`TArrayIndex` give the base types;
+- fixed sizes are read from the name (`Vector3D`, `Float4`, `NodeIndex2`);
+- the user-function signatures moved there from `itemModel.py` as `userFunctionSignatures`
+  (`itemModel.pyFunctionTypeConversion` is now an alias to it).
+
+What the rules do not produce is one exception table of 36 entries, for example:
+- `Int` is `Index` for structures;
+- `Float3`/`Float4` are exchanged as `std::array` for structures and `std::vector` for items;
+- `NumpyVector` is stored as `Vector` in items but as `py::array_t<Real>` in structures;
+- `Matrix2D` reads `Matrix2D` in the docs while the other fixed matrices read `array_like`.
+
+That table is the measured list 34c4/34c5 decide. Only spellings of names that occur in
+`definitions/` were kept: entries such as `SymmetricMatrix` or items' `Int` had no member.
+
+Deleted:
+- the eight tables: both `typeConversion` and both `typeCasts` dicts, `convertToDict`,
+  `typeConversionStub`, `type2PyTyping`, `cppTypeNames`;
+- the per-item UF re-wrapping loop, `Type2PythonType`, `ConvertParameter2Python` (with its dead
+  `Transformations66List` branch) and `autoGenerateHelper.TypeConversion`;
+- the unused `typeConversion` argument of `itemDocsEmitter.WriteFile`.
+
+`definitionValidator.py` now compares library declarations against `CppMemberType`, which is what
+the header emitter writes (0 violations, as before).
+
+Gates:
+- a self-check script found 0 differences between `Render` and the committed tables for every type
+  name used in each context;
+- the committed item header emitter and the new one were run side by side in memory over all 97
+  items with identical results, and the check caught a deliberately changed exception;
+- a full `tools/regenerate.py` rewrote no generated file;
+- full suite PASSED.
+
+The documentation page of the test model added in 34c1
+(`docs/RST/TestModels/parameterConversionTest.rst`) is committed with this step.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving

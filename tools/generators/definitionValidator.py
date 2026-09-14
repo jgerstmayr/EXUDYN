@@ -38,6 +38,10 @@ import sys
 repositoryRoot = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                                '..', '..'))
 definitionsDirectory = os.path.join(repositoryRoot, 'definitions')
+toolsDirectory = os.path.dirname(os.path.abspath(__file__))
+if toolsDirectory not in sys.path:
+    sys.path.insert(0, toolsDirectory)
+import typeModel as tm          # noqa: E402 - the C++ spelling of a definition type, as the header emitter renders it
 
 itemModules = ['itemDefsNodes', 'itemDefsObjects', 'itemDefsMarkers', 'itemDefsLoads',
                'itemDefsSensors']
@@ -54,10 +58,6 @@ parentHeaders = ['src/System/CNode.h', 'src/System/CObject.h', 'src/System/CObje
                  'src/System/VisualizationMarker.h', 'src/System/VisualizationLoad.h',
                  'src/System/VisualizationSensor.h']
 
-#the definition types the generator renders differently in C++ (pythonAutoGenerateObjects.py,
-#typeConversion); only the ones that occur in function signatures matter here
-cppTypeNames = {'Bool': 'bool', 'Int': 'int', 'UInt': 'Index', 'PInt': 'Index', 'UReal': 'Real',
-                'PReal': 'Real', 'String': 'std::string'}
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -275,7 +275,7 @@ def ValidateDefinitions(verbose=True):
                             violations.append(where + ': parent class ' + repr(parentName)
                                               + ' is not in the parsed parent headers')
                             continue
-                        own = Signature(cppTypeNames.get(str(member['type']), str(member['type'])),
+                        own = Signature(tm.CppMemberType(member['type'], 'items'),
                                         member.get('args', '') or '',
                                         'C' in (member.get('cFlags', '') or ''))
                         declared = [s for c in chain for s in classes[c][1].get(name, [])]

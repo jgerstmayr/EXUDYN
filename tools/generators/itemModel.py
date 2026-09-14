@@ -53,62 +53,13 @@ possibleTypes = {'Object':['_None','Ground','Connector','Constraint','Body','Sin
 
 useNewUserFunctions = True
 
-#conversion list for python functions; names must always start with 'PyFunction'...
-pyFunctionTypeConversion = {#for MainSystem => see other MainSystemUserFunctions
-                            'PyFunctionBoolMbsScalar': 'std::function<bool(const MainSystem&,Real)>',#PreStepUserFunction, PostStepUserFunction
-                            'PyFunctionVector2DMbsScalar': 'std::function<StdVector2D(const MainSystem&,Real)>',#PreStepUserFunction, PostStepUserFunction
-                            #for items:
-                            'PyFunctionGraphicsData': 'std::function<py::object(const MainSystem&,Index)>',
-                            'PyFunctionMbsScalar2': 'std::function<Real(const MainSystem&,Real,Real)>',#LoadCoordinate
-                            'PyFunctionVector3DmbsScalarVector3D': 'std::function<StdVector3D(const MainSystem&,Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
-                            'PyFunctionMbsScalarIndexScalar': 'std::function<Real(const MainSystem&,Real,Index,Real)>', #ConnectorCoordinate
-                            'PyFunctionMbsScalarIndexScalar5': 'std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)>', #ConnectorSpringDamper, CoordinateSpringDamper, several others
-                            'PyFunctionMbsScalarIndexScalar9': 'std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real)>', #ANCFCable2D
-                            'PyFunctionMbsScalarIndexScalar11': 'std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real)>', #CoordinateSpringDamperExt
-                            'PyFunctionVector6DmbsScalarIndexVector6D': 'std::function<StdVector6D(const MainSystem&,Real,Index,StdVector6D)>', #GenericJoint
-                            'PyFunctionVector3DmbsScalarIndexScalar4Vector3D': 'std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>', #CartesianSpringDamper
-                            'PyFunctionVectorMbsScalarIndex2Vector': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>', #ObjectGenericODE2, ObjectFFRF...
-                            'PyFunctionMatrixMbsScalarIndex2Vector': 'std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)>', #ObjectGenericODE2, ObjectFFRF...
-                            'PyFunctionMatrixContainerMbsScalarIndex2Vector': 'std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector)>', #ObjectGenericODE2 #changed from PyFunctionMatrixMbsScalarIndex2Vector 2021-09-27
-                            'PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar': 'std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector,Real,Real)>', #ObjectGenericODE2 #Jacobian
-                            'PyFunctionVectorMbsScalarIndexVector': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector)>', #ObjectGenericODE1
-                            'PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D': 'std::function<StdVector6D(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix6D,StdMatrix6D,StdMatrix3D,StdMatrix3D,StdVector6D)>', #RigidBodySpringDamper
-                            'PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix6D,StdMatrix6D,StdMatrix3D,StdMatrix3D,StdVector6D)>', #RigidBodySpringDamper, postNewtonStep
-                            'PyFunctionVectorMbsScalarIndex2VectorBool' : 'std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector,bool)>', #CoordinateVectorConstraint
-                            'PyFunctionMatrixContainerMbsScalarIndex2VectorBool': 'std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector,bool)>', #CoordinateVectorConstraint
-                            'PyFunctionVectorMbsScalarArrayIndexVectorConfiguration': 'std::function<StdVector(const MainSystem&,Real,StdArrayIndex,StdVector,ConfigurationType)>', #SensorUserFunction
-#StdVector3D=std::array<Real,3> does not accept numpy::array                            'PyFunctionVector3DScalarVector3D': 'std::function<StdVector3D(Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
-                            }
+#the C++ signature of each user-function type; the table lives in definitions/definitionTypes.py
+#(revision plan step 34c3)
+pyFunctionTypeConversion = definitionTypes.userFunctionSignatures
 pyFunctionTypeConversionUFtemplate = '{UFT}'
 if useNewUserFunctions:
     pyFunctionTypeConversionUFtemplate = 'PythonUserFunctionBase< {UFT} >'
 
-
-type2PyTyping = {'Bool':'bool', 'Int':'int', 'Index':'int', 'Real':'float', 'float':'float', 'UInt':'int', 'UReal':'float', 'PInt':'int', 'PReal':'float', 
-                 'String':'str',
-                 'Vector':'array_like', 'Vector9D':'array_like', 'Vector7D':'array_like', 'Vector6D':'array_like', 
-                 'Vector4D':'[float,float,float,float]', 'Vector3D':'[float,float,float]', 'Vector2D':'[float,float]',
-                 #
-                 'Matrix':'array_like', 'SymmetricMatrix':'array_like', 
-                 'Matrix3D':'array_like', 'Matrix6D':'array_like', #'Matrix6D':'array_like', 
-                 #'JointTypeList':'std::vector<Joint::Type>',#not needed; JointTypeList is defined in C++
-                 'ArrayIndex':'array_like',
-                 'NumpyMatrix':'array_like', 
-                 'NumpyMatrixI':'array_like', 
-                 'NumpyVector':'array_like',
-                 'Float2': '[float,float]', 'Float3': '[float,float,float]', 'Float4': '[float,float,float,float]',  #e.g. for OpenGL vectors
-                 'Float9': 'array_like', 'Float16': 'array_like', #e.g. for OpenGL rotation matrix and homogenous transformation
-                 'Index2': 'array_like', 'Index3': 'array_like', 'Index4': 'array_like',
-                 'NodeIndex':'NodeIndex','ObjectIndex':'ObjectIndex','MarkerIndex':'MarkerIndex',
-                 'LoadIndex':'LoadIndex','SensorIndex':'SensorIndex',
-                 'OutputVariableType':'OutputVariableType',
-                 } #convert parameter types to C++/EXUDYN types
-
-def Type2PythonType(t):
-    if t in type2PyTyping:
-        return type2PyTyping[t]
-    # print('WARNING: unknown type '+t)
-    return t
 
 #this for mutable args
 def IsASafelyVector(parameterType):
@@ -202,20 +153,6 @@ def GetSetSafelyFunctionName(parType):
     return safelyFunctionName 
 
 
-#some parameters, such as Vector3DList need to be converted to PyVector3DList when writing into dict, etc.
-def ConvertParameter2Python(parName):
-    if parName=='Vector3DList':
-        return 'PyVector3DList'
-    elif parName=='Vector6DList':
-        return 'PyVector6DList'
-    elif parName=='Matrix3DList':
-        return 'PyMatrix3DList'
-    elif parName=='Transformations66List':
-        return 'PyTransformations66List'
-
-    return parName
-
-    
 #SetConstMatrixTemplateSafely<3, 3>(d, item, destination);
 
 #return true, if the the parameter triggers an internal get/set function for conversion, e.g., BeamSection

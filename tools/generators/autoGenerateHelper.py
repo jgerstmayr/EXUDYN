@@ -309,17 +309,6 @@ def CountLines(s):
             counter += 1
     return counter
 
-#************************************************
-#convert type to known C++ type or keep it (in case of special class)
-def TypeConversion(typeStr, typeConversion):
-    newStr = typeStr
-    if (typeStr in typeConversion):
-        newStr = typeConversion[typeStr]
-        
-    #print('convert "'+typeStr+'" into "'+newStr+'"')
-
-    return newStr
-
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #abbreviations inside $$ latex math

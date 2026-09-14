@@ -27,35 +27,12 @@ import copy
 
 import generatorPaths as paths                                          # noqa: E402,F401
 import definitionLoader                                                 # noqa: E402
-from autoGenerateHelper import CountLines, TypeConversion, Str2Latex, Str2Doxygen, GetDateStr, \
+from autoGenerateHelper import CountLines, Str2Latex, Str2Doxygen, GetDateStr, \
                                PyLatexRST, WriteTextIfDifferent, DocStringGoogleFromPlainText  # noqa: E402,F401
 
 sortStructures = True
 ADD_DOCSTRINGS = True
     
-typeCasts = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt':'Index', 
-             'UReal':'Real',  'PReal':'Real', 'UFloat':'float',  'PFloat':'float', 
-             'Vector':'std::vector<Real>', 'Vector3D':'std::vector<Real>', #'Matrix':'Matrix', 'SymmetricMatrix':'Matrix', 
-             'ArrayIndex':'std::vector<Index>', 'ArrayFloat':'std::vector<float>', 'String':'std::string', 'FileName':'std::string',
-             'Float2': 'std::array<float,2>', 'Float3': 'std::array<float,3>', 'Float4': 'std::array<float,4>',  #e.g. for OpenGL vectors
-             'Float9': 'std::array<float,9>', 'Float16': 'std::array<float,16>', #e.g. for OpenGL rotation matrix and homogenous transformation
-             'UInt2': 'std::array<Index,2>', 'UInt3': 'std::array<Index,3>', 'UInt4': 'std::array<Index,4>', 
-             'Index2': 'std::array<Index,2>', 'Index3': 'std::array<Index,3>', 'Index4': 'std::array<Index,4>', 
-             'KeyPressUserFunction': 'std::function<bool(int, int, int)>',
-             'Matrix3D': 'std::array<std::array<Real,3>,3>',
-             'Matrix6D': 'std::array<std::array<Real,6>,6>',
-             'Vector2DList': 'PyVector2DList',
-             } #convert parameter types to C++/Exudyn types
-
-#conversion rules for dictionary 'type'; this type conversion adds rules for the user's values in the dictionary
-convertToDict = {'ResizableVector':'Vector', 'StdArray33F':'MatrixFloat', 
-                 'NumpyVector':'Vector', 'NumpyMatrix':'Matrix', 
-                'Index2':'IndexArray', 'Index4':'IndexArray', 
-                'ArrayIndex':'IndexArray', 'ArrayFloat':'VectorFloat',
-                'Float4':'VectorFloat', 'Float3':'VectorFloat' #,'String':'std::string'
-                }
-
-
 #convert special size parameters:
 sizeParameterConvert = {'3x3':'9', '2x2':'4'} 
 
@@ -180,30 +157,6 @@ def ParameterDescription2DocString(text):
     return text
 
 
-#convert parameter types to C++/Exudyn types
-typeConversion = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt':'Index', 
-                  'UReal':'Real', 'PReal':'Real', 'UFloat':'float',  'PFloat':'float', 
-                  'Vector':'Vector', 
-                  'Matrix':'Matrix', 'SymmetricMatrix':'Vector', 
-                  'NumpyMatrix':'py::array_t<Real>', 'NumpyVector':'py::array_t<Real>', 
-                  'String':'std::string', 'FileName':'std::string',
-                  'KeyPressUserFunction': 'std::function<bool(int, int, int)>'} #convert parameter types to C++/EXUDYN types
-
-#conversion for stub files
-typeConversionStub = {'Bool':'bool', 'Int':'int', 'Index':'int', 'UInt':'int', 'PInt':'int', 
-                  'Real':'float', 'UReal':'float', 'PReal':'float', 'UFloat':'float',  'PFloat':'float', 
-                  'Float3':'Tuple[float,float,float]', 
-                  'Float4':'Tuple[float,float,float,float]', 'Vector':'List[float]', 
-                  'Matrix':'ArrayLike', 'Matrix3D':'ArrayLike', 'Matrix6D':'ArrayLike', 
-                  'SymmetricMatrix':'ArrayLike', 
-                  'NumpyMatrix':'ArrayLike', 'NumpyVector':'ArrayLike', 'StdArray33F':'ArrayLike',
-                  'String':'str', 'FileName':'str', 'Index2':'Tuple[int,int]', 
-                  'KeyPressUserFunction': 'Any',
-                  'std::string':'str', 'void':'None', 
-                  'ArrayIndex':'List[int]','ArrayFloat':'List[float]',
-                  } #conversion for stub files
-
-#the old string records (parseInfo, parameterList) of the structures, in definition order
 parseInfoTemplate = {'class':'',            # C++ class name
              'writeFile':'',        #filename (e.g. SensorData.h)
              'appendToFile':'',     #True, if shall be appended to given file
