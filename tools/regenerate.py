@@ -31,8 +31,7 @@ import os
 #reuse the generators' own comparison rule rather than reimplementing the date exclusion:
 #lines starting with '* @date' or '// AUTO:  last modified' are volatile within otherwise
 #stable files, so git status alone reports phantom drift once a file has been rewritten
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                             '..', 'src', 'pythonGenerator'))
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'generators'))
 from autoGenerateHelper import IsEqualIgnoringDateStrings
 
 #the generators, their order and their inputs/outputs are declared in tools/generators/generate.py,
@@ -48,7 +47,7 @@ tier1Paths = [
     'python/exudyn/mainSystemExtensions.py',
     'python/exudyn/__init__.pyi',
     'python/exudyn/symbolic.pyi',
-    'src/pythonGenerator/generated',
+    'tools/generators/generated',
     'python/TestModels/MiniExamples',
     ]
 

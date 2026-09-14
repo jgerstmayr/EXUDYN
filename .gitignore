@@ -58,7 +58,7 @@ dist/
 # Generator scratch output
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # intermediate data formerly written by the generators (no longer written since step 33)
-src/pythonGenerator/generated/*.npy
+tools/generators/generated/*.npy
 # generator scratch file
 test.txt
 

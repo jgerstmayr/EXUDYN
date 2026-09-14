@@ -10,6 +10,8 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import os, sys  #generatorPaths and the shared helpers live in tools/generators/ (plan step 33, part 2g)
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'tools', 'generators'))
 import io   #for utf-8 encoding
 import generatorPaths as paths
 import sys

@@ -31,9 +31,13 @@ exec(open(file).read(), globals())
 #unrelated cause. That is why the sdist could not be built (#2376, #2383, revision plan step 81).
 oldDir = os.getcwd()
 try:
-    os.chdir(os.path.join(oldDir, 'src', 'pythonGenerator'))
+    #createStubFiles.py and the generatorPaths.py it imports live in tools/generators/ (plan step 33)
+    stubToolsDir = os.path.join(oldDir, 'tools', 'generators')
+    if stubToolsDir not in sys.path:
+        sys.path.insert(0, stubToolsDir)
+    os.chdir(stubToolsDir)
     fileCS='createStubFiles.py'
-    exec(open(fileCS).read(), globals()) #must be executed in pythonGenerator dir
+    exec(open(fileCS).read(), globals())
 except Exception as exceptionStubFiles:
     print('WARNING: stub files could not be merged (' + type(exceptionStubFiles).__name__ + ': '
           + str(exceptionStubFiles) + '); building without a merged __init__.pyi')

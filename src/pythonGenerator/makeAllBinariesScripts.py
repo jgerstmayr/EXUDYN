@@ -7,6 +7,8 @@ Created on Fri Apr 29, 08:53:30 2022
 goal: scripts run only when all binaries are built, changing e.g. latex files for documenations
 """
 
+import os, sys  #generatorPaths and the shared helpers live in tools/generators/ (plan step 33, part 2g)
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'tools', 'generators'))
 import os
 import datetime
 

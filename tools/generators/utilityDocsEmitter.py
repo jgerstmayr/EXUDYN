@@ -21,10 +21,6 @@ import sys
 toolsDirectory = os.path.dirname(os.path.abspath(__file__))
 if toolsDirectory not in sys.path:
     sys.path.insert(0, toolsDirectory)
-#the shared text helpers still live with the old generators until step 33 part 2g moves them
-generatorDirectory = os.path.normpath(os.path.join(toolsDirectory, '..', '..', 'src', 'pythonGenerator'))
-if generatorDirectory not in sys.path:
-    sys.path.insert(0, generatorDirectory)
 
 from utilityDocsModel import *                                                   # noqa: E402,F403
 

@@ -23,10 +23,6 @@ import sys
 toolsDirectory = os.path.dirname(os.path.abspath(__file__))
 if toolsDirectory not in sys.path:
     sys.path.insert(0, toolsDirectory)
-#the shared text helpers still live with the old generators until step 33 part 2g moves them
-generatorDirectory = os.path.normpath(os.path.join(toolsDirectory, '..', '..', 'src', 'pythonGenerator'))
-if generatorDirectory not in sys.path:
-    sys.path.insert(0, generatorDirectory)
 
 from autoGenerateHelper import GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword, RemoveSpacesTabs, CountLines, \
     TypeConversion, GenerateHeader, SplitString, Str2Latex, DefaultValue2Python, Str2Doxygen, GetDateStr, GetTypesStringLatex, \
@@ -36,8 +32,8 @@ from autoGenerateHelper import GenerateLatexStrKeywordExamples, ExtractExamplesW
 import copy
 import os
 import io #RST files written as UTF-8
-from exudynVersion import exudynVersionString
 import generatorPaths as paths
+from exudynVersion import exudynVersionString
 import definitionLoader
 
 ADD_DOCSTRINGS = True

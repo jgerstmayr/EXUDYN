@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN maintainer tool
 #
-# Details:  Emits src/pythonGenerator/generated/stubSystemStructures.pyi, the stub fragment of the
+# Details:  Emits tools/generators/generated/stubSystemStructures.pyi, the stub fragment of the
 #           structures (SimulationSettings, VisualizationSettings, ...) that createStubFiles.py
 #           assembles, from definitions/ (revision plan step 33, part 2c). Moved out of
 #           src/pythonGenerator/pythonAutoGenerateSystemStructures.py; the output is byte-identical.
@@ -20,10 +20,6 @@ import sys
 toolsDirectory = os.path.dirname(os.path.abspath(__file__))
 if toolsDirectory not in sys.path:
     sys.path.insert(0, toolsDirectory)
-#the shared text helpers still live with the old generators until step 33 part 2g moves them
-generatorDirectory = os.path.normpath(os.path.join(toolsDirectory, '..', '..', 'src', 'pythonGenerator'))
-if generatorDirectory not in sys.path:
-    sys.path.insert(0, generatorDirectory)
 
 from structureModel import *                                            # noqa: E402,F403
 

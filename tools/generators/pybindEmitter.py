@@ -9,7 +9,7 @@
 #           src/pythonGenerator/autoGeneratePyBindings.py (revision plan step 33, part 2d); the
 #           output is byte-identical.
 #
-#           Reads src/pythonGenerator/generated/MainSystemCreateExt.rst and MainSystemExt.rst,
+#           Reads tools/generators/generated/MainSystemCreateExt.rst and MainSystemExt.rst,
 #           written by mainSystemExtensionDocsEmitter.py, which tools/regenerate.py runs before this
 #           emitter (step 33 part 2e; part 2f makes such inputs explicit).
 #
@@ -29,10 +29,6 @@ import sys
 toolsDirectory = os.path.dirname(os.path.abspath(__file__))
 if toolsDirectory not in sys.path:
     sys.path.insert(0, toolsDirectory)
-#the shared text helpers still live with the old generators until step 33 part 2g moves them
-generatorDirectory = os.path.normpath(os.path.join(toolsDirectory, '..', '..', 'src', 'pythonGenerator'))
-if generatorDirectory not in sys.path:
-    sys.path.insert(0, generatorDirectory)
 definitionsDirectory = os.path.normpath(os.path.join(toolsDirectory, '..', '..', 'definitions'))
 if definitionsDirectory not in sys.path:
     sys.path.insert(0, definitionsDirectory)

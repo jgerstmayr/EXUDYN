@@ -20,9 +20,6 @@ import sys
 toolsDirectory = os.path.dirname(os.path.abspath(__file__))
 if toolsDirectory not in sys.path:
     sys.path.insert(0, toolsDirectory)
-generatorDirectory = os.path.normpath(os.path.join(toolsDirectory, '..', '..', 'src', 'pythonGenerator'))
-if generatorDirectory not in sys.path:
-    sys.path.insert(0, generatorDirectory)
 
 import itemModel as im                                  # noqa: E402
 from autoGenerateHelper import RemoveIndentation        # noqa: E402

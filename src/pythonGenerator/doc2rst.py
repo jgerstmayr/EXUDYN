@@ -8,6 +8,8 @@ goal: generate .rst files from tex documentation
 
 usage: call 'rstviewer README.rst' directly in powershell; alternatively use restview
 """
+import os, sys  #generatorPaths and the shared helpers live in tools/generators/ (plan step 33, part 2g)
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'tools', 'generators'))
 import copy #for deep copies
 import io   #for utf-8 encoding
 from autoGenerateHelper import Str2Latex, GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword, \

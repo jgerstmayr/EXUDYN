@@ -1086,7 +1086,11 @@ The core investment. Every step is validated byte-for-byte by step 2.
          gitignored and untracked today although `CLAUDE.md` lists the directory) call the
          driver instead of individual generator scripts, and the directory comes under version
          control; `runPythonScripts.bat` already calls `tools/regenerate.py` locally.
-       - **2g - move out.** The emitters and the shrunken remainder of `autoGenerateHelper.py`
+       - **2g - move out. DONE 2026-09-14; step 33 part 2 is complete.** `autoGenerateHelper.py`,
+         `generatorPaths.py`, `createStubFiles.py`, `stubHeader.pyi` and `generated/` moved to
+         `tools/generators/` with `git mv`; `setup.py` and `MANIFEST.in` follow. Only 3 of the
+         helper's 43 definitions were unused by the emitters, so it moved whole.
+         Original scope: the emitters and the shrunken remainder of `autoGenerateHelper.py`
          (only what the emitters still use) live in `tools/generators/`; `src/pythonGenerator/`
          then holds only what later steps delete.
 
