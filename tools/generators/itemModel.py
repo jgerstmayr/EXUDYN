@@ -471,6 +471,77 @@ def SymbolicUserFunctions(definition):
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#direct member access for the emitters (revision plan step 34): each predicate states what a letter
+#of the old string representation (lineType, cFlags) used to encode, read from the member itself
+def IsFunction(member):
+    return 'Function' in member['kind']
+
+
+def IsVariable(member):
+    """a member variable, including one declared by the parent class (old lineType containing V)"""
+    return not IsFunction(member)
+
+
+def FromParent(member):
+    return bool(member.get('fromParent', False))
+
+
+def IsOwnVariable(member):
+    """a member variable of this class itself (old lineType == 'V')"""
+    return IsVariable(member) and not FromParent(member) and not member.get('isLinked', False)
+
+
+def IsVirtualFunction(member):
+    return IsFunction(member) and bool(member.get('isVirtual', False))
+
+
+def IsStaticFunction(member):
+    return IsFunction(member) and bool(member.get('isStatic', False))
+
+
+def IsDeclarationOnly(member):
+    """a function whose body is in the hand-written .cpp (old flag D)"""
+    return IsFunction(member) and member.get('implementation', None) is None
+
+
+def HasFlag(member, letter):
+    """a flag stored in cFlags: CFConst 'C', CFOptional 'O', CFMutable 'U', CFReadOnly 'R'"""
+    return letter in (member.get('cFlags', '') or '')
+
+
+def CppName(member):
+    return Mangle(member.get('cplusplusName', '') or member['pythonName'], 'cplusplusName', 'items')
+
+
+def DefaultValue(member):
+    """the C++ spelling of the default value, or the body of a function"""
+    return Mangle(DefaultValueString(member), 'defaultValue', 'items')
+
+
+def Args(member):
+    return Mangle(member.get('args', '') or '', 'args', 'items')
+
+
+def Header(definition, key):
+    """a class header value as a string ('' if absent)"""
+    value = definition.get(key, '')
+    if value is None:
+        return ''
+    if key in booleanHeaderKeys:
+        return 'True' if value else 'False'
+    return Mangle(str(value), key, 'items')
+
+
+def OutputVariableNames(definition):
+    """the names of the item's output variables, in definition order, each once"""
+    names = []
+    for entry in definition.get('outputVariables', []) or []:
+        if entry['outputVariable'].name not in names:
+            names.append(entry['outputVariable'].name)
+    return names
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the old string representation, for code moved from the old generator that still tests its fields
 legacyItemHeaderKeys = ['class', 'writeFile', 'excludeFromTheDoc', 'cParentClass', 'cBaseClass',
                         'mainParentClass', 'visuParentClass', 'pythonShortName', 'addProtectedC',

@@ -1112,6 +1112,17 @@ The core investment. Every step is validated byte-for-byte by step 2.
     runtime requirement stays numpy-only - and the byte-identity gate applies per emitter.
     Worthless before 33 lands, because it would template code that is still reading the old
     format.
+
+    Sub-steps (added 2026-09-14), each behind the byte-identity gate:
+    - **34a - direct member access.** The emitters stop reading the string records of the old
+      representation (`lineType`, `cFlags` letters, rendered `defaultValue`) and ask the members
+      through named predicates in `itemModel.py` / `structureModel.py`. A template needs exactly
+      this view of a member, so it comes first. *`itemHeaderEmitter.py` DONE 2026-09-14.* Then
+      `structureHeaderEmitter.py`, `structureStubEmitter.py`; the docs emitters
+      (`itemDocsEmitter.py`, `structureDocsEmitter.py`) only if step 50 is not first. When the last
+      consumer is gone, `definitionLoader.py`, `itemModel.LegacyItems()` and
+      `structureModel.LegacyStructures()` are deleted.
+    - **34b - Jinja2 per emitter**, as above, starting with `itemHeaderEmitter.py` (the largest).
 35. Replace the copy-and-append scheme for `mainSystemExtensionsHeader.py` with an
     `@extends(exu.MainSystem, 'CreateMassPoint')` registry decorator binding at the definition
     site, plus an explicit `install()` that raises on collision with an existing C++ method. The

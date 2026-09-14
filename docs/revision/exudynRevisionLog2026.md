@@ -2100,6 +2100,22 @@ and every other generated file is unchanged. `src/pythonGenerator/` holds `autoG
 `doc2rst.py`, `exudynVersion.py`, `latexConverter.py`, `mainSystemExtensionsHeader.py`,
 `makeAllBinariesScripts.py`.
 
+**Done 2026-09-14, step 34a (1) - `itemHeaderEmitter.py` reads the members directly.** The item
+C++ header emitter tested the old string records at 102 sites (63 of them `parameter['type']`,
+the rest `lineType` letters, `cFlags` letters and rendered fields) and 39 `parseInfo` header keys.
+`itemModel.py` gained named predicates that say what each letter encoded, read from the member:
+`IsOwnVariable` (lineType `V`), `IsVariable` (contains `V`, parent members included), `FromParent`
+(`Vp`), `IsFunction`/`IsVirtualFunction`/`IsStaticFunction` (`F`, `v`, `s`), `IsDeclarationOnly`
+(flag `D`, derived from `implementation is None`), `HasFlag(member, 'C'|'O'|'U'|'R')`, plus
+`CppName`, `DefaultValue`, `Args`, `Header(definition, key)` and `OutputVariableNames` - the last
+replaces an `eval()` of a rendered dict literal. `ItemCppHeaders(definition, typeConversion)` takes
+the definition itself; `LegacyItems()` has no consumer left (the item docs emitter reads
+`definitionLoader` directly). Measured beyond the drift gate, because the 7-line header
+comparison (#2415) would hide a changed `@brief`: the committed emitter and the new one were run
+side by side in one process over all 97 items, and all four results per item (C header, Main
+header, Visu header, symbolic user-function records) are identical; `--check` no-op; full test
+suite PASSED.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving
