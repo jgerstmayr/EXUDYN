@@ -570,7 +570,7 @@ def EmitMember(parameter, source, className=chr(39)+chr(39), classType='', paren
             head.append(name + '=True')
 
     entry = None
-    if source == 'items' and isFunction and not isStatic:
+    if source == 'items' and isFunction and isVirtual and not isStatic:
         entry = LibraryEntry(parameter, classType, parentClass, cFlags)
     if entry is not None:
         short = ['        ItemFunctionDef(' + StringLiteral(parameter['pythonName'], raw=False)]
