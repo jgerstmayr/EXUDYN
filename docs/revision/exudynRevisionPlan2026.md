@@ -1016,7 +1016,10 @@ The core investment. Every step is validated byte-for-byte by step 2.
        - **2a - no cwd dependency. DONE 2026-09-14.** `generatorPaths.py`; all generators run
          from any directory (verified from an unrelated one: no drift, nothing written there).
        - **2b - item emitters.** *In progress:* `itemInterface.py` DONE 2026-09-14
-         (`tools/generators/itemInterfaceEmitter.py`, shared facts in `itemModel.py`). Split
+         (`tools/generators/itemInterfaceEmitter.py`, shared facts in `itemModel.py`); item C++
+         headers DONE 2026-09-14 (`itemHeaderEmitter.py`; its moved code still reads the old
+         string records through `itemModel.LegacyItems()` - replacing them with direct member
+         access belongs to step 34). Split
          `pythonAutoGenerateObjects.py` (one `WriteFile`
          returning nine strings) by output: C/Main/Visu C++ headers, `itemInterface.py`, item
          RST + LaTeX, mini examples, `objectFactoryAutoReg.h`. Each reads `definitions/`
@@ -1049,6 +1052,10 @@ The core investment. Every step is validated byte-for-byte by step 2.
          is read by `autoGeneratePyBindings`). Each emitter declares inputs and outputs; one
          driver, `tools/generators/generate.py` with `main()` + argparse, runs them in dependency
          order; `createStubFiles.py` becomes its last stage. `regenerate.py` calls the driver.
+         The maintainer's `tools/buildAndGenerate/` batch scripts (generation, wheels, tests;
+         gitignored and untracked today although `CLAUDE.md` lists the directory) call the
+         driver instead of individual generator scripts, and the directory comes under version
+         control; `runPythonScripts.bat` already calls `tools/regenerate.py` locally.
        - **2g - move out.** The emitters and the shrunken remainder of `autoGenerateHelper.py`
          (only what the emitters still use) live in `tools/generators/`; `src/pythonGenerator/`
          then holds only what later steps delete.

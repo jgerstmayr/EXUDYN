@@ -39,6 +39,7 @@ from autoGenerateHelper import IsEqualIgnoringDateStrings
 generatorScripts = [
     'pythonAutoGenerateObjects.py',
     '../../tools/generators/itemInterfaceEmitter.py',   #step 33 part 2b: split out of the line above
+    '../../tools/generators/itemHeaderEmitter.py',      #step 33 part 2b: split out of the objects generator
     'pythonAutoGenerateSystemStructures.py',
     'autoGeneratePyBindings.py',
     'utilitiesDocuGenerator.py',
