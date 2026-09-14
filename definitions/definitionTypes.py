@@ -17,45 +17,24 @@
 #           nothing checks, and a mistyped letter changed the build silently. As a name it is a
 #           NameError at import, and an editor can complete it.
 #
+#           Layout (plan step 31e): three blocks, by where the vocabulary is USED -
+#             SHARED      types, default values and sentinels used by items AND structures
+#             ITEMS       destinations, item flags, closed header sets, item constructors and
+#                         the function library resolution
+#             STRUCTURES  structure flags, Deprecated, structure constructors
+#           A name used by only one kind of definition lives in that block; one-off types are
+#           listed most-used first.
+#
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-13 (created)
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
 #
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#--------------------------------------------------------------------- destinations (items)
-#combine with +, e.g. DestComp+DestParam
-DestMain             = 'M'   #Main object
-DestComp             = 'C'   #computational object
-DestVisu             = 'V'   #visualization object
-DestParam            = 'P'   #parameter structure
 
-#--------------------------------------------------------------------- flags (items)
-CFReadOnly           = 'R'   #read only; functions are always read only
-CFConst              = 'C'   #const member function
-CFMutable            = 'U'   #mutable: may be modified in const functions (temporary vectors)
-CFNoInterface        = 'n'   #EXCLUDED from the Python dictionary interface. Inverted on
-                             #purpose: 947 of 985 parameters are in the interface and 38
-                             #are not - all of them temporaries or computed state - so
-                             #stating the exception is shorter and says more. The letter
-                             #is not one of the old format's; the emitter translates.
-                             #NOTE: this flag is meaningless on a function. The generator
-                             #reads the interface flag only inside a block guarded by
-                             #lineType 'V' (pythonAutoGenerateObjects.py:1123), so the 'I'
-                             #that 1755 of 1850 function rows carried never had an effect.
-CFOptional           = 'O'   #optional parameter in the dictionary; otherwise the default
-
-#--------------------------------------------------------------------- flags (structures)
-SFNoDictType         = 'D'   #no dictionary with type info - NOTE: the legend gives D twice, also
-                             #as "definition only"; the generator decides by context
-#NOTE: there is no SFSubstructure constant. 'substructure' is DERIVED - it means exactly
-#      'the type names one of the structures defined in these files', which held for all 71
-#      of them, so declaring it as well was a second statement of the same fact.
-SFReturnCopy         = 'V'   #return value policy: copy
-SFPybindArgs         = 'G'   #add args for pybind
-SFConst              = 'C'   #const function
-SFPybind             = 'P'   #write the pybind11 interface
-SFDeprecated         = 'X'   #deprecated; the description links to the relocated value
+#==================================================================================================
+# SHARED - used by item AND structure definitions
+#==================================================================================================
 
 #--------------------------------------------------------------------- default values
 #A default value is a real Python value: True, False, 0., 0, 1.5 - not the string '0.'. Three
@@ -162,80 +141,6 @@ class _NoDefaultValue:
 
 
 NoDefaultValue = _NoDefaultValue()
-
-
-class Deprecated:
-    """When a member was deprecated and when it is to be removed. This used to be stored in
-    defaultValue as the string 'version;EXP=year' - a deprecated member has no default value, so
-    the field was free - and the generator that reads it says "workaround" in its own comment
-    (pythonAutoGenerateSystemStructures.py:149). Two facts in one string, parsed by splitting on
-    a semicolon, are now two fields."""
-
-    def __init__(self, since, expires):
-        self.since = since
-        self.expires = expires
-
-    def ToCpp(self):
-        """the single string the old format stored"""
-        return str(self.since) + ';EXP=' + str(self.expires)
-
-    def __repr__(self):
-        return 'Deprecated(' + repr(self.since) + ', ' + repr(self.expires) + ')'
-
-
-DVInvalidIndex = CppValue('EXUstd::InvalidIndex', 'exudyn.InvalidIndex()', 'invalid index')
-DVDefaultColor = CppValue('Float4({-1.f,-1.f,-1.f,-1.f})', '[-1.,-1.,-1.,-1.]',
-                          'default colour (RGBA -1 means: use the default)')
-DVZeroVector3D = CppValue('Vector3D({0.,0.,0.})', '[0.,0.,0.]')
-
-#--------------------------------------------------------------------- parent classes (items)
-#CLOSED SETS. A new parent class cannot be introduced by editing a definition file: it needs
-#hand-written C++ as well. So a free string here would buy nothing and hide a typo.
-ParentClassCObject                  = 'CObject'
-ParentClassCObjectBody              = 'CObjectBody'
-ParentClassCObjectConnector         = 'CObjectConnector'
-ParentClassCObjectConstraint        = 'CObjectConstraint'
-ParentClassCObjectSuperElement      = 'CObjectSuperElement'
-ParentClassCObjectANCFCable2DBase   = 'CObjectANCFCable2DBase'
-ParentClassCNodeODE1                = 'CNodeODE1'
-ParentClassCNodeODE2                = 'CNodeODE2'
-ParentClassCNodeAE                  = 'CNodeAE'
-ParentClassCNodeData                = 'CNodeData'
-ParentClassCNodeRigidBody           = 'CNodeRigidBody'
-ParentClassCMarker                  = 'CMarker'
-ParentClassCLoad                    = 'CLoad'
-ParentClassCSensor                  = 'CSensor'
-
-MainParentClassMainObject           = 'MainObject'
-MainParentClassMainObjectBody       = 'MainObjectBody'
-MainParentClassMainObjectConnector  = 'MainObjectConnector'
-MainParentClassMainNode             = 'MainNode'
-MainParentClassMainMarker           = 'MainMarker'
-MainParentClassMainLoad             = 'MainLoad'
-MainParentClassMainSensor           = 'MainSensor'
-
-VisuParentClassVisualizationObject             = 'VisualizationObject'
-VisuParentClassVisualizationObjectSuperElement = 'VisualizationObjectSuperElement'
-VisuParentClassVisualizationNode               = 'VisualizationNode'
-VisuParentClassVisualizationMarker             = 'VisualizationMarker'
-VisuParentClassVisualizationLoad               = 'VisualizationLoad'
-VisuParentClassVisualizationSensor             = 'VisualizationSensor'
-
-#--------------------------------------------------------------------- class and object types
-#CLOSED SETS as well; classType additionally selects the file a definition is emitted into.
-ClassTypeNode        = 'Node'
-ClassTypeObject      = 'Object'
-ClassTypeMarker      = 'Marker'
-ClassTypeLoad        = 'Load'
-ClassTypeSensor      = 'Sensor'
-
-ObjectTypeObject        = 'Object'
-ObjectTypeBody          = 'Body'
-ObjectTypeConnector     = 'Connector'
-ObjectTypeConstraint    = 'Constraint'
-ObjectTypeJoint         = 'Joint'
-ObjectTypeFiniteElement = 'FiniteElement'
-ObjectTypeSuperElement  = 'SuperElement'
 
 #--------------------------------------------------------------------- types
 #A type that NAMES A STRUCTURE defined in these files gets no constant: it refers to
@@ -347,76 +252,16 @@ def TIndexND(n, itemKind=None):
     return TypeSpec(_sized(table, n, "index tuple size"), size=n, itemKind=itemKind)
 
 
-#--------------------------------------------------------------------- remaining C++ types
-#one-off types with no family: user-function signatures, containers and EXUDYN structs
-TAccessFunctionType                = TypeSpec('AccessFunctionType')
-TArrayFloat                        = TypeSpec('ArrayFloat')
-TBeamSection                       = TypeSpec('BeamSection')
-TBodyGraphicsData                  = TypeSpec('BodyGraphicsData')
-TBodyGraphicsDataList              = TypeSpec('BodyGraphicsDataList')
-TBool                              = TypeSpec('Bool')
-TCNodeGroup                        = TypeSpec('CNodeGroup')
-TCObjectType                       = TypeSpec('CObjectType')
-TCSolverExplicitTimeInt            = TypeSpec('CSolverExplicitTimeInt')
-TCSolverImplicitSecondOrderTimeIntUserFunction = TypeSpec('CSolverImplicitSecondOrderTimeIntUserFunction')
-TCSolverStatic                     = TypeSpec('CSolverStatic')
-TCrossSectionType                  = TypeSpec('CrossSectionType')
-TDynamicSolverType                 = TypeSpec('DynamicSolverType')
-TFileName                          = TypeSpec('FileName')
-TFloat3                            = TypeSpec('Float3')
-TFloat4                            = TypeSpec('Float4')
-TGeneralMatrixEXUdense             = TypeSpec('GeneralMatrixEXUdense')
-TGeneralMatrixEigenSparse          = TypeSpec('GeneralMatrixEigenSparse')
-THomogeneousTransformation         = TypeSpec('HomogeneousTransformation')
-TInertiaList                       = TypeSpec('InertiaList')
-TInt                               = TypeSpec('Int')
-TItemType                          = TypeSpec('ItemType')
-TJointTypeList                     = TypeSpec('JointTypeList')
-TKeyPressUserFunction              = TypeSpec('KeyPressUserFunction')
-TLinearSolverType                  = TypeSpec('LinearSolverType')
-TLinkedDataVector                  = TypeSpec('LinkedDataVector')
-TLoadType                          = TypeSpec('LoadType')
-TMatrix3DList                      = TypeSpec('Matrix3DList')
-TNumpyMatrix                       = TypeSpec('NumpyMatrix')
-TNumpyMatrixI                      = TypeSpec('NumpyMatrixI')
-TNumpyVector                       = TypeSpec('NumpyVector')
-TOutputVariableType                = TypeSpec('OutputVariableType')
-TPyFunctionGraphicsData            = TypeSpec('PyFunctionGraphicsData')
-TPyFunctionMatrixContainerMbsScalarIndex2Vector = TypeSpec('PyFunctionMatrixContainerMbsScalarIndex2Vector')
-TPyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar = TypeSpec('PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar')
-TPyFunctionMatrixContainerMbsScalarIndex2VectorBool = TypeSpec('PyFunctionMatrixContainerMbsScalarIndex2VectorBool')
-TPyFunctionMatrixMbsScalarIndex2Vector = TypeSpec('PyFunctionMatrixMbsScalarIndex2Vector')
-TPyFunctionMbsScalar2              = TypeSpec('PyFunctionMbsScalar2')
-TPyFunctionMbsScalarIndexScalar    = TypeSpec('PyFunctionMbsScalarIndexScalar')
-TPyFunctionMbsScalarIndexScalar11  = TypeSpec('PyFunctionMbsScalarIndexScalar11')
-TPyFunctionMbsScalarIndexScalar5   = TypeSpec('PyFunctionMbsScalarIndexScalar5')
-TPyFunctionMbsScalarIndexScalar9   = TypeSpec('PyFunctionMbsScalarIndexScalar9')
-TPyFunctionVector3DmbsScalarIndexScalar4Vector3D = TypeSpec('PyFunctionVector3DmbsScalarIndexScalar4Vector3D')
-TPyFunctionVector3DmbsScalarVector3D = TypeSpec('PyFunctionVector3DmbsScalarVector3D')
-TPyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D = TypeSpec('PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D')
-TPyFunctionVector6DmbsScalarIndexVector6D = TypeSpec('PyFunctionVector6DmbsScalarIndexVector6D')
-TPyFunctionVectorMbsScalarArrayIndexVectorConfiguration = TypeSpec('PyFunctionVectorMbsScalarArrayIndexVectorConfiguration')
-TPyFunctionVectorMbsScalarIndex2Vector = TypeSpec('PyFunctionVectorMbsScalarIndex2Vector')
-TPyFunctionVectorMbsScalarIndex2VectorBool = TypeSpec('PyFunctionVectorMbsScalarIndex2VectorBool')
-TPyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D = TypeSpec('PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D')
-TPyFunctionVectorMbsScalarIndexVector = TypeSpec('PyFunctionVectorMbsScalarIndexVector')
-TPyMatrixContainer                 = TypeSpec('PyMatrixContainer')
-TResizableMatrix                   = TypeSpec('ResizableMatrix')
-TResizableVector                   = TypeSpec('ResizableVector')
-TResizableVectorParallel           = TypeSpec('ResizableVectorParallel')
-TSTDstring                         = TypeSpec('STDstring')
-TSensorType                        = TypeSpec('SensorType')
-TStdArray33F                       = TypeSpec('StdArray33F')
-TString                            = TypeSpec('String')
-TTemporaryComputationData          = TypeSpec('TemporaryComputationData')
-TTemporaryComputationDataArray     = TypeSpec('TemporaryComputationDataArray')
-TTransformation66List              = TypeSpec('Transformation66List')
-TVector                            = TypeSpec('Vector')
-TVector2DList                      = TypeSpec('Vector2DList')
-TVector3DList                      = TypeSpec('Vector3DList')
-TVector6DList                      = TypeSpec('Vector6DList')
+#--------------------------------------------------------------------- one-off types used by both
+#types with no family - user-function signatures, containers, EXUDYN structs; most-used first
 Tbool                              = TypeSpec('bool')
 Tvoid                              = TypeSpec('void')
+TString                            = TypeSpec('String')
+TFloat4                            = TypeSpec('Float4')
+TNumpyVector                       = TypeSpec('NumpyVector')
+TNumpyMatrix                       = TypeSpec('NumpyMatrix')
+TOutputVariableType                = TypeSpec('OutputVariableType')
+TResizableVector                   = TypeSpec('ResizableVector')
 
 
 #%%************************************************************************************************
@@ -436,6 +281,131 @@ def _member(kind, fields):
     return fields
 
 
+#==================================================================================================
+# ITEMS - nodes, objects, markers, loads, sensors
+#==================================================================================================
+
+#--------------------------------------------------------------------- destinations (items)
+#combine with +, e.g. DestComp+DestParam
+DestMain             = 'M'   #Main object
+DestComp             = 'C'   #computational object
+DestVisu             = 'V'   #visualization object
+DestParam            = 'P'   #parameter structure
+
+#--------------------------------------------------------------------- flags (items)
+CFReadOnly           = 'R'   #read only; functions are always read only
+CFConst              = 'C'   #const member function
+CFMutable            = 'U'   #mutable: may be modified in const functions (temporary vectors)
+CFNoInterface        = 'n'   #EXCLUDED from the Python dictionary interface. Inverted on
+                             #purpose: 947 of 985 parameters are in the interface and 38
+                             #are not - all of them temporaries or computed state - so
+                             #stating the exception is shorter and says more. The letter
+                             #is not one of the old format's; the emitter translates.
+                             #NOTE: this flag is meaningless on a function. The generator
+                             #reads the interface flag only inside a block guarded by
+                             #lineType 'V' (pythonAutoGenerateObjects.py:1123), so the 'I'
+                             #that 1755 of 1850 function rows carried never had an effect.
+CFOptional           = 'O'   #optional parameter in the dictionary; otherwise the default
+
+#--------------------------------------------------------------------- default values (items)
+DVInvalidIndex = CppValue('EXUstd::InvalidIndex', 'exudyn.InvalidIndex()', 'invalid index')
+DVDefaultColor = CppValue('Float4({-1.f,-1.f,-1.f,-1.f})', '[-1.,-1.,-1.,-1.]',
+                          'default colour (RGBA -1 means: use the default)')
+DVZeroVector3D = CppValue('Vector3D({0.,0.,0.})', '[0.,0.,0.]')
+
+#--------------------------------------------------------------------- parent classes (items)
+#CLOSED SETS. A new parent class cannot be introduced by editing a definition file: it needs
+#hand-written C++ as well. So a free string here would buy nothing and hide a typo.
+ParentClassCObject                  = 'CObject'
+ParentClassCObjectBody              = 'CObjectBody'
+ParentClassCObjectConnector         = 'CObjectConnector'
+ParentClassCObjectConstraint        = 'CObjectConstraint'
+ParentClassCObjectSuperElement      = 'CObjectSuperElement'
+ParentClassCObjectANCFCable2DBase   = 'CObjectANCFCable2DBase'
+ParentClassCNodeODE1                = 'CNodeODE1'
+ParentClassCNodeODE2                = 'CNodeODE2'
+ParentClassCNodeAE                  = 'CNodeAE'
+ParentClassCNodeData                = 'CNodeData'
+ParentClassCNodeRigidBody           = 'CNodeRigidBody'
+ParentClassCMarker                  = 'CMarker'
+ParentClassCLoad                    = 'CLoad'
+ParentClassCSensor                  = 'CSensor'
+
+MainParentClassMainObject           = 'MainObject'
+MainParentClassMainObjectBody       = 'MainObjectBody'
+MainParentClassMainObjectConnector  = 'MainObjectConnector'
+MainParentClassMainNode             = 'MainNode'
+MainParentClassMainMarker           = 'MainMarker'
+MainParentClassMainLoad             = 'MainLoad'
+MainParentClassMainSensor           = 'MainSensor'
+
+VisuParentClassVisualizationObject             = 'VisualizationObject'
+VisuParentClassVisualizationObjectSuperElement = 'VisualizationObjectSuperElement'
+VisuParentClassVisualizationNode               = 'VisualizationNode'
+VisuParentClassVisualizationMarker             = 'VisualizationMarker'
+VisuParentClassVisualizationLoad               = 'VisualizationLoad'
+VisuParentClassVisualizationSensor             = 'VisualizationSensor'
+
+#--------------------------------------------------------------------- class and object types
+#CLOSED SETS as well; classType additionally selects the file a definition is emitted into.
+ClassTypeNode        = 'Node'
+ClassTypeObject      = 'Object'
+ClassTypeMarker      = 'Marker'
+ClassTypeLoad        = 'Load'
+ClassTypeSensor      = 'Sensor'
+
+ObjectTypeObject        = 'Object'
+ObjectTypeBody          = 'Body'
+ObjectTypeConnector     = 'Connector'
+ObjectTypeConstraint    = 'Constraint'
+ObjectTypeJoint         = 'Joint'
+ObjectTypeFiniteElement = 'FiniteElement'
+ObjectTypeSuperElement  = 'SuperElement'
+
+#--------------------------------------------------------------------- one-off types used only by items
+TBool                              = TypeSpec('Bool')
+TCObjectType                       = TypeSpec('CObjectType')
+TVector                            = TypeSpec('Vector')
+TPyMatrixContainer                 = TypeSpec('PyMatrixContainer')
+TResizableMatrix                   = TypeSpec('ResizableMatrix')
+TSensorType                        = TypeSpec('SensorType')
+TBodyGraphicsData                  = TypeSpec('BodyGraphicsData')
+TVector3DList                      = TypeSpec('Vector3DList')
+TVector6DList                      = TypeSpec('Vector6DList')
+TLinkedDataVector                  = TypeSpec('LinkedDataVector')
+TLoadType                          = TypeSpec('LoadType')
+TMatrix3DList                      = TypeSpec('Matrix3DList')
+TNumpyMatrixI                      = TypeSpec('NumpyMatrixI')
+TPyFunctionGraphicsData            = TypeSpec('PyFunctionGraphicsData')
+TPyFunctionMbsScalarIndexScalar5   = TypeSpec('PyFunctionMbsScalarIndexScalar5')
+TPyFunctionVectorMbsScalarIndex2Vector = TypeSpec('PyFunctionVectorMbsScalarIndex2Vector')
+TPyFunctionVector3DmbsScalarVector3D = TypeSpec('PyFunctionVector3DmbsScalarVector3D')
+TTransformation66List              = TypeSpec('Transformation66List')
+TBeamSection                       = TypeSpec('BeamSection')
+THomogeneousTransformation         = TypeSpec('HomogeneousTransformation')
+TPyFunctionMatrixMbsScalarIndex2Vector = TypeSpec('PyFunctionMatrixMbsScalarIndex2Vector')
+TPyFunctionMbsScalarIndexScalar    = TypeSpec('PyFunctionMbsScalarIndexScalar')
+TPyFunctionMbsScalarIndexScalar9   = TypeSpec('PyFunctionMbsScalarIndexScalar9')
+TPyFunctionVector6DmbsScalarIndexVector6D = TypeSpec('PyFunctionVector6DmbsScalarIndexVector6D')
+TAccessFunctionType                = TypeSpec('AccessFunctionType')
+TBodyGraphicsDataList              = TypeSpec('BodyGraphicsDataList')
+TCNodeGroup                        = TypeSpec('CNodeGroup')
+TInertiaList                       = TypeSpec('InertiaList')
+TJointTypeList                     = TypeSpec('JointTypeList')
+TPyFunctionMatrixContainerMbsScalarIndex2Vector = TypeSpec('PyFunctionMatrixContainerMbsScalarIndex2Vector')
+TPyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar = TypeSpec('PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar')
+TPyFunctionMatrixContainerMbsScalarIndex2VectorBool = TypeSpec('PyFunctionMatrixContainerMbsScalarIndex2VectorBool')
+TPyFunctionMbsScalar2              = TypeSpec('PyFunctionMbsScalar2')
+TPyFunctionMbsScalarIndexScalar11  = TypeSpec('PyFunctionMbsScalarIndexScalar11')
+TPyFunctionVector3DmbsScalarIndexScalar4Vector3D = TypeSpec('PyFunctionVector3DmbsScalarIndexScalar4Vector3D')
+TPyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D = TypeSpec('PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D')
+TPyFunctionVectorMbsScalarArrayIndexVectorConfiguration = TypeSpec('PyFunctionVectorMbsScalarArrayIndexVectorConfiguration')
+TPyFunctionVectorMbsScalarIndex2VectorBool = TypeSpec('PyFunctionVectorMbsScalarIndex2VectorBool')
+TPyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D = TypeSpec('PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D')
+TPyFunctionVectorMbsScalarIndexVector = TypeSpec('PyFunctionVectorMbsScalarIndexVector')
+TSTDstring                         = TypeSpec('STDstring')
+
+
 #%%************************************************************************************************
 def ItemParameter(type=Required, destination=Required, pythonName=Required,
                   defaultValue=Required, description=Required,
@@ -450,21 +420,6 @@ def ItemFunction(type=Required, destination=Required, pythonName=Required,
                  cFlags='', implementation=None, args='', size='', cplusplusName='',
                  isVirtual=True, isStatic=False):
     return _member('ItemFunction', locals())
-
-
-#%%************************************************************************************************
-def StructureParameter(type=Required, pythonName=Required, defaultValue=Required,
-                       description=Required,
-                       cFlags='', size='', args='', cplusplusName='',
-                       isLinked=False, fromParent=False, deprecated=None):
-    return _member('StructureParameter', locals())
-
-
-#%%************************************************************************************************
-def StructureFunction(type=Required, pythonName=Required, description=Required,
-                      cFlags='', implementation=None, args='', size='', cplusplusName='',
-                      isVirtual=True, isLinked=False):
-    return _member('StructureFunction', locals())
 
 
 #%%************************************************************************************************
@@ -505,10 +460,10 @@ def ItemFunctionDef(pythonName, implementation=None, description=None,
     """Use site: this item overrides a function whose declaration is in the library. The entry is
     found from the class this member belongs to - its classType and cParentClass - and the name.
 
-    destination and cFlags default to None and are given only where the name alone is ambiguous,
-    which is 12 of 273 entries: the const and non-const halves of an accessor pair, and the names
-    used for both a computation and a visualization function. A missing one is an error listing
-    the alternatives, not a silent pick.
+    destination, cFlags and args default to None and are given only where the name alone is
+    ambiguous: the const and non-const halves of an accessor pair, two argument lists under one
+    name, and the names used for both a computation and a visualization function. A missing one
+    is an error listing the alternatives, not a silent pick.
 
     description is None unless the text is genuinely item-specific; implementation is None for a
     declaration the .cpp defines, '' for an empty body, and a string for a body."""
@@ -578,6 +533,78 @@ def ItemDefinition(className, members, **header):
     header['members'] = members
 
     return header
+
+
+#==================================================================================================
+# STRUCTURES - settings, solver and system structures
+#==================================================================================================
+
+#--------------------------------------------------------------------- flags (structures)
+SFNoDictType         = 'D'   #no dictionary with type info - NOTE: the legend gives D twice, also
+                             #as "definition only"; the generator decides by context
+#NOTE: there is no SFSubstructure constant. 'substructure' is DERIVED - it means exactly
+#      'the type names one of the structures defined in these files', which held for all 71
+#      of them, so declaring it as well was a second statement of the same fact.
+SFReturnCopy         = 'V'   #return value policy: copy
+SFPybindArgs         = 'G'   #add args for pybind
+SFConst              = 'C'   #const function
+SFPybind             = 'P'   #write the pybind11 interface
+SFDeprecated         = 'X'   #deprecated; the description links to the relocated value
+
+class Deprecated:
+    """When a member was deprecated and when it is to be removed. This used to be stored in
+    defaultValue as the string 'version;EXP=year' - a deprecated member has no default value, so
+    the field was free - and the generator that reads it says "workaround" in its own comment
+    (pythonAutoGenerateSystemStructures.py:149). Two facts in one string, parsed by splitting on
+    a semicolon, are now two fields."""
+
+    def __init__(self, since, expires):
+        self.since = since
+        self.expires = expires
+
+    def ToCpp(self):
+        """the single string the old format stored"""
+        return str(self.since) + ';EXP=' + str(self.expires)
+
+    def __repr__(self):
+        return 'Deprecated(' + repr(self.since) + ', ' + repr(self.expires) + ')'
+
+
+#--------------------------------------------------------------------- one-off types used only by structures
+TFloat3                            = TypeSpec('Float3')
+TResizableVectorParallel           = TypeSpec('ResizableVectorParallel')
+TFileName                          = TypeSpec('FileName')
+TInt                               = TypeSpec('Int')
+TGeneralMatrixEXUdense             = TypeSpec('GeneralMatrixEXUdense')
+TGeneralMatrixEigenSparse          = TypeSpec('GeneralMatrixEigenSparse')
+TLinearSolverType                  = TypeSpec('LinearSolverType')
+TKeyPressUserFunction              = TypeSpec('KeyPressUserFunction')
+TStdArray33F                       = TypeSpec('StdArray33F')
+TArrayFloat                        = TypeSpec('ArrayFloat')
+TCSolverExplicitTimeInt            = TypeSpec('CSolverExplicitTimeInt')
+TCSolverImplicitSecondOrderTimeIntUserFunction = TypeSpec('CSolverImplicitSecondOrderTimeIntUserFunction')
+TCSolverStatic                     = TypeSpec('CSolverStatic')
+TCrossSectionType                  = TypeSpec('CrossSectionType')
+TDynamicSolverType                 = TypeSpec('DynamicSolverType')
+TItemType                          = TypeSpec('ItemType')
+TTemporaryComputationData          = TypeSpec('TemporaryComputationData')
+TTemporaryComputationDataArray     = TypeSpec('TemporaryComputationDataArray')
+TVector2DList                      = TypeSpec('Vector2DList')
+
+
+#%%************************************************************************************************
+def StructureParameter(type=Required, pythonName=Required, defaultValue=Required,
+                       description=Required,
+                       cFlags='', size='', args='', cplusplusName='',
+                       isLinked=False, fromParent=False, deprecated=None):
+    return _member('StructureParameter', locals())
+
+
+#%%************************************************************************************************
+def StructureFunction(type=Required, pythonName=Required, description=Required,
+                      cFlags='', implementation=None, args='', size='', cplusplusName='',
+                      isVirtual=True, isLinked=False):
+    return _member('StructureFunction', locals())
 
 
 #%%************************************************************************************************
