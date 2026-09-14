@@ -1072,7 +1072,13 @@ The core investment. Every step is validated byte-for-byte by step 2.
          documents the 27 utility modules from `#**` comments - kept as one emitter now, and
          re-pointed at Google-style docstrings via griffe by steps 36 and 38. The dead
          `utilitiesDocuData.npy` is dropped.
-       - **2f - one driver, explicit intermediates.** Today the scripts hand data to each other
+       - **2f - one driver, explicit intermediates.** *Driver DONE 2026-09-14:*
+         `tools/generators/generate.py` declares 13 stages with the paths each reads and writes and
+         derives the run order (cycles refused); `regenerate.py` calls it. *Open:* bringing
+         `tools/buildAndGenerate/` under version control - its scripts carry machine-specific paths
+         (`C:\Users\<user>\Anaconda`, `/mnt/c/.../Exudyn_git/main/...`, the latter stale since the
+         `main/` level was removed), to be made portable first (maintainer decision).
+         Original scope: today the scripts hand data to each other
          through `src/pythonGenerator/generated/` in an order only `tools/regenerate.py` knows
          (`utilitiesDocuGenerator` must run before `createStubFiles`, and its `MainSystem*Ext.rst`
          is read by `pybindEmitter.py`). Each emitter declares inputs and outputs; one

@@ -2046,6 +2046,20 @@ all 32 RST files; `--check` no-op with the script deleted; full test suite PASSE
 the stub loop writes `stubAutoBindingsExt.pyi` with mode `'w'` per extended class (twice), so a
 second extended class would overwrite the first - only `MainSystem` exists.
 
+**Done 2026-09-14, step 33 part 2f (driver).** `tools/generators/generate.py` is the single
+driver: each of the 13 stages (the emitters, `createStubFiles.py`, `doc2rst.py`) declares the
+repository paths it reads and writes (files, directories or `*` patterns); a stage runs after
+every stage that writes something it reads, declaration order is kept otherwise, and a cycle is
+refused. `tools/regenerate.py` no longer keeps its own script list: it validates `definitions/`,
+calls `generate.RunStages()` and compares. Measured: the derived order equals the previous list;
+reversing the declaration order still yields a valid order (the extension docs before
+`pybindEmitter`, the stub fragments before `createStubFiles`); an injected stage reading
+`__init__.pyi` and writing `stubHeader.pyi` is reported as a cycle; `--check` no-op; full test
+suite PASSED. The first attempt declared the utility emitters as reading all of `python/exudyn/`
+and was refused as a cycle with `createStubFiles` (which writes `__init__.pyi` there) - they read
+`*.py` only. Not done: `tools/buildAndGenerate/` stays untracked; its scripts contain the local
+user path and stale `main/` paths, left to the maintainer.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving
