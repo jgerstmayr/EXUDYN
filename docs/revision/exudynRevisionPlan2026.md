@@ -1045,8 +1045,9 @@ The core investment. Every step is validated byte-for-byte by step 2.
          data structures, enums, chapter introduction) record their calls on a
          `PybindInterface` (`definitions/pybindTypes.py`); `tools/generators/pybindEmitter.py`
          replays them. The string manipulations of the old script became named steering calls
-         (`BeginCppWrittenByHand`, `EndStubSection`, ...). *Open in 2d:* the enum registrators
-         (below) and the validator checks with the four definition errors they find.
+         (`BeginCppWrittenByHand`, `EndStubSection`, ...). *Validator checks DONE 2026-09-14 (#2419):*
+         argument/default/type list lengths, duplicate declarations, balanced Begin/End calls; the
+         four definition errors they found are fixed. *Open in 2d:* the enum registrators (below).
          Original scope: `autoGeneratePyBindings.py` is not a
          generator over definitions: its body *is* the definition of the hand-written Python
          interface (module functions, `SystemContainer`, `MainSystem`, enums, `symbolic`) -

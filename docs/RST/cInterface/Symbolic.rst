@@ -189,8 +189,6 @@ The following table lists special functions for \ ``SymReal``\ :
   | return floating-point remainder of the division operation x / y. For example, mod(5.1, 3) gives 2.1 as a remainder.
 * | **pow**\ (\ *x*\ , \ *y*\ ): 
   | return \ :math:`x^y`\ . 
-* | **max**\ (\ *x*\ , \ *y*\ ): 
-  | return maximum of x and y. 
 * | **IfThenElse**\ (\ *condition*\ , \ *ifTrue*\ , \ *ifFalse*\ ): 
   | Symbolic function for conditional evaluation. If the condition evaluates to True, the expression ifTrue is evaluated, while otherwise expression ifFalse is evaluated
   | *Example*:

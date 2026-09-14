@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.50.dev1, 
+  \item Exudyn version = 1.11.51.dev1, 
   \item last change =  2026-09-14, 
-  \item Number of issues = 2419, 
-  \item Number of resolved issues = 2123 (50 in current version), 
+  \item Number of issues = 2420, 
+  \item Number of resolved issues = 2124 (51 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.51}: {\bf \color{warningRed}  resolved BUG 2419}: {\bf pybind declarations: argTypes shorter than argList and a duplicated symbolic.max}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: definitionValidator (step 33 part 2d) finds: MainSystem.DeleteNode / DeleteSensor and MatrixContainer.SetWithDenseMatrix list fewer argTypes than arguments - so their stubs lose all type hints; symbolic.max is declared twice (twice in symbolic.pyi and the docs); exu.Print has argTypes without argList (unused)}
+    \item {\bf notes: definitionValidator checks the pybind declarations; argTypes completed for DeleteNode / DeleteSensor / SetWithDenseMatrix; duplicate symbolic.max and unused Print argTypes removed}
+    \item   date resolved: {\bf 2026-09-14 14:29},
+date raised: 2026-09-14 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.50}:  resolved Issue 2416: {\bf VSettingsNodes.showNodalSlopes is a boolean flag declared as UInt}
 (check)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

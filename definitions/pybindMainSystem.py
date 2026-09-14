@@ -399,7 +399,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='DeleteNode', cName='PyDeleteNode
                                 description="delete the node with nodeNumber in MainSystem; consistently renames nodes according to their new node numbers; adapts node numbers in sensors and in markers; items using deleted nodeNumber obtain invalid nodeNumber",
                                 argList=['nodeNumber','suppressWarnings'],
                                 defaultArgs=['','False'],
-                                argTypes=['NodeIndex'],
+                                argTypes=['NodeIndex','bool'],
                                 example = "mbs.DeleteNode(nodeNumber=42)",
                                 returnType='None',
                                 )
@@ -840,7 +840,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='DeleteSensor', cName='PyDeleteSe
                                 description="delete the marker with sensorNumber in MainSystem; consistently renames sensors according to their new sensor numbers; adapts sensor numbers in sensors; items using deleted sensorNumber obtain invalid sensorNumber",
                                 argList=['sensorNumber', 'suppressWarnings'],
                                 defaultArgs=['','False'],
-                                argTypes=['SensorIndex'],
+                                argTypes=['SensorIndex','bool'],
                                 example = "mbs.DeleteSensor(sensorNumber=42)",
                                 returnType='None',
                                 )

@@ -700,7 +700,7 @@ class MainSystem:
         """
         ...
     @overload
-    def DeleteNode(self, nodeNumber, suppressWarnings=False) -> None: 
+    def DeleteNode(self, nodeNumber: NodeIndex, suppressWarnings: bool=False) -> None: 
         """Delete the node with nodeNumber in MainSystem; consistently renames nodes according to their new node numbers; adapts node numbers in sensors and in markers; items using deleted nodeNumber obtain invalid nodeNumber.
         
         Examples:
@@ -1031,7 +1031,7 @@ class MainSystem:
         """
         ...
     @overload
-    def DeleteSensor(self, sensorNumber, suppressWarnings=False) -> None: 
+    def DeleteSensor(self, sensorNumber: SensorIndex, suppressWarnings: bool=False) -> None: 
         """Delete the marker with sensorNumber in MainSystem; consistently renames sensors according to their new sensor numbers; adapts sensor numbers in sensors; items using deleted sensorNumber obtain invalid sensorNumber.
         
         Examples:

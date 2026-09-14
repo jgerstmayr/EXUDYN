@@ -104,7 +104,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='SetWithDenseMatrix', cName='SetW
                         argList=['pyArray','useDenseMatrix','factor'],
                         defaultArgs=['','False','1.'],
                         description="set MatrixContainer with dense numpy array of size (n x m); array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems); pyArray is multiplied with given factor",
-                        argTypes=['ArrayLike','bool'],
+                        argTypes=['ArrayLike','bool','float'],
                         returnType='None',
                         )
                                               

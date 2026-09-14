@@ -255,13 +255,6 @@ symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='pow', cName='',
                         returnType='symbolic.Real',
                         )
 
-symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='max', cName='', 
-                        description="return maximum of x and y. ",
-                        argList=['x','y'],
-                        argTypes=['symbolic.Real','symbolic.Real'],
-                        returnType='symbolic.Real',
-                        )
-
 symbolicModule.DefPyFunctionAccess(cClass=classStr, pyName='IfThenElse', cName='', 
                         description="Symbolic function for conditional evaluation. If the condition evaluates to True, the expression ifTrue is evaluated, while otherwise expression ifFalse is evaluated",
                         example = "x=SymReal(-1)\\\\y=SymReal(2,'y')\\\\a=SymReal.IfThenElse(x<0, y+1, y-1))",

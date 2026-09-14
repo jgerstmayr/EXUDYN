@@ -381,7 +381,7 @@ class MatrixContainer:
         """Initialize MatrixContainer with number of rows and columns and set dense/sparse mode."""
         ...
     @overload
-    def SetWithDenseMatrix(self, pyArray, useDenseMatrix=False, factor=1.) -> None: 
+    def SetWithDenseMatrix(self, pyArray: ArrayLike, useDenseMatrix: bool=False, factor: float=1.) -> None: 
         """Set MatrixContainer with dense numpy array of size (n x m); array (=matrix) contains values and matrix size information; if useDenseMatrix=True, matrix will be stored internally as dense matrix, otherwise it will be converted and stored as sparse matrix (which may speed up computations for larger problems); pyArray is multiplied with given factor."""
         ...
     @overload
@@ -2931,7 +2931,7 @@ class MainSystem:
         """
         ...
     @overload
-    def DeleteNode(self, nodeNumber, suppressWarnings=False) -> None: 
+    def DeleteNode(self, nodeNumber: NodeIndex, suppressWarnings: bool=False) -> None: 
         """Delete the node with nodeNumber in MainSystem; consistently renames nodes according to their new node numbers; adapts node numbers in sensors and in markers; items using deleted nodeNumber obtain invalid nodeNumber.
         
         Examples:
@@ -3262,7 +3262,7 @@ class MainSystem:
         """
         ...
     @overload
-    def DeleteSensor(self, sensorNumber, suppressWarnings=False) -> None: 
+    def DeleteSensor(self, sensorNumber: SensorIndex, suppressWarnings: bool=False) -> None: 
         """Delete the marker with sensorNumber in MainSystem; consistently renames sensors according to their new sensor numbers; adapts sensor numbers in sensors; items using deleted sensorNumber obtain invalid sensorNumber.
         
         Examples:

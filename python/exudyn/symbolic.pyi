@@ -229,10 +229,6 @@ def pow(x: Real, y: Real) -> Real:
     """Return $x^y$."""
     ...
 @overload
-def max(x: Real, y: Real) -> Real: 
-    """Return maximum of x and y."""
-    ...
-@overload
 def IfThenElse(condition: Real, ifTrue: Real, ifFalse: Real) -> Real: 
     """Symbolic function for conditional evaluation.
     

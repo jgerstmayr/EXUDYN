@@ -159,6 +159,52 @@ def _DefaultEntries(value):
     return None
 
 
+#the parameters of PyLatexRST.DefPyFunctionAccess, in order (src/pythonGenerator/autoGenerateHelper.py)
+pybindFunctionParameters = ['cClass', 'pyName', 'cName', 'description', 'argList', 'defaultArgs', 'example',
+                            'options', 'isLambdaFunction', 'argTypes', 'returnType', 'addDocu']
+pybindBeginEnd = {'BeginCppWrittenByHand': 'EndCppWrittenByHand', 'BeginNoStub': 'EndNoStub'}
+
+
+def ValidatePybindDeclarations(counts):
+    """checks on definitions/pybind*.py: argument lists agree with defaults and types, no function
+    is declared twice with the same arguments, Begin/End steering calls are balanced"""
+    violations = []
+    for fileName in sorted(os.listdir(definitionsDirectory)):
+        if not (fileName.startswith('pybind') and fileName.endswith('.py')) or fileName == 'pybindTypes.py':
+            continue
+        module = __import__(fileName[:-3])
+        for recorderName, recorder in vars(module).items():
+            if type(recorder).__name__ != 'PybindInterface':
+                continue
+            seen = set()
+            open_ = []
+            for name, args, kwargs in recorder.calls:
+                if name in pybindBeginEnd:
+                    open_.append(name)
+                elif name in pybindBeginEnd.values():
+                    if not open_ or pybindBeginEnd[open_.pop()] != name:
+                        violations.append(fileName + ': ' + name + ' without matching Begin')
+                if name != 'DefPyFunctionAccess':
+                    continue
+                counts['pybind'] += 1
+                call = dict(zip(pybindFunctionParameters, args))
+                call.update(kwargs)
+                where = fileName + ': ' + (call['cClass'] + '.' if call.get('cClass') else '') + call['pyName']
+                argList = call.get('argList', [])
+                for listName in ('defaultArgs', 'argTypes'):
+                    other = call.get(listName, [])
+                    if len(other) != 0 and len(other) != len(argList):
+                        violations.append(where + ': ' + listName + ' has ' + str(len(other))
+                                          + ' entries, argList has ' + str(len(argList)))
+                key = (recorderName, call.get('cClass'), call['pyName'], tuple(argList), tuple(call.get('argTypes', [])))
+                if key in seen:
+                    violations.append(where + ': declared twice with the same arguments')
+                seen.add(key)
+            for name in open_:
+                violations.append(fileName + ': ' + name + ' is not closed')
+    return violations
+
+
 def ValidateDefinitions(verbose=True):
     """Run every check over the loaded definitions; return the list of violations (strings)."""
     if definitionsDirectory not in sys.path:
@@ -248,10 +294,12 @@ def ValidateDefinitions(verbose=True):
                             violations.append(where + ': fromParent, but ' + (' -> '.join(chain)
                                               or repr(parentName)) + ' has no member ' + name)
 
+    violations += ValidatePybindDeclarations(counts)
+
     if verbose:
-        print('definitionValidator: %d overrides, %d fromParent members, %d shaped defaults '
-              'checked; %d violation(s)' % (counts['override'], counts['fromParent'],
-                                            counts['shape'], len(violations)))
+        print('definitionValidator: %d overrides, %d fromParent members, %d shaped defaults, '
+              '%d pybind functions checked; %d violation(s)' % (counts['override'], counts['fromParent'],
+                                            counts['shape'], counts['pybind'], len(violations)))
         for violation in violations:
             print('  ' + violation)
 

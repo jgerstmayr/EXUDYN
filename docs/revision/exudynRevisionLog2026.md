@@ -1997,6 +1997,17 @@ Found on the way: `pybindEmitter.py` reads `MainSystem*Ext.rst` written by
 reaches the documentation only on the second run (2f). Open in 2d: the enum registrators and the
 validator checks.
 
+**Done 2026-09-14, step 33 part 2d (validator), #2419.** `definitionValidator.py` checks the
+`definitions/pybind*.py` recorders: `defaultArgs` and `argTypes` are empty or as long as
+`argList`, no function is declared twice with the same class, name, arguments and types within
+one recorder, and `Begin*`/`End*` steering calls pair up (312 functions). It found four errors:
+`MainSystem.DeleteNode`, `MainSystem.DeleteSensor` and `MatrixContainer.SetWithDenseMatrix` had
+shorter `argTypes` - `PyLatexRST` then silently drops *all* type hints, so their stubs were untyped;
+`symbolic.max` was declared twice (twice in `symbolic.pyi`, the RST and the tex); `exu.Print` had
+an `argTypes` without `argList`, ignored (removed, no output change). Fixed in the definitions;
+the stubs gain the three typed signatures and lose the duplicate; `pybind_manual_classes.h` is
+unchanged.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving

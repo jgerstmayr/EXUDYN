@@ -135,7 +135,6 @@ pb.DefPyFunctionAccess(cClass='', pyName='Print', cName='PyPrint',
                             #this fails in C++ compilation: ['*args','**kwargs'], and also these:
                             #argList=['args','kwargs'], #shall be: ['py::arg("args" = py::args(), py::arg("kwargs") = py::kwargs()
                             #defaultArgs=['py::args()', 'py::kwargs()'],
-                            argTypes=['Any'], #for pyi
                             returnType='None',
                             )
 
