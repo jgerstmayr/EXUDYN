@@ -76,9 +76,10 @@ localListClassNames = [] #string list for highlighting
 
 writeRST = True
 addExampleReferences = True #costs lot of time
-theDocDir = '../../docs/theDoc/'
-rstDir='../../docs/RST/'
-fileDir='../../python/exudyn/'
+import generatorPaths as paths
+theDocDir = paths.theDocDir
+rstDir = paths.rstDir
+fileDir = paths.pythonPackageDir
 filesParsed=[
              'advancedUtilities.py',
              'artificialIntelligence.py',
@@ -712,7 +713,7 @@ dictModules['name'] = 'utilities'
 latexExtensionsMainSystem = ''
 rstExtensionsMainSystem = ''
 
-with open('mainSystemExtensionsHeader.py','r',encoding='utf8') as f:
+with open(paths.generatorDir+'mainSystemExtensionsHeader.py','r',encoding='utf8') as f:
     pyExtensions = f.read()
 
 print('*** updating exudyn.mainSystemExtensions.py ***')
@@ -974,7 +975,7 @@ for fileName in filesParsed:
     dictModules['modules'].append(dictModule)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
-np.save('generated/utilitiesDocuData.npy', dictModules)
+np.save(paths.generatedDir+'utilitiesDocuData.npy', dictModules)
 #utilitiesData = np.load('generated/utilitiesDocuData.npy', allow_pickle=True).item()
 
 
@@ -1058,7 +1059,7 @@ with open(rstDir+'confHelperPyUtilities.py', 'w',encoding='utf8') as f:
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
 #write stub file (.pyi) information and documentation extension for e.g. MainSystem
 for key in latexExtensions:
-    file=io.open('generated/'+key+'Ext.rst','w',encoding='utf8')  #clear file by one write access
+    file=io.open(paths.generatedDir+key+'Ext.rst','w',encoding='utf8')  #clear file by one write access
     file.write(rstExtensions[key])
     file.close()
 
@@ -1066,19 +1067,19 @@ for key in latexExtensions:
     file.write(latexExtensions[key])
     file.close()
 
-    file=io.open('generated/stubAutoBindingsExt.pyi','w',encoding='utf8')  #clear file by one write access
+    file=io.open(paths.generatedDir+'stubAutoBindingsExt.pyi','w',encoding='utf8')  #clear file by one write access
     file.write('\n'+'class '+key+':\n')
     file.write(pyiExtensions[key])
     file.close()
 
-    file=io.open('generated/stubAutoBindingsExt.pyi','w',encoding='utf8')  #clear file by one write access
+    file=io.open(paths.generatedDir+'stubAutoBindingsExt.pyi','w',encoding='utf8')  #clear file by one write access
     file.write('\n'+'class '+key+':\n')
     file.write(pyiExtensions[key])
     file.close()
 
 #%%++++++++++++++++++++++
 if True:
-    file=io.open('generated/MainSystemCreateExt.rst','w',encoding='utf8')  #clear file by one write access
+    file=io.open(paths.generatedDir+'MainSystemCreateExt.rst','w',encoding='utf8')  #clear file by one write access
     file.write(rstExtensionsMainSystem)
     file.close()
 

@@ -1892,6 +1892,15 @@ deleted, together with the step-31 emitter and its driver.
 `CLAUDE.md` hard rule 1, `docs/dev/ARCHITECTURE.md`, `docs/theDoc/introduction.tex` (hence
 `CCode.rst`) and both READMEs now point at `definitions/`. Full `runTestSuite.py` PASSED.
 
+**Done 2026-09-14, step 33 part 2a - the generators no longer depend on the working directory.**
+`src/pythonGenerator/generatorPaths.py` derives every directory from its own location; 41 path
+literals in seven generators (plus `latexConverter.py` and `makeAllBinariesScripts.py`, which
+`regenerate.py` does not run) use it. Paths that are *content* - the `sys.path` lines written into
+the mini examples, the figure-path rewrites in the RST - are untouched. `tools/regenerate.py` now
+starts the generators from the repository root, so a regression fails the gate. Verified by running
+all six from an unrelated directory: no drift, and nothing was written into that directory. Plan
+section 4.5 resolved; step 33 part 2 split into 2b-2g, covering every script in `src/pythonGenerator/`.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving

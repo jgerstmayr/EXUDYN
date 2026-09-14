@@ -7,6 +7,7 @@ Created on Fri May 18 08:53:30 2018
 goal: automatically generate interfaces for structures
 currently: automatic generate structures with ostream and initialization
 """
+import generatorPaths as paths
 import datetime # for current date
 import copy
 import os
@@ -1756,7 +1757,7 @@ def GenerateLatexStrKeywordExamples(itemType, itemName, itemShortName, useLatex 
     
         fileListOrig = []
         for kw in keywords:
-            dirPath = '../../python/'+folder
+            dirPath = paths.pythonDir+folder
             fileListOrig += ExtractExamplesWithKeyword(keyword = kw,
                                                   dirPath = dirPath)
         

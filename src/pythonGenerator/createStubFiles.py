@@ -19,15 +19,16 @@ import io   #for utf-8 encoding
 rstFolder = 'docs/RST/' #folder where generated .rst files are stored
 
 sourceDir=''
-destFile=  '../../python/exudyn/__init__.pyi'
+import generatorPaths as paths
+destFile=  paths.pythonPackageDir+'__init__.pyi'
 
 #main files
 filesParsed=[
-              'stubHeader.pyi',
-              'generated/stubEnums.pyi',
-              'generated/stubSystemStructures.pyi',
-              'generated/stubAutoBindings.pyi',
-              'generated/stubAutoBindingsExt.pyi',
+              paths.generatorDir+'stubHeader.pyi',
+              paths.generatedDir+'stubEnums.pyi',
+              paths.generatedDir+'stubSystemStructures.pyi',
+              paths.generatedDir+'stubAutoBindings.pyi',
+              paths.generatedDir+'stubAutoBindingsExt.pyi',
             ]
 
 mergedFile=''
@@ -79,13 +80,13 @@ if True:
 
 
 if True: 
-    destFile2=  '../../python/exudyn/symbolic.pyi'
+    destFile2=  paths.pythonPackageDir+'symbolic.pyi'
 
-    file=io.open('stubHeader.pyi','r',encoding='utf8')  
+    file=io.open(paths.generatorDir+'stubHeader.pyi','r',encoding='utf8')  
     mergedText = file.read()
     file.close()
 
-    file=io.open('generated/stubSymbolic.pyi','r',encoding='utf8')  
+    file=io.open(paths.generatedDir+'stubSymbolic.pyi','r',encoding='utf8')  
     mergedText += file.read()
     file.close()
 

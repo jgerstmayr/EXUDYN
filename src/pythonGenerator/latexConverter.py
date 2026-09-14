@@ -11,6 +11,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import io   #for utf-8 encoding
+import generatorPaths as paths
 import sys
 import numpy as np
 # from os import listdir
@@ -814,7 +815,7 @@ files = [
 
 testText = ''
 for filename in files:
-    with open('../../docs/theDoc/'+filename, 'r', encoding='utf-8') as file:
+    with open(paths.theDocDir+filename, 'r', encoding='utf-8') as file:
         testText += file.read()
 
 converter = LatexConverter()

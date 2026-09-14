@@ -125,15 +125,20 @@ def GetChangedFiles(repositoryRoot, paths=None):
 
 #%%******************************************************************************************************
 def RunGenerators(repositoryRoot, pythonExecutable, verbose=True):
-    """Run every generator from its required working directory. Returns list of failed scripts."""
-    workingDir = os.path.join(repositoryRoot, generatorDir)
+    """Run every generator. Returns list of failed scripts.
+
+    The generators no longer depend on the working directory (revision plan step 33, they locate
+    everything through generatorPaths.py); they are started from the repository root on purpose,
+    so a regression to a cwd-relative path fails this gate instead of passing by accident."""
+    workingDir = repositoryRoot
     failedScripts = []
 
     for script in generatorScripts:
         if verbose:
             print('  running ' + script + ' ...', flush=True)
 
-        result = subprocess.run([pythonExecutable, script], cwd=workingDir,
+        result = subprocess.run([pythonExecutable, os.path.join(repositoryRoot, generatorDir, script)],
+                                cwd=workingDir,
                                 capture_output=True, text=True)
         if result.returncode != 0:
             failedScripts += [script]

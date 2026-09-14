@@ -24,8 +24,9 @@ sectionMarkerText = '%%SECTIONLEVEL' #add level: 0,1,2, ...
 
 rstFolder = 'docs/RST/' #folder where generated .rst files are stored
 
-sourceDir='../../docs/theDoc/'
-destDir='../../'      #repository root, 2 levels above src/pythonGenerator (was 3 before the flatten, revision plan step 25)
+import generatorPaths as paths
+sourceDir = paths.theDocDir
+destDir = paths.repositoryRoot
 
 #copy from issueTracker.py
 versionNames = {'1.0':'Abercrombie', '1.1':'Burton', '1.2':'Corea', '1.3':'Davis', '1.4':'Ellington', '1.5':'Fitzgerald', 
@@ -537,7 +538,7 @@ if True:
     from runTestSuiteRefSol import TestExamplesReferenceSolution
 
     examplesTestRefSol = TestExamplesReferenceSolution()
-    folderSource = '../../python/'
+    folderSource = paths.pythonDir
 
     #++++++++++++++++++++++++++++++++++++++
     #CREATE lists
@@ -548,7 +549,7 @@ if True:
     from os import listdir
     from os.path import isfile, join
 
-    dirPath = '../../python/Examples/'
+    dirPath = paths.examplesDir
     #sorted(): see ExtractExamplesWithKeyword in autoGenerateHelper.py - listdir() order is
     #filesystem dependent and made the generated docs differ between Windows and Linux
     examplesFileList = sorted([f for f in listdir(dirPath) if isfile(join(dirPath, f)) and '.py' in f],

@@ -20,8 +20,8 @@ buildDateString = str(now.year) + '-' + NumTo2digits(now.month) + '-' + NumTo2di
 buildDateString += '  ' + NumTo2digits(now.hour) + ':' + NumTo2digits(now.minute)# + ':' + NumTo2digits(now.second)
 buildDateString = 'build date and time='+buildDateString
 
-#current directory is main/src/pythonGenerator
-fileDate =open('../../docs/theDoc/buildDate.tex','w',encoding='utf8')  #clear file by one write access
+import generatorPaths as paths
+fileDate =open(paths.theDocDir+'buildDate.tex','w',encoding='utf8')  #clear file by one write access
 fileDate.write(buildDateString)
 fileDate.close()
 
