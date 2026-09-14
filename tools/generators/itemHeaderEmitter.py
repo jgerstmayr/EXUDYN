@@ -24,6 +24,7 @@
 
 import argparse
 import os
+import re
 import sys
 
 toolsDirectory = os.path.dirname(os.path.abspath(__file__))
@@ -886,6 +887,17 @@ def CreateStringSymbolicUserFunctionSet(pySymbolicUserFunction):
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def CheckForLeftoverItemHeaders(directoryString):
+    """raise if directoryString holds C/Main/Visu item headers of an item that definitions/ no longer
+    has: nothing rewrites such a file, so the drift gate cannot see it (#2428)"""
+    classNames = set(definition['className'] for definition in im.ItemDefinitions())
+    pattern = re.compile(r'^(C|Main|Visu)((' + '|'.join(im.itemTypeOrder) + r')\w+)\.h$')
+    leftovers = sorted(fileName for fileName in os.listdir(directoryString)
+                       if pattern.match(fileName) and pattern.match(fileName).group(2) not in classNames)
+    if leftovers:
+        raise ValueError('item headers without a definition in definitions/ (delete them): ' + ', '.join(leftovers))
+
+
 def WriteItemHeaders(directoryString):
     """write all item headers into directoryString (ending with '/'); returns the number of files changed"""
     totalNumberOfLines = 0
@@ -936,6 +948,10 @@ def WriteItemHeaders(directoryString):
 
 
         totalNumberOfLines += CountLines(fileStr[0]) + CountLines(fileStr[1]) + CountLines(fileStr[2])
+
+    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #an item header without a definition is left over from a removed item (revision plan step 101)
+    CheckForLeftoverItemHeaders(directoryString)
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #write include files (.h) for user functions
