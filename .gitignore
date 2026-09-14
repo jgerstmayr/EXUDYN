@@ -157,3 +157,4 @@ Experimental/
 # committed by accident - which used to rely on remembering to restore the default file first.
 /exudyn.sln
 /python/pytest.py
+python/coordinatesSolution.txt
