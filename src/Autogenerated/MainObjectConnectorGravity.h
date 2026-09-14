@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-02-05  22:13:57 (last modified)
+* @date         2026-09-14  23:32:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -105,13 +105,13 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectConnectorGravity->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorGravity->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorGravity->GetParameters().gravitationalConstant = py::cast<Real>(d["gravitationalConstant"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorGravity->GetParameters().mass0 = py::cast<Real>(d["mass0"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorGravity->GetParameters().mass1 = py::cast<Real>(d["mass1"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "minDistanceRegularization")) { cObjectConnectorGravity->GetParameters().minDistanceRegularization = py::cast<Real>(d["minDistanceRegularization"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorGravity->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectConnectorGravity->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { visualizationObjectConnectorGravity->GetDrawSize() = py::cast<float>(d["VdrawSize"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectConnectorGravity->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -123,7 +123,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["markerNumbers"] = EPyUtils::GetArrayMarkerIndex(cObjectConnectorGravity->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
+        d["markerNumbers"] = EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectConnectorGravity->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["gravitationalConstant"] = (Real)cObjectConnectorGravity->GetParameters().gravitationalConstant; //! AUTO: cast variables into python (not needed for standard types) 
         d["mass0"] = (Real)cObjectConnectorGravity->GetParameters().mass0; //! AUTO: cast variables into python (not needed for standard types) 
         d["mass1"] = (Real)cObjectConnectorGravity->GetParameters().mass1; //! AUTO: cast variables into python (not needed for standard types) 
@@ -140,7 +140,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::GetArrayMarkerIndex(cObjectConnectorGravity->GetParameters().markerNumbers));} //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectConnectorGravity->GetParameters().markerNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("gravitationalConstant") == 0) { return py::cast((Real)cObjectConnectorGravity->GetParameters().gravitationalConstant);} //! AUTO: get parameter
         else if (parameterName.compare("mass0") == 0) { return py::cast((Real)cObjectConnectorGravity->GetParameters().mass0);} //! AUTO: get parameter
         else if (parameterName.compare("mass1") == 0) { return py::cast((Real)cObjectConnectorGravity->GetParameters().mass1);} //! AUTO: get parameter
@@ -157,8 +157,8 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { cObjectConnectorGravity->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectConnectorGravity->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("gravitationalConstant") == 0) { cObjectConnectorGravity->GetParameters().gravitationalConstant = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("mass0") == 0) { cObjectConnectorGravity->GetParameters().mass0 = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("mass1") == 0) { cObjectConnectorGravity->GetParameters().mass1 = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

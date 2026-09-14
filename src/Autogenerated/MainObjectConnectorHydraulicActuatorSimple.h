@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:41 (last modified)
+* @date         2026-09-14  23:32:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,8 +114,8 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectConnectorHydraulicActuatorSimple->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectConnectorHydraulicActuatorSimple->GetParameters().nodeNumbers = EPyUtils::GetArrayNodeIndexSafely(d["nodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorHydraulicActuatorSimple->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectConnectorHydraulicActuatorSimple->GetParameters().nodeNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorHydraulicActuatorSimple->GetParameters().offsetLength = py::cast<Real>(d["offsetLength"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorHydraulicActuatorSimple->GetParameters().strokeLength = py::cast<Real>(d["strokeLength"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorHydraulicActuatorSimple->GetParameters().chamberCrossSection0 = py::cast<Real>(d["chamberCrossSection0"]); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -133,7 +133,7 @@ public: // AUTO:
         cObjectConnectorHydraulicActuatorSimple->GetParameters().tankPressure = py::cast<Real>(d["tankPressure"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "useChamberVolumeChange")) { cObjectConnectorHydraulicActuatorSimple->GetParameters().useChamberVolumeChange = py::cast<bool>(d["useChamberVolumeChange"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorHydraulicActuatorSimple->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectConnectorHydraulicActuatorSimple->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VcylinderRadius")) { visualizationObjectConnectorHydraulicActuatorSimple->GetCylinderRadius() = py::cast<float>(d["VcylinderRadius"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VrodRadius")) { visualizationObjectConnectorHydraulicActuatorSimple->GetRodRadius() = py::cast<float>(d["VrodRadius"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -152,8 +152,8 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["markerNumbers"] = EPyUtils::GetArrayMarkerIndex(cObjectConnectorHydraulicActuatorSimple->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
-        d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex(cObjectConnectorHydraulicActuatorSimple->GetParameters().nodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
+        d["markerNumbers"] = EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectConnectorHydraulicActuatorSimple->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
+        d["nodeNumbers"] = EPyUtils::ItemIndexToPython<NodeIndex>(cObjectConnectorHydraulicActuatorSimple->GetParameters().nodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["offsetLength"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().offsetLength; //! AUTO: cast variables into python (not needed for standard types) 
         d["strokeLength"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().strokeLength; //! AUTO: cast variables into python (not needed for standard types) 
         d["chamberCrossSection0"] = (Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().chamberCrossSection0; //! AUTO: cast variables into python (not needed for standard types) 
@@ -189,8 +189,8 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::GetArrayMarkerIndex(cObjectConnectorHydraulicActuatorSimple->GetParameters().markerNumbers));} //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex(cObjectConnectorHydraulicActuatorSimple->GetParameters().nodeNumbers));} //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectConnectorHydraulicActuatorSimple->GetParameters().markerNumbers));} //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<NodeIndex>(cObjectConnectorHydraulicActuatorSimple->GetParameters().nodeNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("offsetLength") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().offsetLength);} //! AUTO: get parameter
         else if (parameterName.compare("strokeLength") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().strokeLength);} //! AUTO: get parameter
         else if (parameterName.compare("chamberCrossSection0") == 0) { return py::cast((Real)cObjectConnectorHydraulicActuatorSimple->GetParameters().chamberCrossSection0);} //! AUTO: get parameter
@@ -226,9 +226,9 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().nodeNumbers = EPyUtils::GetArrayNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectConnectorHydraulicActuatorSimple->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectConnectorHydraulicActuatorSimple->GetParameters().nodeNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("offsetLength") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().offsetLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("strokeLength") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().strokeLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("chamberCrossSection0") == 0) { cObjectConnectorHydraulicActuatorSimple->GetParameters().chamberCrossSection0 = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

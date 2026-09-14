@@ -4,7 +4,7 @@
 *
 * @author       Manzl Peter
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:41 (last modified)
+* @date         2026-09-14  23:32:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,8 +114,8 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectContactConvexRoll->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectContactConvexRoll->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactConvexRoll->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactConvexRoll->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectContactConvexRoll->GetParameters().contactStiffness = py::cast<Real>(d["contactStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "contactDamping")) { cObjectContactConvexRoll->GetParameters().contactDamping = py::cast<Real>(d["contactDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "dynamicFriction")) { cObjectContactConvexRoll->GetParameters().dynamicFriction = py::cast<Real>(d["dynamicFriction"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -124,10 +124,10 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "exponentialDecayStatic")) { cObjectContactConvexRoll->GetParameters().exponentialDecayStatic = py::cast<Real>(d["exponentialDecayStatic"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "frictionProportionalZone")) { cObjectContactConvexRoll->GetParameters().frictionProportionalZone = py::cast<Real>(d["frictionProportionalZone"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "rollLength")) { cObjectContactConvexRoll->GetParameters().rollLength = py::cast<Real>(d["rollLength"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "coefficientsHull")) { EPyUtils::SetNumpyVectorSafely(d, "coefficientsHull", cObjectContactConvexRoll->GetParameters().coefficientsHull); /*! AUTO:  safely cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "coefficientsHull")) { EPyUtils::FromPython(d["coefficientsHull"], cObjectContactConvexRoll->GetParameters().coefficientsHull); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectContactConvexRoll->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "rBoundingSphere")) { cObjectContactConvexRoll->GetRBoundingSphere() = py::cast<Real>(d["rBoundingSphere"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectContactConvexRoll->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectContactConvexRoll->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
@@ -138,7 +138,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["markerNumbers"] = EPyUtils::GetArrayMarkerIndex(cObjectContactConvexRoll->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
+        d["markerNumbers"] = EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectContactConvexRoll->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["nodeNumber"] = (NodeIndex)cObjectContactConvexRoll->GetParameters().nodeNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["contactStiffness"] = (Real)cObjectContactConvexRoll->GetParameters().contactStiffness; //! AUTO: cast variables into python (not needed for standard types) 
         d["contactDamping"] = (Real)cObjectContactConvexRoll->GetParameters().contactDamping; //! AUTO: cast variables into python (not needed for standard types) 
@@ -148,12 +148,12 @@ public: // AUTO:
         d["exponentialDecayStatic"] = (Real)cObjectContactConvexRoll->GetParameters().exponentialDecayStatic; //! AUTO: cast variables into python (not needed for standard types) 
         d["frictionProportionalZone"] = (Real)cObjectContactConvexRoll->GetParameters().frictionProportionalZone; //! AUTO: cast variables into python (not needed for standard types) 
         d["rollLength"] = (Real)cObjectContactConvexRoll->GetParameters().rollLength; //! AUTO: cast variables into python (not needed for standard types) 
-        d["coefficientsHull"] = EPyUtils::Vector2NumPy(cObjectContactConvexRoll->GetParameters().coefficientsHull); //! AUTO: cast variables into python (not needed for standard types) 
+        d["coefficientsHull"] = EPyUtils::ToPython(cObjectContactConvexRoll->GetParameters().coefficientsHull); //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectContactConvexRoll->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
-        d["coefficientsHullDerivative"] = EPyUtils::Vector2NumPy(cObjectContactConvexRoll->GetCoefficientsHullDerivative()); //! AUTO: cast variables into python (not needed for standard types) 
-        d["coefficientsHullDDerivative"] = EPyUtils::Vector2NumPy(cObjectContactConvexRoll->GetCoefficientsHullDDerivative()); //! AUTO: cast variables into python (not needed for standard types) 
+        d["coefficientsHullDerivative"] = EPyUtils::ToPython(cObjectContactConvexRoll->GetCoefficientsHullDerivative()); //! AUTO: cast variables into python (not needed for standard types) 
+        d["coefficientsHullDDerivative"] = EPyUtils::ToPython(cObjectContactConvexRoll->GetCoefficientsHullDDerivative()); //! AUTO: cast variables into python (not needed for standard types) 
         d["rBoundingSphere"] = (Real)cObjectContactConvexRoll->GetRBoundingSphere(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["pContact"] = EPyUtils::SlimVector2NumPy(cObjectContactConvexRoll->GetPContact()); //! AUTO: cast variables into python (not needed for standard types) 
+        d["pContact"] = EPyUtils::ToPython(cObjectContactConvexRoll->GetPContact()); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectContactConvexRoll->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["Vcolor"] = (std::vector<float>)visualizationObjectContactConvexRoll->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -164,7 +164,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::GetArrayMarkerIndex(cObjectContactConvexRoll->GetParameters().markerNumbers));} //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectContactConvexRoll->GetParameters().markerNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectContactConvexRoll->GetParameters().nodeNumber);} //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { return py::cast((Real)cObjectContactConvexRoll->GetParameters().contactStiffness);} //! AUTO: get parameter
         else if (parameterName.compare("contactDamping") == 0) { return py::cast((Real)cObjectContactConvexRoll->GetParameters().contactDamping);} //! AUTO: get parameter
@@ -174,11 +174,11 @@ public: // AUTO:
         else if (parameterName.compare("exponentialDecayStatic") == 0) { return py::cast((Real)cObjectContactConvexRoll->GetParameters().exponentialDecayStatic);} //! AUTO: get parameter
         else if (parameterName.compare("frictionProportionalZone") == 0) { return py::cast((Real)cObjectContactConvexRoll->GetParameters().frictionProportionalZone);} //! AUTO: get parameter
         else if (parameterName.compare("rollLength") == 0) { return py::cast((Real)cObjectContactConvexRoll->GetParameters().rollLength);} //! AUTO: get parameter
-        else if (parameterName.compare("coefficientsHull") == 0) { return EPyUtils::Vector2NumPy(cObjectContactConvexRoll->GetParameters().coefficientsHull);} //! AUTO: get parameter
-        else if (parameterName.compare("coefficientsHullDerivative") == 0) { return EPyUtils::Vector2NumPy(cObjectContactConvexRoll->GetCoefficientsHullDerivative());} //! AUTO: get parameter
-        else if (parameterName.compare("coefficientsHullDDerivative") == 0) { return EPyUtils::Vector2NumPy(cObjectContactConvexRoll->GetCoefficientsHullDDerivative());} //! AUTO: get parameter
+        else if (parameterName.compare("coefficientsHull") == 0) { return EPyUtils::ToPython(cObjectContactConvexRoll->GetParameters().coefficientsHull);} //! AUTO: get parameter
+        else if (parameterName.compare("coefficientsHullDerivative") == 0) { return EPyUtils::ToPython(cObjectContactConvexRoll->GetCoefficientsHullDerivative());} //! AUTO: get parameter
+        else if (parameterName.compare("coefficientsHullDDerivative") == 0) { return EPyUtils::ToPython(cObjectContactConvexRoll->GetCoefficientsHullDDerivative());} //! AUTO: get parameter
         else if (parameterName.compare("rBoundingSphere") == 0) { return py::cast((Real)cObjectContactConvexRoll->GetRBoundingSphere());} //! AUTO: get parameter
-        else if (parameterName.compare("pContact") == 0) { return EPyUtils::SlimVector2NumPy(cObjectContactConvexRoll->GetPContact());} //! AUTO: get parameter
+        else if (parameterName.compare("pContact") == 0) { return EPyUtils::ToPython(cObjectContactConvexRoll->GetPContact());} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectContactConvexRoll->GetParameters().activeConnector);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectContactConvexRoll->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectContactConvexRoll->GetColor());} //! AUTO: get parameter
@@ -190,9 +190,9 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { cObjectContactConvexRoll->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumber") == 0) { cObjectContactConvexRoll->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectContactConvexRoll->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectContactConvexRoll->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { cObjectContactConvexRoll->GetParameters().contactStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("contactDamping") == 0) { cObjectContactConvexRoll->GetParameters().contactDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dynamicFriction") == 0) { cObjectContactConvexRoll->GetParameters().dynamicFriction = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
@@ -201,7 +201,7 @@ public: // AUTO:
         else if (parameterName.compare("exponentialDecayStatic") == 0) { cObjectContactConvexRoll->GetParameters().exponentialDecayStatic = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("frictionProportionalZone") == 0) { cObjectContactConvexRoll->GetParameters().frictionProportionalZone = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("rollLength") == 0) { cObjectContactConvexRoll->GetParameters().rollLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("coefficientsHull") == 0) { EPyUtils::SetNumpyVectorSafely(value, cObjectContactConvexRoll->GetParameters().coefficientsHull); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("coefficientsHull") == 0) { EPyUtils::FromPython(value, cObjectContactConvexRoll->GetParameters().coefficientsHull); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("rBoundingSphere") == 0) { cObjectContactConvexRoll->GetRBoundingSphere() = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectContactConvexRoll->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectContactConvexRoll->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

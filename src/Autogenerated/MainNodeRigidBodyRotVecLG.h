@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Holzinger Stefan
 * @date         2019-07-01 (generated)
-* @date         2026-02-05  22:13:55 (last modified)
+* @date         2026-09-14  23:32:16 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -131,10 +131,10 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::SetSlimVectorTemplateSafely<Real, 6>(d, "referenceCoordinates", cNodeRigidBodyRotVecLG->GetParameters().referenceCoordinates); /*! AUTO:  safely cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "initialCoordinates")) { EPyUtils::SetSlimVectorTemplateSafely<Real, 6>(d, "initialCoordinates", GetParameters().initialCoordinates); /*! AUTO:  safely cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "initialVelocities")) { EPyUtils::SetSlimVectorTemplateSafely<Real, 6>(d, "initialVelocities", GetParameters().initialCoordinates_t); /*! AUTO:  safely cast to C++ type*/} 
-        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["referenceCoordinates"], cNodeRigidBodyRotVecLG->GetParameters().referenceCoordinates); /* AUTO:  read out dictionary and cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "initialCoordinates")) { EPyUtils::FromPython(d["initialCoordinates"], GetParameters().initialCoordinates); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "initialVelocities")) { EPyUtils::FromPython(d["initialVelocities"], GetParameters().initialCoordinates_t); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationNodeRigidBodyRotVecLG->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { visualizationNodeRigidBodyRotVecLG->GetDrawSize() = py::cast<float>(d["VdrawSize"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationNodeRigidBodyRotVecLG->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -145,9 +145,9 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["nodeType"] = (std::string)GetTypeName();
-        d["referenceCoordinates"] = EPyUtils::SlimVector2NumPy(cNodeRigidBodyRotVecLG->GetParameters().referenceCoordinates); //! AUTO: cast variables into python (not needed for standard types) 
-        d["initialCoordinates"] = EPyUtils::SlimVector2NumPy(GetParameters().initialCoordinates); //! AUTO: cast variables into python (not needed for standard types) 
-        d["initialVelocities"] = EPyUtils::SlimVector2NumPy(GetParameters().initialCoordinates_t); //! AUTO: cast variables into python (not needed for standard types) 
+        d["referenceCoordinates"] = EPyUtils::ToPython(cNodeRigidBodyRotVecLG->GetParameters().referenceCoordinates); //! AUTO: cast variables into python (not needed for standard types) 
+        d["initialCoordinates"] = EPyUtils::ToPython(GetParameters().initialCoordinates); //! AUTO: cast variables into python (not needed for standard types) 
+        d["initialVelocities"] = EPyUtils::ToPython(GetParameters().initialCoordinates_t); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationNodeRigidBodyRotVecLG->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VdrawSize"] = (float)visualizationNodeRigidBodyRotVecLG->GetDrawSize(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -159,9 +159,9 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("referenceCoordinates") == 0) { return EPyUtils::SlimVector2NumPy(cNodeRigidBodyRotVecLG->GetParameters().referenceCoordinates);} //! AUTO: get parameter
-        else if (parameterName.compare("initialCoordinates") == 0) { return EPyUtils::SlimVector2NumPy(GetParameters().initialCoordinates);} //! AUTO: get parameter
-        else if (parameterName.compare("initialVelocities") == 0) { return EPyUtils::SlimVector2NumPy(GetParameters().initialCoordinates_t);} //! AUTO: get parameter
+        else if (parameterName.compare("referenceCoordinates") == 0) { return EPyUtils::ToPython(cNodeRigidBodyRotVecLG->GetParameters().referenceCoordinates);} //! AUTO: get parameter
+        else if (parameterName.compare("initialCoordinates") == 0) { return EPyUtils::ToPython(GetParameters().initialCoordinates);} //! AUTO: get parameter
+        else if (parameterName.compare("initialVelocities") == 0) { return EPyUtils::ToPython(GetParameters().initialCoordinates_t);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationNodeRigidBodyRotVecLG->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationNodeRigidBodyRotVecLG->GetDrawSize());} //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationNodeRigidBodyRotVecLG->GetColor());} //! AUTO: get parameter
@@ -173,10 +173,10 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("referenceCoordinates") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 6>(value, cNodeRigidBodyRotVecLG->GetParameters().referenceCoordinates); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("initialCoordinates") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 6>(value, GetParameters().initialCoordinates); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("initialVelocities") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 6>(value, GetParameters().initialCoordinates_t); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("referenceCoordinates") == 0) { EPyUtils::FromPython(value, cNodeRigidBodyRotVecLG->GetParameters().referenceCoordinates); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("initialCoordinates") == 0) { EPyUtils::FromPython(value, GetParameters().initialCoordinates); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("initialVelocities") == 0) { EPyUtils::FromPython(value, GetParameters().initialCoordinates_t); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationNodeRigidBodyRotVecLG->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { visualizationNodeRigidBodyRotVecLG->GetDrawSize() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationNodeRigidBodyRotVecLG->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

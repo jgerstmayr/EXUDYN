@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-03  15:35:24 (last modified)
+* @date         2026-09-14  23:32:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,14 +108,14 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cSensorKinematicTree->GetParameters().objectNumber = EPyUtils::GetObjectIndexSafely(d["objectNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<ObjectIndex>(d["objectNumber"], cSensorKinematicTree->GetParameters().objectNumber); /* AUTO:  read out dictionary and cast to C++ type*/
         cSensorKinematicTree->GetParameters().linkNumber = py::cast<Index>(d["linkNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "localPosition", cSensorKinematicTree->GetParameters().localPosition); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["localPosition"], cSensorKinematicTree->GetParameters().localPosition); /* AUTO:  read out dictionary and cast to C++ type*/
         cSensorKinematicTree->GetParameters().writeToFile = py::cast<bool>(d["writeToFile"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetStringSafely(d, "fileName", cSensorKinematicTree->GetParameters().fileName); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["fileName"], cSensorKinematicTree->GetParameters().fileName); /* AUTO:  read out dictionary and cast to C++ type*/
         cSensorKinematicTree->GetParameters().outputVariableType = (OutputVariableType)py::cast<Index>(d["outputVariableType"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cSensorKinematicTree->GetParameters().storeInternal = py::cast<bool>(d["storeInternal"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationSensorKinematicTree->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
 
@@ -126,7 +126,7 @@ public: // AUTO:
         d["sensorType"] = (std::string)GetTypeName();
         d["objectNumber"] = (ObjectIndex)cSensorKinematicTree->GetParameters().objectNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["linkNumber"] = (Index)cSensorKinematicTree->GetParameters().linkNumber; //! AUTO: cast variables into python (not needed for standard types) 
-        d["localPosition"] = EPyUtils::SlimVector2NumPy(cSensorKinematicTree->GetParameters().localPosition); //! AUTO: cast variables into python (not needed for standard types) 
+        d["localPosition"] = EPyUtils::ToPython(cSensorKinematicTree->GetParameters().localPosition); //! AUTO: cast variables into python (not needed for standard types) 
         d["writeToFile"] = (bool)cSensorKinematicTree->GetParameters().writeToFile; //! AUTO: cast variables into python (not needed for standard types) 
         d["fileName"] = (std::string)cSensorKinematicTree->GetParameters().fileName; //! AUTO: cast variables into python (not needed for standard types) 
         d["outputVariableType"] = (OutputVariableType)cSensorKinematicTree->GetParameters().outputVariableType; //! AUTO: cast variables into python (not needed for standard types) 
@@ -142,7 +142,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("objectNumber") == 0) { return py::cast((ObjectIndex)cSensorKinematicTree->GetParameters().objectNumber);} //! AUTO: get parameter
         else if (parameterName.compare("linkNumber") == 0) { return py::cast((Index)cSensorKinematicTree->GetParameters().linkNumber);} //! AUTO: get parameter
-        else if (parameterName.compare("localPosition") == 0) { return EPyUtils::SlimVector2NumPy(cSensorKinematicTree->GetParameters().localPosition);} //! AUTO: get parameter
+        else if (parameterName.compare("localPosition") == 0) { return EPyUtils::ToPython(cSensorKinematicTree->GetParameters().localPosition);} //! AUTO: get parameter
         else if (parameterName.compare("writeToFile") == 0) { return py::cast((bool)cSensorKinematicTree->GetParameters().writeToFile);} //! AUTO: get parameter
         else if (parameterName.compare("fileName") == 0) { return py::cast((std::string)cSensorKinematicTree->GetParameters().fileName);} //! AUTO: get parameter
         else if (parameterName.compare("outputVariableType") == 0) { return py::cast((OutputVariableType)cSensorKinematicTree->GetParameters().outputVariableType);} //! AUTO: get parameter
@@ -156,12 +156,12 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("objectNumber") == 0) { cSensorKinematicTree->GetParameters().objectNumber = EPyUtils::GetObjectIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("objectNumber") == 0) { EPyUtils::ItemIndexFromPython<ObjectIndex>(value, cSensorKinematicTree->GetParameters().objectNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("linkNumber") == 0) { cSensorKinematicTree->GetParameters().linkNumber = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("localPosition") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cSensorKinematicTree->GetParameters().localPosition); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("localPosition") == 0) { EPyUtils::FromPython(value, cSensorKinematicTree->GetParameters().localPosition); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("writeToFile") == 0) { cSensorKinematicTree->GetParameters().writeToFile = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("fileName") == 0) { EPyUtils::SetStringSafely(value, cSensorKinematicTree->GetParameters().fileName); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("fileName") == 0) { EPyUtils::FromPython(value, cSensorKinematicTree->GetParameters().fileName); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("outputVariableType") == 0) { cSensorKinematicTree->GetParameters().outputVariableType = py::cast<OutputVariableType>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("storeInternal") == 0) { cSensorKinematicTree->GetParameters().storeInternal = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationSensorKinematicTree->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

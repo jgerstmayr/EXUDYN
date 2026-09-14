@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-02-05  22:16:40 (last modified)
+* @date         2026-09-14  23:32:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,13 +108,13 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cMarkerBodiesRelativeRotationCoordinate->GetParameters().bodyNumbers = EPyUtils::GetArrayObjectIndexSafely(d["bodyNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cMarkerBodiesRelativeRotationCoordinate->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "localPosition0", cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition0); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "localPosition1", cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition1); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "axis0", cMarkerBodiesRelativeRotationCoordinate->GetParameters().axis0); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<ObjectIndex>(d["bodyNumbers"], cMarkerBodiesRelativeRotationCoordinate->GetParameters().bodyNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cMarkerBodiesRelativeRotationCoordinate->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["localPosition0"], cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition0); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["localPosition1"], cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition1); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["axis0"], cMarkerBodiesRelativeRotationCoordinate->GetParameters().axis0); /* AUTO:  read out dictionary and cast to C++ type*/
         cMarkerBodiesRelativeRotationCoordinate->GetParameters().offset = py::cast<Real>(d["offset"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationMarkerBodiesRelativeRotationCoordinate->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
 
@@ -123,11 +123,11 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["markerType"] = (std::string)GetTypeName();
-        d["bodyNumbers"] = EPyUtils::GetArrayObjectIndex(cMarkerBodiesRelativeRotationCoordinate->GetParameters().bodyNumbers); //! AUTO: cast variables into python (not needed for standard types) 
+        d["bodyNumbers"] = EPyUtils::ItemIndexToPython<ObjectIndex>(cMarkerBodiesRelativeRotationCoordinate->GetParameters().bodyNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["nodeNumber"] = (NodeIndex)cMarkerBodiesRelativeRotationCoordinate->GetParameters().nodeNumber; //! AUTO: cast variables into python (not needed for standard types) 
-        d["localPosition0"] = EPyUtils::SlimVector2NumPy(cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition0); //! AUTO: cast variables into python (not needed for standard types) 
-        d["localPosition1"] = EPyUtils::SlimVector2NumPy(cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition1); //! AUTO: cast variables into python (not needed for standard types) 
-        d["axis0"] = EPyUtils::SlimVector2NumPy(cMarkerBodiesRelativeRotationCoordinate->GetParameters().axis0); //! AUTO: cast variables into python (not needed for standard types) 
+        d["localPosition0"] = EPyUtils::ToPython(cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition0); //! AUTO: cast variables into python (not needed for standard types) 
+        d["localPosition1"] = EPyUtils::ToPython(cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition1); //! AUTO: cast variables into python (not needed for standard types) 
+        d["axis0"] = EPyUtils::ToPython(cMarkerBodiesRelativeRotationCoordinate->GetParameters().axis0); //! AUTO: cast variables into python (not needed for standard types) 
         d["offset"] = (Real)cMarkerBodiesRelativeRotationCoordinate->GetParameters().offset; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationMarkerBodiesRelativeRotationCoordinate->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -138,11 +138,11 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("bodyNumbers") == 0) { return py::cast(EPyUtils::GetArrayObjectIndex(cMarkerBodiesRelativeRotationCoordinate->GetParameters().bodyNumbers));} //! AUTO: get parameter
+        else if (parameterName.compare("bodyNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<ObjectIndex>(cMarkerBodiesRelativeRotationCoordinate->GetParameters().bodyNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cMarkerBodiesRelativeRotationCoordinate->GetParameters().nodeNumber);} //! AUTO: get parameter
-        else if (parameterName.compare("localPosition0") == 0) { return EPyUtils::SlimVector2NumPy(cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition0);} //! AUTO: get parameter
-        else if (parameterName.compare("localPosition1") == 0) { return EPyUtils::SlimVector2NumPy(cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition1);} //! AUTO: get parameter
-        else if (parameterName.compare("axis0") == 0) { return EPyUtils::SlimVector2NumPy(cMarkerBodiesRelativeRotationCoordinate->GetParameters().axis0);} //! AUTO: get parameter
+        else if (parameterName.compare("localPosition0") == 0) { return EPyUtils::ToPython(cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition0);} //! AUTO: get parameter
+        else if (parameterName.compare("localPosition1") == 0) { return EPyUtils::ToPython(cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition1);} //! AUTO: get parameter
+        else if (parameterName.compare("axis0") == 0) { return EPyUtils::ToPython(cMarkerBodiesRelativeRotationCoordinate->GetParameters().axis0);} //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { return py::cast((Real)cMarkerBodiesRelativeRotationCoordinate->GetParameters().offset);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationMarkerBodiesRelativeRotationCoordinate->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("MarkerBodiesRelativeRotationCoordinate::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
@@ -153,12 +153,12 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("bodyNumbers") == 0) { cMarkerBodiesRelativeRotationCoordinate->GetParameters().bodyNumbers = EPyUtils::GetArrayObjectIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumber") == 0) { cMarkerBodiesRelativeRotationCoordinate->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("localPosition0") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition0); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("localPosition1") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition1); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("axis0") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cMarkerBodiesRelativeRotationCoordinate->GetParameters().axis0); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("bodyNumbers") == 0) { EPyUtils::ItemIndexFromPython<ObjectIndex>(value, cMarkerBodiesRelativeRotationCoordinate->GetParameters().bodyNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cMarkerBodiesRelativeRotationCoordinate->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("localPosition0") == 0) { EPyUtils::FromPython(value, cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition0); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("localPosition1") == 0) { EPyUtils::FromPython(value, cMarkerBodiesRelativeRotationCoordinate->GetParameters().localPosition1); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("axis0") == 0) { EPyUtils::FromPython(value, cMarkerBodiesRelativeRotationCoordinate->GetParameters().axis0); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { cMarkerBodiesRelativeRotationCoordinate->GetParameters().offset = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationMarkerBodiesRelativeRotationCoordinate->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("MarkerBodiesRelativeRotationCoordinate::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user

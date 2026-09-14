@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:40 (last modified)
+* @date         2026-09-14  23:32:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,7 +114,7 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers = EPyUtils::GetArrayNodeIndexSafely(d["nodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectBeamGeometricallyExact2D->GetParameters().physicsLength = py::cast<Real>(d["physicsLength"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectBeamGeometricallyExact2D->GetParameters().physicsMassPerLength = py::cast<Real>(d["physicsMassPerLength"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectBeamGeometricallyExact2D->GetParameters().physicsCrossSectionInertia = py::cast<Real>(d["physicsCrossSectionInertia"]); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -126,7 +126,7 @@ public: // AUTO:
         cObjectBeamGeometricallyExact2D->GetParameters().physicsShearDamping = py::cast<Real>(d["physicsShearDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectBeamGeometricallyExact2D->GetParameters().physicsReferenceCurvature = py::cast<Real>(d["physicsReferenceCurvature"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectBeamGeometricallyExact2D->GetParameters().includeReferenceRotations = py::cast<bool>(d["includeReferenceRotations"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectBeamGeometricallyExact2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VdrawHeight")) { visualizationObjectBeamGeometricallyExact2D->GetDrawHeight() = py::cast<float>(d["VdrawHeight"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectBeamGeometricallyExact2D->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -138,7 +138,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex(cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
+        d["nodeNumbers"] = EPyUtils::ItemIndexToPython<NodeIndex>(cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsLength"] = (Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsLength; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsMassPerLength"] = (Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsMassPerLength; //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsCrossSectionInertia"] = (Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsCrossSectionInertia; //! AUTO: cast variables into python (not needed for standard types) 
@@ -161,7 +161,7 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex(cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers));} //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<NodeIndex>(cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("physicsLength") == 0) { return py::cast((Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsLength);} //! AUTO: get parameter
         else if (parameterName.compare("physicsMassPerLength") == 0) { return py::cast((Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsMassPerLength);} //! AUTO: get parameter
         else if (parameterName.compare("physicsCrossSectionInertia") == 0) { return py::cast((Real)cObjectBeamGeometricallyExact2D->GetParameters().physicsCrossSectionInertia);} //! AUTO: get parameter
@@ -184,8 +184,8 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers = EPyUtils::GetArrayNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsLength") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsMassPerLength") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsMassPerLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsCrossSectionInertia") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsCrossSectionInertia = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

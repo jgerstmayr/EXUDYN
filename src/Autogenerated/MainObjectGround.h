@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-02-05  22:13:55 (last modified)
+* @date         2026-09-14  23:32:16 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,9 +106,9 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "referencePosition", cObjectGround->GetParameters().referencePosition); /*! AUTO:  safely cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "referenceRotation")) { EPyUtils::SetConstMatrixTemplateSafely<3,3>(d, "referenceRotation", cObjectGround->GetParameters().referenceRotation); /*! AUTO:  safely cast to C++ type*/} 
-        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["referencePosition"], cObjectGround->GetParameters().referencePosition); /* AUTO:  read out dictionary and cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "referenceRotation")) { EPyUtils::FromPython<Real, 3, 3>(d["referenceRotation"], cObjectGround->GetParameters().referenceRotation); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectGround->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VgraphicsDataUserFunction")) { visualizationObjectGround->GetGraphicsDataUserFunction() = d["VgraphicsDataUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VgraphicsData")) { PyWriteBodyGraphicsDataList(d, "VgraphicsData", visualizationObjectGround->GetGraphicsData()); /*! AUTO: convert dict to BodyGraphicsData*/} 
@@ -120,8 +120,8 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["referencePosition"] = EPyUtils::SlimVector2NumPy(cObjectGround->GetParameters().referencePosition); //! AUTO: cast variables into python (not needed for standard types) 
-        d["referenceRotation"] = EPyUtils::Matrix2NumPyTemplate(cObjectGround->GetParameters().referenceRotation); //! AUTO: cast variables into python (not needed for standard types) 
+        d["referencePosition"] = EPyUtils::ToPython(cObjectGround->GetParameters().referencePosition); //! AUTO: cast variables into python (not needed for standard types) 
+        d["referenceRotation"] = EPyUtils::ToPython(cObjectGround->GetParameters().referenceRotation); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectGround->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VgraphicsDataUserFunction"] = (py::object)visualizationObjectGround->GetGraphicsDataUserFunction(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -133,8 +133,8 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("referencePosition") == 0) { return EPyUtils::SlimVector2NumPy(cObjectGround->GetParameters().referencePosition);} //! AUTO: get parameter
-        else if (parameterName.compare("referenceRotation") == 0) { return EPyUtils::Matrix2NumPyTemplate(cObjectGround->GetParameters().referenceRotation);} //! AUTO: get parameter
+        else if (parameterName.compare("referencePosition") == 0) { return EPyUtils::ToPython(cObjectGround->GetParameters().referencePosition);} //! AUTO: get parameter
+        else if (parameterName.compare("referenceRotation") == 0) { return EPyUtils::ToPython(cObjectGround->GetParameters().referenceRotation);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectGround->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { return visualizationObjectGround->GetGraphicsDataUserFunction().GetPythonDictionary();;} //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsData") == 0) { return PyGetBodyGraphicsDataList(visualizationObjectGround->GetGraphicsData(), true);} //! AUTO: get parameter
@@ -146,11 +146,11 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("referencePosition") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectGround->GetParameters().referencePosition); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("referenceRotation") == 0) { EPyUtils::SetConstMatrixTemplateSafely<3,3>(value, cObjectGround->GetParameters().referenceRotation); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("referencePosition") == 0) { EPyUtils::FromPython(value, cObjectGround->GetParameters().referencePosition); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("referenceRotation") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectGround->GetParameters().referenceRotation); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectGround->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { visualizationObjectGround->GetGraphicsDataUserFunction() = value; } //! AUTO: get parameter
+        else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { visualizationObjectGround->GetGraphicsDataUserFunction() = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsData") == 0) { PyWriteBodyGraphicsDataList(value, visualizationObjectGround->GetGraphicsData()); } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectGround::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

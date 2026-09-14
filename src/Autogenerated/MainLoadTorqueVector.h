@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-03  15:37:36 (last modified)
+* @date         2026-09-14  23:32:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,11 +106,11 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cLoadTorqueVector->GetParameters().markerNumber = EPyUtils::GetMarkerIndexSafely(d["markerNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "loadVector", cLoadTorqueVector->GetParameters().loadVector); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumber"], cLoadTorqueVector->GetParameters().markerNumber); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["loadVector"], cLoadTorqueVector->GetParameters().loadVector); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "bodyFixed")) { cLoadTorqueVector->GetParameters().bodyFixed = py::cast<bool>(d["bodyFixed"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "loadVectorUserFunction")) { cLoadTorqueVector->GetParameters().loadVectorUserFunction = d["loadVectorUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
-        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationLoadTorqueVector->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
 
@@ -120,7 +120,7 @@ public: // AUTO:
         auto d = py::dict();
         d["loadType"] = (std::string)GetTypeName();
         d["markerNumber"] = (MarkerIndex)cLoadTorqueVector->GetParameters().markerNumber; //! AUTO: cast variables into python (not needed for standard types) 
-        d["loadVector"] = EPyUtils::SlimVector2NumPy(cLoadTorqueVector->GetParameters().loadVector); //! AUTO: cast variables into python (not needed for standard types) 
+        d["loadVector"] = EPyUtils::ToPython(cLoadTorqueVector->GetParameters().loadVector); //! AUTO: cast variables into python (not needed for standard types) 
         d["bodyFixed"] = (bool)cLoadTorqueVector->GetParameters().bodyFixed; //! AUTO: cast variables into python (not needed for standard types) 
         d["loadVectorUserFunction"] = (py::object)cLoadTorqueVector->GetParameters().loadVectorUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
@@ -133,7 +133,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("markerNumber") == 0) { return py::cast((MarkerIndex)cLoadTorqueVector->GetParameters().markerNumber);} //! AUTO: get parameter
-        else if (parameterName.compare("loadVector") == 0) { return EPyUtils::SlimVector2NumPy(cLoadTorqueVector->GetParameters().loadVector);} //! AUTO: get parameter
+        else if (parameterName.compare("loadVector") == 0) { return EPyUtils::ToPython(cLoadTorqueVector->GetParameters().loadVector);} //! AUTO: get parameter
         else if (parameterName.compare("bodyFixed") == 0) { return py::cast((bool)cLoadTorqueVector->GetParameters().bodyFixed);} //! AUTO: get parameter
         else if (parameterName.compare("loadVectorUserFunction") == 0) { return cLoadTorqueVector->GetParameters().loadVectorUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationLoadTorqueVector->GetShow());} //! AUTO: get parameter
@@ -145,11 +145,11 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("markerNumber") == 0) { cLoadTorqueVector->GetParameters().markerNumber = EPyUtils::GetMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("loadVector") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cLoadTorqueVector->GetParameters().loadVector); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("markerNumber") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cLoadTorqueVector->GetParameters().markerNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("loadVector") == 0) { EPyUtils::FromPython(value, cLoadTorqueVector->GetParameters().loadVector); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("bodyFixed") == 0) { cLoadTorqueVector->GetParameters().bodyFixed = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("loadVectorUserFunction") == 0) { cLoadTorqueVector->GetParameters().loadVectorUserFunction = value; } //! AUTO: get parameter
+        else if (parameterName.compare("loadVectorUserFunction") == 0) { cLoadTorqueVector->GetParameters().loadVectorUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationLoadTorqueVector->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("LoadTorqueVector::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-02-05  22:13:55 (last modified)
+* @date         2026-09-14  23:32:16 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -129,7 +129,7 @@ public: // AUTO:
         cNodeGenericAE->GetParameters().referenceCoordinates = py::cast<std::vector<Real>>(d["referenceCoordinates"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cNodeGenericAE->GetParameters().numberOfAECoordinates = py::cast<Index>(d["numberOfAECoordinates"]); /* AUTO:  read out dictionary and cast to C++ type*/
         GetParameters().initialCoordinates = py::cast<std::vector<Real>>(d["initialCoordinates"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationNodeGenericAE->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
 
@@ -138,9 +138,9 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["nodeType"] = (std::string)GetTypeName();
-        d["referenceCoordinates"] = EPyUtils::Vector2NumPy(cNodeGenericAE->GetParameters().referenceCoordinates); //! AUTO: cast variables into python (not needed for standard types) 
+        d["referenceCoordinates"] = EPyUtils::ToPython(cNodeGenericAE->GetParameters().referenceCoordinates); //! AUTO: cast variables into python (not needed for standard types) 
         d["numberOfAECoordinates"] = (Index)cNodeGenericAE->GetParameters().numberOfAECoordinates; //! AUTO: cast variables into python (not needed for standard types) 
-        d["initialCoordinates"] = EPyUtils::Vector2NumPy(GetParameters().initialCoordinates); //! AUTO: cast variables into python (not needed for standard types) 
+        d["initialCoordinates"] = EPyUtils::ToPython(GetParameters().initialCoordinates); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationNodeGenericAE->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
@@ -150,8 +150,8 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("referenceCoordinates") == 0) { return EPyUtils::Vector2NumPy(cNodeGenericAE->GetParameters().referenceCoordinates);} //! AUTO: get parameter
-        else if (parameterName.compare("initialCoordinates") == 0) { return EPyUtils::Vector2NumPy(GetParameters().initialCoordinates);} //! AUTO: get parameter
+        else if (parameterName.compare("referenceCoordinates") == 0) { return EPyUtils::ToPython(cNodeGenericAE->GetParameters().referenceCoordinates);} //! AUTO: get parameter
+        else if (parameterName.compare("initialCoordinates") == 0) { return EPyUtils::ToPython(GetParameters().initialCoordinates);} //! AUTO: get parameter
         else if (parameterName.compare("numberOfAECoordinates") == 0) { return py::cast((Index)cNodeGenericAE->GetParameters().numberOfAECoordinates);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationNodeGenericAE->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("NodeGenericAE::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
@@ -162,7 +162,7 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("referenceCoordinates") == 0) { cNodeGenericAE->GetParameters().referenceCoordinates = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("initialCoordinates") == 0) { GetParameters().initialCoordinates = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("numberOfAECoordinates") == 0) { cNodeGenericAE->GetParameters().numberOfAECoordinates = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

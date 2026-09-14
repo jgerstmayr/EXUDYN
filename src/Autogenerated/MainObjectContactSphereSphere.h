@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Weyrer Sebastian
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:41 (last modified)
+* @date         2026-09-14  23:32:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,9 +114,9 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectContactSphereSphere->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectContactSphereSphere->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetSlimVectorTemplateSafely<Real, 2>(d, "spheresRadii", cObjectContactSphereSphere->GetParameters().spheresRadii); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactSphereSphere->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactSphereSphere->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["spheresRadii"], cObjectContactSphereSphere->GetParameters().spheresRadii); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "isHollowSphere1")) { cObjectContactSphereSphere->GetParameters().isHollowSphere1 = py::cast<bool>(d["isHollowSphere1"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "dynamicFriction")) { cObjectContactSphereSphere->GetParameters().dynamicFriction = py::cast<Real>(d["dynamicFriction"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "frictionProportionalZone")) { cObjectContactSphereSphere->GetParameters().frictionProportionalZone = py::cast<Real>(d["frictionProportionalZone"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -131,7 +131,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "minimumImpactVelocity")) { cObjectContactSphereSphere->GetParameters().minimumImpactVelocity = py::cast<Real>(d["minimumImpactVelocity"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "impactModel")) { cObjectContactSphereSphere->GetParameters().impactModel = py::cast<Index>(d["impactModel"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectContactSphereSphere->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectContactSphereSphere->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectContactSphereSphere->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
@@ -142,9 +142,9 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["markerNumbers"] = EPyUtils::GetArrayMarkerIndex(cObjectContactSphereSphere->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
+        d["markerNumbers"] = EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectContactSphereSphere->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["nodeNumber"] = (NodeIndex)cObjectContactSphereSphere->GetParameters().nodeNumber; //! AUTO: cast variables into python (not needed for standard types) 
-        d["spheresRadii"] = EPyUtils::SlimVector2NumPy(cObjectContactSphereSphere->GetParameters().spheresRadii); //! AUTO: cast variables into python (not needed for standard types) 
+        d["spheresRadii"] = EPyUtils::ToPython(cObjectContactSphereSphere->GetParameters().spheresRadii); //! AUTO: cast variables into python (not needed for standard types) 
         d["isHollowSphere1"] = (bool)cObjectContactSphereSphere->GetParameters().isHollowSphere1; //! AUTO: cast variables into python (not needed for standard types) 
         d["dynamicFriction"] = (Real)cObjectContactSphereSphere->GetParameters().dynamicFriction; //! AUTO: cast variables into python (not needed for standard types) 
         d["frictionProportionalZone"] = (Real)cObjectContactSphereSphere->GetParameters().frictionProportionalZone; //! AUTO: cast variables into python (not needed for standard types) 
@@ -169,9 +169,9 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::GetArrayMarkerIndex(cObjectContactSphereSphere->GetParameters().markerNumbers));} //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectContactSphereSphere->GetParameters().markerNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectContactSphereSphere->GetParameters().nodeNumber);} //! AUTO: get parameter
-        else if (parameterName.compare("spheresRadii") == 0) { return EPyUtils::SlimVector2NumPy(cObjectContactSphereSphere->GetParameters().spheresRadii);} //! AUTO: get parameter
+        else if (parameterName.compare("spheresRadii") == 0) { return EPyUtils::ToPython(cObjectContactSphereSphere->GetParameters().spheresRadii);} //! AUTO: get parameter
         else if (parameterName.compare("isHollowSphere1") == 0) { return py::cast((bool)cObjectContactSphereSphere->GetParameters().isHollowSphere1);} //! AUTO: get parameter
         else if (parameterName.compare("dynamicFriction") == 0) { return py::cast((Real)cObjectContactSphereSphere->GetParameters().dynamicFriction);} //! AUTO: get parameter
         else if (parameterName.compare("frictionProportionalZone") == 0) { return py::cast((Real)cObjectContactSphereSphere->GetParameters().frictionProportionalZone);} //! AUTO: get parameter
@@ -196,10 +196,10 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { cObjectContactSphereSphere->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumber") == 0) { cObjectContactSphereSphere->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("spheresRadii") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 2>(value, cObjectContactSphereSphere->GetParameters().spheresRadii); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectContactSphereSphere->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectContactSphereSphere->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("spheresRadii") == 0) { EPyUtils::FromPython(value, cObjectContactSphereSphere->GetParameters().spheresRadii); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("isHollowSphere1") == 0) { cObjectContactSphereSphere->GetParameters().isHollowSphere1 = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dynamicFriction") == 0) { cObjectContactSphereSphere->GetParameters().dynamicFriction = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("frictionProportionalZone") == 0) { cObjectContactSphereSphere->GetParameters().frictionProportionalZone = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

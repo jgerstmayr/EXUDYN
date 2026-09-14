@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-03  15:37:36 (last modified)
+* @date         2026-09-14  23:32:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,13 +106,13 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cSensorUserFunction->GetParameters().sensorNumbers = EPyUtils::GetArraySensorIndexSafely(d["sensorNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<SensorIndex>(d["sensorNumbers"], cSensorUserFunction->GetParameters().sensorNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
         cSensorUserFunction->GetParameters().factors = py::cast<std::vector<Real>>(d["factors"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cSensorUserFunction->GetParameters().writeToFile = py::cast<bool>(d["writeToFile"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetStringSafely(d, "fileName", cSensorUserFunction->GetParameters().fileName); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["fileName"], cSensorUserFunction->GetParameters().fileName); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "sensorUserFunction")) { cSensorUserFunction->GetParameters().sensorUserFunction = d["sensorUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         cSensorUserFunction->GetParameters().storeInternal = py::cast<bool>(d["storeInternal"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationSensorUserFunction->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
 
@@ -121,8 +121,8 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["sensorType"] = (std::string)GetTypeName();
-        d["sensorNumbers"] = EPyUtils::GetArraySensorIndex(cSensorUserFunction->GetParameters().sensorNumbers); //! AUTO: cast variables into python (not needed for standard types) 
-        d["factors"] = EPyUtils::Vector2NumPy(cSensorUserFunction->GetParameters().factors); //! AUTO: cast variables into python (not needed for standard types) 
+        d["sensorNumbers"] = EPyUtils::ItemIndexToPython<SensorIndex>(cSensorUserFunction->GetParameters().sensorNumbers); //! AUTO: cast variables into python (not needed for standard types) 
+        d["factors"] = EPyUtils::ToPython(cSensorUserFunction->GetParameters().factors); //! AUTO: cast variables into python (not needed for standard types) 
         d["writeToFile"] = (bool)cSensorUserFunction->GetParameters().writeToFile; //! AUTO: cast variables into python (not needed for standard types) 
         d["fileName"] = (std::string)cSensorUserFunction->GetParameters().fileName; //! AUTO: cast variables into python (not needed for standard types) 
         d["sensorUserFunction"] = (py::object)cSensorUserFunction->GetParameters().sensorUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
@@ -136,8 +136,8 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("sensorNumbers") == 0) { return py::cast(EPyUtils::GetArraySensorIndex(cSensorUserFunction->GetParameters().sensorNumbers));} //! AUTO: get parameter
-        else if (parameterName.compare("factors") == 0) { return EPyUtils::Vector2NumPy(cSensorUserFunction->GetParameters().factors);} //! AUTO: get parameter
+        else if (parameterName.compare("sensorNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<SensorIndex>(cSensorUserFunction->GetParameters().sensorNumbers));} //! AUTO: get parameter
+        else if (parameterName.compare("factors") == 0) { return EPyUtils::ToPython(cSensorUserFunction->GetParameters().factors);} //! AUTO: get parameter
         else if (parameterName.compare("writeToFile") == 0) { return py::cast((bool)cSensorUserFunction->GetParameters().writeToFile);} //! AUTO: get parameter
         else if (parameterName.compare("fileName") == 0) { return py::cast((std::string)cSensorUserFunction->GetParameters().fileName);} //! AUTO: get parameter
         else if (parameterName.compare("sensorUserFunction") == 0) { return cSensorUserFunction->GetParameters().sensorUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
@@ -151,12 +151,12 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("sensorNumbers") == 0) { cSensorUserFunction->GetParameters().sensorNumbers = EPyUtils::GetArraySensorIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("sensorNumbers") == 0) { EPyUtils::ItemIndexFromPython<SensorIndex>(value, cSensorUserFunction->GetParameters().sensorNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("factors") == 0) { cSensorUserFunction->GetParameters().factors = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("writeToFile") == 0) { cSensorUserFunction->GetParameters().writeToFile = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("fileName") == 0) { EPyUtils::SetStringSafely(value, cSensorUserFunction->GetParameters().fileName); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("sensorUserFunction") == 0) { cSensorUserFunction->GetParameters().sensorUserFunction = value; } //! AUTO: get parameter
+        else if (parameterName.compare("fileName") == 0) { EPyUtils::FromPython(value, cSensorUserFunction->GetParameters().fileName); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("sensorUserFunction") == 0) { cSensorUserFunction->GetParameters().sensorUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("storeInternal") == 0) { cSensorUserFunction->GetParameters().storeInternal = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationSensorUserFunction->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("SensorUserFunction::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user

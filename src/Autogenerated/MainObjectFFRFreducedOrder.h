@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:40 (last modified)
+* @date         2026-09-14  23:33:05 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -115,32 +115,32 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectFFRFreducedOrder->GetParameters().nodeNumbers = EPyUtils::GetArrayNodeIndexSafely(d["nodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetPyMatrixContainerSafely(d, "massMatrixReduced", cObjectFFRFreducedOrder->GetParameters().massMatrixReduced); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetPyMatrixContainerSafely(d, "stiffnessMatrixReduced", cObjectFFRFreducedOrder->GetParameters().stiffnessMatrixReduced); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetPyMatrixContainerSafely(d, "dampingMatrixReduced", cObjectFFRFreducedOrder->GetParameters().dampingMatrixReduced); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectFFRFreducedOrder->GetParameters().nodeNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::SetPyMatrixContainerSafely(d["massMatrixReduced"], cObjectFFRFreducedOrder->GetParameters().massMatrixReduced); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::SetPyMatrixContainerSafely(d["stiffnessMatrixReduced"], cObjectFFRFreducedOrder->GetParameters().stiffnessMatrixReduced); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::SetPyMatrixContainerSafely(d["dampingMatrixReduced"], cObjectFFRFreducedOrder->GetParameters().dampingMatrixReduced); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "forceUserFunction")) { cObjectFFRFreducedOrder->GetParameters().forceUserFunction = d["forceUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "massMatrixUserFunction")) { cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction = d["massMatrixUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "computeFFRFterms")) { cObjectFFRFreducedOrder->GetParameters().computeFFRFterms = py::cast<bool>(d["computeFFRFterms"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        EPyUtils::SetNumpyMatrixSafely(d, "modeBasis", cObjectFFRFreducedOrder->GetParameters().modeBasis); /*! AUTO:  safely cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "outputVariableModeBasis")) { EPyUtils::SetNumpyMatrixSafely(d, "outputVariableModeBasis", cObjectFFRFreducedOrder->GetParameters().outputVariableModeBasis); /*! AUTO:  safely cast to C++ type*/} 
+        EPyUtils::FromPython(d["modeBasis"], cObjectFFRFreducedOrder->GetParameters().modeBasis); /* AUTO:  read out dictionary and cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "outputVariableModeBasis")) { EPyUtils::FromPython(d["outputVariableModeBasis"], cObjectFFRFreducedOrder->GetParameters().outputVariableModeBasis); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "outputVariableTypeModeBasis")) { cObjectFFRFreducedOrder->GetParameters().outputVariableTypeModeBasis = (OutputVariableType)py::cast<Index>(d["outputVariableTypeModeBasis"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        EPyUtils::SetNumpyVectorSafely(d, "referencePositions", cObjectFFRFreducedOrder->GetParameters().referencePositions); /*! AUTO:  safely cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "mPsiTildePsi")) { EPyUtils::SetNumpyMatrixSafely(d, "mPsiTildePsi", cObjectFFRFreducedOrder->GetParameters().mPsiTildePsi); /*! AUTO:  safely cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "mPsiTildePsiTilde")) { EPyUtils::SetNumpyMatrixSafely(d, "mPsiTildePsiTilde", cObjectFFRFreducedOrder->GetParameters().mPsiTildePsiTilde); /*! AUTO:  safely cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "mPhitTPsi")) { EPyUtils::SetNumpyMatrixSafely(d, "mPhitTPsi", cObjectFFRFreducedOrder->GetParameters().mPhitTPsi); /*! AUTO:  safely cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "mPhitTPsiTilde")) { EPyUtils::SetNumpyMatrixSafely(d, "mPhitTPsiTilde", cObjectFFRFreducedOrder->GetParameters().mPhitTPsiTilde); /*! AUTO:  safely cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "mXRefTildePsi")) { EPyUtils::SetNumpyMatrixSafely(d, "mXRefTildePsi", cObjectFFRFreducedOrder->GetParameters().mXRefTildePsi); /*! AUTO:  safely cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "mXRefTildePsiTilde")) { EPyUtils::SetNumpyMatrixSafely(d, "mXRefTildePsiTilde", cObjectFFRFreducedOrder->GetParameters().mXRefTildePsiTilde); /*! AUTO:  safely cast to C++ type*/} 
+        EPyUtils::FromPython(d["referencePositions"], cObjectFFRFreducedOrder->GetParameters().referencePositions); /* AUTO:  read out dictionary and cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "mPsiTildePsi")) { EPyUtils::FromPython(d["mPsiTildePsi"], cObjectFFRFreducedOrder->GetParameters().mPsiTildePsi); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "mPsiTildePsiTilde")) { EPyUtils::FromPython(d["mPsiTildePsiTilde"], cObjectFFRFreducedOrder->GetParameters().mPsiTildePsiTilde); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "mPhitTPsi")) { EPyUtils::FromPython(d["mPhitTPsi"], cObjectFFRFreducedOrder->GetParameters().mPhitTPsi); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "mPhitTPsiTilde")) { EPyUtils::FromPython(d["mPhitTPsiTilde"], cObjectFFRFreducedOrder->GetParameters().mPhitTPsiTilde); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "mXRefTildePsi")) { EPyUtils::FromPython(d["mXRefTildePsi"], cObjectFFRFreducedOrder->GetParameters().mXRefTildePsi); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "mXRefTildePsiTilde")) { EPyUtils::FromPython(d["mXRefTildePsiTilde"], cObjectFFRFreducedOrder->GetParameters().mXRefTildePsiTilde); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "objectIsInitialized")) { cObjectFFRFreducedOrder->GetObjectIsInitialized() = py::cast<bool>(d["objectIsInitialized"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         cObjectFFRFreducedOrder->GetPhysicsMass() = py::cast<Real>(d["physicsMass"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetConstMatrixTemplateSafely<3,3>(d, "physicsInertia", cObjectFFRFreducedOrder->GetPhysicsInertia()); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "physicsCenterOfMass", cObjectFFRFreducedOrder->GetPhysicsCenterOfMass()); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetConstMatrixTemplateSafely<3,3>(d, "physicsCenterOfMassTilde", cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde()); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython<Real, 3, 3>(d["physicsInertia"], cObjectFFRFreducedOrder->GetPhysicsInertia()); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsCenterOfMass"], cObjectFFRFreducedOrder->GetPhysicsCenterOfMass()); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython<Real, 3, 3>(d["physicsCenterOfMassTilde"], cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde()); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectFFRFreducedOrder->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectFFRFreducedOrder->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "VtriangleMesh")) { EPyUtils::SetNumpyMatrixISafely(d, "VtriangleMesh", visualizationObjectFFRFreducedOrder->GetTriangleMesh()); /*! AUTO:  safely cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VtriangleMesh")) { EPyUtils::FromPython(d["VtriangleMesh"], visualizationObjectFFRFreducedOrder->GetTriangleMesh()); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VshowNodes")) { visualizationObjectFFRFreducedOrder->GetShowNodes() = py::cast<bool>(d["VshowNodes"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
@@ -150,33 +150,33 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex(cObjectFFRFreducedOrder->GetParameters().nodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
+        d["nodeNumbers"] = EPyUtils::ItemIndexToPython<NodeIndex>(cObjectFFRFreducedOrder->GetParameters().nodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["massMatrixReduced"] = (PyMatrixContainer)cObjectFFRFreducedOrder->GetParameters().massMatrixReduced; //! AUTO: cast variables into python (not needed for standard types) 
         d["stiffnessMatrixReduced"] = (PyMatrixContainer)cObjectFFRFreducedOrder->GetParameters().stiffnessMatrixReduced; //! AUTO: cast variables into python (not needed for standard types) 
         d["dampingMatrixReduced"] = (PyMatrixContainer)cObjectFFRFreducedOrder->GetParameters().dampingMatrixReduced; //! AUTO: cast variables into python (not needed for standard types) 
         d["forceUserFunction"] = (py::object)cObjectFFRFreducedOrder->GetParameters().forceUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
         d["massMatrixUserFunction"] = (py::object)cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
         d["computeFFRFterms"] = (bool)cObjectFFRFreducedOrder->GetParameters().computeFFRFterms; //! AUTO: cast variables into python (not needed for standard types) 
-        d["modeBasis"] = EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().modeBasis); //! AUTO: cast variables into python (not needed for standard types) 
-        d["outputVariableModeBasis"] = EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().outputVariableModeBasis); //! AUTO: cast variables into python (not needed for standard types) 
+        d["modeBasis"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().modeBasis); //! AUTO: cast variables into python (not needed for standard types) 
+        d["outputVariableModeBasis"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().outputVariableModeBasis); //! AUTO: cast variables into python (not needed for standard types) 
         d["outputVariableTypeModeBasis"] = (OutputVariableType)cObjectFFRFreducedOrder->GetParameters().outputVariableTypeModeBasis; //! AUTO: cast variables into python (not needed for standard types) 
-        d["referencePositions"] = EPyUtils::Vector2NumPy(cObjectFFRFreducedOrder->GetParameters().referencePositions); //! AUTO: cast variables into python (not needed for standard types) 
-        d["mPsiTildePsi"] = EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mPsiTildePsi); //! AUTO: cast variables into python (not needed for standard types) 
-        d["mPsiTildePsiTilde"] = EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mPsiTildePsiTilde); //! AUTO: cast variables into python (not needed for standard types) 
-        d["mPhitTPsi"] = EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mPhitTPsi); //! AUTO: cast variables into python (not needed for standard types) 
-        d["mPhitTPsiTilde"] = EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mPhitTPsiTilde); //! AUTO: cast variables into python (not needed for standard types) 
-        d["mXRefTildePsi"] = EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mXRefTildePsi); //! AUTO: cast variables into python (not needed for standard types) 
-        d["mXRefTildePsiTilde"] = EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mXRefTildePsiTilde); //! AUTO: cast variables into python (not needed for standard types) 
+        d["referencePositions"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().referencePositions); //! AUTO: cast variables into python (not needed for standard types) 
+        d["mPsiTildePsi"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mPsiTildePsi); //! AUTO: cast variables into python (not needed for standard types) 
+        d["mPsiTildePsiTilde"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mPsiTildePsiTilde); //! AUTO: cast variables into python (not needed for standard types) 
+        d["mPhitTPsi"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mPhitTPsi); //! AUTO: cast variables into python (not needed for standard types) 
+        d["mPhitTPsiTilde"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mPhitTPsiTilde); //! AUTO: cast variables into python (not needed for standard types) 
+        d["mXRefTildePsi"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mXRefTildePsi); //! AUTO: cast variables into python (not needed for standard types) 
+        d["mXRefTildePsiTilde"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mXRefTildePsiTilde); //! AUTO: cast variables into python (not needed for standard types) 
         d["objectIsInitialized"] = (bool)cObjectFFRFreducedOrder->GetObjectIsInitialized(); //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsMass"] = (Real)cObjectFFRFreducedOrder->GetPhysicsMass(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["physicsInertia"] = EPyUtils::Matrix2NumPyTemplate(cObjectFFRFreducedOrder->GetPhysicsInertia()); //! AUTO: cast variables into python (not needed for standard types) 
-        d["physicsCenterOfMass"] = EPyUtils::SlimVector2NumPy(cObjectFFRFreducedOrder->GetPhysicsCenterOfMass()); //! AUTO: cast variables into python (not needed for standard types) 
-        d["physicsCenterOfMassTilde"] = EPyUtils::Matrix2NumPyTemplate(cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde()); //! AUTO: cast variables into python (not needed for standard types) 
-        d["tempUserFunctionForce"] = EPyUtils::Vector2NumPy(cObjectFFRFreducedOrder->GetTempUserFunctionForce()); //! AUTO: cast variables into python (not needed for standard types) 
+        d["physicsInertia"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetPhysicsInertia()); //! AUTO: cast variables into python (not needed for standard types) 
+        d["physicsCenterOfMass"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetPhysicsCenterOfMass()); //! AUTO: cast variables into python (not needed for standard types) 
+        d["physicsCenterOfMassTilde"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde()); //! AUTO: cast variables into python (not needed for standard types) 
+        d["tempUserFunctionForce"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetTempUserFunctionForce()); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectFFRFreducedOrder->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["Vcolor"] = (std::vector<float>)visualizationObjectFFRFreducedOrder->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["VtriangleMesh"] = EPyUtils::MatrixI2NumPy(visualizationObjectFFRFreducedOrder->GetTriangleMesh()); //! AUTO: cast variables into python (not needed for standard types) 
+        d["VtriangleMesh"] = EPyUtils::ToPython(visualizationObjectFFRFreducedOrder->GetTriangleMesh()); //! AUTO: cast variables into python (not needed for standard types) 
         d["VshowNodes"] = (bool)visualizationObjectFFRFreducedOrder->GetShowNodes(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
     }
@@ -185,32 +185,32 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex(cObjectFFRFreducedOrder->GetParameters().nodeNumbers));} //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<NodeIndex>(cObjectFFRFreducedOrder->GetParameters().nodeNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("massMatrixReduced") == 0) { return py::cast((PyMatrixContainer)cObjectFFRFreducedOrder->GetParameters().massMatrixReduced);} //! AUTO: get parameter
         else if (parameterName.compare("stiffnessMatrixReduced") == 0) { return py::cast((PyMatrixContainer)cObjectFFRFreducedOrder->GetParameters().stiffnessMatrixReduced);} //! AUTO: get parameter
         else if (parameterName.compare("dampingMatrixReduced") == 0) { return py::cast((PyMatrixContainer)cObjectFFRFreducedOrder->GetParameters().dampingMatrixReduced);} //! AUTO: get parameter
         else if (parameterName.compare("forceUserFunction") == 0) { return cObjectFFRFreducedOrder->GetParameters().forceUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
         else if (parameterName.compare("massMatrixUserFunction") == 0) { return cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
         else if (parameterName.compare("computeFFRFterms") == 0) { return py::cast((bool)cObjectFFRFreducedOrder->GetParameters().computeFFRFterms);} //! AUTO: get parameter
-        else if (parameterName.compare("modeBasis") == 0) { return EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().modeBasis);} //! AUTO: get parameter
-        else if (parameterName.compare("outputVariableModeBasis") == 0) { return EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().outputVariableModeBasis);} //! AUTO: get parameter
+        else if (parameterName.compare("modeBasis") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().modeBasis);} //! AUTO: get parameter
+        else if (parameterName.compare("outputVariableModeBasis") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().outputVariableModeBasis);} //! AUTO: get parameter
         else if (parameterName.compare("outputVariableTypeModeBasis") == 0) { return py::cast((OutputVariableType)cObjectFFRFreducedOrder->GetParameters().outputVariableTypeModeBasis);} //! AUTO: get parameter
-        else if (parameterName.compare("referencePositions") == 0) { return EPyUtils::Vector2NumPy(cObjectFFRFreducedOrder->GetParameters().referencePositions);} //! AUTO: get parameter
+        else if (parameterName.compare("referencePositions") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().referencePositions);} //! AUTO: get parameter
         else if (parameterName.compare("objectIsInitialized") == 0) { return py::cast((bool)cObjectFFRFreducedOrder->GetObjectIsInitialized());} //! AUTO: get parameter
         else if (parameterName.compare("physicsMass") == 0) { return py::cast((Real)cObjectFFRFreducedOrder->GetPhysicsMass());} //! AUTO: get parameter
-        else if (parameterName.compare("physicsInertia") == 0) { return EPyUtils::Matrix2NumPyTemplate(cObjectFFRFreducedOrder->GetPhysicsInertia());} //! AUTO: get parameter
-        else if (parameterName.compare("physicsCenterOfMass") == 0) { return EPyUtils::SlimVector2NumPy(cObjectFFRFreducedOrder->GetPhysicsCenterOfMass());} //! AUTO: get parameter
-        else if (parameterName.compare("mPsiTildePsi") == 0) { return EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mPsiTildePsi);} //! AUTO: get parameter
-        else if (parameterName.compare("mPsiTildePsiTilde") == 0) { return EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mPsiTildePsiTilde);} //! AUTO: get parameter
-        else if (parameterName.compare("mPhitTPsi") == 0) { return EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mPhitTPsi);} //! AUTO: get parameter
-        else if (parameterName.compare("mPhitTPsiTilde") == 0) { return EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mPhitTPsiTilde);} //! AUTO: get parameter
-        else if (parameterName.compare("mXRefTildePsi") == 0) { return EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mXRefTildePsi);} //! AUTO: get parameter
-        else if (parameterName.compare("mXRefTildePsiTilde") == 0) { return EPyUtils::Matrix2NumPy(cObjectFFRFreducedOrder->GetParameters().mXRefTildePsiTilde);} //! AUTO: get parameter
-        else if (parameterName.compare("physicsCenterOfMassTilde") == 0) { return EPyUtils::Matrix2NumPyTemplate(cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde());} //! AUTO: get parameter
-        else if (parameterName.compare("tempUserFunctionForce") == 0) { return EPyUtils::Vector2NumPy(cObjectFFRFreducedOrder->GetTempUserFunctionForce());} //! AUTO: get parameter
+        else if (parameterName.compare("physicsInertia") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetPhysicsInertia());} //! AUTO: get parameter
+        else if (parameterName.compare("physicsCenterOfMass") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetPhysicsCenterOfMass());} //! AUTO: get parameter
+        else if (parameterName.compare("mPsiTildePsi") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mPsiTildePsi);} //! AUTO: get parameter
+        else if (parameterName.compare("mPsiTildePsiTilde") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mPsiTildePsiTilde);} //! AUTO: get parameter
+        else if (parameterName.compare("mPhitTPsi") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mPhitTPsi);} //! AUTO: get parameter
+        else if (parameterName.compare("mPhitTPsiTilde") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mPhitTPsiTilde);} //! AUTO: get parameter
+        else if (parameterName.compare("mXRefTildePsi") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mXRefTildePsi);} //! AUTO: get parameter
+        else if (parameterName.compare("mXRefTildePsiTilde") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mXRefTildePsiTilde);} //! AUTO: get parameter
+        else if (parameterName.compare("physicsCenterOfMassTilde") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde());} //! AUTO: get parameter
+        else if (parameterName.compare("tempUserFunctionForce") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetTempUserFunctionForce());} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectFFRFreducedOrder->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectFFRFreducedOrder->GetColor());} //! AUTO: get parameter
-        else if (parameterName.compare("VtriangleMesh") == 0) { return EPyUtils::MatrixI2NumPy(visualizationObjectFFRFreducedOrder->GetTriangleMesh());} //! AUTO: get parameter
+        else if (parameterName.compare("VtriangleMesh") == 0) { return EPyUtils::ToPython(visualizationObjectFFRFreducedOrder->GetTriangleMesh());} //! AUTO: get parameter
         else if (parameterName.compare("VshowNodes") == 0) { return py::cast((bool)visualizationObjectFFRFreducedOrder->GetShowNodes());} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectFFRFreducedOrder::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
@@ -220,32 +220,32 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { cObjectFFRFreducedOrder->GetParameters().nodeNumbers = EPyUtils::GetArrayNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("massMatrixReduced") == 0) { EPyUtils::SetPyMatrixContainerSafely(value, cObjectFFRFreducedOrder->GetParameters().massMatrixReduced); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("stiffnessMatrixReduced") == 0) { EPyUtils::SetPyMatrixContainerSafely(value, cObjectFFRFreducedOrder->GetParameters().stiffnessMatrixReduced); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("dampingMatrixReduced") == 0) { EPyUtils::SetPyMatrixContainerSafely(value, cObjectFFRFreducedOrder->GetParameters().dampingMatrixReduced); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("forceUserFunction") == 0) { cObjectFFRFreducedOrder->GetParameters().forceUserFunction = value; } //! AUTO: get parameter
-        else if (parameterName.compare("massMatrixUserFunction") == 0) { cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction = value; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectFFRFreducedOrder->GetParameters().nodeNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("massMatrixReduced") == 0) { EPyUtils::SetPyMatrixContainerSafely(value, cObjectFFRFreducedOrder->GetParameters().massMatrixReduced); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("stiffnessMatrixReduced") == 0) { EPyUtils::SetPyMatrixContainerSafely(value, cObjectFFRFreducedOrder->GetParameters().stiffnessMatrixReduced); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("dampingMatrixReduced") == 0) { EPyUtils::SetPyMatrixContainerSafely(value, cObjectFFRFreducedOrder->GetParameters().dampingMatrixReduced); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("forceUserFunction") == 0) { cObjectFFRFreducedOrder->GetParameters().forceUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("massMatrixUserFunction") == 0) { cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("computeFFRFterms") == 0) { cObjectFFRFreducedOrder->GetParameters().computeFFRFterms = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("modeBasis") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectFFRFreducedOrder->GetParameters().modeBasis); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("outputVariableModeBasis") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectFFRFreducedOrder->GetParameters().outputVariableModeBasis); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("modeBasis") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().modeBasis); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("outputVariableModeBasis") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().outputVariableModeBasis); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("outputVariableTypeModeBasis") == 0) { cObjectFFRFreducedOrder->GetParameters().outputVariableTypeModeBasis = py::cast<OutputVariableType>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("referencePositions") == 0) { EPyUtils::SetNumpyVectorSafely(value, cObjectFFRFreducedOrder->GetParameters().referencePositions); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("referencePositions") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().referencePositions); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("objectIsInitialized") == 0) { cObjectFFRFreducedOrder->GetObjectIsInitialized() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsMass") == 0) { cObjectFFRFreducedOrder->GetPhysicsMass() = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsInertia") == 0) { EPyUtils::SetConstMatrixTemplateSafely<3,3>(value, cObjectFFRFreducedOrder->GetPhysicsInertia()); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsCenterOfMass") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectFFRFreducedOrder->GetPhysicsCenterOfMass()); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("mPsiTildePsi") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectFFRFreducedOrder->GetParameters().mPsiTildePsi); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("mPsiTildePsiTilde") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectFFRFreducedOrder->GetParameters().mPsiTildePsiTilde); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("mPhitTPsi") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectFFRFreducedOrder->GetParameters().mPhitTPsi); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("mPhitTPsiTilde") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectFFRFreducedOrder->GetParameters().mPhitTPsiTilde); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("mXRefTildePsi") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectFFRFreducedOrder->GetParameters().mXRefTildePsi); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("mXRefTildePsiTilde") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectFFRFreducedOrder->GetParameters().mXRefTildePsiTilde); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsCenterOfMassTilde") == 0) { EPyUtils::SetConstMatrixTemplateSafely<3,3>(value, cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde()); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsInertia") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectFFRFreducedOrder->GetPhysicsInertia()); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsCenterOfMass") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetPhysicsCenterOfMass()); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("mPsiTildePsi") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().mPsiTildePsi); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("mPsiTildePsiTilde") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().mPsiTildePsiTilde); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("mPhitTPsi") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().mPhitTPsi); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("mPhitTPsiTilde") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().mPhitTPsiTilde); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("mXRefTildePsi") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().mXRefTildePsi); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("mXRefTildePsiTilde") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().mXRefTildePsiTilde); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsCenterOfMassTilde") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde()); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectFFRFreducedOrder->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectFFRFreducedOrder->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("VtriangleMesh") == 0) { EPyUtils::SetNumpyMatrixISafely(value, visualizationObjectFFRFreducedOrder->GetTriangleMesh()); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VtriangleMesh") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRFreducedOrder->GetTriangleMesh()); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VshowNodes") == 0) { visualizationObjectFFRFreducedOrder->GetShowNodes() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectFFRFreducedOrder::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

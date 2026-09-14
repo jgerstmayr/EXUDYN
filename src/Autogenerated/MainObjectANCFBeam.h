@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:40 (last modified)
+* @date         2026-09-14  23:32:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,11 +114,11 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectANCFBeam->GetParameters().nodeNumbers = EPyUtils::GetNodeIndex2Safely(d["nodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectANCFBeam->GetParameters().nodeNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectANCFBeam->GetParameters().physicsLength = py::cast<Real>(d["physicsLength"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "crossSectionPenaltyFactor", cObjectANCFBeam->GetParameters().crossSectionPenaltyFactor); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "crossSectionDamping", cObjectANCFBeam->GetParameters().crossSectionDamping); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["crossSectionPenaltyFactor"], cObjectANCFBeam->GetParameters().crossSectionPenaltyFactor); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["crossSectionDamping"], cObjectANCFBeam->GetParameters().crossSectionDamping); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         SetInternalBeamSection(d["sectionData"]); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectANCFBeam->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VsectionGeometry")) { visualizationObjectANCFBeam->GetSectionGeometry() = py::cast<BeamSectionGeometry>(d["VsectionGeometry"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -131,10 +131,10 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex((ArrayIndex)cObjectANCFBeam->GetParameters().nodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
+        d["nodeNumbers"] = EPyUtils::ItemIndexToPython<NodeIndex>((ArrayIndex)cObjectANCFBeam->GetParameters().nodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsLength"] = (Real)cObjectANCFBeam->GetParameters().physicsLength; //! AUTO: cast variables into python (not needed for standard types) 
-        d["crossSectionPenaltyFactor"] = EPyUtils::SlimVector2NumPy(cObjectANCFBeam->GetParameters().crossSectionPenaltyFactor); //! AUTO: cast variables into python (not needed for standard types) 
-        d["crossSectionDamping"] = EPyUtils::SlimVector2NumPy(cObjectANCFBeam->GetParameters().crossSectionDamping); //! AUTO: cast variables into python (not needed for standard types) 
+        d["crossSectionPenaltyFactor"] = EPyUtils::ToPython(cObjectANCFBeam->GetParameters().crossSectionPenaltyFactor); //! AUTO: cast variables into python (not needed for standard types) 
+        d["crossSectionDamping"] = EPyUtils::ToPython(cObjectANCFBeam->GetParameters().crossSectionDamping); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["sectionData"] = GetInternalBeamSection(); //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectANCFBeam->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
@@ -147,11 +147,11 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex((ArrayIndex)cObjectANCFBeam->GetParameters().nodeNumbers));} //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<NodeIndex>((ArrayIndex)cObjectANCFBeam->GetParameters().nodeNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("physicsLength") == 0) { return py::cast((Real)cObjectANCFBeam->GetParameters().physicsLength);} //! AUTO: get parameter
         else if (parameterName.compare("sectionData") == 0) { return py::cast(GetInternalBeamSection());} //! AUTO: get parameter
-        else if (parameterName.compare("crossSectionPenaltyFactor") == 0) { return EPyUtils::SlimVector2NumPy(cObjectANCFBeam->GetParameters().crossSectionPenaltyFactor);} //! AUTO: get parameter
-        else if (parameterName.compare("crossSectionDamping") == 0) { return EPyUtils::SlimVector2NumPy(cObjectANCFBeam->GetParameters().crossSectionDamping);} //! AUTO: get parameter
+        else if (parameterName.compare("crossSectionPenaltyFactor") == 0) { return EPyUtils::ToPython(cObjectANCFBeam->GetParameters().crossSectionPenaltyFactor);} //! AUTO: get parameter
+        else if (parameterName.compare("crossSectionDamping") == 0) { return EPyUtils::ToPython(cObjectANCFBeam->GetParameters().crossSectionDamping);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectANCFBeam->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VsectionGeometry") == 0) { return py::cast((BeamSectionGeometry)visualizationObjectANCFBeam->GetSectionGeometry());} //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectANCFBeam->GetColor());} //! AUTO: get parameter
@@ -163,12 +163,12 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { cObjectANCFBeam->GetParameters().nodeNumbers = EPyUtils::GetNodeIndex2Safely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectANCFBeam->GetParameters().nodeNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsLength") == 0) { cObjectANCFBeam->GetParameters().physicsLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("sectionData") == 0) { SetInternalBeamSection(value); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("crossSectionPenaltyFactor") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectANCFBeam->GetParameters().crossSectionPenaltyFactor); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("crossSectionDamping") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectANCFBeam->GetParameters().crossSectionDamping); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("crossSectionPenaltyFactor") == 0) { EPyUtils::FromPython(value, cObjectANCFBeam->GetParameters().crossSectionPenaltyFactor); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("crossSectionDamping") == 0) { EPyUtils::FromPython(value, cObjectANCFBeam->GetParameters().crossSectionDamping); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectANCFBeam->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VsectionGeometry") == 0) { visualizationObjectANCFBeam->GetSectionGeometry() = py::cast<BeamSectionGeometry>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectANCFBeam->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

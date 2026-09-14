@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:41 (last modified)
+* @date         2026-09-14  23:32:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,12 +114,12 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectContactSphereTorus->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectContactSphereTorus->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactSphereTorus->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactSphereTorus->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "radiusSphere")) { cObjectContactSphereTorus->GetParameters().radiusSphere = py::cast<Real>(d["radiusSphere"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "torusMajorRadius")) { cObjectContactSphereTorus->GetParameters().torusMajorRadius = py::cast<Real>(d["torusMajorRadius"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "torusMinorRadius")) { cObjectContactSphereTorus->GetParameters().torusMinorRadius = py::cast<Real>(d["torusMinorRadius"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "torusAxis", cObjectContactSphereTorus->GetParameters().torusAxis); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["torusAxis"], cObjectContactSphereTorus->GetParameters().torusAxis); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "dynamicFriction")) { cObjectContactSphereTorus->GetParameters().dynamicFriction = py::cast<Real>(d["dynamicFriction"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "frictionProportionalZone")) { cObjectContactSphereTorus->GetParameters().frictionProportionalZone = py::cast<Real>(d["frictionProportionalZone"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         cObjectContactSphereTorus->GetParameters().contactStiffness = py::cast<Real>(d["contactStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -129,7 +129,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "minimumImpactVelocity")) { cObjectContactSphereTorus->GetParameters().minimumImpactVelocity = py::cast<Real>(d["minimumImpactVelocity"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "impactModel")) { cObjectContactSphereTorus->GetParameters().impactModel = py::cast<Index>(d["impactModel"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectContactSphereTorus->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectContactSphereTorus->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectContactSphereTorus->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
@@ -140,12 +140,12 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["markerNumbers"] = EPyUtils::GetArrayMarkerIndex(cObjectContactSphereTorus->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
+        d["markerNumbers"] = EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectContactSphereTorus->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["nodeNumber"] = (NodeIndex)cObjectContactSphereTorus->GetParameters().nodeNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["radiusSphere"] = (Real)cObjectContactSphereTorus->GetParameters().radiusSphere; //! AUTO: cast variables into python (not needed for standard types) 
         d["torusMajorRadius"] = (Real)cObjectContactSphereTorus->GetParameters().torusMajorRadius; //! AUTO: cast variables into python (not needed for standard types) 
         d["torusMinorRadius"] = (Real)cObjectContactSphereTorus->GetParameters().torusMinorRadius; //! AUTO: cast variables into python (not needed for standard types) 
-        d["torusAxis"] = EPyUtils::SlimVector2NumPy(cObjectContactSphereTorus->GetParameters().torusAxis); //! AUTO: cast variables into python (not needed for standard types) 
+        d["torusAxis"] = EPyUtils::ToPython(cObjectContactSphereTorus->GetParameters().torusAxis); //! AUTO: cast variables into python (not needed for standard types) 
         d["dynamicFriction"] = (Real)cObjectContactSphereTorus->GetParameters().dynamicFriction; //! AUTO: cast variables into python (not needed for standard types) 
         d["frictionProportionalZone"] = (Real)cObjectContactSphereTorus->GetParameters().frictionProportionalZone; //! AUTO: cast variables into python (not needed for standard types) 
         d["contactStiffness"] = (Real)cObjectContactSphereTorus->GetParameters().contactStiffness; //! AUTO: cast variables into python (not needed for standard types) 
@@ -165,12 +165,12 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::GetArrayMarkerIndex(cObjectContactSphereTorus->GetParameters().markerNumbers));} //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectContactSphereTorus->GetParameters().markerNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectContactSphereTorus->GetParameters().nodeNumber);} //! AUTO: get parameter
         else if (parameterName.compare("radiusSphere") == 0) { return py::cast((Real)cObjectContactSphereTorus->GetParameters().radiusSphere);} //! AUTO: get parameter
         else if (parameterName.compare("torusMajorRadius") == 0) { return py::cast((Real)cObjectContactSphereTorus->GetParameters().torusMajorRadius);} //! AUTO: get parameter
         else if (parameterName.compare("torusMinorRadius") == 0) { return py::cast((Real)cObjectContactSphereTorus->GetParameters().torusMinorRadius);} //! AUTO: get parameter
-        else if (parameterName.compare("torusAxis") == 0) { return EPyUtils::SlimVector2NumPy(cObjectContactSphereTorus->GetParameters().torusAxis);} //! AUTO: get parameter
+        else if (parameterName.compare("torusAxis") == 0) { return EPyUtils::ToPython(cObjectContactSphereTorus->GetParameters().torusAxis);} //! AUTO: get parameter
         else if (parameterName.compare("dynamicFriction") == 0) { return py::cast((Real)cObjectContactSphereTorus->GetParameters().dynamicFriction);} //! AUTO: get parameter
         else if (parameterName.compare("frictionProportionalZone") == 0) { return py::cast((Real)cObjectContactSphereTorus->GetParameters().frictionProportionalZone);} //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { return py::cast((Real)cObjectContactSphereTorus->GetParameters().contactStiffness);} //! AUTO: get parameter
@@ -190,13 +190,13 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { cObjectContactSphereTorus->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumber") == 0) { cObjectContactSphereTorus->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectContactSphereTorus->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectContactSphereTorus->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("radiusSphere") == 0) { cObjectContactSphereTorus->GetParameters().radiusSphere = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("torusMajorRadius") == 0) { cObjectContactSphereTorus->GetParameters().torusMajorRadius = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("torusMinorRadius") == 0) { cObjectContactSphereTorus->GetParameters().torusMinorRadius = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("torusAxis") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectContactSphereTorus->GetParameters().torusAxis); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("torusAxis") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTorus->GetParameters().torusAxis); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dynamicFriction") == 0) { cObjectContactSphereTorus->GetParameters().dynamicFriction = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("frictionProportionalZone") == 0) { cObjectContactSphereTorus->GetParameters().frictionProportionalZone = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { cObjectContactSphereTorus->GetParameters().contactStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

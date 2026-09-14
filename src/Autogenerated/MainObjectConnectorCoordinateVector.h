@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-03  15:37:35 (last modified)
+* @date         2026-09-14  23:33:05 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -109,17 +109,17 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectConnectorCoordinateVector->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(d["markerNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::SetNumpyMatrixSafely(d, "scalingMarker0", cObjectConnectorCoordinateVector->GetParameters().scalingMarker0); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetNumpyMatrixSafely(d, "scalingMarker1", cObjectConnectorCoordinateVector->GetParameters().scalingMarker1); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetNumpyMatrixSafely(d, "quadraticTermMarker0", cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker0); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetNumpyMatrixSafely(d, "quadraticTermMarker1", cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker1); /*! AUTO:  safely cast to C++ type*/
-        EPyUtils::SetNumpyVectorSafely(d, "offset", cObjectConnectorCoordinateVector->GetParameters().offset); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorCoordinateVector->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["scalingMarker0"], cObjectConnectorCoordinateVector->GetParameters().scalingMarker0); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["scalingMarker1"], cObjectConnectorCoordinateVector->GetParameters().scalingMarker1); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["quadraticTermMarker0"], cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker0); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["quadraticTermMarker1"], cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker1); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["offset"], cObjectConnectorCoordinateVector->GetParameters().offset); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorCoordinateVector->GetParameters().velocityLevel = py::cast<bool>(d["velocityLevel"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "constraintUserFunction")) { cObjectConnectorCoordinateVector->GetParameters().constraintUserFunction = d["constraintUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "jacobianUserFunction")) { cObjectConnectorCoordinateVector->GetParameters().jacobianUserFunction = d["jacobianUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorCoordinateVector->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectConnectorCoordinateVector->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectConnectorCoordinateVector->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
@@ -130,12 +130,12 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["markerNumbers"] = EPyUtils::GetArrayMarkerIndex(cObjectConnectorCoordinateVector->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
-        d["scalingMarker0"] = EPyUtils::Matrix2NumPy(cObjectConnectorCoordinateVector->GetParameters().scalingMarker0); //! AUTO: cast variables into python (not needed for standard types) 
-        d["scalingMarker1"] = EPyUtils::Matrix2NumPy(cObjectConnectorCoordinateVector->GetParameters().scalingMarker1); //! AUTO: cast variables into python (not needed for standard types) 
-        d["quadraticTermMarker0"] = EPyUtils::Matrix2NumPy(cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker0); //! AUTO: cast variables into python (not needed for standard types) 
-        d["quadraticTermMarker1"] = EPyUtils::Matrix2NumPy(cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker1); //! AUTO: cast variables into python (not needed for standard types) 
-        d["offset"] = EPyUtils::Vector2NumPy(cObjectConnectorCoordinateVector->GetParameters().offset); //! AUTO: cast variables into python (not needed for standard types) 
+        d["markerNumbers"] = EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectConnectorCoordinateVector->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
+        d["scalingMarker0"] = EPyUtils::ToPython(cObjectConnectorCoordinateVector->GetParameters().scalingMarker0); //! AUTO: cast variables into python (not needed for standard types) 
+        d["scalingMarker1"] = EPyUtils::ToPython(cObjectConnectorCoordinateVector->GetParameters().scalingMarker1); //! AUTO: cast variables into python (not needed for standard types) 
+        d["quadraticTermMarker0"] = EPyUtils::ToPython(cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker0); //! AUTO: cast variables into python (not needed for standard types) 
+        d["quadraticTermMarker1"] = EPyUtils::ToPython(cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker1); //! AUTO: cast variables into python (not needed for standard types) 
+        d["offset"] = EPyUtils::ToPython(cObjectConnectorCoordinateVector->GetParameters().offset); //! AUTO: cast variables into python (not needed for standard types) 
         d["velocityLevel"] = (bool)cObjectConnectorCoordinateVector->GetParameters().velocityLevel; //! AUTO: cast variables into python (not needed for standard types) 
         d["constraintUserFunction"] = (py::object)cObjectConnectorCoordinateVector->GetParameters().constraintUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
         d["jacobianUserFunction"] = (py::object)cObjectConnectorCoordinateVector->GetParameters().jacobianUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
@@ -150,12 +150,12 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::GetArrayMarkerIndex(cObjectConnectorCoordinateVector->GetParameters().markerNumbers));} //! AUTO: get parameter
-        else if (parameterName.compare("scalingMarker0") == 0) { return EPyUtils::Matrix2NumPy(cObjectConnectorCoordinateVector->GetParameters().scalingMarker0);} //! AUTO: get parameter
-        else if (parameterName.compare("scalingMarker1") == 0) { return EPyUtils::Matrix2NumPy(cObjectConnectorCoordinateVector->GetParameters().scalingMarker1);} //! AUTO: get parameter
-        else if (parameterName.compare("quadraticTermMarker0") == 0) { return EPyUtils::Matrix2NumPy(cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker0);} //! AUTO: get parameter
-        else if (parameterName.compare("quadraticTermMarker1") == 0) { return EPyUtils::Matrix2NumPy(cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker1);} //! AUTO: get parameter
-        else if (parameterName.compare("offset") == 0) { return EPyUtils::Vector2NumPy(cObjectConnectorCoordinateVector->GetParameters().offset);} //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectConnectorCoordinateVector->GetParameters().markerNumbers));} //! AUTO: get parameter
+        else if (parameterName.compare("scalingMarker0") == 0) { return EPyUtils::ToPython(cObjectConnectorCoordinateVector->GetParameters().scalingMarker0);} //! AUTO: get parameter
+        else if (parameterName.compare("scalingMarker1") == 0) { return EPyUtils::ToPython(cObjectConnectorCoordinateVector->GetParameters().scalingMarker1);} //! AUTO: get parameter
+        else if (parameterName.compare("quadraticTermMarker0") == 0) { return EPyUtils::ToPython(cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker0);} //! AUTO: get parameter
+        else if (parameterName.compare("quadraticTermMarker1") == 0) { return EPyUtils::ToPython(cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker1);} //! AUTO: get parameter
+        else if (parameterName.compare("offset") == 0) { return EPyUtils::ToPython(cObjectConnectorCoordinateVector->GetParameters().offset);} //! AUTO: get parameter
         else if (parameterName.compare("velocityLevel") == 0) { return py::cast((bool)cObjectConnectorCoordinateVector->GetParameters().velocityLevel);} //! AUTO: get parameter
         else if (parameterName.compare("constraintUserFunction") == 0) { return cObjectConnectorCoordinateVector->GetParameters().constraintUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
         else if (parameterName.compare("jacobianUserFunction") == 0) { return cObjectConnectorCoordinateVector->GetParameters().jacobianUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
@@ -170,16 +170,16 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("markerNumbers") == 0) { cObjectConnectorCoordinateVector->GetParameters().markerNumbers = EPyUtils::GetArrayMarkerIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("scalingMarker0") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectConnectorCoordinateVector->GetParameters().scalingMarker0); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("scalingMarker1") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectConnectorCoordinateVector->GetParameters().scalingMarker1); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("quadraticTermMarker0") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker0); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("quadraticTermMarker1") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker1); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("offset") == 0) { EPyUtils::SetNumpyVectorSafely(value, cObjectConnectorCoordinateVector->GetParameters().offset); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectConnectorCoordinateVector->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("scalingMarker0") == 0) { EPyUtils::FromPython(value, cObjectConnectorCoordinateVector->GetParameters().scalingMarker0); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("scalingMarker1") == 0) { EPyUtils::FromPython(value, cObjectConnectorCoordinateVector->GetParameters().scalingMarker1); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("quadraticTermMarker0") == 0) { EPyUtils::FromPython(value, cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker0); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("quadraticTermMarker1") == 0) { EPyUtils::FromPython(value, cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker1); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("offset") == 0) { EPyUtils::FromPython(value, cObjectConnectorCoordinateVector->GetParameters().offset); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("velocityLevel") == 0) { cObjectConnectorCoordinateVector->GetParameters().velocityLevel = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("constraintUserFunction") == 0) { cObjectConnectorCoordinateVector->GetParameters().constraintUserFunction = value; } //! AUTO: get parameter
-        else if (parameterName.compare("jacobianUserFunction") == 0) { cObjectConnectorCoordinateVector->GetParameters().jacobianUserFunction = value; } //! AUTO: get parameter
+        else if (parameterName.compare("constraintUserFunction") == 0) { cObjectConnectorCoordinateVector->GetParameters().constraintUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("jacobianUserFunction") == 0) { cObjectConnectorCoordinateVector->GetParameters().jacobianUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectConnectorCoordinateVector->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectConnectorCoordinateVector->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectConnectorCoordinateVector->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

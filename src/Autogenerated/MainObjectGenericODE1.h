@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:40 (last modified)
+* @date         2026-09-14  23:33:05 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -115,11 +115,11 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectGenericODE1->GetParameters().nodeNumbers = EPyUtils::GetArrayNodeIndexSafely(d["nodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "systemMatrix")) { EPyUtils::SetNumpyMatrixSafely(d, "systemMatrix", cObjectGenericODE1->GetParameters().systemMatrix); /*! AUTO:  safely cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "rhsVector")) { EPyUtils::SetNumpyVectorSafely(d, "rhsVector", cObjectGenericODE1->GetParameters().rhsVector); /*! AUTO:  safely cast to C++ type*/} 
+        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectGenericODE1->GetParameters().nodeNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "systemMatrix")) { EPyUtils::FromPython(d["systemMatrix"], cObjectGenericODE1->GetParameters().systemMatrix); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "rhsVector")) { EPyUtils::FromPython(d["rhsVector"], cObjectGenericODE1->GetParameters().rhsVector); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "rhsUserFunction")) { cObjectGenericODE1->GetParameters().rhsUserFunction = d["rhsUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
-        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectGenericODE1->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
@@ -129,13 +129,13 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["nodeNumbers"] = EPyUtils::GetArrayNodeIndex(cObjectGenericODE1->GetParameters().nodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
-        d["systemMatrix"] = EPyUtils::Matrix2NumPy(cObjectGenericODE1->GetParameters().systemMatrix); //! AUTO: cast variables into python (not needed for standard types) 
-        d["rhsVector"] = EPyUtils::Vector2NumPy(cObjectGenericODE1->GetParameters().rhsVector); //! AUTO: cast variables into python (not needed for standard types) 
+        d["nodeNumbers"] = EPyUtils::ItemIndexToPython<NodeIndex>(cObjectGenericODE1->GetParameters().nodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
+        d["systemMatrix"] = EPyUtils::ToPython(cObjectGenericODE1->GetParameters().systemMatrix); //! AUTO: cast variables into python (not needed for standard types) 
+        d["rhsVector"] = EPyUtils::ToPython(cObjectGenericODE1->GetParameters().rhsVector); //! AUTO: cast variables into python (not needed for standard types) 
         d["rhsUserFunction"] = (py::object)cObjectGenericODE1->GetParameters().rhsUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
         d["coordinateIndexPerNode"] = (std::vector<Index>)cObjectGenericODE1->GetParameters().coordinateIndexPerNode; //! AUTO: cast variables into python (not needed for standard types) 
-        d["tempCoordinates"] = EPyUtils::Vector2NumPy(cObjectGenericODE1->GetTempCoordinates()); //! AUTO: cast variables into python (not needed for standard types) 
-        d["tempCoordinates_t"] = EPyUtils::Vector2NumPy(cObjectGenericODE1->GetTempCoordinates_t()); //! AUTO: cast variables into python (not needed for standard types) 
+        d["tempCoordinates"] = EPyUtils::ToPython(cObjectGenericODE1->GetTempCoordinates()); //! AUTO: cast variables into python (not needed for standard types) 
+        d["tempCoordinates_t"] = EPyUtils::ToPython(cObjectGenericODE1->GetTempCoordinates_t()); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectGenericODE1->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
@@ -145,13 +145,13 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override 
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::GetArrayNodeIndex(cObjectGenericODE1->GetParameters().nodeNumbers));} //! AUTO: get parameter
-        else if (parameterName.compare("systemMatrix") == 0) { return EPyUtils::Matrix2NumPy(cObjectGenericODE1->GetParameters().systemMatrix);} //! AUTO: get parameter
-        else if (parameterName.compare("rhsVector") == 0) { return EPyUtils::Vector2NumPy(cObjectGenericODE1->GetParameters().rhsVector);} //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<NodeIndex>(cObjectGenericODE1->GetParameters().nodeNumbers));} //! AUTO: get parameter
+        else if (parameterName.compare("systemMatrix") == 0) { return EPyUtils::ToPython(cObjectGenericODE1->GetParameters().systemMatrix);} //! AUTO: get parameter
+        else if (parameterName.compare("rhsVector") == 0) { return EPyUtils::ToPython(cObjectGenericODE1->GetParameters().rhsVector);} //! AUTO: get parameter
         else if (parameterName.compare("rhsUserFunction") == 0) { return cObjectGenericODE1->GetParameters().rhsUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
         else if (parameterName.compare("coordinateIndexPerNode") == 0) { return py::cast((std::vector<Index>)cObjectGenericODE1->GetParameters().coordinateIndexPerNode);} //! AUTO: get parameter
-        else if (parameterName.compare("tempCoordinates") == 0) { return EPyUtils::Vector2NumPy(cObjectGenericODE1->GetTempCoordinates());} //! AUTO: get parameter
-        else if (parameterName.compare("tempCoordinates_t") == 0) { return EPyUtils::Vector2NumPy(cObjectGenericODE1->GetTempCoordinates_t());} //! AUTO: get parameter
+        else if (parameterName.compare("tempCoordinates") == 0) { return EPyUtils::ToPython(cObjectGenericODE1->GetTempCoordinates());} //! AUTO: get parameter
+        else if (parameterName.compare("tempCoordinates_t") == 0) { return EPyUtils::ToPython(cObjectGenericODE1->GetTempCoordinates_t());} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectGenericODE1->GetShow());} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectGenericODE1::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
@@ -161,11 +161,11 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumbers") == 0) { cObjectGenericODE1->GetParameters().nodeNumbers = EPyUtils::GetArrayNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("systemMatrix") == 0) { EPyUtils::SetNumpyMatrixSafely(value, cObjectGenericODE1->GetParameters().systemMatrix); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("rhsVector") == 0) { EPyUtils::SetNumpyVectorSafely(value, cObjectGenericODE1->GetParameters().rhsVector); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("rhsUserFunction") == 0) { cObjectGenericODE1->GetParameters().rhsUserFunction = value; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumbers") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectGenericODE1->GetParameters().nodeNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("systemMatrix") == 0) { EPyUtils::FromPython(value, cObjectGenericODE1->GetParameters().systemMatrix); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("rhsVector") == 0) { EPyUtils::FromPython(value, cObjectGenericODE1->GetParameters().rhsVector); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("rhsUserFunction") == 0) { cObjectGenericODE1->GetParameters().rhsUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectGenericODE1->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectGenericODE1::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

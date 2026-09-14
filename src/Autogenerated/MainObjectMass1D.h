@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:39 (last modified)
+* @date         2026-09-14  23:32:16 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -112,10 +112,10 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         cObjectMass1D->GetParameters().physicsMass = py::cast<Real>(d["physicsMass"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectMass1D->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(d["nodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "referencePosition")) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(d, "referencePosition", cObjectMass1D->GetParameters().referencePosition); /*! AUTO:  safely cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "referenceRotation")) { EPyUtils::SetConstMatrixTemplateSafely<3,3>(d, "referenceRotation", cObjectMass1D->GetParameters().referenceRotation); /*! AUTO:  safely cast to C++ type*/} 
-        EPyUtils::SetStringSafely(d, "name", name); /*! AUTO:  safely cast to C++ type*/
+        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectMass1D->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "referencePosition")) { EPyUtils::FromPython(d["referencePosition"], cObjectMass1D->GetParameters().referencePosition); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "referenceRotation")) { EPyUtils::FromPython<Real, 3, 3>(d["referenceRotation"], cObjectMass1D->GetParameters().referenceRotation); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectMass1D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VgraphicsData")) { PyWriteBodyGraphicsDataList(d, "VgraphicsData", visualizationObjectMass1D->GetGraphicsData()); /*! AUTO: convert dict to BodyGraphicsData*/} 
         GetCObject()->ParametersHaveChanged();
@@ -128,8 +128,8 @@ public: // AUTO:
         d["objectType"] = (std::string)GetTypeName();
         d["physicsMass"] = (Real)cObjectMass1D->GetParameters().physicsMass; //! AUTO: cast variables into python (not needed for standard types) 
         d["nodeNumber"] = (NodeIndex)cObjectMass1D->GetParameters().nodeNumber; //! AUTO: cast variables into python (not needed for standard types) 
-        d["referencePosition"] = EPyUtils::SlimVector2NumPy(cObjectMass1D->GetParameters().referencePosition); //! AUTO: cast variables into python (not needed for standard types) 
-        d["referenceRotation"] = EPyUtils::Matrix2NumPyTemplate(cObjectMass1D->GetParameters().referenceRotation); //! AUTO: cast variables into python (not needed for standard types) 
+        d["referencePosition"] = EPyUtils::ToPython(cObjectMass1D->GetParameters().referencePosition); //! AUTO: cast variables into python (not needed for standard types) 
+        d["referenceRotation"] = EPyUtils::ToPython(cObjectMass1D->GetParameters().referenceRotation); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectMass1D->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VgraphicsData"] = PyGetBodyGraphicsDataList(visualizationObjectMass1D->GetGraphicsData(), addGraphicsData); //! AUTO: cast variables into python (not needed for standard types) 
@@ -142,8 +142,8 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("physicsMass") == 0) { return py::cast((Real)cObjectMass1D->GetParameters().physicsMass);} //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectMass1D->GetParameters().nodeNumber);} //! AUTO: get parameter
-        else if (parameterName.compare("referencePosition") == 0) { return EPyUtils::SlimVector2NumPy(cObjectMass1D->GetParameters().referencePosition);} //! AUTO: get parameter
-        else if (parameterName.compare("referenceRotation") == 0) { return EPyUtils::Matrix2NumPyTemplate(cObjectMass1D->GetParameters().referenceRotation);} //! AUTO: get parameter
+        else if (parameterName.compare("referencePosition") == 0) { return EPyUtils::ToPython(cObjectMass1D->GetParameters().referencePosition);} //! AUTO: get parameter
+        else if (parameterName.compare("referenceRotation") == 0) { return EPyUtils::ToPython(cObjectMass1D->GetParameters().referenceRotation);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectMass1D->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsData") == 0) { return PyGetBodyGraphicsDataList(visualizationObjectMass1D->GetGraphicsData(), true);} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectMass1D::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
@@ -154,11 +154,11 @@ public: // AUTO:
     //! AUTO:  parameter write access
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
-        if (parameterName.compare("name") == 0) { EPyUtils::SetStringSafely(value, name); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsMass") == 0) { cObjectMass1D->GetParameters().physicsMass = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("nodeNumber") == 0) { cObjectMass1D->GetParameters().nodeNumber = EPyUtils::GetNodeIndexSafely(value); /* AUTO:  read out dictionary, check if correct index used and store (converted) Index to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("referencePosition") == 0) { EPyUtils::SetSlimVectorTemplateSafely<Real, 3>(value, cObjectMass1D->GetParameters().referencePosition); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("referenceRotation") == 0) { EPyUtils::SetConstMatrixTemplateSafely<3,3>(value, cObjectMass1D->GetParameters().referenceRotation); /*! AUTO:  safely cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectMass1D->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("referencePosition") == 0) { EPyUtils::FromPython(value, cObjectMass1D->GetParameters().referencePosition); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("referenceRotation") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectMass1D->GetParameters().referenceRotation); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectMass1D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsData") == 0) { PyWriteBodyGraphicsDataList(value, visualizationObjectMass1D->GetGraphicsData()); } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectMass1D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
