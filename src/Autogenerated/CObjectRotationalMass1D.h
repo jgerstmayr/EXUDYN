@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-01-07  23:36:14 (last modified)
+* @date         2026-09-14  07:50:40 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -82,7 +82,7 @@ public: // AUTO:
     //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
     virtual void ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const override;
 
-    //! AUTO:  Jacobian is zero; return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
+    //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override
     {
         return JacobianType::_None;
@@ -103,7 +103,7 @@ public: // AUTO:
     //! AUTO:  return the (global) position of 'localPosition' according to configuration type
     virtual Vector3D GetPosition(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
 
-    //! AUTO:  return the (global) position of 'localPosition' according to configuration type
+    //! AUTO:  return the (global) displacement of 'localPosition' according to configuration type
     virtual Vector3D GetDisplacement(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
 
     //! AUTO:  return the (global) velocity of 'localPosition' according to configuration type
@@ -137,7 +137,7 @@ public: // AUTO:
         parameters.nodeNumber=nodeNumber;
     }
 
-    //! AUTO:  number of nodes; needed for every object
+    //! AUTO:  number of nodes; needed for every object; can depend on the configuration
     virtual Index GetNumberOfNodes() const override
     {
         return 1;

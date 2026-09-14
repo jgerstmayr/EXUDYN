@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-02-28  22:53:57 (last modified)
+* @date         2026-09-14  07:50:40 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -146,7 +146,7 @@ public: // AUTO:
         parameters.nodeNumbers[localIndex]=nodeNumber;
     }
 
-    //! AUTO:  number of nodes; needed for every object
+    //! AUTO:  number of nodes; needed for every object; can depend on the configuration
     virtual Index GetNumberOfNodes() const override
     {
         return 2;

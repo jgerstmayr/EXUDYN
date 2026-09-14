@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-02-05  22:13:55 (last modified)
+* @date         2026-09-14  07:50:39 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -95,7 +95,7 @@ public: // AUTO:
     //! AUTO:  return configuration dependent rotation matrix of node; the slope vector \f$\rv^\prime = [1,0]\f$ is defines as zero angle (\f$\varphi = 0\f$), leading to a matrix \f$\Am = \mr{\cos\varphi}{-\sin\varphi}{0} {\sin\varphi}{\cos\varphi}{0} {0}{0}{1}\f$; the function always computes a 3D Matrix
     virtual Matrix3D GetRotationMatrix(ConfigurationType configuration = ConfigurationType::Current) const override;
 
-    //! AUTO:  provide position jacobian \f$\Jm_P\f$ of node; derivative of 3D position with respect to 4 coordinates ux,uy and x/y 'displacements' of slopex; action of force: \f$\Qm_f = \Jm_P^T \fv\f$
+    //! AUTO:  provide position jacobian \f$\Jm_P\f$ of node; derivative of global 3D position with respect to all nodal coordiantes; action of force: \f$\Qm_f = \Jm_P^T \fv\f$; zero-size matrix for ground node (no action)
     virtual void GetPositionJacobian(Matrix& value) const override;
 
     //! AUTO:  return internally stored reference coordinates of node

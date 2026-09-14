@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-01-07  23:36:15 (last modified)
+* @date         2026-09-14  07:50:40 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -110,7 +110,7 @@ public: // AUTO:
     //! AUTO:  return the (global) position of 'localPosition' according to configuration type
     virtual Vector3D GetPosition(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
 
-    //! AUTO:  return the (global) position of 'localPosition' according to configuration type
+    //! AUTO:  return the (global) displacement of 'localPosition' according to configuration type
     virtual Vector3D GetDisplacement(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
 
     //! AUTO:  return the (global) acceleration of 'localPosition' according to configuration type
@@ -153,7 +153,7 @@ public: // AUTO:
         parameters.nodeNumber=nodeNumber;
     }
 
-    //! AUTO:  number of nodes; needed for every object
+    //! AUTO:  number of nodes; needed for every object; can depend on the configuration
     virtual Index GetNumberOfNodes() const override
     {
         return 1;

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-13  20:45:50 (last modified)
+* @date         2026-09-14  07:50:41 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -169,7 +169,7 @@ public: // AUTO:
         parameters.nodeNumber=nodeNumber;
     }
 
-    //! AUTO:  number of nodes; needed for every object
+    //! AUTO:  number of nodes; needed for every object; can depend on the configuration
     virtual Index GetNumberOfNodes() const override
     {
         return 1;
@@ -193,7 +193,7 @@ public: // AUTO:
     //! AUTO:  function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)
     virtual void PostDiscontinuousIterationStep() override;
 
-    //! AUTO:  connector uses penalty formulation
+    //! AUTO:  true if the connector uses a penalty formulation; false if the constraint uses Lagrange multipliers
     virtual bool IsPenaltyConnector() const override
     {
         return true;

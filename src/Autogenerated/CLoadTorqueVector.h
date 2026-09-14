@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-02  20:40:04 (last modified)
+* @date         2026-09-14  07:50:42 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -109,7 +109,7 @@ public: // AUTO:
         return true;
     }
 
-    //! AUTO:  read access for load vector
+    //! AUTO:  read access for load vector; returns user function result in case it is defined
     virtual Vector3D GetLoadVector(const MainSystemBase& mbs, Real t) const override;
 
     //! AUTO:  per default, forces/torques/... are applied in global coordinates; if IsBodyFixed()=true, the marker needs to provide a rotation (orientation) and forces/torques/... are applied in the local coordinate system

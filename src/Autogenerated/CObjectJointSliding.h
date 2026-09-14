@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-03-02  09:07:19 (last modified)
+* @date         2026-09-14  07:50:42 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -112,7 +112,7 @@ public: // AUTO:
         parameters.nodeNumber=nodeNumber;
     }
 
-    //! AUTO:  number of nodes; needed for every object
+    //! AUTO:  number of nodes; needed for every object; can depend on the configuration
     virtual Index GetNumberOfNodes() const override
     {
         return 1;
@@ -124,7 +124,7 @@ public: // AUTO:
         return 2;
     }
 
-    //! AUTO:  constraints uses Lagrance multiplier formulation
+    //! AUTO:  true if the connector uses a penalty formulation; false if the constraint uses Lagrange multipliers
     virtual bool IsPenaltyConnector() const override
     {
         return false;

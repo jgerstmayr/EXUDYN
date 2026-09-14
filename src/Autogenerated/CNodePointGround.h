@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-02-05  22:13:55 (last modified)
+* @date         2026-09-14  07:50:39 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -88,7 +88,7 @@ public: // AUTO:
         return Vector3D(0.);
     }
 
-    //! AUTO:  return configuration dependent rotation matrix of node; returns always a 3D Vector
+    //! AUTO:  return configuration dependent rotation matrix of node; returns always a 3D matrix
     virtual Matrix3D GetRotationMatrix(ConfigurationType configuration = ConfigurationType::Current) const override
     {
         return EXUmath::unitMatrix3D;
@@ -100,13 +100,13 @@ public: // AUTO:
         return Vector3D(0.);
     }
 
-    //! AUTO:  return zero sized matrix for ground node (no action)
+    //! AUTO:  provide position jacobian \f$\Jm_P\f$ of node; derivative of global 3D position with respect to all nodal coordiantes; action of force: \f$\Qm_f = \Jm_P^T \fv\f$; zero-size matrix for ground node (no action)
     virtual void GetPositionJacobian(Matrix& value) const override
     {
         value.SetNumberOfRowsAndColumns(0,0);
     }
 
-    //! AUTO:  provide 'rotation' jacobian \f$\Jm_R\f$ of node; derivative of 3D angular velocity vector with respect to all velocity coordinates ('G-matrix'); action of torque \f$\mv\f$: \f$\Qm_m = \Jm_R^T \mv\f$
+    //! AUTO:  provide 'rotation' jacobian \f$\Jm_R\f$ of node; derivative of global 3D angular velocity vector with respect to all velocity coordinates ('G-matrix'); action of torque \f$\mv\f$: \f$\Qm_m = \Jm_R^T \mv\f$
     virtual void GetRotationJacobian(Matrix& value) const override
     {
         value.SetNumberOfRowsAndColumns(0,0);

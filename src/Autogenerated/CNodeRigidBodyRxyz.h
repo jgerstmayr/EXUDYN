@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-02-05  22:13:55 (last modified)
+* @date         2026-09-14  07:50:39 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -111,22 +111,22 @@ public: // AUTO:
     //! AUTO:  return configuration dependent acceleration of node
     virtual Vector3D GetAcceleration(ConfigurationType configuration = ConfigurationType::Current) const override;
 
-    //! AUTO:  return configuration dependent rotation matrix of node; returns always a 3D Vector
+    //! AUTO:  return configuration dependent rotation matrix of node; returns always a 3D matrix
     virtual Matrix3D GetRotationMatrix(ConfigurationType configuration = ConfigurationType::Current) const override;
 
     //! AUTO:  return configuration dependent angular velocity of node; returns always a 3D Vector
     virtual Vector3D GetAngularVelocity(ConfigurationType configuration = ConfigurationType::Current) const override;
 
-    //! AUTO:  return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector
+    //! AUTO:  return configuration dependent local (=body-fixed) angular velocity of node; in 2D case, this is the same as the global angular velocity; returns always a 3D Vector
     virtual Vector3D GetAngularVelocityLocal(ConfigurationType configuration = ConfigurationType::Current) const override;
 
     //! AUTO:  return configuration dependent angular acceleration of node
     virtual Vector3D GetAngularAcceleration(ConfigurationType configuration = ConfigurationType::Current) const override;
 
-    //! AUTO:  provide position jacobian of node; derivative of 3D Position with respect to 3 displacement coordinates \f$[q_0,\,q_1,\,q_2]\tp\f$ and 3 rotation coordinates \f$[\psi_0,\,\psi_1,\,\psi_2]\tp\f$
+    //! AUTO:  provide position jacobian \f$\Jm_P\f$ of node; derivative of global 3D position with respect to all nodal coordiantes; action of force: \f$\Qm_f = \Jm_P^T \fv\f$; zero-size matrix for ground node (no action)
     virtual void GetPositionJacobian(Matrix& value) const override;
 
-    //! AUTO:  provide 'rotation' jacobian \f$\Jm_R\f$ of node; derivative of 3D angular velocity vector with respect to all velocity coordinates ('G-matrix'); action of torque \f$\mv\f$: \f$\Qm_m = \Jm_R^T \mv\f$
+    //! AUTO:  provide 'rotation' jacobian \f$\Jm_R\f$ of node; derivative of global 3D angular velocity vector with respect to all velocity coordinates ('G-matrix'); action of torque \f$\mv\f$: \f$\Qm_m = \Jm_R^T \mv\f$
     virtual void GetRotationJacobian(Matrix& value) const override;
 
     //! AUTO:  provide derivative w.r.t. coordinates of rotation Jacobian times vector; for current configuration
