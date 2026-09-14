@@ -21,11 +21,11 @@ The item \ **ObjectConnectorCartesianSpringDamper**\  with type = 'ConnectorCart
   | connector's unique name
 * | **markerNumbers** [\ :math:`[m0,m1]\tp`\ , type = ArrayMarkerIndex, default = [ invalid [-1], invalid [-1] ]]:
   | list of markers used in connector
-* | **stiffness** [\ :math:`{\mathbf{k}}`\ , type = Vector3D, default = [0.,0.,0.]]:
+* | **stiffness** [\ :math:`{\mathbf{k}}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
   | stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction
-* | **damping** [\ :math:`{\mathbf{d}}`\ , type = Vector3D, default = [0.,0.,0.]]:
+* | **damping** [\ :math:`{\mathbf{d}}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
   | damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction
-* | **offset** [\ :math:`{\mathbf{v}}_{\mathrm{off}}`\ , type = Vector3D, default = [0.,0.,0.]]:
+* | **offset** [\ :math:`{\mathbf{v}}_{\mathrm{off}}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
   | offset between two springs
 * | **springForceUserFunction** [\ :math:`\mathrm{UF} \in \Rcal^3`\ , type = PyFunctionVector3DmbsScalarIndexScalar4Vector3D, default =  0]:
   | A Python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below
@@ -42,7 +42,7 @@ The item VObjectConnectorCartesianSpringDamper has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown
 * | **drawSize** [type = float, default = -1.]:
   | drawing size = diameter of spring; size == -1.f means that default connector size is used
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
+* | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA connector color; if R==-1, use default color
 
 

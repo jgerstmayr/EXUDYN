@@ -134,7 +134,7 @@ VSettingsContourAdvanced has the following items:
 * | **colorBarPrecision** [type = PInt, default = 4]:
   | \ ``SC.visualizationSettings.contour.advanced.colorBarPrecision``\ 
   | precision of floating point values shown in color bar; total number of digits used (max. 16)
-* | **colorBarTiling** [type = PInt, default = 12, size = 1]:
+* | **colorBarTiling** [type = PInt, default = 12]:
   | \ ``SC.visualizationSettings.contour.advanced.colorBarTiling``\ 
   | number of tiles (segements) shown in the colorbar for the contour plot
 * | **contourColor0** [type = Float4, default = [0.1,0.1,0.9,1.], size = 4]:
@@ -176,16 +176,16 @@ VSettingsContour has the following items:
 * | **advanced** [type = VSettingsContourAdvanced]:
   | \ ``SC.visualizationSettings.contour.advanced``\ 
   | advanced settings for contour
-* | **alphaTransparency** [type = float, default = 1, size = 1]:
+* | **alphaTransparency** [type = float, default = 1]:
   | \ ``SC.visualizationSettings.contour.alphaTransparency``\ 
   | default value for contour alpha transparency (RGB color computed from contour value)
 * | **automaticRange** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.contour.automaticRange``\ 
   | if true, the contour plot value range is chosen automatically to the maximum range
-* | **maxValue** [type = float, default = 1, size = 1]:
+* | **maxValue** [type = float, default = 1]:
   | \ ``SC.visualizationSettings.contour.maxValue``\ 
   | maximum value for contour plot; set manually, if automaticRange == False
-* | **minValue** [type = float, default = 0, size = 1]:
+* | **minValue** [type = float, default = 0]:
   | \ ``SC.visualizationSettings.contour.minValue``\ 
   | minimum value for contour plot; set manually, if automaticRange == False
 * | **nodesColored** [type = bool, default = True]:
@@ -194,7 +194,7 @@ VSettingsContour has the following items:
 * | **outputVariable** [type = OutputVariableType, default = OutputVariableType::\_None]:
   | \ ``SC.visualizationSettings.contour.outputVariable``\ 
   | selected contour plot output variable type; select OutputVariableType._None to deactivate contour plotting.
-* | **outputVariableComponent** [type = Int, default = 0, size = 1]:
+* | **outputVariableComponent** [type = Int, default = 0]:
   | \ ``SC.visualizationSettings.contour.outputVariableComponent``\ 
   | select the component of the chosen output variable; e.g., for displacements, 3 components are available: 0 == x, 1 == y, 2 == z component; for stresses, 6 components are available, see OutputVariableType description; to draw the norm of a outputVariable, set component to -1; if a certain component is not available by certain objects or nodes, no value is drawn (using default color)
 * | **reduceRange** [type = bool, default = True]:
@@ -692,22 +692,22 @@ VSettingsScene has the following items:
 * | **drawWorldBasis** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.view0.scene.drawWorldBasis``\ , \ ``SC.visualizationSettings.view1.scene.drawWorldBasis``\ , \ ``SC.visualizationSettings.view2.scene.drawWorldBasis``\ , \ ``SC.visualizationSettings.view3.scene.drawWorldBasis``\ 
   | true = draw world basis coordinate system at (0,0,0)
-* | **facesTransparent** [type = bool, default = False, size = 1]:
+* | **facesTransparent** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.view0.scene.facesTransparent``\ , \ ``SC.visualizationSettings.view1.scene.facesTransparent``\ , \ ``SC.visualizationSettings.view2.scene.facesTransparent``\ , \ ``SC.visualizationSettings.view3.scene.facesTransparent``\ 
   | True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers
-* | **showFaceEdges** [type = bool, default = False, size = 1]:
+* | **showFaceEdges** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.view0.scene.showFaceEdges``\ , \ ``SC.visualizationSettings.view1.scene.showFaceEdges``\ , \ ``SC.visualizationSettings.view2.scene.showFaceEdges``\ , \ ``SC.visualizationSettings.view3.scene.showFaceEdges``\ 
   | True: show edges of triangles; using the options showFaces=false and showFaceEdges=true gives are wire frame representation
-* | **showFaces** [type = bool, default = True, size = 1]:
+* | **showFaces** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.view0.scene.showFaces``\ , \ ``SC.visualizationSettings.view1.scene.showFaces``\ , \ ``SC.visualizationSettings.view2.scene.showFaces``\ , \ ``SC.visualizationSettings.view3.scene.showFaces``\ 
   | True: show faces of triangles, etc.; using the options showFaces=false and showFaceEdges=true gives are wireframe representation
-* | **showLines** [type = bool, default = True, size = 1]:
+* | **showLines** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.view0.scene.showLines``\ , \ ``SC.visualizationSettings.view1.scene.showLines``\ , \ ``SC.visualizationSettings.view2.scene.showLines``\ , \ ``SC.visualizationSettings.view3.scene.showLines``\ 
   | True: show lines (other lines than face and mesh edges)
-* | **showMeshEdges** [type = bool, default = True, size = 1]:
+* | **showMeshEdges** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.view0.scene.showMeshEdges``\ , \ ``SC.visualizationSettings.view1.scene.showMeshEdges``\ , \ ``SC.visualizationSettings.view2.scene.showMeshEdges``\ , \ ``SC.visualizationSettings.view3.scene.showMeshEdges``\ 
   | True: show edges of finite elements; independent of showFaceEdges
-* | **showMeshFaces** [type = bool, default = True, size = 1]:
+* | **showMeshFaces** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.view0.scene.showMeshFaces``\ , \ ``SC.visualizationSettings.view1.scene.showMeshFaces``\ , \ ``SC.visualizationSettings.view2.scene.showMeshFaces``\ , \ ``SC.visualizationSettings.view3.scene.showMeshFaces``\ 
   | True: show faces of finite elements; independent of showFaces
 * | **worldBasisSize** [type = PFloat, default = 1.]:
@@ -866,10 +866,10 @@ VSettingsRaytracerAdvanced has the following items:
 * | **searchTreeFactor** [type = PInt, default = 1]:
   | \ ``SC.visualizationSettings.raytracer.advanced.searchTreeFactor``\ 
   | This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128
-* | **shadowScalingFactor** [type = UInt, default = 3, size = 1]:
+* | **shadowScalingFactor** [type = UInt, default = 3]:
   | \ ``SC.visualizationSettings.raytracer.advanced.shadowScalingFactor``\ 
   | if lightRadiusVariations>1, this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries
-* | **shadowSmoothingSteps** [type = UInt, default = 3, size = 1]:
+* | **shadowSmoothingSteps** [type = UInt, default = 3]:
   | \ ``SC.visualizationSettings.raytracer.advanced.shadowSmoothingSteps``\ 
   | if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing  steps may cause artifacts at shadow boundaries; only works for directional lights with position (e.g. 4th component in light0Position should be 1)
 * | **showText** [type = bool, default = True]:
@@ -938,7 +938,7 @@ VSettingsRaytracer has the following items:
 * | **keepWindowActive** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.raytracer.keepWindowActive``\ 
   | Special flag, handle with care; True: sends some glfw functions to keep window reactive for long render times (>2 seconds); otherwise, the rendering may not finish due to timeout
-* | **lightRadiusVariations** [type = PInt, default = 1, size = 1]:
+* | **lightRadiusVariations** [type = PInt, default = 1]:
   | \ ``SC.visualizationSettings.raytracer.lightRadiusVariations``\ 
   | if lightRadiusVariations>1, this defines the number of positions that are used to compute the effect of distributed lights (larger is slower but better quality); range=1..256; avoid squares of integers; good values: 1 (hard shadow boundaries), 6, 13, 20, 31, 72, 130, 240; for lower values, use shadowSmoothingSteps=2..8
 * | **maxReflectionDepth** [type = UInt, default = 2]:
@@ -947,7 +947,7 @@ VSettingsRaytracer has the following items:
 * | **maxTransparencyDepth** [type = UInt, default = 2]:
   | \ ``SC.visualizationSettings.raytracer.maxTransparencyDepth``\ 
   | Maximum number of transparent faces that can be passed (note that for each reflection, the transparency depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)
-* | **multiSampling** [type = PInt, default = 1, size = 1]:
+* | **multiSampling** [type = PInt, default = 1]:
   | \ ``SC.visualizationSettings.raytracer.multiSampling``\ 
   | Multi-sampling used for rendering of faces, lines and text; increases image quality along edges (lines, etc.) but INCREASES rendering costs dramatically (multiSampling=3 => 3x3=9 times slower); also used for shadow if shadowScalingFactor=0; values only accepted in range [1..4]
 * | **numberOfThreads** [type = PInt, default = 8]:
@@ -971,10 +971,10 @@ VSettingsOpenGLAdvanced has the following items:
 * | **clippingPlaneColor** [type = Float4, default = [0.7,0.5,0.5,0.], size = 4]:
   | \ ``SC.visualizationSettings.openGL.advanced.clippingPlaneColor``\ 
   | RGBA color for clipping plane; if alpha-channel is 0, the cutting plane is not drawn; if alpha-channel is 1, the clippingPlaneColor is used; if alpha-channel is 2, the color of the object interior is used as clipping plane color (which may look strange in case of object-in-object); see also view.camera for clipping plane options
-* | **depthSorting** [type = bool, default = False, size = 1]:
+* | **depthSorting** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.openGL.advanced.depthSorting``\ 
   | True (slower): sort triangles by Z-depth to remove transparency artifacts: only works if triangles do not intersect or come close (you may like to refine triangle meshes); False: no depth-sort (faster)
-* | **enableLighting** [type = bool, default = True, size = 1]:
+* | **enableLighting** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.openGL.advanced.enableLighting``\ 
   | generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL_LIGHTING)
 * | **faceNormalsColor** [type = Float4, default = [0.8,0.2,0.2,1.], size = 4]:
@@ -992,31 +992,31 @@ VSettingsOpenGLAdvanced has the following items:
 * | **initialZoom** [type = UFloat, default = 1.]:
   | \ ``SC.visualizationSettings.openGL.advanced.initialZoom``\ 
   | initial zoom of scene; overwritten/ignored if autoFitScene = True
-* | **lightModelLocalViewer** [type = bool, default = False, size = 1]:
+* | **lightModelLocalViewer** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.openGL.advanced.lightModelLocalViewer``\ 
   | True: the camera origin is used to compute shininess effects (more realistic); maps to OpenGL glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,...)
-* | **lightModelTwoSide** [type = bool, default = False, size = 1]:
+* | **lightModelTwoSide** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.openGL.advanced.lightModelTwoSide``\ 
   | enlighten also backside of object; may cause problems on some graphics cards and lead to slower performance; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,...)
-* | **lineSmooth** [type = bool, default = True, size = 1]:
+* | **lineSmooth** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.openGL.advanced.lineSmooth``\ 
   | draw lines smooth
 * | **polygonOffset** [type = float, default = 0.05]:
   | \ ``SC.visualizationSettings.openGL.advanced.polygonOffset``\ 
   | general polygon offset for polygons, except for shadows; use this parameter to draw polygons behind lines to reduce artifacts for very large or small models
-* | **shadeModelSmooth** [type = bool, default = True, size = 1]:
+* | **shadeModelSmooth** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.openGL.advanced.shadeModelSmooth``\ 
   | True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces
 * | **shadowPolygonOffset** [type = PFloat, default = 0.1]:
   | \ ``SC.visualizationSettings.openGL.advanced.shadowPolygonOffset``\ 
   | some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies
-* | **showBoundingBox** [type = bool, default = False, size = 1]:
+* | **showBoundingBox** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.openGL.advanced.showBoundingBox``\ 
   | show scene bounding box (red), as available in renderState.boundingBox; NOTE that the bounding box is only updated with ZoomAll or at startup; this is a debug flag and it may show reasongs for strange ZoomAll behavior, as ZoomAll should zoom to the bounding box; does only work for perspective=0
-* | **textLineSmooth** [type = bool, default = False, size = 1]:
+* | **textLineSmooth** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.openGL.advanced.textLineSmooth``\ 
   | draw lines for representation of text smooth
-* | **textLineWidth** [type = UFloat, default = 1., size = 1]:
+* | **textLineWidth** [type = UFloat, default = 1.]:
   | \ ``SC.visualizationSettings.openGL.advanced.textLineWidth``\ 
   | width of lines used for representation of text
 * | **vertexNormalsColor** [type = Float4, default = [0.8,0.2,0.2,1.], size = 4]:
@@ -1034,34 +1034,34 @@ Settings for lights.
 
 VSettingsLight has the following items:
 
-* | **constantAttenuation** [type = float, default = 1., size = 1]:
+* | **constantAttenuation** [type = float, default = 1.]:
   | \ ``SC.visualizationSettings.openGL.light.constantAttenuation``\ 
   | constant attenuation coefficient of GL_LIGHT[0,1,2,3], this is a constant factor that attenuates the light source; attenuation factor = 1/(kc +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1
-* | **diffuse** [type = float, default = 0.5, size = 1]:
+* | **diffuse** [type = float, default = 0.5]:
   | \ ``SC.visualizationSettings.openGL.light.diffuse``\ 
   | diffuse value of GL_LIGHT[0,1,2,3]
-* | **enable** [type = bool, default = True, size = 1]:
+* | **enable** [type = bool, default = True]:
   | \ ``SC.visualizationSettings.openGL.light.enable``\ 
   | turn on/off light
-* | **lightRadius** [type = float, default = 0.1, size = 1]:
+* | **lightRadius** [type = float, default = 0.1]:
   | \ ``SC.visualizationSettings.openGL.light.lightRadius``\ 
   | only used by raytracers: radius of light used to compute smooth shadows (approximated by raytracer.lightRadiusVariations); if lightRadiusVariations>1, this value defines the radius of the light, converting point lights into distributed lights (slower)
-* | **linearAttenuation** [type = float, default = 0., size = 1]:
+* | **linearAttenuation** [type = float, default = 0.]:
   | \ ``SC.visualizationSettings.openGL.light.linearAttenuation``\ 
   | linear attenuation coefficient of GL_LIGHT[0,1,2,3], this is a linear factor for attenuation of the light source with distance
 * | **position** [type = Float4, default = [2.,2.,10.,0.], size = 4]:
   | \ ``SC.visualizationSettings.openGL.light.position``\ 
   | 4D position vector of GL_LIGHT[0,1,2,3]; 4th value should be 0 for directional lights that are (almost) infinitely far away, like the sun, but 1 for position-based lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position to be located at a reasonable location; the openGL renderer uses shadow volumes and approximates directional lights by enlarging the direction to 200 times maxSceneSize, while the raytracer uses the correct direction; see opengl manuals
-* | **quadraticAttenuation** [type = float, default = 0., size = 1]:
+* | **quadraticAttenuation** [type = float, default = 0.]:
   | \ ``SC.visualizationSettings.openGL.light.quadraticAttenuation``\ 
   | quadratic attenuation coefficient of GL_LIGHT[0,1,2,3], this is a quadratic factor for attenuation of the light source with distance
 * | **shadow** [type = UFloat, default = 0.]:
   | \ ``SC.visualizationSettings.openGL.light.shadow``\ 
   | in OpenGL renderer, the shadow parameter \ :math:`\in [0 ... 1]`\  prescribes amount of shadow of light [0,1,2,3] that is added to the scene, using light position (or only direction), accumulating for each light; if this parameter is different from 0, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for each light if shadow>0, accumulating effects of each light source
-* | **specular** [type = float, default = 0.5, size = 1]:
+* | **specular** [type = float, default = 0.5]:
   | \ ``SC.visualizationSettings.openGL.light.specular``\ 
   | specular value of GL_LIGHT[0,1,2,3]
-* | **useCameraFrame** [type = bool, default = False, size = 1]:
+* | **useCameraFrame** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.openGL.light.useCameraFrame``\ 
   | set False to set light positions and directions relative to model frame; True: lights are in camera frame, not following the visual transformations; this was True up to Exudyn 1.9.174
 
@@ -1091,34 +1091,34 @@ VSettingsOpenGL has the following items:
 * | **light3** [type = VSettingsLight]:
   | \ ``SC.visualizationSettings.openGL.light3``\ 
   | settings for light3 and shadow
-* | **drawFaceNormals** [type = bool, default = False, size = 1]:
+* | **drawFaceNormals** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.openGL.drawFaceNormals``\ 
   | draws triangle normals, e.g. at center of triangles; used for debugging of faces
-* | **drawNormalsLength** [type = PFloat, default = 0.1, size = 1]:
+* | **drawNormalsLength** [type = PFloat, default = 0.1]:
   | \ ``SC.visualizationSettings.openGL.drawNormalsLength``\ 
   | length of normals; used for debugging
-* | **drawVertexNormals** [type = bool, default = False, size = 1]:
+* | **drawVertexNormals** [type = bool, default = False]:
   | \ ``SC.visualizationSettings.openGL.drawVertexNormals``\ 
   | draws vertex normals; used for debugging
 * | **faceEdgesColor** [type = Float4, default = [0.2,0.2,0.2,1.], size = 4]:
   | \ ``SC.visualizationSettings.openGL.faceEdgesColor``\ 
   | global RGBA color for face edges
-* | **faceTransparencyGlobal** [type = UFloat, default = 0.4, size = 1]:
+* | **faceTransparencyGlobal** [type = UFloat, default = 0.4]:
   | \ ``SC.visualizationSettings.openGL.faceTransparencyGlobal``\ 
   | in case that facesTransparent=True this represents the max alpha-transparency
 * | **lightModelAmbient** [type = Float4, default = [0.4,0.4,0.4,1.], size = 4]:
   | \ ``SC.visualizationSettings.openGL.lightModelAmbient``\ 
   | global ambient light (needed for faces that are close to orthogonal to light or faces in shadow region); maps to OpenGL glLightModeli(GL_LIGHT_MODEL_AMBIENT,[r,g,b,a]); also used by raytracer
-* | **lineWidth** [type = UFloat, default = 1., size = 1]:
+* | **lineWidth** [type = UFloat, default = 1.]:
   | \ ``SC.visualizationSettings.openGL.lineWidth``\ 
   | width of lines used for representation of lines, circles, points, etc.
-* | **materialShininess** [type = float, default = 32., size = 1]:
+* | **materialShininess** [type = float, default = 32.]:
   | \ ``SC.visualizationSettings.openGL.materialShininess``\ 
   | shininess of material
 * | **materialSpecular** [type = Float4, default = [0.6,0.6,0.6,1.], size = 4]:
   | \ ``SC.visualizationSettings.openGL.materialSpecular``\ 
   | RGBA specular color of material
-* | **multiSampling** [type = PInt, default = 1, size = 1]:
+* | **multiSampling** [type = PInt, default = 1]:
   | \ ``SC.visualizationSettings.openGL.multiSampling``\ 
   | NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 3, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
 * | **zMaxSceneFactor** [type = PFloat, default = 2.]:

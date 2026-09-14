@@ -47,7 +47,7 @@ The item VObjectContactCircleCable2D has the following parameters:
   | if True and show=True, the underlying contact circle is shown; uses circleTiling*4 for tiling (from VisualizationSettings.general)
 * | **drawSize** [type = float, default = -1.]:
   | drawing size = diameter of spring; size == -1.f means that default connector size is used
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
+* | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA connector color; if R==-1, use default color
 
 

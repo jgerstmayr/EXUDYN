@@ -25,7 +25,7 @@ The item \ **ObjectConnectorLinearSpringDamper**\  with type = 'ConnectorLinearS
   | torsional stiffness [SI:Nm/rad] against relative rotation
 * | **damping** [\ :math:`d`\ , type = Real, default = 0.]:
   | torsional damping [SI:Nm/(rad/s)]
-* | **axisMarker0** [\ :math:`\LU{m0}{{\mathbf{d}}}`\ , type = Vector3D, default = [1,0,0]]:
+* | **axisMarker0** [\ :math:`\LU{m0}{{\mathbf{d}}}`\ , type = Vector3D, size = 3, default = [1,0,0]]:
   | local axis of spring-damper in marker 0 coordinates; this axis will co-move with marker \ :math:`m0`\ ; if marker m0 is attached to ground, the spring-damper represents linear equations
 * | **offset** [\ :math:`x_\mathrm{off}`\ , type = Real, default = 0.]:
   | translational offset considered in the spring force calculation (this can be used as position control input!)
@@ -50,7 +50,7 @@ The item VObjectConnectorLinearSpringDamper has the following parameters:
   | drawing size = diameter of spring; size == -1.f means that default connector size is used
 * | **drawAsCylinder** [type = Bool, default = False]:
   | if this flag is True, the spring-damper is represented as cylinder; this may fit better if the spring-damper represents an actuator
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
+* | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA connector color; if R==-1, use default color
 
 

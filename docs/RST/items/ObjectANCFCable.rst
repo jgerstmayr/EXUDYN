@@ -35,7 +35,7 @@ The item \ **ObjectANCFCable**\  with type = 'ANCFCable' has the following param
   | [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value
 * | **strainIsRelativeToReference** [\ :math:`f\cRef`\ , type = Real, default = 0.]:
   | if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of \ :math:`\varepsilon_0`\  and \ :math:`\kappa_0`\  serve as a reference geometry; allows also values between 0. and 1.
-* | **nodeNumbers** [type = NodeIndex2, default = [invalid [-1], invalid [-1]]]:
+* | **nodeNumbers** [type = NodeIndex2, size = 2, default = [invalid [-1], invalid [-1]]]:
   | two node numbers ANCF cable element
 * | **useReducedOrderIntegration** [type = Index, default = 0]:
   | 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments
@@ -50,7 +50,7 @@ The item VObjectANCFCable has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown; note that all quantities are computed at the beam centerline, even if drawn on surface of cylinder of beam; this effects, e.g., Displacement or Velocity, which is drawn constant over cross section
 * | **radius** [type = float, default = 0.]:
   | if radius==0, only the centerline is drawn; else, a cylinder with radius is drawn; circumferential tiling follows general.cylinderTiling and beam axis tiling follows bodies.beams.axialTiling
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
+* | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA color of the object; if R==-1, use default color
 
 

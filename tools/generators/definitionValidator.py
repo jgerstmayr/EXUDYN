@@ -13,7 +13,10 @@
 #              of the C++ headers; parameter NAMES may differ, as in C++ itself;
 #           2. a fromParent parameter names a data member the parent chain declares;
 #           3. no member is declared twice with the same signature (overloads are fine);
-#           4. a fixed-size vector or matrix default has as many entries as its type.
+#           4. a fixed-size vector or matrix default has as many entries as its type;
+#           5. a type written as a bare name is either a type constant of definitionTypes.py or
+#              the name of a structure defined in definitions/ - a typo in a substructure type
+#              would otherwise reach the generated C++ unnoticed.
 #
 #           ALL violations are reported, not just the first. Revision plan step 32.
 #
@@ -162,6 +165,15 @@ def ValidateDefinitions(verbose=True):
         sys.path.insert(0, definitionsDirectory)
 
     classes = ParseParentClasses()
+    import definitionTypes
+    knownTypeNames = set(str(v) for k, v in vars(definitionTypes).items()
+                         if k.startswith('T') and isinstance(v, definitionTypes.TypeSpec))
+    for table in ('vectorSizes', 'matrixSizes', 'indexTupleSizes', 'nodeIndexTupleSizes'):
+        knownTypeNames.update(getattr(definitionTypes, table).values())
+    for base in ('TReal', 'Tfloat', 'TIndex', 'TArrayIndex'):
+        knownTypeNames.update(getattr(definitionTypes, base).constrainedForms.values())
+    for moduleName in structureModules:
+        knownTypeNames.update(d['className'] for d in __import__(moduleName).definitions)
     violations = []
     counts = collections.Counter()
 
@@ -182,6 +194,12 @@ def ValidateDefinitions(verbose=True):
                 if key in seen:
                     violations.append(where + ': declared twice with the same signature')
                 seen[key] = True
+
+                #---- 5. a bare type name must be known
+                typeName = str(member.get('type', ''))
+                if re.match(r'^[A-Za-z_]\w*$', typeName) and typeName not in knownTypeNames:
+                    violations.append(where + ': type ' + repr(typeName) + ' is neither a type'
+                                      + ' constant nor a structure defined in definitions/')
 
                 #---- 4. shape versus default value
                 size = getattr(member.get('type'), 'size', None)

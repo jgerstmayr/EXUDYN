@@ -47,7 +47,7 @@ The item VObjectJointSliding2D has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown
 * | **drawSize** [type = float, default = -1.]:
   | drawing size = radius of revolute joint; size == -1.f means that default connector size is used
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
+* | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA connector color; if R==-1, use default color
 
 

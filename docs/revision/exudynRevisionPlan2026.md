@@ -973,17 +973,29 @@ The core investment. Every step is validated byte-for-byte by step 2.
     `isVirtual` defect (`9297236`).
 
 33. **Re-point the generators at `definitions/`, then split them.** The intermediate
-    representation this step used to propose now exists: it is the loaded `definitions/` modules,
-    and `tools/generators/definitionEmitter.py` is the first tool that consumes them. But the six
-    generators still parse `objectDefinition.py` / `systemStructuresDefinition.py`, so the
-    repository currently holds **two** inputs, kept in step by the emitter. That is the defect to
-    close, and the order matters:
+    representation this step used to propose now exists: it is the loaded `definitions/` modules.
+    Until part 1 the generators still parsed `objectDefinition.py` /
+    `systemStructuresDefinition.py`, so the repository held **two** inputs, kept in step by an
+    emitter. That was the defect to close, and the order matters:
 
     1. **Re-point first.** Replace `SplitString` parsing with a loader over `definitions/`, and
        delete `objectDefinition.py` and `systemStructuresDefinition.py`. The proof is that
        generated output stays byte-identical, which the round-trip harness already establishes is
        possible - this is a swap of input, not of behaviour. Until this lands, every definition
        change has to be made twice.
+
+       **DONE 2026-09-14.** `tools/generators/definitionLoader.py` yields each class as the old
+       parser's `(parseInfo, parameterList)`; both generators loop over it with their per-class
+       code unchanged. The two old files, `definitionEmitter.py` and `emitDefinitions.py` are
+       deleted. Tier 1 (C++, pybind, `itemInterface.py`, stubs) is **byte-identical**; Tier 2
+       differs in exactly one way, proven by normalising it away in all 53 changed files: the
+       `size` column of the reference tables, which now follows the type (`Matrix3D` shows
+       `size = 9` where nothing was declared; the scalar `size = 1` on 73 structure members is
+       gone). Found on the way: the emitter had dropped every structure's `writeFile` and the
+       empty-but-present `typicalPaths` of `SimulationSettings` - both restored in
+       `definitions/`, and the validator now also checks bare type names (a typo in a
+       substructure type). A deliberate description edit in `definitions/` reached the C++ header
+       and `itemInterface.py`, so the new input is live.
     2. **Split second.** Only then break the monolith into independent emitters - C++ headers,
        pybind, stubs, item interface, RST, LaTeX - each with `main()` + argparse and an explicit
        `--output`, none reading by relative path (see §4.5, the known cwd dependencies).

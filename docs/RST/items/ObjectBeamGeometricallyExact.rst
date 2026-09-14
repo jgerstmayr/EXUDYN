@@ -19,7 +19,7 @@ The item \ **ObjectBeamGeometricallyExact**\  with type = 'BeamGeometricallyExac
 
 * | **name** [type = String, default = '']:
   | objects's unique name
-* | **nodeNumbers** [type = NodeIndex2, default = [invalid [-1], invalid [-1]]]:
+* | **nodeNumbers** [type = NodeIndex2, size = 2, default = [invalid [-1], invalid [-1]]]:
   | two node numbers for beam element
 * | **physicsLength** [\ :math:`L`\ , type = PReal, default = 0.]:
   | [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \ :math:`\rho A L`\ ; must be positive
@@ -36,7 +36,7 @@ The item VObjectBeamGeometricallyExact has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown; geometry is defined by sectionGeometry
 * | **sectionGeometry** [type = BeamSectionGeometry, default =  BeamSectionGeometry()]:
   | defines cross section shape used for visualization and contact
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
+* | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA color of the object; if R==-1, use default color
 
 

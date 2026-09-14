@@ -24,15 +24,15 @@ The item \ **ObjectConnectorRigidBodySpringDamper**\  with type = 'ConnectorRigi
   | list of markers used in connector
 * | **nodeNumber** [\ :math:`n_d`\ , type = NodeIndex, default = invalid (-1)]:
   | node number of a NodeGenericData (size depends on application) for dataCoordinates for user functions (e.g., implementing contact/friction user function)
-* | **stiffness** [type = Matrix6D, default = np.zeros((6,6))]:
+* | **stiffness** [type = Matrix6D, size = 36, default = np.zeros((6,6))]:
   | stiffness [SI:N/m or Nm/rad] of translational, torsional and coupled springs; act against relative displacements in x, y, and z-direction as well as the relative angles (calculated as Euler angles); in the simplest case, the first 3 diagonal values correspond to the local stiffness in x,y,z direction and the last 3 diagonal values correspond to the rotational stiffness around x,y and z axis
-* | **damping** [type = Matrix6D, default = np.zeros((6,6))]:
+* | **damping** [type = Matrix6D, size = 36, default = np.zeros((6,6))]:
   | damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; very similar to stiffness, however, the rotational velocity is computed from the angular velocity vector
-* | **rotationMarker0** [type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:
+* | **rotationMarker0** [type = Matrix3D, size = 9, default = [[1,0,0], [0,1,0], [0,0,1]]]:
   | local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0
-* | **rotationMarker1** [type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:
+* | **rotationMarker1** [type = Matrix3D, size = 9, default = [[1,0,0], [0,1,0], [0,0,1]]]:
   | local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1
-* | **offset** [type = Vector6D, default = [0.,0.,0.,0.,0.,0.]]:
+* | **offset** [type = Vector6D, size = 6, default = [0.,0.,0.,0.,0.,0.]]:
   | translational and rotational offset considered in the spring force calculation
 * | **intrinsicFormulation** [type = Bool, default = False]:
   | if True, the joint uses the intrinsic formulation, which is independent on order of markers, using a mid-point and mid-rotation for evaluation and application of connector forces and torques; this uses a Lie group formulation; in this case, the force/torque vector is computed from the stiffness matrix times the 6-vector of the SE3 matrix logarithm between the two marker positions/rotations, see the equations
@@ -53,7 +53,7 @@ The item VObjectConnectorRigidBodySpringDamper has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown
 * | **drawSize** [type = float, default = -1.]:
   | drawing size = diameter of spring; size == -1.f means that default connector size is used
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
+* | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA connector color; if R==-1, use default color
 
 

@@ -1,7 +1,7 @@
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # VisualizationSettings definitions
 #
-# Details:  31 definitions, emitted from systemStructuresDefinition.py (revision plan step 31a).
+# Details:  31 definitions; the input of the generators (revision plan step 33).
 #           This IS Python: import it and read "definitions", a list of dicts.
 #
 #           ORDER MATTERS. The generators emit in the order the definitions appear,
@@ -29,6 +29,7 @@ definitions = []
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsGeneral',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=False,
     classDescription=r'General settings for visualization that influence all windows, default values, autofit, multithreading, etc.',
@@ -207,6 +208,7 @@ This section includes hierarchical structures for visualization settings, e.g., 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsContourAdvanced',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Advanced settings for contour plots.',
@@ -261,6 +263,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsContour',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Settings for contour plots; use these options to visualize field data, such as displacements, stresses, strains, etc. for bodies, nodes and finite elements.',
@@ -330,6 +333,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsNodes',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Visualization settings for nodes.',
@@ -380,6 +384,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsBeams',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Visualization settings for beam finite elements.',
@@ -434,6 +439,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsShells',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Visualization settings for plate/shell finite elements.',
@@ -456,6 +462,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsKinematicTree',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Visualization settings for kinematic trees.',
@@ -486,6 +493,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsBodies',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Visualization settings for bodies.',
@@ -532,6 +540,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsConnectors',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Visualization settings for connectors.',
@@ -586,6 +595,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsMarkers',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Visualization settings for markers.',
@@ -620,6 +630,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsLoads',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Visualization settings for loads.',
@@ -670,6 +681,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsTraces',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solutionSettings.sensorsWritePeriod) may lead to slow graphics.',
@@ -757,6 +769,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsSensors',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Visualization settings for sensors.',
@@ -795,6 +808,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsContact',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization; also used for contact objects, such as ObjectContactSphereSphere or ObjectContactSphereTriangle',
@@ -877,6 +891,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsCamera',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Settings for camera like perspective, marker tracking, clipping plane, etc. Note that some options may also be found in openGL settings.',
@@ -935,6 +950,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsScene',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Settings change scene representation (show edges, show faces, global transparency), adding world basis, etc., in particular settings that are individual to each view. Note that some scene settings that are global to all views may be found in general and in openGL settings',
@@ -985,6 +1001,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsWindow',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Settings for window that are individual to each view; in particular initial size, and behavior. Note that some of the settings are only used during creation of the window',
@@ -1035,6 +1052,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsView',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Settings for view including camera, scene, window, and advanced options to setup a view or view window.',
@@ -1061,6 +1079,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsWindowDeprecated',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'OpenGL Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes.',
@@ -1130,6 +1149,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsDialogs',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Settings related to dialogs (e.g., visualization settings dialog).',
@@ -1164,6 +1184,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsMaterial',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Settings for rendering materials, in particular for the Raytracer (may be available also in the OpenGL renderer in the future). This material (widely follows Phong model) can be either accessed via SC.renderer.materials or directly in visualizationSettings.raytracer.material0, material1, etc.; note that the default values shown in the documentation only reflect material0 but not all 10 default materials.',
@@ -1210,6 +1231,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsRaytracerAdvanced',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Advanced settings for raytracer.',
@@ -1252,6 +1274,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsRaytracer',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Settings for raytracer (software renderer) which can be used as alternative to classic OpenGL rendering; this option may be erased in future in favor of a modern GPU rendering. To activate the raytracer, simply switch the enable flag to True. The raytracer uses CPU-based rendering and is therefore comparably slow (may take seconds to render one frame). Thus, take care with the window dimension (start with small window size like 400 x 300) and use openGL.multiSampling=1. Note that many parameters are used from openGL settings, like backgroundColor, lineWidth, multiSampling, shadow (only on/off), and lights. See the options to improve appearance and performance.',
@@ -1405,6 +1428,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsOpenGLAdvanced',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Advanced settings for openGL.',
@@ -1491,6 +1515,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsLight',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Settings for lights.',
@@ -1545,6 +1570,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsOpenGL',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'OpenGL settings for 2D and 3D rendering - with many settings also used for raytracer. For further details and backgrounds also see OpenGL 1.3 functionality on the web.',
@@ -1842,6 +1868,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsExportImages',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Functionality to export images of view0 to files (PNG or TGA format) which can be used to create animations; in order to activate image recording during the solution process, set SolutionSettings.recordImagesInterval accordingly.',
@@ -1900,6 +1927,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsOpenVR',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Functionality to interact openVR; requires special hardware or software emulator, see steam / openVR descriptions',
@@ -1930,6 +1958,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsInteractiveAdvanced',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Advanced settings for interactive.',
@@ -2000,6 +2029,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VSettingsInteractive',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Functionality to interact with render window; includes special rotation and zoom factors, item-highlighting, marker tracking, item selection and keyPressUserFunction.',
@@ -2153,6 +2183,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='VisualizationSettings',
+    writeFile='VisualizationSettings.h',
     addDictionaryAccess=True,
     appendToFile=True,
     classDescription=r'Top structure for all visualization settings in Exudyn',

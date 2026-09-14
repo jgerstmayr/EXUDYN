@@ -23,7 +23,7 @@ The item \ **ObjectConnectorReevingSystemSprings**\  with type = 'ConnectorReevi
   | list of position or rigid body markers used in reeving system and optional two coordinate markers (\ :math:`m_{c0}, \, m_{c1}`\ ); the first marker \ :math:`m_0`\  and the last rigid body marker \ :math:`m_{nr-1}`\  represent the ends of the rope and are directly connected to a position; the markers \ :math:`m_1, \, \ldots, \, m_{nr-2}`\  can be connected to sheaves, for which a radius and an axis can be prescribed. The coordinate markers are optional and represent prescribed length at the rope ends (marker \ :math:`m_{c0}`\  is added length at start, marker \ :math:`m_{c1}`\  is added length at end of the rope in the reeving system)
 * | **hasCoordinateMarkers** [type = Bool, default = False]:
   | flag, which determines, the list of markers (markerNumbers) contains two coordinate markers at the end of the list, representing the prescribed change of length at both ends
-* | **coordinateFactors** [\ :math:`[f_0,\, f_1]\tp`\ , type = Vector2D, default = [1,1]]:
+* | **coordinateFactors** [\ :math:`[f_0,\, f_1]\tp`\ , type = Vector2D, size = 2, default = [1,1]]:
   | factors which are multiplied with the values of coordinate markers; this can be used, e.g., to change directions or to transform rotations (revolutions of a sheave) into change of length
 * | **stiffnessPerLength** [\ :math:`EA`\ , type = UReal, default = 0.]:
   | stiffness per length [SI:N/m/m] of rope; in case of cross section \ :math:`A`\  and Young's modulus \ :math:`E`\ , this parameter results in \ :math:`E\cdot A`\ ; the effective stiffness of the reeving system is computed as \ :math:`EA/L`\  in which \ :math:`L`\  is the current length of the rope
@@ -54,7 +54,7 @@ The item VObjectConnectorReevingSystemSprings has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown
 * | **ropeRadius** [type = float, default = 0.001]:
   | radius of rope
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
+* | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA connector color; if R==-1, use default color
 
 

@@ -21,9 +21,9 @@ The item \ **ObjectJointPrismatic2D**\  with type = 'JointPrismatic2D' has the f
   | constraints's unique name
 * | **markerNumbers** [type = ArrayMarkerIndex, default = [ invalid [-1], invalid [-1] ]]:
   | list of markers used in connector
-* | **axisMarker0** [type = Vector3D, default = [1.,0.,0.]]:
+* | **axisMarker0** [type = Vector3D, size = 3, default = [1.,0.,0.]]:
   | direction of prismatic axis, given as a 3D vector in Marker0 frame
-* | **normalMarker1** [type = Vector3D, default = [0.,1.,0.]]:
+* | **normalMarker1** [type = Vector3D, size = 3, default = [0.,1.,0.]]:
   | direction of normal to prismatic axis, given as a 3D vector in Marker1 frame
 * | **constrainRotation** [type = Bool, default = True]:
   | flag, which determines, if the connector also constrains the relative rotation of the two objects; if set to false, the constraint will keep an algebraic equation set equal zero
@@ -40,7 +40,7 @@ The item VObjectJointPrismatic2D has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown
 * | **drawSize** [type = float, default = -1.]:
   | drawing size = radius of revolute joint; size == -1.f means that default connector size is used
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
+* | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA connector color; if R==-1, use default color
 
 

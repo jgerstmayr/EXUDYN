@@ -48,7 +48,7 @@ The item \ **ObjectContactConvexRoll**\  with type = 'ContactConvexRoll' has the
   | second derivative of the hull polynomial.
 * | **rBoundingSphere** [type = UReal, default = 0]:
   | The  radius of the bounding sphere for the contact pre-check, calculated from the polynomial coefficients of the hull
-* | **pContact** [type = Vector3D, default = [0,0,0]]:
+* | **pContact** [type = Vector3D, size = 3, default = [0,0,0]]:
   | The  current potential contact point. Contact occures if pContact[2] < 0. 
 * | **activeConnector** [type = Bool, default = True]:
   | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
@@ -61,7 +61,7 @@ The item VObjectContactConvexRoll has the following parameters:
 
 * | **show** [type = Bool, default = True]:
   | set true, if item is shown in visualization and false if it is not shown
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
+* | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA connector color; if R==-1, use default color
 
 

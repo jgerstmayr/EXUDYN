@@ -57,7 +57,7 @@ The item VObjectContactSphereTriangle has the following parameters:
 
 * | **show** [type = Bool, default = False]:
   | set true, if item is shown in visualization and false if it is not shown; draws spheres by given radii
-* | **color** [type = Float4, default = [0.7,0.7,0.7,1.]]:
+* | **color** [type = Float4, size = 4, default = [0.7,0.7,0.7,1.]]:
   | RGBA connector color; if R==-1, use default color
 
 

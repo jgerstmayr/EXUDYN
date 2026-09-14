@@ -54,7 +54,7 @@ The item VObjectBeamGeometricallyExact2D has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown
 * | **drawHeight** [type = float, default = 0.]:
   | if beam is drawn with rectangular shape, this is the drawing height
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
+* | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA color of the object; if R==-1, use default color
 
 

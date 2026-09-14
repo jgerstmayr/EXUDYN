@@ -1544,7 +1544,7 @@ The item \mybold{ObjectGround} with type = 'Ground' has the following parameters
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
     referencePosition &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline reference point = reference position for ground object; local position is added on top of reference position for a ground object\\ \hline
-    referenceRotation &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates\\ \hline
+    referenceRotation &     Matrix3D &     9 &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates\\ \hline
     visualization &     VObjectGround &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
 \end{center}
@@ -1981,7 +1981,7 @@ The item \mybold{ObjectMass1D} with type = 'Mass1D' has the following parameters
     physicsMass &     UReal &      &     0. &     mass [SI:kg] of mass\\ \hline
     nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number (type NodeIndex) for Node1D\\ \hline
     referencePosition &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline a reference position, used to transform the 1D coordinate to a position\\ \hline
-    referenceRotation &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline the constant body rotation matrix, which transforms body-fixed (b) to global (0) coordinates\\ \hline
+    referenceRotation &     Matrix3D &     9 &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline the constant body rotation matrix, which transforms body-fixed (b) to global (0) coordinates\\ \hline
     visualization &     VObjectMass1D &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
 \end{center}
@@ -2121,7 +2121,7 @@ The item \mybold{ObjectRotationalMass1D} with type = 'RotationalMass1D' has the 
     physicsInertia &     UReal &      &     0. &     inertia components [SI:kgm$^2$] of rotor / rotational mass\\ \hline
     nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number (type NodeIndex) of Node1D, providing rotation coordinate $\psi_0 = c_0$\\ \hline
     referencePosition &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline a constant reference position = reference point, used to assign joint constraints accordingly and for drawing\\ \hline
-    referenceRotation &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline an intermediate rotation matrix, which transforms the 1D coordinate into 3D, see description\\ \hline
+    referenceRotation &     Matrix3D &     9 &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline an intermediate rotation matrix, which transforms the 1D coordinate into 3D, see description\\ \hline
     visualization &     VObjectRotationalMass1D &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
 \end{center}
@@ -2256,7 +2256,7 @@ The item \mybold{ObjectRigidBody} with type = 'RigidBody' has the following para
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
     physicsMass &     UReal &      &     0. &     mass [SI:kg] of rigid body\\ \hline
-    physicsInertia &     Vector6D &      &     [0.,0.,0., 0.,0.,0.] &     \tabnewline inertia components [SI:kgm$^2$]: $[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to \hac{COM}; use the class RigidBodyInertia of exudynRigidBodyUtilities.py and CreateRigidBody(...) of MainSystem to handle inertia, \hac{COM} and mass\\ \hline
+    physicsInertia &     Vector6D &     6 &     [0.,0.,0., 0.,0.,0.] &     \tabnewline inertia components [SI:kgm$^2$]: $[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to \hac{COM}; use the class RigidBodyInertia of exudynRigidBodyUtilities.py and CreateRigidBody(...) of MainSystem to handle inertia, \hac{COM} and mass\\ \hline
     physicsCenterOfMass &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline local position of \hac{COM} relative to the body's reference point; if the vector of the \hac{COM} is [0,0,0], the computation will not consider additional terms for the \hac{COM} and it is faster\\ \hline
     nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number (type NodeIndex) for rigid body node\\ \hline
     visualization &     VObjectRigidBody &      &      &     parameters for visualization of item\\ \hline
@@ -2987,8 +2987,8 @@ The item \mybold{ObjectKinematicTree} with type = 'KinematicTree' has the follow
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
     nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; $n$ being the number of minimal coordinates\\ \hline
-    gravity &     Vector3D &      &     [0.,0.,0.] &     \tabnewline gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree\\ \hline
-    baseOffset &     Vector3D &      &     [0.,0.,0.] &     \tabnewline offset vector for base, in global coordinates\\ \hline
+    gravity &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree\\ \hline
+    baseOffset &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline offset vector for base, in global coordinates\\ \hline
     jointTypes &     JointTypeList &      &     [] &     joint types of kinematic Tree joints, using exu.JointType, like exu.JointType.RevoluteZ; must be always set\\ \hline
     linkParents &     ArrayIndex &      &     [] &     index of parent joint/link; if no parent exists, the value is $-1$; by default, $p_0=-1$ because the $i$th parent index must always fulfill $p_i<i$; must be always set\\ \hline
     jointTransformations &     Matrix3DList &      &     [] &     list of constant joint transformations from parent joint coordinates $p_0$ to this joint coordinates $j_0$; this allows to adjust the orientation of the joint axes (but it does not affect the joint offset); if no parent exists ($-1$), the base coordinate system $0$ is used; must be always set\\ \hline
@@ -3395,7 +3395,7 @@ The item \mybold{ObjectFFRF} with type = 'FFRF' has the following parameters:
     coordinateIndexPerNode &     ArrayIndex &      &     [] &     this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed\\ \hline
     objectIsInitialized &     Bool &      &     False &     ALWAYS set to False! flag used to correctly initialize all \hac{FFRF} matrices; as soon as this flag is False, internal (constant) \hac{FFRF} matrices are recomputed during Assemble()\\ \hline
     physicsMass &     UReal &      &     0. &     total mass [SI:kg] of \hac{FFRF} object, auto-computed from mass matrix $\LU{b}{\Mm}$\\ \hline
-    physicsInertia &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline inertia tensor [SI:kgm$^2$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix $\LU{b}{\Mm}$\\ \hline
+    physicsInertia &     Matrix3D &     9 &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline inertia tensor [SI:kgm$^2$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix $\LU{b}{\Mm}$\\ \hline
     physicsCenterOfMass &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline local position of center of mass (\hac{COM}); auto-computed from mass matrix $\LU{b}{\Mm}$\\ \hline
     PHItTM &     NumpyMatrix &      &     Matrix[] &     projector matrix; may be removed in future\\ \hline
     referencePositions &     NumpyVector &      &     [] &     vector containing the reference positions of all flexible nodes\\ \hline
@@ -3731,7 +3731,7 @@ The item \mybold{ObjectFFRFreducedOrder} with type = 'FFRFreducedOrder' has the 
     referencePositions &     NumpyVector &      &     [] &     vector containing the reference positions of all flexible nodes, needed for graphics\\ \hline
     objectIsInitialized &     Bool &      &     False &     ALWAYS set to False! flag used to correctly initialize all \hac{FFRF} matrices; as soon as this flag is False, some internal (constant) \hac{FFRF} matrices are recomputed during Assemble()\\ \hline
     physicsMass &     UReal &      &     0. &     total mass [SI:kg] of FFRFreducedOrder object\\ \hline
-    physicsInertia &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline inertia tensor [SI:kgm$^2$] of rigid body w.r.t. to the reference point of the body\\ \hline
+    physicsInertia &     Matrix3D &     9 &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline inertia tensor [SI:kgm$^2$] of rigid body w.r.t. to the reference point of the body\\ \hline
     physicsCenterOfMass &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline local position of center of mass (\hac{COM})\\ \hline
     mPsiTildePsi &     NumpyMatrix &      &     Matrix[] &     special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface\\ \hline
     mPsiTildePsiTilde &     NumpyMatrix &      &     Matrix[] &     special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface\\ \hline
@@ -3739,7 +3739,7 @@ The item \mybold{ObjectFFRFreducedOrder} with type = 'FFRFreducedOrder' has the 
     mPhitTPsiTilde &     NumpyMatrix &      &     Matrix[] &     special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface\\ \hline
     mXRefTildePsi &     NumpyMatrix &      &     Matrix[] &     special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface\\ \hline
     mXRefTildePsiTilde &     NumpyMatrix &      &     Matrix[] &     special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface\\ \hline
-    physicsCenterOfMassTilde &     Matrix3D &      &     [[0,0,0], [0,0,0], [0,0,0]] &     \tabnewline tilde matrix from local position of \hac{COM}; autocomputed during initialization\\ \hline
+    physicsCenterOfMassTilde &     Matrix3D &     9 &     [[0,0,0], [0,0,0], [0,0,0]] &     \tabnewline tilde matrix from local position of \hac{COM}; autocomputed during initialization\\ \hline
     tempUserFunctionForce &     NumpyVector &      &     [] &     temporary vector for UF force\\ \hline
     visualization &     VObjectFFRFreducedOrder &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
@@ -4123,7 +4123,7 @@ The item \mybold{ObjectANCFCable} with type = 'ANCFCable' has the following para
     physicsAxialDamping &     UReal &      &     0. &      [SI:N/s] axial damping of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$\\ \hline
     physicsReferenceAxialStrain &     Real &      &     0. &      [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value\\ \hline
     strainIsRelativeToReference &     Real &      &     0. &      if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of $\varepsilon_0$ and $\kappa_0$ serve as a reference geometry; allows also values between 0. and 1.\\ \hline
-    nodeNumbers &     NodeIndex2 &      &     [invalid [-1], invalid [-1]] &     \tabnewline two node numbers ANCF cable element\\ \hline
+    nodeNumbers &     NodeIndex2 &     2 &     [invalid [-1], invalid [-1]] &     \tabnewline two node numbers ANCF cable element\\ \hline
     useReducedOrderIntegration &     Index &      &     0 &     0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments\\ \hline
     visualization &     VObjectANCFCable &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
@@ -4138,7 +4138,7 @@ The item \mybold{ObjectANCFCable} with type = 'ANCFCable' has the following para
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown; note that all quantities are computed at the beam centerline, even if drawn on surface of cylinder of beam; this effects, e.g., Displacement or Velocity, which is drawn constant over cross section\\ \hline
     radius &     float &      &     0. &     if radius==0, only the centerline is drawn; else, a cylinder with radius is drawn; circumferential tiling follows general.cylinderTiling and beam axis tiling follows bodies.beams.axialTiling\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color of the object; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color of the object; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -4241,7 +4241,7 @@ The item \mybold{ObjectANCFCable2D} with type = 'ANCFCable2D' has the following 
     physicsReferenceAxialStrain &     Real &      &     0. &      [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value\\ \hline
     physicsReferenceCurvature &     Real &      &     0. &      [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value\\ \hline
     strainIsRelativeToReference &     Real &      &     0. &      if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of $\varepsilon_0$ and $\kappa_0$ serve as a reference geometry; allows also values between 0. and 1.\\ \hline
-    nodeNumbers &     NodeIndex2 &      &     [invalid [-1], invalid [-1]] &     \tabnewline two node numbers ANCF cable element\\ \hline
+    nodeNumbers &     NodeIndex2 &     2 &     [invalid [-1], invalid [-1]] &     \tabnewline two node numbers ANCF cable element\\ \hline
     useReducedOrderIntegration &     Index &      &     0 &     0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/True: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments; 2: use mixed Lobatto/Gauss integration with exceptional quality of axial strain, however, spurious (hourglass) modes may occur!\\ \hline
     axialForceUserFunction &     PyFunctionMbsScalarIndexScalar9 &     \tabnewline  &     \tabnewline 0 &     A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local axial force; see description below\\ \hline
     bendingMomentUserFunction &     PyFunctionMbsScalarIndexScalar9 &     \tabnewline  &     \tabnewline 0 &     A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local bending moment; see description below\\ \hline
@@ -4258,7 +4258,7 @@ The item \mybold{ObjectANCFCable2D} with type = 'ANCFCable2D' has the following 
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawHeight &     float &      &     0. &     if beam is drawn with rectangular shape, this is the drawing height\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color of the object; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color of the object; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -4690,7 +4690,7 @@ The item \mybold{ObjectALEANCFCable2D} with type = 'ALEANCFCable2D' has the foll
     physicsReferenceCurvature &     Real &      &     0. &      [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value\\ \hline
     physicsUseCouplingTerms &     Bool &      &     True &     true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then)\\ \hline
     physicsAddALEvariation &     Bool &      &     True &     true: correct case, where additional terms related to variation of strain and curvature are added\\ \hline
-    nodeNumbers &     NodeIndex3 &      &     [invalid [-1], invalid [-1], invalid [-1]] &     \tabnewline two node numbers ANCF cable element, third node=ALE GenericODE2 node\\ \hline
+    nodeNumbers &     NodeIndex3 &     3 &     [invalid [-1], invalid [-1], invalid [-1]] &     \tabnewline two node numbers ANCF cable element, third node=ALE GenericODE2 node\\ \hline
     useReducedOrderIntegration &     Index &      &     0 &     0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments\\ \hline
     strainIsRelativeToReference &     Real &      &     0. &      if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of $\varepsilon_0$ and $\kappa_0$ serve as a reference geometry; allows also values between 0. and 1.\\ \hline
     visualization &     VObjectALEANCFCable2D &      &      &     parameters for visualization of item\\ \hline
@@ -4706,7 +4706,7 @@ The item \mybold{ObjectALEANCFCable2D} with type = 'ALEANCFCable2D' has the foll
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawHeight &     float &      &     0. &     if beam is drawn with rectangular shape, this is the drawing height\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color of the object; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color of the object; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -4801,11 +4801,11 @@ The item \mybold{ObjectANCFBeam} with type = 'ANCFBeam' has the following parame
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
-    nodeNumbers &     NodeIndex2 &      &     [invalid [-1], invalid [-1]] &     \tabnewline two node numbers for beam element\\ \hline
+    nodeNumbers &     NodeIndex2 &     2 &     [invalid [-1], invalid [-1]] &     \tabnewline two node numbers for beam element\\ \hline
     physicsLength &     PReal &      &     0. &      [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive\\ \hline
     sectionData &     BeamSection &      &     BeamSection() &     data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.\\ \hline
-    crossSectionPenaltyFactor &     Vector3D &      &     [1.,1.,1.] &     \tabnewline  [SI:1] additional penalty factors for cross section deformation, which are in total $k_{cs} = [f_{yy}\cdot EA,\, f_{zz}\cdot EA,\, f_{yz}\cdot (GA_y+GA_z)]\tp$\\ \hline
-    crossSectionDamping &     Vector3D &      &     [0.,0.,0.] &     \tabnewline  [SI:1] viscous damping according to penalty factors for cross section deformation; the damping is relative to the stiffness and should be thus usually much smaller than 1; the viscous damping factors read  $d_{cs} = [d_{fyy}\cdot EA,\, d_{fzz}\cdot EA,\, d_{fyz}\cdot (GA_y+GA_z)]\tp$\\ \hline
+    crossSectionPenaltyFactor &     Vector3D &     3 &     [1.,1.,1.] &     \tabnewline  [SI:1] additional penalty factors for cross section deformation, which are in total $k_{cs} = [f_{yy}\cdot EA,\, f_{zz}\cdot EA,\, f_{yz}\cdot (GA_y+GA_z)]\tp$\\ \hline
+    crossSectionDamping &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline  [SI:1] viscous damping according to penalty factors for cross section deformation; the damping is relative to the stiffness and should be thus usually much smaller than 1; the viscous damping factors read  $d_{cs} = [d_{fyy}\cdot EA,\, d_{fzz}\cdot EA,\, d_{fyz}\cdot (GA_y+GA_z)]\tp$\\ \hline
     visualization &     VObjectANCFBeam &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
 \end{center}
@@ -4819,7 +4819,7 @@ The item \mybold{ObjectANCFBeam} with type = 'ANCFBeam' has the following parame
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown; geometry is defined by sectionGeometry\\ \hline
     sectionGeometry &     BeamSectionGeometry &     \tabnewline  &     \tabnewline BeamSectionGeometry() &     \tabnewline defines cross section shape used for visualization and contact\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color of the object; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color of the object; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -4916,7 +4916,7 @@ The item \mybold{ObjectBeamGeometricallyExact2D} with type = 'BeamGeometricallyE
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawHeight &     float &      &     0. &     if beam is drawn with rectangular shape, this is the drawing height\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color of the object; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color of the object; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -4995,7 +4995,7 @@ The item \mybold{ObjectBeamGeometricallyExact} with type = 'BeamGeometricallyExa
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
-    nodeNumbers &     NodeIndex2 &      &     [invalid [-1], invalid [-1]] &     \tabnewline two node numbers for beam element\\ \hline
+    nodeNumbers &     NodeIndex2 &     2 &     [invalid [-1], invalid [-1]] &     \tabnewline two node numbers for beam element\\ \hline
     physicsLength &     PReal &      &     0. &      [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive\\ \hline
     sectionData &     BeamSection &      &     BeamSection() &     data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.\\ \hline
     visualization &     VObjectBeamGeometricallyExact &      &      &     parameters for visualization of item\\ \hline
@@ -5011,7 +5011,7 @@ The item \mybold{ObjectBeamGeometricallyExact} with type = 'BeamGeometricallyExa
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown; geometry is defined by sectionGeometry\\ \hline
     sectionGeometry &     BeamSectionGeometry &     \tabnewline  &     \tabnewline BeamSectionGeometry() &     \tabnewline defines cross section shape used for visualization and contact\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color of the object; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color of the object; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -5081,7 +5081,7 @@ The item \mybold{ObjectANCFThinPlate} with type = 'ANCFThinPlate' has the follow
     strainIsRelativeToReference &     Real &      &     1. &      if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation\\ \hline
     slopesScalingX &     Vector4D &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline scaling of x-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances.\\ \hline
     slopesScalingY &     Vector4D &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline scaling of y-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances.\\ \hline
-    nodeNumbers &     NodeIndex4 &      &     [invalid [-1], invalid [-1], invalid [-1], invalid [-1]] &     \tabnewline 4 NodePointSlope12 node numbers, with local (xi,eta) coordinates as [(-1,-1),(1,-1),(1,1),(-1,1)]\\ \hline
+    nodeNumbers &     NodeIndex4 &     4 &     [invalid [-1], invalid [-1], invalid [-1], invalid [-1]] &     \tabnewline 4 NodePointSlope12 node numbers, with local (xi,eta) coordinates as [(-1,-1),(1,-1),(1,1),(-1,1)]\\ \hline
     useReducedOrderIntegration &     Index &      &     0 &     0/false: use highest Gauss integration for virtual work of strains\\ \hline
     visualization &     VObjectANCFThinPlate &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
@@ -5095,7 +5095,7 @@ The item \mybold{ObjectANCFThinPlate} with type = 'ANCFThinPlate' has the follow
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown; note that all quantities are computed at the beam centerline, even if drawn on surface of cylinder of beam; this effects, e.g., Displacement or Velocity, which is drawn constant over cross section\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color of the object; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA color of the object; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -5177,10 +5177,10 @@ The item \mybold{ObjectJointGeneric} with type = 'JointGeneric' has the followin
     name &     String &      &     '' &     constraints's unique name\\ \hline
     markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
     constrainedAxes &     ArrayIndex &     6 &     [1,1,1,1,1,1] &     \tabnewline flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis\\ \hline
-    rotationMarker0 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0\\ \hline
-    rotationMarker1 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1\\ \hline
+    rotationMarker0 &     Matrix3D &     9 &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0\\ \hline
+    rotationMarker1 &     Matrix3D &     9 &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint\\ \hline
-    offsetUserFunctionParameters &     Vector6D &      &     [0.,0.,0.,0.,0.,0.] &     \tabnewline vector of 6 parameters for joint's offsetUserFunction\\ \hline
+    offsetUserFunctionParameters &     Vector6D &     6 &     [0.,0.,0.,0.,0.,0.] &     \tabnewline vector of 6 parameters for joint's offsetUserFunction\\ \hline
     offsetUserFunction &     PyFunctionVector6DmbsScalarIndexVector6D &     \tabnewline  &     \tabnewline 0 &     \tabnewline A Python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (mbs, t, offsetUserFunctionParameters)\\ \hline
     offsetUserFunction\_t &     PyFunctionVector6DmbsScalarIndexVector6D &     \tabnewline  &     \tabnewline 0 &     \tabnewline (NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters\\ \hline
     alternativeConstraints &     Bool &      &     False &     this is an experimental flag, may change in future: if uses alternative contraint equations for rotations, currently in case of 3 locked rotations: $\LU{0}{\tv}_{x0}\tp (\LU{0}{\tv}_{y1} \times \LU{0}{\tv}_{z0})$, $\LU{0}{\tv}_{y0}\tp (\LU{0}{\tv}_{z1} \times \LU{0}{\tv}_{x0})$, $\LU{0}{\tv}_{z0}\tp (\LU{0}{\tv}_{x1} \times \LU{0}{\tv}_{y0})$; this avoids 180\textdegree flips of the standard configuration in static computations, but leads to different values in Lagrange multipliers\\ \hline
@@ -5198,7 +5198,7 @@ The item \mybold{ObjectJointGeneric} with type = 'JointGeneric' has the followin
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     axesRadius &     float &      &     0.1 &     radius of joint axes to draw\\ \hline
     axesLength &     float &      &     0.4 &     length of joint axes to draw\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -5426,8 +5426,8 @@ The item \mybold{ObjectJointRevoluteZ} with type = 'JointRevoluteZ' has the foll
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
     markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
-    rotationMarker0 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0\\ \hline
-    rotationMarker1 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1\\ \hline
+    rotationMarker0 &     Matrix3D &     9 &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0\\ \hline
+    rotationMarker1 &     Matrix3D &     9 &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint\\ \hline
     visualization &     VObjectJointRevoluteZ &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
@@ -5443,7 +5443,7 @@ The item \mybold{ObjectJointRevoluteZ} with type = 'JointRevoluteZ' has the foll
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     axisRadius &     float &      &     0.1 &     radius of joint axis to draw\\ \hline
     axisLength &     float &      &     0.4 &     length of joint axis to draw\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -5605,8 +5605,8 @@ The item \mybold{ObjectJointPrismaticX} with type = 'JointPrismaticX' has the fo
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
     markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
-    rotationMarker0 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0\\ \hline
-    rotationMarker1 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1\\ \hline
+    rotationMarker0 &     Matrix3D &     9 &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0\\ \hline
+    rotationMarker1 &     Matrix3D &     9 &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint\\ \hline
     visualization &     VObjectJointPrismaticX &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
@@ -5622,7 +5622,7 @@ The item \mybold{ObjectJointPrismaticX} with type = 'JointPrismaticX' has the fo
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     axisRadius &     float &      &     0.1 &     radius of joint axis to draw\\ \hline
     axisLength &     float &      &     0.4 &     length of joint axis to draw\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -5757,7 +5757,7 @@ The item \mybold{ObjectJointSpherical} with type = 'JointSpherical' has the foll
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     jointRadius &     float &      &     0.1 &     radius of joint to draw\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -5898,8 +5898,8 @@ The item \mybold{ObjectJointRollingDisc} with type = 'JointRollingDisc' has the 
     constrainedAxes &     ArrayIndex &     3 &     [1,1,1] &     \tabnewline flags, which determine which constraints are active, in which $j_0$ represents lateral motion, $j_1$ longitudinal (forward/backward) motion and $j_2$ represents the normal (contact) direction\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint\\ \hline
     discRadius &     PReal &      &     0 &     defines the disc radius\\ \hline
-    discAxis &     Vector3D &      &     [1,0,0] &     axis of disc defined in marker $m1$ frame\\ \hline
-    planeNormal &     Vector3D &      &     [0,0,1] &     normal to the contact / rolling plane defined in marker $m0$ coordinates\\ \hline
+    discAxis &     Vector3D &     3 &     [1,0,0] &     axis of disc defined in marker $m1$ frame\\ \hline
+    planeNormal &     Vector3D &     3 &     [0,0,1] &     normal to the contact / rolling plane defined in marker $m0$ coordinates\\ \hline
     visualization &     VObjectJointRollingDisc &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
 \end{center}
@@ -5913,7 +5913,7 @@ The item \mybold{ObjectJointRollingDisc} with type = 'JointRollingDisc' has the 
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     discWidth &     float &      &     0.1 &     width of disc for drawing\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -6077,7 +6077,7 @@ The item \mybold{ObjectJointRevolute2D} with type = 'JointRevolute2D' has the fo
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawSize &     float &      &     -1. &     drawing size = radius of revolute joint; size == -1.f means that default connector size is used\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -6137,8 +6137,8 @@ The item \mybold{ObjectJointPrismatic2D} with type = 'JointPrismatic2D' has the 
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
     markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
-    axisMarker0 &     Vector3D &      &     [1.,0.,0.] &     \tabnewline direction of prismatic axis, given as a 3D vector in Marker0 frame\\ \hline
-    normalMarker1 &     Vector3D &      &     [0.,1.,0.] &     \tabnewline direction of normal to prismatic axis, given as a 3D vector in Marker1 frame\\ \hline
+    axisMarker0 &     Vector3D &     3 &     [1.,0.,0.] &     \tabnewline direction of prismatic axis, given as a 3D vector in Marker0 frame\\ \hline
+    normalMarker1 &     Vector3D &     3 &     [0.,1.,0.] &     \tabnewline direction of normal to prismatic axis, given as a 3D vector in Marker1 frame\\ \hline
     constrainRotation &     Bool &      &     True &     flag, which determines, if the connector also constrains the relative rotation of the two objects; if set to false, the constraint will keep an algebraic equation set equal zero\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint\\ \hline
     visualization &     VObjectJointPrismatic2D &      &      &     parameters for visualization of item\\ \hline
@@ -6154,7 +6154,7 @@ The item \mybold{ObjectJointPrismatic2D} with type = 'JointPrismatic2D' has the 
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawSize &     float &      &     -1. &     drawing size = radius of revolute joint; size == -1.f means that default connector size is used\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -6235,7 +6235,7 @@ The item \mybold{ObjectJointSliding} with type = 'JointSliding' has the followin
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawSize &     float &      &     -1. &     drawing size = radius of revolute joint; size == -1.f means that default connector size is used\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -6431,7 +6431,7 @@ The item \mybold{ObjectJointSliding2D} with type = 'JointSliding2D' has the foll
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawSize &     float &      &     -1. &     drawing size = radius of revolute joint; size == -1.f means that default connector size is used\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -6640,7 +6640,7 @@ The item \mybold{ObjectJointALEMoving2D} with type = 'JointALEMoving2D' has the 
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawSize &     float &      &     -1. &     drawing size = radius of revolute joint; size == -1.f means that default connector size is used\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -6836,7 +6836,7 @@ The item \mybold{ObjectConnectorSpringDamper} with type = 'ConnectorSpringDamper
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -7117,9 +7117,9 @@ The item \mybold{ObjectConnectorCartesianSpringDamper} with type = 'ConnectorCar
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     connector's unique name\\ \hline
     markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
-    stiffness &     Vector3D &      &     [0.,0.,0.] &     \tabnewline stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction\\ \hline
-    damping &     Vector3D &      &     [0.,0.,0.] &     \tabnewline damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction\\ \hline
-    offset &     Vector3D &      &     [0.,0.,0.] &     \tabnewline offset between two springs\\ \hline
+    stiffness &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction\\ \hline
+    damping &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction\\ \hline
+    offset &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline offset between two springs\\ \hline
     springForceUserFunction &     PyFunctionVector3DmbsScalarIndexScalar4Vector3D &     \tabnewline  &     \tabnewline 0 &     \tabnewline A Python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint\\ \hline
     visualization &     VObjectConnectorCartesianSpringDamper &      &      &     parameters for visualization of item\\ \hline
@@ -7135,7 +7135,7 @@ The item \mybold{ObjectConnectorCartesianSpringDamper} with type = 'ConnectorCar
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -7360,11 +7360,11 @@ The item \mybold{ObjectConnectorRigidBodySpringDamper} with type = 'ConnectorRig
     name &     String &      &     '' &     connector's unique name\\ \hline
     markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
     nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number of a NodeGenericData (size depends on application) for dataCoordinates for user functions (e.g., implementing contact/friction user function)\\ \hline
-    stiffness &     Matrix6D &      &     np.zeros((6,6)) &     stiffness [SI:N/m or Nm/rad] of translational, torsional and coupled springs; act against relative displacements in x, y, and z-direction as well as the relative angles (calculated as Euler angles); in the simplest case, the first 3 diagonal values correspond to the local stiffness in x,y,z direction and the last 3 diagonal values correspond to the rotational stiffness around x,y and z axis\\ \hline
-    damping &     Matrix6D &      &     np.zeros((6,6)) &     damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; very similar to stiffness, however, the rotational velocity is computed from the angular velocity vector\\ \hline
-    rotationMarker0 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0\\ \hline
-    rotationMarker1 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1\\ \hline
-    offset &     Vector6D &      &     [0.,0.,0.,0.,0.,0.] &     \tabnewline translational and rotational offset considered in the spring force calculation\\ \hline
+    stiffness &     Matrix6D &     36 &     np.zeros((6,6)) &     stiffness [SI:N/m or Nm/rad] of translational, torsional and coupled springs; act against relative displacements in x, y, and z-direction as well as the relative angles (calculated as Euler angles); in the simplest case, the first 3 diagonal values correspond to the local stiffness in x,y,z direction and the last 3 diagonal values correspond to the rotational stiffness around x,y and z axis\\ \hline
+    damping &     Matrix6D &     36 &     np.zeros((6,6)) &     damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; very similar to stiffness, however, the rotational velocity is computed from the angular velocity vector\\ \hline
+    rotationMarker0 &     Matrix3D &     9 &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0\\ \hline
+    rotationMarker1 &     Matrix3D &     9 &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1\\ \hline
+    offset &     Vector6D &     6 &     [0.,0.,0.,0.,0.,0.] &     \tabnewline translational and rotational offset considered in the spring force calculation\\ \hline
     intrinsicFormulation &     Bool &      &     False &     if True, the joint uses the intrinsic formulation, which is independent on order of markers, using a mid-point and mid-rotation for evaluation and application of connector forces and torques; this uses a Lie group formulation; in this case, the force/torque vector is computed from the stiffness matrix times the 6-vector of the SE3 matrix logarithm between the two marker positions/rotations, see the equations\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint\\ \hline
     springForceTorqueUserFunction &     PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D &     \tabnewline  &     \tabnewline 0 &     \tabnewline A Python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below\\ \hline
@@ -7382,7 +7382,7 @@ The item \mybold{ObjectConnectorRigidBodySpringDamper} with type = 'ConnectorRig
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -7596,7 +7596,7 @@ The item \mybold{ObjectConnectorLinearSpringDamper} with type = 'ConnectorLinear
     markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
     stiffness &     Real &      &     0. &     torsional stiffness [SI:Nm/rad] against relative rotation\\ \hline
     damping &     Real &      &     0. &     torsional damping [SI:Nm/(rad/s)]\\ \hline
-    axisMarker0 &     Vector3D &      &     [1,0,0] &     local axis of spring-damper in marker 0 coordinates; this axis will co-move with marker $m0$; if marker m0 is attached to ground, the spring-damper represents linear equations\\ \hline
+    axisMarker0 &     Vector3D &     3 &     [1,0,0] &     local axis of spring-damper in marker 0 coordinates; this axis will co-move with marker $m0$; if marker m0 is attached to ground, the spring-damper represents linear equations\\ \hline
     offset &     Real &      &     0. &     translational offset considered in the spring force calculation (this can be used as position control input!)\\ \hline
     velocityOffset &     Real &      &     0. &     velocity offset considered in the damper force calculation (this can be used as velocity control input!)\\ \hline
     force &     Real &      &     0. &     additional constant force [SI:Nm] added to spring-damper; this can be used to prescribe a force between the two attached bodies (e.g., for actuation and control)\\ \hline
@@ -7616,7 +7616,7 @@ The item \mybold{ObjectConnectorLinearSpringDamper} with type = 'ConnectorLinear
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
     drawAsCylinder &     Bool &      &     False &     if this flag is True, the spring-damper is represented as cylinder; this may fit better if the spring-damper represents an actuator\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -7785,8 +7785,8 @@ The item \mybold{ObjectConnectorTorsionalSpringDamper} with type = 'ConnectorTor
     nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number of a NodeGenericData with 1 dataCoordinate for continuous rotation reconstruction; if this node is left to invalid index, it will not be used\\ \hline
     stiffness &     Real &      &     0. &     torsional stiffness [SI:Nm/rad] against relative rotation\\ \hline
     damping &     Real &      &     0. &     torsional damping [SI:Nm/(rad/s)]\\ \hline
-    rotationMarker0 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker 0; transforms joint into marker coordinates\\ \hline
-    rotationMarker1 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker 1; transforms joint into marker coordinates\\ \hline
+    rotationMarker0 &     Matrix3D &     9 &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker 0; transforms joint into marker coordinates\\ \hline
+    rotationMarker1 &     Matrix3D &     9 &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker 1; transforms joint into marker coordinates\\ \hline
     offset &     Real &      &     0. &     rotational offset considered in the spring torque calculation (this can be used as rotation control input!)\\ \hline
     velocityOffset &     Real &      &     0. &     angular velocity offset considered in the damper torque calculation (this can be used as angular velocity control input!)\\ \hline
     torque &     Real &      &     0. &     additional constant torque [SI:Nm] added to spring-damper; this can be used to prescribe a torque between the two attached bodies (e.g., for actuation and control)\\ \hline
@@ -7805,7 +7805,7 @@ The item \mybold{ObjectConnectorTorsionalSpringDamper} with type = 'ConnectorTor
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -7995,7 +7995,7 @@ The item \mybold{ObjectConnectorCoordinateSpringDamper} with type = 'ConnectorCo
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -8210,7 +8210,7 @@ The item \mybold{ObjectConnectorCoordinateSpringDamperExt} with type = 'Connecto
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -8462,7 +8462,7 @@ The item \mybold{ObjectConnectorGravity} with type = 'ConnectorGravity' has the 
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     False &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -8658,8 +8658,8 @@ The item \mybold{ObjectConnectorHydraulicActuatorSimple} with type = 'ConnectorH
     rodMountRadius &     float &      &     0. &     radius for drawing of rod mount sphere\\ \hline
     baseMountRadius &     float &      &     0. &     radius for drawing of base mount sphere\\ \hline
     baseMountLength &     float &      &     0. &     radius for drawing of base mount sphere\\ \hline
-    colorCylinder &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA cylinder color; if R==-1, use default connector color\\ \hline
-    colorPiston &     Float4 &      &     [0.8,0.8,0.8,1.] &     \tabnewline RGBA piston color\\ \hline
+    colorCylinder &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA cylinder color; if R==-1, use default connector color\\ \hline
+    colorPiston &     Float4 &     4 &     [0.8,0.8,0.8,1.] &     \tabnewline RGBA piston color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -8849,7 +8849,7 @@ The item \mybold{ObjectConnectorReevingSystemSprings} with type = 'ConnectorReev
     name &     String &      &     '' &     connector's unique name\\ \hline
     markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of position or rigid body markers used in reeving system and optional two coordinate markers ($m_{c0}, \, m_{c1}$); the first marker $m_0$ and the last rigid body marker $m_{nr-1}$ represent the ends of the rope and are directly connected to a position; the markers $m_1, \, \ldots, \, m_{nr-2}$ can be connected to sheaves, for which a radius and an axis can be prescribed. The coordinate markers are optional and represent prescribed length at the rope ends (marker $m_{c0}$ is added length at start, marker $m_{c1}$ is added length at end of the rope in the reeving system)\\ \hline
     hasCoordinateMarkers &     Bool &      &     False &     flag, which determines, the list of markers (markerNumbers) contains two coordinate markers at the end of the list, representing the prescribed change of length at both ends\\ \hline
-    coordinateFactors &     Vector2D &      &     [1,1] &     factors which are multiplied with the values of coordinate markers; this can be used, e.g., to change directions or to transform rotations (revolutions of a sheave) into change of length\\ \hline
+    coordinateFactors &     Vector2D &     2 &     [1,1] &     factors which are multiplied with the values of coordinate markers; this can be used, e.g., to change directions or to transform rotations (revolutions of a sheave) into change of length\\ \hline
     stiffnessPerLength &     UReal &      &     0. &     stiffness per length [SI:N/m/m] of rope; in case of cross section $A$ and Young's modulus $E$, this parameter results in $E\cdot A$; the effective stiffness of the reeving system is computed as $EA/L$ in which $L$ is the current length of the rope\\ \hline
     dampingPerLength &     UReal &      &     0. &     axial damping per length [SI:N/(m/s)/m] of rope; the effective damping coefficient of the reeving system is computed as $DA/L$ in which $L$ is the current length of the rope\\ \hline
     dampingTorsional &     UReal &      &     0. &     torsional damping [SI:Nms] between sheaves; this effect can damp rotations around the rope axis, pairwise between sheaves; this parameter is experimental\\ \hline
@@ -8872,7 +8872,7 @@ The item \mybold{ObjectConnectorReevingSystemSprings} with type = 'ConnectorReev
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     ropeRadius &     float &      &     0.001 &     radius of rope\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -9076,14 +9076,14 @@ The item \mybold{ObjectConnectorRollingDiscPenalty} with type = 'ConnectorRollin
     markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector; $m0$ represents a point at the plane surface (normal of surface plane defined by planeNormal); the ground can also be a moving rigid body; $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point\\ \hline
     nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact)\\ \hline
     discRadius &     PReal &      &     0. &     defines the disc radius\\ \hline
-    discAxis &     Vector3D &      &     [1,0,0] &     axis of disc defined in marker $m1$ frame\\ \hline
-    planeNormal &     Vector3D &      &     [0,0,1] &     normal to the contact / rolling plane (ground); note that the plane reference point can be arbitrarily chosen by the location of the marker $m0$\\ \hline
+    discAxis &     Vector3D &     3 &     [1,0,0] &     axis of disc defined in marker $m1$ frame\\ \hline
+    planeNormal &     Vector3D &     3 &     [0,0,1] &     normal to the contact / rolling plane (ground); note that the plane reference point can be arbitrarily chosen by the location of the marker $m0$\\ \hline
     dryFrictionAngle &     Real &      &     0. &     angle [SI:1 (rad)] which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle\\ \hline
     contactStiffness &     UReal &      &     0. &     normal contact stiffness [SI:N/m]\\ \hline
     contactDamping &     UReal &      &     0. &     normal contact damping [SI:N/(m s)]\\ \hline
-    dryFriction &     Vector2D &      &     [0,0] &     dry friction coefficients [SI:1] in local marker 1 joint $J1$ coordinates; if $\alpha_t==0$, lateral direction $l=x$ and forward direction $f=y$; assuming a normal force $f_n$, the local friction force can be computed as $\LU{J1}{\vp{f_{t,x}}{f_{t,y}}} = \vp{\mu_x f_n}{\mu_y f_n}$\\ \hline
+    dryFriction &     Vector2D &     2 &     [0,0] &     dry friction coefficients [SI:1] in local marker 1 joint $J1$ coordinates; if $\alpha_t==0$, lateral direction $l=x$ and forward direction $f=y$; assuming a normal force $f_n$, the local friction force can be computed as $\LU{J1}{\vp{f_{t,x}}{f_{t,y}}} = \vp{\mu_x f_n}{\mu_y f_n}$\\ \hline
     dryFrictionProportionalZone &     Real &      &     0. &     limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)\\ \hline
-    viscousFriction &     Vector2D &      &     [0,0] &     viscous friction coefficients [SI:1/(m/s)] in local marker 1 joint $J1$ coordinates; proportional to slipping velocity, leading to increasing slipping friction force for increasing slipping velocity\\ \hline
+    viscousFriction &     Vector2D &     2 &     [0,0] &     viscous friction coefficients [SI:1/(m/s)] in local marker 1 joint $J1$ coordinates; proportional to slipping velocity, leading to increasing slipping friction force for increasing slipping velocity\\ \hline
     rollingFrictionViscous &     Real &      &     0. &     rolling friction [SI:1], which acts against the velocity of the trail on ground and leads to a force proportional to the contact normal force; currently, only implemented for disc axis parallel to ground!\\ \hline
     useLinearProportionalZone &     Bool &      &     False &     if True, a linear proportional zone is used; the linear zone performs better in implicit time integration as the Jacobian has a constant tangent in the sticking case\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint\\ \hline
@@ -9100,7 +9100,7 @@ The item \mybold{ObjectConnectorRollingDiscPenalty} with type = 'ConnectorRollin
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     discWidth &     float &      &     0.1 &     width of disc for drawing\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -9349,7 +9349,7 @@ The item \mybold{ObjectContactConvexRoll} with type = 'ContactConvexRoll' has th
     coefficientsHullDerivative &     NumpyVector &      &     [] &     polynomial coefficients of the polynomial $\mathrm{hull}^\prime(x)$\\ \hline
     coefficientsHullDDerivative &     NumpyVector &      &     [] &     second derivative of the hull polynomial.\\ \hline
     rBoundingSphere &     UReal &      &     0 &     The  radius of the bounding sphere for the contact pre-check, calculated from the polynomial coefficients of the hull\\ \hline
-    pContact &     Vector3D &      &     [0,0,0] &     The  current potential contact point. Contact occures if pContact[2] < 0. \\ \hline
+    pContact &     Vector3D &     3 &     [0,0,0] &     The  current potential contact point. Contact occures if pContact[2] < 0. \\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint\\ \hline
     visualization &     VObjectContactConvexRoll &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
@@ -9363,7 +9363,7 @@ The item \mybold{ObjectContactConvexRoll} with type = 'ContactConvexRoll' has th
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -9540,7 +9540,7 @@ The item \mybold{ObjectContactCoordinate} with type = 'ContactCoordinate' has th
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -9605,7 +9605,7 @@ The item \mybold{ObjectContactCircleCable2D} with type = 'ContactCircleCable2D' 
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     showContactCircle &     Bool &      &     True &     if True and show=True, the underlying contact circle is shown; uses circleTiling*4 for tiling (from VisualizationSettings.general)\\ \hline
     drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -9681,7 +9681,7 @@ The item \mybold{ObjectContactFrictionCircleCable2D} with type = 'ContactFrictio
     show &     Bool &      &     True &     set True, if item is shown in visualization and false if it is not shown; note that only normal contact forces can be  drawn, which are approximated by $k_c \cdot g$ (neglecting damping term)\\ \hline
     showContactCircle &     Bool &      &     True &     if True and show=True, the underlying contact circle is shown; uses circleTiling*4 for tiling (from VisualizationSettings.general)\\ \hline
     drawSize &     float &      &     -1. &     drawing size = diameter of spring; size == -1.f means that default connector size is used\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -10165,7 +10165,7 @@ The item \mybold{ObjectContactSphereSphere} with type = 'ContactSphereSphere' ha
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     False &     set true, if item is shown in visualization and false if it is not shown; draws spheres by given radii\\ \hline
-    color &     Float4 &      &     [0.7,0.7,0.7,1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [0.7,0.7,0.7,1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -10431,7 +10431,7 @@ The item \mybold{ObjectContactSphereTorus} with type = 'ContactSphereTorus' has 
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     False &     set true, if item is shown in visualization and false if it is not shown; draws spheres by given radii\\ \hline
-    color &     Float4 &      &     [0.7,0.7,0.7,1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [0.7,0.7,0.7,1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -10541,7 +10541,7 @@ The item \mybold{ObjectContactSphereTriangle} with type = 'ContactSphereTriangle
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     False &     set true, if item is shown in visualization and false if it is not shown; draws spheres by given radii\\ \hline
-    color &     Float4 &      &     [0.7,0.7,0.7,1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [0.7,0.7,0.7,1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -10635,7 +10635,7 @@ The item \mybold{ObjectContactCurveCircles} with type = 'ContactCurveCircles' ha
     circlesRadii &     NumpyVector &      &     [] &     Vector containing radii of $n_c$ circles [SI:m]; number according to size of markerNumbers-1\\ \hline
     segmentsData &     PyMatrixContainer &     \tabnewline  &     PyMatrixContainer[] &     \tabnewline matrix containing a set of two planar point coordinates in each row, representing segments attached to marker $m0$ and undergoing contact with the circles; for segment $s0$ row 0 reads $[p_{0x,s0},\,p_{0y,s0},\,p_{1x,s0},\,p_{1y,s0}]$; note that the segments must be ordered such that going from $\pv_0$ to $\pv_1$, the exterior lies on the right (positive) side. MatrixContainer has to be provided in dense mode!\\ \hline
     polynomialData &     PyMatrixContainer &     \tabnewline  &     PyMatrixContainer[] &     \tabnewline matrix containing coefficients for special polynomial enhancements of the linear segments; each row contains coefficients for polynomials for the according segment, prescribing slopes at beginning and end of segment as well as curvature at beginning and end of segment; slopes and curvatures are defined in a local x/y coordinate system where x is the segment axis (start: x=0; x-axis points towards end point) and the segment normal is in y-direction; MatrixContainer has to be provided in dense mode!\\ \hline
-    rotationMarker0 &     Matrix3D &      &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker 0; used to rotate marker coordinates such that the curve lies in the $x-y$-plane\\ \hline
+    rotationMarker0 &     Matrix3D &     9 &     [[1,0,0], [0,1,0], [0,0,1]] &     \tabnewline local rotation matrix for marker 0; used to rotate marker coordinates such that the curve lies in the $x-y$-plane\\ \hline
     dynamicFriction &     UReal &      &     0. &     dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}\\ \hline
     frictionProportionalZone &     UReal &      &     0.001 &     limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}\\ \hline
     contactStiffness &     Real &      &     0. &     normal contact stiffness [SI:N/(m*m)]\\ \hline
@@ -10658,7 +10658,7 @@ The item \mybold{ObjectContactCurveCircles} with type = 'ContactCurveCircles' ha
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown; draws curve and circles with given radii; uses visualizationSettings circleTiling for circles and circleTiling/2 for tiling of non-straight segments\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -10764,7 +10764,7 @@ The item \mybold{ObjectConnectorDistance} with type = 'ConnectorDistance' has th
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawSize &     float &      &     -1. &     drawing size = link size; size == -1.f means that default connector size is used\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -10918,7 +10918,7 @@ The item \mybold{ObjectConnectorCoordinate} with type = 'ConnectorCoordinate' ha
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
     drawSize &     float &      &     -1. &     drawing size = link size; size == -1.f means that default connector size is used\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -11151,7 +11151,7 @@ The item \mybold{ObjectConnectorCoordinateVector} with type = 'ConnectorCoordina
     \hline
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     show &     Bool &      &     True &     set true, if item is shown in visualization and false if it is not shown\\ \hline
-    color &     Float4 &      &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
+    color &     Float4 &     4 &     [-1.,-1.,-1.,-1.] &     \tabnewline RGBA connector color; if R==-1, use default color\\ \hline
 \end{longtable}
 \end{center}
 \par\noindent\rule{\textwidth}{0.4pt}
@@ -13077,7 +13077,7 @@ The item \mybold{LoadForceVector} with type = 'ForceVector' has the following pa
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     load's unique name\\ \hline
     markerNumber &     MarkerIndex &      &     invalid (-1) &     \tabnewline marker's number to which load is applied\\ \hline
-    loadVector &     Vector3D &      &     [0.,0.,0.] &     \tabnewline vector-valued load [SI:N]; in case of a user function, this vector is ignored\\ \hline
+    loadVector &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline vector-valued load [SI:N]; in case of a user function, this vector is ignored\\ \hline
     bodyFixed &     Bool &      &     False &     if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower force; if false: global coordinates are used\\ \hline
     loadVectorUserFunction &     PyFunctionVector3DmbsScalarVector3D &     \tabnewline  &     \tabnewline 0 &     A Python function which defines the time-dependent load and replaces loadVector; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); NOTE that forces are drawn using the value of loadVector; thus the current values according to the user function are NOT shown in the render window; however, a sensor (SensorLoad) returns the user function force which is applied to the object; to draw forces with current user function values, use a graphicsDataUserFunction of a ground object\\ \hline
     visualization &     VLoadForceVector &      &      &     parameters for visualization of item\\ \hline
@@ -13178,7 +13178,7 @@ The item \mybold{LoadTorqueVector} with type = 'TorqueVector' has the following 
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     load's unique name\\ \hline
     markerNumber &     MarkerIndex &      &     invalid (-1) &     \tabnewline marker's number to which load is applied\\ \hline
-    loadVector &     Vector3D &      &     [0.,0.,0.] &     \tabnewline vector-valued load [SI:N]; in case of a user function, this vector is ignored\\ \hline
+    loadVector &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline vector-valued load [SI:N]; in case of a user function, this vector is ignored\\ \hline
     bodyFixed &     Bool &      &     False &     if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower torque; if false: global coordinates are used\\ \hline
     loadVectorUserFunction &     PyFunctionVector3DmbsScalarVector3D &     \tabnewline  &     \tabnewline 0 &     A Python function which defines the time-dependent load and replaces loadVector; see description below; see also notes on loadFactor and drawing in LoadForceVector! Example for Python function: def f(mbs, t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]\\ \hline
     visualization &     VLoadTorqueVector &      &      &     parameters for visualization of item\\ \hline
@@ -13279,7 +13279,7 @@ The item \mybold{LoadMassProportional} with type = 'MassProportional' has the fo
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     load's unique name\\ \hline
     markerNumber &     MarkerIndex &      &     invalid (-1) &     \tabnewline marker's number to which load is applied\\ \hline
-    loadVector &     Vector3D &      &     [0.,0.,0.] &     \tabnewline vector-valued load [SI:N/kg = m/s$^2$]; typically, this will be the gravity vector in global coordinates; in case of a user function, this v is ignored\\ \hline
+    loadVector &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline vector-valued load [SI:N/kg = m/s$^2$]; typically, this will be the gravity vector in global coordinates; in case of a user function, this v is ignored\\ \hline
     loadVectorUserFunction &     PyFunctionVector3DmbsScalarVector3D &     \tabnewline  &     \tabnewline 0 &     A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector!\\ \hline
     visualization &     VLoadMassProportional &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}

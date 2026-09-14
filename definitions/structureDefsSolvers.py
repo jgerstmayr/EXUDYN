@@ -1,7 +1,7 @@
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Solvers definitions
 #
-# Details:  3 definitions, emitted from systemStructuresDefinition.py (revision plan step 31a).
+# Details:  3 definitions; the input of the generators (revision plan step 33).
 #           This IS Python: import it and read "definitions", a list of dicts.
 #
 #           ORDER MATTERS. The generators emit in the order the definitions appear,
@@ -29,6 +29,7 @@ definitions = []
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='MainSolverStatic',
+    writeFile='MainSolver.h',
     addDictionaryAccess=False,
     appendToFile=False,
     classDescription=r"""PyBind interface (trampoline) class for static solver. With this interface, the static solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write: \\ 
@@ -313,6 +314,7 @@ and hereafter you can access all data and functions via 'solver'.""",
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='MainSolverImplicitSecondOrder',
+    writeFile='MainSolver.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r"""PyBind interface (trampoline) class for dynamic implicit solver. Note that this solver includes the classical Newmark method (set useNewmark True; with option of index 2 reduction) as well as the generalized-alpha method. With the interface, the dynamic implicit solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (still fast, but performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write: \\ 
@@ -686,6 +688,7 @@ and hereafter you can access all data and functions via 'solver'.
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='MainSolverExplicit',
+    writeFile='MainSolver.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r"""PyBind interface (trampoline) class for dynamic explicit solver. Note that this solver includes the 1st order explicit Euler scheme and the 4th order Runge-Kutta scheme with 5th order error estimation (DOPRI5). With the interface, the solver and its substructures can be accessed via Python. NOTE that except from SolveSystem(...), these functions are only intended for experienced users and they need to be handled with care, as unexpected crashes may happen if used inappropriate. Furthermore, the functions have a lot of overhead (still fast, but performance much lower than internal solver) due to Python interfaces, and should thus be used for small systems. To access the solver in Python, write \\ 

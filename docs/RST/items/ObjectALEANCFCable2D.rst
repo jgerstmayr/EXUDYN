@@ -40,7 +40,7 @@ The item \ **ObjectALEANCFCable2D**\  with type = 'ALEANCFCable2D' has the follo
   | true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then)
 * | **physicsAddALEvariation** [type = Bool, default = True]:
   | true: correct case, where additional terms related to variation of strain and curvature are added
-* | **nodeNumbers** [type = NodeIndex3, default = [invalid [-1], invalid [-1], invalid [-1]]]:
+* | **nodeNumbers** [type = NodeIndex3, size = 3, default = [invalid [-1], invalid [-1], invalid [-1]]]:
   | two node numbers ANCF cable element, third node=ALE GenericODE2 node
 * | **useReducedOrderIntegration** [type = Index, default = 0]:
   | 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments
@@ -57,7 +57,7 @@ The item VObjectALEANCFCable2D has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown
 * | **drawHeight** [type = float, default = 0.]:
   | if beam is drawn with rectangular shape, this is the drawing height
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
+* | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA color of the object; if R==-1, use default color
 
 

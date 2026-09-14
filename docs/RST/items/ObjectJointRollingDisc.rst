@@ -27,9 +27,9 @@ The item \ **ObjectJointRollingDisc**\  with type = 'JointRollingDisc' has the f
   | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
 * | **discRadius** [type = PReal, default = 0]:
   | defines the disc radius
-* | **discAxis** [\ :math:`\LU{m1}{{\mathbf{w}}_{1}}, \;\; |\LU{m1}{{\mathbf{w}}_{1}}| = 1`\ , type = Vector3D, default = [1,0,0]]:
+* | **discAxis** [\ :math:`\LU{m1}{{\mathbf{w}}_{1}}, \;\; |\LU{m1}{{\mathbf{w}}_{1}}| = 1`\ , type = Vector3D, size = 3, default = [1,0,0]]:
   | axis of disc defined in marker \ :math:`m1`\  frame
-* | **planeNormal** [\ :math:`\LU{m0}{{\mathbf{v}}_{PN}}`\ , type = Vector3D, default = [0,0,1]]:
+* | **planeNormal** [\ :math:`\LU{m0}{{\mathbf{v}}_{PN}}`\ , type = Vector3D, size = 3, default = [0,0,1]]:
   | normal to the contact / rolling plane defined in marker \ :math:`m0`\  coordinates
 * | **visualization** [type = VObjectJointRollingDisc]:
   | parameters for visualization of item
@@ -42,7 +42,7 @@ The item VObjectJointRollingDisc has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown
 * | **discWidth** [type = float, default = 0.1]:
   | width of disc for drawing
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
+* | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA connector color; if R==-1, use default color
 
 

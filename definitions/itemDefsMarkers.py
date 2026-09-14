@@ -1,7 +1,7 @@
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Marker item definitions
 #
-# Details:  18 definitions, emitted from objectDefinition.py (revision plan step 31a).
+# Details:  18 definitions; the input of the generators (revision plan step 33).
 #           This IS Python: import it and read "definitions", a list of dicts.
 #
 #           ORDER MATTERS. The generators emit in the order the definitions appear,

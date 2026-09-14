@@ -21,7 +21,7 @@ The item \ **ObjectRigidBody**\  with type = 'RigidBody' has the following param
   | objects's unique name
 * | **physicsMass** [\ :math:`m`\ , type = UReal, default = 0.]:
   | mass [SI:kg] of rigid body
-* | **physicsInertia** [\ :math:`\LU{b}{{\mathbf{j}}_6}`\ , type = Vector6D, default = [0.,0.,0., 0.,0.,0.]]:
+* | **physicsInertia** [\ :math:`\LU{b}{{\mathbf{j}}_6}`\ , type = Vector6D, size = 6, default = [0.,0.,0., 0.,0.,0.]]:
   | inertia components [SI:kgm\ :math:`^2`\ ]: \ :math:`[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]`\  in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to \ :ref:`COM <COM>`\ ; use the class RigidBodyInertia of exudynRigidBodyUtilities.py and CreateRigidBody(...) of MainSystem to handle inertia, \ :ref:`COM <COM>`\  and mass
 * | **physicsCenterOfMass** [\ :math:`\LU{b}{{\mathbf{b}}_{COM}}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
   | local position of \ :ref:`COM <COM>`\  relative to the body's reference point; if the vector of the \ :ref:`COM <COM>`\  is [0,0,0], the computation will not consider additional terms for the \ :ref:`COM <COM>`\  and it is faster

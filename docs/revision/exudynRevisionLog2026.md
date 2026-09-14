@@ -1855,6 +1855,43 @@ a lost `const` on a Main function, a renamed `fromParent` member, a duplicated p
 two-entry `Vector3D` default - and all five were reported. Measured first against the round trip:
 the only real finding on the tree was the 31h `isVirtual` defect, already fixed in `9297236`.
 
+<a id="step-33"></a>
+
+**Done 2026-09-14, step 33 part 1 - the generators read `definitions/`.** One input instead of
+two: `src/pythonGenerator/objectDefinition.py` (1.4 MB) and `systemStructuresDefinition.py` are
+deleted, together with the step-31 emitter and its driver.
+
+- **How.** `tools/generators/definitionLoader.py` imports `definitions/` and yields each class as
+  the `(parseInfo, parameterList)` pair the old `SplitString` loop built: flags that became
+  derived are put back as letters (`D` from `implementation is None`, `I` from the inverted `n`,
+  `S` for a structure-typed member), values are rendered back with `CppLiteral`, the shape the
+  type carries becomes `size`, the output variables become the dict literal the generators
+  `eval()`. The per-class code of both generators is kept verbatim, only dedented out of the
+  parsing loop. The adapter is temporary: part 2 makes the emitters read `definitions/` directly.
+- **Checked against the old parser first.** Loader output vs the parser's own representation,
+  every field: the only differences were the three known normalisations - `size` (213 item, 79
+  structure members), the inert `I` on 95 functions, and the 53 dead `;` implementations of
+  declaration-only functions.
+- **Generated set.** Tier 1 byte-identical. Tier 2: 53 documentation files differ, and after
+  removing the `size` entries from both sides **all 53 are identical** - the reference tables now
+  show the shape wherever the type has one, and no longer show `size = 1` on the scalars that
+  happened to declare it. Accepted as the documentation side of the 31b decision that the type
+  carries the shape.
+- **Two losses in step 31, found only now.** The emitter skipped `writeFile` for every structure
+  (the C++ header a structure is written into; 6 different values) and treated the empty
+  `typicalPaths` of `SimulationSettings` like an absent one - but empty means "the paths are the
+  member names", absent means "no paths", and 12 lines of the reference vanished. The round-trip
+  harness excluded `writeFile` and compared empty and absent as equal, so neither was visible.
+  Both are restored in `definitions/`. The lesson recorded: a harness that skips a field proves
+  nothing about it; the regeneration gate caught what the field comparison could not.
+- **Validator, check 5.** With the emitter gone nothing checked that a bare type name (a
+  substructure type such as `TimeIntegrationSettings`) exists; `definitionValidator.py` now does.
+- **Live input proven:** a description changed in `definitions/itemDefsObjects.py` reached
+  `CObjectMassPoint.h` and `itemInterface.py` on regeneration, then was reverted.
+
+`CLAUDE.md` hard rule 1, `docs/dev/ARCHITECTURE.md`, `docs/theDoc/introduction.tex` (hence
+`CCode.rst`) and both READMEs now point at `definitions/`. Full `runTestSuite.py` PASSED.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving

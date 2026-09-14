@@ -21,9 +21,9 @@ The item \ **ObjectKinematicTree**\  with type = 'KinematicTree' has the followi
   | objects's unique name
 * | **nodeNumber** [\ :math:`n_0 \in \Ncal^n`\ , type = NodeIndex, default = invalid (-1)]:
   | node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; \ :math:`n`\  being the number of minimal coordinates
-* | **gravity** [\ :math:`\LU{0}{{\mathbf{g}}} \in \Rcal^{3}`\ , type = Vector3D, default = [0.,0.,0.]]:
+* | **gravity** [\ :math:`\LU{0}{{\mathbf{g}}} \in \Rcal^{3}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
   | gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree
-* | **baseOffset** [\ :math:`\LU{0}{{\mathbf{p}}_b} \in \Rcal^{3}`\ , type = Vector3D, default = [0.,0.,0.]]:
+* | **baseOffset** [\ :math:`\LU{0}{{\mathbf{p}}_b} \in \Rcal^{3}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
   | offset vector for base, in global coordinates
 * | **jointTypes** [\ :math:`{\mathbf{j}}_T \in \Ncal^{n}`\ , type = JointTypeList, default = []]:
   | joint types of kinematic Tree joints, using exu.JointType, like exu.JointType.RevoluteZ; must be always set

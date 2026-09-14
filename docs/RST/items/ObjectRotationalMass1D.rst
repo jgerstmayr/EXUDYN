@@ -25,7 +25,7 @@ The item \ **ObjectRotationalMass1D**\  with type = 'RotationalMass1D' has the f
   | node number (type NodeIndex) of Node1D, providing rotation coordinate \ :math:`\psi_0 = c_0`\ 
 * | **referencePosition** [\ :math:`\LU{0}{\pRef_0}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
   | a constant reference position = reference point, used to assign joint constraints accordingly and for drawing
-* | **referenceRotation** [\ :math:`\LU{0i}{\Rot_{0}} \in \Rcal^{3 \times 3}`\ , type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:
+* | **referenceRotation** [\ :math:`\LU{0i}{\Rot_{0}} \in \Rcal^{3 \times 3}`\ , type = Matrix3D, size = 9, default = [[1,0,0], [0,1,0], [0,0,1]]]:
   | an intermediate rotation matrix, which transforms the 1D coordinate into 3D, see description
 * | **visualization** [type = VObjectRotationalMass1D]:
   | parameters for visualization of item

@@ -41,7 +41,7 @@ The item \ **ObjectFFRF**\  with type = 'FFRF' has the following parameters:
   | ALWAYS set to False! flag used to correctly initialize all \ :ref:`FFRF <FFRF>`\  matrices; as soon as this flag is False, internal (constant) \ :ref:`FFRF <FFRF>`\  matrices are recomputed during Assemble()
 * | **physicsMass** [\ :math:`m`\ , type = UReal, default = 0.]:
   | total mass [SI:kg] of \ :ref:`FFRF <FFRF>`\  object, auto-computed from mass matrix \ :math:`\LU{b}{{\mathbf{M}}}`\ 
-* | **physicsInertia** [\ :math:`J_r \in \Rcal^{3 \times 3}`\ , type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:
+* | **physicsInertia** [\ :math:`J_r \in \Rcal^{3 \times 3}`\ , type = Matrix3D, size = 9, default = [[1,0,0], [0,1,0], [0,0,1]]]:
   | inertia tensor [SI:kgm\ :math:`^2`\ ] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \ :math:`\LU{b}{{\mathbf{M}}}`\ 
 * | **physicsCenterOfMass** [\ :math:`\LU{b}{{\mathbf{b}}}_{COM}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
   | local position of center of mass (\ :ref:`COM <COM>`\ ); auto-computed from mass matrix \ :math:`\LU{b}{{\mathbf{M}}}`\ 

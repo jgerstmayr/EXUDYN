@@ -20,7 +20,7 @@ The item \ **LoadForceVector**\  with type = 'ForceVector' has the following par
   | load's unique name
 * | **markerNumber** [type = MarkerIndex, default = invalid (-1)]:
   | marker's number to which load is applied
-* | **loadVector** [\ :math:`{\mathbf{f}}`\ , type = Vector3D, default = [0.,0.,0.]]:
+* | **loadVector** [\ :math:`{\mathbf{f}}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
   | vector-valued load [SI:N]; in case of a user function, this vector is ignored
 * | **bodyFixed** [type = Bool, default = False]:
   | if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower force; if false: global coordinates are used

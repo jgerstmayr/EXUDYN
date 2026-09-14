@@ -25,7 +25,7 @@ The item \ **ObjectMass1D**\  with type = 'Mass1D' has the following parameters:
   | node number (type NodeIndex) for Node1D
 * | **referencePosition** [\ :math:`\LU{0}{\pRef_0}`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
   | a reference position, used to transform the 1D coordinate to a position
-* | **referenceRotation** [\ :math:`\LU{0b}{\Rot_{0}} \in \Rcal^{3 \times 3}`\ , type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:
+* | **referenceRotation** [\ :math:`\LU{0b}{\Rot_{0}} \in \Rcal^{3 \times 3}`\ , type = Matrix3D, size = 9, default = [[1,0,0], [0,1,0], [0,0,1]]]:
   | the constant body rotation matrix, which transforms body-fixed (b) to global (0) coordinates
 * | **visualization** [type = VObjectMass1D]:
   | parameters for visualization of item

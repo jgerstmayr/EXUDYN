@@ -191,7 +191,7 @@ In the following, two use cases are shown, which show the simplicity of the proc
 +  \ **Case 1**\ : user object (body):
 
   It is recommended to first search for a body with a similar behavior.
-  Copy the definition of such an object inside the file \ ``objectDefinition.py``\  and edit the according lines. 
+  Copy the definition of such an object in \ ``definitions/itemDefsObjects.py``\  and edit the according lines. 
   There is not much description of 
   this file yet (except from the first lines of the file), as it will be transformed into another format in the future.
   Basically, you need to edit the interface, which contains parameters (which are linked to Python) and functions, 
@@ -218,7 +218,7 @@ In the following, two use cases are shown, which show the simplicity of the proc
 
   It is recommended to search for a connector with similar behavior; first check, if you would like to implement 
   an algebraic constraint or a spring-damper-like connector.
-  Again, copy a similar connector in \ ``objectDefinition.py``\  and edit the according lines. 
+  Again, copy a similar connector in \ ``definitions/itemDefsObjects.py``\  and edit the according lines. 
   When you finished editing, run \ ``pythonAutoGenerateObjects.py``\  and make a copy of the copied implementation (\ ``.cpp``\ ) file.
   The implementation file usually consists of
   

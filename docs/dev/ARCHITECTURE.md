@@ -2,7 +2,7 @@
 
 The overall idea of the C++ side: what the pieces are, how a Python call reaches computation, and
 where to look when changing something. **Not an API reference** — the per-item reference is
-generated into `theDoc.pdf` and the RST documentation from `objectDefinition.py`, and is far better
+generated into `theDoc.pdf` and the RST documentation from `definitions/`, and is far better
 at that job.
 
 Related, deliberately not repeated here: repository layout in [README.md](README.md), build and
@@ -163,7 +163,7 @@ which is exactly the wrong conclusion.
 |---|---|
 | see how the module is created | `main/src/Pymodules/PybindModule.cpp` |
 | follow `mbs.AddObject` into C++ | `main/src/Main/MainObjectFactory.cpp` |
-| add a new item | [CODING_STYLE.md §9](CODING_STYLE.md#9-adding-a-new-item-node-object-marker-load-sensor) — edit `objectDefinition.py`, never the generated header |
+| add a new item | [CODING_STYLE.md §9](CODING_STYLE.md#9-adding-a-new-item-node-object-marker-load-sensor) — edit `definitions/`, never the generated header |
 | understand the time loop | `main/src/Solver/CSolverImplicitSecondOrder.cpp` |
 | debug Python→C++ | VS2022, `Debug|x64`, breakpoint in a `ComputeODE2LHS` |
 

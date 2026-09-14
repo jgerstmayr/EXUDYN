@@ -28,9 +28,9 @@ The item \ **ObjectConnectorTorsionalSpringDamper**\  with type = 'ConnectorTors
   | torsional stiffness [SI:Nm/rad] against relative rotation
 * | **damping** [\ :math:`d`\ , type = Real, default = 0.]:
   | torsional damping [SI:Nm/(rad/s)]
-* | **rotationMarker0** [type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:
+* | **rotationMarker0** [type = Matrix3D, size = 9, default = [[1,0,0], [0,1,0], [0,0,1]]]:
   | local rotation matrix for marker 0; transforms joint into marker coordinates
-* | **rotationMarker1** [type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:
+* | **rotationMarker1** [type = Matrix3D, size = 9, default = [[1,0,0], [0,1,0], [0,0,1]]]:
   | local rotation matrix for marker 1; transforms joint into marker coordinates
 * | **offset** [\ :math:`\theta_\mathrm{off}`\ , type = Real, default = 0.]:
   | rotational offset considered in the spring torque calculation (this can be used as rotation control input!)
@@ -53,7 +53,7 @@ The item VObjectConnectorTorsionalSpringDamper has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown
 * | **drawSize** [type = float, default = -1.]:
   | drawing size = diameter of spring; size == -1.f means that default connector size is used
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
+* | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA connector color; if R==-1, use default color
 
 

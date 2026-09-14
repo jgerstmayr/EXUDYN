@@ -1,7 +1,7 @@
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # SolverData definitions
 #
-# Details:  6 definitions, emitted from systemStructuresDefinition.py (revision plan step 31a).
+# Details:  6 definitions; the input of the generators (revision plan step 33).
 #           This IS Python: import it and read "definitions", a list of dicts.
 #
 #           ORDER MATTERS. The generators emit in the order the definitions appear,
@@ -29,6 +29,7 @@ definitions = []
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='CSolverTimer',
+    writeFile='CSolverStructures.h',
     addDictionaryAccess=False,
     appendToFile=False,
     classDescription=r'Structure for timing in solver. Each Real variable is used to measure the CPU time which certain parts of the solver need. This structure is only active if the code is not compiled with the __FAST_EXUDYN_LINALG option and if displayComputationTime is set True. Timings will only be filled, if useTimer is True.',
@@ -157,6 +158,7 @@ There is plenty of possibilities to interact with the solvers, being it the extr
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='SolverLocalData',
+    writeFile='CSolverStructures.h',
     addConstructor=r"""    SetLinearSolverType(LinearSolverType::EXUdense); //for safety, data is linked initially\n""",
     addDictionaryAccess=False,
     appendToFile=True,
@@ -294,6 +296,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='SolverIterationData',
+    writeFile='CSolverStructures.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Solver internal structure for counters, steps, step size, time, etc.; solution vectors, residuals, etc. are SolverLocalData. The given default values are overwritten by the simulationSettings when initializing the solver.',
@@ -394,6 +397,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='SolverConvergenceData',
+    writeFile='CSolverStructures.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Solver internal structure for convergence information: residua, iteration loop errors and error flags. For detailed behavior of these flags, visit the source code!',
@@ -467,6 +471,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='SolverOutputData',
+    writeFile='CSolverStructures.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Solver internal structure for output modes, output timers and counters.',
@@ -580,6 +585,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='SolverFileData',
+    writeFile='CSolverStructures.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Solver internal structure for output files. This structure is not linked to pybind, because std::ofstream is not supported.',

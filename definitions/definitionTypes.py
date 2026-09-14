@@ -6,12 +6,12 @@
 #
 #           Why hand-written: the flag letters used to have no central definition at all - the
 #           old generator tested them as bare literals (parameter['cFlags'].find('I') and
-#           friends, 16 such sites in pythonAutoGenerateObjects.py), and the emitter carried its
-#           own copy of the table. Two independent transcriptions of the same vocabulary can
+#           friends, 16 such sites in pythonAutoGenerateObjects.py), and the step-31 emitter carried
+#           its own copy of the table. Two independent transcriptions of the same vocabulary can
 #           drift with nothing to notice. So the table lives here, once;
-#           tools/generators/definitionEmitter.py imports it and owns no table of its own, and
-#           it FAILS if the data uses a letter, a type or a closed-set value that is missing
-#           here, naming what to add. Drift becomes an error instead of a silent difference.
+#           tools/generators/definitionLoader.py imports it and owns no table of its own, and a
+#           flag, type or closed-set value that is missing here is a NameError when the
+#           definitions are imported. Drift becomes an error instead of a silent difference.
 #
 #           Why constants and not strings: a flag spelled as a bare letter is a value that
 #           nothing checks, and a mistyped letter changed the build silently. As a name it is a
@@ -144,7 +144,7 @@ NoDefaultValue = _NoDefaultValue()
 
 #--------------------------------------------------------------------- types
 #A type that NAMES A STRUCTURE defined in these files gets no constant: it refers to
-#the definition itself, which the emitter checks exists. That is a stronger check than
+#the definition itself, which definitionValidator.py checks exists. That is a stronger check than
 #a constant (which only verifies spelling) and it removed 45 single-use names.
 #
 #A type is a str SUBCLASS carrying its constraints, so it compares and hashes exactly like
@@ -160,7 +160,7 @@ NoDefaultValue = _NoDefaultValue()
 #
 #Both range predicates are needed and stay distinct: >= 0 and > 0 are both in use, and the
 #generators select CheckForValidUReal vs CheckForValidPReal on exactly that difference.
-#Only sizes for which a C++ type exists are accepted, so TVectorND(5) fails at emit time
+#Only sizes for which a C++ type exists are accepted, so TVectorND(5) fails at import time
 #instead of reaching the compiler; the same call also states the shape, which is why members
 #no longer carry a separate size= - it was never checked anyway, see the generator's own note
 #"future: also add size check ..." at pythonAutoGenerateObjects.py:904.
@@ -300,7 +300,7 @@ CFNoInterface        = 'n'   #EXCLUDED from the Python dictionary interface. Inv
                              #purpose: 947 of 985 parameters are in the interface and 38
                              #are not - all of them temporaries or computed state - so
                              #stating the exception is shorter and says more. The letter
-                             #is not one of the old format's; the emitter translates.
+                             #is not one of the old format's; definitionLoader.py translates.
                              #NOTE: this flag is meaningless on a function. The generator
                              #reads the interface flag only inside a block guarded by
                              #lineType 'V' (pythonAutoGenerateObjects.py:1123), so the 'I'
@@ -347,7 +347,7 @@ VisuParentClassVisualizationLoad               = 'VisualizationLoad'
 VisuParentClassVisualizationSensor             = 'VisualizationSensor'
 
 #--------------------------------------------------------------------- class and object types
-#CLOSED SETS as well; classType additionally selects the file a definition is emitted into.
+#CLOSED SETS as well; classType additionally selects the itemDefs file a definition belongs in.
 ClassTypeNode        = 'Node'
 ClassTypeObject      = 'Object'
 ClassTypeMarker      = 'Marker'

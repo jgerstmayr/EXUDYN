@@ -36,7 +36,7 @@ The item VObjectJointSpherical has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown
 * | **jointRadius** [type = float, default = 0.1]:
   | radius of joint to draw
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
+* | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA connector color; if R==-1, use default color
 
 

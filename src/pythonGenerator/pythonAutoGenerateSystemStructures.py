@@ -17,13 +17,11 @@ import io
 import os
 import numpy as np
 from exudynVersion import exudynVersionString
-#revision plan step 31a: collects the parsed representation for the NEW format; a no-op
-#unless EXUDYN_EMIT_DEFINITIONS is set, so a normal run is completely unaffected. The
-#emitter lives with the NEW generators in tools/generators/, which is where generation
-#moves as the old generators here are retired.
+#the input is definitions/ at the repository root, read through definitionLoader, which
+#lives with the new generator code in tools/generators/ (revision plan step 33)
 import sys
 sys.path.append(os.path.join('..', '..', 'tools', 'generators'))
-from definitionEmitter import CollectDefinition, WriteStructureDefinitions
+import definitionLoader
 
 SHOW_PARAMETER_CHANGES = False
 sortStructures = True
@@ -1086,12 +1084,8 @@ try: #still close file if crashes
                   , fileMode='w')
 
     #read system definition
-    filename = "systemStructuresDefinition.py"
     totalNumberOfLines = 0
 
-    file=open(filename,'r', encoding='utf8') 
-    fileLines = file.readlines()
-    file.close()
     
     typeConversion = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt':'Index', 
                       'UReal':'Real', 'PReal':'Real', 'UFloat':'float',  'PFloat':'float', 
@@ -1152,148 +1146,71 @@ try: #still close file if crashes
     
     fileListHeaderOnce = [] #store all opened files, which get a "#endif " at the end for the #ifdef ... at the beginning
     
-    for line in fileLines:
-        if continueOperation:
-            if line[0] != '#':
-                pureline = (line.strip('\n')) #eliminate EOL
-                if len(pureline.replace(' ','')): #empty lines are ignored
-                    if (pureline[0] == 'V') or (pureline[0] == 'F'):
-                        #must be definition of parameters
-                        info = SplitString(pureline, linecnt)
-                        #print(info)
-                        if len(info) != len(lineDefinition):
-                            continueOperation = False
-                        d={} #empty dictionary
-                        
-                        cnt = 0
-                        for item in lineDefinition:
-                            d[lineDefinition[cnt]] = info[cnt]
-                            cnt+=1
-                        if len(d['cplusplusName']) == 0:
-                            d['cplusplusName'] = d['pythonName']
-                        #print(d)
-                        parameterList.append(d) #append parameter dictionary to list
-                    elif (pureline.find('=') != -1): #definition
-    #                    pureline = pureline.replace(' ','') #eliminate spaces and EOL
-                        info = pureline.split('=', maxsplit = 1)
-                        #print("info =", info)
-                        if (len(info) == 2):
-                            defName = info[0].replace(' ','')
-                            #print("defname =",defName)
-                            RHS = RemoveSpacesTabs(info[1])
-                            if RHS != None:
-                                if len(RHS) and RHS[0] == "'":
-                                    RHS = RHS.strip("'")
-                                else:
-                                    RHS = RHS.strip('"')
-                                if (defName != 'classDescription' and defName != 'latexText' and defName != 'cppText' and defName != 'addConstructor'):
-                                    RHS = RHS.replace(' ','')
-                                if (defName == 'classDescription' or defName == 'latexText' or defName == 'cppText'):
-                                    RHS = RHS.replace('\\n','\n') #enable line breaks!
-                                
-                            if (defName in parseInfo):
-                                parseInfo[defName] = RHS
-                                #print(parseinfo)
-                            else:
-                                print("ERROR: invalid specifier", defName, "in line",linecnt)    
-                                continueOperation = False
-                            if (defName == "class"):
-                                if (mode == 0):
-                                    mode = 1
-                                else:
-                                    print("ERROR: did not expect 'class' keyword in line",linecnt)    
-                                    continueOperation = False                       
-                            if (defName == "writeFile"):
-                                if (mode == 1):
-                                    mode = 0
-                                    #the parsed representation of this class is complete HERE,
-                                    #before WriteFile touches it and before the reset below
-                                    CollectDefinition(parseInfo, parameterList, lineDefinition, 'structures')
-                                    #++++++++++++++++++++++++++++++
-                                    #now write C++ header file for defined class
-                                    [fileStr, latexStr, getSetDict, rstStr, stubStr, parameterInfo, 
-                                     implementationGetSetStr, parameterChangesList] = WriteFile(parseInfo, parameterList, typeConversion)
-                                    globalLatexStr += latexStr
-                                    globalStubStr += stubStr
-                                    globalImplementationGetSetStr += implementationGetSetStr
-                                    globalParameterChangesList += parameterChangesList
-                                    strFileMode = 'w'
-                                    
-                                    if parseInfo['appendToFile'] == 'True':
-                                        strFileMode = 'a'
-                                    else:
-                                        fileListHeaderOnce += [directoryString+parseInfo['writeFile']]
-                                        
-                                    if not HasTopClass(parseInfo['class']) and globalImplementationGetSetStr != '':
-                                        fileStr += '\n\n//! implementation:\n'+globalImplementationGetSetStr
-                                        #print(parseInfo['class']+'-IMPL:',globalImplementationGetSetStr)
-                                        (globalLatexStr, rstStr) = ParameterChanges2LatexRST(globalParameterChangesList, globalLatexStr, rstStr)
-                                        globalParameterChangesList = []
-                                        globalImplementationGetSetStr = ''
-                                        
-                                    # file=open(directoryString+parseInfo['writeFile'],strFileMode) 
-                                    # file.write(fileStr)
-                                    # file.close()
-                                    WriteFileDict(writeFilesDict, fileName=directoryString+parseInfo['writeFile'], 
-                                                  text=fileStr, fileMode=strFileMode)
+    #the definitions come from definitions/ (revision plan step 33): definitionLoader yields
+    #each class in the form the old line parser built it, and the code below is what that
+    #parser ran every time it reached writeFile
+    parseInfoTemplate = copy.deepcopy(parseInfo)
+    for parseInfo, parameterList in definitionLoader.LoadStructureDefinitions(parseInfoTemplate, lineDefinition):
+        #++++++++++++++++++++++++++++++
+        #now write C++ header file for defined class
+        [fileStr, latexStr, getSetDict, rstStr, stubStr, parameterInfo, 
+         implementationGetSetStr, parameterChangesList] = WriteFile(parseInfo, parameterList, typeConversion)
+        globalLatexStr += latexStr
+        globalStubStr += stubStr
+        globalImplementationGetSetStr += implementationGetSetStr
+        globalParameterChangesList += parameterChangesList
+        strFileMode = 'w'
+
+        if parseInfo['appendToFile'] == 'True':
+            strFileMode = 'a'
+        else:
+            fileListHeaderOnce += [directoryString+parseInfo['writeFile']]
+
+        if not HasTopClass(parseInfo['class']) and globalImplementationGetSetStr != '':
+            fileStr += '\n\n//! implementation:\n'+globalImplementationGetSetStr
+            #print(parseInfo['class']+'-IMPL:',globalImplementationGetSetStr)
+            (globalLatexStr, rstStr) = ParameterChanges2LatexRST(globalParameterChangesList, globalLatexStr, rstStr)
+            globalParameterChangesList = []
+            globalImplementationGetSetStr = ''
+
+        # file=open(directoryString+parseInfo['writeFile'],strFileMode) 
+        # file.write(fileStr)
+        # file.close()
+        WriteFileDict(writeFilesDict, fileName=directoryString+parseInfo['writeFile'], 
+                      text=fileStr, fileMode=strFileMode)
 
 
-                                    fileName = parseInfo['writeFile'].split('.')[0]
-                                    if fileName in rstFileDict:
-                                       rstFileDict[fileName] += rstStr
+        fileName = parseInfo['writeFile'].split('.')[0]
+        if fileName in rstFileDict:
+           rstFileDict[fileName] += rstStr
 
-                                    #++++++++++++++++++++++++++++++
-                                    #write Python/pybind11 includes
-                                    if parseInfo['writePybindIncludes'] == 'True':
-                                        pybindStr = CreatePybindHeaders(parseInfo, parameterList, typeConversion)
-                                        # file=open(pybindFile,'a')  #always append to pybind file
-                                        # file.write(pybindStr)
-                                        # file.close()
-                                        WriteFileDict(writeFilesDict, fileName=pybindFile, 
-                                                      text=pybindStr, fileMode='a')
-                                        
-                                    if parseInfo['writePybindIncludes'] == 'True':
-                                        # file=open(getSetFile,'a')  #always append to pybind file
-                                        # file.write(getSetDict)
-                                        # file.close()
-                                        WriteFileDict(writeFilesDict, fileName=getSetFile, 
-                                                      text=getSetDict, fileMode='a')
-                                    
-                                    if len(parameterInfo) != 0:
-                                        classDict = {'class':parseInfo['class'],
-                                                     'description':parseInfo['classDescription'],
-                                                     'typicalPaths':copy.copy(parseInfo['typicalPaths']),
-                                                     'parameters':copy.copy(parameterInfo)
-                                                     }
-                                        dictSystemStructures['structures'].append(classDict)
-                                    
-                                    #++++++++++++++++++++++++++++++
-                                    #reset structures for next file
-                                    totalNumberOfLines += CountLines(fileStr)+CountLines(pybindStr)+CountLines(getSetDict)
-                                    parameterList = [] #reset list
-                                    parseInfo['appendToFile'] = 'False'
-                                    parseInfo['writeFile'] = ''
-                                    parseInfo['class'] = ''
-                                    parseInfo['parentClass'] = ''
-                                    parseInfo['pythonClass'] = ''
-                                    parseInfo['classDescription'] = ''
-                                    parseInfo['addConstructor'] = ''
-                                    parseInfo['linkedClass'] = ''
-                                    parseInfo['latexText'] = ''
-                                    parseInfo['typicalPaths'] = None #not registered ...
-                                    parseInfo['cppText'] = ''
-                                    parseInfo['writePybindIncludes'] = 'False'
-                                    parseInfo['addDictionaryAccess'] = 'False'
-                                else:
-                                    print("ERROR: did not expect 'writeFile' keyword in line",linecnt)    
-                                    continueOperation = False
-                                
-                        else:
-                            print("ERROR: definition mismatch in line",linecnt)    
-                            continueOperation = False
-                    else: #ERROR
-                        print("ERROR: unknown format of line",linecnt)    
-            linecnt += 1;
+        #++++++++++++++++++++++++++++++
+        #write Python/pybind11 includes
+        if parseInfo['writePybindIncludes'] == 'True':
+            pybindStr = CreatePybindHeaders(parseInfo, parameterList, typeConversion)
+            # file=open(pybindFile,'a')  #always append to pybind file
+            # file.write(pybindStr)
+            # file.close()
+            WriteFileDict(writeFilesDict, fileName=pybindFile, 
+                          text=pybindStr, fileMode='a')
+
+        if parseInfo['writePybindIncludes'] == 'True':
+            # file=open(getSetFile,'a')  #always append to pybind file
+            # file.write(getSetDict)
+            # file.close()
+            WriteFileDict(writeFilesDict, fileName=getSetFile, 
+                          text=getSetDict, fileMode='a')
+
+        if len(parameterInfo) != 0:
+            classDict = {'class':parseInfo['class'],
+                         'description':parseInfo['classDescription'],
+                         'typicalPaths':copy.copy(parseInfo['typicalPaths']),
+                         'parameters':copy.copy(parameterInfo)
+                         }
+            dictSystemStructures['structures'].append(classDict)
+
+        #++++++++++++++++++++++++++++++
+        totalNumberOfLines += CountLines(fileStr)+CountLines(pybindStr)+CountLines(getSetDict)
     
     if (continueOperation == False):
         print('\n\nERROR: Parsing terminated unexpectedly in line',linecnt,'\n\n')
@@ -1382,8 +1299,6 @@ Structures and Settings
     np.save('generated/systemStructuresData.npy', dictSystemStructures)
     #utilitiesData = np.load('generated/systemStructuresData.npy', allow_pickle=True).item()
 
-    #no-op unless EXUDYN_EMIT_DEFINITIONS is set (revision plan step 31a)
-    WriteStructureDefinitions()
 
 finally:    
     file.close()

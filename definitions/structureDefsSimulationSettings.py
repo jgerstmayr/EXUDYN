@@ -1,7 +1,7 @@
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # SimulationSettings definitions
 #
-# Details:  11 definitions, emitted from systemStructuresDefinition.py (revision plan step 31a).
+# Details:  11 definitions; the input of the generators (revision plan step 33).
 #           This IS Python: import it and read "definitions", a list of dicts.
 #
 #           ORDER MATTERS. The generators emit in the order the definitions appear,
@@ -29,6 +29,7 @@ definitions = []
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='SolutionSettings',
+    writeFile='SimulationSettings.h',
     addDictionaryAccess=False,
     appendToFile=False,
     classDescription=r'General settings for exporting the solution (results) of a simulation.',
@@ -156,6 +157,7 @@ This section includes hierarchical structures for simulation settings, e.g., tim
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='NumericalDifferentiationSettings',
+    writeFile='SimulationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Settings for numerical differentiation of a function (needed for computation of numerical jacobian e.g. in implizit integration).',
@@ -202,6 +204,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='DiscontinuousSettings',
+    writeFile='SimulationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Settings for discontinuous iterations, as in contact, friction, plasticity and general switching phenomena.',
@@ -232,6 +235,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='NewtonSettings',
+    writeFile='SimulationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Settings for Newton method used in static or dynamic simulation.',
@@ -302,6 +306,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='GeneralizedAlphaSettings',
+    writeFile='SimulationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Settings for generalized-alpha, implicit trapezoidal or Newmark time integration methods.',
@@ -356,6 +361,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='ExplicitIntegrationSettings',
+    writeFile='SimulationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Settings for explicit solvers, like Explicit Euler, RK44, ODE23, DOPRI5 and others. The settings may significantely influence performance.',
@@ -390,6 +396,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='TimeIntegrationSettings',
+    writeFile='SimulationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'General parameters used in time integration; specific parameters are provided in the according solver settings, e.g. for generalizedAlpha.',
@@ -512,6 +519,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='StaticSolverSettings',
+    writeFile='SimulationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Settings for static solver linear or nonlinear (Newton).',
@@ -606,6 +614,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='LinearSolverSettings',
+    writeFile='SimulationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Settings for linear solver, both dense and sparse (Eigen).',
@@ -636,6 +645,7 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='Parallel',
+    writeFile='SimulationSettings.h',
     addDictionaryAccess=False,
     appendToFile=True,
     classDescription=r'Settings for linear solver, both dense and sparse (Eigen).',
@@ -682,6 +692,8 @@ definitions.append(StructureDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='SimulationSettings',
+    writeFile='SimulationSettings.h',
+    typicalPaths='',     #empty, not absent: the paths are the member names themselves
     addDictionaryAccess=True,
     appendToFile=True,
     classDescription=r'General Settings for simulation; according settings for solution and solvers are given in subitems of this structure',

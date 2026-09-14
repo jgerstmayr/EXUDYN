@@ -30,7 +30,7 @@ The item \ **ObjectContactCurveCircles**\  with type = 'ContactCurveCircles' has
   | matrix containing a set of two planar point coordinates in each row, representing segments attached to marker \ :math:`m0`\  and undergoing contact with the circles; for segment \ :math:`s0`\  row 0 reads \ :math:`[p_{0x,s0},\,p_{0y,s0},\,p_{1x,s0},\,p_{1y,s0}]`\ ; note that the segments must be ordered such that going from \ :math:`{\mathbf{p}}_0`\  to \ :math:`{\mathbf{p}}_1`\ , the exterior lies on the right (positive) side. MatrixContainer has to be provided in dense mode!
 * | **polynomialData** [\ :math:`{\mathbf{P}} \in \Rcal^{n_s \times n_p}`\ , type = PyMatrixContainer, default = PyMatrixContainer[]]:
   | matrix containing coefficients for special polynomial enhancements of the linear segments; each row contains coefficients for polynomials for the according segment, prescribing slopes at beginning and end of segment as well as curvature at beginning and end of segment; slopes and curvatures are defined in a local x/y coordinate system where x is the segment axis (start: x=0; x-axis points towards end point) and the segment normal is in y-direction; MatrixContainer has to be provided in dense mode!
-* | **rotationMarker0** [type = Matrix3D, default = [[1,0,0], [0,1,0], [0,0,1]]]:
+* | **rotationMarker0** [type = Matrix3D, size = 9, default = [[1,0,0], [0,1,0], [0,0,1]]]:
   | local rotation matrix for marker 0; used to rotate marker coordinates such that the curve lies in the \ :math:`x-y`\ -plane
 * | **dynamicFriction** [\ :math:`\mu_d`\ , type = UReal, default = 0.]:
   | dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, Section :ref:`sec-module-physics`\ 
@@ -61,7 +61,7 @@ The item VObjectContactCurveCircles has the following parameters:
 
 * | **show** [type = Bool, default = True]:
   | set true, if item is shown in visualization and false if it is not shown; draws curve and circles with given radii; uses visualizationSettings circleTiling for circles and circleTiling/2 for tiling of non-straight segments
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
+* | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA connector color; if R==-1, use default color
 
 

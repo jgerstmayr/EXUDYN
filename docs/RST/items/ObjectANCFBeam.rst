@@ -19,15 +19,15 @@ The item \ **ObjectANCFBeam**\  with type = 'ANCFBeam' has the following paramet
 
 * | **name** [type = String, default = '']:
   | objects's unique name
-* | **nodeNumbers** [type = NodeIndex2, default = [invalid [-1], invalid [-1]]]:
+* | **nodeNumbers** [type = NodeIndex2, size = 2, default = [invalid [-1], invalid [-1]]]:
   | two node numbers for beam element
 * | **physicsLength** [\ :math:`L`\ , type = PReal, default = 0.]:
   | [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \ :math:`\rho A L`\ ; must be positive
 * | **sectionData** [type = BeamSection, default = BeamSection()]:
   | data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.
-* | **crossSectionPenaltyFactor** [\ :math:`k_{cs} = [f_{yy},\,f_{zz},\,f_{yz}]\tp`\ , type = Vector3D, default = [1.,1.,1.]]:
+* | **crossSectionPenaltyFactor** [\ :math:`k_{cs} = [f_{yy},\,f_{zz},\,f_{yz}]\tp`\ , type = Vector3D, size = 3, default = [1.,1.,1.]]:
   | [SI:1] additional penalty factors for cross section deformation, which are in total \ :math:`k_{cs} = [f_{yy}\cdot EA,\, f_{zz}\cdot EA,\, f_{yz}\cdot (GA_y+GA_z)]\tp`\ 
-* | **crossSectionDamping** [\ :math:`d_{cs} = [d_{fyy},\,d_{fzz},\,d_{fyz}]\tp`\ , type = Vector3D, default = [0.,0.,0.]]:
+* | **crossSectionDamping** [\ :math:`d_{cs} = [d_{fyy},\,d_{fzz},\,d_{fyz}]\tp`\ , type = Vector3D, size = 3, default = [0.,0.,0.]]:
   | [SI:1] viscous damping according to penalty factors for cross section deformation; the damping is relative to the stiffness and should be thus usually much smaller than 1; the viscous damping factors read  \ :math:`d_{cs} = [d_{fyy}\cdot EA,\, d_{fzz}\cdot EA,\, d_{fyz}\cdot (GA_y+GA_z)]\tp`\ 
 * | **visualization** [type = VObjectANCFBeam]:
   | parameters for visualization of item
@@ -40,7 +40,7 @@ The item VObjectANCFBeam has the following parameters:
   | set true, if item is shown in visualization and false if it is not shown; geometry is defined by sectionGeometry
 * | **sectionGeometry** [type = BeamSectionGeometry, default =  BeamSectionGeometry()]:
   | defines cross section shape used for visualization and contact
-* | **color** [type = Float4, default = [-1.,-1.,-1.,-1.]]:
+* | **color** [type = Float4, size = 4, default = [-1.,-1.,-1.,-1.]]:
   | RGBA color of the object; if R==-1, use default color
 
 

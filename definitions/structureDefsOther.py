@@ -1,7 +1,7 @@
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Other definitions
 #
-# Details:  2 definitions, emitted from systemStructuresDefinition.py (revision plan step 31a).
+# Details:  2 definitions; the input of the generators (revision plan step 33).
 #           This IS Python: import it and read "definitions", a list of dicts.
 #
 #           ORDER MATTERS. The generators emit in the order the definitions appear,
@@ -29,6 +29,7 @@ definitions = []
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='PyBeamSection',
+    writeFile='PyStructuralElementsDataStructures.h',
     classDescription=r"""Data structure for definition of 2D and 3D beam (cross) section mechanical properties. The beam has local coordinates, in which $X$ represents the beam centerline (beam axis) coordinate, being the neutral fiber w.r.t.\ bending; $Y$ and $Z$ are the local cross section coordinates. Note that most elements do not accept all parameters, which results in an error if those parameters (e.g., stiffness parameters) are non-zero.""",
     cppText=r"""#include "Main/StructuralElementsDataStructures.h"
 #include "Pymodules/PybindUtilities.h"
@@ -66,6 +67,7 @@ This section includes data structures for structural elements, such as beams (an
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(StructureDefinition(
     className='BeamSectionGeometry',
+    writeFile='BeamSectionGeometry.h',
     addDictionaryAccess=False,
     appendToFile=False,
     classDescription=r'Data structure for definition of 2D and 3D beam (cross) section geometrical properties. Used for visualization and contact.',
