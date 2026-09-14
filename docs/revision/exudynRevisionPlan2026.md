@@ -1146,7 +1146,7 @@ The core investment. Every step is validated byte-for-byte by step 2.
       | sub-step | changes generated C++ | gate |
       |---|---|---|
       | **34c1 behaviour test first** *(DONE 2026-09-14: `parameterConversionTest.py`)*: one valid and several invalid values per type family through dict creation, `SetObjectParameter`/`GetObjectParameter` and settings structures; records acceptance, returned value and type (numpy vs list), exception type | no | passes on the current code |
-      | **34c2 `src/Pymodules/PyConversion.h`**: `EPyUtils::FromPython(object, destination, context)` / `ToPython(value)` per C++ type; index kinds as tag types; fixed and dynamic sizes as templates; range forms as a check parameter. A new header, kept apart from `PybindUtilities.h`, which only gains marked one-line forwarding wrappers | no | wheel, test suite, 34c1 |
+      | **34c2 `src/Pymodules/PyConversion.h`** *(DONE 2026-09-14)*: `EPyUtils::FromPython(object, destination)` / `ToPython(value)` per C++ type (string, `SlimVectorBase<T,n>`, `ConstSizeMatrixBase` as `FromPython<T,rows,columns>`, `MatrixBase<T>`, `VectorBase<T>`), `ItemIndexFromPython<NodeIndex>` / `ItemIndexToPython<NodeIndex>` for single, array and fixed-count indices. A new header, kept apart from `PybindUtilities.h`, whose 35 covered helpers became one-line forwards in one marked block. The range argument and an error context (item and parameter name) come with 34c4, where they are first used | no | wheel (full rebuild, #2427), test suite, 34c1 |
       | **34c3 one type model** in the generators: facts (family, element, size, item kind, user-function signature) on `TypeSpec` in `definitions/definitionTypes.py`; `typeModel.Render(type, destination)` for `cppStorage`, `python`, `docs` (docs keep the definition name: `Int`, `UReal`, `NodeIndex`); the eight tables, `ConvertParameter2Python`, `IsAVector`/`IsASafelyVector` go; a type without a rule fails at generation. Definition names or default strings may change where that makes the rules simpler | no | byte-identity per emitter |
       | **34c4 items** use `FromPython`/`ToPython`; `SetWithDictionary` goes through the same code as `SetParameter`; range checks move from `itemInterface.py` into C++ | yes | wheel, test suite, 34c1 (intended differences only: the bypass paths now check; messages name item and parameter), item-creation timing |
       | **34c5 structures** likewise; `definitionLoader`/`Legacy*()` deleted at the end | yes | same |
@@ -1155,18 +1155,27 @@ The core investment. Every step is validated byte-for-byte by step 2.
       The later rewrite of `PybindUtilities.h` itself (reduce to what is still needed, unify, fewer
       templates) is not part of 34c.
 
-      **Recorded by 34c1, to be decided before 34c4/34c5** - behaviour that exists today and that a
-      unified conversion would change if it were not reproduced on purpose (counts are parameter
-      paths in `parameterConversionTestReference.txt`):
+      **Recorded by 34c1, decided 2026-09-14** - behaviour that exists today and that a unified
+      conversion would change if it were not reproduced on purpose (counts are parameter paths in
+      `parameterConversionTestReference.txt`). Each change is applied in 34c4/34c5 as its own
+      reference update, so the test suite shows what depends on it:
       - range checks run only in the `itemInterface` classes: 90 `U` and 15 `P` item parameters
-        accept a negative (or zero) value through `SetObjectParameter` and a raw dict; structures
-        check on attribute set, but `SetDictionary` skips the check (191 parameters);
+        accept a negative (or zero) value through `SetObjectParameter` and a raw dict. `Set...Parameter`
+        was deliberately unchecked as the lower level. **Decision:** every write path gets the same
+        check, and one `exudyn.special` flag switches item and structure range checks off - so the
+        flag (step 95) is built in 34c4, together with the checks;
+      - structures check on attribute set, but `SetDictionary` skips the check (191 parameters).
+        `SetDictionary` is used for loading and saving settings. **Decision:** checked as well (34c5);
       - `None` is accepted by every `bool` (read back `False`) and by index arrays, `Vector3DList`,
-        `Matrix3DList` and `PyMatrixContainer` parameters (read back empty);
-      - `float` parameters accept a `NodeIndex`/`ObjectIndex` (read back as its number);
+        `Matrix3DList` and `PyMatrixContainer` parameters (read back empty). **Decision:** raise
+        (step 97, #2424);
+      - `float` and `bool` parameters accept a `NodeIndex`/`ObjectIndex` (read back as its number).
+        **Decision:** reject where simple (step 98, #2425);
       - 17 item classes reject their own defaults (`MarkerNodeCoordinate(coordinate=InvalidIndex())`
-        fails `CheckForValidUInt`), `ObjectANCFThinPlate` cannot be created with defaults at all;
-      - 4-element float vectors (`Vcolor`) read back as lists, Real vectors as numpy - kept.
+        fails `CheckForValidUInt`), and `ObjectANCFThinPlate` cannot be created with defaults at all -
+        step 99 (#2426);
+      - 4-element float vectors (`Vcolor`) read back as lists, Real vectors as numpy - kept: colours
+        are split and appended, not added.
     - **34b - Jinja2 per emitter**, as above, starting with `itemHeaderEmitter.py` (the largest),
       after 34c.
 35. Replace the copy-and-append scheme for `mainSystemExtensionsHeader.py` with an
@@ -1573,13 +1582,47 @@ step; larger ones get their own. #2411 is step 83 and #2412 belongs to step 36.
     item and structure parameters (`UReal`, `PReal`, `UInt`, `PInt`) raise in the normal and in
     the fast build. A release can carry a wrong range limit that is hard to test for; a flag in
     `exudyn.special` would let the user switch the checks off. Needs the checks in one place first,
-    which 34c provides.
+    which 34c provides. **Built in 34c4** (maintainer decision 2026-09-14): 34c4 gives every write
+    path the range check, including `Set<Kind>Parameter`, which was unchecked until now, so the
+    switch has to exist from the same commit. One flag covers items and structures.
 96. *(Phase 5)* **C++ user errors inspect the Python source** (#2423). `PyError`/`PyWarning` call
     `PyGetCurrentFileInformation` (`src/Main/Stdoutput.cpp:259`), which calls
     `inspect.getframeinfo`; that scans `sys.modules` and reads the source file. The ~38000 probe
     errors of `parameterConversionTest.py` took 1 s standalone and 9 s inside `runTestSuite.py`
     after scipy, matplotlib and ngsolve were imported - a cost wherever errors are caught in a loop.
     The frame itself (`f_code.co_filename`, `f_lineno`) carries the same information.
+97. *(with 34c4/34c5)* **`None` raises instead of converting** (#2424). Today every `bool`
+    parameter reads `None` back as `False`; index arrays, `Vector3DList`, `Matrix3DList` and
+    `PyMatrixContainer` read it back empty. Applied as its own reference update of
+    `parameterConversionTest.py`; the test suite shows whether a model relies on it.
+98. *(with 34c4/34c5)* **Item indices are rejected by `float` and `bool` parameters** (#2425), where
+    this is simple - the index tag types make it a type test in `FromPython`.
+99. *(with 34c4)* **Item classes accept their own defaults** (#2426). 17 `itemInterface` classes
+    raise on their defaults, because `InvalidIndex()` carries two meanings:
+    - **set later:** a node, marker or object number that closes a loop and is only known at the
+      end. It is valid only at `CheckPreAssembleConsistency`, which already checks indices and
+      types;
+    - **must be given at creation:** `MarkerNodeCoordinate.coordinate`, where a default of 0 would
+      be dangerous.
+
+    Suggestion:
+    - Keep the keyword style (every argument has a default; the model files stay self-explanatory)
+      and the `InvalidIndex()` defaults.
+    - A constructor never range-checks an `InvalidIndex()` default.
+    - A new member flag in `definitions/` marks the must-be-given parameters. `Add<Kind>` raises for
+      them in C++, naming item and parameter; `mbs.AddMarker(MarkerNodeCoordinate(...))` is one
+      statement, so the error still points at the user's line.
+    - Set-later indices stay with `CheckPreAssembleConsistency`.
+    - The 17 classes are the starting list for the flag. `ObjectANCFThinPlate`, which also fails in
+      C++, is looked at on its own.
+100. *(Phase 1 tooling, before the next header-only change)* **The wheel build does not see header
+    changes** (#2427). setuptools recompiles a `.cpp` only when it is newer than its `.obj`, and it
+    does not track included headers. In 34c2, `pip wheel . -w dist --no-deps` after a rewrite of
+    `PybindUtilities.h` (included by 35 files) produced a `.pyd` with the same md5 as the build
+    before, and the test suite passed against the old binary. Deleting
+    `build/temp.win-amd64-cpython-313` forced the full compile (49 s). Until this is fixed, the build
+    gate must remove that directory after a header change. Fix: pass `depends=` (the headers) to
+    the `Extension`, or let `setup.py` compare header times itself.
 
 ### Phase 9 — Deeper implementation problems (last)
 

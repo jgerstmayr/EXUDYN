@@ -2140,6 +2140,42 @@ test switches log and console off and replaces `inspect.getframeinfo` while prob
 1.8 s; the full suite 19.0 s, PASSED. The findings that 34c4/34c5 must decide are listed in plan
 step 34c.
 
+**Note 2026-09-14, step 34c1 findings decided.** The maintainer decided the five findings of 34c1
+(plan step 34c):
+- every write path gets the range check, with one `exudyn.special` switch, built in 34c4 (step 95);
+- `SetDictionary` of structures is checked too;
+- `None` raises (#2424, step 97);
+- item indices are rejected by `float`/`bool` parameters where simple (#2425, step 98);
+- classes accept their own defaults, with a must-be-given flag checked at `Add<Kind>` (#2426,
+  step 99).
+
+**Done 2026-09-14, step 34c2 - `src/Pymodules/PyConversion.h`.** A new header-only conversion
+layer in `EPyUtils`:
+- `FromPython(value, destination)` for `STDstring`, `SlimVectorBase<T,n>`, `ConstSizeMatrixBase`
+  (`FromPython<T,rows,columns>`, because rows and columns cannot be deduced from the storage
+  size), `MatrixBase<T>` and `VectorBase<T>`;
+- `ItemIndexFromPython<TItemIndex>` for one index, an `ArrayIndex` and a fixed-count `SlimArray`;
+- `ToPython` for Real vectors and all matrices (numpy), and `ItemIndexToPython<TItemIndex>`
+  (a list of the index kind);
+- `Conversion::NumpyToMatrix`/`NumpyToVector` for any matrix or vector class, so that
+  `ConstSizeMatrix` callers keep working.
+
+The code is the behaviour of the old helpers, written once instead of five times per index kind.
+One asymmetry of the old fixed-size matrix conversion is kept on purpose and commented: a list row
+of wrong length is silently skipped, a numpy row raises. In `PybindUtilities.h` the 35 helpers it
+covers were removed and re-added as one-line forwards in one marked block at the top of the
+namespace ("removed in 34c6"); nothing else in the file changed (1104 -> 682 lines). The string
+helpers now take `STDstring` instead of a template parameter, and the build confirmed no caller
+used anything else. Error texts are unchanged, except that the index messages are built from the
+kind name, so the `SensorIndex` array message no longer lists "SensorIndex" where the others list
+"MarkerIndex".
+
+**The first build gate was false (#2427, step 100):** `pip wheel .` compiled nothing after the
+header change - the `.pyd` had the md5 of the previous build - and the suite passed against the old
+binary. After deleting `build/temp.win-amd64-cpython-313` the full compile ran (49 s, new md5);
+`parameterConversionTest.py` 0 differences, full suite PASSED 19.0 s; `regenerate.py --check` is
+not affected (no generator change).
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving

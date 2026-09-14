@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.52.dev1, 
 +  last change =  2026-09-14, 
-+  Number of issues = 2424, 
++  Number of issues = 2428, 
 +  Number of resolved issues = 2125 (52 in current version), 
 
 ************
@@ -7050,6 +7050,11 @@ Version 0.1
 Open issues
 ***********
 
+ * **open issue 2426:** item classes reject their own default values
+    - issue author: Claude-JG
+    - description:  Recorded by parameterConversionTest.py (step 34c1): 17 itemInterface classes raise ValueError when created with their defaults - e.g. MarkerNodeCoordinate(): coordinate=InvalidIndex() fails CheckForValidUInt; ObjectANCFThinPlate cannot be created with defaults in C++ either. The defaults carry two meanings: an index set later (closing a loop; valid only at CheckPreAssembleConsistency) and a value that must be given at creation (MarkerNodeCoordinate.coordinate; a default 0 would be dangerous). Suggestion: constructors never range-check an InvalidIndex() default; a new member flag in definitions/ marks must-be-given parameters and Add<Kind> raises for them in C++ naming item and parameter (same statement as the user line); set-later indices stay with CheckPreAssembleConsistency. Plan step 99.
+    - date raised: 2026-09-14 
+
  * **open issue 2423:** every C++ user error inspects the Python source for its file and line
     - issue author: Claude-JG
     - description:  PyError and PyWarning call PyGetCurrentFileInformation (src/Main/Stdoutput.cpp:259); which calls inspect.getframeinfo - that resolves the module by scanning sys.modules and reads the source file. The cost grows with the number of imported modules: the ~38000 probe errors of parameterConversionTest.py (step 34c1) took 1 s standalone and 9 s inside runTestSuite.py after scipy; matplotlib and ngsolve were imported. It matters wherever errors are caught in a loop (parameter studies; try/except in user code). The frame alone (f_code.co_filename; f_lineno) gives the same information without the scan. Plan step 96.
@@ -8214,6 +8219,21 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2427:` the wheel build reuses stale object files after a header-only change
+    - issue author: Claude-JG
+    - description:  setuptools recompiles a .cpp only when the .cpp is newer than its .obj; it does not track included headers. Found in step 34c2: after rewriting src/Pymodules/PybindUtilities.h (included by 35 files) pip wheel . -w dist finished and produced an exudynCPP .pyd with the same md5 as the previous build in build/lib.win-amd64-cpython-313 - nothing was compiled; the test suite then passed against the old binary. Only deleting build/temp.win-amd64-cpython-313 forced the full compile (49 s). So the build gate proves nothing for header-only changes. Fix options: pass depends= (all headers or the include graph) to the Extension so setuptools compares them; or have the gate remove build/temp first. Plan step 100.
+    - date raised: 2026-09-14 
+
+ * :textred:`open BUG 2425:` item indices are accepted by float and bool parameters
+    - issue author: Claude-JG
+    - description:  Recorded by parameterConversionTest.py (step 34c1): float parameters (e.g. LoadCoordinate.load - SimulationSettings.solutionSettings.sensorsWritePeriod) accept a NodeIndex or ObjectIndex and store its number; bool parameters accept them as well. Maintainer decision 2026-09-14: reject them where this is simple. Applied with the unified conversion (34c4/34c5) as its own reference change. Plan step 98.
+    - date raised: 2026-09-14 
+
+ * :textred:`open BUG 2424:` None is silently converted when written into item and structure parameters
+    - issue author: Claude-JG
+    - description:  Recorded by parameterConversionTest.py (step 34c1): every bool parameter accepts None and reads back False; index arrays - Vector3DList - Matrix3DList and PyMatrixContainer parameters accept None and read back empty. Maintainer decision 2026-09-14: None shall raise instead of converting unexpectedly; the test suite shows whether any model relies on it. Applied with the unified conversion (34c4/34c5) as its own reference change. Plan step 97.
+    - date raised: 2026-09-14 
 
  * :textred:`open BUG 2415:` a changed class description never reaches the generated headers
     - issue author: Claude-JG
