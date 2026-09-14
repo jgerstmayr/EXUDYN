@@ -1946,6 +1946,17 @@ documentation half (2320 lines at the start of 2b, 842 now).
 - The previous commit (`14cbacb`) accidentally removed the `## Resolved facts` heading below; it
   is restored here.
 
+**Done 2026-09-14, step 33 part 2b - `pythonAutoGenerateObjects.py` is deleted.** Its last three
+outputs moved: `objectFactoryAutoReg.h` into `itemHeaderEmitter.py` (the item list for the
+registration templates now comes from `definitions/` in definition order), the mini examples
+into `miniExampleEmitter.py` (it needs only `miniExample` and reads it directly), and the
+reference documentation - item RST, `itemDefinition.tex`, `confHelperItems.py` - into
+`itemDocsEmitter.py`, which is the remainder of the old file with `main()` instead of a
+module-level `try`. The docs emitter keeps the old string records: step 50 replaces that pipeline
+as a whole. `tools/regenerate.py` runs the four item emitters in its place; `--check` no-op;
+deleting each of the six outputs and running only the emitters recreates them identically; full
+test suite PASSED. Part 2b is complete; the item side has no hidden script ordering left.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving

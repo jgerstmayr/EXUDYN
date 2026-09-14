@@ -366,8 +366,7 @@ Regenerate with `python tools/regenerate.py` (add `--check` to fail on Tier 1 dr
 `definitions/`, runs every generator and emitter in the required order from any directory, and
 reports Tier 1 (plan §4.2) and Tier 2 (plan §4.3) differences. The order lives in one place, its
 `generatorScripts` list — do not run the scripts by hand: step 33 is moving outputs from the old
-generators to separate emitters (`itemInterface.py` is already written by
-`tools/generators/itemInterfaceEmitter.py`, no longer by `pythonAutoGenerateObjects.py`).
+generators to separate emitters in `tools/generators/` (all item outputs already are).
 `makeAllBinariesScripts.py` is not part of it; it writes only a volatile build date.
 
 Two measured caveats (2026-09-09, plan §3 facts 11 and 13):

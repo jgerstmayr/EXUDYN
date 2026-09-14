@@ -37,9 +37,11 @@ from autoGenerateHelper import IsEqualIgnoringDateStrings
 
 #the generators, in the order they must run; every one is executed from GENERATOR_DIR
 generatorScripts = [
-    'pythonAutoGenerateObjects.py',
-    '../../tools/generators/itemInterfaceEmitter.py',   #step 33 part 2b: split out of the line above
-    '../../tools/generators/itemHeaderEmitter.py',      #step 33 part 2b: split out of the objects generator
+    #the item emitters; together they replace pythonAutoGenerateObjects.py (step 33, part 2b)
+    '../../tools/generators/itemHeaderEmitter.py',
+    '../../tools/generators/itemInterfaceEmitter.py',
+    '../../tools/generators/miniExampleEmitter.py',
+    '../../tools/generators/itemDocsEmitter.py',
     'pythonAutoGenerateSystemStructures.py',
     'autoGeneratePyBindings.py',
     'utilitiesDocuGenerator.py',

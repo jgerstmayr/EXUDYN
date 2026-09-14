@@ -451,7 +451,7 @@ index.rst
 
 | path | produced by |
 |---|---|
-| `docs/RST/items/` | `pythonAutoGenerateObjects.py` |
+| `docs/RST/items/` | `tools/generators/itemDocsEmitter.py` |
 | `docs/RST/structures/` | `pythonAutoGenerateSystemStructures.py` |
 | `docs/RST/cInterface/` | `autoGeneratePyBindings.py` |
 | `docs/RST/pythonUtilities/` | `utilitiesDocuGenerator.py` |
@@ -1015,7 +1015,11 @@ The core investment. Every step is validated byte-for-byte by step 2.
        Sub-steps, each its own commit behind the byte-identity gate:
        - **2a - no cwd dependency. DONE 2026-09-14.** `generatorPaths.py`; all generators run
          from any directory (verified from an unrelated one: no drift, nothing written there).
-       - **2b - item emitters.** *In progress:* `itemInterface.py` DONE 2026-09-14
+       - **2b - item emitters. DONE 2026-09-14; `pythonAutoGenerateObjects.py` is deleted.**
+         `itemHeaderEmitter.py` (C/Main/Visu headers, user-function headers,
+         `objectFactoryAutoReg.h`), `itemInterfaceEmitter.py`, `miniExampleEmitter.py`,
+         `itemDocsEmitter.py` (item RST, `itemDefinition.tex`, `confHelperItems.py`).
+         History: `itemInterface.py` DONE 2026-09-14
          (`tools/generators/itemInterfaceEmitter.py`, shared facts in `itemModel.py`); item C++
          headers DONE 2026-09-14 (`itemHeaderEmitter.py`; its moved code still reads the old
          string records through `itemModel.LegacyItems()` - replacing them with direct member

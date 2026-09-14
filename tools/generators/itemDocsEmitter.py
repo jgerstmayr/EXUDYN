@@ -1,12 +1,32 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri May 18 08:53:30 2018
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN maintainer tool
+#
+# Details:  Emits the item reference documentation from definitions/: docs/theDoc/itemDefinition.tex,
+#           docs/RST/items/*.rst with their index files, and docs/RST/confHelperItems.py (revision
+#           plan step 33, part 2b). This is what remained of src/pythonGenerator/
+#           pythonAutoGenerateObjects.py once its C++ headers, itemInterface.py and mini examples
+#           had their own emitters; the code is unchanged apart from the moves. It reads the old
+#           string records (definitionLoader), which is acceptable here: step 50 replaces the
+#           LaTeX/RST documentation pipeline as a whole.
+#
+# Usage:    python tools/generators/itemDocsEmitter.py
+#
+# Author:   Johannes Gerstmayr
+# Date:     2018-05-18 (created as pythonAutoGenerateObjects.py), 2026-09-14 (emitter)
+# Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-@author: Johannes Gerstmayr
+import os
+import sys
 
-goal: automatically generate interfaces for structures
-currently: automatic generate structures with ostream and initialization
-"""
+toolsDirectory = os.path.dirname(os.path.abspath(__file__))
+if toolsDirectory not in sys.path:
+    sys.path.insert(0, toolsDirectory)
+#the shared text helpers still live with the old generators until step 33 part 2g moves them
+generatorDirectory = os.path.normpath(os.path.join(toolsDirectory, '..', '..', 'src', 'pythonGenerator'))
+if generatorDirectory not in sys.path:
+    sys.path.insert(0, generatorDirectory)
 
 from autoGenerateHelper import GenerateLatexStrKeywordExamples, ExtractExamplesWithKeyword, RemoveSpacesTabs, CountLines, \
     TypeConversion, GenerateHeader, SplitString, Str2Latex, DefaultValue2Python, Str2Doxygen, GetDateStr, GetTypesStringLatex, \
@@ -17,9 +37,6 @@ import copy
 import os
 import io #RST files written as UTF-8
 from exudynVersion import exudynVersionString
-#the input is definitions/ at the repository root, read through definitionLoader, which
-#lives with the new generator code in tools/generators/ (revision plan step 33)
-import sys
 import generatorPaths as paths
 import definitionLoader
 
@@ -41,56 +58,6 @@ from itemModel import possibleTypes, useNewUserFunctions, pyFunctionTypeConversi
     IsASimpleMatrix, IsAMatrixVectorSpecial, IsAArrayIndex, IsASetSafelyParameter, \
     GetSetSafelyFunctionName, ConvertParameter2Python, IsInternalSetGetParameter, IsTypeWithRangeCheck, \
     IsItemIndex, ExtractLatexSymbol
-
-#function which writes the mini examples for every item into a separate file
-def WriteMiniExample(className, miniExample):
-    s=''
-    # s+= '#+++++++++++++++++++++++++++++++++++++++++++\n'
-    # s+= '# Mini example for class ' + className + '\n'
-    # s+= '#+++++++++++++++++++++++++++++++++++++++++++\n\n'
-    
-    s+= '#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n'
-    s+= '# This is an EXUDYN example\n'
-    s+= '# \n'
-    s+= '# Details:  Mini example for class ' + className + '\n'
-    s+= '# \n'
-    s+= "# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.\n"
-    s+= '# \n'
-    s+= '#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n'
-
-    s+= 'import sys\n'
-    s+= "sys.path.append('../TestModels')\n"
-    s+= "sys.path.append('../../TestModels') #for direct run in directory\n\n"
-    s+= 'import exudyn as exu\n'
-
-    s+= 'from exudyn.utilities import *\n'
-    s+= 'import exudyn.graphics as graphics\n\n'
-    s+= 'from modelUnitTests import ExudynTestStructure, exudynTestGlobals\n'
-    s+= 'import numpy as np\n'
-    s+= '\n'
-    s+= '#create an environment for mini example\n'
-    s+= 'SC = exu.SystemContainer()\n'
-    s+= 'mbs = SC.AddSystem()\n'
-    s+= '\n'
-    s+= 'oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))\n'
-    s+= 'nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))\n'
-    s+= '\n'
-    # s+= 'testError=1 #set default error, if failed\n'
-    #s+= 'exu.Print("start mini example for class ' + className + '")\n'
-    #s+= 'try: #puts example in safe environment\n'
-    #s+= miniExample
-    s+= RemoveIndentation( miniExample, removeAllSpaces=False)
-    s+= '\n'
-    #s+= 'except BaseException as e:\n'
-    #s+= space4+'exu.Print("An error occured in test example for ' + className + ':", e)\n'
-    #s+= 'else:\n'
-    #s+= space4+'exu.Print("example for ' + className + ' completed, test result =", exudynTestGlobals.testResult)\n'
-    s+= 'exu.Print("example for ' + className + ' completed, test result =", exudynTestGlobals.testResult)\n'
-    s+= '\n'
-    
-    fileExample=open(paths.testModelsDir+'MiniExamples/'+className+'.py','w',encoding='utf8') 
-    fileExample.write(s)
-    fileExample.close()
 
 
 def RemoveIndentation2(text, addSpaces = '', removeAllSpaces = True, removeIndentation = True):
@@ -144,8 +111,6 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     fileWriteCnt+=1
 
     classStr = parseInfo['class']
-    if len(parseInfo['miniExample']) != 0:
-        WriteMiniExample(parseInfo['class'], parseInfo['miniExample'])
 
     classTypeStr = parseInfo['classType']
     sTypeName = classStr.replace(classTypeStr,'')
@@ -419,7 +384,7 @@ def WriteFile(parseInfo, parameterList, typeConversion):
 #************************************************
     
 
-try: #still close file if crashes
+def main():
     #create Python/pybind11 file; currently not used ...
     #    pybindFile = 'pybind_objects.h'
     #    file=open(pybindFile,'w')  #clear file by one write access
@@ -556,7 +521,6 @@ try: #still close file if crashes
     sLatexItemList = '' #Latex string containing list of items
     #++++++++++++++++++++++++++    
     
-    miniExamplesList = []    #generate file list for mini examples
     multiLineReading = False #for equations and miniExample
     multiLineString = '' #stored string from multiline reading
     multiLineType = ''   #equations or miniExample
@@ -621,8 +585,6 @@ try: #still close file if crashes
 
             # print('item=',parseInfo['class'], ', typeInd=',typeInd,',objType=', oType, ', indexGlobal=', indexLatexGlobal)
 
-        if len(parseInfo['miniExample']) != 0:
-            miniExamplesList += [parseInfo['class']+'.py']
 
         #++++++++++++++++++++++++++++++
         #++++++++++++++++++++++++++++++
@@ -661,21 +623,6 @@ For description of types (e.g., the meaning of \texttt{Vector3D} or \texttt{Nump
         fileLatex.write(sLatexGlobal[it])
     
     fileLatex.close()
-
-    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #write Mini examples
-    fileExampleList=open(paths.testModelsDir+'MiniExamples/miniExamplesFileList.py','w',encoding='utf8') 
-    s = '#this file provides a list of file names for mini examples\n'
-    s+= '\n'
-    s+= 'miniExamplesFileList = ['
-    sepStr = ''
-    for item in miniExamplesList:
-        s+= sepStr + "'" + item + "'"
-        sepStr=',\n'
-    s+= ']\n'
-    s+= '\n'
-    fileExampleList.write(s)
-    fileExampleList.close()
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -759,83 +706,11 @@ Reference manual for: objects, nodes, markers, loads and sensors
     with open(exuDir+'confHelperItems.py', 'w',encoding='utf8') as f:
         f.write(sConfHelper)
 
-    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #files and structures for autoregistration of items
-    from autoGenerateHelper import minimalItemsList
-    excludeItemsList=[]
-    
-    templateItemSDAutoReg="""
-bool MainObject{classNamePure}IsRegistered = ClassFactoryItemsSystemData<Main{itemType}>::Get().RegisterClass("{classNamePure}", [](CSystemData* cSystemData)
-	{ //AUTO: 
-		C{itemType}* c{itemType} = new C{itemType}{classNamePure}();
-		c{itemType}->SetCSystemData(cSystemData);
-		MainObject* object = new MainObject{classNamePure}(); //new main object
-		object->SetC{itemType}(c{itemType});
-		VisualizationObject{classNamePure}* vObject = new VisualizationObject{classNamePure}();
-		object->SetVisualizationObject(vObject);
-		return object;
-	});
-"""
-    templateItemAutoReg="""
-bool Main{itemType}{classNamePure}IsRegistered = ClassFactoryItem<Main{itemType}>::Get().RegisterClass("{classNamePure}", []
-	{ //AUTO: 
-		C{itemType}{classNamePure}* cItem = new C{itemType}{classNamePure}();							//new point {itemType}
-		Main{itemType}* item = new Main{itemType}{classNamePure}(); //new main item
-		item->SetC{itemType}(cItem);
-		Visualization{itemType}{classNamePure}* vItem = new Visualization{itemType}{classNamePure}();
-		item->SetVisualization{itemType}(vItem);
-		return item;
-	});
-"""
-    templateNodeAutoReg="""
-bool Main{itemType}{classNamePure}IsRegistered = ClassFactoryItemsSystemData<Main{itemType}>::Get().RegisterClass("{classNamePure}", [](CSystemData* cSystemData)
-	{ //AUTO: 
-		C{itemType}{classNamePure}* cItem = new C{itemType}{classNamePure}();							//new point {itemType}
-		cItem->GetCData() = &(cSystemData->GetCData()); //add CData reference to CNode
-		Main{itemType}* item = new Main{itemType}{classNamePure}(); //new main item
-		item->SetC{itemType}(cItem);
-		Visualization{itemType}{classNamePure}* vItem = new Visualization{itemType}{classNamePure}();
-		item->SetVisualization{itemType}(vItem);
-		return item;
-	});
-"""
-    sAutoRegMinimal = ''
-    sAutoReg = ''
-    for key, value in globalItemsDict.items():
-        for key1, value1 in value.items():
-            fullName = key+key1
-            if fullName in excludeItemsList:
-                continue
-            if key == 'Object':
-                code = templateItemSDAutoReg.replace('{classNamePure}',key1).replace('{itemType}',key)
-            elif key == 'Node':
-                code = templateNodeAutoReg.replace('{classNamePure}',key1).replace('{itemType}',key)
-            else:
-                code = templateItemAutoReg.replace('{classNamePure}',key1).replace('{itemType}',key)
-            if fullName in minimalItemsList:
-                sAutoRegMinimal += code
-            else:
-                sAutoReg += code
-            
+    print('total parameters converted:', parameterCnt)
+    return 0
 
-    fileAutoReg = paths.autogeneratedDir+'objectFactoryAutoReg.h'
-    with open(fileAutoReg,'w',encoding='utf8') as f:
-        f.write('/** **************************************\n')
-        f.write('* @brief        autogenerated registration variables for items\n')
-        f.write('* @author       Gerstmayr Johannes\n')
-        f.write('* @date         2024-02-21 (first created)\n')
-        f.write('****************************************** */\n')
-        f.write('//AUTO: do not modify\n\n')
-        f.write(sAutoRegMinimal+'\n')
-        f.write('#ifndef EXUDYN_MINIMAL_COMPILATION\n')
-        f.write(sAutoReg+'\n')
-        f.write('#endif //EXUDYN_MINIMAL_COMPILATION\n\n')
 
-#%%
-finally:    
-    file.close()
-
-print('total parameters converted:', parameterCnt)
+if __name__ == '__main__':
+    sys.exit(main())
 
 
