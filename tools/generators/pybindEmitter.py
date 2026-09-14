@@ -38,6 +38,7 @@ if definitionsDirectory not in sys.path:
     sys.path.insert(0, definitionsDirectory)
 
 import generatorPaths as paths                                                          # noqa: E402
+import enumEmitter                                                                      # noqa: E402
 import outputVariableEmitter                                                            # noqa: E402
 from autoGenerateHelper import PyLatexRST, GetDateStr, WriteTextIfDifferent             # noqa: E402
 from autoGenerateHelper import localListFunctionNames, localListClassNames, localListEnumNames  # noqa: E402
@@ -104,8 +105,9 @@ def main():
     plrmain = PyLatexRST('','', '')
     replay(Declarations('pybindGeneralInformation').pb.calls, plrmain)
 
-    #the OutputVariableType registrator owns the enum and writes its C++ header
+    #the OutputVariableType registrator owns the enum and writes its C++ header; enumEmitter writes EnumTypes.h
     outputVariableEmitter.EmitHeader()
+    enumEmitter.EmitHeader()
 
     plr = PyLatexRST('','', '')
     replay(Declarations('pybindEnums').pb.calls, plr)
