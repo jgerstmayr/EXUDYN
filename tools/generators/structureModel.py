@@ -1,0 +1,316 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN maintainer tool
+#
+# Details:  Shared facts of the structure emitters (structureHeaderEmitter.py, structureStubEmitter.py,
+#           structureDocsEmitter.py): type tables, predicates on classes and parameters, the
+#           sorted parameter list, typical paths and the old string records of every structure,
+#           rendered from definitions/ by definitionLoader. Moved out of
+#           src/pythonGenerator/pythonAutoGenerateSystemStructures.py (revision plan step 33, part 2c).
+#           The string records are replaced by direct member access in plan step 34.
+#
+# Usage:    import structureModel as sm
+#
+# Author:   Johannes Gerstmayr
+# Date:     2018-05-18 (created as pythonAutoGenerateSystemStructures.py), 2026-09-14 (structureModel.py)
+# Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import os
+import sys
+
+toolsDirectory = os.path.dirname(os.path.abspath(__file__))
+if toolsDirectory not in sys.path:
+    sys.path.insert(0, toolsDirectory)
+#the shared text helpers still live with the old generators until step 33 part 2g moves them
+generatorDirectory = os.path.normpath(os.path.join(toolsDirectory, '..', '..', 'src', 'pythonGenerator'))
+if generatorDirectory not in sys.path:
+    sys.path.insert(0, generatorDirectory)
+
+import copy
+
+import generatorPaths as paths                                          # noqa: E402,F401
+import definitionLoader                                                 # noqa: E402
+from autoGenerateHelper import CountLines, TypeConversion, Str2Latex, Str2Doxygen, GetDateStr, \
+                               PyLatexRST, WriteTextIfDifferent, DocStringGoogleFromPlainText  # noqa: E402,F401
+
+sortStructures = True
+ADD_DOCSTRINGS = True
+    
+typeCasts = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt':'Index', 
+             'UReal':'Real',  'PReal':'Real', 'UFloat':'float',  'PFloat':'float', 
+             'Vector':'std::vector<Real>', 'Vector3D':'std::vector<Real>', #'Matrix':'Matrix', 'SymmetricMatrix':'Matrix', 
+             'ArrayIndex':'std::vector<Index>', 'ArrayFloat':'std::vector<float>', 'String':'std::string', 'FileName':'std::string',
+             'Float2': 'std::array<float,2>', 'Float3': 'std::array<float,3>', 'Float4': 'std::array<float,4>',  #e.g. for OpenGL vectors
+             'Float9': 'std::array<float,9>', 'Float16': 'std::array<float,16>', #e.g. for OpenGL rotation matrix and homogenous transformation
+             'UInt2': 'std::array<Index,2>', 'UInt3': 'std::array<Index,3>', 'UInt4': 'std::array<Index,4>', 
+             'Index2': 'std::array<Index,2>', 'Index3': 'std::array<Index,3>', 'Index4': 'std::array<Index,4>', 
+             'KeyPressUserFunction': 'std::function<bool(int, int, int)>',
+             'Matrix3D': 'std::array<std::array<Real,3>,3>',
+             'Matrix6D': 'std::array<std::array<Real,6>,6>',
+             'Vector2DList': 'PyVector2DList',
+             } #convert parameter types to C++/Exudyn types
+
+#conversion rules for dictionary 'type'; this type conversion adds rules for the user's values in the dictionary
+convertToDict = {'ResizableVector':'Vector', 'StdArray33F':'MatrixFloat', 
+                 'NumpyVector':'Vector', 'NumpyMatrix':'Matrix', 
+                'Index2':'IndexArray', 'Index4':'IndexArray', 
+                'ArrayIndex':'IndexArray', 'ArrayFloat':'VectorFloat',
+                'Float4':'VectorFloat', 'Float3':'VectorFloat' #,'String':'std::string'
+                }
+
+
+#convert special size parameters:
+sizeParameterConvert = {'3x3':'9', '2x2':'4'} 
+
+#check if this helps improving type completion:
+addDocuClass = True  #add doc string for classes
+addDocuMember = True #add doc string for member variables
+
+#return True for types, which get a range check and does a .def_property access in pybind and a set/get function
+def IsTypeWithRangeCheck(origType):
+    if (origType.find('PInt') != -1 or origType.find('UInt') != -1 or 
+        origType.find('PReal') != -1 or origType.find('UReal') != -1 or
+        origType.find('PFloat') != -1 or origType.find('UFloat') != -1
+        ):
+        return True
+    return False
+
+#return True for types, which need a .def_property access in pybind and a set/get function
+def IsTypeWithSetGetFunction(origType):
+    if (origType.find('Matrix3D') != -1 or
+        origType.find('Matrix6D') != -1 or
+        origType.find('Vector2DList') != -1 or
+        origType.find('KeyPressUserFunction') != -1 
+        ):
+        return True
+    return False
+
+
+settingsClassName2member = {'ContourAdvanced':'advanced','ViewAdvanced':'advanced',
+                            'GeneralAdvanced':'advanced','OpenGLAdvanced':'advanced',
+                            'RaytracerAdvanced':'advanced','InteractiveAdvanced':'advanced',
+                            'WindowDeprecated':'window',
+                            'TimeIntegrationSettings':'timeIntegration', 
+                            'StaticSolverSettings':'staticSolver', 
+                            'ExplicitIntegrationSettings':'explicitIntegration', 
+                            'GeneralizedAlphaSettings':'generalizedAlpha',
+                            'NewtonSettings':'newton', 
+                            'DiscontinuousSettings':'discontinuous', 
+                            'NumericalDifferentiationSettings':'numericalDifferentiation',
+                            }
+#convert settings class name like Contour into contour
+def ConvertClassName2member(className):
+    className = className.replace('VSettings','') #fixes name prefix for all visualization settings
+    if className in settingsClassName2member.keys():
+        finalName = settingsClassName2member[className]
+    else:
+        finalName = className[0:1].lower() + className[1:] #also works for empty strings
+    return finalName
+
+#remove special latex commands from string, especially for pybind descriptions
+def RemoveLatexCommands(s):
+    s = s.replace('\\hac{ODE2}','ODE2')
+    s = s.replace('\\hac{ODE1}','ODE1')
+    s = s.replace('\\hac{AE}','AE')
+    return s
+
+def ClassHasGetSetDictionary(className):
+    return (className.find('Solver') == -1 
+        or className == 'StaticSolverSettings'
+        or className == 'LinearSolverSettings')
+
+def ClassHasBackLink(className):
+    return (className == 'VisualizationSettings'
+            or className.startswith('VSettings'))
+
+def TopClassName(className):
+    if className.startswith('VSettings') or className == 'VisualizationSettings':
+        return 'VisualizationSettings'
+    else:
+        return ''
+    
+#if it is a substructure, return True; if topclass, return False
+def HasTopClass(className):
+    return TopClassName(className) != className
+
+#just extract and evaluate cflag
+def IsDeprecatedParameter(parameter):
+    return (parameter['cFlags'].find('X') != -1)
+
+#just extract and evaluate cflag
+def IsStructureParameter(parameter):
+    return (parameter['cFlags'].find('S') != -1)
+
+#convert parameter to deprecation version and expiration data
+def DParameter2VersionExpiration(parameter):
+    changedInfo = parameter['defaultValue'] #workaround; contains 'version;EXP=....' where in EXP, the expire year is noted where the deprecated parameter will be removed
+    if len(changedInfo.split(';')) < 2 or 'EXP=' not in changedInfo:
+        raise ValueError('VersionExpiration: parameter '+str(parameter) + 'has illegal version')
+    version = changedInfo.split(';')[0]
+    expDate = changedInfo.split(';')[1].replace('EXP=','')
+    return (version, expDate)
+    
+
+#extract parameterdescription depending on deprecated status (then it is the re-link)
+def ParameterDescription(parameter):
+    IDP = IsDeprecatedParameter(parameter)
+    return 'DEPRECATED; Instead use '*IDP + parameter['parameterDescription']
+
+def ParameterChanges2LatexRST(parameterChangesList, latexStr, rstStr):
+    if len(parameterChangesList):
+        text = '\nThe following parameter changes have been made:\n'
+        latexStr += text
+        rstStr += text+'\n'
+        latexStr += '\\bi\n'
+        for param in parameterChangesList:
+            latexStr += '  \\item '
+            latexStr += param[0].replace('visualizationSettings.','')+' $\\ra$ '
+            latexStr += param[1].replace('visualizationSettings.','')
+            text = ' (changed in version '+param[2]+', expires: '+param[3]+')\n'
+            latexStr += text
+            rstStr += '  - ' + param[0]+' → '+param[1]+text
+        latexStr += '\\ei\n'
+        rstStr += '\n'
+        # print(rstStr[-200:])
+    return (latexStr, rstStr)
+
+
+def ParameterDescription2DocString(text):
+    if text.strip().startswith('$'): #formula at beginning
+        listStrip = text.split('$')
+        if len(listStrip) > 2: 
+            text = '$'.join(listStrip[2:])
+    return text
+
+
+#convert parameter types to C++/Exudyn types
+typeConversion = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt':'Index', 
+                  'UReal':'Real', 'PReal':'Real', 'UFloat':'float',  'PFloat':'float', 
+                  'Vector':'Vector', 
+                  'Matrix':'Matrix', 'SymmetricMatrix':'Vector', 
+                  'NumpyMatrix':'py::array_t<Real>', 'NumpyVector':'py::array_t<Real>', 
+                  'String':'std::string', 'FileName':'std::string',
+                  'KeyPressUserFunction': 'std::function<bool(int, int, int)>'} #convert parameter types to C++/EXUDYN types
+
+#conversion for stub files
+typeConversionStub = {'Bool':'bool', 'Int':'int', 'Index':'int', 'UInt':'int', 'PInt':'int', 
+                  'Real':'float', 'UReal':'float', 'PReal':'float', 'UFloat':'float',  'PFloat':'float', 
+                  'Float3':'Tuple[float,float,float]', 
+                  'Float4':'Tuple[float,float,float,float]', 'Vector':'List[float]', 
+                  'Matrix':'ArrayLike', 'Matrix3D':'ArrayLike', 'Matrix6D':'ArrayLike', 
+                  'SymmetricMatrix':'ArrayLike', 
+                  'NumpyMatrix':'ArrayLike', 'NumpyVector':'ArrayLike', 'StdArray33F':'ArrayLike',
+                  'String':'str', 'FileName':'str', 'Index2':'Tuple[int,int]', 
+                  'KeyPressUserFunction': 'Any',
+                  'std::string':'str', 'void':'None', 
+                  'ArrayIndex':'List[int]','ArrayFloat':'List[float]',
+                  } #conversion for stub files
+
+#the old string records (parseInfo, parameterList) of the structures, in definition order
+parseInfoTemplate = {'class':'',            # C++ class name
+             'writeFile':'',        #filename (e.g. SensorData.h)
+             'appendToFile':'',     #True, if shall be appended to given file
+             'writePybindIncludes':'',#True, if pybind11 includes shall be written for this class
+             'addDictionaryAccess':'',#True, if dictionary access function should be added via pybind
+             'pythonClass':'',      #name of class in Python or empty
+             'parentClass':'',      #name of parent class or empty
+             'classDescription':'', #add a (brief, one line) description of class
+             'addConstructor':'',   #code added at the end of default constructor
+             'linkedClass':'',      #if not empty, this is a class member to which the python interface is linked
+             'latexText':'',        #text, which will be added before the class description (e.g., to start a new section)
+             'typicalPaths':None,   #comma-separated typical paths
+             'cppText':''}          #code which is added before class definition
+lineDefinition = ['lineType',       #[V|F[v]]P: V...Value (=member variable), F...Function (access via member function); v ... virtual Function; P ... write Pybind11 interface
+                  'pythonName',     #name which is used in python
+                  'cplusplusName',     #name which is used in Exudyn (leave empty if it is the same)
+                  'size',           #leave empty if size is variable; e.g. 3 (size of vector), 2x3 (2 rows, 3 columns)  %used for vectors and matrices only!
+                  'type',           #Bool, Int, Real, UInt, UReal, Vector, Matrix, SymmetricMatrix
+                  'defaultValue',   #default value for member variable or function definition
+                  'args',           #args for functions
+                  'cFlags',         #P(add Pybind11 interface), R(read only), M(modifiableDuringSimulation), C...const function, D...definition only [default is read/write access and that changes are immediately applied and need no reset of the system]
+                  'parameterDescription'] #description for parameter used in C++ code
+
+
+def LegacyStructures():
+    """yield (parseInfo, parameterList) for every structure, as the old line parser built them"""
+    return definitionLoader.LoadStructureDefinitions(copy.deepcopy(parseInfoTemplate), lineDefinition)
+
+
+def PythonClassName(parseInfo):
+    pythonClass = parseInfo['class']
+    if parseInfo['pythonClass'] != '':
+        pythonClass = parseInfo['pythonClass']
+    return pythonClass
+
+
+def SortedParameters(parameterList):
+    #create sorted parameter list; distinguish between structures (cFlags have 'S') and values: adds 0/1 before name for sorting ...
+    parameterListSorted=sorted(parameterList, 
+                               key=lambda d: str(int(d['cFlags'].find('S')==-1))+d['pythonName'].upper())
+    if not sortStructures:
+        parameterListSorted = parameterList 
+    return parameterListSorted
+
+
+def HasPybindInterface(parseInfo, parameterList):
+    """True if the structure has member variables in the Python interface; only those are documented"""
+    hasPybindInterface = False
+    for parameter in parameterList:
+        if (parameter['lineType'].find('V') != -1) and (parameter['cFlags'].find('P') != -1): #only if it is a member variable
+            hasPybindInterface = True
+
+    if (parseInfo['class'] == 'SolverLocalData'
+        #or parseInfo['class'] == 'SolverFileData'
+        ):
+        hasPybindInterface = False
+    return hasPybindInterface
+
+
+def TypicalPaths(parseInfo):
+    """the typical access paths of a structure in Python, e.g. ['SC.visualizationSettings.nodes']"""
+    typicalPaths = []
+    if parseInfo['typicalPaths'] != None:
+        typicalPaths = parseInfo['typicalPaths']
+        class2name = parseInfo['class']
+
+        if class2name.endswith('View'):
+            typicalPaths += '.view'
+            class2name = ''
+            
+        if typicalPaths.endswith('.view'):
+            oldTypicalPath = typicalPaths
+            typicalPaths = ''
+            sep = ''
+            for i in range(4):
+                typicalPaths += sep + oldTypicalPath.replace('.view','.view'+str(i))
+                sep = ','
+
+        class2name = ConvertClassName2member(class2name)
+        
+        #remove Settings from structure:
+        # conv = ['TimeIntegrationSettings', 'StaticSolverSettings', 'ExplicitIntegrationSettings', 'GeneralizedAlphaSettings',
+        # 'NewtonSettings', 'DiscontinuousSettings', 'NumericalDifferentiationSettings']
+        # for c in conv:
+        #     if c in class2name:
+        #         class2name = class2name.replace('Settings','')
+        
+        typicalPaths = typicalPaths.split(',')
+        for i in range(len(typicalPaths)):
+            typicalPaths[i] += '.' if (typicalPaths[i]!='' and class2name!='') else ''
+            typicalPaths[i] += class2name[0:1].lower() + class2name[1:]
+    return typicalPaths
+
+
+def ParameterChangesList(parseInfo, parameterListSorted, typicalPaths):
+    """old and new full path of every deprecated value parameter, with version and expiration"""
+    parameterChangesList = [] #old and new parameter (full path)
+    for parameter in parameterListSorted:
+        if IsDeprecatedParameter(parameter) and not IsStructureParameter(parameter): #for structures, there is no replacement; only for values
+            for path in typicalPaths:
+                oldParameterStr = path.replace('SC.','') +'.'+ parameter['pythonName']
+                baseParameter = oldParameterStr.split('.')[0]
+                newParameterStr = baseParameter+'.'+parameter['parameterDescription']
+                (version, expDate) = DParameter2VersionExpiration(parameter)
+                parameterChangesList.append([oldParameterStr, newParameterStr, version, expDate])
+    return parameterChangesList

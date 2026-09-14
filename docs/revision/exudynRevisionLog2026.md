@@ -1957,6 +1957,23 @@ as a whole. `tools/regenerate.py` runs the four item emitters in its place; `--c
 deleting each of the six outputs and running only the emitters recreates them identically; full
 test suite PASSED. Part 2b is complete; the item side has no hidden script ordering left.
 
+**Done 2026-09-14, step 33 part 2c - `pythonAutoGenerateSystemStructures.py` is deleted.** Its
+`WriteFile` built four outputs in two interleaved loops; the code moved line for line into
+`structureModel.py` (tables, predicates, the old string records) and three emitters:
+`structureHeaderEmitter.py` (structure headers with the deprecated-parameter implementations
+collected at `VisualizationSettings`, `DictionariesGetSet.h`, `pybind_modules.h`),
+`structureStubEmitter.py` and `structureDocsEmitter.py`. Two couplings had to be cut: the typical
+paths (computed in the documentation block, used by the C++ block for the parameter-change list)
+became `structureModel.TypicalPaths()`, and the docs emitter lists the parameter changes at
+`VisualizationSettings` whenever changes were collected, instead of whenever the C++ implementation
+string was non-empty - the same condition for the current definitions. Dropped: the export
+dictionary written to `systemStructuresData.npy` (no reader anywhere) with `convertToPython`, and
+the `SHOW_PARAMETER_CHANGES` debug print. `definitionLoader.py` is not deleted as 2c planned: item
+and structure emitters still read the old records through it until step 34. `--check` no-op with
+the generator removed; the stub, LaTeX and RST outputs recreated identically after deletion and the
+four C++ headers after corruption (`WriteTextIfDifferent` does not create missing files; only date
+lines differed); run from an unrelated directory; full test suite PASSED.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving

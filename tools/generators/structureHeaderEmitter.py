@@ -1,204 +1,41 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri May 18 08:53:30 2018
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN maintainer tool
+#
+# Details:  Emits the C++ structure headers (SimulationSettings.h, VisualizationSettings.h, ...),
+#           DictionariesGetSet.h and pybind_modules.h from definitions/ (revision plan step 33,
+#           part 2c). Moved out of src/pythonGenerator/pythonAutoGenerateSystemStructures.py; the
+#           output is byte-identical.
+#
+# Usage:    python tools/generators/structureHeaderEmitter.py
+#
+# Author:   Johannes Gerstmayr
+# Date:     2018-05-18 (created as pythonAutoGenerateSystemStructures.py), 2026-09-14 (emitter)
+# Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-@author: Johannes Gerstmayr
-
-goal: automatically generate interfaces for structures
-currently: automatic generate structures with ostream and initialization
-"""
-import datetime # for current date
-from autoGenerateHelper import RemoveSpacesTabs, CountLines, TypeConversion, GenerateHeader, SplitString, Str2Latex,\
-                               Str2Doxygen, GetDateStr, CutLinesFromString, PyLatexRST, IsEqualIgnoringDateStrings,\
-                               WriteTextIfDifferent, DocStringGoogleFromPlainText
-
-import copy
-import io
 import os
-import numpy as np
-from exudynVersion import exudynVersionString
-#the input is definitions/ at the repository root, read through definitionLoader, which
-#lives with the new generator code in tools/generators/ (revision plan step 33)
 import sys
-import generatorPaths as paths
-import definitionLoader
 
-SHOW_PARAMETER_CHANGES = False
-sortStructures = True
-ADD_DOCSTRINGS = True
-    
-typeCasts = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt':'Index', 
-             'UReal':'Real',  'PReal':'Real', 'UFloat':'float',  'PFloat':'float', 
-             'Vector':'std::vector<Real>', 'Vector3D':'std::vector<Real>', #'Matrix':'Matrix', 'SymmetricMatrix':'Matrix', 
-             'ArrayIndex':'std::vector<Index>', 'ArrayFloat':'std::vector<float>', 'String':'std::string', 'FileName':'std::string',
-             'Float2': 'std::array<float,2>', 'Float3': 'std::array<float,3>', 'Float4': 'std::array<float,4>',  #e.g. for OpenGL vectors
-             'Float9': 'std::array<float,9>', 'Float16': 'std::array<float,16>', #e.g. for OpenGL rotation matrix and homogenous transformation
-             'UInt2': 'std::array<Index,2>', 'UInt3': 'std::array<Index,3>', 'UInt4': 'std::array<Index,4>', 
-             'Index2': 'std::array<Index,2>', 'Index3': 'std::array<Index,3>', 'Index4': 'std::array<Index,4>', 
-             'KeyPressUserFunction': 'std::function<bool(int, int, int)>',
-             'Matrix3D': 'std::array<std::array<Real,3>,3>',
-             'Matrix6D': 'std::array<std::array<Real,6>,6>',
-             'Vector2DList': 'PyVector2DList',
-             } #convert parameter types to C++/Exudyn types
+toolsDirectory = os.path.dirname(os.path.abspath(__file__))
+if toolsDirectory not in sys.path:
+    sys.path.insert(0, toolsDirectory)
+#the shared text helpers still live with the old generators until step 33 part 2g moves them
+generatorDirectory = os.path.normpath(os.path.join(toolsDirectory, '..', '..', 'src', 'pythonGenerator'))
+if generatorDirectory not in sys.path:
+    sys.path.insert(0, generatorDirectory)
 
-#conversion rules for dictionary 'type'; this type conversion adds rules for the user's values in the dictionary
-convertToDict = {'ResizableVector':'Vector', 'StdArray33F':'MatrixFloat', 
-                 'NumpyVector':'Vector', 'NumpyMatrix':'Matrix', 
-                'Index2':'IndexArray', 'Index4':'IndexArray', 
-                'ArrayIndex':'IndexArray', 'ArrayFloat':'VectorFloat',
-                'Float4':'VectorFloat', 'Float3':'VectorFloat' #,'String':'std::string'
-                }
+import copy                                                             # noqa: E402
 
-#for LLMs
-convertToPython = {'Real': 'float',
-                   'std::string': 'str',
-                   'Index': 'int',
-                   'ResizableVectorParallel': 'numpy.ndarray',
-                   'std::vector<float>': 'numpy.ndarray',
-                   'std::array<Index,2>': '[int,int]',
-                   'std::array<float,3>': '[float,float,float]',
-                   'std::array<float,4>': '[float,float,float,float]',
-                   }
+from structureModel import *                                            # noqa: E402,F403
 
-#convert special size parameters:
-sizeParameterConvert = {'3x3':'9', '2x2':'4'} 
-
-#check if this helps improving type completion:
-addDocuClass = True  #add doc string for classes
-addDocuMember = True #add doc string for member variables
-
-#return True for types, which get a range check and does a .def_property access in pybind and a set/get function
-def IsTypeWithRangeCheck(origType):
-    if (origType.find('PInt') != -1 or origType.find('UInt') != -1 or 
-        origType.find('PReal') != -1 or origType.find('UReal') != -1 or
-        origType.find('PFloat') != -1 or origType.find('UFloat') != -1
-        ):
-        return True
-    return False
-
-#return True for types, which need a .def_property access in pybind and a set/get function
-def IsTypeWithSetGetFunction(origType):
-    if (origType.find('Matrix3D') != -1 or
-        origType.find('Matrix6D') != -1 or
-        origType.find('Vector2DList') != -1 or
-        origType.find('KeyPressUserFunction') != -1 
-        ):
-        return True
-    return False
-
-
-settingsClassName2member = {'ContourAdvanced':'advanced','ViewAdvanced':'advanced',
-                            'GeneralAdvanced':'advanced','OpenGLAdvanced':'advanced',
-                            'RaytracerAdvanced':'advanced','InteractiveAdvanced':'advanced',
-                            'WindowDeprecated':'window',
-                            'TimeIntegrationSettings':'timeIntegration', 
-                            'StaticSolverSettings':'staticSolver', 
-                            'ExplicitIntegrationSettings':'explicitIntegration', 
-                            'GeneralizedAlphaSettings':'generalizedAlpha',
-                            'NewtonSettings':'newton', 
-                            'DiscontinuousSettings':'discontinuous', 
-                            'NumericalDifferentiationSettings':'numericalDifferentiation',
-                            }
-#convert settings class name like Contour into contour
-def ConvertClassName2member(className):
-    className = className.replace('VSettings','') #fixes name prefix for all visualization settings
-    if className in settingsClassName2member.keys():
-        finalName = settingsClassName2member[className]
-    else:
-        finalName = className[0:1].lower() + className[1:] #also works for empty strings
-    return finalName
-
-#remove special latex commands from string, especially for pybind descriptions
-def RemoveLatexCommands(s):
-    s = s.replace('\\hac{ODE2}','ODE2')
-    s = s.replace('\\hac{ODE1}','ODE1')
-    s = s.replace('\\hac{AE}','AE')
-    return s
-
-def ClassHasGetSetDictionary(className):
-    return (className.find('Solver') == -1 
-        or className == 'StaticSolverSettings'
-        or className == 'LinearSolverSettings')
-
-def ClassHasBackLink(className):
-    return (className == 'VisualizationSettings'
-            or className.startswith('VSettings'))
-
-def TopClassName(className):
-    if className.startswith('VSettings') or className == 'VisualizationSettings':
-        return 'VisualizationSettings'
-    else:
-        return ''
-    
-#if it is a substructure, return True; if topclass, return False
-def HasTopClass(className):
-    return TopClassName(className) != className
-
-#just extract and evaluate cflag
-def IsDeprecatedParameter(parameter):
-    return (parameter['cFlags'].find('X') != -1)
-
-#just extract and evaluate cflag
-def IsStructureParameter(parameter):
-    return (parameter['cFlags'].find('S') != -1)
-
-#convert parameter to deprecation version and expiration data
-def DParameter2VersionExpiration(parameter):
-    changedInfo = parameter['defaultValue'] #workaround; contains 'version;EXP=....' where in EXP, the expire year is noted where the deprecated parameter will be removed
-    if len(changedInfo.split(';')) < 2 or 'EXP=' not in changedInfo:
-        raise ValueError('VersionExpiration: parameter '+str(parameter) + 'has illegal version')
-    version = changedInfo.split(';')[0]
-    expDate = changedInfo.split(';')[1].replace('EXP=','')
-    return (version, expDate)
-    
-
-#extract parameterdescription depending on deprecated status (then it is the re-link)
-def ParameterDescription(parameter):
-    IDP = IsDeprecatedParameter(parameter)
-    return 'DEPRECATED; Instead use '*IDP + parameter['parameterDescription']
-
-def ParameterChanges2LatexRST(parameterChangesList, latexStr, rstStr):
-    if len(parameterChangesList):
-        text = '\nThe following parameter changes have been made:\n'
-        latexStr += text
-        rstStr += text+'\n'
-        latexStr += '\\bi\n'
-        for param in parameterChangesList:
-            latexStr += '  \\item '
-            latexStr += param[0].replace('visualizationSettings.','')+' $\\ra$ '
-            latexStr += param[1].replace('visualizationSettings.','')
-            text = ' (changed in version '+param[2]+', expires: '+param[3]+')\n'
-            latexStr += text
-            rstStr += '  - ' + param[0]+' → '+param[1]+text
-        latexStr += '\\ei\n'
-        rstStr += '\n'
-        # print(rstStr[-200:])
-    return (latexStr, rstStr)
-
-
-def ParameterDescription2DocString(text):
-    if text.strip().startswith('$'): #formula at beginning
-        listStrip = text.split('$')
-        if len(listStrip) > 2: 
-            text = '$'.join(listStrip[2:])
-    return text
-
-globalList=[]
 
 #************************************************
-#create autogenerated .h  file for list of parameters
-def WriteFile(parseInfo, parameterList, typeConversion):
-    #print (parseInfo)
-    #print('file="'+parseInfo['writeFile']+'"')
-    plr = PyLatexRST()
-    stubStr = '' #string for .pyi file
-    spaces4 = '    '
-    
+#create the C++ header text of one structure
+def StructureCppHeader(parseInfo, parameterList, typeConversion):
+    """returns [header text, dictionary get/set text, implementation text]"""
     dateStr = GetDateStr()
     yearStr = dateStr.split('-')[0]
-
-    plr.AddDocu(parseInfo['latexText']) #.replace('\\n','\n') #this is the string for latex documentation
-    
     cppText = parseInfo['cppText'] #.replace('\\n','\n') #this is the string for latex documentation
     sGetSetDictionarys = '' #goes into separate file
 
@@ -246,170 +83,11 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         s += cppText
         s += '\n'
 
-    pythonClass = parseInfo['class']
-    if parseInfo['pythonClass'] != '':
-        pythonClass = parseInfo['pythonClass']
-
     classInitBackLink = ClassHasBackLink(parseInfo['class'])
     classHasBackLink = ClassHasBackLink(parseInfo['class']) and HasTopClass(parseInfo['class'])
 
     implementationGetSetStr = '' #implementations that come in the end
-    parameterChangesList = [] #old and new parameter (full path)
-
-    #create sorted parameter list; distinguish between structures (cFlags have 'S') and values: adds 0/1 before name for sorting ...
-    parameterListSorted=sorted(parameterList, 
-                               key=lambda d: str(int(d['cFlags'].find('S')==-1))+d['pythonName'].upper())
-    if not sortStructures:
-        parameterListSorted = parameterList 
-    # global globalList
-    # if parseInfo['class'] == 'NewtonSettings': globalList = parameterListSorted
-
-    #************************************
-    
-    #Latex doc:
-    hasPybindInterface = False
-    for parameter in parameterList:
-        if (parameter['lineType'].find('V') != -1) and (parameter['cFlags'].find('P') != -1): #only if it is a member variable
-            hasPybindInterface = True
-
-    if (parseInfo['class'] == 'SolverLocalData'
-        #or parseInfo['class'] == 'SolverFileData'
-        ):
-        hasPybindInterface = False
-        
-
-    if hasPybindInterface: #otherwise do not include the description into latex doc
-
-        stubStr += '\n#information for '+ pythonClass + '\n'
-        stubStr += 'class ' + pythonClass + ':\n'
-        if ADD_DOCSTRINGS: 
-            stubStr += DocStringGoogleFromPlainText(parseInfo['classDescription'],
-                                                    addSpaces=' '*4, multiline=True)
-        typicalPaths = []
-        if parseInfo['typicalPaths'] != None:
-            typicalPaths = parseInfo['typicalPaths']
-            class2name = parseInfo['class']
-
-            if class2name.endswith('View'):
-                typicalPaths += '.view'
-                class2name = ''
-                
-            if typicalPaths.endswith('.view'):
-                oldTypicalPath = typicalPaths
-                typicalPaths = ''
-                sep = ''
-                for i in range(4):
-                    typicalPaths += sep + oldTypicalPath.replace('.view','.view'+str(i))
-                    sep = ','
-
-            class2name = ConvertClassName2member(class2name)
-            
-            #remove Settings from structure:
-            # conv = ['TimeIntegrationSettings', 'StaticSolverSettings', 'ExplicitIntegrationSettings', 'GeneralizedAlphaSettings',
-            # 'NewtonSettings', 'DiscontinuousSettings', 'NumericalDifferentiationSettings']
-            # for c in conv:
-            #     if c in class2name:
-            #         class2name = class2name.replace('Settings','')
-            
-            typicalPaths = typicalPaths.split(',')
-            for i in range(len(typicalPaths)):
-                typicalPaths[i] += '.' if (typicalPaths[i]!='' and class2name!='') else ''
-                typicalPaths[i] += class2name[0:1].lower() + class2name[1:]
-
-        #print('typical:',typicalPaths)
-
-        descriptionStr = parseInfo['classDescription']
-        if not descriptionStr.endswith('.'): 
-            descriptionStr += '. '
-        
-        plr.sLatex += '\n%+++++++++++++++++++++++++++++++++++\n'
-        plr.AddDocu(Str2Latex(descriptionStr, replaceCurlyBracket=False)+
-                    '\n\n\\noindent '+
-                    parseInfo['class'] + ' has the following items:\n', 
-                    section=parseInfo['class'], sectionLevel=3, 
-                    sectionLabel='sec:' + parseInfo['class'].replace(' ',''))
-        plr.sRST += '\n' #newline for start of list
-
-        # plr.sLatex += '\mysubsubsection{' + parseInfo['class'] + '} \label{sec:' + parseInfo['class'].replace(' ','') + '}\n'
-        # plr.sLatex += Str2Latex(descriptionStr, replaceCurlyBracket=False) + '\\\\ \n'
-        # plr.sLatex += '%\n\\noindent '
-        # plr.sLatex += parseInfo['class'] + ' has the following items:\n'
-        plr.sLatex += '%reference manual TABLE\n'
-        plr.sLatex += '\\begin{center}\n'
-        plr.sLatex += '  \\footnotesize\n'
-        plr.sLatex += '  \\begin{longtable}{| p{4.2cm} | p{2.5cm} | p{0.3cm} | p{3.0cm} | p{6cm} |}\n'
-        plr.sLatex += '    \\hline\n'
-        plr.sLatex += '    \\bf Name & \\bf type / function return type & \\bf size & \\bf default value / function args & \\bf description \\\\ \\hline\n'
-    
-        for parameter in parameterListSorted:
-            if IsDeprecatedParameter(parameter):
-                continue
-            if (parameter['lineType'].find('V') != -1 and 
-                parameter['cFlags'].find('P') != -1 and
-                parameter['type'].find('ResizableVector') == -1): #only if it is a member variable
-                
-                sString = ''
-                if (parameter['type'] == 'String' or parameter['type'] == 'FileName'):
-                    sString="'"
-                #write latex doc:
-                defaultValueStr = parameter['defaultValue']
-                paramDescriptionStr = parameter['parameterDescription'].replace('_','\\_')
-                if len(defaultValueStr) > 18:
-                    paramDescriptionStr = '\\tabnewline ' + paramDescriptionStr
-                pythonName = Str2Latex(parameter['pythonName']) 
-                typeName = Str2Latex(parameter['type'])
-                
-                # if len(pythonName)>28:  #inside plr.SystemStructuresWriteDefRow
-                #     typeName = '\\tabnewline ' + typeName
-                    
-                if parameter['type'] != 'String' and parameter['type'] != 'FileName': #don't do this for file names, because 'f' is erased!
-                    defaultValueStr = Str2Latex(defaultValueStr, True)
-
-                plr.SystemStructuresWriteDefRow(pythonName, typeName, Str2Latex(parameter['size']), 
-                                            sString+defaultValueStr+sString, paramDescriptionStr, 
-                                            typicalPaths=typicalPaths, isFunction=False)
-                                
-                stubStr += spaces4+parameter['pythonName']+': '
-                stubStr += TypeConversion(parameter['type'], typeConversionStub) + '\n'
-                if ADD_DOCSTRINGS: 
-                    stubStr += DocStringGoogleFromPlainText(text=ParameterDescription2DocString(parameter['parameterDescription']),
-                                                            addSpaces=' '*4, multiline=False)
-
-            if (parameter['lineType'].find('F') != -1) and (parameter['cFlags'].find('P') != -1): #only if it is a function
-                #write latex doc:
-                functionName = Str2Latex(parameter['pythonName'])
-                argStr = parameter['args']
-                if (argStr != ''):
-                    #functionName += '(...)' #now added in SystemStructuresWriteDefRow
-                    argSplit = argStr.split(',') #split into list of args
-                    argStr = ''
-                    argSep = '' #no comma for first time
-                    for item in argSplit:
-                        argName = item.split(' ')[-1] #last word in args is the name of the argument, e.g. in const MainSystem& mainSystem ==> mainSystem
-                        argName = Str2Latex(argName)
-                        argStr += argSep + argName.replace('=true','=True').replace('=false','=False')
-                        argSep = ', '
-
-                functionType = Str2Latex(parameter['type'])
-                # if (len(functionName)>28):  #done now in SystemStructuresWriteDefRow
-                #     functionType = '\\tabnewline ' + functionType
-
-                # plr.sLatex += '    ' + functionName + ' & '
-                # plr.sLatex += '    ' + functionType + ' & '
-                # plr.sLatex += '    ' + Str2Latex(parameter['size']) + ' & '
-
-                # plr.sLatex += '    ' + argStr + ' & '
-                # plr.sLatex += '    ' + Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False) + '\\\\ \\hline\n' #Str2Latex not used, must be latex compatible!!!
-
-                plr.SystemStructuresWriteDefRow(functionName, functionType, Str2Latex(parameter['size']), argStr, 
-                                            Str2Latex(parameter['parameterDescription'], replaceCurlyBracket=False), isFunction=True)
-
-                stubStr += spaces4+'@overload\n'
-                stubStr += spaces4+'def '+functionName+'('+argStr.replace('\\_','_')+')'+' -> '+TypeConversion(parameter['type'], typeConversionStub)+': ...\n'
-                
-        plr.sLatex += '	  \\end{longtable}\n'
-        plr.sLatex += '	\\end{center}\n'
-
+    parameterListSorted = SortedParameters(parameterList)
 
     #************************************
     #class definition:
@@ -428,13 +106,6 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     sPrivate = ''
     sProtected = ''
     for parameter in parameterListSorted:
-        if IsDeprecatedParameter(parameter) and not IsStructureParameter(parameter): #for structures, there is no replacement; only for values
-            for path in typicalPaths:
-                oldParameterStr = path.replace('SC.','') +'.'+ parameter['pythonName']
-                baseParameter = oldParameterStr.split('.')[0]
-                newParameterStr = baseParameter+'.'+parameter['parameterDescription']
-                (version, expDate) = DParameter2VersionExpiration(parameter)
-                parameterChangesList.append([oldParameterStr, newParameterStr, version, expDate])
 
         if ((parameter['lineType'].find('V') != -1) and 
             (parameter['lineType'].find('L') == -1) and 
@@ -548,7 +219,6 @@ def WriteFile(parseInfo, parameterList, typeConversion):
         parameterListSorted2 = copy.deepcopy(parameterListSorted) 
         
         
-    parameterInfo = [] #list for exporting dictionaries
     for parameter in parameterListSorted2:
         if (parameter['lineType'].find('V') != -1): #only if it is a member variable
             ISP = bool(IsStructureParameter(parameter))
@@ -713,20 +383,6 @@ def WriteFile(parseInfo, parameterList, typeConversion):
                         #set functions:
                         sDictSet += '    data.' + parameter['cplusplusName'] + ' = py::cast<' + typeCastStr + '>(d["' + parameter['pythonName']  + '"]);\n'
                         
-                        #dict for exporting
-                        pythonTypeStr = typeCastStr
-                        if pythonTypeStr in convertToPython:
-                            pythonTypeStr = convertToPython[pythonTypeStr]
-                        # print(pythonTypeStr)
-                            
-                        parameterDict={'name': parameter['pythonName'],
-                                       'type': pythonTypeStr,
-                                       'description': parameter['parameterDescription'].replace("\\_","_"),
-                                       'size': pSize,
-                                       'default': parameter['defaultValue'],
-                            }
-                        parameterInfo.append(parameterDict)
-                        
             #++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     
@@ -825,17 +481,8 @@ def WriteFile(parseInfo, parameterList, typeConversion):
     
     s+='};\n\n\n' #class
 
-    if len(parameterChangesList) and SHOW_PARAMETER_CHANGES:
-        #print('parameter changes:\n',parameterChangesList,sep='')
-        for pChange in parameterChangesList:
-            print(pChange[0]+' → '+pChange[1])
-        
-    
-    return [s, plr.sLatex, sGetSetDictionarys, plr.sRST, stubStr, 
-            parameterInfo, implementationGetSetStr, parameterChangesList]
+    return [s, sGetSetDictionarys, implementationGetSetStr]
 
-#**************************************************************************************
-#**************************************************************************************
 #**************************************************************************************
 #create string containing the pybind11 headers/modules for a class
 def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
@@ -981,33 +628,7 @@ def CreatePybindHeaders(parseInfo, parameterList, typeConversion):
     return s
 
 
-
-#************************************************
-#MAIN CONVERSION
-#************************************************
-    
-rstFileDict={'SimulationSettings':'',
-             'VisualizationSettings':'',
-             'CSolverStructures':'',
-             'MainSolver':'',
-             'PyStructuralElementsDataStructures':'',
-             'BeamSectionGeometry':'',
-             } #contains available file names and text
-
-
-#added structures for creating dictionaries for settings; saved via numpy save
-dictSystemStructures = {}
-dictSystemStructures['structures'] = [] #contains list of modules
-dictSystemStructures['version'] = exudynVersionString
-dictSystemStructures['name'] = 'systemStructures'
-
-def WriteFileDict(writeFilesDict, fileName, text, fileMode='a'):
-    if fileMode=='w' or (fileName not in writeFilesDict):
-        writeFilesDict[fileName] = text
-    else:
-        writeFilesDict[fileName] += text
-
-try: #still close file if crashes
+def main():
     print('******************************')
     print('Autogenerate system structures')
 
@@ -1020,46 +641,18 @@ try: #still close file if crashes
     
     writeFilesDict = {} #this will be written finally, ignoring header section!
 
-    # file=open(pybindFile,'w')  #clear file by one write access
-    # file.write('// AUTO:  ++++++++++++++++++++++\n')
-    # file.write('// AUTO:  pybind11 module includes; generated by Johannes Gerstmayr\n')
-    # file.write('// AUTO:  last modified = '+ GetDateStr() + '\n')
-    # file.write('// AUTO:  ++++++++++++++++++++++\n\n')
-    # file.close()
+
+    writeFilesDict = {} #this will be written finally, ignoring header section!
+
     WriteFileDict(writeFilesDict, fileName=pybindFile, text=''+
                   '// AUTO:  ++++++++++++++++++++++\n'+
                   '// AUTO:  pybind11 module includes; generated by Johannes Gerstmayr\n'+
                   '// AUTO:  last modified = '+ GetDateStr() + '\n'+
                   '// AUTO:  ++++++++++++++++++++++\n\n', fileMode='w')
     
-    # file=open(getSetFile,'w')  #clear file by one write access
-    # file.write('// AUTO:  ++++++++++++++++++++++\n')
-    # file.write('// AUTO:  Helper file for dictionaries get/set for system structures; generated by Johannes Gerstmayr\n')
-    # file.write('// AUTO:  Generated by Johannes Gerstmayr\n')
-    # file.write('// AUTO:  Used for SimulationSettings and VisualizationSettings\n')
-    # file.write('// AUTO:  last modified = '+ GetDateStr() + '\n')
-    # file.write('// AUTO:  ++++++++++++++++++++++\n\n')
-    # file.write('// AUTO:  ++++++++++++++++++++++\n')
-    # file.write('// AUTO:  Helper file for dictionaries get/set for system structures; generated by Johannes Gerstmayr\n')
-    # file.write('// AUTO:  Generated by Johannes Gerstmayr\n')
-    # file.write('// AUTO:  Used for SimulationSettings and VisualizationSettings\n')
-    # file.write('// AUTO:  last modified = '+ GetDateStr() + '\n')
-    # file.write('// AUTO:  ++++++++++++++++++++++\n\n')
 
     
-    # file.write('  #ifndef DICTIONARIESGETSET__H\n')
-    # file.write('  #define DICTIONARIESGETSET__H\n\n')
 
-    # file.write('  #include "Linalg/BasicLinalg.h"\n')
-    # file.write('  #include "Main/CSystem.h"\n')
-    # file.write('  #include "Autogenerated/SimulationSettings.h"\n')
-    # file.write('  #include "Autogenerated/VisualizationSettings.h"\n\n')
-    # file.write('  #include <pybind11/pybind11.h>\n')
-    # file.write('  #include <pybind11/stl.h>\n')
-    # file.write('  #include <pybind11/stl_bind.h>\n')
-    # file.write('  namespace py = pybind11;\n\n')
-    # file.write('  namespace EPyUtils {\n //add namespace for access to dictionaries')
-    # file.close()
 
     WriteFileDict(writeFilesDict, fileName=getSetFile, text=''+
                   '// AUTO:  ++++++++++++++++++++++\n'+
@@ -1083,82 +676,13 @@ try: #still close file if crashes
                   '  namespace EPyUtils {\n //add namespace for access to dictionaries'
                   , fileMode='w')
 
-    #read system definition
     totalNumberOfLines = 0
-
-    
-    typeConversion = {'Bool':'bool', 'Int':'Index', 'Real':'Real', 'UInt':'Index', 'PInt':'Index', 
-                      'UReal':'Real', 'PReal':'Real', 'UFloat':'float',  'PFloat':'float', 
-                      'Vector':'Vector', 
-                      'Matrix':'Matrix', 'SymmetricMatrix':'Vector', 
-                      'NumpyMatrix':'py::array_t<Real>', 'NumpyVector':'py::array_t<Real>', 
-                      'String':'std::string', 'FileName':'std::string',
-                      'KeyPressUserFunction': 'std::function<bool(int, int, int)>'} #convert parameter types to C++/EXUDYN types
-
-    typeConversionStub = {'Bool':'bool', 'Int':'int', 'Index':'int', 'UInt':'int', 'PInt':'int', 
-                      'Real':'float', 'UReal':'float', 'PReal':'float', 'UFloat':'float',  'PFloat':'float', 
-                      'Float3':'Tuple[float,float,float]', 
-                      'Float4':'Tuple[float,float,float,float]', 'Vector':'List[float]', 
-                      'Matrix':'ArrayLike', 'Matrix3D':'ArrayLike', 'Matrix6D':'ArrayLike', 
-                      'SymmetricMatrix':'ArrayLike', 
-                      'NumpyMatrix':'ArrayLike', 'NumpyVector':'ArrayLike', 'StdArray33F':'ArrayLike',
-                      'String':'str', 'FileName':'str', 'Index2':'Tuple[int,int]', 
-                      'KeyPressUserFunction': 'Any',
-                      'std::string':'str', 'void':'None', 
-                      'ArrayIndex':'List[int]','ArrayFloat':'List[float]',
-                      } #conversion for stub files
-
-    parseInfo = {'class':'',            # C++ class name
-                 'writeFile':'',        #filename (e.g. SensorData.h)
-                 'appendToFile':'',     #True, if shall be appended to given file
-                 'writePybindIncludes':'',#True, if pybind11 includes shall be written for this class
-                 'addDictionaryAccess':'',#True, if dictionary access function should be added via pybind
-                 'pythonClass':'',      #name of class in Python or empty
-                 'parentClass':'',      #name of parent class or empty
-                 'classDescription':'', #add a (brief, one line) description of class
-                 'addConstructor':'',   #code added at the end of default constructor
-                 'linkedClass':'',      #if not empty, this is a class member to which the python interface is linked
-                 'latexText':'',        #text, which will be added before the class description (e.g., to start a new section)
-                 'typicalPaths':None,   #comma-separated typical paths
-                 'cppText':''}          #code which is added before class definition
-    lineDefinition = ['lineType',       #[V|F[v]]P: V...Value (=member variable), F...Function (access via member function); v ... virtual Function; P ... write Pybind11 interface
-                      'pythonName',     #name which is used in python
-                      'cplusplusName',     #name which is used in Exudyn (leave empty if it is the same)
-                      'size',           #leave empty if size is variable; e.g. 3 (size of vector), 2x3 (2 rows, 3 columns)  %used for vectors and matrices only!
-                      'type',           #Bool, Int, Real, UInt, UReal, Vector, Matrix, SymmetricMatrix
-                      'defaultValue',   #default value for member variable or function definition
-                      'args',           #args for functions
-                      'cFlags',         #P(add Pybind11 interface), R(read only), M(modifiableDuringSimulation), C...const function, D...definition only [default is read/write access and that changes are immediately applied and need no reset of the system]
-                      'parameterDescription'] #description for parameter used in C++ code
-    nparam = len(lineDefinition)
-    
-    
-    mode = 0 #1...read parameterlist , 0...read definitions
-    linecnt = 1
-    
-    parameterList = [] #list of dictionaries for parameters
-    continueOperation = True #flag to signal that operation shall be terminated
-    
-    globalLatexStr = '' #this is the whole string for the latex docu
-    globalStubStr = ''  #will be written into .pyi file
-    globalImplementationGetSetStr = '' #implementation part added at end of each structure (visualization, etc.)
-    globalParameterChangesList = []
-    
     fileListHeaderOnce = [] #store all opened files, which get a "#endif " at the end for the #ifdef ... at the beginning
-    
-    #the definitions come from definitions/ (revision plan step 33): definitionLoader yields
-    #each class in the form the old line parser built it, and the code below is what that
-    #parser ran every time it reached writeFile
-    parseInfoTemplate = copy.deepcopy(parseInfo)
-    for parseInfo, parameterList in definitionLoader.LoadStructureDefinitions(parseInfoTemplate, lineDefinition):
-        #++++++++++++++++++++++++++++++
-        #now write C++ header file for defined class
-        [fileStr, latexStr, getSetDict, rstStr, stubStr, parameterInfo, 
-         implementationGetSetStr, parameterChangesList] = WriteFile(parseInfo, parameterList, typeConversion)
-        globalLatexStr += latexStr
-        globalStubStr += stubStr
+    globalImplementationGetSetStr = '' #implementation part added at end of each structure (visualization, etc.)
+
+    for parseInfo, parameterList in LegacyStructures():
+        [fileStr, getSetDict, implementationGetSetStr] = StructureCppHeader(parseInfo, parameterList, typeConversion)
         globalImplementationGetSetStr += implementationGetSetStr
-        globalParameterChangesList += parameterChangesList
         strFileMode = 'w'
 
         if parseInfo['appendToFile'] == 'True':
@@ -1168,64 +692,25 @@ try: #still close file if crashes
 
         if not HasTopClass(parseInfo['class']) and globalImplementationGetSetStr != '':
             fileStr += '\n\n//! implementation:\n'+globalImplementationGetSetStr
-            #print(parseInfo['class']+'-IMPL:',globalImplementationGetSetStr)
-            (globalLatexStr, rstStr) = ParameterChanges2LatexRST(globalParameterChangesList, globalLatexStr, rstStr)
-            globalParameterChangesList = []
             globalImplementationGetSetStr = ''
 
-        # file=open(directoryString+parseInfo['writeFile'],strFileMode) 
-        # file.write(fileStr)
-        # file.close()
         WriteFileDict(writeFilesDict, fileName=directoryString+parseInfo['writeFile'], 
                       text=fileStr, fileMode=strFileMode)
 
-
-        fileName = parseInfo['writeFile'].split('.')[0]
-        if fileName in rstFileDict:
-           rstFileDict[fileName] += rstStr
-
         #++++++++++++++++++++++++++++++
         #write Python/pybind11 includes
+        pybindStr = ''
         if parseInfo['writePybindIncludes'] == 'True':
             pybindStr = CreatePybindHeaders(parseInfo, parameterList, typeConversion)
-            # file=open(pybindFile,'a')  #always append to pybind file
-            # file.write(pybindStr)
-            # file.close()
-            WriteFileDict(writeFilesDict, fileName=pybindFile, 
-                          text=pybindStr, fileMode='a')
+            WriteFileDict(writeFilesDict, fileName=pybindFile, text=pybindStr, fileMode='a')
+            WriteFileDict(writeFilesDict, fileName=getSetFile, text=getSetDict, fileMode='a')
 
-        if parseInfo['writePybindIncludes'] == 'True':
-            # file=open(getSetFile,'a')  #always append to pybind file
-            # file.write(getSetDict)
-            # file.close()
-            WriteFileDict(writeFilesDict, fileName=getSetFile, 
-                          text=getSetDict, fileMode='a')
-
-        if len(parameterInfo) != 0:
-            classDict = {'class':parseInfo['class'],
-                         'description':parseInfo['classDescription'],
-                         'typicalPaths':copy.copy(parseInfo['typicalPaths']),
-                         'parameters':copy.copy(parameterInfo)
-                         }
-            dictSystemStructures['structures'].append(classDict)
-
-        #++++++++++++++++++++++++++++++
         totalNumberOfLines += CountLines(fileStr)+CountLines(pybindStr)+CountLines(getSetDict)
-    
-    if (continueOperation == False):
-        print('\n\nERROR: Parsing terminated unexpectedly in line',linecnt,'\n\n')
 
     for fileName in fileListHeaderOnce:
-        # file=open(fileName,'a') 
-        # file.write("\n#endif //#ifdef include once...\n")
-        # file.close()
         WriteFileDict(writeFilesDict, fileName=fileName, 
                       text="\n#endif //#ifdef include once...\n", fileMode='a')
 
-    # fileGetSet=open(getSetFile,'a')  #clear file by one write access
-    # fileGetSet.write('} //namespace EPyUtils \n\n')
-    # fileGetSet.write("\n#endif //#ifdef include once...\n")
-    # fileGetSet.close()
     WriteFileDict(writeFilesDict, fileName=getSetFile, text='} //namespace EPyUtils \n\n'+'\n#endif //#ifdef include once...\n',
                        fileMode='a')
 
@@ -1239,69 +724,17 @@ try: #still close file if crashes
         totalNumberOfFilesChanged += int(WriteTextIfDifferent(fileName, text, True) )
 
     print('total number of files changed =', totalNumberOfFilesChanged)
-    
-    latexText = """
-This section includes the reference manual for structures (such as for solvers, helper structures, etc.) 
-and settings which are available in the python interface, e.g., simulation settings, visualization settings. 
-The data is auto-generated from the according interfaces in order to keep fully up-to-date with changes.
-"""
-    globalLatexStr += latexText
-    
-    fileLatex=open(latexFile,'w',encoding='utf8')  #clear file by one write access
-    fileLatex.write('% definition of structures\n')
-    fileLatex.write(globalLatexStr)
-    fileLatex.close()
 
-    globalStubStr = """
-#This is the stub file for system structures, such as SimulationSettings and VisualizationSettings
-#This file will greatly improve autocompletion
+    return 0
 
-""" + globalStubStr
 
-    fileStub=open(stubFile,'w',encoding='utf8')  #clear file by one write access
-    fileStub.write(globalStubStr)
-    fileStub.close()
-
-    rstDir = paths.rstDir+'structures/'
-    rstIndex = """
-=======================
-Structures and Settings
-=======================
-"""
-    rstIndex += latexText
-    rstIndex += """
-.. toctree::
-   :maxdepth: 2
-
-"""
-    
-    
-    for key, value in rstFileDict.items():
-        # print('RST: write '+key)#, ':',value[:200])
-        file=io.open(rstDir+key+'.rst','w',encoding='utf8')  #clear file by one write access
-        file.write(value+'\n')
-        file.close()
-        rstIndex += '   '+key+'\n'
-
-    file=io.open(rstDir+'StructuresAndSettingsIndex.rst','w',encoding='utf8')  #clear file by one write access
-    file.write(rstIndex+'\n')
-    file.close()
+def WriteFileDict(writeFilesDict, fileName, text, fileMode='a'):
+    if fileMode=='w' or (fileName not in writeFilesDict):
+        writeFilesDict[fileName] = text
+    else:
+        writeFilesDict[fileName] += text
 
 
 
-    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    structList = dictSystemStructures['structures']
-    paramCnt = 0
-    for pList in structList: 
-        paramCnt+=len(pList['parameters'])
-    print('total number of parameters (excl. classes):',paramCnt)
-
-    np.save(paths.generatedDir+'systemStructuresData.npy', dictSystemStructures)
-    #utilitiesData = np.load('generated/systemStructuresData.npy', allow_pickle=True).item()
-
-
-finally:    
-    file.close()
-
-
-
+if __name__ == '__main__':
+    sys.exit(main())

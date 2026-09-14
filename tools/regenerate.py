@@ -42,7 +42,10 @@ generatorScripts = [
     '../../tools/generators/itemInterfaceEmitter.py',
     '../../tools/generators/miniExampleEmitter.py',
     '../../tools/generators/itemDocsEmitter.py',
-    'pythonAutoGenerateSystemStructures.py',
+    #the structure emitters; together they replace pythonAutoGenerateSystemStructures.py (step 33, part 2c)
+    '../../tools/generators/structureHeaderEmitter.py',
+    '../../tools/generators/structureStubEmitter.py',
+    '../../tools/generators/structureDocsEmitter.py',
     'autoGeneratePyBindings.py',
     'utilitiesDocuGenerator.py',
     'createStubFiles.py',

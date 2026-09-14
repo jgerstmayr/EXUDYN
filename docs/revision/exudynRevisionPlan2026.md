@@ -452,7 +452,7 @@ index.rst
 | path | produced by |
 |---|---|
 | `docs/RST/items/` | `tools/generators/itemDocsEmitter.py` |
-| `docs/RST/structures/` | `pythonAutoGenerateSystemStructures.py` |
+| `docs/RST/structures/` | `tools/generators/structureDocsEmitter.py` |
 | `docs/RST/cInterface/` | `autoGeneratePyBindings.py` |
 | `docs/RST/pythonUtilities/` | `utilitiesDocuGenerator.py` |
 | `docs/RST/Examples/`, `docs/RST/TestModels/` | from the `.py` files |
@@ -1029,7 +1029,14 @@ The core investment. Every step is validated byte-for-byte by step 2.
          RST + LaTeX, mini examples, `objectFactoryAutoReg.h`. Each reads `definitions/`
          directly; `itemInterface.py` first, as the smallest self-contained output with the
          largest user surface.
-       - **2c - structure emitters.** The same for `pythonAutoGenerateSystemStructures.py`: C++
+       - **2c - structure emitters. DONE 2026-09-14; `pythonAutoGenerateSystemStructures.py` is
+         deleted.** `structureModel.py` (shared tables, predicates, typical paths, the old string
+         records), `structureHeaderEmitter.py` (structure headers, `DictionariesGetSet.h`,
+         `pybind_modules.h`), `structureStubEmitter.py` (`stubSystemStructures.pyi`),
+         `structureDocsEmitter.py` (structure RST, `interfaces.tex`); `systemStructuresData.npy`
+         is no longer written. `definitionLoader.py` stays: both item and structure emitters
+         still read the old string records through it, which step 34 replaces.
+         Original scope: the same for `pythonAutoGenerateSystemStructures.py`: C++
          headers, pybind/get-set glue, stub fragment, RST + LaTeX. `definitionLoader.py` is
          deleted when its last consumer is gone; `systemStructuresData.npy` is dropped.
        - **2d - the manual pybind interface becomes data.** `autoGeneratePyBindings.py` is not a
