@@ -1145,7 +1145,7 @@ The core investment. Every step is validated byte-for-byte by step 2.
 
       | sub-step | changes generated C++ | gate |
       |---|---|---|
-      | **34c1 behaviour test first**: one valid and several invalid values per type family through dict creation, `SetObjectParameter`/`GetObjectParameter` and settings structures; records acceptance, returned value and type (numpy vs list), exception type | no | passes on the current code |
+      | **34c1 behaviour test first** *(DONE 2026-09-14: `parameterConversionTest.py`)*: one valid and several invalid values per type family through dict creation, `SetObjectParameter`/`GetObjectParameter` and settings structures; records acceptance, returned value and type (numpy vs list), exception type | no | passes on the current code |
       | **34c2 `src/Pymodules/PyConversion.h`**: `EPyUtils::FromPython(object, destination, context)` / `ToPython(value)` per C++ type; index kinds as tag types; fixed and dynamic sizes as templates; range forms as a check parameter. A new header, kept apart from `PybindUtilities.h`, which only gains marked one-line forwarding wrappers | no | wheel, test suite, 34c1 |
       | **34c3 one type model** in the generators: facts (family, element, size, item kind, user-function signature) on `TypeSpec` in `definitions/definitionTypes.py`; `typeModel.Render(type, destination)` for `cppStorage`, `python`, `docs` (docs keep the definition name: `Int`, `UReal`, `NodeIndex`); the eight tables, `ConvertParameter2Python`, `IsAVector`/`IsASafelyVector` go; a type without a rule fails at generation. Definition names or default strings may change where that makes the rules simpler | no | byte-identity per emitter |
       | **34c4 items** use `FromPython`/`ToPython`; `SetWithDictionary` goes through the same code as `SetParameter`; range checks move from `itemInterface.py` into C++ | yes | wheel, test suite, 34c1 (intended differences only: the bypass paths now check; messages name item and parameter), item-creation timing |
@@ -1154,6 +1154,19 @@ The core investment. Every step is validated byte-for-byte by step 2.
 
       The later rewrite of `PybindUtilities.h` itself (reduce to what is still needed, unify, fewer
       templates) is not part of 34c.
+
+      **Recorded by 34c1, to be decided before 34c4/34c5** - behaviour that exists today and that a
+      unified conversion would change if it were not reproduced on purpose (counts are parameter
+      paths in `parameterConversionTestReference.txt`):
+      - range checks run only in the `itemInterface` classes: 90 `U` and 15 `P` item parameters
+        accept a negative (or zero) value through `SetObjectParameter` and a raw dict; structures
+        check on attribute set, but `SetDictionary` skips the check (191 parameters);
+      - `None` is accepted by every `bool` (read back `False`) and by index arrays, `Vector3DList`,
+        `Matrix3DList` and `PyMatrixContainer` parameters (read back empty);
+      - `float` parameters accept a `NodeIndex`/`ObjectIndex` (read back as its number);
+      - 17 item classes reject their own defaults (`MarkerNodeCoordinate(coordinate=InvalidIndex())`
+        fails `CheckForValidUInt`), `ObjectANCFThinPlate` cannot be created with defaults at all;
+      - 4-element float vectors (`Vcolor`) read back as lists, Real vectors as numpy - kept.
     - **34b - Jinja2 per emitter**, as above, starting with `itemHeaderEmitter.py` (the largest),
       after 34c.
 35. Replace the copy-and-append scheme for `mainSystemExtensionsHeader.py` with an
@@ -1561,6 +1574,12 @@ step; larger ones get their own. #2411 is step 83 and #2412 belongs to step 36.
     the fast build. A release can carry a wrong range limit that is hard to test for; a flag in
     `exudyn.special` would let the user switch the checks off. Needs the checks in one place first,
     which 34c provides.
+96. *(Phase 5)* **C++ user errors inspect the Python source** (#2423). `PyError`/`PyWarning` call
+    `PyGetCurrentFileInformation` (`src/Main/Stdoutput.cpp:259`), which calls
+    `inspect.getframeinfo`; that scans `sys.modules` and reads the source file. The ~38000 probe
+    errors of `parameterConversionTest.py` took 1 s standalone and 9 s inside `runTestSuite.py`
+    after scipy, matplotlib and ngsolve were imported - a cost wherever errors are caught in a loop.
+    The frame itself (`f_code.co_filename`, `f_lineno`) carries the same information.
 
 ### Phase 9 — Deeper implementation problems (last)
 

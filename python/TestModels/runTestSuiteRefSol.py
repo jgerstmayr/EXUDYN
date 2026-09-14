@@ -94,6 +94,7 @@ def TestExamplesReferenceSolution():
         'objectGenericODE2Test.py':-2.316378897486015e-05,
         'PARTS_ATEs_moving.py':0.44656762760262214,
         'pendulumFriction.py':0.39999998776982304,
+        'parameterConversionTest.py':0,                             #new 2026-09-14: number of differences to parameterConversionTestReference.txt (step 34c1)
         'pickleCopyMbs.py':0.2583013564103496,                      #new 2025-05-10
         'plotSensorTest.py':1,
         'postNewtonStepContactTest.py':0.057286638346409235,

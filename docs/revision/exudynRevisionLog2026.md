@@ -2123,6 +2123,23 @@ failed to import until it was pointed at `tools/generators` (plus `src/pythonGen
 The tracker now defines `RSTheaderString` (level 1, the only one it uses) locally; `LatexString2RST`
 stays imported only until the tracker logs move to Markdown.
 
+**Done 2026-09-14, step 34c1 - the parameter conversion has a behaviour record.** New test model
+`python/TestModels/parameterConversionTest.py` writes 15 probe values (negative, zero, int, real,
+string, bool, lists of 2/3/4, numpy, 2x2 list, `NodeIndex`, `ObjectIndex`, list of `MarkerIndex`,
+`None`) into every parameter of all 97 item types through three paths - `Set<Kind>Parameter`, a
+raw dict, the `itemInterface` class - and into every leaf of `SimulationSettings` and
+`VisualizationSettings` by attribute and by `SetDictionary`; 3777 parameter paths. Each outcome is
+the exception class or the type, shape and value read back; messages are not recorded, because
+34c4 changes them on purpose. The outcomes are grouped into 63 distinct rows in
+`parameterConversionTestReference.txt` (107 KB); the test result is the number of paths that
+differ (reference 0). `recordReference = True` rewrites the file. The default dict of an item is
+built from the class signature, because 17 classes reject their own defaults. Two costs had to be
+removed from inside the test: every C++ user error is written to the suite log (7 MB), and every
+one calls `inspect.getframeinfo` (#2423, step 96) - 9 s in the suite against 1 s standalone; the
+test switches log and console off and replaces `inspect.getframeinfo` while probing. It now takes
+1.8 s; the full suite 19.0 s, PASSED. The findings that 34c4/34c5 must decide are listed in plan
+step 34c.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving

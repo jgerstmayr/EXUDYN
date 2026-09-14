@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.52.dev1, 
 +  last change =  2026-09-14, 
-+  Number of issues = 2423, 
++  Number of issues = 2424, 
 +  Number of resolved issues = 2125 (52 in current version), 
 
 ************
@@ -7049,6 +7049,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 2423:** every C++ user error inspects the Python source for its file and line
+    - issue author: Claude-JG
+    - description:  PyError and PyWarning call PyGetCurrentFileInformation (src/Main/Stdoutput.cpp:259); which calls inspect.getframeinfo - that resolves the module by scanning sys.modules and reads the source file. The cost grows with the number of imported modules: the ~38000 probe errors of parameterConversionTest.py (step 34c1) took 1 s standalone and 9 s inside runTestSuite.py after scipy; matplotlib and ngsolve were imported. It matters wherever errors are caught in a loop (parameter studies; try/except in user code). The frame alone (f_code.co_filename; f_lineno) gives the same information without the scan. Plan step 96.
+    - date raised: 2026-09-14 
 
  * **open issue 2422:** switch to disable parameter range checks at runtime
     - issue author: Claude-JG
