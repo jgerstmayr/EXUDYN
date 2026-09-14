@@ -2,15 +2,15 @@
 # This is an EXUDYN maintainer tool
 #
 # Details:  Writes objectDefinition.py and systemStructuresDefinition.py out in the NEW format -
-#           real Python dicts, one file per category, under src/pythonGenerator/definitions/.
+#           real Python, one file per category, under definitions/ at the repository root.
 #
 #           It runs the two generators with EXUDYN_EMIT_DEFINITIONS set. They parse the old
 #           format exactly as they always do and hand their in-memory representation to
 #           definitionEmitter.py, so there is no second parser to drift. Their normal output is
 #           unaffected - tools/regenerate.py --check stays a no-op.
 #
-#           Revision plan step 31a. NOTHING reads the emitted files yet: they exist so the format
-#           can be reviewed and changed cheaply before anything depends on it.
+#           Revision plan step 31a. The generators do not read the emitted files yet - see
+#           tools/generators/README.md.
 #
 # Usage:    python tools/generators/emitDefinitions.py
 #
