@@ -65,5 +65,5 @@ An item does not restate a declaration it shares with other items: it writes
 - Only functions that **override** a parent's virtual function belong in the library. Functions
   new in one item are written out with `ItemFunction(...)`.
 - The library states what the C++ base headers (`src/System/CObject*.h`, `CNode*.h`, `CMarker*.h`,
-  …) declare. **Change both together.** Plan step 32 turns that agreement into a check; until then
-  it is kept by hand.
+  …) declare. **Change both together** - `tools/generators/definitionValidator.py`, run by
+  `tools/regenerate.py`, fails when they disagree.

@@ -1832,6 +1832,29 @@ follow step 33 because it generates from `definitions/`. The plan's step count s
 highest step was already 82; the totals were removed from the plan, `CLAUDE.md` and
 `docs/dev/README.md`, since any total goes stale.
 
+<a id="step-32"></a>
+
+**Done 2026-09-14, step 32 - the definitions are validated before generation.**
+`tools/generators/definitionValidator.py` makes the cross-file checks no constructor can make,
+reports every violation, and is called by `tools/regenerate.py` before the generators run.
+
+- **Virtual functions vs the C++ parents.** The 18 hand-written parent headers (`C*`, `Main*`,
+  `Visualization*`) are parsed for `virtual` declarations; each virtual item function must match
+  one in its parent chain in return type, argument types and constness. Parameter names are
+  ignored, as C++ ignores them - that is what made deriving the library impossible (169 name-only
+  differences) but checking it easy. Definition types are mapped as the generator maps them
+  (`Bool` -> `bool`). **1655 checked, 0 violations.**
+- **`fromParent` parameters** must be data members of the parent chain: 194 checked, 0
+  violations. The 7 on structures are not checked - their parents are not hand-written classes.
+- **Duplicates** are keyed on the full signature: a name-only check reports 39 hits, all of them
+  legitimate overloads (the const/non-const `GetMarkerNumbers`, the `GetCSolver` pair).
+- **Shaped defaults**: a `Vector3D` default must have 3 entries; 36 checked, 0 violations.
+
+A clean result proves nothing on its own, so each check was mutated once - a wrong argument type,
+a lost `const` on a Main function, a renamed `fromParent` member, a duplicated parameter, a
+two-entry `Vector3D` default - and all five were reported. Measured first against the round trip:
+the only real finding on the tree was the 31h `isVirtual` defect, already fixed in `9297236`.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving

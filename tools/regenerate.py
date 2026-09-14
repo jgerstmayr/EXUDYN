@@ -10,6 +10,9 @@
 #           version string, so regenerating first leaves them one version behind and this tool
 #           then reports drift unrelated to your change (revision plan fact 21).
 #
+#           Before running the generators it validates definitions/ (definitionValidator.py)
+#           and stops with exit code 3 if they are inconsistent.
+#
 # Usage:    python tools/regenerate.py            regenerate and report
 #           python tools/regenerate.py --check    the same, but exit non-zero on Tier 1 drift (CI)
 #           python tools/regenerate.py --no-run   only check drift, do not run the generators
@@ -241,6 +244,13 @@ def Main():
               + ' file(s) modified outside the tiers; ignored as unrelated work')
 
     if not args.no_run:
+        #the definitions are validated BEFORE anything is generated from them (plan step 32)
+        sys.path.insert(0, os.path.join(repositoryRoot, 'tools', 'generators'))
+        import definitionValidator
+        if definitionValidator.ValidateDefinitions(verbose=verbose):
+            print('FAILED: the definitions in definitions/ are inconsistent; nothing was generated')
+            return 3
+
         if verbose:
             print('running ' + str(len(generatorScripts)) + ' generators ...')
         failedScripts = RunGenerators(repositoryRoot, args.python, verbose)
