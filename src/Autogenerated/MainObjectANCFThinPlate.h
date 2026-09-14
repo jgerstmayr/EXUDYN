@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-14  23:57:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -115,7 +115,7 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         EPyUtils::FromPython(d["physicsThickness"], cObjectANCFThinPlate->GetParameters().physicsThickness); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectANCFThinPlate->GetParameters().physicsDensity = py::cast<Real>(d["physicsDensity"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsDensity"], cObjectANCFThinPlate->GetParameters().physicsDensity, EPyUtils::RangeCheck::nonNegative, "ObjectANCFThinPlate.physicsDensity"); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectANCFThinPlate->GetParameters().physicsMassProportionalDamping = py::cast<Real>(d["physicsMassProportionalDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetMatrix3DListSafely(d["physicsStrainCoefficients"], cObjectANCFThinPlate->GetParameters().physicsStrainCoefficients); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetMatrix3DListSafely(d["physicsCurvatureCoefficients"], cObjectANCFThinPlate->GetParameters().physicsCurvatureCoefficients); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -177,7 +177,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsThickness") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().physicsThickness); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsDensity") == 0) { cObjectANCFThinPlate->GetParameters().physicsDensity = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsDensity") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().physicsDensity, EPyUtils::RangeCheck::nonNegative, "ObjectANCFThinPlate.physicsDensity"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsMassProportionalDamping") == 0) { cObjectANCFThinPlate->GetParameters().physicsMassProportionalDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsStrainCoefficients") == 0) { EPyUtils::SetMatrix3DListSafely(value, cObjectANCFThinPlate->GetParameters().physicsStrainCoefficients); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsCurvatureCoefficients") == 0) { EPyUtils::SetMatrix3DListSafely(value, cObjectANCFThinPlate->GetParameters().physicsCurvatureCoefficients); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

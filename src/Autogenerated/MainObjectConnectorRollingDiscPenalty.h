@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-14  23:57:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -116,12 +116,12 @@ public: // AUTO:
     {
         EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorRollingDiscPenalty->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectConnectorRollingDiscPenalty->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectConnectorRollingDiscPenalty->GetParameters().discRadius = py::cast<Real>(d["discRadius"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["discRadius"], cObjectConnectorRollingDiscPenalty->GetParameters().discRadius, EPyUtils::RangeCheck::positive, "ObjectConnectorRollingDiscPenalty.discRadius"); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "discAxis")) { EPyUtils::FromPython(d["discAxis"], cObjectConnectorRollingDiscPenalty->GetParameters().discAxis); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "planeNormal")) { EPyUtils::FromPython(d["planeNormal"], cObjectConnectorRollingDiscPenalty->GetParameters().planeNormal); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "dryFrictionAngle")) { cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionAngle = py::cast<Real>(d["dryFrictionAngle"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        cObjectConnectorRollingDiscPenalty->GetParameters().contactStiffness = py::cast<Real>(d["contactStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "contactDamping")) { cObjectConnectorRollingDiscPenalty->GetParameters().contactDamping = py::cast<Real>(d["contactDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        EPyUtils::FromPython(d["contactStiffness"], cObjectConnectorRollingDiscPenalty->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorRollingDiscPenalty.contactStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "contactDamping")) { EPyUtils::FromPython(d["contactDamping"], cObjectConnectorRollingDiscPenalty->GetParameters().contactDamping, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorRollingDiscPenalty.contactDamping"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "dryFriction")) { EPyUtils::FromPython(d["dryFriction"], cObjectConnectorRollingDiscPenalty->GetParameters().dryFriction); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "dryFrictionProportionalZone")) { cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionProportionalZone = py::cast<Real>(d["dryFrictionProportionalZone"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "viscousFriction")) { EPyUtils::FromPython(d["viscousFriction"], cObjectConnectorRollingDiscPenalty->GetParameters().viscousFriction); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -193,12 +193,12 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectConnectorRollingDiscPenalty->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectConnectorRollingDiscPenalty->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("discRadius") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().discRadius = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("discRadius") == 0) { EPyUtils::FromPython(value, cObjectConnectorRollingDiscPenalty->GetParameters().discRadius, EPyUtils::RangeCheck::positive, "ObjectConnectorRollingDiscPenalty.discRadius"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("discAxis") == 0) { EPyUtils::FromPython(value, cObjectConnectorRollingDiscPenalty->GetParameters().discAxis); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("planeNormal") == 0) { EPyUtils::FromPython(value, cObjectConnectorRollingDiscPenalty->GetParameters().planeNormal); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dryFrictionAngle") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionAngle = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("contactStiffness") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().contactStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("contactDamping") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().contactDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("contactStiffness") == 0) { EPyUtils::FromPython(value, cObjectConnectorRollingDiscPenalty->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorRollingDiscPenalty.contactStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("contactDamping") == 0) { EPyUtils::FromPython(value, cObjectConnectorRollingDiscPenalty->GetParameters().contactDamping, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorRollingDiscPenalty.contactDamping"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dryFriction") == 0) { EPyUtils::FromPython(value, cObjectConnectorRollingDiscPenalty->GetParameters().dryFriction); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dryFrictionProportionalZone") == 0) { cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionProportionalZone = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("viscousFriction") == 0) { EPyUtils::FromPython(value, cObjectConnectorRollingDiscPenalty->GetParameters().viscousFriction); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

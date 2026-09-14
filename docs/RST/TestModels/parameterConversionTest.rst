@@ -114,6 +114,11 @@ You can view and download this file on Github: `parameterConversionTest.py <http
    #defaults (e.g. MarkerNodeCoordinate: coordinate=InvalidIndex() fails CheckForValidUInt)
    records = {}
    
+   def SetRangeChecks(active):
+       """exudyn.special.exceptions.parameterRangeChecks, which exists since step 34c4 (b)"""
+       if hasattr(exu.special.exceptions, 'parameterRangeChecks'):
+           exu.special.exceptions.parameterRangeChecks = active
+   
    def Record(key, row):
        records.setdefault(' '.join(row), []).append(key)
    
@@ -141,13 +146,33 @@ You can view and download this file on Github: `parameterConversionTest.py <http
        mbs = SC.AddSystem()
        Record(className + ' defaults', [Outcome(lambda: Add(mbs, dict(defaults))),
                                         Outcome(lambda: Add(SC.AddSystem(), itemClass()))])
+       #the base item is created with range checks switched off, because some defaults violate their
+       #range (e.g. coordinate=InvalidIndex() for a UInt, #2426); a default that is rejected when written
+       #back with checks on is replaced by 1 in the dict and class paths, so those paths probe one
+       #parameter at a time instead of failing on another one. Before step 34c4 (b) nothing is replaced.
        mbs = SC.AddSystem()
        with contextlib.redirect_stdout(io.StringIO()):
            try:
+               SetRangeChecks(False)
                index = Add(mbs, dict(defaults))
            except Exception:
                continue
+           finally:
+               SetRangeChecks(True)
        members = [m for m in defaults if m != typeKey]
+       fixes = {}
+       for member in members:
+           with contextlib.redirect_stdout(io.StringIO()):
+               try:
+                   getattr(mbs, 'Set' + kind + 'Parameter')(index, member, defaults[member])
+               except Exception:
+                   try:
+                       getattr(mbs, 'Set' + kind + 'Parameter')(index, member, 1)
+                       fixes[member] = 1
+                   except Exception:
+                       pass
+       defaults.update(fixes)
+       classFixes = {m: v for m, v in fixes.items() if not m.startswith('V')}
    
        for member in members:
            GetParameter = lambda mbs, i: getattr(mbs, 'Get' + kind + 'Parameter')(i, member)
@@ -167,9 +192,9 @@ You can view and download this file on Github: `parameterConversionTest.py <http
                            if member[0] == 'V' and member[1:] in inspect.signature(itemClass).parameters['visualization'].default:
                                visualization = dict(inspect.signature(itemClass).parameters['visualization'].default)
                                visualization[member[1:]] = probe
-                               item = itemClass(visualization=visualization)
+                               item = itemClass(visualization=visualization, **classFixes)
                            else:
-                               item = itemClass(**{member: probe})
+                               item = itemClass(**dict(classFixes, **{member: probe}))
                            mbs2 = SC.AddSystem()
                            return GetParameter(mbs2, Add(mbs2, item))
                    row.append(Outcome(Run))

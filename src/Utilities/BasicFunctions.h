@@ -271,10 +271,14 @@ namespace EXUstd {
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//! false if the user switched range checks off with exudyn.special.exceptions.parameterRangeChecks;
+	//! defined next to exudyn.special in Pybind_manual_classes.cpp (revision plan steps 34c4, 95)
+	bool ParameterRangeChecksActive();
+
 	//checker functions for simulationSettings and visualizationSettings
 	inline Index GetSafelyUInt(Index value, const char* parameterName)
 	{
-		if (!(value >= 0))
+		if (!(value >= 0) && ParameterRangeChecksActive())
 		{
 			PyError(STDstring("integer parameter '") + parameterName + "' may not be negative, but received: " + EXUstd::ToString(value));
 			return 0;
@@ -284,7 +288,7 @@ namespace EXUstd {
 
 	inline Index GetSafelyPInt(Index value, const char* parameterName)
 	{
-		if (!(value > 0))
+		if (!(value > 0) && ParameterRangeChecksActive())
 		{
 			PyError(STDstring("integer parameter '") + parameterName + "' must be positive (> 0), but received: " + EXUstd::ToString(value));
 			return 1; //any positive value, should work in most cases as a backup
@@ -294,7 +298,7 @@ namespace EXUstd {
 
 	inline Real GetSafelyUReal(Real value, const char* parameterName)
 	{
-		if (value < 0)
+		if (value < 0 && ParameterRangeChecksActive())
 		{
 			PyError(STDstring("Real parameter '") + parameterName + "' may not be negative, but received: " + EXUstd::ToString(value));
 			return 0;
@@ -304,7 +308,7 @@ namespace EXUstd {
 
 	inline Real GetSafelyPReal(Real value, const char* parameterName)
 	{
-		if (value <= 0)
+		if (value <= 0 && ParameterRangeChecksActive())
 		{
 			PyError(STDstring("Real parameter '") + parameterName + "' must be positive (> 0), but received: " + EXUstd::ToString(value));
 			return 1; //any positive value, should work in most cases as a backup
@@ -314,7 +318,7 @@ namespace EXUstd {
 
 	inline float GetSafelyUFloat(float value, const char* parameterName)
 	{
-		if (value < 0)
+		if (value < 0 && ParameterRangeChecksActive())
 		{
 			PyError(STDstring("float parameter '") + parameterName + "' may not be negative, but received: " + EXUstd::ToString(value));
 			return 0;
@@ -324,7 +328,7 @@ namespace EXUstd {
 
 	inline float GetSafelyPFloat(float value, const char* parameterName)
 	{
-		if (value <= 0)
+		if (value <= 0 && ParameterRangeChecksActive())
 		{
 			PyError(STDstring("float parameter '") + parameterName + "' must be positive (> 0), but received: " + EXUstd::ToString(value));
 			return 1; //any positive value, should work in most cases as a backup

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-14  23:57:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -117,9 +117,9 @@ public: // AUTO:
         EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactCircleCable2D->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactCircleCable2D->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectContactCircleCable2D->GetParameters().numberOfContactSegments = py::cast<Index>(d["numberOfContactSegments"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectContactCircleCable2D->GetParameters().contactStiffness = py::cast<Real>(d["contactStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectContactCircleCable2D->GetParameters().contactDamping = py::cast<Real>(d["contactDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectContactCircleCable2D->GetParameters().circleRadius = py::cast<Real>(d["circleRadius"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["contactStiffness"], cObjectContactCircleCable2D->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactCircleCable2D.contactStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["contactDamping"], cObjectContactCircleCable2D->GetParameters().contactDamping, EPyUtils::RangeCheck::nonNegative, "ObjectContactCircleCable2D.contactDamping"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["circleRadius"], cObjectContactCircleCable2D->GetParameters().circleRadius, EPyUtils::RangeCheck::nonNegative, "ObjectContactCircleCable2D.circleRadius"); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectContactCircleCable2D->GetParameters().offset = py::cast<Real>(d["offset"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectContactCircleCable2D->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -179,9 +179,9 @@ public: // AUTO:
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectContactCircleCable2D->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectContactCircleCable2D->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("numberOfContactSegments") == 0) { cObjectContactCircleCable2D->GetParameters().numberOfContactSegments = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("contactStiffness") == 0) { cObjectContactCircleCable2D->GetParameters().contactStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("contactDamping") == 0) { cObjectContactCircleCable2D->GetParameters().contactDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("circleRadius") == 0) { cObjectContactCircleCable2D->GetParameters().circleRadius = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("contactStiffness") == 0) { EPyUtils::FromPython(value, cObjectContactCircleCable2D->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactCircleCable2D.contactStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("contactDamping") == 0) { EPyUtils::FromPython(value, cObjectContactCircleCable2D->GetParameters().contactDamping, EPyUtils::RangeCheck::nonNegative, "ObjectContactCircleCable2D.contactDamping"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("circleRadius") == 0) { EPyUtils::FromPython(value, cObjectContactCircleCable2D->GetParameters().circleRadius, EPyUtils::RangeCheck::nonNegative, "ObjectContactCircleCable2D.circleRadius"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { cObjectContactCircleCable2D->GetParameters().offset = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectContactCircleCable2D->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectContactCircleCable2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

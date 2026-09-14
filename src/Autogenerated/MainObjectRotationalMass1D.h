@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:16 (last modified)
+* @date         2026-09-14  23:57:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -111,7 +111,7 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectRotationalMass1D->GetParameters().physicsInertia = py::cast<Real>(d["physicsInertia"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsInertia"], cObjectRotationalMass1D->GetParameters().physicsInertia, EPyUtils::RangeCheck::nonNegative, "ObjectRotationalMass1D.physicsInertia"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectRotationalMass1D->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "referencePosition")) { EPyUtils::FromPython(d["referencePosition"], cObjectRotationalMass1D->GetParameters().referencePosition); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "referenceRotation")) { EPyUtils::FromPython<Real, 3, 3>(d["referenceRotation"], cObjectRotationalMass1D->GetParameters().referenceRotation); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -155,7 +155,7 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsInertia") == 0) { cObjectRotationalMass1D->GetParameters().physicsInertia = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsInertia") == 0) { EPyUtils::FromPython(value, cObjectRotationalMass1D->GetParameters().physicsInertia, EPyUtils::RangeCheck::nonNegative, "ObjectRotationalMass1D.physicsInertia"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectRotationalMass1D->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("referencePosition") == 0) { EPyUtils::FromPython(value, cObjectRotationalMass1D->GetParameters().referencePosition); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("referenceRotation") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectRotationalMass1D->GetParameters().referenceRotation); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

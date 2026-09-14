@@ -74,6 +74,25 @@ namespace EPyUtils {
 	//Python -> C++
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+	//! the range a scalar parameter must lie in (the U... and P... types of definitions/)
+	enum class RangeCheck { nonNegative, positive };
+
+	//! a Real, float or Index scalar with a range; context names item and parameter for the message,
+	//! e.g. "ObjectMassPoint.physicsMass"; exudyn.special.exceptions.parameterRangeChecks = False accepts any value
+	template<class T>
+	inline void FromPython(const py::object& value, T& destination, RangeCheck range, const char* context)
+	{
+		T scalar = py::cast<T>(value);
+		bool valid = (range == RangeCheck::positive) ? (scalar > 0) : (scalar >= 0);
+		if (!valid && EXUstd::ParameterRangeChecksActive())
+		{
+			PyError(STDstring("parameter ") + context + (range == RangeCheck::positive ? " must be positive (> 0)" : " may not be negative") +
+				", but received " + EXUstd::ToString(scalar) +
+				" (range checks can be switched off with exudyn.special.exceptions.parameterRangeChecks = False)");
+		}
+		destination = scalar;
+	}
+
 	//! a string; any other type raises
 	inline void FromPython(const py::object& value, STDstring& destination)
 	{

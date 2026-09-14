@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-14  23:57:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -116,13 +116,13 @@ public: // AUTO:
     {
         EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactFrictionCircleCable2D->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactFrictionCircleCable2D->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectContactFrictionCircleCable2D->GetParameters().numberOfContactSegments = py::cast<Index>(d["numberOfContactSegments"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectContactFrictionCircleCable2D->GetParameters().contactStiffness = py::cast<Real>(d["contactStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectContactFrictionCircleCable2D->GetParameters().contactDamping = py::cast<Real>(d["contactDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectContactFrictionCircleCable2D->GetParameters().frictionVelocityPenalty = py::cast<Real>(d["frictionVelocityPenalty"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectContactFrictionCircleCable2D->GetParameters().frictionStiffness = py::cast<Real>(d["frictionStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectContactFrictionCircleCable2D->GetParameters().frictionCoefficient = py::cast<Real>(d["frictionCoefficient"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectContactFrictionCircleCable2D->GetParameters().circleRadius = py::cast<Real>(d["circleRadius"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["numberOfContactSegments"], cObjectContactFrictionCircleCable2D->GetParameters().numberOfContactSegments, EPyUtils::RangeCheck::positive, "ObjectContactFrictionCircleCable2D.numberOfContactSegments"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["contactStiffness"], cObjectContactFrictionCircleCable2D->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.contactStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["contactDamping"], cObjectContactFrictionCircleCable2D->GetParameters().contactDamping, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.contactDamping"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["frictionVelocityPenalty"], cObjectContactFrictionCircleCable2D->GetParameters().frictionVelocityPenalty, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.frictionVelocityPenalty"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["frictionStiffness"], cObjectContactFrictionCircleCable2D->GetParameters().frictionStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.frictionStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["frictionCoefficient"], cObjectContactFrictionCircleCable2D->GetParameters().frictionCoefficient, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.frictionCoefficient"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["circleRadius"], cObjectContactFrictionCircleCable2D->GetParameters().circleRadius, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.circleRadius"); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectContactFrictionCircleCable2D->GetParameters().useSegmentNormals = py::cast<bool>(d["useSegmentNormals"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectContactFrictionCircleCable2D->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -187,13 +187,13 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectContactFrictionCircleCable2D->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectContactFrictionCircleCable2D->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("numberOfContactSegments") == 0) { cObjectContactFrictionCircleCable2D->GetParameters().numberOfContactSegments = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("contactStiffness") == 0) { cObjectContactFrictionCircleCable2D->GetParameters().contactStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("contactDamping") == 0) { cObjectContactFrictionCircleCable2D->GetParameters().contactDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("frictionVelocityPenalty") == 0) { cObjectContactFrictionCircleCable2D->GetParameters().frictionVelocityPenalty = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("frictionStiffness") == 0) { cObjectContactFrictionCircleCable2D->GetParameters().frictionStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("frictionCoefficient") == 0) { cObjectContactFrictionCircleCable2D->GetParameters().frictionCoefficient = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("circleRadius") == 0) { cObjectContactFrictionCircleCable2D->GetParameters().circleRadius = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("numberOfContactSegments") == 0) { EPyUtils::FromPython(value, cObjectContactFrictionCircleCable2D->GetParameters().numberOfContactSegments, EPyUtils::RangeCheck::positive, "ObjectContactFrictionCircleCable2D.numberOfContactSegments"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("contactStiffness") == 0) { EPyUtils::FromPython(value, cObjectContactFrictionCircleCable2D->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.contactStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("contactDamping") == 0) { EPyUtils::FromPython(value, cObjectContactFrictionCircleCable2D->GetParameters().contactDamping, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.contactDamping"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("frictionVelocityPenalty") == 0) { EPyUtils::FromPython(value, cObjectContactFrictionCircleCable2D->GetParameters().frictionVelocityPenalty, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.frictionVelocityPenalty"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("frictionStiffness") == 0) { EPyUtils::FromPython(value, cObjectContactFrictionCircleCable2D->GetParameters().frictionStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.frictionStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("frictionCoefficient") == 0) { EPyUtils::FromPython(value, cObjectContactFrictionCircleCable2D->GetParameters().frictionCoefficient, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.frictionCoefficient"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("circleRadius") == 0) { EPyUtils::FromPython(value, cObjectContactFrictionCircleCable2D->GetParameters().circleRadius, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.circleRadius"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("useSegmentNormals") == 0) { cObjectContactFrictionCircleCable2D->GetParameters().useSegmentNormals = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectContactFrictionCircleCable2D->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectContactFrictionCircleCable2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

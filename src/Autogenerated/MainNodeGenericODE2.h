@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:16 (last modified)
+* @date         2026-09-14  23:57:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -135,7 +135,7 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         cNodeGenericODE2->GetParameters().referenceCoordinates = py::cast<std::vector<Real>>(d["referenceCoordinates"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cNodeGenericODE2->GetParameters().numberOfODE2Coordinates = py::cast<Index>(d["numberOfODE2Coordinates"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["numberOfODE2Coordinates"], cNodeGenericODE2->GetParameters().numberOfODE2Coordinates, EPyUtils::RangeCheck::positive, "NodeGenericODE2.numberOfODE2Coordinates"); /* AUTO:  read out dictionary and cast to C++ type*/
         GetParameters().initialCoordinates = py::cast<std::vector<Real>>(d["initialCoordinates"]); /* AUTO:  read out dictionary and cast to C++ type*/
         GetParameters().initialCoordinates_t = py::cast<std::vector<Real>>(d["initialCoordinates_t"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -177,7 +177,7 @@ public: // AUTO:
         else if (parameterName.compare("referenceCoordinates") == 0) { cNodeGenericODE2->GetParameters().referenceCoordinates = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("initialCoordinates") == 0) { GetParameters().initialCoordinates = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("initialCoordinates_t") == 0) { GetParameters().initialCoordinates_t = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("numberOfODE2Coordinates") == 0) { cNodeGenericODE2->GetParameters().numberOfODE2Coordinates = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("numberOfODE2Coordinates") == 0) { EPyUtils::FromPython(value, cNodeGenericODE2->GetParameters().numberOfODE2Coordinates, EPyUtils::RangeCheck::positive, "NodeGenericODE2.numberOfODE2Coordinates"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationNodeGenericODE2->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("NodeGenericODE2::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }

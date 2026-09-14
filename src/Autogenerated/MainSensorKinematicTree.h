@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-14  23:57:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -109,7 +109,7 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         EPyUtils::ItemIndexFromPython<ObjectIndex>(d["objectNumber"], cSensorKinematicTree->GetParameters().objectNumber); /* AUTO:  read out dictionary and cast to C++ type*/
-        cSensorKinematicTree->GetParameters().linkNumber = py::cast<Index>(d["linkNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["linkNumber"], cSensorKinematicTree->GetParameters().linkNumber, EPyUtils::RangeCheck::nonNegative, "SensorKinematicTree.linkNumber"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["localPosition"], cSensorKinematicTree->GetParameters().localPosition); /* AUTO:  read out dictionary and cast to C++ type*/
         cSensorKinematicTree->GetParameters().writeToFile = py::cast<bool>(d["writeToFile"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["fileName"], cSensorKinematicTree->GetParameters().fileName); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -158,7 +158,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("objectNumber") == 0) { EPyUtils::ItemIndexFromPython<ObjectIndex>(value, cSensorKinematicTree->GetParameters().objectNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("linkNumber") == 0) { cSensorKinematicTree->GetParameters().linkNumber = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("linkNumber") == 0) { EPyUtils::FromPython(value, cSensorKinematicTree->GetParameters().linkNumber, EPyUtils::RangeCheck::nonNegative, "SensorKinematicTree.linkNumber"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("localPosition") == 0) { EPyUtils::FromPython(value, cSensorKinematicTree->GetParameters().localPosition); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("writeToFile") == 0) { cSensorKinematicTree->GetParameters().writeToFile = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("fileName") == 0) { EPyUtils::FromPython(value, cSensorKinematicTree->GetParameters().fileName); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

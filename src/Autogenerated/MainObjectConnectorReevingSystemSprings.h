@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-14  23:57:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -111,10 +111,10 @@ public: // AUTO:
         EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorReevingSystemSprings->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "hasCoordinateMarkers")) { cObjectConnectorReevingSystemSprings->GetParameters().hasCoordinateMarkers = py::cast<bool>(d["hasCoordinateMarkers"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["coordinateFactors"], cObjectConnectorReevingSystemSprings->GetParameters().coordinateFactors); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectConnectorReevingSystemSprings->GetParameters().stiffnessPerLength = py::cast<Real>(d["stiffnessPerLength"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "dampingPerLength")) { cObjectConnectorReevingSystemSprings->GetParameters().dampingPerLength = py::cast<Real>(d["dampingPerLength"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "dampingTorsional")) { cObjectConnectorReevingSystemSprings->GetParameters().dampingTorsional = py::cast<Real>(d["dampingTorsional"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "dampingShear")) { cObjectConnectorReevingSystemSprings->GetParameters().dampingShear = py::cast<Real>(d["dampingShear"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        EPyUtils::FromPython(d["stiffnessPerLength"], cObjectConnectorReevingSystemSprings->GetParameters().stiffnessPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.stiffnessPerLength"); /* AUTO:  read out dictionary and cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "dampingPerLength")) { EPyUtils::FromPython(d["dampingPerLength"], cObjectConnectorReevingSystemSprings->GetParameters().dampingPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.dampingPerLength"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "dampingTorsional")) { EPyUtils::FromPython(d["dampingTorsional"], cObjectConnectorReevingSystemSprings->GetParameters().dampingTorsional, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.dampingTorsional"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "dampingShear")) { EPyUtils::FromPython(d["dampingShear"], cObjectConnectorReevingSystemSprings->GetParameters().dampingShear, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.dampingShear"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "regularizationForce")) { cObjectConnectorReevingSystemSprings->GetParameters().regularizationForce = py::cast<Real>(d["regularizationForce"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "referenceLength")) { cObjectConnectorReevingSystemSprings->GetParameters().referenceLength = py::cast<Real>(d["referenceLength"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetVector3DListSafely(d["sheavesAxes"], cObjectConnectorReevingSystemSprings->GetParameters().sheavesAxes); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -182,10 +182,10 @@ public: // AUTO:
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectConnectorReevingSystemSprings->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("hasCoordinateMarkers") == 0) { cObjectConnectorReevingSystemSprings->GetParameters().hasCoordinateMarkers = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("coordinateFactors") == 0) { EPyUtils::FromPython(value, cObjectConnectorReevingSystemSprings->GetParameters().coordinateFactors); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("stiffnessPerLength") == 0) { cObjectConnectorReevingSystemSprings->GetParameters().stiffnessPerLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("dampingPerLength") == 0) { cObjectConnectorReevingSystemSprings->GetParameters().dampingPerLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("dampingTorsional") == 0) { cObjectConnectorReevingSystemSprings->GetParameters().dampingTorsional = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("dampingShear") == 0) { cObjectConnectorReevingSystemSprings->GetParameters().dampingShear = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("stiffnessPerLength") == 0) { EPyUtils::FromPython(value, cObjectConnectorReevingSystemSprings->GetParameters().stiffnessPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.stiffnessPerLength"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("dampingPerLength") == 0) { EPyUtils::FromPython(value, cObjectConnectorReevingSystemSprings->GetParameters().dampingPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.dampingPerLength"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("dampingTorsional") == 0) { EPyUtils::FromPython(value, cObjectConnectorReevingSystemSprings->GetParameters().dampingTorsional, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.dampingTorsional"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("dampingShear") == 0) { EPyUtils::FromPython(value, cObjectConnectorReevingSystemSprings->GetParameters().dampingShear, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.dampingShear"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("regularizationForce") == 0) { cObjectConnectorReevingSystemSprings->GetParameters().regularizationForce = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("referenceLength") == 0) { cObjectConnectorReevingSystemSprings->GetParameters().referenceLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("sheavesAxes") == 0) { EPyUtils::SetVector3DListSafely(value, cObjectConnectorReevingSystemSprings->GetParameters().sheavesAxes); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

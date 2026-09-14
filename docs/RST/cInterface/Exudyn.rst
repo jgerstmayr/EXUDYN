@@ -82,6 +82,10 @@ These are the access functions to the Exudyn module. General usage is explained 
   | if >= 0, the solver stops after reaching accoring CPU time specified with timeout; makes sense for parameter variation, automatic testing or for long-running simulations; default=-1 (no timeout)
 * | **special.solver.multiThreadingLoadBalancing**:
   | if True (=default), multithreaded code parts (in particular solver and raytracing) use load balancing, which may give better performance in case of non-equilibrated loads; (mobile) Intel CPUs may perform significantly better without load balancing
+* | **special.exceptions**:
+  | special flags for exceptions and checks; not intended for regular users; for available features, see the C++ code class PySpecialExceptions
+* | **special.exceptions.parameterRangeChecks**:
+  | if True (=default), writing an item or settings parameter outside its range (e.g. a negative mass or a non-positive number of steps) raises an error, on every write path (item classes, dictionaries, SetObjectParameter, ...); set False to accept any value, e.g. if a range limit turns out to be wrong
 * | **variables**:
   | this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables["myvar"] = 42; can be used in particular to exchange data between different mbs or between packages by importing exudyn.variables wherever needed.
 * | **sys**:

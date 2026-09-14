@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-14  23:57:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -109,7 +109,7 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cMarkerNodeRotationCoordinate->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/
-        cMarkerNodeRotationCoordinate->GetParameters().rotationCoordinate = py::cast<Index>(d["rotationCoordinate"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["rotationCoordinate"], cMarkerNodeRotationCoordinate->GetParameters().rotationCoordinate, EPyUtils::RangeCheck::nonNegative, "MarkerNodeRotationCoordinate.rotationCoordinate"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationMarkerNodeRotationCoordinate->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
@@ -143,7 +143,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cMarkerNodeRotationCoordinate->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("rotationCoordinate") == 0) { cMarkerNodeRotationCoordinate->GetParameters().rotationCoordinate = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("rotationCoordinate") == 0) { EPyUtils::FromPython(value, cMarkerNodeRotationCoordinate->GetParameters().rotationCoordinate, EPyUtils::RangeCheck::nonNegative, "MarkerNodeRotationCoordinate.rotationCoordinate"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationMarkerNodeRotationCoordinate->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("MarkerNodeRotationCoordinate::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }

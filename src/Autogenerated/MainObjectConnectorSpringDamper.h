@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-14  23:57:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -107,9 +107,9 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorSpringDamper->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectConnectorSpringDamper->GetParameters().referenceLength = py::cast<Real>(d["referenceLength"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectConnectorSpringDamper->GetParameters().stiffness = py::cast<Real>(d["stiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectConnectorSpringDamper->GetParameters().damping = py::cast<Real>(d["damping"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["referenceLength"], cObjectConnectorSpringDamper->GetParameters().referenceLength, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorSpringDamper.referenceLength"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["stiffness"], cObjectConnectorSpringDamper->GetParameters().stiffness, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorSpringDamper.stiffness"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["damping"], cObjectConnectorSpringDamper->GetParameters().damping, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorSpringDamper.damping"); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "force")) { cObjectConnectorSpringDamper->GetParameters().force = py::cast<Real>(d["force"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "velocityOffset")) { cObjectConnectorSpringDamper->GetParameters().velocityOffset = py::cast<Real>(d["velocityOffset"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorSpringDamper->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -166,9 +166,9 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectConnectorSpringDamper->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("referenceLength") == 0) { cObjectConnectorSpringDamper->GetParameters().referenceLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("stiffness") == 0) { cObjectConnectorSpringDamper->GetParameters().stiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("damping") == 0) { cObjectConnectorSpringDamper->GetParameters().damping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("referenceLength") == 0) { EPyUtils::FromPython(value, cObjectConnectorSpringDamper->GetParameters().referenceLength, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorSpringDamper.referenceLength"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("stiffness") == 0) { EPyUtils::FromPython(value, cObjectConnectorSpringDamper->GetParameters().stiffness, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorSpringDamper.stiffness"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("damping") == 0) { EPyUtils::FromPython(value, cObjectConnectorSpringDamper->GetParameters().damping, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorSpringDamper.damping"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("force") == 0) { cObjectConnectorSpringDamper->GetParameters().force = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("velocityOffset") == 0) { cObjectConnectorSpringDamper->GetParameters().velocityOffset = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectConnectorSpringDamper->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

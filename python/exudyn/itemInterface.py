@@ -860,7 +860,7 @@ class NodeGenericODE2:
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
         self.initialCoordinates_t = np.array(initialCoordinates_t)
-        self.numberOfODE2Coordinates = CheckForValidPInt(numberOfODE2Coordinates,"numberOfODE2Coordinates","NodeGenericODE2")
+        self.numberOfODE2Coordinates = numberOfODE2Coordinates
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -910,7 +910,7 @@ class NodeGenericODE1:
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
-        self.numberOfODE1Coordinates = CheckForValidPInt(numberOfODE1Coordinates,"numberOfODE1Coordinates","NodeGenericODE1")
+        self.numberOfODE1Coordinates = numberOfODE1Coordinates
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -959,7 +959,7 @@ class NodeGenericAE:
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
-        self.numberOfAECoordinates = CheckForValidPInt(numberOfAECoordinates,"numberOfAECoordinates","NodeGenericAE")
+        self.numberOfAECoordinates = numberOfAECoordinates
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -1008,7 +1008,7 @@ class NodeGenericData:
     def __init__(self, name = '', initialCoordinates = [], numberOfDataCoordinates = 0, visualization = {'show': False}):
         self.name = name
         self.initialCoordinates = np.array(initialCoordinates)
-        self.numberOfDataCoordinates = CheckForValidUInt(numberOfDataCoordinates,"numberOfDataCoordinates","NodeGenericData")
+        self.numberOfDataCoordinates = numberOfDataCoordinates
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -1177,7 +1177,7 @@ class ObjectMassPoint:
     """
     def __init__(self, name = '', physicsMass = 0., nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsData': []}):
         self.name = name
-        self.physicsMass = CheckForValidUReal(physicsMass,"physicsMass","ObjectMassPoint")
+        self.physicsMass = physicsMass
         self.nodeNumber = nodeNumber
         self.visualization = CopyDictLevel1(visualization)
 
@@ -1234,7 +1234,7 @@ class ObjectMassPoint2D:
     """
     def __init__(self, name = '', physicsMass = 0., nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsData': []}):
         self.name = name
-        self.physicsMass = CheckForValidUReal(physicsMass,"physicsMass","ObjectMassPoint2D")
+        self.physicsMass = physicsMass
         self.nodeNumber = nodeNumber
         self.visualization = CopyDictLevel1(visualization)
 
@@ -1297,7 +1297,7 @@ class ObjectMass1D:
     """
     def __init__(self, name = '', physicsMass = 0., nodeNumber = exudyn.InvalidIndex(), referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), visualization = {'show': True, 'graphicsData': []}):
         self.name = name
-        self.physicsMass = CheckForValidUReal(physicsMass,"physicsMass","ObjectMass1D")
+        self.physicsMass = physicsMass
         self.nodeNumber = nodeNumber
         self.referencePosition = np.array(referencePosition)
         self.referenceRotation = np.array(referenceRotation)
@@ -1362,7 +1362,7 @@ class ObjectRotationalMass1D:
     """
     def __init__(self, name = '', physicsInertia = 0., nodeNumber = exudyn.InvalidIndex(), referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), visualization = {'show': True, 'graphicsData': []}):
         self.name = name
-        self.physicsInertia = CheckForValidUReal(physicsInertia,"physicsInertia","ObjectRotationalMass1D")
+        self.physicsInertia = physicsInertia
         self.nodeNumber = nodeNumber
         self.referencePosition = np.array(referencePosition)
         self.referenceRotation = np.array(referenceRotation)
@@ -1433,7 +1433,7 @@ class ObjectRigidBody:
     """
     def __init__(self, name = '', physicsMass = 0., physicsInertia = [0.,0.,0., 0.,0.,0.], physicsCenterOfMass = [0.,0.,0.], nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
         self.name = name
-        self.physicsMass = CheckForValidUReal(physicsMass,"physicsMass","ObjectRigidBody")
+        self.physicsMass = physicsMass
         self.physicsInertia = np.array(physicsInertia)
         self.physicsCenterOfMass = np.array(physicsCenterOfMass)
         self.nodeNumber = nodeNumber
@@ -1505,8 +1505,8 @@ class ObjectRigidBody2D:
     """
     def __init__(self, name = '', physicsMass = 0., physicsInertia = 0., physicsCenterOfMass = [0.,0.], nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
         self.name = name
-        self.physicsMass = CheckForValidUReal(physicsMass,"physicsMass","ObjectRigidBody2D")
-        self.physicsInertia = CheckForValidUReal(physicsInertia,"physicsInertia","ObjectRigidBody2D")
+        self.physicsMass = physicsMass
+        self.physicsInertia = physicsInertia
         self.physicsCenterOfMass = np.array(physicsCenterOfMass)
         self.nodeNumber = nodeNumber
         self.visualization = CopyDictLevel1(visualization)
@@ -2042,7 +2042,7 @@ class ObjectFFRFreducedOrder:
         self.outputVariableTypeModeBasis = outputVariableTypeModeBasis
         self.referencePositions = CheckForValidNumpyArray(referencePositions)
         self.objectIsInitialized = objectIsInitialized
-        self.physicsMass = CheckForValidUReal(physicsMass,"physicsMass","ObjectFFRFreducedOrder")
+        self.physicsMass = physicsMass
         self.physicsInertia = np.array(physicsInertia)
         self.physicsCenterOfMass = np.array(physicsCenterOfMass)
         self.mPsiTildePsi = CheckForValidNumpyArray(mPsiTildePsi)
@@ -2151,12 +2151,12 @@ class ObjectANCFCable:
     """
     def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., strainIsRelativeToReference = 0., nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, visualization = {'show': True, 'radius': 0., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
-        self.physicsLength = CheckForValidUReal(physicsLength,"physicsLength","ObjectANCFCable")
-        self.physicsMassPerLength = CheckForValidUReal(physicsMassPerLength,"physicsMassPerLength","ObjectANCFCable")
-        self.physicsBendingStiffness = CheckForValidUReal(physicsBendingStiffness,"physicsBendingStiffness","ObjectANCFCable")
-        self.physicsAxialStiffness = CheckForValidUReal(physicsAxialStiffness,"physicsAxialStiffness","ObjectANCFCable")
-        self.physicsBendingDamping = CheckForValidUReal(physicsBendingDamping,"physicsBendingDamping","ObjectANCFCable")
-        self.physicsAxialDamping = CheckForValidUReal(physicsAxialDamping,"physicsAxialDamping","ObjectANCFCable")
+        self.physicsLength = physicsLength
+        self.physicsMassPerLength = physicsMassPerLength
+        self.physicsBendingStiffness = physicsBendingStiffness
+        self.physicsAxialStiffness = physicsAxialStiffness
+        self.physicsBendingDamping = physicsBendingDamping
+        self.physicsAxialDamping = physicsAxialDamping
         self.physicsReferenceAxialStrain = physicsReferenceAxialStrain
         self.strainIsRelativeToReference = strainIsRelativeToReference
         self.nodeNumbers = copy.copy(nodeNumbers)
@@ -2251,12 +2251,12 @@ class ObjectANCFCable2D:
     """
     def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., physicsReferenceCurvature = 0., strainIsRelativeToReference = 0., nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, axialForceUserFunction = 0, bendingMomentUserFunction = 0, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
-        self.physicsLength = CheckForValidUReal(physicsLength,"physicsLength","ObjectANCFCable2D")
-        self.physicsMassPerLength = CheckForValidUReal(physicsMassPerLength,"physicsMassPerLength","ObjectANCFCable2D")
-        self.physicsBendingStiffness = CheckForValidUReal(physicsBendingStiffness,"physicsBendingStiffness","ObjectANCFCable2D")
-        self.physicsAxialStiffness = CheckForValidUReal(physicsAxialStiffness,"physicsAxialStiffness","ObjectANCFCable2D")
-        self.physicsBendingDamping = CheckForValidUReal(physicsBendingDamping,"physicsBendingDamping","ObjectANCFCable2D")
-        self.physicsAxialDamping = CheckForValidUReal(physicsAxialDamping,"physicsAxialDamping","ObjectANCFCable2D")
+        self.physicsLength = physicsLength
+        self.physicsMassPerLength = physicsMassPerLength
+        self.physicsBendingStiffness = physicsBendingStiffness
+        self.physicsAxialStiffness = physicsAxialStiffness
+        self.physicsBendingDamping = physicsBendingDamping
+        self.physicsAxialDamping = physicsAxialDamping
         self.physicsReferenceAxialStrain = physicsReferenceAxialStrain
         self.physicsReferenceCurvature = physicsReferenceCurvature
         self.strainIsRelativeToReference = strainIsRelativeToReference
@@ -2356,13 +2356,13 @@ class ObjectALEANCFCable2D:
     """
     def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsMovingMassFactor = 1., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., physicsReferenceCurvature = 0., physicsUseCouplingTerms = True, physicsAddALEvariation = True, nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, strainIsRelativeToReference = 0., visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
-        self.physicsLength = CheckForValidUReal(physicsLength,"physicsLength","ObjectALEANCFCable2D")
-        self.physicsMassPerLength = CheckForValidUReal(physicsMassPerLength,"physicsMassPerLength","ObjectALEANCFCable2D")
-        self.physicsMovingMassFactor = CheckForValidUReal(physicsMovingMassFactor,"physicsMovingMassFactor","ObjectALEANCFCable2D")
-        self.physicsBendingStiffness = CheckForValidUReal(physicsBendingStiffness,"physicsBendingStiffness","ObjectALEANCFCable2D")
-        self.physicsAxialStiffness = CheckForValidUReal(physicsAxialStiffness,"physicsAxialStiffness","ObjectALEANCFCable2D")
-        self.physicsBendingDamping = CheckForValidUReal(physicsBendingDamping,"physicsBendingDamping","ObjectALEANCFCable2D")
-        self.physicsAxialDamping = CheckForValidUReal(physicsAxialDamping,"physicsAxialDamping","ObjectALEANCFCable2D")
+        self.physicsLength = physicsLength
+        self.physicsMassPerLength = physicsMassPerLength
+        self.physicsMovingMassFactor = physicsMovingMassFactor
+        self.physicsBendingStiffness = physicsBendingStiffness
+        self.physicsAxialStiffness = physicsAxialStiffness
+        self.physicsBendingDamping = physicsBendingDamping
+        self.physicsAxialDamping = physicsAxialDamping
         self.physicsReferenceAxialStrain = physicsReferenceAxialStrain
         self.physicsReferenceCurvature = physicsReferenceCurvature
         self.physicsUseCouplingTerms = physicsUseCouplingTerms
@@ -2451,7 +2451,7 @@ class ObjectANCFBeam:
     def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], physicsLength = 0., sectionData = exudyn.BeamSection(), crossSectionPenaltyFactor = [1.,1.,1.], crossSectionDamping = [0.,0.,0.], visualization = {'show': True, 'sectionGeometry': exudyn.BeamSectionGeometry(), 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
-        self.physicsLength = CheckForValidPReal(physicsLength,"physicsLength","ObjectANCFBeam")
+        self.physicsLength = physicsLength
         self.sectionData = sectionData
         self.crossSectionPenaltyFactor = np.array(crossSectionPenaltyFactor)
         self.crossSectionDamping = np.array(crossSectionDamping)
@@ -2541,15 +2541,15 @@ class ObjectBeamGeometricallyExact2D:
     def __init__(self, name = '', nodeNumbers = [], physicsLength = 0., physicsMassPerLength = 0., physicsCrossSectionInertia = 0., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsShearStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsShearDamping = 0., physicsReferenceCurvature = 0., includeReferenceRotations = False, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
-        self.physicsLength = CheckForValidUReal(physicsLength,"physicsLength","ObjectBeamGeometricallyExact2D")
-        self.physicsMassPerLength = CheckForValidUReal(physicsMassPerLength,"physicsMassPerLength","ObjectBeamGeometricallyExact2D")
-        self.physicsCrossSectionInertia = CheckForValidUReal(physicsCrossSectionInertia,"physicsCrossSectionInertia","ObjectBeamGeometricallyExact2D")
-        self.physicsBendingStiffness = CheckForValidUReal(physicsBendingStiffness,"physicsBendingStiffness","ObjectBeamGeometricallyExact2D")
-        self.physicsAxialStiffness = CheckForValidUReal(physicsAxialStiffness,"physicsAxialStiffness","ObjectBeamGeometricallyExact2D")
-        self.physicsShearStiffness = CheckForValidUReal(physicsShearStiffness,"physicsShearStiffness","ObjectBeamGeometricallyExact2D")
-        self.physicsBendingDamping = CheckForValidUReal(physicsBendingDamping,"physicsBendingDamping","ObjectBeamGeometricallyExact2D")
-        self.physicsAxialDamping = CheckForValidUReal(physicsAxialDamping,"physicsAxialDamping","ObjectBeamGeometricallyExact2D")
-        self.physicsShearDamping = CheckForValidUReal(physicsShearDamping,"physicsShearDamping","ObjectBeamGeometricallyExact2D")
+        self.physicsLength = physicsLength
+        self.physicsMassPerLength = physicsMassPerLength
+        self.physicsCrossSectionInertia = physicsCrossSectionInertia
+        self.physicsBendingStiffness = physicsBendingStiffness
+        self.physicsAxialStiffness = physicsAxialStiffness
+        self.physicsShearStiffness = physicsShearStiffness
+        self.physicsBendingDamping = physicsBendingDamping
+        self.physicsAxialDamping = physicsAxialDamping
+        self.physicsShearDamping = physicsShearDamping
         self.physicsReferenceCurvature = physicsReferenceCurvature
         self.includeReferenceRotations = includeReferenceRotations
         self.visualization = CopyDictLevel1(visualization)
@@ -2627,7 +2627,7 @@ class ObjectBeamGeometricallyExact:
     def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], physicsLength = 0., sectionData = exudyn.BeamSection(), visualization = {'show': True, 'sectionGeometry': exudyn.BeamSectionGeometry(), 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
-        self.physicsLength = CheckForValidPReal(physicsLength,"physicsLength","ObjectBeamGeometricallyExact")
+        self.physicsLength = physicsLength
         self.sectionData = sectionData
         self.visualization = CopyDictLevel1(visualization)
 
@@ -2705,7 +2705,7 @@ class ObjectANCFThinPlate:
     def __init__(self, name = '', physicsThickness = [], physicsDensity = 0., physicsMassProportionalDamping = 0., physicsStrainCoefficients = None, physicsCurvatureCoefficients = None, strainIsRelativeToReference = 1., slopesScalingX = [-1.,-1.,-1.,-1.], slopesScalingY = [-1.,-1.,-1.,-1.], nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.physicsThickness = CheckForValidNumpyArray(physicsThickness)
-        self.physicsDensity = CheckForValidUReal(physicsDensity,"physicsDensity","ObjectANCFThinPlate")
+        self.physicsDensity = physicsDensity
         self.physicsMassProportionalDamping = physicsMassProportionalDamping
         self.physicsStrainCoefficients = physicsStrainCoefficients
         self.physicsCurvatureCoefficients = physicsCurvatureCoefficients
@@ -2790,9 +2790,9 @@ class ObjectConnectorSpringDamper:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], referenceLength = 0., stiffness = 0., damping = 0., force = 0., velocityOffset = 0., activeConnector = True, springForceUserFunction = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
-        self.referenceLength = CheckForValidUReal(referenceLength,"referenceLength","ObjectConnectorSpringDamper")
-        self.stiffness = CheckForValidUReal(stiffness,"stiffness","ObjectConnectorSpringDamper")
-        self.damping = CheckForValidUReal(damping,"damping","ObjectConnectorSpringDamper")
+        self.referenceLength = referenceLength
+        self.stiffness = stiffness
+        self.damping = damping
         self.force = force
         self.velocityOffset = velocityOffset
         self.activeConnector = activeConnector
@@ -3374,17 +3374,17 @@ class ObjectConnectorCoordinateSpringDamperExt:
         self.velocityOffset = velocityOffset
         self.factor0 = factor0
         self.factor1 = factor1
-        self.fDynamicFriction = CheckForValidUReal(fDynamicFriction,"fDynamicFriction","ObjectConnectorCoordinateSpringDamperExt")
-        self.fStaticFrictionOffset = CheckForValidUReal(fStaticFrictionOffset,"fStaticFrictionOffset","ObjectConnectorCoordinateSpringDamperExt")
-        self.stickingStiffness = CheckForValidUReal(stickingStiffness,"stickingStiffness","ObjectConnectorCoordinateSpringDamperExt")
-        self.stickingDamping = CheckForValidUReal(stickingDamping,"stickingDamping","ObjectConnectorCoordinateSpringDamperExt")
-        self.exponentialDecayStatic = CheckForValidPReal(exponentialDecayStatic,"exponentialDecayStatic","ObjectConnectorCoordinateSpringDamperExt")
+        self.fDynamicFriction = fDynamicFriction
+        self.fStaticFrictionOffset = fStaticFrictionOffset
+        self.stickingStiffness = stickingStiffness
+        self.stickingDamping = stickingDamping
+        self.exponentialDecayStatic = exponentialDecayStatic
         self.fViscousFriction = fViscousFriction
-        self.frictionProportionalZone = CheckForValidUReal(frictionProportionalZone,"frictionProportionalZone","ObjectConnectorCoordinateSpringDamperExt")
+        self.frictionProportionalZone = frictionProportionalZone
         self.limitStopsUpper = limitStopsUpper
         self.limitStopsLower = limitStopsLower
-        self.limitStopsStiffness = CheckForValidUReal(limitStopsStiffness,"limitStopsStiffness","ObjectConnectorCoordinateSpringDamperExt")
-        self.limitStopsDamping = CheckForValidUReal(limitStopsDamping,"limitStopsDamping","ObjectConnectorCoordinateSpringDamperExt")
+        self.limitStopsStiffness = limitStopsStiffness
+        self.limitStopsDamping = limitStopsDamping
         self.useLimitStops = useLimitStops
         self.activeConnector = activeConnector
         self.springForceUserFunction = springForceUserFunction
@@ -3480,9 +3480,9 @@ class ObjectConnectorGravity:
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.gravitationalConstant = gravitationalConstant
-        self.mass0 = CheckForValidUReal(mass0,"mass0","ObjectConnectorGravity")
-        self.mass1 = CheckForValidUReal(mass1,"mass1","ObjectConnectorGravity")
-        self.minDistanceRegularization = CheckForValidUReal(minDistanceRegularization,"minDistanceRegularization","ObjectConnectorGravity")
+        self.mass0 = mass0
+        self.mass1 = mass1
+        self.minDistanceRegularization = minDistanceRegularization
         self.activeConnector = activeConnector
         self.visualization = CopyDictLevel1(visualization)
 
@@ -3614,19 +3614,19 @@ class ObjectConnectorHydraulicActuatorSimple:
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumbers = copy.copy(nodeNumbers)
-        self.offsetLength = CheckForValidUReal(offsetLength,"offsetLength","ObjectConnectorHydraulicActuatorSimple")
-        self.strokeLength = CheckForValidPReal(strokeLength,"strokeLength","ObjectConnectorHydraulicActuatorSimple")
-        self.chamberCrossSection0 = CheckForValidPReal(chamberCrossSection0,"chamberCrossSection0","ObjectConnectorHydraulicActuatorSimple")
-        self.chamberCrossSection1 = CheckForValidPReal(chamberCrossSection1,"chamberCrossSection1","ObjectConnectorHydraulicActuatorSimple")
-        self.hoseVolume0 = CheckForValidPReal(hoseVolume0,"hoseVolume0","ObjectConnectorHydraulicActuatorSimple")
-        self.hoseVolume1 = CheckForValidPReal(hoseVolume1,"hoseVolume1","ObjectConnectorHydraulicActuatorSimple")
+        self.offsetLength = offsetLength
+        self.strokeLength = strokeLength
+        self.chamberCrossSection0 = chamberCrossSection0
+        self.chamberCrossSection1 = chamberCrossSection1
+        self.hoseVolume0 = hoseVolume0
+        self.hoseVolume1 = hoseVolume1
         self.valveOpening0 = valveOpening0
         self.valveOpening1 = valveOpening1
-        self.actuatorDamping = CheckForValidUReal(actuatorDamping,"actuatorDamping","ObjectConnectorHydraulicActuatorSimple")
-        self.oilBulkModulus = CheckForValidPReal(oilBulkModulus,"oilBulkModulus","ObjectConnectorHydraulicActuatorSimple")
-        self.cylinderBulkModulus = CheckForValidUReal(cylinderBulkModulus,"cylinderBulkModulus","ObjectConnectorHydraulicActuatorSimple")
-        self.hoseBulkModulus = CheckForValidUReal(hoseBulkModulus,"hoseBulkModulus","ObjectConnectorHydraulicActuatorSimple")
-        self.nominalFlow = CheckForValidPReal(nominalFlow,"nominalFlow","ObjectConnectorHydraulicActuatorSimple")
+        self.actuatorDamping = actuatorDamping
+        self.oilBulkModulus = oilBulkModulus
+        self.cylinderBulkModulus = cylinderBulkModulus
+        self.hoseBulkModulus = hoseBulkModulus
+        self.nominalFlow = nominalFlow
         self.systemPressure = systemPressure
         self.tankPressure = tankPressure
         self.useChamberVolumeChange = useChamberVolumeChange
@@ -3740,10 +3740,10 @@ class ObjectConnectorReevingSystemSprings:
         self.markerNumbers = copy.copy(markerNumbers)
         self.hasCoordinateMarkers = hasCoordinateMarkers
         self.coordinateFactors = np.array(coordinateFactors)
-        self.stiffnessPerLength = CheckForValidUReal(stiffnessPerLength,"stiffnessPerLength","ObjectConnectorReevingSystemSprings")
-        self.dampingPerLength = CheckForValidUReal(dampingPerLength,"dampingPerLength","ObjectConnectorReevingSystemSprings")
-        self.dampingTorsional = CheckForValidUReal(dampingTorsional,"dampingTorsional","ObjectConnectorReevingSystemSprings")
-        self.dampingShear = CheckForValidUReal(dampingShear,"dampingShear","ObjectConnectorReevingSystemSprings")
+        self.stiffnessPerLength = stiffnessPerLength
+        self.dampingPerLength = dampingPerLength
+        self.dampingTorsional = dampingTorsional
+        self.dampingShear = dampingShear
         self.regularizationForce = regularizationForce
         self.referenceLength = referenceLength
         self.sheavesAxes = sheavesAxes
@@ -3822,7 +3822,7 @@ class ObjectConnectorDistance:
     def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], distance = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
-        self.distance = CheckForValidPReal(distance,"distance","ObjectConnectorDistance")
+        self.distance = distance
         self.activeConnector = activeConnector
         self.visualization = CopyDictLevel1(visualization)
 
@@ -4090,12 +4090,12 @@ class ObjectConnectorRollingDiscPenalty:
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
-        self.discRadius = CheckForValidPReal(discRadius,"discRadius","ObjectConnectorRollingDiscPenalty")
+        self.discRadius = discRadius
         self.discAxis = np.array(discAxis)
         self.planeNormal = np.array(planeNormal)
         self.dryFrictionAngle = dryFrictionAngle
-        self.contactStiffness = CheckForValidUReal(contactStiffness,"contactStiffness","ObjectConnectorRollingDiscPenalty")
-        self.contactDamping = CheckForValidUReal(contactDamping,"contactDamping","ObjectConnectorRollingDiscPenalty")
+        self.contactStiffness = contactStiffness
+        self.contactDamping = contactDamping
         self.dryFriction = np.array(dryFriction)
         self.dryFrictionProportionalZone = dryFrictionProportionalZone
         self.viscousFriction = np.array(viscousFriction)
@@ -4206,14 +4206,14 @@ class ObjectContactConvexRoll:
         self.nodeNumber = nodeNumber
         self.contactStiffness = contactStiffness
         self.contactDamping = contactDamping
-        self.dynamicFriction = CheckForValidUReal(dynamicFriction,"dynamicFriction","ObjectContactConvexRoll")
-        self.staticFrictionOffset = CheckForValidUReal(staticFrictionOffset,"staticFrictionOffset","ObjectContactConvexRoll")
-        self.viscousFriction = CheckForValidUReal(viscousFriction,"viscousFriction","ObjectContactConvexRoll")
-        self.exponentialDecayStatic = CheckForValidPReal(exponentialDecayStatic,"exponentialDecayStatic","ObjectContactConvexRoll")
-        self.frictionProportionalZone = CheckForValidUReal(frictionProportionalZone,"frictionProportionalZone","ObjectContactConvexRoll")
-        self.rollLength = CheckForValidUReal(rollLength,"rollLength","ObjectContactConvexRoll")
+        self.dynamicFriction = dynamicFriction
+        self.staticFrictionOffset = staticFrictionOffset
+        self.viscousFriction = viscousFriction
+        self.exponentialDecayStatic = exponentialDecayStatic
+        self.frictionProportionalZone = frictionProportionalZone
+        self.rollLength = rollLength
         self.coefficientsHull = CheckForValidNumpyArray(coefficientsHull)
-        self.rBoundingSphere = CheckForValidUReal(rBoundingSphere,"rBoundingSphere","ObjectContactConvexRoll")
+        self.rBoundingSphere = rBoundingSphere
         self.activeConnector = activeConnector
         self.visualization = CopyDictLevel1(visualization)
 
@@ -4293,8 +4293,8 @@ class ObjectContactCoordinate:
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
-        self.contactStiffness = CheckForValidUReal(contactStiffness,"contactStiffness","ObjectContactCoordinate")
-        self.contactDamping = CheckForValidUReal(contactDamping,"contactDamping","ObjectContactCoordinate")
+        self.contactStiffness = contactStiffness
+        self.contactDamping = contactDamping
         self.offset = offset
         self.activeConnector = activeConnector
         self.visualization = CopyDictLevel1(visualization)
@@ -4380,9 +4380,9 @@ class ObjectContactCircleCable2D:
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
         self.numberOfContactSegments = numberOfContactSegments
-        self.contactStiffness = CheckForValidUReal(contactStiffness,"contactStiffness","ObjectContactCircleCable2D")
-        self.contactDamping = CheckForValidUReal(contactDamping,"contactDamping","ObjectContactCircleCable2D")
-        self.circleRadius = CheckForValidUReal(circleRadius,"circleRadius","ObjectContactCircleCable2D")
+        self.contactStiffness = contactStiffness
+        self.contactDamping = contactDamping
+        self.circleRadius = circleRadius
         self.offset = offset
         self.activeConnector = activeConnector
         self.visualization = CopyDictLevel1(visualization)
@@ -4476,13 +4476,13 @@ class ObjectContactFrictionCircleCable2D:
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
-        self.numberOfContactSegments = CheckForValidPInt(numberOfContactSegments,"numberOfContactSegments","ObjectContactFrictionCircleCable2D")
-        self.contactStiffness = CheckForValidUReal(contactStiffness,"contactStiffness","ObjectContactFrictionCircleCable2D")
-        self.contactDamping = CheckForValidUReal(contactDamping,"contactDamping","ObjectContactFrictionCircleCable2D")
-        self.frictionVelocityPenalty = CheckForValidUReal(frictionVelocityPenalty,"frictionVelocityPenalty","ObjectContactFrictionCircleCable2D")
-        self.frictionStiffness = CheckForValidUReal(frictionStiffness,"frictionStiffness","ObjectContactFrictionCircleCable2D")
-        self.frictionCoefficient = CheckForValidUReal(frictionCoefficient,"frictionCoefficient","ObjectContactFrictionCircleCable2D")
-        self.circleRadius = CheckForValidUReal(circleRadius,"circleRadius","ObjectContactFrictionCircleCable2D")
+        self.numberOfContactSegments = numberOfContactSegments
+        self.contactStiffness = contactStiffness
+        self.contactDamping = contactDamping
+        self.frictionVelocityPenalty = frictionVelocityPenalty
+        self.frictionStiffness = frictionStiffness
+        self.frictionCoefficient = frictionCoefficient
+        self.circleRadius = circleRadius
         self.useSegmentNormals = useSegmentNormals
         self.activeConnector = activeConnector
         self.visualization = CopyDictLevel1(visualization)
@@ -4585,18 +4585,18 @@ class ObjectContactSphereSphere:
         self.nodeNumber = nodeNumber
         self.spheresRadii = np.array(spheresRadii)
         self.isHollowSphere1 = isHollowSphere1
-        self.dynamicFriction = CheckForValidUReal(dynamicFriction,"dynamicFriction","ObjectContactSphereSphere")
-        self.frictionProportionalZone = CheckForValidUReal(frictionProportionalZone,"frictionProportionalZone","ObjectContactSphereSphere")
-        self.contactStiffness = CheckForValidUReal(contactStiffness,"contactStiffness","ObjectContactSphereSphere")
-        self.contactDamping = CheckForValidUReal(contactDamping,"contactDamping","ObjectContactSphereSphere")
-        self.contactStiffnessExponent = CheckForValidPReal(contactStiffnessExponent,"contactStiffnessExponent","ObjectContactSphereSphere")
-        self.constantPullOffForce = CheckForValidUReal(constantPullOffForce,"constantPullOffForce","ObjectContactSphereSphere")
-        self.contactPlasticityRatio = CheckForValidUReal(contactPlasticityRatio,"contactPlasticityRatio","ObjectContactSphereSphere")
-        self.adhesionCoefficient = CheckForValidUReal(adhesionCoefficient,"adhesionCoefficient","ObjectContactSphereSphere")
-        self.adhesionExponent = CheckForValidUReal(adhesionExponent,"adhesionExponent","ObjectContactSphereSphere")
-        self.restitutionCoefficient = CheckForValidPReal(restitutionCoefficient,"restitutionCoefficient","ObjectContactSphereSphere")
-        self.minimumImpactVelocity = CheckForValidUReal(minimumImpactVelocity,"minimumImpactVelocity","ObjectContactSphereSphere")
-        self.impactModel = CheckForValidUInt(impactModel,"impactModel","ObjectContactSphereSphere")
+        self.dynamicFriction = dynamicFriction
+        self.frictionProportionalZone = frictionProportionalZone
+        self.contactStiffness = contactStiffness
+        self.contactDamping = contactDamping
+        self.contactStiffnessExponent = contactStiffnessExponent
+        self.constantPullOffForce = constantPullOffForce
+        self.contactPlasticityRatio = contactPlasticityRatio
+        self.adhesionCoefficient = adhesionCoefficient
+        self.adhesionExponent = adhesionExponent
+        self.restitutionCoefficient = restitutionCoefficient
+        self.minimumImpactVelocity = minimumImpactVelocity
+        self.impactModel = impactModel
         self.activeConnector = activeConnector
         self.visualization = CopyDictLevel1(visualization)
 
@@ -4696,18 +4696,18 @@ class ObjectContactSphereTorus:
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
-        self.radiusSphere = CheckForValidPReal(radiusSphere,"radiusSphere","ObjectContactSphereTorus")
-        self.torusMajorRadius = CheckForValidPReal(torusMajorRadius,"torusMajorRadius","ObjectContactSphereTorus")
-        self.torusMinorRadius = CheckForValidPReal(torusMinorRadius,"torusMinorRadius","ObjectContactSphereTorus")
+        self.radiusSphere = radiusSphere
+        self.torusMajorRadius = torusMajorRadius
+        self.torusMinorRadius = torusMinorRadius
         self.torusAxis = np.array(torusAxis)
-        self.dynamicFriction = CheckForValidUReal(dynamicFriction,"dynamicFriction","ObjectContactSphereTorus")
-        self.frictionProportionalZone = CheckForValidUReal(frictionProportionalZone,"frictionProportionalZone","ObjectContactSphereTorus")
-        self.contactStiffness = CheckForValidUReal(contactStiffness,"contactStiffness","ObjectContactSphereTorus")
-        self.contactDamping = CheckForValidUReal(contactDamping,"contactDamping","ObjectContactSphereTorus")
-        self.contactStiffnessExponent = CheckForValidPReal(contactStiffnessExponent,"contactStiffnessExponent","ObjectContactSphereTorus")
-        self.restitutionCoefficient = CheckForValidPReal(restitutionCoefficient,"restitutionCoefficient","ObjectContactSphereTorus")
-        self.minimumImpactVelocity = CheckForValidUReal(minimumImpactVelocity,"minimumImpactVelocity","ObjectContactSphereTorus")
-        self.impactModel = CheckForValidUInt(impactModel,"impactModel","ObjectContactSphereTorus")
+        self.dynamicFriction = dynamicFriction
+        self.frictionProportionalZone = frictionProportionalZone
+        self.contactStiffness = contactStiffness
+        self.contactDamping = contactDamping
+        self.contactStiffnessExponent = contactStiffnessExponent
+        self.restitutionCoefficient = restitutionCoefficient
+        self.minimumImpactVelocity = minimumImpactVelocity
+        self.impactModel = impactModel
         self.activeConnector = activeConnector
         self.visualization = CopyDictLevel1(visualization)
 
@@ -4803,17 +4803,17 @@ class ObjectContactSphereTriangle:
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
-        self.radiusSphere = CheckForValidPReal(radiusSphere,"radiusSphere","ObjectContactSphereTriangle")
+        self.radiusSphere = radiusSphere
         self.trianglePoints = trianglePoints
-        self.includeEdges = CheckForValidUInt(includeEdges,"includeEdges","ObjectContactSphereTriangle")
-        self.dynamicFriction = CheckForValidUReal(dynamicFriction,"dynamicFriction","ObjectContactSphereTriangle")
-        self.frictionProportionalZone = CheckForValidUReal(frictionProportionalZone,"frictionProportionalZone","ObjectContactSphereTriangle")
-        self.contactStiffness = CheckForValidUReal(contactStiffness,"contactStiffness","ObjectContactSphereTriangle")
-        self.contactDamping = CheckForValidUReal(contactDamping,"contactDamping","ObjectContactSphereTriangle")
-        self.contactStiffnessExponent = CheckForValidPReal(contactStiffnessExponent,"contactStiffnessExponent","ObjectContactSphereTriangle")
-        self.restitutionCoefficient = CheckForValidPReal(restitutionCoefficient,"restitutionCoefficient","ObjectContactSphereTriangle")
-        self.minimumImpactVelocity = CheckForValidUReal(minimumImpactVelocity,"minimumImpactVelocity","ObjectContactSphereTriangle")
-        self.impactModel = CheckForValidUInt(impactModel,"impactModel","ObjectContactSphereTriangle")
+        self.includeEdges = includeEdges
+        self.dynamicFriction = dynamicFriction
+        self.frictionProportionalZone = frictionProportionalZone
+        self.contactStiffness = contactStiffness
+        self.contactDamping = contactDamping
+        self.contactStiffnessExponent = contactStiffnessExponent
+        self.restitutionCoefficient = restitutionCoefficient
+        self.minimumImpactVelocity = minimumImpactVelocity
+        self.impactModel = impactModel
         self.activeConnector = activeConnector
         self.visualization = CopyDictLevel1(visualization)
 
@@ -4916,11 +4916,11 @@ class ObjectContactCurveCircles:
         self.segmentsData = segmentsData
         self.polynomialData = polynomialData
         self.rotationMarker0 = np.array(rotationMarker0)
-        self.dynamicFriction = CheckForValidUReal(dynamicFriction,"dynamicFriction","ObjectContactCurveCircles")
-        self.frictionProportionalZone = CheckForValidUReal(frictionProportionalZone,"frictionProportionalZone","ObjectContactCurveCircles")
+        self.dynamicFriction = dynamicFriction
+        self.frictionProportionalZone = frictionProportionalZone
         self.contactStiffness = contactStiffness
         self.contactDamping = contactDamping
-        self.contactModel = CheckForValidUInt(contactModel,"contactModel","ObjectContactCurveCircles")
+        self.contactModel = contactModel
         self.activeConnector = activeConnector
         self.visualization = CopyDictLevel1(visualization)
 
@@ -5321,7 +5321,7 @@ class ObjectJointRollingDisc:
         self.markerNumbers = copy.copy(markerNumbers)
         self.constrainedAxes = copy.copy(constrainedAxes)
         self.activeConnector = activeConnector
-        self.discRadius = CheckForValidPReal(discRadius,"discRadius","ObjectJointRollingDisc")
+        self.discRadius = discRadius
         self.discAxis = np.array(discAxis)
         self.planeNormal = np.array(planeNormal)
         self.visualization = CopyDictLevel1(visualization)
@@ -6005,7 +6005,7 @@ class MarkerNodeCoordinate:
     def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
         self.nodeNumber = nodeNumber
-        self.coordinate = CheckForValidUInt(coordinate,"coordinate","MarkerNodeCoordinate")
+        self.coordinate = coordinate
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -6095,7 +6095,7 @@ class MarkerNodeODE1Coordinate:
     def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), visualization = {'show': False}):
         self.name = name
         self.nodeNumber = nodeNumber
-        self.coordinate = CheckForValidUInt(coordinate,"coordinate","MarkerNodeODE1Coordinate")
+        self.coordinate = coordinate
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -6141,7 +6141,7 @@ class MarkerNodeRotationCoordinate:
     def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), rotationCoordinate = exudyn.InvalidIndex(), visualization = {'show': True}):
         self.name = name
         self.nodeNumber = nodeNumber
-        self.rotationCoordinate = CheckForValidUInt(rotationCoordinate,"rotationCoordinate","MarkerNodeRotationCoordinate")
+        self.rotationCoordinate = rotationCoordinate
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -6441,7 +6441,7 @@ class MarkerKinematicTreeRigid:
     def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), linkNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], visualization = {'show': True}):
         self.name = name
         self.objectNumber = objectNumber
-        self.linkNumber = CheckForValidUInt(linkNumber,"linkNumber","MarkerKinematicTreeRigid")
+        self.linkNumber = linkNumber
         self.localPosition = np.array(localPosition)
         self.visualization = CopyDictLevel1(visualization)
 
@@ -6535,7 +6535,7 @@ class MarkerBodyCable2DShape:
     def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), numberOfSegments = 3, verticalOffset = 0., visualization = {'show': True}):
         self.name = name
         self.bodyNumber = bodyNumber
-        self.numberOfSegments = CheckForValidPInt(numberOfSegments,"numberOfSegments","MarkerBodyCable2DShape")
+        self.numberOfSegments = numberOfSegments
         self.verticalOffset = verticalOffset
         self.visualization = CopyDictLevel1(visualization)
 
@@ -7073,7 +7073,7 @@ class SensorSuperElement:
     def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), meshNodeNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = {'show': True}):
         self.name = name
         self.bodyNumber = bodyNumber
-        self.meshNodeNumber = CheckForValidUInt(meshNodeNumber,"meshNodeNumber","SensorSuperElement")
+        self.meshNodeNumber = meshNodeNumber
         self.writeToFile = writeToFile
         self.fileName = fileName
         self.outputVariableType = outputVariableType
@@ -7136,7 +7136,7 @@ class SensorKinematicTree:
     def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), linkNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = {'show': True}):
         self.name = name
         self.objectNumber = objectNumber
-        self.linkNumber = CheckForValidUInt(linkNumber,"linkNumber","SensorKinematicTree")
+        self.linkNumber = linkNumber
         self.localPosition = np.array(localPosition)
         self.writeToFile = writeToFile
         self.fileName = fileName

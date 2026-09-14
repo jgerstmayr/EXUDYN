@@ -175,11 +175,8 @@ def ItemClasses(definition):
             else:
                 tempVPythonDict += "None"
 
-            #range check:
+            #range checks are done in C++ on every write path (revision plan step 34c4 b)
             parameterWithCheck = pythonName
-            if IsTypeWithRangeCheck(typeName):
-                parameterWithCheck = 'CheckForValid' + typeName + '(' + pythonName + ','
-                parameterWithCheck += '"' + pythonName +'","' + className + '")'
             if (IsAVector(typeName)
                 or IsASimpleMatrix(typeName)
                 ):

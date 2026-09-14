@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-14  23:57:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -107,9 +107,9 @@ public: // AUTO:
     {
         EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorGravity->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorGravity->GetParameters().gravitationalConstant = py::cast<Real>(d["gravitationalConstant"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectConnectorGravity->GetParameters().mass0 = py::cast<Real>(d["mass0"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectConnectorGravity->GetParameters().mass1 = py::cast<Real>(d["mass1"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "minDistanceRegularization")) { cObjectConnectorGravity->GetParameters().minDistanceRegularization = py::cast<Real>(d["minDistanceRegularization"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        EPyUtils::FromPython(d["mass0"], cObjectConnectorGravity->GetParameters().mass0, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorGravity.mass0"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["mass1"], cObjectConnectorGravity->GetParameters().mass1, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorGravity.mass1"); /* AUTO:  read out dictionary and cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "minDistanceRegularization")) { EPyUtils::FromPython(d["minDistanceRegularization"], cObjectConnectorGravity->GetParameters().minDistanceRegularization, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorGravity.minDistanceRegularization"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorGravity->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectConnectorGravity->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -160,9 +160,9 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectConnectorGravity->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("gravitationalConstant") == 0) { cObjectConnectorGravity->GetParameters().gravitationalConstant = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("mass0") == 0) { cObjectConnectorGravity->GetParameters().mass0 = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("mass1") == 0) { cObjectConnectorGravity->GetParameters().mass1 = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("minDistanceRegularization") == 0) { cObjectConnectorGravity->GetParameters().minDistanceRegularization = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("mass0") == 0) { EPyUtils::FromPython(value, cObjectConnectorGravity->GetParameters().mass0, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorGravity.mass0"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("mass1") == 0) { EPyUtils::FromPython(value, cObjectConnectorGravity->GetParameters().mass1, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorGravity.mass1"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("minDistanceRegularization") == 0) { EPyUtils::FromPython(value, cObjectConnectorGravity->GetParameters().minDistanceRegularization, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorGravity.minDistanceRegularization"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectConnectorGravity->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectConnectorGravity->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { visualizationObjectConnectorGravity->GetDrawSize() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

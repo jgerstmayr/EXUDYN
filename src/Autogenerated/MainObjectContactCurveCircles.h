@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-14  23:57:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -120,11 +120,11 @@ public: // AUTO:
         EPyUtils::SetPyMatrixContainerSafely(d["segmentsData"], cObjectContactCurveCircles->GetParameters().segmentsData); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetPyMatrixContainerSafely(d["polynomialData"], cObjectContactCurveCircles->GetParameters().polynomialData); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectContactCurveCircles->GetParameters().rotationMarker0); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "dynamicFriction")) { cObjectContactCurveCircles->GetParameters().dynamicFriction = py::cast<Real>(d["dynamicFriction"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "frictionProportionalZone")) { cObjectContactCurveCircles->GetParameters().frictionProportionalZone = py::cast<Real>(d["frictionProportionalZone"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "dynamicFriction")) { EPyUtils::FromPython(d["dynamicFriction"], cObjectContactCurveCircles->GetParameters().dynamicFriction, EPyUtils::RangeCheck::nonNegative, "ObjectContactCurveCircles.dynamicFriction"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "frictionProportionalZone")) { EPyUtils::FromPython(d["frictionProportionalZone"], cObjectContactCurveCircles->GetParameters().frictionProportionalZone, EPyUtils::RangeCheck::nonNegative, "ObjectContactCurveCircles.frictionProportionalZone"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         cObjectContactCurveCircles->GetParameters().contactStiffness = py::cast<Real>(d["contactStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "contactDamping")) { cObjectContactCurveCircles->GetParameters().contactDamping = py::cast<Real>(d["contactDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "contactModel")) { cObjectContactCurveCircles->GetParameters().contactModel = py::cast<Index>(d["contactModel"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "contactModel")) { EPyUtils::FromPython(d["contactModel"], cObjectContactCurveCircles->GetParameters().contactModel, EPyUtils::RangeCheck::nonNegative, "ObjectContactCurveCircles.contactModel"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectContactCurveCircles->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectContactCurveCircles->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -196,11 +196,11 @@ public: // AUTO:
         else if (parameterName.compare("segmentsData") == 0) { EPyUtils::SetPyMatrixContainerSafely(value, cObjectContactCurveCircles->GetParameters().segmentsData); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("polynomialData") == 0) { EPyUtils::SetPyMatrixContainerSafely(value, cObjectContactCurveCircles->GetParameters().polynomialData); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectContactCurveCircles->GetParameters().rotationMarker0); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("dynamicFriction") == 0) { cObjectContactCurveCircles->GetParameters().dynamicFriction = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("frictionProportionalZone") == 0) { cObjectContactCurveCircles->GetParameters().frictionProportionalZone = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("dynamicFriction") == 0) { EPyUtils::FromPython(value, cObjectContactCurveCircles->GetParameters().dynamicFriction, EPyUtils::RangeCheck::nonNegative, "ObjectContactCurveCircles.dynamicFriction"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("frictionProportionalZone") == 0) { EPyUtils::FromPython(value, cObjectContactCurveCircles->GetParameters().frictionProportionalZone, EPyUtils::RangeCheck::nonNegative, "ObjectContactCurveCircles.frictionProportionalZone"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { cObjectContactCurveCircles->GetParameters().contactStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("contactDamping") == 0) { cObjectContactCurveCircles->GetParameters().contactDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("contactModel") == 0) { cObjectContactCurveCircles->GetParameters().contactModel = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("contactModel") == 0) { EPyUtils::FromPython(value, cObjectContactCurveCircles->GetParameters().contactModel, EPyUtils::RangeCheck::nonNegative, "ObjectContactCurveCircles.contactModel"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { cObjectContactCurveCircles->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectContactCurveCircles->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectContactCurveCircles->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

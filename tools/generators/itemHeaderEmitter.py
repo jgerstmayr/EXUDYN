@@ -70,7 +70,12 @@ def ItemIndexKind(typeName):
     raise ValueError('ItemIndexKind: not an item index type: ' + typeName)
 
 
-def ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDictionary):
+#the range forms of definitions/definitionTypes.py and the check C++ applies to them
+rangeCheckForms = {'UReal': 'nonNegative', 'UFloat': 'nonNegative', 'UInt': 'nonNegative',
+                   'PReal': 'positive', 'PFloat': 'positive', 'PInt': 'positive'}
+
+
+def ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDictionary, className):
     """the C++ statement that writes one parameter from Python (revision plan step 34c4): the same
     conversion for SetWithDictionary (source d["name"]) and SetParameter (source value); only
     BodyGraphicsData and OutputVariableType still differ between the two, as before"""
@@ -95,6 +100,9 @@ def ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDiction
         return 'EPyUtils::ItemIndexFromPython<' + ItemIndexKind(typeName) + '>(' + source + ', ' + destStr + ');' + comment
     if 'PyFunction' in typeName: #py::object can be directly written
         return destStr + ' = ' + source + ';' + comment
+    if typeName in rangeCheckForms: #the same check on every write path (step 34c4 b)
+        return ('EPyUtils::FromPython(' + source + ', ' + destStr + ', EPyUtils::RangeCheck::' + rangeCheckForms[typeName]
+                + ', "' + className + '.' + pyName + '");' + comment)
     if typeCastStr == 'OutputVariableType' and fromDictionary:
         return destStr + ' = (OutputVariableType)py::cast<Index>(' + source + ');' + comment
     return destStr + ' = py::cast<' + typeCastStr + '>(' + source + ');' + comment
@@ -511,7 +519,7 @@ def ItemCppHeaders(definition):
                     if HasFlag(parameter, 'O'): #optional ==> means that we have to check first, if it exists in the dictionary
                         dictListWrite[i]+='if (EPyUtils::DictItemExists(d, "' +  pyName + '")) { '
                     #if (TypeName(parameter) == 'String') | (TypeName(parameter) == 'Vector2D') | (TypeName(parameter) == 'Vector3D') | (TypeName(parameter) == 'Vector4D') | (TypeName(parameter) == 'Vector6D') | (TypeName(parameter) == 'Vector7D'):
-                    dictListWrite[i] += ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDictionary=True)
+                    dictListWrite[i] += ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDictionary=True, className=classStr)
                     if HasFlag(parameter, 'O'): #optional ==> means that we have to check first, if it exists in the dictionary
                         dictListWrite[i]+='} '
                     dictListWrite[i]+='\n'
@@ -519,7 +527,7 @@ def ItemCppHeaders(definition):
                     #+++++++++++++++++
                     #parameter write
                     #if (TypeName(parameter) == 'String') | (TypeName(parameter) == 'Vector2D') | (TypeName(parameter) == 'Vector3D') | (TypeName(parameter) == 'Vector4D') | (TypeName(parameter) == 'Vector6D') | (TypeName(parameter) == 'Vector7D'):
-                    parWrite += ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDictionary=False)
+                    parWrite += ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDictionary=False, className=classStr)
 
                 #+++++++++++++++++
                 #parameter read

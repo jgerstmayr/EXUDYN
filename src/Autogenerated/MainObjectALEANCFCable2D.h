@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-14  23:57:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,13 +114,13 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectALEANCFCable2D->GetParameters().physicsLength = py::cast<Real>(d["physicsLength"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectALEANCFCable2D->GetParameters().physicsMassPerLength = py::cast<Real>(d["physicsMassPerLength"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectALEANCFCable2D->GetParameters().physicsMovingMassFactor = py::cast<Real>(d["physicsMovingMassFactor"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectALEANCFCable2D->GetParameters().physicsBendingStiffness = py::cast<Real>(d["physicsBendingStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectALEANCFCable2D->GetParameters().physicsAxialStiffness = py::cast<Real>(d["physicsAxialStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectALEANCFCable2D->GetParameters().physicsBendingDamping = py::cast<Real>(d["physicsBendingDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectALEANCFCable2D->GetParameters().physicsAxialDamping = py::cast<Real>(d["physicsAxialDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsLength"], cObjectALEANCFCable2D->GetParameters().physicsLength, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsLength"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsMassPerLength"], cObjectALEANCFCable2D->GetParameters().physicsMassPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsMassPerLength"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsMovingMassFactor"], cObjectALEANCFCable2D->GetParameters().physicsMovingMassFactor, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsMovingMassFactor"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsBendingStiffness"], cObjectALEANCFCable2D->GetParameters().physicsBendingStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsBendingStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsAxialStiffness"], cObjectALEANCFCable2D->GetParameters().physicsAxialStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsAxialStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsBendingDamping"], cObjectALEANCFCable2D->GetParameters().physicsBendingDamping, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsBendingDamping"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsAxialDamping"], cObjectALEANCFCable2D->GetParameters().physicsAxialDamping, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsAxialDamping"); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectALEANCFCable2D->GetParameters().physicsReferenceAxialStrain = py::cast<Real>(d["physicsReferenceAxialStrain"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectALEANCFCable2D->GetParameters().physicsReferenceCurvature = py::cast<Real>(d["physicsReferenceCurvature"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectALEANCFCable2D->GetParameters().physicsUseCouplingTerms = py::cast<bool>(d["physicsUseCouplingTerms"]); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -191,13 +191,13 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsLength") == 0) { cObjectALEANCFCable2D->GetParameters().physicsLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsMassPerLength") == 0) { cObjectALEANCFCable2D->GetParameters().physicsMassPerLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsMovingMassFactor") == 0) { cObjectALEANCFCable2D->GetParameters().physicsMovingMassFactor = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsBendingStiffness") == 0) { cObjectALEANCFCable2D->GetParameters().physicsBendingStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsAxialStiffness") == 0) { cObjectALEANCFCable2D->GetParameters().physicsAxialStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsBendingDamping") == 0) { cObjectALEANCFCable2D->GetParameters().physicsBendingDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsAxialDamping") == 0) { cObjectALEANCFCable2D->GetParameters().physicsAxialDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsLength") == 0) { EPyUtils::FromPython(value, cObjectALEANCFCable2D->GetParameters().physicsLength, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsLength"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsMassPerLength") == 0) { EPyUtils::FromPython(value, cObjectALEANCFCable2D->GetParameters().physicsMassPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsMassPerLength"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsMovingMassFactor") == 0) { EPyUtils::FromPython(value, cObjectALEANCFCable2D->GetParameters().physicsMovingMassFactor, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsMovingMassFactor"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsBendingStiffness") == 0) { EPyUtils::FromPython(value, cObjectALEANCFCable2D->GetParameters().physicsBendingStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsBendingStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsAxialStiffness") == 0) { EPyUtils::FromPython(value, cObjectALEANCFCable2D->GetParameters().physicsAxialStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsAxialStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsBendingDamping") == 0) { EPyUtils::FromPython(value, cObjectALEANCFCable2D->GetParameters().physicsBendingDamping, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsBendingDamping"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsAxialDamping") == 0) { EPyUtils::FromPython(value, cObjectALEANCFCable2D->GetParameters().physicsAxialDamping, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsAxialDamping"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsReferenceAxialStrain") == 0) { cObjectALEANCFCable2D->GetParameters().physicsReferenceAxialStrain = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsReferenceCurvature") == 0) { cObjectALEANCFCable2D->GetParameters().physicsReferenceCurvature = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsUseCouplingTerms") == 0) { cObjectALEANCFCable2D->GetParameters().physicsUseCouplingTerms = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

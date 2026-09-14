@@ -404,6 +404,7 @@ void PyDoRendererIdleTasks(Real waitSeconds, bool deprecationWarning = false)
 #include "Main/Experimental.h"
 PyExperimental pyExperimental;	//! for experimental things, not to be used by common user
 PySpecial pySpecial;			//! special features; affects exudyn globally; treat with care
+bool EXUstd::ParameterRangeChecksActive() { return pySpecial.exceptions.parameterRangeChecks; }
 
 #include "Main/Config.h"
 ExudynConfig pyConfig;				//! unified config for exudyn, avoid bloating main scope
@@ -477,6 +478,7 @@ void Init_Pybind_manual_classes(py::module& m) {
 		//+++++++++++++++++++++++++++++++++++++++++++
 		.def_readwrite("dictionaryNonCopyable", &PySpecialExceptions::dictionaryNonCopyable)
 		.def_readwrite("dictionaryVersionMismatch", &PySpecialExceptions::dictionaryVersionMismatch)
+		.def_readwrite("parameterRangeChecks", &PySpecialExceptions::parameterRangeChecks)
 
 		//representation:
 		.def("__repr__", [](const PySpecialExceptions& item) {

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:16 (last modified)
+* @date         2026-09-14  23:57:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -112,7 +112,7 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cObjectRigidBody->GetParameters().physicsMass = py::cast<Real>(d["physicsMass"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsMass"], cObjectRigidBody->GetParameters().physicsMass, EPyUtils::RangeCheck::nonNegative, "ObjectRigidBody.physicsMass"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["physicsInertia"], cObjectRigidBody->GetParameters().physicsInertia); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "physicsCenterOfMass")) { EPyUtils::FromPython(d["physicsCenterOfMass"], cObjectRigidBody->GetParameters().physicsCenterOfMass); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectRigidBody->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -159,7 +159,7 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsMass") == 0) { cObjectRigidBody->GetParameters().physicsMass = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsMass") == 0) { EPyUtils::FromPython(value, cObjectRigidBody->GetParameters().physicsMass, EPyUtils::RangeCheck::nonNegative, "ObjectRigidBody.physicsMass"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsInertia") == 0) { EPyUtils::FromPython(value, cObjectRigidBody->GetParameters().physicsInertia); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsCenterOfMass") == 0) { EPyUtils::FromPython(value, cObjectRigidBody->GetParameters().physicsCenterOfMass); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectRigidBody->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

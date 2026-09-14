@@ -296,6 +296,11 @@ pb.DefLatexDataAccess('special.solver.timeout','if >= 0, the solver stops after 
 pb.DefLatexDataAccess('special.solver.multiThreadingLoadBalancing','if True (=default), multithreaded code parts (in particular solver and raytracing) use load balancing, which may give better performance in case of non-equilibrated loads; (mobile) Intel CPUs may perform significantly better without load balancing',
                         dataType='bool', isTopLevel = True)
 
+pb.DefLatexDataAccess('special.exceptions','special flags for exceptions and checks; not intended for regular users; for available features, see the C++ code class PySpecialExceptions',
+                        dataType='SpecialExceptions', isTopLevel = True)
+pb.DefLatexDataAccess('special.exceptions.parameterRangeChecks','if True (=default), writing an item or settings parameter outside its range (e.g. a negative mass or a non-positive number of steps) raises an error, on every write path (item classes, dictionaries, SetObjectParameter, ...); set False to accept any value, e.g. if a range limit turns out to be wrong',
+                        dataType='bool', isTopLevel = True)
+
 pb.EndNoStub()
 
 pb.CppCode('        m.attr("variables") = exudynVariables;\n') 

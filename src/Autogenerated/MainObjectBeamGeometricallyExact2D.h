@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-14  23:57:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -115,15 +115,15 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectBeamGeometricallyExact2D->GetParameters().physicsLength = py::cast<Real>(d["physicsLength"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectBeamGeometricallyExact2D->GetParameters().physicsMassPerLength = py::cast<Real>(d["physicsMassPerLength"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectBeamGeometricallyExact2D->GetParameters().physicsCrossSectionInertia = py::cast<Real>(d["physicsCrossSectionInertia"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingStiffness = py::cast<Real>(d["physicsBendingStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialStiffness = py::cast<Real>(d["physicsAxialStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectBeamGeometricallyExact2D->GetParameters().physicsShearStiffness = py::cast<Real>(d["physicsShearStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingDamping = py::cast<Real>(d["physicsBendingDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialDamping = py::cast<Real>(d["physicsAxialDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectBeamGeometricallyExact2D->GetParameters().physicsShearDamping = py::cast<Real>(d["physicsShearDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsLength"], cObjectBeamGeometricallyExact2D->GetParameters().physicsLength, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsLength"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsMassPerLength"], cObjectBeamGeometricallyExact2D->GetParameters().physicsMassPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsMassPerLength"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsCrossSectionInertia"], cObjectBeamGeometricallyExact2D->GetParameters().physicsCrossSectionInertia, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsCrossSectionInertia"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsBendingStiffness"], cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsBendingStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsAxialStiffness"], cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsAxialStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsShearStiffness"], cObjectBeamGeometricallyExact2D->GetParameters().physicsShearStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsShearStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsBendingDamping"], cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingDamping, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsBendingDamping"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsAxialDamping"], cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialDamping, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsAxialDamping"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsShearDamping"], cObjectBeamGeometricallyExact2D->GetParameters().physicsShearDamping, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsShearDamping"); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectBeamGeometricallyExact2D->GetParameters().physicsReferenceCurvature = py::cast<Real>(d["physicsReferenceCurvature"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectBeamGeometricallyExact2D->GetParameters().includeReferenceRotations = py::cast<bool>(d["includeReferenceRotations"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -186,15 +186,15 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumbers") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsLength") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsMassPerLength") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsMassPerLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsCrossSectionInertia") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsCrossSectionInertia = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsBendingStiffness") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsAxialStiffness") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsShearStiffness") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsShearStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsBendingDamping") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsAxialDamping") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsShearDamping") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsShearDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsLength") == 0) { EPyUtils::FromPython(value, cObjectBeamGeometricallyExact2D->GetParameters().physicsLength, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsLength"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsMassPerLength") == 0) { EPyUtils::FromPython(value, cObjectBeamGeometricallyExact2D->GetParameters().physicsMassPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsMassPerLength"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsCrossSectionInertia") == 0) { EPyUtils::FromPython(value, cObjectBeamGeometricallyExact2D->GetParameters().physicsCrossSectionInertia, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsCrossSectionInertia"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsBendingStiffness") == 0) { EPyUtils::FromPython(value, cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsBendingStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsAxialStiffness") == 0) { EPyUtils::FromPython(value, cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsAxialStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsShearStiffness") == 0) { EPyUtils::FromPython(value, cObjectBeamGeometricallyExact2D->GetParameters().physicsShearStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsShearStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsBendingDamping") == 0) { EPyUtils::FromPython(value, cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingDamping, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsBendingDamping"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsAxialDamping") == 0) { EPyUtils::FromPython(value, cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialDamping, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsAxialDamping"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsShearDamping") == 0) { EPyUtils::FromPython(value, cObjectBeamGeometricallyExact2D->GetParameters().physicsShearDamping, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsShearDamping"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsReferenceCurvature") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().physicsReferenceCurvature = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("includeReferenceRotations") == 0) { cObjectBeamGeometricallyExact2D->GetParameters().includeReferenceRotations = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { visualizationObjectBeamGeometricallyExact2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

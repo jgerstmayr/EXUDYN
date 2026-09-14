@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-14  23:57:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -109,7 +109,7 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         EPyUtils::ItemIndexFromPython<ObjectIndex>(d["bodyNumber"], cSensorSuperElement->GetParameters().bodyNumber); /* AUTO:  read out dictionary and cast to C++ type*/
-        cSensorSuperElement->GetParameters().meshNodeNumber = py::cast<Index>(d["meshNodeNumber"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["meshNodeNumber"], cSensorSuperElement->GetParameters().meshNodeNumber, EPyUtils::RangeCheck::nonNegative, "SensorSuperElement.meshNodeNumber"); /* AUTO:  read out dictionary and cast to C++ type*/
         cSensorSuperElement->GetParameters().writeToFile = py::cast<bool>(d["writeToFile"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["fileName"], cSensorSuperElement->GetParameters().fileName); /* AUTO:  read out dictionary and cast to C++ type*/
         cSensorSuperElement->GetParameters().outputVariableType = (OutputVariableType)py::cast<Index>(d["outputVariableType"]); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -155,7 +155,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("bodyNumber") == 0) { EPyUtils::ItemIndexFromPython<ObjectIndex>(value, cSensorSuperElement->GetParameters().bodyNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("meshNodeNumber") == 0) { cSensorSuperElement->GetParameters().meshNodeNumber = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("meshNodeNumber") == 0) { EPyUtils::FromPython(value, cSensorSuperElement->GetParameters().meshNodeNumber, EPyUtils::RangeCheck::nonNegative, "SensorSuperElement.meshNodeNumber"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("writeToFile") == 0) { cSensorSuperElement->GetParameters().writeToFile = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("fileName") == 0) { EPyUtils::FromPython(value, cSensorSuperElement->GetParameters().fileName); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("outputVariableType") == 0) { cSensorSuperElement->GetParameters().outputVariableType = py::cast<OutputVariableType>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

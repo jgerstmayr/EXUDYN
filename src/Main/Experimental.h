@@ -107,6 +107,7 @@ class PySpecialExceptions
 public:
     bool dictionaryVersionMismatch;  //!< warn on version mismatch in SetDictionary(...)
     bool dictionaryNonCopyable;          //!< raise exception if things cannot be copied in GetDictionary(...)
+    bool parameterRangeChecks;           //!< raise if an item or settings parameter violates its range (UReal, PInt, ...); false accepts any value
 
     PySpecialExceptions()
     {
@@ -117,6 +118,7 @@ public:
     {
         dictionaryVersionMismatch = true;
         dictionaryNonCopyable = true;
+        parameterRangeChecks = true;
     }
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -124,6 +126,7 @@ public:
     {
         os << "  dictionaryVersionMismatch = " << dictionaryVersionMismatch << "\n";
         os << "  dictionaryNonCopyable = " << dictionaryNonCopyable << "\n";
+        os << "  parameterRangeChecks = " << parameterRangeChecks << "\n";
         os << "\n";
     }
 

@@ -1148,7 +1148,7 @@ The core investment. Every step is validated byte-for-byte by step 2.
       | **34c1 behaviour test first** *(DONE 2026-09-14: `parameterConversionTest.py`)*: one valid and several invalid values per type family through dict creation, `SetObjectParameter`/`GetObjectParameter` and settings structures; records acceptance, returned value and type (numpy vs list), exception type | no | passes on the current code |
       | **34c2 `src/Pymodules/PyConversion.h`** *(DONE 2026-09-14)*: `EPyUtils::FromPython(object, destination)` / `ToPython(value)` per C++ type (string, `SlimVectorBase<T,n>`, `ConstSizeMatrixBase` as `FromPython<T,rows,columns>`, `MatrixBase<T>`, `VectorBase<T>`), `ItemIndexFromPython<NodeIndex>` / `ItemIndexToPython<NodeIndex>` for single, array and fixed-count indices. A new header, kept apart from `PybindUtilities.h`, whose 35 covered helpers became one-line forwards in one marked block. The range argument and an error context (item and parameter name) come with 34c4, where they are first used | no | wheel (full rebuild, #2427), test suite, 34c1 |
       | **34c3 one type model** *(DONE 2026-09-14: `tools/generators/typeModel.py`; 36 exception entries left for 34c4/34c5)* in the generators: facts (family, element, size, item kind, user-function signature) on `TypeSpec` in `definitions/definitionTypes.py`; `typeModel.Render(type, destination)` for `cppStorage`, `python`, `docs` (docs keep the definition name: `Int`, `UReal`, `NodeIndex`); the eight tables, `ConvertParameter2Python`, `IsAVector`/`IsASafelyVector` go; a type without a rule fails at generation. Definition names or default strings may change where that makes the rules simpler | no | byte-identity per emitter |
-      | **34c4 items**, in parts, each its own commit: **(a)** *(DONE 2026-09-14)* the generated item code converts through `FromPython`/`ItemIndexFromPython`/`ToPython`/`ItemIndexToPython`, and `SetWithDictionary` and `SetParameter` are written by the same generator function (`ParameterWriteStatement`), behaviour unchanged; **(b)** range checks in C++ on every write path with the `exudyn.special` switch (step 95), the Python checks in `itemInterface.py` removed; **(c)** `None` raises (step 97); **(d)** item indices rejected by float/bool (step 98); **(e)** classes accept their defaults (step 99) | yes | wheel (full rebuild, #2427), test suite, 34c1 (a: 0 differences; b-e: only the intended reference changes), item-creation timing |
+      | **34c4 items**, in parts, each its own commit: **(a)** *(DONE 2026-09-14)* the generated item code converts through `FromPython`/`ItemIndexFromPython`/`ToPython`/`ItemIndexToPython`, and `SetWithDictionary` and `SetParameter` are written by the same generator function (`ParameterWriteStatement`), behaviour unchanged; **(b)** *(DONE 2026-09-15)* range checks in C++ on every write path with the `exudyn.special` switch (step 95), the Python checks in `itemInterface.py` removed; **(c)** `None` raises (step 97); **(d)** item indices rejected by float/bool (step 98); **(e)** classes accept their defaults (step 99) | yes | wheel (full rebuild, #2427), test suite, 34c1 (a: 0 differences; b-e: only the intended reference changes), item-creation timing |
       | **34c5 structures** likewise; `definitionLoader`/`Legacy*()` deleted at the end | yes | same |
       | **34c6 clean up**: helpers of `PybindUtilities.h` with no remaining caller are deleted; the hand-written callers (`MainSystem.cpp`, `PyGeneralContact.h`, ...) switch to `FromPython`/`ToPython` first (maintainer decision 2026-09-14), so the old helpers lose their last callers | yes | same |
 
@@ -1578,7 +1578,7 @@ step; larger ones get their own. #2411 is step 83 and #2412 belongs to step 36.
     tested, and those tests re-read the written solution and sensor files and check them.
     `TestExamples` stay serial: they only check that the examples still run against the current
     API, raising on e.g. a changed argument or function.
-95. *(Phase 5, after 34c)* **A user switch for parameter range checks** (#2422). Range checks on
+95. **DONE 2026-09-15 with 34c4 (b).** *(Phase 5, after 34c)* **A user switch for parameter range checks** (#2422): `exudyn.special.exceptions.parameterRangeChecks`. Range checks on
     item and structure parameters (`UReal`, `PReal`, `UInt`, `PInt`) raise in the normal and in
     the fast build. A release can carry a wrong range limit that is hard to test for; a flag in
     `exudyn.special` would let the user switch the checks off. Needs the checks in one place first,
@@ -1634,6 +1634,19 @@ step; larger ones get their own. #2411 is step 83 and #2412 belongs to step 36.
     `C|Main|Visu<Kind>...h` in the output directory whose item has no definition. The check is
     local to the item emitter, because the stage declarations of `generate.py` are directory
     patterns and cannot name the expected files.
+102. *(with 34c4/34c5, before 34c6)* **One spelling per type: unify the item/structure exceptions of
+    `typeModel.py`** (#2429). Step 34c3 left 36 spellings the rules do not produce. The same
+    definition type is spelled differently for items and structures, for example:
+    - `Int` is `int` for items and `Index` for structures;
+    - `Float3`/`Float4` are exchanged as `std::vector<float>` for items and `std::array<float,n>`
+      for structures;
+    - `NumpyVector`/`NumpyMatrix` are stored as `Vector`/`Matrix` in items and `py::array_t<Real>`
+      in structures;
+    - `Matrix2D` reads `Matrix2D` in the docs, while the other fixed matrices read `array_like`.
+
+    Unify as far as possible, one change at a time. A unification stays only if the full test suite
+    and `parameterConversionTest.py` pass, apart from intended reference changes. Every entry that
+    must remain gets a comment giving the reason.
 
 ### Phase 9 — Deeper implementation problems (last)
 

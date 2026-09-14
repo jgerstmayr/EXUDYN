@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:33:05 (last modified)
+* @date         2026-09-14  23:57:17 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -133,7 +133,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "mXRefTildePsi")) { EPyUtils::FromPython(d["mXRefTildePsi"], cObjectFFRFreducedOrder->GetParameters().mXRefTildePsi); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "mXRefTildePsiTilde")) { EPyUtils::FromPython(d["mXRefTildePsiTilde"], cObjectFFRFreducedOrder->GetParameters().mXRefTildePsiTilde); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "objectIsInitialized")) { cObjectFFRFreducedOrder->GetObjectIsInitialized() = py::cast<bool>(d["objectIsInitialized"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        cObjectFFRFreducedOrder->GetPhysicsMass() = py::cast<Real>(d["physicsMass"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsMass"], cObjectFFRFreducedOrder->GetPhysicsMass(), EPyUtils::RangeCheck::nonNegative, "ObjectFFRFreducedOrder.physicsMass"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython<Real, 3, 3>(d["physicsInertia"], cObjectFFRFreducedOrder->GetPhysicsInertia()); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["physicsCenterOfMass"], cObjectFFRFreducedOrder->GetPhysicsCenterOfMass()); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython<Real, 3, 3>(d["physicsCenterOfMassTilde"], cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde()); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -233,7 +233,7 @@ public: // AUTO:
         else if (parameterName.compare("outputVariableTypeModeBasis") == 0) { cObjectFFRFreducedOrder->GetParameters().outputVariableTypeModeBasis = py::cast<OutputVariableType>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("referencePositions") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().referencePositions); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("objectIsInitialized") == 0) { cObjectFFRFreducedOrder->GetObjectIsInitialized() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsMass") == 0) { cObjectFFRFreducedOrder->GetPhysicsMass() = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsMass") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetPhysicsMass(), EPyUtils::RangeCheck::nonNegative, "ObjectFFRFreducedOrder.physicsMass"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsInertia") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectFFRFreducedOrder->GetPhysicsInertia()); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsCenterOfMass") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetPhysicsCenterOfMass()); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("mPsiTildePsi") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().mPsiTildePsi); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

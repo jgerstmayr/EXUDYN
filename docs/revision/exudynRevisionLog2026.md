@@ -2256,6 +2256,40 @@ compiled code, so the wheel does not change apart from the version. `itemHeaderE
 `CheckForLeftoverItemHeaders`, which raises when the output directory holds an item header without
 a definition. It was checked with a dummy `VisuObjectFooTest.h`, which made the emitter fail.
 
+**Done 2026-09-15, step 34c4 (b) and step 95 - range checks on every write path, with a switch
+(#2422).**
+- **C++ check:** `PyConversion.h` gained `FromPython(value, destination, RangeCheck, context)` for
+  `Real`, `float` and `Index`. `itemHeaderEmitter.py` emits it for every `UReal`/`PReal`/`UInt`/
+  `PInt`/`UFloat`/`PFloat` item parameter, in `SetWithDictionary` and `SetParameter` alike, with the
+  context `"ObjectMassPoint.physicsMass"` in the message.
+- **Python checks removed:** `itemInterfaceEmitter.py` no longer wraps those arguments in
+  `CheckForValid...`. The four helper functions stay defined in `itemInterface.py`, because
+  `from exudyn.utilities import *` exposes them.
+- **The switch:** `exudyn.special.exceptions.parameterRangeChecks` (default `True`), a new member of
+  `PySpecialExceptions` (`Experimental.h`, bound in `Pybind_manual_classes.cpp`), read through
+  `EXUstd::ParameterRangeChecksActive()`. The settings checks `EXUstd::GetSafely...` in
+  `BasicFunctions.h` ask the same function, so one switch covers items and structures. Documented
+  in `definitions/pybindModule.py` together with its parent `special.exceptions`.
+
+Checked by hand: `SetObjectParameter(o, 'physicsMass', -1)` raises; with the switch off it stores
+-1; `solutionWritePeriod = -1` raises with the switch on and is accepted with it off.
+
+**`parameterConversionTest.py` harness change:** the base item of each type is now created with
+the switch off, and a default that is rejected when written back is replaced by 1 for the dict and
+class paths. Without this, the 17 item types whose defaults violate their range (#2426) lost all
+their paths. The change is neutral for the code before (b): nothing was rejected there, so nothing
+is replaced, and the switch is only set if it exists.
+
+**Reference update:** 532 paths changed, all of them intended. Grouped:
+- `set` and `dict` now raise for negative (`U`) or zero (`P`) values: 97+24+12+5 parameters per path.
+- The `class` path raises `RuntimeError` from C++ instead of `ValueError`/`TypeError` from Python.
+  `NodeIndex`/`ObjectIndex` into a range scalar are now accepted there as on the other paths (#2425).
+- The 17 classes that rejected their own defaults can be constructed and now probe normally. Adding
+  their plain defaults fails in C++, as the `defaults` row records (#2426).
+
+Full suite PASSED (20.3 s) on a full rebuild. 20000 `mbs.AddObject(ObjectMassPoint(...))` took
+0.064 s; there is no comparable number from before the change.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving
