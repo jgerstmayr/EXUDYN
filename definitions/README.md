@@ -7,7 +7,8 @@ and the measurements behind every decision are in
 
 To change an item or a structure, edit the file here and run `python tools/regenerate.py --check`
 (in `venvExuP313`): it validates the definitions and regenerates everything. The generators read
-these files through `tools/generators/definitionLoader.py`.
+these files through `tools/generators/definitionLoader.py`; the `pybind*.py` files are replayed
+by `tools/generators/pybindEmitter.py`.
 
 **Order matters** within and across the files: classes are generated in the order they appear,
 and structures written into one C++ header (`appendToFile`) depend on it.
@@ -22,6 +23,8 @@ and structures written into one C++ header (`appendToFile`) depend on it.
 | `outputVariableDescriptions.py` | hand | the output-variable texts shared by four or more items |
 | `itemDefsNodes.py`, `itemDefsObjects.py`, `itemDefsMarkers.py`, `itemDefsLoads.py`, `itemDefsSensors.py` | hand | one `ItemDefinition(...)` per item |
 | `structureDefs*.py` | hand | one `StructureDefinition(...)` per settings / solver / system structure |
+| `pybindTypes.py` | hand | `PybindInterface`, the recorder of the hand-written Python interface declarations, with its call vocabulary and the shared stub type names |
+| `pybindModule.py`, `pybindSystemContainer.py`, `pybindRenderer.py`, `pybindMainSystem.py`, `pybindSystemData.py`, `pybindSymbolic.py`, `pybindGeneralContact.py`, `pybindDataStructures.py`, `pybindEnums.py`, `pybindGeneralInformation.py` | hand | the hand-written Python interface (functions and classes whose C++ binding is not generated from an item or structure), in declaration calls on `pb`; order matters, as the calls are replayed in order |
 
 `definitionTypes.py` is grouped in three blocks by where a name is used: **SHARED** (types, default
 values, sentinels), **ITEMS**, **STRUCTURES**.

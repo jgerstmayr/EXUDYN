@@ -1974,6 +1974,29 @@ the generator removed; the stub, LaTeX and RST outputs recreated identically aft
 four C++ headers after corruption (`WriteTextIfDifferent` does not create missing files; only date
 lines differed); run from an unrelated directory; full test suite PASSED.
 
+**Done 2026-09-14, step 33 part 2d (move) - `autoGeneratePyBindings.py` is deleted.** Its 4480-line
+body was converted mechanically (AST-driven, from the committed file) into ten
+`definitions/pybind*.py` declaration files, one per interface. The declaration calls keep their
+form (`pb.DefPyFunctionAccess(...)` instead of `plr.DefPyFunctionAccess(...)`); `pb` is a
+`PybindInterface` (`definitions/pybindTypes.py`) that records the calls, and
+`tools/generators/pybindEmitter.py` replays them into `PyLatexRST` with the orchestration the
+script had (enums first but documented last, the chapter introduction, the separate symbolic
+recorder, the reversed stub sections). The script manipulated the output strings directly in 57
+places; each became a named steering call: `CppCode`/`LatexCode`/`StubCode` (literal text),
+`BeginCppWrittenByHand`/`EndCppWrittenByHand` (was `sOld = plr.PyStr() ... plr.sPy = sOld`),
+`BeginNoStub`/`EndNoStub`, `EndStubSection` (was `savedPyi = plr.sPyi+savedPyi`),
+`CppFinishClass` (was a throwaway `plr2`), `ExtensionRST` (the `MainSystem*Ext.rst` reads),
+`ResetRST`. The recorder rejects unknown call names. One dead statement dropped (an `sPyOld` in
+the symbolic section that was never restored); commented-out old code referring to the removed
+string mechanism was removed, commented-out declarations were kept. Measured: the emitter and the
+committed script, run one after the other, write byte-identical `pybind_manual_classes.h`,
+`OutputVariableTypes.h`, the three stub fragments, `manual_interfaces.tex`, `confHelper.py` and the
+cInterface RST; `--check` no-op with the script deleted; full test suite PASSED.
+Found on the way: `pybindEmitter.py` reads `MainSystem*Ext.rst` written by
+`utilitiesDocuGenerator.py`, which `regenerate.py` runs *after* it - a change of the extensions
+reaches the documentation only on the second run (2f). Open in 2d: the enum registrators and the
+validator checks.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving

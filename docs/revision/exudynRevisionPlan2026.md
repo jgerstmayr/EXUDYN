@@ -453,7 +453,7 @@ index.rst
 |---|---|
 | `docs/RST/items/` | `tools/generators/itemDocsEmitter.py` |
 | `docs/RST/structures/` | `tools/generators/structureDocsEmitter.py` |
-| `docs/RST/cInterface/` | `autoGeneratePyBindings.py` |
+| `docs/RST/cInterface/` | `tools/generators/pybindEmitter.py` |
 | `docs/RST/pythonUtilities/` | `utilitiesDocuGenerator.py` |
 | `docs/RST/Examples/`, `docs/RST/TestModels/` | from the `.py` files |
 | `docs/RST/*.rst` (top level) | `doc2rst.py`, from `version.txt`, `gettingStarted.tex`, `introduction.tex`, `tutorial.tex`, `GUI.tex`, `notation.tex`, `theory.tex`, `solver.tex` |
@@ -1039,7 +1039,15 @@ The core investment. Every step is validated byte-for-byte by step 2.
          Original scope: the same for `pythonAutoGenerateSystemStructures.py`: C++
          headers, pybind/get-set glue, stub fragment, RST + LaTeX. `definitionLoader.py` is
          deleted when its last consumer is gone; `systemStructuresData.npy` is dropped.
-       - **2d - the manual pybind interface becomes data.** `autoGeneratePyBindings.py` is not a
+       - **2d - the manual pybind interface becomes data.** *Move DONE 2026-09-14;
+         `autoGeneratePyBindings.py` is deleted.* Ten `definitions/pybind*.py` files (module,
+         `SystemContainer`, `Renderer`, `MainSystem`, `SystemData`, `symbolic`, `GeneralContact`,
+         data structures, enums, chapter introduction) record their calls on a
+         `PybindInterface` (`definitions/pybindTypes.py`); `tools/generators/pybindEmitter.py`
+         replays them. The string manipulations of the old script became named steering calls
+         (`BeginCppWrittenByHand`, `EndStubSection`, ...). *Open in 2d:* the enum registrators
+         (below) and the validator checks with the four definition errors they find.
+         Original scope: `autoGeneratePyBindings.py` is not a
          generator over definitions: its body *is* the definition of the hand-written Python
          interface (module functions, `SystemContainer`, `MainSystem`, enums, `symbolic`) -
          the same mix of data and emitter step 31 removed for the items. Move the declarations
@@ -1060,7 +1068,7 @@ The core investment. Every step is validated byte-for-byte by step 2.
        - **2f - one driver, explicit intermediates.** Today the scripts hand data to each other
          through `src/pythonGenerator/generated/` in an order only `tools/regenerate.py` knows
          (`utilitiesDocuGenerator` must run before `createStubFiles`, and its `MainSystem*Ext.rst`
-         is read by `autoGeneratePyBindings`). Each emitter declares inputs and outputs; one
+         is read by `pybindEmitter.py`). Each emitter declares inputs and outputs; one
          driver, `tools/generators/generate.py` with `main()` + argparse, runs them in dependency
          order; `createStubFiles.py` becomes its last stage. `regenerate.py` calls the driver.
          The maintainer's `tools/buildAndGenerate/` batch scripts (generation, wheels, tests;

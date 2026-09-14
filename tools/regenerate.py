@@ -46,7 +46,8 @@ generatorScripts = [
     '../../tools/generators/structureHeaderEmitter.py',
     '../../tools/generators/structureStubEmitter.py',
     '../../tools/generators/structureDocsEmitter.py',
-    'autoGeneratePyBindings.py',
+    #replaces autoGeneratePyBindings.py (step 33, part 2d)
+    '../../tools/generators/pybindEmitter.py',
     'utilitiesDocuGenerator.py',
     'createStubFiles.py',
     'doc2rst.py',
