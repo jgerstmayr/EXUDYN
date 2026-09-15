@@ -18,6 +18,14 @@ import numpy as np
 import exudyn
 from exudyn.extensionRegistry import extends
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'solverCheckMemoryAllocations', 'solverCheckMemoryAllocationsThreshold', 'SolverErrorMessage',
+    'SolveStatic', 'SolveDynamic', 'SolverSuccess', 'DeactivateWritingOfSolvers',
+    'RestoreSimulationSettings', 'ComputeLinearizedSystem', 'ComputeODE2Eigenvalues',
+    'ComputeSystemDegreeOfFreedom', 'CheckSolverInfoStatistics',
+    ]
+
 solverCheckMemoryAllocations = True
 solverCheckMemoryAllocationsThreshold = 100000 #treshold for warning on too many news during solving
 

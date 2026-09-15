@@ -25,6 +25,7 @@ You can view and download this file on Github: `HydraulicActuator2Arms.py <https
    
    import exudyn as exu
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import exudyn
    import exudyn.graphics as graphics #only import if it does not conflict
    
    #import numpy as np

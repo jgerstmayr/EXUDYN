@@ -22,6 +22,11 @@ from exudyn.rigidBodyUtilities import RotationMatrix2RotZYZ, HT2rotationMatrix, 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'MakeCorkeRobot', 'ComputeIK3R', 'ComputeIKPuma560', 'ComputeIKUR',
+    ]
+
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

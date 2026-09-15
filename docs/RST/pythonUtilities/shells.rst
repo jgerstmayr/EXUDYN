@@ -24,7 +24,7 @@ CLASS ShellMesh (in module shells)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/shells.py\#L41>`__\ (\ ``self``\ , \ ``vertices = [[-1,-1,0],[ 1,-1,0],[ 1, 1,0],[-1, 1,0]]``\ , \ ``numberOfElementsX = 1``\ , \ ``numberOfElementsY = 1``\ , \ ``youngsModulus = None``\ , \ ``poissonsRatio = None``\ , \ ``density = None``\ , \ ``thickness = None``\ , \ ``massProportionalDamping = 0.``\ , \ ``thicknessAtNodes = None``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/shells.py\#L46>`__\ (\ ``self``\ , \ ``vertices = [[-1,-1,0],[ 1,-1,0],[ 1, 1,0],[-1, 1,0]]``\ , \ ``numberOfElementsX = 1``\ , \ ``numberOfElementsY = 1``\ , \ ``youngsModulus = None``\ , \ ``poissonsRatio = None``\ , \ ``density = None``\ , \ ``thickness = None``\ , \ ``massProportionalDamping = 0.``\ , \ ``thicknessAtNodes = None``\ )
 
 - | \ *classFunction*\ :
   | initialize rectangular shell mesh with geometry, discretization and physics parameters

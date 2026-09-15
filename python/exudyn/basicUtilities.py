@@ -20,6 +20,17 @@ import numpy as np
 import exudyn
 from exudyn.itemInterface import MarkerBodyRigid, VMarkerBodyRigid, SensorUserFunction
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'pi', 'sqrt2', 'g', 'ClearWorkspace', 'SmartRound2String', 'Normalize',
+    'gaussIntegrationPoints', 'gaussIntegrationWeights', 'GaussIntegrate',
+    'lobattoIntegrationPoints', 'lobattoIntegrationWeights', 'LobattoIntegrate', 'GetOtherMarker',
+    'GetJointArgs', 'ShowOnlyObjects', 'HighlightItem', 'UFsensorRecord', 'AddSensorRecorder',
+    'LoadSolutionFile', 'NumpyInt8ArrayToString', 'BinaryReadIndex', 'BinaryReadReal',
+    'BinaryReadString', 'BinaryReadArrayIndex', 'BinaryReadRealVector', 'LoadBinarySolutionFile',
+    'RecoverSolutionFile', 'InitializeFromRestartFile', 'SetSolutionState', 'AnimateSolution',
+    ]
+
 #define some constants which would require external libraries
 #pi = 3.1415926535897932 #define pi in order to avoid importing large libraries; identical to from math import pi
 pi = math.pi

@@ -55,7 +55,7 @@ mbs.AddLoad(Force(markerNumber = mSuperElement, loadVector = [10, 0, 0]))
 #assemble and solve system for default parameters
 mbs.Assemble()
 
-mbs.SolveDynamic(solverType = exudyn.DynamicSolverType.TrapezoidalIndex2)
+mbs.SolveDynamic(solverType = exu.DynamicSolverType.TrapezoidalIndex2)
 
 #check result at default integration time
 exudynTestGlobals.testResult = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0]

@@ -14,10 +14,11 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Utility functions and structures for Exudyn
 
-import numpy as np
-from math import sqrt #, sin, cos, pi
-
-import exudyn
+import exudyn.basicUtilities as _basicUtilities
+import exudyn.advancedUtilities as _advancedUtilities
+import exudyn.rigidBodyUtilities as _rigidBodyUtilities
+import exudyn.graphicsDataUtilities as _graphicsDataUtilities
+import exudyn.itemInterface as _itemInterface
 from exudyn.basicUtilities import * # noqa: F403, F401
 from exudyn.advancedUtilities import * # noqa: F403, F401
 from exudyn.rigidBodyUtilities import * # noqa: F403, F401
@@ -26,7 +27,14 @@ import exudyn.graphics #requires import for usage during __init__.py
 from exudyn.itemInterface import * # noqa: F403, F401
 
 #for compatibility with older models:
-from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint,\
-                         GenerateStraightBeam # noqa # pylint: disable=unused-import
+from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint,                         GenerateStraightBeam # noqa # pylint: disable=unused-import
 #MainSystem extensions that were defined here before step 107b:
 from exudyn.mainSystemExtensions import CreateDistanceSensorGeometry, CreateDistanceSensor, DrawSystemGraph # noqa: F401
+
+#the exported names are those of the imported modules (step 107c); helper imports such as np or sqrt
+#are not part of it - import them explicitly
+__all__ = (_basicUtilities.__all__ + _advancedUtilities.__all__ + _rigidBodyUtilities.__all__
+           + _graphicsDataUtilities.__all__ + _itemInterface.__all__
+           + ['GenerateStraightLineANCFCable2D', 'GenerateSlidingJoint', 'GenerateAleSlidingJoint',
+              'GenerateStraightBeam', 'CreateDistanceSensorGeometry', 'CreateDistanceSensor',
+              'DrawSystemGraph'])

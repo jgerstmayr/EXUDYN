@@ -15,6 +15,12 @@
 import numpy as np
 from math import exp
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'StribeckFunction', 'RegularizedFrictionStep', 'RegularizedFriction', 'VonMisesStress',
+    'UFvonMisesStress',
+    ]
+
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def StribeckFunction(vel, muDynamic, muStaticOffset, muViscous=0, expVel=1e-3, regVel=1e-3):
     r"""describes regularized Stribeck function with optial viscous part for given velocity,

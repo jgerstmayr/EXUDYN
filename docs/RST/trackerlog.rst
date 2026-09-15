@@ -19,15 +19,25 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.69.dev1, 
++  Exudyn version = 1.11.71.dev1, 
 +  last change =  2026-09-15, 
-+  Number of issues = 2444, 
-+  Number of resolved issues = 2142 (69 in current version), 
++  Number of issues = 2445, 
++  Number of resolved issues = 2144 (71 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.71: resolved Issue 2444: python modules: __all__ in every module; star imports no longer export helper imports (change)
+    - issue author: Claude-JG
+    - description:  step 107c: __all__ in 35 modules (itemInterface by its emitter) from the rule in tools/generators/publicApi.py; tools/checkAll.py --check/--write and GitLab job check_all; utilities.py composes the lists; Examples/TestModels that used np sin cos sqrt copy exudyn from star imports import them explicitly (50 files)
+    - date resolved: **2026-09-15 18:58**\ , date raised: 2026-09-15 
+    - resolved by: Claude-JG
+ * Version 1.11.70: resolved Issue 2438: utility modules: star imports export helper names (change)
+    - issue author: Claude-JG
+    - description:  from exudyn.utilities import \* also exports imported helpers (extends; docmeta; module imports); define __all__ or restructure so only the public API is exported; check what examples and test models rely on first (plan step 107)
+    - date resolved: **2026-09-15 18:58**\ , date raised: 2026-09-15 
+    - resolved by: Claude-JG
  * Version 1.11.69: resolved Issue 2443: utilities.py: deprecated GraphicsData aliases removed; functions moved to basicUtilities/advancedUtilities/mainSystemExtensions (change)
     - issue author: Claude-JG
     - description:  step 107b: 23 GraphicsData... aliases removed (uses switched to exudyn.graphics); @extends functions to mainSystemExtensions; TCP/IP to advancedUtilities; all other functions to basicUtilities (now imports exudyn); utilities.py only re-exports
@@ -7147,11 +7157,6 @@ Open issues
  * **open issue 2440:** itemInterface.py: generated docstrings do not match the signatures
     - issue author: Claude-JG
     - description:  pydoclint reports 387 findings in the generated itemInterface.py: the visualization argument is not documented and the arguments carry type hints in the docstring; fix in itemInterfaceEmitter.py and then include the file in the pydoclint check (plan step 108)
-    - date raised: 2026-09-15 
-
- * **open issue 2438:** utility modules: star imports export helper names
-    - issue author: Claude-JG
-    - description:  from exudyn.utilities import \* also exports imported helpers (extends; docmeta; module imports); define __all__ or restructure so only the public API is exported; check what examples and test models rely on first (plan step 107)
     - date raised: 2026-09-15 
 
  * **open issue 2432:** parameter conversion errors raise inconsistent exception types

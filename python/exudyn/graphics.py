@@ -28,6 +28,18 @@ import numpy as np #LoadSolutionFile
 import copy as copy #to be able to copy e.g. lists
 from math import radians, pi, sin, cos, tan, asin #, acos
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'graphicsDataNormalsFactor', 'graphicsDataSwitchTriangleOrder', 'color', 'material',
+    'colorList', 'Sphere', 'Lines', 'Circle', 'Text', 'Cuboid', 'BrickXYZ', 'Brick', 'Cylinder',
+    'Tube', 'Torus', 'RigidLink', 'SolidOfRevolution', 'Arrow', 'Basis', 'Frame', 'Quad',
+    'CheckerBoard', 'SolidExtrusion', 'LinkedCylinders', 'BallBearingRings', 'InvoluteGear',
+    'ToothedRack', 'BoundingBoxSingle', 'BoundingBox', 'FromPointsAndTrigs', 'ToPointsAndTrigs',
+    'Transform', 'Move', 'MergeTriangleLists', 'InvertTriangles', 'InconsistentTriangles',
+    'NGsolveMesh2PointsAndTrigs', 'FromSTLfileASCII', 'FromPyMeshlabFile', 'FromSTLfile',
+    'AddEdgesAndSmoothenNormals', 'ExportSTL',
+    ]
+
 graphicsDataNormalsFactor = 1. #this is a factor being either -1. [original normals pointing inside; until 2022-06-27], while +1. gives corrected normals pointing outside
 graphicsDataSwitchTriangleOrder = False #this is the old ordering of triangles in some Sphere or Cylinder functions, causing computed normals to point inside
 

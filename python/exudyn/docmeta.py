@@ -15,6 +15,11 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'docmeta',
+    ]
+
 def docmeta(*, author=None, date=None, status=None, public=True):
     """Attach documentation metadata; public=False keeps a function or class out of the
     generated reference documentation."""

@@ -18,7 +18,7 @@ specific friction angle of rolling disc is used to model rolls of mecanum wheels
 
 Function: MobileRobot2MBS
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`MobileRobot2MBS <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py\#L30>`__\ (\ ``mbs``\ , \ ``mobileRobot``\ , \ ``markerGround``\ , \ ``flagGraphicsRollers = True``\ , \ ``*args``\ , \ ``**kwargs``\ )
+`MobileRobot2MBS <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py\#L36>`__\ (\ ``mbs``\ , \ ``mobileRobot``\ , \ ``markerGround``\ , \ ``flagGraphicsRollers = True``\ , \ ``*args``\ , \ ``**kwargs``\ )
 
 - | \ *function description*\ :
   | add items to existing mbs to build up a mobile robot platform,
@@ -50,7 +50,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Generatrix2Polynomial
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`Generatrix2Polynomial <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py\#L409>`__\ (\ ``param``\ , \ ``GeneratrixFunction``\ , \ ``tol = 1e-14``\ , \ ``nFit = 101``\ , \ ``nTest = 1001``\ )
+`Generatrix2Polynomial <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py\#L415>`__\ (\ ``param``\ , \ ``GeneratrixFunction``\ , \ ``tol = 1e-14``\ , \ ``nFit = 101``\ , \ ``nTest = 1001``\ )
 
 - | \ *function description*\ :
   | create a polynomial describing a generatrix function
@@ -71,7 +71,7 @@ Function: Generatrix2Polynomial
 
 Function: GeneratrixRoll
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`GeneratrixRoll <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py\#L479>`__\ (\ ``u``\ , \ ``param``\ )
+`GeneratrixRoll <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py\#L485>`__\ (\ ``u``\ , \ ``param``\ )
 
 - | \ *function description*\ :
   | generatrix function for a roll of a Mecanum wheel
@@ -98,7 +98,7 @@ Function: GeneratrixRoll
 
 Function: FunDiffPoly
 ^^^^^^^^^^^^^^^^^^^^^
-`FunDiffPoly <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py\#L501>`__\ (\ ``x``\ , \ ``a``\ )
+`FunDiffPoly <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py\#L507>`__\ (\ ``x``\ , \ ``a``\ )
 
 - | \ *function description*\ :
   | calculates the derivative of the polynomial \ :math:`a0*x^n + ...`\
@@ -121,7 +121,7 @@ Function: FunDiffPoly
 
 Function: FunDDiffPoly
 ^^^^^^^^^^^^^^^^^^^^^^
-`FunDDiffPoly <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py\#L521>`__\ (\ ``x``\ , \ ``a``\ )
+`FunDDiffPoly <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py\#L527>`__\ (\ ``x``\ , \ ``a``\ )
 
 - | \ *function description*\ :
   | calculates the second derivative of a polynomial
@@ -154,7 +154,7 @@ CLASS MobileKinematics (in module robotics.mobile)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py\#L319>`__\ (\ ``self``\ , \ ``R``\ , \ ``lx``\ , \ ``ly``\ , \ ``flagAdjusted = False``\ , \ ``lcx = 0``\ , \ ``lcy = 0``\ , \ ``wheeltype = 0``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py\#L325>`__\ (\ ``self``\ , \ ``R``\ , \ ``lx``\ , \ ``ly``\ , \ ``flagAdjusted = False``\ , \ ``lcx = 0``\ , \ ``lcy = 0``\ , \ ``wheeltype = 0``\ )
 
 - | \ *classFunction*\ :
   | initialize mobileKinematics class
@@ -172,7 +172,7 @@ Class function: __init__
 
 Class function: GetWheelVelocities
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetWheelVelocities <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py\#L355>`__\ (\ ``self``\ , \ ``vDes``\ )
+`GetWheelVelocities <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py\#L361>`__\ (\ ``self``\ , \ ``vDes``\ )
 
 - | \ *classFunction*\ :
   | calculate wheel velocities from Cartesian velocities
@@ -192,7 +192,7 @@ Class function: GetWheelVelocities
 
 Class function: GetCartesianVelocities
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetCartesianVelocities <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py\#L382>`__\ (\ ``self``\ , \ ``w``\ )
+`GetCartesianVelocities <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/mobile.py\#L388>`__\ (\ ``self``\ , \ ``w``\ )
 
 - | \ *classFunction*\ :
   | calculate Cartesian velocities from wheel velocities

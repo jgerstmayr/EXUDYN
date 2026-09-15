@@ -15,6 +15,11 @@ import exudyn
 import numpy as np #LoadSolutionFile
 # import copy as copy #to be able to copy e.g. lists
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'CreateParticlesInBox',
+    ]
+
 def CreateParticlesInBox(minPointBox, maxPointBox, minRadius, maxRadius=None, 
                          maxNumberOfParticles=None, offsetRadius=0, verbose=0):
     """create set of spherical particles densly packed inside box using hexagonal closest packing (HCP); radius is randomized between minRadius and maxRadius

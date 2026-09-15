@@ -18,6 +18,14 @@ import exudyn #for sensor index
 import exudyn.itemInterface as eii
 
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'GenerateStraightLineANCFCable2D', 'GenerateStraightLineANCFCable',
+    'GenerateBeamElementsAlongLine', 'GenerateStraightBeam', 'GenerateCircularArcANCFCable2D',
+    'CreateReevingCurve', 'PointsAndSlopes2ANCFCable2D', 'GenerateSlidingJoint',
+    'GenerateAleSlidingJoint',
+    ]
+
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numberOfElements, cableTemplate,
                                 massProportionalLoad=[0,0,0], 

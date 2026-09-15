@@ -20,6 +20,12 @@ from exudyn.extensionRegistry import extends
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'InteractiveDialog', 'AnimateModes', 'SolutionViewer', 'ConvertImages2Video',
+    'InteractiveImages2Video',
+    ]
+
 class InteractiveDialog:
     """create an interactive dialog, which allows to interact with simulations
     the dialog has a 'Run' button, which initiates the simulation and a 'Stop' button which stops/pauses simulation; 'Quit' closes the simulation model

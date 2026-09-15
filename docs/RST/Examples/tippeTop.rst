@@ -27,6 +27,7 @@ You can view and download this file on Github: `tippeTop.py <https://github.com/
    
    import exudyn as exu
    from exudyn.itemInterface import *
+   import numpy as np
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
    import exudyn.graphics as graphics #only import if it does not conflict
    

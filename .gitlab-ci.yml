@@ -119,6 +119,16 @@ check_docstrings:
     - pip install --no-cache-dir --group lint         # pydoclint, pinned: the baseline holds its messages
     - pydoclint --config=pyproject.toml python/exudyn
 
+# Every Python module in python/exudyn declares its public names in __all__, and the list must be
+# complete (revision plan step 107c); utilities.py composes them. A pure AST scan.
+check_all:
+  stage: build
+  image: python:3.13
+  variables:
+    GIT_DEPTH: "1"
+  script:
+    - python tools/checkAll.py --check
+
 # Keep the compile list honest: sources.json is generated from the ClCompile entries of
 # cppsrc.vcxproj, and setup.py builds from the JSON (revision plan step 17). This fails when the
 # vcxproj, the JSON and the files on disk disagree - including on CASE, which is invisible on the

@@ -14,6 +14,16 @@
 
 import sys
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'doDebug', 'argList', 'listMarkerStyles', 'x', 'y', 'updatePeriod', 'lineColor', 'lineStyle',
+    'logX', 'logY', 'colorVariations', 'sizeXinInches', 'sizeYinInches', 'xColumns', 'yColumns',
+    'xLabels', 'yLabels', 'addMarker', 'fileName', 'variations', 'runLoader', 'nArgs', 'i',
+    'fileReady', 'lines', 'header', 'colValue', 'nColumnsProcessed', 'nPlots', 'nVariations',
+    'variableRanges', 'maxCols', 'nRows', 'nCols', 'fig', 'axList', 'lineList', 'markerList',
+    'finished', 'firstRun',
+    ]
+
 doDebug = False
 
 if doDebug:

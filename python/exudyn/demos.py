@@ -13,6 +13,11 @@
 
 import exudyn
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'DemoInfo', 'Demo1', 'Demo2',
+    ]
+
 def DemoInfo():
     exudyn.Print('\n************************************')
     exudyn.Print('for advanced demos github page:')

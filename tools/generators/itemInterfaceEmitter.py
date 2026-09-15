@@ -26,6 +26,7 @@ if toolsDirectory not in sys.path:
 
 import itemModel as im                                                              # noqa: E402
 import typeModel as tm                                                              # noqa: E402
+import publicApi                                                                     # noqa: E402
 from itemModel import (pyFunctionTypeConversion, IsAVector,                         # noqa: E402
                        IsASimpleMatrix, IsAArrayIndex, IsTypeWithRangeCheck, ExtractLatexSymbol,
                        possibleTypes)
@@ -259,6 +260,9 @@ def EmitItemInterface(definitions):
             if definition.get('classType', '') == classType:
                 s += ItemClasses(definition)
 
+    #__all__ after the imports, from the same rule tools/checkAll.py checks (step 107c)
+    marker = '\n\n#helper function for level-1 copy of dicts'
+    s = s.replace(marker, '\n\n' + publicApi.AllText(publicApi.PublicNames(s)) + marker, 1)
     return s
 
 

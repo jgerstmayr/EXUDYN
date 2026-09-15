@@ -2808,6 +2808,45 @@ Moved functions (same code, docstrings and decorators):
   other extensions). `checkExtras`, pydoclint (baseline regenerated for the new file names),
   wheel, full suite PASSED.
 
+<a id="step-107c"></a>
+
+### Step 107c - `__all__` in every module; step 107 complete
+
+**DONE 2026-09-15** (#2444, #2438).
+
+Measured first: over the 293 Examples/TestModels with `from exudyn.utilities import *` (and all
+other star imports of exudyn modules), which names they used that the modules only imported:
+
+| name | files |
+|---|---|
+| `exudyn` | 19 |
+| `sin` | 18 |
+| `cos` | 17 |
+| `np` | 15 |
+| `sqrt` | 3 |
+| `copy` | 1 |
+
+These 50 files import the names explicitly now. The two generated MiniExamples among them
+(`MarkerSuperElementPosition`, `ObjectGenericODE2`) are fixed in `definitions/` (`exu.` instead of
+`exudyn.` in their example code).
+
+- **Rule** (`tools/generators/publicApi.py`): public are the top-level functions, classes and
+  assigned names (also inside top-level `if`/`try`, not inside `if __name__ == '__main__'`) that do
+  not start with `_`, except `@docmeta(public=False)`. Imported names are never public.
+- **`__all__`** written into 34 hand-written modules by `tools/checkAll.py --write` (after the
+  imports, in definition order); `itemInterface.py` gets it from `itemInterfaceEmitter.py` with
+  the same rule; `utilities.py` composes the lists of the five modules it star-imports plus its
+  explicit re-exports.
+- **Checker** `tools/checkAll.py --check`: fails if a module's `__all__` differs from its public
+  names (missing, not defined, or order). GitLab job `check_all`. `CODING_STYLE.md` names the rule
+  and the `--write` step.
+- **Result**, compared in a fresh interpreter: `from exudyn.utilities import *` provides exactly
+  the names it provided before, except `Enum`, `copy`, `cos`, `docmeta`, `eii`, `exu`, `exudyn`,
+  `graphics`, `math`, `np`, `sin`, `sqrt`; nothing was gained. The package modules that use star
+  imports themselves (`robotics/mobile.py`, `robotics/rosInterface.py`) resolve every name.
+- Checked: regeneration (tier 1 changes as intended: `itemInterface.py` `__all__`, the two
+  MiniExamples), `checkAll`, `checkExtras`, pydoclint, wheel, full suite PASSED.
+
 <a id="api-changes-v2"></a>
 
 ### API changes for the v2.0 release notes
@@ -2821,6 +2860,7 @@ Breaking changes of the Python API, collected as they happen; step 52 carries th
 | 107b | 23 deprecated `GraphicsData...` aliases removed from `exudyn.utilities` (e.g. `GraphicsDataOrthoCubePoint`, `GraphicsDataCylinder`, `GraphicsDataCheckerBoard`) | use `exudyn.graphics`: `graphics.Brick`, `graphics.Cylinder`, `graphics.CheckerBoard`, ... (full list in the step 107b log) |
 | 107b | functions of `exudyn.utilities` moved to `basicUtilities`, `advancedUtilities` (TCP/IP) and `mainSystemExtensions` (distance sensor, `DrawSystemGraph`) | nothing when importing from `exudyn.utilities`; imports from the new modules also work |
 | 107b | `from exudyn.utilities import *` no longer provides `extends` | not part of the user API |
+| 107c | star imports of exudyn modules export only what the module defines (`__all__`); `from exudyn.utilities import *` no longer provides `np`, `sin`, `cos`, `sqrt`, `math`, `copy`, `Enum`, `exudyn`, `exu`, `eii`, `graphics`, `docmeta` | import them explicitly: `import numpy as np`, `from math import sin, cos, sqrt`, `import exudyn as exu`, `import exudyn.graphics as graphics` |
 | 107a | `NormL2`, `VSum`, `VAdd`, `VSub`, `VMult`, `ScalarMult`, `Vec2Tilde`, `Tilde2Vec`, `DiagonalMatrix`, `eye2D`, `eye3D` removed from `exudyn.basicUtilities` (and so from `exudyn.utilities`) | use numpy: `np.linalg.norm`, `np.sum`, array arithmetic, `np.dot`, `Skew`/`Skew2Vec`, `np.eye` |
 
 ## Plan text of steps condensed on 2026-09-15

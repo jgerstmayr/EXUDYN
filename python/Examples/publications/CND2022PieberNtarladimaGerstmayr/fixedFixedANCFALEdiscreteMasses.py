@@ -18,6 +18,7 @@ from exudyn.basicUtilities import ClearWorkspace
 ClearWorkspace()
 
 from exudyn.basicUtilities import *
+import exudyn
 import exudyn as exu
 from exudyn.processing import ParameterVariation
 

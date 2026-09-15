@@ -17,6 +17,11 @@ import numpy as np
 import exudyn
 from exudyn.advancedUtilities import IsListOrArray
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'FilterSensorOutput', 'FilterSignal', 'ComputeFFT', 'GetInterpolatedSignalValue',
+    ]
+
 def FilterSensorOutput(signal, filterWindow=5, polyOrder=3, derivative=0, centralDifferentiate=True):
     """filter output of sensors (using numpy savgol filter) as well as numerical differentiation to compute derivative of signal
 

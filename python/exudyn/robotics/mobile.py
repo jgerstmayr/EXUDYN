@@ -27,6 +27,12 @@ from exudyn.robotics import *
 
 import numpy as np
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'MobileRobot2MBS', 'MobileKinematics', 'Generatrix2Polynomial', 'GeneratrixRoll', 'FunDiffPoly',
+    'FunDDiffPoly', 'MecanumXYphi2WheelVelocities', 'MecanumWheelVelocity2XYphi',
+    ]
+
 def MobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *args, **kwargs):
     """add items to existing mbs to build up a mobile robot platform,
     there are options that can be passed as args / kwargs, which can contains options as described below.

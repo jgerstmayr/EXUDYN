@@ -13,6 +13,11 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'extends', 'install',
+    ]
+
 _registry = [] #(class, method name, function) in registration order
 
 

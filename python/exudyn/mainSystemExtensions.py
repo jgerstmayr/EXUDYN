@@ -43,6 +43,21 @@ import copy
 #add helpful Python extensions for MainSystem, regarding creation of bodies, point masses, connectors and joints
 
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'MainSystemCreateGround', 'MainSystemCreateMassPoint', 'MainSystemCreateRigidBody',
+    'MainSystemCreateSpringDamper', 'MainSystemCreateCartesianSpringDamper',
+    'MainSystemCreateRigidBodySpringDamper', 'MainSystemCreateTorsionalSpringDamper',
+    'MainSystemCreateRevoluteJoint', 'MainSystemCreatePrismaticJoint',
+    'MainSystemCreateSphericalJoint', 'MainSystemCreateGenericJoint',
+    'MainSystemCreateDistanceConstraint', 'MainSystemCreateCoordinateConstraint',
+    'MainSystemCreateRollingDisc', 'MainSystemCreateRollingDiscPenalty',
+    'MainSystemCreateSphereSphereContact', 'MainSystemCreateSphereQuadContact',
+    'MainSystemCreateSphereTriangleContact', 'MainSystemCreateKinematicTree',
+    'MainSystemCreateFFRFReducedOrderObject', 'MainSystemCreateForce', 'MainSystemCreateTorque',
+    'CreateDistanceSensorGeometry', 'CreateDistanceSensor', 'DrawSystemGraph',
+    ]
+
 #internal function: do some pre-checks and calculations for joint
 #extended function which also accepts markers in bodyNumbers and returns new or existing markers
 #marker0 overrides the joint "position"

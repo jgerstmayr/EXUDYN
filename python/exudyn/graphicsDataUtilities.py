@@ -26,6 +26,19 @@ import numpy as np #LoadSolutionFile
 import copy as copy #to be able to copy e.g. lists
 from math import pi, sin, cos
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'color4red', 'color4green', 'color4blue', 'color4cyan', 'color4magenta', 'color4yellow',
+    'color4orange', 'color4pink', 'color4lawngreen', 'color4springgreen', 'color4violet',
+    'color4dodgerblue', 'color4lightred', 'color4lightgreen', 'color4steelblue', 'color4brown',
+    'color4black', 'color4darkgrey', 'color4darkgrey2', 'color4grey', 'color4lightgrey',
+    'color4lightgrey2', 'color4white', 'color4default', 'color4list', 'color4listSize',
+    'SwitchTripletOrder', 'ComputeTriangleNormal', 'ComputeTriangleArea',
+    'Compute6NodeTrigsNormals', 'RefineMesh', 'ShrinkMeshNormalToSurface', 'ComputeTriangularMesh',
+    'SegmentsFromPoints', 'CirclePointsAndSegments', 'GraphicsDataRectangle',
+    'GraphicsDataOrthoCubeLines',
+    ]
+
 # color definitions
 color4red = [1.,0.,0.,1.]
 color4green = [0.,1.,0.,1.]

@@ -25,6 +25,7 @@ You can view and download this file on Github: `pendulum2Dconstraint.py <https:/
    
    import exudyn as exu
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+   import numpy as np
    import exudyn.graphics as graphics #only import if it does not conflict
    
    SC = exu.SystemContainer()

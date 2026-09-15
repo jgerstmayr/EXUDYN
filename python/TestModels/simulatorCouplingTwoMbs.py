@@ -14,6 +14,8 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn
+from math import sin
 import exudyn.graphics as graphics #only import if it does not conflict
 import numpy as np
 import sys

@@ -23,6 +23,15 @@ import numpy as np
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'ComputeStepWithRK1', 'ComputeStepWithRK1FromAcceleration', 'ComputeStepWithRK4',
+    'RK_SolveEulersEOMWithProposedApproach', 'LieGroupExplicitRKInitialize',
+    'ExplicitRKComputeSystemAcceleration', 'LieGroupComputeKstage',
+    'ExplicitRKApplyCoordinateConstraints', 'LieGroupUpdateStageSystemCoordinates',
+    'UserFunctionNewtonLieGroupRK4',
+    ]
+
 ###############################################################################    
 def ComputeStepWithRK1(ODE2RHS, v0, w0, h):
     w     = w0 + h*ODE2RHS(v0, w0)

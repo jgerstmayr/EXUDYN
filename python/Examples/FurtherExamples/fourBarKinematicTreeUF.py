@@ -14,6 +14,7 @@
 
 import exudyn as exu
 from exudyn.utilities import *
+import copy
 import exudyn.graphics as graphics
 
 import numpy as np

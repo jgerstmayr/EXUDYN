@@ -23,6 +23,13 @@ import os
 import exudyn
 from exudyn.advancedUtilities import IsInteger, IsEmptyList
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'GetVersionPlatformString', 'SingleIndex2SubIndices', 'AddComputationIndexAndFunctionData',
+    'WriteToFile', 'ProcessParameterList', 'ParameterVariation', 'GeneticOptimization', 'Minimize',
+    'ComputeSensitivities', 'PlotOptimizationResults2D', 'PlotSensitivityResults',
+    ]
+
 #%%+++++++++++++++++++++++++++++++++++++++++++
 def GetVersionPlatformString():
     """internal function to return Exudyn version string, which allows to identify how results have been obtained

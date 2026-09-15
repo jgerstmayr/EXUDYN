@@ -15,6 +15,7 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
+import exudyn
 from exudyn.processing import ComputeSensitivities, PlotSensitivityResults
 from exudyn.utilities import AddSensorRecorder
 

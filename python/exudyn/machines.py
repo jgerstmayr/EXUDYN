@@ -15,6 +15,12 @@ import exudyn as exu
 import numpy as np
 from math import radians, cos, sin, sqrt, tan, atan, atan2, pi
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'Involute', 'ApproxInvolute', 'InvInvolute', 'InvoluteGear', 'GetBallBearingData',
+    'CreateBallBearing',
+    ]
+
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def Involute(x):
     r"""compute involute (x being in radians): $y=\\tan(x)-x$;

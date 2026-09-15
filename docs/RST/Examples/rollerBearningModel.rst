@@ -24,6 +24,7 @@ You can view and download this file on Github: `rollerBearningModel.py <https://
    
    import exudyn as exu
    from exudyn.utilities import *
+   from math import sin, cos
    import exudyn.graphics as graphics
    import numpy as np
    

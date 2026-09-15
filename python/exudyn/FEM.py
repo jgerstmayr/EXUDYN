@@ -28,6 +28,22 @@ import numpy as np #LoadSolutionFile
 from enum import Enum #for class HCBstaticModeSelection
 import os
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'useOldCSRformat', 'scipyInstalled', 'WarnNumpy2', 'CheckForSciPyAndWarn',
+    'CheckForSciPyAndError', 'CheckForSciPyMatrix', 'CompressedRowSparseToDenseMatrix',
+    'MapSparseMatrixIndices', 'VectorDiadicUnitMatrix3D', 'CyclicCompareReversed',
+    'AddEntryToCompressedRowSparseArray', 'CSRtoRowsAndColumns', 'warnedCSRtoScipySparseCSR',
+    'CSRtoScipySparseCSR', 'SparseTripletsToScipySparseCSR', 'ScipySparseCSRtoCSR',
+    'ResortIndicesOfCSRmatrix', 'ResortIndicesOfNGvector', 'ResortIndicesExudyn2NGvector',
+    'FileNameToMode', 'ReadNodesFromAbaqusInp', 'ConvertHexToTrigs', 'ConvertTetToTrigs',
+    'warnedConvertDenseToCompressedRowMatrix', 'ConvertDenseToCompressedRowMatrix',
+    'ReadMatrixFromAnsysMMF', 'ReadMatrixDOFmappingVectorFromAnsysTxt',
+    'ReadNodalCoordinatesFromAnsysTxt', 'ReadElementsFromAnsysTxt', 'MaterialBaseClass',
+    'KirchhoffMaterial', 'FiniteElement', 'Tet4', 'ObjectFFRFinterface', 'CMSObjectComputeNorm',
+    'ObjectFFRFreducedOrderInterface', 'HCBstaticModeSelection', 'FEMinterface',
+    ]
+
 #switch to old format for compatibility:
 useOldCSRformat = False
 

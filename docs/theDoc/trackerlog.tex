@@ -9,15 +9,31 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.69.dev1, 
+  \item Exudyn version = 1.11.71.dev1, 
   \item last change =  2026-09-15, 
-  \item Number of issues = 2444, 
-  \item Number of resolved issues = 2142 (69 in current version), 
+  \item Number of issues = 2445, 
+  \item Number of resolved issues = 2144 (71 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.71}:  resolved Issue 2444: {\bf python modules: \_\_all\_\_ in every module; star imports no longer export helper imports}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: step 107c: \_\_all\_\_ in 35 modules (itemInterface by its emitter) from the rule in tools/generators/publicApi.py; tools/checkAll.py --check/--write and GitLab job check\_all; utilities.py composes the lists; Examples/TestModels that used np sin cos sqrt copy exudyn from star imports import them explicitly (50 files)}
+    \item   date resolved: {\bf 2026-09-15 18:58},
+date raised: 2026-09-15 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.70}:  resolved Issue 2438: {\bf utility modules: star imports export helper names}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: from exudyn.utilities import * also exports imported helpers (extends; docmeta; module imports); define \_\_all\_\_ or restructure so only the public API is exported; check what examples and test models rely on first (plan step 107)}
+    \item   date resolved: {\bf 2026-09-15 18:58},
+date raised: 2026-09-15 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.69}:  resolved Issue 2443: {\bf utilities.py: deprecated GraphicsData aliases removed; functions moved to basicUtilities/advancedUtilities/mainSystemExtensions}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

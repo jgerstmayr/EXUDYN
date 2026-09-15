@@ -20,7 +20,7 @@ Basic utility functions and constants; they depend on numpy only, not on exudyn.
 
 Function: ClearWorkspace
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`ClearWorkspace <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L30>`__\ ()
+`ClearWorkspace <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L41>`__\ ()
 
 - | \ *function description*\ :
   | clear all workspace variables except for system variables with '_' at beginning,
@@ -56,7 +56,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: SmartRound2String
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`SmartRound2String <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L86>`__\ (\ ``x``\ , \ ``prec = 3``\ )
+`SmartRound2String <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L97>`__\ (\ ``x``\ , \ ``prec = 3``\ )
 
 - | \ *function description*\ :
   | round to max number of digits; may give more digits if this is shorter; using in general the format() with '.g' option, but keeping decimal point and using exponent where necessary
@@ -70,7 +70,7 @@ Function: SmartRound2String
 
 Function: Normalize
 ^^^^^^^^^^^^^^^^^^^
-`Normalize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L98>`__\ (\ ``v``\ )
+`Normalize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L109>`__\ (\ ``v``\ )
 
 - | \ *function description*\ :
   | take a vector and return it normalized to L2-norm 1; a zero vector is returned as zero vector
@@ -93,7 +93,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GaussIntegrate
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`GaussIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L130>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
+`GaussIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L141>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
 
 - | \ *function description*\ :
   | compute numerical integration of functionOfX in interval [a,b] using Gaussian integration
@@ -114,7 +114,7 @@ Function: GaussIntegrate
 
 Function: LobattoIntegrate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`LobattoIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L170>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
+`LobattoIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L181>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
 
 - | \ *function description*\ :
   | compute numerical integration of functionOfX in interval [a,b] using Lobatto integration
@@ -135,7 +135,7 @@ Function: LobattoIntegrate
 
 Function: GetOtherMarker
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`GetOtherMarker <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L203>`__\ (\ ``mbs``\ , \ ``bodyNumber``\ , \ ``existingMarker``\ , \ ``show = True``\ )
+`GetOtherMarker <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L214>`__\ (\ ``mbs``\ , \ ``bodyNumber``\ , \ ``existingMarker``\ , \ ``show = True``\ )
 
 - | \ *function description*\ :
   | creates a new marker for body with bodyNumber using another marker existingMarker, such that the new marker has the same reference position as the existing marker, working for MarkerBodyPosition (no rotations included); this alleviates creation of markers and calculation of localPosition
@@ -170,7 +170,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GetJointArgs
 ^^^^^^^^^^^^^^^^^^^^^^
-`GetJointArgs <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L240>`__\ (\ ``mbs``\ , \ ``markerNumber0 = None``\ , \ ``markerNumber1 = None``\ , \ ``rotationMarker0 = None``\ , \ ``rotationMarker1 = None``\ , \ ``bodyNumber0 = None``\ , \ ``bodyNumber1 = None``\ )
+`GetJointArgs <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L251>`__\ (\ ``mbs``\ , \ ``markerNumber0 = None``\ , \ ``markerNumber1 = None``\ , \ ``rotationMarker0 = None``\ , \ ``rotationMarker1 = None``\ , \ ``bodyNumber0 = None``\ , \ ``bodyNumber1 = None``\ )
 
 - | \ *function description*\ :
   | creates input args for joints, based on an exiting marker (markerNumber, may be rigid or flex body), with optional existing rotationMarker and uses another rigid body (given as bodyNumber) to create a new MarkerBodyRigid and rotationMarker; this alleviates creation of joint args, see the example; inputs are either markerNumber0 [, rotationMarker0], bodyNumber1 OR markerNumber1 [, rotationMarker1], bodyNumber0
@@ -211,7 +211,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ShowOnlyObjects
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`ShowOnlyObjects <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L316>`__\ (\ ``mbs``\ , \ ``objectNumbers = []``\ , \ ``showOthers = False``\ )
+`ShowOnlyObjects <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L327>`__\ (\ ``mbs``\ , \ ``objectNumbers = []``\ , \ ``showOthers = False``\ )
 
 - | \ *function description*\ :
   | function to hide all objects in mbs except for those listed in objectNumbers
@@ -231,7 +231,7 @@ Function: ShowOnlyObjects
 
 Function: HighlightItem
 ^^^^^^^^^^^^^^^^^^^^^^^
-`HighlightItem <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L344>`__\ (\ ``SC``\ , \ ``mbs``\ , \ ``itemNumber``\ , \ ``itemType = exudyn.ItemType.Object``\ , \ ``showNumbers = True``\ )
+`HighlightItem <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L355>`__\ (\ ``SC``\ , \ ``mbs``\ , \ ``itemNumber``\ , \ ``itemType = exudyn.ItemType.Object``\ , \ ``showNumbers = True``\ )
 
 - | \ *function description*\ :
   | highlight a certain item with number itemNumber; set itemNumber to -1 to show again all objects
@@ -250,7 +250,7 @@ Function: HighlightItem
 
 Function: UFsensorRecord
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`UFsensorRecord <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L387>`__\ (\ ``mbs``\ , \ ``t``\ , \ ``sensorNumbers``\ , \ ``factors``\ , \ ``configuration``\ )
+`UFsensorRecord <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L398>`__\ (\ ``mbs``\ , \ ``t``\ , \ ``sensorNumbers``\ , \ ``factors``\ , \ ``configuration``\ )
 
 - | \ *function description*\ :
   | DEPRECATED: Internal SensorUserFunction, used in function AddSensorRecorder
@@ -266,7 +266,7 @@ Function: UFsensorRecord
 
 Function: AddSensorRecorder
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`AddSensorRecorder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L405>`__\ (\ ``mbs``\ , \ ``sensorNumber``\ , \ ``endTime``\ , \ ``sensorsWritePeriod``\ , \ ``sensorOutputSize = 3``\ )
+`AddSensorRecorder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L416>`__\ (\ ``mbs``\ , \ ``sensorNumber``\ , \ ``endTime``\ , \ ``sensorsWritePeriod``\ , \ ``sensorOutputSize = 3``\ )
 
 - | \ *function description*\ :
   | DEPRECATED: Add a SensorUserFunction object in order to record sensor output internally; this avoids creation of files for sensors, which can speedup and simplify evaluation in ParameterVariation and GeneticOptimization; values are stored internally in mbs.variables['sensorRecord'+str(sensorNumber)] where sensorNumber is the mbs sensor number
@@ -294,7 +294,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: LoadSolutionFile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`LoadSolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L433>`__\ (\ ``fileName``\ , \ ``safeMode = False``\ , \ ``maxRows = -1``\ , \ ``verbose = True``\ , \ ``hasHeader = True``\ )
+`LoadSolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L444>`__\ (\ ``fileName``\ , \ ``safeMode = False``\ , \ ``maxRows = -1``\ , \ ``verbose = True``\ , \ ``hasHeader = True``\ )
 
 - | \ *function description*\ :
   | read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary:
@@ -320,7 +320,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: NumpyInt8ArrayToString
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`NumpyInt8ArrayToString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L571>`__\ (\ ``npArray``\ )
+`NumpyInt8ArrayToString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L582>`__\ (\ ``npArray``\ )
 
 - | \ *function description*\ :
   | simple conversion of int8 arrays into strings (not highly efficient, so use only for short strings)
@@ -334,7 +334,7 @@ Function: NumpyInt8ArrayToString
 
 Function: BinaryReadIndex
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`BinaryReadIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L580>`__\ (\ ``file``\ , \ ``intType``\ )
+`BinaryReadIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L591>`__\ (\ ``file``\ , \ ``intType``\ )
 
 - | \ *function description*\ :
   | read single Index from current file position in binary solution file
@@ -348,7 +348,7 @@ Function: BinaryReadIndex
 
 Function: BinaryReadReal
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`BinaryReadReal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L588>`__\ (\ ``file``\ , \ ``realType``\ )
+`BinaryReadReal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L599>`__\ (\ ``file``\ , \ ``realType``\ )
 
 - | \ *function description*\ :
   | read single Real from current file position in binary solution file
@@ -362,7 +362,7 @@ Function: BinaryReadReal
 
 Function: BinaryReadString
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`BinaryReadString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L596>`__\ (\ ``file``\ , \ ``intType``\ )
+`BinaryReadString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L607>`__\ (\ ``file``\ , \ ``intType``\ )
 
 - | \ *function description*\ :
   | read string from current file position in binary solution file
@@ -376,7 +376,7 @@ Function: BinaryReadString
 
 Function: BinaryReadArrayIndex
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`BinaryReadArrayIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L604>`__\ (\ ``file``\ , \ ``intType``\ )
+`BinaryReadArrayIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L615>`__\ (\ ``file``\ , \ ``intType``\ )
 
 - | \ *function description*\ :
   | read Index array from current file position in binary solution file
@@ -390,7 +390,7 @@ Function: BinaryReadArrayIndex
 
 Function: BinaryReadRealVector
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`BinaryReadRealVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L612>`__\ (\ ``file``\ , \ ``intType``\ , \ ``realType``\ )
+`BinaryReadRealVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L623>`__\ (\ ``file``\ , \ ``intType``\ , \ ``realType``\ )
 
 - | \ *function description*\ :
   | read Real vector from current file position in binary solution file
@@ -406,7 +406,7 @@ Function: BinaryReadRealVector
 
 Function: LoadBinarySolutionFile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`LoadBinarySolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L626>`__\ (\ ``fileName``\ , \ ``maxRows = -1``\ , \ ``verbose = True``\ )
+`LoadBinarySolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L637>`__\ (\ ``fileName``\ , \ ``maxRows = -1``\ , \ ``verbose = True``\ )
 
 - | \ *function description*\ :
   | read BINARY coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary
@@ -426,7 +426,7 @@ Function: LoadBinarySolutionFile
 
 Function: RecoverSolutionFile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RecoverSolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L812>`__\ (\ ``fileName``\ , \ ``newFileName``\ , \ ``verbose = 0``\ )
+`RecoverSolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L823>`__\ (\ ``fileName``\ , \ ``newFileName``\ , \ ``verbose = 0``\ )
 
 - | \ *function description*\ :
   | recover solution file with last row not completely written (e.g., if crashed, interrupted or no flush file option set)
@@ -446,7 +446,7 @@ Function: RecoverSolutionFile
 
 Function: InitializeFromRestartFile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`InitializeFromRestartFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L871>`__\ (\ ``mbs``\ , \ ``simulationSettings``\ , \ ``restartFileName``\ , \ ``verbose = True``\ )
+`InitializeFromRestartFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L882>`__\ (\ ``mbs``\ , \ ``simulationSettings``\ , \ ``restartFileName``\ , \ ``verbose = True``\ )
 
 - | \ *function description*\ :
   | recover initial coordinates, time, etc. from given restart file
@@ -467,7 +467,7 @@ Function: InitializeFromRestartFile
 
 Function: SetSolutionState
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`SetSolutionState <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L947>`__\ (\ ``mbs``\ , \ ``solution``\ , \ ``row``\ , \ ``configuration = exudyn.ConfigurationType.Current``\ , \ ``sendRedrawSignal = True``\ )
+`SetSolutionState <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L958>`__\ (\ ``mbs``\ , \ ``solution``\ , \ ``row``\ , \ ``configuration = exudyn.ConfigurationType.Current``\ , \ ``sendRedrawSignal = True``\ )
 
 - | \ *function description*\ :
   | load selected row of solution dictionary (previously loaded with LoadSolutionFile) into specific state; flag sendRedrawSignal is only used if configuration = exudyn.ConfigurationType.Visualization
@@ -481,7 +481,7 @@ Function: SetSolutionState
 
 Function: AnimateSolution
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`AnimateSolution <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L973>`__\ (\ ``mbs``\ , \ ``solution``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``createImages = False``\ , \ ``runLoop = False``\ )
+`AnimateSolution <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L984>`__\ (\ ``mbs``\ , \ ``solution``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``createImages = False``\ , \ ``runLoop = False``\ )
 
 - | \ *function description*\ :
   | This function is not further maintaned and should only be used if you do not have tkinter (like on some MacOS versions); use exudyn.interactive.SolutionViewer() instead! AnimateSolution consecutively load the rows of a solution file and visualize the result

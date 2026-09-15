@@ -24,6 +24,19 @@ from exudyn.itemInterface import userFunctionArgsDict
 #GENERAL FUNCTIONS
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'PlotLineCode', 'specialExudynTypes', 'FindObjectIndex', 'FindNodeIndex', 'IsListOrArray',
+    'ExpectedType', 'RaiseTypeError', 'IsNone', 'IsNotNone', 'IsValidBool', 'IsValidRealInt',
+    'IsValidInt', 'IsValidPRealInt', 'IsValidURealInt', 'IsReal', 'IsInteger', 'IsVector',
+    'IsIntVector', 'IsSquareMatrix', 'IsValidObjectIndex', 'IsValidNodeIndex', 'IsValidMarkerIndex',
+    'IsEmptyList', 'FillInSubMatrix', 'SweepSin', 'SweepCos', 'FrequencySweep', 'SmoothStep',
+    'SmoothStepDerivative', 'IndexFromValue', 'RoundMatrix', 'ConvertScipySparseToDict',
+    'ConvertDictToScipySparse', 'SaveDictToHDF5', 'LoadDictFromHDF5', 'ConvertFunctionToSymbolic',
+    'CreateSymbolicUserFunction', 'TCPIPdata', 'CreateTCPIPconnection', 'TCPIPsendReceive',
+    'CloseTCPIPconnection',
+    ]
+
 def PlotLineCode(index):
     """helper functions for matplotlib, returns a list of 28 line codes to be used in plot, e.g. 'r-' for red solid line
 

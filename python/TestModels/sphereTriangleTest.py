@@ -12,6 +12,7 @@
 
 import exudyn as exu
 from exudyn.utilities import *
+from math import sin, cos
 import exudyn.graphics as graphics
 import numpy as np
 

@@ -35,6 +35,11 @@ import exudyn.itemInterface as eii
 from exudyn.basicUtilities import Normalize
 
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'ShellMesh',
+    ]
+
 class ShellMesh:
     """class for generation, representation of plate and shell meshes; creaton of Exudyn elements
     """

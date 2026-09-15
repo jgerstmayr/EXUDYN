@@ -27,6 +27,16 @@ import exudyn.rigidBodyUtilities as erb
 # https://github.com/petercorke/robotics-toolbox-python
 
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'RotationX2T66Inverse', 'RotationY2T66Inverse', 'RotationZ2T66Inverse',
+    'TranslationX2T66Inverse', 'TranslationY2T66Inverse', 'TranslationZ2T66Inverse',
+    'MassCOMinertia2T66', 'Inertia2T66', 'Inertia66toMassCOMinertia',
+    'dictOfJointTransformMotionSubspace66', 'JointTransformMotionSubspace66',
+    'dictOfJointRotationMatrixAxis', 'JointTransformMotionSubspace', 'KinematicTree33', 'CRM',
+    'CRF', 'KinematicTree66',
+    ]
+
 #the following functions are defined here to fit into the original Featherstone algorithm
 #rotations are transposed / inverse
 def RotationX2T66Inverse(angle):

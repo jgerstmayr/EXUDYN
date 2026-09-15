@@ -29,6 +29,18 @@ from exudyn.rigidBodyUtilities import EulerParameters2RotationMatrix, RotXYZ2Rot
 #       HELPER METHODS FOR BASIC LIE GROUP METHODS
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'Sinc', 'Cot', 'R3xSO3Matrix2RotationMatrix', 'R3xSO3Matrix2Translation', 'R3xSO3Matrix',
+    'ExpSO3', 'ExpS3', 'LogSO3', 'TExpSO3', 'TExpSO3Inv', 'ExpSE3', 'LogSE3', 'TExpSE3',
+    'TExpSE3Inv', 'ExpR3xSO3', 'TExpR3xSO3', 'TExpR3xSO3Inv', 'CompositionRuleDirectProductR3AndS3',
+    'CompositionRuleSemiDirectProductR3AndS3', 'CompositionRuleDirectProductR3AndR3RotVec',
+    'CompositionRuleSemiDirectProductR3AndR3RotVec',
+    'CompositionRuleDirectProductR3AndR3RotXYZAngles',
+    'CompositionRuleSemiDirectProductR3AndR3RotXYZAngles', 'CompositionRuleForEulerParameters',
+    'CompositionRuleForRotationVectors', 'CompositionRuleRotXYZAnglesRotationVector',
+    ]
+
 @docmeta(author='Stefan Holzinger')
 def Sinc(x):
     """compute the cardinal sine function in radians

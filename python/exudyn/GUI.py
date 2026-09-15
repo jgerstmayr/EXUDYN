@@ -20,6 +20,18 @@ import ast #for ast.literal_eval
 import sys
 import exudyn
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'useRenderWindowDisplayScaling', 'treeviewDefaultFontSize', 'textHeightFactor',
+    'treeEditDefaultWidth', 'treeEditDefaultHeight', 'treeEditMaxInitialHeight',
+    'dialogDefaultWidth', 'dialogDefaultHeight', 'treeEditOpenItems', 'IsApple',
+    'GetRendererSystemContainer', 'GetTkRootAndNewWindow', 'TkRootExists', 'TkTextHeight',
+    'IsFloat', 'IsArrayInt', 'IsVector', 'GetExudynDisplayScaling', 'GetGUIContentScaling',
+    'GetComboBoxListsDict', 'ConvertString2Value', 'ConvertValue2String', 'CheckType',
+    'TkinterEditDictionaryWithTypeInfo', 'EditDictionaryWithTypeInfo', 'TkinterEditDictionary',
+    'EditDictionary',
+    ]
+
 useRenderWindowDisplayScaling = True #using this, scaling will change with render window
 
 treeviewDefaultFontSize = 9 #this is then scaled; but it could be changed to make fonts smaller

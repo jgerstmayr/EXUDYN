@@ -51,6 +51,11 @@ import rospy
 from geometry_msgs.msg import PoseStamped, WrenchStamped, Twist
 from std_msgs.msg import Float64MultiArray, Empty, String, Time
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'ROSInterface',
+    ]
+
 @docmeta(author='Martin Sereinig, Peter Manzl')
 class ROSInterface: 
     """interface super class to establish a ROS Exudyn interface

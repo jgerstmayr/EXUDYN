@@ -14,7 +14,7 @@ This module offers methods for GeneralContact, in particular particles (DEM - di
 
 Function: CreateParticlesInBox
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CreateParticlesInBox <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/particles.py\#L18>`__\ (\ ``minPointBox``\ , \ ``maxPointBox``\ , \ ``minRadius``\ , \ ``maxRadius = None``\ , \ ``maxNumberOfParticles = None``\ , \ ``offsetRadius = 0``\ , \ ``verbose = 0``\ )
+`CreateParticlesInBox <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/particles.py\#L23>`__\ (\ ``minPointBox``\ , \ ``maxPointBox``\ , \ ``minRadius``\ , \ ``maxRadius = None``\ , \ ``maxNumberOfParticles = None``\ , \ ``offsetRadius = 0``\ , \ ``verbose = 0``\ )
 
 - | \ *function description*\ :
   | create set of spherical particles densly packed inside box using hexagonal closest packing (HCP); radius is randomized between minRadius and maxRadius

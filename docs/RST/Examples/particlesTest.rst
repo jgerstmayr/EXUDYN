@@ -25,6 +25,7 @@ You can view and download this file on Github: `particlesTest.py <https://github
    
    import exudyn as exu
    from exudyn.itemInterface import *
+   from math import sqrt
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
    import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.graphicsDataUtilities import *

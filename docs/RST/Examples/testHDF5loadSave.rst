@@ -24,6 +24,7 @@ You can view and download this file on Github: `testHDF5loadSave.py <https://git
    
    import exudyn as exu               #EXUDYN package including C++ core part
    from exudyn.utilities import * 
+   import numpy as np
    import exudyn.graphics as graphics
    from exudyn.advancedUtilities import * 
    

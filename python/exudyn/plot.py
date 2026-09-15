@@ -19,6 +19,13 @@ from exudyn.advancedUtilities import PlotLineCode, IsListOrArray, IsEmptyList
 import copy
 import os
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'listMarkerStyles', 'listMarkerStylesFilled', 'componentNorm', 'ParseOutputFileHeader',
+    'PlotSensorDefaults', 'PlotSensor', 'PlotFFT', 'FileStripSpaces', 'DataArrayFromSensorList',
+    'LoadImage', 'PlotImage',
+    ]
+
 #++++++++++++++++++++++++++++++++
 #this structure helps to define default values, that are then always used!
 class __PlotSensorDefaults:

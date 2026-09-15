@@ -817,7 +817,7 @@ The core investment. Every step is validated byte-for-byte by step 2.
     every item class is undocumented, and the arguments carry types (`name (str): ...`) although
     the package convention has none. Fix in `itemInterfaceEmitter.py`, then drop the `exclude` in
     `[tool.pydoclint]`.
-107. *(Phase 3, after 36)* **Star-import surface of the utility modules** (#2438, maintainer request
+107. **DONE 2026-09-15 (107a-107c)** — *(Phase 3, after 36)* **Star-import surface of the utility modules** (#2438, maintainer request
     2026-09-15). `from exudyn.utilities import *` exports everything `utilities.py` imports,
     including helpers such as `extends` (step 35) and `docmeta` (step 37), `np`, `sqrt` and
     `exudyn`, because no utility module has `__all__`; it also re-exports `basicUtilities`,
@@ -848,7 +848,7 @@ The core investment. Every step is validated byte-for-byte by step 2.
       `utilities.py`; `utilities.py` imports everything, including `mainSystemExtensions.py`.
       Signature defaults such as `exudyn.ConfigurationType.Current` are evaluated at import, which
       works because the C++ module is loaded before any utility module.
-    - **107c - `__all__`.** Measure which implicitly exported names (`np`, `pi`, `sqrt`, `exudyn`,
+    - **107c - `__all__`** (#2444). **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#step-107c). Measure which implicitly exported names (`np`, `pi`, `sqrt`, `exudyn`,
       the itemInterface classes, ...) Examples and TestModels take from `from exudyn.utilities
       import *` (some do use `np` and `sqrt` that way; they get explicit imports). Then give every
       utility module an `__all__` and let `utilities.py` compose them. A checker keeps the lists

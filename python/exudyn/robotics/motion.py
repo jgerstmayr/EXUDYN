@@ -17,6 +17,12 @@ import numpy as np
 from copy import copy, deepcopy
 import exudyn
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'BasicProfile', 'ProfileConstantAcceleration', 'ProfileLinearAccelerationsList', 'ProfilePTP',
+    'Trajectory', 'BasicProfileLinearAcceleration',
+    ]
+
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #internal class, which stores information on PTP profiles
 #DO NOT USE this class, as it is an internal interface, which will be adapted significantly in future!

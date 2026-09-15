@@ -23,6 +23,28 @@ from math import sin, cos #, sqrt, atan2
 
 import copy
 
+#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+__all__ = [
+    'eulerParameters0', 'ComputeOrthonormalBasisVectors', 'ComputeOrthonormalBasis', 'GramSchmidt',
+    'Skew', 'Skew2Vec', 'ComputeSkewMatrix', 'EulerParameters2G', 'EulerParameters2GLocal',
+    'EulerParameters2RotationMatrix', 'RotationMatrix2EulerParameters',
+    'AngularVelocity2EulerParameters_t', 'RotationVector2RotationMatrix',
+    'RotationMatrix2RotationVector', 'ComputeRotationAxisFromRotationVector', 'RotationVector2G',
+    'RotationVector2GLocal', 'RotXYZ2RotationMatrix', 'RotationMatrix2RotXYZ', 'RotXYZ2G',
+    'RotXYZ2G_t', 'RotXYZ2GLocal', 'RotXYZ2GLocal_t', 'AngularVelocity2RotXYZ_t',
+    'RotXYZ2EulerParameters', 'RotationMatrix2RotZYZ', 'RotationMatrixX', 'RotationMatrixY',
+    'RotationMatrixZ', 'RotationMatrix2D', 'HomogeneousTransformation', 'HT', 'HTtranslate',
+    'HTtranslateX', 'HTtranslateY', 'HTtranslateZ', 'HT0', 'HTrotateX', 'HTrotateY', 'HTrotateZ',
+    'HT2translation', 'HT2rotationMatrix', 'InverseHT', 'RotationX2T66', 'RotationY2T66',
+    'RotationZ2T66', 'Translation2T66', 'TranslationX2T66', 'TranslationY2T66', 'TranslationZ2T66',
+    'T66toRotationTranslation', 'InverseT66toRotationTranslation', 'RotationTranslation2T66',
+    'RotationTranslation2T66Inverse', 'T66Inverse', 'T66toHT', 'HT2T66Inverse',
+    'InertiaTensor2Inertia6D', 'Inertia6D2InertiaTensor', 'TreeLink', 'RigidBodyInertia',
+    'InertiaCuboid', 'InertiaRodX', 'InertiaMassPoint', 'InertiaSphere', 'InertiaHollowSphere',
+    'InertiaCylinder', 'StrNodeType2NodeType', 'GetRigidBodyNode', 'AddRigidBody',
+    'AddRevoluteJoint', 'AddPrismaticJoint',
+    ]
+
 eulerParameters0 = [1.,0.,0.,0.] #Euler parameters for case where rotation angle is zero (rotation axis arbitrary)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
