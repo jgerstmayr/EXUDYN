@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  19:35:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,7 +28,7 @@ class CMarkerBodyCable2DShapeParameters // AUTO:
 {
 public: // AUTO:
     Index bodyNumber;                             //!< AUTO: body number to which marker is attached to
-    Index numberOfSegments;                       //!< AUTO: number of number of segments; each segment is a line and is associated to a data (history) variable; must be same as in according contact element
+    Index numberOfSegments;                       //!< AUTO: must be > 0; number of number of segments; each segment is a line and is associated to a data (history) variable; must be same as in according contact element
     Real verticalOffset;                          //!< AUTO: vertical offset from beam axis in positive (local) Y-direction; this offset accounts for consistent computation of positions and velocities at the surface of the beam
     //! AUTO: default constructor with parameter initialization
     CMarkerBodyCable2DShapeParameters()

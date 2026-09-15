@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  19:35:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,7 +28,7 @@ class CMarkerKinematicTreeRigidParameters // AUTO:
 {
 public: // AUTO:
     Index objectNumber;                           //!< AUTO: body number to which marker is attached to
-    Index linkNumber;                             //!< AUTO: number of link in KinematicTree to which marker is attached to
+    Index linkNumber;                             //!< AUTO: must be >= 0; number of link in KinematicTree to which marker is attached to
     Vector3D localPosition;                       //!< AUTO: local (link-fixed) position of marker at link \f$n_l\f$, using the link (\f$n_l\f$) coordinate system
     //! AUTO: default constructor with parameter initialization
     CMarkerKinematicTreeRigidParameters()

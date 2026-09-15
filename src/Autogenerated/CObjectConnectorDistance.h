@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  19:35:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,7 +28,7 @@ class CObjectConnectorDistanceParameters // AUTO:
 {
 public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector
-    Real distance;                                //!< AUTO: prescribed distance [SI:m] of the used markers; must by greater than zero
+    Real distance;                                //!< AUTO: must be > 0; prescribed distance [SI:m] of the used markers; must by greater than zero
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorDistanceParameters()

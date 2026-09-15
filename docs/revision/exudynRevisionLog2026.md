@@ -2890,6 +2890,26 @@ pydoclint found 387 findings in `itemInterface.py`, which was excluded. Fixed in
 - Documentation changes: `docs/RST/items/` (5 pages), `docs/theDoc/itemDefinition.tex`; no C++ or
   Python output changed.
 
+<a id="step-87"></a>
+
+### Step 87 - constrained types stated in the generated C++ headers
+
+**DONE 2026-09-15** (#2409).
+
+The planned typedefs `PReal`, `UReal`, `PInt`, `UInt` cannot be added: `PReal` is already a macro
+in `src/Linalg/Use_avx.h` (packed Real, `__m256d`/`__m512d` in AVX builds), which would replace a
+typedef of the same name. Maintainer decision 2026-09-15: no new types; the range goes at the start
+of the member comment instead.
+
+- `typeModel.ConstraintNote(typeName)`: `'must be > 0; '` for `PReal`, `PFloat`, `PInt`,
+  `'must be >= 0; '` for `UReal`, `UFloat`, `UInt`, else `''` - read from the `constrainedForms`
+  of `definitionTypes.py`, so there is no second list.
+- Used for the member comments in `itemHeaderEmitter.py` and `structureHeaderEmitter.py`, e.g.
+  `Index numberOfSegments; //!< AUTO: must be > 0; number of segments ...`.
+- 272 member comments in 45 generated headers; checked that the diff, with the note and the
+  `@date` lines removed, is empty - no code changed.
+- Checked: regeneration, wheel build, full suite PASSED.
+
 <a id="api-changes-v2"></a>
 
 ### API changes for the v2.0 release notes

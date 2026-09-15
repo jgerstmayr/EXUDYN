@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Weyrer Sebastian
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  19:35:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,18 +31,18 @@ public: // AUTO:
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is the plastic overlap of the Edinburgh Adhesive Elasto-Plastic Model, initialized usually with 0 and set back to 0 in case that spheres have been separated.
     Vector2D spheresRadii;                        //!< AUTO: list containing radius of sphere 0 and radius of sphere 1 [SI:m].
     bool isHollowSphere1;                         //!< AUTO: flag, which determines, if sphere attached to marker 1 (radius 1) is a hollow sphere.
-    Real dynamicFriction;                         //!< AUTO: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}
-    Real frictionProportionalZone;                //!< AUTO: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}
-    Real contactStiffness;                        //!< AUTO: normal contact stiffness [SI:N/m] (units in case that \f$n_\mathrm{exp}=1\f$)
-    Real contactDamping;                          //!< AUTO: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.
-    Real contactStiffnessExponent;                //!< AUTO: exponent in normal contact model [SI:1]
-    Real constantPullOffForce;                    //!< AUTO: constant adhesion force [SI:N]; Edinburgh Adhesive Elasto-Plastic Model
-    Real contactPlasticityRatio;                  //!< AUTO: ratio of contact stiffness for first loading and unloading/reloading [SI:1]; Edinburgh Adhesive Elasto-Plastic Model; \f$\lambda_\mathrm{P}=1-k_c/K2\f$, which gives the contact stiffness for unloading/reloading \f$K2 = k_c/(1-\lambda_\mathrm{P})\f$; set to 0 in order to fully deactivate Edinburgh Adhesive Elasto-Plastic Model model
-    Real adhesionCoefficient;                     //!< AUTO: coefficient for adhesion [SI:N/m] (units in case that \f$n_\mathrm{adh}=1\f$); Edinburgh Adhesive Elasto-Plastic Model; set to 0 to deactivate adhesion model
-    Real adhesionExponent;                        //!< AUTO: exponent for adhesion coefficient [SI:1]; Edinburgh Adhesive Elasto-Plastic Model
-    Real restitutionCoefficient;                  //!< AUTO: coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems)
-    Real minimumImpactVelocity;                   //!< AUTO: minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact)
-    Index impactModel;                            //!< AUTO:  number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!
+    Real dynamicFriction;                         //!< AUTO: must be >= 0; dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}
+    Real frictionProportionalZone;                //!< AUTO: must be >= 0; limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}
+    Real contactStiffness;                        //!< AUTO: must be >= 0; normal contact stiffness [SI:N/m] (units in case that \f$n_\mathrm{exp}=1\f$)
+    Real contactDamping;                          //!< AUTO: must be >= 0; linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.
+    Real contactStiffnessExponent;                //!< AUTO: must be > 0; exponent in normal contact model [SI:1]
+    Real constantPullOffForce;                    //!< AUTO: must be >= 0; constant adhesion force [SI:N]; Edinburgh Adhesive Elasto-Plastic Model
+    Real contactPlasticityRatio;                  //!< AUTO: must be >= 0; ratio of contact stiffness for first loading and unloading/reloading [SI:1]; Edinburgh Adhesive Elasto-Plastic Model; \f$\lambda_\mathrm{P}=1-k_c/K2\f$, which gives the contact stiffness for unloading/reloading \f$K2 = k_c/(1-\lambda_\mathrm{P})\f$; set to 0 in order to fully deactivate Edinburgh Adhesive Elasto-Plastic Model model
+    Real adhesionCoefficient;                     //!< AUTO: must be >= 0; coefficient for adhesion [SI:N/m] (units in case that \f$n_\mathrm{adh}=1\f$); Edinburgh Adhesive Elasto-Plastic Model; set to 0 to deactivate adhesion model
+    Real adhesionExponent;                        //!< AUTO: must be >= 0; exponent for adhesion coefficient [SI:1]; Edinburgh Adhesive Elasto-Plastic Model
+    Real restitutionCoefficient;                  //!< AUTO: must be > 0; coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems)
+    Real minimumImpactVelocity;                   //!< AUTO: must be >= 0; minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact)
+    Index impactModel;                            //!< AUTO: must be >= 0;  number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
     CObjectContactSphereSphereParameters()

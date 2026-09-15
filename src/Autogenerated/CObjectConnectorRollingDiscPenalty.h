@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  19:35:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,12 +29,12 @@ class CObjectConnectorRollingDiscPenaltyParameters // AUTO:
 public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector; \f$m0\f$ represents a point at the plane surface (normal of surface plane defined by planeNormal); the ground can also be a moving rigid body; \f$m1\f$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact)
-    Real discRadius;                              //!< AUTO: defines the disc radius
+    Real discRadius;                              //!< AUTO: must be > 0; defines the disc radius
     Vector3D discAxis;                            //!< AUTO: axis of disc defined in marker \f$m1\f$ frame
     Vector3D planeNormal;                         //!< AUTO: normal to the contact / rolling plane (ground); note that the plane reference point can be arbitrarily chosen by the location of the marker \f$m0\f$
     Real dryFrictionAngle;                        //!< AUTO: angle [SI:1 (rad)] which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle
-    Real contactStiffness;                        //!< AUTO: normal contact stiffness [SI:N/m]
-    Real contactDamping;                          //!< AUTO: normal contact damping [SI:N/(m s)]
+    Real contactStiffness;                        //!< AUTO: must be >= 0; normal contact stiffness [SI:N/m]
+    Real contactDamping;                          //!< AUTO: must be >= 0; normal contact damping [SI:N/(m s)]
     Vector2D dryFriction;                         //!< AUTO: dry friction coefficients [SI:1] in local marker 1 joint \f$J1\f$ coordinates; if \f$\alpha_t==0\f$, lateral direction \f$l=x\f$ and forward direction \f$f=y\f$; assuming a normal force \f$f_n\f$, the local friction force can be computed as \f$\LU{J1}{\vp{f_{t,x}}{f_{t,y}}} = \vp{\mu_x f_n}{\mu_y f_n}\f$
     Real dryFrictionProportionalZone;             //!< AUTO: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)
     Vector2D viscousFriction;                     //!< AUTO: viscous friction coefficients [SI:1/(m/s)] in local marker 1 joint \f$J1\f$ coordinates; proportional to slipping velocity, leading to increasing slipping friction force for increasing slipping velocity

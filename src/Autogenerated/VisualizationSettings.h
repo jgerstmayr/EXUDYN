@@ -29,32 +29,32 @@ class VSettingsGeneral // AUTO:
 {
 public: // AUTO: 
   bool autoFitScene;                              //!< AUTO: automatically fit scene within startup after SC.renderer.Start()
-  Index axesTiling;                               //!< AUTO: global number of segments for drawing cylinders for axes and cones for arrows (reduce this number, e.g. to 4, if many axes are drawn)
+  Index axesTiling;                               //!< AUTO: must be > 0; global number of segments for drawing cylinders for axes and cones for arrows (reduce this number, e.g. to 4, if many axes are drawn)
   Float4 backgroundColor;                         //!< AUTO: red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])
   Float4 backgroundColorBottom;                   //!< AUTO: red, green, blue and alpha values for bottom background color in case that useGradientBackground = True
-  float boundingBoxZoomAllFactor;                 //!< AUTO: factor on boundingBox for zoom all (without minimum offset)
-  float boundingBoxZoomAllOffset;                 //!< AUTO: minimum offset to bounding box of scene in window - width or height, whatever is smaller; adjust for very small or large scenes; may be negative
-  Index circleTiling;                             //!< AUTO: global number of segments for circles; if smaller than 2, 2 segments are used (flat)
-  float coordinateSystemSize;                     //!< AUTO: size of coordinate system relative to font size
-  Index cylinderTiling;                           //!< AUTO: global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)
-  float graphicsUpdateInterval;                   //!< AUTO: interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed
+  float boundingBoxZoomAllFactor;                 //!< AUTO: must be > 0; factor on boundingBox for zoom all (without minimum offset)
+  float boundingBoxZoomAllOffset;                 //!< AUTO: must be >= 0; minimum offset to bounding box of scene in window - width or height, whatever is smaller; adjust for very small or large scenes; may be negative
+  Index circleTiling;                             //!< AUTO: must be > 0; global number of segments for circles; if smaller than 2, 2 segments are used (flat)
+  float coordinateSystemSize;                     //!< AUTO: must be > 0; size of coordinate system relative to font size
+  Index cylinderTiling;                           //!< AUTO: must be > 0; global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)
+  float graphicsUpdateInterval;                   //!< AUTO: must be >= 0; interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed
   bool limitWindowToScreenSize;                   //!< AUTO: True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize
-  float linuxDisplayScaleFactor;                  //!< AUTO: Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts
-  float minSceneSize;                             //!< AUTO: minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO
-  float pointSize;                                //!< AUTO: global point size (absolute)
-  Real reallyQuitTimeLimit;                       //!< AUTO: number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked
-  Index rendererPrecision;                        //!< AUTO: precision of general floating point numbers shown in render window: total number of digits used  (max. 16)
-  Index rendererStartupTimeout;                   //!< AUTO: OpenGL render windows startup timeout in ms (change might be necessary if CPU is very slow)
+  float linuxDisplayScaleFactor;                  //!< AUTO: must be > 0; Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts
+  float minSceneSize;                             //!< AUTO: must be > 0; minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO
+  float pointSize;                                //!< AUTO: must be > 0; global point size (absolute)
+  Real reallyQuitTimeLimit;                       //!< AUTO: must be >= 0; number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked
+  Index rendererPrecision;                        //!< AUTO: must be > 0; precision of general floating point numbers shown in render window: total number of digits used  (max. 16)
+  Index rendererStartupTimeout;                   //!< AUTO: must be > 0; OpenGL render windows startup timeout in ms (change might be necessary if CPU is very slow)
   std::string renderWindowString;                 //!< AUTO: string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to solutionInformation in SimulationSettings.solutionSettings)
-  Index showHelpOnStartup;                        //!< AUTO: seconds to show help message on startup (0=deactivate)
+  Index showHelpOnStartup;                        //!< AUTO: must be >= 0; seconds to show help message on startup (0=deactivate)
   bool showSolutionInformation;                   //!< AUTO: true = show solution information (from simulationSettings.solution)
   bool showSolverInformation;                     //!< AUTO: true = solver name and further information shown in render window
   bool showSolverTime;                            //!< AUTO: true = solver current time shown in render window
-  Index sphereTiling;                             //!< AUTO: global number of segments for spheres; if smaller than 2, 2 segments are used (flat)
+  Index sphereTiling;                             //!< AUTO: must be > 0; global number of segments for spheres; if smaller than 2, 2 segments are used (flat)
   bool textAlwaysInFront;                         //!< AUTO: if true, text for item numbers and other item-related text is drawn in front; this may be unwanted in case that you only with to see numbers of objects in front; currently does not work with perspective
   Float4 textColor;                               //!< AUTO: general text color (default); used for system texts in render window
   bool textHasBackground;                         //!< AUTO: if true, text for item numbers and other item-related text have a background (depending on text color), allowing for better visibility if many numbers are shown; the text itself is black; therefore, dark background colors are ignored and shown as white
-  float textOffsetFactor;                         //!< AUTO: This is an additional out of plane offset for item texts (node number, etc.); the factor is relative to the maximum scene size and is only used, if textAlwaysInFront=False; this factor allows to draw text, e.g., in front of nodes
+  float textOffsetFactor;                         //!< AUTO: must be >= 0; This is an additional out of plane offset for item texts (node number, etc.); the factor is relative to the maximum scene size and is only used, if textAlwaysInFront=False; this factor allows to draw text, e.g., in front of nodes
   bool threadSafeGraphicsUpdate;                  //!< AUTO: true = updating of visualization is threadsafe, but slower for complicated models; deactivate this to speed up computation, but activate for generation of animations; may be improved in future by adding a safe visualizationUpdate state
   bool useBitmapText;                             //!< AUTO: if true, texts are displayed using pre-defined bitmaps for the text; may increase the complexity of your scene, e.g., if many (>10000) node numbers shown
   bool useGradientBackground;                     //!< AUTO: true = use vertical gradient for background; 
@@ -201,8 +201,8 @@ public: // AUTO:
 class VSettingsContourAdvanced // AUTO: 
 {
 public: // AUTO: 
-  Index colorBarPrecision;                        //!< AUTO: precision of floating point values shown in color bar; total number of digits used (max. 16)
-  Index colorBarTiling;                           //!< AUTO: number of tiles (segements) shown in the colorbar for the contour plot
+  Index colorBarPrecision;                        //!< AUTO: must be > 0; precision of floating point values shown in color bar; total number of digits used (max. 16)
+  Index colorBarTiling;                           //!< AUTO: must be > 0; number of tiles (segements) shown in the colorbar for the contour plot
   Float4 contourColor0;                           //!< AUTO: RGBA color for relative value 0 used for contour plot; alpha is ignored
   Float4 contourColor1;                           //!< AUTO: RGBA color for relative value 0.25 used for contour plot; alpha is ignored
   Float4 contourColor2;                           //!< AUTO: RGBA color for relative value 0.25 used for contour plot; alpha is ignored
@@ -384,7 +384,7 @@ public: // AUTO:
   bool showBasis;                                 //!< AUTO: show basis (three axes) of coordinate system in 3D nodes
   bool showNodalSlopes;                           //!< AUTO: draw nodal slope vectors, e.g. in ANCF beam finite elements
   bool showNumbers;                               //!< AUTO: flag to decide, whether the node number is shown
-  Index tiling;                                   //!< AUTO: tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4
+  Index tiling;                                   //!< AUTO: must be > 0; tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4
 
 private: // AUTO: 
   VisualizationSettings* backlink; //!< AUTO: backlink for global access of structure
@@ -453,12 +453,12 @@ public: // AUTO:
 class VSettingsBeams // AUTO: 
 {
 public: // AUTO: 
-  Index axialTiling;                              //!< AUTO: number of segments to discretise the beams axis
+  Index axialTiling;                              //!< AUTO: must be > 0; number of segments to discretise the beams axis
   bool crossSectionFilled;                        //!< AUTO: if implemented for element, cross section is drawn as solid (filled) instead of wire-frame; NOTE: some quantities may not be interpolated correctly over cross section in visualization; equivalent to drawSolid of shells
-  Index crossSectionTiling;                       //!< AUTO: number of quads drawn over height of beam, if drawn as flat objects; leads to higher accuracy of components drawn over beam height or with, but also to larger CPU costs for drawing
+  Index crossSectionTiling;                       //!< AUTO: must be > 0; number of quads drawn over height of beam, if drawn as flat objects; leads to higher accuracy of components drawn over beam height or with, but also to larger CPU costs for drawing
   bool drawVertical;                              //!< AUTO: draw contour plot outputVariables 'vertical' along beam height; contour.outputVariable must be set accordingly
   Float4 drawVerticalColor;                       //!< AUTO: color for outputVariable to be drawn along cross section (vertically)
-  float drawVerticalFactor;                       //!< AUTO: factor for outputVariable to be drawn along cross section (vertically)
+  float drawVerticalFactor;                       //!< AUTO: must be >= 0; factor for outputVariable to be drawn along cross section (vertically)
   bool drawVerticalLines;                         //!< AUTO: draw additional vertical lines for better visibility
   float drawVerticalOffset;                       //!< AUTO: offset for vertical drawn lines; offset is added before multiplication with drawVerticalFactor
   bool drawVerticalValues;                        //!< AUTO: show values at vertical lines; note that these numbers are interpolated values and may be different from values evaluated directly at this point!
@@ -534,7 +534,7 @@ class VSettingsShells // AUTO:
 {
 public: // AUTO: 
   bool drawSolid;                                 //!< AUTO: if true: to draw plates/shells as 3D objects; false: only the element surface is drawn; equivalent to crossSectionFilled in beams
-  float thicknessFactor;                          //!< AUTO: a factor multiplied with the thickness of shells/plates only for visualization (e.g. to make some effects more visible)
+  float thicknessFactor;                          //!< AUTO: must be > 0; a factor multiplied with the thickness of shells/plates only for visualization (e.g. to make some effects more visible)
 
 private: // AUTO: 
   VisualizationSettings* backlink; //!< AUTO: backlink for global access of structure
@@ -734,7 +734,7 @@ public: // AUTO:
   bool showContact;                               //!< AUTO: flag to decide, whether contact points, lines, etc. are shown for special cable-circle contacts; for spheres, triangles, tori, see visualizationSettings.contact
   bool showJointAxes;                             //!< AUTO: flag to decide, whether contact joint axes of 3D joints are shown
   bool showNumbers;                               //!< AUTO: flag to decide, whether the connector(=object) number is shown
-  Index springNumberOfWindings;                   //!< AUTO: number of windings for springs drawn as helical spring
+  Index springNumberOfWindings;                   //!< AUTO: must be > 0; number of windings for springs drawn as helical spring
 
 private: // AUTO: 
   VisualizationSettings* backlink; //!< AUTO: backlink for global access of structure
@@ -947,11 +947,11 @@ public: // AUTO:
 class VSettingsTraces // AUTO: 
 {
 public: // AUTO: 
-  float lineWidth;                                //!< AUTO: line width for traces
+  float lineWidth;                                //!< AUTO: must be >= 0; line width for traces
   ArrayIndex listOfPositionSensors;               //!< AUTO: list of position sensors which can be shown as trace inside render window if sensors have storeInternal=True; if this list is empty and showPositionTrace=True, then all available sensors are shown
   ArrayIndex listOfTriadSensors;                  //!< AUTO: list of sensors of with OutputVariableType RotationMatrix; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showTriads=True; the triad is drawn at the related position
   ArrayIndex listOfVectorSensors;                 //!< AUTO: list of sensors with 3D vector quantities; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showVectors=True; the vector quantity is drawn relative to the related position
-  Index positionsShowEvery;                       //!< AUTO: integer value i; out of available sensor data, show every i-th position
+  Index positionsShowEvery;                       //!< AUTO: must be > 0; integer value i; out of available sensor data, show every i-th position
   Index sensorsMbsNumber;                         //!< AUTO: number of main system which is used to for sensor lists; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number
   bool showCurrent;                               //!< AUTO: show current trace position (and especially vector quantity) related to current visualization state; this only works in solution viewer if sensor values are stored at time grid points of the solution file (up to a precision of 1e-10) and may therefore be temporarily unavailable
   bool showFuture;                                //!< AUTO: show trace future to current visualization state if already computed (e.g. in SolutionViewer)
@@ -959,12 +959,12 @@ public: // AUTO:
   bool showPositionTrace;                         //!< AUTO: show position trace of all position sensors if listOfPositionSensors=[] or of specified sensors; sensors need to activate storeInternal=True
   bool showTriads;                                //!< AUTO: if True, show basis vectors from rotation matrices provided by sensors
   bool showVectors;                               //!< AUTO: if True, show vector quantities according to description in showPositionTrace
-  Real timeSpan;                                  //!< AUTO: maximum trace time span of past or future trace; given in seconds of simulation time; if zero, it is unused
+  Real timeSpan;                                  //!< AUTO: must be >= 0; maximum trace time span of past or future trace; given in seconds of simulation time; if zero, it is unused
   ArrayFloat traceColors;                         //!< AUTO: RGBA float values for traces in one array; using 6x4 values gives different colors for 6 traces; in case of triads, the 0/1/2-axes are drawn in red, green, and blue
   float triadSize;                                //!< AUTO: length of triad axes if shown
-  Index triadsShowEvery;                          //!< AUTO: integer value i; out of available sensor data, show every i-th triad
+  Index triadsShowEvery;                          //!< AUTO: must be > 0; integer value i; out of available sensor data, show every i-th triad
   float vectorScaling;                            //!< AUTO: scaling of vector quantities; if, e.g., loads, this factor has to be adjusted significantly
-  Index vectorsShowEvery;                         //!< AUTO: integer value i; out of available sensor data, show every i-th vector
+  Index vectorsShowEvery;                         //!< AUTO: must be > 0; integer value i; out of available sensor data, show every i-th vector
 
 private: // AUTO: 
   VisualizationSettings* backlink; //!< AUTO: backlink for global access of structure
@@ -1139,8 +1139,8 @@ public: // AUTO:
   bool showSpheres;                               //!< AUTO: show contact spheres (SpheresWithMarker, ...)
   bool showTori;                                  //!< AUTO: show each contact torus
   bool showTriangles;                             //!< AUTO: show contact triangles (TrianglesRigidBodyBased, ...)
-  Index tilingCurves;                             //!< AUTO: tiling for nonlinear/polynomial curves; higher values give smoother curves
-  Index tilingSpheres;                            //!< AUTO: tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates
+  Index tilingCurves;                             //!< AUTO: must be > 0; tiling for nonlinear/polynomial curves; higher values give smoother curves
+  Index tilingSpheres;                            //!< AUTO: must be > 0; tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates
 
 private: // AUTO: 
   VisualizationSettings* backlink; //!< AUTO: backlink for global access of structure
@@ -1230,7 +1230,7 @@ public: // AUTO:
   Float3 clippingPlaneNormal;                     //!< AUTO: normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; the clipped half-space is in direction of the normal; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance and openGL.advanced.clippingPlaneColor
   bool modelCentricView;                          //!< AUTO: True: rotations and translations are applied to model, while camera stays far enough away from the model and always captures the whole model (everything is in front of camera plane); False: camera moves and rotates while model stays in physical space; only geometry in front of camera is visible; note that the behavior of trackMarker changes with modelCentricView and some features are not available in case of modelCentricView=False.
   Float3 nearFarPlaneOffset;                      //!< AUTO: the three values are [nearPlaneOffset, farPlaneOffset, flag]; if flag=0, the offsets are ignored and computed automatically, using x = 2 * maxSceneSize * zMaxSceneFactor, setting near plane to -x and far plane to +x in case of modelCentricView=True and setting near plane to 0.01 (minimal offset to eye point) and far plane to +x if modelCentricView=False; if flag=1, the near and far plane values are just overwritten; note that positive values for near plane make objects in front of the camera invisible while negative values make objects behind the camera plane visible; in case of camera-centric view, the eyepoint can be shifted backwards using cameraPosition accordingly.
-  float perspective;                              //!< AUTO: parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 1 (extreme: 5), where larger values are possible but should be used with care; NOTE that the relation to the common field of view (FOV) angle alpha, with alpha=90°, is given by perspective = tan(alpha/2) = 1; mouse coordinates (F3) can not be shown with perspective>0
+  float perspective;                              //!< AUTO: must be >= 0; parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 1 (extreme: 5), where larger values are possible but should be used with care; NOTE that the relation to the common field of view (FOV) angle alpha, with alpha=90°, is given by perspective = tan(alpha/2) = 1; mouse coordinates (F3) can not be shown with perspective>0
   Index trackMarker;                              //!< AUTO: if valid marker index is provided and marker provides position (and orientation), the centerpoint of the scene follows the marker (and orientation); depends on trackMarkerPosition and trackMarkerOrientation; by default, only position is tracked
   Index trackMarkerMbsNumber;                     //!< AUTO: number of main system which is used to track marker; if only 1 mbs is in the SystemContainer, use 0; if there are several mbs, it needs to specify the number
   Float3 trackMarkerOrientation;                  //!< AUTO: choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one
@@ -1308,7 +1308,7 @@ public: // AUTO:
 class VSettingsScene // AUTO: 
 {
 public: // AUTO: 
-  Index drawCoordinateSystem;                     //!< AUTO: 0 = no coordinate system shown, 1 = draw lines with text, 2 = draw arrows, 3 = draw arrows with text
+  Index drawCoordinateSystem;                     //!< AUTO: must be >= 0; 0 = no coordinate system shown, 1 = draw lines with text, 2 = draw arrows, 3 = draw arrows with text
   bool drawWorldBasis;                            //!< AUTO: true = draw world basis coordinate system at (0,0,0)
   bool facesTransparent;                          //!< AUTO: True: show faces transparent independent of transparency (A)-value in color of objects; allow to show otherwise hidden node/marker/object numbers
   bool showFaceEdges;                             //!< AUTO: True: show edges of triangles; using the options showFaces=false and showFaceEdges=true gives are wire frame representation
@@ -1316,7 +1316,7 @@ public: // AUTO:
   bool showLines;                                 //!< AUTO: True: show lines (other lines than face and mesh edges)
   bool showMeshEdges;                             //!< AUTO: True: show edges of finite elements; independent of showFaceEdges
   bool showMeshFaces;                             //!< AUTO: True: show faces of finite elements; independent of showFaces
-  float worldBasisSize;                           //!< AUTO: size of world basis coordinate system
+  float worldBasisSize;                           //!< AUTO: must be > 0; size of world basis coordinate system
 
 private: // AUTO: 
   VisualizationSettings* backlink; //!< AUTO: backlink for global access of structure
@@ -1386,7 +1386,7 @@ class VSettingsWindow // AUTO:
 {
 public: // AUTO: 
   bool alwaysOnTop;                               //!< AUTO: True: render window of respective view will be always on top of all other windows
-  float globalFontSize;                           //!< AUTO: general text font size (roughly measured in pixels); if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)
+  float globalFontSize;                           //!< AUTO: must be > 0; general text font size (roughly measured in pixels); if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)
   bool lockModelView;                             //!< AUTO: True: all movements (with mouse/keys), rotations, zoom are disabled; the view is either based on initial values (or on the current state) ==> initial zoom, rotation and center point need to be adjusted, approx. 0.4*maxSceneSize is a good value
   bool maximize;                                  //!< AUTO: True: render window of respective view will be maximized at startup
   Index2 renderWindowSize;                        //!< AUTO: initial size of render window of respective view for specific view in pixels for
@@ -1624,9 +1624,9 @@ public: // AUTO:
 class VSettingsDialogs // AUTO: 
 {
 public: // AUTO: 
-  float alphaTransparency;                        //!< AUTO: alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all)
+  float alphaTransparency;                        //!< AUTO: must be >= 0; alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all)
   bool alwaysTopmost;                             //!< AUTO: True: dialogs are always topmost (otherwise, they are sometimes hidden)
-  float fontScalingMacOS;                         //!< AUTO: font scaling value for MacOS systems (on Windows, system display scaling is used)
+  float fontScalingMacOS;                         //!< AUTO: must be >= 0; font scaling value for MacOS systems (on Windows, system display scaling is used)
   bool multiThreadedDialogs;                      //!< AUTO: True: During dialogs, the OpenGL render windows will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed
   bool openTreeView;                              //!< AUTO: True: all sub-trees of the visusalization dialog are opened when opening the dialog; False: only some sub-trees are opened
 
@@ -1689,13 +1689,13 @@ public: // AUTO:
 class VSettingsMaterial // AUTO: 
 {
 public: // AUTO: 
-  float alpha;                                    //!< AUTO: alpha-transparency, same as in alpha channel in RGBA colors; 1=opaque, 0=fully transparent; leads to extra rendering costs per transparent pixel
+  float alpha;                                    //!< AUTO: must be >= 0; alpha-transparency, same as in alpha channel in RGBA colors; 1=opaque, 0=fully transparent; leads to extra rendering costs per transparent pixel
   Float3 baseColor;                               //!< AUTO: RGB default material color if face color has R-color channel -1
   Float3 emission;                                //!< AUTO: RGB emissive material color (enlightened material)
-  float ior;                                      //!< AUTO: index of refraction for transparent materials (1=no refraction), >1 represents refraction
+  float ior;                                      //!< AUTO: must be >= 0; index of refraction for transparent materials (1=no refraction), >1 represents refraction
   std::string name;                               //!< AUTO: material name for easier handling
-  float reflectivity;                             //!< AUTO: controls reflectivity of material; 0=no reflections (rough, e.g. rubber), 1=fully reflective (mirror); this leads to large extra rendering costs per visible reflective pixel
-  float shininess;                                //!< AUTO: controls shininess of specular component of lights; values < 5 is not very shiny, while > 50 is very shiny
+  float reflectivity;                             //!< AUTO: must be >= 0; controls reflectivity of material; 0=no reflections (rough, e.g. rubber), 1=fully reflective (mirror); this leads to large extra rendering costs per visible reflective pixel
+  float shininess;                                //!< AUTO: must be >= 0; controls shininess of specular component of lights; values < 5 is not very shiny, while > 50 is very shiny
   Float3 specular;                                //!< AUTO: RGB specular material color
 
 private: // AUTO: 
@@ -1764,11 +1764,11 @@ class VSettingsRaytracerAdvanced // AUTO:
 {
 public: // AUTO: 
   Float4 backgroundColorReflections;              //!< AUTO: scene RGBA color for background that is hit by reflection material; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; this is generally needed, as our scenes are usually not inside a closed geometry (like inside a room); this color is also used if maxReflectionDepth is reached
-  Index searchTreeFactor;                         //!< AUTO: This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128
-  Index shadowScalingFactor;                      //!< AUTO: if lightRadiusVariations>1, this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries
-  Index shadowSmoothingSteps;                     //!< AUTO: if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing  steps may cause artifacts at shadow boundaries; only works for directional lights with position (e.g. 4th component in light0Position should be 1)
+  Index searchTreeFactor;                         //!< AUTO: must be > 0; This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128
+  Index shadowScalingFactor;                      //!< AUTO: must be >= 0; if lightRadiusVariations>1, this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries
+  Index shadowSmoothingSteps;                     //!< AUTO: must be >= 0; if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing  steps may cause artifacts at shadow boundaries; only works for directional lights with position (e.g. 4th component in light0Position should be 1)
   bool showText;                                  //!< AUTO: True: show any kind of status text, node numbers, object numbers, etc. (depending on settings); False: do not show any text in raytracer, independently of settings
-  Index tilesPerThread;                           //!< AUTO: Total number of sub-tiles per thread, used to evenly distribute rendering load to threads
+  Index tilesPerThread;                           //!< AUTO: must be > 0; Total number of sub-tiles per thread, used to evenly distribute rendering load to threads
   float zBiasLines;                               //!< AUTO: offset for lines to draw in front of faces; relative to scene radius
 
 private: // AUTO: 
@@ -1846,14 +1846,14 @@ public: // AUTO:
   VSettingsMaterial material8;                    //!< AUTO: settings for material8
   VSettingsMaterial material9;                    //!< AUTO: settings for material9
   Float4 globalFogColor;                          //!< AUTO: scene RGBA fog color
-  float globalFogDensity;                         //!< AUTO: global fog density; fog is deactivated if fogDensity=0, otherwise it is a density relative to scene max size; as it is relative, the factor has to be relatively high to be visible (usually >1)
-  Index imageSizeFactor;                          //!< AUTO: Special size factor (1-16) to allow drawing with smaller resolution (faster); use this for long rendering times for adjustments, etc.
+  float globalFogDensity;                         //!< AUTO: must be >= 0; global fog density; fog is deactivated if fogDensity=0, otherwise it is a density relative to scene max size; as it is relative, the factor has to be relatively high to be visible (usually >1)
+  Index imageSizeFactor;                          //!< AUTO: must be > 0; Special size factor (1-16) to allow drawing with smaller resolution (faster); use this for long rendering times for adjustments, etc.
   bool keepWindowActive;                          //!< AUTO: Special flag, handle with care; True: sends some glfw functions to keep window reactive for long render times (>2 seconds); otherwise, the rendering may not finish due to timeout
-  Index lightRadiusVariations;                    //!< AUTO: if lightRadiusVariations>1, this defines the number of positions that are used to compute the effect of distributed lights (larger is slower but better quality); range=1..256; avoid squares of integers; good values: 1 (hard shadow boundaries), 6, 13, 20, 31, 72, 130, 240; for lower values, use shadowSmoothingSteps=2..8
-  Index maxReflectionDepth;                       //!< AUTO: Maximum number of reflections computed for one ray (note that for each transparent face passed, the reflection depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)
-  Index maxTransparencyDepth;                     //!< AUTO: Maximum number of transparent faces that can be passed (note that for each reflection, the transparency depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)
-  Index multiSampling;                            //!< AUTO: Multi-sampling used for rendering of faces, lines and text; increases image quality along edges (lines, etc.) but INCREASES rendering costs dramatically (multiSampling=3 => 3x3=9 times slower); also used for shadow if shadowScalingFactor=0; values only accepted in range [1..4]
-  Index numberOfThreads;                          //!< AUTO: Number of CPU-threads (max: 256) used for software rendering (should be approx. the number of available threads)
+  Index lightRadiusVariations;                    //!< AUTO: must be > 0; if lightRadiusVariations>1, this defines the number of positions that are used to compute the effect of distributed lights (larger is slower but better quality); range=1..256; avoid squares of integers; good values: 1 (hard shadow boundaries), 6, 13, 20, 31, 72, 130, 240; for lower values, use shadowSmoothingSteps=2..8
+  Index maxReflectionDepth;                       //!< AUTO: must be >= 0; Maximum number of reflections computed for one ray (note that for each transparent face passed, the reflection depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)
+  Index maxTransparencyDepth;                     //!< AUTO: must be >= 0; Maximum number of transparent faces that can be passed (note that for each reflection, the transparency depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)
+  Index multiSampling;                            //!< AUTO: must be > 0; Multi-sampling used for rendering of faces, lines and text; increases image quality along edges (lines, etc.) but INCREASES rendering costs dramatically (multiSampling=3 => 3x3=9 times slower); also used for shadow if shadowScalingFactor=0; values only accepted in range [1..4]
+  Index numberOfThreads;                          //!< AUTO: must be > 0; Number of CPU-threads (max: 256) used for software rendering (should be approx. the number of available threads)
   Index verbose;                                  //!< AUTO: 1: print out some debug information on rendering, in particular rendering timings and counter; 2 and higher: advanced debug information
 
 private: // AUTO: 
@@ -2007,18 +2007,18 @@ public: // AUTO:
   bool enableLighting;                            //!< AUTO: generally enable lighting (otherwise, colors of objects are used); OpenGL: glEnable(GL_LIGHTING)
   Float4 faceNormalsColor;                        //!< AUTO: global RGBA color for face normals
   Float3 initialCenterPoint;                      //!< AUTO: centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True; only used in case that modelCentricView=True
-  float initialMaxSceneSize;                      //!< AUTO: initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True
+  float initialMaxSceneSize;                      //!< AUTO: must be > 0; initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True
   StdArray33F initialModelRotation;               //!< AUTO: initial model rotation matrix for OpenGl; in python use e.g.: initialModelRotation=[[1,0,0],[0,1,0],[0,0,1]]; only used in case that modelCentricView=True
-  float initialZoom;                              //!< AUTO: initial zoom of scene; overwritten/ignored if autoFitScene = True
+  float initialZoom;                              //!< AUTO: must be >= 0; initial zoom of scene; overwritten/ignored if autoFitScene = True
   bool lightModelLocalViewer;                     //!< AUTO: True: the camera origin is used to compute shininess effects (more realistic); maps to OpenGL glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,...)
   bool lightModelTwoSide;                         //!< AUTO: enlighten also backside of object; may cause problems on some graphics cards and lead to slower performance; maps to OpenGL glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,...)
   bool lineSmooth;                                //!< AUTO: draw lines smooth
   float polygonOffset;                            //!< AUTO: general polygon offset for polygons, except for shadows; use this parameter to draw polygons behind lines to reduce artifacts for very large or small models
   bool shadeModelSmooth;                          //!< AUTO: True: turn on smoothing for shaders, which uses vertex normals to smooth surfaces
-  float shadowPolygonOffset;                      //!< AUTO: some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies
+  float shadowPolygonOffset;                      //!< AUTO: must be > 0; some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies
   bool showBoundingBox;                           //!< AUTO: show scene bounding box (red), as available in renderState.boundingBox; NOTE that the bounding box is only updated with ZoomAll or at startup; this is a debug flag and it may show reasongs for strange ZoomAll behavior, as ZoomAll should zoom to the bounding box; does only work for perspective=0
   bool textLineSmooth;                            //!< AUTO: draw lines for representation of text smooth
-  float textLineWidth;                            //!< AUTO: width of lines used for representation of text
+  float textLineWidth;                            //!< AUTO: must be >= 0; width of lines used for representation of text
   Float4 vertexNormalsColor;                      //!< AUTO: global RGBA color for vertex normals
 
 private: // AUTO: 
@@ -2115,7 +2115,7 @@ public: // AUTO:
   float linearAttenuation;                        //!< AUTO: linear attenuation coefficient of GL_LIGHT[0,1,2,3], this is a linear factor for attenuation of the light source with distance
   Float4 position;                                //!< AUTO: 4D position vector of GL_LIGHT[0,1,2,3]; 4th value should be 0 for directional lights that are (almost) infinitely far away, like the sun, but 1 for position-based lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position to be located at a reasonable location; the openGL renderer uses shadow volumes and approximates directional lights by enlarging the direction to 200 times maxSceneSize, while the raytracer uses the correct direction; see opengl manuals
   float quadraticAttenuation;                     //!< AUTO: quadratic attenuation coefficient of GL_LIGHT[0,1,2,3], this is a quadratic factor for attenuation of the light source with distance
-  float shadow;                                   //!< AUTO: in OpenGL renderer, the shadow parameter \f$\in [0 ... 1]\f$ prescribes amount of shadow of light [0,1,2,3] that is added to the scene, using light position (or only direction), accumulating for each light; if this parameter is different from 0, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for each light if shadow>0, accumulating effects of each light source
+  float shadow;                                   //!< AUTO: must be >= 0; in OpenGL renderer, the shadow parameter \f$\in [0 ... 1]\f$ prescribes amount of shadow of light [0,1,2,3] that is added to the scene, using light position (or only direction), accumulating for each light; if this parameter is different from 0, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for each light if shadow>0, accumulating effects of each light source
   float specular;                                 //!< AUTO: specular value of GL_LIGHT[0,1,2,3]
   bool useCameraFrame;                            //!< AUTO: set False to set light positions and directions relative to model frame; True: lights are in camera frame, not following the visual transformations; this was True up to Exudyn 1.9.174
 
@@ -2194,16 +2194,16 @@ public: // AUTO:
   VSettingsLight light2;                          //!< AUTO: settings for light2 and shadow
   VSettingsLight light3;                          //!< AUTO: settings for light3 and shadow
   bool drawFaceNormals;                           //!< AUTO: draws triangle normals, e.g. at center of triangles; used for debugging of faces
-  float drawNormalsLength;                        //!< AUTO: length of normals; used for debugging
+  float drawNormalsLength;                        //!< AUTO: must be > 0; length of normals; used for debugging
   bool drawVertexNormals;                         //!< AUTO: draws vertex normals; used for debugging
   Float4 faceEdgesColor;                          //!< AUTO: global RGBA color for face edges
-  float faceTransparencyGlobal;                   //!< AUTO: in case that facesTransparent=True this represents the max alpha-transparency
+  float faceTransparencyGlobal;                   //!< AUTO: must be >= 0; in case that facesTransparent=True this represents the max alpha-transparency
   Float4 lightModelAmbient;                       //!< AUTO: global ambient light (needed for faces that are close to orthogonal to light or faces in shadow region); maps to OpenGL glLightModeli(GL_LIGHT_MODEL_AMBIENT,[r,g,b,a]); also used by raytracer
-  float lineWidth;                                //!< AUTO: width of lines used for representation of lines, circles, points, etc.
+  float lineWidth;                                //!< AUTO: must be >= 0; width of lines used for representation of lines, circles, points, etc.
   float materialShininess;                        //!< AUTO: shininess of material
   Float4 materialSpecular;                        //!< AUTO: RGBA specular color of material
-  Index multiSampling;                            //!< AUTO: NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 3, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
-  float zMaxSceneFactor;                          //!< AUTO: factor multiplied with maxSceneSize to avoid clipping of modelview; larger values reduce clipping of near or far objects, but may lead to artifacts (so-called Z-fighting)
+  Index multiSampling;                            //!< AUTO: must be > 0; NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 3, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
+  float zMaxSceneFactor;                          //!< AUTO: must be > 0; factor multiplied with maxSceneSize to avoid clipping of modelview; larger values reduce clipping of near or far objects, but may lead to artifacts (so-called Z-fighting)
   float dummy;                                    //!< AUTO: unused dummy variable, used to redirect deprecated values
 
 private: // AUTO: 
@@ -2504,17 +2504,17 @@ public: // AUTO:
 class VSettingsExportImages // AUTO: 
 {
 public: // AUTO: 
-  Index heightAlignment;                          //!< AUTO: alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)
+  Index heightAlignment;                          //!< AUTO: must be > 0; alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)
   bool saveImageAsTextCircles;                    //!< AUTO: export circles in save image (only in TXT format)
   bool saveImageAsTextLines;                      //!< AUTO: export lines in save image (only in TXT format)
   bool saveImageAsTextTexts;                      //!< AUTO: export text in save image (only in TXT format)
   bool saveImageAsTextTriangles;                  //!< AUTO: export triangles in save image (only in TXT format)
-  Index saveImageFileCounter;                     //!< AUTO: current value of the counter which is used to consecutively save frames (images) with consecutive numbers
+  Index saveImageFileCounter;                     //!< AUTO: must be >= 0; current value of the counter which is used to consecutively save frames (images) with consecutive numbers
   std::string saveImageFileName;                  //!< AUTO: filename (without extension!) and (relative) path for image file(s) with consecutive numbering (e.g., frame0000.png, frame0001.png,...); ; directory will be created if it does not exist
   std::string saveImageFormat;                    //!< AUTO: format for exporting figures: currently only PNG, TGA and TXT available; while PNG and TGA represent the according image file formats, the TXT format results in a text file containing the 3D graphics data information as lists of lines, triangles, etc; PNG is not available for Ubuntu18.04 (check  use TGA has highest compatibility with all platforms
   bool saveImageSingleFile;                       //!< AUTO: True: only save single files with given filename, not adding numbering; False: add numbering to files, see saveImageFileName
-  Index saveImageTimeOut;                         //!< AUTO: timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes
-  Index widthAlignment;                           //!< AUTO: alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost)
+  Index saveImageTimeOut;                         //!< AUTO: must be > 0; timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes
+  Index widthAlignment;                           //!< AUTO: must be > 0; alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost)
 
 private: // AUTO: 
   VisualizationSettings* backlink; //!< AUTO: backlink for global access of structure
@@ -2747,7 +2747,7 @@ public: // AUTO:
   Float3 autoRotationVelocity;                    //!< AUTO: Angular velocity vector for auto-rotation of scene (only visualization view is rotated, not the model itself!)
   Index highlightItemIndex;                       //!< AUTO: index of item that shall be highlighted (e.g., to find item which cauess problems); if set -1, no item is highlighted
   ItemType highlightItemType;                     //!< AUTO: item type (Node, Object, ...) that shall be highlighted (e.g., to find item which cauess problems)
-  Index highlightMbsNumber;                       //!< AUTO: index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)
+  Index highlightMbsNumber;                       //!< AUTO: must be >= 0; index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)
   bool ignoreKeys;                                //!< AUTO: True: ignore keyboard input except escape and 'F2' keys; used for interactive mode, e.g., to perform kinematic analysis; This flag can be switched with key 'F2'; if ignoreKeys=True, then keyPressUserFunction can be used!
   std::function<bool(int, int, int)> keyPressUserFunction;//!< AUTO: add a Python function f(key, action, mods) here, which is called every time a key is pressed; set this parameter to 0 (int) in order to deactivate it; the user function is only called if interactive.ignoreKeys=True; function shall return true, if key has been processed; Example: \tabnewline def f(key, action, mods):\tabnewline \phantom{XXX} print('key=',key);\tabnewline use chr(key) to convert key codes [32 ...96] to ascii; special key codes (>256) are provided in the exudyn.KeyCode enumeration type; key action needs to be checked (0=released, 1=pressed, 2=repeated); mods provide information (binary) for SHIFT (1), CTRL (2), ALT (4), Super keys (8), CAPSLOCK (16)
   bool logMouseCoordinates;                       //!< AUTO: True: if showMouseCoordinates=True, also log mouse coordinates (transformed to model coordinates); only works for axis-aligned ortho-projections and shows the coordinates of the current plane

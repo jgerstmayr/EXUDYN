@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  19:35:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -27,7 +27,7 @@
 class CObjectRotationalMass1DParameters // AUTO:
 {
 public: // AUTO:
-    Real physicsInertia;                          //!< AUTO: inertia components [SI:kgm\f$^2\f$] of rotor / rotational mass
+    Real physicsInertia;                          //!< AUTO: must be >= 0; inertia components [SI:kgm\f$^2\f$] of rotor / rotational mass
     Index nodeNumber;                             //!< AUTO: node number (type NodeIndex) of Node1D, providing rotation coordinate \f$\psi_0 = c_0\f$
     Vector3D referencePosition;                   //!< AUTO: a constant reference position = reference point, used to assign joint constraints accordingly and for drawing
     Matrix3D referenceRotation;                   //!< AUTO: an intermediate rotation matrix, which transforms the 1D coordinate into 3D, see description

@@ -26,8 +26,8 @@
 class BeamSectionGeometry // AUTO: 
 {
 public: // AUTO: 
-  Real crossSectionRadiusY;                       //!< AUTO: \f$c_Y\,\f$ [SI:m] \f$Y\f$ radius for circular cross section
-  Real crossSectionRadiusZ;                       //!< AUTO: \f$c_Z\,\f$ [SI:m] \f$Z\f$ radius for circular cross section
+  Real crossSectionRadiusY;                       //!< AUTO: must be >= 0; \f$c_Y\,\f$ [SI:m] \f$Y\f$ radius for circular cross section
+  Real crossSectionRadiusZ;                       //!< AUTO: must be >= 0; \f$c_Z\,\f$ [SI:m] \f$Z\f$ radius for circular cross section
   CrossSectionType crossSectionType;              //!< AUTO: Type of cross section: Polygon, Circular, etc.
   Vector2DList polygonalPoints;                   //!< AUTO: \f$\pv_{pg}\,\f$ [SI: (m,m) ] list of polygonal (\f$Y,Z\f$) points in local beam cross section coordinates, defined in positive rotation direction
 

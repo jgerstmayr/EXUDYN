@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  19:35:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,8 +29,8 @@ class CObjectContactCoordinateParameters // AUTO:
 public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: markers define contact gap
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData for 1 dataCoordinate (used for active set strategy ==> holds the gap of the last discontinuous iteration)
-    Real contactStiffness;                        //!< AUTO: contact (penalty) stiffness [SI:N/m]; acts only upon penetration
-    Real contactDamping;                          //!< AUTO: contact damping [SI:N/(m s)]; acts only upon penetration
+    Real contactStiffness;                        //!< AUTO: must be >= 0; contact (penalty) stiffness [SI:N/m]; acts only upon penetration
+    Real contactDamping;                          //!< AUTO: must be >= 0; contact damping [SI:N/(m s)]; acts only upon penetration
     Real offset;                                  //!< AUTO: offset [SI:m] of contact
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization

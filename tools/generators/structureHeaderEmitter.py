@@ -144,7 +144,7 @@ def StructureCppHeader(parseInfo):
             insertSpaces = ''
             if nChar < alignment:
                 insertSpaces = ' '*(alignment-nChar)
-            temp += insertSpaces + '//!< AUTO: ' + Str2Doxygen(ParameterDescription(parameter)) + '\n'
+            temp += insertSpaces + '//!< AUTO: ' + tm.ConstraintNote(parameter['type']) + Str2Doxygen(ParameterDescription(parameter)) + '\n'
 
             if (FromParent(parameter)): #make variable private ==> no direct access via C++ or python!
                 sPrivate += temp

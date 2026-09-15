@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  19:35:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -85,7 +85,7 @@ protected: // AUTO:
     CObjectFFRFParameters parameters; //! AUTO: contains all parameters for CObjectFFRF
     ArrayIndex coordinateIndexPerNode;            //!< AUTO: this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
     bool objectIsInitialized;                     //!< AUTO: ALWAYS set to False! flag used to correctly initialize all \hac{FFRF} matrices; as soon as this flag is False, internal (constant) \hac{FFRF} matrices are recomputed during Assemble()
-    Real physicsMass;                             //!< AUTO: total mass [SI:kg] of \hac{FFRF} object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
+    Real physicsMass;                             //!< AUTO: must be >= 0; total mass [SI:kg] of \hac{FFRF} object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
     Matrix3D physicsInertia;                      //!< AUTO: inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\LU{b}{\Mm}\f$
     Vector3D physicsCenterOfMass;                 //!< AUTO: local position of center of mass (\hac{COM}); auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
     Matrix PHItTM;                                //!< AUTO: projector matrix; may be removed in future

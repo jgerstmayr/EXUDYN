@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  19:35:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,17 +38,17 @@ public: // AUTO:
     Real velocityOffset;                          //!< AUTO: offset between two coordinates; used to model D-control of a drive, where damping is not acting against prescribed velocity
     Real factor0;                                 //!< AUTO: marker 0 coordinate is multiplied with factor0
     Real factor1;                                 //!< AUTO: marker 1 coordinate is multiplied with factor1
-    Real fDynamicFriction;                        //!< AUTO: dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force \f$f_N\f$, the friction force can be interpreted as \f$f_\mu = \mu f_N\f$
-    Real fStaticFrictionOffset;                   //!< AUTO: static (dry) friction offset force [SI:N]; assuming a normal force \f$f_N\f$, the friction force is limited by \f$f_\mu \le (\mu_{so} + \mu_d) f_N = f_{\mu_d} + f_{\mu_{so}}\f$
-    Real stickingStiffness;                       //!< AUTO: stiffness of bristles in sticking case  [SI:N/m]
-    Real stickingDamping;                         //!< AUTO: damping of bristles in sticking case  [SI:N/(m/s)]
-    Real exponentialDecayStatic;                  //!< AUTO: relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at \f$\Delta v = v_\mathrm{exp}\f$, the static friction offset force is reduced to 36.8\%
+    Real fDynamicFriction;                        //!< AUTO: must be >= 0; dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force \f$f_N\f$, the friction force can be interpreted as \f$f_\mu = \mu f_N\f$
+    Real fStaticFrictionOffset;                   //!< AUTO: must be >= 0; static (dry) friction offset force [SI:N]; assuming a normal force \f$f_N\f$, the friction force is limited by \f$f_\mu \le (\mu_{so} + \mu_d) f_N = f_{\mu_d} + f_{\mu_{so}}\f$
+    Real stickingStiffness;                       //!< AUTO: must be >= 0; stiffness of bristles in sticking case  [SI:N/m]
+    Real stickingDamping;                         //!< AUTO: must be >= 0; damping of bristles in sticking case  [SI:N/(m/s)]
+    Real exponentialDecayStatic;                  //!< AUTO: must be > 0; relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at \f$\Delta v = v_\mathrm{exp}\f$, the static friction offset force is reduced to 36.8\%
     Real fViscousFriction;                        //!< AUTO: viscous friction force part [SI:N/(m s)], acting against relative velocity in sliding case
-    Real frictionProportionalZone;                //!< AUTO: if non-zero, a regularized Stribeck model is used, regularizing friction force around zero velocity - leading to zero friction force in case of zero velocity; this does not require a data node at all; if zero, the bristle model is used, which requires a data node which contains previous friction state and last sticking position
+    Real frictionProportionalZone;                //!< AUTO: must be >= 0; if non-zero, a regularized Stribeck model is used, regularizing friction force around zero velocity - leading to zero friction force in case of zero velocity; this does not require a data node at all; if zero, the bristle model is used, which requires a data node which contains previous friction state and last sticking position
     Real limitStopsUpper;                         //!< AUTO: upper (maximum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates
     Real limitStopsLower;                         //!< AUTO: lower (minimum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates
-    Real limitStopsStiffness;                     //!< AUTO: stiffness [SI:N/m] of limit stop (contact stiffness); following a linear contact model
-    Real limitStopsDamping;                       //!< AUTO: damping [SI:N/(m/s)] of limit stop (contact damping); following a linear contact model
+    Real limitStopsStiffness;                     //!< AUTO: must be >= 0; stiffness [SI:N/m] of limit stop (contact stiffness); following a linear contact model
+    Real limitStopsDamping;                       //!< AUTO: must be >= 0; damping [SI:N/(m/s)] of limit stop (contact damping); following a linear contact model
     bool useLimitStops;                           //!< AUTO: if True, limit stops are considered and parameters must be set accordingly; furthermore, the NodeGenericData must have 3 data coordinates
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     PythonUserFunctionBase< std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real)> > springForceUserFunction;//!< AUTO: A Python function which defines the spring force with 8 parameters, see equations section / see description below

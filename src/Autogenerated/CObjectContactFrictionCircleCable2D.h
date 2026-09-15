@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  19:35:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -30,13 +30,13 @@ class CObjectContactFrictionCircleCable2DParameters // AUTO:
 public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: a marker \f$m0\f$ with position and orientation and a marker \f$m1\f$ of type BodyCable2DShape; together defining the contact geometry
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with 3 \f$\times n_{cs}\f$  dataCoordinates (used for active set strategy \f$\ra\f$ hold the gap of the last discontinuous iteration, friction state (+-1=slip, 0=stick, -2=undefined) and the last sticking position; initialize coordinates with list [0.1]*\f$n_{cs}\f$+[-2]*\f$n_{cs}\f$+[0.]*\f$n_{cs}\f$, meaning that there is no initial contact with undefined slip/stick
-    Index numberOfContactSegments;                //!< AUTO: number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker
-    Real contactStiffness;                        //!< AUTO: contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) \f$f_n\f$ act in contact normal direction only upon penetration
-    Real contactDamping;                          //!< AUTO: contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration
-    Real frictionVelocityPenalty;                 //!< AUTO: tangential velocity dependent penalty coefficient for friction [SI:N/(m s)/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential velocities in the contact area
-    Real frictionStiffness;                       //!< AUTO: tangential displacement dependent penalty/stiffness coefficient for friction [SI:N/m/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential displacements in the contact area
-    Real frictionCoefficient;                     //!< AUTO: friction coefficient [SI: 1]; tangential specific friction forces (per length) \f$f_t\f$ must fulfill the condition \f$f_t \le \mu f_n\f$
-    Real circleRadius;                            //!< AUTO: radius [SI:m] of contact circle
+    Index numberOfContactSegments;                //!< AUTO: must be > 0; number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker
+    Real contactStiffness;                        //!< AUTO: must be >= 0; contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) \f$f_n\f$ act in contact normal direction only upon penetration
+    Real contactDamping;                          //!< AUTO: must be >= 0; contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration
+    Real frictionVelocityPenalty;                 //!< AUTO: must be >= 0; tangential velocity dependent penalty coefficient for friction [SI:N/(m s)/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential velocities in the contact area
+    Real frictionStiffness;                       //!< AUTO: must be >= 0; tangential displacement dependent penalty/stiffness coefficient for friction [SI:N/m/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential displacements in the contact area
+    Real frictionCoefficient;                     //!< AUTO: must be >= 0; friction coefficient [SI: 1]; tangential specific friction forces (per length) \f$f_t\f$ must fulfill the condition \f$f_t \le \mu f_n\f$
+    Real circleRadius;                            //!< AUTO: must be >= 0; radius [SI:m] of contact circle
     bool useSegmentNormals;                       //!< AUTO:  True: use normal and tangent according to linear segment; this is appropriate for very long (compared to circle) segments; False: use normals at segment points according to vector to circle center; this is more consistent for short segments, as forces are only applied in beam tangent and normal direction
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  19:35:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -27,7 +27,7 @@
 class CNodeGenericDataParameters // AUTO:
 {
 public: // AUTO:
-    Index numberOfDataCoordinates;                //!< AUTO: number of generic data coordinates (history variables)
+    Index numberOfDataCoordinates;                //!< AUTO: must be >= 0; number of generic data coordinates (history variables)
     //! AUTO: default constructor with parameter initialization
     CNodeGenericDataParameters()
     {

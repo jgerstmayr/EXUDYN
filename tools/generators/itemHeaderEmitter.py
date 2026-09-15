@@ -266,7 +266,7 @@ def ItemCppHeaders(definition):
             parameterDescription = Description(parameter) #remove symbol from parameter description
             [parameterDescription, latexSymbol] = ExtractLatexSymbol(parameterDescription)
 
-            lineStr = temp + insertSpaces + '//!< AUTO: ' + Str2Doxygen(parameterDescription) + '\n'
+            lineStr = temp + insertSpaces + '//!< AUTO: ' + tm.ConstraintNote(TypeName(parameter)) + Str2Doxygen(parameterDescription) + '\n'
 
             sList[DestinationNr(Destination(parameter))] += lineStr
 

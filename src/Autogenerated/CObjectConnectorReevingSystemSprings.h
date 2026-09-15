@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  19:35:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,10 +31,10 @@ public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of position or rigid body markers used in reeving system and optional two coordinate markers (\f$m_{c0}, \, m_{c1}\f$); the first marker \f$m_0\f$ and the last rigid body marker \f$m_{nr-1}\f$ represent the ends of the rope and are directly connected to a position; the markers \f$m_1, \, \ldots, \, m_{nr-2}\f$ can be connected to sheaves, for which a radius and an axis can be prescribed. The coordinate markers are optional and represent prescribed length at the rope ends (marker \f$m_{c0}\f$ is added length at start, marker \f$m_{c1}\f$ is added length at end of the rope in the reeving system)
     bool hasCoordinateMarkers;                    //!< AUTO: flag, which determines, the list of markers (markerNumbers) contains two coordinate markers at the end of the list, representing the prescribed change of length at both ends
     Vector2D coordinateFactors;                   //!< AUTO: factors which are multiplied with the values of coordinate markers; this can be used, e.g., to change directions or to transform rotations (revolutions of a sheave) into change of length
-    Real stiffnessPerLength;                      //!< AUTO: stiffness per length [SI:N/m/m] of rope; in case of cross section \f$A\f$ and Young's modulus \f$E\f$, this parameter results in \f$E\cdot A\f$; the effective stiffness of the reeving system is computed as \f$EA/L\f$ in which \f$L\f$ is the current length of the rope
-    Real dampingPerLength;                        //!< AUTO: axial damping per length [SI:N/(m/s)/m] of rope; the effective damping coefficient of the reeving system is computed as \f$DA/L\f$ in which \f$L\f$ is the current length of the rope
-    Real dampingTorsional;                        //!< AUTO: torsional damping [SI:Nms] between sheaves; this effect can damp rotations around the rope axis, pairwise between sheaves; this parameter is experimental
-    Real dampingShear;                            //!< AUTO: damping of shear motion [SI:Ns] between sheaves; this effect can damp motion perpendicular to the rope between each pair of sheaves; this parameter is experimental
+    Real stiffnessPerLength;                      //!< AUTO: must be >= 0; stiffness per length [SI:N/m/m] of rope; in case of cross section \f$A\f$ and Young's modulus \f$E\f$, this parameter results in \f$E\cdot A\f$; the effective stiffness of the reeving system is computed as \f$EA/L\f$ in which \f$L\f$ is the current length of the rope
+    Real dampingPerLength;                        //!< AUTO: must be >= 0; axial damping per length [SI:N/(m/s)/m] of rope; the effective damping coefficient of the reeving system is computed as \f$DA/L\f$ in which \f$L\f$ is the current length of the rope
+    Real dampingTorsional;                        //!< AUTO: must be >= 0; torsional damping [SI:Nms] between sheaves; this effect can damp rotations around the rope axis, pairwise between sheaves; this parameter is experimental
+    Real dampingShear;                            //!< AUTO: must be >= 0; damping of shear motion [SI:Ns] between sheaves; this effect can damp motion perpendicular to the rope between each pair of sheaves; this parameter is experimental
     Real regularizationForce;                     //!< AUTO: small regularization force [SI:N] in order to avoid large compressive forces; this regularization force can either be \f$<0\f$ (using a linear tension/compression spring model) or \f$>0\f$, which restricts forces in the rope to be always \f$\ge -F_{reg}\f$. Note that smaller forces lead to problems in implicit integrators and smaller time steps. For explicit integrators, this force can be chosen close to zero.
     Real referenceLength;                         //!< AUTO: reference length for computation of roped force
     Vector3DList sheavesAxes;                     //!< AUTO: list of local vectors axes of sheaves; vectors refer to rigid body markers given in list of markerNumbers; first and last axes are ignored, as they represent the attachment of the rope ends

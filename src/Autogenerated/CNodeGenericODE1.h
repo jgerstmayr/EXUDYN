@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  19:35:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,7 +28,7 @@ class CNodeGenericODE1Parameters // AUTO:
 {
 public: // AUTO:
     Vector referenceCoordinates;                  //!< AUTO: generic reference coordinates of node; must be consistent with numberOfODE1Coordinates
-    Index numberOfODE1Coordinates;                //!< AUTO: number of generic \hac{ODE1} coordinates
+    Index numberOfODE1Coordinates;                //!< AUTO: must be > 0; number of generic \hac{ODE1} coordinates
     //! AUTO: default constructor with parameter initialization
     CNodeGenericODE1Parameters()
     {

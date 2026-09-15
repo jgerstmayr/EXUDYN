@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  19:35:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -30,19 +30,19 @@ class CObjectConnectorHydraulicActuatorSimpleParameters // AUTO:
 public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector
     ArrayIndex nodeNumbers;                       //!< AUTO: currently a list with one node number of NodeGenericODE1 for 2 hydraulic pressures (reference values for this node must be zero); data node may be added in future for switching
-    Real offsetLength;                            //!< AUTO: offset length [SI:m] of cylinder, representing minimal distance between the two bushings at stroke=0
-    Real strokeLength;                            //!< AUTO: stroke length [SI:m] of cylinder, representing maximum extension relative to \f$L_o\f$; the measured distance between the markers is \f$L_s+L_o\f$
-    Real chamberCrossSection0;                    //!< AUTO: cross section [SI:m\f$^2\f$] of chamber (inner cylinder) at piston head (nut) side (0)
-    Real chamberCrossSection1;                    //!< AUTO: cross section [SI:m\f$^2\f$] of chamber at piston rod side (1); usually smaller than chamberCrossSection0
-    Real hoseVolume0;                             //!< AUTO: hose volume [SI:m\f$^3\f$] at piston head (nut) side (0); as the effective bulk modulus would go to infinity at stroke length zero, the hose volume must be greater than zero
-    Real hoseVolume1;                             //!< AUTO: hose volume [SI:m\f$^3\f$] at piston rod side (1); as the effective bulk modulus would go to infinity at max. stroke length, the hose volume must be greater than zero
+    Real offsetLength;                            //!< AUTO: must be >= 0; offset length [SI:m] of cylinder, representing minimal distance between the two bushings at stroke=0
+    Real strokeLength;                            //!< AUTO: must be > 0; stroke length [SI:m] of cylinder, representing maximum extension relative to \f$L_o\f$; the measured distance between the markers is \f$L_s+L_o\f$
+    Real chamberCrossSection0;                    //!< AUTO: must be > 0; cross section [SI:m\f$^2\f$] of chamber (inner cylinder) at piston head (nut) side (0)
+    Real chamberCrossSection1;                    //!< AUTO: must be > 0; cross section [SI:m\f$^2\f$] of chamber at piston rod side (1); usually smaller than chamberCrossSection0
+    Real hoseVolume0;                             //!< AUTO: must be > 0; hose volume [SI:m\f$^3\f$] at piston head (nut) side (0); as the effective bulk modulus would go to infinity at stroke length zero, the hose volume must be greater than zero
+    Real hoseVolume1;                             //!< AUTO: must be > 0; hose volume [SI:m\f$^3\f$] at piston rod side (1); as the effective bulk modulus would go to infinity at max. stroke length, the hose volume must be greater than zero
     Real valveOpening0;                           //!< AUTO: relative opening of valve \f$[-1 \ldots 1]\f$ [SI:1] at piston head (nut) side (0); positive value is valve opening towards system pressure, negative value is valve opening towards tank pressure; zero means closed valve
     Real valveOpening1;                           //!< AUTO: relative opening of valve \f$[-1 \ldots 1]\f$ [SI:1] at piston rod side (1); positive value is valve opening towards system pressure, negative value is valve opening towards tank pressure; zero means closed valve
-    Real actuatorDamping;                         //!< AUTO: damping [SI:N/(m\f$\,\f$s)] of hydraulic actuator (against actuator axial velocity)
-    Real oilBulkModulus;                          //!< AUTO: bulk modulus of oil [SI:N/(m\f$^2\f$)]
-    Real cylinderBulkModulus;                     //!< AUTO: bulk modulus of cylinder [SI:N/(m\f$^2\f$)]; in fact, this is value represents the effect of the cylinder stiffness on the effective bulk modulus
-    Real hoseBulkModulus;                         //!< AUTO: bulk modulus of hose [SI:N/(m\f$^2\f$)]; in fact, this is value represents the effect of the hose stiffness on the effective bulk modulus
-    Real nominalFlow;                             //!< AUTO: nominal flow of oil through valve [SI:m\f$^3\f$/s]
+    Real actuatorDamping;                         //!< AUTO: must be >= 0; damping [SI:N/(m\f$\,\f$s)] of hydraulic actuator (against actuator axial velocity)
+    Real oilBulkModulus;                          //!< AUTO: must be > 0; bulk modulus of oil [SI:N/(m\f$^2\f$)]
+    Real cylinderBulkModulus;                     //!< AUTO: must be >= 0; bulk modulus of cylinder [SI:N/(m\f$^2\f$)]; in fact, this is value represents the effect of the cylinder stiffness on the effective bulk modulus
+    Real hoseBulkModulus;                         //!< AUTO: must be >= 0; bulk modulus of hose [SI:N/(m\f$^2\f$)]; in fact, this is value represents the effect of the hose stiffness on the effective bulk modulus
+    Real nominalFlow;                             //!< AUTO: must be > 0; nominal flow of oil through valve [SI:m\f$^3\f$/s]
     Real systemPressure;                          //!< AUTO: system pressure [SI:N/(m\f$^2\f$)]
     Real tankPressure;                            //!< AUTO: tank pressure [SI:N/(m\f$^2\f$)]
     bool useChamberVolumeChange;                  //!< AUTO: if True, the pressure build up equations include the change of oil stiffness due to change of chamber volume

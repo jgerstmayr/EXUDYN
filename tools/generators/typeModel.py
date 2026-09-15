@@ -216,6 +216,17 @@ def Render(typeName, destination, context):
     return typeName if result is None else result
 
 
+def ConstraintNote(typeName):
+    """the range of a constrained type as the start of a C++ comment ('must be > 0; '), '' otherwise;
+    C++ stores PReal, UReal, ... as their base type (step 87: PReal is also the AVX packed-real macro)"""
+    for spec in [dt.TReal, dt.Tfloat, dt.TIndex]:
+        if str(typeName) == spec.constrainedForms['greaterThan']:
+            return 'must be > 0; '
+        if str(typeName) == spec.constrainedForms['minimum']:
+            return 'must be >= 0; '
+    return ''
+
+
 def CppMemberType(typeName, context):
     """the C++ member type; items store a user function wrapped in PythonUserFunctionBase"""
     rendered = Render(typeName, 'cppStorage', context)

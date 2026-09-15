@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  19:35:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,15 +28,15 @@ class CObjectBeamGeometricallyExact2DParameters // AUTO:
 {
 public: // AUTO:
     ArrayIndex nodeNumbers;                       //!< AUTO: two node numbers for beam element
-    Real physicsLength;                           //!< AUTO:  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
-    Real physicsMassPerLength;                    //!< AUTO:  [SI:kg/m] mass per length of beam
-    Real physicsCrossSectionInertia;              //!< AUTO:  [SI:kg m] cross section mass moment of inertia; inertia acting against rotation of cross section
-    Real physicsBendingStiffness;                 //!< AUTO:  [SI:Nm\f$^2\f$] bending stiffness of beam; the bending moment is \f$m = EI (\kappa - \kappa_0)\f$, in which \f$\kappa\f$ is the material measure of curvature
-    Real physicsAxialStiffness;                   //!< AUTO:  [SI:N] axial stiffness of beam; the axial force is \f$f_{ax} = EA (\varepsilon -\varepsilon_0)\f$, in which \f$\varepsilon\f$ is the axial strain
-    Real physicsShearStiffness;                   //!< AUTO:  [SI:N] effective shear stiffness of beam, including stiffness correction
-    Real physicsBendingDamping;                   //!< AUTO:  [SI:Nm\f$^2\f$/s] viscous damping of bending deformation; the additional virtual work due to damping is \f$\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx\f$
-    Real physicsAxialDamping;                     //!< AUTO:  [SI:N/s] viscous damping of axial deformation
-    Real physicsShearDamping;                     //!< AUTO:  [SI:N/s] viscous damping of shear deformation
+    Real physicsLength;                           //!< AUTO: must be >= 0;  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
+    Real physicsMassPerLength;                    //!< AUTO: must be >= 0;  [SI:kg/m] mass per length of beam
+    Real physicsCrossSectionInertia;              //!< AUTO: must be >= 0;  [SI:kg m] cross section mass moment of inertia; inertia acting against rotation of cross section
+    Real physicsBendingStiffness;                 //!< AUTO: must be >= 0;  [SI:Nm\f$^2\f$] bending stiffness of beam; the bending moment is \f$m = EI (\kappa - \kappa_0)\f$, in which \f$\kappa\f$ is the material measure of curvature
+    Real physicsAxialStiffness;                   //!< AUTO: must be >= 0;  [SI:N] axial stiffness of beam; the axial force is \f$f_{ax} = EA (\varepsilon -\varepsilon_0)\f$, in which \f$\varepsilon\f$ is the axial strain
+    Real physicsShearStiffness;                   //!< AUTO: must be >= 0;  [SI:N] effective shear stiffness of beam, including stiffness correction
+    Real physicsBendingDamping;                   //!< AUTO: must be >= 0;  [SI:Nm\f$^2\f$/s] viscous damping of bending deformation; the additional virtual work due to damping is \f$\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx\f$
+    Real physicsAxialDamping;                     //!< AUTO: must be >= 0;  [SI:N/s] viscous damping of axial deformation
+    Real physicsShearDamping;                     //!< AUTO: must be >= 0;  [SI:N/s] viscous damping of shear deformation
     Real physicsReferenceCurvature;               //!< AUTO:  [SI:1/m] reference curvature of beam (pre-deformation) of beam
     bool includeReferenceRotations;               //!< AUTO: if True, rotation of the cross section at the nodes includes node reference rotations (within referenceCoordinates of NodeRigidBody2D), which are used for the computation of bending strains (this means that a pre-curved beam is stress-free); if False, the reference rotation of the cross section is orthogonal to the reference slope vector. This allows to easily share nodes among several beams with different reference cross section orientation (i.e., only the change of rotation counts).
     //! AUTO: default constructor with parameter initialization

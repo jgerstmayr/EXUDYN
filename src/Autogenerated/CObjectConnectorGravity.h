@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  19:35:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,9 +29,9 @@ class CObjectConnectorGravityParameters // AUTO:
 public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector
     Real gravitationalConstant;                   //!< AUTO: gravitational constant [SI:m\f$^3\f$kg\f$^{-1}\f$s\f$^{-2}\f$)]; while not recommended, a negative constant gan represent a repulsive force
-    Real mass0;                                   //!< AUTO: mass [SI:kg] of object attached to marker \f$m0\f$
-    Real mass1;                                   //!< AUTO: mass [SI:kg] of object attached to marker \f$m1\f$
-    Real minDistanceRegularization;               //!< AUTO: distance [SI:m] at which a regularization is added in order to avoid singularities, if objects come close
+    Real mass0;                                   //!< AUTO: must be >= 0; mass [SI:kg] of object attached to marker \f$m0\f$
+    Real mass1;                                   //!< AUTO: must be >= 0; mass [SI:kg] of object attached to marker \f$m1\f$
+    Real minDistanceRegularization;               //!< AUTO: must be >= 0; distance [SI:m] at which a regularization is added in order to avoid singularities, if objects come close
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorGravityParameters()

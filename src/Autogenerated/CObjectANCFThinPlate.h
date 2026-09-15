@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  19:35:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,7 +28,7 @@ class CObjectANCFThinPlateParameters // AUTO:
 {
 public: // AUTO:
     Vector physicsThickness;                      //!< AUTO:  [SI:m] thickness of plate either provided as scalar or as vector (4 values, same order as local element node numbers) values that are linearly interpolated from nodal values; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients
-    Real physicsDensity;                          //!< AUTO:  [SI:kg/m\f$^3\f$] density of the plate, possibly averaged over thickness
+    Real physicsDensity;                          //!< AUTO: must be >= 0;  [SI:kg/m\f$^3\f$] density of the plate, possibly averaged over thickness
     Real physicsMassProportionalDamping;          //!< AUTO: mass-proportional damping coefficient \f$\alpha\f$ [SI:1/s]; adds massmatrix proportional damping forces \f$\fv_d = \alpha \Mm \dot{\qv}\f$
     Matrix3DList physicsStrainCoefficients;       //!< AUTO:  [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients
     Matrix3DList physicsCurvatureCoefficients;    //!< AUTO:  [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients
