@@ -2,7 +2,7 @@
 # Johannes Gerstmayr
 # date = 2026-09-15
 # release = 1.11
-# version = 75
+# version = 76
 # line format: number, issue name, issue author, status, description, type, priority, date raised, deadline, date resolved, resolved author, file(name), line(number), notes
 # type: BUG, NEW FEATURE, CHANGE, IDEA, EXTENSION, NEW TEST, FIX
 # status: RAISED, RESOLVED, WORK, TESTING(=currently tested)
@@ -2453,3 +2453,4 @@
 2442,basicUtilities: numpy-era vector helpers removed,Claude-JG,RESOLVED, step 107a: NormL2 VSum VAdd VSub VMult ScalarMult Vec2Tilde Tilde2Vec DiagonalMatrix eye2D eye3D removed; uses in package/TestModels/Examples replaced by numpy (np.linalg.norm; np.sum; array arithmetic; np.dot; Skew); Normalize kept (zero vector allowed) and implemented with numpy; basicUtilities imports numpy,CHANGE,,2026-09-15,2027-03-14,2026-09-15 18:02,Claude-JG,,,
 2443,utilities.py: deprecated GraphicsData aliases removed; functions moved to basicUtilities/advancedUtilities/mainSystemExtensions,Claude-JG,RESOLVED, step 107b: 23 GraphicsData... aliases removed (uses switched to exudyn.graphics); @extends functions to mainSystemExtensions; TCP/IP to advancedUtilities; all other functions to basicUtilities (now imports exudyn); utilities.py only re-exports,CHANGE,,2026-09-15,2027-03-14,2026-09-15 18:47,Claude-JG,,,
 2444,python modules: __all__ in every module; star imports no longer export helper imports,Claude-JG,RESOLVED, step 107c: __all__ in 35 modules (itemInterface by its emitter) from the rule in tools/generators/publicApi.py; tools/checkAll.py --check/--write and GitLab job check_all; utilities.py composes the lists; Examples/TestModels that used np sin cos sqrt copy exudyn from star imports import them explicitly (50 files),CHANGE,,2026-09-15,2027-03-14,2026-09-15 18:58,Claude-JG,,,
+2445,Structure members: SFPybind on almost every member; invert to SFNoPybind,Claude-JG,RESOLVED, SFPybind (P) is set on 845 of 883 structure members; the 38 without it are solver internals (matrix links; temporary data; file streams; cSolver links and their accessors). Maintainer request 2026-09-15: invert the flag so only the exceptions are marked. Measured first by forcing P on all members: 9 generated files change (pybind; stubs; dictionaries; public/protected in CSolverStructures.h; docs); so the flag has an effect for both parameters and functions and must stay as the inverted flag.,CHANGE,,2026-09-15,2027-03-14,2026-09-15 19:59,Claude-JG,definitions/definitionTypes.py,,step 110: SFNoPybind on 38 members replaces SFPybind on 845; effective flags identical; regeneration no-op

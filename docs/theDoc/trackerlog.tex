@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.75.dev1, 
+  \item Exudyn version = 1.11.76.dev1, 
   \item last change =  2026-09-15, 
-  \item Number of issues = 2445, 
-  \item Number of resolved issues = 2148 (75 in current version), 
+  \item Number of issues = 2446, 
+  \item Number of resolved issues = 2149 (76 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.76}:  resolved Issue 2445: {\bf Structure members: SFPybind on almost every member; invert to SFNoPybind}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: SFPybind (P) is set on 845 of 883 structure members; the 38 without it are solver internals (matrix links; temporary data; file streams; cSolver links and their accessors). Maintainer request 2026-09-15: invert the flag so only the exceptions are marked. Measured first by forcing P on all members: 9 generated files change (pybind; stubs; dictionaries; public/protected in CSolverStructures.h; docs); so the flag has an effect for both parameters and functions and must stay as the inverted flag.}
+    \item {\bf notes: step 110: SFNoPybind on 38 members replaces SFPybind on 845; effective flags identical; regeneration no-op}
+    \item   date resolved: {\bf 2026-09-15 19:59},
+date raised: 2026-09-15 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.75}:  resolved Issue 2409: {\bf the constrained parameter types PReal UReal PInt UInt are lost at the C++ boundary}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

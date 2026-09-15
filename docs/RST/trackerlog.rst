@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.75.dev1, 
++  Exudyn version = 1.11.76.dev1, 
 +  last change =  2026-09-15, 
-+  Number of issues = 2445, 
-+  Number of resolved issues = 2148 (75 in current version), 
++  Number of issues = 2446, 
++  Number of resolved issues = 2149 (76 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.76: resolved Issue 2445: Structure members: SFPybind on almost every member; invert to SFNoPybind (change)
+    - issue author: Claude-JG
+    - description:  SFPybind (P) is set on 845 of 883 structure members; the 38 without it are solver internals (matrix links; temporary data; file streams; cSolver links and their accessors). Maintainer request 2026-09-15: invert the flag so only the exceptions are marked. Measured first by forcing P on all members: 9 generated files change (pybind; stubs; dictionaries; public/protected in CSolverStructures.h; docs); so the flag has an effect for both parameters and functions and must stay as the inverted flag.
+    - **notes:** step 110: SFNoPybind on 38 members replaces SFPybind on 845; effective flags identical; regeneration no-op
+    - date resolved: **2026-09-15 19:59**\ , date raised: 2026-09-15 
+    - resolved by: Claude-JG
  * Version 1.11.75: resolved Issue 2409: the constrained parameter types PReal UReal PInt UInt are lost at the C++ boundary (extension)
     - issue author: Claude-JG
     - description:  PReal, UReal, PInt and UInt exist so that a bad parameter fails where the item is created - in itemInterface, through the generated CheckForValid\* guards - instead of surfacing later as a division by zero or a bad size deep in the solver. But typeConversion in pythonAutoGenerateObjects.py:1801 maps all of them onto plain Real resp. Index, so in the C++ core the intent is gone and a reader of the header cannot tell a positive-only quantity from any other Real. Proposal: add typedefs (PReal -> Real, UReal -> Real, PInt -> Index, UInt -> Index) and emit the constrained name into the generated C++, so the documentation value survives into the core. Purely additive; no behaviour change. Raised on maintainer request during revision plan step 31b.

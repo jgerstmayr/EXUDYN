@@ -582,7 +582,8 @@ SFNoDictType         = 'D'   #no dictionary with type info - NOTE: the legend gi
 SFReturnCopy         = 'V'   #return value policy: copy
 SFPybindArgs         = 'G'   #add args for pybind
 SFConst              = 'C'   #const function
-SFPybind             = 'P'   #write the pybind11 interface
+SFNoPybind           = 'N'   #not in the Python interface (pybind11, stubs, dictionaries, docs); members
+                             #without it are in the interface - the generators read that as 'P' (step 110)
 SFDeprecated         = 'X'   #deprecated; the description links to the relocated value
 
 class Deprecated:

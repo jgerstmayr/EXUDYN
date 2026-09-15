@@ -175,9 +175,12 @@ def IsVirtualFunction(member):
 
 
 def HasFlag(member, letter):
-    """a flag of cFlags: SFPybind 'P', SFConst 'C', SFPybindArgs 'G', SFReturnCopy 'V', SFNoDictType 'D',
-    SFDeprecated 'X'"""
-    return letter in (member.get('cFlags', '') or '')
+    """a flag of cFlags: SFConst 'C', SFPybindArgs 'G', SFReturnCopy 'V', SFNoDictType 'D', SFDeprecated
+    'X'; 'P' (in the Python interface) is the absence of SFNoPybind 'N' (step 110)"""
+    flags = member.get('cFlags', '') or ''
+    if letter == 'P':
+        return 'N' not in flags
+    return letter in flags
 
 
 def IsDeclarationOnly(member):

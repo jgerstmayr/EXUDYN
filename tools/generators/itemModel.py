@@ -308,8 +308,11 @@ def Flags(member, source, structureClassNames):
             flags = flags.replace('n', '')
         else:
             flags += 'I'
-    elif str(member.get('type', '')) in structureClassNames:
-        flags = flags.replace('P', 'PS', 1) if 'P' in flags else 'S' + flags
+    else:
+        if 'N' not in flags:
+            flags = 'P' + flags  #SFNoPybind 'N' inverts P (step 110); 'N' stays, structureModel.HasFlag reads it
+        if str(member.get('type', '')) in structureClassNames:
+            flags = flags.replace('P', 'PS', 1) if 'P' in flags else 'S' + flags
     return flags
 
 

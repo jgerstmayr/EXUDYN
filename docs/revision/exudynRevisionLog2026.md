@@ -2910,6 +2910,27 @@ of the member comment instead.
   `@date` lines removed, is empty - no code changed.
 - Checked: regeneration, wheel build, full suite PASSED.
 
+<a id="step-110"></a>
+
+### Step 110 - `SFPybind` inverted to `SFNoPybind`
+
+**DONE 2026-09-15** (#2445, maintainer request).
+
+`SFPybind` ('P') was set on 845 of the 883 structure members. The maintainer suspected it had no
+effect for `StructureFunction`s; measured by forcing 'P' on every member and regenerating: 9
+generated files change - pybind bindings of parameters *and* functions (`SolverLocalData` matrix
+links, `SolverFileData`, `cSolver`, `GetCSolver`, ...), `DictionariesGetSet.h`, public instead of
+protected members in `CSolverStructures.h`, the `.pyi` stubs and the docs (`SolverFileData` would
+get a section). So the flag matters, and the 38 exceptions are real solver internals.
+
+- `definitionTypes.py`: `SFPybind` removed, `SFNoPybind = 'N'` added. The 38 members without 'P'
+  got `cFlags=SFNoPybind` (after `type=`); `SFPybind` removed from the 845 others.
+- The generators still read 'P': `structureModel.HasFlag(member, 'P')` is `'N' not in cFlags`, and
+  `itemModel.Flags` prepends 'P' to the record flags unless 'N' is present - the same inversion
+  items already have with `n`/'I'. 'N' stays in the flags so both paths agree.
+- Checked: the effective flags of all 883 members (every letter through `HasFlag`) are identical
+  before and after; regeneration is a no-op; wheel, full suite PASSED.
+
 <a id="api-changes-v2"></a>
 
 ### API changes for the v2.0 release notes
