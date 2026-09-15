@@ -74,22 +74,25 @@ AddEdgesAndSmoothenNormals = exudyn.graphics.AddEdgesAndSmoothenNormals
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#**function: creates a new marker for body with bodyNumber using another marker existingMarker, such that the new marker has the same reference position as the existing marker, working for MarkerBodyPosition (no rotations included); this alleviates creation of markers and calculation of localPosition
-#**input: 
-#  mbs: multibody system where new marker is added to
-#  bodyNumber: body where new marker shall be attached to 
-#  existingMarker: marker number which serves as a reference
-#  show: if True, marker is shown
-#**output: returns marker number of new marker
-#**example:
-# #oBody0 = mbs.CreateRigidBody(...)
-# #oBody1 = mbs.CreateRigidBody(...)
-# 
-# marker0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oBody0,localPosition=[1,0,0]))
-# 
-# #create joint from one marker (with rotation) and other body
-# mbs.AddObject(SphericalJoint(markerNumbers=[marker0, GetOtherMarker(mbs, oBody1, marker0)]))
 def GetOtherMarker(mbs, bodyNumber, existingMarker, show=True):
+    """creates a new marker for body with bodyNumber using another marker existingMarker, such that the new marker has the same reference position as the existing marker, working for MarkerBodyPosition (no rotations included); this alleviates creation of markers and calculation of localPosition
+
+    Args:
+        mbs: multibody system where new marker is added to
+        bodyNumber: body where new marker shall be attached to
+        existingMarker: marker number which serves as a reference
+        show: if True, marker is shown
+
+    Returns:
+        returns marker number of new marker
+
+    Example:
+        #oBody0 = mbs.CreateRigidBody(...)
+        #oBody1 = mbs.CreateRigidBody(...)
+        marker0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oBody0,localPosition=[1,0,0]))
+        #create joint from one marker (with rotation) and other body
+        mbs.AddObject(SphericalJoint(markerNumbers=[marker0, GetOtherMarker(mbs, oBody1, marker0)]))
+    """
     #reference position and rotation of body:
     pRefBody = mbs.GetObjectOutputBody(bodyNumber,exudyn.OutputVariableType.Position,
                                        localPosition=[0,0,0],
@@ -110,30 +113,33 @@ def GetOtherMarker(mbs, bodyNumber, existingMarker, show=True):
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-#**function: creates input args for joints, based on an exiting marker (markerNumber, may be rigid or flex body), with optional existing rotationMarker and uses another rigid body (given as bodyNumber) to create a new MarkerBodyRigid and rotationMarker; this alleviates creation of joint args, see the example; inputs are either markerNumber0 [, rotationMarker0], bodyNumber1 OR markerNumber1 [, rotationMarker1], bodyNumber0
-#**input: 
-#  mbs: multibody system where new marker is added to
-#  markerNumber0: markerNumber of existing rigid body marker
-#  markerNumber1: markerNumber of existing rigid body marker
-#  rotationMarker0: joint marker rotation matrix for markerNumber0 (must be MarkerBodyRigid)
-#  rotationMarker1: joint marker rotation matrix for markerNumber1 (must be MarkerBodyRigid)
-#  bodyNumber0: existing body used to create new marker
-#  bodyNumber1: existing body used to create new marker
-#**output: returns dict with 'markerNumbers' list, 'rotationMarker0' and 'rotationMarker1', ready to be used as args
-#**example:
-# #oBody0 = mbs.CreateRigidBody(...)
-# #oBody1 = mbs.CreateRigidBody(...)
-# 
-# marker0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oBody0,localPosition=[1,0,0]))
-# rotM0 = RotationMatrixX(0.5*pi)
-# 
-# #create joint from one marker (with rotation) and other body
-# mbs.AddObject(RevoluteJointZ(**GetJointArgs(mbs, markerNumber0=marker0, 
-#                                             rotationMarker0=rotM0, 
-#                                             bodyNumber1=oBody1)
 def GetJointArgs(mbs, markerNumber0=None, markerNumber1=None, 
                  rotationMarker0=None, rotationMarker1=None, 
                  bodyNumber0=None, bodyNumber1=None):
+    """creates input args for joints, based on an exiting marker (markerNumber, may be rigid or flex body), with optional existing rotationMarker and uses another rigid body (given as bodyNumber) to create a new MarkerBodyRigid and rotationMarker; this alleviates creation of joint args, see the example; inputs are either markerNumber0 [, rotationMarker0], bodyNumber1 OR markerNumber1 [, rotationMarker1], bodyNumber0
+
+    Args:
+        mbs: multibody system where new marker is added to
+        markerNumber0: markerNumber of existing rigid body marker
+        markerNumber1: markerNumber of existing rigid body marker
+        rotationMarker0: joint marker rotation matrix for markerNumber0 (must be MarkerBodyRigid)
+        rotationMarker1: joint marker rotation matrix for markerNumber1 (must be MarkerBodyRigid)
+        bodyNumber0: existing body used to create new marker
+        bodyNumber1: existing body used to create new marker
+
+    Returns:
+        returns dict with 'markerNumbers' list, 'rotationMarker0' and 'rotationMarker1', ready to be used as args
+
+    Example:
+        #oBody0 = mbs.CreateRigidBody(...)
+        #oBody1 = mbs.CreateRigidBody(...)
+        marker0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oBody0,localPosition=[1,0,0]))
+        rotM0 = RotationMatrixX(0.5*pi)
+        #create joint from one marker (with rotation) and other body
+        mbs.AddObject(RevoluteJointZ(**GetJointArgs(mbs, markerNumber0=marker0,
+                                                    rotationMarker0=rotM0,
+                                                    bodyNumber1=oBody1)
+    """
     rotationMarkerThis = np.eye(3)
     if markerNumber0 is not None:
         existingMarker = markerNumber0
@@ -184,13 +190,17 @@ def GetJointArgs(mbs, markerNumber0=None, markerNumber1=None,
 
 
 
-#**function: function to hide all objects in mbs except for those listed in objectNumbers
-#**input: 
-#  mbs: mbs containing object
-#  objectNumbers: integer object number or list of object numbers to be shown; if empty list [], then all objects are shown
-#  showOthers: if True, then all other objects are shown again
-#**output: changes all colors in mbs, which is NOT reversible
 def ShowOnlyObjects(mbs, objectNumbers=[], showOthers=False):
+    """function to hide all objects in mbs except for those listed in objectNumbers
+
+    Args:
+        mbs: mbs containing object
+        objectNumbers: integer object number or list of object numbers to be shown; if empty list [], then all objects are shown
+        showOthers: if True, then all other objects are shown again
+
+    Returns:
+        changes all colors in mbs, which is NOT reversible
+    """
     if not isinstance(objectNumbers,list):
         listObjects = [objectNumbers]
     else:
@@ -207,13 +217,15 @@ def ShowOnlyObjects(mbs, objectNumbers=[], showOthers=False):
     SC=mbs.GetSystemContainer()
     SC.renderer.SendRedrawSignal()
 
-#**function: highlight a certain item with number itemNumber; set itemNumber to -1 to show again all objects
-#**input: 
-#  mbs: mbs containing object
-#  itemNumbers: integer object/node/etc number to be highlighted
-#  itemType: type of items to be highlighted
-#  showNumbers: if True, then the numbers of these items are shown
 def HighlightItem(SC, mbs, itemNumber, itemType=exudyn.ItemType.Object, showNumbers=True):
+    """highlight a certain item with number itemNumber; set itemNumber to -1 to show again all objects
+
+    Args:
+        mbs: mbs containing object
+        itemNumbers: integer object/node/etc number to be highlighted
+        itemType: type of items to be highlighted
+        showNumbers: if True, then the numbers of these items are shown
+    """
     SC.visualizationSettings.interactive.highlightItemIndex = itemNumber
     SC.visualizationSettings.interactive.highlightItemType = itemType
     if showNumbers and itemType == exudyn.ItemType.Node:
@@ -251,8 +263,9 @@ def HighlightItem(SC, mbs, itemNumber, itemType=exudyn.ItemType.Object, showNumb
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#**function: internal function used for CreateDistanceSensor
 def __UFsensorDistance(mbs, t, sensorNumbers, factors, configuration):
+    """internal function used for CreateDistanceSensor
+    """
 
     generalContactIndex = int(factors[0])
     dirSensor = factors[5:8]
@@ -299,18 +312,24 @@ def __UFsensorDistance(mbs, t, sensorNumbers, factors, configuration):
 
 
 
-#**function: Add geometry for distance sensor given by points and triangles (point indices) to mbs; use a rigid body marker where the geometry is put on; 
-#           Creates a GeneralContact for efficient search on background. If you have several sets of points and trigs, first merge them or add them manually to the contact
-#**input: 
-#  mbs: MainSystem where contact is created
-#  meshPoints: list of points (3D), as returned by graphics.ToPointsAndTrigs()
-#  meshTrigs: list of trigs (3 node indices each), as returned by graphics.ToPointsAndTrigs()
-#  rigidBodyMarkerIndex: rigid body marker to which the triangles are fixed on (ground or moving object)
-#  searchTreeCellSize: size of search tree (X,Y,Z); use larger values in directions where more triangles are located
-#**output::int: returns ngc, which is the number of GeneralContact in mbs, to be used in CreateDistanceSensor(...); keep the gContact as deletion may corrupt data
-#**notes: should be used by CreateDistanceSensor(...) and AddLidar(...) for simple initialization of GeneralContact; old name: DistanceSensorSetupGeometry(...)
 @extends(exudyn.MainSystem)
 def CreateDistanceSensorGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerIndex, searchTreeCellSize=[8,8,8]):
+    """Add geometry for distance sensor given by points and triangles (point indices) to mbs; use a rigid body marker where the geometry is put on;
+    Creates a GeneralContact for efficient search on background. If you have several sets of points and trigs, first merge them or add them manually to the contact
+
+    Args:
+        mbs: MainSystem where contact is created
+        meshPoints: list of points (3D), as returned by graphics.ToPointsAndTrigs()
+        meshTrigs: list of trigs (3 node indices each), as returned by graphics.ToPointsAndTrigs()
+        rigidBodyMarkerIndex: rigid body marker to which the triangles are fixed on (ground or moving object)
+        searchTreeCellSize: size of search tree (X,Y,Z); use larger values in directions where more triangles are located
+
+    Returns:
+        :int: returns ngc, which is the number of GeneralContact in mbs, to be used in CreateDistanceSensor(...); keep the gContact as deletion may corrupt data
+
+    Note:
+        should be used by CreateDistanceSensor(...) and AddLidar(...) for simple initialization of GeneralContact; old name: DistanceSensorSetupGeometry(...)
+    """
     gContact = mbs.AddGeneralContact()
     gContact.SetFrictionPairings(0*np.eye(1)) #may not be empty
     gContact.SetSearchTreeCellSize(numberOfCells=searchTreeCellSize)
@@ -324,24 +343,6 @@ def CreateDistanceSensorGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerInde
 
     return ngc
 
-#**function: Function to create distance sensor based on GeneralContact in mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker
-#**input:
-#  mbs: the MainSystem where distance sensor is created
-#  generalContactIndex: the number of the GeneralContact object in mbs; the index of the GeneralContact object which has been added with last AddGeneralContact(...) command is generalContactIndex=mbs.NumberOfGeneralContacts()-1
-#  positionOrMarker: either a 3D position as list or np.array, or a MarkerIndex with according rigid body marker
-#  dirSensor: the direction (no need to normalize) along which the distance is measured (must not be normalized); in case of marker, the direction is relative to marker orientation if marker contains orientation (BodyRigid, NodeRigid)
-#  minDistance: the minimum distance which is accepted; smaller distance will be ignored
-#  maxDistance: the maximum distance which is accepted; items being at maxDistance or futher are ignored; if no items are found, the function returns maxDistance
-#  cylinderRadius: in case of spheres (selectedTypeIndex=ContactTypeIndex.IndexSpheresMarkerBased), a cylinder can be used which measures the shortest distance at a certain radius (geometrically interpreted as cylinder)
-#  selectedTypeIndex: either this type has default value, meaning that all items in GeneralContact are measured, or there is a specific type index, which is the only type that is considered during measurement
-#  storeInternal: like with any SensorUserFunction, setting to True stores sensor data internally
-#  fileName: if defined, recorded data of SensorUserFunction is written to specified file
-#  measureVelocity: if True, the sensor measures additionally the velocity (component 0=distance, component 1=velocity); velocity is the velocity in direction 'dirSensor' and does not account for changes in geometry, thus it may be different from the time derivative of the distance!
-#  addGraphicsObject: if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small
-#  drawDisplaced: if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position
-#  color: optional color for 'laser beam' to be drawn
-#**output::SensorIndex: creates sensor and returns according sensor number of SensorUserFunction
-#**notes: use generalContactIndex = CreateDistanceSensorGeometry(...) before to create GeneralContact module containing geometry; old name: AddDistanceSensor(...)
 @extends(exudyn.MainSystem)
 def CreateDistanceSensor(mbs, generalContactIndex,
                       positionOrMarker, dirSensor, minDistance=-1e7, 
@@ -349,6 +350,30 @@ def CreateDistanceSensor(mbs, generalContactIndex,
                       selectedTypeIndex=exudyn.ContactTypeIndex.IndexEndOfEnumList,
                       storeInternal = False, fileName = '', measureVelocity = False,
                       addGraphicsObject=False, drawDisplaced=True, color=exudyn.graphics.color.red):
+    """Function to create distance sensor based on GeneralContact in mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker
+
+    Args:
+        mbs: the MainSystem where distance sensor is created
+        generalContactIndex: the number of the GeneralContact object in mbs; the index of the GeneralContact object which has been added with last AddGeneralContact(...) command is generalContactIndex=mbs.NumberOfGeneralContacts()-1
+        positionOrMarker: either a 3D position as list or np.array, or a MarkerIndex with according rigid body marker
+        dirSensor: the direction (no need to normalize) along which the distance is measured (must not be normalized); in case of marker, the direction is relative to marker orientation if marker contains orientation (BodyRigid, NodeRigid)
+        minDistance: the minimum distance which is accepted; smaller distance will be ignored
+        maxDistance: the maximum distance which is accepted; items being at maxDistance or futher are ignored; if no items are found, the function returns maxDistance
+        cylinderRadius: in case of spheres (selectedTypeIndex=ContactTypeIndex.IndexSpheresMarkerBased), a cylinder can be used which measures the shortest distance at a certain radius (geometrically interpreted as cylinder)
+        selectedTypeIndex: either this type has default value, meaning that all items in GeneralContact are measured, or there is a specific type index, which is the only type that is considered during measurement
+        storeInternal: like with any SensorUserFunction, setting to True stores sensor data internally
+        fileName: if defined, recorded data of SensorUserFunction is written to specified file
+        measureVelocity: if True, the sensor measures additionally the velocity (component 0=distance, component 1=velocity); velocity is the velocity in direction 'dirSensor' and does not account for changes in geometry, thus it may be different from the time derivative of the distance!
+        addGraphicsObject: if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small
+        drawDisplaced: if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position
+        color: optional color for 'laser beam' to be drawn
+
+    Returns:
+        :SensorIndex: creates sensor and returns according sensor number of SensorUserFunction
+
+    Note:
+        use generalContactIndex = CreateDistanceSensorGeometry(...) before to create GeneralContact module containing geometry; old name: AddDistanceSensor(...)
+    """
     
     markerNumber = -1
     p0list = [0,0,0]
@@ -393,9 +418,12 @@ def CreateDistanceSensor(mbs, generalContactIndex,
     return sUF
 
 
-#**function: DEPRECATED: Internal SensorUserFunction, used in function AddSensorRecorder
-#**notes: Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
 def UFsensorRecord(mbs, t, sensorNumbers, factors, configuration):
+    """DEPRECATED: Internal SensorUserFunction, used in function AddSensorRecorder
+
+    Note:
+        Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
+    """
     iSensor = sensorNumbers[0]
     val = mbs.GetSensorValues(iSensor, configuration=configuration) #get all values
     if type(val) == float:# or type(x) == nd.float64:
@@ -407,16 +435,22 @@ def UFsensorRecord(mbs, t, sensorNumbers, factors, configuration):
         
     return val #return value usually not used further
 
-#**function: DEPRECATED: Add a SensorUserFunction object in order to record sensor output internally; this avoids creation of files for sensors, which can speedup and simplify evaluation in ParameterVariation and GeneticOptimization; values are stored internally in mbs.variables['sensorRecord'+str(sensorNumber)] where sensorNumber is the mbs sensor number
-#**input: 
-#  mbs: mbs containing object
-#  sensorNumber: integer sensor number to be recorded
-#  endTime: end time of simulation, as given in simulationSettings.timeIntegration.endTime 
-#  sensorsWritePeriod: as given in simulationSettings.solutionSettings.sensorsWritePeriod
-#  sensorOutputSize: size of sensor data: 3 for Displacement, Position, etc. sensors; may be larger for RotationMatrix or Coordinates sensors; check this size by calling mbs.GetSensorValues(sensorNumber)
-#**output: adds an according SensorUserFunction sensor to mbs; returns new sensor number; during initialization a new numpy array is allocated in  mbs.variables['sensorRecord'+str(sensorNumber)] and the information is written row-wise: [time, sensorValue1, sensorValue2, ...]
-#**notes: Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
 def AddSensorRecorder(mbs, sensorNumber, endTime, sensorsWritePeriod, sensorOutputSize=3):
+    """DEPRECATED: Add a SensorUserFunction object in order to record sensor output internally; this avoids creation of files for sensors, which can speedup and simplify evaluation in ParameterVariation and GeneticOptimization; values are stored internally in mbs.variables['sensorRecord'+str(sensorNumber)] where sensorNumber is the mbs sensor number
+
+    Args:
+        mbs: mbs containing object
+        sensorNumber: integer sensor number to be recorded
+        endTime: end time of simulation, as given in simulationSettings.timeIntegration.endTime
+        sensorsWritePeriod: as given in simulationSettings.solutionSettings.sensorsWritePeriod
+        sensorOutputSize: size of sensor data: 3 for Displacement, Position, etc. sensors; may be larger for RotationMatrix or Coordinates sensors; check this size by calling mbs.GetSensorValues(sensorNumber)
+
+    Returns:
+        adds an according SensorUserFunction sensor to mbs; returns new sensor number; during initialization a new numpy array is allocated in  mbs.variables['sensorRecord'+str(sensorNumber)] and the information is written row-wise: [time, sensorValue1, sensorValue2, ...]
+
+    Note:
+        Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
+    """
     exudyn.Print('WARNING: AddSensorRecorder is DEPRECATED, use sensors and set storeInternal=True to achieve similar functionality')
     nSteps = int(endTime/sensorsWritePeriod)
     mbs.variables['sensorRecord'+str(sensorNumber)] = np.zeros((nSteps+1,1+sensorOutputSize)) #time+3 sensor values
@@ -435,15 +469,19 @@ def AddSensorRecorder(mbs, sensorNumber, endTime, sensorsWritePeriod, sensorOutp
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #++++++++++++++++++++++++++++++++++++++++++++
-#**function: read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary:
-#**input: 
-#  fileName: string containing directory and filename of stored coordinatesSolutionFile
-#  saveMode: if True, it loads lines directly to load inconsistent lines as well; use this for huge files (>2GB); is slower but needs less memory!
-#  verbose: if True, some information is written when importing file (use for huge files to track progress)
-#  maxRows: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows
-#  hasHeader: set to False, if file is expected to have no header; if False, then some error checks related to file header are not performed
-#**output: dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], 'nColumns': the number of data columns and 'nRows': the number of data rows
 def LoadSolutionFile(fileName, safeMode=False, maxRows=-1, verbose=True, hasHeader=True):
+    """read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary:
+
+    Args:
+        fileName: string containing directory and filename of stored coordinatesSolutionFile
+        saveMode: if True, it loads lines directly to load inconsistent lines as well; use this for huge files (>2GB); is slower but needs less memory!
+        verbose: if True, some information is written when importing file (use for huge files to track progress)
+        maxRows: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows
+        hasHeader: set to False, if file is expected to have no header; if False, then some error checks related to file header are not performed
+
+    Returns:
+        dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], 'nColumns': the number of data columns and 'nRows': the number of data rows
+    """
 
     #check if is binary or ASCII
     isBinary = False
@@ -573,40 +611,48 @@ def LoadSolutionFile(fileName, safeMode=False, maxRows=-1, verbose=True, hasHead
 #helper functions for reading binary files:
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: simple conversion of int8 arrays into strings (not highly efficient, so use only for short strings)
 def NumpyInt8ArrayToString(npArray):
+    """simple conversion of int8 arrays into strings (not highly efficient, so use only for short strings)
+    """
     s=''
     for x in npArray:
         s+=chr(x)
     return s
 
-#**function: read single Index from current file position in binary solution file
 def BinaryReadIndex(file, intType):
+    """read single Index from current file position in binary solution file
+    """
     data = np.fromfile(file, dtype=intType, count=1)
     if data.size != 1: return [0,True] #end of file
     return [data[0], False]
 
-#**function: read single Real from current file position in binary solution file
 def BinaryReadReal(file, realType):
+    """read single Real from current file position in binary solution file
+    """
     data = np.fromfile(file, dtype=realType, count=1)
     if data.size != 1: return [0,True] #end of file
     return [data[0], False]
 
-#**function: read string from current file position in binary solution file
 def BinaryReadString(file, intType):
+    """read string from current file position in binary solution file
+    """
     dataLength = np.fromfile(file, dtype=intType, count=1)[0]
     data = np.fromfile(file, dtype=np.byte, count=dataLength)
     return [NumpyInt8ArrayToString(data), False]
 
-#**function: read Index array from current file position in binary solution file
 def BinaryReadArrayIndex(file, intType):
+    """read Index array from current file position in binary solution file
+    """
     dataLength = np.fromfile(file, dtype=intType, count=1)[0]
     data = np.fromfile(file, dtype=intType, count=dataLength)
     return [data, False]
 
-#**function: read Real vector from current file position in binary solution file
-#**output: return data as numpy array, or False if no data read
 def BinaryReadRealVector(file, intType, realType):
+    """read Real vector from current file position in binary solution file
+
+    Returns:
+        return data as numpy array, or False if no data read
+    """
     sizeData = np.fromfile(file, dtype=intType, count=1)
     if sizeData.size != 1: return [[],True] #end of file
     dataLength = sizeData[0]
@@ -616,13 +662,17 @@ def BinaryReadRealVector(file, intType, realType):
 
 
 #++++++++++++++++++++++++++++++++++++++++++++
-#**function: read BINARY coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary
-#**input: 
-#  fileName: string containing directory and filename of stored coordinatesSolutionFile
-#  verbose: if True, some information is written when importing file (use for huge files to track progress)
-#  maxRows: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows
-#**output: dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], 'nColumns': the number of data columns and 'nRows': the number of data rows
 def LoadBinarySolutionFile(fileName, maxRows=-1, verbose=True):
+    """read BINARY coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary
+
+    Args:
+        fileName: string containing directory and filename of stored coordinatesSolutionFile
+        verbose: if True, some information is written when importing file (use for huge files to track progress)
+        maxRows: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows
+
+    Returns:
+        dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], 'nColumns': the number of data columns and 'nRows': the number of data rows
+    """
     exudyn.Print('verbose=',verbose)
     with open(fileName, 'r') as file:
         data = np.fromfile(file, dtype=np.byte, count=6)
@@ -801,13 +851,17 @@ def LoadBinarySolutionFile(fileName, maxRows=-1, verbose=True):
 
 
 #++++++++++++++++++++++++++++++++++++++++++++
-#**function: recover solution file with last row not completely written (e.g., if crashed, interrupted or no flush file option set)
-#**input: 
-#  fileName: string containing directory and filename of stored coordinatesSolutionFile
-#  newFileName: string containing directory and filename of new coordinatesSolutionFile
-#  verbose: 0=no information, 1=basic information, 2=information per row
-#**output: writes only consistent rows of file to file with name newFileName
 def RecoverSolutionFile(fileName, newFileName, verbose=0):
+    """recover solution file with last row not completely written (e.g., if crashed, interrupted or no flush file option set)
+
+    Args:
+        fileName: string containing directory and filename of stored coordinatesSolutionFile
+        newFileName: string containing directory and filename of new coordinatesSolutionFile
+        verbose: 0=no information, 1=basic information, 2=information per row
+
+    Returns:
+        writes only consistent rows of file to file with name newFileName
+    """
     #read file header
     fileRead=open(fileName,'r') 
     fileLines = []
@@ -856,14 +910,18 @@ def RecoverSolutionFile(fileName, newFileName, verbose=0):
                 cnt += 1
 
 #++++++++++++++++++++++++++++++++++++++++++++
-#**function: recover initial coordinates, time, etc. from given restart file
-#**input: 
-#  mbs: MainSystem to be operated with
-#  simulationSettings: simulationSettings which is updated and shall be used afterwards for SolveDynamic(...) or SolveStatic(...)
-#  restartFileName: string containing directory and filename of stored restart file, as given in solutionSettings.restartFileName
-#  verbose: False=no information, True=basic information
-#**output: modifies simulationSettings and sets according initial conditions in mbs
 def InitializeFromRestartFile(mbs, simulationSettings, restartFileName, verbose=True):
+    """recover initial coordinates, time, etc. from given restart file
+
+    Args:
+        mbs: MainSystem to be operated with
+        simulationSettings: simulationSettings which is updated and shall be used afterwards for SolveDynamic(...) or SolveStatic(...)
+        restartFileName: string containing directory and filename of stored restart file, as given in solutionSettings.restartFileName
+        verbose: False=no information, True=basic information
+
+    Returns:
+        modifies simulationSettings and sets according initial conditions in mbs
+    """
     raise ValueError('InitializeFromRestartFile: not fully implemented')
 
     fileRead=open(restartFileName,'r') 
@@ -928,8 +986,9 @@ def InitializeFromRestartFile(mbs, simulationSettings, restartFileName, verbose=
     if verbose: exudyn.Print('\nInitializeFromRestartFile finished\n')
     
 #++++++++++++++++++++++++++++++++++++++++++++
-#**function: load selected row of solution dictionary (previously loaded with LoadSolutionFile) into specific state; flag sendRedrawSignal is only used if configuration = exudyn.ConfigurationType.Visualization
 def SetSolutionState(mbs, solution, row, configuration=exudyn.ConfigurationType.Current, sendRedrawSignal=True):
+    """load selected row of solution dictionary (previously loaded with LoadSolutionFile) into specific state; flag sendRedrawSignal is only used if configuration = exudyn.ConfigurationType.Visualization
+    """
     if row < solution['nRows']:
         rowData = solution['data'][row]
         #cols = solution['columnsExported']
@@ -953,16 +1012,20 @@ def SetSolutionState(mbs, solution, row, configuration=exudyn.ConfigurationType.
         exudyn.Print("ERROR in SetVisualizationState: invalid row (out of range)")
 
 #++++++++++++++++++++++++++++++++++++++++++++
-#**function: This function is not further maintaned and should only be used if you do not have tkinter (like on some MacOS versions); use exudyn.interactive.SolutionViewer() instead! AnimateSolution consecutively load the rows of a solution file and visualize the result
-#**input: 
-#  mbs: the system used for animation
-#  solution: solution dictionary previously loaded with LoadSolutionFile; will be played from first to last row
-#  rowIncrement: can be set larger than 1 in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame)
-#  timeout: in seconds is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second
-#  createImages: creates consecutively images from the animation, which can be converted into an animation
-#  runLoop: if True, the animation is played in a loop until 'q' is pressed in render window
-#**output: renders the scene in mbs and changes the visualization state in mbs continuously
 def AnimateSolution(mbs, solution, rowIncrement = 1, timeout=0.04, createImages = False, runLoop = False):
+    """This function is not further maintaned and should only be used if you do not have tkinter (like on some MacOS versions); use exudyn.interactive.SolutionViewer() instead! AnimateSolution consecutively load the rows of a solution file and visualize the result
+
+    Args:
+        mbs: the system used for animation
+        solution: solution dictionary previously loaded with LoadSolutionFile; will be played from first to last row
+        rowIncrement: can be set larger than 1 in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame)
+        timeout: in seconds is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second
+        createImages: creates consecutively images from the animation, which can be converted into an animation
+        runLoop: if True, the animation is played in a loop until 'q' is pressed in render window
+
+    Returns:
+        renders the scene in mbs and changes the visualization state in mbs continuously
+    """
     SC = mbs.GetSystemContainer()
     nRows = solution['nRows']
     if nRows == 0:
@@ -990,29 +1053,33 @@ def AnimateSolution(mbs, solution, rowIncrement = 1, timeout=0.04, createImages 
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph; the graph visualization uses randomizer, which results in different graphs after every run!
-#**input:
-#   mbs: MainSystem to be operated with
-#   showLoads: toggle appearance of loads in mbs
-#   showSensors: toggle appearance of sensors in mbs
-#   useItemNames: if True, object names are shown instead of basic object types (Node, Load, ...)
-#   useItemTypes: if True, object type names (MassPoint, JointRevolute, ...) are shown instead of basic object types (Node, Load, ...); Note that Node, Object, is omitted at the beginning of itemName (as compared to theDoc.pdf); item classes become clear from the legend
-#   addItemTypeNames: if True, type nymes (Node, Load, etc.) are added
-#   multiLine: if True, labels are multiline, improving readability; ignored if showGraph = False
-#   fontSizeFactor: use this factor to scale fonts, allowing to fit larger graphs on the screen with values < 1
-#   showLegend: shows legend for different item types
-#   layoutDistanceFactor: this factor influences the arrangement of labels; larger distance values lead to circle-like results
-#   layoutIterations: more iterations lead to better arrangement of the layout, but need more time for larger systems (use 1000-10000 to get good results)
-#   tightLayout: if True, uses matplotlib plt.tight\_layout() which may raise warning
-#   showGraph: if True, graph is plotted with matplotlib
-#   addItemData: if True, specific data is added to the graph nodes, to be used for deeper analysis of system graphs
-#   addAnnotations: add data node graphs (not shown), except for graphics data, item numbers, names and types (which are already available in graph data or edges)
-#**output::[Any, Any, Any]: returns [networkx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw\_networkx\_labels(...)
 @extends(exudyn.MainSystem)
 def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False, 
                     useItemTypes = False, addItemTypeNames=True, multiLine=True, fontSizeFactor=1., 
                     layoutDistanceFactor=3., layoutIterations=100, showLegend = True, tightLayout = True, 
                     showGraph = True, addItemData = False, addAnnotations = False):
+    r"""helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph; the graph visualization uses randomizer, which results in different graphs after every run!
+
+    Args:
+        mbs: MainSystem to be operated with
+        showLoads: toggle appearance of loads in mbs
+        showSensors: toggle appearance of sensors in mbs
+        useItemNames: if True, object names are shown instead of basic object types (Node, Load, ...)
+        useItemTypes: if True, object type names (MassPoint, JointRevolute, ...) are shown instead of basic object types (Node, Load, ...); Note that Node, Object, is omitted at the beginning of itemName (as compared to theDoc.pdf); item classes become clear from the legend
+        addItemTypeNames: if True, type nymes (Node, Load, etc.) are added
+        multiLine: if True, labels are multiline, improving readability; ignored if showGraph = False
+        fontSizeFactor: use this factor to scale fonts, allowing to fit larger graphs on the screen with values < 1
+        showLegend: shows legend for different item types
+        layoutDistanceFactor: this factor influences the arrangement of labels; larger distance values lead to circle-like results
+        layoutIterations: more iterations lead to better arrangement of the layout, but need more time for larger systems (use 1000-10000 to get good results)
+        tightLayout: if True, uses matplotlib plt.tight\_layout() which may raise warning
+        showGraph: if True, graph is plotted with matplotlib
+        addItemData: if True, specific data is added to the graph nodes, to be used for deeper analysis of system graphs
+        addAnnotations: add data node graphs (not shown), except for graphics data, item numbers, names and types (which are already available in graph data or edges)
+
+    Returns:
+        :[Any, Any, Any]: returns [networkx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw\_networkx\_labels(...)
+    """
     
     try:
         #all imports are part of anaconda (e.g. anaconda 5.2.0, python 3.6.5)
@@ -1447,8 +1514,9 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #TCP/IP functionality
-#**class: helper class for CreateTCPIPconnection and for TCPIPsendReceive
 class TCPIPdata:
+    """helper class for CreateTCPIPconnection and for TCPIPsendReceive
+    """
     def __init__(self, sendSize, receiveSize, packerSend, packerReceive, 
                   socketTCP, connection, address, lastReceiveTime):
         self.sendSize = sendSize
@@ -1461,57 +1529,61 @@ class TCPIPdata:
         self.lastReceiveTime = lastReceiveTime #usually zero; used to make substeps in mbs
         
         
-#**function: function which has to be called before simulation to setup TCP/IP socket (server) for 
-#  sending and receiving data; can be used to communicate with other Python interpreters
-#  or for communication with MATLAB/Simulink
-#**input:
-#  sendSize: number of double values to be sent to TCPIP client
-#  receiveSize: number of double values to be received from TCPIP client
-#  IPaddress: string containing IP address of client (e.g., '127.0.0.1')
-#  port: port for communication with client
-#  bigEndian: if True, it uses bigEndian, otherwise littleEndian is used for byte order
-#**output: returns information (TCPIPdata class) on socket; recommended to store this in mbs.sys['TCPIPobject']
-#**example:
-# mbs.sys['TCPIPobject'] = CreateTCPIPconnection(sendSize=3, receiveSize=2, 
-#                                                bigEndian=True, verbose=True)
-# sampleTime = 0.01 #sample time in MATLAB! must be same!
-# mbs.variables['tLast'] = 0 #in case that exudyn makes finer steps than sample time
-
-# def PreStepUserFunction(mbs, t):
-#     if t >= mbs.variables['tLast'] + sampleTime:
-#         mbs.variables['tLast'] += sampleTime
-
-#         tcp = mbs.sys['TCPIPobject']
-#         y = TCPIPsendReceive(tcp, np.array([t, np.sin(t), np.cos(t)])) #time, torque
-#         tau = y[1]
-#         exudyn.Print('tau=',tau)
-#     return True
 
 
-# try:
-#     mbs.SetPreStepUserFunction(PreStepUserFunction)
+
+
     
-#     #%%++++++++++++++++++++++++++++++++++++++++++++++++++
-#     mbs.Assemble()
-#     [...] #start renderer; simulate model
-# finally: #use this to always close connection, even in case of errors
-#     CloseTCPIPconnection(mbs.sys['TCPIPobject'])
-#
-# #*****************************************
-# #the following settings work between Python and MATLAB-Simulink (client), and gives stable results(with only delay of one step):
-# # TCP/IP Client Send:
-# #   priority = 2 (in properties)
-# #   blocking = false
-# #   Transfer Delay on (but off also works)
-# # TCP/IP Client Receive:
-# #   priority = 1 (in properties)
-# #   blocking = true
-# #   Sourec Data type = double
-# #   data size = number of double in packer
-# #   Byte order = BigEndian
-# #   timeout = 10
 def CreateTCPIPconnection(sendSize, receiveSize, IPaddress='127.0.0.1', port=52421, 
                           bigEndian=False, verbose=False):
+    """function which has to be called before simulation to setup TCP/IP socket (server) for
+    sending and receiving data; can be used to communicate with other Python interpreters
+    or for communication with MATLAB/Simulink
+
+    Args:
+        sendSize: number of double values to be sent to TCPIP client
+        receiveSize: number of double values to be received from TCPIP client
+        IPaddress: string containing IP address of client (e.g., '127.0.0.1')
+        port: port for communication with client
+        bigEndian: if True, it uses bigEndian, otherwise littleEndian is used for byte order
+
+    Returns:
+        returns information (TCPIPdata class) on socket; recommended to store this in mbs.sys['TCPIPobject']
+
+    Example:
+        mbs.sys['TCPIPobject'] = CreateTCPIPconnection(sendSize=3, receiveSize=2,
+                                                       bigEndian=True, verbose=True)
+        sampleTime = 0.01 #sample time in MATLAB! must be same!
+        mbs.variables['tLast'] = 0 #in case that exudyn makes finer steps than sample time
+        def PreStepUserFunction(mbs, t):
+            if t >= mbs.variables['tLast'] + sampleTime:
+                mbs.variables['tLast'] += sampleTime
+                tcp = mbs.sys['TCPIPobject']
+                y = TCPIPsendReceive(tcp, np.array([t, np.sin(t), np.cos(t)])) #time, torque
+                tau = y[1]
+                exudyn.Print('tau=',tau)
+            return True
+        try:
+            mbs.SetPreStepUserFunction(PreStepUserFunction)
+            #%%++++++++++++++++++++++++++++++++++++++++++++++++++
+            mbs.Assemble()
+            [...] #start renderer; simulate model
+        finally: #use this to always close connection, even in case of errors
+            CloseTCPIPconnection(mbs.sys['TCPIPobject'])
+        #*****************************************
+        #the following settings work between Python and MATLAB-Simulink (client), and gives stable results(with only delay of one step):
+        # TCP/IP Client Send:
+        #   priority = 2 (in properties)
+        #   blocking = false
+        #   Transfer Delay on (but off also works)
+        # TCP/IP Client Receive:
+        #   priority = 1 (in properties)
+        #   blocking = true
+        #   Sourec Data type = double
+        #   data size = number of double in packer
+        #   Byte order = BigEndian
+        #   timeout = 10
+    """
     import socket
     import struct
     s = ''
@@ -1532,18 +1604,22 @@ def CreateTCPIPconnection(sendSize, receiveSize, IPaddress='127.0.0.1', port=524
     return TCPIPdata(sendSize, receiveSize, packerSend, packerReceive, 
                      socketTCP, connection, address, 0.)
 
-#**function: call this function at every simulation step at which you intend to communicate with
-#  other programs via TCPIP; e.g., call this function in preStepUserFunction of a mbs model
-#**input:
-#  TCPIPobject: the object returned by CreateTCPIPconnection(...)
-#  sendData: numpy array containing data (double array) to be sent; must agree with sendSize
-#**output: returns array as received from TCPIP
-#**example:
-#mbs.sys['TCPIPobject']=CreateTCPIPconnection(sendSize=2, receiveSize=1, IPaddress='127.0.0.1')
-#y = TCPIPsendReceive(mbs.sys['TCPIPobject'], np.array([1.,2.]))
-#exudyn.Print(y)
-#
 def TCPIPsendReceive(TCPIPobject, sendData):
+    """call this function at every simulation step at which you intend to communicate with
+    other programs via TCPIP; e.g., call this function in preStepUserFunction of a mbs model
+
+    Args:
+        TCPIPobject: the object returned by CreateTCPIPconnection(...)
+        sendData: numpy array containing data (double array) to be sent; must agree with sendSize
+
+    Returns:
+        returns array as received from TCPIP
+
+    Example:
+        mbs.sys['TCPIPobject']=CreateTCPIPconnection(sendSize=2, receiveSize=1, IPaddress='127.0.0.1')
+        y = TCPIPsendReceive(mbs.sys['TCPIPobject'], np.array([1.,2.]))
+        exudyn.Print(y)
+    """
     #first send data (no other way in MATLAB):
     TCPIPobject.connection.sendall(TCPIPobject.packerSend.pack(*sendData))
 
@@ -1555,8 +1631,9 @@ def TCPIPsendReceive(TCPIPobject, sendData):
     else:
         return TCPIPobject.packerReceive.unpack(data)
 
-#**function: close a previously created TCPIP connection
 def CloseTCPIPconnection(TCPIPobject):
+    """close a previously created TCPIP connection
+    """
     TCPIPobject.connection.close()
     TCPIPobject.socket.close()
     

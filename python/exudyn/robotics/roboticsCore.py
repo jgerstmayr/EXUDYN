@@ -16,6 +16,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #constants and fixed structures:
+from exudyn.docmeta import docmeta
 import numpy as np
 
 import exudyn
@@ -84,19 +85,22 @@ dictJointType2coordinate6D = {
 #preerb.HT must be added for joint axes definitions and for currentHT
 #inertia and COM need to be converted by localHT of StdDH into ModDH configuration!!!
 
-#**class: class to define visualization of RobotLink
 class VRobotLink:
-    #**classFunction: initialize robot link with parameters, being self-explaining
-    #**input:
-    #  jointRadius: radius of joint to draw
-    #  jointWidth: length or width of joint (depending on type of joint)
-    #  showMBSjoint: if False, joint is not drawn
-    #  linkWidth: width of link for default drawing
-    #  linkColor: color of link for default drawing
-    #  showCOM: if True, center of mass is marked with cube
-    #  graphicsData: list of GraphicsData to represent link; if list is empty, link graphics will be generated from link geometry data; otherwise, drawing will be taken from graphicsData, and only showMBSjoint and showCOM flags will add additional graphics
+    """class to define visualization of RobotLink
+    """
     def __init__(self, jointRadius = 0.06, jointWidth = 0.12, linkWidth = 0.1, showMBSjoint = True, showCOM = True, 
                  linkColor = [0.4,0.4,0.4,1], graphicsData = [] ):
+        """initialize robot link with parameters, being self-explaining
+
+        Args:
+            jointRadius: radius of joint to draw
+            jointWidth: length or width of joint (depending on type of joint)
+            showMBSjoint: if False, joint is not drawn
+            linkWidth: width of link for default drawing
+            linkColor: color of link for default drawing
+            showCOM: if True, center of mass is marked with cube
+            graphicsData: list of GraphicsData to represent link; if list is empty, link graphics will be generated from link geometry data; otherwise, drawing will be taken from graphicsData, and only showMBSjoint and showCOM flags will add additional graphics
+        """
         self.jointRadius = jointRadius
         self.jointWidth = jointWidth 
         self.showMBSjoint = showMBSjoint
@@ -122,20 +126,23 @@ class VRobotLink:
         return str(self)
 
 
-#**class: class to define one link of a robot
 class RobotLink:
-    #**classFunction: initialize robot link
-    #**input:
-    #  mass: mass of robot link
-    #  COM: center of mass in link coordinate system
-    #  inertia: 3x3 matrix (list of lists / numpy array) containing inertia tensor in link coordinates, with respect to center of mass
-    #  localHT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from local joint to link coordinates; default = identity; currently, this transformation is not available in KinematicTree, therefore the link inertia and COM must be transformed accordingly
-    #  preHT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from previous link to this joint; default = identity
-    #  jointType: string containing joint type, out of: 'Rx', 'Ry', 'Rz' for revolute joints and 'Px', 'Py', 'Pz' for prismatic joints around/along the respecitive local axes
-    #  parent: for building robots as kinematic tree; use '-2' to automatically set parents for serial robot (on fixed base), use '-1' for ground-parent and any other 0-based index for connection to parent link
-    #  PDcontrol: tuple of P and D control values, defining position (rotation) proportional value P and velocitiy proportional value D
-    #  visualization: VRobotLink structure containing options for drawing of link and joints; see class VRobotLink
+    """class to define one link of a robot
+    """
     def __init__(self, mass, COM, inertia, localHT=erb.HT0(), jointType='Rz', parent=-2, preHT=erb.HT0(), PDcontrol=(None,None), visualization=VRobotLink()):
+        """initialize robot link
+
+        Args:
+            mass: mass of robot link
+            COM: center of mass in link coordinate system
+            inertia: 3x3 matrix (list of lists / numpy array) containing inertia tensor in link coordinates, with respect to center of mass
+            localHT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from local joint to link coordinates; default = identity; currently, this transformation is not available in KinematicTree, therefore the link inertia and COM must be transformed accordingly
+            preHT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from previous link to this joint; default = identity
+            jointType: string containing joint type, out of: 'Rx', 'Ry', 'Rz' for revolute joints and 'Px', 'Py', 'Pz' for prismatic joints around/along the respecitive local axes
+            parent: for building robots as kinematic tree; use '-2' to automatically set parents for serial robot (on fixed base), use '-1' for ground-parent and any other 0-based index for connection to parent link
+            PDcontrol: tuple of P and D control values, defining position (rotation) proportional value P and velocitiy proportional value D
+            visualization: VRobotLink structure containing options for drawing of link and joints; see class VRobotLink
+        """
         self.mass = mass
         self.COM = np.array(COM)
         self.inertia = np.array(inertia)
@@ -147,16 +154,19 @@ class RobotLink:
         if PDcontrol[0] != None:
             self.PDcontrol = PDcontrol
 
-    #**classFunction: set PD control values for drive of joint related to link using position-proportional value P and differential value (velocity proportional) D
     def SetPDcontrol(self, Pvalue, Dvalue):
+        """set PD control values for drive of joint related to link using position-proportional value P and differential value (velocity proportional) D
+        """
         self.PDcontrol = (Pvalue, Dvalue)
 
-    #**classFunction: check if contrl is available
     def HasPDcontrol(self):
+        """check if contrl is available
+        """
         return hasattr(self, 'PDcontrol')
 
-    #**classFunction: get PD control values
     def GetPDcontrol(self):
+        """get PD control values
+        """
         if not hasattr(self, 'PDcontrol'):
             raise ValueError('RobotLink: PDcontrol is not defined for link! Use SetPDcontrol to define parameters before using')
         return self.PDcontrol
@@ -177,19 +187,24 @@ class RobotLink:
     def __repr__(self):
         return str(self)
         
-#**class: class to define visualization of RobotTool
 class VRobotTool:
-    #**classFunction: initialize robot tool with parameters; currently only graphicsData, which is a list of GraphicsData same as in mbs Objects
+    """class to define visualization of RobotTool
+    """
     def __init__(self, graphicsData=[]):
+        """initialize robot tool with parameters; currently only graphicsData, which is a list of GraphicsData same as in mbs Objects
+        """
         self.graphicsData = copy(graphicsData)
 
-#**class: define tool of robot: containing graphics and HT (may add features in future)
 class RobotTool:
-    #**classFunction: initialize robot tool
-    #**input:
-    #  HT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from last link to tool
-    #  graphicsData: dictionary containing a list of GraphicsData, same as in exudyn Objects
+    """define tool of robot: containing graphics and HT (may add features in future)
+    """
     def __init__(self, HT=erb.HT0(), visualization=VRobotTool()):
+        """initialize robot tool
+
+        Args:
+            HT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from last link to tool
+            graphicsData: dictionary containing a list of GraphicsData, same as in exudyn Objects
+        """
         self.HT = np.array(HT)
         self.visualization = visualization
         
@@ -200,20 +215,25 @@ class RobotTool:
     def __repr__(self):
         return str(self)
 
-#**class: class to define visualization of RobotBase
 class VRobotBase:
-    #**classFunction: initialize robot base with parameters; currently only graphicsData, which is a list of GraphicsData same as in mbs Objects
+    """class to define visualization of RobotBase
+    """
     def __init__(self, graphicsData=[]):
+        """initialize robot base with parameters; currently only graphicsData, which is a list of GraphicsData same as in mbs Objects
+        """
         self.graphicsData = copy(graphicsData)
 
     
-#**class: define base of robot: containing graphics and HT (may add features in future)
 class RobotBase:
-    #**classFunction: initialize robot base
-    #**input:
-    #  HT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from world coordinates to base coordinates (changes orientation and position of robot)
-    #  graphicsData: dictionary containing a list of GraphicsData, same as in exudyn Objects
+    """define base of robot: containing graphics and HT (may add features in future)
+    """
     def __init__(self, HT=erb.HT0(), visualization=VRobotBase()):
+        """initialize robot base
+
+        Args:
+            HT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from world coordinates to base coordinates (changes orientation and position of robot)
+            graphicsData: dictionary containing a list of GraphicsData, same as in exudyn Objects
+        """
         self.HT = np.array(HT)
         self.visualization = visualization
     
@@ -230,20 +250,23 @@ buildFromDictionaryWarned = False #do not use this variable, it is for deprecati
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++  Define robot ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**class: class to define a robot
 class Robot:
-    #**classFunction: initialize robot class
-    #**input:
-    #  base: definition of base using RobotBase() class
-    #  tool: definition of tool using RobotTool() class
-    #  gravity: a list or 3D numpy array defining gravity
-    #  referenceConfiguration: a list of scalar quantities defining the parameters for reference configuration
+    """class to define a robot
+    """
     def __init__(self, 
                  gravity=[0,0,-9.81],
                  base = RobotBase(),
                  tool = RobotTool(),
                  referenceConfiguration = []
                  ):
+        """initialize robot class
+
+        Args:
+            base: definition of base using RobotBase() class
+            tool: definition of tool using RobotTool() class
+            gravity: a list or 3D numpy array defining gravity
+            referenceConfiguration: a list of scalar quantities defining the parameters for reference configuration
+        """
         self.gravity = np.array(gravity)
         self.base = base
         self.tool = tool
@@ -263,8 +286,9 @@ class Robot:
         return str(self)
         
 
-    #**classFunction: add a link to serial robot
     def AddLink(self, robotLink):
+        """add a link to serial robot
+        """
         i = len(self.links) #current index
         if len(self.referenceConfiguration) == i: #extend reference configuration, if not specified by user during initialization
             self.referenceConfiguration = np.hstack((self.referenceConfiguration,[0]))
@@ -284,37 +308,45 @@ class Robot:
 
         return i #return index of link
 
-    #**classFunction: return True, if robot is a serial robot
     def IsSerialRobot(self):
+        """return True, if robot is a serial robot
+        """
         return self.isSerialRobot
 
-    #**classFunction: return Link object of link i
     def GetLink(self, i):
+        """return Link object of link i
+        """
         return self.links[i]
 
-    #**classFunction: True if link has parent, False if not
     def HasParent(self, i):
+        """True if link has parent, False if not
+        """
         return self.links[i].parent >= 0
 
-    #**classFunction: Get index of parent link; for serial robot this is simple, but for general trees, there is a index list
     def GetParentIndex(self, i):
+        """Get index of parent link; for serial robot this is simple, but for general trees, there is a index list
+        """
         return self.links[i].parent
 
     
-    #**classFunction: return number of links
     def NumberOfLinks(self):
+        """return number of links
+        """
         return len(self.links)
 
-    #**classFunction: return base as homogeneous transformation
     def GetBaseHT(self):
+        """return base as homogeneous transformation
+        """
         return self.base.HT
 
-    #**classFunction: return base as homogeneous transformation
     def GetToolHT(self):
+        """return base as homogeneous transformation
+        """
         return self.tool.HT
     
-    #**classFunction: compute list of homogeneous transformations for every link, using current joint coordinates q; leads to different results for standard and modified DH parameters because link coordinates are different!
     def LinkHT(self, q):
+        """compute list of homogeneous transformations for every link, using current joint coordinates q; leads to different results for standard and modified DH parameters because link coordinates are different!
+        """
         HT = []
 
         # #only for serial robots:
@@ -342,8 +374,9 @@ class Robot:
         
         return HT    
 
-    #**classFunction: compute list of homogeneous transformations for every joint (after rotation), using current joint coordinates q
     def JointHT(self, q):
+        """compute list of homogeneous transformations for every joint (after rotation), using current joint coordinates q
+        """
         HT = []
 
         # #only for serial robots:
@@ -369,8 +402,9 @@ class Robot:
             HT += [copy(Tcurrent)]
         return HT
 
-    #**classFunction: compute list of  homogeneous transformations HT from base to every COM using HT list from Robot.JointHT(...)
     def COMHT(self, HT):
+        """compute list of  homogeneous transformations HT from base to every COM using HT list from Robot.JointHT(...)
+        """
         HTCOM = []
         
         for i in range(len(self.links)):
@@ -378,8 +412,9 @@ class Robot:
         
         return HTCOM
     
-    #**classFunction: compute list of joint torques for serial robot due to gravity (gravity and mass as given in robot), taking HT from Robot.JointHT()
     def StaticTorques(self,HT):
+        """compute list of joint torques for serial robot due to gravity (gravity and mass as given in robot), taking HT from Robot.JointHT()
+        """
         jointTorques = np.zeros(np.size(self.links))
     
         #compute HTs for COM
@@ -395,14 +430,18 @@ class Robot:
         return jointTorques
     
     
-    #**classFunction: compute jacobian for translation and rotation at toolPosition using joint HT; this is using the Robot functions, but is inefficient for simulation purposes
-    #**input:
-    #  HT: list of homogeneous transformations per joint , as computed by Robot.JointHT(...)
-    #  toolPosition: global position at which the jacobian is evaluated (e.g., COM); if empty [], it uses the origin of the last link
-    #  mode: 'all'...translation and rotation jacobian, 'trans'...only translation part, 'rot': only rotation part
-    #  linkIndex: link index for which the jacobian is evaluated; if linkIndex==None, it uses the last link provided in HT
-    #**output: returns jacobian with translation and rotation parts in rows (3 or 6) according to mode, and one column per HT; in the kinematic tree the columns not related to linkIndex remain zero
     def Jacobian(self, HT, toolPosition=[], mode='all', linkIndex=None):
+        """compute jacobian for translation and rotation at toolPosition using joint HT; this is using the Robot functions, but is inefficient for simulation purposes
+
+        Args:
+            HT: list of homogeneous transformations per joint , as computed by Robot.JointHT(...)
+            toolPosition: global position at which the jacobian is evaluated (e.g., COM); if empty [], it uses the origin of the last link
+            mode: 'all'...translation and rotation jacobian, 'trans'...only translation part, 'rot': only rotation part
+            linkIndex: link index for which the jacobian is evaluated; if linkIndex==None, it uses the last link provided in HT
+
+        Returns:
+            returns jacobian with translation and rotation parts in rows (3 or 6) according to mode, and one column per HT; in the kinematic tree the columns not related to linkIndex remain zero
+        """
         n = len(HT)
         if n > len(self.links):
             exudyn.Print("ERROR: number of homogeneous transformations (HT) greater than number of links")
@@ -465,18 +504,22 @@ class Robot:
 
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #**classFunction: Add a ObjectKinematicTree to existing mbs from the robot structure inside this robot class;
-    #                 Joints defined by the kinematics as well as links (and inertia) are transferred to the kinematic tree object;
-    #                 Current implementation only works for serial robots;
-    #                 Control can be realized simply by adding PDcontrol to RobotLink structures, then modifying jointPositionOffsetVector and jointVelocityOffsetVector in ObjectKinematicTree; force offsets (e.g., static or dynamic torque compensation) can be added to KinematicTree jointForceVector; more general control can be added by using KinematicTree forceUserFunction;
-    #                 The coordinates in KinematicTree (as well as jointPositionOffsetVector, etc.) are sorted in the order as the RobotLinks are added to the Robot class;
-    #                 Note that the ObjectKinematicTree is still under development and interfaces may change.
-    #**input: 
-    #   mbs: the multibody system, which will be extended
-    #   name: object name in KinematicTree; transferred to KinematicTree, default = ''
-    #   forceUserFunction: defines the user function for computation of joint forces in KinematicTree; transferred to KinematicTree, default = 0
-    #**output: the function returns a dictionary containing 'nodeGeneric': generic ODE2 node number ,'objectKinematicTree': the kinematic tree object, 'baseObject': the base object if created, otherwise None; further values will be added in future
     def CreateKinematicTree(self, mbs, name = '', forceUserFunction = 0):
+        """Add a ObjectKinematicTree to existing mbs from the robot structure inside this robot class;
+        Joints defined by the kinematics as well as links (and inertia) are transferred to the kinematic tree object;
+        Current implementation only works for serial robots;
+        Control can be realized simply by adding PDcontrol to RobotLink structures, then modifying jointPositionOffsetVector and jointVelocityOffsetVector in ObjectKinematicTree; force offsets (e.g., static or dynamic torque compensation) can be added to KinematicTree jointForceVector; more general control can be added by using KinematicTree forceUserFunction;
+        The coordinates in KinematicTree (as well as jointPositionOffsetVector, etc.) are sorted in the order as the RobotLinks are added to the Robot class;
+        Note that the ObjectKinematicTree is still under development and interfaces may change.
+
+        Args:
+            mbs: the multibody system, which will be extended
+            name: object name in KinematicTree; transferred to KinematicTree, default = ''
+            forceUserFunction: defines the user function for computation of joint forces in KinematicTree; transferred to KinematicTree, default = 0
+
+        Returns:
+            the function returns a dictionary containing 'nodeGeneric': generic ODE2 node number ,'objectKinematicTree': the kinematic tree object, 'baseObject': the base object if created, otherwise None; further values will be added in future
+        """
         #def CreateKinematicTree(self, mbs, jointSpringDamperUserFunctionList=[]):
 
         #add graphics for base:
@@ -643,24 +686,28 @@ class Robot:
                       
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #**classFunction: Add items to existing mbs from the robot structure inside this robot class; robot is attached to baseMarker (can be ground object or moving/deformable body);
-    #                 The (serial) robot is built as rigid bodies (containing rigid body nodes), where bodies represent the links which are connected by joints; 
-    #                 Add optional jointSpringDamperUserFunctionList for individual control of joints; otherwise use PDcontrol in RobotLink structure; additional joint torques/forces can be added via spring damper, using mbs.SetObjectParameter(...) function;
-    #                 See several Python examples, e.g., \texttt{serialRobotTestTSD.py}, in Examples or TestModels;
-    #                 For more efficient models, use CreateKinematicTree(...) function!
-    #**input: 
-    #   mbs: the multibody system, which will be extended
-    #   baseMarker: a rigid body marker, at which the robot will be placed (usually ground); note that the local coordinate system of the base must be in accordance with the DH-parameters, i.e., the z-axis must be the first rotation axis. For correction of the base coordinate system, use rotationMarkerBase
-    #   jointSpringDamperUserFunctionList: NOT IMPLEMENTED yet: jointSpringDamperUserFunctionLista list of user functions for actuation of joints with more efficient spring-damper based connector (spring-damper directly emulates PD-controller); uses torsional spring damper for revolute joints and linear spring damper for prismatic joints; can be empty list (no spring dampers); if entry of list is 0, no user function is created, just pure spring damper; parameters are taken from RobotLink PDcontrol structure, which MUST be defined using SetPDcontrol(...) in RobotLink
-    #   jointLoadUserFunctionList: DEPRECATED: a list of user functions for actuation of joints according to a LoadTorqueVector userFunction, see serialRobotTest.py as an example; can be empty list
-    #   createJointTorqueLoads: DEPRECATED: if True, independently of jointLoadUserFunctionList, joint loads are created; the load numbers are stored in lists jointTorque0List/ jointTorque1List; the loads contain zero torques and need to be updated in every computation step, e.g., using a preStepUserFunction; unitTorque0List/ unitTorque1List contain the unit torque vector for the according body(link) which needs to be applied on both bodies attached to the joint
-    #   rotationMarkerBase: add a numpy 3x3 matrix for rotation of the base, in order that the robot can be attached to any rotated base marker; the rotationMarkerBase is according to the definition in GenericJoint; note, that for moving base, the static compensation does not work (base rotation must be updated)
-    #   rigidBodyNodeType: specify node type of rigid body node, e.g., exudyn.NodeType.RotationEulerParameters, etc.
-    #**output: the function returns a dictionary containing per link nodes and object (body) numbers, 'nodeList', 'bodyList', the object numbers for joints, 'jointList', list of load numbers for joint torques (jointTorque0List, jointTorque1List); unit torque vectors in local coordinates of the bodies to which the torques are applied (unitTorque0List, unitTorque1List); springDamperList contains the spring dampers if defined by PDcontrol of links
     def CreateRedundantCoordinateMBS(self, mbs, baseMarker, jointSpringDamperUserFunctionList= [], 
                                      jointLoadUserFunctionList=[], 
                                      createJointTorqueLoads=True, rotationMarkerBase=None,
                                      rigidBodyNodeType=exudyn.NodeType.RotationEulerParameters): 
+        r"""Add items to existing mbs from the robot structure inside this robot class; robot is attached to baseMarker (can be ground object or moving/deformable body);
+        The (serial) robot is built as rigid bodies (containing rigid body nodes), where bodies represent the links which are connected by joints;
+        Add optional jointSpringDamperUserFunctionList for individual control of joints; otherwise use PDcontrol in RobotLink structure; additional joint torques/forces can be added via spring damper, using mbs.SetObjectParameter(...) function;
+        See several Python examples, e.g., \texttt{serialRobotTestTSD.py}, in Examples or TestModels;
+        For more efficient models, use CreateKinematicTree(...) function!
+
+        Args:
+            mbs: the multibody system, which will be extended
+            baseMarker: a rigid body marker, at which the robot will be placed (usually ground); note that the local coordinate system of the base must be in accordance with the DH-parameters, i.e., the z-axis must be the first rotation axis. For correction of the base coordinate system, use rotationMarkerBase
+            jointSpringDamperUserFunctionList: NOT IMPLEMENTED yet: jointSpringDamperUserFunctionLista list of user functions for actuation of joints with more efficient spring-damper based connector (spring-damper directly emulates PD-controller); uses torsional spring damper for revolute joints and linear spring damper for prismatic joints; can be empty list (no spring dampers); if entry of list is 0, no user function is created, just pure spring damper; parameters are taken from RobotLink PDcontrol structure, which MUST be defined using SetPDcontrol(...) in RobotLink
+            jointLoadUserFunctionList: DEPRECATED: a list of user functions for actuation of joints according to a LoadTorqueVector userFunction, see serialRobotTest.py as an example; can be empty list
+            createJointTorqueLoads: DEPRECATED: if True, independently of jointLoadUserFunctionList, joint loads are created; the load numbers are stored in lists jointTorque0List/ jointTorque1List; the loads contain zero torques and need to be updated in every computation step, e.g., using a preStepUserFunction; unitTorque0List/ unitTorque1List contain the unit torque vector for the according body(link) which needs to be applied on both bodies attached to the joint
+            rotationMarkerBase: add a numpy 3x3 matrix for rotation of the base, in order that the robot can be attached to any rotated base marker; the rotationMarkerBase is according to the definition in GenericJoint; note, that for moving base, the static compensation does not work (base rotation must be updated)
+            rigidBodyNodeType: specify node type of rigid body node, e.g., exudyn.NodeType.RotationEulerParameters, etc.
+
+        Returns:
+            the function returns a dictionary containing per link nodes and object (body) numbers, 'nodeList', 'bodyList', the object numbers for joints, 'jointList', list of load numbers for joint torques (jointTorque0List, jointTorque1List); unit torque vectors in local coordinates of the bodies to which the torques are applied (unitTorque0List, unitTorque1List); springDamperList contains the spring dampers if defined by PDcontrol of links
+        """
         #build robot model:
         nodeList = []           #node number or rigid node for link
         bodyList = []           #body number or rigid body for link
@@ -895,8 +942,9 @@ class Robot:
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    #**classFunction: export kinematicTree
     def GetKinematicTree66(self):
+        """export kinematicTree
+        """
         from exudyn.kinematicTree import KinematicTree66, Inertia2T66
         
         jointTypes = []
@@ -925,8 +973,9 @@ class Robot:
                            gravity=self.gravity)
         return KT
     
-    #**classFunction: create link GraphicsData (list) for link i; internally used in CreateRedundantCoordinateMBS(...); linkVisualization contains visualization dict of link
     def GetLinkGraphicsData(self, i, p0, p1, axis0, axis1, linkVisualization):
+        """create link GraphicsData (list) for link i; internally used in CreateRedundantCoordinateMBS(...); linkVisualization contains visualization dict of link
+        """
         
         com = self.links[i].COM
         graphicsList = []
@@ -969,8 +1018,9 @@ class Robot:
         return graphicsList
 
     
-    #**classFunction: build robot structre from dictionary; this is a DEPRECATED function, which is used in older models; DO NOT USE
     def BuildFromDictionary(self, robotDict):
+        """build robot structre from dictionary; this is a DEPRECATED function, which is used in older models; DO NOT USE
+        """
         global buildFromDictionaryWarned
         if not buildFromDictionaryWarned:
             buildFromDictionaryWarned = True
@@ -1021,8 +1071,9 @@ class Robot:
 #+++  DH-PARAMETERS  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#**function: compute homogeneous transformation matrix HT from standard DHparameters=[theta, d, a, alpha]
 def StdDH2HT(DHparameters):
+    """compute homogeneous transformation matrix HT from standard DHparameters=[theta, d, a, alpha]
+    """
 #    [theta, d, a, alpha] = DHparameters
 #    return erb.HTrotateZ(theta) @ erb.HTtranslate([0,0,d]) @ erb.HTtranslate([a,0,0]) @ erb.HTrotateX(alpha)
     #optimized version:
@@ -1043,21 +1094,25 @@ def StdDH2HT(DHparameters):
 #Test (compared with Robotcs, Vision and Control book of P. Corke:
 #exudyn.Print("std. DH =\n", DH2HT([0.5, 0.1, 0.2, np.pi/2]).round(4))
 
-#**function: compute pre- and post- homogeneous transformation matrices from modified Denavit-Hartenberg DHparameters=[alpha, d, theta, r]; returns [HTpre, HTpost]; HTpre is transformation before axis rotation, HTpost includes axis rotation and everything hereafter; modified DH-Parameters according to Khalil and Kleinfinger, 1986
 def ModDHKK2HT(DHparameters):
+    """compute pre- and post- homogeneous transformation matrices from modified Denavit-Hartenberg DHparameters=[alpha, d, theta, r]; returns [HTpre, HTpost]; HTpre is transformation before axis rotation, HTpost includes axis rotation and everything hereafter; modified DH-Parameters according to Khalil and Kleinfinger, 1986
+    """
     [alpha, d, theta, r] = DHparameters
     return [erb.HTrotateX(alpha) @ erb.HTtranslate([d,0,0]) , erb.HTrotateZ(theta) @ erb.HTtranslate([0,0,r]) ] 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: This function projects an angle in the range $[-min_{float}, +max_{float}]$ fo the range $[-\pi, +\pi]$
-#**input:
-#  q0: An angle either as scalar, list or array
-#**output:
-#  qProj: The angle projected into the range $[-\pi to \pi]$
-#**author: Peter Manzl
+@docmeta(author='Peter Manzl')
 def projectAngleToPMPi(q0): 
+    r"""This function projects an angle in the range $[-min_{float}, +max_{float}]$ fo the range $[-\pi, +\pi]$
+
+    Args:
+        q0: An angle either as scalar, list or array
+
+    Returns:
+        qProj: The angle projected into the range $[-\pi to \pi]$
+    """
     if type(q0) == list: 
         q0 = np.array(q0) # cast to array for modulo to work
     q1 =  q0 % (2*np.pi) # in range 0 to 2*np.pi
@@ -1068,21 +1123,26 @@ def projectAngleToPMPi(q0):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**class: This class can be used to solve the inverse kinematics problem using a multibody system 
-#            by solving the static problem of a serial robot
-#**author: Peter Manzl, Johannes Gerstmayr
-#**notes: still under development; errors in orientations of solution may occure. proviedes mtehods to calculate inverse Kinematics 
+@docmeta(author='Peter Manzl, Johannes Gerstmayr')
 class InverseKinematicsNumerical(): 
+    """This class can be used to solve the inverse kinematics problem using a multibody system
+    by solving the static problem of a serial robot
+
+    Note:
+        still under development; errors in orientations of solution may occure. proviedes mtehods to calculate inverse Kinematics
+    """
     # initialize system
-    #**classFunction: initialize RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. reference point!!!) and center of mass com
-    #**input:
-    #  robot: robot class
-    #  jointStiffness: the stiffness used for the robot's model joints
-    #  useRenderer: when solving the inverse kinematics the renderer is used to show the starting/end 
-    #               configuration of the robot using the graphics objects definded in the robot object
-    #**author: Peter Manzl
+    @docmeta(author='Peter Manzl')
     def __init__(self, robot, jointStiffness = 1e0, useRenderer=False, flagDebug=False, 
                  useAlternativeConstraints=False): 
+        """initialize RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. reference point!!!) and center of mass com
+
+        Args:
+            robot: robot class
+            jointStiffness: the stiffness used for the robot's model joints
+            useRenderer: when solving the inverse kinematics the renderer is used to show the starting/end
+                         configuration of the robot using the graphics objects definded in the robot object
+        """
         self.SC = exudyn.SystemContainer()
         self.mbsIK = self.SC.AddSystem()
         self.robot = robot
@@ -1170,27 +1230,33 @@ class InverseKinematicsNumerical():
         return x, y, z
 
 
-    #**classFunction: Utility function to get current Homogeneous transformation of the robot to check inverse Kinematics solution
-    # ** output: 
-    #   T: 4x4 homogeneous Transformation matrix of the current TCP pose
     def GetCurrentRobotHT(self): 
+        """Utility function to get current Homogeneous transformation of the robot to check inverse Kinematics solution
+        ** output:
+          T: 4x4 homogeneous Transformation matrix of the current TCP pose
+        """
         # self.robot.JointHT(q)[-1]  @ self.robot.tool.HT # proviedes same functionality as reading sensors...
         posFKine = self.mbsIK.GetSensorValues(self.sToolTrans) 
         RotFkine = self.mbsIK.GetSensorValues(self.sToolRot).reshape((3,3))
         T = erb.HomogeneousTransformation(RotFkine, posFKine) # global HT
         return T
 
-    #**classFunction: 
-    #**input:
-    #  T1: 4x4 homogeneous transformation matrix representing the first Pose
-    #  T2: 4x4 homogeneous transformation matrix representing the second Pose
-    #  rotStep: the max. size of steps to take for the orientation
-    #  minSteps: minimum number of substeps to interpolate
-    #**output: 
-    # T: a List of homogeneous Transformations for each step between
-    #**author: Peter Manzl
-    #**notes: still under development; interpolation may be changed to using logSE3
+    @docmeta(author='Peter Manzl')
     def InterpolateHTs(self, T1, T2, rotStep=np.pi/16, minSteps = 1): 
+        """
+
+        Args:
+            T1: 4x4 homogeneous transformation matrix representing the first Pose
+            T2: 4x4 homogeneous transformation matrix representing the second Pose
+            rotStep: the max. size of steps to take for the orientation
+            minSteps: minimum number of substeps to interpolate
+
+        Returns:
+            T: a List of homogeneous Transformations for each step between
+
+        Note:
+            still under development; interpolation may be changed to using logSE3
+        """
         R1, t1 = T1[:3,:3], erb.HT2translation(T1)
         R2, t2 = T2[:3,:3], erb.HT2translation(T2)
         t12 = t2 - t1
@@ -1221,17 +1287,23 @@ class InverseKinematicsNumerical():
         T += [T2] # to satisfy the boundry condition
         return T
     
-    #**classFunction: This Method can be used to solve the inverse kinematics problem by solving 
-    #            the static problem of a serial robot using steps to interpolate between start and end position close to the function Solve. 
-    #            This helps the function Solve() to find the correct solutions. 
-    #**input:
-    #  T: the 4x4 homogeneous transformation matrix representing the desired position and orientation of the Endeffector
-    #  q0: The configuration (joint angles/positions) of the robot from which the numerical methods start so calculate the solution; q0=None indicates that the stored solution (from model or previous solution) shall be used for initialization
-    #**output: [q, success]; q: The solution for the joint angles in which the robot's tool center point (TCP) reaches the desired homogeneous transformation matrix T; success=False indicates that all trials for inverse kinematics failed, leading to q=None
-    # success: flag to indicate if method was successful
-    #**author: Peter Manzl, Johannes Gerstmayr
-    #**notes: still under development; errors in orientations of solution may occure. works similar to ikine\_LM function of the robotics toolbox from peter corke
+    @docmeta(author='Peter Manzl, Johannes Gerstmayr')
     def SolveSafe(self, T, q0 = None):
+        r"""This Method can be used to solve the inverse kinematics problem by solving
+        the static problem of a serial robot using steps to interpolate between start and end position close to the function Solve.
+        This helps the function Solve() to find the correct solutions.
+
+        Args:
+            T: the 4x4 homogeneous transformation matrix representing the desired position and orientation of the Endeffector
+            q0: The configuration (joint angles/positions) of the robot from which the numerical methods start so calculate the solution; q0=None indicates that the stored solution (from model or previous solution) shall be used for initialization
+
+        Returns:
+            [q, success]; q: The solution for the joint angles in which the robot's tool center point (TCP) reaches the desired homogeneous transformation matrix T; success=False indicates that all trials for inverse kinematics failed, leading to q=None
+            success: flag to indicate if method was successful
+
+        Note:
+            still under development; errors in orientations of solution may occure. works similar to ikine\_LM function of the robotics toolbox from peter corke
+        """
         T0 = self.GetCurrentRobotHT()
         TInterp = self.InterpolateHTs(T0, T, rotStep=np.pi/3) # no steps in between needed!
         q = q0
@@ -1272,16 +1344,22 @@ class InverseKinematicsNumerical():
 
         return [q, success]
     
-    #**classFunction: This Method can be used to solve the inverse kinematics problem by solving 
-    #            the static problem of a serial robot using steps to interpolate between start and end position close to the function Solve. 
-    #           T his helps the fucntion Solve to find the correct solutions. 
-    #**input:
-    #  T: the 4x4 homogeneous transformation matrix representing the desired position and orientation of the Endeffector
-    #  q0: The configuration (joint angles/positions) of the robot from which the numerical methods start so calculate the solution; q0=None indicates that the stored solution (from model or previous solution) shall be used for initialization
-    #**output: [q, success]; q: The solution for the joint angles in which the robot's tool center point (TCP) reaches the desired homogeneous transformation matrix T; success=False indicates that all trials for inverse kinematics failed, leading to q=None
-    #**author: Peter Manzl, Johannes Gerstmayr
-    #**notes: still under development; errors in orientations of solution may occure. works similar to ikine\_LM function of the robotics toolbox from peter corke
+    @docmeta(author='Peter Manzl, Johannes Gerstmayr')
     def Solve(self, T, q0 = None): 
+        r"""This Method can be used to solve the inverse kinematics problem by solving
+         the static problem of a serial robot using steps to interpolate between start and end position close to the function Solve.
+        T his helps the fucntion Solve to find the correct solutions.
+
+        Args:
+            T: the 4x4 homogeneous transformation matrix representing the desired position and orientation of the Endeffector
+            q0: The configuration (joint angles/positions) of the robot from which the numerical methods start so calculate the solution; q0=None indicates that the stored solution (from model or previous solution) shall be used for initialization
+
+        Returns:
+            [q, success]; q: The solution for the joint angles in which the robot's tool center point (TCP) reaches the desired homogeneous transformation matrix T; success=False indicates that all trials for inverse kinematics failed, leading to q=None
+
+        Note:
+            still under development; errors in orientations of solution may occure. works similar to ikine\_LM function of the robotics toolbox from peter corke
+        """
         # check type of T 
         T = np.array(T)
         if T.shape != (4,4) or round(np.linalg.det(T[0:3, 0:3]),10) != 1.0:  # check if is homogeneous TF

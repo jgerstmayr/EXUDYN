@@ -19,15 +19,20 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.63.dev1, 
++  Exudyn version = 1.11.64.dev1, 
 +  last change =  2026-09-15, 
-+  Number of issues = 2436, 
-+  Number of resolved issues = 2136 (63 in current version), 
++  Number of issues = 2437, 
++  Number of resolved issues = 2137 (64 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.64: resolved Issue 2436: utility modules: Google-style docstrings and @docmeta instead of #\*\* comments (change)
+    - issue author: Claude-JG
+    - description:  step 36b/36c and 37: all utility modules converted; utilityDocsModel reads docstrings and decorators with ast; the #\*\* parser is deleted; generated docs unchanged apart from listed whitespace and recovered text
+    - date resolved: **2026-09-15 13:46**\ , date raised: 2026-09-15 
+    - resolved by: Claude-JG
  * Version 1.11.63: resolved Issue 2435: utility modules: malformed #\*\* tags silently dropped from the documentation (fix)
     - issue author: Claude-JG
     - description:  step 36a: #\*\*note (9) #\*\*nodes (3) #\*\*examples #\*\*compute #\*\*outputinput and two #\*\* continuation lines were not recognised; five #\*\*function lacked the colon; HT2T66Inverse had input and output swapped

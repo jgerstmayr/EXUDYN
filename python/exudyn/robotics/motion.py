@@ -134,20 +134,26 @@ class BasicProfile:
 
         return [s,v,a]
     
-#**class: class to create a constant acceleration (optimal) PTP trajectory; trajectory ignores global max. velocities and accelerations
-#**input: 
-#  finalCoordinates: list or numpy array with final coordinates for profile
-#  duration: duration (time) for profile
-#**output: returns profile object, which is then used to compute interpolated trajectory
 class ProfileConstantAcceleration:
-    #**classFunction: initialize ProfileConstantAcceleration with vector of final coordinates and duration (time span)
+    """class to create a constant acceleration (optimal) PTP trajectory; trajectory ignores global max. velocities and accelerations
+
+    Args:
+        finalCoordinates: list or numpy array with final coordinates for profile
+        duration: duration (time) for profile
+
+    Returns:
+        returns profile object, which is then used to compute interpolated trajectory
+    """
     def __init__(self, finalCoordinates, duration):
+        """initialize ProfileConstantAcceleration with vector of final coordinates and duration (time span)
+        """
         self.duration = duration
         self.finalCoordinates = np.array(finalCoordinates,dtype=float)
     
-    #**classFunction: return a class representing profile which is used in Trajectory
     def GetBasicProfile(self, initialTime, initialCoordinates,
                       globalMaxVelocities, globalMaxAccelerations):
+        """return a class representing profile which is used in Trajectory
+        """
         if len(globalMaxVelocities)+len(globalMaxAccelerations) != 0:
             exudyn.Print('WARNING: ProfileConstantAcceleration: max acceleration and velocities in Trajectory not applicable')
         distances = self.finalCoordinates-initialCoordinates
@@ -159,15 +165,21 @@ class ProfileConstantAcceleration:
                           maxVelocities=abs(aMax * distances)**0.5,
                           maxAccelerations=aMax)
 
-#**class: class to create a linear acceleration PTP profile, using a list of accelerations to define the profile; the (joint) coordinates and velocities are computed relative to values of previous profiles; ignores global max. accelerations and velocities of Trajectory
-#**input: 
-#  accelerationList: list of tuples (relativeTime, accelerationVector) in which relativeTime is the time relative to the start of the profile (first time must be zero!) and accelerationVector is the list of accelerations of this time point, which is then linearly interpolated
-#**output: returns profile object, which is then used to compute interpolated trajectory in class Trajectory
-#**example:
-#   profile = ProfileLinearAccelerationsList([(0,[0.,1.,2]), (0,[1.,1.,-2])])
 class ProfileLinearAccelerationsList:
-    #**classFunction: initialize ProfileLinearAccelerationsList with a list of tuples containing time and acceleration vector
+    """class to create a linear acceleration PTP profile, using a list of accelerations to define the profile; the (joint) coordinates and velocities are computed relative to values of previous profiles; ignores global max. accelerations and velocities of Trajectory
+
+    Args:
+        accelerationList: list of tuples (relativeTime, accelerationVector) in which relativeTime is the time relative to the start of the profile (first time must be zero!) and accelerationVector is the list of accelerations of this time point, which is then linearly interpolated
+
+    Returns:
+        returns profile object, which is then used to compute interpolated trajectory in class Trajectory
+
+    Example:
+        profile = ProfileLinearAccelerationsList([(0,[0.,1.,2]), (0,[1.,1.,-2])])
+    """
     def __init__(self, accelerationList):
+        """initialize ProfileLinearAccelerationsList with a list of tuples containing time and acceleration vector
+        """
         self.accelerationList = accelerationList
         
         if len(accelerationList) < 2:
@@ -176,9 +188,10 @@ class ProfileLinearAccelerationsList:
             raise ValueError('ProfileLinearAccelerationsList (robotics.motion): first time in acceleration profile needs to be zero!')
             
     
-    #**classFunction: return a class representing profile which is used in Trajectory
     def GetBasicProfile(self, initialTime, initialCoordinates,
                       globalMaxVelocities, globalMaxAccelerations):
+        """return a class representing profile which is used in Trajectory
+        """
         if len(self.accelerationList[0][1]) != len(initialCoordinates):
             raise ValueError('ProfileLinearAccelerationsList (robotics.motion): length of acceleration vectors are different from size of initialCoordinates!')
         if len(globalMaxVelocities)+len(globalMaxAccelerations) != 0:
@@ -186,15 +199,20 @@ class ProfileLinearAccelerationsList:
 
         return BasicProfileLinearAcceleration(initialCoordinates, initialTime, self.accelerationList)
         
-#**class: class to create a synchronous motion PTP trajectory, using max. accelerations and max velocities; duration automatically computed
-#**input: 
-#  finalCoordinates: list or numpy array with final coordinates for profile
-#  maxVelocities: list or numpy array with maximum velocities; may be empty list []; used if smaller than globalMaxVelocities
-#  maxAccelerations: list or numpy array with maximum accelerations; may be empty list []; used if smaller than globalMaxAccelerations
-#**output: returns profile object, which is then used to compute interpolated trajectory
 class ProfilePTP:
-    #**classFunction: initialize ProfilePTP with final coordinates of motion, optionally max. velocities and accelerations just for this profile (overrides global settings)
+    """class to create a synchronous motion PTP trajectory, using max. accelerations and max velocities; duration automatically computed
+
+    Args:
+        finalCoordinates: list or numpy array with final coordinates for profile
+        maxVelocities: list or numpy array with maximum velocities; may be empty list []; used if smaller than globalMaxVelocities
+        maxAccelerations: list or numpy array with maximum accelerations; may be empty list []; used if smaller than globalMaxAccelerations
+
+    Returns:
+        returns profile object, which is then used to compute interpolated trajectory
+    """
     def __init__(self, finalCoordinates, syncAccTimes=True, maxVelocities=[], maxAccelerations=[]):
+        """initialize ProfilePTP with final coordinates of motion, optionally max. velocities and accelerations just for this profile (overrides global settings)
+        """
         self.finalCoordinates = np.array(finalCoordinates,dtype=float)
         self.maxVelocities = np.array(maxVelocities,dtype=float)
         self.maxAccelerations = np.array(maxAccelerations,dtype=float)
@@ -206,9 +224,10 @@ class ProfilePTP:
         if syncAccTimes==True:
             raise ValueError('ProfilePTP: syncAccTime must be False; other case yet not implemented')
         
-    #**classFunction: return a class representing profile which is used in Trajectory
     def GetBasicProfile(self, initialTime, initialCoordinates,
                       globalMaxVelocities, globalMaxAccelerations):
+        """return a class representing profile which is used in Trajectory
+        """
         
         if len(globalMaxAccelerations)+len(self.maxAccelerations)==0:
             raise ValueError('ProfilePTP: maxAccelerations must either in Trajectory or in ProfilePTP be non-empty')
@@ -271,25 +290,29 @@ class ProfilePTP:
                           maxAccelerations=aMax)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**class: class to define (PTP) trajectories for robots and multibody systems; trajectories are defined for a set of coordinates (e.g. joint angles or other coordinates which need to be interpolated over time)
-#**example:
-##create simple trajectory for two joint coordinates:
-#traj = Trajectory(initialCoordinates=[1,1], initialTime=1)
-##add optimal trajectory with max. accelerations:
-#traj.Add(ProfileConstantAcceleration([2.,3.],2.))
-#traj.Add(ProfileConstantAcceleration([3.,-1.],2.))
-##add profile with limited velocities and accelerations:
-#traj.Add(ProfilePTP([1,1],syncAccTimes=False, maxVelocities=[1,1], maxAccelerations=[5,5]))
-##now evaluate trajectory at certain time point (this could be now applied in a user function)
-#[s,v,a] = traj.Evaluate(t=0.5)
 class Trajectory:
-    #**classFunction: initialize robot link with parameters, being self-explaining
-    #**input:
-    #  initialTime: initial time for initial coordinates
-    #  initialCoordinates: initial coordinates for profile
-    #  maxVelocities: list or numpy array to describe global maximum velocities per coordinate
-    #  maxAccelerations: list or numpy array to describe global maximum accelerations per coordinate
+    """class to define (PTP) trajectories for robots and multibody systems; trajectories are defined for a set of coordinates (e.g. joint angles or other coordinates which need to be interpolated over time)
+
+    Example:
+        #create simple trajectory for two joint coordinates:
+        traj = Trajectory(initialCoordinates=[1,1], initialTime=1)
+        #add optimal trajectory with max. accelerations:
+        traj.Add(ProfileConstantAcceleration([2.,3.],2.))
+        traj.Add(ProfileConstantAcceleration([3.,-1.],2.))
+        #add profile with limited velocities and accelerations:
+        traj.Add(ProfilePTP([1,1],syncAccTimes=False, maxVelocities=[1,1], maxAccelerations=[5,5]))
+        #now evaluate trajectory at certain time point (this could be now applied in a user function)
+        [s,v,a] = traj.Evaluate(t=0.5)
+    """
     def __init__(self, initialCoordinates, initialTime = 0, maxVelocities=[], maxAccelerations=[]):
+        """initialize robot link with parameters, being self-explaining
+
+        Args:
+            initialTime: initial time for initial coordinates
+            initialCoordinates: initial coordinates for profile
+            maxVelocities: list or numpy array to describe global maximum velocities per coordinate
+            maxAccelerations: list or numpy array to describe global maximum accelerations per coordinate
+        """
         self.initialTime = initialTime
         self.initialCoordinates = initialCoordinates
         self.globalMaxVelocities = maxVelocities
@@ -303,36 +326,43 @@ class Trajectory:
         if min(list(maxAccelerations)+[1]) <= 0:
             raise ValueError('Trajectory: maxAccelerations must by > 0')
 
-    #**classFunction: returns the coordinates at the end of the (currently) Final profile
     def GetFinalCoordinates(self):
+        """returns the coordinates at the end of the (currently) Final profile
+        """
         if len(self.profiles) == 0:
             return self.initialCoordinates
         else:
             return self.profiles[-1].GetFinalCoordinates()
 
 
-    #**classFunction: add successively profiles, using MotionProfile class
     def Add(self, profile):
+        """add successively profiles, using MotionProfile class
+        """
         self.initialized = False
         ptp = profile.GetBasicProfile(self.GetTimes()[-1], self.GetFinalCoordinates(),
                                     self.globalMaxVelocities,self.globalMaxAccelerations)
         self.profiles+=[ptp]
 
-    #**classFunction: return vector of times of start/end of profiles
     def GetTimes(self):
+        """return vector of times of start/end of profiles
+        """
         timesList = [self.initialTime]
         for profile in self.profiles:
             timesList+=[profile.finalTime]
         return timesList
 
-    #**classFunction: initialize some parameters for faster evaluation
     def Initialize(self):
+        """initialize some parameters for faster evaluation
+        """
         self.timesList = self.GetTimes();
         self.initialized = True
 
-    #**classFunction: return interpolation of trajectory for coordinates, velocities and accelerations at given time
-    #**output: [s, v, a] as numpy arrays representing coordinates, velocities and accelerations
     def Evaluate(self, t):
+        """return interpolation of trajectory for coordinates, velocities and accelerations at given time
+
+        Returns:
+            [s, v, a] as numpy arrays representing coordinates, velocities and accelerations
+        """
         if not self.initialized: self.Initialize()
 
         cnt = 0
@@ -350,10 +380,15 @@ class Trajectory:
             n = len(uL)
             return [uL, np.zeros(n), np.zeros(n)]
 
-    #**classFunction: return interpolation of trajectory for coordinate, including velocity and acceleration coordinate at given time
-    #**output: [s, v, a] being scalar position, velocity and acceleration
-    #**notes: faster for single coordinate than Evaluate(...)
     def EvaluateCoordinate(self, t, coordinate):
+        """return interpolation of trajectory for coordinate, including velocity and acceleration coordinate at given time
+
+        Returns:
+            [s, v, a] being scalar position, velocity and acceleration
+
+        Note:
+            faster for single coordinate than Evaluate(...)
+        """
         if not self.initialized: 
             self.Initialize()
 
@@ -368,21 +403,25 @@ class Trajectory:
         else:
             return [self.profiles[-1].GetFinalCoordinates()[coordinate], 0., 0.]
 
-    #**classFunction: iterator allows to use for x in trajectory: ... constructs
     def __iter__(self):
+        """iterator allows to use for x in trajectory: ... constructs
+        """
         return iter(self.profiles)
 
-    #**classFunction: access to profiles via operator [], allowing trajectory[0], etc.
     def __getitem__(self, key):
+        """access to profiles via operator [], allowing trajectory[0], etc.
+        """
         return self.profiles[key]
 
-    #**classFunction: allow using len(trajectory)
     def __len__(self):
+        """allow using len(trajectory)
+        """
         return len(self.profiles)
 
 
-    #**classFunction: representation of Trajectory is given a list of profiles, allowing easy inspection of data
     def __repr__(self):
+        """representation of Trajectory is given a list of profiles, allowing easy inspection of data
+        """
         return str(self.profiles)
 
     # slower version:

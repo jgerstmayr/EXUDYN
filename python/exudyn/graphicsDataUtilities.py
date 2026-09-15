@@ -79,20 +79,30 @@ color4listSize = len(color4list) #maximum number of colors in color4list
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#**function: helper function to switch order of three items in a list; mostly used for reverting normals in triangles
-#**input: 3D vector as list or as np.array
-#**output: interchanged 2nd and 3rd component of list
 def SwitchTripletOrder(vector):
+    """helper function to switch order of three items in a list; mostly used for reverting normals in triangles
+
+    Args:
+        3D vector as list or as np.array
+
+    Returns:
+        interchanged 2nd and 3rd component of list
+    """
     v=list(vector) #copy, such that vector is not changed
     a = v[2]
     v[2] = v[1]
     v[1] = a
     return v
 
-#**function: compute normalized normal for 3 triangle points
-#**input: 3D vector as list or as np.array
-#**output: normal as np.array
 def ComputeTriangleNormal(p0,p1,p2):
+    """compute normalized normal for 3 triangle points
+
+    Args:
+        3D vector as list or as np.array
+
+    Returns:
+        normal as np.array
+    """
     v0 = np.array(p1) - np.array(p0)
     v1 = np.array(p2) - np.array(p0)
 
@@ -102,17 +112,25 @@ def ComputeTriangleNormal(p0,p1,p2):
         n /= ln
     return n
 
-#**function: compute area of triangle given by 3 points
-#**input: 3D vector as list or as np.array
-#**output: area as float
 def ComputeTriangleArea(p0,p1,p2):
+    """compute area of triangle given by 3 points
+
+    Args:
+        3D vector as list or as np.array
+
+    Returns:
+        area as float
+    """
     return 0.5*np.linalg.norm(np.cross(np.array(p1) - np.array(p0), np.array(p2) - np.array(p0)))
 
 
-#**function: Internal function: compute normals to 6-node triangular surface given by elementNodes
-#input: elementNodes given as np.array with 6 node vectors in rows; node ordering must follow Netgen order, see the local coordinates in the function
-#**output: returns np.array with 6 normals in rows
 def Compute6NodeTrigsNormals(elementNodes):
+    """Internal function: compute normals to 6-node triangular surface given by elementNodes
+    input: elementNodes given as np.array with 6 node vectors in rows; node ordering must follow Netgen order, see the local coordinates in the function
+
+    Returns:
+        returns np.array with 6 normals in rows
+    """
     #unused; compute shape functions in local coordinates xi and eta
     def ShapeFunctions(xi, eta):
         N = np.zeros(6)
@@ -177,13 +195,19 @@ def Compute6NodeTrigsNormals(elementNodes):
 
 
 #************************************************
-#**function: refine triangle mesh; every triangle is subdivided into 4 triangles
-#**input:
-#  points: list of np.array with 3 floats per point 
-#  triangles: list of np.array with 3 int per triangle (0-based indices to triangles)
-#**output: returns [points2, triangles2] containing the refined mesh; if the original mesh is consistent, no points are duplicated; if the mesh is not consistent, some mesh points are duplicated!
-#**notes: becomes slow for meshes with more than 5000 points
 def RefineMesh(points, triangles):
+    """refine triangle mesh; every triangle is subdivided into 4 triangles
+
+    Args:
+        points: list of np.array with 3 floats per point
+        triangles: list of np.array with 3 int per triangle (0-based indices to triangles)
+
+    Returns:
+        returns [points2, triangles2] containing the refined mesh; if the original mesh is consistent, no points are duplicated; if the mesh is not consistent, some mesh points are duplicated!
+
+    Note:
+        becomes slow for meshes with more than 5000 points
+    """
     # 2
     # |\
     # a c
@@ -228,14 +252,20 @@ def RefineMesh(points, triangles):
     return [points2, triangles2]
 
 #************************************************
-#**function: shrink mesh using triangle normals; every point is at least moved a distance 'distance' normal from boundary
-#**input:
-#  points: list of np.array with 3 floats per point 
-#  triangles: list of np.array with 3 int per triangle (0-based indices to triangles)
-#  distance: float value of minimum distance
-#**output: returns [points2, triangles2] containing the refined mesh; currently the points of the subdivided triangles are duplicated!
-#**notes: ONLY works for consistent meshes (no duplicated points!)
 def ShrinkMeshNormalToSurface(points, triangles, distance):
+    """shrink mesh using triangle normals; every point is at least moved a distance 'distance' normal from boundary
+
+    Args:
+        points: list of np.array with 3 floats per point
+        triangles: list of np.array with 3 int per triangle (0-based indices to triangles)
+        distance: float value of minimum distance
+
+    Returns:
+        returns [points2, triangles2] containing the refined mesh; currently the points of the subdivided triangles are duplicated!
+
+    Note:
+        ONLY works for consistent meshes (no duplicated points!)
+    """
     points2 = copy.deepcopy(points)
     triangles2 = copy.deepcopy(triangles)
     #disp = [np.zeros(3).copy()]*len(points2) #copy, otherwise linked!!!
@@ -259,31 +289,36 @@ def ShrinkMeshNormalToSurface(points, triangles, distance):
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: helper function to compute triangular mesh from list of vertices (=points) and segments;
-#   computes triangular meshes for non-convex case. In order to make it efficient, it first computes
-#   neighbors and then defines triangles at segments to be inside/outside. Finally neighboring
-#   relations are used to define all triangles inside/outside
-#   finally only returns triangles that are inside the segments
-#**input:
-#  vertices: list of pairs of coordinates of vertices in mesh [x,y]
-#  segments: list of segments, which are pairs of node numbers [i,j], defining the boundary of the mesh;
-#            the ordering of the nodes is such that left triangle = inside, right triangle = outside, compare example with segment [V1,V2]:\\
-#  
-#     inside
-#  V1         V2
-#  O----------O
-#    outside
-#**output:
-#  triangulation structure of Delaunay(...), see scipy.spatial.Delaunaystructure, containing all simplices (=triangles)
-#**notes: Delauney will not work if points are duplicated; you must first create point lists without duplicated points!
-#**example:
-# points = np.array([[0, 0], [0, 2], [2, 2], [2, 1], [1, 1], [0, 1], [1, 0]])
-# segments = [len(points)-1,0]
-# for i in range(len(points)-1):
-#     segments += [i,i+1]
-# tri = ComputeTriangularMesh(points, segments)
-# exudyn.Print(tri.simplices)
 def ComputeTriangularMesh(vertices, segments):
+    r"""helper function to compute triangular mesh from list of vertices (=points) and segments;
+    computes triangular meshes for non-convex case. In order to make it efficient, it first computes
+    neighbors and then defines triangles at segments to be inside/outside. Finally neighboring
+    relations are used to define all triangles inside/outside
+    finally only returns triangles that are inside the segments
+
+    Args:
+        vertices: list of pairs of coordinates of vertices in mesh [x,y]
+        segments: list of segments, which are pairs of node numbers [i,j], defining the boundary of the mesh;
+                  the ordering of the nodes is such that left triangle = inside, right triangle = outside, compare example with segment [V1,V2]:\\
+           inside
+        V1         V2
+        O----------O
+          outside
+
+    Returns:
+        triangulation structure of Delaunay(...), see scipy.spatial.Delaunaystructure, containing all simplices (=triangles)
+
+    Note:
+        Delauney will not work if points are duplicated; you must first create point lists without duplicated points!
+
+    Example:
+        points = np.array([[0, 0], [0, 2], [2, 2], [2, 1], [1, 1], [0, 1], [1, 0]])
+        segments = [len(points)-1,0]
+        for i in range(len(points)-1):
+            segments += [i,i+1]
+        tri = ComputeTriangularMesh(points, segments)
+        exudyn.Print(tri.simplices)
+    """
     from scipy.spatial import Delaunay
     from copy import deepcopy
 
@@ -346,12 +381,16 @@ def ComputeTriangularMesh(vertices, segments):
     
     return tri
 
-#**function: convert point list into segments (indices to points); point indices start with pointIndexOffset
-#**input:
-#  invert: True: circle defines outter boundary; False: circle cuts out geometry inside a geometry
-#  pointIndexOffset: point indices start with pointIndexOffset
-#**output: return segments, containing list of lists of point indices for segments
 def SegmentsFromPoints(points, pointIndexOffset = 0, invert=False, closeCurve=True):
+    """convert point list into segments (indices to points); point indices start with pointIndexOffset
+
+    Args:
+        invert: True: circle defines outter boundary; False: circle cuts out geometry inside a geometry
+        pointIndexOffset: point indices start with pointIndexOffset
+
+    Returns:
+        return segments, containing list of lists of point indices for segments
+    """
     n = len(points)
     segments = np.zeros((n,2),dtype=int)
     if invert:
@@ -369,16 +408,22 @@ def SegmentsFromPoints(points, pointIndexOffset = 0, invert=False, closeCurve=Tr
 
     return segments
 
-#**function: create points and segments, used in SolidExtrusion(...) for circle with given parameters
-#**input:
-#  center: 2D center point (list/numpy array) for circle center
-#  radius: radius of circle
-#  invert: True: circle defines outter boundary; False: circle cuts out geometry inside a geometry
-#  pointIndexOffset: point indices start with pointIndexOffset
-#  nTiles: number of tiles/segments for circle creation (higher is finer)
-#**output: return [points, segments], both containing lists of lists
-#**notes: geometries may not intersect!
 def CirclePointsAndSegments(center=[0,0], radius=0.1, invert = False, pointIndexOffset=0, nTiles=16):
+    """create points and segments, used in SolidExtrusion(...) for circle with given parameters
+
+    Args:
+        center: 2D center point (list/numpy array) for circle center
+        radius: radius of circle
+        invert: True: circle defines outter boundary; False: circle cuts out geometry inside a geometry
+        pointIndexOffset: point indices start with pointIndexOffset
+        nTiles: number of tiles/segments for circle creation (higher is finer)
+
+    Returns:
+        return [points, segments], both containing lists of lists
+
+    Note:
+        geometries may not intersect!
+    """
     segments = np.zeros((nTiles,2),dtype=int)
     points = np.zeros((nTiles,2))
     
@@ -398,11 +443,18 @@ def CirclePointsAndSegments(center=[0,0], radius=0.1, invert = False, pointIndex
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #************************************************
-#**function: generate graphics data for 2D rectangle
-#**input: minimal and maximal cartesian coordinates in (x/y) plane; color provided as list of 4 RGBA values
-#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
-#**notes: DEPRECATED
 def GraphicsDataRectangle(xMin, yMin, xMax, yMax, color=[0.,0.,0.,1.]): 
+    """generate graphics data for 2D rectangle
+
+    Args:
+        minimal and maximal cartesian coordinates in (x/y) plane; color provided as list of 4 RGBA values
+
+    Returns:
+        graphicsData dictionary, to be used in visualization of EXUDYN objects
+
+    Note:
+        DEPRECATED
+    """
 
     rect = [xMin, yMin,xMax,yMax]
     dataRect = {'type':'Line', 'color': list(color), 'data':[rect[0],rect[1],0, rect[2],rect[1],0, rect[2],rect[3],0, rect[0],rect[3],0, rect[0],rect[1],0]}
@@ -410,11 +462,18 @@ def GraphicsDataRectangle(xMin, yMin, xMax, yMax, color=[0.,0.,0.,1.]):
     return dataRect
 
 #************************************************
-#**function: generate graphics data for orthogonal block drawn with lines
-#**input: minimal and maximal cartesian coordinates for orthogonal cube; color provided as list of 4 RGBA values
-#**output: graphicsData dictionary, to be used in visualization of EXUDYN objects
-#**notes: DEPRECATED
 def GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.]): 
+    """generate graphics data for orthogonal block drawn with lines
+
+    Args:
+        minimal and maximal cartesian coordinates for orthogonal cube; color provided as list of 4 RGBA values
+
+    Returns:
+        graphicsData dictionary, to be used in visualization of EXUDYN objects
+
+    Note:
+        DEPRECATED
+    """
 
     dataRect = {'type':'Line', 'color': list(color), 'data':[xMin,yMin,zMin, xMin,yMax,zMin, xMin,yMin,zMin, xMax,yMin,zMin, xMax,yMax,zMin, xMax,yMin,zMin, 
                                                        xMax,yMin,zMax, xMax,yMax,zMax, xMax,yMin,zMax, xMin,yMin,zMax, xMin,yMax,zMax, xMin,yMin,zMax, 

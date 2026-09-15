@@ -186,7 +186,7 @@ Do not enforce them retroactively, and do not introduce them into files that lac
 |---|---|
 | Doxygen comment style (`//!`, `@todo`, `@test`, `@bug`) | **deprecated, and the toolchain is gone.** `docs/doxygen/` was removed 2026-09-10 — it broke on project size, the PDF path never worked, and graph generation had already been switched off. So nothing consumes these comments any more. New code need not adopt the style; existing blocks stay until a dedicated cleanup step. For the architectural overview doxygen was once expected to give, see [ARCHITECTURE.md](ARCHITECTURE.md). |
 | "Add a complete unit test to every function" (LEST) | not obeyed. The LEST tests are gated on `PERFORM_UNIT_TESTS`, enabled only for Python 3.7, so they run nowhere. Plan step 42 wires them into the VS `Debug` configuration. |
-| The `#**` doc-comment convention in `main/pythonDev/exudyn/` | **in migration** to NumPy docstrings, plan steps 36-39. Only 11 tags are parsed; anything else is silently dropped. Do not convert these outside a Phase 3 step. |
+| The `#**` doc-comment convention in `python/exudyn/` | **replaced 2026-09-15** (plan step 36) by Google-style docstrings: summary, then `Args:`, `Returns:`, `Note:`, `Example:`, each section's text indented by four spaces. `author`, `date`, `status` and `public=False` go into `@docmeta(...)` (`exudyn/docmeta.py`), a MainSystem method is marked `@extends(exudyn.MainSystem)`. The text inside is still LaTeX-flavoured until step 36d turns it into Markdown. |
 
 **The operative rule when editing an existing file: follow that file's local style.** A consistent
 file beats a globally consistent repository during a migration.

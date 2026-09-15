@@ -15,6 +15,7 @@
 
 
 
+from exudyn.docmeta import docmeta
 import numpy as np
 from numpy.linalg import norm
 from math import sin, cos, tan, atan2, sqrt
@@ -28,11 +29,16 @@ from exudyn.rigidBodyUtilities import EulerParameters2RotationMatrix, RotXYZ2Rot
 #       HELPER METHODS FOR BASIC LIE GROUP METHODS
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-#**function: compute the cardinal sine function in radians
-#**input: scalar float or int value
-#**output: float value in radians
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def Sinc(x):
+    """compute the cardinal sine function in radians
+
+    Args:
+        scalar float or int value
+
+    Returns:
+        float value in radians
+    """
     if x == 0.:
         s = 1.0
     else:
@@ -41,39 +47,56 @@ def Sinc(x):
     return s
 
 
-#**function: compute the cotangent function cot(x)=1/tan(x) in radians
-#**input: scalar float or int value
-#**output: float value in radians
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def Cot(x):
+    """compute the cotangent function cot(x)=1/tan(x) in radians
+
+    Args:
+        scalar float or int value
+
+    Returns:
+        float value in radians
+    """
     return 1/tan(x)
 
 
-#**function: computes 3x3 rotation matrix from 7x7 R3xSO(3) matrix, see \cite{Bruels2011}
-#**input: 
-#   G: 7x7 matrix as np.array
-#**output: 3x3 rotation matrix as np.array
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def R3xSO3Matrix2RotationMatrix(G): 
+    r"""computes 3x3 rotation matrix from 7x7 R3xSO(3) matrix, see \cite{Bruels2011}
+
+    Args:
+        G: 7x7 matrix as np.array
+
+    Returns:
+        3x3 rotation matrix as np.array
+    """
     return G[0:3,0:3]
 
 
-#**function: computes translation part of R3xSO(3) matrix, see \cite{Bruels2011}
-#**input: 
-#   G: 7x7 matrix as np.array
-#**output: 3D vector as np.array containg translational part of R3xSO(3)
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def R3xSO3Matrix2Translation(G):
+    r"""computes translation part of R3xSO(3) matrix, see \cite{Bruels2011}
+
+    Args:
+        G: 7x7 matrix as np.array
+
+    Returns:
+        3D vector as np.array containg translational part of R3xSO(3)
+    """
     return G[3:6,6]
 
 
-#**function: builds 7x7 matrix as element of the Lie group R3xSO(3), see \cite{Bruels2011}
-#**input: 
-#   x: 3D vector as np.array representing the translation part corresponding to R3 
-#   R: 3x3 rotation matrix as np.array
-#**output: 7x7 matrix as np.array
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def R3xSO3Matrix(x,R):
+    r"""builds 7x7 matrix as element of the Lie group R3xSO(3), see \cite{Bruels2011}
+
+    Args:
+        x: 3D vector as np.array representing the translation part corresponding to R3
+        R: 3x3 rotation matrix as np.array
+
+    Returns:
+        7x7 matrix as np.array
+    """
     G = np.eye(7)
     G[0:3,0:3] = R
     G[3:6,6] = x
@@ -92,11 +115,16 @@ def R3xSO3Matrix(x,R):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-#**function: compute the matrix exponential map on the Lie group SO(3), see \cite{Mueller2017}
-#**input: 3D rotation vector as np.array
-#**output: 3x3 matrix as np.array
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def ExpSO3(Omega):
+    r"""compute the matrix exponential map on the Lie group SO(3), see \cite{Mueller2017}
+
+    Args:
+        3D rotation vector as np.array
+
+    Returns:
+        3x3 matrix as np.array
+    """
     phi = norm(Omega)
     I = np.eye(3)
     OmegaSkew = Skew(Omega)
@@ -104,24 +132,36 @@ def ExpSO3(Omega):
     return R  
 
 
-#**function: compute the quaternion exponential map on the Lie group S(3), see \cite{Terze2016, Mueller2017}
-#**input: 3D rotation vector as np.array
-#**output: 4D vector as np.array containing four Euler parameters 
-#          entry zero of output represent the scalar part of Euler parameters
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def ExpS3(Omega):
+    r"""compute the quaternion exponential map on the Lie group S(3), see \cite{Terze2016, Mueller2017}
+
+    Args:
+        3D rotation vector as np.array
+
+    Returns:
+        4D vector as np.array containing four Euler parameters
+        entry zero of output represent the scalar part of Euler parameters
+    """
     phi = norm(Omega)
     q0 = cos(0.5*phi)
     qV = 0.5*Sinc(0.5*phi)*Omega
     return np.array([q0, qV[0], qV[1], qV[2]])     
 
 
-#**function: compute the matrix logarithmic map on the Lie group SO(3)
-#**input: 3x3 rotation matrix as np.array
-#**output: 3x3 skew symmetric matrix as np.array
-#**author: Johannes Gerstmayr
-#**notes: improved accuracy for very small angles as well as angles phi close to pi AS WELL AS at phi=pi
+@docmeta(author='Johannes Gerstmayr')
 def LogSO3(R):
+    """compute the matrix logarithmic map on the Lie group SO(3)
+
+    Args:
+        3x3 rotation matrix as np.array
+
+    Returns:
+        3x3 skew symmetric matrix as np.array
+
+    Note:
+        improved accuracy for very small angles as well as angles phi close to pi AS WELL AS at phi=pi
+    """
     ep = RotationMatrix2EulerParameters(R)
     
     n = ep[1:]
@@ -153,11 +193,16 @@ def LogSO3(R):
 #     return X
 
 
-#**function: compute the tangent operator corresponding to ExpSO3, see \cite{Bruels2011}
-#**input: 3D rotation vector as np.array
-#**output: 3x3 matrix as np.array       
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def TExpSO3(Omega):
+    r"""compute the tangent operator corresponding to ExpSO3, see \cite{Bruels2011}
+
+    Args:
+        3D rotation vector as np.array
+
+    Returns:
+        3x3 matrix as np.array
+    """
     #not all of these terms are needed (as implemented in C++ code):
 
     phi = norm(Omega)
@@ -176,12 +221,17 @@ def TExpSO3(Omega):
     return T
 
 
-#**function: compute the inverse of the tangent operator TExpSO3, see \cite{Sonneville2014}
-#            this function was improved, see coordinateMaps.pdf by Stefan Holzinger
-#**input: 3D rotation vector as np.array
-#**output: 3x3 matrix as np.array 
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def TExpSO3Inv(Omega):
+    r"""compute the inverse of the tangent operator TExpSO3, see \cite{Sonneville2014}
+    this function was improved, see coordinateMaps.pdf by Stefan Holzinger
+
+    Args:
+        3D rotation vector as np.array
+
+    Returns:
+        3x3 matrix as np.array
+    """
     phi = norm(Omega)
     if phi == 0.0: 
         Tinv = np.eye(3)
@@ -200,11 +250,16 @@ def TExpSO3Inv(Omega):
     return Tinv 
 
 
-#**function: compute the matrix exponential map on the Lie group SE(3), see \cite{Bruels2011}
-#**input: 6D incremental motion vector as np.array
-#**output: 4x4 homogeneous transformation matrix as np.array
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def ExpSE3(x):
+    r"""compute the matrix exponential map on the Lie group SE(3), see \cite{Bruels2011}
+
+    Args:
+        6D incremental motion vector as np.array
+
+    Returns:
+        4x4 homogeneous transformation matrix as np.array
+    """
     U     = x[0:3]
     Omega = x[3:6]
     R = ExpSO3(Omega)
@@ -212,11 +267,16 @@ def ExpSE3(x):
     return HomogeneousTransformation(R, x)
 
 
-#**function: compute the matrix logarithm on the Lie group SE(3), see \cite{Sonneville2014}
-#**input: 4x4 homogeneous transformation matrix as np.array
-#**output: 4x4 skew symmetric matrix as np.array
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def LogSE3(H):
+    r"""compute the matrix logarithm on the Lie group SE(3), see \cite{Sonneville2014}
+
+    Args:
+        4x4 homogeneous transformation matrix as np.array
+
+    Returns:
+        4x4 skew symmetric matrix as np.array
+    """
     R = HT2rotationMatrix(H)
     aSkew = LogSO3(R)
     a = Skew2Vec(aSkew)   
@@ -228,12 +288,19 @@ def LogSE3(H):
     return log
     
 
-#**function: compute the tangent operator corresponding to ExpSE3, see \cite{Bruels2011}
-#**input: 6D incremental motion vector as np.array
-#**output: 6x6 matrix as np.array
-#**author: Stefan Holzinger
-#**notes: improved accuracy for very small angles as well as angles phi 
+@docmeta(author='Stefan Holzinger')
 def TExpSE3(x):
+    r"""compute the tangent operator corresponding to ExpSE3, see \cite{Bruels2011}
+
+    Args:
+        6D incremental motion vector as np.array
+
+    Returns:
+        6x6 matrix as np.array
+
+    Note:
+        improved accuracy for very small angles as well as angles phi
+    """
     U     = x[0:3]
     Omega = x[3:6]
     USkew     = Skew(U)
@@ -274,12 +341,19 @@ def TExpSE3(x):
 
 
 
-#**function: compute the inverse of tangent operator TExpSE3, see \cite{Sonneville2014}
-#**input: 6D incremental motion vector as np.array
-#**output: 6x6 matrix as np.array
-#**author: Stefan Holzinger
-#**notes: improved accuracy for very small angles as well as angles phi 
+@docmeta(author='Stefan Holzinger')
 def TExpSE3Inv(x):
+    r"""compute the inverse of tangent operator TExpSE3, see \cite{Sonneville2014}
+
+    Args:
+        6D incremental motion vector as np.array
+
+    Returns:
+        6x6 matrix as np.array
+
+    Note:
+        improved accuracy for very small angles as well as angles phi
+    """
     U     = x[0:3]
     Omega = x[3:6]
     USkew     = Skew(U)
@@ -307,32 +381,47 @@ def TExpSE3Inv(x):
     return Tinv
     
 
-#**function: compute the matrix exponential map on the Lie group R3xSO(3), see \cite{Bruels2011}
-#**input: 6D incremental motion vector as np.array
-#**output: 7x7 matrix as np.array
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def ExpR3xSO3(x):
+    r"""compute the matrix exponential map on the Lie group R3xSO(3), see \cite{Bruels2011}
+
+    Args:
+        6D incremental motion vector as np.array
+
+    Returns:
+        7x7 matrix as np.array
+    """
     G = np.eye(7)
     G[0:3,0:3] = ExpSO3(x[3:6])
     G[3:6,6] = x[0:3]
     return G
 
 
-#**function: compute the tangent operator corresponding to ExpR3xSO3, see \cite{Bruels2011}
-#**input: 6D incremental motion vector as np.array
-#**output: 6x6 matrix as np.array
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def TExpR3xSO3(x):
+    r"""compute the tangent operator corresponding to ExpR3xSO3, see \cite{Bruels2011}
+
+    Args:
+        6D incremental motion vector as np.array
+
+    Returns:
+        6x6 matrix as np.array
+    """
     T = np.eye(6)
     T[3:6,3:6] = TExpSO3(x[3:6])
     return T
 
 
-#**function: compute the inverse of tangent operator TExpR3xSO3
-#**input: 6D incremental motion vector as np.array
-#**output: 6x6 matrix as np.array
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def TExpR3xSO3Inv(x):
+    """compute the inverse of tangent operator TExpR3xSO3
+
+    Args:
+        6D incremental motion vector as np.array
+
+    Returns:
+        6x6 matrix as np.array
+    """
     T = np.eye(6)
     T[3:6,3:6] = TExpSO3Inv(x[3:6])
     return T
@@ -350,13 +439,17 @@ def TExpR3xSO3Inv(x):
 
 
 
-#**function: compute composition operation for pairs in the Lie group R3xS3
-#**input: 
-#  q0: 7D vector as np.array containing position coordinates and Euler parameters
-#  incrementalMotionVector: 6D incremental motion vector as np.array
-#**output: 7D vector as np.array containing composed position coordinates and composed Euler parameters
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def CompositionRuleDirectProductR3AndS3(q0, incrementalMotionVector):
+    """compute composition operation for pairs in the Lie group R3xS3
+
+    Args:
+        q0: 7D vector as np.array containing position coordinates and Euler parameters
+        incrementalMotionVector: 6D incremental motion vector as np.array
+
+    Returns:
+        7D vector as np.array containing composed position coordinates and composed Euler parameters
+    """
     
     # pair (x0, theta0)
     x0     = q0[0:3]  # global COM position at time step t0
@@ -373,13 +466,17 @@ def CompositionRuleDirectProductR3AndS3(q0, incrementalMotionVector):
     return np.block([x, theta])
 
 
-#**function: compute composition operation for pairs in the Lie group R3 semiTimes S3 (corresponds to SE(3))
-#**input: 
-#  q0: 7D vector as np.array containing position coordinates and Euler parameters
-#  incrementalMotionVector: 6D incremental motion vector as np.array
-#**output: 7D vector as np.array containing composed position coordinates and composed Euler parameters
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def CompositionRuleSemiDirectProductR3AndS3(q0, incrementalMotionVector):
+    """compute composition operation for pairs in the Lie group R3 semiTimes S3 (corresponds to SE(3))
+
+    Args:
+        q0: 7D vector as np.array containing position coordinates and Euler parameters
+        incrementalMotionVector: 6D incremental motion vector as np.array
+
+    Returns:
+        7D vector as np.array containing composed position coordinates and composed Euler parameters
+    """
     
     # pair (x0, theta0)
     x0     = q0[0:3]  # global COM position at time step t0
@@ -397,15 +494,19 @@ def CompositionRuleSemiDirectProductR3AndS3(q0, incrementalMotionVector):
     return np.block([x, theta])
 
 
-#**function: compute composition operation for pairs in the group obtained from the direct product of R3 and R3, see \cite{HolzingerGerstmayr2020}
-#            the rotation vector is used as rotation parametrizations
-#            this composition operation can be used in formulations which represent the translational velocities in the global (inertial) frame
-#**input: 
-#  q0: 6D vector as np.array containing position coordinates and rotation vector
-#  incrementalMotionVector: 6D incremental motion vector as np.array
-#**output: 7D vector as np.array containing composed position coordinates and composed rotation vector
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def CompositionRuleDirectProductR3AndR3RotVec(q0, incrementalMotionVector):
+    r"""compute composition operation for pairs in the group obtained from the direct product of R3 and R3, see \cite{HolzingerGerstmayr2020}
+    the rotation vector is used as rotation parametrizations
+    this composition operation can be used in formulations which represent the translational velocities in the global (inertial) frame
+
+    Args:
+        q0: 6D vector as np.array containing position coordinates and rotation vector
+        incrementalMotionVector: 6D incremental motion vector as np.array
+
+    Returns:
+        7D vector as np.array containing composed position coordinates and composed rotation vector
+    """
     
     # pair (x0, psi0)
     x0   = q0[0:3]  # global COM position at time step t0
@@ -422,15 +523,19 @@ def CompositionRuleDirectProductR3AndR3RotVec(q0, incrementalMotionVector):
     return np.block([x, psi])
 
 
-#**function: compute composition operation for pairs in the group obtained from the direct product of R3 and R3.
-#            the rotation vector is used as rotation parametrizations
-#            this composition operation can be used in formulations which represent the translational velocities in the local (body-attached) frame
-#**input: 
-#  q0: 6D vector as np.array containing position coordinates and rotation vector
-#  incrementalMotionVector: 6D incremental motion vector as np.array
-#**output: 6D vector as np.array containing composed position coordinates and composed rotation vector
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def CompositionRuleSemiDirectProductR3AndR3RotVec(q0, incrementalMotionVector):
+    """compute composition operation for pairs in the group obtained from the direct product of R3 and R3.
+    the rotation vector is used as rotation parametrizations
+    this composition operation can be used in formulations which represent the translational velocities in the local (body-attached) frame
+
+    Args:
+        q0: 6D vector as np.array containing position coordinates and rotation vector
+        incrementalMotionVector: 6D incremental motion vector as np.array
+
+    Returns:
+        6D vector as np.array containing composed position coordinates and composed rotation vector
+    """
     
     # pair (x0, psi0)
     x0   = q0[0:3]  # global COM position at time step t0
@@ -448,15 +553,19 @@ def CompositionRuleSemiDirectProductR3AndR3RotVec(q0, incrementalMotionVector):
     return np.block([x, psi])
 
 
-#**function: compute composition operation for pairs in the group obtained from the direct product of R3 and R3.
-#            Cardan-Tait/Bryan (CTB) angles are used as rotation parametrizations
-#            this composition operation can be used in formulations which represent the translational velocities in the global (inertial) frame
-#**input: 
-#  q0: 6D vector as np.array containing position coordinates and Cardan-Tait/Bryan angles
-#  incrementalMotionVector: 6D incremental motion vector as np.array
-#**output: 6D vector as np.array containing composed position coordinates and composed Cardan-Tait/Bryan angles
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def CompositionRuleDirectProductR3AndR3RotXYZAngles(q0, incrementalMotionVector):
+    """compute composition operation for pairs in the group obtained from the direct product of R3 and R3.
+    Cardan-Tait/Bryan (CTB) angles are used as rotation parametrizations
+    this composition operation can be used in formulations which represent the translational velocities in the global (inertial) frame
+
+    Args:
+        q0: 6D vector as np.array containing position coordinates and Cardan-Tait/Bryan angles
+        incrementalMotionVector: 6D incremental motion vector as np.array
+
+    Returns:
+        6D vector as np.array containing composed position coordinates and composed Cardan-Tait/Bryan angles
+    """
     
     # pair (x0, psi0)
     x0     = q0[0:3]  # global COM position at time step t0
@@ -473,15 +582,19 @@ def CompositionRuleDirectProductR3AndR3RotXYZAngles(q0, incrementalMotionVector)
     return np.block([x, alpha])
 
 
-#**function: compute composition operation for pairs in the group obtained from the direct product of R3 and R3.
-#            Cardan-Tait/Bryan (CTB) angles are used as rotation parametrizations
-#            this composition operation can be used in formulations which represent the translational velocities in the local (body-attached) frame
-#**input: 
-#  q0: 6D vector as np.array containing position coordinates and Cardan-Tait/Bryan angles
-#  incrementalMotionVector: 6D incremental motion vector as np.array
-#**output: 6D vector as np.array containing composed position coordinates and composed Cardan-Tait/Bryan angles
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def CompositionRuleSemiDirectProductR3AndR3RotXYZAngles(q0, incrementalMotionVector):
+    """compute composition operation for pairs in the group obtained from the direct product of R3 and R3.
+    Cardan-Tait/Bryan (CTB) angles are used as rotation parametrizations
+    this composition operation can be used in formulations which represent the translational velocities in the local (body-attached) frame
+
+    Args:
+        q0: 6D vector as np.array containing position coordinates and Cardan-Tait/Bryan angles
+        incrementalMotionVector: 6D incremental motion vector as np.array
+
+    Returns:
+        6D vector as np.array containing composed position coordinates and composed Cardan-Tait/Bryan angles
+    """
     
     # pair (x0, psi0)
     x0     = q0[0:3]  # global COM position at time step t0
@@ -499,14 +612,18 @@ def CompositionRuleSemiDirectProductR3AndR3RotXYZAngles(q0, incrementalMotionVec
     return np.block([x, alpha])
  
 
-#**function: compute composition operation for Euler parameters (unit quaternions)
-#            this composition operation is quaternion multiplication, see \cite{Terze2016}
-#**input: 
-#  q: 4D vector as np.array containing Euler parameters
-#  p: 4D vector as np.array containing Euler parameters
-#**output: 4D vector as np.array containing composed (multiplied) Euler parameters
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def CompositionRuleForEulerParameters(q, p):
+    r"""compute composition operation for Euler parameters (unit quaternions)
+    this composition operation is quaternion multiplication, see \cite{Terze2016}
+
+    Args:
+        q: 4D vector as np.array containing Euler parameters
+        p: 4D vector as np.array containing Euler parameters
+
+    Returns:
+        4D vector as np.array containing composed (multiplied) Euler parameters
+    """
     p0 = p[0]
     pV = p[1:4]
     q0 = q[0]
@@ -516,13 +633,17 @@ def CompositionRuleForEulerParameters(q, p):
     return np.array([x0, xV[0], xV[1], xV[2]])
 
 
-#**function: compute composition operation for rotation vectors v0 and Omega, see \cite{Holzinger2021}
-#**input: 
-#  v0: 3D rotation vector as np.array
-#  Omega: 3D (incremental) rotation vector as np.array
-#**output: 3D vector as np.array containing composed rotation vector v
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def CompositionRuleForRotationVectors(v0, Omega):
+    r"""compute composition operation for rotation vectors v0 and Omega, see \cite{Holzinger2021}
+
+    Args:
+        v0: 3D rotation vector as np.array
+        Omega: 3D (incremental) rotation vector as np.array
+
+    Returns:
+        3D vector as np.array containing composed rotation vector v
+    """
     w1Half = 0.5*norm(v0)
     w2Half = 0.5*norm(Omega)
     c0 = cos(w1Half)
@@ -539,13 +660,17 @@ def CompositionRuleForRotationVectors(v0, Omega):
     return v
 
 
-#**function: compute composition operation for RotXYZ angles, see \cite{Holzinger2021}
-#**input: 
-#  alpha0: 3D vector as np.array containing RotXYZ angles
-#  Omega:  3D vector as np.array containing the (incremental) rotation vector
-#**output: 3D vector as np.array containing composed RotXYZ angles
-#**author: Stefan Holzinger
+@docmeta(author='Stefan Holzinger')
 def CompositionRuleRotXYZAnglesRotationVector(alpha0, Omega):
+    r"""compute composition operation for RotXYZ angles, see \cite{Holzinger2021}
+
+    Args:
+        alpha0: 3D vector as np.array containing RotXYZ angles
+        Omega:  3D vector as np.array containing the (incremental) rotation vector
+
+    Returns:
+        3D vector as np.array containing composed RotXYZ angles
+    """
   
     # Cardan-Tait/Bryan angles
     psi0   = alpha0[0]

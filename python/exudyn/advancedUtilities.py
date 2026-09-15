@@ -24,10 +24,15 @@ from exudyn.itemInterface import userFunctionArgsDict
 #GENERAL FUNCTIONS
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#**function: helper functions for matplotlib, returns a list of 28 line codes to be used in plot, e.g. 'r-' for red solid line
-#**input: index in range(0:28)
-#**output: a color and line style code for matplotlib plot
 def PlotLineCode(index):
+    """helper functions for matplotlib, returns a list of 28 line codes to be used in plot, e.g. 'r-' for red solid line
+
+    Args:
+        index in range(0:28)
+
+    Returns:
+        a color and line style code for matplotlib plot
+    """
     CC = ['r-','g-','b-','k-','c-','m-','y-','r:','g:','b:','k:','c:','m:','y:','r--','g--','b--','k--','c--','m--','y--','r-.','g-.','b-.','k-.','c-.','m-.','y-.']
     if index < len(CC):
         return CC[index]
@@ -46,12 +51,16 @@ specialExudynTypes = (exudyn.ObjectIndex, exudyn.NodeIndex, exudyn.LoadIndex,
 #INSPECTION, needs numpy and exudyn:
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         
-#**function: simple function to find object index i within the local or global scope of variables
-#**input: i, the integer object number and  globalVariables=globals()
-#**example:
-# FindObjectIndex(2, locals() )  #usually sufficient
-# FindObjectIndex(2, globals() ) #wider search
 def FindObjectIndex(i, globalVariables):
+    """simple function to find object index i within the local or global scope of variables
+
+    Args:
+        i, the integer object number and  globalVariables=globals()
+
+    Example:
+        FindObjectIndex(2, locals() )  #usually sufficient
+        FindObjectIndex(2, globals() ) #wider search
+    """
     #run through all variables and check if an object index exists
     found = False
     for varname in globalVariables:
@@ -62,12 +71,16 @@ def FindObjectIndex(i, globalVariables):
     if not found:
         exudyn.Print("no according variable found")
 
-#**function: simple function to find node index i within the local or global scope of variables
-#**input: i, the integer node number and  globalVariables=globals()
-#**example:
-# FindObjectIndex(2, locals() )  #usually sufficient
-# FindObjectIndex(2, globals() ) #wider search
 def FindNodeIndex(i, globalVariables):
+    """simple function to find node index i within the local or global scope of variables
+
+    Args:
+        i, the integer node number and  globalVariables=globals()
+
+    Example:
+        FindObjectIndex(2, locals() )  #usually sufficient
+        FindObjectIndex(2, globals() ) #wider search
+    """
     #run through all variables and check if an object index exists
     found = False
     for varname in globalVariables:
@@ -78,12 +91,16 @@ def FindNodeIndex(i, globalVariables):
     if not found:
         exudyn.Print("no according variable found")
 
-#**function: checks, if data is of type list or np.array; used in functions to check input data
-#**input:
-#  data: any type, preferrably list or numpy.array
-#  checkIfNoneEmpty: if True, function only returns True if type is list or array AND if length is non-zero
-#**output: returns True/False
 def IsListOrArray(data, checkIfNoneEmpty=False):
+    """checks, if data is of type list or np.array; used in functions to check input data
+
+    Args:
+        data: any type, preferrably list or numpy.array
+        checkIfNoneEmpty: if True, function only returns True if type is list or array AND if length is non-zero
+
+    Returns:
+        returns True/False
+    """
     if isinstance(data,list) or isinstance(data,np.ndarray):
         if checkIfNoneEmpty and len(data) == 0:
             return False
@@ -92,8 +109,9 @@ def IsListOrArray(data, checkIfNoneEmpty=False):
         return False
 
 
-#**class: internal type which is used for type checking in exudyn Python user functions; used to create unique error messages
 class ExpectedType(Enum):
+    """internal type which is used for type checking in exudyn Python user functions; used to create unique error messages
+    """
     _None = 0
     Positive = 1
     Unsigned = 2
@@ -115,8 +133,9 @@ class ExpectedType(Enum):
     SensorIndex = 4096
     String = 8192
 
-#**function: internal function which is used to raise common errors in case of wrong types; dim is used for vectors and square matrices, cols is used for non-square matrices
 def RaiseTypeError(where='', argumentName='', received = None, expectedType = None, dim=None, cols=None):
+    """internal function which is used to raise common errors in case of wrong types; dim is used for vectors and square matrices, cols is used for non-square matrices
+    """
     t = copy.copy(expectedType)
     
     errStr = 'ERROR in ' + where + ' in argument ' + argumentName + ': '
@@ -148,16 +167,19 @@ def RaiseTypeError(where='', argumentName='', received = None, expectedType = No
 
     raise ValueError(errStr)
 
-#**function: return True, if x is None; works also for numpy arrays or structures
 def IsNone(x):
+    """return True, if x is None; works also for numpy arrays or structures
+    """
     return (x is None)
 
-#**function: return True, if x is not None; works also for numpy arrays or structures
 def IsNotNone(x):
+    """return True, if x is not None; works also for numpy arrays or structures
+    """
     return (x is not None)
 
-#**function: return True, if x is int, float, np.double, np.integer or similar types that can be automatically casted to pybind11
 def IsValidBool(x):
+    """return True, if x is int, float, np.double, np.integer or similar types that can be automatically casted to pybind11
+    """
     if (isinstance(x, bool)
         or isinstance(x, int)
         or isinstance(x, np.integer)
@@ -165,8 +187,9 @@ def IsValidBool(x):
         return True
     return False
 
-#**function: return True, if x is int, float, np.double, np.integer or similar types that can be automatically casted to pybind11
 def IsValidRealInt(x):
+    """return True, if x is int, float, np.double, np.integer or similar types that can be automatically casted to pybind11
+    """
     if (isinstance(x, float) 
         or isinstance(x, int)
         or isinstance(x, np.double)
@@ -175,42 +198,48 @@ def IsValidRealInt(x):
         return True
     return False
 
-#**function: return True, if x is int, np.integer or similar types that can be automatically casted to pybind11
 def IsValidInt(x):
+    """return True, if x is int, np.integer or similar types that can be automatically casted to pybind11
+    """
     if (isinstance(x, int)
         or isinstance(x, np.integer)
         ):
         return True
     return False
 
-#**function: return True, if x is valid Real/Int and positive
 def IsValidPRealInt(x):
+    """return True, if x is valid Real/Int and positive
+    """
     if IsValidRealInt(x) and x > 0:
         return True
     return False
 
-#**function: return True, if x is valid Real/Int and unsigned (non-negative)
 def IsValidURealInt(x):
+    """return True, if x is valid Real/Int and unsigned (non-negative)
+    """
     if IsValidRealInt(x) and x >= 0:
         return True
     return False
 
-#**function: return True, if x is any python or numpy float type; could also be called IsFloat(), but Real has special meaning in Exudyn
 def IsReal(x):
+    """return True, if x is any python or numpy float type; could also be called IsFloat(), but Real has special meaning in Exudyn
+    """
     if isinstance(x, (np.floating, float)): 
         return True
     else:
         return False
 
-#**function: return True, if x is any python or numpy float type
 def IsInteger(x):
+    """return True, if x is any python or numpy float type
+    """
     if isinstance(x, (np.integer, int)): 
         return True
     else:
         return False
 
-#**function: check if v is a valid vector with floats or ints; if expectedSize!=None, the length is also checked
 def IsVector(v, expectedSize=None):
+    """check if v is a valid vector with floats or ints; if expectedSize!=None, the length is also checked
+    """
     if type(v) != list and type(v) != np.ndarray:
         return False
 
@@ -223,8 +252,9 @@ def IsVector(v, expectedSize=None):
 
     return True
 
-#**function: check if v is a valid vector with floats or ints; if expectedSize!=None, the length is also checked
 def IsIntVector(v, expectedSize=None):
+    """check if v is a valid vector with floats or ints; if expectedSize!=None, the length is also checked
+    """
     if type(v) != list and type(v) != np.ndarray:
         return False
 
@@ -238,8 +268,9 @@ def IsIntVector(v, expectedSize=None):
     return True
 
 
-#**function: check if v is a valid vector with floats or ints; if expectedSize!=None, the length is also checked
 def IsSquareMatrix(m, expectedSize=None):
+    """check if v is a valid vector with floats or ints; if expectedSize!=None, the length is also checked
+    """
     if type(m) != list and type(m) != np.ndarray:
         return False
 
@@ -255,41 +286,51 @@ def IsSquareMatrix(m, expectedSize=None):
 
     return True
 
-#**function: return True, if x is valid exudyn object index
 def IsValidObjectIndex(x):
+    """return True, if x is valid exudyn object index
+    """
     if isinstance(x, int) or isinstance(x, np.integer) or isinstance(x, exudyn.ObjectIndex):
         return True
     return False
 
-#**function: return True, if x is valid exudyn node index
 def IsValidNodeIndex(x):
+    """return True, if x is valid exudyn node index
+    """
     if isinstance(x, int) or isinstance(x, np.integer) or isinstance(x, exudyn.NodeIndex):
         return True
     return False
 
-#**function: return True, if x is valid exudyn marker index
 def IsValidMarkerIndex(x):
+    """return True, if x is valid exudyn marker index
+    """
     if isinstance(x, int) or isinstance(x, np.integer) or isinstance(x, exudyn.MarkerIndex):
         return True
     return False
 
-#**function: return True, if x is an empty list (or empty list converted from numpy array), otherwise return False
 def IsEmptyList(x):
+    """return True, if x is an empty list (or empty list converted from numpy array), otherwise return False
+    """
     if isinstance(x, list) or isinstance(x, np.ndarray):
         return len(x) == 0
     return False 
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: fill submatrix into given destinationMatrix; all matrices must be numpy arrays 
-#**input: 
-#  subMatrix: input matrix, which is filled into destinationMatrix
-#  destinationMatrix: the subMatrix is entered here
-#  destRow: row destination of subMatrix
-#  destColumn: column destination of subMatrix
-#**notes: may be erased in future!
-#**output: destinationMatrix is changed after function call
 def FillInSubMatrix(subMatrix, destinationMatrix, destRow, destColumn):
+    """fill submatrix into given destinationMatrix; all matrices must be numpy arrays
+
+    Args:
+        subMatrix: input matrix, which is filled into destinationMatrix
+        destinationMatrix: the subMatrix is entered here
+        destRow: row destination of subMatrix
+        destColumn: column destination of subMatrix
+
+    Returns:
+        destinationMatrix is changed after function call
+
+    Note:
+        may be erased in future!
+    """
     nRows = subMatrix.shape[0]
     nColumns = subMatrix.shape[1]
 
@@ -301,47 +342,63 @@ def FillInSubMatrix(subMatrix, destinationMatrix, destRow, destColumn):
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: compute sin sweep at given time t
-#**input: 
-#  t: evaluate of sweep at time t
-#  t1: end time of sweep frequency range
-#  f0: start of frequency interval [f0,f1] in Hz
-#  f1: end of frequency interval [f0,f1] in Hz
-#**output: evaluation of sin sweep (in range -1..+1)
 def SweepSin(t, t1, f0, f1):
+    """compute sin sweep at given time t
+
+    Args:
+        t: evaluate of sweep at time t
+        t1: end time of sweep frequency range
+        f0: start of frequency interval [f0,f1] in Hz
+        f1: end of frequency interval [f0,f1] in Hz
+
+    Returns:
+        evaluation of sin sweep (in range -1..+1)
+    """
     k = (f1-f0)/t1
     return sin(2*pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
 
-#**function: compute cos sweep at given time t
-#**input: 
-#  t: evaluate of sweep at time t
-#  t1: end time of sweep frequency range
-#  f0: start of frequency interval [f0,f1] in Hz
-#  f1: end of frequency interval [f0,f1] in Hz
-#**output: evaluation of cos sweep (in range -1..+1)
 def SweepCos(t, t1, f0, f1):
+    """compute cos sweep at given time t
+
+    Args:
+        t: evaluate of sweep at time t
+        t1: end time of sweep frequency range
+        f0: start of frequency interval [f0,f1] in Hz
+        f1: end of frequency interval [f0,f1] in Hz
+
+    Returns:
+        evaluation of cos sweep (in range -1..+1)
+    """
     k = (f1-f0)/t1
     return cos(2*pi*(f0+k*0.5*t)*t) #take care of factor 0.5 in k*0.5*t, in order to obtain correct frequencies!!!
 
-#**function: frequency according to given sweep functions SweepSin, SweepCos
-#**input: 
-#  t: evaluate of frequency at time t
-#  t1: end time of sweep frequency range
-#  f0: start of frequency interval [f0,f1] in Hz
-#  f1: end of frequency interval [f0,f1] in Hz
-#**output: frequency in Hz
 def FrequencySweep(t, t1, f0, f1):
+    """frequency according to given sweep functions SweepSin, SweepCos
+
+    Args:
+        t: evaluate of frequency at time t
+        t1: end time of sweep frequency range
+        f0: start of frequency interval [f0,f1] in Hz
+        f1: end of frequency interval [f0,f1] in Hz
+
+    Returns:
+        frequency in Hz
+    """
     return t*(f1-f0)/t1 + f0
 
-#**function: step function with smooth transition from value0 to value1; transition is computed with cos function
-#**input:
-#  x: argument at which function is evaluated
-#  x0: start of step (f(x) = value0)
-#  x1: end of step (f(x) = value1)
-#  value0: value before smooth step
-#  value1: value at end of smooth step
-#**output: returns f(x)
 def SmoothStep(x, x0, x1, value0, value1): 
+    """step function with smooth transition from value0 to value1; transition is computed with cos function
+
+    Args:
+        x: argument at which function is evaluated
+        x0: start of step (f(x) = value0)
+        x1: end of step (f(x) = value1)
+        value0: value before smooth step
+        value1: value at end of smooth step
+
+    Returns:
+        returns f(x)
+    """
     loadValue = value0
 
     if x > x0:
@@ -352,15 +409,19 @@ def SmoothStep(x, x0, x1, value0, value1):
             loadValue = value1
     return loadValue
 
-#**function: derivative of SmoothStep using same arguments
-#**input:
-#  x: argument at which function is evaluated
-#  x0: start of step (f(x) = value0)
-#  x1: end of step (f(x) = value1)
-#  value0: value before smooth step
-#  value1: value at end of smooth step
-#**output: returns d/dx(f(x))
 def SmoothStepDerivative(x, x0, x1, value0, value1): 
+    """derivative of SmoothStep using same arguments
+
+    Args:
+        x: argument at which function is evaluated
+        x0: start of step (f(x) = value0)
+        x1: end of step (f(x) = value1)
+        value0: value before smooth step
+        value1: value at end of smooth step
+
+    Returns:
+        returns d/dx(f(x))
+    """
     loadValue = 0
 
     if x > x0 and x < x1:
@@ -368,15 +429,21 @@ def SmoothStepDerivative(x, x0, x1, value0, value1):
         loadValue = (value1-value0) * 0.5*(pi/dx*sin((x-x0)/dx*pi)) 
     return loadValue
 
-#**function: get index from value in given data vector (numpy array); usually used to get specific index of time vector; this function is slow (linear search), if sampling rate is non-constant; otherwise set assumeConstantSampleRate=True!
-#**input: 
-#  data: containing (almost) equidistant values of time
-#  value: e.g., time to be found in data
-#  tolerance: tolerance, which is accepted (default: tolerance=1e-7)
-#  rangeWarning: warn, if index returns out of range; if warning is deactivated, function uses the closest value
-#**notes: to obtain the interpolated value of a time-signal array, use GetInterpolatedSignalValue() in exudyn.signalProcessing
-#**output: index
 def IndexFromValue(data, value, tolerance=1e-7, assumeConstantSampleRate=False, rangeWarning=True):
+    """get index from value in given data vector (numpy array); usually used to get specific index of time vector; this function is slow (linear search), if sampling rate is non-constant; otherwise set assumeConstantSampleRate=True!
+
+    Args:
+        data: containing (almost) equidistant values of time
+        value: e.g., time to be found in data
+        tolerance: tolerance, which is accepted (default: tolerance=1e-7)
+        rangeWarning: warn, if index returns out of range; if warning is deactivated, function uses the closest value
+
+    Returns:
+        index
+
+    Note:
+        to obtain the interpolated value of a time-signal array, use GetInterpolatedSignalValue() in exudyn.signalProcessing
+    """
     index  = -1
     
     if assumeConstantSampleRate and len(data) > 1:
@@ -405,10 +472,15 @@ def IndexFromValue(data, value, tolerance=1e-7, assumeConstantSampleRate=False, 
     return index
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: set all entries in matrix to zero which are smaller than given treshold; operates directly on matrix
-#**input: matrix as np.array, treshold as positive value
-#**output: changes matrix
 def RoundMatrix(matrix, treshold = 1e-14):
+    """set all entries in matrix to zero which are smaller than given treshold; operates directly on matrix
+
+    Args:
+        matrix as np.array, treshold as positive value
+
+    Returns:
+        changes matrix
+    """
     (rows, cols) = matrix.shape
     for i in range (rows):
         for j in range(cols):
@@ -417,8 +489,9 @@ def RoundMatrix(matrix, treshold = 1e-14):
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function:  Function to convert a scipy sparse matrix to a dictionary
 def ConvertScipySparseToDict(sparseMatrix):
+    """Function to convert a scipy sparse matrix to a dictionary
+    """
     from scipy.sparse import csr_matrix
     if not isinstance(sparseMatrix, csr_matrix):
         try:
@@ -431,18 +504,23 @@ def ConvertScipySparseToDict(sparseMatrix):
             'indptr': sparseMatrix.indptr,
             'shape': sparseMatrix.shape}
 
-#**function:  Function to convert a dictionary back to a scipy sparse matrix
 def ConvertDictToScipySparse(sparseDict):
+    """Function to convert a dictionary back to a scipy sparse matrix
+    """
     from scipy.sparse import csr_matrix
     return csr_matrix((sparseDict['data'], sparseDict['indices'], sparseDict['indptr']),
                       shape=sparseDict['shape'])
 
-#**function: recursively saves a hierarchical dictionary dataDict to a HDF5 file with given fileName; limitations for certain types and Python or symbolic user functions
-#**input: 
-#  fileName: file name (possibly including path) for HDF5 file, including file ending
-#  dataDict: the dictionary containing the hierarchical data to be saved; the data may contain the following data types in hierarchical form: int, bool, float, str (utf-8), list, dict, numpy array, scipy csr\_matrix, Python function
-#**output: None
 def SaveDictToHDF5(fileName, dataDict):
+    r"""recursively saves a hierarchical dictionary dataDict to a HDF5 file with given fileName; limitations for certain types and Python or symbolic user functions
+
+    Args:
+        fileName: file name (possibly including path) for HDF5 file, including file ending
+        dataDict: the dictionary containing the hierarchical data to be saved; the data may contain the following data types in hierarchical form: int, bool, float, str (utf-8), list, dict, numpy array, scipy csr\_matrix, Python function
+
+    Returns:
+        None
+    """
     try:
         import h5py
         from scipy.sparse import csr_matrix
@@ -545,12 +623,16 @@ def SaveDictToHDF5(fileName, dataDict):
         RecursivelySaveDictToHDF5(h5file, dataDict)
 
 
-#**function: recursively loads a hierarchical dictionary from a HDF5 file with given fileName
-#**input: 
-#  fileName: file name (possibly including path) for HDF5 file, including file ending
-#  callerGlobals: optional: if your data contains functions, the callerGlobals must contain, e.g., globals() of the caller, where the Python functions are defined at which the HDF5 function refers to 
-#**output: dict which contains loaded data
 def LoadDictFromHDF5(fileName, callerGlobals=None):
+    """recursively loads a hierarchical dictionary from a HDF5 file with given fileName
+
+    Args:
+        fileName: file name (possibly including path) for HDF5 file, including file ending
+        callerGlobals: optional: if your data contains functions, the callerGlobals must contain, e.g., globals() of the caller, where the Python functions are defined at which the HDF5 function refers to
+
+    Returns:
+        dict which contains loaded data
+    """
     try:
         import h5py
         #from scipy.sparse import csr_matrix
@@ -663,18 +745,22 @@ def LoadDictFromHDF5(fileName, callerGlobals=None):
 
 
 
-#**function: Internal function to convert a Python user function into a dictionary containing the symbolic representation;
-#  this function is under development and should be used with care
-#**input:
-#  mbs: MainSystem, needed currently for interface
-#  function: Python function with interface according to desired user function
-#  itemIndex: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem; if None, itemTypeName must be provided instead
-#  itemTypeName: use of type name, such as ObjectConnectorSpringDamper; in this case, itemIndex must be None
-#  itemIndex: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem
-#  userFunctionName: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished
-#  verbose: if > 0, according output is printed
-#**output: return dictionary with 'functionName', 'argList', and 'returnList'
 def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, itemTypeName=None, verbose=0):
+    """Internal function to convert a Python user function into a dictionary containing the symbolic representation;
+    this function is under development and should be used with care
+
+    Args:
+        mbs: MainSystem, needed currently for interface
+        function: Python function with interface according to desired user function
+        itemIndex: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem; if None, itemTypeName must be provided instead
+        itemTypeName: use of type name, such as ObjectConnectorSpringDamper; in this case, itemIndex must be None
+        itemIndex: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem
+        userFunctionName: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished
+        verbose: if > 0, according output is printed
+
+    Returns:
+        return dictionary with 'functionName', 'argList', and 'returnList'
+    """
     fnName = function.__name__
     fnArgs = function.__code__.co_varnames
     #fnAnnotations = function.__annotations__ #not necessarily present
@@ -784,35 +870,38 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
             'returnType': returnType}
 
 
-#**function: Helper function to convert a Python user function into a symbolic user function;
-#  this function is under development and should be used with care
-#**input:
-#  mbs: MainSystem, needed currently for interface
-#  function: Python function with interface according to desired user function
-#  itemIndex: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem; if None, itemTypeName must be provided instead
-#  itemTypeName: use of type name, such as ObjectConnectorSpringDamper; in this case, itemIndex must be None
-#  userFunctionName: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished
-#  verbose: if > 0, according output may be printed
-#**output: returns symbolic user function; this can be transfered into an item using TransferUserFunction2Item
-#**notes: keep the return value alive in a variable (or list), as it contains the expression tree which must exist for the lifetime of the user function
-#**example:
-# oGround = mbs.AddObject(ObjectGround())
-#
-# node = mbs.AddNode(NodePoint(referenceCoordinates = [1.05,0,0]))
-# oMassPoint = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
-#
-# symbolicFunc = CreateSymbolicUserFunction(mbs, function=springForceUserFunction, 
-#                                           userFunctionName='springForceUserFunction', 
-#                                           itemTypeName='ObjectConnectorSpringDamper')
-#
-# m0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
-# m1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oMassPoint, localPosition=[0,0,0]))
-# co = mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
-#                    referenceLength = 1, stiffness = 100, damping = 1, 
-#                    springForceUserFunction=symbolicFunc))
-#
-# exudyn.Print(symbolicFunc.Evaluate(mbs, 0., 0, 1.1, 0.,  100., 0., 13.) )
 def CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex=None, itemTypeName=None, verbose=0):
+    """Helper function to convert a Python user function into a symbolic user function;
+    this function is under development and should be used with care
+
+    Args:
+        mbs: MainSystem, needed currently for interface
+        function: Python function with interface according to desired user function
+        itemIndex: item index, such as ObjectIndex or LoadIndex; -1 indicates MainSystem; if None, itemTypeName must be provided instead
+        itemTypeName: use of type name, such as ObjectConnectorSpringDamper; in this case, itemIndex must be None
+        userFunctionName: name of user function item, see documentation; this is required, because some items have several user functions, which need to be distinguished
+        verbose: if > 0, according output may be printed
+
+    Returns:
+        returns symbolic user function; this can be transfered into an item using TransferUserFunction2Item
+
+    Note:
+        keep the return value alive in a variable (or list), as it contains the expression tree which must exist for the lifetime of the user function
+
+    Example:
+        oGround = mbs.AddObject(ObjectGround())
+        node = mbs.AddNode(NodePoint(referenceCoordinates = [1.05,0,0]))
+        oMassPoint = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
+        symbolicFunc = CreateSymbolicUserFunction(mbs, function=springForceUserFunction,
+                                                  userFunctionName='springForceUserFunction',
+                                                  itemTypeName='ObjectConnectorSpringDamper')
+        m0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
+        m1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oMassPoint, localPosition=[0,0,0]))
+        co = mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
+                           referenceLength = 1, stiffness = 100, damping = 1,
+                           springForceUserFunction=symbolicFunc))
+        exudyn.Print(symbolicFunc.Evaluate(mbs, 0., 0, 1.1, 0.,  100., 0., 13.) )
+    """
     fnDict = ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex, itemTypeName, verbose)
     symbolicFunc = exudyn.symbolic.UserFunction()
     symbolicFunc.SetUserFunctionFromDict(mbs, fnDict, userFunctionName, itemIndex, str(itemTypeName))

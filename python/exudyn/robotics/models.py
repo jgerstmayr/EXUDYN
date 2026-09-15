@@ -13,6 +13,7 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+from exudyn.docmeta import docmeta
 import numpy as np
 import exudyn
 import exudyn.graphicsDataUtilities as gdu
@@ -36,11 +37,16 @@ import scipy.io
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: generate 4R manipulator as myRobot dictionary, settings are done in function 
-#**output: myRobot dictionary
-#**author: Martin Sereinig
-#**notes: the 4th joint is used to simulate a paralell kinematics manipulator 
+@docmeta(author='Martin Sereinig')
 def Manipulator4Rsimple():
+    """generate 4R manipulator as myRobot dictionary, settings are done in function
+
+    Returns:
+        myRobot dictionary
+
+    Note:
+        the 4th joint is used to simulate a paralell kinematics manipulator
+    """
     inertiaLink0=np.array([ [  0.703370,   -0.0001390,    0.0067720],
                             [ -0.000139,    0.7066100,    0.0192169],
                             [  0.006772,    0.0192169,    0.0091170]  ])
@@ -120,16 +126,21 @@ def Manipulator4Rsimple():
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: generate 3R manipulator as myRobot dictionary, settings are done in function 
-#**output: myRobot dictionary
-#**author: Martin Sereinig
-#**notes: DH-parameters: [theta, d, a, alpha], according to P. Corke
-#       Values according to Wörnle simple example with l1=0
-#       d=[h1 0 0];
-#       theta=[beta1 beta2 beta3];
-#       a=[l1 l2 l3];
-#       alpha=[pi/2 0 0];
+@docmeta(author='Martin Sereinig')
 def Manipulator3RSimple():
+    """generate 3R manipulator as myRobot dictionary, settings are done in function
+
+    Returns:
+        myRobot dictionary
+
+    Note:
+        DH-parameters: [theta, d, a, alpha], according to P. Corke
+        Values according to Wörnle simple example with l1=0
+        d=[h1 0 0];
+        theta=[beta1 beta2 beta3];
+        a=[l1 l2 l3];
+        alpha=[pi/2 0 0];
+    """
         
     l1=0.0
     l2=0.5
@@ -209,14 +220,19 @@ def Manipulator3RSimple():
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: generate Franka Emika Panda manipulator as myRobot dictionary, settings are done in function 
-#**output: myRobot dictionary
-#**author: Martin Sereinig
-#**notes:  all Parameter according to Gaz et. al \cite{GazDeLuca2019}
-#       DH-parameters(std): [theta, d, a, alpha], according to P. Corke
-#       Standard DH Parameters, masses, inertias and com according P.Corke and Gaz et. al (they working with modified DH parameter)
-#       changes to standard DH Parameter checked with P.Corke toolbox                             
+@docmeta(author='Martin Sereinig')
 def ManipulatorPANDA():
+    r"""generate Franka Emika Panda manipulator as myRobot dictionary, settings are done in function
+
+    Returns:
+        myRobot dictionary
+
+    Note:
+        all Parameter according to Gaz et. al \cite{GazDeLuca2019}
+        DH-parameters(std): [theta, d, a, alpha], according to P. Corke
+        Standard DH Parameters, masses, inertias and com according P.Corke and Gaz et. al (they working with modified DH parameter)
+        changes to standard DH Parameter checked with P.Corke toolbox
+    """
 
        
     inertiaLink0=np.array([ [  0.703370,   -0.0001390,    0.0067720],
@@ -351,13 +367,18 @@ def ManipulatorPANDA():
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: generate UR5 manipulator as myRobot dictionary, settings are done in function 
-#**output: myRobot dictionary
-#**author: Martin Sereinig
-#**notes: define myRobot kinematics, UR5 Universal Robotics, 
-#  Standard DH-parameters: [theta, d, a, alpha], according to P. Corke, 
-#  Links modeld as cylindrical tubes, Inertia from Parham M. Kebria2016 / Kuefeta2014
+@docmeta(author='Martin Sereinig')
 def ManipulatorUR5():
+    """generate UR5 manipulator as myRobot dictionary, settings are done in function
+
+    Returns:
+        myRobot dictionary
+
+    Note:
+        define myRobot kinematics, UR5 Universal Robotics,
+        Standard DH-parameters: [theta, d, a, alpha], according to P. Corke,
+        Links modeld as cylindrical tubes, Inertia from Parham M. Kebria2016 / Kuefeta2014
+    """
 
      
     link0={'stdDH':[0,0.089459,0,np.pi/2], 
@@ -439,13 +460,18 @@ def ManipulatorUR5():
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: generate puma560 manipulator as myRobot dictionary, settings are done in function 
-#**output: myRobot dictionary
-#**author: Martin Sereinig
-#**notes: std DH-parameters: [theta, d, a, alpha], according to P. Corke page 138, 
-#       puma p560 limits, taken from Corke Visual Control of Robots 
 
+@docmeta(author='Martin Sereinig')
 def ManipulatorPuma560():
+    """generate puma560 manipulator as myRobot dictionary, settings are done in function
+
+    Returns:
+        myRobot dictionary
+
+    Note:
+        std DH-parameters: [theta, d, a, alpha], according to P. Corke page 138,
+        puma p560 limits, taken from Corke Visual Control of Robots
+    """
     link0={'stdDH':[0,0,0,np.pi/2], 
            'modDHKK':[0,0,0,0],
            'mass':20,  #not needed!
@@ -531,19 +557,25 @@ def ManipulatorPuma560():
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: generate serial manipulator as robotClass object from robotLinkDict
-#**input: 
-#  robotClass: robot class object from roboticsCore; if robotClass is provided, gravity, tool and base are used from there
-#  robotLinkDict: list of robot links generated by manipulator import for individual robot dictionary
-#**output: updated robot class
-#**author: Martin Sereinig
-#**notes: DH Parameter Information
-#  stdH = [theta, d, a, alpha] with Rz(theta) * Tz(d) * Tx(a) * Rx(alpha)
-#  modDH = [alpha, dx, theta, rz] with 
-#  used by Corke and Lynch: Rx(alpha) * Tx(a) * Rz(theta) * Tz(d)
-#  used by Khali:           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r)
-#  Important note:  d(khali)=a(corke)  and r(khali)=d(corke)  
+@docmeta(author='Martin Sereinig')
 def LinkDict2Robot(robotLinkDict, robotClass=None):
+    """generate serial manipulator as robotClass object from robotLinkDict
+
+    Args:
+        robotClass: robot class object from roboticsCore; if robotClass is provided, gravity, tool and base are used from there
+        robotLinkDict: list of robot links generated by manipulator import for individual robot dictionary
+
+    Returns:
+        updated robot class
+
+    Note:
+        DH Parameter Information
+        stdH = [theta, d, a, alpha] with Rz(theta) * Tz(d) * Tx(a) * Rx(alpha)
+        modDH = [alpha, dx, theta, rz] with
+        used by Corke and Lynch: Rx(alpha) * Tx(a) * Rz(theta) * Tz(d)
+        used by Khali:           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r)
+        Important note:  d(khali)=a(corke)  and r(khali)=d(corke)
+    """
     dhMode = robotLinkDict['dhMode']
     
     if robotClass == None:
@@ -590,14 +622,20 @@ def LinkDict2Robot(robotLinkDict, robotClass=None):
 
 
 
-#**function: special test function to generate serial manipulator as robotClass object from robotLinkDict using inertia parameters defined in stdDH coordinates, but creating robot from modDHKK; will be ERASED in future
-#**input: 
-#  robotLinkDict: list of robot links generated by manipulator import for individual robot dictionary
-#  robotClass: robot class object from roboticsCore; if robotClass is provided, gravity, tool and base are used from there
-#**output: updated robot class
-#**author: Martin Sereinig
-#**notes: DEPRECATED; function uses modDHKK in robotLinkDict for creation, transforms inertia parameters; should only be used for testing!
+@docmeta(author='Martin Sereinig')
 def LinkDictModDHKK2Robot(robotLinkDict, robotClass=None):
+    """special test function to generate serial manipulator as robotClass object from robotLinkDict using inertia parameters defined in stdDH coordinates, but creating robot from modDHKK; will be ERASED in future
+
+    Args:
+        robotLinkDict: list of robot links generated by manipulator import for individual robot dictionary
+        robotClass: robot class object from roboticsCore; if robotClass is provided, gravity, tool and base are used from there
+
+    Returns:
+        updated robot class
+
+    Note:
+        DEPRECATED; function uses modDHKK in robotLinkDict for creation, transforms inertia parameters; should only be used for testing!
+    """
     exudyn.Print('WARNING: LinkDictModDHKK2Robot: untested')
     dhMode = robotLinkDict['dhMode']
     

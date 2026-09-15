@@ -39,13 +39,15 @@ else:
     from gymnasium import logger, spaces, Env # noqa # pylint: disable=unused-import
 
 
-#**class: interface class to set up Exudyn model which can be used as model in open AI gym;
-#         see specific class functions which contain 'OVERRIDE' to integrate your model;
-#         in general, set up a model with CreateMBS(), map state to initial values, initial values to state and action to mbs;
 class OpenAIGymInterfaceEnv(Env):
+    """interface class to set up Exudyn model which can be used as model in open AI gym;
+    see specific class functions which contain 'OVERRIDE' to integrate your model;
+    in general, set up a model with CreateMBS(), map state to initial values, initial values to state and action to mbs;
+    """
     metadata = {'render_modes': ['human'], 'render_fps': 50}
-    #**classFunction: internal function to initialize model; store self.mbs and self.simulationSettings; special arguments **kwargs are passed to CreateMBS
     def __init__(self, **kwargs):
+        """internal function to initialize model; store self.mbs and self.simulationSettings; special arguments **kwargs are passed to CreateMBS
+        """
         #some general gym initialization
         self.state = None
 
@@ -76,48 +78,59 @@ class OpenAIGymInterfaceEnv(Env):
         #++++++++++++++++++++++++++++
         #now system is ready to go!
         
-    #**classFunction: OVERRIDE this function to create multibody system mbs and setup simulationSettings; call Assemble() at the end!
-    #                 you may also change SC.visualizationSettings() individually; kwargs may be used for special setup
     def CreateMBS(self, SC, mbs, simulationSettings, **kwargs):
+        """OVERRIDE this function to create multibody system mbs and setup simulationSettings; call Assemble() at the end!
+        you may also change SC.visualizationSettings() individually; kwargs may be used for special setup
+        """
         return 0#override this class and return state size!
 
-    #**classFunction: OVERRIDE this function to set up self.action\_space and self.observation\_space
     def SetupSpaces(self):
+        r"""OVERRIDE this function to set up self.action\_space and self.observation\_space
+        """
         pass #override this class!
 
 
-    #**classFunction: OVERRIDE this function to map the action given by learning algorithm to the multibody system, e.g. as a load parameter
     def MapAction2MBS(self, action):
+        """OVERRIDE this function to map the action given by learning algorithm to the multibody system, e.g. as a load parameter
+        """
         pass #override this class!
 
-    #**classFunction: OVERRIDE this function to collect output of simulation and map to self.state tuple
-    #**output: return bool done which contains information if system state is outside valid range
     def Output2StateAndDone(self):
+        """OVERRIDE this function to collect output of simulation and map to self.state tuple
+
+        Returns:
+            return bool done which contains information if system state is outside valid range
+        """
         return False#override this class!
 
     
-    #**classFunction: OVERRIDE this function to maps the current state to mbs initial values
-    #**output: return [initialValues, initialValues\_t] where initialValues[\_t] are ODE2 vectors of coordinates[\_t] for the mbs
     def State2InitialValues(self):
+        r"""OVERRIDE this function to maps the current state to mbs initial values
+
+        Returns:
+            return [initialValues, initialValues\_t] where initialValues[\_t] are ODE2 vectors of coordinates[\_t] for the mbs
+        """
         return [[0],[0]]#override this class and return the two vectors!
 
 
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #HELPER functions
-    #**classFunction: test model by running in simulation environment having several options
-    #**input: 
-    #  numberOfSteps: number of steps to test MBS and model (with or without learned model); with renderer, press 'Q' in render window to stop simulation
-    #  seed: seed value for reset function; this value initializes the randomizer; use e.g. time to obtain non-reproducible results
-    #  model: either None to just test the MBS model without learned model, or containing a learned model, e.g., with A2C; use A2C.save(...) and A2C.load(...) for storing and retrieving models
-    #  solutionFileName: if given, the MBS internal states are written to the file with given name, which can be loaded with solution viewer and visualized; solution is written every period given in simulationSettings.solutionSettings.solutionWritePeriod
-    #  useRenderer: if set True, the internal renderer is used and model updates are shown in visualization of Exudyn
-    #  return_info: internal value in reset function
-    #  sleepTime: sleep time between time steps to obtain certain frame rate for visualization
-    #  stopIfDone: if set to True, the simulation will reset as soon as the defined observation limits are reached and done is set True
-    #  showTimeSpent: if True, the total time spent is measured; this helps to check the performance of the model (e.g. how many steps can be computed per second)
     def TestModel(self, numberOfSteps=500, seed=0, model = None, solutionFileName = None,
                   useRenderer=True, sleepTime=0.01, stopIfDone=False, showTimeSpent=True, **kwargs):
+        """test model by running in simulation environment having several options
+
+        Args:
+            numberOfSteps: number of steps to test MBS and model (with or without learned model); with renderer, press 'Q' in render window to stop simulation
+            seed: seed value for reset function; this value initializes the randomizer; use e.g. time to obtain non-reproducible results
+            model: either None to just test the MBS model without learned model, or containing a learned model, e.g., with A2C; use A2C.save(...) and A2C.load(...) for storing and retrieving models
+            solutionFileName: if given, the MBS internal states are written to the file with given name, which can be loaded with solution viewer and visualized; solution is written every period given in simulationSettings.solutionSettings.solutionWritePeriod
+            useRenderer: if set True, the internal renderer is used and model updates are shown in visualization of Exudyn
+            return_info: internal value in reset function
+            sleepTime: sleep time between time steps to obtain certain frame rate for visualization
+            stopIfDone: if set to True, the simulation will reset as soon as the defined observation limits are reached and done is set True
+            showTimeSpent: if True, the total time spent is measured; this helps to check the performance of the model (e.g. how many steps can be computed per second)
+        """
         import time
 
         writeToFile = solutionFileName != None
@@ -154,8 +167,9 @@ class OpenAIGymInterfaceEnv(Env):
         self.close()
         self.useRenderer = storeRenderer #restore
 
-    #**classFunction: use solverType = exudyn.DynamicSolverType.[...] to define solver (choose between implicit and explicit solvers!)
     def SetSolver(self, solverType):
+        """use solverType = exudyn.DynamicSolverType.[...] to define solver (choose between implicit and explicit solvers!)
+        """
         self.simulationSettings == solverType
         if solverType==exu.DynamicSolverType.TrapezoidalIndex2 or solverType==exu.DynamicSolverType.GeneralizedAlpha:
             useIndex2 = False
@@ -180,15 +194,17 @@ class OpenAIGymInterfaceEnv(Env):
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #INTERNAL FUNCTIONS!
-    #**classFunction: internal function which initializes dynamic solver; adapt in special cases; this function has some overhead and should not be called during reset() or step()
     def PreInitializeSolver(self):
+        """internal function which initializes dynamic solver; adapt in special cases; this function has some overhead and should not be called during reset() or step()
+        """
         self.SetSolver(solverType=exu.DynamicSolverType.GeneralizedAlpha)
 
         # #in derived class, you can also call explicit solver, e.g. using:
         # self.SetSolver(solverType=exu.DynamicSolverType.ExplicitEuler)
 
-    #**classFunction: internal function which is called to solve for one step
     def IntegrateStep(self):
+        """internal function which is called to solve for one step
+        """
         #exudyn simulation part
         #index 2 solver (may have some drift, but can be restarted easily)
 
@@ -205,8 +221,9 @@ class OpenAIGymInterfaceEnv(Env):
         self.mbs.systemData.SetODE2Coordinates_tt(coordinates = self.mbs.systemData.GetODE2Coordinates_tt(), 
                                                 configuration = exu.ConfigurationType.Initial)
 
-    #**classFunction: openAI gym interface function which is called to compute one step
     def step(self, action):
+        """openAI gym interface function which is called to compute one step
+        """
         err_msg = f"{action!r} ({type(action)}) invalid"
         assert self.action_space.contains(action), err_msg
         assert self.state is not None, "Call reset before using step method."
@@ -252,7 +269,6 @@ class OpenAIGymInterfaceEnv(Env):
 
  
 
-    #**classFunction: openAI gym function which resets the system
     def reset(
         self,
         *,
@@ -260,6 +276,8 @@ class OpenAIGymInterfaceEnv(Env):
         return_info: bool = False,
         options: Optional[dict] = None,
     ):
+        """openAI gym function which resets the system
+        """
         #super().reset(seed=seed)
         randSize = (self.stateSize)
         #randomInitializationValue could also be a vector!
@@ -293,14 +311,16 @@ class OpenAIGymInterfaceEnv(Env):
     
      
 
-    #**classFunction: openAI gym interface function to render the system
     def render(self, mode="human"):
+        """openAI gym interface function to render the system
+        """
         if self.rendererRunning==None and self.useRenderer:
             self.SC.renderer.Start()
             self.rendererRunning = True
 
-    #**classFunction: openAI gym interface function to close system after learning or simulation
     def close(self):
+        """openAI gym interface function to close system after learning or simulation
+        """
         self.dynamicSolver.FinalizeSolver(self.mbs, self.simulationSettings)
         if self.rendererRunning==True:
             # SC.renderer.DoIdleTasks()

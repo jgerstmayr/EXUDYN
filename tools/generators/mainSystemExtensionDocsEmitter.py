@@ -2,7 +2,7 @@
 # This is an EXUDYN maintainer tool
 #
 # Details:  Emits the documentation and stubs of the Python functions added to MainSystem
-#           (#** belongsTo): MainSystemExt.rst and MainSystemCreateExt.rst in
+#           (@extends(exudyn.MainSystem)): MainSystemExt.rst and MainSystemCreateExt.rst in
 #           tools/generators/generated/ (read by pybindEmitter.py, so this runs first),
 #           docs/theDoc/MainSystemExt.tex, MainSystemCreateExt.tex and stubAutoBindingsExt.pyi
 #           (read by createStubFiles.py). Moved out of utilitiesDocuGenerator.py (revision plan

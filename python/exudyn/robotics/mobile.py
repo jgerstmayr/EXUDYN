@@ -17,6 +17,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # exudyn imports
+from exudyn.docmeta import docmeta
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *
@@ -26,20 +27,26 @@ from exudyn.robotics import *
 
 import numpy as np
 
-#**function:    add items to existing mbs to build up a mobile robot platform, 
-#               there are options that can be passed as args / kwargs, which can contains options as described below. 
-#               The robot platform is built out of rigid bodies where the wheels can be modeled as rolling discs 
-#               (mecanum wheel x/o configuration) or with a detailed mecanum wheel simulation approach 
-#**input: 
-#   mbs: the multibody system which will be extended
-#   markerGround: a rigid body marker, at which the robot will be placed (usually ground)
-#   mobileRobot: a dictionary including all information about the mobile robot platform 
-#**output: the function returns a dictionary containing nodes, body, object and marker numbers of individual mobile robot parts 
-#           nPlatformList, bPlatformList, oPlatformList, mPlatformList; nodes, bodies, objects and marker of the platform [nPlattform] [bPlattform] [oPlattform]  []  
-#           oAxisList, mAxlesList; objects and marker of the axles  [a1, a2, a3, a4]
-#           nWheelsList, bWheelsList, oRollingDiscsList, mWheelsList; nodes, bodys, objects and markers of the four wheels [w1, w2, w3, w4]
-#**notes: for coordinate system, see Python function definition
 def MobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *args, **kwargs):
+    """add items to existing mbs to build up a mobile robot platform,
+    there are options that can be passed as args / kwargs, which can contains options as described below.
+    The robot platform is built out of rigid bodies where the wheels can be modeled as rolling discs
+    (mecanum wheel x/o configuration) or with a detailed mecanum wheel simulation approach
+
+    Args:
+        mbs: the multibody system which will be extended
+        markerGround: a rigid body marker, at which the robot will be placed (usually ground)
+        mobileRobot: a dictionary including all information about the mobile robot platform
+
+    Returns:
+        the function returns a dictionary containing nodes, body, object and marker numbers of individual mobile robot parts
+        nPlatformList, bPlatformList, oPlatformList, mPlatformList; nodes, bodies, objects and marker of the platform [nPlattform] [bPlattform] [oPlattform]  []
+        oAxisList, mAxlesList; objects and marker of the axles  [a1, a2, a3, a4]
+        nWheelsList, bWheelsList, oRollingDiscsList, mWheelsList; nodes, bodys, objects and markers of the four wheels [w1, w2, w3, w4]
+
+    Note:
+        for coordinate system, see Python function definition
+    """
     # platform setup:
     # ^Y
     # |    W3 +---------+ W1
@@ -290,10 +297,13 @@ def MobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *a
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**class: calculate 4 wheel velocities for a mecanum wheel driven platform with given platform velocities  
-#**author: Peter Manzl, Johannes Gerstmayr
-#**notes: still under development; wheel axis is mounted at y-axis; positive angVel rotates CCW in x/y plane viewed from top; for coordinate system, see Python class definition
+@docmeta(author='Peter Manzl, Johannes Gerstmayr')
 class MobileKinematics:
+    """calculate 4 wheel velocities for a mecanum wheel driven platform with given platform velocities
+
+    Note:
+        still under development; wheel axis is mounted at y-axis; positive angVel rotates CCW in x/y plane viewed from top; for coordinate system, see Python class definition
+    """
 # platform setup:
 # ^Y
 # |    W3 +---------+ W1
@@ -305,14 +315,16 @@ class MobileKinematics:
 # |
 # +-------->X
 
-    #**classFunction: initialize mobileKinematics class
-    #**input: 
-    #  R: wheel radius
-    #  lx: wheel track width 
-    #  ly: wheel base 
-    #  wheeltype: 1=x-config (bad), 0=o-config (good) 
-    #**author: Peter Manzl
+    @docmeta(author='Peter Manzl')
     def __init__(self, R, lx, ly, flagAdjusted = False, lcx=0, lcy=0, wheeltype=0): 
+        """initialize mobileKinematics class
+
+        Args:
+            R: wheel radius
+            lx: wheel track width
+            ly: wheel base
+            wheeltype: 1=x-config (bad), 0=o-config (good)
+        """
         if wheeltype ==0: cc = 1
         elif wheeltype == 1: cc = -1
         else: exu.Print('wheeltype {} not implemented (yet)!'.format(wheeltype))
@@ -339,16 +351,19 @@ class MobileKinematics:
                                             [1,   -1*F4,  lx + ly + lcx + lcy]])
         self.JacobianPInv = np.linalg.pinv(self.Jacobian)
     
-    #**classFunction: calculate wheel velocities from Cartesian velocities
-    #**input:
-    #  vDes: desired velocity [vx, vy, omega] in the robot's local frame
-    #  vx: platform  translational velocity in local x direction
-    #  vy: platform translational velocity in local y direction
-    #  omega: platform rotational velocity around local z axis
-    #**output: 
-    #   w: wheel velocities w=[w0,w1,w2,w3]
-    #**author: Peter Manzl
+    @docmeta(author='Peter Manzl')
     def GetWheelVelocities(self, vDes):
+        """calculate wheel velocities from Cartesian velocities
+
+        Args:
+            vDes: desired velocity [vx, vy, omega] in the robot's local frame
+            vx: platform  translational velocity in local x direction
+            vy: platform translational velocity in local y direction
+            omega: platform rotational velocity around local z axis
+
+        Returns:
+            w: wheel velocities w=[w0,w1,w2,w3]
+        """
         if len(vDes) == 3: 
             return self.Jacobian @ vDes
         else: 
@@ -363,16 +378,19 @@ class MobileKinematics:
                 w[i,:] = self.Jacobian @ vDes[i,:]
             return w
 
-    #**classFunction: calculate Cartesian velocities from wheel velocities
-    #**input:
-    #   w: wheel velocities w=[w0,w1,w2,w3]
-    #**output: 
-    #  v: Cartesian velocity [vx, vy, omega] in the robot's local frame
-    #  vx: platform  translational velocity in local x direction
-    #  vy: platform translational velocity in local y direction
-    #  omega: platform rotational velocity around local z axis
-    #**author: Peter Manzl
+    @docmeta(author='Peter Manzl')
     def GetCartesianVelocities(self, w): 
+        """calculate Cartesian velocities from wheel velocities
+
+        Args:
+            w: wheel velocities w=[w0,w1,w2,w3]
+
+        Returns:
+            v: Cartesian velocity [vx, vy, omega] in the robot's local frame
+            vx: platform  translational velocity in local x direction
+            vy: platform translational velocity in local y direction
+            omega: platform rotational velocity around local z axis
+        """
         if len(w) == 4: 
             return self.JacobianPInv @ w
         else: 
@@ -387,14 +405,17 @@ class MobileKinematics:
                 v[i,:] = self.JacobianPInv @ w[i,:]
             return v   
 
-#**function: create a polynomial describing a generatrix function 
-#**input: 
-#   param: list containing data (lRoll, aPoly, ...)
-#   
-#**author: Peter Manzl
-#**notes: create and fit a polynomial of an order high enough to approximate the given GeneratrixFunction
-#   with a given tolerance. The error is measured as the Chebyshev distance.  
+@docmeta(author='Peter Manzl')
 def Generatrix2Polynomial(param, GeneratrixFunction, tol=1e-14, nFit=101, nTest = 1001): 
+    """create a polynomial describing a generatrix function
+
+    Args:
+        param: list containing data (lRoll, aPoly, ...)
+
+    Note:
+        create and fit a polynomial of an order high enough to approximate the given GeneratrixFunction
+        with a given tolerance. The error is measured as the Chebyshev distance.
+    """
     u = np.linspace(-np.pi/4, np.pi/4 , nFit) # calculate error with more! 
     x, y = GeneratrixFunction(u, param)
 
@@ -454,47 +475,62 @@ def Generatrix2Polynomial(param, GeneratrixFunction, tol=1e-14, nFit=101, nTest 
     param['xBoundary'] = [-param['lRoll']/2, param['lRoll']/2]
     return 
 
-#**function: generatrix function for a roll of a Mecanum wheel
-#**input: 
-#   u: parameter, max. +- pi/2
-#   param['r']: radius of the associated Mecanum wheel
-#   param['delta']: angle of the rolls rotation axis to the wheels rotation axis
-#   param['dRoll']: smallest distance of roll axis to the wheel axis
-#**output: 
-#   x and y values for the function in the local frame. The rotation around the 
-#   local x-yxis creates the surface of the roll. 
-#**author: Peter Manzl
-#**notes: parametric equation, x,y are the generatrix of the roll in 
-#   its local frame with the axis of rotation x, see \cite{Gfrerrer2008}.
+@docmeta(author='Peter Manzl')
 def GeneratrixRoll(u, param): 
+    r"""generatrix function for a roll of a Mecanum wheel
+
+    Args:
+        u: parameter, max. +- pi/2
+        param['r']: radius of the associated Mecanum wheel
+        param['delta']: angle of the rolls rotation axis to the wheels rotation axis
+        param['dRoll']: smallest distance of roll axis to the wheel axis
+
+    Returns:
+        x and y values for the function in the local frame. The rotation around the
+        local x-yxis creates the surface of the roll.
+
+    Note:
+        parametric equation, x,y are the generatrix of the roll in
+        its local frame with the axis of rotation x, see \cite{Gfrerrer2008}.
+    """
     x = param['dRoll']*np.cos(param['delta'])**2/np.sin(param['delta']) * np.tan(u) + param['r'] *np.sin(param['delta'])*np.sin(u);
     y = np.sqrt(np.cos(param['delta'])**2 * np.tan(u)**2 + 1) * (param['r']*np.cos(u)- param['dRoll']);
     return x, y
 
-#**function: calculates the derivative of the polynomial $a0*x^n + ... $
-#**input:
-#   x: value at which the polynomial is evaluated
-#   a: coefficients
-#**output:
-#   f: 
-#**author: Peter Manzl
-#**notes: helper function polynomial describing a generatrix function 
+@docmeta(author='Peter Manzl')
 def FunDiffPoly(x,a): 
+    """calculates the derivative of the polynomial $a0*x^n + ... $
+
+    Args:
+        x: value at which the polynomial is evaluated
+        a: coefficients
+
+    Returns:
+        f:
+
+    Note:
+        helper function polynomial describing a generatrix function
+    """
     f = 0
     k = np.size(a)-1
     for i in range(k): 
         f += (k-i)*x**(k-i-1)*a[i] 
     return f
 
-#**function:  calculates the second derivative of a polynomial
-#**input:
-#   x: value at which the polynomial is evaluated
-#   a: coefficients
-#**output:
-#   f: 
-#**author: Peter Manzl
-#**notes: helper function polynomial describing a generatrix function 
+@docmeta(author='Peter Manzl')
 def FunDDiffPoly(x, a): 
+    """calculates the second derivative of a polynomial
+
+    Args:
+        x: value at which the polynomial is evaluated
+        a: coefficients
+
+    Returns:
+        f:
+
+    Note:
+        helper function polynomial describing a generatrix function
+    """
     k = a.size -2  # order of the new polynomial 
     ddf = 0
     for i in range(k):

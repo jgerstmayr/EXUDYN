@@ -13,6 +13,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #constants and fixed structures:
+from exudyn.docmeta import docmeta
 import exudyn as exu
 import exudyn.itemInterface as eii
 #from exudyn.utilities import 
@@ -65,11 +66,15 @@ def CheckForSciPyMatrix(data, stringWhere):
     if not isspmatrix(data):
         raise ValueError('in function ' + stringWhere+': function expects either a [[row,col,value]] data or a scipy sparse matrix')
 
-#**function: convert zero-based sparse matrix data to dense numpy matrix
-#**input: 
-#  sparseData: format (per row): [row, column, value] ==> converted into dense format
-#**output: a dense matrix as np.array
 def CompressedRowSparseToDenseMatrix(sparseData):
+    """convert zero-based sparse matrix data to dense numpy matrix
+
+    Args:
+        sparseData: format (per row): [row, column, value] ==> converted into dense format
+
+    Returns:
+        a dense matrix as np.array
+    """
     if IsListOrArray(sparseData):
         #does not work, if there are no entry in highest rows and columns
         n = int(max(np.max(sparseData[:,0]),np.max(sparseData[:,1])))+1 #rows and columns indices are 0-based ==> add 1 for size!
@@ -81,31 +86,35 @@ def CompressedRowSparseToDenseMatrix(sparseData):
         CheckForSciPyMatrix(sparseData, 'CompressedRowSparseToDenseMatrix')
         return sparseData.toarray()
 
-#**function: resort a sparse matrix (internal CSR format) with given sorting for rows and columns; changes matrix directly! used for ANSYS matrix import
 def MapSparseMatrixIndices(matrix, sorting):
+    """resort a sparse matrix (internal CSR format) with given sorting for rows and columns; changes matrix directly! used for ANSYS matrix import
+    """
     for row in matrix:
         row[0] = sorting[int(row[0])]
         row[1] = sorting[int(row[1])]
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: compute diadic product of vector v and a 3D unit matrix = diadic(v,I$_{3x3}$); used for ObjectFFRF and CMS implementation
 def VectorDiadicUnitMatrix3D(v):
+    """compute diadic product of vector v and a 3D unit matrix = diadic(v,I$_{3x3}$); used for ObjectFFRF and CMS implementation
+    """
     return np.kron(np.array(v), np.eye(3)).T
 
 
 #+++++++++++++++++++++++++++
-#**function: compare cyclic two lists, reverse second list; return True, if any cyclic shifted lists are same, False otherwise
 def CyclicCompareReversed(list1, list2):
+    """compare cyclic two lists, reverse second list; return True, if any cyclic shifted lists are same, False otherwise
+    """
     revList1 = np.flip(list1,0)
     for i in range(len(list2)):
         if (revList1 == np.roll(list2,i)).all(): return True
     return False
 
 
-#**function: add entry to compressedRowSparse matrix, avoiding duplicates
-#value is either added to existing entry (avoid duplicates) or a new entry is appended
 def AddEntryToCompressedRowSparseArray(sparseData, row, column, value):
+    """add entry to compressedRowSparse matrix, avoiding duplicates
+    value is either added to existing entry (avoid duplicates) or a new entry is appended
+    """
     if IsListOrArray(sparseData):
         n = len(sparseData[:,0])
 
@@ -125,8 +134,9 @@ def AddEntryToCompressedRowSparseArray(sparseData, row, column, value):
         # Add the new entry to the existing matrix
         return sparseData + new_entry.tocsr()
 
-#**function: compute rows and columns of a compressed sparse matrix and return as tuple: (rows,columns)
 def CSRtoRowsAndColumns(sparseMatrixCSR):
+    """compute rows and columns of a compressed sparse matrix and return as tuple: (rows,columns)
+    """
     if sparseMatrixCSR is None:
         return (0, 0) #empty matrix
     if IsListOrArray(sparseMatrixCSR):
@@ -139,8 +149,9 @@ def CSRtoRowsAndColumns(sparseMatrixCSR):
 
 
 warnedCSRtoScipySparseCSR = False #add warning if this function is used with old format!
-#**function: DEPRECATED: convert internal compressed CSR to scipy.sparse csr matrix; should not be used and raises warning; use SparseTripletsToScipySparseCSR instead!
 def CSRtoScipySparseCSR(sparseMatrixCSR):
+    """DEPRECATED: convert internal compressed CSR to scipy.sparse csr matrix; should not be used and raises warning; use SparseTripletsToScipySparseCSR instead!
+    """
     if IsListOrArray(sparseMatrixCSR):
         global warnedCSRtoScipySparseCSR
         if not useOldCSRformat and not warnedCSRtoScipySparseCSR:
@@ -156,8 +167,9 @@ def CSRtoScipySparseCSR(sparseMatrixCSR):
         CheckForSciPyMatrix(sparseMatrixCSR, 'CSRtoScipySparseCSR')
         return sparseMatrixCSR
 
-#**function: convert list of sparse triplets (or numpy array with one sparse triplet per row) into scipy.sparse csr\_matrix
 def SparseTripletsToScipySparseCSR(sparseTriplets):
+    r"""convert list of sparse triplets (or numpy array with one sparse triplet per row) into scipy.sparse csr\_matrix
+    """
     if IsListOrArray(sparseTriplets):
         if type(sparseTriplets) == list:
             sparseTriplets = np.array(sparseTriplets)
@@ -168,16 +180,18 @@ def SparseTripletsToScipySparseCSR(sparseTriplets):
     else:
         raise ValueError('SparseTripletsToScipySparseCSR: requires sparse triplets as input')
 
-#**function: convert scipy.sparse csr matrix to internal compressed CSR 
 def ScipySparseCSRtoCSR(scipyCSR):
+    """convert scipy.sparse csr matrix to internal compressed CSR
+    """
     #from scipy.sparse import csr_matrix
     data=scipyCSR.tocoo()
     sparseData = [data.row,data.col,data.data]
     return np.array(sparseData).T
 
-#**function: resort indices of given NGsolve CSR matrix in XXXYYYZZZ format to XYZXYZXYZ format; numberOfRows must be equal to columns
-#needed for import from NGsolve
 def ResortIndicesOfCSRmatrix(mXXYYZZ, numberOfRows):
+    """resort indices of given NGsolve CSR matrix in XXXYYYZZZ format to XYZXYZXYZ format; numberOfRows must be equal to columns
+    needed for import from NGsolve
+    """
     #compute resorting index array [0,1,2, 3,4,5, 6,7,8] ==> [0,3,6, 1,4,7, 2,5,8]
     if numberOfRows%3 != 0:
         raise ValueError("ResortIndicesOfCSRmatrix: numberOfRows must be multiple of 3")
@@ -190,8 +204,9 @@ def ResortIndicesOfCSRmatrix(mXXYYZZ, numberOfRows):
     mXXYYZZ[:,1] = r[mXXYYZZ[:,1].astype(int)]
 
     
-#**function: resort indices of given NGsolve vector in XXXYYYZZZ format to XYZXYZXYZ format
 def ResortIndicesOfNGvector(vXXYYZZ):
+    """resort indices of given NGsolve vector in XXXYYYZZZ format to XYZXYZXYZ format
+    """
     #compute resorting index array [0,1,2, 3,4,5, 6,7,8] ==> [0,3,6, 1,4,7, 2,5,8]
     v = np.array(vXXYYZZ)
     numberOfRows = len(v)
@@ -210,8 +225,9 @@ def ResortIndicesOfNGvector(vXXYYZZ):
 
     return vNew
     
-#**function: resort indices of given Exudyun vector XYZXYZXYZ to NGsolve vector in XXXYYYZZZ format
 def ResortIndicesExudyn2NGvector(vXYZXYZ):
+    """resort indices of given Exudyun vector XYZXYZXYZ to NGsolve vector in XXXYYYZZZ format
+    """
     #compute resorting index array [0,1,2, 3,4,5, 6,7,8] ==> [0,3,6, 1,4,7, 2,5,8]
     v = np.array(vXYZXYZ)
     numberOfRows = len(v)
@@ -378,9 +394,12 @@ def ReadNodesFromAbaqusInp(fileName, typeName='Part', name='Part-1', exportEleme
 
 
 
-#**function: convert list of Hex8/C3D8  element with 8 nodes in nodeNumbers into triangle-List
-#**notes: works for Hex20 elements, but does only take the corner nodes for drawing!
 def ConvertHexToTrigs(nodeNumbers):
+    """convert list of Hex8/C3D8  element with 8 nodes in nodeNumbers into triangle-List
+
+    Note:
+        works for Hex20 elements, but does only take the corner nodes for drawing!
+    """
     localList = [[0,1,2], [0,2,3], [6,5,4], [6,4,7], [0,4,1], [1,4,5], [1,5,2], [2,5,6], [2,6,3], [3,6,7], [3,7,0], [0,7,4]]
 
     trigList = []
@@ -389,9 +408,12 @@ def ConvertHexToTrigs(nodeNumbers):
         trigList += [ind]
     return trigList
 
-#**function: convert list of Tet4/Tet10 element with 4 or 10 nodes in nodeNumbers into triangle-List
-#**notes: works for Tet10 elements, but does only take the corner nodes for drawing!
 def ConvertTetToTrigs(nodeNumbers):
+    """convert list of Tet4/Tet10 element with 4 or 10 nodes in nodeNumbers into triangle-List
+
+    Note:
+        works for Tet10 elements, but does only take the corner nodes for drawing!
+    """
     localList = [[0,1,2], [0,3,1], [1,3,2], [0,2,3]]
 
     trigList = []
@@ -402,8 +424,9 @@ def ConvertTetToTrigs(nodeNumbers):
 
 
 warnedConvertDenseToCompressedRowMatrix = False #add warning if this function is used with old format!
-#**function: convert numpy.array dense matrix to OLD FEM internal compressed row sparse format; do not use!
 def ConvertDenseToCompressedRowMatrix(denseMatrix):
+    """convert numpy.array dense matrix to OLD FEM internal compressed row sparse format; do not use!
+    """
     global warnedConvertDenseToCompressedRowMatrix
     if not useOldCSRformat and not warnedConvertDenseToCompressedRowMatrix:
         exu.Print('WARNING: function ConvertDenseToCompressedRowMatrix(...) should not be used any more! use scipy sparse csr matrices in FEM module!')
@@ -421,42 +444,40 @@ def ConvertDenseToCompressedRowMatrix(denseMatrix):
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function:This function reads either the mass or stiffness matrix from an Ansys
-#           Matrix Market Format (MMF). The corresponding matrix can either be exported 
-#           as dense matrix or sparse matrix.
-#
-#**input: fileName of MMF file
-#**output: internal compressed row sparse matrix (as (nrows x 3) numpy array)
-#
-#**author: Stefan Holzinger
-#
-#**notes:
-#   A MMF file can be created in Ansys by placing the following APDL code inside
-#   the solution tree in Ansys Workbench:
-#
-#   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#   ! APDL code that exports sparse stiffnes and mass matrix in MMF format. If 
-#   ! the dense matrix is needed, replace *SMAT with *DMAT in the following
-#   ! APDL code.
-#    
-#   ! Export the stiffness matrix in MMF format
-#   *SMAT,MatKD,D,IMPORT,FULL,file.full,STIFF
-#   *EXPORT,MatKD,MMF,fileNameStiffnessMatrix,,,
-#
-#   ! Export the mass matrix in MMF format
-#   *SMAT,MatMD,D,IMPORT,FULL,file.full,MASS
-#   *EXPORT,MatMD,MMF,fileNameMassMatrix,,,
-#   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#
-# In case a lumped mass matrix is needed, place the following APDL Code inside 
-# the Modal Analysis Tree:
-#
-#   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#   ! APDL code to force Ansys to use a lumped mass formulation (if available for
-#   ! used elements)
-#   LUMPM, ON, , 0
-#   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+@docmeta(author='Stefan Holzinger')
 def ReadMatrixFromAnsysMMF(fileName, verbose=False):
+    """This function reads either the mass or stiffness matrix from an Ansys
+    Matrix Market Format (MMF). The corresponding matrix can either be exported
+    as dense matrix or sparse matrix.
+
+    Args:
+        fileName of MMF file
+
+    Returns:
+        internal compressed row sparse matrix (as (nrows x 3) numpy array)
+
+    Note:
+          A MMF file can be created in Ansys by placing the following APDL code inside
+          the solution tree in Ansys Workbench:
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          ! APDL code that exports sparse stiffnes and mass matrix in MMF format. If
+          ! the dense matrix is needed, replace *SMAT with *DMAT in the following
+          ! APDL code.
+          ! Export the stiffness matrix in MMF format
+          *SMAT,MatKD,D,IMPORT,FULL,file.full,STIFF
+          *EXPORT,MatKD,MMF,fileNameStiffnessMatrix,,,
+          ! Export the mass matrix in MMF format
+          *SMAT,MatMD,D,IMPORT,FULL,file.full,MASS
+          *EXPORT,MatMD,MMF,fileNameMassMatrix,,,
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        In case a lumped mass matrix is needed, place the following APDL Code inside
+        the Modal Analysis Tree:
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          ! APDL code to force Ansys to use a lumped mass formulation (if available for
+          ! used elements)
+          LUMPM, ON, , 0
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    """
     if verbose: exu.Print("Start read matrix")
     # read file
     fileLines = []
@@ -499,10 +520,11 @@ def ReadMatrixFromAnsysMMF(fileName, verbose=False):
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: read sorting vector for ANSYS mass and stiffness matrices and return sorting vector as np.array
-#  the file contains sorting for nodes and applies this sorting to the DOF (assuming 3 DOF per node!)
-#  the resulting sorted vector is already converted to 0-based indices
 def ReadMatrixDOFmappingVectorFromAnsysTxt(fileName):
+    """read sorting vector for ANSYS mass and stiffness matrices and return sorting vector as np.array
+    the file contains sorting for nodes and applies this sorting to the DOF (assuming 3 DOF per node!)
+    the resulting sorted vector is already converted to 0-based indices
+    """
     fileLines = []
     file=open(fileName,'r') 
     fileLines = file.readlines()
@@ -540,25 +562,27 @@ def ReadMatrixDOFmappingVectorFromAnsysTxt(fileName):
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: This function reads the nodal coordinates exported from Ansys.
-#
-#**input: fileName (file name ending must be .txt!)
-#**output: nodal coordinates as numpy array
-#
-#**author: Stefan Holzinger
-#
-#**notes:
-#   The nodal coordinates can be exported from Ansys by creating a named selection
-#   of the body whos mesh should to exported by choosing its geometry. Next, 
-#   create a second named selcetion by using a worksheet. Add the named selection
-#   that was created first into the worksheet of the second named selection.
-#   Inside the working sheet, choose 'convert' and convert the first created
-#   named selection to 'mesh node' (Netzknoten in german) and click on generate
-#   to create the second named selection. Next, right click on the second 
-#   named selection tha was created and choose 'export' and save the nodal 
-#   coordinates as .txt file.
-#   
+@docmeta(author='Stefan Holzinger')
 def ReadNodalCoordinatesFromAnsysTxt(fileName, verbose=False):
+    """This function reads the nodal coordinates exported from Ansys.
+
+    Args:
+        fileName (file name ending must be .txt!)
+
+    Returns:
+        nodal coordinates as numpy array
+
+    Note:
+        The nodal coordinates can be exported from Ansys by creating a named selection
+        of the body whos mesh should to exported by choosing its geometry. Next,
+        create a second named selcetion by using a worksheet. Add the named selection
+        that was created first into the worksheet of the second named selection.
+        Inside the working sheet, choose 'convert' and convert the first created
+        named selection to 'mesh node' (Netzknoten in german) and click on generate
+        to create the second named selection. Next, right click on the second
+        named selection tha was created and choose 'export' and save the nodal
+        coordinates as .txt file.
+    """
     
     # read file
     fileLines = []
@@ -620,24 +644,27 @@ def ReadNodalCoordinatesFromAnsysTxt(fileName, verbose=False):
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: This function reads the nodal coordinates exported from Ansys.
-#
-#**input: fileName (file name ending must be .txt!)
-#**output: element connectivity as numpy array
-#
-#**author: Stefan Holzinger
-#
-#**notes:
-#   The elements can be exported from Ansys by creating a named selection
-#   of the body whos mesh should to exported by choosing its geometry. Next, 
-#   create a second named selcetion by using a worksheet. Add the named selection
-#   that was created first into the worksheet of the second named selection.
-#   Inside the worksheet, choose 'convert' and convert the first created
-#   named selection to 'mesh element' (Netzelement in german) and click on generate
-#   to create the second named selection. Next, right click on the second 
-#   named selection tha was created and choose 'export' and save the elements 
-#   as .txt file.
+@docmeta(author='Stefan Holzinger')
 def ReadElementsFromAnsysTxt(fileName, verbose=False):
+    """This function reads the nodal coordinates exported from Ansys.
+
+    Args:
+        fileName (file name ending must be .txt!)
+
+    Returns:
+        element connectivity as numpy array
+
+    Note:
+        The elements can be exported from Ansys by creating a named selection
+        of the body whos mesh should to exported by choosing its geometry. Next,
+        create a second named selcetion by using a worksheet. Add the named selection
+        that was created first into the worksheet of the second named selection.
+        Inside the worksheet, choose 'convert' and convert the first created
+        named selection to 'mesh element' (Netzelement in german) and click on generate
+        to create the second named selection. Next, right click on the second
+        named selection tha was created and choose 'export' and save the elements
+        as .txt file.
+    """
     
     # read file
     fileLines = []
@@ -711,27 +738,33 @@ def ReadElementsFromAnsysTxt(fileName, verbose=False):
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**class: INTERNAL material base class, e.g., for FiniteElement
 class MaterialBaseClass:
+    """INTERNAL material base class, e.g., for FiniteElement
+    """
     def __init__(self, youngsModulus, poissonsRatio, density):
         self.youngsModulus = youngsModulus
         self.poissonsRatio = poissonsRatio
         self.density = density
 
-#**class: class for representation of Kirchhoff (linear elastic, 3D and 2D) material
-#**notes: use planeStress=False for plane strain
 class KirchhoffMaterial(MaterialBaseClass):
-    #**classFunction: add according nodes, objects and constraints for FFRF object to MainSystem mbs; only implemented for Euler parameters
-    #**input:
-    #  youngsModulus: Young's modulus for single domain and material; in case of multi-domain, it must be None
-    #  poissonsRatio: Poisson's ratio for single domain and material; in case of multi-domain, it must be None
-    #  density: density for for single domain and material; in case of multi-domain, it must be 0 or None
-    #  materials: dictionary of material dictionaries according to names in NGsolve mesh, containing youngsModulus, poissonsRatio and density per material, see ImportMeshFromNGsolve
-    #  fes: in case of materials dictionary, fes (as returned by ImportMeshFromNGsolve) has to be provided
-    #  planeStress: set True for 2D materials (currently not used)
+    """class for representation of Kirchhoff (linear elastic, 3D and 2D) material
+
+    Note:
+        use planeStress=False for plane strain
+    """
     def __init__(self, youngsModulus=None, poissonsRatio=None, density = 0, 
                  materials = None, fes = None,
                  planeStress = True):
+        """add according nodes, objects and constraints for FFRF object to MainSystem mbs; only implemented for Euler parameters
+
+        Args:
+            youngsModulus: Young's modulus for single domain and material; in case of multi-domain, it must be None
+            poissonsRatio: Poisson's ratio for single domain and material; in case of multi-domain, it must be None
+            density: density for for single domain and material; in case of multi-domain, it must be 0 or None
+            materials: dictionary of material dictionaries according to names in NGsolve mesh, containing youngsModulus, poissonsRatio and density per material, see ImportMeshFromNGsolve
+            fes: in case of materials dictionary, fes (as returned by ImportMeshFromNGsolve) has to be provided
+            planeStress: set True for 2D materials (currently not used)
+        """
         super().__init__(youngsModulus, poissonsRatio, density)
         self.planeStress = planeStress
 
@@ -793,8 +826,9 @@ class KirchhoffMaterial(MaterialBaseClass):
                                                     [0, 0, mu]])
 
 
-    #**classFunction: convert strain tensor into stress tensor using elasticity tensor
     def Strain2Stress(self, strain):
+        """convert strain tensor into stress tensor using elasticity tensor
+        """
         if self.useMaterials:
             raise ValueError('KirchhoffMaterial: Strain2Stress is not callable in case of multi-domain materials')
         E = strain
@@ -806,14 +840,16 @@ class KirchhoffMaterial(MaterialBaseClass):
                       [SV[4], SV[3], SV[2]]])
         return S
 
-    #**classFunction: convert strain vector into stress vector
     def StrainVector2StressVector(self, strainVector):
+        """convert strain vector into stress vector
+        """
         if self.useMaterials:
             raise ValueError('KirchhoffMaterial: StrainVector2StressVector is not callable in case of multi-domain materials')
         return self.elasticityTensor @ strainVector
 
-    #**classFunction: compute 2D stress vector from strain vector
     def StrainVector2StressVector2D(self, strainVector2D):
+        """compute 2D stress vector from strain vector
+        """
         if self.useMaterials:
             raise ValueError('KirchhoffMaterial: StrainVector2StressVector2D is not callable in case of multi-domain materials')
         #E=strain
@@ -822,9 +858,12 @@ class KirchhoffMaterial(MaterialBaseClass):
         #S = np.array([[SV[0], SV[2]], [SV[2], SV[1]]])
         return SV
 
-    #**classFunction: compute Lame parameters from internal Young's modulus and Poisson ratio
-    #**output: return vector [mu, lam] of Lame parameters
     def LameParameters(self):
+        """compute Lame parameters from internal Young's modulus and Poisson ratio
+
+        Returns:
+            return vector [mu, lam] of Lame parameters
+        """
         E = self.youngsModulus
         nu = self.poissonsRatio
         mu  = E / 2 / (1+nu) #Lame parameters
@@ -838,13 +877,15 @@ class KirchhoffMaterial(MaterialBaseClass):
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**class: finite element base class for lateron implementations of other finite elements
 class FiniteElement:
+    """finite element base class for lateron implementations of other finite elements
+    """
     def __init__(self, material):
         self.material = material
     
-#**class: simplistic 4-noded tetrahedral interface to compute strain/stress at nodal points
 class Tet4(FiniteElement):
+    """simplistic 4-noded tetrahedral interface to compute strain/stress at nodal points
+    """
     def __init__(self, material):
         super().__init__(material)
     
@@ -906,14 +947,16 @@ class Tet4(FiniteElement):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++          ObjectFFRF                               ++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**class: compute terms necessary for ObjectFFRF
-#class used internally in FEMinterface to compute ObjectFFRF object 
-#this class holds all data for ObjectFFRF user functions
 class ObjectFFRFinterface:
-    #**classFunction: initialize ObjectFFRFinterface with FEMinterface class
-    #  initializes the ObjectFFRFinterface with nodes, modes, surface description and systemmatrices from FEMinterface
-    #  data is then transfered to mbs object with classFunction AddObjectFFRF(...)
+    """compute terms necessary for ObjectFFRF
+    class used internally in FEMinterface to compute ObjectFFRF object
+    this class holds all data for ObjectFFRF user functions
+    """
     def __init__(self, femInterface):
+        """initialize ObjectFFRFinterface with FEMinterface class
+        initializes the ObjectFFRFinterface with nodes, modes, surface description and systemmatrices from FEMinterface
+        data is then transfered to mbs object with classFunction AddObjectFFRF(...)
+        """
         self.modeBasis = femInterface.modeBasis['matrix']
         self.nodeArray = femInterface.GetNodePositionsAsArray()
         self.trigList = femInterface.GetSurfaceTriangles()
@@ -946,18 +989,6 @@ class ObjectFFRFinterface:
         self.inertiaLocal = self.xRefTilde.T @ self.massMatrixSparse @ self.xRefTilde #LARGE MATRIX COMPUTATION
 
 
-    #**classFunction: add according nodes, objects and constraints for FFRF object to MainSystem mbs; only implemented for Euler parameters
-    #**input:
-    #  exu: the exudyn module
-    #  mbs: a MainSystem object
-    #  positionRef: reference position of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
-    #  eulerParametersRef: reference euler parameters of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
-    #  initialVelocity: initial velocity of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
-    #  initialAngularVelocity: initial angular velocity of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
-    #  gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
-    #  constrainRigidBodyMotion: set True in order to add constraint (Tisserand frame) in order to suppress rigid motion of mesh nodes
-    #  color: provided as list of 4 RGBA values
-    #add object to mbs as well as according nodes
     def AddObjectFFRF(self, exu, mbs, 
                       positionRef=[0,0,0], eulerParametersRef=[1,0,0,0], 
                       initialVelocity=[0,0,0], initialAngularVelocity=[0,0,0],
@@ -965,6 +996,20 @@ class ObjectFFRFinterface:
                       constrainRigidBodyMotion=True, 
                       massProportionalDamping = 0, stiffnessProportionalDamping = 0,
                       color=[0.1,0.9,0.1,1.]):
+        """add according nodes, objects and constraints for FFRF object to MainSystem mbs; only implemented for Euler parameters
+
+        Args:
+              exu: the exudyn module
+              mbs: a MainSystem object
+              positionRef: reference position of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
+              eulerParametersRef: reference euler parameters of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
+              initialVelocity: initial velocity of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
+              initialAngularVelocity: initial angular velocity of created ObjectFFRF (set in rigid body node underlying to ObjectFFRF)
+              gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
+              constrainRigidBodyMotion: set True in order to add constraint (Tisserand frame) in order to suppress rigid motion of mesh nodes
+              color: provided as list of 4 RGBA values
+            add object to mbs as well as according nodes
+        """
 
         self.gravity = gravity
 
@@ -1039,8 +1084,9 @@ class ObjectFFRFinterface:
 
         return dictReturn
 
-    #**classFunction: optional forceUserFunction for ObjectFFRF (per default, this user function is ignored)
     def UFforce(self, exu, mbs, t, q, q_t):
+        """optional forceUserFunction for ObjectFFRF (per default, this user function is ignored)
+        """
         exu.Print("UFforce: not tested and not integrated in to FFRFinterface!")
 
         force = np.zeros(self.nODE2FFRF)
@@ -1085,8 +1131,9 @@ class ObjectFFRFinterface:
 
         return force
 
-    #**classFunction: optional massMatrixUserFunction for ObjectFFRF (per default, this user function is ignored)
     def UFmassGenericODE2(self, exu, mbs, t, q, q_t):
+        """optional massMatrixUserFunction for ObjectFFRF (per default, this user function is ignored)
+        """
         exu.Print("UFmassGenericODE2: not tested and not integrated into FFRFinterface!")
         Avec = mbs.GetNodeOutput(self.nRigidBody,  exu.OutputVariableType.RotationMatrix)
         A = Avec.reshape((3,3))
@@ -1117,15 +1164,19 @@ class ObjectFFRFinterface:
 
 
 
-#**function: compute current (max, min, ...) value for chosen ObjectFFRFreducedOrder object (CMSobject) with exu.OutputVariableType. The function operates on nodal values. This is a helper function, which can be used to conveniently compute output quantities of the CMSobject efficiently and to use it in sensors
-#**input: 
-#  mbs: MainSystem of objectNumber
-#  objectNumber: number of ObjectFFRFreducedOrder in mbs
-#  outputVariableType: a exu.OutputVariableType out of [StressLocal, DisplacementLocal, VelocityLocal]
-#  norm: string containing chosen norm to be computed, out of 'Mises', 'maxNorm', 'min', 'max'; 'max' will return maximum of all components (component wise), 'min' does same but for minimum; 'maxNorm' computes np.linalg.norm for every node and then takes maximum of all norms; Mises computes von-Mises stress for every node and then takes maximum of all nodes
-#  nodeNumberList: list of mesh node numbers (from FEMinterface); if empty [], all nodes are used; otherwise, only given nodes are evaluated
-#**output: return value or list of values according to chosen norm as np.array
 def CMSObjectComputeNorm(mbs, objectNumber, outputVariableType, norm='max', nodeNumberList=[]):
+    """compute current (max, min, ...) value for chosen ObjectFFRFreducedOrder object (CMSobject) with exu.OutputVariableType. The function operates on nodal values. This is a helper function, which can be used to conveniently compute output quantities of the CMSobject efficiently and to use it in sensors
+
+    Args:
+        mbs: MainSystem of objectNumber
+        objectNumber: number of ObjectFFRFreducedOrder in mbs
+        outputVariableType: a exu.OutputVariableType out of [StressLocal, DisplacementLocal, VelocityLocal]
+        norm: string containing chosen norm to be computed, out of 'Mises', 'maxNorm', 'min', 'max'; 'max' will return maximum of all components (component wise), 'min' does same but for minimum; 'maxNorm' computes np.linalg.norm for every node and then takes maximum of all norms; Mises computes von-Mises stress for every node and then takes maximum of all nodes
+        nodeNumberList: list of mesh node numbers (from FEMinterface); if empty [], all nodes are used; otherwise, only given nodes are evaluated
+
+    Returns:
+        return value or list of values according to chosen norm as np.array
+    """
     #get generic node number containing current coordinates:
     nGeneric = mbs.GetObjectParameter(objectNumber,'nodeNumbers')[1]
     #problem with rigid body coordinates:
@@ -1185,19 +1236,22 @@ def CMSObjectComputeNorm(mbs, objectNumber, outputVariableType, norm='max', node
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++          ObjectFFRFreducedOrderTerms              ++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**class: compute terms necessary for ObjectFFRFreducedOrder
-#  class used internally in FEMinterface to compute ObjectFFRFreducedOrder dictionary
-#  this class holds all data for ObjectFFRFreducedOrder user functions
 class ObjectFFRFreducedOrderInterface:
-    #**classFunction: initialize ObjectFFRFreducedOrderInterface with FEMinterface class
-    #  initializes the ObjectFFRFreducedOrderInterface with nodes, modes, surface description and reduced system matrices from FEMinterface
-    #  data is then transfered to mbs object with classFunction AddObjectFFRFreducedOrderWithUserFunctions(...)
-    #**input: 
-    #  femInterface: must provide nodes, surfaceTriangles, modeBasis, massMatrix, stiffness; if femInterface=None, an empty ObjectFFRFreducedOrderInterface instance is created which may be used to load data with LoadFromFile()
-    #  roundMassMatrix: use this value to set entries of reduced mass matrix to zero which are below the treshold
-    #  roundStiffnessMatrix: use this value to set entries of reduced stiffness matrix to zero which are below the treshold
+    """compute terms necessary for ObjectFFRFreducedOrder
+    class used internally in FEMinterface to compute ObjectFFRFreducedOrder dictionary
+    this class holds all data for ObjectFFRFreducedOrder user functions
+    """
     def __init__(self, femInterface=None, rigidBodyNodeType = 'NodeType.RotationEulerParameters',
                  roundMassMatrix = 1e-13, roundStiffnessMatrix = 1e-13):
+        """initialize ObjectFFRFreducedOrderInterface with FEMinterface class
+        initializes the ObjectFFRFreducedOrderInterface with nodes, modes, surface description and reduced system matrices from FEMinterface
+        data is then transfered to mbs object with classFunction AddObjectFFRFreducedOrderWithUserFunctions(...)
+
+        Args:
+            femInterface: must provide nodes, surfaceTriangles, modeBasis, massMatrix, stiffness; if femInterface=None, an empty ObjectFFRFreducedOrderInterface instance is created which may be used to load data with LoadFromFile()
+            roundMassMatrix: use this value to set entries of reduced mass matrix to zero which are below the treshold
+            roundStiffnessMatrix: use this value to set entries of reduced stiffness matrix to zero which are below the treshold
+        """
  
         if femInterface!=None:
             #self.femInterface = femInterface #2023-04-20: removed in order to consistenly store class
@@ -1342,12 +1396,16 @@ class ObjectFFRFreducedOrderInterface:
         if not isinstance(self.trigList,list): #NPZ
             self.trigList = self.trigList.tolist()
 
-    #**classFunction: save all data to a data filename; can be used to avoid loading femInterface and FE data
-    #**input: 
-    #  fileName: string for path and file name without ending ==> ".npy" will be added
-    #  fileVersion: FOR EXPERTS: this allows to store in older format, will be recovered when loading; must be integer; version must by > 0; the default value will change in future!
-    #**output: stores file
     def SaveToFile(self, fileName, fileVersion = 1 ):
+        """save all data to a data filename; can be used to avoid loading femInterface and FE data
+
+        Args:
+            fileName: string for path and file name without ending ==> ".npy" will be added
+            fileVersion: FOR EXPERTS: this allows to store in older format, will be recovered when loading; must be integer; version must by > 0; the default value will change in future!
+
+        Returns:
+            stores file
+        """
 
         [fileName, fileExtension, mode] = FileNameToMode(fileName, None)
 
@@ -1402,13 +1460,17 @@ class ObjectFFRFreducedOrderInterface:
                 from exudyn.advancedUtilities import SaveDictToHDF5
                 SaveDictToHDF5(fileName+fileExtension, data)
                 
-    #**classFunction: load all data (nodes, elements, ...) from a data filename previously stored with SaveToFile(...). 
-    #this function is much faster than the text-based import functions
-    #**input: 
-    #  fileName: string for path and file name without ending ==> ".npy" will be added
-    #  mode: choose between different file formats (NPY and NPZ); Note: NPY only works for Numpy 1.x, not for Numpy >= 2.0
-    #**output: loads data into fem (note that existing values are not overwritten!)
     def LoadFromFile(self, fileName, mode=None):
+        """load all data (nodes, elements, ...) from a data filename previously stored with SaveToFile(...).
+        this function is much faster than the text-based import functions
+
+        Args:
+            fileName: string for path and file name without ending ==> ".npy" will be added
+            mode: choose between different file formats (NPY and NPZ); Note: NPY only works for Numpy 1.x, not for Numpy >= 2.0
+
+        Returns:
+            loads data into fem (note that existing values are not overwritten!)
+        """
         [fileName, fileExtension, mode] = FileNameToMode(fileName, mode)
         
             
@@ -1470,29 +1532,6 @@ class ObjectFFRFreducedOrderInterface:
         
     ##  UFforce: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; usually this function reads like:\\ \texttt{def UFforceFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced\_t):\\ \phantom{XXXX}return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)}
 
-    #**classFunction: add according nodes, objects and constraints for ObjectFFRFreducedOrder object to MainSystem mbs; use this function with userfunctions=0 in order to use internal C++ functionality, which is approx. 10x faster; implementation of userfunctions also available for rotation vector (Lie group formulation), which needs further testing
-    #**input:
-    #  exu: the exudyn module
-    #  mbs: a MainSystem object
-    #  positionRef: reference position of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
-    #  initialVelocity: initial velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
-    #  rotationMatrixRef: reference rotation of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder); if [], it becomes the unit matrix
-    #  initialAngularVelocity: initial angular velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
-    #  eulerParametersRef: DEPRECATED, use rotationParametersRef or rotationMatrixRef in future: reference euler parameters of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
-    #  gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
-    #  UFforce: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; see example
-    #  UFmassMatrix: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; see example
-    #  massProportionalDamping: Rayleigh damping factor for mass proportional damping (multiplied with reduced mass matrix), added to floating frame/modal coordinates only
-    #  stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only (multiplied with reduced stiffness matrix)
-    #  color: provided as list of 4 RGBA values
-    #  name: name string for FFRFreducedOrder object, rigid body node is 'NodeRigidBody:'+name, GenericODE2 node is 'NodeGeneric:'+name
-    #**example:
-    # #example of a user function for forces:
-    # def UFforceFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced_t):
-    #     return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
-    # #example of a user function for mass matrix:
-    # def UFmassFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced\_t):
-    #     return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)
     def AddObjectFFRFreducedOrderWithUserFunctions(self, exu, mbs, 
                                                   positionRef=[0,0,0], 
                                                   initialVelocity=[0,0,0], 
@@ -1504,6 +1543,32 @@ class ObjectFFRFreducedOrderInterface:
                                                   color=[0.1,0.9,0.1,1.],
                                                   eulerParametersRef=[],
                                                   name=''):
+        r"""add according nodes, objects and constraints for ObjectFFRFreducedOrder object to MainSystem mbs; use this function with userfunctions=0 in order to use internal C++ functionality, which is approx. 10x faster; implementation of userfunctions also available for rotation vector (Lie group formulation), which needs further testing
+
+        Args:
+            exu: the exudyn module
+            mbs: a MainSystem object
+            positionRef: reference position of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+            initialVelocity: initial velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+            rotationMatrixRef: reference rotation of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder); if [], it becomes the unit matrix
+            initialAngularVelocity: initial angular velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+            eulerParametersRef: DEPRECATED, use rotationParametersRef or rotationMatrixRef in future: reference euler parameters of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+            gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
+            UFforce: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; see example
+            UFmassMatrix: (OPTIONAL, computation is slower) provide a user function, which computes the quadratic velocity vector and applied forces; see example
+            massProportionalDamping: Rayleigh damping factor for mass proportional damping (multiplied with reduced mass matrix), added to floating frame/modal coordinates only
+            stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only (multiplied with reduced stiffness matrix)
+            color: provided as list of 4 RGBA values
+            name: name string for FFRFreducedOrder object, rigid body node is 'NodeRigidBody:'+name, GenericODE2 node is 'NodeGeneric:'+name
+
+        Example:
+            #example of a user function for forces:
+            def UFforceFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced_t):
+                return cms.UFforceFFRFreducedOrder(exu, mbs, t, qReduced, qReduced_t)
+            #example of a user function for mass matrix:
+            def UFmassFFRFreducedOrder(mbs, t, itemIndex, qReduced, qReduced\_t):
+                return cms.UFmassFFRFreducedOrder(exu, mbs, t, qReduced, qReduced\_t)
+        """
 
         #check chosen rotation parameterization:
         if len(rotationMatrixRef) == 0 and len(eulerParametersRef) == 0:
@@ -1653,8 +1718,9 @@ class ObjectFFRFreducedOrderInterface:
 
 
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #**classFunction: CMS mass matrix user function; qReduced and qReduced\_t contain the coordiantes of the rigid body node and the modal coordinates in one vector!
     def UFmassFFRFreducedOrder(self, exu, mbs, t, qReduced, qReduced_t):
+        r"""CMS mass matrix user function; qReduced and qReduced\_t contain the coordiantes of the rigid body node and the modal coordinates in one vector!
+        """
 
         Avec = mbs.GetNodeOutput(self.nRigidBody,  exu.OutputVariableType.RotationMatrix)
         A = Avec.reshape((3,3))
@@ -1704,8 +1770,9 @@ class ObjectFFRFreducedOrderInterface:
         return self.massMatrixFFRFreduced
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #**classFunction: CMS force matrix user function; qReduced and qReduced\_t contain the coordiantes of the rigid body node and the modal coordinates in one vector!
     def UFforceFFRFreducedOrder(self, exu, mbs, t, qReduced, qReduced_t):
+        r"""CMS force matrix user function; qReduced and qReduced\_t contain the coordiantes of the rigid body node and the modal coordinates in one vector!
+        """
         force = np.zeros(self.nODE2FFRFreduced)
 
         Avec = mbs.GetNodeOutput(self.nRigidBody,  exu.OutputVariableType.RotationMatrix)
@@ -1776,25 +1843,27 @@ class ObjectFFRFreducedOrderInterface:
 
         return force
 
-    #**classFunction: add according nodes, objects and constraints for ObjectFFRFreducedOrder object to MainSystem mbs; use this function in order to use internal C++ functionality, which is approx. 10x faster than AddObjectFFRFreducedOrderWithUserFunctions(...)
-    #**input:
-    #  exu: the exudyn module
-    #  mbs: a MainSystem object
-    #  positionRef: reference position of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
-    #  initialVelocity: initial velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
-    #  rotationMatrixRef: reference rotation of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder); if [], it becomes the unit matrix
-    #  initialAngularVelocity: initial angular velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
-    #  massProportionalDamping: Rayleigh damping factor for mass proportional damping, added to floating frame/modal coordinates only
-    #  stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only
-    #  gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
-    #  color: provided as list of 4 RGBA values
-    #  name: name string for FFRFreducedOrder object, rigid body node is 'NodeRigidBody:'+name, GenericODE2 node is 'NodeGeneric:'+name
     def AddObjectFFRFreducedOrder(self, mbs, 
                                   positionRef=[0,0,0], initialVelocity=[0,0,0], 
                                   rotationMatrixRef=[], initialAngularVelocity=[0,0,0],
                                   massProportionalDamping = 0, stiffnessProportionalDamping = 0,
                                   gravity = [0,0,0],
                                   color=[0.1,0.9,0.1,1.], name=''):
+        """add according nodes, objects and constraints for ObjectFFRFreducedOrder object to MainSystem mbs; use this function in order to use internal C++ functionality, which is approx. 10x faster than AddObjectFFRFreducedOrderWithUserFunctions(...)
+
+        Args:
+            exu: the exudyn module
+            mbs: a MainSystem object
+            positionRef: reference position of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+            initialVelocity: initial velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+            rotationMatrixRef: reference rotation of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder); if [], it becomes the unit matrix
+            initialAngularVelocity: initial angular velocity of created ObjectFFRFreducedOrder (set in rigid body node underlying to ObjectFFRFreducedOrder)
+            massProportionalDamping: Rayleigh damping factor for mass proportional damping, added to floating frame/modal coordinates only
+            stiffnessProportionalDamping: Rayleigh damping factor for stiffness proportional damping, added to floating frame/modal coordinates only
+            gravity: set [0,0,0] if no gravity shall be applied, or to the gravity vector otherwise
+            color: provided as list of 4 RGBA values
+            name: name string for FFRFreducedOrder object, rigid body node is 'NodeRigidBody:'+name, GenericODE2 node is 'NodeGeneric:'+name
+        """
         return self.AddObjectFFRFreducedOrderWithUserFunctions(exu=exu, mbs=mbs, 
                                                   positionRef=positionRef, initialVelocity=initialVelocity, rotationMatrixRef=rotationMatrixRef, 
                                                   initialAngularVelocity=initialAngularVelocity,
@@ -1804,12 +1873,13 @@ class ObjectFFRFreducedOrderInterface:
         
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**class: helper calss for function ComputeHurtyCraigBamptonModes, declaring some computation options. It offers the following options:\\
-# - allBoundaryNodes:     compute a single static mode for every boundary coordinate\\
-# - RBE2:                 static modes only for rigid body motion at boundary nodes; using rigid boundary surfaces (additional stiffening)\\
-# - RBE3:                 static modes only for rigid body motion at boundary nodes; averaged rigid body motion at boundary surfaces (leads to deformation at boundaries)\\
-# - noStaticModes:        do not compute static modes, only eigen modes (not recommended; usually only for tests)
 class HCBstaticModeSelection(Enum):
+    r"""helper calss for function ComputeHurtyCraigBamptonModes, declaring some computation options. It offers the following options:\\
+    - allBoundaryNodes:     compute a single static mode for every boundary coordinate\\
+    - RBE2:                 static modes only for rigid body motion at boundary nodes; using rigid boundary surfaces (additional stiffening)\\
+    - RBE3:                 static modes only for rigid body motion at boundary nodes; averaged rigid body motion at boundary surfaces (leads to deformation at boundaries)\\
+    - noStaticModes:        do not compute static modes, only eigen modes (not recommended; usually only for tests)
+    """
     allBoundaryNodes = 1    #compute a single static mode for every boundary coordinate; if this is used, 6 constraints need to be added to the ObjectFFRFreducedOrder, otherwise there is additional rigid body motion!
     RBE2 = 2                #static modes which include (exact / constrained) rigid body motion (3x translation, 3x rotation) at boundary / interface; recommended as basic / simpler method, however, leads to additional stiffening and stress concentration at boundary
     RBE3 = 3                #static modes which include averaged rigid body motion (3x translation, 3x rotation) at boundary / interface; recommended as advanced method; may lead to overly large deformation at boundary
@@ -1819,35 +1889,37 @@ class HCBstaticModeSelection(Enum):
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++   FEMinterface - finite element interface class   ++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**class: general interface to different FEM / mesh imports and export to EXUDYN functions
-#         use this class to import meshes from different meshing or FEM programs (NETGEN/NGsolve \cite{NGsolve2022}, ABAQUS, ANSYS, ..) and store it in a unique format
-#         do mesh operations, compute eigenmodes and reduced basis, etc.
-#         load/store the data efficiently with LoadFromFile(...), SaveToFile(...)  if import functions are slow
-#         export to EXUDYN objects
 class FEMinterface:
-    #**classFunction: initalize all data of the FEMinterface by, e.g., \texttt{fem = FEMinterface()}
-    #**example:
-    # #**** this is not an example, just a description for internal variables ****
-    # #default values for member variables stored internally in FEMinterface fem and typical structure:
-    # 
-    # dictionary of different node lists:
-    # fem.nodes = {}                 # {'Position':np.array([[x0,y0,z0],...]), 'RigidBodyRxyz':np.array([[x0,y0,z0,alpha0,beta0,gamma0],...]),  },...]
-    # list of elements (element connectivity):
-    # fem.elements = []              # [{'Name':'identifier', 'Tet4':np.array([[n0,n1,n2,n3],...]), 'Hex8':np.array([[n0,...,n7],...]),  },...]
-    # fem.massMatrix = None          # scipy csr_matrix
-    # fem.stiffnessMatrix= None      # scipy csr_matrix
-    # surface sets with faces, usually for drawing:
-    # fem.surface = []               # [{'Name':'identifier', 'Trigs':np.array([[n0,n1,n2],...]), 'Quads':np.array([[n0,...,n3],...]),  },...]
-    # node sets for boundary conditions, etc.
-    # fem.nodeSets = []              # [{'Name':'identifier', 'NodeNumbers':np.array([n_0,...,n_ns]), 'NodeWeights':np.array([w_0,...,w_ns])},...]
-    # element sets, e.g., for different domains, etc.
-    # fem.elementSets = []           # [{'Name':'identifier', 'ElementNumbers':np.array([n_0,...,n_ns])},...]
-    # mode basis: 'NormalModes' are eigenmodes, 'HCBmodes' are Craig-Bampton modes including static modes:
-    # fem.modeBasis = {}             # {'matrix':np.array([[Psi_00,Psi_01, ..., Psi_0m],...,[Psi_n0,Psi_n1, ..., Psi_nm]]),'type':'NormalModes'}
-    # eigenvalues related to eigenvectors in mode basis:
-    # fem.eigenValues = []           # np.array([ev0, ev1, ...])
-    # fem.postProcessingModes = {}   # {'matrix':<matrix (np.array) containing stress components (xx,yy,zz,yz,xz,xy) in each column, rows are for every mesh node>,'outputVariableType':exudyn.OutputVariableType.StressLocal}
+    r"""general interface to different FEM / mesh imports and export to EXUDYN functions
+    use this class to import meshes from different meshing or FEM programs (NETGEN/NGsolve \cite{NGsolve2022}, ABAQUS, ANSYS, ..) and store it in a unique format
+    do mesh operations, compute eigenmodes and reduced basis, etc.
+    load/store the data efficiently with LoadFromFile(...), SaveToFile(...)  if import functions are slow
+    export to EXUDYN objects
+    """
     def __init__(self):
+        r"""initalize all data of the FEMinterface by, e.g., \texttt{fem = FEMinterface()}
+
+        Example:
+            #**** this is not an example, just a description for internal variables ****
+            #default values for member variables stored internally in FEMinterface fem and typical structure:
+            dictionary of different node lists:
+            fem.nodes = {}                 # {'Position':np.array([[x0,y0,z0],...]), 'RigidBodyRxyz':np.array([[x0,y0,z0,alpha0,beta0,gamma0],...]),  },...]
+            list of elements (element connectivity):
+            fem.elements = []              # [{'Name':'identifier', 'Tet4':np.array([[n0,n1,n2,n3],...]), 'Hex8':np.array([[n0,...,n7],...]),  },...]
+            fem.massMatrix = None          # scipy csr_matrix
+            fem.stiffnessMatrix= None      # scipy csr_matrix
+            surface sets with faces, usually for drawing:
+            fem.surface = []               # [{'Name':'identifier', 'Trigs':np.array([[n0,n1,n2],...]), 'Quads':np.array([[n0,...,n3],...]),  },...]
+            node sets for boundary conditions, etc.
+            fem.nodeSets = []              # [{'Name':'identifier', 'NodeNumbers':np.array([n_0,...,n_ns]), 'NodeWeights':np.array([w_0,...,w_ns])},...]
+            element sets, e.g., for different domains, etc.
+            fem.elementSets = []           # [{'Name':'identifier', 'ElementNumbers':np.array([n_0,...,n_ns])},...]
+            mode basis: 'NormalModes' are eigenmodes, 'HCBmodes' are Craig-Bampton modes including static modes:
+            fem.modeBasis = {}             # {'matrix':np.array([[Psi_00,Psi_01, ..., Psi_0m],...,[Psi_n0,Psi_n1, ..., Psi_nm]]),'type':'NormalModes'}
+            eigenvalues related to eigenvectors in mode basis:
+            fem.eigenValues = []           # np.array([ev0, ev1, ...])
+            fem.postProcessingModes = {}   # {'matrix':<matrix (np.array) containing stress components (xx,yy,zz,yz,xz,xy) in each column, rows are for every mesh node>,'outputVariableType':exudyn.OutputVariableType.StressLocal}
+        """
         self.metaData = {'source':'unknown'} # a dictionary with metaData that is used in load/save and can be used by the user for adding additional information (textual description, mesh, geometry, etc.); source contains information on where the mesh has been generated
         self.nodes = {}                 # {'Position':np.array([[x0,y0,z0],...]), 'RigidBodyRxyz':np.array([[x0,y0,z0,alpha0,beta0,gamma0],...]),  },...]                     #dictionary of different node lists
         self.elements = []              # [{'Name':'identifier', 'Tet4':np.array([[n0,n1,n2,n3],...]), 'Hex8':np.array([[n0,...,n7],...]),  },...]        #there may be several element sets
@@ -1889,8 +1961,9 @@ class FEMinterface:
 
         return matrix
 
-    #**classFunction: get dictionary containing current data of FEMinterface
     def GetDictionary(self):
+        """get dictionary containing current data of FEMinterface
+        """
 
         data = {'metaData':self.metaData,
                 'nodes':self.nodes,
@@ -1906,8 +1979,9 @@ class FEMinterface:
                 }
         return data
 
-    #**classFunction: set dictionary containing current data for FEMinterface; used internally
     def SetWithDictionary(self, dictData, warn=True, fromNPZ=False):
+        """set dictionary containing current data for FEMinterface; used internally
+        """
         # for item in dictData['surface']:
         #     if 'Trigs' in item:
         #         if isinstance(item['Trigs'], np.ndarray):
@@ -1943,14 +2017,20 @@ class FEMinterface:
         self.ConvertSurfaceLists2Numpy()  #if loading old format
         
         
-    #**classFunction: save all data (nodes, elements, ...) to a data filename; this function is much faster than the text-based import functions; note that HDF5 and PKL formats lead to smaller files
-    #**input: 
-    #  fileName: string for path and file name; if no ending is provided ==> ".npy" will be added and NumPy format will be used; alternatives: '.pkl' ending uses Python's pickle method (smaller files) and '.hdf5' uses the HDF5 file format, but requires the python package h5py to be installed!
-    #  fileVersion: FOR EXPERTS: this allows to store in older format, will be recovered when loading; must be integer; version must by > 0
-    #  mode: default: numpy format ('NPZ'); alternatives: 'HDF5' (requires h5py package) and 'PKL' (pickle); NPY (deprecated, under Numpy 1.x)
-    #**output: stores file
-    #**notes: test with 10-node tets and 86154 nodes, 50752 elements and 20 modes (incl. stress modes) gives the timings for save+load: [NPY: 2.10s, PKL: 0.76s, HDF5: 0.69s] and file sizes [NPY: 1032MB, PKL: 580MB, HDF5: 581MB]
     def SaveToFile(self, fileName, fileVersion = 4, mode=None):
+        """save all data (nodes, elements, ...) to a data filename; this function is much faster than the text-based import functions; note that HDF5 and PKL formats lead to smaller files
+
+        Args:
+            fileName: string for path and file name; if no ending is provided ==> ".npy" will be added and NumPy format will be used; alternatives: '.pkl' ending uses Python's pickle method (smaller files) and '.hdf5' uses the HDF5 file format, but requires the python package h5py to be installed!
+            fileVersion: FOR EXPERTS: this allows to store in older format, will be recovered when loading; must be integer; version must by > 0
+            mode: default: numpy format ('NPZ'); alternatives: 'HDF5' (requires h5py package) and 'PKL' (pickle); NPY (deprecated, under Numpy 1.x)
+
+        Returns:
+            stores file
+
+        Note:
+            test with 10-node tets and 86154 nodes, 50752 elements and 20 modes (incl. stress modes) gives the timings for save+load: [NPY: 2.10s, PKL: 0.76s, HDF5: 0.69s] and file sizes [NPY: 1032MB, PKL: 580MB, HDF5: 581MB]
+        """
         [fileName, fileExtension, mode] = FileNameToMode(fileName, mode)
 
         try:
@@ -2000,13 +2080,17 @@ class FEMinterface:
 
             
                     
-    #**classFunction: load all data (nodes, elements, ...) from a data filename previously stored with SaveToFile(...). 
-    #this function is much faster than the text-based import functions
-    #**input: 
-    #  fileName: string for path and file name; if no ending is provided ==> ".npz" will be added and NumPy format will be assumed; alternatives: '.pkl' ending uses Python's pickle method and '.hdf5' uses the HDF5 file format, but requires the python package h5py to be installed!
-    #  forceVersion: FOR EXPERTS: this allows to store in older format, will be recovered when loading; must be integer; for old files, use forceVersion=0
-    #**output: loads data into fem (note that existing values are not overwritten!); returns file version or None if version is not available
     def LoadFromFile(self, fileName, forceVersion=None, mode=None):
+        """load all data (nodes, elements, ...) from a data filename previously stored with SaveToFile(...).
+        this function is much faster than the text-based import functions
+
+        Args:
+            fileName: string for path and file name; if no ending is provided ==> ".npz" will be added and NumPy format will be assumed; alternatives: '.pkl' ending uses Python's pickle method and '.hdf5' uses the HDF5 file format, but requires the python package h5py to be installed!
+            forceVersion: FOR EXPERTS: this allows to store in older format, will be recovered when loading; must be integer; for old files, use forceVersion=0
+
+        Returns:
+            loads data into fem (note that existing values are not overwritten!); returns file version or None if version is not available
+        """
         [fileName, fileExtension, mode] = FileNameToMode(fileName, mode)
 
         fileVersion = None
@@ -2063,21 +2147,27 @@ class FEMinterface:
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #ABAQUS import functions
 
-    #**classFunction: import nodes and elements from Abaqus input file and create surface elements; 
-    #                 node numbers in elements are converted from 1-based indices to python's 0-based indices;
-    #                 This function can only import one part or instance; this means that you have to merge all 
-    #                 instances or parts in order to use this function for import of flexible bodies for order reduction methods
-    #**input:
-    #  fileName: file name incl. path
-    #  typeName: this is what is searched for regarding nodes and elements, see your .inp file
-    #  name: if there are several parts, this name should address the according part name
-    #  verbose: use True for some debug information
-    #  createSurfaceTrigs: if True, triangles are created for visualization (triangles both for Tet and Hex elements)
-    #  surfaceTrigsAll: if False, visualization triangles are created at the surface; if True, surface triangles are created also for interior elements
-    #**notes: only works for Hex8, Hex20, Tet4 and Tet10 (C3D4, C3D8, C3D8R, C3D10, C3D20, C3D20R) elements; some functionality is untested and works in limited cases; only works for one single part or instance
-    #**output: return node numbers as numpy array
     def ImportFromAbaqusInputFile(self, fileName, typeName='Part', name='Part-1', verbose=False,
                                   createSurfaceTrigs=True, surfaceTrigsAll=False):
+        """import nodes and elements from Abaqus input file and create surface elements;
+        node numbers in elements are converted from 1-based indices to python's 0-based indices;
+        This function can only import one part or instance; this means that you have to merge all
+        instances or parts in order to use this function for import of flexible bodies for order reduction methods
+
+        Args:
+            fileName: file name incl. path
+            typeName: this is what is searched for regarding nodes and elements, see your .inp file
+            name: if there are several parts, this name should address the according part name
+            verbose: use True for some debug information
+            createSurfaceTrigs: if True, triangles are created for visualization (triangles both for Tet and Hex elements)
+            surfaceTrigsAll: if False, visualization triangles are created at the surface; if True, surface triangles are created also for interior elements
+
+        Returns:
+            return node numbers as numpy array
+
+        Note:
+            only works for Hex8, Hex20, Tet4 and Tet10 (C3D4, C3D8, C3D8R, C3D10, C3D20, C3D20R) elements; some functionality is untested and works in limited cases; only works for one single part or instance
+        """
         #def ImportABAQUS(fileName, typeName, name, verbose = False):
         fileLines = []
         if verbose: exu.Print("ImportFromAbaqusInputFile: read file name=", fileName)
@@ -2243,12 +2333,13 @@ class FEMinterface:
 
 
 
-    #**classFunction: read mass matrix from compressed row text format (exported from Abaqus); in order to export system matrices, write the following lines in your Abaqus input file:
-    #*STEP
-    #*MATRIX GENERATE, STIFFNESS, MASS
-    #*MATRIX OUTPUT, STIFFNESS, MASS, FORMAT=COORDINATE
-    #*End Step
     def ReadMassMatrixFromAbaqus(self, fileName, type='SparseRowColumnValue'):
+        """read mass matrix from compressed row text format (exported from Abaqus); in order to export system matrices, write the following lines in your Abaqus input file:
+        *STEP
+        *MATRIX GENERATE, STIFFNESS, MASS
+        *MATRIX OUTPUT, STIFFNESS, MASS, FORMAT=COORDINATE
+        *End Step
+        """
         self.massMatrix = np.loadtxt(fileName)
         self.massMatrix[:,0] -= 1 #convert 1-based indices to 0-based indices
         self.massMatrix[:,1] -= 1
@@ -2256,8 +2347,9 @@ class FEMinterface:
         if not useOldCSRformat:
             self.massMatrix = SparseTripletsToScipySparseCSR(self.massMatrix)
 
-    #**classFunction: read stiffness matrix from compressed row text format (exported from Abaqus)
     def ReadStiffnessMatrixFromAbaqus(self, fileName, type='SparseRowColumnValue'):
+        """read stiffness matrix from compressed row text format (exported from Abaqus)
+        """
         self.stiffnessMatrix = np.loadtxt(fileName)
         self.stiffnessMatrix[:,0] -= 1 #convert 1-based indices to 0-based indices
         self.stiffnessMatrix[:,1] -= 1
@@ -2265,8 +2357,9 @@ class FEMinterface:
         if not useOldCSRformat:
             self.stiffnessMatrix = SparseTripletsToScipySparseCSR(self.stiffnessMatrix)
 
-    #**classFunction: function to get all node sets in FEMinterface.nodeSet which have type 'boundary', e.g. made in function GetNodesOfNGsolveBoundary; can be directly used for HCB modes
     def GetBoundaryNodeSetsAsLists(self):
+        """function to get all node sets in FEMinterface.nodeSet which have type 'boundary', e.g. made in function GetNodesOfNGsolveBoundary; can be directly used for HCB modes
+        """
         boundaryNodesList = []
         boundaryWeightsList= []
         for nodeSet in self.nodeSets:
@@ -2280,8 +2373,9 @@ class FEMinterface:
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #**classFunction: internal function to get ngsolve mesh nodes of boundary with name boundaryName
     def GetNodesOfNGsolveBoundary(self, mesh, boundaryName):
+        """internal function to get ngsolve mesh nodes of boundary with name boundaryName
+        """
         ngMesh = mesh.ngmesh
         bcList = mesh.GetBoundaries()
         #node2BC = np.zeros(mesh.nv, dtype=np.int32) #0 is default
@@ -2293,12 +2387,16 @@ class FEMinterface:
                     boundaryNodes.add(node.nr - 1)  #convert netgen point ID (1-based) to int;
         return list(boundaryNodes)  #convert to list before returning
 
-    #**classFunction: create node sets for given (or all) boundaries in NGsolve; node sets are added to existing node sets
-    #**input:
-    #    mesh: a previously created \texttt{ngs.mesh} (NGsolve mesh, see examples)
-    #    boundaryNamesList: a List of boundary names used to define mesh boundaries or None; if given, node sets are only created for the given boundary names
-    #**output: list of nodeSets according to FEMinterface nodeSets structure, a dictionary with 'Name', 'NodeNumbers' and 'NodeWeights'
     def CreateNGsolveBoundaryNodeSets(self, mesh, boundaryNamesList=None, warnNodeSets=True):
+        r"""create node sets for given (or all) boundaries in NGsolve; node sets are added to existing node sets
+
+        Args:
+            mesh: a previously created \texttt{ngs.mesh} (NGsolve mesh, see examples)
+            boundaryNamesList: a List of boundary names used to define mesh boundaries or None; if given, node sets are only created for the given boundary names
+
+        Returns:
+            list of nodeSets according to FEMinterface nodeSets structure, a dictionary with 'Name', 'NodeNumbers' and 'NodeWeights'
+        """
         nodeSets = []
         try:
             ngMesh = mesh.ngmesh
@@ -2338,37 +2436,44 @@ class FEMinterface:
 
         return nodeSets
 
-    #**classFunction: import mesh from NETGEN/NGsolve and setup mechanical problem
-    #**notes: The interface to NETGEN/NGsolve has been created together with Joachim Sch\"oberl, main developer 
-    #  of NETGEN/NGsolve \cite{Schoeberl1997,NGsolve2014}; Thank's a lot!
-    #  download NGsolve at: https://ngsolve.org/
-    #  NGsolve needs Python 3.7 (64bit) ==> use according EXUDYN version!
-    #  note that node/element indices in the NGsolve mesh are 1-based and need to be converted to 0-base!
-    #**input:
-    #    mesh: a previously created \texttt{ngs.mesh} (NGsolve mesh, see examples)
-    #    youngsModulus: In case of single material: Young's modulus used for mechanical model
-    #    poissonsRatio: In case of single material: Poisson's ratio used for mechanical model
-    #    density: In case of single material: density used for mechanical model
-    #    materials: dictionary of material dictionaries according to names in NGsolve mesh, containing youngsModulus, poissonsRatio and density per material, see example
-    #    createBoundaryNodeSets: if True, during import named boundaries conditions of the mesh are transformed into node sets for further use during mode creation, etc.
-    #    boundaryNamesList: given as list of boundary names to be used for boundary node sets or None (creating node sets for all boundaries)
-    #    meshOrder: use 1 for linear elements and 2 for second order elements (recommended to use 2 for much higher accuracy!)
-    #    verbose: set True to print out some status information
-    #**notes: setting ngsolve.SetNumThreads(nt) you can select the number of treads that are used for assemble or other functionality with NGsolve functionality 
-    #**output: creates according nodes, elements, in FEM and returns [bfM, bfK, fes] which are the (mass matrix M, stiffness matrix K) bilinear forms and the finite element space fes
-    #**author: Johannes Gerstmayr, Joachim Sch\"oberl
-    #**example: 
-    # ... #assume you have a FEMinterface fem and a NGsolve mesh
-    # #we have to define specific materials and (if still in the mesh), the default material
-    # materials = {'default':{'youngsModulus':2.1e11, 'poissonsRatio':0.3, 'density':7800},
-    #              'steel':{'youngsModulus':2.1e11, 'poissonsRatio':0.3, 'density':7800},
-    #              'aluminum':{'youngsModulus':7e10, 'poissonsRatio':0.35, 'density':2700}, 
-    #              }
-    # fem.ImportMeshFromNGsolve(self, mesh, materials)
-    # #==> fem has now nodes, elements, node sets, etc. set according to mesh
+    @docmeta(author='Johannes Gerstmayr, Joachim Sch\\"oberl')
     def ImportMeshFromNGsolve(self, mesh, density=None, youngsModulus=None, poissonsRatio=None, 
                               materials = None, createBoundaryNodeSets = True, boundaryNamesList=None,
                               verbose = False, meshOrder = 1, **kwargs):
+        r"""import mesh from NETGEN/NGsolve and setup mechanical problem
+
+        Args:
+            mesh: a previously created \texttt{ngs.mesh} (NGsolve mesh, see examples)
+            youngsModulus: In case of single material: Young's modulus used for mechanical model
+            poissonsRatio: In case of single material: Poisson's ratio used for mechanical model
+            density: In case of single material: density used for mechanical model
+            materials: dictionary of material dictionaries according to names in NGsolve mesh, containing youngsModulus, poissonsRatio and density per material, see example
+            createBoundaryNodeSets: if True, during import named boundaries conditions of the mesh are transformed into node sets for further use during mode creation, etc.
+            boundaryNamesList: given as list of boundary names to be used for boundary node sets or None (creating node sets for all boundaries)
+            meshOrder: use 1 for linear elements and 2 for second order elements (recommended to use 2 for much higher accuracy!)
+            verbose: set True to print out some status information
+
+        Returns:
+            creates according nodes, elements, in FEM and returns [bfM, bfK, fes] which are the (mass matrix M, stiffness matrix K) bilinear forms and the finite element space fes
+
+        Note:
+            The interface to NETGEN/NGsolve has been created together with Joachim Sch\"oberl, main developer
+            of NETGEN/NGsolve \cite{Schoeberl1997,NGsolve2014}; Thank's a lot!
+            download NGsolve at: https://ngsolve.org/
+            NGsolve needs Python 3.7 (64bit) ==> use according EXUDYN version!
+            note that node/element indices in the NGsolve mesh are 1-based and need to be converted to 0-base!
+            setting ngsolve.SetNumThreads(nt) you can select the number of treads that are used for assemble or other functionality with NGsolve functionality
+
+        Example:
+            ... #assume you have a FEMinterface fem and a NGsolve mesh
+            #we have to define specific materials and (if still in the mesh), the default material
+            materials = {'default':{'youngsModulus':2.1e11, 'poissonsRatio':0.3, 'density':7800},
+                         'steel':{'youngsModulus':2.1e11, 'poissonsRatio':0.3, 'density':7800},
+                         'aluminum':{'youngsModulus':7e10, 'poissonsRatio':0.35, 'density':2700},
+                         }
+            fem.ImportMeshFromNGsolve(self, mesh, materials)
+            #==> fem has now nodes, elements, node sets, etc. set according to mesh
+        """
         import ngsolve as ngs
 
         if meshOrder < 1 or meshOrder > 2:
@@ -2531,19 +2636,23 @@ class FEMinterface:
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #**classFunction: compute nModes smallest eigenvalues and eigenmodes from mass and stiffnessMatrix; store mode vectors in modeBasis, but exclude a number of 'excludeRigidBodyModes' rigid body modes from modeBasis; uses scipy for solution of generalized eigenvalue problem
-    #**input: 
-    #  nModes: prescribe the number of modes to be computed; total computed modes are  (nModes+excludeRigidBodyModes), but only nModes with smallest absolute eigenvalues are considered and stored
-    #  excludeRigidBodyModes: if rigid body modes are expected (in case of free-free modes), then this number specifies the number of eigenmodes to be excluded in the stored basis (usually 6 modes in 3D)
-    #  maxEigensolveIterations: maximum number of iterations for iterative eigensolver; default=40
-    #  verbose: if True, output some relevant information during solving
-    #**output: eigenmodes are stored internally in FEMinterface as 'modeBasis' and eigenvalues as 'eigenValues'
-    #**author: Johannes Gerstmayr, Joachim Sch\"oberl
+    @docmeta(author='Johannes Gerstmayr, Joachim Sch\\"oberl')
     def ComputeEigenmodesNGsolve(self, bfM, bfK,
                                  nModes, 
                                  maxEigensolveIterations = 40,
                                  excludeRigidBodyModes = 0,
                                  verbose = False):
+        """compute nModes smallest eigenvalues and eigenmodes from mass and stiffnessMatrix; store mode vectors in modeBasis, but exclude a number of 'excludeRigidBodyModes' rigid body modes from modeBasis; uses scipy for solution of generalized eigenvalue problem
+
+        Args:
+            nModes: prescribe the number of modes to be computed; total computed modes are  (nModes+excludeRigidBodyModes), but only nModes with smallest absolute eigenvalues are considered and stored
+            excludeRigidBodyModes: if rigid body modes are expected (in case of free-free modes), then this number specifies the number of eigenmodes to be excluded in the stored basis (usually 6 modes in 3D)
+            maxEigensolveIterations: maximum number of iterations for iterative eigensolver; default=40
+            verbose: if True, output some relevant information during solving
+
+        Returns:
+            eigenmodes are stored internally in FEMinterface as 'modeBasis' and eigenvalues as 'eigenValues'
+        """
         import ngsolve as ngs
 
         maxIt = maxEigensolveIterations
@@ -2571,22 +2680,26 @@ class FEMinterface:
         if verbose: print ("eigenfrequencies (Hz) =",(0.5/np.pi)*np.sqrt(np.abs(res[0][excludeRigidBodyModes:excludeRigidBodyModes + nModes])))
 
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #**classFunction: compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part \refSection{sec:theory:CMS}. This function uses internal computational functionality of NGsolve and is often much faster than the scipy variant
-    #**input:
-    #  bfM: bilinearform for mass matrix as retured in ImportMeshFromNGsolve(...)
-    #  bfK: bilinearform for stiffness matrix as retured in ImportMeshFromNGsolve(...)
-    #  boundaryNodesList: [nodeList0, nodeList1, ...] a list of node lists, each of them representing a set of 'Position' nodes for which a rigid body interface (displacement/rotation and force/torque) is created; NOTE THAT boundary nodes may not overlap between the different node lists (no duplicated node indices!)
-    #  nEigenModes: number of eigen modes in addition to static modes (may be zero for RBE2 computationMode); eigen modes are computed for the case where all rigid body motions at boundaries are fixed; only smallest nEigenModes absolute eigenvalues are considered
-    #  maxEigensolveIterations: maximum number of iterations for iterative eigensolver; default=40
-    #  verbose: if True, output some relevant information during solving
-    #**output: stores computed modes in self.modeBasis and abs(eigenvalues) in self.eigenValues
-    #**author: Johannes Gerstmayr, Joachim Sch\"oberl
+    @docmeta(author='Johannes Gerstmayr, Joachim Sch\\"oberl')
     def ComputeHurtyCraigBamptonModesNGsolve(self,
                                       bfM, bfK,
                                       boundaryNodesList,
                                       nEigenModes, 
                                       maxEigensolveIterations = 40,
                                       verbose = False):
+        r"""compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part \refSection{sec:theory:CMS}. This function uses internal computational functionality of NGsolve and is often much faster than the scipy variant
+
+        Args:
+            bfM: bilinearform for mass matrix as retured in ImportMeshFromNGsolve(...)
+            bfK: bilinearform for stiffness matrix as retured in ImportMeshFromNGsolve(...)
+            boundaryNodesList: [nodeList0, nodeList1, ...] a list of node lists, each of them representing a set of 'Position' nodes for which a rigid body interface (displacement/rotation and force/torque) is created; NOTE THAT boundary nodes may not overlap between the different node lists (no duplicated node indices!)
+            nEigenModes: number of eigen modes in addition to static modes (may be zero for RBE2 computationMode); eigen modes are computed for the case where all rigid body motions at boundaries are fixed; only smallest nEigenModes absolute eigenvalues are considered
+            maxEigensolveIterations: maximum number of iterations for iterative eigensolver; default=40
+            verbose: if True, output some relevant information during solving
+
+        Returns:
+            stores computed modes in self.modeBasis and abs(eigenvalues) in self.eigenValues
+        """
 
         import ngsolve as ngs
         import time
@@ -2714,17 +2827,23 @@ class FEMinterface:
 
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #**classFunction: compute special stress or strain modes in order to enable visualization of stresses and strains in ObjectFFRFreducedOrder; takes a NGsolve fes as input and uses internal NGsolve methods to efficiently compute stresses or strains
-    #**input: 
-    #  fes: finite element space as retured in ImportMeshFromNGsolve(...)
-    #  material: specify material properties for computation of stresses, using a material class, e.g. material = KirchhoffMaterial(Emodulus, nu, rho); not needed for strains (material = 0)
-    #  outputVariableType: specify either exudyn.OutputVariableType.StressLocal or exudyn.OutputVariableType.StrainLocal as the desired output variables
-    #**notes: This function is implemented in Python and rather slow for larger meshes; for NGsolve / Netgen meshes, see the according ComputePostProcessingModesNGsolve function, which is usually much faster
-    #**output: post processing modes are stored in FEMinterface in local variable postProcessingModes as a dictionary, where 'matrix' represents the modes and 'outputVariableType' stores the type of mode as a OutputVariableType
-    #**author: Johannes Gerstmayr, Joachim Sch\"oberl
+    @docmeta(author='Johannes Gerstmayr, Joachim Sch\\"oberl')
     def ComputePostProcessingModesNGsolve(self, fes, material = 0, 
                                           outputVariableType = 'OutputVariableType.StressLocal', 
                                           verbose = False):
+        """compute special stress or strain modes in order to enable visualization of stresses and strains in ObjectFFRFreducedOrder; takes a NGsolve fes as input and uses internal NGsolve methods to efficiently compute stresses or strains
+
+        Args:
+            fes: finite element space as retured in ImportMeshFromNGsolve(...)
+            material: specify material properties for computation of stresses, using a material class, e.g. material = KirchhoffMaterial(Emodulus, nu, rho); not needed for strains (material = 0)
+            outputVariableType: specify either exudyn.OutputVariableType.StressLocal or exudyn.OutputVariableType.StrainLocal as the desired output variables
+
+        Returns:
+            post processing modes are stored in FEMinterface in local variable postProcessingModes as a dictionary, where 'matrix' represents the modes and 'outputVariableType' stores the type of mode as a OutputVariableType
+
+        Note:
+            This function is implemented in Python and rather slow for larger meshes; for NGsolve / Netgen meshes, see the according ComputePostProcessingModesNGsolve function, which is usually much faster
+        """
 
         import ngsolve as ngs
         #++++++++++++++++++++++++++++++++++++
@@ -2796,57 +2915,67 @@ class FEMinterface:
     #general FEMinterface functionality
 
 
-    #**classFunction: get sparse mass matrix in according format
     def GetMassMatrix(self, sparse=True):
+        """get sparse mass matrix in according format
+        """
         if sparse:
             return self.massMatrix
         else:
             return CompressedRowSparseToDenseMatrix(self.massMatrix)
 
-    #**classFunction: get sparse stiffness matrix in according format
     def GetStiffnessMatrix(self, sparse=True):
+        """get sparse stiffness matrix in according format
+        """
         if sparse:
             return self.stiffnessMatrix
         else:
             return CompressedRowSparseToDenseMatrix(self.stiffnessMatrix)
 
-    #**classFunction: get total number of nodes
     def NumberOfNodes(self):
+        """get total number of nodes
+        """
         nNodes = 0
         for nodeTypeName in self.nodes:
             nNodes += len(self.nodes[nodeTypeName])
         return nNodes
 
-    #**classFunction: get node points as array; only possible, if there exists only one type of Position nodes
-    #**notes: in order to obtain a list of certain node positions, see example
-    #**example:
-    #p=GetNodePositionsAsArray(self)[42] #get node 42 position
-    #nodeList=[1,13,42]
-    #pArray=GetNodePositionsAsArray(self)[nodeList] #get np.array with positions of node indices
     def GetNodePositionsAsArray(self):
+        """get node points as array; only possible, if there exists only one type of Position nodes
+
+        Note:
+            in order to obtain a list of certain node positions, see example
+
+        Example:
+            p=GetNodePositionsAsArray(self)[42] #get node 42 position
+            nodeList=[1,13,42]
+            pArray=GetNodePositionsAsArray(self)[nodeList] #get np.array with positions of node indices
+        """
         if len(self.nodes) != 1:
             raise ValueError("ERROR: GetNodePositionsAsArray() only possible for one type of Position nodes!")
 
         nodeTypeName = list(self.nodes)[0]
         return self.nodes[nodeTypeName]
 
-    #**classFunction: get mean (average) position of nodes defined by list of node numbers
     def GetNodePositionsMean(self,nodeNumberList):
+        """get mean (average) position of nodes defined by list of node numbers
+        """
         if len(self.nodes) != 1:
             raise ValueError("ERROR: GetNodesMeanPositions(...) only possible for one type of Position nodes!")
 
         return np.mean(self.GetNodePositionsAsArray()[nodeNumberList], axis=0)
 
-    #**classFunction: get number of total nodal coordinates
     def NumberOfCoordinates(self):
+        """get number of total nodal coordinates
+        """
         nCoordinates = 0
         for nodeTypeName in self.nodes:
             nCoordinates += len(self.nodes[nodeTypeName]) * self.coordinatesPerNodeType[nodeTypeName]
         return nCoordinates
 
-    #**classFunction: get node number for node at given point, e.g. p=[0.1,0.5,-0.2], using a tolerance (+/-) if coordinates are available only with reduced accuracy
-    #if not found, it returns an invalid index
     def GetNodeAtPoint(self, point, tolerance = 1e-5, raiseException = True):
+        """get node number for node at given point, e.g. p=[0.1,0.5,-0.2], using a tolerance (+/-) if coordinates are available only with reduced accuracy
+        if not found, it returns an invalid index
+        """
         cnt = 0
         if len(self.nodes) != 1 or 'Position' not in self.nodes:
             raise ValueError('FEMinterface.GetNodeAtPoint: only Position type nodes allowed')
@@ -2860,9 +2989,10 @@ class FEMinterface:
             raise ValueError("ERROR: GetNodeAtPoint: node point not found!")
         return -1 #invalid index, only if no exception raised
 
-    #**classFunction: get node numbers in plane defined by point p and (normalized) normal vector n using a tolerance for the distance to the plane
-    #if not found, it returns an empty list
     def GetNodesInPlane(self, point, normal,  tolerance = 1e-5):
+        """get node numbers in plane defined by point p and (normalized) normal vector n using a tolerance for the distance to the plane
+        if not found, it returns an empty list
+        """
         cnt = 0
         nodeList=[]
         if len(self.nodes) != 1 or 'Position' not in self.nodes:
@@ -2874,11 +3004,15 @@ class FEMinterface:
                 cnt+=1
         return nodeList
 
-    #**classFunction: get node numbers in cube, given by pMin and pMax, containing the minimum and maximum x, y, and z coordinates
-    #**example:
-    #nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])
-    #**output: returns list of nodes; if no nodes found, return an empty list
     def GetNodesInCube(self, pMin, pMax):
+        """get node numbers in cube, given by pMin and pMax, containing the minimum and maximum x, y, and z coordinates
+
+        Returns:
+            returns list of nodes; if no nodes found, return an empty list
+
+        Example:
+            nList = GetNodesInCube([-1,-0.2,0],[1,0.5,0.5])
+        """
         cnt = 0
         nodeList=[]
         if len(self.nodes) != 1 or 'Position' not in self.nodes:
@@ -2892,14 +3026,16 @@ class FEMinterface:
                 cnt+=1
         return nodeList
 
-    #**classFunction: get node numbers lying on line defined by points p1 and p2 and tolerance, which is accepted for points slightly outside the surface
     def GetNodesOnLine(self, p1, p2, tolerance=1e-5):
+        """get node numbers lying on line defined by points p1 and p2 and tolerance, which is accepted for points slightly outside the surface
+        """
         return self.GetNodesOnCylinder(p1, p2, radius=0, tolerance=1e-5)
 
-    #**classFunction: get node numbers lying on cylinder surface; cylinder defined by cylinder axes (points p1 and p2), 
-    #  cylinder radius and tolerance, which is accepted for points slightly outside the surface
-    #  if not found, it returns an empty list
     def GetNodesOnCylinder(self, p1, p2, radius, tolerance=1e-5):
+        """get node numbers lying on cylinder surface; cylinder defined by cylinder axes (points p1 and p2),
+        cylinder radius and tolerance, which is accepted for points slightly outside the surface
+        if not found, it returns an empty list
+        """
         cnt = 0
         v0 = np.array(p2) - np.array(p1)
         lAxis = np.linalg.norm(v0)
@@ -2924,10 +3060,11 @@ class FEMinterface:
                 cnt+=1
         return nodeList
 
-    #**classFunction: get node numbers lying on a circle, by point p, (normalized) normal vector n (which is the axis of the circle) and radius r
-    #using a tolerance for the distance to the plane
-    #if not found, it returns an empty list
     def GetNodesOnCircle(self, point, normal, r, tolerance = 1e-5):
+        """get node numbers lying on a circle, by point p, (normalized) normal vector n (which is the axis of the circle) and radius r
+        using a tolerance for the distance to the plane
+        if not found, it returns an empty list
+        """
         cnt = 0
         nodeList=[]
         if len(self.nodes) != 1 or 'Position' not in self.nodes:
@@ -2941,13 +3078,19 @@ class FEMinterface:
         return nodeList
 
 
-    #**classFunction: return list of node weights based on surface triangle areas; surface triangles are identified as such for which all nodes of a triangle are on the surface
-    #**notes: requires that surface triangles have been already built during import of finite element mesh, or by calling VolumeToSurfaceElements!
-    #**input: 
-    #  nodeList: list of local (Position) node numbers
-    #  normalizeWeights: if True, weights are normalized to sum(weights)==1; otherwise, returned list contains areas according to nodes per
-    #**output: numpy array with weights according to indices in node list
     def GetNodeWeightsFromSurfaceAreas(self, nodeList, normalizeWeights=True):
+        """return list of node weights based on surface triangle areas; surface triangles are identified as such for which all nodes of a triangle are on the surface
+
+        Args:
+            nodeList: list of local (Position) node numbers
+            normalizeWeights: if True, weights are normalized to sum(weights)==1; otherwise, returned list contains areas according to nodes per
+
+        Returns:
+            numpy array with weights according to indices in node list
+
+        Note:
+            requires that surface triangles have been already built during import of finite element mesh, or by calling VolumeToSurfaceElements!
+        """
         verboseMode=False #for debug
         if len(self.surface) != 1:
             raise ValueError('GetNodeWeightsFromSurfaces: expected one surface triangle list in FEM, but received: '+str(len(self.surface)))
@@ -2998,18 +3141,20 @@ class FEMinterface:
         
         return weights
 
-    #**classFunction: return surface trigs as node number list (for drawing in EXUDYN and for node weights)
     def GetSurfaceTriangles(self):
+        """return surface trigs as node number list (for drawing in EXUDYN and for node weights)
+        """
         trigList = []
         for surface in self.surface:
             if 'Trigs' in surface:
                 trigList += self.NumpyArray2ListOfLists(surface['Trigs'])
         return trigList
 
-    #**classFunction: generate surface elements from volume elements
-    #stores the surface in self.surface
-    #only works for one element list and only for element types 'Hex8', 'Hex20', 'Tet4' and 'Tet10'
     def VolumeToSurfaceElements(self, verbose=False):
+        """generate surface elements from volume elements
+        stores the surface in self.surface
+        only works for one element list and only for element types 'Hex8', 'Hex20', 'Tet4' and 'Tet10'
+        """
         if verbose: exu.Print("create surface from volume elements")
 #        self.elements = []              # [{'Name':'identifier', 'Tet4':[[n0,n1,n2,n3],...], 'Hex8':[[n0,...,n7],...],  },...]        #there may be several element sets
 #        self.surface = []               # [{'Name':'identifier', 'Trigs':[[n0,n1,n2],...], 'Quads':[[n0,...,n3],...],  },...]           #surface with faces
@@ -3130,8 +3275,9 @@ class FEMinterface:
         self.ConvertSurfaceLists2Numpy()
         
         
-    #**classFunction: get rigid body inertia parameters according to Exudyn's internal RigidBodyInertia class, to be used e.g. for CreateRigidBody
     def GetRigidBodyInertia(self):
+        """get rigid body inertia parameters according to Exudyn's internal RigidBodyInertia class, to be used e.g. for CreateRigidBody
+        """
         # get nodes position array and the number of nodes
         nodeArray = self.GetNodePositionsAsArray() # fem interface class function
         nNodes = len(nodeArray)
@@ -3156,8 +3302,9 @@ class FEMinterface:
     #+++++++++++      COMPUTATIONAL FUNCTIONS            ++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             
-    #**classFunction: get gyroscopic matrix in according format; rotationAxis=[0,1,2] = [x,y,z]
     def GetGyroscopicMatrix(self, rotationAxis=2, sparse=True):
+        """get gyroscopic matrix in according format; rotationAxis=[0,1,2] = [x,y,z]
+        """
         #create gyroscopic terms
         nNodes = self.NumberOfNodes()
         if rotationAxis == 0:
@@ -3185,8 +3332,9 @@ class FEMinterface:
 
 
 
-    #**classFunction: scale (=multiply) mass matrix with factor
     def ScaleMassMatrix(self, factor):
+        """scale (=multiply) mass matrix with factor
+        """
         if useOldCSRformat:
             self.massMatrix[:,2] *= factor
         else:
@@ -3194,8 +3342,9 @@ class FEMinterface:
             self.massMatrix *= factor
 
 
-    #**classFunction: scale (=multiply) stiffness matrix with factor
     def ScaleStiffnessMatrix(self, factor):
+        """scale (=multiply) stiffness matrix with factor
+        """
         if useOldCSRformat:
             self.stiffnessMatrix[:,2] *= factor
         else:
@@ -3203,9 +3352,10 @@ class FEMinterface:
             self.stiffnessMatrix *= factor
 
         
-    #**classFunction: modify stiffness matrix to add elastic support (joint, etc.) to a node; nodeNumber zero based (as everywhere in the code...)
-    #springStiffness must have length according to the node size
     def AddElasticSupportAtNode(self, nodeNumber, springStiffness=[1e8,1e8,1e8]):
+        """modify stiffness matrix to add elastic support (joint, etc.) to a node; nodeNumber zero based (as everywhere in the code...)
+        springStiffness must have length according to the node size
+        """
         if len(self.nodes) != 1:
             exu.Print("ERROR: AddElasticSupportAtNode: there must be exactly one list of nodes!")
         #nodeList = self.nodes(list(self.nodes)[0])
@@ -3220,8 +3370,9 @@ class FEMinterface:
             self.stiffnessMatrix = AddEntryToCompressedRowSparseArray(self.stiffnessMatrix, nCoordinate+i,nCoordinate+i,springStiffness[i])
         #np.vstack((self.stiffnessMatrix, np.array(supports))) #append supports to sparse matrix
 
-    #**classFunction: modify mass matrix by adding a mass to a certain node, modifying directly the mass matrix
     def AddNodeMass(self, nodeNumber, addedMass):
+        """modify mass matrix by adding a mass to a certain node, modifying directly the mass matrix
+        """
         if len(self.nodes) != 1:
             exu.Print("ERROR: AddElasticSupportAtNode: there must be exactly one list of nodes!")
 
@@ -3237,11 +3388,15 @@ class FEMinterface:
         #np.vstack((self.massMatrix, np.array(supports))) #append supports to sparse matrix
 
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #**classFunction: create GenericODE2 object out of (linear) FEM model; uses always the sparse matrix mode, independent of the solver settings; this model can be directly used inside the multibody system as a static or dynamic FEM subsystem undergoing small deformations; computation is several magnitudes slower than ObjectFFRFreducedOrder
-    #**input:
-    #  mbs: multibody system to which the GenericODE2 is added
-    #**output: return list [oGenericODE2, nodeList] containing object number of GenericODE2 as well as the list of mbs node numbers of all NodePoint nodes
     def CreateLinearFEMObjectGenericODE2(self, mbs, color=[0.9,0.4,0.4,1.]):
+        """create GenericODE2 object out of (linear) FEM model; uses always the sparse matrix mode, independent of the solver settings; this model can be directly used inside the multibody system as a static or dynamic FEM subsystem undergoing small deformations; computation is several magnitudes slower than ObjectFFRFreducedOrder
+
+        Args:
+            mbs: multibody system to which the GenericODE2 is added
+
+        Returns:
+            return list [oGenericODE2, nodeList] containing object number of GenericODE2 as well as the list of mbs node numbers of all NodePoint nodes
+        """
         femNodes = self.GetNodePositionsAsArray()
         
         #add nodes:
@@ -3267,25 +3422,30 @@ class FEMinterface:
         return [oGenericODE2, allNodeList]
         
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #**classFunction: import mesh from NETGEN/NGsolve and setup mechanical problem
-    #**classFunction: create GenericODE2 object fully nonlinear FEM model using NGsolve; uses always the sparse matrix mode, independent of the solver settings; this model can be directly used inside the multibody system as a static or dynamic nonlinear FEM subsystem undergoing large deformations; computation is several magnitudes slower than ObjectFFRFreducedOrder
-    #**input:
-    #    mbs: multibody system to which the GenericODE2 is added
-    #    mesh: a previously created \texttt{ngs.mesh} (NGsolve mesh, see examples)
-    #    youngsModulus: Young's modulus used for mechanical model
-    #    poissonsRatio: Poisson's ratio used for mechanical model
-    #    density: density used for mechanical model
-    #    meshOrder: use 1 for linear elements and 2 for second order elements (recommended to use 2 for much higher accuracy!)
-    #**output: return list [oGenericODE2, nodeList] containing object number of GenericODE2 as well as the list of mbs node numbers of all NodePoint nodes
-    #**notes: The interface to NETGEN/NGsolve has been created together with Joachim Sch\"oberl, main developer 
-    #  of NETGEN/NGsolve \cite{Schoeberl1997,NGsolve2014}; Thank's a lot!
-    #  download NGsolve at: https://ngsolve.org/
-    #  NGsolve needs Python 3.7 (64bit) ==> use according EXUDYN version!
-    #  note that node/element indices in the NGsolve mesh are 1-based and need to be converted to 0-base!
-    #**author: Johannes Gerstmayr, Joachim Sch\"oberl
+    @docmeta(author='Johannes Gerstmayr, Joachim Sch\\"oberl')
     def CreateNonlinearFEMObjectGenericODE2NGsolve(self, mbs, mesh, 
                                                    density, youngsModulus, poissonsRatio, 
                                                    meshOrder=1, color=[0.9,0.4,0.4,1.]):
+        r"""create GenericODE2 object fully nonlinear FEM model using NGsolve; uses always the sparse matrix mode, independent of the solver settings; this model can be directly used inside the multibody system as a static or dynamic nonlinear FEM subsystem undergoing large deformations; computation is several magnitudes slower than ObjectFFRFreducedOrder
+
+        Args:
+            mbs: multibody system to which the GenericODE2 is added
+            mesh: a previously created \texttt{ngs.mesh} (NGsolve mesh, see examples)
+            youngsModulus: Young's modulus used for mechanical model
+            poissonsRatio: Poisson's ratio used for mechanical model
+            density: density used for mechanical model
+            meshOrder: use 1 for linear elements and 2 for second order elements (recommended to use 2 for much higher accuracy!)
+
+        Returns:
+            return list [oGenericODE2, nodeList] containing object number of GenericODE2 as well as the list of mbs node numbers of all NodePoint nodes
+
+        Note:
+            The interface to NETGEN/NGsolve has been created together with Joachim Sch\"oberl, main developer
+            of NETGEN/NGsolve \cite{Schoeberl1997,NGsolve2014}; Thank's a lot!
+            download NGsolve at: https://ngsolve.org/
+            NGsolve needs Python 3.7 (64bit) ==> use according EXUDYN version!
+            note that node/element indices in the NGsolve mesh are 1-based and need to be converted to 0-base!
+        """
         import ngsolve as ngs
         from scipy.sparse import csr_matrix
         
@@ -3381,14 +3541,20 @@ class FEMinterface:
         return [oGenericODE2, allNodeList]
         
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #**classFunction: compute nModes smallest eigenvalues and eigenmodes from mass and stiffnessMatrix; store mode vectors in modeBasis, but exclude a number of 'excludeRigidBodyModes' rigid body modes from modeBasis; uses scipy for solution of generalized eigenvalue problem
-    #**input: 
-    #  nModes: prescribe the number of modes to be computed; total computed modes are  (nModes+excludeRigidBodyModes), but only nModes with smallest absolute eigenvalues are considered and stored
-    #  excludeRigidBodyModes: if rigid body modes are expected (in case of free-free modes), then this number specifies the number of eigenmodes to be excluded in the stored basis (usually 6 modes in 3D)
-    #  useSparseSolver: for larger systems, the sparse solver needs to be used, which iteratively solves the problem and uses a random number generator (internally in ARPACK): therefore, results are not fully repeatable!!!
-    #**notes: for NGsolve / Netgen meshes, see the according ComputeEigenmodesNGsolve function, which is usually much faster
-    #**output: eigenmodes are stored internally in FEMinterface as 'modeBasis' and eigenvalues as 'eigenValues'
     def ComputeEigenmodes(self, nModes, excludeRigidBodyModes = 0, useSparseSolver = True):
+        """compute nModes smallest eigenvalues and eigenmodes from mass and stiffnessMatrix; store mode vectors in modeBasis, but exclude a number of 'excludeRigidBodyModes' rigid body modes from modeBasis; uses scipy for solution of generalized eigenvalue problem
+
+        Args:
+            nModes: prescribe the number of modes to be computed; total computed modes are  (nModes+excludeRigidBodyModes), but only nModes with smallest absolute eigenvalues are considered and stored
+            excludeRigidBodyModes: if rigid body modes are expected (in case of free-free modes), then this number specifies the number of eigenmodes to be excluded in the stored basis (usually 6 modes in 3D)
+            useSparseSolver: for larger systems, the sparse solver needs to be used, which iteratively solves the problem and uses a random number generator (internally in ARPACK): therefore, results are not fully repeatable!!!
+
+        Returns:
+            eigenmodes are stored internally in FEMinterface as 'modeBasis' and eigenvalues as 'eigenValues'
+
+        Note:
+            for NGsolve / Netgen meshes, see the according ComputeEigenmodesNGsolve function, which is usually much faster
+        """
         if not useSparseSolver:
             #unsorted, dense eigen vectors
             from scipy.linalg import eigh#, solve, eig #eigh for symmetric matrices, positive definite
@@ -3426,16 +3592,20 @@ class FEMinterface:
             self.eigenValues = abs(eigVals[excludeRigidBodyModes:excludeRigidBodyModes + nModes])
 
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #**classFunction: compute eigenmodes, using a set of boundary nodes that are all fixed; very similar to ComputeEigenmodes, but with additional definition of (fixed) boundary nodes.
-    #**input: 
-    #  boundaryNodes: a list of boundary node indices, refering to 'Position' type nodes in FEMinterface; all coordinates of these nodes are fixed for the computation of the modes
-    #  nEigenModes: prescribe the number of modes to be computed; only nEigenModes with smallest abs(eigenvalues) are considered and stored
-    #  useSparseSolver: [yet NOT IMPLEMENTED] for larger systems, the sparse solver needs to be used, which iteratively solves the problem and uses a random number generator (internally in ARPACK): therefore, results are not fully repeatable!!!
-    #**output: eigenmodes are stored internally in FEMinterface as 'modeBasis' and eigenvalues as 'eigenValues'
     def ComputeEigenModesWithBoundaryNodes(self, 
                                       boundaryNodes,
                                       nEigenModes, 
                                       useSparseSolver = True):
+        """compute eigenmodes, using a set of boundary nodes that are all fixed; very similar to ComputeEigenmodes, but with additional definition of (fixed) boundary nodes.
+
+        Args:
+            boundaryNodes: a list of boundary node indices, refering to 'Position' type nodes in FEMinterface; all coordinates of these nodes are fixed for the computation of the modes
+            nEigenModes: prescribe the number of modes to be computed; only nEigenModes with smallest abs(eigenvalues) are considered and stored
+            useSparseSolver: [yet NOT IMPLEMENTED] for larger systems, the sparse solver needs to be used, which iteratively solves the problem and uses a random number generator (internally in ARPACK): therefore, results are not fully repeatable!!!
+
+        Returns:
+            eigenmodes are stored internally in FEMinterface as 'modeBasis' and eigenvalues as 'eigenValues'
+        """
         if not useSparseSolver:
             #unsorted, dense eigen vectors
             from scipy.linalg import eigh#, solve, eig #eigh for symmetric matrices, positive definite
@@ -3504,20 +3674,6 @@ class FEMinterface:
     
     
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #**classFunction: compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part \refSection{sec:theory:CMS}. Note that this function may need significant time, depending on your hardware, but 50.000 nodes will require approx. 1-2 minutes and more nodes typically raise time more than linearly.
-    #**input:
-    #  boundaryNodesList: [nodeList0, nodeList1, ...] a list of node lists, each of them representing a set of 'Position' nodes for which a rigid body interface (displacement/rotation and force/torque) is created; NOTE THAT boundary nodes may not overlap between the different node lists (no duplicated node indices!)
-    #  nEigenModes: number of eigen modes in addition to static modes (may be zero for RBE2/RBE3 computationMode); eigen modes are computed for the case where all rigid body motions at boundaries are fixed; only smallest nEigenModes absolute eigenvalues are considered
-    #  useSparseSolver: for more than approx.~500 nodes, it is recommended to use the sparse solver; dense mode not available for RBE3
-    #  computationMode: see class HCBstaticModeSelection for available modes; select RBE2 / RBE3 as standard, which is both efficient and accurate and which uses rigid-body-interfaces (6 independent modes) per boundary; RBE3 mode uses singular value decomposition, which requires full matrices for boundary nodes; this becomes slow in particular if the number of a single boundary node set gets larger than 500 nodes
-    #  boundaryNodesWeights: according list of weights with same order as boundaryNodesList, as returned e.g. by FEMinterface.GetNodeWeightsFromSurfaceAreas(...)
-    #  excludeRigidBodyMotion: if True (recommended), the first set of boundary modes is eliminated, which defines the reference conditions for the FFRF object
-    #  RBE3secondMomentOfAreaWeighting: if True, the weighting of RBE3 boundaries is done according to second moment of area; if False, the more conventional (but less appropriate) quadratic distance to reference point weighting is used
-    #  numberOfRigidBodyModes: only used in case that no boundary interfaces (node lists) exist, then the rigid body motion can be excluded using this number of rigid body modes (in 3D usually)
-    #  verboseMode: if True, some additional output is printed
-    #  timerTreshold: for more DOF than this number, CPU times are printed even with verboseMode=False
-    #**notes: for NGsolve / Netgen meshes, see the according ComputeHurtyCraigBamptonModesNGsolve function, which is usually much faster - currently only implemented for RBE2 case
-    #**output: stores computed modes in self.modeBasis and abs(eigenvalues) in self.eigenValues
     def ComputeHurtyCraigBamptonModes(self,
                                   boundaryNodesList,
                                   nEigenModes, 
@@ -3529,6 +3685,26 @@ class FEMinterface:
                                   numberOfRigidBodyModes = None,
                                   verboseMode = False,
                                   timerTreshold = 20000):
+        r"""compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part \refSection{sec:theory:CMS}. Note that this function may need significant time, depending on your hardware, but 50.000 nodes will require approx. 1-2 minutes and more nodes typically raise time more than linearly.
+
+        Args:
+            boundaryNodesList: [nodeList0, nodeList1, ...] a list of node lists, each of them representing a set of 'Position' nodes for which a rigid body interface (displacement/rotation and force/torque) is created; NOTE THAT boundary nodes may not overlap between the different node lists (no duplicated node indices!)
+            nEigenModes: number of eigen modes in addition to static modes (may be zero for RBE2/RBE3 computationMode); eigen modes are computed for the case where all rigid body motions at boundaries are fixed; only smallest nEigenModes absolute eigenvalues are considered
+            useSparseSolver: for more than approx.~500 nodes, it is recommended to use the sparse solver; dense mode not available for RBE3
+            computationMode: see class HCBstaticModeSelection for available modes; select RBE2 / RBE3 as standard, which is both efficient and accurate and which uses rigid-body-interfaces (6 independent modes) per boundary; RBE3 mode uses singular value decomposition, which requires full matrices for boundary nodes; this becomes slow in particular if the number of a single boundary node set gets larger than 500 nodes
+            boundaryNodesWeights: according list of weights with same order as boundaryNodesList, as returned e.g. by FEMinterface.GetNodeWeightsFromSurfaceAreas(...)
+            excludeRigidBodyMotion: if True (recommended), the first set of boundary modes is eliminated, which defines the reference conditions for the FFRF object
+            RBE3secondMomentOfAreaWeighting: if True, the weighting of RBE3 boundaries is done according to second moment of area; if False, the more conventional (but less appropriate) quadratic distance to reference point weighting is used
+            numberOfRigidBodyModes: only used in case that no boundary interfaces (node lists) exist, then the rigid body motion can be excluded using this number of rigid body modes (in 3D usually)
+            verboseMode: if True, some additional output is printed
+            timerTreshold: for more DOF than this number, CPU times are printed even with verboseMode=False
+
+        Returns:
+            stores computed modes in self.modeBasis and abs(eigenvalues) in self.eigenValues
+
+        Note:
+            for NGsolve / Netgen meshes, see the according ComputeHurtyCraigBamptonModesNGsolve function, which is usually much faster - currently only implemented for RBE2 case
+        """
 
         #only makes sense for RBE3 modes:  positionOnlyModes: provide empty list [] to compute rigid body interfaces for all boundary node lists, or a boolean list [False, False, True, ...] to indicate which modes only have 3 position but no rotation modes; only valid for computationMode = RBE2 
         #unsorted, dense eigen vectors
@@ -3934,8 +4110,9 @@ class FEMinterface:
 
 
 
-    #**classFunction: return list of eigenvalues in Hz of previously computed eigenmodes
     def GetEigenFrequenciesHz(self):
+        """return list of eigenvalues in Hz of previously computed eigenmodes
+        """
         return np.sqrt(self.eigenValues)/(2.*np.pi)
 
     #internal function for ComputePostProcessingModes, do not call from outside FEM
@@ -3988,16 +4165,22 @@ class FEMinterface:
 
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #**classFunction: compute special stress or strain modes in order to enable visualization of stresses and strains in ObjectFFRFreducedOrder;
-    #**input: 
-    #  material: specify material properties for computation of stresses, using a material class, e.g. material = KirchhoffMaterial(Emodulus, nu, rho); not needed for strains
-    #  outputVariableType: specify either exudyn.OutputVariableType.StressLocal or exudyn.OutputVariableType.StrainLocal as the desired output variables
-    #  numberOfThreads: if numberOfThreads=1, it uses single threaded computation; if numberOfThreads>1, it uses the multiprocessing pools functionality, which requires that all code in your main file must be encapsulated within an if clause "if \_\_name\_\_ == '\_\_main\_\_':", see examples; if numberOfThreads==-1, it uses all threads/CPUs available
-    #**notes: This function is implemented in Python and rather slow for larger meshes; for NGsolve / Netgen meshes, see the according ComputePostProcessingModesNGsolve function, which is usually much faster
-    #**output: post processing modes are stored in FEMinterface in local variable postProcessingModes as a dictionary, where 'matrix' represents the modes and 'outputVariableType' stores the type of mode as a OutputVariableType
     def ComputePostProcessingModes(self, material=0, 
                                    outputVariableType='OutputVariableType.StressLocal',
                                    numberOfThreads=1):
+        r"""compute special stress or strain modes in order to enable visualization of stresses and strains in ObjectFFRFreducedOrder;
+
+        Args:
+            material: specify material properties for computation of stresses, using a material class, e.g. material = KirchhoffMaterial(Emodulus, nu, rho); not needed for strains
+            outputVariableType: specify either exudyn.OutputVariableType.StressLocal or exudyn.OutputVariableType.StrainLocal as the desired output variables
+            numberOfThreads: if numberOfThreads=1, it uses single threaded computation; if numberOfThreads>1, it uses the multiprocessing pools functionality, which requires that all code in your main file must be encapsulated within an if clause "if \_\_name\_\_ == '\_\_main\_\_':", see examples; if numberOfThreads==-1, it uses all threads/CPUs available
+
+        Returns:
+            post processing modes are stored in FEMinterface in local variable postProcessingModes as a dictionary, where 'matrix' represents the modes and 'outputVariableType' stores the type of mode as a OutputVariableType
+
+        Note:
+            This function is implemented in Python and rather slow for larger meshes; for NGsolve / Netgen meshes, see the according ComputePostProcessingModesNGsolve function, which is usually much faster
+        """
 
         if str(outputVariableType) == 'OutputVariableType.StressLocal':
             computeStrains = False
@@ -4096,25 +4279,29 @@ class FEMinterface:
         #self.postProcessingModes = {}   # {'matrix':<matrix containing stress components (xx,yy,zz,yz,xz,xy) in each column, rows are for every mesh node>,'outputVariableType':exudyn.OutputVariableType.StressLocal}
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #**classFunction: compute Campbell diagram for given mechanical system
-    #create a first order system Axd + Bx = 0 with x= [q,qd]' and compute eigenvalues
-    #takes mass M, stiffness K and gyroscopic matrix G from FEMinterface
-    #currently only uses dense matrices, so it is limited to approx. 5000 unknowns!
-    #**input:
-    #  terminalFrequency: frequency in Hz, up to which the campbell diagram is computed
-    #  nEigenfrequencies: gives the number of computed eigenfrequencies(modes), in addition to the rigid body mode 0
-    #  frequencySteps: gives the number of increments (gives frequencySteps+1 total points in campbell diagram)
-    #  rotationAxis:[0,1,2] = [x,y,z] provides rotation axis
-    #  plotDiagram: if True, plots diagram for nEigenfrequencies befor terminating
-    #  verbose: if True, shows progress of computation; if verbose=2, prints also eigenfrequencies
-    #  useCorotationalFrame: if False, the classic rotor dynamics formulation for rotationally-symmetric rotors is used, where the rotor can be understood in a Lagrangian-Eulerian manner: the rotation is represented by an additional (Eulerian) velocity in rotation direction; if True, the corotational frame is used, which gives a factor 2 in the gyroscopic matrix and can be used for non-symmetric rotors as well
-    #  useSparseSolver: for larger systems, the sparse solver needs to be used for creation of system matrices and for the eigenvalue solver (uses a random number generator internally in ARPACK, therefore, results are not fully repeatable!!!)
-    #**output: [listFrequencies, campbellFrequencies]
-    #  listFrequencies: list of computed frequencies
-    #  campbellFrequencies: array of campbell frequencies per eigenfrequency of system
     def ComputeCampbellDiagram(self, terminalFrequency, nEigenfrequencies=10, frequencySteps=25, 
                                rotationAxis=2, plotDiagram=False, verbose=False, 
                                useCorotationalFrame=False, useSparseSolver=False):
+        """compute Campbell diagram for given mechanical system
+        create a first order system Axd + Bx = 0 with x= [q,qd]' and compute eigenvalues
+        takes mass M, stiffness K and gyroscopic matrix G from FEMinterface
+        currently only uses dense matrices, so it is limited to approx. 5000 unknowns!
+
+        Args:
+            terminalFrequency: frequency in Hz, up to which the campbell diagram is computed
+            nEigenfrequencies: gives the number of computed eigenfrequencies(modes), in addition to the rigid body mode 0
+            frequencySteps: gives the number of increments (gives frequencySteps+1 total points in campbell diagram)
+            rotationAxis:[0,1,2] = [x,y,z] provides rotation axis
+            plotDiagram: if True, plots diagram for nEigenfrequencies befor terminating
+            verbose: if True, shows progress of computation; if verbose=2, prints also eigenfrequencies
+            useCorotationalFrame: if False, the classic rotor dynamics formulation for rotationally-symmetric rotors is used, where the rotor can be understood in a Lagrangian-Eulerian manner: the rotation is represented by an additional (Eulerian) velocity in rotation direction; if True, the corotational frame is used, which gives a factor 2 in the gyroscopic matrix and can be used for non-symmetric rotors as well
+            useSparseSolver: for larger systems, the sparse solver needs to be used for creation of system matrices and for the eigenvalue solver (uses a random number generator internally in ARPACK, therefore, results are not fully repeatable!!!)
+
+        Returns:
+            [listFrequencies, campbellFrequencies]
+            listFrequencies: list of computed frequencies
+            campbellFrequencies: array of campbell frequencies per eigenfrequency of system
+        """
         from scipy.linalg import eig #eigh for symmetric matrices, positive definite
         
         #create gyroscopic terms
@@ -4296,8 +4483,9 @@ class FEMinterface:
 
         return [listFrequencies, campbellFrequencies]
 
-    #**classFunction: perform some consistency checks
     def CheckConsistency(self):
+        """perform some consistency checks
+        """
         nNodes = self.NumberOfNodes()
         #nNodes = len(self.nodes['Position']) #old
         (rows,columns) = CSRtoRowsAndColumns(self.massMatrix)
@@ -4317,8 +4505,9 @@ class FEMinterface:
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     # Ansys    
     
-    #**classFunction: read mass matrix from CSV format (exported from Ansys)
     def ReadMassMatrixFromAnsys(self, fileName, dofMappingVectorFile, sparse=True, verbose=False):
+        """read mass matrix from CSV format (exported from Ansys)
+        """
         if sparse:
             self.massMatrix = ReadMatrixFromAnsysMMF(fileName, verbose)
         else:
@@ -4333,8 +4522,9 @@ class FEMinterface:
         if not useOldCSRformat:
             self.massMatrix = SparseTripletsToScipySparseCSR(self.massMatrix)
 
-    #**classFunction: read stiffness matrix from CSV format (exported from Ansys)
     def ReadStiffnessMatrixFromAnsys(self, fileName, dofMappingVectorFile, sparse=True, verbose=False):
+        """read stiffness matrix from CSV format (exported from Ansys)
+        """
         if sparse:
             self.stiffnessMatrix = ReadMatrixFromAnsysMMF(fileName, verbose) 
         else:
@@ -4349,14 +4539,16 @@ class FEMinterface:
         if not useOldCSRformat:
             self.stiffnessMatrix = SparseTripletsToScipySparseCSR(self.stiffnessMatrix)
                     
-    #**classFunction: read nodal coordinates (exported from Ansys as .txt-File)
     def ReadNodalCoordinatesFromAnsys(self, fileName, verbose=False):
+        """read nodal coordinates (exported from Ansys as .txt-File)
+        """
         nodes = ReadNodalCoordinatesFromAnsysTxt(fileName, verbose)
         self.nodes['Position'] = np.array(nodes)
         self.metaData['source'] = 'Ansys'
 
-    #**classFunction: read elements (exported from Ansys as .txt-File)
     def ReadElementsFromAnsys(self, fileName, verbose=False):
+        """read elements (exported from Ansys as .txt-File)
+        """
         self.elements += [ReadElementsFromAnsysTxt(fileName, verbose)] #add dictionary to list of dicts
         self.VolumeToSurfaceElements() #generate surface elements
         self.metaData['source'] = 'Ansys'

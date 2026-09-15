@@ -12,6 +12,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
+from exudyn.docmeta import docmeta
 import numpy as np
 import exudyn.robotics as rob
 from exudyn.basicUtilities import ScalarMult
@@ -25,20 +26,25 @@ from exudyn.rigidBodyUtilities import RotationMatrix2RotZYZ, HT2rotationMatrix, 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: makeCorkeRobot, creates robot using the peter corke toolbox using standard (stdDH) or modified (modKKDH) Denavid Hartenberg parameters
-#**input: 
-#  robotDic: robot dictionary by exudyn robotic models
-#  dhpara: stDH for standard DH parameter, modKKDH for modified DH parameter 
-#**output: serial robot object by corke
-#**author: Martin Sereinig
-#**notes: 
-#    DH Parameter Information:
-#    stdH = [theta, d, a, alpha] with Rz(theta) * Tz(d) * Tx(a) * Rx(alpha)
-#    modDH = [alpha, dx, theta, rz] with 
-#    used by Corke and Lynch: Rx(alpha) * Tx(a) * Rz(theta) * Tz(d)
-#    used by Khali:           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r)
-#    Important note:  d(khali)=a(corke)  and r(khali)=d(corke)  
+@docmeta(author='Martin Sereinig')
 def MakeCorkeRobot(robotDic):
+    """makeCorkeRobot, creates robot using the peter corke toolbox using standard (stdDH) or modified (modKKDH) Denavid Hartenberg parameters
+
+    Args:
+        robotDic: robot dictionary by exudyn robotic models
+        dhpara: stDH for standard DH parameter, modKKDH for modified DH parameter
+
+    Returns:
+        serial robot object by corke
+
+    Note:
+        DH Parameter Information:
+        stdH = [theta, d, a, alpha] with Rz(theta) * Tz(d) * Tx(a) * Rx(alpha)
+        modDH = [alpha, dx, theta, rz] with
+        used by Corke and Lynch: Rx(alpha) * Tx(a) * Rz(theta) * Tz(d)
+        used by Khali:           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r)
+        Important note:  d(khali)=a(corke)  and r(khali)=d(corke)
+    """
     
     try:
         import roboticstoolbox as rtb
@@ -73,16 +79,21 @@ def MakeCorkeRobot(robotDic):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#**function: calculates the analytical inverse kinematics for 3R elbow type serial robot manipulator
-#**input:
-#  robotDic: robot dictionary
-#  HT: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array
-#**output: solutions, list of lists with posible joint angles [q1,q2,q3] (in radiant)
-#          to achive the desired position (4 posible solutions,schoulder left/right, ellbow up/down ) in following order: left/down, left/up, right/up, right/down
-#**author: Martin Sereinig
-#**notes:  only applicable for standard Denavit-Hartenberg parameters
-#**status: testet with various configurations and joint angels
+@docmeta(author='Martin Sereinig', status='testet with various configurations and joint angels')
 def ComputeIK3R(robotDic, HT):
+    """calculates the analytical inverse kinematics for 3R elbow type serial robot manipulator
+
+    Args:
+        robotDic: robot dictionary
+        HT: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array
+
+    Returns:
+        solutions, list of lists with posible joint angles [q1,q2,q3] (in radiant)
+        to achive the desired position (4 posible solutions,schoulder left/right, ellbow up/down ) in following order: left/down, left/up, right/up, right/down
+
+    Note:
+        only applicable for standard Denavit-Hartenberg parameters
+    """
     ZERO = 10e-10
     # DH-parameters: [theta, d, a, alpha], according to P. Corke page 138
     qSolutions = np.empty((4, 3))
@@ -144,17 +155,22 @@ def ComputeIK3R(robotDic, HT):
 
 
 
-#**function: calculates the analytical inverse kinematics for Puma560 serial 6R robotDic manipulator
-#**input:
-#  robotDic: robotDictionary
-#  HT: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array
-#**output: qSolutions, list of lists with posible joint angles [q1,q2,q3,q4,q5,q6] (in radiant)
-#          to achive the desired position and orientation (8 posible solutions,schoulder left/right, ellbow up/down, wrist flipped/notflipped (rotated by pi) )
-#          left/down/notflipped, left/down/flipped, left/up/notflipped, left/up/flipped, right/up/notflipped, right/up/flipped, right/down/notflipped, right/down/flipped
-#**author: Martin Sereinig
-#**notes:  Usage for different manipulators with sperical wrist posible, only applicable for standard Denavit-Hartenberg parameters
-#**status: tested (compared with robotDiccs, Vision and Control book of P. Corke
+@docmeta(author='Martin Sereinig', status='tested (compared with robotDiccs, Vision and Control book of P. Corke')
 def ComputeIKPuma560(robotDic, HT):
+    """calculates the analytical inverse kinematics for Puma560 serial 6R robotDic manipulator
+
+    Args:
+        robotDic: robotDictionary
+        HT: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array
+
+    Returns:
+        qSolutions, list of lists with posible joint angles [q1,q2,q3,q4,q5,q6] (in radiant)
+        to achive the desired position and orientation (8 posible solutions,schoulder left/right, ellbow up/down, wrist flipped/notflipped (rotated by pi) )
+        left/down/notflipped, left/down/flipped, left/up/notflipped, left/up/flipped, right/up/notflipped, right/up/flipped, right/down/notflipped, right/down/flipped
+
+    Note:
+        Usage for different manipulators with sperical wrist posible, only applicable for standard Denavit-Hartenberg parameters
+    """
     # - Inverse kinematics for a PUMA 560,
     #   Paul and Zhang,
     #   The International Journal of Robotics Research,
@@ -269,17 +285,22 @@ def ComputeIKPuma560(robotDic, HT):
 
     return qSolutions
 
-#**function: calculates the analytical inverse kinematics for UR type serial 6R robot manipulator without sperical wrist
-#**input:
-#  robotDic: robot dictionary
-#  HT: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array
-#**output: solutions, list of lists with posible joint angles [q1,q2,q3,q4,q5,q6] (in radiant)
-#          to achive the desired position and orientation (8 posible solutions,schoulder left/right, ellbow up/down, wrist flipped/notflipped (rotated by pi) )
-#          [left/down/notflipped, left/down/flipped, left/up/notflipped, left/up/flipped, right/up/notflipped, right/up/flipped, right/down/notflipped, right/down/flipped]
-#**notes:  Usage for different manipulators without sperical wrist posible UR3,UR5,UR10, only applicable for standard Denavit-Hartenberg parameters
-#**author: Martin Sereinig
-#**status: under development, works for most configurations, singularities not checked -> ZeroConfiguration not working
+@docmeta(author='Martin Sereinig', status='under development, works for most configurations, singularities not checked -> ZeroConfiguration not working')
 def ComputeIKUR(robotDic, HTdes):
+    """calculates the analytical inverse kinematics for UR type serial 6R robot manipulator without sperical wrist
+
+    Args:
+        robotDic: robot dictionary
+        HT: desired position and orientation for the end effector as 4x4 homogeneous transformation matrix as list of lists or np.array
+
+    Returns:
+        solutions, list of lists with posible joint angles [q1,q2,q3,q4,q5,q6] (in radiant)
+        to achive the desired position and orientation (8 posible solutions,schoulder left/right, ellbow up/down, wrist flipped/notflipped (rotated by pi) )
+        [left/down/notflipped, left/down/flipped, left/up/notflipped, left/up/flipped, right/up/notflipped, right/up/flipped, right/down/notflipped, right/down/flipped]
+
+    Note:
+        Usage for different manipulators without sperical wrist posible UR3,UR5,UR10, only applicable for standard Denavit-Hartenberg parameters
+    """
     # - Inverse kinematics for a URType
     ZERO = 10e-8
     SolWarning = ['NoWarning']*4

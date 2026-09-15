@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN maintainer tool
 #
-# Details:  Emits the reference documentation of the utility modules from their #** comments:
+# Details:  Emits the reference documentation of the utility modules from their docstrings:
 #           docs/theDoc/pythonUtilitiesDescription.tex, docs/RST/pythonUtilities/*.rst and
 #           docs/RST/confHelperPyUtilities.py. Moved out of utilitiesDocuGenerator.py (revision plan
 #           step 33, part 2e); re-pointed at Google-style docstrings via griffe by steps 36 and 38.

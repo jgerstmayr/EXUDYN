@@ -48,8 +48,9 @@ def GetRendererSystemContainer():
         pass
     return None
 
-#**function: get new or current root and new window app; return list of [tkRoot, tkWindow, tkRuns]
 def GetTkRootAndNewWindow():
+    """get new or current root and new window app; return list of [tkRoot, tkWindow, tkRuns]
+    """
     if tk._default_root == None:
         root = tk.Tk()
         tkWindow = root
@@ -60,8 +61,9 @@ def GetTkRootAndNewWindow():
         tkRuns = True
     return [root, tkWindow, tkRuns]
 
-#**function: this function returns True, if tkinter has already a root window (which is assumed to have already a mainloop running)
 def TkRootExists():
+    """this function returns True, if tkinter has already a root window (which is assumed to have already a mainloop running)
+    """
     return (tk._default_root != None)
 
 
@@ -632,13 +634,17 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
             self.comboItem.lower(self.editItem) #bring entry item to front
 
 
-#**function: edit dictionaryData and return modified (new) dictionary
-#**input: 
-#  settingsStructure: hierarchical settings structure, e.g., SC.visualizationSettings
-#  exu: exudyn module
-#  dictionaryName: name displayed in dialog
-#**output: returns modified dictionary, which can be used, e.g., for SC.visualizationSettings.SetDictionary(...)
 def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit'):
+    """edit dictionaryData and return modified (new) dictionary
+
+    Args:
+        settingsStructure: hierarchical settings structure, e.g., SC.visualizationSettings
+        exu: exudyn module
+        dictionaryName: name displayed in dialog
+
+    Returns:
+        returns modified dictionary, which can be used, e.g., for SC.visualizationSettings.SetDictionary(...)
+    """
 
     [root, tkWindow, tkinterAlreadyRunning] = GetTkRootAndNewWindow()
     

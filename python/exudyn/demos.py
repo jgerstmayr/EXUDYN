@@ -23,8 +23,9 @@ def DemoInfo():
     
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: very simple demo to show that exudyn is correctly installed; does not require graphics; similar to Examples/myFirstExample.py
 def Demo1(showAll = True):
+    """very simple demo to show that exudyn is correctly installed; does not require graphics; similar to Examples/myFirstExample.py
+    """
     if showAll:
         exudyn.Print('start demo1: verify that exudyn is running')
     import exudyn.itemInterface as eii #conversion of data to exudyn dictionaries
@@ -51,8 +52,9 @@ def Demo1(showAll = True):
     return [mbs, SC]
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: advanced demo, showing that graphics is available; similar to Examples/rigid3Dexample.py
 def Demo2(showAll = True):
+    """advanced demo, showing that graphics is available; similar to Examples/rigid3Dexample.py
+    """
     import exudyn.itemInterface as eii #conversion of data to exudyn dictionaries
     from exudyn.utilities import eulerParameters0
     import exudyn.graphics as graphics

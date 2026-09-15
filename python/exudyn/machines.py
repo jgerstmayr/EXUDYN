@@ -16,20 +16,27 @@ import numpy as np
 from math import radians, cos, sin, sqrt, tan, atan, atan2, pi
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#**function: compute involute (x being in radians): $y=\\tan(x)-x$; 
 def Involute(x):
+    r"""compute involute (x being in radians): $y=\\tan(x)-x$;
+    """
     if abs(x) < 0.02:
         return ApproxInvolute(x)
     return tan(x)-x
 
-#**function: Approximate involute for $|x| < 0.02$, being more accurate than tan: $y=\\tan(x)-x \approx (1/3) x^3 + (2/15) x^5$; 
 def ApproxInvolute(x):
+    r"""Approximate involute for $|x| < 0.02$, being more accurate than tan: $y=\\tan(x)-x \approx (1/3) x^3 + (2/15) x^5$;
+    """
     return (1./3.) * x**3 + (2./15.) * x**5 + (17./315.) * x**7
 
-#**function: compute inverse of involute, see Involute(x); computes $x$ for given $y$ in $y=\\tan(x)-x$ using Newton-Raphson method
-#**input: y provides given value; if warn==True, a warning is displayed if no convergence is achieved
-#**notes: uses Newton-Raphson method (iteratively); usually converges within 4-5 steps
 def InvInvolute(y, warn=True):
+    r"""compute inverse of involute, see Involute(x); computes $x$ for given $y$ in $y=\\tan(x)-x$ using Newton-Raphson method
+
+    Args:
+        y provides given value; if warn==True, a warning is displayed if no convergence is achieved
+
+    Note:
+        uses Newton-Raphson method (iteratively); usually converges within 4-5 steps
+    """
     #compute starting value:
     if abs(y) > 2:
         x0 = atan(y)
@@ -61,26 +68,29 @@ def InvInvolute(y, warn=True):
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #GEARS
 
-#**class: class InvoluteGear is based on github project py_gear_gen, but improved for compatibility with Exudyn; Note the involute profile is generated using the coordinates with parametrization phi (not the polar angle): $x = r_b (\cos(\varphi) + \varphi * \sin(\varphi))$, $y = r_b (\sin(\varphi) - \varphi * \cos(\varphi))$, which avoids numerical computation of the involute function
 class InvoluteGear:
-    #**classFunction: Initialize class with involute gear parameters, to be then generated with GenerateGear()
-    #**input:
-    #  module: module of the gear (pitch diameter / number of teeth)
-    #  nTeeth: number of teeth on the gear
-    #  pressureAngleDeg: pressure angle of the gear in degrees
-    #  fillet: radius of the fillet connecting a tooth to the root circle
-    #  backlash: circumferential play between meshed teeth
-    #  maxSteps: maximum steps for generating the involute profile, not all of them used
-    #  arcStepSize: step size for generating arcs for root
-    #  reductionToleranceDeg: angle tolerance for polyline reduction in degrees
-    #  dedendumFactor: factor for dedendum (depth below the pitch circle)
-    #  addendumFactor: factor for addendum (height above the pitch circle)
-    #  isInternalGear: set flag True for internal gear
-    #  tolerance: points closer than this distance are removed; this avoids problems with meshing later on
+    r"""class InvoluteGear is based on github project py_gear_gen, but improved for compatibility with Exudyn; Note the involute profile is generated using the coordinates with parametrization phi (not the polar angle): $x = r_b (\cos(\varphi) + \varphi * \sin(\varphi))$, $y = r_b (\sin(\varphi) - \varphi * \cos(\varphi))$, which avoids numerical computation of the involute function
+    """
     def __init__(self, module=1, nTeeth=12, pressureAngleDeg=20, fillet=0, backlash=0,
                  maxSteps=100, arcStepSize=0.1, reductionToleranceDeg=0, 
                  dedendumFactor=1.157, addendumFactor=1.0, isInternalGear=False,
                  tolerance = 1e-6):
+        """Initialize class with involute gear parameters, to be then generated with GenerateGear()
+
+        Args:
+            module: module of the gear (pitch diameter / number of teeth)
+            nTeeth: number of teeth on the gear
+            pressureAngleDeg: pressure angle of the gear in degrees
+            fillet: radius of the fillet connecting a tooth to the root circle
+            backlash: circumferential play between meshed teeth
+            maxSteps: maximum steps for generating the involute profile, not all of them used
+            arcStepSize: step size for generating arcs for root
+            reductionToleranceDeg: angle tolerance for polyline reduction in degrees
+            dedendumFactor: factor for dedendum (depth below the pitch circle)
+            addendumFactor: factor for addendum (height above the pitch circle)
+            isInternalGear: set flag True for internal gear
+            tolerance: points closer than this distance are removed; this avoids problems with meshing later on
+        """
         self.module = module
         self.nTeeth = nTeeth
         self.pressureAngle = radians(pressureAngleDeg)
@@ -113,31 +123,42 @@ class InvoluteGear:
         self.maxSteps = maxSteps
         self.arcStepSize = arcStepSize
 
-    #**classFunction: returns a 2x2 numpy array for vertical mirroring
     def MirrorMatrixV(self):
+        """returns a 2x2 numpy array for vertical mirroring
+        """
         return np.array([[1, 0], [0, -1]])
 
-    #**classFunction: compute 2D rotation matrix; not imported from exudyn.rigidBodyUtilities to avoid cyclic imports
-    #**input: angle around out-of-plane axis in radiant
-    #**output: 2x2 rotation matrix as np.array
     def RotationMatrix2D(self, angleRad):
+        """compute 2D rotation matrix; not imported from exudyn.rigidBodyUtilities to avoid cyclic imports
+
+        Args:
+            angle around out-of-plane axis in radiant
+
+        Returns:
+            2x2 rotation matrix as np.array
+        """
         return np.array([ [np.cos(angleRad),-np.sin(angleRad)],
                           [np.sin(angleRad), np.cos(angleRad)] ]);
     
-    #**classFunction: convert polarCoordinates as [radius,angle] into Cartesian coordinates [x,y] 
     def PolarToCartesian(self, polarCoordinates):
+        """convert polarCoordinates as [radius,angle] into Cartesian coordinates [x,y]
+        """
         r, ang = polarCoordinates
         return np.array([r * cos(ang), r * sin(ang)])
     
     
-    #**classFunction: convert cartesianCoordinates [x,y] into polar coordinates as [radius,angle]
     def CartesianToPolar(self, cartesianCoordinates):
+        """convert cartesianCoordinates [x,y] into polar coordinates as [radius,angle]
+        """
         x, y = cartesianCoordinates
         return np.array([sqrt(x * x + y * y), atan2(y, x)])
 
-    #**classFunction: generate half of an involute tooth profile; later on mirrored for full tooth
-    #**output: numpy array of shape (2, n) representing the half-tooth profile
     def GenerateHalfTooth(self):
+        """generate half of an involute tooth profile; later on mirrored for full tooth
+
+        Returns:
+            numpy array of shape (2, n) representing the half-tooth profile
+        """
         phiList = np.linspace(0, pi, self.maxSteps)
         points = []
         reachedLimit = False
@@ -168,9 +189,12 @@ class InvoluteGear:
 
         return np.array(points).T
 
-    #**classFunction: generate half of the root profile between teeth; later on mirrored for full root profile
-    #**output: numpy array of shape (2, n) representing the half-root profile
     def GenerateHalfRoot(self):
+        """generate half of the root profile between teeth; later on mirrored for full root profile
+
+        Returns:
+            numpy array of shape (2, n) representing the half-root profile
+        """
         rootArcLength = (self.angleToothAndGap - self.angleFullTooth) * self.rootRadius
         pointsRoot = []
 
@@ -188,18 +212,24 @@ class InvoluteGear:
 
         return np.array(pointsRoot).T
 
-    #**classFunction: generate roots on either side of the first tooth
-    #**output: list of two numpy arrays, each of shape (2, n)
     def GenerateRoots(self):
+        """generate roots on either side of the first tooth
+
+        Returns:
+            list of two numpy arrays, each of shape (2, n)
+        """
         halfRoot = self.GenerateHalfRoot()
         halfRoot = self.RotationMatrix2D(-self.angleFullTooth / 2) @ halfRoot
         pointsSecondHalf = self.MirrorMatrixV() @ halfRoot
         pointsSecondHalf = np.flip(pointsSecondHalf, axis=1)
         return [pointsSecondHalf, halfRoot]
 
-    #**classFunction: generate a single involute tooth profile
-    #**output: numpy array of shape (2, n) representing the tooth profile
     def GenerateTooth(self):
+        """generate a single involute tooth profile
+
+        Returns:
+            numpy array of shape (2, n) representing the tooth profile
+        """
         halfTooth = self.GenerateHalfTooth()
         halfTooth = self.RotationMatrix2D(-self.angleFullTooth / 2 ) @ halfTooth
         pointsSecondHalf = self.MirrorMatrixV() @ halfTooth
@@ -207,17 +237,23 @@ class InvoluteGear:
         tooth = np.concatenate((halfTooth, pointsSecondHalf), axis=1)
         return tooth
 
-    #**classFunction: a single tooth and the adjacent root profile
-    #**output: numpy array of shape (2, n) representing the tooth and gap profile
     def GenerateToothAndGap(self):
+        """a single tooth and the adjacent root profile
+
+        Returns:
+            numpy array of shape (2, n) representing the tooth and gap profile
+        """
         tooth = self.GenerateTooth()
         roots = self.GenerateRoots()
         toothAndGap = np.concatenate((roots[0], tooth, roots[1]), axis=1)
         return toothAndGap
 
-    #**classFunction: generate gear according to dimensions and return Cartesian coordinates of profile
-    #**output: numpy array of shape (n, 2) representing the gear outline; [x,y] coordinates are in rows of 2D numpy array
     def GenerateGear(self):
+        """generate gear according to dimensions and return Cartesian coordinates of profile
+
+        Returns:
+            numpy array of shape (n, 2) representing the gear outline; [x,y] coordinates are in rows of 2D numpy array
+        """
         toothAndGap = self.GenerateToothAndGap()
         teeth = [self.RotationMatrix2D(self.angleToothAndGap * n) @ toothAndGap for n in range(self.nTeeth)]
         gear = np.concatenate(teeth, axis=1)
@@ -237,29 +273,33 @@ class InvoluteGear:
 #ROLLING-ELEMENT BEARINGS
 
 
-#**function: based on some nominal data, this function computes the data for a ball bearning, using a couple of common assumptions
-#**input:
-#  outsideDiameter: outer radius of outer ring
-#  boreDiameter: inner radius of inner ring
-#  width: width of bearing
-#  radiusBalls: radius of balls; if not provided it is assumed as 58% of (outsideDiameter-boreDiameter)
-#  ballsAngleOffset: angle offset for location of balls (in radiant)
-#  radiusCage: radius of centers of balls; if not provided it is assumed as (outsideDiameter+boreDiameter)/2
-#  innerGrooveRadius: depends on osculation (usually radiusBalls*1.02 ... radiusBalls*1.04); if not provided assumed as radiusBalls*1.04
-#  outerGrooveRadius: same as rGrooveInner if not provided
-#  innerRingShoulderRadius: outer radius of inner ring
-#  outerRingShoulderRadius: inner radius of outer ring
-#  heightCage: radial dimension of cage (just for drawing)
-#  widthCage: width of cage (just for drawing)
-#  outerEdgeChamfer: chamfer or radius
-#  innerEdgeChamfer: chamfer or radius
-#**output: returns dictionary with all data as used by further bearing functions; note: 'ballPositions' are in the local bearing coordinate system!
 def GetBallBearingData(axis, outsideDiameter, boreDiameter, width, nBalls, 
                        radiusBalls=None, ballsAngleOffset=0,
                        radiusCage=None, innerGrooveRadius=None, outerGrooveRadius=None,
                        innerRingShoulderRadius=None, outerRingShoulderRadius=None, 
                        widthCage=None, heightCage=None,
                        innerEdgeChamfer=None, outerEdgeChamfer=None):
+    """based on some nominal data, this function computes the data for a ball bearning, using a couple of common assumptions
+
+    Args:
+        outsideDiameter: outer radius of outer ring
+        boreDiameter: inner radius of inner ring
+        width: width of bearing
+        radiusBalls: radius of balls; if not provided it is assumed as 58% of (outsideDiameter-boreDiameter)
+        ballsAngleOffset: angle offset for location of balls (in radiant)
+        radiusCage: radius of centers of balls; if not provided it is assumed as (outsideDiameter+boreDiameter)/2
+        innerGrooveRadius: depends on osculation (usually radiusBalls*1.02 ... radiusBalls*1.04); if not provided assumed as radiusBalls*1.04
+        outerGrooveRadius: same as rGrooveInner if not provided
+        innerRingShoulderRadius: outer radius of inner ring
+        outerRingShoulderRadius: inner radius of outer ring
+        heightCage: radial dimension of cage (just for drawing)
+        widthCage: width of cage (just for drawing)
+        outerEdgeChamfer: chamfer or radius
+        innerEdgeChamfer: chamfer or radius
+
+    Returns:
+        returns dictionary with all data as used by further bearing functions; note: 'ballPositions' are in the local bearing coordinate system!
+    """
 
     from exudyn.rigidBodyUtilities import ComputeOrthonormalBasisVectors
     outsideRadius = 0.5*outsideDiameter
@@ -324,30 +364,6 @@ def GetBallBearingData(axis, outsideDiameter, boreDiameter, width, nBalls,
     
     return data
 
-#**function: create ball bearing in mbs using bearingData from function GetBallBearingData; requires rigid body markers for inner ring and outer ring and creates rigid bodies for cage and balls; also adds contact between balls and inner ring and balls and outer ring
-#**input:
-#  mbs: a MainSystem where bearing objects are added
-#  bearingData: dictionary as returned from GetBallBearingData; note that axis represents the local axis relative to markers markerInnerRing and markerOuterRing
-#  markerInnerRing: a rigid body marker where the inner ring is attached to; this represents the bearing center position and orientation; bearing axis is relative to this marker
-#  markerOuterRing: a rigid body marker where the outer ring is attached to
-#  densityBalls: the material density for sphere rigid bodies
-#  densityCage: the material density for cage rigid body, assuming a hollow cylinder with dimensions given in bearingData; density should be adjusted to weight of cage
-#  cageInitialAngularVelocity: the global initial angular velocity vector of the cage
-#  ballsInitialAngularVelocity: the global initial angular velocity vector of the balls
-#  gravity: either [0,0,0] or otherwise the gravity added to balls and cage
-#  springStiffnessCage: if non-zero, for simplicity spring-dampers are added between balls and cage instead of contact with cage
-#  springDampingCage: if non-zero, for simplicity springs-dampers are added between balls and cage instead of contact with cage
-#  contactParametersRingBalls: a dictionary with contact parameters according to ObjectContactSphereTorus, including usually contactStiffness, contactDamping, dynamicFriction, and contactStiffnessExponent
-#  colorCage: cage RGBA color
-#  nTilesRings: circumferential tiling of rings
-#  nTilesGrooves: tiling of grooves
-#  colorInnerRing: inner ring RGBA color
-#  colorOuterRing: outer ring RGBA color
-#  nTilesBalls: tiling of spheres for balls
-#  colorBalls: balls RGBA color
-#  addBallsBasis: if True, basis vectors are added to drawing of balls, to see rotation
-#  ballsDrawRadiusFactor: a factor for drawing balls smaller to avoid drawing artifacts between rings and balls; ideally should be 1
-#**output: returns dictionary with newly created items: objectsBalls, objectCage, innerRingBallContacts, outerRingBallContacts, objectsCageBallContact
 def CreateBallBearing(mbs, bearingData, markerInnerRing, markerOuterRing, densityBalls, densityCage,
                       cageInitialAngularVelocity=[0,0,0], ballsInitialAngularVelocity=[0,0,0],
                       gravity=[0,0,0],
@@ -357,6 +373,34 @@ def CreateBallBearing(mbs, bearingData, markerInnerRing, markerOuterRing, densit
                       colorInnerRing=[0.5,0.5,0.5,1], colorOuterRing=[0.5,0.5,0.5,1],
                       nTilesBalls=32, colorBalls=[0.6,0.6,0.65,1], addBallsBasis=False, ballsDrawRadiusFactor=1
                       ):
+    """create ball bearing in mbs using bearingData from function GetBallBearingData; requires rigid body markers for inner ring and outer ring and creates rigid bodies for cage and balls; also adds contact between balls and inner ring and balls and outer ring
+
+    Args:
+        mbs: a MainSystem where bearing objects are added
+        bearingData: dictionary as returned from GetBallBearingData; note that axis represents the local axis relative to markers markerInnerRing and markerOuterRing
+        markerInnerRing: a rigid body marker where the inner ring is attached to; this represents the bearing center position and orientation; bearing axis is relative to this marker
+        markerOuterRing: a rigid body marker where the outer ring is attached to
+        densityBalls: the material density for sphere rigid bodies
+        densityCage: the material density for cage rigid body, assuming a hollow cylinder with dimensions given in bearingData; density should be adjusted to weight of cage
+        cageInitialAngularVelocity: the global initial angular velocity vector of the cage
+        ballsInitialAngularVelocity: the global initial angular velocity vector of the balls
+        gravity: either [0,0,0] or otherwise the gravity added to balls and cage
+        springStiffnessCage: if non-zero, for simplicity spring-dampers are added between balls and cage instead of contact with cage
+        springDampingCage: if non-zero, for simplicity springs-dampers are added between balls and cage instead of contact with cage
+        contactParametersRingBalls: a dictionary with contact parameters according to ObjectContactSphereTorus, including usually contactStiffness, contactDamping, dynamicFriction, and contactStiffnessExponent
+        colorCage: cage RGBA color
+        nTilesRings: circumferential tiling of rings
+        nTilesGrooves: tiling of grooves
+        colorInnerRing: inner ring RGBA color
+        colorOuterRing: outer ring RGBA color
+        nTilesBalls: tiling of spheres for balls
+        colorBalls: balls RGBA color
+        addBallsBasis: if True, basis vectors are added to drawing of balls, to see rotation
+        ballsDrawRadiusFactor: a factor for drawing balls smaller to avoid drawing artifacts between rings and balls; ideally should be 1
+
+    Returns:
+        returns dictionary with newly created items: objectsBalls, objectCage, innerRingBallContacts, outerRingBallContacts, objectsCageBallContact
+    """
     
     import exudyn.graphics as graphics
     import exudyn.itemInterface as eii

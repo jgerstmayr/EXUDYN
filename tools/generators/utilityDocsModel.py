@@ -1,11 +1,10 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN maintainer tool
 #
-# Details:  The parser of the #** documentation comments in the utility modules of python/exudyn/
-#           and the text helpers shared by mainSystemExtensionsEmitter.py,
-#           mainSystemExtensionDocsEmitter.py and utilityDocsEmitter.py. Moved out of
-#           src/pythonGenerator/utilitiesDocuGenerator.py (revision plan step 33, part 2e); the
-#           #** comments are replaced by Google-style docstrings in plan steps 36 and 38.
+# Details:  The reader of the docstrings (and @docmeta/@extends decorators) of the utility modules
+#           of python/exudyn/, and the text helpers shared by mainSystemExtensionDocsEmitter.py
+#           and utilityDocsEmitter.py. Moved out of src/pythonGenerator/utilitiesDocuGenerator.py
+#           (revision plan step 33, part 2e); reads docstrings instead of #** comments since step 36.
 #
 # Usage:    import utilityDocsModel
 #
@@ -15,6 +14,7 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import ast
 import io
 import os
 import sys
@@ -138,8 +138,6 @@ argListMBSconvert = {'mbs':'self', 'mainSystem':'self'} #for conversion to class
 #  argumentsList (list of strings), 
 #  defaultArgumentsList (list of strings in same order as argumentsList)
 
-tagPreamble = '#**' #this must be given at beginning of any tag
-
 def SpecialAppend(prevList, name):
     name = name.replace('\\_','_')
     if name not in prevList and name not in ['__init__', '__add__', '__iadd__', '__sub__', '__len__', '__repr__', '__getitem__', '__iter__']:
@@ -178,37 +176,6 @@ def ToLatex(s, replaceCurlyBracket=True): #replace _ and other symbols to fit in
     s = s.replace('&','\\&')
     return s
 
-
-#*****************************************************
-#find identifier in line
-def HasDocuIdentifier(lineString, identifier):
-    s = lineString.strip() #erase spaces at beginning
-    n = len(identifier)
-    if len(s) >= n+len(tagPreamble): #additional symbols needed: #**function
-        # if (s[0:n+len(tagPreamble)] == tagPreamble+identifier and 
-        #     s[0:n+len(tagPreamble)+1] != tagPreamble+identifier+':'):
-        #     print('problematic identifier:',tagPreamble+identifier)
-        if s[0:n+len(tagPreamble)] == tagPreamble+identifier:
-            return True
-    return False
-
-#*****************************************************
-#check if is definition: def Function(): ...
-def HasDefinitionIdentifier(lineString):
-    s = lineString.strip() #erase spaces at beginning for classes
-    if len(s) > 4: #def F
-        if s[0:4] == 'def ':
-            return True
-    return False
-
-#*****************************************************
-#check if is class: class Object: ...
-def HasClassIdentifier(lineString):
-    s = lineString.strip() #erase spaces at beginning
-    if len(s) > 6: #class X...
-        if s[0:6] == 'class ':
-            return True
-    return False
 
 def TagString2TypeAndString(tag, tagStr):
     tagType = None
@@ -292,28 +259,14 @@ def GetFunctionArguments(functionLine, infoText):
     return [functionName,argumentsList,defaultArgumentsList]
 
 #*****************************************************
-#parse file and extract list of dictionaries (every dict for one function)
-def ParsePythonFile(fileName):
-    fileLines = []
+#parse the comment header of a module (Details, Author, ...)
+def _ParseModuleHeader(fileName):
     file=open(fileName,'r',encoding='utf8') 
     fileLines = file.readlines()
     file.close()
 
     nLines = len(fileLines)
     lineCnt = 0
-    
-    functionList = []       #list of dictionaries of free functions or class
-    functionDict = {}       #current dictionary of function (also for class functions) will contain all information for this function in the end
-
-    classList = []          #current list of classes will contain dictionaries of {'funtionList':classFunctionList, 'className':name} in the end
-    classFunctionList = []  #list of dictionaries of class functions
-    classDict = {}          #current dictionary of class will contain all information for this class in the end
-    
-    verbose = False
-    classMode = False       #do not start in class mode
-
-    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #parse header, consisting of continuous comments:
     isHeader = True #as long as comments are there, parse header
     headerDict =  {}
@@ -347,143 +300,105 @@ def ParsePythonFile(fileName):
                 
             
         lineCnt+=1 #search for identifier
-    #print(headerDict)
-
-    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #run through file:
-    while lineCnt < nLines:
-        #read some identifier: function, class, classFunction
-        if HasDocuIdentifier(fileLines[lineCnt],'function') or HasDocuIdentifier(fileLines[lineCnt],'class') or HasDocuIdentifier(fileLines[lineCnt],'classFunction'):
-            
-            #complete last function reading
-            if len(functionDict) != 0 and not classMode:
-                functionList += [copy.deepcopy(functionDict)] #store copy of previous dict
-                if verbose: print("add function:", functionDict['functionName'])
-            elif len(functionDict) != 0 and classMode:
-                if verbose: 
-                    print("class functionDict:", functionDict)
-                if not 'functionName' in functionDict: #then this still contains class definitions
-                    #add class notes or example
-                    for (key,value) in functionDict.items():
-                        classDict[key] = value
-                else:
-                    classFunctionList += [copy.deepcopy(functionDict)] #store copy of previous dict
-                    if verbose: 
-                        print("add class function:", functionDict['functionName'])
-            functionDict = {}
-
-            currentLine = fileLines[lineCnt]
-            #terminate last class definition:
-            if (HasDocuIdentifier(currentLine,'function') or HasDocuIdentifier(currentLine,'class')) and not HasDocuIdentifier(currentLine,'classFunction'):
-               #as we see a function or a new class, class mode can be turned off:
-                if verbose: print("line:",currentLine)
-                if classMode and len(classDict) != 0:
-                    classDict['functionList'] = copy.deepcopy(classFunctionList)
-                    classList += [copy.deepcopy(classDict)]
-                    if verbose: 
-                        print("  write class: ",classDict, '\n')
-
-                    classDict = {}
-                    classFunctionList = []
-                    if verbose: 
-                        print("\nSTART new class")
-                        # print("  classFunctionList =",classFunctionList)
-                        # print("  classDict =",classDict, '\n')
-                
-                if HasDocuIdentifier(currentLine,'class'):
-                    if verbose: print("==>switch to class mode")
-                    classMode = True
-                else:
-                    if verbose: print("==>switch to function mode")
-                    classMode = False 
-                
+    return headerDict
 
 
+#*****************************************************
+#the reader of the Google-style docstrings (revision plan step 36): it hands the emitters the
+#dictionaries the former #** comment parser produced.
+#Documented are the module-level functions and classes, and the functions of those classes, that
+#have a docstring and are not marked @docmeta(public=False); author, date and status come from
+#@docmeta, belongsTo from @extends.
+docstringSections = {'Args': 'input', 'Returns': 'output', 'Note': 'notes', 'Example': 'example'}
 
-            fillInMode = ''         #this is the place where to fill in the information
-            currentInfo = ''        #string containing current tag information
-            definitionFinished = False #signals that function has been completely parsed
-            while lineCnt < nLines and not definitionFinished:
-                line = fileLines[lineCnt].strip()
-                newTag = False
-                for tag in docuTags:
-                    if not newTag and HasDocuIdentifier(line, tag):
-                        if fillInMode != '': 
-                            # if not classMode:
-                            functionDict[fillInMode] = currentInfo #complete writing of previous tag information
-                            # else:
-                            #     classDict[fillInMode] = currentInfo #complete writing of previous tag information
-                                
-                        fillInMode = tag
-                        newTag = True
-                        currentInfo = line.split(tagPreamble+tag)[1]
-                        if currentInfo[0] == ':': #erase ':', which may be omitted
-                            currentInfo = currentInfo[1:]
-                        currentInfo+="\n"
-                #if fillInMode == 'example' and len(currentInfo) > 1: #always has length 1 ...
-                    #print("example=", currentInfo)
-                    #currentInfo = currentInfo.replace('{','\{').replace('}','\}')
-                    #currentInfo = '\\begin{lstlisting}[language=Python]\n'+currentInfo+'\\end{lstlisting}' #' \\vspace{6pt}'
-                #now add remaining line or total line
-                if not newTag:
-                    if len(line.strip()) > 1 and line.strip()[0] == '#': #comment needed to add into docu info
-                        currentInfo += line.strip()[1:]+"\n"
-                    elif line.startswith('@extends('): #@extends(exudyn.MainSystem): bound as method
-                        if fillInMode != '':
-                            functionDict[fillInMode] = currentInfo
-                            fillInMode = ''
-                        functionDict['belongsTo'] = line[len('@extends('):].split(')')[0].split(',')[0].split('.')[-1]
-                    elif HasDefinitionIdentifier(line): #parse arguments
-                        if verbose: print("function def line:",line)
-                        storedLineNumber = lineCnt #beginning of function definition, for hyperref
-                        definitionFinished = True
-                        if fillInMode != '': 
-                            functionDict[fillInMode] = currentInfo #complete writing of previous tag information
-                            fillInMode = ''
-                        functionLine= line.strip()[4:] #without 'def '
-                        while functionLine.strip()[-1] != ':': #read complete function definition
-                            lineCnt+=1
-                            functionLine += fileLines[lineCnt]
-                        [functionName, argumentsList, defaultArgumentsList]=GetFunctionArguments(functionLine, fileName)
-                        functionDict['functionName'] = Str2Latex(functionName)
-                        functionDict['lineNumber'] = storedLineNumber
-                        functionDict['argumentsList'] = argumentsList
-                        functionDict['defaultArgumentsList'] = defaultArgumentsList
-                    elif HasClassIdentifier(line): #parse arguments
-                        if verbose: print("class def line:",line)
-                        definitionFinished = True
-                        if fillInMode != '': 
-                            classDict[fillInMode] = currentInfo #complete writing of previous tag information
-                            fillInMode = ''
-                        className= line.strip()[6:-1] #without 'class ' and ':'
+def _TagValue(lines):
+    """a tag value as the #** parser produced it for a tag whose text starts on the next line"""
+    return '\n' + ''.join(line + '\n' for line in lines)
 
-                        classDict['className'] = Str2Latex(className)
-            
-                lineCnt+=1 #increase lines while reading single function docu information
+def _DocstringItem(node, summaryTag, fileLines, fileName):
+    """dictionary of one documented function or class; None if it is not documented"""
+    docstring = ast.get_docstring(node, clean=False)
+    if docstring is None:
+        return None
+    item = {}
+    for decorator in node.decorator_list:
+        if not isinstance(decorator, ast.Call) or not isinstance(decorator.func, ast.Name):
+            continue
+        if decorator.func.id == 'docmeta':
+            for keyword in decorator.keywords:
+                value = ast.literal_eval(keyword.value)
+                if keyword.arg == 'public':
+                    if not value:
+                        return None
+                elif value is not None:
+                    item[keyword.arg] = ' ' + value + '\n'
+        elif decorator.func.id == 'extends':
+            target = decorator.args[0]
+            item['belongsTo'] = target.attr if isinstance(target, ast.Attribute) else target.id
+
+    bodyLine = fileLines[node.body[0].lineno - 1]
+    indent = bodyLine[:len(bodyLine) - len(bodyLine.lstrip())]
+    docLines = docstring.split('\n')
+    current = summaryTag
+    values = {summaryTag: [docLines[0].strip()] if docLines[0].strip() != '' else []}
+    for line in docLines[1:]:
+        if line.strip() == '':
+            continue
+        if line.rstrip()[len(indent):-1] in docstringSections and line.rstrip() == indent + line.strip():
+            current = docstringSections[line.strip()[:-1]]
+            values[current] = []
+            continue
+        prefix = indent if current == summaryTag else indent + '    '
+        if not line.startswith(prefix):
+            raise ValueError(fileName + ':' + str(node.lineno) + ': docstring line not indented as its '
+                             + 'section requires: ' + repr(line))
+        values[current].append(line[len(prefix):])
+    for tag, lines in values.items():
+        if tag == summaryTag and len(lines) != 0: #the summary was written on the tag line
+            item[tag] = ' ' + lines[0] + '\n' + _TagValue(lines[1:])[1:]
         else:
-            #print("skip line:",fileLines[lineCnt])
-            lineCnt+=1 #search for identifier
-    
+            item[tag] = _TagValue(lines)
 
-    #write last function dictionary:    
-    if len(functionDict) != 0 and not classMode:
-        functionList += [copy.deepcopy(functionDict)] #store copy of previous dict
-        if verbose: print("add function:", functionDict['functionName'])
-    elif len(functionDict) != 0 and classMode:
-        classFunctionList += [copy.deepcopy(functionDict)] #store copy of previous dict
-        if verbose: print("add class function:", functionDict['functionName'])
+    definitionLine = fileLines[node.lineno - 1].strip()
+    if isinstance(node, ast.ClassDef):
+        item['className'] = Str2Latex(definitionLine[6:-1])
+    else:
+        functionLine = definitionLine[4:]
+        lineIndex = node.lineno - 1
+        while functionLine.strip()[-1] != ':':
+            lineIndex += 1
+            functionLine += fileLines[lineIndex] + '\n'
+        [functionName, argumentsList, defaultArgumentsList] = GetFunctionArguments(functionLine, fileName)
+        item['functionName'] = Str2Latex(functionName)
+        item['lineNumber'] = node.lineno - 1
+        item['argumentsList'] = argumentsList
+        item['defaultArgumentsList'] = defaultArgumentsList
+    return item
 
-    #write last class:
-    if classMode and len(classDict) != 0:
-        if verbose: 
-            print("  write class: ",classDict, '\n')
-        classDict['functionList'] = copy.deepcopy(classFunctionList)
-        classList += [copy.deepcopy(classDict)]
-        classDict = {}
-        classFunctionList = []
+def _ParseDocstrings(fileName):
+    """[functionList, classList] from the docstrings of a file"""
+    source = io.open(fileName, 'r', encoding='utf8').read()
+    fileLines = source.split('\n')
+    functionList = []
+    classList = []
+    for node in ast.parse(source).body:
+        if isinstance(node, ast.FunctionDef):
+            item = _DocstringItem(node, 'function', fileLines, fileName)
+            if item is not None:
+                functionList.append(item)
+        elif isinstance(node, ast.ClassDef):
+            item = _DocstringItem(node, 'class', fileLines, fileName)
+            if item is not None:
+                item['functionList'] = [f for f in (_DocstringItem(n, 'classFunction', fileLines, fileName)
+                                                    for n in node.body if isinstance(n, ast.FunctionDef))
+                                        if f is not None]
+                classList.append(item)
+    return [functionList, classList]
 
-    return [functionList, classList, headerDict]
+def ParsePythonFile(fileName):
+    """[functionList, classList, headerDict] of a utility module, from its docstrings and its comment header"""
+    [functionList, classList] = _ParseDocstrings(fileName)
+    return [functionList, classList, _ParseModuleHeader(fileName)]
 
 #*****************************************************
 #convert tags of tagList in functionDict to latex and RST

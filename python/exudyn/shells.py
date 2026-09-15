@@ -28,26 +28,16 @@
 #   4. Minor formatting/spacing differences; logic is otherwise identical.
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+from exudyn.docmeta import docmeta
 import numpy as np
 import exudyn as exu
 import exudyn.itemInterface as eii
 from exudyn.basicUtilities import Normalize
 
 
-#**class: class for generation, representation of plate and shell meshes; creaton of Exudyn elements
 class ShellMesh:
-    #**classFunction: initialize rectangular shell mesh with geometry, discretization and physics parameters
-    #**notes: x-axis is aligned with bottom (y=min) and top (y=max); y-axis is aligned with left (x=min) and right (x=max)
-    #**input:
-    #  vertices: list of four 3D vectors (numpy array or list), sorted [bottom-left, bottom-right, top-right, top-left];
-    #            defining the reference positions of the corner nodes; if further transformations are added, use unit coordinates!
-    #  numberOfElementsX: number of elements in x-direction
-    #  numberOfElementsY: number of elements in y-direction
-    #  youngsModulus: Young's modulus; used for calculation of membrane and bending stiffness
-    #  poissonsRatio: Poisson's ratio for inplane shear deformation
-    #  density: average density of plate/shell
-    #  thickness: thickness of plate/shell
-    #  massProportionalDamping: damping parameter which introduces damping proportional to distributed mass
+    """class for generation, representation of plate and shell meshes; creaton of Exudyn elements
+    """
     def __init__(self,
                  vertices=[[-1,-1,0],[ 1,-1,0],[ 1, 1,0],[-1, 1,0]],
                  numberOfElementsX=1,
@@ -58,6 +48,22 @@ class ShellMesh:
                  thickness=None,
                  massProportionalDamping=0.,
                  thicknessAtNodes=None):
+        """initialize rectangular shell mesh with geometry, discretization and physics parameters
+
+        Args:
+            vertices: list of four 3D vectors (numpy array or list), sorted [bottom-left, bottom-right, top-right, top-left];
+                      defining the reference positions of the corner nodes; if further transformations are added, use unit coordinates!
+            numberOfElementsX: number of elements in x-direction
+            numberOfElementsY: number of elements in y-direction
+            youngsModulus: Young's modulus; used for calculation of membrane and bending stiffness
+            poissonsRatio: Poisson's ratio for inplane shear deformation
+            density: average density of plate/shell
+            thickness: thickness of plate/shell
+            massProportionalDamping: damping parameter which introduces damping proportional to distributed mass
+
+        Note:
+            x-axis is aligned with bottom (y=min) and top (y=max); y-axis is aligned with left (x=min) and right (x=max)
+        """
 
         # store mesh geometry corners (four 3D points, counter-clockwise)
         self.vertices = vertices
@@ -90,6 +96,7 @@ class ShellMesh:
         # initialise all output lists to empty
         self.CreateReset()
 
+    @docmeta(public=False)
     def CreateReset(self):
         """Reset all generated mesh data so CreateANCFThinPlateElements can be called again."""
         # boundary node numbers indexed by side name; 'all' = union of the four sides
@@ -107,10 +114,12 @@ class ShellMesh:
         # dr/dy tangent slopes (unit vectors) per node — polar / width direction for shells
         self.nodeSlopesY = []
 
+    @docmeta(public=False)
     def NumberOfNodes(self):
         """Return total number of nodes (including boundary nodes)."""
         return len(self.nodeReferencePositions)
 
+    @docmeta(public=False)
     def SetVisualizationThicknessFactor(self, mbs, VthicknessFactor=1.0):
         """Set native visualization thickness scaling (VthicknessFactor) for all shell elements."""
         tf = float(VthicknessFactor)
@@ -119,11 +128,13 @@ class ShellMesh:
         for o in self.elementNumbers:
             mbs.SetObjectParameter(o, 'VthicknessFactor', tf)
 
+    @docmeta(public=False)
     def ApplyVertexTransformation(self):
         """Apply a homogeneous vertex transformation. Reserved for future use; currently a no-op."""
         if self.vertexTransformation is None: return
         #reserved for future use
 
+    @docmeta(public=False)
     def ApplyVertexMapping(self):
         """Apply vertexMapping using exu.symbolic.Real for exact analytical slope computation.
 
@@ -214,6 +225,7 @@ class ShellMesh:
             # keep parametric (unmapped) position for debugging / seam-closure
             self.nodeReferencePositionsUnmapped.append(posNumpy)
 
+    @docmeta(public=False)
     def CreateANCFThinPlateElements(self, mbs, VthicknessFactor=1.0):
         """Generate all Exudyn nodes (NodePointSlope12) and elements (ObjectANCFThinPlate)
         and add them to mbs.  Populates nodeNumbers, elementNumbers, boundaryNodeNumbers.

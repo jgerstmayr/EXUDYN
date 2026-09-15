@@ -14,7 +14,7 @@ For advanced demos, see python/Examples and python/TestModels
 
 Function: Demo1
 ^^^^^^^^^^^^^^^
-`Demo1 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/demos.py\#L27>`__\ (\ ``showAll = True``\ )
+`Demo1 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/demos.py\#L26>`__\ (\ ``showAll = True``\ )
 
 - | \ *function description*\ :
   | very simple demo to show that exudyn is correctly installed; does not require graphics; similar to Examples/myFirstExample.py

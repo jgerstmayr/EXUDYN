@@ -20,7 +20,7 @@ includes functionality like mesh manipulation and some helper functions
 
 Function: SwitchTripletOrder
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`SwitchTripletOrder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L85>`__\ (\ ``vector``\ )
+`SwitchTripletOrder <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L82>`__\ (\ ``vector``\ )
 
 - | \ *function description*\ :
   | helper function to switch order of three items in a list; mostly used for reverting normals in triangles
@@ -38,7 +38,7 @@ Function: SwitchTripletOrder
 
 Function: ComputeTriangleNormal
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeTriangleNormal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L95>`__\ (\ ``p0``\ , \ ``p1``\ , \ ``p2``\ )
+`ComputeTriangleNormal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L97>`__\ (\ ``p0``\ , \ ``p1``\ , \ ``p2``\ )
 
 - | \ *function description*\ :
   | compute normalized normal for 3 triangle points
@@ -56,7 +56,7 @@ Function: ComputeTriangleNormal
 
 Function: ComputeTriangleArea
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeTriangleArea <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L108>`__\ (\ ``p0``\ , \ ``p1``\ , \ ``p2``\ )
+`ComputeTriangleArea <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L115>`__\ (\ ``p0``\ , \ ``p1``\ , \ ``p2``\ )
 
 - | \ *function description*\ :
   | compute area of triangle given by 3 points
@@ -74,7 +74,7 @@ Function: ComputeTriangleArea
 
 Function: Compute6NodeTrigsNormals
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`Compute6NodeTrigsNormals <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L115>`__\ (\ ``elementNodes``\ )
+`Compute6NodeTrigsNormals <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L127>`__\ (\ ``elementNodes``\ )
 
 - | \ *function description*\ :
   | Internal function: compute normals to 6-node triangular surface given by elementNodes
@@ -91,7 +91,7 @@ Function: Compute6NodeTrigsNormals
 
 Function: RefineMesh
 ^^^^^^^^^^^^^^^^^^^^
-`RefineMesh <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L186>`__\ (\ ``points``\ , \ ``triangles``\ )
+`RefineMesh <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L198>`__\ (\ ``points``\ , \ ``triangles``\ )
 
 - | \ *function description*\ :
   | refine triangle mesh; every triangle is subdivided into 4 triangles
@@ -116,7 +116,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ShrinkMeshNormalToSurface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ShrinkMeshNormalToSurface <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L238>`__\ (\ ``points``\ , \ ``triangles``\ , \ ``distance``\ )
+`ShrinkMeshNormalToSurface <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L255>`__\ (\ ``points``\ , \ ``triangles``\ , \ ``distance``\ )
 
 - | \ *function description*\ :
   | shrink mesh using triangle normals; every point is at least moved a distance 'distance' normal from boundary
@@ -142,7 +142,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: ComputeTriangularMesh
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ComputeTriangularMesh <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L286>`__\ (\ ``vertices``\ , \ ``segments``\ )
+`ComputeTriangularMesh <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L292>`__\ (\ ``vertices``\ , \ ``segments``\ )
 
 - | \ *function description*\ :
   | helper function to compute triangular mesh from list of vertices (=points) and segments;
@@ -184,7 +184,7 @@ Function: ComputeTriangularMesh
 
 Function: SegmentsFromPoints
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`SegmentsFromPoints <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L354>`__\ (\ ``points``\ , \ ``pointIndexOffset = 0``\ , \ ``invert = False``\ , \ ``closeCurve = True``\ )
+`SegmentsFromPoints <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L384>`__\ (\ ``points``\ , \ ``pointIndexOffset = 0``\ , \ ``invert = False``\ , \ ``closeCurve = True``\ )
 
 - | \ *function description*\ :
   | convert point list into segments (indices to points); point indices start with pointIndexOffset
@@ -203,7 +203,7 @@ Function: SegmentsFromPoints
 
 Function: CirclePointsAndSegments
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CirclePointsAndSegments <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L381>`__\ (\ ``center = [0,0]``\ , \ ``radius = 0.1``\ , \ ``invert = False``\ , \ ``pointIndexOffset = 0``\ , \ ``nTiles = 16``\ )
+`CirclePointsAndSegments <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L411>`__\ (\ ``center = [0,0]``\ , \ ``radius = 0.1``\ , \ ``invert = False``\ , \ ``pointIndexOffset = 0``\ , \ ``nTiles = 16``\ )
 
 - | \ *function description*\ :
   | create points and segments, used in SolidExtrusion(...) for circle with given parameters
@@ -227,7 +227,7 @@ Function: CirclePointsAndSegments
 
 Function: GraphicsDataRectangle
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GraphicsDataRectangle <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L405>`__\ (\ ``xMin``\ , \ ``yMin``\ , \ ``xMax``\ , \ ``yMax``\ , \ ``color = [0.,0.,0.,1.]``\ )
+`GraphicsDataRectangle <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L446>`__\ (\ ``xMin``\ , \ ``yMin``\ , \ ``xMax``\ , \ ``yMax``\ , \ ``color = [0.,0.,0.,1.]``\ )
 
 - | \ *function description*\ :
   | generate graphics data for 2D rectangle
@@ -251,7 +251,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: GraphicsDataOrthoCubeLines
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GraphicsDataOrthoCubeLines <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L417>`__\ (\ ``xMin``\ , \ ``yMin``\ , \ ``zMin``\ , \ ``xMax``\ , \ ``yMax``\ , \ ``zMax``\ , \ ``color = [0.,0.,0.,1.]``\ )
+`GraphicsDataOrthoCubeLines <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/graphicsDataUtilities.py\#L465>`__\ (\ ``xMin``\ , \ ``yMin``\ , \ ``zMin``\ , \ ``xMax``\ , \ ``yMax``\ , \ ``zMax``\ , \ ``color = [0.,0.,0.,1.]``\ )
 
 - | \ *function description*\ :
   | generate graphics data for orthogonal block drawn with lines
