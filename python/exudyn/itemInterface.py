@@ -209,11 +209,11 @@ class VNodePoint:
     """Visualization data for NodePoint.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used
+        drawSize: drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used; type: float
 
-        color ([float,float,float,float]): Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
+        color: Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -233,13 +233,15 @@ class NodePoint:
     """A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for ODE2.
     
     Args:
-        name (str): node's unique name
+        name: node's unique name; type: str
 
-        referenceCoordinates ([float,float,float]): reference coordinates of node, e.g. ref. coordinates for finite elements; global position of node without displacement
+        referenceCoordinates: reference coordinates of node, e.g. ref. coordinates for finite elements; global position of node without displacement; type: [float,float,float]
 
-        initialCoordinates ([float,float,float]): initial displacement coordinate
+        initialCoordinates: initial displacement coordinate; type: [float,float,float]
 
-        initialVelocities ([float,float,float]): initial velocity coordinate
+        initialVelocities: initial velocity coordinate; type: [float,float,float]
+
+        visualization: visualization data, see VNodePoint
 
     Notes:
         Node has/provides the following types: ``Position``
@@ -273,11 +275,11 @@ class VNodePoint2D:
     """Visualization data for NodePoint2D.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used
+        drawSize: drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used; type: float
 
-        color ([float,float,float,float]): Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
+        color: Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -297,13 +299,15 @@ class NodePoint2D:
     """A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for ODE2.
     
     Args:
-        name (str): node's unique name
+        name: node's unique name; type: str
 
-        referenceCoordinates ([float,float]): reference coordinates of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement
+        referenceCoordinates: reference coordinates of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement; type: [float,float]
 
-        initialCoordinates ([float,float]): initial displacement coordinate
+        initialCoordinates: initial displacement coordinate; type: [float,float]
 
-        initialVelocities ([float,float]): initial velocity coordinate
+        initialVelocities: initial velocity coordinate; type: [float,float]
+
+        visualization: visualization data, see VNodePoint2D
 
     Notes:
         Node has/provides the following types: ``Position2D``, ``Position``
@@ -337,11 +341,11 @@ class VNodeRigidBodyEP:
     """Visualization data for NodeRigidBodyEP.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used
+        drawSize: drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used; type: float
 
-        color ([float,float,float,float]): Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
+        color: Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -363,15 +367,17 @@ class NodeRigidBodyEP:
     The node has 3 displacement coordinates (representing displacement of reference point :math:`{}^{0}{\rv}`) and four rotation coordinates (Euler parameters = unit quaternions).
     
     Args:
-        name (str): node's unique name
+        name: node's unique name; type: str
 
-        referenceCoordinates (array_like): reference coordinates (3 position coordinates and 4 Euler parameters) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)
+        referenceCoordinates: reference coordinates (3 position coordinates and 4 Euler parameters) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints); type: array_like
 
-        initialCoordinates (array_like): initial displacement coordinates and 4 Euler parameters relative to reference coordinates
+        initialCoordinates: initial displacement coordinates and 4 Euler parameters relative to reference coordinates; type: array_like
 
-        initialVelocities (array_like): initial velocity coordinates: time derivatives of initial displacements and Euler parameters
+        initialVelocities: initial velocity coordinates: time derivatives of initial displacements and Euler parameters; type: array_like
 
-        addConstraintEquation (bool): True: automatically add Euler parameter constraint for node; False: Euler parameter constraint is not added, must be done manually (e.g., with CoordinateVectorConstraint)
+        addConstraintEquation: True: automatically add Euler parameter constraint for node; False: Euler parameter constraint is not added, must be done manually (e.g., with CoordinateVectorConstraint); type: bool
+
+        visualization: visualization data, see VNodeRigidBodyEP
 
     Notes:
         Node has/provides the following types: ``Position``, ``Orientation``, ``RigidBody``, ``RotationEulerParameters``
@@ -407,11 +413,11 @@ class VNodeRigidBodyRxyz:
     """Visualization data for NodeRigidBodyRxyz.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used
+        drawSize: drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used; type: float
 
-        color ([float,float,float,float]): Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
+        color: Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -433,13 +439,15 @@ class NodeRigidBodyRxyz:
     All coordinates lead to second order differential equations; NOTE: this node has a singularity if the second rotation parameter reaches :math:`\psi_1 = (2k-1) \pi/2`, with :math:`k \in \Ncal` or :math:`-k \in \Ncal`.
     
     Args:
-        name (str): node's unique name
+        name: node's unique name; type: str
 
-        referenceCoordinates (array_like): reference coordinates (3 position and 3 xyz Euler angles) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)
+        referenceCoordinates: reference coordinates (3 position and 3 xyz Euler angles) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints); type: array_like
 
-        initialCoordinates (array_like): initial displacement coordinates: ux,uy,uz and 3 Euler angles (xyz) relative to reference coordinates
+        initialCoordinates: initial displacement coordinates: ux,uy,uz and 3 Euler angles (xyz) relative to reference coordinates; type: array_like
 
-        initialVelocities (array_like): initial velocity coordinate: time derivatives of ux,uy,uz and of 3 Euler angles (xyz)
+        initialVelocities: initial velocity coordinate: time derivatives of ux,uy,uz and of 3 Euler angles (xyz); type: array_like
+
+        visualization: visualization data, see VNodeRigidBodyRxyz
 
     Notes:
         Node has/provides the following types: ``Position``, ``Orientation``, ``RigidBody``, ``RotationRxyz``
@@ -473,11 +481,11 @@ class VNodeRigidBodyRotVecLG:
     """Visualization data for NodeRigidBodyRotVecLG.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used
+        drawSize: drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used; type: float
 
-        color ([float,float,float,float]): Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
+        color: Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -499,13 +507,15 @@ class NodeRigidBodyRotVecLG:
     The node has 3 displacement coordinates and three rotation coordinates and can be used in combination with explicit Lie Group time integration methods.
     
     Args:
-        name (str): node's unique name
+        name: node's unique name; type: str
 
-        referenceCoordinates (array_like): reference coordinates (position and rotation vector :math:`\nu`) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)
+        referenceCoordinates: reference coordinates (position and rotation vector :math:`\nu`) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints); type: array_like
 
-        initialCoordinates (array_like): initial displacement coordinates :math:`\mathbf{u}` and rotation vector :math:`\nu` relative to reference coordinates
+        initialCoordinates: initial displacement coordinates :math:`\mathbf{u}` and rotation vector :math:`\nu` relative to reference coordinates; type: array_like
 
-        initialVelocities (array_like): initial velocity coordinate: time derivatives of displacement and angular velocity vector
+        initialVelocities: initial velocity coordinate: time derivatives of displacement and angular velocity vector; type: array_like
+
+        visualization: visualization data, see VNodeRigidBodyRotVecLG
 
     Notes:
         Node has/provides the following types: ``Position``, ``Orientation``, ``RigidBody``, ``RotationRotationVector``
@@ -539,11 +549,11 @@ class VNodeRigidBody2D:
     """Visualization data for NodeRigidBody2D.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used
+        drawSize: drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used; type: float
 
-        color ([float,float,float,float]): Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
+        color: Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -565,13 +575,15 @@ class NodeRigidBody2D:
     The node has 2 displacement degrees of freedom and one rotation coordinate (rotation around z-axis: :math:`\psi_0`). All coordinates are ODE2, used for second order differetial equations.
     
     Args:
-        name (str): node's unique name
+        name: node's unique name; type: str
 
-        referenceCoordinates ([float,float,float]): reference coordinates (x-pos,y-pos and rotation) of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement
+        referenceCoordinates: reference coordinates (x-pos,y-pos and rotation) of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement; type: [float,float,float]
 
-        initialCoordinates ([float,float,float]): initial displacement coordinates and angle (relative to reference coordinates)
+        initialCoordinates: initial displacement coordinates and angle (relative to reference coordinates); type: [float,float,float]
 
-        initialVelocities ([float,float,float]): initial velocity coordinates
+        initialVelocities: initial velocity coordinates; type: [float,float,float]
+
+        visualization: visualization data, see VNodeRigidBody2D
 
     Notes:
         Node has/provides the following types: ``Position2D``, ``Orientation2D``, ``Position``, ``Orientation``, ``RigidBody``
@@ -605,7 +617,7 @@ class VNode1D:
     """Visualization data for Node1D.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown; The node1D is represented as reference position and displacement along the global x-axis, which must not agree with the representation in the object using the Node1D
+        show: set true, if item is shown in visualization and false if it is not shown; The node1D is represented as reference position and displacement along the global x-axis, which must not agree with the representation in the object using the Node1D; type: bool
 
     """
     def __init__(self, show = False):
@@ -623,13 +635,15 @@ class Node1D:
     Use e.g. for scalar dynamic equations (Mass1D) and mass-spring-damper mechanisms, representing either translational or rotational degrees of freedom: in most cases, Node1D is equivalent to NodeGenericODE2 using one coordinate, however, it offers a transformation to 3D translational or rotational motion and allows to couple this node to 2D or 3D bodies.
     
     Args:
-        name (str): node's unique name
+        name: node's unique name; type: str
 
-        referenceCoordinates (array_like): reference coordinate of node (in vector form)
+        referenceCoordinates: reference coordinate of node (in vector form); type: array_like
 
-        initialCoordinates (array_like): initial displacement coordinate (in vector form)
+        initialCoordinates: initial displacement coordinate (in vector form); type: array_like
 
-        initialVelocities (array_like): initial velocity coordinate (in vector form)
+        initialVelocities: initial velocity coordinate (in vector form); type: array_like
+
+        visualization: visualization data, see VNode1D
 
     Notes:
         Node has/provides the following types: ``GenericODE2``
@@ -657,11 +671,11 @@ class VNodePoint2DSlope1:
     """Visualization data for NodePoint2DSlope1.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used
+        drawSize: drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used; type: float
 
-        color ([float,float,float,float]): Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
+        color: Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -683,13 +697,15 @@ class NodePoint2DSlope1:
     The node has 4 displacement degrees of freedom (2 for displacement of point node and 2 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as :math:`()^\prime`; in straight configuration aligned at the global x-axis, the slope vector reads :math:`\rv^\prime=[r_x^\prime\;\;r_y^\prime]^T=[1\;\;0]^T`.
     
     Args:
-        name (str): node's unique name
+        name: node's unique name; type: str
 
-        referenceCoordinates ([float,float,float,float]): reference coordinates (x-pos,y-pos; x-slopex, y-slopex) of node; global position of node without displacement
+        referenceCoordinates: reference coordinates (x-pos,y-pos; x-slopex, y-slopex) of node; global position of node without displacement; type: [float,float,float,float]
 
-        initialCoordinates ([float,float,float,float]): initial displacement coordinates: ux, uy and x/y 'displacements' of slopex
+        initialCoordinates: initial displacement coordinates: ux, uy and x/y 'displacements' of slopex; type: [float,float,float,float]
 
-        initialVelocities ([float,float,float,float]): initial velocity coordinates
+        initialVelocities: initial velocity coordinates; type: [float,float,float,float]
+
+        visualization: visualization data, see VNodePoint2DSlope1
 
     Notes:
         Node has/provides the following types: ``Position2D``, ``Orientation2D``, ``Point2DSlope1``, ``Position``, ``Orientation``
@@ -723,11 +739,11 @@ class VNodePointSlope1:
     """Visualization data for NodePointSlope1.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used
+        drawSize: drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used; type: float
 
-        color ([float,float,float,float]): Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
+        color: Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -749,13 +765,15 @@ class NodePointSlope1:
     The node has 6 displacement degrees of freedom (3 for displacement of point node and 3 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as :math:`()^\prime`; in straight configuration aligned at the global x-axis, the slope vector reads :math:`\rv^\prime=[r_x^\prime\;\;r_y^\prime\;\;r_z^\prime]^T=[1\;\;0]^T`.
     
     Args:
-        name (str): node's unique name
+        name: node's unique name; type: str
 
-        referenceCoordinates (array_like): reference coordinates (x-pos,y-pos,z-pos; x-slopex, y-slopex, z-slopex) of node; global position of node without displacement
+        referenceCoordinates: reference coordinates (x-pos,y-pos,z-pos; x-slopex, y-slopex, z-slopex) of node; global position of node without displacement; type: array_like
 
-        initialCoordinates (array_like): initial displacement coordinates: ux, uy, uz and x/y/z 'displacements' of slopex
+        initialCoordinates: initial displacement coordinates: ux, uy, uz and x/y/z 'displacements' of slopex; type: array_like
 
-        initialVelocities (array_like): initial velocity coordinates
+        initialVelocities: initial velocity coordinates; type: array_like
+
+        visualization: visualization data, see VNodePointSlope1
 
     Notes:
         Node has/provides the following types: ``Position``
@@ -785,11 +803,11 @@ class VNodePointSlope12:
     """Visualization data for NodePointSlope12.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used
+        drawSize: drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used; type: float
 
-        color ([float,float,float,float]): Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
+        color: Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -811,13 +829,15 @@ class NodePointSlope12:
     The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 :math:`\times` 3 for the slope vectors 'slopeX' and 'slopeY'); all coordinates lead to second order differential equations; the slopeX vector defines the directional derivative w.r.t the local axial (x) coordinate, etc.; in straight configuration aligned at the global x-axis, the slopeY vector reads :math:`\rv_y^\prime=[0\;\;1\;\;0]^T`.
     
     Args:
-        name (str): node's unique name
+        name: node's unique name; type: str
 
-        referenceCoordinates (array_like): reference coordinates (x-pos,y-pos,z-pos; x-slopeX, y-slopeX, z-slopeX; x-slopeY, y-slopeY, z-slopeY) of node; global position of node without displacement
+        referenceCoordinates: reference coordinates (x-pos,y-pos,z-pos; x-slopeX, y-slopeX, z-slopeX; x-slopeY, y-slopeY, z-slopeY) of node; global position of node without displacement; type: array_like
 
-        initialCoordinates (array_like): initial displacement coordinates relative to reference coordinates
+        initialCoordinates: initial displacement coordinates relative to reference coordinates; type: array_like
 
-        initialVelocities (array_like): initial velocity coordinates
+        initialVelocities: initial velocity coordinates; type: array_like
+
+        visualization: visualization data, see VNodePointSlope12
 
     Notes:
         Node has/provides the following types: ``Position``, ``Orientation``
@@ -847,11 +867,11 @@ class VNodePointSlope23:
     """Visualization data for NodePointSlope23.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used
+        drawSize: drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used; type: float
 
-        color ([float,float,float,float]): Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
+        color: Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -873,13 +893,15 @@ class NodePointSlope23:
     The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 :math:`\times` 3 for the slope vectors 'slopeY' and 'slopeZ'); all coordinates lead to second order differential equations; the slopeY vector defines the directional derivative w.r.t the local axial (y) coordinate, etc.; the slopeY vector reads :math:`\rv_y^\prime=[0\;\;1\;\;0]^T` and slopeZ gets :math:`\rv_z^\prime=[0\;\;0\;\;1]^T`.
     
     Args:
-        name (str): node's unique name
+        name: node's unique name; type: str
 
-        referenceCoordinates (array_like): reference coordinates (x-pos,y-pos,z-pos; x-slopey, y-slopey, z-slopey; x-slopez, y-slopez, z-slopez) of node; global position of node without displacement
+        referenceCoordinates: reference coordinates (x-pos,y-pos,z-pos; x-slopey, y-slopey, z-slopey; x-slopez, y-slopez, z-slopez) of node; global position of node without displacement; type: array_like
 
-        initialCoordinates (array_like): initial displacement coordinates relative to reference coordinates
+        initialCoordinates: initial displacement coordinates relative to reference coordinates; type: array_like
 
-        initialVelocities (array_like): initial velocity coordinates
+        initialVelocities: initial velocity coordinates; type: array_like
+
+        visualization: visualization data, see VNodePointSlope23
 
     Notes:
         Node has/provides the following types: ``Position``, ``Orientation``
@@ -909,7 +931,7 @@ class VNodeGenericODE2:
     """Visualization data for NodeGenericODE2.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = False):
@@ -927,15 +949,17 @@ class NodeGenericODE2:
     Use this node e.g. for scalar dynamic equations (Mass1D), for ObjectGenericODE2 or for the Eulerian coordinate in the ALECable element. NOTE: referenceCoordinates and all initialCoordinates(_t) must be initialized, because no default values exist.
     
     Args:
-        name (str): node's unique name
+        name: node's unique name; type: str
 
-        referenceCoordinates (array_like): generic reference coordinates of node; must be consistent with numberOfODE2Coordinates
+        referenceCoordinates: generic reference coordinates of node; must be consistent with numberOfODE2Coordinates; type: array_like
 
-        initialCoordinates (array_like): initial displacement coordinates; must be consistent with numberOfODE2Coordinates
+        initialCoordinates: initial displacement coordinates; must be consistent with numberOfODE2Coordinates; type: array_like
 
-        initialCoordinates_t (array_like): initial velocity coordinates; must be consistent with numberOfODE2Coordinates
+        initialCoordinates_t: initial velocity coordinates; must be consistent with numberOfODE2Coordinates; type: array_like
 
-        numberOfODE2Coordinates (int): number of generic ODE2 coordinates
+        numberOfODE2Coordinates: number of generic ODE2 coordinates; type: int
+
+        visualization: visualization data, see VNodeGenericODE2
 
     Notes:
         Node has/provides the following types: ``GenericODE2``
@@ -965,7 +989,7 @@ class VNodeGenericODE1:
     """Visualization data for NodeGenericODE1.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = False):
@@ -983,13 +1007,15 @@ class NodeGenericODE1:
     Use this node e.g. for linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.
     
     Args:
-        name (str): node's unique name
+        name: node's unique name; type: str
 
-        referenceCoordinates (array_like): generic reference coordinates of node; must be consistent with numberOfODE1Coordinates
+        referenceCoordinates: generic reference coordinates of node; must be consistent with numberOfODE1Coordinates; type: array_like
 
-        initialCoordinates (array_like): initial displacement coordinates; must be consistent with numberOfODE1Coordinates
+        initialCoordinates: initial displacement coordinates; must be consistent with numberOfODE1Coordinates; type: array_like
 
-        numberOfODE1Coordinates (int): number of generic ODE1 coordinates
+        numberOfODE1Coordinates: number of generic ODE1 coordinates; type: int
+
+        visualization: visualization data, see VNodeGenericODE1
 
     """
     def __init__(self, name = '', referenceCoordinates = [], initialCoordinates = [], numberOfODE1Coordinates = 0, visualization = {'show': False}):
@@ -1014,7 +1040,7 @@ class VNodeGenericAE:
     """Visualization data for NodeGenericAE.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = False):
@@ -1032,13 +1058,15 @@ class NodeGenericAE:
     Use e.g. linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.
     
     Args:
-        name (str): node's unique name
+        name: node's unique name; type: str
 
-        referenceCoordinates (array_like): generic reference coordinates of node; must be consistent with numberOfAECoordinates
+        referenceCoordinates: generic reference coordinates of node; must be consistent with numberOfAECoordinates; type: array_like
 
-        initialCoordinates (array_like): initial displacement coordinates; must be consistent with numberOfAECoordinates
+        initialCoordinates: initial displacement coordinates; must be consistent with numberOfAECoordinates; type: array_like
 
-        numberOfAECoordinates (int): number of generic AE coordinates
+        numberOfAECoordinates: number of generic AE coordinates; type: int
+
+        visualization: visualization data, see VNodeGenericAE
 
     """
     def __init__(self, name = '', referenceCoordinates = [], initialCoordinates = [], numberOfAECoordinates = 0, visualization = {'show': False}):
@@ -1063,7 +1091,7 @@ class VNodeGenericData:
     """Visualization data for NodeGenericData.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = False):
@@ -1081,11 +1109,13 @@ class NodeGenericData:
     Use this node e.g. for contact (active set), friction or plasticity (history variables).
     
     Args:
-        name (str): node's unique name
+        name: node's unique name; type: str
 
-        initialCoordinates (array_like): initial data coordinates
+        initialCoordinates: initial data coordinates; type: array_like
 
-        numberOfDataCoordinates (int): number of generic data coordinates (history variables)
+        numberOfDataCoordinates: number of generic data coordinates (history variables); type: int
+
+        visualization: visualization data, see VNodeGenericData
 
     Notes:
         Node has/provides the following types: ``GenericData``
@@ -1111,11 +1141,11 @@ class VNodePointGround:
     """Visualization data for NodePointGround.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used
+        drawSize: drawing size (diameter, dimensions of underlying cube, etc.)  for item; size == -1.f means that default size is used; type: float
 
-        color ([float,float,float,float]): Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used
+        color: Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -1137,9 +1167,11 @@ class NodePointGround:
     Applied or reaction forces do not have any effect. This node can be used for 'blind' or 'dummy' ODE2 and ODE1 coordinates to which CoordinateSpringDamper or CoordinateConstraint objects are attached to.
     
     Args:
-        name (str): node's unique name
+        name: node's unique name; type: str
 
-        referenceCoordinates ([float,float,float]): reference coordinates of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement
+        referenceCoordinates: reference coordinates of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement; type: [float,float,float]
+
+        visualization: visualization data, see VNodePointGround
 
     Notes:
         Node has/provides the following types: ``Ground``, ``Position2D``, ``Position``, ``Orientation``, ``GenericODE2``
@@ -1171,11 +1203,11 @@ class VObjectGround:
     """Visualization data for ObjectGround.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        graphicsDataUserFunction (PyFunctionGraphicsData): A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function
+        graphicsDataUserFunction: A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; type: PyFunctionGraphicsData
 
-        graphicsData (BodyGraphicsData): Structure contains data for body visualization; data is defined in special list / dictionary structure
+        graphicsData: Structure contains data for body visualization; data is defined in special list / dictionary structure; type: BodyGraphicsData
 
     """
     def __init__(self, show = True, graphicsDataUserFunction = 0, graphicsData = []):
@@ -1197,11 +1229,13 @@ class ObjectGround:
     Used to attach body-connectors without an action. For examples see spring dampers and joints.
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        referencePosition ([float,float,float]): reference point = reference position for ground object; local position is added on top of reference position for a ground object
+        referencePosition: reference point = reference position for ground object; local position is added on top of reference position for a ground object; type: [float,float,float]
 
-        referenceRotation (array_like): the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates
+        referenceRotation: the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates; type: array_like
+
+        visualization: visualization data, see VObjectGround
 
     Notes:
         Object has/provides the following types: ``Ground``, ``Body``
@@ -1229,9 +1263,9 @@ class VObjectMassPoint:
     """Visualization data for ObjectMassPoint.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        graphicsData (BodyGraphicsData): Structure contains data for body visualization; data is defined in special list / dictionary structure
+        graphicsData: Structure contains data for body visualization; data is defined in special list / dictionary structure; type: BodyGraphicsData
 
     """
     def __init__(self, show = True, graphicsData = []):
@@ -1249,11 +1283,13 @@ class ObjectMassPoint:
     """A 3D mass point which is attached to a position-based node, usually NodePoint.
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        physicsMass (float): mass [SI:kg] of mass point
+        physicsMass: mass [SI:kg] of mass point; type: float
 
-        nodeNumber (NodeIndex): node number (type NodeIndex) for mass point
+        nodeNumber: node number (type NodeIndex) for mass point
+
+        visualization: visualization data, see VObjectMassPoint
 
     Notes:
         Object has/provides the following types: ``Body``, ``SingleNoded``
@@ -1286,9 +1322,9 @@ class VObjectMassPoint2D:
     """Visualization data for ObjectMassPoint2D.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        graphicsData (BodyGraphicsData): Structure contains data for body visualization; data is defined in special list / dictionary structure
+        graphicsData: Structure contains data for body visualization; data is defined in special list / dictionary structure; type: BodyGraphicsData
 
     """
     def __init__(self, show = True, graphicsData = []):
@@ -1306,11 +1342,13 @@ class ObjectMassPoint2D:
     """A 2D mass point which is attached to a position-based 2D node.
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        physicsMass (float): mass [SI:kg] of mass point
+        physicsMass: mass [SI:kg] of mass point; type: float
 
-        nodeNumber (NodeIndex): node number (type NodeIndex) for mass point
+        nodeNumber: node number (type NodeIndex) for mass point
+
+        visualization: visualization data, see VObjectMassPoint2D
 
     Notes:
         Object has/provides the following types: ``Body``, ``SingleNoded``
@@ -1343,9 +1381,9 @@ class VObjectMass1D:
     """Visualization data for ObjectMass1D.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        graphicsData (BodyGraphicsData): Structure contains data for body visualization; data is defined in special list / dictionary structure
+        graphicsData: Structure contains data for body visualization; data is defined in special list / dictionary structure; type: BodyGraphicsData
 
     """
     def __init__(self, show = True, graphicsData = []):
@@ -1365,15 +1403,17 @@ class ObjectMass1D:
     Note, that the mass does not need to have the interpretation as a translational mass.
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        physicsMass (float): mass [SI:kg] of mass
+        physicsMass: mass [SI:kg] of mass; type: float
 
-        nodeNumber (NodeIndex): node number (type NodeIndex) for Node1D
+        nodeNumber: node number (type NodeIndex) for Node1D
 
-        referencePosition ([float,float,float]): a reference position, used to transform the 1D coordinate to a position
+        referencePosition: a reference position, used to transform the 1D coordinate to a position; type: [float,float,float]
 
-        referenceRotation (array_like): the constant body rotation matrix, which transforms body-fixed (b) to global (0) coordinates
+        referenceRotation: the constant body rotation matrix, which transforms body-fixed (b) to global (0) coordinates; type: array_like
+
+        visualization: visualization data, see VObjectMass1D
 
     Notes:
         Object has/provides the following types: ``Body``, ``SingleNoded``
@@ -1410,9 +1450,9 @@ class VObjectRotationalMass1D:
     """Visualization data for ObjectRotationalMass1D.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        graphicsData (BodyGraphicsData): Structure contains data for body visualization; data is defined in special list / dictionary structure
+        graphicsData: Structure contains data for body visualization; data is defined in special list / dictionary structure; type: BodyGraphicsData
 
     """
     def __init__(self, show = True, graphicsData = []):
@@ -1430,15 +1470,17 @@ class ObjectRotationalMass1D:
     r"""A 1D rotational inertia (mass) which is attached to Node1D.
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        physicsInertia (float): inertia components [SI:kgm:math:`^2`] of rotor / rotational mass
+        physicsInertia: inertia components [SI:kgm:math:`^2`] of rotor / rotational mass; type: float
 
-        nodeNumber (NodeIndex): node number (type NodeIndex) of Node1D, providing rotation coordinate :math:`\psi_0 = c_0`
+        nodeNumber: node number (type NodeIndex) of Node1D, providing rotation coordinate :math:`\psi_0 = c_0`
 
-        referencePosition ([float,float,float]): a constant reference position = reference point, used to assign joint constraints accordingly and for drawing
+        referencePosition: a constant reference position = reference point, used to assign joint constraints accordingly and for drawing; type: [float,float,float]
 
-        referenceRotation (array_like): an intermediate rotation matrix, which transforms the 1D coordinate into 3D, see description
+        referenceRotation: an intermediate rotation matrix, which transforms the 1D coordinate into 3D, see description; type: array_like
+
+        visualization: visualization data, see VObjectRotationalMass1D
 
     Notes:
         Object has/provides the following types: ``Body``, ``SingleNoded``
@@ -1475,11 +1517,11 @@ class VObjectRigidBody:
     """Visualization data for ObjectRigidBody.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        graphicsDataUserFunction (PyFunctionGraphicsData): A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates
+        graphicsDataUserFunction: A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates; type: PyFunctionGraphicsData
 
-        graphicsData (BodyGraphicsData): Structure contains data for body visualization; data is defined in special list / dictionary structure
+        graphicsData: Structure contains data for body visualization; data is defined in special list / dictionary structure; type: BodyGraphicsData
 
     """
     def __init__(self, show = True, graphicsDataUserFunction = 0, graphicsData = []):
@@ -1501,15 +1543,17 @@ class ObjectRigidBody:
     The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about :math:`x` or :math:`z` axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class ``RigidBodyInertia``, see theDoc.pdf and ``CreateRigidBody(...)``, see theDoc.pdf, of ``exudyn.rigidBodyUtilities`` to handle inertia, COM and mass. addExampleImage{ObjectRigidBody}
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        physicsMass (float): mass [SI:kg] of rigid body
+        physicsMass: mass [SI:kg] of rigid body; type: float
 
-        physicsInertia (array_like): inertia components [SI:kgm:math:`^2`]: :math:`[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]` in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to COM; use the class RigidBodyInertia of exudynRigidBodyUtilities.py and CreateRigidBody(...) of MainSystem to handle inertia, COM and mass
+        physicsInertia: inertia components [SI:kgm:math:`^2`]: :math:`[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]` in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to COM; use the class RigidBodyInertia of exudynRigidBodyUtilities.py and CreateRigidBody(...) of MainSystem to handle inertia, COM and mass; type: array_like
 
-        physicsCenterOfMass ([float,float,float]): local position of COM relative to the body's reference point; if the vector of the COM is [0,0,0], the computation will not consider additional terms for the COM and it is faster
+        physicsCenterOfMass: local position of COM relative to the body's reference point; if the vector of the COM is [0,0,0], the computation will not consider additional terms for the COM and it is faster; type: [float,float,float]
 
-        nodeNumber (NodeIndex): node number (type NodeIndex) for rigid body node
+        nodeNumber: node number (type NodeIndex) for rigid body node
+
+        visualization: visualization data, see VObjectRigidBody
 
     Notes:
         Object has/provides the following types: ``Body``, ``SingleNoded``
@@ -1547,11 +1591,11 @@ class VObjectRigidBody2D:
     """Visualization data for ObjectRigidBody2D.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        graphicsDataUserFunction (PyFunctionGraphicsData): A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates
+        graphicsDataUserFunction: A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates; type: PyFunctionGraphicsData
 
-        graphicsData (BodyGraphicsData): Structure contains data for body visualization; data is defined in special list / dictionary structure
+        graphicsData: Structure contains data for body visualization; data is defined in special list / dictionary structure; type: BodyGraphicsData
 
     """
     def __init__(self, show = True, graphicsDataUserFunction = 0, graphicsData = []):
@@ -1573,15 +1617,17 @@ class ObjectRigidBody2D:
     The body obtains coordinates, position, velocity, etc. from the underlying 2D node.
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        physicsMass (float): mass [SI:kg] of rigid body
+        physicsMass: mass [SI:kg] of rigid body; type: float
 
-        physicsInertia (float): inertia [SI:kgm:math:`^2`] of rigid body w.r.t. reference point; this is equal to the center of mass, if physicsCenterOfMass = 0
+        physicsInertia: inertia [SI:kgm:math:`^2`] of rigid body w.r.t. reference point; this is equal to the center of mass, if physicsCenterOfMass = 0; type: float
 
-        physicsCenterOfMass ([float,float]): local position of COM relative to the body's reference point; if the vector of the COM is [0,0], the computation will not consider additional terms for the COM and it is faster
+        physicsCenterOfMass: local position of COM relative to the body's reference point; if the vector of the COM is [0,0], the computation will not consider additional terms for the COM and it is faster; type: [float,float]
 
-        nodeNumber (NodeIndex): node number (type NodeIndex) for 2D rigid body node
+        nodeNumber: node number (type NodeIndex) for 2D rigid body node
+
+        visualization: visualization data, see VObjectRigidBody2D
 
     Notes:
         Object has/provides the following types: ``Body``, ``SingleNoded``
@@ -1619,15 +1665,15 @@ class VObjectGenericODE2:
     """Visualization data for ObjectGenericODE2.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        color ([float,float,float,float]): RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used
+        color: RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
 
-        triangleMesh (array_like): a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!
+        triangleMesh: a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!; type: array_like
 
-        showNodes (bool): set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'
+        showNodes: set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'; type: bool
 
-        graphicsDataUserFunction (PyFunctionGraphicsData): A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization
+        graphicsDataUserFunction: A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization; type: PyFunctionGraphicsData
 
     """
     def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False, graphicsDataUserFunction = 0):
@@ -1653,31 +1699,25 @@ class ObjectGenericODE2:
     It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE: all matrices, vectors, etc. must have the same dimensions :math:`n` or :math:`(n \times n)`, or they must be empty :math:`(0 \times 0)`, except for the mass matrix which always needs to have dimensions :math:`(n \times n)`.
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        nodeNumbers (ArrayNodeIndex): node numbers which provide the coordinates for the object (consecutively as provided in this list)
+        nodeNumbers: node numbers which provide the coordinates for the object (consecutively as provided in this list); type: ArrayNodeIndex
 
-        massMatrix (PyMatrixContainer): mass matrix of object as MatrixContainer (or numpy array / list of lists)
+        massMatrix: mass matrix of object as MatrixContainer (or numpy array / list of lists); type: PyMatrixContainer
 
-        stiffnessMatrix (PyMatrixContainer): stiffness matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with dampingMatrix and jacobianUserFunction
+        stiffnessMatrix: stiffness matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with dampingMatrix and jacobianUserFunction; type: PyMatrixContainer
 
-        dampingMatrix (PyMatrixContainer): damping matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with stiffnessMatrix and jacobianUserFunction
+        dampingMatrix: damping matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with stiffnessMatrix and jacobianUserFunction; type: PyMatrixContainer
 
-        forceVector (array_like): generalized force vector added to RHS
+        forceVector: generalized force vector added to RHS; type: array_like
 
-        forceUserFunction (PyFunctionVectorMbsScalarIndex2Vector): A Python user function which computes the generalized user force vector for the ODE2 equations; see description below
+        forceUserFunction: A Python user function which computes the generalized user force vector for the ODE2 equations; see description below; type: PyFunctionVectorMbsScalarIndex2Vector
 
-        massMatrixUserFunction (PyFunctionMatrixContainerMbsScalarIndex2Vector): A Python user function which computes the mass matrix instead of the constant mass matrix given in :math:`\Mm`; return numpy array or MatrixContainer; see description below
+        massMatrixUserFunction: A Python user function which computes the mass matrix instead of the constant mass matrix given in :math:`\Mm`; return numpy array or MatrixContainer; see description below; type: PyFunctionMatrixContainerMbsScalarIndex2Vector
 
-        jacobianUserFunction (PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar): A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times :math:`f_{ODE2}`) and w.r.t. the velocities (times :math:`f_{ODE2_t}`). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below
+        jacobianUserFunction: A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times :math:`f_{ODE2}`) and w.r.t. the velocities (times :math:`f_{ODE2_t}`). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below; type: PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar
 
-        coordinateIndexPerNode (array_like): this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
-
-        tempCoordinates (array_like): temporary vector containing coordinates
-
-        tempCoordinates_t (array_like): temporary vector containing velocity coordinates
-
-        tempCoordinates_tt (array_like): temporary vector containing acceleration coordinates
+        visualization: visualization data, see VObjectGenericODE2
 
     Notes:
         Object has/provides the following types: ``Body``, ``MultiNoded``, ``SuperElement``
@@ -1719,7 +1759,7 @@ class VObjectGenericODE1:
     """Visualization data for ObjectGenericODE1.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -1737,21 +1777,17 @@ class ObjectGenericODE1:
     It is based on NodeGenericODE1 nodes. NOTE that all matrices, vectors, etc. must have the same dimensions :math:`n` or :math:`(n \times n)`, or they must be empty :math:`(0 \times 0)`, using [] in Python.
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        nodeNumbers (ArrayNodeIndex): node numbers which provide the coordinates for the object (consecutively as provided in this list)
+        nodeNumbers: node numbers which provide the coordinates for the object (consecutively as provided in this list); type: ArrayNodeIndex
 
-        systemMatrix (array_like): system matrix (state space matrix) of first order ODE
+        systemMatrix: system matrix (state space matrix) of first order ODE; type: array_like
 
-        rhsVector (array_like): a constant rhs vector (e.g., for constant input)
+        rhsVector: a constant rhs vector (e.g., for constant input); type: array_like
 
-        rhsUserFunction (PyFunctionVectorMbsScalarIndexVector): A Python user function which computes the right-hand-side (rhs) of the first order ODE; see description below
+        rhsUserFunction: A Python user function which computes the right-hand-side (rhs) of the first order ODE; see description below; type: PyFunctionVectorMbsScalarIndexVector
 
-        coordinateIndexPerNode (array_like): this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
-
-        tempCoordinates (array_like): temporary vector containing coordinates
-
-        tempCoordinates_t (array_like): temporary vector containing velocity coordinates
+        visualization: visualization data, see VObjectGenericODE1
 
     Notes:
         Object has/provides the following types: ``MultiNoded``
@@ -1781,15 +1817,15 @@ class VObjectKinematicTree:
     """Visualization data for ObjectKinematicTree.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        showLinks (bool): set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link; NOTE visualization of joint and COM frames can be modified via visualizationSettings.bodies.kinematicTree
+        showLinks: set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link; NOTE visualization of joint and COM frames can be modified via visualizationSettings.bodies.kinematicTree; type: bool
 
-        showJoints (bool): set true, if joints shall be shown; if graphicsDataList is empty, a standard drawing for joints is used (drawing a cylinder for revolute joints; size relative to frame size in KinematicTree visualization settings)
+        showJoints: set true, if joints shall be shown; if graphicsDataList is empty, a standard drawing for joints is used (drawing a cylinder for revolute joints; size relative to frame size in KinematicTree visualization settings); type: bool
 
-        color ([float,float,float,float]): RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used
+        color: RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
 
-        graphicsDataList (BodyGraphicsDataList): Structure contains data for link/joint visualization; data is defined as list of BodyGraphicsData where every BodyGraphicsData corresponds to one link/joint; must either be emtpy list or length must agree with number of links
+        graphicsDataList: Structure contains data for link/joint visualization; data is defined as list of BodyGraphicsData where every BodyGraphicsData corresponds to one link/joint; must either be emtpy list or length must agree with number of links; type: BodyGraphicsDataList
 
     """
     def __init__(self, show = True, showLinks = True, showJoints = True, color = [-1.,-1.,-1.,-1.], graphicsDataList = []):
@@ -1815,43 +1851,45 @@ class ObjectKinematicTree:
     The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc. per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl. translation) from the previous link's to this link's joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        nodeNumber (NodeIndex): node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; :math:`n` being the number of minimal coordinates
+        nodeNumber: node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; :math:`n` being the number of minimal coordinates
 
-        gravity ([float,float,float]): gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree
+        gravity: gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree; type: [float,float,float]
 
-        baseOffset ([float,float,float]): offset vector for base, in global coordinates
+        baseOffset: offset vector for base, in global coordinates; type: [float,float,float]
 
-        jointTypes (JointTypeList): joint types of kinematic Tree joints, using exu.JointType, like exu.JointType.RevoluteZ; must be always set
+        jointTypes: joint types of kinematic Tree joints, using exu.JointType, like exu.JointType.RevoluteZ; must be always set; type: JointTypeList
 
-        linkParents (array_like): index of parent joint/link; if no parent exists, the value is :math:`-1`; by default, :math:`p_0=-1` because the :math:`i`th parent index must always fulfill :math:`p_i<i`; must be always set
+        linkParents: index of parent joint/link; if no parent exists, the value is :math:`-1`; by default, :math:`p_0=-1` because the :math:`i`th parent index must always fulfill :math:`p_i<i`; must be always set; type: array_like
 
-        jointTransformations (Matrix3DList): list of constant joint transformations from parent joint coordinates :math:`p_0` to this joint coordinates :math:`j_0`; this allows to adjust the orientation of the joint axes (but it does not affect the joint offset); if no parent exists (:math:`-1`), the base coordinate system :math:`0` is used; must be always set
+        jointTransformations: list of constant joint transformations from parent joint coordinates :math:`p_0` to this joint coordinates :math:`j_0`; this allows to adjust the orientation of the joint axes (but it does not affect the joint offset); if no parent exists (:math:`-1`), the base coordinate system :math:`0` is used; must be always set; type: Matrix3DList
 
-        jointOffsets (Vector3DList): list of constant joint offsets from parent joint to this joint; :math:`p_0`, :math:`p_1`, :math:`\ldots` denote the parent coordinate systems; this means that the joint offset is added prior to performing the joint transformation; if no parent exists (:math:`-1`), the base coordinate system :math:`0` is used; must be always set
+        jointOffsets: list of constant joint offsets from parent joint to this joint; :math:`p_0`, :math:`p_1`, :math:`\ldots` denote the parent coordinate systems; this means that the joint offset is added prior to performing the joint transformation; if no parent exists (:math:`-1`), the base coordinate system :math:`0` is used; must be always set; type: Vector3DList
 
-        linkInertiasCOM (Matrix3DList): list of link inertia tensors w.r.t. COM in joint/link :math:`j_i` coordinates; must be always set
+        linkInertiasCOM: list of link inertia tensors w.r.t. COM in joint/link :math:`j_i` coordinates; must be always set; type: Matrix3DList
 
-        linkCOMs (Vector3DList): list of vectors for center of mass (COM) in joint/link :math:`j_i` coordinates; must be always set
+        linkCOMs: list of vectors for center of mass (COM) in joint/link :math:`j_i` coordinates; must be always set; type: Vector3DList
 
-        linkMasses (array_like): masses of links; must be always set
+        linkMasses: masses of links; must be always set; type: array_like
 
-        linkForces (Vector3DList): list of 3D force vectors per link in global coordinates acting on joint frame origin; use force-torque couple to realize off-origin forces; defaults to empty list :math:`[]`, adding no forces
+        linkForces: list of 3D force vectors per link in global coordinates acting on joint frame origin; use force-torque couple to realize off-origin forces; defaults to empty list :math:`[]`, adding no forces; type: Vector3DList
 
-        linkTorques (Vector3DList): list of 3D torque vectors per link in global coordinates; defaults to empty list :math:`[]`, adding no torques
+        linkTorques: list of 3D torque vectors per link in global coordinates; defaults to empty list :math:`[]`, adding no torques; type: Vector3DList
 
-        jointForceVector (array_like): generalized force vector per coordinate added to RHS of EOM; represents a torque around the axis of rotation in revolute joints and a force in prismatic joints; for a revolute joint :math:`i`, the torque :math:`f[i]` acts positive (w.r.t. rotation axis) on link :math:`i` and negative on parent link :math:`p_i`; must be either empty list/array :math:`[]` (default) or have size :math:`n`
+        jointForceVector: generalized force vector per coordinate added to RHS of EOM; represents a torque around the axis of rotation in revolute joints and a force in prismatic joints; for a revolute joint :math:`i`, the torque :math:`f[i]` acts positive (w.r.t. rotation axis) on link :math:`i` and negative on parent link :math:`p_i`; must be either empty list/array :math:`[]` (default) or have size :math:`n`; type: array_like
 
-        jointPositionOffsetVector (array_like): offset for joint coordinates used in P(D) control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array :math:`[]` (default) or have size :math:`n`
+        jointPositionOffsetVector: offset for joint coordinates used in P(D) control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array :math:`[]` (default) or have size :math:`n`; type: array_like
 
-        jointVelocityOffsetVector (array_like): velocity offset for joint coordinates used in (P)D control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array :math:`[]` (default) or have size :math:`n`
+        jointVelocityOffsetVector: velocity offset for joint coordinates used in (P)D control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array :math:`[]` (default) or have size :math:`n`; type: array_like
 
-        jointPControlVector (array_like): proportional (P) control values per joint (multiplied with position error between joint value and offset :math:`\mathbf{u}_o`); note that more complicated control laws must be implemented with user functions; must be either empty list/array :math:`[]` (default) or have size :math:`n`
+        jointPControlVector: proportional (P) control values per joint (multiplied with position error between joint value and offset :math:`\mathbf{u}_o`); note that more complicated control laws must be implemented with user functions; must be either empty list/array :math:`[]` (default) or have size :math:`n`; type: array_like
 
-        jointDControlVector (array_like): derivative (D) control values per joint (multiplied with velocity error between joint velocity and velocity offset :math:`\vv_o`); note that more complicated control laws must be implemented with user functions; must be either empty list/array :math:`[]` (default) or have size :math:`n`
+        jointDControlVector: derivative (D) control values per joint (multiplied with velocity error between joint velocity and velocity offset :math:`\vv_o`); note that more complicated control laws must be implemented with user functions; must be either empty list/array :math:`[]` (default) or have size :math:`n`; type: array_like
 
-        forceUserFunction (PyFunctionVectorMbsScalarIndex2Vector): A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below
+        forceUserFunction: A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below; type: PyFunctionVectorMbsScalarIndex2Vector
+
+        visualization: visualization data, see VObjectKinematicTree
 
     Notes:
         Object has/provides the following types: ``Body``, ``MultiNoded``, ``SuperElement``
@@ -1919,13 +1957,13 @@ class VObjectFFRF:
     """Visualization data for ObjectFFRF.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown; use visualizationSettings.bodies.deformationScaleFactor to draw scaled (local) deformations; the reference frame node is shown with additional letters RF
+        show: set true, if item is shown in visualization and false if it is not shown; use visualizationSettings.bodies.deformationScaleFactor to draw scaled (local) deformations; the reference frame node is shown with additional letters RF; type: bool
 
-        color ([float,float,float,float]): RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used
+        color: RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
 
-        triangleMesh (array_like): a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!
+        triangleMesh: a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!; type: array_like
 
-        showNodes (bool): set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'
+        showNodes: set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'; type: bool
 
     """
     def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False):
@@ -1949,47 +1987,27 @@ class ObjectFFRF:
     It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the FFRF. Note that temporary matrices and vectors are subject of change in future. NOTE: Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead.
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        nodeNumbers (ArrayNodeIndex): node numbers which provide the coordinates for the object (consecutively as provided in this list); the :math:`(n_\mathrm{nf}+1)` nodes represent the nodes of the FE mesh (except for node 0); the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame
+        nodeNumbers: node numbers which provide the coordinates for the object (consecutively as provided in this list); the :math:`(n_\mathrm{nf}+1)` nodes represent the nodes of the FE mesh (except for node 0); the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame; type: ArrayNodeIndex
 
-        massMatrixFF (PyMatrixContainer): body-fixed and ONLY flexible coordinates part of mass matrix of object given in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format
+        massMatrixFF: body-fixed and ONLY flexible coordinates part of mass matrix of object given in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format; type: PyMatrixContainer
 
-        stiffnessMatrixFF (PyMatrixContainer): body-fixed and ONLY flexible coordinates part of stiffness matrix of object in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format
+        stiffnessMatrixFF: body-fixed and ONLY flexible coordinates part of stiffness matrix of object in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format; type: PyMatrixContainer
 
-        dampingMatrixFF (PyMatrixContainer): body-fixed and ONLY flexible coordinates part of damping matrix of object in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format
+        dampingMatrixFF: body-fixed and ONLY flexible coordinates part of damping matrix of object in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format; type: PyMatrixContainer
 
-        forceVector (array_like): generalized, force vector added to RHS; the rigid body part :math:`\fv_r` is directly applied to rigid body coordinates while the flexible part :math:`\fv\indf` is transformed from global to local coordinates; note that this force vector only allows to add gravity forces for bodies with COM at the origin of the reference frame
+        forceVector: generalized, force vector added to RHS; the rigid body part :math:`\fv_r` is directly applied to rigid body coordinates while the flexible part :math:`\fv\indf` is transformed from global to local coordinates; note that this force vector only allows to add gravity forces for bodies with COM at the origin of the reference frame; type: array_like
 
-        forceUserFunction (PyFunctionVectorMbsScalarIndex2Vector): A Python user function which computes the generalized user force vector for the ODE2 equations; note the different coordinate systems for rigid body and flexible part; The function args are mbs, time, objectNumber, coordinates q (without reference values) and coordinate velocities q_t; see description below
+        forceUserFunction: A Python user function which computes the generalized user force vector for the ODE2 equations; note the different coordinate systems for rigid body and flexible part; The function args are mbs, time, objectNumber, coordinates q (without reference values) and coordinate velocities q_t; see description below; type: PyFunctionVectorMbsScalarIndex2Vector
 
-        massMatrixUserFunction (PyFunctionMatrixMbsScalarIndex2Vector): A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; note the different coordinate systems as described in the FFRF mass matrix; see description below
+        massMatrixUserFunction: A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; note the different coordinate systems as described in the FFRF mass matrix; see description below; type: PyFunctionMatrixMbsScalarIndex2Vector
 
-        computeFFRFterms (bool): flag decides whether the standard FFRF terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector
+        computeFFRFterms: flag decides whether the standard FFRF terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector; type: bool
 
-        coordinateIndexPerNode (array_like): this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
+        objectIsInitialized: ALWAYS set to False! flag used to correctly initialize all FFRF matrices; as soon as this flag is False, internal (constant) FFRF matrices are recomputed during Assemble(); type: bool
 
-        objectIsInitialized (bool): ALWAYS set to False! flag used to correctly initialize all FFRF matrices; as soon as this flag is False, internal (constant) FFRF matrices are recomputed during Assemble()
-
-        physicsMass (float): total mass [SI:kg] of FFRF object, auto-computed from mass matrix :math:`{}^{b}{\Mm}`
-
-        physicsInertia (array_like): inertia tensor [SI:kgm:math:`^2`] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix :math:`{}^{b}{\Mm}`
-
-        physicsCenterOfMass ([float,float,float]): local position of center of mass (COM); auto-computed from mass matrix :math:`{}^{b}{\Mm}`
-
-        PHItTM (array_like): projector matrix; may be removed in future
-
-        referencePositions (array_like): vector containing the reference positions of all flexible nodes
-
-        tempVector (array_like): temporary vector
-
-        tempCoordinates (array_like): temporary vector containing coordinates
-
-        tempCoordinates_t (array_like): temporary vector containing velocity coordinates
-
-        tempRefPosSkew (array_like): temporary matrix with skew symmetric local (deformed) node positions
-
-        tempVelSkew (array_like): temporary matrix with skew symmetric local node velocities
+        visualization: visualization data, see VObjectFFRF
 
     Notes:
         Object has/provides the following types: ``Body``, ``MultiNoded``, ``SuperElement``
@@ -2032,13 +2050,13 @@ class VObjectFFRFreducedOrder:
     """Visualization data for ObjectFFRFreducedOrder.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown; use visualizationSettings.bodies.deformationScaleFactor to draw scaled (local) deformations; the reference frame node is shown with additional letters RF
+        show: set true, if item is shown in visualization and false if it is not shown; use visualizationSettings.bodies.deformationScaleFactor to draw scaled (local) deformations; the reference frame node is shown with additional letters RF; type: bool
 
-        color ([float,float,float,float]): RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used
+        color: RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
 
-        triangleMesh (array_like): a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!
+        triangleMesh: a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!; type: array_like
 
-        showNodes (bool): set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'
+        showNodes: set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'; type: bool
 
     """
     def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False):
@@ -2062,53 +2080,53 @@ class ObjectFFRFreducedOrder:
     It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the ``FEMinterface`` in theDoc.pdf. It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class ``ObjectFFRFreducedOrderInterface``, especially the user functions ``UFmassFFRFreducedOrder`` and ``UFforceFFRFreducedOrder``, theDoc.pdf.
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        nodeNumbers (ArrayNodeIndex): node numbers of rigid body node and NodeGenericODE2 for modal coordinates; the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame, the modal coordinates and the mode basis
+        nodeNumbers: node numbers of rigid body node and NodeGenericODE2 for modal coordinates; the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame, the modal coordinates and the mode basis; type: ArrayNodeIndex
 
-        massMatrixReduced (PyMatrixContainer): body-fixed and ONLY flexible coordinates part of reduced mass matrix; provided as MatrixContainer(sparse/dense matrix)
+        massMatrixReduced: body-fixed and ONLY flexible coordinates part of reduced mass matrix; provided as MatrixContainer(sparse/dense matrix); type: PyMatrixContainer
 
-        stiffnessMatrixReduced (PyMatrixContainer): body-fixed and ONLY flexible coordinates part of reduced stiffness matrix; provided as MatrixContainer(sparse/dense matrix)
+        stiffnessMatrixReduced: body-fixed and ONLY flexible coordinates part of reduced stiffness matrix; provided as MatrixContainer(sparse/dense matrix); type: PyMatrixContainer
 
-        dampingMatrixReduced (PyMatrixContainer): body-fixed and ONLY flexible coordinates part of reduced damping matrix; provided as MatrixContainer(sparse/dense matrix)
+        dampingMatrixReduced: body-fixed and ONLY flexible coordinates part of reduced damping matrix; provided as MatrixContainer(sparse/dense matrix); type: PyMatrixContainer
 
-        forceUserFunction (PyFunctionVectorMbsScalarIndex2Vector): A Python user function which computes the generalized user force vector for the ODE2 equations; see description below
+        forceUserFunction: A Python user function which computes the generalized user force vector for the ODE2 equations; see description below; type: PyFunctionVectorMbsScalarIndex2Vector
 
-        massMatrixUserFunction (PyFunctionMatrixMbsScalarIndex2Vector): A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below
+        massMatrixUserFunction: A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below; type: PyFunctionMatrixMbsScalarIndex2Vector
 
-        computeFFRFterms (bool): flag decides whether the standard FFRF/CMS terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector
+        computeFFRFterms: flag decides whether the standard FFRF/CMS terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector; type: bool
 
-        modeBasis (array_like): mode basis, which transforms reduced coordinates to (full) nodal coordinates, written as a single vector :math:`[u_{x,n_0},\,u_{y,n_0},\,u_{z,n_0},\,\ldots,\,u_{x,n_n},\,u_{y,n_n},\,u_{z,n_n}]\tp`
+        modeBasis: mode basis, which transforms reduced coordinates to (full) nodal coordinates, written as a single vector :math:`[u_{x,n_0},\,u_{y,n_0},\,u_{z,n_0},\,\ldots,\,u_{x,n_n},\,u_{y,n_n},\,u_{z,n_n}]\tp`; type: array_like
 
-        outputVariableModeBasis (array_like): mode basis, which transforms reduced coordinates to output variables per mode and per node; :math:`s_{OV}` is the size of the output variable, e.g., 6 for stress modes (:math:`S_{xx},...,S_{xy}`)
+        outputVariableModeBasis: mode basis, which transforms reduced coordinates to output variables per mode and per node; :math:`s_{OV}` is the size of the output variable, e.g., 6 for stress modes (:math:`S_{xx},...,S_{xy}`); type: array_like
 
-        outputVariableTypeModeBasis (OutputVariableType): this must be the output variable type of the outputVariableModeBasis, e.g. exu.OutputVariableType.Stress
+        outputVariableTypeModeBasis: this must be the output variable type of the outputVariableModeBasis, e.g. exu.OutputVariableType.Stress
 
-        referencePositions (array_like): vector containing the reference positions of all flexible nodes, needed for graphics
+        referencePositions: vector containing the reference positions of all flexible nodes, needed for graphics; type: array_like
 
-        objectIsInitialized (bool): ALWAYS set to False! flag used to correctly initialize all FFRF matrices; as soon as this flag is False, some internal (constant) FFRF matrices are recomputed during Assemble()
+        objectIsInitialized: ALWAYS set to False! flag used to correctly initialize all FFRF matrices; as soon as this flag is False, some internal (constant) FFRF matrices are recomputed during Assemble(); type: bool
 
-        physicsMass (float): total mass [SI:kg] of FFRFreducedOrder object
+        physicsMass: total mass [SI:kg] of FFRFreducedOrder object; type: float
 
-        physicsInertia (array_like): inertia tensor [SI:kgm:math:`^2`] of rigid body w.r.t. to the reference point of the body
+        physicsInertia: inertia tensor [SI:kgm:math:`^2`] of rigid body w.r.t. to the reference point of the body; type: array_like
 
-        physicsCenterOfMass ([float,float,float]): local position of center of mass (COM)
+        physicsCenterOfMass: local position of center of mass (COM); type: [float,float,float]
 
-        mPsiTildePsi (array_like): special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface
+        mPsiTildePsi: special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface; type: array_like
 
-        mPsiTildePsiTilde (array_like): special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface
+        mPsiTildePsiTilde: special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface; type: array_like
 
-        mPhitTPsi (array_like): special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface
+        mPhitTPsi: special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface; type: array_like
 
-        mPhitTPsiTilde (array_like): special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface
+        mPhitTPsiTilde: special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface; type: array_like
 
-        mXRefTildePsi (array_like): special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface
+        mXRefTildePsi: special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface; type: array_like
 
-        mXRefTildePsiTilde (array_like): special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface
+        mXRefTildePsiTilde: special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface; type: array_like
 
-        physicsCenterOfMassTilde (array_like): tilde matrix from local position of COM; autocomputed during initialization
+        physicsCenterOfMassTilde: tilde matrix from local position of COM; autocomputed during initialization; type: array_like
 
-        tempUserFunctionForce (array_like): temporary vector for UF force
+        visualization: visualization data, see VObjectFFRFreducedOrder
 
     Notes:
         Object has/provides the following types: ``Body``, ``MultiNoded``, ``SuperElement``
@@ -2181,11 +2199,11 @@ class VObjectANCFCable:
     """Visualization data for ObjectANCFCable.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown; note that all quantities are computed at the beam centerline, even if drawn on surface of cylinder of beam; this effects, e.g., Displacement or Velocity, which is drawn constant over cross section
+        show: set true, if item is shown in visualization and false if it is not shown; note that all quantities are computed at the beam centerline, even if drawn on surface of cylinder of beam; this effects, e.g., Displacement or Velocity, which is drawn constant over cross section; type: bool
 
-        radius (float): if radius==0, only the centerline is drawn; else, a cylinder with radius is drawn; circumferential tiling follows general.cylinderTiling and beam axis tiling follows bodies.beams.axialTiling
+        radius: if radius==0, only the centerline is drawn; else, a cylinder with radius is drawn; circumferential tiling follows general.cylinderTiling and beam axis tiling follows bodies.beams.axialTiling; type: float
 
-        color ([float,float,float,float]): RGBA color of the object; if R==-1, use default color
+        color: RGBA color of the object; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, radius = 0., color = [-1.,-1.,-1.,-1.]):
@@ -2207,27 +2225,29 @@ class ObjectANCFCable:
     The localPosition of the beam with length :math:`L`=physicsLength and height :math:`h` ranges in :math:`X`-direction in range :math:`[0, L]` and in :math:`Y`-direction in range :math:`[-h/2,h/2]` (which is in fact not needed in the EOM). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        physicsLength (float): [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive
+        physicsLength: [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive; type: float
 
-        physicsMassPerLength (float): [SI:kg/m] mass per length of beam
+        physicsMassPerLength: [SI:kg/m] mass per length of beam; type: float
 
-        physicsBendingStiffness (float): [SI:Nm:math:`^2`] bending stiffness of beam; the bending moment is :math:`m = EI (\kappa - \kappa_0)`, in which :math:`\kappa` is the material measure of curvature
+        physicsBendingStiffness: [SI:Nm:math:`^2`] bending stiffness of beam; the bending moment is :math:`m = EI (\kappa - \kappa_0)`, in which :math:`\kappa` is the material measure of curvature; type: float
 
-        physicsAxialStiffness (float): [SI:N] axial stiffness of beam; the axial force is :math:`f_{ax} = EA (\varepsilon -\varepsilon_0)`, in which :math:`\varepsilon = |\rv^\prime|-1` is the axial strain
+        physicsAxialStiffness: [SI:N] axial stiffness of beam; the axial force is :math:`f_{ax} = EA (\varepsilon -\varepsilon_0)`, in which :math:`\varepsilon = |\rv^\prime|-1` is the axial strain; type: float
 
-        physicsBendingDamping (float): [SI:Nm:math:`^2`/s] bending damping of beam ; the additional virtual work due to damping is :math:`\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx`
+        physicsBendingDamping: [SI:Nm:math:`^2`/s] bending damping of beam ; the additional virtual work due to damping is :math:`\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx`; type: float
 
-        physicsAxialDamping (float): [SI:N/s] axial damping of beam; the additional virtual work due to damping is :math:`\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx`
+        physicsAxialDamping: [SI:N/s] axial damping of beam; the additional virtual work due to damping is :math:`\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx`; type: float
 
-        physicsReferenceAxialStrain (float): [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value
+        physicsReferenceAxialStrain: [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value; type: float
 
-        strainIsRelativeToReference (float): if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of :math:`\varepsilon_0` and :math:`\kappa_0` serve as a reference geometry; allows also values between 0. and 1.
+        strainIsRelativeToReference: if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of :math:`\varepsilon_0` and :math:`\kappa_0` serve as a reference geometry; allows also values between 0. and 1.; type: float
 
-        nodeNumbers (NodeIndex2): two node numbers ANCF cable element
+        nodeNumbers: two node numbers ANCF cable element; type: NodeIndex2
 
-        useReducedOrderIntegration (int): 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments
+        useReducedOrderIntegration: 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments
+
+        visualization: visualization data, see VObjectANCFCable
 
     Notes:
         Object has/provides the following types: ``Body``, ``MultiNoded``
@@ -2277,11 +2297,11 @@ class VObjectANCFCable2D:
     """Visualization data for ObjectANCFCable2D.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawHeight (float): if beam is drawn with rectangular shape, this is the drawing height
+        drawHeight: if beam is drawn with rectangular shape, this is the drawing height; type: float
 
-        color ([float,float,float,float]): RGBA color of the object; if R==-1, use default color
+        color: RGBA color of the object; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawHeight = 0., color = [-1.,-1.,-1.,-1.]):
@@ -2303,33 +2323,35 @@ class ObjectANCFCable2D:
     The localPosition of the beam with length :math:`L`=physicsLength and height :math:`h` ranges in :math:`X`-direction in range :math:`[0, L]` and in :math:`Y`-direction in range :math:`[-h/2,h/2]` (which is in fact not needed in the EOM).
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        physicsLength (float): [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive
+        physicsLength: [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive; type: float
 
-        physicsMassPerLength (float): [SI:kg/m] mass per length of beam
+        physicsMassPerLength: [SI:kg/m] mass per length of beam; type: float
 
-        physicsBendingStiffness (float): [SI:Nm:math:`^2`] bending stiffness of beam; the bending moment is :math:`m = EI (\kappa - \kappa_0)`, in which :math:`\kappa` is the material measure of curvature
+        physicsBendingStiffness: [SI:Nm:math:`^2`] bending stiffness of beam; the bending moment is :math:`m = EI (\kappa - \kappa_0)`, in which :math:`\kappa` is the material measure of curvature; type: float
 
-        physicsAxialStiffness (float): [SI:N] axial stiffness of beam; the axial force is :math:`f_{ax} = EA (\varepsilon -\varepsilon_0)`, in which :math:`\varepsilon = |\rv^\prime|-1` is the axial strain
+        physicsAxialStiffness: [SI:N] axial stiffness of beam; the axial force is :math:`f_{ax} = EA (\varepsilon -\varepsilon_0)`, in which :math:`\varepsilon = |\rv^\prime|-1` is the axial strain; type: float
 
-        physicsBendingDamping (float): [SI:Nm:math:`^2`/s] bending damping of beam ; the additional virtual work due to damping is :math:`\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx`
+        physicsBendingDamping: [SI:Nm:math:`^2`/s] bending damping of beam ; the additional virtual work due to damping is :math:`\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx`; type: float
 
-        physicsAxialDamping (float): [SI:N/s] axial damping of beam; the additional virtual work due to damping is :math:`\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx`
+        physicsAxialDamping: [SI:N/s] axial damping of beam; the additional virtual work due to damping is :math:`\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx`; type: float
 
-        physicsReferenceAxialStrain (float): [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value
+        physicsReferenceAxialStrain: [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value; type: float
 
-        physicsReferenceCurvature (float): [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value
+        physicsReferenceCurvature: [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value; type: float
 
-        strainIsRelativeToReference (float): if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of :math:`\varepsilon_0` and :math:`\kappa_0` serve as a reference geometry; allows also values between 0. and 1.
+        strainIsRelativeToReference: if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of :math:`\varepsilon_0` and :math:`\kappa_0` serve as a reference geometry; allows also values between 0. and 1.; type: float
 
-        nodeNumbers (NodeIndex2): two node numbers ANCF cable element
+        nodeNumbers: two node numbers ANCF cable element; type: NodeIndex2
 
-        useReducedOrderIntegration (int): 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/True: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments; 2: use mixed Lobatto/Gauss integration with exceptional quality of axial strain, however, spurious (hourglass) modes may occur!
+        useReducedOrderIntegration: 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/True: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments; 2: use mixed Lobatto/Gauss integration with exceptional quality of axial strain, however, spurious (hourglass) modes may occur!
 
-        axialForceUserFunction (PyFunctionMbsScalarIndexScalar9): A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local axial force; see description below
+        axialForceUserFunction: A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local axial force; see description below; type: PyFunctionMbsScalarIndexScalar9
 
-        bendingMomentUserFunction (PyFunctionMbsScalarIndexScalar9): A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local bending moment; see description below
+        bendingMomentUserFunction: A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local bending moment; see description below; type: PyFunctionMbsScalarIndexScalar9
+
+        visualization: visualization data, see VObjectANCFCable2D
 
     Notes:
         Requested Node type: ``Position2D`` + ``Orientation2D`` + ``Point2DSlope1`` + ``Position`` + ``Orientation``
@@ -2383,11 +2405,11 @@ class VObjectALEANCFCable2D:
     """Visualization data for ObjectALEANCFCable2D.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawHeight (float): if beam is drawn with rectangular shape, this is the drawing height
+        drawHeight: if beam is drawn with rectangular shape, this is the drawing height; type: float
 
-        color ([float,float,float,float]): RGBA color of the object; if R==-1, use default color
+        color: RGBA color of the object; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawHeight = 0., color = [-1.,-1.,-1.,-1.]):
@@ -2409,35 +2431,37 @@ class ObjectALEANCFCable2D:
     This allows modeling pipes but also axially moving beams. The localPosition of the beam with length :math:`L`=physicsLength and height :math:`h` ranges in :math:`X`-direction in range :math:`[0, L]` and in :math:`Y`-direction in range :math:`[-h/2,h/2]` (which is in fact not needed in the EOM).
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        physicsLength (float): [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive
+        physicsLength: [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive; type: float
 
-        physicsMassPerLength (float): [SI:kg/m] total mass per length of beam (including axially moving parts / fluid)
+        physicsMassPerLength: [SI:kg/m] total mass per length of beam (including axially moving parts / fluid); type: float
 
-        physicsMovingMassFactor (float): this factor denotes the amount of :math:`\rho A` which is moving; physicsMovingMassFactor=1 means, that all mass is moving; physicsMovingMassFactor=0 means, that no mass is moving; factor can be used to simulate e.g. pipe conveying fluid, in which :math:`\rho A` is the mass of the pipe+fluid, while :math:`physicsMovingMassFactor \cdot \rho A` is the mass per unit length of the fluid
+        physicsMovingMassFactor: this factor denotes the amount of :math:`\rho A` which is moving; physicsMovingMassFactor=1 means, that all mass is moving; physicsMovingMassFactor=0 means, that no mass is moving; factor can be used to simulate e.g. pipe conveying fluid, in which :math:`\rho A` is the mass of the pipe+fluid, while :math:`physicsMovingMassFactor \cdot \rho A` is the mass per unit length of the fluid; type: float
 
-        physicsBendingStiffness (float): [SI:Nm:math:`^2`] bending stiffness of beam; the bending moment is :math:`m = EI (\kappa - \kappa_0)`, in which :math:`\kappa` is the material measure of curvature
+        physicsBendingStiffness: [SI:Nm:math:`^2`] bending stiffness of beam; the bending moment is :math:`m = EI (\kappa - \kappa_0)`, in which :math:`\kappa` is the material measure of curvature; type: float
 
-        physicsAxialStiffness (float): [SI:N] axial stiffness of beam; the axial force is :math:`f_{ax} = EA (\varepsilon -\varepsilon_0)`, in which :math:`\varepsilon = |\rv^\prime|-1` is the axial strain
+        physicsAxialStiffness: [SI:N] axial stiffness of beam; the axial force is :math:`f_{ax} = EA (\varepsilon -\varepsilon_0)`, in which :math:`\varepsilon = |\rv^\prime|-1` is the axial strain; type: float
 
-        physicsBendingDamping (float): [SI:Nm:math:`^2`/s] bending damping of beam ; the additional virtual work due to damping is :math:`\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx`
+        physicsBendingDamping: [SI:Nm:math:`^2`/s] bending damping of beam ; the additional virtual work due to damping is :math:`\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx`; type: float
 
-        physicsAxialDamping (float): [SI:N/s] axial damping of beam; the additional virtual work due to damping is :math:`\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx`
+        physicsAxialDamping: [SI:N/s] axial damping of beam; the additional virtual work due to damping is :math:`\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx`; type: float
 
-        physicsReferenceAxialStrain (float): [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value
+        physicsReferenceAxialStrain: [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value; type: float
 
-        physicsReferenceCurvature (float): [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value
+        physicsReferenceCurvature: [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value; type: float
 
-        physicsUseCouplingTerms (bool): true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then)
+        physicsUseCouplingTerms: true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then); type: bool
 
-        physicsAddALEvariation (bool): true: correct case, where additional terms related to variation of strain and curvature are added
+        physicsAddALEvariation: true: correct case, where additional terms related to variation of strain and curvature are added; type: bool
 
-        nodeNumbers (NodeIndex3): two node numbers ANCF cable element, third node=ALE GenericODE2 node
+        nodeNumbers: two node numbers ANCF cable element, third node=ALE GenericODE2 node; type: NodeIndex3
 
-        useReducedOrderIntegration (int): 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments
+        useReducedOrderIntegration: 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments
 
-        strainIsRelativeToReference (float): if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of :math:`\varepsilon_0` and :math:`\kappa_0` serve as a reference geometry; allows also values between 0. and 1.
+        strainIsRelativeToReference: if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of :math:`\varepsilon_0` and :math:`\kappa_0` serve as a reference geometry; allows also values between 0. and 1.; type: float
+
+        visualization: visualization data, see VObjectALEANCFCable2D
 
     """
     def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsMovingMassFactor = 1., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., physicsReferenceCurvature = 0., physicsUseCouplingTerms = True, physicsAddALEvariation = True, nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, strainIsRelativeToReference = 0., visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
@@ -2490,11 +2514,11 @@ class VObjectANCFBeam:
     """Visualization data for ObjectANCFBeam.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown; geometry is defined by sectionGeometry
+        show: set true, if item is shown in visualization and false if it is not shown; geometry is defined by sectionGeometry; type: bool
 
-        sectionGeometry (BeamSectionGeometry): defines cross section shape used for visualization and contact
+        sectionGeometry: defines cross section shape used for visualization and contact; type: BeamSectionGeometry
 
-        color ([float,float,float,float]): RGBA color of the object; if R==-1, use default color
+        color: RGBA color of the object; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, sectionGeometry = exudyn.BeamSectionGeometry(), color = [-1.,-1.,-1.,-1.]):
@@ -2516,17 +2540,19 @@ class ObjectANCFBeam:
     The localPosition :math:`x` of the beam ranges from :math:`-L/2` (at node 0) to :math:`L/2` (at node 1). The axial coordinate is :math:`x` (first coordinate) and the cross section is spanned by local :math:`y`/:math:`z` axes; assuming dimensions :math:`w_y` and :math:`w_z` in cross section, the local position range is :math:`\in [[-L/2,L/2],\, [-wy/2,wy/2],\, [-wz/2,wz/2] ]`. NOTE: Requires further development and tests!
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        nodeNumbers (NodeIndex2): two node numbers for beam element
+        nodeNumbers: two node numbers for beam element; type: NodeIndex2
 
-        physicsLength (float): [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive
+        physicsLength: [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive; type: float
 
-        sectionData (BeamSection): data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.
+        sectionData: data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.
 
-        crossSectionPenaltyFactor ([float,float,float]): [SI:1] additional penalty factors for cross section deformation, which are in total :math:`k_{cs} = [f_{yy}\cdot EA,\, f_{zz}\cdot EA,\, f_{yz}\cdot (GA_y+GA_z)]\tp`
+        crossSectionPenaltyFactor: [SI:1] additional penalty factors for cross section deformation, which are in total :math:`k_{cs} = [f_{yy}\cdot EA,\, f_{zz}\cdot EA,\, f_{yz}\cdot (GA_y+GA_z)]\tp`; type: [float,float,float]
 
-        crossSectionDamping ([float,float,float]): [SI:1] viscous damping according to penalty factors for cross section deformation; the damping is relative to the stiffness and should be thus usually much smaller than 1; the viscous damping factors read  :math:`d_{cs} = [d_{fyy}\cdot EA,\, d_{fzz}\cdot EA,\, d_{fyz}\cdot (GA_y+GA_z)]\tp`
+        crossSectionDamping: [SI:1] viscous damping according to penalty factors for cross section deformation; the damping is relative to the stiffness and should be thus usually much smaller than 1; the viscous damping factors read  :math:`d_{cs} = [d_{fyy}\cdot EA,\, d_{fzz}\cdot EA,\, d_{fyz}\cdot (GA_y+GA_z)]\tp`; type: [float,float,float]
+
+        visualization: visualization data, see VObjectANCFBeam
 
     Notes:
         Object has/provides the following types: ``Body``, ``MultiNoded``
@@ -2566,11 +2592,11 @@ class VObjectBeamGeometricallyExact2D:
     """Visualization data for ObjectBeamGeometricallyExact2D.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawHeight (float): if beam is drawn with rectangular shape, this is the drawing height
+        drawHeight: if beam is drawn with rectangular shape, this is the drawing height; type: float
 
-        color ([float,float,float,float]): RGBA color of the object; if R==-1, use default color
+        color: RGBA color of the object; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawHeight = 0., color = [-1.,-1.,-1.,-1.]):
@@ -2592,31 +2618,33 @@ class ObjectBeamGeometricallyExact2D:
     Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the :math:`y`-axis, while and angle :math:`\pi/2` means that the cross section points in negative :math:`x`-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length :math:`L`=physicsLength and height :math:`h` ranges in :math:`X`-direction in range :math:`[-L/2, L/2]` and in :math:`Y`-direction in range :math:`[-h/2,h/2]` (which is in fact not needed in the EOM).
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        nodeNumbers (ArrayNodeIndex): two node numbers for beam element
+        nodeNumbers: two node numbers for beam element; type: ArrayNodeIndex
 
-        physicsLength (float): [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive
+        physicsLength: [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive; type: float
 
-        physicsMassPerLength (float): [SI:kg/m] mass per length of beam
+        physicsMassPerLength: [SI:kg/m] mass per length of beam; type: float
 
-        physicsCrossSectionInertia (float): [SI:kg m] cross section mass moment of inertia; inertia acting against rotation of cross section
+        physicsCrossSectionInertia: [SI:kg m] cross section mass moment of inertia; inertia acting against rotation of cross section; type: float
 
-        physicsBendingStiffness (float): [SI:Nm:math:`^2`] bending stiffness of beam; the bending moment is :math:`m = EI (\kappa - \kappa_0)`, in which :math:`\kappa` is the material measure of curvature
+        physicsBendingStiffness: [SI:Nm:math:`^2`] bending stiffness of beam; the bending moment is :math:`m = EI (\kappa - \kappa_0)`, in which :math:`\kappa` is the material measure of curvature; type: float
 
-        physicsAxialStiffness (float): [SI:N] axial stiffness of beam; the axial force is :math:`f_{ax} = EA (\varepsilon -\varepsilon_0)`, in which :math:`\varepsilon` is the axial strain
+        physicsAxialStiffness: [SI:N] axial stiffness of beam; the axial force is :math:`f_{ax} = EA (\varepsilon -\varepsilon_0)`, in which :math:`\varepsilon` is the axial strain; type: float
 
-        physicsShearStiffness (float): [SI:N] effective shear stiffness of beam, including stiffness correction
+        physicsShearStiffness: [SI:N] effective shear stiffness of beam, including stiffness correction; type: float
 
-        physicsBendingDamping (float): [SI:Nm:math:`^2`/s] viscous damping of bending deformation; the additional virtual work due to damping is :math:`\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx`
+        physicsBendingDamping: [SI:Nm:math:`^2`/s] viscous damping of bending deformation; the additional virtual work due to damping is :math:`\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx`; type: float
 
-        physicsAxialDamping (float): [SI:N/s] viscous damping of axial deformation
+        physicsAxialDamping: [SI:N/s] viscous damping of axial deformation; type: float
 
-        physicsShearDamping (float): [SI:N/s] viscous damping of shear deformation
+        physicsShearDamping: [SI:N/s] viscous damping of shear deformation; type: float
 
-        physicsReferenceCurvature (float): [SI:1/m] reference curvature of beam (pre-deformation) of beam
+        physicsReferenceCurvature: [SI:1/m] reference curvature of beam (pre-deformation) of beam; type: float
 
-        includeReferenceRotations (bool): if True, rotation of the cross section at the nodes includes node reference rotations (within referenceCoordinates of NodeRigidBody2D), which are used for the computation of bending strains (this means that a pre-curved beam is stress-free); if False, the reference rotation of the cross section is orthogonal to the reference slope vector. This allows to easily share nodes among several beams with different reference cross section orientation (i.e., only the change of rotation counts).
+        includeReferenceRotations: if True, rotation of the cross section at the nodes includes node reference rotations (within referenceCoordinates of NodeRigidBody2D), which are used for the computation of bending strains (this means that a pre-curved beam is stress-free); if False, the reference rotation of the cross section is orthogonal to the reference slope vector. This allows to easily share nodes among several beams with different reference cross section orientation (i.e., only the change of rotation counts).; type: bool
+
+        visualization: visualization data, see VObjectBeamGeometricallyExact2D
 
     Notes:
         Object has/provides the following types: ``Body``, ``MultiNoded``
@@ -2670,11 +2698,11 @@ class VObjectBeamGeometricallyExact:
     """Visualization data for ObjectBeamGeometricallyExact.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown; geometry is defined by sectionGeometry
+        show: set true, if item is shown in visualization and false if it is not shown; geometry is defined by sectionGeometry; type: bool
 
-        sectionGeometry (BeamSectionGeometry): defines cross section shape used for visualization and contact
+        sectionGeometry: defines cross section shape used for visualization and contact; type: BeamSectionGeometry
 
-        color ([float,float,float,float]): RGBA color of the object; if R==-1, use default color
+        color: RGBA color of the object; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, sectionGeometry = exudyn.BeamSectionGeometry(), color = [-1.,-1.,-1.,-1.]):
@@ -2696,13 +2724,15 @@ class ObjectBeamGeometricallyExact:
     The localPosition :math:`x` of the beam ranges from :math:`-L/2` (at node 0) to :math:`L/2` (at node 1). The axial coordinate is :math:`x` (first coordinate) and the cross section is spanned by local :math:`y`/:math:`z` axes. NOTE: Requires further development and tests!
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        nodeNumbers (NodeIndex2): two node numbers for beam element
+        nodeNumbers: two node numbers for beam element; type: NodeIndex2
 
-        physicsLength (float): [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive
+        physicsLength: [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive; type: float
 
-        sectionData (BeamSection): data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.
+        sectionData: data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.
+
+        visualization: visualization data, see VObjectBeamGeometricallyExact
 
     Notes:
         Object has/provides the following types: ``Body``, ``MultiNoded``
@@ -2738,9 +2768,9 @@ class VObjectANCFThinPlate:
     """Visualization data for ObjectANCFThinPlate.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown; note that all quantities are computed at the beam centerline, even if drawn on surface of cylinder of beam; this effects, e.g., Displacement or Velocity, which is drawn constant over cross section
+        show: set true, if item is shown in visualization and false if it is not shown; note that all quantities are computed at the beam centerline, even if drawn on surface of cylinder of beam; this effects, e.g., Displacement or Velocity, which is drawn constant over cross section; type: bool
 
-        color ([float,float,float,float]): RGBA color of the object; if R==-1, use default color
+        color: RGBA color of the object; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, color = [-1.,-1.,-1.,-1.]):
@@ -2760,27 +2790,29 @@ class ObjectANCFThinPlate:
     The geometry as well as (deformed and distorted) reference configuration is given by the nodes. The localPosition follows unit-coordinates in the range [-1,1] for X, Y and Z coordinates; the thickness of the plate is h; This element is under construction.
     
     Args:
-        name (str): objects's unique name
+        name: objects's unique name; type: str
 
-        physicsThickness (array_like): [SI:m] thickness of plate either provided as scalar or as vector (4 values, same order as local element node numbers) values that are linearly interpolated from nodal values; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients
+        physicsThickness: [SI:m] thickness of plate either provided as scalar or as vector (4 values, same order as local element node numbers) values that are linearly interpolated from nodal values; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients; type: array_like
 
-        physicsDensity (float): [SI:kg/m:math:`^3`] density of the plate, possibly averaged over thickness
+        physicsDensity: [SI:kg/m:math:`^3`] density of the plate, possibly averaged over thickness; type: float
 
-        physicsMassProportionalDamping (float): mass-proportional damping coefficient :math:`\alpha` [SI:1/s]; adds massmatrix proportional damping forces :math:`\fv_d = \alpha \Mm \dot{\qv}`
+        physicsMassProportionalDamping: mass-proportional damping coefficient :math:`\alpha` [SI:1/s]; adds massmatrix proportional damping forces :math:`\fv_d = \alpha \Mm \dot{\qv}`; type: float
 
-        physicsStrainCoefficients (Matrix3DList): [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients
+        physicsStrainCoefficients: [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients; type: Matrix3DList
 
-        physicsCurvatureCoefficients (Matrix3DList): [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients
+        physicsCurvatureCoefficients: [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients; type: Matrix3DList
 
-        strainIsRelativeToReference (float): if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation
+        strainIsRelativeToReference: if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation; type: float
 
-        slopesScalingX ([float,float,float,float]): scaling of x-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances.
+        slopesScalingX: scaling of x-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances.; type: [float,float,float,float]
 
-        slopesScalingY ([float,float,float,float]): scaling of y-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances.
+        slopesScalingY: scaling of y-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances.; type: [float,float,float,float]
 
-        nodeNumbers (NodeIndex4): 4 NodePointSlope12 node numbers, with local (xi,eta) coordinates as [(-1,-1),(1,-1),(1,1),(-1,1)]
+        nodeNumbers: 4 NodePointSlope12 node numbers, with local (xi,eta) coordinates as [(-1,-1),(1,-1),(1,1),(-1,1)]; type: NodeIndex4
 
-        useReducedOrderIntegration (int): 0/false: use highest Gauss integration for virtual work of strains
+        useReducedOrderIntegration: 0/false: use highest Gauss integration for virtual work of strains
+
+        visualization: visualization data, see VObjectANCFThinPlate
 
     Notes:
         Object has/provides the following types: ``Body``, ``MultiNoded``
@@ -2825,11 +2857,11 @@ class VObjectConnectorSpringDamper:
     """Visualization data for ObjectConnectorSpringDamper.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size = diameter of spring; size == -1.f means that default connector size is used
+        drawSize: drawing size = diameter of spring; size == -1.f means that default connector size is used; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -2849,23 +2881,25 @@ class ObjectConnectorSpringDamper:
     """An simple spring-damper element with additional force, connecting to position-based markers.
     
     Args:
-        name (str): connector's unique name
+        name: connector's unique name; type: str
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        referenceLength (float): reference length [SI:m] of spring
+        referenceLength: reference length [SI:m] of spring; type: float
 
-        stiffness (float): stiffness [SI:N/m] of spring; force acts against (length-initialLength)
+        stiffness: stiffness [SI:N/m] of spring; force acts against (length-initialLength); type: float
 
-        damping (float): damping [SI:N/(m s)] of damper; force acts against d/dt(length)
+        damping: damping [SI:N/(m s)] of damper; force acts against d/dt(length); type: float
 
-        force (float): added constant force [SI:N] of spring; scalar force; f=1 is equivalent to reducing initialLength by 1/stiffness; f > 0: tension; f < 0: compression; can be used to model actuator force
+        force: added constant force [SI:N] of spring; scalar force; f=1 is equivalent to reducing initialLength by 1/stiffness; f > 0: tension; f < 0: compression; can be used to model actuator force; type: float
 
-        velocityOffset (float): velocity offset [SI:m/s] of damper, being equivalent to time change of reference length
+        velocityOffset: velocity offset [SI:m/s] of damper, being equivalent to time change of reference length; type: float
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
-        springForceUserFunction (PyFunctionMbsScalarIndexScalar5): A Python function which defines the spring force with parameters; the Python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below
+        springForceUserFunction: A Python function which defines the spring force with parameters; the Python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below; type: PyFunctionMbsScalarIndexScalar5
+
+        visualization: visualization data, see VObjectConnectorSpringDamper
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -2911,11 +2945,11 @@ class VObjectConnectorCartesianSpringDamper:
     """Visualization data for ObjectConnectorCartesianSpringDamper.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size = diameter of spring; size == -1.f means that default connector size is used
+        drawSize: drawing size = diameter of spring; size == -1.f means that default connector size is used; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -2935,19 +2969,21 @@ class ObjectConnectorCartesianSpringDamper:
     """An 3D spring-damper element, providing springs and dampers in three (global) directions (x,y,z); the connector can be attached to position-based markers.
     
     Args:
-        name (str): connector's unique name
+        name: connector's unique name; type: str
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        stiffness ([float,float,float]): stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction
+        stiffness: stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction; type: [float,float,float]
 
-        damping ([float,float,float]): damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction
+        damping: damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction; type: [float,float,float]
 
-        offset ([float,float,float]): offset between two springs
+        offset: offset between two springs; type: [float,float,float]
 
-        springForceUserFunction (PyFunctionVector3DmbsScalarIndexScalar4Vector3D): A Python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below
+        springForceUserFunction: A Python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below; type: PyFunctionVector3DmbsScalarIndexScalar4Vector3D
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectConnectorCartesianSpringDamper
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -2989,11 +3025,11 @@ class VObjectConnectorRigidBodySpringDamper:
     """Visualization data for ObjectConnectorRigidBodySpringDamper.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size = diameter of spring; size == -1.f means that default connector size is used
+        drawSize: drawing size = diameter of spring; size == -1.f means that default connector size is used; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -3015,29 +3051,31 @@ class ObjectConnectorRigidBodySpringDamper:
     It represents a penalty-based rigid joint (or prismatic, revolute, etc.)
     
     Args:
-        name (str): connector's unique name
+        name: connector's unique name; type: str
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        nodeNumber (NodeIndex): node number of a NodeGenericData (size depends on application) for dataCoordinates for user functions (e.g., implementing contact/friction user function)
+        nodeNumber: node number of a NodeGenericData (size depends on application) for dataCoordinates for user functions (e.g., implementing contact/friction user function); type: NodeIndex
 
-        stiffness (array_like): stiffness [SI:N/m or Nm/rad] of translational, torsional and coupled springs; act against relative displacements in x, y, and z-direction as well as the relative angles (calculated as Euler angles); in the simplest case, the first 3 diagonal values correspond to the local stiffness in x,y,z direction and the last 3 diagonal values correspond to the rotational stiffness around x,y and z axis
+        stiffness: stiffness [SI:N/m or Nm/rad] of translational, torsional and coupled springs; act against relative displacements in x, y, and z-direction as well as the relative angles (calculated as Euler angles); in the simplest case, the first 3 diagonal values correspond to the local stiffness in x,y,z direction and the last 3 diagonal values correspond to the rotational stiffness around x,y and z axis; type: array_like
 
-        damping (array_like): damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; very similar to stiffness, however, the rotational velocity is computed from the angular velocity vector
+        damping: damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; very similar to stiffness, however, the rotational velocity is computed from the angular velocity vector; type: array_like
 
-        rotationMarker0 (array_like): local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0
+        rotationMarker0: local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0; type: array_like
 
-        rotationMarker1 (array_like): local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1
+        rotationMarker1: local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1; type: array_like
 
-        offset (array_like): translational and rotational offset considered in the spring force calculation
+        offset: translational and rotational offset considered in the spring force calculation; type: array_like
 
-        intrinsicFormulation (bool): if True, the joint uses the intrinsic formulation, which is independent on order of markers, using a mid-point and mid-rotation for evaluation and application of connector forces and torques; this uses a Lie group formulation; in this case, the force/torque vector is computed from the stiffness matrix times the 6-vector of the SE3 matrix logarithm between the two marker positions/rotations, see the equations
+        intrinsicFormulation: if True, the joint uses the intrinsic formulation, which is independent on order of markers, using a mid-point and mid-rotation for evaluation and application of connector forces and torques; this uses a Lie group formulation; in this case, the force/torque vector is computed from the stiffness matrix times the 6-vector of the SE3 matrix logarithm between the two marker positions/rotations, see the equations; type: bool
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
-        springForceTorqueUserFunction (PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D): A Python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below
+        springForceTorqueUserFunction: A Python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below; type: PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D
 
-        postNewtonStepUserFunction (PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D): A Python function which computes the error of the PostNewtonStep; see description below
+        postNewtonStepUserFunction: A Python function which computes the error of the PostNewtonStep; see description below; type: PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D
+
+        visualization: visualization data, see VObjectConnectorRigidBodySpringDamper
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -3091,13 +3129,13 @@ class VObjectConnectorLinearSpringDamper:
     """Visualization data for ObjectConnectorLinearSpringDamper.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size = diameter of spring; size == -1.f means that default connector size is used
+        drawSize: drawing size = diameter of spring; size == -1.f means that default connector size is used; type: float
 
-        drawAsCylinder (bool): if this flag is True, the spring-damper is represented as cylinder; this may fit better if the spring-damper represents an actuator
+        drawAsCylinder: if this flag is True, the spring-damper is represented as cylinder; this may fit better if the spring-damper represents an actuator; type: bool
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., drawAsCylinder = False, color = [-1.,-1.,-1.,-1.]):
@@ -3121,25 +3159,27 @@ class ObjectConnectorLinearSpringDamper:
     It connects to position and orientation-based markers; the linear spring-damper is intended to act within prismatic joints or in situations where only one translational axis is free; if the two markers rotate relative to each other, the spring-damper will always act in the local joint0 coordinate system.
     
     Args:
-        name (str): connector's unique name
+        name: connector's unique name; type: str
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        stiffness (float): torsional stiffness [SI:Nm/rad] against relative rotation
+        stiffness: torsional stiffness [SI:Nm/rad] against relative rotation; type: float
 
-        damping (float): torsional damping [SI:Nm/(rad/s)]
+        damping: torsional damping [SI:Nm/(rad/s)]; type: float
 
-        axisMarker0 ([float,float,float]): local axis of spring-damper in marker 0 coordinates; this axis will co-move with marker :math:`m0`; if marker m0 is attached to ground, the spring-damper represents linear equations
+        axisMarker0: local axis of spring-damper in marker 0 coordinates; this axis will co-move with marker :math:`m0`; if marker m0 is attached to ground, the spring-damper represents linear equations; type: [float,float,float]
 
-        offset (float): translational offset considered in the spring force calculation (this can be used as position control input!)
+        offset: translational offset considered in the spring force calculation (this can be used as position control input!); type: float
 
-        velocityOffset (float): velocity offset considered in the damper force calculation (this can be used as velocity control input!)
+        velocityOffset: velocity offset considered in the damper force calculation (this can be used as velocity control input!); type: float
 
-        force (float): additional constant force [SI:Nm] added to spring-damper; this can be used to prescribe a force between the two attached bodies (e.g., for actuation and control)
+        force: additional constant force [SI:Nm] added to spring-damper; this can be used to prescribe a force between the two attached bodies (e.g., for actuation and control); type: float
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
-        springForceUserFunction (PyFunctionMbsScalarIndexScalar5): A Python function which computes the scalar force between the two rigid body markers along axisMarker0 in :math:`m0` coordinates, if activeConnector=True; see description below
+        springForceUserFunction: A Python function which computes the scalar force between the two rigid body markers along axisMarker0 in :math:`m0` coordinates, if activeConnector=True; see description below; type: PyFunctionMbsScalarIndexScalar5
+
+        visualization: visualization data, see VObjectConnectorLinearSpringDamper
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -3188,11 +3228,11 @@ class VObjectConnectorTorsionalSpringDamper:
     """Visualization data for ObjectConnectorTorsionalSpringDamper.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size = diameter of spring; size == -1.f means that default connector size is used
+        drawSize: drawing size = diameter of spring; size == -1.f means that default connector size is used; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -3214,29 +3254,31 @@ class ObjectConnectorTorsionalSpringDamper:
     It connects to orientation-based markers; if other rotation axis than the local joint0 Z axis shall be used, the joint rotationMarker0 / rotationMarker1 may be used. The joint perfectly extends a RevoluteJoint with a spring-damper, which can also be used to represent feedback control in an elegant and efficient way, by chosing appropriate user functions. It also allows to measure continuous / infinite rotations by making use of a NodeGeneric which compensates :math:`\pm \pi` jumps in the measured rotation (``OutputVariableType.Rotation``).
     
     Args:
-        name (str): connector's unique name
+        name: connector's unique name; type: str
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        nodeNumber (NodeIndex): node number of a NodeGenericData with 1 dataCoordinate for continuous rotation reconstruction; if this node is left to invalid index, it will not be used
+        nodeNumber: node number of a NodeGenericData with 1 dataCoordinate for continuous rotation reconstruction; if this node is left to invalid index, it will not be used; type: NodeIndex
 
-        stiffness (float): torsional stiffness [SI:Nm/rad] against relative rotation
+        stiffness: torsional stiffness [SI:Nm/rad] against relative rotation; type: float
 
-        damping (float): torsional damping [SI:Nm/(rad/s)]
+        damping: torsional damping [SI:Nm/(rad/s)]; type: float
 
-        rotationMarker0 (array_like): local rotation matrix for marker 0; transforms joint into marker coordinates
+        rotationMarker0: local rotation matrix for marker 0; transforms joint into marker coordinates; type: array_like
 
-        rotationMarker1 (array_like): local rotation matrix for marker 1; transforms joint into marker coordinates
+        rotationMarker1: local rotation matrix for marker 1; transforms joint into marker coordinates; type: array_like
 
-        offset (float): rotational offset considered in the spring torque calculation (this can be used as rotation control input!)
+        offset: rotational offset considered in the spring torque calculation (this can be used as rotation control input!); type: float
 
-        velocityOffset (float): angular velocity offset considered in the damper torque calculation (this can be used as angular velocity control input!)
+        velocityOffset: angular velocity offset considered in the damper torque calculation (this can be used as angular velocity control input!); type: float
 
-        torque (float): additional constant torque [SI:Nm] added to spring-damper; this can be used to prescribe a torque between the two attached bodies (e.g., for actuation and control)
+        torque: additional constant torque [SI:Nm] added to spring-damper; this can be used to prescribe a torque between the two attached bodies (e.g., for actuation and control); type: float
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
-        springTorqueUserFunction (PyFunctionMbsScalarIndexScalar5): A Python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below
+        springTorqueUserFunction: A Python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below; type: PyFunctionMbsScalarIndexScalar5
+
+        visualization: visualization data, see VObjectConnectorTorsionalSpringDamper
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -3290,11 +3332,11 @@ class VObjectConnectorCoordinateSpringDamper:
     """Visualization data for ObjectConnectorCoordinateSpringDamper.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size = diameter of spring; size == -1.f means that default connector size is used
+        drawSize: drawing size = diameter of spring; size == -1.f means that default connector size is used; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -3316,19 +3358,21 @@ class ObjectConnectorCoordinateSpringDamper:
     NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates.
     
     Args:
-        name (str): connector's unique name
+        name: connector's unique name; type: str
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        stiffness (float): stiffness [SI:N/m] of spring; acts against relative value of coordinates
+        stiffness: stiffness [SI:N/m] of spring; acts against relative value of coordinates; type: float
 
-        damping (float): damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates
+        damping: damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates; type: float
 
-        offset (float): offset between two coordinates (reference length of springs), see equation
+        offset: offset between two coordinates (reference length of springs), see equation; type: float
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
-        springForceUserFunction (PyFunctionMbsScalarIndexScalar5): A Python function which defines the spring force with 8 parameters, see equations section / see description below
+        springForceUserFunction: A Python function which defines the spring force with 8 parameters, see equations section / see description below; type: PyFunctionMbsScalarIndexScalar5
+
+        visualization: visualization data, see VObjectConnectorCoordinateSpringDamper
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -3370,11 +3414,11 @@ class VObjectConnectorCoordinateSpringDamperExt:
     """Visualization data for ObjectConnectorCoordinateSpringDamperExt.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size = diameter of spring; size == -1.f means that default connector size is used
+        drawSize: drawing size = diameter of spring; size == -1.f means that default connector size is used; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -3396,51 +3440,53 @@ class ObjectConnectorCoordinateSpringDamperExt:
     It has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. It is highly recommended, to use the bristle model for friction with frictionProportionalZone=0 in case of implicit integrators (GeneralizedAlpha) as it converges better.
     
     Args:
-        name (str): connector's unique name
+        name: connector's unique name; type: str
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        nodeNumber (NodeIndex): node number of a NodeGenericData for 3 data coordinates (friction mode, last sticking position, limit stop state), see description for details; must exist in case of bristle friction model or limit stops
+        nodeNumber: node number of a NodeGenericData for 3 data coordinates (friction mode, last sticking position, limit stop state), see description for details; must exist in case of bristle friction model or limit stops; type: NodeIndex
 
-        stiffness (float): stiffness [SI:N/m] of spring; acts against relative value of coordinates
+        stiffness: stiffness [SI:N/m] of spring; acts against relative value of coordinates; type: float
 
-        damping (float): damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates
+        damping: damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates; type: float
 
-        offset (float): offset between two coordinates (reference length of springs), see equation; it can be used to represent the pre-scribed drive coordinate
+        offset: offset between two coordinates (reference length of springs), see equation; it can be used to represent the pre-scribed drive coordinate; type: float
 
-        velocityOffset (float): offset between two coordinates; used to model D-control of a drive, where damping is not acting against prescribed velocity
+        velocityOffset: offset between two coordinates; used to model D-control of a drive, where damping is not acting against prescribed velocity; type: float
 
-        factor0 (float): marker 0 coordinate is multiplied with factor0
+        factor0: marker 0 coordinate is multiplied with factor0; type: float
 
-        factor1 (float): marker 1 coordinate is multiplied with factor1
+        factor1: marker 1 coordinate is multiplied with factor1; type: float
 
-        fDynamicFriction (float): dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force :math:`f_N`, the friction force can be interpreted as :math:`f_\mu = \mu f_N`
+        fDynamicFriction: dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force :math:`f_N`, the friction force can be interpreted as :math:`f_\mu = \mu f_N`; type: float
 
-        fStaticFrictionOffset (float): static (dry) friction offset force [SI:N]; assuming a normal force :math:`f_N`, the friction force is limited by :math:`f_\mu \le (\mu_{so} + \mu_d) f_N = f_{\mu_d} + f_{\mu_{so}}`
+        fStaticFrictionOffset: static (dry) friction offset force [SI:N]; assuming a normal force :math:`f_N`, the friction force is limited by :math:`f_\mu \le (\mu_{so} + \mu_d) f_N = f_{\mu_d} + f_{\mu_{so}}`; type: float
 
-        stickingStiffness (float): stiffness of bristles in sticking case  [SI:N/m]
+        stickingStiffness: stiffness of bristles in sticking case  [SI:N/m]; type: float
 
-        stickingDamping (float): damping of bristles in sticking case  [SI:N/(m/s)]
+        stickingDamping: damping of bristles in sticking case  [SI:N/(m/s)]; type: float
 
-        exponentialDecayStatic (float): relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at :math:`\Delta v = v_\mathrm{exp}`, the static friction offset force is reduced to 36.8%
+        exponentialDecayStatic: relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at :math:`\Delta v = v_\mathrm{exp}`, the static friction offset force is reduced to 36.8%; type: float
 
-        fViscousFriction (float): viscous friction force part [SI:N/(m s)], acting against relative velocity in sliding case
+        fViscousFriction: viscous friction force part [SI:N/(m s)], acting against relative velocity in sliding case; type: float
 
-        frictionProportionalZone (float): if non-zero, a regularized Stribeck model is used, regularizing friction force around zero velocity - leading to zero friction force in case of zero velocity; this does not require a data node at all; if zero, the bristle model is used, which requires a data node which contains previous friction state and last sticking position
+        frictionProportionalZone: if non-zero, a regularized Stribeck model is used, regularizing friction force around zero velocity - leading to zero friction force in case of zero velocity; this does not require a data node at all; if zero, the bristle model is used, which requires a data node which contains previous friction state and last sticking position; type: float
 
-        limitStopsUpper (float): upper (maximum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates
+        limitStopsUpper: upper (maximum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates; type: float
 
-        limitStopsLower (float): lower (minimum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates
+        limitStopsLower: lower (minimum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates; type: float
 
-        limitStopsStiffness (float): stiffness [SI:N/m] of limit stop (contact stiffness); following a linear contact model
+        limitStopsStiffness: stiffness [SI:N/m] of limit stop (contact stiffness); following a linear contact model; type: float
 
-        limitStopsDamping (float): damping [SI:N/(m/s)] of limit stop (contact damping); following a linear contact model
+        limitStopsDamping: damping [SI:N/(m/s)] of limit stop (contact damping); following a linear contact model; type: float
 
-        useLimitStops (bool): if True, limit stops are considered and parameters must be set accordingly; furthermore, the NodeGenericData must have 3 data coordinates
+        useLimitStops: if True, limit stops are considered and parameters must be set accordingly; furthermore, the NodeGenericData must have 3 data coordinates; type: bool
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
-        springForceUserFunction (PyFunctionMbsScalarIndexScalar11): A Python function which defines the spring force with 8 parameters, see equations section / see description below
+        springForceUserFunction: A Python function which defines the spring force with 8 parameters, see equations section / see description below; type: PyFunctionMbsScalarIndexScalar11
+
+        visualization: visualization data, see VObjectConnectorCoordinateSpringDamperExt
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -3516,11 +3562,11 @@ class VObjectConnectorGravity:
     """Visualization data for ObjectConnectorGravity.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size = diameter of spring; size == -1.f means that default connector size is used
+        drawSize: drawing size = diameter of spring; size == -1.f means that default connector size is used; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = False, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -3542,19 +3588,21 @@ class ObjectConnectorGravity:
     NOTE: DO NOT USE this connector for adding gravitational forces (loads), which should be using LoadMassProportional, which is acting global and always in the same direction.
     
     Args:
-        name (str): connector's unique name
+        name: connector's unique name; type: str
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        gravitationalConstant (float): gravitational constant [SI:m:math:`^3`kg:math:`^{-1}`s:math:`^{-2}`)]; while not recommended, a negative constant gan represent a repulsive force
+        gravitationalConstant: gravitational constant [SI:m:math:`^3`kg:math:`^{-1}`s:math:`^{-2}`)]; while not recommended, a negative constant gan represent a repulsive force; type: float
 
-        mass0 (float): mass [SI:kg] of object attached to marker :math:`m0`
+        mass0: mass [SI:kg] of object attached to marker :math:`m0`; type: float
 
-        mass1 (float): mass [SI:kg] of object attached to marker :math:`m1`
+        mass1: mass [SI:kg] of object attached to marker :math:`m1`; type: float
 
-        minDistanceRegularization (float): distance [SI:m] at which a regularization is added in order to avoid singularities, if objects come close
+        minDistanceRegularization: distance [SI:m] at which a regularization is added in order to avoid singularities, if objects come close; type: float
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectConnectorGravity
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -3596,25 +3644,25 @@ class VObjectConnectorHydraulicActuatorSimple:
     """Visualization data for ObjectConnectorHydraulicActuatorSimple.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        cylinderRadius (float): radius for drawing of cylinder
+        cylinderRadius: radius for drawing of cylinder; type: float
 
-        rodRadius (float): radius for drawing of rod
+        rodRadius: radius for drawing of rod; type: float
 
-        pistonRadius (float): radius for drawing of piston (if drawn transparent)
+        pistonRadius: radius for drawing of piston (if drawn transparent); type: float
 
-        pistonLength (float): radius for drawing of piston (if drawn transparent)
+        pistonLength: radius for drawing of piston (if drawn transparent); type: float
 
-        rodMountRadius (float): radius for drawing of rod mount sphere
+        rodMountRadius: radius for drawing of rod mount sphere; type: float
 
-        baseMountRadius (float): radius for drawing of base mount sphere
+        baseMountRadius: radius for drawing of base mount sphere; type: float
 
-        baseMountLength (float): radius for drawing of base mount sphere
+        baseMountLength: radius for drawing of base mount sphere; type: float
 
-        colorCylinder ([float,float,float,float]): RGBA cylinder color; if R==-1, use default connector color
+        colorCylinder: RGBA cylinder color; if R==-1, use default connector color; type: [float,float,float,float]
 
-        colorPiston ([float,float,float,float]): RGBA piston color
+        colorPiston: RGBA piston color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, cylinderRadius = 0.05, rodRadius = 0.03, pistonRadius = 0.04, pistonLength = 0.001, rodMountRadius = 0., baseMountRadius = 0., baseMountLength = 0., colorCylinder = [-1.,-1.,-1.,-1.], colorPiston = [0.8,0.8,0.8,1.]):
@@ -3650,45 +3698,47 @@ class ObjectConnectorHydraulicActuatorSimple:
     The actuator follows a valve input value, which results in a in- or outflow of fluid depending on the pressure difference. Valve values can be prescribed by user functions (not yet available) or with the ``MainSystem`` ``PreStepUserFunction(...)``.
     
     Args:
-        name (str): connector's unique name
+        name: connector's unique name; type: str
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        nodeNumbers (ArrayNodeIndex): currently a list with one node number of NodeGenericODE1 for 2 hydraulic pressures (reference values for this node must be zero); data node may be added in future for switching
+        nodeNumbers: currently a list with one node number of NodeGenericODE1 for 2 hydraulic pressures (reference values for this node must be zero); data node may be added in future for switching; type: ArrayNodeIndex
 
-        offsetLength (float): offset length [SI:m] of cylinder, representing minimal distance between the two bushings at stroke=0
+        offsetLength: offset length [SI:m] of cylinder, representing minimal distance between the two bushings at stroke=0; type: float
 
-        strokeLength (float): stroke length [SI:m] of cylinder, representing maximum extension relative to :math:`L_o`; the measured distance between the markers is :math:`L_s+L_o`
+        strokeLength: stroke length [SI:m] of cylinder, representing maximum extension relative to :math:`L_o`; the measured distance between the markers is :math:`L_s+L_o`; type: float
 
-        chamberCrossSection0 (float): cross section [SI:m:math:`^2`] of chamber (inner cylinder) at piston head (nut) side (0)
+        chamberCrossSection0: cross section [SI:m:math:`^2`] of chamber (inner cylinder) at piston head (nut) side (0); type: float
 
-        chamberCrossSection1 (float): cross section [SI:m:math:`^2`] of chamber at piston rod side (1); usually smaller than chamberCrossSection0
+        chamberCrossSection1: cross section [SI:m:math:`^2`] of chamber at piston rod side (1); usually smaller than chamberCrossSection0; type: float
 
-        hoseVolume0 (float): hose volume [SI:m:math:`^3`] at piston head (nut) side (0); as the effective bulk modulus would go to infinity at stroke length zero, the hose volume must be greater than zero
+        hoseVolume0: hose volume [SI:m:math:`^3`] at piston head (nut) side (0); as the effective bulk modulus would go to infinity at stroke length zero, the hose volume must be greater than zero; type: float
 
-        hoseVolume1 (float): hose volume [SI:m:math:`^3`] at piston rod side (1); as the effective bulk modulus would go to infinity at max. stroke length, the hose volume must be greater than zero
+        hoseVolume1: hose volume [SI:m:math:`^3`] at piston rod side (1); as the effective bulk modulus would go to infinity at max. stroke length, the hose volume must be greater than zero; type: float
 
-        valveOpening0 (float): relative opening of valve :math:`[-1 \ldots 1]` [SI:1] at piston head (nut) side (0); positive value is valve opening towards system pressure, negative value is valve opening towards tank pressure; zero means closed valve
+        valveOpening0: relative opening of valve :math:`[-1 \ldots 1]` [SI:1] at piston head (nut) side (0); positive value is valve opening towards system pressure, negative value is valve opening towards tank pressure; zero means closed valve; type: float
 
-        valveOpening1 (float): relative opening of valve :math:`[-1 \ldots 1]` [SI:1] at piston rod side (1); positive value is valve opening towards system pressure, negative value is valve opening towards tank pressure; zero means closed valve
+        valveOpening1: relative opening of valve :math:`[-1 \ldots 1]` [SI:1] at piston rod side (1); positive value is valve opening towards system pressure, negative value is valve opening towards tank pressure; zero means closed valve; type: float
 
-        actuatorDamping (float): damping [SI:N/(m:math:`\,`s)] of hydraulic actuator (against actuator axial velocity)
+        actuatorDamping: damping [SI:N/(m:math:`\,`s)] of hydraulic actuator (against actuator axial velocity); type: float
 
-        oilBulkModulus (float): bulk modulus of oil [SI:N/(m:math:`^2`)]
+        oilBulkModulus: bulk modulus of oil [SI:N/(m:math:`^2`)]; type: float
 
-        cylinderBulkModulus (float): bulk modulus of cylinder [SI:N/(m:math:`^2`)]; in fact, this is value represents the effect of the cylinder stiffness on the effective bulk modulus
+        cylinderBulkModulus: bulk modulus of cylinder [SI:N/(m:math:`^2`)]; in fact, this is value represents the effect of the cylinder stiffness on the effective bulk modulus; type: float
 
-        hoseBulkModulus (float): bulk modulus of hose [SI:N/(m:math:`^2`)]; in fact, this is value represents the effect of the hose stiffness on the effective bulk modulus
+        hoseBulkModulus: bulk modulus of hose [SI:N/(m:math:`^2`)]; in fact, this is value represents the effect of the hose stiffness on the effective bulk modulus; type: float
 
-        nominalFlow (float): nominal flow of oil through valve [SI:m:math:`^3`/s]
+        nominalFlow: nominal flow of oil through valve [SI:m:math:`^3`/s]; type: float
 
-        systemPressure (float): system pressure [SI:N/(m:math:`^2`)]
+        systemPressure: system pressure [SI:N/(m:math:`^2`)]; type: float
 
-        tankPressure (float): tank pressure [SI:N/(m:math:`^2`)]
+        tankPressure: tank pressure [SI:N/(m:math:`^2`)]; type: float
 
-        useChamberVolumeChange (bool): if True, the pressure build up equations include the change of oil stiffness due to change of chamber volume
+        useChamberVolumeChange: if True, the pressure build up equations include the change of oil stiffness due to change of chamber volume; type: bool
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectConnectorHydraulicActuatorSimple
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -3763,11 +3813,11 @@ class VObjectConnectorReevingSystemSprings:
     """Visualization data for ObjectConnectorReevingSystemSprings.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        ropeRadius (float): radius of rope
+        ropeRadius: radius of rope; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, ropeRadius = 0.001, color = [-1.,-1.,-1.,-1.]):
@@ -3789,31 +3839,33 @@ class ObjectConnectorReevingSystemSprings:
     NOTE that the spring can undergo tension AND compression (in order to avoid compression, use a PreStepUserFunction to turn off stiffness and damping in this case!). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by :math:`nr` rigid body markers :math:`[m_0, \, m_1, \, \ldots, \, m_{nr-1}]`. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by :math:`m_{c0}` and :math:`m_{c1}` .
     
     Args:
-        name (str): connector's unique name
+        name: connector's unique name; type: str
 
-        markerNumbers (ArrayMarkerIndex): list of position or rigid body markers used in reeving system and optional two coordinate markers (:math:`m_{c0}, \, m_{c1}`); the first marker :math:`m_0` and the last rigid body marker :math:`m_{nr-1}` represent the ends of the rope and are directly connected to a position; the markers :math:`m_1, \, \ldots, \, m_{nr-2}` can be connected to sheaves, for which a radius and an axis can be prescribed. The coordinate markers are optional and represent prescribed length at the rope ends (marker :math:`m_{c0}` is added length at start, marker :math:`m_{c1}` is added length at end of the rope in the reeving system)
+        markerNumbers: list of position or rigid body markers used in reeving system and optional two coordinate markers (:math:`m_{c0}, \, m_{c1}`); the first marker :math:`m_0` and the last rigid body marker :math:`m_{nr-1}` represent the ends of the rope and are directly connected to a position; the markers :math:`m_1, \, \ldots, \, m_{nr-2}` can be connected to sheaves, for which a radius and an axis can be prescribed. The coordinate markers are optional and represent prescribed length at the rope ends (marker :math:`m_{c0}` is added length at start, marker :math:`m_{c1}` is added length at end of the rope in the reeving system); type: ArrayMarkerIndex
 
-        hasCoordinateMarkers (bool): flag, which determines, the list of markers (markerNumbers) contains two coordinate markers at the end of the list, representing the prescribed change of length at both ends
+        hasCoordinateMarkers: flag, which determines, the list of markers (markerNumbers) contains two coordinate markers at the end of the list, representing the prescribed change of length at both ends; type: bool
 
-        coordinateFactors ([float,float]): factors which are multiplied with the values of coordinate markers; this can be used, e.g., to change directions or to transform rotations (revolutions of a sheave) into change of length
+        coordinateFactors: factors which are multiplied with the values of coordinate markers; this can be used, e.g., to change directions or to transform rotations (revolutions of a sheave) into change of length; type: [float,float]
 
-        stiffnessPerLength (float): stiffness per length [SI:N/m/m] of rope; in case of cross section :math:`A` and Young's modulus :math:`E`, this parameter results in :math:`E\cdot A`; the effective stiffness of the reeving system is computed as :math:`EA/L` in which :math:`L` is the current length of the rope
+        stiffnessPerLength: stiffness per length [SI:N/m/m] of rope; in case of cross section :math:`A` and Young's modulus :math:`E`, this parameter results in :math:`E\cdot A`; the effective stiffness of the reeving system is computed as :math:`EA/L` in which :math:`L` is the current length of the rope; type: float
 
-        dampingPerLength (float): axial damping per length [SI:N/(m/s)/m] of rope; the effective damping coefficient of the reeving system is computed as :math:`DA/L` in which :math:`L` is the current length of the rope
+        dampingPerLength: axial damping per length [SI:N/(m/s)/m] of rope; the effective damping coefficient of the reeving system is computed as :math:`DA/L` in which :math:`L` is the current length of the rope; type: float
 
-        dampingTorsional (float): torsional damping [SI:Nms] between sheaves; this effect can damp rotations around the rope axis, pairwise between sheaves; this parameter is experimental
+        dampingTorsional: torsional damping [SI:Nms] between sheaves; this effect can damp rotations around the rope axis, pairwise between sheaves; this parameter is experimental; type: float
 
-        dampingShear (float): damping of shear motion [SI:Ns] between sheaves; this effect can damp motion perpendicular to the rope between each pair of sheaves; this parameter is experimental
+        dampingShear: damping of shear motion [SI:Ns] between sheaves; this effect can damp motion perpendicular to the rope between each pair of sheaves; this parameter is experimental; type: float
 
-        regularizationForce (float): small regularization force [SI:N] in order to avoid large compressive forces; this regularization force can either be :math:`<0` (using a linear tension/compression spring model) or :math:`>0`, which restricts forces in the rope to be always :math:`\ge -F_{reg}`. Note that smaller forces lead to problems in implicit integrators and smaller time steps. For explicit integrators, this force can be chosen close to zero.
+        regularizationForce: small regularization force [SI:N] in order to avoid large compressive forces; this regularization force can either be :math:`<0` (using a linear tension/compression spring model) or :math:`>0`, which restricts forces in the rope to be always :math:`\ge -F_{reg}`. Note that smaller forces lead to problems in implicit integrators and smaller time steps. For explicit integrators, this force can be chosen close to zero.; type: float
 
-        referenceLength (float): reference length for computation of roped force
+        referenceLength: reference length for computation of roped force; type: float
 
-        sheavesAxes (Vector3DList): list of local vectors axes of sheaves; vectors refer to rigid body markers given in list of markerNumbers; first and last axes are ignored, as they represent the attachment of the rope ends
+        sheavesAxes: list of local vectors axes of sheaves; vectors refer to rigid body markers given in list of markerNumbers; first and last axes are ignored, as they represent the attachment of the rope ends; type: Vector3DList
 
-        sheavesRadii (array_like): radius for each sheave, related to list of markerNumbers and list of sheaveAxes; first and last radii must always be zero.
+        sheavesRadii: radius for each sheave, related to list of markerNumbers and list of sheaveAxes; first and last radii must always be zero.; type: array_like
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectConnectorReevingSystemSprings
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -3867,11 +3919,11 @@ class VObjectConnectorDistance:
     """Visualization data for ObjectConnectorDistance.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size = link size; size == -1.f means that default connector size is used
+        drawSize: drawing size = link size; size == -1.f means that default connector size is used; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -3891,13 +3943,15 @@ class ObjectConnectorDistance:
     """Connector which enforces constant or prescribed distance between two bodies/nodes.
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        distance (float): prescribed distance [SI:m] of the used markers; must by greater than zero
+        distance: prescribed distance [SI:m] of the used markers; must by greater than zero; type: float
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectConnectorDistance
 
     Notes:
         Object has/provides the following types: ``Connector``, ``Constraint``
@@ -3933,11 +3987,11 @@ class VObjectConnectorCoordinate:
     """Visualization data for ObjectConnectorCoordinate.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size = link size; size == -1.f means that default connector size is used
+        drawSize: drawing size = link size; size == -1.f means that default connector size is used; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -3959,21 +4013,23 @@ class ObjectConnectorCoordinate:
     The constraint acts directly on coordinates, but does not include reference values, e.g., of nodal values. This constraint is computationally efficient and should be used to constrain nodal coordinates.
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        offset (float): An offset between the two values
+        offset: An offset between the two values; type: float
 
-        factorValue1 (float): An additional factor multiplied with value1 used in algebraic equation
+        factorValue1: An additional factor multiplied with value1 used in algebraic equation; type: float
 
-        velocityLevel (bool): If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored
+        velocityLevel: If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored; type: bool
 
-        offsetUserFunction (PyFunctionMbsScalarIndexScalar): A Python function which defines the time-dependent offset; see description below
+        offsetUserFunction: A Python function which defines the time-dependent offset; see description below; type: PyFunctionMbsScalarIndexScalar
 
-        offsetUserFunction_t (PyFunctionMbsScalarIndexScalar): time derivative of offsetUserFunction; needed for velocity level constraints; see description below
+        offsetUserFunction_t: time derivative of offsetUserFunction; needed for velocity level constraints; see description below; type: PyFunctionMbsScalarIndexScalar
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectConnectorCoordinate
 
     Notes:
         Object has/provides the following types: ``Connector``, ``Constraint``
@@ -4017,9 +4073,9 @@ class VObjectConnectorCoordinateVector:
     """Visualization data for ObjectConnectorCoordinateVector.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, color = [-1.,-1.,-1.,-1.]):
@@ -4039,27 +4095,29 @@ class ObjectConnectorCoordinateVector:
     The marker uses the objects LTG-lists to build the according coordinate mappings.
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        scalingMarker0 (array_like): linear scaling matrix for coordinate vector of marker 0; matrix provided in Python numpy format
+        scalingMarker0: linear scaling matrix for coordinate vector of marker 0; matrix provided in Python numpy format; type: array_like
 
-        scalingMarker1 (array_like): linear scaling matrix for coordinate vector of marker 1; matrix provided in Python numpy format
+        scalingMarker1: linear scaling matrix for coordinate vector of marker 1; matrix provided in Python numpy format; type: array_like
 
-        quadraticTermMarker0 (array_like): quadratic scaling matrix for coordinate vector of marker 0; matrix provided in Python numpy format
+        quadraticTermMarker0: quadratic scaling matrix for coordinate vector of marker 0; matrix provided in Python numpy format; type: array_like
 
-        quadraticTermMarker1 (array_like): quadratic scaling matrix for coordinate vector of marker 1; matrix provided in Python numpy format
+        quadraticTermMarker1: quadratic scaling matrix for coordinate vector of marker 1; matrix provided in Python numpy format; type: array_like
 
-        offset (array_like): offset added to constraint equation; only active, if no userFunction is defined
+        offset: offset added to constraint equation; only active, if no userFunction is defined; type: array_like
 
-        velocityLevel (bool): If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored
+        velocityLevel: If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored; type: bool
 
-        constraintUserFunction (PyFunctionVectorMbsScalarIndex2VectorBool): A Python user function which computes the constraint equations; to define the number of algebraic equations, set scalingMarker0 as a numpy.zeros((nAE,1)) array with nAE being the number algebraic equations; see description below
+        constraintUserFunction: A Python user function which computes the constraint equations; to define the number of algebraic equations, set scalingMarker0 as a numpy.zeros((nAE,1)) array with nAE being the number algebraic equations; see description below; type: PyFunctionVectorMbsScalarIndex2VectorBool
 
-        jacobianUserFunction (PyFunctionMatrixContainerMbsScalarIndex2VectorBool): A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times :math:`f_{ODE2}`) and w.r.t. the velocities (times :math:`f_{ODE2_t}`). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below
+        jacobianUserFunction: A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times :math:`f_{ODE2}`) and w.r.t. the velocities (times :math:`f_{ODE2_t}`). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below; type: PyFunctionMatrixContainerMbsScalarIndex2VectorBool
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectConnectorCoordinateVector
 
     Notes:
         Object has/provides the following types: ``Connector``, ``Constraint``
@@ -4108,11 +4166,11 @@ class VObjectConnectorRollingDiscPenalty:
     """Visualization data for ObjectConnectorRollingDiscPenalty.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        discWidth (float): width of disc for drawing
+        discWidth: width of disc for drawing; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, discWidth = 0.1, color = [-1.,-1.,-1.,-1.]):
@@ -4134,35 +4192,37 @@ class ObjectConnectorRollingDiscPenalty:
     The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation for the arbitrary disc axis is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector; :math:`m0` represents a point at the plane surface (normal of surface plane defined by planeNormal); the ground can also be a moving rigid body; :math:`m1` represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point
+        markerNumbers: list of markers used in connector; :math:`m0` represents a point at the plane surface (normal of surface plane defined by planeNormal); the ground can also be a moving rigid body; :math:`m1` represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point; type: ArrayMarkerIndex
 
-        nodeNumber (NodeIndex): node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact)
+        nodeNumber: node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact); type: NodeIndex
 
-        discRadius (float): defines the disc radius
+        discRadius: defines the disc radius; type: float
 
-        discAxis ([float,float,float]): axis of disc defined in marker :math:`m1` frame
+        discAxis: axis of disc defined in marker :math:`m1` frame; type: [float,float,float]
 
-        planeNormal ([float,float,float]): normal to the contact / rolling plane (ground); note that the plane reference point can be arbitrarily chosen by the location of the marker :math:`m0`
+        planeNormal: normal to the contact / rolling plane (ground); note that the plane reference point can be arbitrarily chosen by the location of the marker :math:`m0`; type: [float,float,float]
 
-        dryFrictionAngle (float): angle [SI:1 (rad)] which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle
+        dryFrictionAngle: angle [SI:1 (rad)] which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle; type: float
 
-        contactStiffness (float): normal contact stiffness [SI:N/m]
+        contactStiffness: normal contact stiffness [SI:N/m]; type: float
 
-        contactDamping (float): normal contact damping [SI:N/(m s)]
+        contactDamping: normal contact damping [SI:N/(m s)]; type: float
 
-        dryFriction ([float,float]): dry friction coefficients [SI:1] in local marker 1 joint :math:`J1` coordinates; if :math:`\alpha_t==0`, lateral direction :math:`l=x` and forward direction :math:`f=y`; assuming a normal force :math:`f_n`, the local friction force can be computed as :math:`{}^{J1}{\vp{f_{t,x}}{f_{t,y}}} = \vp{\mu_x f_n}{\mu_y f_n}`
+        dryFriction: dry friction coefficients [SI:1] in local marker 1 joint :math:`J1` coordinates; if :math:`\alpha_t==0`, lateral direction :math:`l=x` and forward direction :math:`f=y`; assuming a normal force :math:`f_n`, the local friction force can be computed as :math:`{}^{J1}{\vp{f_{t,x}}{f_{t,y}}} = \vp{\mu_x f_n}{\mu_y f_n}`; type: [float,float]
 
-        dryFrictionProportionalZone (float): limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)
+        dryFrictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations); type: float
 
-        viscousFriction ([float,float]): viscous friction coefficients [SI:1/(m/s)] in local marker 1 joint :math:`J1` coordinates; proportional to slipping velocity, leading to increasing slipping friction force for increasing slipping velocity
+        viscousFriction: viscous friction coefficients [SI:1/(m/s)] in local marker 1 joint :math:`J1` coordinates; proportional to slipping velocity, leading to increasing slipping friction force for increasing slipping velocity; type: [float,float]
 
-        rollingFrictionViscous (float): rolling friction [SI:1], which acts against the velocity of the trail on ground and leads to a force proportional to the contact normal force; currently, only implemented for disc axis parallel to ground!
+        rollingFrictionViscous: rolling friction [SI:1], which acts against the velocity of the trail on ground and leads to a force proportional to the contact normal force; currently, only implemented for disc axis parallel to ground!; type: float
 
-        useLinearProportionalZone (bool): if True, a linear proportional zone is used; the linear zone performs better in implicit time integration as the Jacobian has a constant tangent in the sticking case
+        useLinearProportionalZone: if True, a linear proportional zone is used; the linear zone performs better in implicit time integration as the Jacobian has a constant tangent in the sticking case; type: bool
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectConnectorRollingDiscPenalty
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -4222,9 +4282,9 @@ class VObjectContactConvexRoll:
     """Visualization data for ObjectContactConvexRoll.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, color = [-1.,-1.,-1.,-1.]):
@@ -4244,39 +4304,35 @@ class ObjectContactConvexRoll:
     The connector is similar to ObjectConnectorRollingDiscPenalty, but includes a (strictly) convex shape of the roll defined by a polynomial. It is based on a penalty formulation and adds friction and slipping. The formulation is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector; :math:`m0` represents the ground, which can undergo translations but not rotations, and :math:`m1` represents the rolling body, which has its reference point (=local position [0,0,0]) at the roll's center point
+        markerNumbers: list of markers used in connector; :math:`m0` represents the ground, which can undergo translations but not rotations, and :math:`m1` represents the rolling body, which has its reference point (=local position [0,0,0]) at the roll's center point; type: ArrayMarkerIndex
 
-        nodeNumber (NodeIndex): node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact)
+        nodeNumber: node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact); type: NodeIndex
 
-        contactStiffness (float): normal contact stiffness [SI:N/m]
+        contactStiffness: normal contact stiffness [SI:N/m]; type: float
 
-        contactDamping (float): normal contact damping [SI:N/(m s)]
+        contactDamping: normal contact damping [SI:N/(m s)]; type: float
 
-        dynamicFriction (float): dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, theDoc.pdf
+        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, theDoc.pdf; type: float
 
-        staticFrictionOffset (float): static friction offset for friction model (static friction = dynamic friction + static offset), see StribeckFunction in exudyn.physics, theDoc.pdf
+        staticFrictionOffset: static friction offset for friction model (static friction = dynamic friction + static offset), see StribeckFunction in exudyn.physics, theDoc.pdf; type: float
 
-        viscousFriction (float): viscous friction coefficient (velocity dependent part) for friction model, see StribeckFunction in exudyn.physics, theDoc.pdf
+        viscousFriction: viscous friction coefficient (velocity dependent part) for friction model, see StribeckFunction in exudyn.physics, theDoc.pdf; type: float
 
-        exponentialDecayStatic (float): exponential decay of static friction offset (must not be zero!), see StribeckFunction in exudyn.physics (named expVel there!), theDoc.pdf
+        exponentialDecayStatic: exponential decay of static friction offset (must not be zero!), see StribeckFunction in exudyn.physics (named expVel there!), theDoc.pdf; type: float
 
-        frictionProportionalZone (float): limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), theDoc.pdf
+        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), theDoc.pdf; type: float
 
-        rollLength (float): roll length [m], symmetric w.r.t. centerpoint
+        rollLength: roll length [m], symmetric w.r.t. centerpoint; type: float
 
-        coefficientsHull (array_like): a vector of polynomial coefficients, which provides the polynomial of the CONVEX hull of the roll; :math:`\mathrm{hull}(x) = k_0 x^{n_p-1} + k x^{n_p-2} + \ldots + k_{n_p-2} x  + k_{n_p-1}`
+        coefficientsHull: a vector of polynomial coefficients, which provides the polynomial of the CONVEX hull of the roll; :math:`\mathrm{hull}(x) = k_0 x^{n_p-1} + k x^{n_p-2} + \ldots + k_{n_p-2} x  + k_{n_p-1}`; type: array_like
 
-        coefficientsHullDerivative (array_like): polynomial coefficients of the polynomial :math:`\mathrm{hull}^\prime(x)`
+        rBoundingSphere: The  radius of the bounding sphere for the contact pre-check, calculated from the polynomial coefficients of the hull; type: float
 
-        coefficientsHullDDerivative (array_like): second derivative of the hull polynomial.
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
-        rBoundingSphere (float): The  radius of the bounding sphere for the contact pre-check, calculated from the polynomial coefficients of the hull
-
-        pContact ([float,float,float]): The  current potential contact point. Contact occures if pContact[2] < 0.
-
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        visualization: visualization data, see VObjectContactConvexRoll
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -4329,11 +4385,11 @@ class VObjectContactCoordinate:
     """Visualization data for ObjectContactCoordinate.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size = diameter of spring; size == -1.f means that default connector size is used
+        drawSize: drawing size = diameter of spring; size == -1.f means that default connector size is used; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -4353,19 +4409,21 @@ class ObjectContactCoordinate:
     r"""A penalty-based contact condition for one coordinate; the contact gap :math:`g` is defined as :math:`g=marker.value[1]- marker.value[0] - offset`; the contact force :math:`f_c` is zero for :math:`gap>0` and otherwise computed from :math:`f_c = g*contactStiffness + \dot g*contactDamping`; during Newton iterations, the contact force is actived only, if :math:`dataCoordinate[0] <= 0`; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
     
     Args:
-        name (str): connector's unique name
+        name: connector's unique name; type: str
 
-        markerNumbers (ArrayMarkerIndex): markers define contact gap
+        markerNumbers: markers define contact gap; type: ArrayMarkerIndex
 
-        nodeNumber (NodeIndex): node number of a NodeGenericData for 1 dataCoordinate (used for active set strategy ==> holds the gap of the last discontinuous iteration)
+        nodeNumber: node number of a NodeGenericData for 1 dataCoordinate (used for active set strategy ==> holds the gap of the last discontinuous iteration); type: NodeIndex
 
-        contactStiffness (float): contact (penalty) stiffness [SI:N/m]; acts only upon penetration
+        contactStiffness: contact (penalty) stiffness [SI:N/m]; acts only upon penetration; type: float
 
-        contactDamping (float): contact damping [SI:N/(m s)]; acts only upon penetration
+        contactDamping: contact damping [SI:N/(m s)]; acts only upon penetration; type: float
 
-        offset (float): offset [SI:m] of contact
+        offset: offset [SI:m] of contact; type: float
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectContactCoordinate
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -4405,13 +4463,13 @@ class VObjectContactCircleCable2D:
     """Visualization data for ObjectContactCircleCable2D.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        showContactCircle (bool): if True and show=True, the underlying contact circle is shown; uses circleTiling*4 for tiling (from VisualizationSettings.general)
+        showContactCircle: if True and show=True, the underlying contact circle is shown; uses circleTiling*4 for tiling (from VisualizationSettings.general); type: bool
 
-        drawSize (float): drawing size = diameter of spring; size == -1.f means that default connector size is used
+        drawSize: drawing size = diameter of spring; size == -1.f means that default connector size is used; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, showContactCircle = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -4435,23 +4493,25 @@ class ObjectContactCircleCable2D:
     A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap :math:`g` is integrated (piecewise linear) along the cable and circle; the contact force :math:`f_c` is zero for :math:`gap>0` and otherwise computed from :math:`f_c = g*contactStiffness + \dot g*contactDamping`; during Newton iterations, the contact force is actived only, if :math:`dataCoordinate[0] <= 0`; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
     
     Args:
-        name (str): connector's unique name
+        name: connector's unique name; type: str
 
-        markerNumbers (ArrayMarkerIndex): markers define contact gap
+        markerNumbers: markers define contact gap; type: ArrayMarkerIndex
 
-        nodeNumber (NodeIndex): node number of a NodeGenericData for nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state)
+        nodeNumber: node number of a NodeGenericData for nSegments dataCoordinates (used for active set strategy ==> hold the gap of the last discontinuous iteration and the friction state); type: NodeIndex
 
-        numberOfContactSegments (int): number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker
+        numberOfContactSegments: number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker; type: int
 
-        contactStiffness (float): contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) :math:`f_N` act in contact normal direction only upon penetration
+        contactStiffness: contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) :math:`f_N` act in contact normal direction only upon penetration; type: float
 
-        contactDamping (float): contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration
+        contactDamping: contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration; type: float
 
-        circleRadius (float): radius [SI:m] of contact circle
+        circleRadius: radius [SI:m] of contact circle; type: float
 
-        offset (float): offset [SI:m] of contact, e.g. to include thickness of cable element
+        offset: offset [SI:m] of contact, e.g. to include thickness of cable element; type: float
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectContactCircleCable2D
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -4496,13 +4556,13 @@ class VObjectContactFrictionCircleCable2D:
     r"""Visualization data for ObjectContactFrictionCircleCable2D.
     
     Args:
-        show (bool): set True, if item is shown in visualization and false if it is not shown; note that only normal contact forces can be  drawn, which are approximated by :math:`k_c \cdot g` (neglecting damping term)
+        show: set True, if item is shown in visualization and false if it is not shown; note that only normal contact forces can be  drawn, which are approximated by :math:`k_c \cdot g` (neglecting damping term); type: bool
 
-        showContactCircle (bool): if True and show=True, the underlying contact circle is shown; uses circleTiling*4 for tiling (from VisualizationSettings.general)
+        showContactCircle: if True and show=True, the underlying contact circle is shown; uses circleTiling*4 for tiling (from VisualizationSettings.general); type: bool
 
-        drawSize (float): drawing size = diameter of spring; size == -1.f means that default connector size is used
+        drawSize: drawing size = diameter of spring; size == -1.f means that default connector size is used; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, showContactCircle = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -4526,29 +4586,31 @@ class ObjectContactFrictionCircleCable2D:
     A node NodeGenericData is required with 3:math:`\times`(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=0, slip=+-1, undefined=-2), last friction position]. The connector works with Cable2D and ALECable2D, HOWEVER, due to conceptual differences the (tangential) frictionStiffness cannot be used with ALECable2D; if using, it gives wrong tangential stresses, even though it may work in general.
     
     Args:
-        name (str): connector's unique name
+        name: connector's unique name; type: str
 
-        markerNumbers (ArrayMarkerIndex): a marker :math:`m0` with position and orientation and a marker :math:`m1` of type BodyCable2DShape; together defining the contact geometry
+        markerNumbers: a marker :math:`m0` with position and orientation and a marker :math:`m1` of type BodyCable2DShape; together defining the contact geometry; type: ArrayMarkerIndex
 
-        nodeNumber (NodeIndex): node number of a NodeGenericData with 3 :math:`\times n_{cs}`  dataCoordinates (used for active set strategy → hold the gap of the last discontinuous iteration, friction state (+-1=slip, 0=stick, -2=undefined) and the last sticking position; initialize coordinates with list [0.1]*:math:`n_{cs}`+[-2]*:math:`n_{cs}`+[0.]*:math:`n_{cs}`, meaning that there is no initial contact with undefined slip/stick
+        nodeNumber: node number of a NodeGenericData with 3 :math:`\times n_{cs}`  dataCoordinates (used for active set strategy → hold the gap of the last discontinuous iteration, friction state (+-1=slip, 0=stick, -2=undefined) and the last sticking position; initialize coordinates with list [0.1]*:math:`n_{cs}`+[-2]*:math:`n_{cs}`+[0.]*:math:`n_{cs}`, meaning that there is no initial contact with undefined slip/stick; type: NodeIndex
 
-        numberOfContactSegments (int): number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker
+        numberOfContactSegments: number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker; type: int
 
-        contactStiffness (float): contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) :math:`f_n` act in contact normal direction only upon penetration
+        contactStiffness: contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) :math:`f_n` act in contact normal direction only upon penetration; type: float
 
-        contactDamping (float): contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration
+        contactDamping: contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration; type: float
 
-        frictionVelocityPenalty (float): tangential velocity dependent penalty coefficient for friction [SI:N/(m s)/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential velocities in the contact area
+        frictionVelocityPenalty: tangential velocity dependent penalty coefficient for friction [SI:N/(m s)/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential velocities in the contact area; type: float
 
-        frictionStiffness (float): tangential displacement dependent penalty/stiffness coefficient for friction [SI:N/m/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential displacements in the contact area
+        frictionStiffness: tangential displacement dependent penalty/stiffness coefficient for friction [SI:N/m/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential displacements in the contact area; type: float
 
-        frictionCoefficient (float): friction coefficient [SI: 1]; tangential specific friction forces (per length) :math:`f_t` must fulfill the condition :math:`f_t \le \mu f_n`
+        frictionCoefficient: friction coefficient [SI: 1]; tangential specific friction forces (per length) :math:`f_t` must fulfill the condition :math:`f_t \le \mu f_n`; type: float
 
-        circleRadius (float): radius [SI:m] of contact circle
+        circleRadius: radius [SI:m] of contact circle; type: float
 
-        useSegmentNormals (bool): True: use normal and tangent according to linear segment; this is appropriate for very long (compared to circle) segments; False: use normals at segment points according to vector to circle center; this is more consistent for short segments, as forces are only applied in beam tangent and normal direction
+        useSegmentNormals: True: use normal and tangent according to linear segment; this is appropriate for very long (compared to circle) segments; False: use normals at segment points according to vector to circle center; this is more consistent for short segments, as forces are only applied in beam tangent and normal direction; type: bool
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectContactFrictionCircleCable2D
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -4599,9 +4661,9 @@ class VObjectContactSphereSphere:
     """Visualization data for ObjectContactSphereSphere.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown; draws spheres by given radii
+        show: set true, if item is shown in visualization and false if it is not shown; draws spheres by given radii; type: bool
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = False, color = [0.7,0.7,0.7,1.]):
@@ -4621,41 +4683,43 @@ class ObjectContactSphereSphere:
     The connector implements at least the same functionality as in GeneralContact and is intended for simple setups and for testing, while GeneralContact is much more efficient due to parallelization approaches and efficient contact search.
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): list of markers representing centers of spheres, used in connector
+        markerNumbers: list of markers representing centers of spheres, used in connector; type: ArrayMarkerIndex
 
-        nodeNumber (NodeIndex): node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is the plastic overlap of the Edinburgh Adhesive Elasto-Plastic Model, initialized usually with 0 and set back to 0 in case that spheres have been separated.
+        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is the plastic overlap of the Edinburgh Adhesive Elasto-Plastic Model, initialized usually with 0 and set back to 0 in case that spheres have been separated.; type: NodeIndex
 
-        spheresRadii ([float,float]): list containing radius of sphere 0 and radius of sphere 1 [SI:m].
+        spheresRadii: list containing radius of sphere 0 and radius of sphere 1 [SI:m].; type: [float,float]
 
-        isHollowSphere1 (bool): flag, which determines, if sphere attached to marker 1 (radius 1) is a hollow sphere.
+        isHollowSphere1: flag, which determines, if sphere attached to marker 1 (radius 1) is a hollow sphere.; type: bool
 
-        dynamicFriction (float): dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, theDoc.pdf
+        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, theDoc.pdf; type: float
 
-        frictionProportionalZone (float): limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), theDoc.pdf
+        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), theDoc.pdf; type: float
 
-        contactStiffness (float): normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`)
+        contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
 
-        contactDamping (float): linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
 
-        contactStiffnessExponent (float): exponent in normal contact model [SI:1]
+        contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
 
-        constantPullOffForce (float): constant adhesion force [SI:N]; Edinburgh Adhesive Elasto-Plastic Model
+        constantPullOffForce: constant adhesion force [SI:N]; Edinburgh Adhesive Elasto-Plastic Model; type: float
 
-        contactPlasticityRatio (float): ratio of contact stiffness for first loading and unloading/reloading [SI:1]; Edinburgh Adhesive Elasto-Plastic Model; :math:`\lambda_\mathrm{P}=1-k_c/K2`, which gives the contact stiffness for unloading/reloading :math:`K2 = k_c/(1-\lambda_\mathrm{P})`; set to 0 in order to fully deactivate Edinburgh Adhesive Elasto-Plastic Model model
+        contactPlasticityRatio: ratio of contact stiffness for first loading and unloading/reloading [SI:1]; Edinburgh Adhesive Elasto-Plastic Model; :math:`\lambda_\mathrm{P}=1-k_c/K2`, which gives the contact stiffness for unloading/reloading :math:`K2 = k_c/(1-\lambda_\mathrm{P})`; set to 0 in order to fully deactivate Edinburgh Adhesive Elasto-Plastic Model model; type: float
 
-        adhesionCoefficient (float): coefficient for adhesion [SI:N/m] (units in case that :math:`n_\mathrm{adh}=1`); Edinburgh Adhesive Elasto-Plastic Model; set to 0 to deactivate adhesion model
+        adhesionCoefficient: coefficient for adhesion [SI:N/m] (units in case that :math:`n_\mathrm{adh}=1`); Edinburgh Adhesive Elasto-Plastic Model; set to 0 to deactivate adhesion model; type: float
 
-        adhesionExponent (float): exponent for adhesion coefficient [SI:1]; Edinburgh Adhesive Elasto-Plastic Model
+        adhesionExponent: exponent for adhesion coefficient [SI:1]; Edinburgh Adhesive Elasto-Plastic Model; type: float
 
-        restitutionCoefficient (float): coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems)
+        restitutionCoefficient: coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems); type: float
 
-        minimumImpactVelocity (float): minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact)
+        minimumImpactVelocity: minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact); type: float
 
-        impactModel (int): number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!
+        impactModel: number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!; type: int
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectContactSphereSphere
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -4716,9 +4780,9 @@ class VObjectContactSphereTorus:
     """Visualization data for ObjectContactSphereTorus.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown; draws spheres by given radii
+        show: set true, if item is shown in visualization and false if it is not shown; draws spheres by given radii; type: bool
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = False, color = [0.7,0.7,0.7,1.]):
@@ -4738,37 +4802,39 @@ class ObjectContactSphereTorus:
     The sphere is assumed to be placed inside of the torus (outer contact of sphere with torus currently not implemented!).
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): list of markers representing centers of sphere (marker 0) and center of torus (marker 1)
+        markerNumbers: list of markers representing centers of sphere (marker 0) and center of torus (marker 1); type: ArrayMarkerIndex
 
-        nodeNumber (NodeIndex): node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused.
+        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused.; type: NodeIndex
 
-        radiusSphere (float): radius of sphere [SI:m]
+        radiusSphere: radius of sphere [SI:m]; type: float
 
-        torusMajorRadius (float): major radius of torus [SI:m], representing center of rotated circle
+        torusMajorRadius: major radius of torus [SI:m], representing center of rotated circle; type: float
 
-        torusMinorRadius (float): minor radius of torus [SI:m], representing radius of circle of ring
+        torusMinorRadius: minor radius of torus [SI:m], representing radius of circle of ring; type: float
 
-        torusAxis ([float,float,float]): Vector containing rotation axis of torus; must be a unit vector.
+        torusAxis: Vector containing rotation axis of torus; must be a unit vector.; type: [float,float,float]
 
-        dynamicFriction (float): dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, theDoc.pdf
+        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, theDoc.pdf; type: float
 
-        frictionProportionalZone (float): limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), theDoc.pdf
+        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), theDoc.pdf; type: float
 
-        contactStiffness (float): normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`)
+        contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
 
-        contactDamping (float): linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
 
-        contactStiffnessExponent (float): exponent in normal contact model [SI:1]
+        contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
 
-        restitutionCoefficient (float): coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems)
+        restitutionCoefficient: coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems); type: float
 
-        minimumImpactVelocity (float): minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact)
+        minimumImpactVelocity: minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact); type: float
 
-        impactModel (int): number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!
+        impactModel: number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!; type: int
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectContactSphereTorus
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -4825,9 +4891,9 @@ class VObjectContactSphereTriangle:
     """Visualization data for ObjectContactSphereTriangle.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown; draws spheres by given radii
+        show: set true, if item is shown in visualization and false if it is not shown; draws spheres by given radii; type: bool
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = False, color = [0.7,0.7,0.7,1.]):
@@ -4847,35 +4913,37 @@ class ObjectContactSphereTriangle:
     Penalty-based contact is computed from penetration of the sphere with the triangle, including contact with edges if desired.
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): list of markers representing the center of the sphere (marker 0) and the reference point of the triangle (marker 1), where triangle nodal positions are defined in the local coordinates of marker 1.
+        markerNumbers: list of markers representing the center of the sphere (marker 0) and the reference point of the triangle (marker 1), where triangle nodal positions are defined in the local coordinates of marker 1.; type: ArrayMarkerIndex
 
-        nodeNumber (NodeIndex): node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused.
+        nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused.; type: NodeIndex
 
-        radiusSphere (float): radius of sphere [SI:m]
+        radiusSphere: radius of sphere [SI:m]; type: float
 
-        trianglePoints (Vector3DList): triangle points, defined in marker 1 local coordinates
+        trianglePoints: triangle points, defined in marker 1 local coordinates; type: Vector3DList
 
-        includeEdges (int): Binary flag, where 1 defines contact with edges 0, 2 with edge 1 and 4 with edge 2; 7 means that contact with all edges is included; edge 0 is the edge between node 0 and node 1
+        includeEdges: Binary flag, where 1 defines contact with edges 0, 2 with edge 1 and 4 with edge 2; 7 means that contact with all edges is included; edge 0 is the edge between node 0 and node 1; type: int
 
-        dynamicFriction (float): dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, theDoc.pdf
+        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, theDoc.pdf; type: float
 
-        frictionProportionalZone (float): limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), theDoc.pdf
+        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), theDoc.pdf; type: float
 
-        contactStiffness (float): normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`)
+        contactStiffness: normal contact stiffness [SI:N/m] (units in case that :math:`n_\mathrm{exp}=1`); type: float
 
-        contactDamping (float): linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior.; type: float
 
-        contactStiffnessExponent (float): exponent in normal contact model [SI:1]
+        contactStiffnessExponent: exponent in normal contact model [SI:1]; type: float
 
-        restitutionCoefficient (float): coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems)
+        restitutionCoefficient: coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems); type: float
 
-        minimumImpactVelocity (float): minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact)
+        minimumImpactVelocity: minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact); type: float
 
-        impactModel (int): number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!
+        impactModel: number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!; type: int
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectContactSphereTriangle
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -4930,9 +4998,9 @@ class VObjectContactCurveCircles:
     """Visualization data for ObjectContactCurveCircles.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown; draws curve and circles with given radii; uses visualizationSettings circleTiling for circles and circleTiling/2 for tiling of non-straight segments
+        show: set true, if item is shown in visualization and false if it is not shown; draws curve and circles with given radii; uses visualizationSettings circleTiling for circles and circleTiling/2 for tiling of non-straight segments; type: bool
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, color = [-1.,-1.,-1.,-1.]):
@@ -4952,39 +5020,33 @@ class ObjectContactCurveCircles:
     The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. [REQUIRES FURTHER TESTING; friction not yet available]
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): list of :math:`n_c+1` markers; marker :math:`m0` represents the marker carrying the curve; all other markers represent centers of :math:`n_c` circles, used in connector
+        markerNumbers: list of :math:`n_c+1` markers; marker :math:`m0` represents the marker carrying the curve; all other markers represent centers of :math:`n_c` circles, used in connector; type: ArrayMarkerIndex
 
-        nodeNumber (NodeIndex): node number of a NodeGenericData with nDataVariablesPerSegment dataCoordinates per segment, needed for discontinuous iteration; data variables contain values from last PostNewton iteration: data[0+3*i] is the circle number, data[1+3*i] is the gap, data[2+3*i] is the tangential velocity (and thus contains information if it is stick or slip)
+        nodeNumber: node number of a NodeGenericData with nDataVariablesPerSegment dataCoordinates per segment, needed for discontinuous iteration; data variables contain values from last PostNewton iteration: data[0+3*i] is the circle number, data[1+3*i] is the gap, data[2+3*i] is the tangential velocity (and thus contains information if it is stick or slip); type: NodeIndex
 
-        circlesRadii (array_like): Vector containing radii of :math:`n_c` circles [SI:m]; number according to size of markerNumbers-1
+        circlesRadii: Vector containing radii of :math:`n_c` circles [SI:m]; number according to size of markerNumbers-1; type: array_like
 
-        segmentsData (PyMatrixContainer): matrix containing a set of two planar point coordinates in each row, representing segments attached to marker :math:`m0` and undergoing contact with the circles; for segment :math:`s0` row 0 reads :math:`[p_{0x,s0},\,p_{0y,s0},\,p_{1x,s0},\,p_{1y,s0}]`; note that the segments must be ordered such that going from :math:`\mathbf{p}_0` to :math:`\mathbf{p}_1`, the exterior lies on the right (positive) side. MatrixContainer has to be provided in dense mode!
+        segmentsData: matrix containing a set of two planar point coordinates in each row, representing segments attached to marker :math:`m0` and undergoing contact with the circles; for segment :math:`s0` row 0 reads :math:`[p_{0x,s0},\,p_{0y,s0},\,p_{1x,s0},\,p_{1y,s0}]`; note that the segments must be ordered such that going from :math:`\mathbf{p}_0` to :math:`\mathbf{p}_1`, the exterior lies on the right (positive) side. MatrixContainer has to be provided in dense mode!; type: PyMatrixContainer
 
-        polynomialData (PyMatrixContainer): matrix containing coefficients for special polynomial enhancements of the linear segments; each row contains coefficients for polynomials for the according segment, prescribing slopes at beginning and end of segment as well as curvature at beginning and end of segment; slopes and curvatures are defined in a local x/y coordinate system where x is the segment axis (start: x=0; x-axis points towards end point) and the segment normal is in y-direction; MatrixContainer has to be provided in dense mode!
+        polynomialData: matrix containing coefficients for special polynomial enhancements of the linear segments; each row contains coefficients for polynomials for the according segment, prescribing slopes at beginning and end of segment as well as curvature at beginning and end of segment; slopes and curvatures are defined in a local x/y coordinate system where x is the segment axis (start: x=0; x-axis points towards end point) and the segment normal is in y-direction; MatrixContainer has to be provided in dense mode!; type: PyMatrixContainer
 
-        rotationMarker0 (array_like): local rotation matrix for marker 0; used to rotate marker coordinates such that the curve lies in the :math:`x-y`-plane
+        rotationMarker0: local rotation matrix for marker 0; used to rotate marker coordinates such that the curve lies in the :math:`x-y`-plane; type: array_like
 
-        dynamicFriction (float): dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, theDoc.pdf
+        dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, theDoc.pdf; type: float
 
-        frictionProportionalZone (float): limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), theDoc.pdf
+        frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), theDoc.pdf; type: float
 
-        contactStiffness (float): normal contact stiffness [SI:N/(m*m)]
+        contactStiffness: normal contact stiffness [SI:N/(m*m)]; type: float
 
-        contactDamping (float): linear normal contact damping [SI:N/(m s)]; this damping is a simplification of real contact dissipation and should be used with care.
+        contactDamping: linear normal contact damping [SI:N/(m s)]; this damping is a simplification of real contact dissipation and should be used with care.; type: float
 
-        contactModel (int): number of contact model: 0) linear model for stiffness and damping, only proportional to penetration; contact force is computed from :math:`l_\mathrm{seg}\left(p \cdot  \cdot k_c + \dot p \cdot d_c \right)` as long as :math:`p>0`; while this is numerically more stable, it gives jumps in forces when sliding over contact geometry 1) contact force proportional to integral over penetration area of circle with segments, giving a smoother contact force when sliding over geometry;
+        contactModel: number of contact model: 0) linear model for stiffness and damping, only proportional to penetration; contact force is computed from :math:`l_\mathrm{seg}\left(p \cdot  \cdot k_c + \dot p \cdot d_c \right)` as long as :math:`p>0`; while this is numerically more stable, it gives jumps in forces when sliding over contact geometry 1) contact force proportional to integral over penetration area of circle with segments, giving a smoother contact force when sliding over geometry;
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
-        gapPerSegment (array_like): temporary vector for computed gap
-
-        gapPerSegment_t (array_like): temporary vector for computed gap velocity
-
-        segmentsForceLocalX (array_like): temporary vector for contact force per segment in local X-direction
-
-        segmentsForceLocalY (array_like): temporary vector for contact force per segment in local Y-direction
+        visualization: visualization data, see VObjectContactCurveCircles
 
     Notes:
         Object has/provides the following types: ``Connector``
@@ -5039,13 +5101,13 @@ class VObjectJointGeneric:
     """Visualization data for ObjectJointGeneric.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        axesRadius (float): radius of joint axes to draw
+        axesRadius: radius of joint axes to draw; type: float
 
-        axesLength (float): length of joint axes to draw
+        axesLength: length of joint axes to draw; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, axesRadius = 0.1, axesLength = 0.4, color = [-1.,-1.,-1.,-1.]):
@@ -5069,25 +5131,27 @@ class ObjectJointGeneric:
     An additional local rotation (rotationMarker) can be used to adjust the three rotation axes and/or sliding axes.
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        constrainedAxes (array_like): flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for :math:`j_i`, two values are possible: 0=free axis, 1=constrained axis
+        constrainedAxes: flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for :math:`j_i`, two values are possible: 0=free axis, 1=constrained axis; type: array_like
 
-        rotationMarker0 (array_like): local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0
+        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; type: array_like
 
-        rotationMarker1 (array_like): local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1
+        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; type: array_like
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
-        offsetUserFunctionParameters (array_like): vector of 6 parameters for joint's offsetUserFunction
+        offsetUserFunctionParameters: vector of 6 parameters for joint's offsetUserFunction; type: array_like
 
-        offsetUserFunction (PyFunctionVector6DmbsScalarIndexVector6D): A Python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (mbs, t, offsetUserFunctionParameters)
+        offsetUserFunction: A Python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (mbs, t, offsetUserFunctionParameters); type: PyFunctionVector6DmbsScalarIndexVector6D
 
-        offsetUserFunction_t (PyFunctionVector6DmbsScalarIndexVector6D): (NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters
+        offsetUserFunction_t: (NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters; type: PyFunctionVector6DmbsScalarIndexVector6D
 
-        alternativeConstraints (bool): this is an experimental flag, may change in future: if uses alternative contraint equations for rotations, currently in case of 3 locked rotations: :math:`{}^{0}{\mathbf{t}}_{x0}\tp ({}^{0}{\mathbf{t}}_{y1} \times {}^{0}{\mathbf{t}}_{z0})`, :math:`{}^{0}{\mathbf{t}}_{y0}\tp ({}^{0}{\mathbf{t}}_{z1} \times {}^{0}{\mathbf{t}}_{x0})`, :math:`{}^{0}{\mathbf{t}}_{z0}\tp ({}^{0}{\mathbf{t}}_{x1} \times {}^{0}{\mathbf{t}}_{y0})`; this avoids 180textdegree flips of the standard configuration in static computations, but leads to different values in Lagrange multipliers
+        alternativeConstraints: this is an experimental flag, may change in future: if uses alternative contraint equations for rotations, currently in case of 3 locked rotations: :math:`{}^{0}{\mathbf{t}}_{x0}\tp ({}^{0}{\mathbf{t}}_{y1} \times {}^{0}{\mathbf{t}}_{z0})`, :math:`{}^{0}{\mathbf{t}}_{y0}\tp ({}^{0}{\mathbf{t}}_{z1} \times {}^{0}{\mathbf{t}}_{x0})`, :math:`{}^{0}{\mathbf{t}}_{z0}\tp ({}^{0}{\mathbf{t}}_{x1} \times {}^{0}{\mathbf{t}}_{y0})`; this avoids 180textdegree flips of the standard configuration in static computations, but leads to different values in Lagrange multipliers; type: bool
+
+        visualization: visualization data, see VObjectJointGeneric
 
     Notes:
         Object has/provides the following types: ``Connector``, ``Constraint``
@@ -5136,13 +5200,13 @@ class VObjectJointRevoluteZ:
     """Visualization data for ObjectJointRevoluteZ.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        axisRadius (float): radius of joint axis to draw
+        axisRadius: radius of joint axis to draw; type: float
 
-        axisLength (float): length of joint axis to draw
+        axisLength: length of joint axis to draw; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, axisRadius = 0.1, axisLength = 0.4, color = [-1.,-1.,-1.,-1.]):
@@ -5166,15 +5230,17 @@ class ObjectJointRevoluteZ:
     An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), theDoc.pdf, for two rigid bodies (or ground). addExampleImage{RevoluteJointZ}
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        rotationMarker0 (array_like): local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0
+        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; type: array_like
 
-        rotationMarker1 (array_like): local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1
+        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; type: array_like
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectJointRevoluteZ
 
     Notes:
         Object has/provides the following types: ``Connector``, ``Constraint``
@@ -5213,13 +5279,13 @@ class VObjectJointPrismaticX:
     """Visualization data for ObjectJointPrismaticX.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        axisRadius (float): radius of joint axis to draw
+        axisRadius: radius of joint axis to draw; type: float
 
-        axisLength (float): length of joint axis to draw
+        axisLength: length of joint axis to draw; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, axisRadius = 0.1, axisLength = 0.4, color = [-1.,-1.,-1.,-1.]):
@@ -5243,15 +5309,17 @@ class ObjectJointPrismaticX:
     the joint :math:`y` and :math:`z` axes, allowing a relative motion along the joint :math:`x` axis (defined in local coordinates of marker 0 / joint J0 coordinates). An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), theDoc.pdf, for two rigid bodies (or ground). addExampleImage{PrismaticJointX}
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        rotationMarker0 (array_like): local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0
+        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; type: array_like
 
-        rotationMarker1 (array_like): local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1
+        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; type: array_like
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectJointPrismaticX
 
     Notes:
         Object has/provides the following types: ``Connector``, ``Constraint``
@@ -5290,11 +5358,11 @@ class VObjectJointSpherical:
     """Visualization data for ObjectJointSpherical.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        jointRadius (float): radius of joint to draw
+        jointRadius: radius of joint to draw; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, jointRadius = 0.1, color = [-1.,-1.,-1.,-1.]):
@@ -5314,13 +5382,15 @@ class ObjectJointSpherical:
     """A spherical joint, which constrains the relative translation between two position based markers.
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector; :math:`m1` is the moving coin rigid body and :math:`m0` is the marker for the ground body, which use the localPosition=[0,0,0] for this marker!
+        markerNumbers: list of markers used in connector; :math:`m1` is the moving coin rigid body and :math:`m0` is the marker for the ground body, which use the localPosition=[0,0,0] for this marker!; type: ArrayMarkerIndex
 
-        constrainedAxes (array_like): flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for :math:`j_i`, two values are possible: 0=free axis, 1=constrained axis
+        constrainedAxes: flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for :math:`j_i`, two values are possible: 0=free axis, 1=constrained axis; type: array_like
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectJointSpherical
 
     Notes:
         Object has/provides the following types: ``Connector``, ``Constraint``
@@ -5356,11 +5426,11 @@ class VObjectJointRollingDisc:
     """Visualization data for ObjectJointRollingDisc.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        discWidth (float): width of disc for drawing
+        discWidth: width of disc for drawing; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, discWidth = 0.1, color = [-1.,-1.,-1.,-1.]):
@@ -5382,19 +5452,21 @@ class ObjectJointRollingDisc:
     The contraint is based on an idealized rolling formulation with no slip. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. It must be assured that the disc has contact to ground in the initial configuration (adjust z-position of body accordingly). The ground body can be a rigid body which is moving. In this case, the flat surface is assumed to be in the :math:`x`-:math:`y`-plane at :math:`z=0`. Note that the rolling body must have the reference point at the center of the disc. NOTE: the cases of normal other than :math:`z`-direction, wheel axis other than :math:`x`-axis and moving ground body needs to be tested further, check your results!
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector; :math:`m0` represents the ground and :math:`m1` represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point
+        markerNumbers: list of markers used in connector; :math:`m0` represents the ground and :math:`m1` represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point; type: ArrayMarkerIndex
 
-        constrainedAxes (array_like): flags, which determine which constraints are active, in which :math:`j_0` represents lateral motion, :math:`j_1` longitudinal (forward/backward) motion and :math:`j_2` represents the normal (contact) direction
+        constrainedAxes: flags, which determine which constraints are active, in which :math:`j_0` represents lateral motion, :math:`j_1` longitudinal (forward/backward) motion and :math:`j_2` represents the normal (contact) direction; type: array_like
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
-        discRadius (float): defines the disc radius
+        discRadius: defines the disc radius; type: float
 
-        discAxis ([float,float,float]): axis of disc defined in marker :math:`m1` frame
+        discAxis: axis of disc defined in marker :math:`m1` frame; type: [float,float,float]
 
-        planeNormal ([float,float,float]): normal to the contact / rolling plane defined in marker :math:`m0` coordinates
+        planeNormal: normal to the contact / rolling plane defined in marker :math:`m0` coordinates; type: [float,float,float]
+
+        visualization: visualization data, see VObjectJointRollingDisc
 
     Notes:
         Object has/provides the following types: ``Connector``, ``Constraint``
@@ -5436,11 +5508,11 @@ class VObjectJointRevolute2D:
     """Visualization data for ObjectJointRevolute2D.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size = radius of revolute joint; size == -1.f means that default connector size is used
+        drawSize: drawing size = radius of revolute joint; size == -1.f means that default connector size is used; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -5460,11 +5532,13 @@ class ObjectJointRevolute2D:
     """A revolute joint in 2D; constrains the absolute 2D position of two points given by PointMarkers or RigidMarkers.
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectJointRevolute2D
 
     Notes:
         Object has/provides the following types: ``Connector``, ``Constraint``
@@ -5498,11 +5572,11 @@ class VObjectJointPrismatic2D:
     """Visualization data for ObjectJointPrismatic2D.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size = radius of revolute joint; size == -1.f means that default connector size is used
+        drawSize: drawing size = radius of revolute joint; size == -1.f means that default connector size is used; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -5522,17 +5596,19 @@ class ObjectJointPrismatic2D:
     """A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers.
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): list of markers used in connector
+        markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        axisMarker0 ([float,float,float]): direction of prismatic axis, given as a 3D vector in Marker0 frame
+        axisMarker0: direction of prismatic axis, given as a 3D vector in Marker0 frame; type: [float,float,float]
 
-        normalMarker1 ([float,float,float]): direction of normal to prismatic axis, given as a 3D vector in Marker1 frame
+        normalMarker1: direction of normal to prismatic axis, given as a 3D vector in Marker1 frame; type: [float,float,float]
 
-        constrainRotation (bool): flag, which determines, if the connector also constrains the relative rotation of the two objects; if set to false, the constraint will keep an algebraic equation set equal zero
+        constrainRotation: flag, which determines, if the connector also constrains the relative rotation of the two objects; if set to false, the constraint will keep an algebraic equation set equal zero; type: bool
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectJointPrismatic2D
 
     Notes:
         Object has/provides the following types: ``Connector``, ``Constraint``
@@ -5572,11 +5648,11 @@ class VObjectJointSliding:
     """Visualization data for ObjectJointSliding.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size = radius of revolute joint; size == -1.f means that default connector size is used
+        drawSize: drawing size = radius of revolute joint; size == -1.f means that default connector size is used; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -5596,23 +5672,25 @@ class ObjectJointSliding:
     """A specialized 3D sliding joint between a list of beam elements (updated marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep.
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): marker m0: position or rigid body marker of mass point or rigid body; marker m1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)
+        markerNumbers: marker m0: position or rigid body marker of mass point or rigid body; marker m1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep); type: ArrayMarkerIndex
 
-        slidingMarkerNumbers (ArrayMarkerIndex): these markers are used to update marker m1, if the sliding position exceeds the current cable's range; the markers must be sorted such that marker :math:`m_{si}` at x=cable(i).length is equal to marker(i+1) at x=0 of cable(i+1)
+        slidingMarkerNumbers: these markers are used to update marker m1, if the sliding position exceeds the current cable's range; the markers must be sorted such that marker :math:`m_{si}` at x=cable(i).length is equal to marker(i+1) at x=0 of cable(i+1); type: ArrayMarkerIndex
 
-        slidingMarkerOffsets (array_like): this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker m0: offset=0, marker m1: offset=Length(cable0), marker m2: offset=Length(cable0)+Length(cable1), ...
+        slidingMarkerOffsets: this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker m0: offset=0, marker m1: offset=Length(cable0), marker m2: offset=Length(cable0)+Length(cable1), ...; type: array_like
 
-        nodeNumber (NodeIndex): node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position
+        nodeNumber: node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position; type: NodeIndex
 
-        constrainRotations (array_like): flags for constrained rotation about x, y and z-axis: if flag=1, add constraint on rotation of marker m0 relative to respective axis; flag=0: sliding body can rotate freely about this axis; for ANCFCable, rotation about x-axis cannot be constrained
+        constrainRotations: flags for constrained rotation about x, y and z-axis: if flag=1, add constraint on rotation of marker m0 relative to respective axis; flag=0: sliding body can rotate freely about this axis; for ANCFCable, rotation about x-axis cannot be constrained; type: array_like
 
-        constrainTranslations (array_like): flags for constrained translation in x, y and z-direction: if flag=1, add constraint on translation of marker m0 relative to respective axis; flag=0: sliding body can translate freely about this axis; along x-axis this should be usually 0, except for driven motion
+        constrainTranslations: flags for constrained translation in x, y and z-direction: if flag=1, add constraint on translation of marker m0 relative to respective axis; flag=0: sliding body can translate freely about this axis; along x-axis this should be usually 0, except for driven motion; type: array_like
 
-        axialForce (float): ONLY APPLIES if classicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions.
+        axialForce: ONLY APPLIES if classicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions.; type: float
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectJointSliding
 
     Notes:
         Object has/provides the following types: ``Connector``, ``Constraint``
@@ -5660,11 +5738,11 @@ class VObjectJointSliding2D:
     """Visualization data for ObjectJointSliding2D.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size = radius of revolute joint; size == -1.f means that default connector size is used
+        drawSize: drawing size = radius of revolute joint; size == -1.f means that default connector size is used; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -5684,23 +5762,25 @@ class ObjectJointSliding2D:
     """A specialized sliding joint (without rotation) in 2D between a Cable2D (marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep.
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): marker m0: position or rigid body marker of mass point or rigid body; marker m1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)
+        markerNumbers: marker m0: position or rigid body marker of mass point or rigid body; marker m1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep); type: ArrayMarkerIndex
 
-        slidingMarkerNumbers (ArrayMarkerIndex): these markers are used to update marker m1, if the sliding position exceeds the current cable's range; the markers must be sorted such that marker :math:`m_{si}` at x=cable(i).length is equal to marker(i+1) at x=0 of cable(i+1)
+        slidingMarkerNumbers: these markers are used to update marker m1, if the sliding position exceeds the current cable's range; the markers must be sorted such that marker :math:`m_{si}` at x=cable(i).length is equal to marker(i+1) at x=0 of cable(i+1); type: ArrayMarkerIndex
 
-        slidingMarkerOffsets (array_like): this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker m0: offset=0, marker m1: offset=Length(cable0), marker m2: offset=Length(cable0)+Length(cable1), ...
+        slidingMarkerOffsets: this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker m0: offset=0, marker m1: offset=Length(cable0), marker m2: offset=Length(cable0)+Length(cable1), ...; type: array_like
 
-        nodeNumber (NodeIndex): node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position
+        nodeNumber: node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position; type: NodeIndex
 
-        classicalFormulation (bool): True: uses a formulation with 3 (+1) equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; False: use local formulation, which only needs 2 (+1) equations and can be used with index 2 formulation
+        classicalFormulation: True: uses a formulation with 3 (+1) equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; False: use local formulation, which only needs 2 (+1) equations and can be used with index 2 formulation; type: bool
 
-        constrainRotation (bool): True: add constraint on rotation of marker m0 relative to slope (if True, marker m0 must be a rigid body marker); False: marker m0 body can rotate freely
+        constrainRotation: True: add constraint on rotation of marker m0 relative to slope (if True, marker m0 must be a rigid body marker); False: marker m0 body can rotate freely; type: bool
 
-        axialForce (float): ONLY APPLIES if classicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions.
+        axialForce: ONLY APPLIES if classicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions.; type: float
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectJointSliding2D
 
     Notes:
         Object has/provides the following types: ``Connector``, ``Constraint``
@@ -5748,11 +5828,11 @@ class VObjectJointALEMoving2D:
     """Visualization data for ObjectJointALEMoving2D.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize (float): drawing size = radius of revolute joint; size == -1.f means that default connector size is used
+        drawSize: drawing size = radius of revolute joint; size == -1.f means that default connector size is used; type: float
 
-        color ([float,float,float,float]): RGBA connector color; if R==-1, use default color
+        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
     def __init__(self, show = True, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
@@ -5772,23 +5852,25 @@ class ObjectJointALEMoving2D:
     """A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); ALE=Arbitrary Lagrangian Eulerian; the data coordinate x[0] provides the current index in slidingMarkerNumbers, and the ODE2 coordinate q[0] provides the (given) moving coordinate in the cable element.
     
     Args:
-        name (str): constraints's unique name
+        name: constraints's unique name
 
-        markerNumbers (ArrayMarkerIndex): marker m0: position-marker of mass point or rigid body; marker m1: updated marker to ANCF Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)
+        markerNumbers: marker m0: position-marker of mass point or rigid body; marker m1: updated marker to ANCF Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep); type: ArrayMarkerIndex
 
-        slidingMarkerNumbers (ArrayMarkerIndex): a list of sn (global) marker numbers which are are used to update marker1
+        slidingMarkerNumbers: a list of sn (global) marker numbers which are are used to update marker1; type: ArrayMarkerIndex
 
-        slidingMarkerOffsets (array_like): this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker0: offset=0, marker1: offset=Length(cable0), marker2: offset=Length(cable0)+Length(cable1), ...
+        slidingMarkerOffsets: this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker0: offset=0, marker1: offset=Length(cable0), marker2: offset=Length(cable0)+Length(cable1), ...; type: array_like
 
-        slidingOffset (float): sliding offset [SI:m]: a scalar offset, which represents the (reference arc) length of all previous sliding cable elements
+        slidingOffset: sliding offset [SI:m]: a scalar offset, which represents the (reference arc) length of all previous sliding cable elements; type: float
 
-        nodeNumbers (ArrayNodeIndex): node number of NodeGenericData (GD) with one data coordinate and of NodeGenericODE2 (ALE) with one ODE2 coordinate
+        nodeNumbers: node number of NodeGenericData (GD) with one data coordinate and of NodeGenericODE2 (ALE) with one ODE2 coordinate; type: ArrayNodeIndex
 
-        usePenaltyFormulation (bool): flag, which determines, if the connector is formulated with penalty, but still using algebraic equations (IsPenaltyConnector() still false)
+        usePenaltyFormulation: flag, which determines, if the connector is formulated with penalty, but still using algebraic equations (IsPenaltyConnector() still false); type: bool
 
-        penaltyStiffness (float): penalty stiffness [SI:N/m] used if usePenaltyFormulation=True
+        penaltyStiffness: penalty stiffness [SI:N/m] used if usePenaltyFormulation=True; type: float
 
-        activeConnector (bool): flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
+        activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        visualization: visualization data, see VObjectJointALEMoving2D
 
     Notes:
         Object has/provides the following types: ``Connector``, ``Constraint``
@@ -5836,7 +5918,7 @@ class VMarkerBodyMass:
     """Visualization data for MarkerBodyMass.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -5852,9 +5934,11 @@ class MarkerBodyMass:
     """A marker attached to the body mass; use this marker to apply a body-load (e.g. gravitational force).
     
     Args:
-        name (str): marker's unique name
+        name: marker's unique name; type: str
 
-        bodyNumber (ObjectIndex): body number to which marker is attached to
+        bodyNumber: body number to which marker is attached to; type: ObjectIndex
+
+        visualization: visualization data, see VMarkerBodyMass
 
     Notes:
         Marker has/provides the following types: ``Object``, ``Body``, ``BodyMass``
@@ -5878,7 +5962,7 @@ class VMarkerBodyPosition:
     """Visualization data for MarkerBodyPosition.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -5896,11 +5980,13 @@ class MarkerBodyPosition:
     It provides position information as well as the according derivatives (=velocity and derivative of position w.r.t. body coordinates). It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerBodyRigid.
     
     Args:
-        name (str): marker's unique name
+        name: marker's unique name; type: str
 
-        bodyNumber (ObjectIndex): body number to which marker is attached to
+        bodyNumber: body number to which marker is attached to; type: ObjectIndex
 
-        localPosition ([float,float,float]): local body position of marker; e.g. local (body-fixed) position where force is applied to
+        localPosition: local body position of marker; e.g. local (body-fixed) position where force is applied to; type: [float,float,float]
+
+        visualization: visualization data, see VMarkerBodyPosition
 
     Notes:
         Marker has/provides the following types: ``Object``, ``Body``, ``Position``
@@ -5926,7 +6012,7 @@ class VMarkerBodyRigid:
     """Visualization data for MarkerBodyRigid.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -5944,11 +6030,13 @@ class MarkerBodyRigid:
     It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required.
     
     Args:
-        name (str): marker's unique name
+        name: marker's unique name; type: str
 
-        bodyNumber (ObjectIndex): body number to which marker is attached to
+        bodyNumber: body number to which marker is attached to; type: ObjectIndex
 
-        localPosition ([float,float,float]): local body position of marker; e.g. local (body-fixed) position where force is applied to
+        localPosition: local body position of marker; e.g. local (body-fixed) position where force is applied to; type: [float,float,float]
+
+        visualization: visualization data, see VMarkerBodyRigid
 
     Notes:
         Marker has/provides the following types: ``Object``, ``Body``, ``Position``, ``Orientation``
@@ -5974,7 +6062,7 @@ class VMarkerNodePosition:
     """Visualization data for MarkerNodePosition.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -5992,9 +6080,11 @@ class MarkerNodePosition:
     It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerNodeRigid.
     
     Args:
-        name (str): marker's unique name
+        name: marker's unique name; type: str
 
-        nodeNumber (NodeIndex): node number to which marker is attached to
+        nodeNumber: node number to which marker is attached to; type: NodeIndex
+
+        visualization: visualization data, see VMarkerNodePosition
 
     Notes:
         Marker has/provides the following types: ``Node``, ``Position``
@@ -6018,7 +6108,7 @@ class VMarkerNodeRigid:
     """Visualization data for MarkerNodeRigid.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -6036,9 +6126,11 @@ class MarkerNodeRigid:
     It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required.
     
     Args:
-        name (str): marker's unique name
+        name: marker's unique name; type: str
 
-        nodeNumber (NodeIndex): node number to which marker is attached to
+        nodeNumber: node number to which marker is attached to; type: NodeIndex
+
+        visualization: visualization data, see VMarkerNodeRigid
 
     Notes:
         Marker has/provides the following types: ``Node``, ``Position``, ``Orientation``
@@ -6062,7 +6154,7 @@ class VMarkerNodeCoordinate:
     """Visualization data for MarkerNodeCoordinate.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -6078,11 +6170,13 @@ class MarkerNodeCoordinate:
     """A node-Marker attached to a ODE2 coordinate of a node; this marker allows to connect a coordinate-based constraint or connector to a nodal coordinate (also NodeGround); for ODE1 coordinates use ``MarkerNodeODE1Coordinate``.
     
     Args:
-        name (str): marker's unique name
+        name: marker's unique name; type: str
 
-        nodeNumber (NodeIndex): node number to which marker is attached to
+        nodeNumber: node number to which marker is attached to; type: NodeIndex
 
-        coordinate (int): coordinate of node to which marker is attached to
+        coordinate: coordinate of node to which marker is attached to; type: int
+
+        visualization: visualization data, see VMarkerNodeCoordinate
 
     Notes:
         Marker has/provides the following types: ``Node``, ``Coordinate``
@@ -6108,7 +6202,7 @@ class VMarkerNodeCoordinates:
     """Visualization data for MarkerNodeCoordinates.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -6126,9 +6220,11 @@ class MarkerNodeCoordinates:
     IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! For ODE1 coordinates use ``MarkerNodeODE1Coordinates``.
     
     Args:
-        name (str): marker's unique name
+        name: marker's unique name; type: str
 
-        nodeNumber (NodeIndex): node number to which marker is attached to
+        nodeNumber: node number to which marker is attached to; type: NodeIndex
+
+        visualization: visualization data, see VMarkerNodeCoordinates
 
     Notes:
         Marker has/provides the following types: ``Node``, ``Coordinate``
@@ -6152,7 +6248,7 @@ class VMarkerNodeODE1Coordinate:
     """Visualization data for MarkerNodeODE1Coordinate.
     
     Args:
-        show (bool): currently not available; set true, if item is shown in visualization and false if it is not shown
+        show: currently not available; set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = False):
@@ -6168,11 +6264,13 @@ class MarkerNodeODE1Coordinate:
     """A node-Marker attached to a ODE1 coordinate of a node.
     
     Args:
-        name (str): marker's unique name
+        name: marker's unique name; type: str
 
-        nodeNumber (NodeIndex): node number to which marker is attached to
+        nodeNumber: node number to which marker is attached to; type: NodeIndex
 
-        coordinate (int): coordinate of node to which marker is attached to
+        coordinate: coordinate of node to which marker is attached to; type: int
+
+        visualization: visualization data, see VMarkerNodeODE1Coordinate
 
     Notes:
         Marker has/provides the following types: ``Node``, ``Coordinate``
@@ -6198,7 +6296,7 @@ class VMarkerNodeRotationCoordinate:
     """Visualization data for MarkerNodeRotationCoordinate.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -6214,11 +6312,13 @@ class MarkerNodeRotationCoordinate:
     """A node-Marker attached to a a node containing rotation; the Marker measures a rotation coordinate (Tait-Bryan angles) or angular velocities on the velocity level.
     
     Args:
-        name (str): marker's unique name
+        name: marker's unique name; type: str
 
-        nodeNumber (NodeIndex): node number to which marker is attached to
+        nodeNumber: node number to which marker is attached to; type: NodeIndex
 
-        rotationCoordinate (int): rotation coordinate: 0=x, 1=y, 2=z
+        rotationCoordinate: rotation coordinate: 0=x, 1=y, 2=z; type: int
+
+        visualization: visualization data, see VMarkerNodeRotationCoordinate
 
     Notes:
         Marker has/provides the following types: ``Node``, ``Coordinate``
@@ -6244,7 +6344,7 @@ class VMarkerBodiesRelativeTranslationCoordinate:
     """Visualization data for MarkerBodiesRelativeTranslationCoordinate.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -6262,17 +6362,19 @@ class MarkerBodiesRelativeTranslationCoordinate:
     This marker can be used together with coordinate-based constraints and connectors (e.g., CoordinateSpringDamper and CoordinateConstraint). NOTE: it is assumed that the two bodies can only move along the given axis (e.g., constrained by a prismatic joint) -- otherwise results may be unexpected. NOTE: this approach is not compatible with FFRF-based flexible bodies and currently requires and intermediate rigid body.
     
     Args:
-        name (str): marker's unique name
+        name: marker's unique name; type: str
 
-        bodyNumbers (ArrayObjectIndex): list of body numbers for which relative coordinate is computed
+        bodyNumbers: list of body numbers for which relative coordinate is computed; type: ArrayObjectIndex
 
-        localPosition0 ([float,float,float]): local position on body 0; i.e. local (body-fixed) position where position is measured and force is applied to
+        localPosition0: local position on body 0; i.e. local (body-fixed) position where position is measured and force is applied to; type: [float,float,float]
 
-        localPosition1 ([float,float,float]): local position on body 1; i.e. local (body-fixed) position where position is measured and force is applied to
+        localPosition1: local position on body 1; i.e. local (body-fixed) position where position is measured and force is applied to; type: [float,float,float]
 
-        axis0 ([float,float,float]): axis defined in body 0, along which the relative translation is measured
+        axis0: axis defined in body 0, along which the relative translation is measured; type: [float,float,float]
 
-        offset (float): translation offset [SI:m] subtracted from the translation; can be used to change the zero position
+        offset: translation offset [SI:m] subtracted from the translation; can be used to change the zero position; type: float
+
+        visualization: visualization data, see VMarkerBodiesRelativeTranslationCoordinate
 
     Notes:
         Marker has/provides the following types: ``Object``, ``Body``, ``Position``, ``Orientation``, ``Coordinate``
@@ -6304,7 +6406,7 @@ class VMarkerBodiesRelativeRotationCoordinate:
     """Visualization data for MarkerBodiesRelativeRotationCoordinate.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -6322,19 +6424,21 @@ class MarkerBodiesRelativeRotationCoordinate:
     NOTE: it is assumed that the two bodies can only rotate about the given axis (e.g., constrained by a revolute joint) -- otherwise results may be unexpected. NOTE: this approach is not compatible with FFRF-based flexible bodies and currently requires and intermediate rigid body.
     
     Args:
-        name (str): marker's unique name
+        name: marker's unique name; type: str
 
-        bodyNumbers (ArrayObjectIndex): list of body numbers for which relative coordinate is computed
+        bodyNumbers: list of body numbers for which relative coordinate is computed; type: ArrayObjectIndex
 
-        nodeNumber (NodeIndex): node number of NodeGenericData with 1 coordinate which contains previous angle for continuation of angles (initialize accordingly if needed); if node is not supplied, angles will have jump outside :math:`\pm \pi`
+        nodeNumber: node number of NodeGenericData with 1 coordinate which contains previous angle for continuation of angles (initialize accordingly if needed); if node is not supplied, angles will have jump outside :math:`\pm \pi`; type: NodeIndex
 
-        localPosition0 ([float,float,float]): local position on body 0; i.e. local (body-fixed) position where position is measured and force is applied to
+        localPosition0: local position on body 0; i.e. local (body-fixed) position where position is measured and force is applied to; type: [float,float,float]
 
-        localPosition1 ([float,float,float]): local position on body 1; i.e. local (body-fixed) position where position is measured and force is applied to
+        localPosition1: local position on body 1; i.e. local (body-fixed) position where position is measured and force is applied to; type: [float,float,float]
 
-        axis0 ([float,float,float]): axis defined in body 0, along which the relative rotation is measured
+        axis0: axis defined in body 0, along which the relative rotation is measured; type: [float,float,float]
 
-        offset (float): rotation offset [SI:1] subtracted from the measured rotation; can be used to change the zero rotation
+        offset: rotation offset [SI:1] subtracted from the measured rotation; can be used to change the zero rotation; type: float
+
+        visualization: visualization data, see VMarkerBodiesRelativeRotationCoordinate
 
     Notes:
         Marker has/provides the following types: ``Node``, ``Object``, ``Body``, ``Position``, ``Orientation``, ``Coordinate``
@@ -6368,9 +6472,9 @@ class VMarkerSuperElementPosition:
     """Visualization data for MarkerSuperElementPosition.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        showMarkerNodes (bool): set true, if all nodes are shown (similar to marker, but with less intensity)
+        showMarkerNodes: set true, if all nodes are shown (similar to marker, but with less intensity); type: bool
 
     """
     def __init__(self, show = True, showMarkerNodes = True):
@@ -6390,13 +6494,15 @@ class MarkerSuperElementPosition:
     The marker acts on the mesh (interface) nodes, not on the underlying nodes of the object.
     
     Args:
-        name (str): marker's unique name
+        name: marker's unique name; type: str
 
-        bodyNumber (ObjectIndex): body number to which marker is attached to
+        bodyNumber: body number to which marker is attached to; type: ObjectIndex
 
-        meshNodeNumbers (array_like): a list of :math:`n_m` mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers
+        meshNodeNumbers: a list of :math:`n_m` mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers; type: array_like
 
-        weightingFactors (array_like): a list of :math:`n_m` weighting factors per node to compute the final local position; the sum of these weights shall be 1, such that a summation of all nodal positions times weights gives the average position of the marker
+        weightingFactors: a list of :math:`n_m` weighting factors per node to compute the final local position; the sum of these weights shall be 1, such that a summation of all nodal positions times weights gives the average position of the marker; type: array_like
+
+        visualization: visualization data, see VMarkerSuperElementPosition
 
     Notes:
         Marker has/provides the following types: ``Object``, ``Body``, ``Position``
@@ -6425,9 +6531,9 @@ class VMarkerSuperElementRigid:
     """Visualization data for MarkerSuperElementRigid.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        showMarkerNodes (bool): set true, if all nodes are shown (similar to marker, but with less intensity)
+        showMarkerNodes: set true, if all nodes are shown (similar to marker, but with less intensity); type: bool
 
     """
     def __init__(self, show = True, showMarkerNodes = True):
@@ -6447,19 +6553,21 @@ class MarkerSuperElementRigid:
     The marker acts on the mesh nodes, not on the underlying nodes of the object. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that these node points can represent a rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition.
     
     Args:
-        name (str): marker's unique name
+        name: marker's unique name; type: str
 
-        bodyNumber (ObjectIndex): body number to which marker is attached to
+        bodyNumber: body number to which marker is attached to; type: ObjectIndex
 
-        offset ([float,float,float]): local marker SuperElement reference position offset used to correct the center point of the marker, which is computed from the weighted average of reference node positions (which may have some offset to the desired joint position). Note that this offset shall be small and larger offsets can cause instability in simulation models (better to have symmetric meshes at joints).
+        offset: local marker SuperElement reference position offset used to correct the center point of the marker, which is computed from the weighted average of reference node positions (which may have some offset to the desired joint position). Note that this offset shall be small and larger offsets can cause instability in simulation models (better to have symmetric meshes at joints).; type: [float,float,float]
 
-        meshNodeNumbers (array_like): a list of :math:`n_m` mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position and orientation; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers
+        meshNodeNumbers: a list of :math:`n_m` mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position and orientation; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers; type: array_like
 
-        weightingFactors (array_like): a list of :math:`n_m` weighting factors per node to compute the final local position and orientation; these factors could be based on surface integrals of the constrained mesh faces
+        weightingFactors: a list of :math:`n_m` weighting factors per node to compute the final local position and orientation; these factors could be based on surface integrals of the constrained mesh faces; type: array_like
 
-        useAlternativeApproach (bool): this flag switches between two versions for the computation of the rotation and angular velocity of the marker; alternative approach uses skew symmetric matrix of reference position; follows the inertia concept
+        useAlternativeApproach: this flag switches between two versions for the computation of the rotation and angular velocity of the marker; alternative approach uses skew symmetric matrix of reference position; follows the inertia concept; type: bool
 
-        rotationsExponentialMap (int): Experimental flag (2 is the correct value and will be used in future, removing this flag): This value switches different behavior for computation of rotations and angular velocities: 0 uses linearized rotations and angular velocities, 1 uses the exponential map for rotations but linear angular velocities, 2 uses the exponential map for rotations and the according tangent map for angular velocities
+        rotationsExponentialMap: Experimental flag (2 is the correct value and will be used in future, removing this flag): This value switches different behavior for computation of rotations and angular velocities: 0 uses linearized rotations and angular velocities, 1 uses the exponential map for rotations but linear angular velocities, 2 uses the exponential map for rotations and the according tangent map for angular velocities; type: int
+
+        visualization: visualization data, see VMarkerSuperElementRigid
 
     Notes:
         Marker has/provides the following types: ``Object``, ``Body``, ``Position``, ``Orientation``
@@ -6494,7 +6602,7 @@ class VMarkerKinematicTreeRigid:
     """Visualization data for MarkerKinematicTreeRigid.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -6512,13 +6620,15 @@ class MarkerKinematicTreeRigid:
     The marker is attached to the ObjectKinematicTree object and additionally needs a link number as well as a local position, similar to the SensorKinematicTree. The marker allows to attach loads (LoadForceVector and LoadTorqueVector) at arbitrary links or position. It also allows to attach connectors (e.g., spring dampers or actuators) to the kinematic tree. Finally, joint constraints can be attached, which allows for realization of closed loop structures. NOTE, however, that it is less efficient to attach many markers to a kinematic tree, therefor for forces or joint control use the structures available in kinematic tree whenever possible.
     
     Args:
-        name (str): marker's unique name
+        name: marker's unique name; type: str
 
-        objectNumber (ObjectIndex): body number to which marker is attached to
+        objectNumber: body number to which marker is attached to; type: ObjectIndex
 
-        linkNumber (int): number of link in KinematicTree to which marker is attached to
+        linkNumber: number of link in KinematicTree to which marker is attached to; type: int
 
-        localPosition ([float,float,float]): local (link-fixed) position of marker at link :math:`n_l`, using the link (:math:`n_l`) coordinate system
+        localPosition: local (link-fixed) position of marker at link :math:`n_l`, using the link (:math:`n_l`) coordinate system; type: [float,float,float]
+
+        visualization: visualization data, see VMarkerKinematicTreeRigid
 
     Notes:
         Marker has/provides the following types: ``Object``, ``Body``, ``Position``, ``Orientation``
@@ -6546,7 +6656,7 @@ class VMarkerObjectODE2Coordinates:
     """Visualization data for MarkerObjectODE2Coordinates.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -6564,9 +6674,11 @@ class MarkerObjectODE2Coordinates:
     The measured coordinates INCLUDE reference + current coordinates.
     
     Args:
-        name (str): marker's unique name
+        name: marker's unique name; type: str
 
-        objectNumber (ObjectIndex): body number to which marker is attached to
+        objectNumber: body number to which marker is attached to; type: ObjectIndex
+
+        visualization: visualization data, see VMarkerObjectODE2Coordinates
 
     Notes:
         Marker has/provides the following types: ``Object``, ``Body``, ``Coordinate``
@@ -6590,7 +6702,7 @@ class VMarkerBodyCable2DShape:
     """Visualization data for MarkerBodyCable2DShape.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -6606,13 +6718,15 @@ class MarkerBodyCable2DShape:
     """A special Marker attached to a 2D ANCF beam finite element with cubic interpolation and 8 coordinates.
     
     Args:
-        name (str): marker's unique name
+        name: marker's unique name; type: str
 
-        bodyNumber (ObjectIndex): body number to which marker is attached to
+        bodyNumber: body number to which marker is attached to; type: ObjectIndex
 
-        numberOfSegments (int): number of number of segments; each segment is a line and is associated to a data (history) variable; must be same as in according contact element
+        numberOfSegments: number of number of segments; each segment is a line and is associated to a data (history) variable; must be same as in according contact element; type: int
 
-        verticalOffset (float): vertical offset from beam axis in positive (local) Y-direction; this offset accounts for consistent computation of positions and velocities at the surface of the beam
+        verticalOffset: vertical offset from beam axis in positive (local) Y-direction; this offset accounts for consistent computation of positions and velocities at the surface of the beam; type: float
+
+        visualization: visualization data, see VMarkerBodyCable2DShape
 
     Notes:
         Marker has/provides the following types: ``Object``, ``Body``, ``Coordinate``
@@ -6640,7 +6754,7 @@ class VMarkerBodyCable2DCoordinates:
     """Visualization data for MarkerBodyCable2DCoordinates.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -6656,9 +6770,11 @@ class MarkerBodyCable2DCoordinates:
     """A special Marker attached to the coordinates of a 2D ANCF beam finite element with cubic interpolation.
     
     Args:
-        name (str): marker's unique name
+        name: marker's unique name; type: str
 
-        bodyNumber (ObjectIndex): body number to which marker is attached to
+        bodyNumber: body number to which marker is attached to; type: ObjectIndex
+
+        visualization: visualization data, see VMarkerBodyCable2DCoordinates
 
     Notes:
         Marker has/provides the following types: ``Object``, ``Body``, ``Coordinate``
@@ -6682,7 +6798,7 @@ class VMarkerBodyBeamShape:
     """Visualization data for MarkerBodyBeamShape.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -6698,9 +6814,11 @@ class MarkerBodyBeamShape:
     """A special Marker attached to a 3D beam finite element which provides at least position and tangent to the beam axis.
     
     Args:
-        name (str): marker's unique name
+        name: marker's unique name; type: str
 
-        bodyNumber (ObjectIndex): body number to which marker is attached to (beam type)
+        bodyNumber: body number to which marker is attached to (beam type); type: ObjectIndex
+
+        visualization: visualization data, see VMarkerBodyBeamShape
 
     Notes:
         Marker has/provides the following types: ``Object``, ``Body``
@@ -6726,7 +6844,7 @@ class VLoadForceVector:
     """Visualization data for LoadForceVector.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -6742,15 +6860,17 @@ class LoadForceVector:
     """Load with (3D) force vector; attached to position-based marker.
     
     Args:
-        name (str): load's unique name
+        name: load's unique name; type: str
 
-        markerNumber (MarkerIndex): marker's number to which load is applied
+        markerNumber: marker's number to which load is applied; type: MarkerIndex
 
-        loadVector ([float,float,float]): vector-valued load [SI:N]; in case of a user function, this vector is ignored
+        loadVector: vector-valued load [SI:N]; in case of a user function, this vector is ignored; type: [float,float,float]
 
-        bodyFixed (bool): if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower force; if false: global coordinates are used
+        bodyFixed: if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower force; if false: global coordinates are used; type: bool
 
-        loadVectorUserFunction (PyFunctionVector3DmbsScalarVector3D): A Python function which defines the time-dependent load and replaces loadVector; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); NOTE that forces are drawn using the value of loadVector; thus the current values according to the user function are NOT shown in the render window; however, a sensor (SensorLoad) returns the user function force which is applied to the object; to draw forces with current user function values, use a graphicsDataUserFunction of a ground object
+        loadVectorUserFunction: A Python function which defines the time-dependent load and replaces loadVector; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); NOTE that forces are drawn using the value of loadVector; thus the current values according to the user function are NOT shown in the render window; however, a sensor (SensorLoad) returns the user function force which is applied to the object; to draw forces with current user function values, use a graphicsDataUserFunction of a ground object; type: PyFunctionVector3DmbsScalarVector3D
+
+        visualization: visualization data, see VLoadForceVector
 
     Notes:
         Requested Marker type: ``Position``
@@ -6784,7 +6904,7 @@ class VLoadTorqueVector:
     """Visualization data for LoadTorqueVector.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -6800,15 +6920,17 @@ class LoadTorqueVector:
     """Load with (3D) torque vector; attached to rigidbody-based marker.
     
     Args:
-        name (str): load's unique name
+        name: load's unique name; type: str
 
-        markerNumber (MarkerIndex): marker's number to which load is applied
+        markerNumber: marker's number to which load is applied; type: MarkerIndex
 
-        loadVector ([float,float,float]): vector-valued load [SI:N]; in case of a user function, this vector is ignored
+        loadVector: vector-valued load [SI:N]; in case of a user function, this vector is ignored; type: [float,float,float]
 
-        bodyFixed (bool): if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower torque; if false: global coordinates are used
+        bodyFixed: if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower torque; if false: global coordinates are used; type: bool
 
-        loadVectorUserFunction (PyFunctionVector3DmbsScalarVector3D): A Python function which defines the time-dependent load and replaces loadVector; see description below; see also notes on loadFactor and drawing in LoadForceVector! Example for Python function: def f(mbs, t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]
+        loadVectorUserFunction: A Python function which defines the time-dependent load and replaces loadVector; see description below; see also notes on loadFactor and drawing in LoadForceVector! Example for Python function: def f(mbs, t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]; type: PyFunctionVector3DmbsScalarVector3D
+
+        visualization: visualization data, see VLoadTorqueVector
 
     Notes:
         Requested Marker type: ``Orientation``
@@ -6842,7 +6964,7 @@ class VLoadMassProportional:
     """Visualization data for LoadMassProportional.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -6858,13 +6980,15 @@ class LoadMassProportional:
     """Load attached to MarkerBodyMass marker, applying a 3D vector load (e.g. the vector [0,-g,0] is used to apply gravitational loading of size g in negative y-direction).
     
     Args:
-        name (str): load's unique name
+        name: load's unique name; type: str
 
-        markerNumber (MarkerIndex): marker's number to which load is applied
+        markerNumber: marker's number to which load is applied; type: MarkerIndex
 
-        loadVector ([float,float,float]): vector-valued load [SI:N/kg = m/s:math:`^2`]; typically, this will be the gravity vector in global coordinates; in case of a user function, this v is ignored
+        loadVector: vector-valued load [SI:N/kg = m/s:math:`^2`]; typically, this will be the gravity vector in global coordinates; in case of a user function, this v is ignored; type: [float,float,float]
 
-        loadVectorUserFunction (PyFunctionVector3DmbsScalarVector3D): A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector!
+        loadVectorUserFunction: A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector!; type: PyFunctionVector3DmbsScalarVector3D
+
+        visualization: visualization data, see VLoadMassProportional
 
     Notes:
         Requested Marker type: ``Body`` + ``BodyMass``
@@ -6896,7 +7020,7 @@ class VLoadCoordinate:
     """Visualization data for LoadCoordinate.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -6912,13 +7036,15 @@ class LoadCoordinate:
     """Load with scalar value, which is attached to a coordinate-based marker; the load can be used e.g. to apply a force to a single axis of a body, a nodal coordinate of a finite element  or a torque to the rotatory DOF of a rigid body.
     
     Args:
-        name (str): load's unique name
+        name: load's unique name; type: str
 
-        markerNumber (MarkerIndex): marker's number to which load is applied
+        markerNumber: marker's number to which load is applied; type: MarkerIndex
 
-        load (float): scalar load [SI:N]; in case of a user function, this value is ignored
+        load: scalar load [SI:N]; in case of a user function, this value is ignored; type: float
 
-        loadUserFunction (PyFunctionMbsScalar2): A Python function which defines the time-dependent load and replaces the load; see description below; see also notes on loadFactor and drawing in LoadForceVector!
+        loadUserFunction: A Python function which defines the time-dependent load and replaces the load; see description below; see also notes on loadFactor and drawing in LoadForceVector!; type: PyFunctionMbsScalar2
+
+        visualization: visualization data, see VLoadCoordinate
 
     Notes:
         Requested Marker type: ``Coordinate``
@@ -6948,7 +7074,7 @@ class VSensorNode:
     """Visualization data for SensorNode.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -6966,17 +7092,19 @@ class SensorNode:
     The sensor measures OutputVariables and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
     
     Args:
-        name (str): sensor's unique name
+        name: sensor's unique name; type: str
 
-        nodeNumber (NodeIndex): node number to which sensor is attached to
+        nodeNumber: node number to which sensor is attached to; type: NodeIndex
 
-        writeToFile (bool): True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''
+        writeToFile: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''; type: bool
 
-        fileName (str): directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+        fileName: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
 
-        outputVariableType (OutputVariableType): OutputVariableType for sensor
+        outputVariableType: OutputVariableType for sensor
 
-        storeInternal (bool): true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available
+        storeInternal: true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available; type: bool
+
+        visualization: visualization data, see VSensorNode
 
     """
     def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = {'show': True}):
@@ -7005,7 +7133,7 @@ class VSensorObject:
     """Visualization data for SensorObject.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown; sensors can be shown at the position assiciated with the object - note that in some cases, there might be no such position (e.g. data object)!
+        show: set true, if item is shown in visualization and false if it is not shown; sensors can be shown at the position assiciated with the object - note that in some cases, there might be no such position (e.g. data object)!; type: bool
 
     """
     def __init__(self, show = True):
@@ -7023,17 +7151,19 @@ class SensorObject:
     As a difference to other SensorBody, the connector sensor measures quantities without a local position. The sensor measures OutputVariable and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
     
     Args:
-        name (str): sensor's unique name
+        name: sensor's unique name; type: str
 
-        objectNumber (ObjectIndex): object (e.g. connector) number to which sensor is attached to
+        objectNumber: object (e.g. connector) number to which sensor is attached to; type: ObjectIndex
 
-        writeToFile (bool): True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''
+        writeToFile: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''; type: bool
 
-        fileName (str): directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+        fileName: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
 
-        outputVariableType (OutputVariableType): OutputVariableType for sensor
+        outputVariableType: OutputVariableType for sensor
 
-        storeInternal (bool): true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available
+        storeInternal: true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available; type: bool
+
+        visualization: visualization data, see VSensorObject
 
     """
     def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = {'show': True}):
@@ -7062,7 +7192,7 @@ class VSensorBody:
     """Visualization data for SensorBody.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -7080,19 +7210,21 @@ class SensorBody:
     As a difference to SensorObject, the body sensor needs a local position at which the sensor is attached to. The sensor measures OutputVariableBody and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
     
     Args:
-        name (str): sensor's unique name
+        name: sensor's unique name; type: str
 
-        bodyNumber (ObjectIndex): body (=object) number to which sensor is attached to
+        bodyNumber: body (=object) number to which sensor is attached to; type: ObjectIndex
 
-        localPosition ([float,float,float]): local (body-fixed) body position of sensor
+        localPosition: local (body-fixed) body position of sensor; type: [float,float,float]
 
-        writeToFile (bool): True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''
+        writeToFile: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''; type: bool
 
-        fileName (str): directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+        fileName: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
 
-        outputVariableType (OutputVariableType): OutputVariableType for sensor
+        outputVariableType: OutputVariableType for sensor
 
-        storeInternal (bool): true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available
+        storeInternal: true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available; type: bool
+
+        visualization: visualization data, see VSensorBody
 
     """
     def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = {'show': True}):
@@ -7123,7 +7255,7 @@ class VSensorSuperElement:
     """Visualization data for SensorSuperElement.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -7141,19 +7273,21 @@ class SensorSuperElement:
     As a difference to other ObjectSensors, the SuperElement sensor has a mesh node number at which the sensor is attached to. The sensor measures OutputVariableSuperElement and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
     
     Args:
-        name (str): sensor's unique name
+        name: sensor's unique name; type: str
 
-        bodyNumber (ObjectIndex): body (=object) number to which sensor is attached to
+        bodyNumber: body (=object) number to which sensor is attached to; type: ObjectIndex
 
-        meshNodeNumber (int): mesh node number, which is a local node number with in the object (starting with 0); the node number may represent a real Node in mbs, or may be virtual and reconstructed from the object coordinates such as in ObjectFFRFreducedOrder
+        meshNodeNumber: mesh node number, which is a local node number with in the object (starting with 0); the node number may represent a real Node in mbs, or may be virtual and reconstructed from the object coordinates such as in ObjectFFRFreducedOrder; type: int
 
-        writeToFile (bool): True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''
+        writeToFile: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''; type: bool
 
-        fileName (str): directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+        fileName: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
 
-        outputVariableType (OutputVariableType): OutputVariableType for sensor, based on the output variables available for the mesh nodes (see special section for super element output variables, e.g, in ObjectFFRFreducedOrder, theDoc.pdf)
+        outputVariableType: OutputVariableType for sensor, based on the output variables available for the mesh nodes (see special section for super element output variables, e.g, in ObjectFFRFreducedOrder, theDoc.pdf)
 
-        storeInternal (bool): true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available
+        storeInternal: true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available; type: bool
+
+        visualization: visualization data, see VSensorSuperElement
 
     """
     def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), meshNodeNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = {'show': True}):
@@ -7184,7 +7318,7 @@ class VSensorKinematicTree:
     """Visualization data for SensorKinematicTree.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -7202,21 +7336,23 @@ class SensorKinematicTree:
     As a difference to SensorBody, the KinematicTree sensor needs a local position and a link number, which defines the sub-body at which the sensor values are evaluated. The local position is given in sub-body (link) local coordinates. The sensor measures OutputVariableKinematicTree and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
     
     Args:
-        name (str): sensor's unique name
+        name: sensor's unique name; type: str
 
-        objectNumber (ObjectIndex): object number of KinematicTree to which sensor is attached to
+        objectNumber: object number of KinematicTree to which sensor is attached to; type: ObjectIndex
 
-        linkNumber (int): number of link in KinematicTree to measure quantities
+        linkNumber: number of link in KinematicTree to measure quantities; type: int
 
-        localPosition ([float,float,float]): local (link-fixed) position of sensor, defined in link (:math:`n_l`) coordinate system
+        localPosition: local (link-fixed) position of sensor, defined in link (:math:`n_l`) coordinate system; type: [float,float,float]
 
-        writeToFile (bool): True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''
+        writeToFile: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''; type: bool
 
-        fileName (str): directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+        fileName: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
 
-        outputVariableType (OutputVariableType): OutputVariableType for sensor
+        outputVariableType: OutputVariableType for sensor
 
-        storeInternal (bool): true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available
+        storeInternal: true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available; type: bool
+
+        visualization: visualization data, see VSensorKinematicTree
 
     """
     def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), linkNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = {'show': True}):
@@ -7249,7 +7385,7 @@ class VSensorMarker:
     """Visualization data for SensorMarker.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown
+        show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
     """
     def __init__(self, show = True):
@@ -7267,17 +7403,19 @@ class SensorMarker:
     The sensor measures the selected marker values and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Depending on markers, it can measure Coordinates (MarkerNodeCoordinate), Position and Velocity (MarkerXXXPosition), Position, Velocity, Rotation and AngularVelocityLocal (MarkerXXXRigid). Note that marker values are only available for the current configuration. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file
     
     Args:
-        name (str): sensor's unique name
+        name: sensor's unique name; type: str
 
-        markerNumber (MarkerIndex): marker number to which sensor is attached to
+        markerNumber: marker number to which sensor is attached to; type: MarkerIndex
 
-        writeToFile (bool): True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''
+        writeToFile: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''; type: bool
 
-        fileName (str): directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+        fileName: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
 
-        outputVariableType (OutputVariableType): OutputVariableType for sensor; output variables are only possible according to markertype, see general description of SensorMarker
+        outputVariableType: OutputVariableType for sensor; output variables are only possible according to markertype, see general description of SensorMarker
 
-        storeInternal (bool): true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available
+        storeInternal: true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available; type: bool
+
+        visualization: visualization data, see VSensorMarker
 
     """
     def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', outputVariableType = 0, storeInternal = False, visualization = {'show': True}):
@@ -7306,7 +7444,7 @@ class VSensorLoad:
     """Visualization data for SensorLoad.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown; sensor visualization CURRENTLY NOT IMPLEMENTED
+        show: set true, if item is shown in visualization and false if it is not shown; sensor visualization CURRENTLY NOT IMPLEMENTED; type: bool
 
     """
     def __init__(self, show = True):
@@ -7324,15 +7462,17 @@ class SensorLoad:
     The sensor measures the load values and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
     
     Args:
-        name (str): sensor's unique name
+        name: sensor's unique name; type: str
 
-        loadNumber (LoadIndex): load number to which sensor is attached to
+        loadNumber: load number to which sensor is attached to; type: LoadIndex
 
-        writeToFile (bool): True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''
+        writeToFile: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''; type: bool
 
-        fileName (str): directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+        fileName: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
 
-        storeInternal (bool): true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available
+        storeInternal: true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available; type: bool
+
+        visualization: visualization data, see VSensorLoad
 
     """
     def __init__(self, name = '', loadNumber = exudyn.InvalidIndex(), writeToFile = True, fileName = '', storeInternal = False, visualization = {'show': True}):
@@ -7359,7 +7499,7 @@ class VSensorUserFunction:
     """Visualization data for SensorUserFunction.
     
     Args:
-        show (bool): set true, if item is shown in visualization and false if it is not shown; sensor visualization CURRENTLY NOT IMPLEMENTED
+        show: set true, if item is shown in visualization and false if it is not shown; sensor visualization CURRENTLY NOT IMPLEMENTED; type: bool
 
     """
     def __init__(self, show = True):
@@ -7377,19 +7517,21 @@ class SensorUserFunction:
     The sensor is intended to collect sensor values of a list of given sensors and recombine the output into a new value for output or control purposes. It is also possible to use this sensor without any dependence on other sensors in order to generate output for, e.g., any quantities in mbs or solvers.
     
     Args:
-        name (str): sensor's unique name
+        name: sensor's unique name; type: str
 
-        sensorNumbers (ArraySensorIndex): optional list of :math:`n` sensor numbers for use in user function
+        sensorNumbers: optional list of :math:`n` sensor numbers for use in user function; type: ArraySensorIndex
 
-        factors (array_like): optional list of :math:`m` factors which can be used, e.g., for weighting sensor values
+        factors: optional list of :math:`m` factors which can be used, e.g., for weighting sensor values; type: array_like
 
-        writeToFile (bool): True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''
+        writeToFile: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''; type: bool
 
-        fileName (str): directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+        fileName: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
 
-        sensorUserFunction (PyFunctionVectorMbsScalarArrayIndexVectorConfiguration): A Python function which defines the time-dependent user function, which usually evaluates one or several sensors and computes a new sensor value, see example
+        sensorUserFunction: A Python function which defines the time-dependent user function, which usually evaluates one or several sensors and computes a new sensor value, see example; type: PyFunctionVectorMbsScalarArrayIndexVectorConfiguration
 
-        storeInternal (bool): true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available
+        storeInternal: true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available; type: bool
+
+        visualization: visualization data, see VSensorUserFunction
 
     """
     def __init__(self, name = '', sensorNumbers = [], factors = [], writeToFile = True, fileName = '', sensorUserFunction = 0, storeInternal = False, visualization = {'show': True}):

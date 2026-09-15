@@ -2847,6 +2847,26 @@ These 50 files import the names explicitly now. The two generated MiniExamples a
 - Checked: regeneration (tier 1 changes as intended: `itemInterface.py` `__all__`, the two
   MiniExamples), `checkAll`, `checkExtras`, pydoclint, wheel, full suite PASSED.
 
+<a id="step-108"></a>
+
+### Step 108 - generated `itemInterface.py` docstrings match the signatures
+
+**DONE 2026-09-15** (#2440).
+
+pydoclint found 387 findings in `itemInterface.py`, which was excluded. Fixed in
+`tools/generators/itemInterfaceEmitter.py` (`ItemDocstrings`):
+
+- `Args:` without `(type)`, as in the rest of the package; the type is kept at the end of the
+  description (`; type: NodeIndex`) unless the description already names it. The renderer in
+  `docstringText.py` got the option `argTypes` (default True, so other users are unchanged).
+- `visualization` is documented for every item class (`visualization data, see V<Item>`).
+- Read-only members (`temp...`, e.g. in `ObjectFFRF`, `ObjectGenericODE2`) are not `__init__`
+  arguments and left `Args:`.
+- `exclude = 'itemInterface\.py'` removed from `[tool.pydoclint]`; the whole package passes
+  without new baseline entries.
+- Checked: regeneration (tier 1: only docstring lines of `itemInterface.py`), pydoclint,
+  `checkAll`, `checkExtras`, wheel, full suite PASSED.
+
 <a id="api-changes-v2"></a>
 
 ### API changes for the v2.0 release notes

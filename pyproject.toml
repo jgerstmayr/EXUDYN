@@ -156,7 +156,7 @@ dev = [
 #raised exceptions are not checked - the check is that documented arguments match the signature.
 #Findings present when the check was introduced are listed in the baseline, so only new ones fail;
 #fixed ones are removed with 'pydoclint --config=pyproject.toml --generate-baseline=True python/exudyn'.
-#itemInterface.py is generated and excluded; its docstrings come from itemInterfaceEmitter.py.
+#itemInterface.py is generated and checked too (step 108); its docstrings come from itemInterfaceEmitter.py.
 [tool.pydoclint]
 style = 'google'
 arg-type-hints-in-signature = false
@@ -166,7 +166,6 @@ skip-checking-raises = true
 allow-init-docstring = true
 check-class-attributes = false
 should-document-star-arguments = false
-exclude = 'itemInterface\.py'
 baseline = 'tools/ci/pydoclintBaseline.txt'
 auto-regenerate-baseline = false
 

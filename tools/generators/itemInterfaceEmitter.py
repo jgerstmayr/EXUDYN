@@ -75,24 +75,26 @@ def ItemDocstrings(definition):
     classType = definition.get('classType', '')
     (pyiSummary, pyiDescription) = SplitSummaryDescription(CleanStringForPyiDescription(
         im.ClassDescription(definition)))
-    dataDocstring = {'kind': 'classFunction', 'notes': [], 'inputs': []}
+    dataDocstring = {'kind': 'classFunction', 'notes': [], 'inputs': [], 'argTypes': False}
     dataDocstring['summary'] = pyiSummary
     dataDocstring['description'] = pyiDescription
     dataDocstringV = {'kind': 'classFunction',
                       'summary': 'Visualization data for ' + className,
-                      'inputs': []}
+                      'inputs': [], 'argTypes': False}
 
     requestedMarkerString = ''
     itemTypeString = ''
     requestedNodeString = ''
     for member in definition['members']:
-        if im.IsInterfaceParameter(member):
+        if im.IsInterfaceParameter(member) and not im.IsReadOnly(member): #the __init__ arguments
             [parameterDescription, latexSymbol] = ExtractLatexSymbol(im.Description(member))
             thisDataDocString = dataDocstringV if 'V' in im.Destination(member) else dataDocstring
+            typeHint = tm.Render(im.TypeName(member), 'pyTyping', 'items')
+            description = CleanStringForPyiDescription(parameterDescription).strip()
+            if typeHint and typeHint not in description: #the type stays readable; Args have no '(type)'
+                description += ('' if description == '' else ';') + ' type: ' + typeHint
             thisDataDocString['inputs'].append({'name': member['pythonName'],
-                                                'description': CleanStringForPyiDescription(parameterDescription),
-                                                'type_hint': tm.Render(im.TypeName(member), 'pyTyping', 'items')
-                                                })
+                                                'description': description.strip()})
         elif member['pythonName'] == 'GetRequestedMarkerType':
             requestedMarkerString = GetTypesStringLatex(im.DefaultValueString(member), 'Marker',
                                                         possibleTypes['Marker'], ' +')
@@ -117,6 +119,8 @@ def ItemDocstrings(definition):
             dataDocstring['notes'].append('Requested Node type: '
                                           + CleanStringForPyiDescription(requestedNodeString))
 
+    dataDocstring['inputs'].append({'name': 'visualization',
+                                    'description': 'visualization data, see V' + className})
     return dataDocstring, dataDocstringV
 
 

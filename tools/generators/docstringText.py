@@ -205,6 +205,7 @@ class GoogleDocstringRenderer:
           - summary: str
           - description: str or list[str] (optional)
           - inputs: list of {name, description, type_hint?}
+          - argTypes: bool (optional, default True); False renders Args without '(type)'
           - output: {type_hint?, description?} or None
           - notes: list[str]
           - examples: list[str]
@@ -250,9 +251,12 @@ class GoogleDocstringRenderer:
             for p in inputs:
                 name = p.get("name", "").strip()
                 desc = (p.get("description") or "").strip()
-                # Prefer provided type_hint; fall back to 'Any'
-                type_part = (p.get("type_hint") or "Any")
-                lines.append(f"{indent}    {name} ({type_part}): {desc}\n")
+                if data.get("argTypes", True):
+                    # Prefer provided type_hint; fall back to 'Any'
+                    type_part = (p.get("type_hint") or "Any")
+                    lines.append(f"{indent}    {name} ({type_part}): {desc}\n")
+                else: #package convention: no types in Args (step 108)
+                    lines.append(f"{indent}    {name}: {desc}\n")
 
         output = data.get("output") or None
         if output and (output.get("type_hint") or output.get("description")):
