@@ -832,7 +832,8 @@ The core investment. Every step is validated byte-for-byte by step 2.
       with a full suite run and the Examples/TestModels switched in the same commit:
     - **107a - numpy-era vector helpers in `basicUtilities.py`** (#2442). **DONE 2026-09-15.**
       → [log](exudynRevisionLog2026.md#step-107a)
-    - **107b - `utilities.py`** (maintainer decisions 2026-09-15). (1) Remove the 23 deprecated
+    - **107b - `utilities.py`** (#2443). **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#step-107b).
+      Maintainer decisions 2026-09-15: (1) Remove the 23 deprecated
       `GraphicsData...` aliases after replacing their uses by `exudyn.graphics.*`. (2) No new files;
       module names are final, since removing a function from a module later breaks user scripts:
       - the `@extends` functions (`CreateDistanceSensorGeometry`, `CreateDistanceSensor` with its

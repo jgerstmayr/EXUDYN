@@ -22,13 +22,14 @@ import exudyn.plot
 import exudyn.solver
 import exudyn.interactive
 import exudyn.graphics
-from exudyn.utilities import Normalize
+from exudyn.basicUtilities import Normalize
 
 from exudyn.rigidBodyUtilities import ComputeOrthonormalBasis, \
     RotationMatrix2EulerParameters, AngularVelocity2EulerParameters_t, RotationMatrix2RotXYZ, AngularVelocity2RotXYZ_t, \
     RotationMatrix2RotationVector, HT0, HT2translation, HT2rotationMatrix, RotationMatrixZ
 
 import exudyn.itemInterface as eii
+from exudyn.itemInterface import ObjectGround, VObjectGround, SensorUserFunction
 from exudyn.advancedUtilities import RaiseTypeError, IsVector, IsReal, ExpectedType, IsValidObjectIndex, IsValidNodeIndex, \
                                     IsValidRealInt, IsValidPRealInt, IsValidURealInt, IsIntVector, \
                                     IsValidBool, IsSquareMatrix, IsNone, IsNotNone, IsInteger, IsValidInt
@@ -3151,5 +3152,616 @@ def MainSystemCreateTorque(mbs,
 # #def InitializeFromRestartFile(mbs, simulationSettings, restartFileName, verbose=True):
 
      
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#distance sensor and system graph (moved from utilities.py, revision plan step 107b)
+
+def __UFsensorDistance(mbs, t, sensorNumbers, factors, configuration):
+    """internal function used for CreateDistanceSensor
+    """
+
+    generalContactIndex = int(factors[0])
+    dirSensor = factors[5:8]
+    markerNumber = int(factors[1])
+    hasRotation = False
+    if markerNumber != -1:
+        p0 = mbs.GetMarkerOutput(markerNumber, variableType=exudyn.OutputVariableType.Position)
+        hasRotation = ('Rigid' in mbs.GetMarker(markerNumber)['markerType'])
+        if hasRotation:
+            A0 = mbs.GetMarkerOutput(markerNumber, variableType=exudyn.OutputVariableType.RotationMatrix).reshape((3,3))
+            dirSensor = A0 @ dirSensor
+    else:
+        p0 = np.array(factors[2:5])
+
+    [minDistance, maxDistance, cylinderRadius, selectedTypeIndex, measureVelocity, graphicsObject, flags] = factors[8:15]
+    selectedTypeIndex = exudyn.ContactTypeIndex(int(selectedTypeIndex)) #only converts from int
+    measureVelocity = bool(measureVelocity)
+    graphicsObject = int(graphicsObject)
+
+    gContact = mbs.GetGeneralContact(generalContactIndex)
+    data = gContact.ShortestDistanceAlongLine(pStart = p0, direction = dirSensor, 
+                                           minDistance=minDistance, maxDistance=maxDistance,
+                                           cylinderRadius=cylinderRadius, asDictionary=(measureVelocity==True),
+                                           typeIndex=selectedTypeIndex,
+                                           )
+    if measureVelocity:
+        d = data['distance']
+        v = data['velocityAlongLine']
+        rv = [d, v]
+    else:
+        d = data
+        rv = [d]
+
+    if graphicsObject != -1:
+        factLen = 1
+        if int(flags) == 0:
+            factLen = 0
+
+        mbs.SetObjectParameter(graphicsObject,'referencePosition',p0 + factLen*(d*np.array(Normalize(dirSensor))) )
+        if hasRotation:
+            mbs.SetObjectParameter(graphicsObject,'referenceRotation', A0)
+            
+    return rv
+
+
+@extends(exudyn.MainSystem)
+def CreateDistanceSensorGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerIndex, searchTreeCellSize=[8,8,8]):
+    """Add geometry for distance sensor given by points and triangles (point indices) to mbs; use a rigid body marker where the geometry is put on;
+    Creates a GeneralContact for efficient search on background. If you have several sets of points and trigs, first merge them or add them manually to the contact
+
+    Args:
+        mbs: MainSystem where contact is created
+        meshPoints: list of points (3D), as returned by graphics.ToPointsAndTrigs()
+        meshTrigs: list of trigs (3 node indices each), as returned by graphics.ToPointsAndTrigs()
+        rigidBodyMarkerIndex: rigid body marker to which the triangles are fixed on (ground or moving object)
+        searchTreeCellSize: size of search tree (X,Y,Z); use larger values in directions where more triangles are located
+
+    Returns:
+        :int: returns ngc, which is the number of GeneralContact in mbs, to be used in CreateDistanceSensor(...); keep the gContact as deletion may corrupt data
+
+    Note:
+        should be used by CreateDistanceSensor(...) and AddLidar(...) for simple initialization of GeneralContact; old name: DistanceSensorSetupGeometry(...)
+    """
+    gContact = mbs.AddGeneralContact()
+    gContact.SetFrictionPairings(0*np.eye(1)) #may not be empty
+    gContact.SetSearchTreeCellSize(numberOfCells=searchTreeCellSize)
+    # [meshPoints, meshTrigs] = RefineMesh(meshPoints, meshTrigs) #just to have more triangles on floor
+    gContact.AddTrianglesRigidBodyBased(rigidBodyMarkerIndex=rigidBodyMarkerIndex,
+                                        contactStiffness=1, contactDamping=1, #dummy values
+                                        frictionMaterialIndex=0, pointList=meshPoints, triangleList=meshTrigs)
+    gContact.isActive=False #no contact computation; could also be done later on, if many moving objects are used ...
+    ngc = mbs.NumberOfGeneralContacts()-1
+    gContact = mbs.GetGeneralContact(ngc) #keeps reference to gContact, while other functions work with automatic ...
+
+    return ngc
+
+
+@extends(exudyn.MainSystem)
+def CreateDistanceSensor(mbs, generalContactIndex,
+                      positionOrMarker, dirSensor, minDistance=-1e7, 
+                      maxDistance=1e7, cylinderRadius=0, 
+                      selectedTypeIndex=exudyn.ContactTypeIndex.IndexEndOfEnumList,
+                      storeInternal = False, fileName = '', measureVelocity = False,
+                      addGraphicsObject=False, drawDisplaced=True, color=exudyn.graphics.color.red):
+    """Function to create distance sensor based on GeneralContact in mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker
+
+    Args:
+        mbs: the MainSystem where distance sensor is created
+        generalContactIndex: the number of the GeneralContact object in mbs; the index of the GeneralContact object which has been added with last AddGeneralContact(...) command is generalContactIndex=mbs.NumberOfGeneralContacts()-1
+        positionOrMarker: either a 3D position as list or np.array, or a MarkerIndex with according rigid body marker
+        dirSensor: the direction (no need to normalize) along which the distance is measured (must not be normalized); in case of marker, the direction is relative to marker orientation if marker contains orientation (BodyRigid, NodeRigid)
+        minDistance: the minimum distance which is accepted; smaller distance will be ignored
+        maxDistance: the maximum distance which is accepted; items being at maxDistance or futher are ignored; if no items are found, the function returns maxDistance
+        cylinderRadius: in case of spheres (selectedTypeIndex=ContactTypeIndex.IndexSpheresMarkerBased), a cylinder can be used which measures the shortest distance at a certain radius (geometrically interpreted as cylinder)
+        selectedTypeIndex: either this type has default value, meaning that all items in GeneralContact are measured, or there is a specific type index, which is the only type that is considered during measurement
+        storeInternal: like with any SensorUserFunction, setting to True stores sensor data internally
+        fileName: if defined, recorded data of SensorUserFunction is written to specified file
+        measureVelocity: if True, the sensor measures additionally the velocity (component 0=distance, component 1=velocity); velocity is the velocity in direction 'dirSensor' and does not account for changes in geometry, thus it may be different from the time derivative of the distance!
+        addGraphicsObject: if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small
+        drawDisplaced: if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position
+        color: optional color for 'laser beam' to be drawn
+
+    Returns:
+        :SensorIndex: creates sensor and returns according sensor number of SensorUserFunction
+
+    Note:
+        use generalContactIndex = CreateDistanceSensorGeometry(...) before to create GeneralContact module containing geometry; old name: AddDistanceSensor(...)
+    """
+    
+    markerNumber = -1
+    p0list = [0,0,0]
+    if type(positionOrMarker) == list or type(positionOrMarker) == np.ndarray:
+        p0list = list(positionOrMarker)
+    elif type(positionOrMarker)==exudyn.MarkerIndex:
+        markerNumber = float(int(positionOrMarker))
+        try:
+            p0list = mbs.GetMarkerOutput(markerNumber=positionOrMarker,
+                                         variableType=exudyn.OutputVariableType.Position, 
+                                         configuration=exudyn.ConfigurationType.Reference)
+            p0list = list(p0list)
+        except:
+            p0list = [0,0,0] #this was just a trial, otherwise initialize with zeros (e.g. for special objects where this does not work)
+    else:
+        raise ValueError('CreateDistanceSensor: positionOrMarker must be either MarkerIndex or 3D position as list or numpy.array')
+
+    graphicsObject = -1 #signals that there is no graphics object
+    sign = 1.
+    if drawDisplaced:
+        sign = -1.
+    if addGraphicsObject:
+        if cylinderRadius == 0:
+            gData = exudyn.graphics.Lines([[0,0,0],list(sign*np.array(dirSensor))], color = color)
+        else: 
+            gData = exudyn.graphics.Cylinder([0,0,0],sign*np.array(dirSensor), radius=cylinderRadius, color = color)
+            
+        graphicsObject=mbs.AddObject(ObjectGround(referencePosition= p0list,
+                                      visualization=VObjectGround(graphicsData=[gData])))
+
+    flags = int(drawDisplaced)
+    dataUF = [float(generalContactIndex)]
+    dataUF += [markerNumber] + p0list + list(dirSensor)
+    dataUF += [ minDistance, maxDistance, cylinderRadius, float(int(selectedTypeIndex)), float(measureVelocity), float(int(graphicsObject)), float(flags)] 
+
+
+    sUF = mbs.AddSensor(SensorUserFunction(sensorNumbers=[], factors=dataUF,
+                                              storeInternal=storeInternal,
+                                              fileName=fileName,
+                                              sensorUserFunction=__UFsensorDistance))
+
+    return sUF
+
+
+@extends(exudyn.MainSystem)
+def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False, 
+                    useItemTypes = False, addItemTypeNames=True, multiLine=True, fontSizeFactor=1., 
+                    layoutDistanceFactor=3., layoutIterations=100, showLegend = True, tightLayout = True, 
+                    showGraph = True, addItemData = False, addAnnotations = False):
+    """helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph; the graph visualization uses randomizer, which results in different graphs after every run!
+
+    Args:
+        mbs: MainSystem to be operated with
+        showLoads: toggle appearance of loads in mbs
+        showSensors: toggle appearance of sensors in mbs
+        useItemNames: if True, object names are shown instead of basic object types (Node, Load, ...)
+        useItemTypes: if True, object type names (MassPoint, JointRevolute, ...) are shown instead of basic object types (Node, Load, ...); Note that Node, Object, is omitted at the beginning of itemName (as compared to theDoc.pdf); item classes become clear from the legend
+        addItemTypeNames: if True, type nymes (Node, Load, etc.) are added
+        multiLine: if True, labels are multiline, improving readability; ignored if showGraph = False
+        fontSizeFactor: use this factor to scale fonts, allowing to fit larger graphs on the screen with values < 1
+        showLegend: shows legend for different item types
+        layoutDistanceFactor: this factor influences the arrangement of labels; larger distance values lead to circle-like results
+        layoutIterations: more iterations lead to better arrangement of the layout, but need more time for larger systems (use 1000-10000 to get good results)
+        tightLayout: if True, uses matplotlib plt.tight_layout() which may raise warning
+        showGraph: if True, graph is plotted with matplotlib
+        addItemData: if True, specific data is added to the graph nodes, to be used for deeper analysis of system graphs
+        addAnnotations: add data node graphs (not shown), except for graphics data, item numbers, names and types (which are already available in graph data or edges)
+
+    Returns:
+        :[Any, Any, Any]: returns [networkx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw_networkx_labels(...)
+    """
+    
+    try:
+        #all imports are part of anaconda (e.g. anaconda 5.2.0, python 3.6.5)
+        #import numpy as np
+        import networkx as nx #for generating graphs and graph arrangement
+        import matplotlib.pyplot as plt #for drawing
+    except ImportError as e:
+        raise ImportError("numpy, networkx and matplotlib required for DrawSystemGraph(...)") from e
+    except :
+        exudyn.Print("DrawSystemGraph(...): unexpected error during import of numpy, networkx and matplotlib")
+        raise
+    
+    excludeAnnotations = ['V',
+                          'nodeNumber', 'objectNumber', 'bodyNumber', 'markerNumber', 
+                          'loadNumber', 'sensorNumber',
+                          'nodeType','objectType','markerType','loadType','sensorType',
+                          'name',
+                          ]
+    def GetAnnotations(itemDict):
+        annotations = {}
+        for key, value in itemDict.items():
+            exclude = False
+            for startWith in excludeAnnotations:
+                if key.startswith(startWith):
+                    exclude = True
+                    break
+            if not exclude:
+                annotations[key] = value
+        return annotations
+                
+    
+    itemColors = {'Node':'red', 'Object':'skyblue', 'Oconnector':'dodgerblue', 'Ojoint':'dodgerblue', 'Ocontact':'dodgerblue', #turqoise, skyblue
+                      'Marker': 'orange', 'Load': 'mediumorchid', 
+                      'Sensor': 'forestgreen'} #https://matplotlib.org/examples/color/named_colors.html
+    
+    itemColorMap=[]     #color per item
+    itemNames=[]        #name per item 
+    itemTypes=[]        #name per item 
+    edgeColorMap=[]
+    nodesToItems=[]     #maps mbs-node numbers to item numbers
+    markersToItems=[]   #maps mbs-marker numbers to item numbers
+    objectsToItems=[]   #maps mbs-object numbers to item numbers
+    loadsToItems=[]     #maps mbs-load numbers to item numbers
+    sensorsToItems=[]   #maps mbs-sensor numbers to item numbers
+    
+    objectNodeColor = 'navy' #color for edges between nodes and objects, to be highlighted
+            
+    G = nx.Graph()
+    
+    #showLegend = False
+    #addItemTypeNames = False #Object, Node, ... not added but legend added
+    # if useItemTypes or useItemNames:
+    #     showLegend = True
+
+    sLineBreak = ''
+    if multiLine and showGraph:
+        sLineBreak = '-\n'
+
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
+    itemType = 'Node'
+    n = mbs.systemData.NumberOfNodes()
+    for i in range(n):
+        item = mbs.GetNode(i)
+        itemName=itemType+str(i)
+    
+        nodeName = 'Node'
+        if item['nodeType'].find('Ground') != -1:
+            nodeName = nodeName + 'Ground'
+    
+        if useItemNames:
+            itemName=item['name'] #+str(i)
+        elif useItemTypes:
+            itemName=item['nodeType']+str(i)
+            if addItemTypeNames:
+                itemName = nodeName + sLineBreak + itemName
+
+            if sLineBreak != '':
+                itemName=itemName.replace('Node'+sLineBreak+'Rigid','NodeRigid'+sLineBreak)
+                itemName=itemName.replace('Node'+sLineBreak+'Generic','NodeGeneric'+sLineBreak)
+    
+        G.add_node(itemName)
+        if addItemData:
+            G.nodes[itemName].update({'type':itemType + item['nodeType'],
+                                      'basicType': itemType,
+                                      'ID': i,
+                                      'name': item['name'],
+                                      })
+        if addAnnotations:
+            G.nodes[itemName].update({'annotations': GetAnnotations(item)})
+
+        nodesToItems += [len(itemColorMap)]
+        itemColorMap += [itemColors[itemType]]
+        itemNames += [itemName]
+        itemTypes += [itemType]
+    
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #add markers without edges
+    itemType = 'Marker'
+    n = mbs.systemData.NumberOfMarkers()
+    for i in range(n):
+        item = mbs.GetMarker(i)
+        itemName=itemType+str(i)
+        if useItemNames:
+            itemName=item['name']#+str(i)
+        elif useItemTypes:
+            itemName=item['markerType']+str(i)
+            if addItemTypeNames:
+                itemName = 'Marker' + sLineBreak + itemName
+
+            if sLineBreak != '':
+                itemName=itemName.replace('Marker'+sLineBreak+'Body','MarkerBody'+sLineBreak)
+                itemName=itemName.replace('Marker'+sLineBreak+'Object','MarkerObject'+sLineBreak)
+                itemName=itemName.replace('Marker'+sLineBreak+'Node','MarkerNode'+sLineBreak)
+                itemName=itemName.replace('Marker'+sLineBreak+'SuperElement','MarkerSuperElement'+sLineBreak)
+                itemName=itemName.replace('Marker'+sLineBreak+'Kinematic','MarkerKinematic'+sLineBreak)
+    
+        G.add_node(itemName) #attributes: size, weight, ...
+        if addItemData:
+            G.nodes[itemName].update({'type':itemType + item['markerType'],
+                                      'basicType': itemType,
+                                      'ID': i,
+                                      'name': item['name'],
+                                      })
+        if addAnnotations:
+            G.nodes[itemName].update({'annotations': GetAnnotations(item)})
+        markersToItems += [len(itemColorMap)]
+        itemColorMap += [itemColors[itemType]]
+        itemNames += [itemName]
+        itemTypes += [itemType]
+    
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
+    itemType = 'Object'
+    n = mbs.systemData.NumberOfObjects()
+    for i in range(n):
+        objectType = itemType
+        item = mbs.GetObject(i)
+        if item['objectType'].find('Connector') != -1:
+            objectType = 'Oconnector'
+        elif item['objectType'].find('Contact') != -1:
+            objectType = 'Ocontact'
+        elif item['objectType'].find('Joint') != -1:
+            objectType = 'Ojoint'
+        itemName=objectType+str(i)
+    
+        if useItemNames:
+            itemName=item['name']#+str(i)
+        elif useItemTypes:
+            itemName=item['objectType']+str(i)
+            if addItemTypeNames:
+                itemName = 'Object' + sLineBreak + itemName
+            
+            if sLineBreak != '':
+                itemName=itemName.replace('Object'+sLineBreak+'Joint','ObjectJoint'+sLineBreak)
+                itemName=itemName.replace('Object'+sLineBreak+'Mass','ObjectMass'+sLineBreak)
+                itemName=itemName.replace('Object'+sLineBreak+'Beam','ObjectBeam'+sLineBreak)
+                itemName=itemName.replace('Object'+sLineBreak+'ANCF','ObjectANCF'+sLineBreak)
+                itemName=itemName.replace('Object'+sLineBreak+'Contact','ObjectContact'+sLineBreak)
+                itemName=itemName.replace('Object'+sLineBreak+'Connector','ObjectConnector'+sLineBreak)
+                itemName=itemName.replace('Object'+sLineBreak+'Rigid','ObjectRigid'+sLineBreak)
+                itemName=itemName.replace('Object'+sLineBreak+'FFRFr','ObjectFFRF'+sLineBreak+'r')
+            
+        G.add_node(itemName) #attributes: size, weight, ...
+        if addItemData:
+            G.nodes[itemName].update({'type':itemType + item['objectType'],
+                                      'basicType': itemType,
+                                      'ID': i,
+                                      'name': item['name'],
+                                      })
+        if addAnnotations:
+            G.nodes[itemName].update({'annotations': GetAnnotations(item)})
+        objectsToItems += [len(itemColorMap)]
+        itemNames += [itemName]
+        itemTypes += [itemType]
+        itemColorMap += [itemColors[objectType]]
+    
+    #    objectColor = ''
+        #for objects: add edges to nodes
+        nodeNumbers = []
+        if 'nodeNumber' in item:
+            nodeNumbers += [item['nodeNumber']]
+        if 'nodeNumbers' in item:
+            nodeNumbers += item['nodeNumbers']
+    
+        for j in range(len(nodeNumbers)):
+            nodeNumbers[j] = int(nodeNumbers[j])
+    
+        for j in nodeNumbers:
+            if j != exudyn.InvalidIndex(): #for RigidBodySpringDamper
+                edge = (itemNames[objectsToItems[i]],itemNames[nodesToItems[j]])
+                G.add_edge(*edge)
+                # if addItemData:
+                #     G.edges[edge].update({'type':itemType + item['objectType'],
+                #                           'basicType': itemType,
+                #                           'ID': i,
+                #                           'name': item['name'],
+                #                           })
+                if showGraph:
+                    G.edges[edge].update({'color':objectNodeColor})
+    
+        #for connectors, contact, joint: add edges to these objects
+        markerNumbers = []
+        if 'markerNumbers' in item: #should only be markerNumbers ...
+            markerNumbers += item['markerNumbers']
+    
+        for j in range(len(markerNumbers)):
+            markerNumbers[j] = int(markerNumbers[j])
+    
+        for j in markerNumbers:
+            edge = (itemNames[objectsToItems[i]],itemNames[markersToItems[j]])
+            G.add_edge(*edge)
+            # if addItemData:
+            #     G.edges[edge].update({'type':itemType + item['objectType'],
+            #                           'basicType': itemType,
+            #                           'ID': i,
+            #                           'name': item['name'],
+            #                           })
+            if showGraph:
+                G.edges[edge].update({'color':itemColors['Oconnector']})
+
+
+            
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #now add only edges for markers:
+    itemType = 'Marker'
+    n = mbs.systemData.NumberOfMarkers()
+    for i in range(n):
+        objectType = itemType
+        item = mbs.GetMarker(i)
+    
+        #for node markers:
+        nodeNumbers = []
+        if 'nodeNumber' in item:
+            nodeNumbers += [item['nodeNumber']]
+       
+        for j in range(len(nodeNumbers)):
+            nodeNumbers[j] = int(nodeNumbers[j])
+    
+        for j in nodeNumbers:
+            edge = (itemNames[markersToItems[i]],itemNames[nodesToItems[j]])
+            G.add_edge(*edge)
+            # if addItemData:
+            #     G.edges[edge].update({'type':itemType + item['markerType'],
+            #                           'basicType': itemType,
+            #                           'ID': i,
+            #                           'name': item['name'],
+            #                           })
+            if showGraph:
+                G.edges[edge].update({'color':'orange'})
+    
+        #for object markers:
+        objectNumbers = []
+        if 'objectNumber' in item: objectNumbers += [item['objectNumber']]
+        if 'bodyNumber' in item: objectNumbers += [item['bodyNumber']]
+       
+        for j in range(len(objectNumbers)):
+            objectNumbers[j] = int(objectNumbers[j])
+    
+        for j in objectNumbers:
+            edge = (itemNames[markersToItems[i]],itemNames[objectsToItems[j]])
+            G.add_edge(*edge)
+            # if addItemData:
+            #     G.edges[edge].update({'type':itemType + item['markerType'],
+            #                           'basicType': itemType,
+            #                           'ID': i,
+            #                           'name': item['name'],
+            #                           })
+            if showGraph:
+                G.edges[edge].update({'color':'orange'})
+            
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #add loads
+    if showLoads:
+        itemType = 'Load'
+        n = mbs.systemData.NumberOfLoads()
+        for i in range(n):
+            item = mbs.GetLoad(i)
+            itemName=itemType+str(i)
+            if useItemNames:
+                itemName=item['name']#+str(i)
+            elif useItemTypes:
+                itemName=item['loadType']+str(i)
+                if addItemTypeNames:
+                    itemName = 'Load' + sLineBreak + itemName
+
+                if sLineBreak != '':
+                    itemName=itemName.replace('Load'+sLineBreak+'Mass','LoadMass'+sLineBreak)
+
+        
+            G.add_node(itemName) #attributes: size, weight, ...
+            if addItemData:
+                G.nodes[itemName].update({'type':itemType + item['loadType'],
+                                          'basicType': itemType,
+                                          'ID': i,
+                                          'name': item['name'],
+                                          })
+            if addAnnotations:
+                G.nodes[itemName].update({'annotations': GetAnnotations(item)})
+
+            loadsToItems += [len(itemColorMap)]
+            itemColorMap += [itemColors[itemType]]
+            itemNames += [itemName]
+            itemTypes += [itemType]
+    
+            markerNumbers = [int(item['markerNumber'])]
+            
+            for j in markerNumbers:
+                G.add_edge(itemNames[loadsToItems[i]],itemNames[markersToItems[j]], color=itemColors['Load'])
+    
+    #+++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #add sensors
+    if showSensors:
+        itemType = 'Sensor'
+        n = mbs.systemData.NumberOfSensors() #only available for Exudyn version >= 1.0.15
+        for i in range(n):
+            item = mbs.GetSensor(i)
+            itemName=itemType+str(i)
+            if useItemNames:
+                itemName=item['name']#+str(i)
+            elif useItemTypes:
+                itemName=item['sensorType']+str(i)
+                if addItemTypeNames:
+                    itemName = 'Sensor' + sLineBreak + itemName
+        
+            G.add_node(itemName) #attributes: size, weight, ...
+            if addItemData:
+                G.nodes[itemName].update({'type':itemType + item['sensorType'],
+                                          'basicType': itemType,
+                                          'ID': i,
+                                          'name': item['name'],
+                                          })
+            if addAnnotations:
+                G.nodes[itemName].update({'annotations': GetAnnotations(item)})
+            sensorsToItems += [len(itemColorMap)]
+            itemColorMap += [itemColors[itemType]]
+            itemNames += [itemName]
+            itemTypes += [itemType]
+    
+            #for object sensors:
+            objectNumbers = []
+            if 'objectNumber' in item: objectNumbers += [item['objectNumber']]
+            if 'bodyNumber' in item: objectNumbers += [item['bodyNumber']]
+           
+            for j in range(len(objectNumbers)):
+                objectNumbers[j] = int(objectNumbers[j])
+        
+            for j in objectNumbers:
+                G.add_edge(itemNames[sensorsToItems[i]],itemNames[objectsToItems[j]],color=itemColors[itemType])
+
+            #for node sensors:
+            nodeNumbers = []
+            if 'nodeNumber' in item: nodeNumbers += [int(item['nodeNumber'])]
+                   
+            for j in nodeNumbers:
+                G.add_edge(itemNames[sensorsToItems[i]],itemNames[nodesToItems[j]],color=itemColors[itemType])
+
+    items = None #only assigned if shown
+    if showGraph:
+        plt.clf()
+    
+        if showLegend:
+            legendColors = {'Node':'red', 'Object':'skyblue', 'Object(Connector)':'dodgerblue', 
+                          'Marker': 'orange', 'Load': 'mediumorchid', 
+                          'Sensor': 'forestgreen'} 
+            #f = plt.figure(1)
+            #ax = f.add_subplot(1,1,1)
+            for label in legendColors:
+                plt.plot([0],[0],linewidth=8,color=legendColors[label],label=label)
+            
+            fontSizeLegend = 10
+            if fontSizeFactor > 1: #do not make font size smaller!
+                fontSizeLegend *= fontSizeFactor
+            plt.legend(fontsize=fontSizeLegend)
+    
+        
+        #now get out the right sorting of colors ...
+        edgeColorMap = []
+        edgeWidths = []
+        edges=G.edges()
+        for item in edges.items(): 
+            edgeColorMap += [item[1]['color']] #color is in item[1], which is a dictionary ...
+            edgeWidth = 2
+            if item[1]['color'] == objectNodeColor: #object-node should be emphasized
+                edgeWidth = 4
+            edgeWidths += [edgeWidth]
+        
+        pos = nx.drawing.spring_layout(G, scale=0.5, k=layoutDistanceFactor*1/np.sqrt(G.size()), 
+                                       threshold = 1e-5, iterations = layoutIterations)
+        nx.draw_networkx_nodes(G, pos, node_size=1)
+        nx.draw_networkx_edges(G, pos, edge_color=edgeColorMap, width=edgeWidths)#width=2)
+        
+        #reproduce what draw_networkx_labels does, allowing different colors for nodes
+        #check: https://networkx.github.io/documentation/stable/_modules/networkx/drawing/nx_pylab.html
+        items = nx.draw_networkx_labels(G, pos, font_size=10*fontSizeFactor, clip_on=False, #clip at plot boundary
+                                        bbox=dict(facecolor='skyblue', edgecolor='black', 
+                                                  boxstyle='round,pad=0.1', lw=10*fontSizeFactor)) #lw is border size (no effect?)
+    
+        
+        #now assign correct colors:
+        for i in range(len(itemNames)):
+            currentColor = itemColorMap[i]
+            itemType = itemTypes[i]
+            boxStyle = 'round,pad=0.2'
+            fontSize = 10*fontSizeFactor
+            if itemType == 'Object':
+                boxStyle = 'round,pad=0.2'
+                fontSize = 12*fontSizeFactor
+            if itemType == 'Node':  
+                boxStyle = 'square,pad=0.1'
+                fontSize = 10*fontSizeFactor
+            if itemType == 'Marker':  
+                boxStyle = 'square,pad=0.1'
+                fontSize = 8*fontSizeFactor
+        
+            items[itemNames[i]].set_bbox(dict(facecolor=currentColor,  
+                  edgecolor=currentColor, boxstyle=boxStyle))
+            items[itemNames[i]].set_fontsize(fontSize)
+        
+        plt.axis('off') #do not show frame, because usually some nodes are very close to frame ...
+        if tightLayout:
+            plt.tight_layout()
+        plt.margins(x=0.1*fontSizeFactor, y=0.1*fontSizeFactor) #larger margin, to avoid clipping of long texts
+        plt.draw() #force redraw after colors have changed
+    
+    return [nx, G, items]
+
+
 #bind all functions marked with @extends (in this module, plot, solver, utilities, interactive) to their classes
 install()

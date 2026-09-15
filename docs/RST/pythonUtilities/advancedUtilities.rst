@@ -685,6 +685,121 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
     \ `cartesianSpringDamperUserFunction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/cartesianSpringDamperUserFunction.py>`_\  (Ex), \ `SpringDamperMassUserFunction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/SpringDamperMassUserFunction.py>`_\  (Ex), \ `symbolicUserFunctionMasses.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/symbolicUserFunctionMasses.py>`_\  (Ex), \ `loadUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/loadUserFunctionTest.py>`_\  (TM), \ `symbolicUserFunctionTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/symbolicUserFunctionTest.py>`_\  (TM)
 
 
+
+----
+
+
+.. _sec-advancedutilities-createtcpipconnection:
+
+Function: CreateTCPIPconnection
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`CreateTCPIPconnection <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L930>`__\ (\ ``sendSize``\ , \ ``receiveSize``\ , \ ``IPaddress = '127.0.0.1'``\ , \ ``port = 52421``\ , \ ``bigEndian = False``\ , \ ``verbose = False``\ )
+
+- | \ *function description*\ :
+  | function which has to be called before simulation to setup TCP/IP socket (server) for
+  | sending and receiving data; can be used to communicate with other Python interpreters
+  | or for communication with MATLAB/Simulink
+- | \ *input*\ :
+  | \ ``sendSize``\ : number of double values to be sent to TCPIP client
+  | \ ``receiveSize``\ : number of double values to be received from TCPIP client
+  | \ ``IPaddress``\ : string containing IP address of client (e.g., '127.0.0.1')
+  | \ ``port``\ : port for communication with client
+  | \ ``bigEndian``\ : if True, it uses bigEndian, otherwise littleEndian is used for byte order
+- | \ *output*\ :
+  | returns information (TCPIPdata class) on socket; recommended to store this in mbs.sys['TCPIPobject']
+- | \ *example*\ :
+
+.. code-block:: python
+
+  mbs.sys['TCPIPobject'] = CreateTCPIPconnection(sendSize=3, receiveSize=2,
+                                                 bigEndian=True, verbose=True)
+  sampleTime = 0.01 #sample time in MATLAB! must be same!
+  mbs.variables['tLast'] = 0 #in case that exudyn makes finer steps than sample time
+  def PreStepUserFunction(mbs, t):
+      if t >= mbs.variables['tLast'] + sampleTime:
+          mbs.variables['tLast'] += sampleTime
+          tcp = mbs.sys['TCPIPobject']
+          y = TCPIPsendReceive(tcp, np.array([t, np.sin(t), np.cos(t)])) #time, torque
+          tau = y[1]
+          exudyn.Print('tau=',tau)
+      return True
+  try:
+      mbs.SetPreStepUserFunction(PreStepUserFunction)
+      #%%++++++++++++++++++++++++++++++++++++++++++++++++++
+      mbs.Assemble()
+      [...] #start renderer; simulate model
+  finally: #use this to always close connection, even in case of errors
+      CloseTCPIPconnection(mbs.sys['TCPIPobject'])
+  #*****************************************
+  #the following settings work between Python and MATLAB-Simulink (client), and gives stable results(with only delay of one step):
+  # TCP/IP Client Send:
+  #   priority = 2 (in properties)
+  #   blocking = false
+  #   Transfer Delay on (but off also works)
+  # TCP/IP Client Receive:
+  #   priority = 1 (in properties)
+  #   blocking = true
+  #   Sourec Data type = double
+  #   data size = number of double in packer
+  #   Byte order = BigEndian
+  #   timeout = 10
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `TCPIPexudynMatlab.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/TCPIPexudynMatlab.py>`_\  (Ex)
+
+
+
+----
+
+
+.. _sec-advancedutilities-tcpipsendreceive:
+
+Function: TCPIPsendReceive
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+`TCPIPsendReceive <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L1001>`__\ (\ ``TCPIPobject``\ , \ ``sendData``\ )
+
+- | \ *function description*\ :
+  | call this function at every simulation step at which you intend to communicate with
+  | other programs via TCPIP; e.g., call this function in preStepUserFunction of a mbs model
+- | \ *input*\ :
+  | \ ``TCPIPobject``\ : the object returned by CreateTCPIPconnection(...)
+  | \ ``sendData``\ : numpy array containing data (double array) to be sent; must agree with sendSize
+- | \ *output*\ :
+  | returns array as received from TCPIP
+- | \ *example*\ :
+
+.. code-block:: python
+
+  mbs.sys['TCPIPobject']=CreateTCPIPconnection(sendSize=2, receiveSize=1, IPaddress='127.0.0.1')
+  y = TCPIPsendReceive(mbs.sys['TCPIPobject'], np.array([1.,2.]))
+  exudyn.Print(y)
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `TCPIPexudynMatlab.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/TCPIPexudynMatlab.py>`_\  (Ex)
+
+
+
+----
+
+
+.. _sec-advancedutilities-closetcpipconnection:
+
+Function: CloseTCPIPconnection
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`CloseTCPIPconnection <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L1029>`__\ (\ ``TCPIPobject``\ )
+
+- | \ *function description*\ :
+  | close a previously created TCPIP connection
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+
+    \ `TCPIPexudynMatlab.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/TCPIPexudynMatlab.py>`_\  (Ex)
+
+
 .. _sec-module-advancedutilities-class-expectedtype(enum):
 
 CLASS ExpectedType(Enum) (in module advancedUtilities)
@@ -692,5 +807,15 @@ CLASS ExpectedType(Enum) (in module advancedUtilities)
 **class description**: 
 
     internal type which is used for type checking in exudyn Python user functions; used to create unique error messages
+
+
+
+.. _sec-module-advancedutilities-class-tcpipdata:
+
+CLASS TCPIPdata (in module advancedUtilities)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+**class description**: 
+
+    helper class for CreateTCPIPconnection and for TCPIPsendReceive
 
 

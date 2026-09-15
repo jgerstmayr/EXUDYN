@@ -13,6 +13,7 @@
 
 import exudyn as exu
 from exudyn.utilities import *
+import exudyn.graphics as graphics
 from exudyn.FEM import *
 
 import numpy as np
@@ -35,7 +36,7 @@ addForce = True #add gravity as body / link forces and Torque in the first link
 addConstraint = True #add constraint at tip of chain
 
 
-gGround =  GraphicsDataCheckerBoard(point= [0,0,-2], size = 12)
+gGround =  graphics.CheckerBoard(point= [0,0,-2], size = 12)
 objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0],
                                           visualization=VObjectGround(graphicsData=[gGround])))
 baseMarker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=objectGround, localPosition=[0,0,0]))
@@ -68,12 +69,12 @@ torque = 1 # Nm Antriebsmoment am ersten Link
 
 
 gravity3D = [0,-9.81*0,0]
-graphicsBaseList = [GraphicsDataOrthoCubePoint(size=[L, 0.8*w, 0.8*w], color=color4grey)]
+graphicsBaseList = [graphics.Brick(size=[L, 0.8*w, 0.8*w], color=color4grey)]
 
 newRobot = Robot(gravity=gravity3D,
               base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
               tool = RobotTool(HT=HTtranslate([0,0.5*Lengths[-1],0]), visualization=VRobotTool(graphicsData=[
-                  GraphicsDataOrthoCubePoint(size=[w, Lengths[-1], w], color=color4orange)])),
+                  graphics.Brick(size=[w, Lengths[-1], w], color=color4orange)])),
               referenceConfiguration = []) #referenceConfiguration created with 0s automatically
 
 

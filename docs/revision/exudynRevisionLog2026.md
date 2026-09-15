@@ -2773,6 +2773,41 @@ time numpy was optional; it now imports numpy (not exudyn).
   `SolidOfRevolution`, `SolidExtrusion`, `Sphere`, `Brick`, `Arrow`, `Basis`, `CheckerBoard`)
   produce the same data as before; the hand-written docs do not use the removed names.
 
+<a id="step-107b"></a>
+
+### Step 107b - `utilities.py` becomes the big import only
+
+**DONE 2026-09-15** (#2443; decisions in plan step 107b).
+
+Deprecated aliases. The 23 `GraphicsData...` names (`GraphicsDataOrthoCubePoint = graphics.Brick`,
+...) are removed. Remaining uses switched to `graphics.X`, with `import exudyn.graphics as graphics`
+added where missing: 5 Examples in `FurtherExamples/fourBarKinematicTree*.py`, one publication
+example, `TestModels/generalContactImplicit1/2.py` (32 uses). The package and the hand-written docs
+used none.
+
+Moved functions (same code, docstrings and decorators):
+
+| from `utilities.py` | to |
+|---|---|
+| `CreateDistanceSensorGeometry`, `CreateDistanceSensor` (with `__UFsensorDistance`), `DrawSystemGraph` - the `@extends` functions | `mainSystemExtensions.py` |
+| `TCPIPdata`, `CreateTCPIPconnection`, `TCPIPsendReceive`, `CloseTCPIPconnection` | `advancedUtilities.py` |
+| `GetOtherMarker`, `GetJointArgs`, `ShowOnlyObjects`, `HighlightItem`, `UFsensorRecord`, `AddSensorRecorder`, `LoadSolutionFile`, `NumpyInt8ArrayToString`, `BinaryReadIndex`/`Real`/`String`/`ArrayIndex`/`RealVector`, `LoadBinarySolutionFile`, `RecoverSolutionFile`, `InitializeFromRestartFile`, `SetSolutionState`, `AnimateSolution` | `basicUtilities.py` (now imports `exudyn` and three itemInterface classes) |
+
+- `utilities.py` (1641 -> 32 lines) holds only the star imports, the `beams` compatibility import
+  and the re-export of the three `@extends` functions; it no longer imports `extends`.
+- Import order without cycles: `mainSystemExtensions.py` imports `Normalize` from
+  `basicUtilities` instead of `utilities` (its other `utilities` imports are inside functions);
+  `utilities.py` imports `mainSystemExtensions.py`. Package imports of moved names point to the
+  defining module (`interactive.py`, `robotics/utilities.py`); explicit imports from
+  `exudyn.utilities` in Examples keep working through the re-export.
+- Checked in a fresh interpreter: every moved name, `np`, `sqrt`, `Normalize`, `graphics` still
+  come with `from exudyn.utilities import *`; `GraphicsDataOrthoCubePoint` and `extends` do not;
+  `mbs.CreateDistanceSensor` and `mbs.DrawSystemGraph` are bound. Regeneration: tier 1 unchanged;
+  the reference pages of `utilities`, `basicUtilities`, `advancedUtilities` list the functions
+  under their new module (the `@extends` functions only in the MainSystem extensions, as for the
+  other extensions). `checkExtras`, pydoclint (baseline regenerated for the new file names),
+  wheel, full suite PASSED.
+
 <a id="api-changes-v2"></a>
 
 ### API changes for the v2.0 release notes
@@ -2783,6 +2818,9 @@ Breaking changes of the Python API, collected as they happen; step 52 carries th
 | step | change | what users do |
 |---|---|---|
 | 35 | MainSystem extensions bound by `@extends`; `mainSystemExtensions.py` is ordinary source | nothing |
+| 107b | 23 deprecated `GraphicsData...` aliases removed from `exudyn.utilities` (e.g. `GraphicsDataOrthoCubePoint`, `GraphicsDataCylinder`, `GraphicsDataCheckerBoard`) | use `exudyn.graphics`: `graphics.Brick`, `graphics.Cylinder`, `graphics.CheckerBoard`, ... (full list in the step 107b log) |
+| 107b | functions of `exudyn.utilities` moved to `basicUtilities`, `advancedUtilities` (TCP/IP) and `mainSystemExtensions` (distance sensor, `DrawSystemGraph`) | nothing when importing from `exudyn.utilities`; imports from the new modules also work |
+| 107b | `from exudyn.utilities import *` no longer provides `extends` | not part of the user API |
 | 107a | `NormL2`, `VSum`, `VAdd`, `VSub`, `VMult`, `ScalarMult`, `Vec2Tilde`, `Tilde2Vec`, `DiagonalMatrix`, `eye2D`, `eye3D` removed from `exudyn.basicUtilities` (and so from `exudyn.utilities`) | use numpy: `np.linalg.norm`, `np.sum`, array arithmetic, `np.dot`, `Skew`/`Skew2Vec`, `np.eye` |
 
 ## Plan text of steps condensed on 2026-09-15

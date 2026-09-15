@@ -11,6 +11,8 @@ python/exudyn/advancedUtilities.py
     DOC102: Function `ConvertFunctionToSymbolic`: Docstring contains more arguments than in function signature.
     DOC103: Function `ConvertFunctionToSymbolic`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ).
     DOC104: Function `CreateSymbolicUserFunction`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC101: Function `CreateTCPIPconnection`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `CreateTCPIPconnection`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [verbose: ].
 --------------------
 python/exudyn/artificialIntelligence.py
     DOC102: Method `OpenAIGymInterfaceEnv.TestModel`: Docstring contains more arguments than in function signature.
@@ -18,6 +20,15 @@ python/exudyn/artificialIntelligence.py
 --------------------
 python/exudyn/basicUtilities.py
     DOC001: Function/method `Normalize`: Potential formatting errors in docstring. Error message: Expected a colon in 'vector v as list or in numpy format'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC202: Function `ShowOnlyObjects` has a return section in docstring, but there are no return statements or annotations
+    DOC101: Function `HighlightItem`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `HighlightItem`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [SC: , itemNumber: ]. Arguments in the docstring but not in the function signature: [itemNumbers: ].
+    DOC103: Function `LoadSolutionFile`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [safeMode: ]. Arguments in the docstring but not in the function signature: [saveMode: ].
+    DOC101: Function `BinaryReadRealVector`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `BinaryReadRealVector`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [file: , intType: , realType: ].
+    DOC104: Function `LoadBinarySolutionFile`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC202: Function `RecoverSolutionFile` has a return section in docstring, but there are no return statements or annotations
+    DOC202: Function `InitializeFromRestartFile` has a return section in docstring, but there are no return statements or annotations
 --------------------
 python/exudyn/beams.py
     DOC101: Function `GenerateBeamElementsAlongLine`: Docstring contains fewer arguments than in function signature.
@@ -160,6 +171,7 @@ python/exudyn/mainSystemExtensions.py
     DOC104: Function `MainSystemCreateRollingDiscPenalty`: Arguments are the same in the docstring and the function signature, but are in a different order.
     DOC102: Function `MainSystemCreateKinematicTree`: Docstring contains more arguments than in function signature.
     DOC103: Function `MainSystemCreateKinematicTree`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [showJoints: , showLinks: ].
+    DOC104: Function `DrawSystemGraph`: Arguments are the same in the docstring and the function signature, but are in a different order.
 --------------------
 python/exudyn/physics.py
     DOC104: Function `StribeckFunction`: Arguments are the same in the docstring and the function signature, but are in a different order.
@@ -307,18 +319,4 @@ python/exudyn/signalProcessing.py
 python/exudyn/solver.py
     DOC104: Function `ComputeSystemDegreeOfFreedom`: Arguments are the same in the docstring and the function signature, but are in a different order.
     DOC001: Function/method `CheckSolverInfoStatistics`: Potential formatting errors in docstring. Error message: Expected a colon in 'stat=exudyn.special.InfoStat() from previous step, numberOfEvaluations is a counter which is proportional to number of RHS evaluations in method'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
---------------------
-python/exudyn/utilities.py
-    DOC202: Function `ShowOnlyObjects` has a return section in docstring, but there are no return statements or annotations
-    DOC101: Function `HighlightItem`: Docstring contains fewer arguments than in function signature.
-    DOC103: Function `HighlightItem`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [SC: , itemNumber: ]. Arguments in the docstring but not in the function signature: [itemNumbers: ].
-    DOC103: Function `LoadSolutionFile`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [safeMode: ]. Arguments in the docstring but not in the function signature: [saveMode: ].
-    DOC101: Function `BinaryReadRealVector`: Docstring contains fewer arguments than in function signature.
-    DOC103: Function `BinaryReadRealVector`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [file: , intType: , realType: ].
-    DOC104: Function `LoadBinarySolutionFile`: Arguments are the same in the docstring and the function signature, but are in a different order.
-    DOC202: Function `RecoverSolutionFile` has a return section in docstring, but there are no return statements or annotations
-    DOC202: Function `InitializeFromRestartFile` has a return section in docstring, but there are no return statements or annotations
-    DOC104: Function `DrawSystemGraph`: Arguments are the same in the docstring and the function signature, but are in a different order.
-    DOC101: Function `CreateTCPIPconnection`: Docstring contains fewer arguments than in function signature.
-    DOC103: Function `CreateTCPIPconnection`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [verbose: ].
 --------------------

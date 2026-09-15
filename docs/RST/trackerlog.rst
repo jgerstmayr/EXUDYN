@@ -19,15 +19,20 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.68.dev1, 
++  Exudyn version = 1.11.69.dev1, 
 +  last change =  2026-09-15, 
-+  Number of issues = 2443, 
-+  Number of resolved issues = 2141 (68 in current version), 
++  Number of issues = 2444, 
++  Number of resolved issues = 2142 (69 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.69: resolved Issue 2443: utilities.py: deprecated GraphicsData aliases removed; functions moved to basicUtilities/advancedUtilities/mainSystemExtensions (change)
+    - issue author: Claude-JG
+    - description:  step 107b: 23 GraphicsData... aliases removed (uses switched to exudyn.graphics); @extends functions to mainSystemExtensions; TCP/IP to advancedUtilities; all other functions to basicUtilities (now imports exudyn); utilities.py only re-exports
+    - date resolved: **2026-09-15 18:47**\ , date raised: 2026-09-15 
+    - resolved by: Claude-JG
  * Version 1.11.68: resolved Issue 2442: basicUtilities: numpy-era vector helpers removed (change)
     - issue author: Claude-JG
     - description:  step 107a: NormL2 VSum VAdd VSub VMult ScalarMult Vec2Tilde Tilde2Vec DiagonalMatrix eye2D eye3D removed; uses in package/TestModels/Examples replaced by numpy (np.linalg.norm; np.sum; array arithmetic; np.dot; Skew); Normalize kept (zero vector allowed) and implemented with numpy; basicUtilities imports numpy

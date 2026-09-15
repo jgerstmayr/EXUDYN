@@ -12,7 +12,7 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-#import exudyn.graphics as graphics #only import if it does not conflict
+import exudyn.graphics as graphics
 
 
 import numpy as np
@@ -67,7 +67,7 @@ gContact.SetSearchTreeCellSize(numberOfCells=[4,4,4])
 p0 = np.array([0,0,-0.5*t])
 color4wall = [0.9,0.9,0.7,0.5]
 addNormals = False
-gFloor = GraphicsDataOrthoCubePoint(p0,[L,L,t],color4steelblue,addNormals)
+gFloor = graphics.Brick(p0,[L,L,t],color4steelblue,addNormals)
 
 gDataList = [gFloor]
 
@@ -76,21 +76,21 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0] ))
 mGround = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nGround))
 mGroundC = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
 
-[meshPoints, meshTrigs] = GraphicsData2PointsAndTrigs(gFloor)
+[meshPoints, meshTrigs] = graphics.ToPointsAndTrigs(gFloor)
 #[meshPoints, meshTrigs] = RefineMesh(meshPoints, meshTrigs) #just to have more triangles on floor
 # [meshPoints, meshTrigs] = RefineMesh(meshPoints, meshTrigs) #just to have more triangles on floor
 gContact.AddTrianglesRigidBodyBased(rigidBodyMarkerIndex=mGround, contactStiffness=k, contactDamping=d, frictionMaterialIndex=0,
     pointList=meshPoints,  triangleList=meshTrigs)
 
 if True: #looses color
-    gFloor = GraphicsDataFromPointsAndTrigs(meshPoints, meshTrigs, color=color4wall) #show refined mesh
+    gFloor = graphics.FromPointsAndTrigs(meshPoints, meshTrigs, color=color4wall) #show refined mesh
     gDataList = [gFloor]
 
 evalNodes = [] #collect nodes that are evaluated for test
 #%%++++++++++++++++++++++++++++++++++++++++++++
 #free rolling sphere:
-gList = [GraphicsDataSphere(point=[0,0,0], radius=r, color= color4red, nTiles=24)]
-gList += [GraphicsDataBasis(length=2*r)]
+gList = [graphics.Sphere(point=[0,0,0], radius=r, color= color4red, nTiles=24)]
+gList += [graphics.Basis(length=2*r)]
 
 pRef = [-0.4*L,0*L,r - m*gFact/(0.5*k)] #need to use series of 2 k's!
 

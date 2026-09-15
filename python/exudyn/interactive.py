@@ -807,7 +807,7 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
         sol = LoadSolutionFile('coordinatesSolution.txt') #load solution: adjust to your file name
         mbs.SolutionViewer(sol) #call via MainSystem
     """
-    from exudyn.utilities import SetSolutionState, LoadSolutionFile
+    from exudyn.basicUtilities import SetSolutionState, LoadSolutionFile
     
     mbs = mainSystem
     SC = mbs.GetSystemContainer()

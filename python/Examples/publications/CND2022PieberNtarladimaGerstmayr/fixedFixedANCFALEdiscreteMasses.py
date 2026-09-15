@@ -29,6 +29,7 @@ from exudyn.itemInterface import *
 from exudyn.FEM import *
 from exudyn.graphicsDataUtilities import *
 from exudyn.utilities import *
+import exudyn.graphics as graphics
 
 import numpy as np
 from scipy.linalg import eigh, eig #eigh for symmetric matrices, positive definite
@@ -314,7 +315,7 @@ def BuildModel(parameterSet):
         sizeMass = 0.02
         for i in range(nMasses):
             nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0], initialVelocities=[0*mbs.variables['setVALE'],0]))
-            g = GraphicsDataSphere([0,0,0], radius=sizeMass*0.5, color=color4red)
+            g = graphics.Sphere([0,0,0], radius=sizeMass*0.5, color=color4red)
             oMass = mbs.AddObject(ObjectMassPoint2D(physicsMass=mass, nodeNumber=nMass, 
                                                     visualization=VMassPoint2D(graphicsData=[g])))
     

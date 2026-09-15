@@ -14,6 +14,7 @@
 
 import exudyn as exu
 from exudyn.utilities import *
+import exudyn.graphics as graphics
 
 import numpy as np
 
@@ -23,7 +24,7 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
 
-gGround =  GraphicsDataCheckerBoard(point= [0,0,-2], size = 12)
+gGround =  graphics.CheckerBoard(point= [0,0,-2], size = 12)
 objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0],
                                           visualization=VObjectGround(graphicsData=[gGround])))
 markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=objectGround,
@@ -38,7 +39,7 @@ gravity = [0, -9.81, 0]  # Schwerkraft
 torque = 1
 
 
-graphicsBaseList = [GraphicsDataOrthoCubePoint(size=[0.75*w, 0.75*w, 0.75*w], color=color4grey)] #rail
+graphicsBaseList = [graphics.Brick(size=[0.75*w, 0.75*w, 0.75*w], color=color4grey)] #rail
 
 linkSystem = Robot(gravity=gravity,
               base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),

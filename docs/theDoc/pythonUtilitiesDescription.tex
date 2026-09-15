@@ -686,8 +686,136 @@
 \ei
 
 %
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L930}{CreateTCPIPconnection}{}}}\label{sec:advancedUtilities:CreateTCPIPconnection}
+({\it sendSize}, {\it receiveSize}, {\it IPaddress}= '127.0.0.1', {\it port}= 52421, {\it bigEndian}= False, {\it verbose}= False)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]function which has to be called before simulation to setup TCP/IP socket (server) for
+\item[]sending and receiving data; can be used to communicate with other Python interpreters
+\item[]or for communication with MATLAB/Simulink
+\end{itemize}
+\item[--]
+{\bf input}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]{\it sendSize}: number of double values to be sent to TCPIP client
+\item[]{\it receiveSize}: number of double values to be received from TCPIP client
+\item[]{\it IPaddress}: string containing IP address of client (e.g., '127.0.0.1')
+\item[]{\it port}: port for communication with client
+\item[]{\it bigEndian}: if True, it uses bigEndian, otherwise littleEndian is used for byte order
+\end{itemize}
+\item[--]
+{\bf output}: returns information (TCPIPdata class) on socket; recommended to store this in mbs.sys['TCPIPobject']
+\item[--]
+{\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
+  mbs.sys['TCPIPobject'] = CreateTCPIPconnection(sendSize=3, receiveSize=2,
+                                                 bigEndian=True, verbose=True)
+  sampleTime = 0.01 #sample time in MATLAB! must be same!
+  mbs.variables['tLast'] = 0 #in case that exudyn makes finer steps than sample time
+  def PreStepUserFunction(mbs, t):
+      if t >= mbs.variables['tLast'] + sampleTime:
+          mbs.variables['tLast'] += sampleTime
+          tcp = mbs.sys['TCPIPobject']
+          y = TCPIPsendReceive(tcp, np.array([t, np.sin(t), np.cos(t)])) #time, torque
+          tau = y[1]
+          exudyn.Print('tau=',tau)
+      return True
+  try:
+      mbs.SetPreStepUserFunction(PreStepUserFunction)
+      #%%++++++++++++++++++++++++++++++++++++++++++++++++++
+      mbs.Assemble()
+      [...] #start renderer; simulate model
+  finally: #use this to always close connection, even in case of errors
+      CloseTCPIPconnection(mbs.sys['TCPIPobject'])
+  #*****************************************
+  #the following settings work between Python and MATLAB-Simulink (client), and gives stable results(with only delay of one step):
+  # TCP/IP Client Send:
+  #   priority = 2 (in properties)
+  #   blocking = false
+  #   Transfer Delay on (but off also works)
+  # TCP/IP Client Receive:
+  #   priority = 1 (in properties)
+  #   blocking = true
+  #   Sourec Data type = double
+  #   data size = number of double in packer
+  #   Byte order = BigEndian
+  #   timeout = 10
+\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
+%
+%
+\noindent For examples on CreateTCPIPconnection see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/TCPIPexudynMatlab.py}{\texttt{TCPIPexudynMatlab.py}} (Ex)
+\ei
+
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L1001}{TCPIPsendReceive}{}}}\label{sec:advancedUtilities:TCPIPsendReceive}
+({\it TCPIPobject}, {\it sendData})
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]call this function at every simulation step at which you intend to communicate with
+\item[]other programs via TCPIP; e.g., call this function in preStepUserFunction of a mbs model
+\end{itemize}
+\item[--]
+{\bf input}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]{\it TCPIPobject}: the object returned by CreateTCPIPconnection(...)
+\item[]{\it sendData}: numpy array containing data (double array) to be sent; must agree with sendSize
+\end{itemize}
+\item[--]
+{\bf output}: returns array as received from TCPIP
+\item[--]
+{\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
+  mbs.sys['TCPIPobject']=CreateTCPIPconnection(sendSize=2, receiveSize=1, IPaddress='127.0.0.1')
+  y = TCPIPsendReceive(mbs.sys['TCPIPobject'], np.array([1.,2.]))
+  exudyn.Print(y)
+\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
+%
+%
+\noindent For examples on TCPIPsendReceive see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/TCPIPexudynMatlab.py}{\texttt{TCPIPexudynMatlab.py}} (Ex)
+\ei
+
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/advancedUtilities.py\#L1029}{CloseTCPIPconnection}{}}}\label{sec:advancedUtilities:CloseTCPIPconnection}
+({\it TCPIPobject})
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: close a previously created TCPIP connection
+\vspace{12pt}\end{itemize}
+%
+%
+\noindent For examples on CloseTCPIPconnection see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/TCPIPexudynMatlab.py}{\texttt{TCPIPexudynMatlab.py}} (Ex)
+\ei
+
+%
 \mysubsubsection{CLASS ExpectedType(Enum) (in module advancedUtilities)}
 \noindent\textcolor{steelblue}{{\bf class description}}:  internal type which is used for type checking in exudyn Python user functions; used to create unique error messages
+\vspace{3pt} \\ 
+\mysubsubsection{CLASS TCPIPdata (in module advancedUtilities)}
+\noindent\textcolor{steelblue}{{\bf class description}}:  helper class for CreateTCPIPconnection and for TCPIPsendReceive
 \vspace{3pt} \\ 
 \mysubsection{Module: artificialIntelligence}
 \label{sec:module:artificialIntelligence}
@@ -882,7 +1010,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 \ei
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L28}{ClearWorkspace}{}}}\label{sec:basicUtilities:ClearWorkspace}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L30}{ClearWorkspace}{}}}\label{sec:basicUtilities:ClearWorkspace}
 ()
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -921,7 +1049,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L84}{SmartRound2String}{}}}\label{sec:basicUtilities:SmartRound2String}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L86}{SmartRound2String}{}}}\label{sec:basicUtilities:SmartRound2String}
 ({\it x}, {\it prec}= 3)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -932,7 +1060,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L96}{Normalize}{}}}\label{sec:basicUtilities:Normalize}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L98}{Normalize}{}}}\label{sec:basicUtilities:Normalize}
 ({\it v})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -965,7 +1093,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L128}{GaussIntegrate}{}}}\label{sec:basicUtilities:GaussIntegrate}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L130}{GaussIntegrate}{}}}\label{sec:basicUtilities:GaussIntegrate}
 ({\it functionOfX}, {\it integrationOrder}, {\it a}, {\it b})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -987,7 +1115,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L168}{LobattoIntegrate}{}}}\label{sec:basicUtilities:LobattoIntegrate}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L170}{LobattoIntegrate}{}}}\label{sec:basicUtilities:LobattoIntegrate}
 ({\it functionOfX}, {\it integrationOrder}, {\it a}, {\it b})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1006,6 +1134,388 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 \item[--]
 {\bf output}: (scalar or vectorized) integral value
 \vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L203}{GetOtherMarker}{}}}\label{sec:basicUtilities:GetOtherMarker}
+({\it mbs}, {\it bodyNumber}, {\it existingMarker}, {\it show}= True)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: creates a new marker for body with bodyNumber using another marker existingMarker, such that the new marker has the same reference position as the existing marker, working for MarkerBodyPosition (no rotations included); this alleviates creation of markers and calculation of localPosition
+\item[--]
+{\bf input}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]{\it mbs}: multibody system where new marker is added to
+\item[]{\it bodyNumber}: body where new marker shall be attached to
+\item[]{\it existingMarker}: marker number which serves as a reference
+\item[]{\it show}: if True, marker is shown
+\end{itemize}
+\item[--]
+{\bf output}: returns marker number of new marker
+\item[--]
+{\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
+  #oBody0 = mbs.CreateRigidBody(...)
+  #oBody1 = mbs.CreateRigidBody(...)
+  marker0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oBody0,localPosition=[1,0,0]))
+  #create joint from one marker (with rotation) and other body
+  mbs.AddObject(SphericalJoint(markerNumbers=[marker0, GetOtherMarker(mbs, oBody1, marker0)]))
+\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
+%
+%
+\noindent For examples on GetOtherMarker see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveFFRF.py}{\texttt{NGsolveFFRF.py}} (Ex)
+\ei
+
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L240}{GetJointArgs}{}}}\label{sec:basicUtilities:GetJointArgs}
+({\it mbs}, {\it markerNumber0}= None, {\it markerNumber1}= None, {\it rotationMarker0}= None, {\it rotationMarker1}= None, {\it bodyNumber0}= None, {\it bodyNumber1}= None)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: creates input args for joints, based on an exiting marker (markerNumber, may be rigid or flex body), with optional existing rotationMarker and uses another rigid body (given as bodyNumber) to create a new MarkerBodyRigid and rotationMarker; this alleviates creation of joint args, see the example; inputs are either markerNumber0 [, rotationMarker0], bodyNumber1 OR markerNumber1 [, rotationMarker1], bodyNumber0
+\item[--]
+{\bf input}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]{\it mbs}: multibody system where new marker is added to
+\item[]{\it markerNumber0}: markerNumber of existing rigid body marker
+\item[]{\it markerNumber1}: markerNumber of existing rigid body marker
+\item[]{\it rotationMarker0}: joint marker rotation matrix for markerNumber0 (must be MarkerBodyRigid)
+\item[]{\it rotationMarker1}: joint marker rotation matrix for markerNumber1 (must be MarkerBodyRigid)
+\item[]{\it bodyNumber0}: existing body used to create new marker
+\item[]{\it bodyNumber1}: existing body used to create new marker
+\end{itemize}
+\item[--]
+{\bf output}: returns dict with 'markerNumbers' list, 'rotationMarker0' and 'rotationMarker1', ready to be used as args
+\item[--]
+{\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
+  #oBody0 = mbs.CreateRigidBody(...)
+  #oBody1 = mbs.CreateRigidBody(...)
+  marker0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oBody0,localPosition=[1,0,0]))
+  rotM0 = RotationMatrixX(0.5*pi)
+  #create joint from one marker (with rotation) and other body
+  mbs.AddObject(RevoluteJointZ(**GetJointArgs(mbs, markerNumber0=marker0,
+                                              rotationMarker0=rotM0,
+                                              bodyNumber1=oBody1)
+\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
+%
+%
+\noindent For examples on GetJointArgs see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/jointArgsTest.py}{\texttt{jointArgsTest.py}} (TM)
+\ei
+
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L316}{ShowOnlyObjects}{}}}\label{sec:basicUtilities:ShowOnlyObjects}
+({\it mbs}, {\it objectNumbers}= [], {\it showOthers}= False)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: function to hide all objects in mbs except for those listed in objectNumbers
+\item[--]
+{\bf input}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]{\it mbs}: mbs containing object
+\item[]{\it objectNumbers}: integer object number or list of object numbers to be shown; if empty list [], then all objects are shown
+\item[]{\it showOthers}: if True, then all other objects are shown again
+\end{itemize}
+\item[--]
+{\bf output}: changes all colors in mbs, which is NOT reversible
+\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L344}{HighlightItem}{}}}\label{sec:basicUtilities:HighlightItem}
+({\it SC}, {\it mbs}, {\it itemNumber}, {\it itemType}= exudyn.ItemType.Object, {\it showNumbers}= True)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: highlight a certain item with number itemNumber; set itemNumber to -1 to show again all objects
+\item[--]
+{\bf input}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]{\it mbs}: mbs containing object
+\item[]{\it itemNumbers}: integer object/node/etc number to be highlighted
+\item[]{\it itemType}: type of items to be highlighted
+\item[]{\it showNumbers}: if True, then the numbers of these items are shown
+\end{itemize}
+\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L387}{UFsensorRecord}{}}}\label{sec:basicUtilities:UFsensorRecord}
+({\it mbs}, {\it t}, {\it sensorNumbers}, {\it factors}, {\it configuration})
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: DEPRECATED: Internal SensorUserFunction, used in function AddSensorRecorder
+\item[--]
+{\bf notes}: Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
+\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L405}{AddSensorRecorder}{}}}\label{sec:basicUtilities:AddSensorRecorder}
+({\it mbs}, {\it sensorNumber}, {\it endTime}, {\it sensorsWritePeriod}, {\it sensorOutputSize}= 3)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: DEPRECATED: Add a SensorUserFunction object in order to record sensor output internally; this avoids creation of files for sensors, which can speedup and simplify evaluation in ParameterVariation and GeneticOptimization; values are stored internally in mbs.variables['sensorRecord'+str(sensorNumber)] where sensorNumber is the mbs sensor number
+\item[--]
+{\bf input}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]{\it mbs}: mbs containing object
+\item[]{\it sensorNumber}: integer sensor number to be recorded
+\item[]{\it endTime}: end time of simulation, as given in simulationSettings.timeIntegration.endTime
+\item[]{\it sensorsWritePeriod}: as given in simulationSettings.solutionSettings.sensorsWritePeriod
+\item[]{\it sensorOutputSize}: size of sensor data: 3 for Displacement, Position, etc. sensors; may be larger for RotationMatrix or Coordinates sensors; check this size by calling mbs.GetSensorValues(sensorNumber)
+\end{itemize}
+\item[--]
+{\bf output}: adds an according SensorUserFunction sensor to mbs; returns new sensor number; during initialization a new numpy array is allocated in  mbs.variables['sensorRecord'+str(sensorNumber)] and the information is written row-wise: [time, sensorValue1, sensorValue2, ...]
+\item[--]
+{\bf notes}: Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
+\vspace{12pt}\end{itemize}
+%
+%
+\noindent For examples on AddSensorRecorder see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ComputeSensitivitiesExample.py}{\texttt{ComputeSensitivitiesExample.py}} (Ex)
+\ei
+
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L433}{LoadSolutionFile}{}}}\label{sec:basicUtilities:LoadSolutionFile}
+({\it fileName}, {\it safeMode}= False, {\it maxRows}= -1, {\it verbose}= True, {\it hasHeader}= True)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary:
+\item[--]
+{\bf input}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]{\it fileName}: string containing directory and filename of stored coordinatesSolutionFile
+\item[]{\it saveMode}: if True, it loads lines directly to load inconsistent lines as well; use this for huge files (>2GB); is slower but needs less memory!
+\item[]{\it verbose}: if True, some information is written when importing file (use for huge files to track progress)
+\item[]{\it maxRows}: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows
+\item[]{\it hasHeader}: set to False, if file is expected to have no header; if False, then some error checks related to file header are not performed
+\end{itemize}
+\item[--]
+{\bf output}: dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], 'nColumns': the number of data columns and 'nRows': the number of data rows
+\vspace{12pt}\end{itemize}
+%
+%
+\noindent For examples on LoadSolutionFile see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py}{\texttt{beltDriveALE.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py}{\texttt{beltDriveReevingSystem.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py}{\texttt{beltDrivesComparison.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py}{\texttt{fourBarMechanism3D.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py}{\texttt{kinematicTreeAndMBS.py}} (Ex), 
+ ...
+, 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py}{\texttt{ANCFgeneralContactCircle.py}} (TM), 
+ ...
+
+\ei
+
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L571}{NumpyInt8ArrayToString}{}}}\label{sec:basicUtilities:NumpyInt8ArrayToString}
+({\it npArray})
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: simple conversion of int8 arrays into strings (not highly efficient, so use only for short strings)
+\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L580}{BinaryReadIndex}{}}}\label{sec:basicUtilities:BinaryReadIndex}
+({\it file}, {\it intType})
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: read single Index from current file position in binary solution file
+\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L588}{BinaryReadReal}{}}}\label{sec:basicUtilities:BinaryReadReal}
+({\it file}, {\it realType})
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: read single Real from current file position in binary solution file
+\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L596}{BinaryReadString}{}}}\label{sec:basicUtilities:BinaryReadString}
+({\it file}, {\it intType})
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: read string from current file position in binary solution file
+\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L604}{BinaryReadArrayIndex}{}}}\label{sec:basicUtilities:BinaryReadArrayIndex}
+({\it file}, {\it intType})
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: read Index array from current file position in binary solution file
+\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L612}{BinaryReadRealVector}{}}}\label{sec:basicUtilities:BinaryReadRealVector}
+({\it file}, {\it intType}, {\it realType})
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: read Real vector from current file position in binary solution file
+\item[--]
+{\bf output}: return data as numpy array, or False if no data read
+\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L626}{LoadBinarySolutionFile}{}}}\label{sec:basicUtilities:LoadBinarySolutionFile}
+({\it fileName}, {\it maxRows}= -1, {\it verbose}= True)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: read BINARY coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary
+\item[--]
+{\bf input}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]{\it fileName}: string containing directory and filename of stored coordinatesSolutionFile
+\item[]{\it verbose}: if True, some information is written when importing file (use for huge files to track progress)
+\item[]{\it maxRows}: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows
+\end{itemize}
+\item[--]
+{\bf output}: dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], 'nColumns': the number of data columns and 'nRows': the number of data rows
+\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L812}{RecoverSolutionFile}{}}}\label{sec:basicUtilities:RecoverSolutionFile}
+({\it fileName}, {\it newFileName}, {\it verbose}= 0)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: recover solution file with last row not completely written (e.g., if crashed, interrupted or no flush file option set)
+\item[--]
+{\bf input}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]{\it fileName}: string containing directory and filename of stored coordinatesSolutionFile
+\item[]{\it newFileName}: string containing directory and filename of new coordinatesSolutionFile
+\item[]{\it verbose}: 0=no information, 1=basic information, 2=information per row
+\end{itemize}
+\item[--]
+{\bf output}: writes only consistent rows of file to file with name newFileName
+\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L871}{InitializeFromRestartFile}{}}}\label{sec:basicUtilities:InitializeFromRestartFile}
+({\it mbs}, {\it simulationSettings}, {\it restartFileName}, {\it verbose}= True)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: recover initial coordinates, time, etc. from given restart file
+\item[--]
+{\bf input}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]{\it mbs}: MainSystem to be operated with
+\item[]{\it simulationSettings}: simulationSettings which is updated and shall be used afterwards for SolveDynamic(...) or SolveStatic(...)
+\item[]{\it restartFileName}: string containing directory and filename of stored restart file, as given in solutionSettings.restartFileName
+\item[]{\it verbose}: False=no information, True=basic information
+\end{itemize}
+\item[--]
+{\bf output}: modifies simulationSettings and sets according initial conditions in mbs
+\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L947}{SetSolutionState}{}}}\label{sec:basicUtilities:SetSolutionState}
+({\it mbs}, {\it solution}, {\it row}, {\it configuration}= exudyn.ConfigurationType.Current, {\it sendRedrawSignal}= True)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: load selected row of solution dictionary (previously loaded with LoadSolutionFile) into specific state; flag sendRedrawSignal is only used if configuration = exudyn.ConfigurationType.Visualization
+\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L973}{AnimateSolution}{}}}\label{sec:basicUtilities:AnimateSolution}
+({\it mbs}, {\it solution}, {\it rowIncrement}= 1, {\it timeout}= 0.04, {\it createImages}= False, {\it runLoop}= False)
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: This function is not further maintaned and should only be used if you do not have tkinter (like on some MacOS versions); use exudyn.interactive.SolutionViewer() instead! AnimateSolution consecutively load the rows of a solution file and visualize the result
+\item[--]
+{\bf input}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]{\it mbs}: the system used for animation
+\item[]{\it solution}: solution dictionary previously loaded with LoadSolutionFile; will be played from first to last row
+\item[]{\it rowIncrement}: can be set larger than 1 in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame)
+\item[]{\it timeout}: in seconds is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second
+\item[]{\it createImages}: creates consecutively images from the animation, which can be converted into an animation
+\item[]{\it runLoop}: if True, the animation is played in a loop until 'q' is pressed in render window
+\end{itemize}
+\item[--]
+{\bf output}: renders the scene in mbs and changes the visualization state in mbs continuously
+\vspace{12pt}\end{itemize}
+%
+%
+\noindent For examples on AnimateSolution see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
+\bi
+ \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py}{\texttt{NGsolvePistonEngine.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/SliderCrank.py}{\texttt{SliderCrank.py}} (Ex), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/slidercrankWithMassSpring.py}{\texttt{slidercrankWithMassSpring.py}} (Ex), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrankFloatingTest.py}{\texttt{sliderCrankFloatingTest.py}} (TM)
+\ei
+
 %
 \mysubsection{Module: beams}
 \label{sec:module:beams}
@@ -3879,7 +4389,10 @@ export to EXUDYN objects
  ...
 , 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py}{\texttt{distanceSensor.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py}{\texttt{generalContactFrictionTests.py}} (TM)
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactFrictionTests.py}{\texttt{generalContactFrictionTests.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/generalContactImplicit1.py}{\texttt{generalContactImplicit1.py}} (TM), 
+ ...
+
 \ei
 
 %
@@ -10664,555 +11177,12 @@ by inheritance with class MyClass(ROSInterface)
 %
 \mysubsection{Module: utilities}
 \label{sec:module:utilities}
-  Basic support functions for simpler creation of Exudyn models.
-           Advanced functions for loading and animating solutions and for drawing a graph of the mbs system.
-           This library requires numpy (as well as time and copy)
+  The big import of Exudyn's Python utilities: 'from exudyn.utilities import *' makes the
+           utility modules available at once. It defines no functions of its own (revision plan
+           step 107b); they are in basicUtilities, advancedUtilities, rigidBodyUtilities,
+           graphicsDataUtilities, itemInterface, beams and mainSystemExtensions.
 \begin{itemize}[leftmargin=1.4cm]
 \setlength{\itemindent}{-1.4cm}
 \item[]Author:    Johannes Gerstmayr
 \item[]Date:      2019-07-26 (created)
 \ei
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L77}{GetOtherMarker}{}}}\label{sec:utilities:GetOtherMarker}
-({\it mbs}, {\it bodyNumber}, {\it existingMarker}, {\it show}= True)
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: creates a new marker for body with bodyNumber using another marker existingMarker, such that the new marker has the same reference position as the existing marker, working for MarkerBodyPosition (no rotations included); this alleviates creation of markers and calculation of localPosition
-\item[--]
-{\bf input}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]{\it mbs}: multibody system where new marker is added to
-\item[]{\it bodyNumber}: body where new marker shall be attached to
-\item[]{\it existingMarker}: marker number which serves as a reference
-\item[]{\it show}: if True, marker is shown
-\end{itemize}
-\item[--]
-{\bf output}: returns marker number of new marker
-\item[--]
-{\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
-  #oBody0 = mbs.CreateRigidBody(...)
-  #oBody1 = mbs.CreateRigidBody(...)
-  marker0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oBody0,localPosition=[1,0,0]))
-  #create joint from one marker (with rotation) and other body
-  mbs.AddObject(SphericalJoint(markerNumbers=[marker0, GetOtherMarker(mbs, oBody1, marker0)]))
-\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
-%
-%
-\noindent For examples on GetOtherMarker see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-\bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveFFRF.py}{\texttt{NGsolveFFRF.py}} (Ex)
-\ei
-
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L116}{GetJointArgs}{}}}\label{sec:utilities:GetJointArgs}
-({\it mbs}, {\it markerNumber0}= None, {\it markerNumber1}= None, {\it rotationMarker0}= None, {\it rotationMarker1}= None, {\it bodyNumber0}= None, {\it bodyNumber1}= None)
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: creates input args for joints, based on an exiting marker (markerNumber, may be rigid or flex body), with optional existing rotationMarker and uses another rigid body (given as bodyNumber) to create a new MarkerBodyRigid and rotationMarker; this alleviates creation of joint args, see the example; inputs are either markerNumber0 [, rotationMarker0], bodyNumber1 OR markerNumber1 [, rotationMarker1], bodyNumber0
-\item[--]
-{\bf input}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]{\it mbs}: multibody system where new marker is added to
-\item[]{\it markerNumber0}: markerNumber of existing rigid body marker
-\item[]{\it markerNumber1}: markerNumber of existing rigid body marker
-\item[]{\it rotationMarker0}: joint marker rotation matrix for markerNumber0 (must be MarkerBodyRigid)
-\item[]{\it rotationMarker1}: joint marker rotation matrix for markerNumber1 (must be MarkerBodyRigid)
-\item[]{\it bodyNumber0}: existing body used to create new marker
-\item[]{\it bodyNumber1}: existing body used to create new marker
-\end{itemize}
-\item[--]
-{\bf output}: returns dict with 'markerNumbers' list, 'rotationMarker0' and 'rotationMarker1', ready to be used as args
-\item[--]
-{\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
-  #oBody0 = mbs.CreateRigidBody(...)
-  #oBody1 = mbs.CreateRigidBody(...)
-  marker0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oBody0,localPosition=[1,0,0]))
-  rotM0 = RotationMatrixX(0.5*pi)
-  #create joint from one marker (with rotation) and other body
-  mbs.AddObject(RevoluteJointZ(**GetJointArgs(mbs, markerNumber0=marker0,
-                                              rotationMarker0=rotM0,
-                                              bodyNumber1=oBody1)
-\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
-%
-%
-\noindent For examples on GetJointArgs see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-\bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/jointArgsTest.py}{\texttt{jointArgsTest.py}} (TM)
-\ei
-
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L193}{ShowOnlyObjects}{}}}\label{sec:utilities:ShowOnlyObjects}
-({\it mbs}, {\it objectNumbers}= [], {\it showOthers}= False)
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: function to hide all objects in mbs except for those listed in objectNumbers
-\item[--]
-{\bf input}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]{\it mbs}: mbs containing object
-\item[]{\it objectNumbers}: integer object number or list of object numbers to be shown; if empty list [], then all objects are shown
-\item[]{\it showOthers}: if True, then all other objects are shown again
-\end{itemize}
-\item[--]
-{\bf output}: changes all colors in mbs, which is NOT reversible
-\vspace{12pt}\end{itemize}
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L220}{HighlightItem}{}}}\label{sec:utilities:HighlightItem}
-({\it SC}, {\it mbs}, {\it itemNumber}, {\it itemType}= exudyn.ItemType.Object, {\it showNumbers}= True)
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: highlight a certain item with number itemNumber; set itemNumber to -1 to show again all objects
-\item[--]
-{\bf input}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]{\it mbs}: mbs containing object
-\item[]{\it itemNumbers}: integer object/node/etc number to be highlighted
-\item[]{\it itemType}: type of items to be highlighted
-\item[]{\it showNumbers}: if True, then the numbers of these items are shown
-\end{itemize}
-\vspace{12pt}\end{itemize}
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L266}{\_\_UFsensorDistance}{}}}\label{sec:utilities:__UFsensorDistance}
-({\it mbs}, {\it t}, {\it sensorNumbers}, {\it factors}, {\it configuration})
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: internal function used for CreateDistanceSensor
-\vspace{12pt}\end{itemize}
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L316}{CreateDistanceSensorGeometry}{}}}({\it mbs}, {\it meshPoints}, {\it meshTrigs}, {\it rigidBodyMarkerIndex}, {\it searchTreeCellSize}= [8,8,8])
-\end{flushleft}
-\bi
-  \item \mybold{NOTE}: this function is directly available in MainSystem (mbs); it should be directly called as mbs.CreateDistanceSensorGeometry(...). For description of the interface, see the MainSystem Python extensions, \refSection{sec:mainsystemextensions:CreateDistanceSensorGeometry}.
-
-\ei
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L347}{CreateDistanceSensor}{}}}({\it mbs}, {\it generalContactIndex}, {\it positionOrMarker}, {\it dirSensor}, {\it minDistance}= -1e7, {\it maxDistance}= 1e7, {\it cylinderRadius}= 0, {\it selectedTypeIndex}= exudyn.ContactTypeIndex.IndexEndOfEnumList, {\it storeInternal}= False, {\it fileName}= '', {\it measureVelocity}= False, {\it addGraphicsObject}= False, {\it drawDisplaced}= True, {\it color}= exudyn.graphics.color.red)
-\end{flushleft}
-\bi
-  \item \mybold{NOTE}: this function is directly available in MainSystem (mbs); it should be directly called as mbs.CreateDistanceSensor(...). For description of the interface, see the MainSystem Python extensions, \refSection{sec:mainsystemextensions:CreateDistanceSensor}.
-
-\ei
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L421}{UFsensorRecord}{}}}\label{sec:utilities:UFsensorRecord}
-({\it mbs}, {\it t}, {\it sensorNumbers}, {\it factors}, {\it configuration})
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: DEPRECATED: Internal SensorUserFunction, used in function AddSensorRecorder
-\item[--]
-{\bf notes}: Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
-\vspace{12pt}\end{itemize}
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L438}{AddSensorRecorder}{}}}\label{sec:utilities:AddSensorRecorder}
-({\it mbs}, {\it sensorNumber}, {\it endTime}, {\it sensorsWritePeriod}, {\it sensorOutputSize}= 3)
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: DEPRECATED: Add a SensorUserFunction object in order to record sensor output internally; this avoids creation of files for sensors, which can speedup and simplify evaluation in ParameterVariation and GeneticOptimization; values are stored internally in mbs.variables['sensorRecord'+str(sensorNumber)] where sensorNumber is the mbs sensor number
-\item[--]
-{\bf input}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]{\it mbs}: mbs containing object
-\item[]{\it sensorNumber}: integer sensor number to be recorded
-\item[]{\it endTime}: end time of simulation, as given in simulationSettings.timeIntegration.endTime
-\item[]{\it sensorsWritePeriod}: as given in simulationSettings.solutionSettings.sensorsWritePeriod
-\item[]{\it sensorOutputSize}: size of sensor data: 3 for Displacement, Position, etc. sensors; may be larger for RotationMatrix or Coordinates sensors; check this size by calling mbs.GetSensorValues(sensorNumber)
-\end{itemize}
-\item[--]
-{\bf output}: adds an according SensorUserFunction sensor to mbs; returns new sensor number; during initialization a new numpy array is allocated in  mbs.variables['sensorRecord'+str(sensorNumber)] and the information is written row-wise: [time, sensorValue1, sensorValue2, ...]
-\item[--]
-{\bf notes}: Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
-\vspace{12pt}\end{itemize}
-%
-%
-\noindent For examples on AddSensorRecorder see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-\bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ComputeSensitivitiesExample.py}{\texttt{ComputeSensitivitiesExample.py}} (Ex)
-\ei
-
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L472}{LoadSolutionFile}{}}}\label{sec:utilities:LoadSolutionFile}
-({\it fileName}, {\it safeMode}= False, {\it maxRows}= -1, {\it verbose}= True, {\it hasHeader}= True)
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary:
-\item[--]
-{\bf input}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]{\it fileName}: string containing directory and filename of stored coordinatesSolutionFile
-\item[]{\it saveMode}: if True, it loads lines directly to load inconsistent lines as well; use this for huge files (>2GB); is slower but needs less memory!
-\item[]{\it verbose}: if True, some information is written when importing file (use for huge files to track progress)
-\item[]{\it maxRows}: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows
-\item[]{\it hasHeader}: set to False, if file is expected to have no header; if False, then some error checks related to file header are not performed
-\end{itemize}
-\item[--]
-{\bf output}: dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], 'nColumns': the number of data columns and 'nRows': the number of data rows
-\vspace{12pt}\end{itemize}
-%
-%
-\noindent For examples on LoadSolutionFile see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-\bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveALE.py}{\texttt{beltDriveALE.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDriveReevingSystem.py}{\texttt{beltDriveReevingSystem.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/beltDrivesComparison.py}{\texttt{beltDrivesComparison.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/fourBarMechanism3D.py}{\texttt{fourBarMechanism3D.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/kinematicTreeAndMBS.py}{\texttt{kinematicTreeAndMBS.py}} (Ex), 
- ...
-, 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ACFtest.py}{\texttt{ACFtest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFbeltDrive.py}{\texttt{ANCFbeltDrive.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/ANCFgeneralContactCircle.py}{\texttt{ANCFgeneralContactCircle.py}} (TM), 
- ...
-
-\ei
-
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L614}{NumpyInt8ArrayToString}{}}}\label{sec:utilities:NumpyInt8ArrayToString}
-({\it npArray})
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: simple conversion of int8 arrays into strings (not highly efficient, so use only for short strings)
-\vspace{12pt}\end{itemize}
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L622}{BinaryReadIndex}{}}}\label{sec:utilities:BinaryReadIndex}
-({\it file}, {\it intType})
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: read single Index from current file position in binary solution file
-\vspace{12pt}\end{itemize}
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L629}{BinaryReadReal}{}}}\label{sec:utilities:BinaryReadReal}
-({\it file}, {\it realType})
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: read single Real from current file position in binary solution file
-\vspace{12pt}\end{itemize}
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L636}{BinaryReadString}{}}}\label{sec:utilities:BinaryReadString}
-({\it file}, {\it intType})
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: read string from current file position in binary solution file
-\vspace{12pt}\end{itemize}
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L643}{BinaryReadArrayIndex}{}}}\label{sec:utilities:BinaryReadArrayIndex}
-({\it file}, {\it intType})
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: read Index array from current file position in binary solution file
-\vspace{12pt}\end{itemize}
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L650}{BinaryReadRealVector}{}}}\label{sec:utilities:BinaryReadRealVector}
-({\it file}, {\it intType}, {\it realType})
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: read Real vector from current file position in binary solution file
-\item[--]
-{\bf output}: return data as numpy array, or False if no data read
-\vspace{12pt}\end{itemize}
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L665}{LoadBinarySolutionFile}{}}}\label{sec:utilities:LoadBinarySolutionFile}
-({\it fileName}, {\it maxRows}= -1, {\it verbose}= True)
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: read BINARY coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary
-\item[--]
-{\bf input}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]{\it fileName}: string containing directory and filename of stored coordinatesSolutionFile
-\item[]{\it verbose}: if True, some information is written when importing file (use for huge files to track progress)
-\item[]{\it maxRows}: maximum number of data rows loaded, if saveMode=True; use this for huge files to reduce loading time; set -1 to load all rows
-\end{itemize}
-\item[--]
-{\bf output}: dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], 'nColumns': the number of data columns and 'nRows': the number of data rows
-\vspace{12pt}\end{itemize}
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L854}{RecoverSolutionFile}{}}}\label{sec:utilities:RecoverSolutionFile}
-({\it fileName}, {\it newFileName}, {\it verbose}= 0)
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: recover solution file with last row not completely written (e.g., if crashed, interrupted or no flush file option set)
-\item[--]
-{\bf input}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]{\it fileName}: string containing directory and filename of stored coordinatesSolutionFile
-\item[]{\it newFileName}: string containing directory and filename of new coordinatesSolutionFile
-\item[]{\it verbose}: 0=no information, 1=basic information, 2=information per row
-\end{itemize}
-\item[--]
-{\bf output}: writes only consistent rows of file to file with name newFileName
-\vspace{12pt}\end{itemize}
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L913}{InitializeFromRestartFile}{}}}\label{sec:utilities:InitializeFromRestartFile}
-({\it mbs}, {\it simulationSettings}, {\it restartFileName}, {\it verbose}= True)
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: recover initial coordinates, time, etc. from given restart file
-\item[--]
-{\bf input}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]{\it mbs}: MainSystem to be operated with
-\item[]{\it simulationSettings}: simulationSettings which is updated and shall be used afterwards for SolveDynamic(...) or SolveStatic(...)
-\item[]{\it restartFileName}: string containing directory and filename of stored restart file, as given in solutionSettings.restartFileName
-\item[]{\it verbose}: False=no information, True=basic information
-\end{itemize}
-\item[--]
-{\bf output}: modifies simulationSettings and sets according initial conditions in mbs
-\vspace{12pt}\end{itemize}
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L989}{SetSolutionState}{}}}\label{sec:utilities:SetSolutionState}
-({\it mbs}, {\it solution}, {\it row}, {\it configuration}= exudyn.ConfigurationType.Current, {\it sendRedrawSignal}= True)
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: load selected row of solution dictionary (previously loaded with LoadSolutionFile) into specific state; flag sendRedrawSignal is only used if configuration = exudyn.ConfigurationType.Visualization
-\vspace{12pt}\end{itemize}
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1015}{AnimateSolution}{}}}\label{sec:utilities:AnimateSolution}
-({\it mbs}, {\it solution}, {\it rowIncrement}= 1, {\it timeout}= 0.04, {\it createImages}= False, {\it runLoop}= False)
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: This function is not further maintaned and should only be used if you do not have tkinter (like on some MacOS versions); use exudyn.interactive.SolutionViewer() instead! AnimateSolution consecutively load the rows of a solution file and visualize the result
-\item[--]
-{\bf input}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]{\it mbs}: the system used for animation
-\item[]{\it solution}: solution dictionary previously loaded with LoadSolutionFile; will be played from first to last row
-\item[]{\it rowIncrement}: can be set larger than 1 in order to skip solution frames: e.g. rowIncrement=10 visualizes every 10th row (frame)
-\item[]{\it timeout}: in seconds is used between frames in order to limit the speed of animation; e.g. use timeout=0.04 to achieve approximately 25 frames per second
-\item[]{\it createImages}: creates consecutively images from the animation, which can be converted into an animation
-\item[]{\it runLoop}: if True, the animation is played in a loop until 'q' is pressed in render window
-\end{itemize}
-\item[--]
-{\bf output}: renders the scene in mbs and changes the visualization state in mbs continuously
-\vspace{12pt}\end{itemize}
-%
-%
-\noindent For examples on AnimateSolution see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-\bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py}{\texttt{NGsolvePistonEngine.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/SliderCrank.py}{\texttt{SliderCrank.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/slidercrankWithMassSpring.py}{\texttt{slidercrankWithMassSpring.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrankFloatingTest.py}{\texttt{sliderCrankFloatingTest.py}} (TM)
-\ei
-
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1057}{DrawSystemGraph}{}}}({\it mbs}, {\it showLoads}= True, {\it showSensors}= True, {\it useItemNames}= False, {\it useItemTypes}= False, {\it addItemTypeNames}= True, {\it multiLine}= True, {\it fontSizeFactor}= 1., {\it layoutDistanceFactor}= 3., {\it layoutIterations}= 100, {\it showLegend}= True, {\it tightLayout}= True, {\it showGraph}= True, {\it addItemData}= False, {\it addAnnotations}= False)
-\end{flushleft}
-\bi
-  \item \mybold{NOTE}: this function is directly available in MainSystem (mbs); it should be directly called as mbs.DrawSystemGraph(...). For description of the interface, see the MainSystem Python extensions, \refSection{sec:mainsystemextensions:DrawSystemGraph}.
-
-\ei
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1537}{CreateTCPIPconnection}{}}}\label{sec:utilities:CreateTCPIPconnection}
-({\it sendSize}, {\it receiveSize}, {\it IPaddress}= '127.0.0.1', {\it port}= 52421, {\it bigEndian}= False, {\it verbose}= False)
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]function which has to be called before simulation to setup TCP/IP socket (server) for
-\item[]sending and receiving data; can be used to communicate with other Python interpreters
-\item[]or for communication with MATLAB/Simulink
-\end{itemize}
-\item[--]
-{\bf input}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]{\it sendSize}: number of double values to be sent to TCPIP client
-\item[]{\it receiveSize}: number of double values to be received from TCPIP client
-\item[]{\it IPaddress}: string containing IP address of client (e.g., '127.0.0.1')
-\item[]{\it port}: port for communication with client
-\item[]{\it bigEndian}: if True, it uses bigEndian, otherwise littleEndian is used for byte order
-\end{itemize}
-\item[--]
-{\bf output}: returns information (TCPIPdata class) on socket; recommended to store this in mbs.sys['TCPIPobject']
-\item[--]
-{\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
-  mbs.sys['TCPIPobject'] = CreateTCPIPconnection(sendSize=3, receiveSize=2,
-                                                 bigEndian=True, verbose=True)
-  sampleTime = 0.01 #sample time in MATLAB! must be same!
-  mbs.variables['tLast'] = 0 #in case that exudyn makes finer steps than sample time
-  def PreStepUserFunction(mbs, t):
-      if t >= mbs.variables['tLast'] + sampleTime:
-          mbs.variables['tLast'] += sampleTime
-          tcp = mbs.sys['TCPIPobject']
-          y = TCPIPsendReceive(tcp, np.array([t, np.sin(t), np.cos(t)])) #time, torque
-          tau = y[1]
-          exudyn.Print('tau=',tau)
-      return True
-  try:
-      mbs.SetPreStepUserFunction(PreStepUserFunction)
-      #%%++++++++++++++++++++++++++++++++++++++++++++++++++
-      mbs.Assemble()
-      [...] #start renderer; simulate model
-  finally: #use this to always close connection, even in case of errors
-      CloseTCPIPconnection(mbs.sys['TCPIPobject'])
-  #*****************************************
-  #the following settings work between Python and MATLAB-Simulink (client), and gives stable results(with only delay of one step):
-  # TCP/IP Client Send:
-  #   priority = 2 (in properties)
-  #   blocking = false
-  #   Transfer Delay on (but off also works)
-  # TCP/IP Client Receive:
-  #   priority = 1 (in properties)
-  #   blocking = true
-  #   Sourec Data type = double
-  #   data size = number of double in packer
-  #   Byte order = BigEndian
-  #   timeout = 10
-\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
-%
-%
-\noindent For examples on CreateTCPIPconnection see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-\bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/TCPIPexudynMatlab.py}{\texttt{TCPIPexudynMatlab.py}} (Ex)
-\ei
-
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1607}{TCPIPsendReceive}{}}}\label{sec:utilities:TCPIPsendReceive}
-({\it TCPIPobject}, {\it sendData})
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]call this function at every simulation step at which you intend to communicate with
-\item[]other programs via TCPIP; e.g., call this function in preStepUserFunction of a mbs model
-\end{itemize}
-\item[--]
-{\bf input}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]{\it TCPIPobject}: the object returned by CreateTCPIPconnection(...)
-\item[]{\it sendData}: numpy array containing data (double array) to be sent; must agree with sendSize
-\end{itemize}
-\item[--]
-{\bf output}: returns array as received from TCPIP
-\item[--]
-{\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
-  mbs.sys['TCPIPobject']=CreateTCPIPconnection(sendSize=2, receiveSize=1, IPaddress='127.0.0.1')
-  y = TCPIPsendReceive(mbs.sys['TCPIPobject'], np.array([1.,2.]))
-  exudyn.Print(y)
-\end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
-%
-%
-\noindent For examples on TCPIPsendReceive see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-\bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/TCPIPexudynMatlab.py}{\texttt{TCPIPexudynMatlab.py}} (Ex)
-\ei
-
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/utilities.py\#L1634}{CloseTCPIPconnection}{}}}\label{sec:utilities:CloseTCPIPconnection}
-({\it TCPIPobject})
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: close a previously created TCPIP connection
-\vspace{12pt}\end{itemize}
-%
-%
-\noindent For examples on CloseTCPIPconnection see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-\bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/TCPIPexudynMatlab.py}{\texttt{TCPIPexudynMatlab.py}} (Ex)
-\ei
-
-%
-\mysubsubsection{CLASS TCPIPdata (in module utilities)}
-\noindent\textcolor{steelblue}{{\bf class description}}:  helper class for CreateTCPIPconnection and for TCPIPsendReceive
-\vspace{3pt} \\ 

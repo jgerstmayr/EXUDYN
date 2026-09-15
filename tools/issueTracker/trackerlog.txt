@@ -2,7 +2,7 @@
 # Johannes Gerstmayr
 # date = 2026-09-15
 # release = 1.11
-# version = 68
+# version = 69
 # line format: number, issue name, issue author, status, description, type, priority, date raised, deadline, date resolved, resolved author, file(name), line(number), notes
 # type: BUG, NEW FEATURE, CHANGE, IDEA, EXTENSION, NEW TEST, FIX
 # status: RAISED, RESOLVED, WORK, TESTING(=currently tested)
@@ -2451,3 +2451,4 @@
 2440,itemInterface.py: generated docstrings do not match the signatures,Claude-JG,RAISED  , pydoclint reports 387 findings in the generated itemInterface.py: the visualization argument is not documented and the arguments carry type hints in the docstring; fix in itemInterfaceEmitter.py and then include the file in the pydoclint check (plan step 108),FIX,,2026-09-15,2027-03-14,,,,,
 2441,development environments: dependency groups instead of hand-written package lists,Claude-JG,RESOLVED, step 109: [dependency-groups] docs/lint/build/ide/dev in pyproject.toml; docs/requirements.txt removed; CI and readthedocs install groups; condaEnvironments.md recipe uses pip install --group dev,CHANGE,,2026-09-15,2027-03-14,2026-09-15 17:14,Claude-JG,,,
 2442,basicUtilities: numpy-era vector helpers removed,Claude-JG,RESOLVED, step 107a: NormL2 VSum VAdd VSub VMult ScalarMult Vec2Tilde Tilde2Vec DiagonalMatrix eye2D eye3D removed; uses in package/TestModels/Examples replaced by numpy (np.linalg.norm; np.sum; array arithmetic; np.dot; Skew); Normalize kept (zero vector allowed) and implemented with numpy; basicUtilities imports numpy,CHANGE,,2026-09-15,2027-03-14,2026-09-15 18:02,Claude-JG,,,
+2443,utilities.py: deprecated GraphicsData aliases removed; functions moved to basicUtilities/advancedUtilities/mainSystemExtensions,Claude-JG,RESOLVED, step 107b: 23 GraphicsData... aliases removed (uses switched to exudyn.graphics); @extends functions to mainSystemExtensions; TCP/IP to advancedUtilities; all other functions to basicUtilities (now imports exudyn); utilities.py only re-exports,CHANGE,,2026-09-15,2027-03-14,2026-09-15 18:47,Claude-JG,,,

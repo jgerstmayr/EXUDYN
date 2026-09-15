@@ -906,7 +906,128 @@ def CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex=None, 
     symbolicFunc = exudyn.symbolic.UserFunction()
     symbolicFunc.SetUserFunctionFromDict(mbs, fnDict, userFunctionName, itemIndex, str(itemTypeName))
     return symbolicFunc
-    
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#TCP/IP functionality (moved from utilities.py, revision plan step 107b)
 
+#TCP/IP functionality
+class TCPIPdata:
+    """helper class for CreateTCPIPconnection and for TCPIPsendReceive
+    """
+    def __init__(self, sendSize, receiveSize, packerSend, packerReceive, 
+                  socketTCP, connection, address, lastReceiveTime):
+        self.sendSize = sendSize
+        self.receiveSize = receiveSize
+        self.packerSend = packerSend
+        self.packerReceive = packerReceive
+        self.socket = socketTCP
+        self.connection = connection
+        self.address = address
+        self.lastReceiveTime = lastReceiveTime #usually zero; used to make substeps in mbs
+
+
+def CreateTCPIPconnection(sendSize, receiveSize, IPaddress='127.0.0.1', port=52421, 
+                          bigEndian=False, verbose=False):
+    """function which has to be called before simulation to setup TCP/IP socket (server) for
+    sending and receiving data; can be used to communicate with other Python interpreters
+    or for communication with MATLAB/Simulink
+
+    Args:
+        sendSize: number of double values to be sent to TCPIP client
+        receiveSize: number of double values to be received from TCPIP client
+        IPaddress: string containing IP address of client (e.g., '127.0.0.1')
+        port: port for communication with client
+        bigEndian: if True, it uses bigEndian, otherwise littleEndian is used for byte order
+
+    Returns:
+        returns information (TCPIPdata class) on socket; recommended to store this in mbs.sys['TCPIPobject']
+
+    Example:
+        mbs.sys['TCPIPobject'] = CreateTCPIPconnection(sendSize=3, receiveSize=2,
+                                                       bigEndian=True, verbose=True)
+        sampleTime = 0.01 #sample time in MATLAB! must be same!
+        mbs.variables['tLast'] = 0 #in case that exudyn makes finer steps than sample time
+        def PreStepUserFunction(mbs, t):
+            if t >= mbs.variables['tLast'] + sampleTime:
+                mbs.variables['tLast'] += sampleTime
+                tcp = mbs.sys['TCPIPobject']
+                y = TCPIPsendReceive(tcp, np.array([t, np.sin(t), np.cos(t)])) #time, torque
+                tau = y[1]
+                exudyn.Print('tau=',tau)
+            return True
+        try:
+            mbs.SetPreStepUserFunction(PreStepUserFunction)
+            #%%++++++++++++++++++++++++++++++++++++++++++++++++++
+            mbs.Assemble()
+            [...] #start renderer; simulate model
+        finally: #use this to always close connection, even in case of errors
+            CloseTCPIPconnection(mbs.sys['TCPIPobject'])
+        #*****************************************
+        #the following settings work between Python and MATLAB-Simulink (client), and gives stable results(with only delay of one step):
+        # TCP/IP Client Send:
+        #   priority = 2 (in properties)
+        #   blocking = false
+        #   Transfer Delay on (but off also works)
+        # TCP/IP Client Receive:
+        #   priority = 1 (in properties)
+        #   blocking = true
+        #   Sourec Data type = double
+        #   data size = number of double in packer
+        #   Byte order = BigEndian
+        #   timeout = 10
+    """
+    import socket
+    import struct
+    s = ''
+    if bigEndian:
+        s = '>' #signals bigEndian format
+    packerSend = struct.Struct(s+'d '*sendSize) #'>' for big endian in matlab, I=unsigned int, i=int, d=double
+    packerReceive = struct.Struct(s+'d '*receiveSize) #'>' for big endian in matlab, I=unsigned int, i=int, d=double
+    if verbose:
+        exudyn.Print('setup TCP/IP socket ...')
+    socketTCP = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    socketTCP.bind((IPaddress, port))
+    socketTCP.listen()
+    connection, address = socketTCP.accept()
+
+    if verbose:
+        exudyn.Print('TCP/IP connection running!')
+
+    return TCPIPdata(sendSize, receiveSize, packerSend, packerReceive, 
+                     socketTCP, connection, address, 0.)
+
+
+def TCPIPsendReceive(TCPIPobject, sendData):
+    """call this function at every simulation step at which you intend to communicate with
+    other programs via TCPIP; e.g., call this function in preStepUserFunction of a mbs model
+
+    Args:
+        TCPIPobject: the object returned by CreateTCPIPconnection(...)
+        sendData: numpy array containing data (double array) to be sent; must agree with sendSize
+
+    Returns:
+        returns array as received from TCPIP
+
+    Example:
+        mbs.sys['TCPIPobject']=CreateTCPIPconnection(sendSize=2, receiveSize=1, IPaddress='127.0.0.1')
+        y = TCPIPsendReceive(mbs.sys['TCPIPobject'], np.array([1.,2.]))
+        exudyn.Print(y)
+    """
+    #first send data (no other way in MATLAB):
+    TCPIPobject.connection.sendall(TCPIPobject.packerSend.pack(*sendData))
+
+    #now receive data:
+    data = TCPIPobject.connection.recv(TCPIPobject.packerReceive.size) #data size in bytes
+    if not data:
+        exudyn.Print('WARNING: TCPIPsendReceive: loss of data') #usually does not happen!
+        return np.zeros(TCPIPobject.receiveSize)
+    else:
+        return TCPIPobject.packerReceive.unpack(data)
+
+
+def CloseTCPIPconnection(TCPIPobject):
+    """close a previously created TCPIP connection
+    """
+    TCPIPobject.connection.close()
+    TCPIPobject.socket.close()

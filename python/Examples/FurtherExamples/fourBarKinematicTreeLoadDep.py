@@ -16,6 +16,7 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes graphicsDataUtilities and rigidBodyUtilities
+import exudyn.graphics as graphics
 import numpy as np
 
 SC = exu.SystemContainer()
@@ -90,10 +91,10 @@ for i in range(n):
     jointTransformations.Append(A)
     jointOffsets.Append(v)
 
-gLink1 =  GraphicsDataOrthoCubePoint(centerPoint= [0.5*L1,0,0], size= [L1,w,w], color= color4dodgerblue)
-gLink2 =  GraphicsDataOrthoCubePoint(centerPoint= [0.5*L2,0,0], size= [L2,w,w], color= color4dodgerblue)
-gLink3 =  GraphicsDataOrthoCubePoint(centerPoint= [0.5*L3,0,0], size= [L3,w,w], color= color4dodgerblue)
-gJoint = GraphicsDataCylinder([0,0,-2.5*w], [0,0,5*w], 0.8*w, color=color4grey)
+gLink1 =  graphics.Brick(centerPoint= [0.5*L1,0,0], size= [L1,w,w], color= color4dodgerblue)
+gLink2 =  graphics.Brick(centerPoint= [0.5*L2,0,0], size= [L2,w,w], color= color4dodgerblue)
+gLink3 =  graphics.Brick(centerPoint= [0.5*L3,0,0], size= [L3,w,w], color= color4dodgerblue)
+gJoint = graphics.Cylinder([0,0,-2.5*w], [0,0,5*w], 0.8*w, color=color4grey)
 gList = [[gJoint,gLink1],[gJoint,gLink2],[gJoint,gLink3]] #one list per link; add joint first, then it will be visible with transparency setting
 
 nGeneric = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0.]*n,
