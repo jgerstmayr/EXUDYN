@@ -23,11 +23,11 @@ from exudyn.basicUtilities import * # noqa: F403, F401
 from exudyn.advancedUtilities import * # noqa: F403, F401
 from exudyn.rigidBodyUtilities import * # noqa: F403, F401
 from exudyn.graphicsDataUtilities import * # noqa: F403, F401
-import exudyn.graphics #requires import for usage during __init__.py
 from exudyn.itemInterface import * # noqa: F403, F401
 
 #for compatibility with older models:
-from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint,                         GenerateStraightBeam # noqa # pylint: disable=unused-import
+from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint,\
+                         GenerateStraightBeam # noqa # pylint: disable=unused-import
 #MainSystem extensions that were defined here before step 107b:
 from exudyn.mainSystemExtensions import CreateDistanceSensorGeometry, CreateDistanceSensor, DrawSystemGraph # noqa: F401
 

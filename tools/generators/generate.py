@@ -46,7 +46,7 @@ G = 'tools/generators/generated/'
 #declaration order is kept wherever the dependencies do not force another one
 stages = [
     Stage('tools/generators/itemHeaderEmitter.py', ['definitions'],
-          [A + 'C*.h', A + 'Main*.h', A + 'Visu*.h', A + 'PySymbolicUserFunctionSet.h',
+          [A + 'nodes', A + 'objects', A + 'markers', A + 'loads', A + 'sensors', A + 'PySymbolicUserFunctionSet.h',
            A + 'PythonUserFunctionsTemplates.h', A + 'objectFactoryAutoReg.h']),
     Stage('tools/generators/itemInterfaceEmitter.py', ['definitions'], ['python/exudyn/itemInterface.py']),
     Stage('tools/generators/miniExampleEmitter.py', ['definitions'], ['python/TestModels/MiniExamples']),
