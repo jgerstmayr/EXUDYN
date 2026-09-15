@@ -705,13 +705,6 @@ void CObjectKinematicTree::GetOutputVariableKinematicTree(OutputVariableType var
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //AccessFunction:
-//! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
-AccessFunctionType CObjectKinematicTree::GetAccessFunctionTypes() const
-{
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::AngularVelocity_qt +
-		//(Index)AccessFunctionType::DisplacementMassIntegral_q + //is included in recursive formula, more efficient!
-		(Index)AccessFunctionType::KinematicTree);
-}
 
 //! just make sure that this overwritten function is not called!
 void CObjectKinematicTree::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const

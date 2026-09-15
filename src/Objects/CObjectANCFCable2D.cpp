@@ -591,14 +591,6 @@ void CObjectANCFCable2DBase::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& 
 }
 
 
-//! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
-AccessFunctionType CObjectANCFCable2DBase::GetAccessFunctionTypes() const
-{
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + 
-		(Index)AccessFunctionType::AngularVelocity_qt +
-		//TODO: (Index)AccessFunctionType::JacobianTtimesVector_q +
-		(Index)AccessFunctionType::DisplacementMassIntegral_q);
-}
 
 //! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
 OutputVariableType CObjectANCFCable2DBase::GetOutputVariableTypes() const

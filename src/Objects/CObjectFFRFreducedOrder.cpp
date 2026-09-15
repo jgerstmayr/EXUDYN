@@ -468,15 +468,6 @@ void CObjectFFRFreducedOrder::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber
 }
 
 
-//! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
-AccessFunctionType CObjectFFRFreducedOrder::GetAccessFunctionTypes() const
-{
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + 
-		(Index)AccessFunctionType::AngularVelocity_qt +
-		//(Index)AccessFunctionType::JacobianTtimesVector_q + //to be implemented!
-		(Index)AccessFunctionType::DisplacementMassIntegral_q +
-		(Index)AccessFunctionType::SuperElement);
-}
 
 //! provide Jacobian at localPosition in "value" ONLY OF reference frame, according to configuration type
 //! however, DisplacementMassIntegral_q also works for the FFRF body!

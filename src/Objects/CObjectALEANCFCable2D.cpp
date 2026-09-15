@@ -215,11 +215,6 @@ void CObjectALEANCFCable2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) 
 
 }
 
-////! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
-//AccessFunctionType CObjectALEANCFCable2D::GetAccessFunctionTypes() const
-//{
-//	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::DisplacementMassIntegral_q);
-//}
 
 #define CObjectALEANCFCable2D_USE_ALE_MASSTERM 1 //0 or 1
 //! provide Jacobian at localPosition in "value" according to object access

@@ -93,11 +93,6 @@ void CObjectGenericODE1::ComputeODE1RHS(Vector& ODE1Rhs, Index objectNumber) con
 
 }
 
-//! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
-AccessFunctionType CObjectGenericODE1::GetAccessFunctionTypes() const
-{
-	return (AccessFunctionType)((Index)AccessFunctionType::_None); //currently no access possible (no markers, no loads; apply input only to nodes)
-}
 
 //! provide Jacobian at localPosition in "value" according to object access
 void CObjectGenericODE1::GetAccessFunction(AccessFunctionType accessType, Matrix& value) const

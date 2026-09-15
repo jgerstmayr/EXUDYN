@@ -274,12 +274,6 @@ JacobianType::Type CObjectGenericODE2::GetAvailableJacobians() const
 	}
 }
 
-//! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
-AccessFunctionType CObjectGenericODE2::GetAccessFunctionTypes() const
-{
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::AngularVelocity_qt +
-		(Index)AccessFunctionType::DisplacementMassIntegral_q + (Index)AccessFunctionType::SuperElement);
-}
 
 //! provide Jacobian at localPosition in "value" according to object access
 void CObjectGenericODE2::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const

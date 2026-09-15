@@ -474,14 +474,6 @@ void CObjectANCFCable::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobi
 }
 
 
-//! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
-AccessFunctionType CObjectANCFCable::GetAccessFunctionTypes() const
-{
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + 
-		(Index)AccessFunctionType::AngularVelocity_qt +
-		//TODO: (Index)AccessFunctionType::JacobianTtimesVector_q +
-		(Index)AccessFunctionType::DisplacementMassIntegral_q);
-}
 
 //! provide Jacobian at localPosition in "value" according to object access
 void CObjectANCFCable::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const

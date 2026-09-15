@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.84.dev1, 
++  Exudyn version = 1.11.85.dev1, 
 +  last change =  2026-09-15, 
-+  Number of issues = 2452, 
-+  Number of resolved issues = 2157 (84 in current version), 
++  Number of issues = 2453, 
++  Number of resolved issues = 2158 (85 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.85: resolved Issue 2452: Declared item types and access function types (change)
+    - issue author: Claude-JG
+    - description:  Plan step 83c: GetType of nodes and markers and GetAccessFunctionTypes of objects (bodies in 19 cpp files) become declared lists with generated bodies; basis of the Python type information and compatibility queries (83d).
+    - **notes:** step 83c: ItemTypes in 34 nodes/markers; ItemAccessFunctionTypes in 19 objects; cpp bodies removed
+    - date resolved: **2026-09-15 22:50**\ , date raised: 2026-09-15 
+    - resolved by: Claude-JG
  * Version 1.11.84: resolved Issue 2451: Marker::Type is not in the enum registrator (change)
     - issue author: Claude-JG
     - description:  Marker::Type is hand-written in src/Main/OutputVariable.h with a comment to keep it synchronized with AccessFunctionType; NodeType and the others are generated from definitions/enumTypes.py (step 33). ItemRequestedTypes (step 83a) can therefore validate node type names but not marker type names; and step 83b needs the marker type names in Python.

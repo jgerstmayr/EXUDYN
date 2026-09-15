@@ -784,9 +784,9 @@ The core investment. Every step is validated byte-for-byte by step 2.
       decision 2026-09-15: generated and in the Python interface, so that it becomes visible which
       objects, markers, connectors and loads combine). **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#step-83b).
       `LoadType`, `SensorType`, `CObjectType`, `JacobianType` stay hand-written.
-    - **83c - item type facts declared**: `GetType` of markers and nodes as declared lists;
-      `GetAccessFunctionTypes` (19 objects, bodies in `src/Objects/*.cpp`) declared where it is a
-      plain sum; the access function a marker needs. Open.
+    - **83c - item type facts declared** (#2452). **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#step-83c).
+      `ItemTypes` (34 nodes and markers), `ItemAccessFunctionTypes` (19 objects; the `.cpp` bodies
+      removed). A marker needs no declaration: its Position/Orientation bits select the access function.
     - **83d - `python/exudyn/types/`** (#2411), the first half above, plus small tested query
       functions (e.g. `MarkersForObject`, `ConnectorsForMarkers`) implementing the C++ containment
       rule. Open.

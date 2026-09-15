@@ -3068,6 +3068,36 @@ the other hand-written type enums stay).
   -2147483648 as int). The integrity-check message still reads "expected marker type 'Position'".
 - Checked: regeneration (EnumTypes.h, pybind_manual_classes.h, stubs; docs), wheel, full suite PASSED.
 
+<a id="step-83c"></a>
+
+### Step 83c - item type facts declared
+
+**DONE 2026-09-15** (#2452).
+
+- `definitionTypes.py`: one body generator `_TypeSumImplementation(cppName, types, conditional)`
+  for `Node::Type`, `Marker::Type` and `AccessFunctionType`, validated against `enumTypes.py`;
+  used by `ItemRequestedTypes` (83a), `ItemTypes(kind, types, description)` and
+  `ItemAccessFunctionTypes(types)`. The lists stay on the members (`itemTypes`,
+  `accessFunctionTypes`) for 83d.
+- `GetType` of all 16 nodes and 18 markers converted by script. Two marker bodies carried a
+  commented-out term (`JacobianDerivativeAvailable + JacobianDerivativeNonZero //neglected for now`
+  in `MarkerBodiesRelativeTranslationCoordinate`, `MarkerBodiesRelativeRotationCoordinate`); it is not
+  part of the type and is dropped.
+- `GetAccessFunctionTypes`: all 18 bodies in `src/Objects/*.cpp` were plain sums; now declared in the
+  17 definitions that referenced the library function, and in `ObjectANCFCable2D` and
+  `ObjectALEANCFCable2D`, which inherited `CObjectANCFCable2DBase::GetAccessFunctionTypes` (declaration
+  removed from `CObjectANCFCable2DBase.h`). The `.cpp` bodies are deleted, including the dead,
+  commented-out body in `CObjectALEANCFCable2D.cpp`. Commented TODO terms dropped with them: `AngularVelocity_qt`
+  and `JacobianTtimesVector_q` for `ObjectANCFBeam`, `JacobianTtimesVector_q` for `ObjectANCFCable`,
+  `ObjectANCFCable2D`, `ObjectFFRF`, `ObjectFFRFreducedOrder`, `AngularVelocity_qt` for
+  `ObjectANCFThinPlate`, `DisplacementMassIntegral_q` for `ObjectKinematicTree` ("included in
+  recursive formula").
+- Marker side (survey, `CSystem::CheckSystemIntegrity`): a marker's `Position` bit needs the
+  object's `TranslationalVelocity_qt`, `Orientation` needs `AngularVelocity_qt`, and a `Body` marker
+  needs an object of `CObjectType::Body`. Nothing per marker to declare.
+- Generated headers: 46 change (one spelling of the sums; access functions now inline).
+- Checked: regeneration, wheel, full suite PASSED.
+
 <a id="api-changes-v2"></a>
 
 ### API changes for the v2.0 release notes

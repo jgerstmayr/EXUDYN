@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  22:48:26 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -93,7 +93,7 @@ public: // AUTO:
     //! AUTO:  return node type (for node treatment in computation)
     virtual Node::Type GetType() const override
     {
-        return (Node::Type)(Node::Position + Node::Orientation + Node::RigidBody + Node::RotationRxyz);
+        return (Node::Type)((Index)Node::Position + (Index)Node::Orientation + (Index)Node::RigidBody + (Index)Node::RotationRxyz);
     }
 
     //! AUTO:  return node group, which is special because of algebraic equations

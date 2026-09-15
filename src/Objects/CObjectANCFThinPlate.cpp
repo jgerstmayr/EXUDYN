@@ -1064,13 +1064,6 @@ void CObjectANCFThinPlate::PreComputeMassTerms() const
     massMatrixComputed = true;
 }
 
-// Placeholder implementations for other required functions
-AccessFunctionType CObjectANCFThinPlate::GetAccessFunctionTypes() const
-{
-    return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt 
-        //+ (Index)AccessFunctionType::AngularVelocity_qt 
-        + (Index)AccessFunctionType::DisplacementMassIntegral_q);
-}
 
 void CObjectANCFThinPlate::GetAccessFunctionBody(AccessFunctionType accessType, 
                                                   const Vector3D& localPosition, 

@@ -434,15 +434,6 @@ void CObjectFFRF::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 
 
 
-//! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
-AccessFunctionType CObjectFFRF::GetAccessFunctionTypes() const
-{
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt+
-		(Index)AccessFunctionType::AngularVelocity_qt + 
-		//(Index)AccessFunctionType::JacobianTtimesVector_q + //to be implemented!
-		(Index)AccessFunctionType::DisplacementMassIntegral_q + 
-		(Index)AccessFunctionType::SuperElement);
-}
 
 //! provide Jacobian at localPosition in "value" ONLY OF reference frame, according to configuration type
 void CObjectFFRF::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const

@@ -507,6 +507,27 @@ def ItemFunctionDef(pythonName, implementation=None, description=None,
             'cplusplusName': cplusplusName}
 
 
+def _TypeSumImplementation(cppName, types, conditional=()):
+    """C++ body returning a bit combination of the enum cppName ('Node::Type', 'Marker::Type' or
+    'AccessFunctionType'), validated against definitions/enumTypes.py (revision plan step 83)"""
+    import enumTypes
+    valueNames = [value.name for enumType in enumTypes.enumTypes if enumType.cppName == cppName
+                  for value in enumType.values]
+    if not valueNames:
+        raise ValueError('no enum ' + repr(cppName) + ' in definitions/enumTypes.py')
+    for name in list(types) + [c[0] for c in conditional]:
+        if name == '_None' or name not in valueNames:
+            raise ValueError(repr(name) + ' is not a value of ' + cppName)
+    scope = cppName[:-len('::Type')] if cppName.endswith('::Type') else cppName
+    terms = ['(Index)' + scope + '::' + name for name in types]
+    terms += ['(parameters.' + parameter + ' != 0)*(Index)' + scope + '::' + name for name, parameter in conditional]
+    if not terms:
+        return 'return ' + scope + '::_None;'
+    if len(terms) == 1 and not conditional:
+        return 'return ' + scope + '::' + types[0] + ';'
+    return 'return (' + cppName + ')(' + ' + '.join(terms) + ');'
+
+
 def ItemRequestedTypes(kind, types, conditional=(), description=None):
     """Use site: the node or marker types an object (or load) requires, as a declared list instead
     of C++ written into the definition (revision plan step 83a). kind is 'Node' or 'Marker'; types are
@@ -515,27 +536,37 @@ def ItemRequestedTypes(kind, types, conditional=(), description=None):
     pairs: the type is added when that parameter is not zero - the only condition the tree needs
     (ObjectContactSphereSphere, ObjectContactSphereTriangle: Orientation if dynamicFriction != 0).
     Expands to GetRequested<kind>Type from definitions/itemFunctions.py with a generated body."""
-    import enumTypes
-    cppName = kind + '::Type'
-    valueNames = [value.name for enumType in enumTypes.enumTypes if enumType.cppName == cppName
-                  for value in enumType.values]
     if kind not in ('Node', 'Marker'):
         raise ValueError('ItemRequestedTypes: kind must be Node or Marker, not ' + repr(kind))
-    for name in list(types) + [c[0] for c in conditional]:
-        if name == '_None' or name not in valueNames:
-            raise ValueError('ItemRequestedTypes: ' + repr(name) + ' is not a value of ' + cppName)
-    terms = ['(Index)' + kind + '::' + name for name in types]
-    terms += ['(parameters.' + parameter + ' != 0)*(Index)' + kind + '::' + name for name, parameter in conditional]
-    if not terms:
-        implementation = 'return ' + kind + '::_None;'
-    elif len(terms) == 1 and not conditional:
-        implementation = 'return ' + kind + '::' + types[0] + ';'
-    else:
-        implementation = 'return (' + cppName + ')(' + ' + '.join(terms) + ');'
-    member = ItemFunctionDef('GetRequested' + kind + 'Type', implementation=implementation,
+    member = ItemFunctionDef('GetRequested' + kind + 'Type',
+                             implementation=_TypeSumImplementation(kind + '::Type', types, conditional),
                              description=description)
     member['requestedTypes'] = list(types)
     member['conditionalTypes'] = [tuple(c) for c in conditional]
+    return member
+
+
+def ItemTypes(kind, types, description):
+    """Use site: the type bits of a node or marker (GetType), as a declared list (revision plan step
+    83c); kind is 'Node' or 'Marker', types are value names of Node::Type / Marker::Type"""
+    if kind not in ('Node', 'Marker'):
+        raise ValueError('ItemTypes: kind must be Node or Marker, not ' + repr(kind))
+    member = ItemFunction(type=kind + '::Type', destination=DestComp, cFlags=CFConst,
+                          pythonName='GetType',
+                          implementation=_TypeSumImplementation(kind + '::Type', types),
+                          description=description)
+    member['itemTypes'] = list(types)
+    return member
+
+
+def ItemAccessFunctionTypes(types, description=None):
+    """Use site: the access functions an object provides for markers and loads (GetAccessFunctionTypes),
+    as a declared list of AccessFunctionType value names (revision plan step 83c); a marker with
+    Position (Orientation) needs TranslationalVelocity_qt (AngularVelocity_qt)"""
+    member = ItemFunctionDef('GetAccessFunctionTypes',
+                             implementation=_TypeSumImplementation('AccessFunctionType', types),
+                             description=description)
+    member['accessFunctionTypes'] = list(types)
     return member
 
 
@@ -582,7 +613,7 @@ def _ResolveFunctionReference(reference, className, classType, parentClass):
     if reference['description'] is not None:
         member['description'] = reference['description']
     member['cplusplusName'] = reference['cplusplusName'] or reference['pythonName']
-    for key in ('requestedTypes', 'conditionalTypes'): #declared lists of ItemRequestedTypes (step 83)
+    for key in ('requestedTypes', 'conditionalTypes', 'accessFunctionTypes'): #declared lists (step 83)
         if key in reference:
             member[key] = reference[key]
 

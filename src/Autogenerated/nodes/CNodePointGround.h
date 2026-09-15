@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  22:48:26 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -73,7 +73,7 @@ public: // AUTO:
     //! AUTO:  return node type (for node treatment in computation)
     virtual Node::Type GetType() const override
     {
-        return (Node::Type)(Node::Position + Node::Position2D + Node::Orientation + Node::GenericODE2 + Node::Ground);
+        return (Node::Type)((Index)Node::Position + (Index)Node::Position2D + (Index)Node::Orientation + (Index)Node::GenericODE2 + (Index)Node::Ground);
     }
 
     //! AUTO:  Returns position of node, which is the reference position for all configurations

@@ -445,14 +445,6 @@ void CObjectBeamGeometricallyExact2D::ComputeODE2LHStemplate(VectorBase<TReal>& 
     }
 }
 
-//! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
-AccessFunctionType CObjectBeamGeometricallyExact2D::GetAccessFunctionTypes() const
-{
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + 
-		(Index)AccessFunctionType::AngularVelocity_qt +
-		(Index)AccessFunctionType::JacobianTtimesVector_q+
-		(Index)AccessFunctionType::DisplacementMassIntegral_q);
-}
 
 //! provide Jacobian at localPosition in 'value' according to object access
 void CObjectBeamGeometricallyExact2D::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const

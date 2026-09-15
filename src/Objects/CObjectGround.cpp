@@ -31,14 +31,6 @@ void CObjectGround::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 	ode2Lhs.SetNumberOfItems(0);
 }
 
-//! Flags to determine, which access (forces, moments, connectors, ...) to object are possible
-AccessFunctionType CObjectGround::GetAccessFunctionTypes() const
-{
-	return (AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + 
-		(Index)AccessFunctionType::AngularVelocity_qt + 
-		(Index)AccessFunctionType::JacobianTtimesVector_q +
-		(Index)AccessFunctionType::DisplacementMassIntegral_q);
-}
 
 //! provide Jacobian at localPosition in "value" according to object access
 void CObjectGround::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
