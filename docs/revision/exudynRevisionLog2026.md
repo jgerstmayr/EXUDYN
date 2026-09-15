@@ -3021,6 +3021,30 @@ removed; the constructors now initialise the one member.
   PASSED. Not checked here: the VS2022 solution build; the project file entries were rewritten by
   the same pattern.
 
+<a id="step-83a"></a>
+
+### Step 83a - requested node and marker types are declared lists
+
+**DONE 2026-09-15** (#2450; step 83 continues as 83b, #2411).
+
+**Survey.** 70 item definitions wrote `GetRequestedNodeType` (34 objects) or
+`GetRequestedMarkerType` (32 objects, 4 loads) as a C++ body. 68 are a plain bit sum of enum
+values or `_None`; the 2 others (`ObjectContactSphereSphere`, `ObjectContactSphereTriangle`) add
+`Marker::Orientation` if `dynamicFriction != 0`. No case needs more than one condition, so the
+grammar is a list plus optional (type, parameter) pairs meaning "added when the parameter is not
+zero". (`GetType`, 95 definitions, is left as it is: all but 2 are plain sums, the 2 have a
+commented-out term.)
+
+- `definitionTypes.ItemRequestedTypes(kind, types, conditional=(), description=None)` expands to
+  the library function `GetRequested<kind>Type` with a generated body, and keeps
+  `requestedTypes` / `conditionalTypes` on the member for 83b. Node type names are checked against
+  `enumTypes.py`; marker type names cannot be yet (#2451, step 114).
+- The 70 use sites converted by script, e.g. `ItemRequestedTypes('Marker', ['Position'],
+  conditional=[('Orientation', 'dynamicFriction')])`, `ItemRequestedTypes('Node', [])`.
+- Generated C++: 12 headers change in spelling only (one form: `(Kind::Type)((Index)Kind::A +
+  (Index)Kind::B)`, a single type as `Kind::A`); the documentation does not change.
+- Checked: regeneration, wheel build, full suite PASSED.
+
 <a id="api-changes-v2"></a>
 
 ### API changes for the v2.0 release notes

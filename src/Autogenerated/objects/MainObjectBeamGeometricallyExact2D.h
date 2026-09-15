@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  20:53:06 (last modified)
+* @date         2026-09-15  21:59:30 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -104,7 +104,7 @@ public: // AUTO:
     //! AUTO:  provide requested nodeType for objects; used for automatic checks in CheckSystemIntegrity(); where no exact type can be given, a generic type is used and the check is done in CheckPreAssembleConsistency(...)
     virtual Node::Type GetRequestedNodeType() const override
     {
-        return (Node::Type)(Node::Position2D + Node::Orientation2D);
+        return (Node::Type)((Index)Node::Position2D + (Index)Node::Orientation2D);
     }
 
     //! AUTO:  Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail

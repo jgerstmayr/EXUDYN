@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  19:35:47 (last modified)
+* @date         2026-09-15  21:59:30 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -177,7 +177,7 @@ public: // AUTO:
     //! AUTO:  provide requested markerType for connector
     virtual Marker::Type GetRequestedMarkerType() const override
     {
-        return (Marker::Type)((Index)Marker::Position + (parameters.dynamicFriction!=0)*(Index)Marker::Orientation);
+        return (Marker::Type)((Index)Marker::Position + (parameters.dynamicFriction != 0)*(Index)Marker::Orientation);
     }
 
     //! AUTO:  return object type (for node treatment in computation)

@@ -507,6 +507,39 @@ def ItemFunctionDef(pythonName, implementation=None, description=None,
             'cplusplusName': cplusplusName}
 
 
+def ItemRequestedTypes(kind, types, conditional=(), description=None):
+    """Use site: the node or marker types an object (or load) requires, as a declared list instead
+    of C++ written into the definition (revision plan step 83a). kind is 'Node' or 'Marker'; types are
+    value names of Node::Type / Marker::Type in definitions/enumTypes.py, combined as bits; an empty
+    list is _None (no single type can be required). conditional holds (typeName, parameterName)
+    pairs: the type is added when that parameter is not zero - the only condition the tree needs
+    (ObjectContactSphereSphere, ObjectContactSphereTriangle: Orientation if dynamicFriction != 0).
+    Expands to GetRequested<kind>Type from definitions/itemFunctions.py with a generated body."""
+    import enumTypes
+    cppName = kind + '::Type'
+    valueNames = [value.name for enumType in enumTypes.enumTypes if enumType.cppName == cppName
+                  for value in enumType.values]
+    if kind not in ('Node', 'Marker'):
+        raise ValueError('ItemRequestedTypes: kind must be Node or Marker, not ' + repr(kind))
+    #Marker::Type is still hand-written in src/Main/OutputVariable.h (#2451, step 114); the compiler checks those names
+    for name in list(types) + [c[0] for c in conditional]:
+        if name == '_None' or (valueNames and name not in valueNames):
+            raise ValueError('ItemRequestedTypes: ' + repr(name) + ' is not a value of ' + cppName)
+    terms = ['(Index)' + kind + '::' + name for name in types]
+    terms += ['(parameters.' + parameter + ' != 0)*(Index)' + kind + '::' + name for name, parameter in conditional]
+    if not terms:
+        implementation = 'return ' + kind + '::_None;'
+    elif len(terms) == 1 and not conditional:
+        implementation = 'return ' + kind + '::' + types[0] + ';'
+    else:
+        implementation = 'return (' + cppName + ')(' + ' + '.join(terms) + ');'
+    member = ItemFunctionDef('GetRequested' + kind + 'Type', implementation=implementation,
+                             description=description)
+    member['requestedTypes'] = list(types)
+    member['conditionalTypes'] = [tuple(c) for c in conditional]
+    return member
+
+
 _functionLibrary = None
 
 
@@ -550,6 +583,9 @@ def _ResolveFunctionReference(reference, className, classType, parentClass):
     if reference['description'] is not None:
         member['description'] = reference['description']
     member['cplusplusName'] = reference['cplusplusName'] or reference['pythonName']
+    for key in ('requestedTypes', 'conditionalTypes'): #declared lists of ItemRequestedTypes (step 83)
+        if key in reference:
+            member[key] = reference[key]
 
     return member
 
