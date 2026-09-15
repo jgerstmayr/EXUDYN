@@ -115,7 +115,8 @@ check_docstrings:
   variables:
     GIT_DEPTH: "1"
   script:
-    - pip install --no-cache-dir pydoclint==0.9.1          # the baseline messages are version-specific
+    - pip install --no-cache-dir --upgrade pip        # dependency groups need pip >= 25.1
+    - pip install --no-cache-dir --group lint         # pydoclint, pinned: the baseline holds its messages
     - pydoclint --config=pyproject.toml python/exudyn
 
 # Keep the compile list honest: sources.json is generated from the ClCompile entries of
@@ -136,7 +137,8 @@ docs:
   stage: docs
   image: python:3.13
   script:
-    - pip install --no-cache-dir -r docs/requirements.txt
+    - pip install --no-cache-dir --upgrade pip        # dependency groups need pip >= 25.1
+    - pip install --no-cache-dir --group docs         # [dependency-groups] in pyproject.toml
     - sphinx-build -b html . _build -E -W --keep-going
   artifacts:
     paths:

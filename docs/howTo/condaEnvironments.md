@@ -31,35 +31,52 @@ install requirements.
 
 ## The standard environment
 
-`venvExuP313` is the reference environment: it runs Exudyn, the tests and the documentation
-build.
+`venvExuP313` is the reference environment: it runs Exudyn, the generators, the tests and the
+documentation build. Its packages are not listed here but in `pyproject.toml`, as dependency
+groups (PEP 735), so this recipe cannot fall behind:
 
 ```bash
-conda create -n venvExuP313 python=3.13 numpy scipy=1.15.2 matplotlib ipywidgets tqdm spyder-kernels=3.0 ipykernel psutil -y
+conda create -n venvExuP313 python=3.13 -y
 conda activate venvExuP313
-pip install exudyn ngsolve h5py sphinx readthedocs-sphinx-search sphinx-copybutton sphinx_rtd_theme
-pip install "pybind11<3.0"
+cd EXUDYN_git                                 #the repository root, where pyproject.toml is
+python -m pip install --upgrade pip           #dependency groups need pip >= 25.1
+pip install --group dev                       #docs, lint, build and IDE tools, scipy pin, jinja2, griffe
+pip wheel . -w dist --no-deps                 #build Exudyn
+pip install --pre --find-links=dist "exudyn[tests]"   #the local wheel plus what TestModels/ needs
 ```
 
-> **Why `pybind11` explicitly?** It is declared in `build-system.requires`, so `pip wheel .` and
-> `python -m build` install it themselves under build isolation. A direct
-> `python setup.py bdist_wheel` — the daily Windows path — does **not** use build isolation, so
-> there it has to be present in the environment. Until revision plan step 15 it was fetched
-> behind the scenes by the deprecated `setup_requires` into `main/.eggs/`; that is gone.
+| group | contains | used by |
+|---|---|---|
+| `docs` | sphinx and its theme and extensions | `sphinx-build`, the CI `docs` jobs, readthedocs |
+| `lint` | `pydoclint` (pinned; the baseline holds its messages) | CI `check_docstrings` |
+| `build` | `setuptools`, `wheel`, `pybind11<3.0` | a direct `python setup.py bdist_wheel`, which has no build isolation |
+| `ide` | `spyder-kernels`, `ipykernel`, `ipywidgets` | Spyder and Jupyter |
+| `dev` | all of the above, plus `scipy==1.15.2`, `jinja2`, `griffe` | the development environment |
 
-> **Pin scipy to 1.15.2.** scipy 1.18.0 slows the Exudyn test suite from ~22 s to over 10 minutes,
-> apparently in the eigensolver path. Measured 2026-09-09 on the same machine and the same Exudyn
-> 1.11.0; NGsolve makes no difference. scipy 1.15.2 pulls numpy 2.4.6, which is fine.
+Groups are never published with the wheel, unlike the extras (`exudyn[tests]` etc.) below, which
+users see. A single group can be installed alone, e.g. `pip install --group docs`.
+
+> **Why `pybind11` in `build`?** It is declared in `build-system.requires`, so `pip wheel .` and
+> `python -m build` install it themselves under build isolation. A direct
+> `python setup.py bdist_wheel` does **not** use build isolation, so there it has to be present in
+> the environment.
+
+> **Why scipy 1.15.2?** scipy 1.18.0 slows the Exudyn test suite from ~22 s to over 10 minutes,
+> apparently in the eigensolver path (measured 2026-09-09, revision plan fact 19). The pin is in
+> the `dev` group; `exudyn[tests]` itself does not pin scipy.
+
+> **spyder-kernels** in the `ide` group is `3.*`, matching Spyder 6; for an older Spyder see the
+> table below and install the matching version afterwards.
 
 Test environments per Python version are named `venvP310` ... `venvP314` and carry an Exudyn build
 for that version.
 
 ### Documentation toolchain only
 
-If an existing environment only needs the docs tools added:
+If an existing environment only needs the docs tools added, from the repository root:
 
 ```bash
-pip install sphinx readthedocs-sphinx-search sphinx-copybutton sphinx_rtd_theme
+pip install --group docs
 ```
 
 Build the HTML documentation from the repository root:
@@ -70,7 +87,7 @@ sphinx-build -b html . _build -E
 
 ### Optional packages via the Exudyn extras
 
-The optional dependencies are declared in `main/pyproject.toml`, so they can be installed by name
+The optional dependencies are declared in `pyproject.toml`, so they can be installed by name
 instead of being listed by hand:
 
 | command | installs |

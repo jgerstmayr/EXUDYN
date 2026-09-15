@@ -12,9 +12,10 @@ Python is **not** on `PATH` under a plain shell. Use the named conda environment
 | **default — generators, docs and tests** | `%USERPROFILE%\Anaconda\envs\venvExuP313\python.exe` |
 | **per-version test matrix** | `...\envs\venvP31x\python.exe`, x in 0–4 |
 
-`venvExuP313` carries Exudyn, scipy, ngsolve/h5py and the full sphinx toolchain, so one environment
-covers regeneration, the docs build and the test suite. Its recipe and the package-to-feature
-mapping are in [`docs/howTo/condaEnvironments.md`](../howTo/condaEnvironments.md). The batch
+`venvExuP313` covers regeneration, the docs build, the docstring check and the test suite. Its
+packages are the dependency groups in `pyproject.toml` (`pip install --group dev`, pip >= 25.1) plus
+the `[tests]` extra of the locally built wheel; the recipe is in
+[`docs/howTo/condaEnvironments.md`](../howTo/condaEnvironments.md). The batch
 scripts in `tools/buildAndGenerate/` select environments themselves via
 `execWithPythonVersion.bat` and `execWithAllPythonVersions.bat` (P310–P314).
 

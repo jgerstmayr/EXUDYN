@@ -117,6 +117,40 @@ rl = [
     "tensorboard",
     ]
 
+#Development environments (revision plan step 109). Dependency groups (PEP 735) are never published
+#with the wheel - unlike the extras above, which users see as exudyn[...]. Install with pip >= 25.1
+#from the repository root, e.g. 'pip install --group dev'; see docs/howTo/condaEnvironments.md.
+#The test dependencies are the [tests] extra of the locally built wheel, not repeated here.
+[dependency-groups]
+docs = [
+    "sphinx",
+    "sphinx-rtd-theme",
+    "readthedocs-sphinx-search",
+    "sphinx-copybutton",
+    ]
+lint = [
+    "pydoclint==0.9.1",     #the baseline tools/ci/pydoclintBaseline.txt holds this version's messages
+    ]
+build = [
+    "setuptools",
+    "wheel",
+    "pybind11<3.0",         #a direct 'python setup.py bdist_wheel' has no build isolation
+    ]
+ide = [
+    "spyder-kernels==3.*",  #must match the Spyder version, see docs/howTo/condaEnvironments.md
+    "ipykernel",
+    "ipywidgets",
+    ]
+dev = [
+    {include-group = "docs"},
+    {include-group = "lint"},
+    {include-group = "build"},
+    {include-group = "ide"},
+    "scipy==1.15.2",        #scipy 1.18.0 slows the test suite from ~22 s to over 10 min (plan fact 19)
+    "jinja2",               #templates were measured in step 34b; kept available for the generators
+    "griffe",               #static API inspection (step 38 left it available)
+    ]
+
 #Docstring check of the Python package (revision plan step 38): 'pydoclint --config=pyproject.toml python/exudyn'.
 #Google style; type hints are neither required in signatures nor in docstrings, return types and
 #raised exceptions are not checked - the check is that documented arguments match the signature.

@@ -19,11 +19,11 @@ build:
         if git diff --quiet HEAD~1 -- docs/ .readthedocs.yaml; then
           exit 183
         fi
+    #the docs toolchain is the 'docs' dependency group in pyproject.toml (revision plan step 109)
+    install:
+      - pip install --upgrade pip
+      - pip install --group docs
 
-python:
-  install:
-   - requirements: docs/requirements.txt
-     
 # Build documentation in the "docs/" directory with Sphinx
 sphinx:
   configuration: conf.py

@@ -2716,6 +2716,31 @@ Step 38. The emitters already read statically since 36b, with `ast`; what remain
   `python/exudyn/mainSystemExtensions.py` of `regenerated_files` (no longer generated since step
   35) was removed.
 
+<a id="step-109"></a>
+
+### Step 109 - development environments from dependency groups
+
+**DONE 2026-09-15** (#2441, maintainer request). The packages of `venvExuP313` were written down
+only as a hand-typed `conda create`/`pip install` line in `docs/howTo/condaEnvironments.md`, from
+the start of the revision; `jinja2`, `griffe`, `pydoclint`, `setuptools`, `wheel` were missing,
+the scipy pin was prose, and `docs/requirements.txt` (CI docs jobs, readthedocs) listed `furo`,
+which `conf.py` does not use.
+- `pyproject.toml` `[dependency-groups]` (PEP 735; never published, unlike the extras, and not
+  seen by `tools/checkExtras.py`): `docs`, `lint` (`pydoclint==0.9.1`), `build` (`setuptools`,
+  `wheel`, `pybind11<3.0`), `ide` (`spyder-kernels==3.*`, `ipykernel`, `ipywidgets`) and `dev`,
+  which includes all four plus `scipy==1.15.2`, `jinja2`, `griffe`. Test dependencies stay the
+  `[tests]` extra, installed together with the local wheel, so they are listed once.
+- Recipe in `condaEnvironments.md`: `conda create ... python=3.13`, upgrade pip (groups need
+  pip >= 25.1), `pip install --group dev`, build, `pip install --pre --find-links=dist
+  "exudyn[tests]"`. `WORKFLOW.md` links to it instead of naming packages.
+- `docs/requirements.txt` deleted (approved). Its users now install `--group docs`: GitLab `docs`
+  job, GitHub `documentation.yaml` (maintainer-approved change under `.github/workflows/`), and
+  `.readthedocs.yaml` through `build.jobs.install`. The GitLab `check_docstrings` job installs
+  `--group lint`. Each job upgrades pip first, since the `python:3.13` image may ship an older one.
+- Checked offline: in `venvExuP313` (pip 26.2.1) `pip install --group dev --no-index --dry-run`
+  resolves with every requirement already satisfied, i.e. the groups describe the environment
+  that ran the gates. Not checkable locally: the readthedocs and GitHub runs.
+
 ## Plan text of steps condensed on 2026-09-15
 
 When the plan was condensed, every done step was reduced to one line there. Its full plan text at
