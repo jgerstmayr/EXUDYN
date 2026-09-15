@@ -182,13 +182,7 @@ promise for no gain.
 **R2.14** **DONE 2026-09-12** — `setupPyConfig.json` retired. → [log](exudynRevisionLog2026.md#r2-14)
 
 <a id="r2-15"></a>
-**R2.15** *(phase R2, small)* **Build and packaging hygiene** (#2372, #2380, #2387).
-    `pyproject.toml` uses the `license = { text = ... }` table that setuptools removes after
-    2027-02-18; the replacement is an SPDX expression, and `LICENSE.txt` is a custom licence, so
-    this needs a decision on the identifier (#2372). `quietCompile` rebinds `sys.stdout`, which the
-    compiler subprocess on Linux bypasses - capture the subprocess output instead (#2380). 20
-    `ClInclude` entries in `cppsrc.vcxproj` have the wrong directory case and 5 do not exist;
-    browse-only today, but the same defect in a `ClCompile` entry breaks the build (#2387).
+**R2.15** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r2-15) — *(phase R2, small)* **Build and packaging hygiene** (#2372, #2380, #2387): SPDX licence, quiet Linux compile, project file entries checked.
 
 <a id="r2-16"></a>
 **R2.16** *(phase R2, with R2.10)* **Decide AVX2 on Linux with a benchmark that can resolve it** (#2396,

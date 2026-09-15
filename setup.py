@@ -660,11 +660,12 @@ if config['compileParallel']:
                     exudynCompileCnt.value = 0
                 
                 nObjects = len(objects)
+                consoleDescriptor = [1] #the console while the descriptors are redirected
                 def _single_compile(obj):
 
                     try: src, ext = build[obj]
                     except KeyError: return
-                    #NOTE: sys.stdout is redirected ONCE around the whole pool below, not here.
+                    #NOTE: the output is redirected ONCE around the whole pool below, not here.
                     #Doing it per file rebound the GLOBAL sys.stdout from every worker thread,
                     #each opening 'setuppy.output.txt' with mode 'w' - so the threads truncated
                     #each other's output and the restore raced with the other workers.
@@ -680,20 +681,42 @@ if config['compileParallel']:
                         startSRC = obj.find('src/')
                         if startSRC == -1: startSRC = -4
                         objName = obj[startSRC+4:-2]+'.cpp'
-                        #to the real console, not to the redirected sys.stdout - otherwise the
-                        #progress would end up inside setuppy.output.txt with the compiler noise
-                        sys.__stdout__.write('completed '+str(cnt).zfill(3)+'/'
-                                             +str(nObjects)+ ': '+ objName+'\n')
-                        sys.__stdout__.flush()
+                        #to the saved console descriptor: descriptors 1 and 2 point to
+                        #setuppy.output.txt while the pool runs (#2380)
+                        os.write(consoleDescriptor[0], ('completed '+str(cnt).zfill(3)+'/'
+                                 +str(nObjects)+ ': '+ objName+'\n').encode())
 
                 # convert to list, imap is evaluated on-demand
                 N_cores = multiprocessing.cpu_count() #better to use all threads, not only cpus
                 if config['quietCompile']:
-                    #opened ONCE, around the whole pool, exactly as the Windows branch does
-                    with open('setuppy.output.txt', 'w') as compileLog:
-                        with contextlib.redirect_stdout(compileLog):
+                    #the compiler is a subprocess writing to file descriptors 1 and 2 directly, so
+                    #rebinding sys.stdout does not catch it: redirect the descriptors themselves,
+                    #ONCE around the whole pool (#2380)
+                    sys.stdout.flush()
+                    sys.stderr.flush()
+                    savedOut, savedErr = os.dup(1), os.dup(2)
+                    consoleDescriptor[0] = savedOut
+                    try:
+                        with open('setuppy.output.txt', 'w') as compileLog:
+                            os.dup2(compileLog.fileno(), 1)
+                            os.dup2(compileLog.fileno(), 2)
                             list(multiprocessing.pool.ThreadPool(N_cores).imap(_single_compile,
                                                                                objects))
+                    except BaseException:
+                        os.dup2(savedOut, 1)
+                        os.dup2(savedErr, 2)
+                        with open('setuppy.output.txt', errors='replace') as compileLog:
+                            print('compilation failed; last lines of setuppy.output.txt:\n'
+                                  + ''.join(compileLog.readlines()[-40:]))
+                        raise
+                    finally:
+                        sys.stdout.flush()
+                        sys.stderr.flush()
+                        os.dup2(savedOut, 1)
+                        os.dup2(savedErr, 2)
+                        os.close(savedOut)
+                        os.close(savedErr)
+                        consoleDescriptor[0] = 1
                 else:
                     list(multiprocessing.pool.ThreadPool(N_cores).imap(_single_compile,objects))
 

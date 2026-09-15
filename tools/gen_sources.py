@@ -97,6 +97,58 @@ def ListSourcesOnDisk(repositoryRoot):
 
 
 #%%******************************************************************************************************
+def RealSpelling(baseDirectory, path):
+    """
+    The on-disk spelling of a relative path, component by component (os.listdir reports the true
+    case also on Windows), or None when it does not exist.
+    """
+    current = baseDirectory
+    parts = []
+    for part in path.split('/'):
+        if part in ('.', '..'):
+            parts += [part]
+            current = os.path.join(current, part)
+            continue
+        try:
+            matches = [name for name in os.listdir(current) if name.lower() == part.lower()]
+        except OSError:
+            return None
+        if not matches:
+            return None
+        parts += [matches[0]]
+        current = os.path.join(current, matches[0])
+
+    return '/'.join(parts)
+
+
+#%%******************************************************************************************************
+def CheckProjectFileEntries(repositoryRoot):
+    """
+    Every ClCompile, ClInclude and None entry of the vcxproj and its .filters file must exist in
+    exactly this spelling (#2387). ClInclude and None are only browsed by Visual Studio today, but a
+    wrong case would break any move or flattening step, and the same defect in ClCompile breaks Linux.
+    Returns the list of problem descriptions.
+    """
+    msvcDirectory = os.path.join(repositoryRoot, os.path.dirname(vcxprojPath))
+    problems = []
+    for fileName in [vcxprojPath, vcxprojPath + '.filters']:
+        fullName = os.path.join(repositoryRoot, fileName)
+        if not os.path.isfile(fullName):
+            continue
+        with open(fullName, 'r', encoding='utf8', errors='replace') as f:
+            xmlText = f.read()
+        for kind, include in re.findall(r'<(ClCompile|ClInclude|None)\s+Include="([^"]+)"', xmlText):
+            path = include.replace('\\', '/')
+            real = RealSpelling(msvcDirectory, path)
+            if real is None:
+                problems += [fileName + ': ' + kind + ' ' + include + '   does NOT exist']
+            elif real != path:
+                problems += [fileName + ': ' + kind + ' ' + include + '   WRONG CASE, on disk: ' + real]
+
+    return problems
+
+
+#%%******************************************************************************************************
 def ReadSourcesJson(repositoryRoot):
     """The committed sources.json, or None when it does not exist yet."""
     fullName = os.path.join(repositoryRoot, sourcesPath)
@@ -181,6 +233,12 @@ def Main():
     if unlisted:
         Report('on disk but NOT listed in the vcxproj', unlisted)
         problems += ['unlisted files']
+
+    #4: every project entry, also headers and other files, in both project files (#2387)
+    entryProblems = CheckProjectFileEntries(repositoryRoot)
+    if entryProblems:
+        Report('ENTRIES of the project files that are missing or wrongly spelled', entryProblems)
+        problems += ['project file entries']
 
     #the minimal subset cannot be derived from the vcxproj; carry it over and validate it
     minimalSources = existing.get('minimal', []) if existing else []

@@ -1225,6 +1225,32 @@ alongside the wheels — a stale extras list and a broken build are independent 
     with the CI override, and the sdist now carries the maintainer’s switches. #2407.
 ---
 
+<a id="r2-15"></a>
+### R2.15 - build and packaging hygiene
+
+**DONE 2026-09-16** (#2372, #2380, #2387).
+
+- **#2372 licence.** `pyproject.toml` had `license = { text = "BSD" }`, a table form setuptools
+  rejects after 2027-02-18, and "BSD" was wrong for the custom EXUDYN General License. Maintainer
+  decision: `license = "LicenseRef-EXUDYN-General-License"` with `license-files = ["LICENSE.txt"]`;
+  `build-system.requires` raised to `setuptools>=77` (first version with SPDX expressions). The
+  wheel METADATA shows `License-Expression` and `License-File`, and ships
+  `dist-info/licenses/LICENSE.txt`.
+- **#2380 quiet compile on Linux/macOS.** Rebinding `sys.stdout` did not reach the compiler, a
+  subprocess writing to descriptors 1 and 2. `parallelCCompile` now `os.dup2`s the log file onto both
+  descriptors around the thread pool, writes the progress to the saved console descriptor, restores
+  in `finally`, and on failure prints the last 40 lines of `setuppy.output.txt`. Verified by the
+  maintainer in WSL (venvExuP313): `setuppy.output.txt` filled; `pip wheel -v` shows only the
+  `completed NNN/133` lines (plus `001/1` lines of the compiler flag probes); a deliberate `#error`
+  shows the error tail. Note: plain `pip wheel` hides all build output unless the build fails.
+- **#2387 project file entries.** 20 `ClInclude` paths with wrong directory case in both
+  `cppsrc.vcxproj` and `.filters` (the `.filters` also had `src\tests\UnitTestBase.cpp`) corrected;
+  5 missing entries removed (`VisuObjectBeamGeometricallyExact3D.h`, `MainObjectFactory.h`, three
+  `ClassDiagram*.cd`). `tools/gen_sources.py --check` now checks every `ClCompile`, `ClInclude` and
+  `None` entry of both files for exact on-disk spelling (fails on the old vcxproj).
+
+Gates: wheel build and install (Windows), full test suite passed, regeneration, checkAll.
+
 <a id="r2-17"></a>
 ### R2.17 - the wheel build sees header changes
 

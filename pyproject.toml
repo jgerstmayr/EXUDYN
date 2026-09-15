@@ -1,6 +1,7 @@
 [build-system]
 #setuptools>=61 is what makes the [project] table below authoritative; on anything older it is
 #silently ignored and the wheel ends up with no metadata at all (revision2026 step R2.1).
+#setuptools>=77 is the first version accepting the SPDX license expression below (#2372).
 #pybind11<3.0: 3.0 (July 2025) is not yet compatible - a deliberate pin, not a stale one. It moved
 #here from setup_requires in revision2026 step R2.2; note that this is honoured under build isolation ('pip
 #wheel .', 'python -m build') but NOT by a direct 'python setup.py bdist_wheel', where pybind11
@@ -9,7 +10,7 @@
 #requires-python allows 3.10 and CI builds cp310. Same caveat as pybind11 - under a direct
 #'python setup.py bdist_wheel' this is NOT installed for you, so setup.py raises an ImportError
 #naming the install command rather than silently falling back to different defaults (revision2026 step R2.14).
-requires = ["setuptools>=61", "wheel", "pybind11<3.0", "tomli; python_version < '3.11'"]
+requires = ["setuptools>=77", "wheel", "pybind11<3.0", "tomli; python_version < '3.11'"]
 build-backend = "setuptools.build_meta"
 
 #Static package metadata. Everything here used to be keyword arguments to setup(); what is left
@@ -31,10 +32,11 @@ dependencies = ["numpy"]
 #derived from the version string in setup.py: '.dev1' switches the Development Status classifier
 dynamic = ["version", "classifiers"]
 
-#a table, not an SPDX expression: the licence is the custom 'EXUDYN General License', not any
-#OSI-approved BSD, so "BSD-3-Clause" would be a false claim. The corresponding
-#'License :: OSI Approved :: BSD License' classifier was already dropped as deprecated.
-license = { text = "BSD" }
+#the licence is the custom 'EXUDYN General License' in LICENSE.txt, not any OSI-approved BSD, so
+#"BSD-3-Clause" would be a false claim; SPDX writes a custom licence as LicenseRef-... (#2372).
+#The 'License :: OSI Approved :: BSD License' classifier was already dropped as deprecated.
+license = "LicenseRef-EXUDYN-General-License"
+license-files = ["LICENSE.txt"]
 
 [[project.authors]]
 name = "Johannes Gerstmayr"
