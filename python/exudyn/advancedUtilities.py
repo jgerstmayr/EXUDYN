@@ -24,7 +24,7 @@ from exudyn.itemInterface import userFunctionArgsDict
 #GENERAL FUNCTIONS
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'PlotLineCode', 'specialExudynTypes', 'FindObjectIndex', 'FindNodeIndex', 'IsListOrArray',
     'ExpectedType', 'RaiseTypeError', 'IsNone', 'IsNotNone', 'IsValidBool', 'IsValidRealInt',
@@ -922,7 +922,7 @@ def CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex=None, 
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#TCP/IP functionality (moved from utilities.py, revision plan step 107b)
+#TCP/IP functionality (moved from utilities.py, revision2026 step R4.22.2)
 
 #TCP/IP functionality
 class TCPIPdata:

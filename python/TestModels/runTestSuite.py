@@ -219,7 +219,7 @@ if TSScope.runTestExamples:
     TSScope.testTolFactors = TestExamplesToleranceFactors()
     TSScope.sensitiveTests = SensitiveTests()
     #known Windows/Linux differences are excluded from the exit code ON LINUX ONLY: the
-    #reference values are the Windows ones, so Windows must still pass them (Phase 9)
+    #reference values are the Windows ones, so Windows must still pass them (revision2026 phase R10)
     TSScope.unresolvedTests = set()
     if not isWindows and not isMacOS:
         TSScope.unresolvedTests = UnresolvedOnLinux()
@@ -228,7 +228,7 @@ if TSScope.runTestExamples:
     
     #the reference lists ARE the run manifest, so a model missing from them is never executed.
     #Check that against the folder before running anything, and report it in the log where the
-    #next reader will see it (revision plan step 69).
+    #next reader will see it (revision2026 step R5.9).
     TSScope.coverageText, TSScope.coverageFailed = testRunnerTools.CheckTestCoverage(
         modelsDir='.',
         #MiniExamples are deliberately absent: they live in MiniExamples/, not here, and have
@@ -307,7 +307,7 @@ if TSScope.runTestExamples:
                     exu.Print('        it is reported but does not affect the exit code')
                 elif TSScope.file in TSScope.unresolvedTests:
                     exu.Print('  NOTE: known unresolved Windows/Linux difference (revision plan')
-                    exu.Print('        Phase 9); reported but does not affect the exit code')
+                    exu.Print('        revision2026 phase R10); reported but does not affect the exit code')
                 exu.Print('******************************************')
                 testsFailed = testsFailed + [TSScope.testExamplesCnt]
                 TSScope.examplesFailedNames.add(TSScope.name)

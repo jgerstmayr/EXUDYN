@@ -4,7 +4,7 @@
 > `docs/theDoc/introduction.tex`, sections *Code style and conventions*, *Notation conventions*
 > and *No-abbreviations-rule*, plus the abbreviation table from `docs/theDoc/abbreviations.tex`.
 > Those LaTeX files still ship in `theDoc.pdf`. If you change a rule, change it in **both** places
-> until plan step 50 makes RST/Sphinx primary and this duplication goes away.
+> until revision2026 step R7.1 makes RST/Sphinx primary and this duplication goes away.
 
 ## 1. General rules
 
@@ -138,6 +138,13 @@ Historical note: `ODE2` corresponds to `SOS2` / `EvalF2` in HOTINT, `ODE1` to `E
   through `MarkerNodePosition` + `LoadForceVector` is 3D. A local position in a 2D object is given
   as a 3D vector.
 
+### References in comments
+
+A comment that explains why code is the way it is cites the **issue** (`#2411`), not a step of the
+revision plan: comments stay for years, issue numbers are stable and the issue names its plan step.
+Plan steps are cited in issues and commit messages as "revision2026 step R4.10.3" (see
+[`exudynRevisionInfo2026.md`](../revision/exudynRevisionInfo2026.md) §1).
+
 ## 7. File headers
 
 **C++** — Doxygen-style block at the top of the file:
@@ -185,8 +192,8 @@ Do not enforce them retroactively, and do not introduce them into files that lac
 | rule | status |
 |---|---|
 | Doxygen comment style (`//!`, `@todo`, `@test`, `@bug`) | **deprecated, and the toolchain is gone.** `docs/doxygen/` was removed 2026-09-10 — it broke on project size, the PDF path never worked, and graph generation had already been switched off. So nothing consumes these comments any more. New code need not adopt the style; existing blocks stay until a dedicated cleanup step. For the architectural overview doxygen was once expected to give, see [ARCHITECTURE.md](ARCHITECTURE.md). |
-| "Add a complete unit test to every function" (LEST) | not obeyed. The LEST tests are gated on `PERFORM_UNIT_TESTS`, enabled only for Python 3.7, so they run nowhere. Plan step 42 wires them into the VS `Debug` configuration. |
-| The `#**` doc-comment convention in `python/exudyn/` | **replaced 2026-09-15** (plan step 36) by Google-style docstrings: summary, then `Args:`, `Returns:`, `Note:`, `Example:`, each section's text indented by four spaces. `author`, `date`, `status` and `public=False` go into `@docmeta(...)` (`exudyn/docmeta.py`), a MainSystem method is marked `@extends(exudyn.MainSystem)`. Every module in `python/exudyn` has an `__all__` listing its public names (top-level functions, classes and assigned names not starting with `_`, except `@docmeta(public=False)`); `python tools/checkAll.py --write` updates it after adding a function, and CI fails if it is incomplete (step 107c). The text is Markdown (step 36d): `code` in backquotes, `$...$` math, `[Key]` for a citation, `[text](#label)` for a reference (`[Section](#sec:...)`, an abbreviation as `[HT](#HT)`), `**bold**`, `*italics*`, UTF-8 characters instead of LaTeX accents; no LaTeX macros outside math. |
+| "Add a complete unit test to every function" (LEST) | not obeyed. The LEST tests are gated on `PERFORM_UNIT_TESTS`, enabled only for Python 3.7, so they run nowhere. revision2026 step R5.3 wires them into the VS `Debug` configuration. |
+| The `#**` doc-comment convention in `python/exudyn/` | **replaced 2026-09-15** (revision2026 step R4.6) by Google-style docstrings: summary, then `Args:`, `Returns:`, `Note:`, `Example:`, each section's text indented by four spaces. `author`, `date`, `status` and `public=False` go into `@docmeta(...)` (`exudyn/docmeta.py`), a MainSystem method is marked `@extends(exudyn.MainSystem)`. Every module in `python/exudyn` has an `__all__` listing its public names (top-level functions, classes and assigned names not starting with `_`, except `@docmeta(public=False)`); `python tools/checkAll.py --write` updates it after adding a function, and CI fails if it is incomplete (revision2026 step R4.22.3). The text is Markdown (revision2026 step R4.6.4): `code` in backquotes, `$...$` math, `[Key]` for a citation, `[text](#label)` for a reference (`[Section](#sec:...)`, an abbreviation as `[HT](#HT)`), `**bold**`, `*italics*`, UTF-8 characters instead of LaTeX accents; no LaTeX macros outside math. |
 
 **The operative rule when editing an existing file: follow that file's local style.** A consistent
 file beats a globally consistent repository during a migration.

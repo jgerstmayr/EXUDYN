@@ -18,7 +18,7 @@ import numpy as np
 import exudyn
 from exudyn.extensionRegistry import extends
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'solverCheckMemoryAllocations', 'solverCheckMemoryAllocationsThreshold', 'SolverErrorMessage',
     'SolveStatic', 'SolveDynamic', 'SolverSuccess', 'DeactivateWritingOfSolvers',

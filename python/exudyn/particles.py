@@ -15,7 +15,7 @@ import exudyn
 import numpy as np #LoadSolutionFile
 # import copy as copy #to be able to copy e.g. lists
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'CreateParticlesInBox',
     ]

@@ -18,7 +18,7 @@ import platform
 
 #shared temporary log directory for all runners; a single directory is easy to delete.
 #relative to the runner's working directory, which is the models directory.
-#NOTE: becomes logs/tmp/ when the logs are relocated (revision plan step 74)
+#NOTE: becomes logs/tmp/ when the logs are relocated (revision2026 step R3.8)
 tmpLogDir = '../logsTmp/'
 
 #packages whose version can change test results; taken from what the TestModels and Examples
@@ -128,7 +128,7 @@ def CheckTestCoverage(modelsDir, refSolNames, notTestModels, deliberatelyNotRun)
     runTestSuite.py builds its run list purely from the keys of TestExamplesReferenceSolution():
     there is no listdir anywhere in the suite. A model which exists but is in no list is
     therefore never executed, and is indistinguishable from a file which does not exist. That
-    is how 19 models came to be silently unrun (revision plan fact 14, step 69).
+    is how 19 models came to be silently unrun (revision2026 fact 14, revision2026 step R5.9).
 
     Four checks, covering every direction in which the two can drift apart:
 
@@ -202,7 +202,7 @@ def FormatTestOverview(title, names, results, errors, tolerances=None, times=Non
 
     Fixed width so that the table greps and diffs cleanly across machines - comparing per-test
     errors between platforms is how the sensitive-test list in runTestSuiteRefSol.py has to be
-    populated (revision plan fact 24), and that is impractical while the numbers are only
+    populated (revision2026 fact 24), and that is impractical while the numbers are only
     embedded in prose.
     """
     failedNames = failedNames if failedNames is not None else set()
@@ -238,7 +238,7 @@ def FormatTestOverview(title, names, results, errors, tolerances=None, times=Non
         s += '  reported but does not set the exit code\n'
     if len(unresolvedNames) != 0:
         s += 'L marked UnresolvedOnLinux in runTestSuiteRefSol.py: a known, reproducible\n'
-        s += '  Windows/Linux difference awaiting investigation (revision plan Phase 9).\n'
+        s += '  Windows/Linux difference awaiting investigation (revision plan phase R10).\n'
         s += '  Excluded from the exit code on Linux only - on Windows these must pass.\n'
 
     return s

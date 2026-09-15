@@ -49,20 +49,20 @@ def TestExamplesReferenceSolution():
         'createRollingDiscTest.py':4.009716209090299,               #new 2025-03-05
         'createSphereQuadContact.py':1.124377662163088,             #new 2025-06-29
         'createSphereQuadContact2.py':0.15616582432927872,          #new 2025-07-05
-        'createSphereTriangleContact.py':4.8409602192504355,        #new 2026-09-11 (step 69); tEnd shortened 0.65->0.25 on adding
+        'createSphereTriangleContact.py':4.8409602192504355,        #new 2026-09-11 (revision2026 step R5.9); tEnd shortened 0.65->0.25 on adding
         'deleteItemsTest.py':-0.9860528006518329,                   #new 2025-05-10
         'distanceSensor.py':1.867764310778691,
         'driveTrainTest.py':-9.269855516524927e-08,                 #new 2023-05-20 (mainSystemExtensions); before:-9.269311940229841e-08,
         'explicitLieGroupIntegratorPythonTest.py':149.8473939540758,
         'explicitLieGroupIntegratorTest.py':0.16164013319819065,
-        'explicitLieGroupMBSTest.py':3.028987107923892,             #new 2026-09-11 (step 69); endTime shortened 1->0.1 on adding, step size unchanged
+        'explicitLieGroupMBSTest.py':3.028987107923892,             #new 2026-09-11 (revision2026 step R5.9); endTime shortened 1->0.1 on adding, step size unchanged
         'fourBarMechanismTest.py':-2.376335780518213,
         'fourBarMechanismIftomm.py':0.1721665271840173,
         'generalContactCylinderTest.py':12.246626442545603,         #new 2024-03-17 (spurious trig-sphere contact forces)
         'generalContactCylinderTrigsTest.py':5.486908430912642,     #new 2024-03-17 (internal sphere-sphere contact)
         'generalContactFrictionTests.py':12.030182715125177,        #changed 2025-05-06 (seems to now be closer to linux; differences with object8); new 2024-03-17: 12.027740342293988 (doubled damping; fixed sphere-sphere and trig-sphere contact); old: 12.464092000879125,        #new 2022-07-11 (CState Parallel); #before 2022-01-25 (changed some velocity computation in GeneralContact): 10.133183086232139, #changed GeneralContact and implicit solver; before 2022-01-18: 10.132106712933348 , 
-        'generalContactImplicit1.py':0.775815593379039,             #new 2026-09-11 (step 69)
-        'generalContactImplicit2.py':0.500000053786963,             #new 2026-09-11 (step 69)
+        'generalContactImplicit1.py':0.775815593379039,             #new 2026-09-11 (revision2026 step R5.9)
+        'generalContactImplicit2.py':0.500000053786963,             #new 2026-09-11 (revision2026 step R5.9)
         'generalContactSpheresTest.py':-1.1138547720263323,         #new 2022-07-22 (parallel Lie group updates); new 2022-07-11 (CState Parallel); #before 2022-01-25(minor diff, due to round off errors in multithreading; now changed to 1 thread):-1.113854772026123, #changed GeneralContact and implicit solver; before 2022-01-18: -1.0947542400425323, #before 2021-12-02: -1.0947542400427703,
         'genericJointUserFunctionTest.py':1.1922383967562884,
         'genericODE2test.py':0.036045463499024655,                  #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 0.036045463498793825,
@@ -94,8 +94,8 @@ def TestExamplesReferenceSolution():
         'objectGenericODE2Test.py':-2.316378897486015e-05,
         'PARTS_ATEs_moving.py':0.44656762760262214,
         'pendulumFriction.py':0.39999998776982304,
-        'parameterConversionTest.py':0,                             #new 2026-09-14: number of differences to parameterConversionTestReference.txt (step 34c1)
-        'typeInformationTest.py':0,                                 #new 2026-09-15: number of disagreements of exudyn.types with the C++ module (step 83d)
+        'parameterConversionTest.py':0,                             #new 2026-09-14: number of differences to parameterConversionTestReference.txt (revision2026 step R4.4.3.1)
+        'typeInformationTest.py':0,                                 #new 2026-09-15: number of disagreements of exudyn.types with the C++ module (revision2026 step R4.10.4)
         'pickleCopyMbs.py':0.2583013564103496,                      #new 2025-05-10
         'plotSensorTest.py':1,
         'postNewtonStepContactTest.py':0.057286638346409235,
@@ -114,7 +114,7 @@ def TestExamplesReferenceSolution():
         'scissorPrismaticRevolute2D.py':27.20255648904422,          #new 2022-07-11 (CState Parallel); #added JacobianODE2, but example computed with numDiff forODE2connectors, 2022-01-18: 27.202556489044145,
         'sensorUserFunctionTest.py':45.0,            
         'serialRobotTest.py':0.7681856909852399,                    #until 2022-04-21: 0.7680031232063571 wrong static torque compensation
-        'sliderCrank3Dbenchmark.py':7.256859913349651,              #new 2026-09-11 (step 69); tEnd shortened 5->0.5, the value the file itself calls converged
+        'sliderCrank3Dbenchmark.py':7.256859913349651,              #new 2026-09-11 (revision2026 step R5.9); tEnd shortened 5->0.5, the value the file itself calls converged
         'sliderCrank3Dtest.py':3.3642761780921897,
         'sliderCrankFloatingTest.py':0.591649163378833,
         'solverExplicitODE1ODE2test.py':3.3767933275970896,         #new 2022-07-11 (CState Parallel); 
@@ -175,7 +175,7 @@ def NotTestModels():
 #%%+++++++++++++++++++++++++++++++++++++++
 #return the test models which exist but are deliberately NOT executed by the test suite,
 #name -> reason. A reason is required: a bare exclusion list is how the set rotted in the
-#first place (revision plan fact 14), and a sentence per entry makes an unjustified
+#first place (revision2026 fact 14), and a sentence per entry makes an unjustified
 #exclusion visible when the file is read.
 #
 #Anything listed here is skipped by the coverage check. Anything NOT listed and not in a
@@ -268,7 +268,7 @@ def SensitiveTests():
 #
 #This is deliberately separate from SensitiveTests(): those are non-deterministic everywhere
 #and can never be pinned down, whereas these are reproducible differences with a cause that
-#has not been found yet. They are scheduled for investigation in Phase 9 of the revision plan;
+#has not been found yet. They are scheduled for investigation in revision2026 phase R10 of the revision plan;
 #the list should SHRINK as they are resolved, and each entry removed is a real fix.
 #
 #Measured 2026-09-10 on manylinux_2_28 / cp313 / numpy 2.4.6, relative to the Windows

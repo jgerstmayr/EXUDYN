@@ -5,9 +5,9 @@
 #           structureDocsEmitter.py): type tables, predicates on classes and parameters, the
 #           sorted parameter list, typical paths and the old string records of every structure,
 #           rendered from definitions/ by definitionLoader. Moved out of
-#           src/pythonGenerator/pythonAutoGenerateSystemStructures.py (revision plan step 33, part 2c).
-#           The header and stub emitters read the members directly (step 34a); only
-#           structureDocsEmitter.py still reads the string records, until step 50 replaces it.
+#           src/pythonGenerator/pythonAutoGenerateSystemStructures.py (revision2026 step R4.3, part 2c).
+#           The header and stub emitters read the members directly (revision2026 step R4.4.1); only
+#           structureDocsEmitter.py still reads the string records, until revision2026 step R7.1 replaces it.
 #
 # Usage:    import structureModel as sm
 #
@@ -109,9 +109,9 @@ def HasTopClass(className):
     return TopClassName(className) != className
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#direct member access (revision plan step 34a): the header and structure-stub emitters read the
+#direct member access (revision2026 step R4.4.1): the header and structure-stub emitters read the
 #definitions/ members through these functions. The predicates shared with structureDocsEmitter.py
-#also accept the old string records it still reads; that second form goes with step 50.
+#also accept the old string records it still reads; that second form goes with revision2026 step R7.1.
 import itemModel as _im                                                 # noqa: E402
 
 #generation order: structures appended to one file (appendToFile) depend on it
@@ -176,7 +176,7 @@ def IsVirtualFunction(member):
 
 def HasFlag(member, letter):
     """a flag of cFlags: SFConst 'C', SFPybindArgs 'G', SFReturnCopy 'V', SFNoDictType 'D', SFDeprecated
-    'X'; 'P' (in the Python interface) is the absence of SFNoPybind 'N' (step 110)"""
+    'X'; 'P' (in the Python interface) is the absence of SFNoPybind 'N' (revision2026 step R4.25)"""
     flags = member.get('cFlags', '') or ''
     if letter == 'P':
         return 'N' not in flags

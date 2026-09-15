@@ -28,7 +28,7 @@ import numpy as np #LoadSolutionFile
 import copy as copy #to be able to copy e.g. lists
 from math import radians, pi, sin, cos, tan, asin #, acos
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'graphicsDataNormalsFactor', 'graphicsDataSwitchTriangleOrder', 'color', 'material',
     'colorList', 'Sphere', 'Lines', 'Circle', 'Text', 'Cuboid', 'BrickXYZ', 'Brick', 'Cylinder',

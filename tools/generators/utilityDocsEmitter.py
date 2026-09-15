@@ -4,7 +4,7 @@
 # Details:  Emits the reference documentation of the utility modules from their docstrings:
 #           docs/theDoc/pythonUtilitiesDescription.tex, docs/RST/pythonUtilities/*.rst and
 #           docs/RST/confHelperPyUtilities.py. Moved out of utilitiesDocuGenerator.py (revision plan
-#           step 33, part 2e); re-pointed at Google-style docstrings via griffe by steps 36 and 38.
+#           revision2026 step R4.3, part 2e); re-pointed at Google-style docstrings via griffe by revision2026 steps R4.6 and R4.8.
 #
 # Usage:    python tools/generators/utilityDocsEmitter.py
 #

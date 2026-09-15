@@ -230,7 +230,7 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 
 stepSize = 1e-3*0.1 #slider position with 6 digits converged after 0.5 seconds
 writeStepSize = stepSize
-tEnd = 0.5 #2026-09-11 (step 69): was 0.5*10 ; the comment above records that the slider
+tEnd = 0.5 #2026-09-11 (revision2026 step R5.9): was 0.5*10 ; the comment above records that the slider
            #position is converged to 6 digits after 0.5s, so the extra 4.5s only cost runtime
 # if fixedVelocity: #to check initial velocity
 #     stepSize = 1e-8

@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN maintainer tool
 #
-# Details:  The single driver of the code generators (revision plan step 33, part 2f). Every
+# Details:  The single driver of the code generators (revision2026 step R4.3, part 2f). Every
 #           stage declares the files or directories it reads and writes (repository-relative);
 #           the driver derives the order from these declarations - a stage runs after every
 #           stage that writes something it reads - and refuses a cycle. Before, the order lived
@@ -80,7 +80,7 @@ stages = [
     ]
 
 #deliberately NOT stages:
-#  makeAllBinariesScripts.py  writes only docs/theDoc/buildDate.tex, a volatile timestamp (step 50)
+#  makeAllBinariesScripts.py  writes only docs/theDoc/buildDate.tex, a volatile timestamp (revision2026 step R7.1)
 #  tools/issueTracker/issueTracker.py  a different tool on a different trigger; it owns the
 #                                      version files and trackerlog.{tex,rst,html}
 

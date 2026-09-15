@@ -3,7 +3,7 @@
 #
 # Details:  Emits tools/generators/generated/stubSystemStructures.pyi, the stub fragment of the
 #           structures (SimulationSettings, VisualizationSettings, ...) that createStubFiles.py
-#           assembles, from definitions/ (revision plan step 33, part 2c). Moved out of
+#           assembles, from definitions/ (revision2026 step R4.3, part 2c). Moved out of
 #           src/pythonGenerator/pythonAutoGenerateSystemStructures.py; the output is byte-identical.
 #
 # Usage:    python tools/generators/structureStubEmitter.py

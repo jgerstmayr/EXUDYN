@@ -29,7 +29,7 @@ from exudyn.rigidBodyUtilities import EulerParameters2RotationMatrix, RotXYZ2Rot
 #       HELPER METHODS FOR BASIC LIE GROUP METHODS
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'Sinc', 'Cot', 'R3xSO3Matrix2RotationMatrix', 'R3xSO3Matrix2Translation', 'R3xSO3Matrix',
     'ExpSO3', 'ExpS3', 'LogSO3', 'TExpSO3', 'TExpSO3Inv', 'ExpSE3', 'LogSE3', 'TExpSE3',

@@ -5,7 +5,7 @@
 #           their stubs go into stubEnums.pyi, their documentation after the data structures.
 #           The calls are recorded by PybindInterface (pybindTypes.py) and replayed by
 #           tools/generators/pybindEmitter.py into pybind_manual_classes.h, the stub fragments and
-#           the Python-C++ interface documentation (revision plan step 33, part 2d).
+#           the Python-C++ interface documentation (revision2026 step R4.3, part 2d).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2018-05-18 (created in autoGeneratePyBindings.py), 2026-09-14 (moved to definitions/)
@@ -53,7 +53,7 @@ pb.DefLatexStartTable(pyClass)
 
 #the enum, its bit positions, the two C++ helper functions and this Python/documentation
 #table all come from definitions/outputVariableTypes.py - nothing is left to keep
-#synchronized by hand (revision plan step 31d)
+#synchronized by hand (revision2026 step R4.1.4)
 for outputVariable in outputVariableTypes:
     pb.AddEnumValue(pyClass, outputVariable.name, outputVariable.description)
 
@@ -61,7 +61,7 @@ pb.CppCode('		'+enumExportValues+';\n\n')
 pb.DefLatexFinishTable()
 
 #the other enums: their values, the C++ enums and string functions all come from
-#definitions/enumTypes.py (revision plan step 33, part 2d)
+#definitions/enumTypes.py (revision2026 step R4.3, part 2d)
 for enum in enumTypes:
     if enum.description is None:
         continue #C++ only

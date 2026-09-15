@@ -17,7 +17,7 @@ from exudyn.mainSystemExtensions import CreateDistanceSensor
 import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.rigidBodyUtilities import HT2translation, HT2rotationMatrix
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'AddLidar', 'GetRoboticsToolboxInternalModel', 'LoadURDFrobot', 'GetURDFrobotData',
     ]

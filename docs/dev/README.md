@@ -11,7 +11,8 @@ Developer-facing notes. Users start at [`README.rst`](../../README.rst) and
 | [WORKFLOW.md](WORKFLOW.md) | issue tracker, versioning, the four commit gates |
 | [../../definitions/README.md](../../definitions/README.md) | the item and structure definitions as Python, and the function declaration library |
 | [../../tools/generators/README.md](../../tools/generators/README.md) | the new generator code and how to re-emit the definitions |
-| [../revision/exudynRevisionPlan2026.md](../revision/exudynRevisionPlan2026.md) | the v1.11.0 → v2.0 restructuring plan, in numbered steps |
+| [../revision/exudynRevisionInfo2026.md](../revision/exudynRevisionInfo2026.md) | general information on the v1.11.0 → v2.0 restructuring: rules, facts, decisions |
+| [../revision/exudynRevisionPlan2026.md](../revision/exudynRevisionPlan2026.md) | the restructuring plan, in steps R0.1 ... R11.x |
 | [../revision/exudynRevisionLog2026.md](../revision/exudynRevisionLog2026.md) | the record of the steps already closed — the revision / migration document |
 | [../../CONTRIBUTING.md](../../CONTRIBUTING.md) | how to contribute from outside |
 | [../../CLAUDE.md](../../CLAUDE.md) | the working contract for Claude Code sessions |

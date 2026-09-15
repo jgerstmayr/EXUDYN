@@ -4,7 +4,7 @@
 # Details:  The declaration types of the hand-written Python interface (definitions/pybind*.py):
 #           PybindInterface records the declaration calls in order, and
 #           tools/generators/pybindEmitter.py replays them into pybind_manual_classes.h, the stub
-#           fragments and the documentation (revision plan step 33, part 2d). Also the stub type
+#           fragments and the documentation (revision2026 step R4.3, part 2d). Also the stub type
 #           names and C++ templates the declarations share.
 #
 # Author:   Johannes Gerstmayr

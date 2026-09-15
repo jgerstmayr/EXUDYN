@@ -2,9 +2,9 @@
 # This is an EXUDYN maintainer tool
 #
 # Details:  Emits the C++ structure headers (SimulationSettings.h, VisualizationSettings.h, ...),
-#           DictionariesGetSet.h and pybind_modules.h from definitions/ (revision plan step 33,
+#           DictionariesGetSet.h and pybind_modules.h from definitions/ (revision2026 step R4.3,
 #           part 2c). Moved out of src/pythonGenerator/pythonAutoGenerateSystemStructures.py. Reads the
-#           members directly through the predicates of structureModel.py (step 34a).
+#           members directly through the predicates of structureModel.py (revision2026 step R4.4.1).
 #
 # Usage:    python tools/generators/structureHeaderEmitter.py
 #
@@ -27,14 +27,14 @@ from structureModel import *                                            # noqa: 
 import typeModel as tm                                                  # noqa: E402
 
 
-#scalar types written through EPyUtils::FromPython (revision plan step 34c5 a): None and item
+#scalar types written through EPyUtils::FromPython (revision2026 step R4.4.3.5a): None and item
 #indices raise as for items; the U.../P... forms carry their range check
 scalarRangeForms = {'bool': None, 'float': None, 'Real': None, 'Index': None, 'Int': None,
                     'UReal': 'nonNegative', 'UFloat': 'nonNegative', 'UInt': 'nonNegative',
                     'PReal': 'positive', 'PFloat': 'positive', 'PInt': 'positive'}
 
 
-#further member types with a FromPython overload and a context (step 34c5 b); vectors and index
+#further member types with a FromPython overload and a context (revision2026 step R4.4.3.5b); vectors and index
 #arrays are returned as lists through EPyUtils::ToPythonMember
 convertedMemberTypes = list(scalarRangeForms) + ['String', 'FileName', 'Float3', 'Float4', 'Index2', 'ArrayIndex',
                                                  'LinearSolverType', 'DynamicSolverType', 'OutputVariableType',
@@ -397,7 +397,7 @@ def StructureCppHeader(parseInfo):
                         sDictGet += '    d = py::dict(); //reset local dict\n'
                         sDictGet += '    d["itemIdentifier"] = std::string(""); //identifier for item\n'
                         valueStr = 'data.' + cValueStr
-                        if IsDirectScalar(parameter) and parameter['type'] in listMemberTypes: #lists, as the attribute (step 34c5 b)
+                        if IsDirectScalar(parameter) and parameter['type'] in listMemberTypes: #lists, as the attribute (revision2026 step R4.4.3.5b)
                             valueStr = 'EPyUtils::ToPythonMember(data.' + parameter['cplusplusName'] + ')'
                         sDictGet += '    d["value"] = ' + valueStr + ';\n'
                         sDictGet += '    d["type"] = "' + pType + '";\n'
@@ -410,7 +410,7 @@ def StructureCppHeader(parseInfo):
                         sDictGetPure += valueStr + ';\n'
                         
                         #set functions:
-                        if parameter['type'] in convertedMemberTypes: #the same conversion and checks as the attribute (step 34c5 a, b)
+                        if parameter['type'] in convertedMemberTypes: #the same conversion and checks as the attribute (revision2026 step R4.4.3.5a, b)
                             sDictSet += ('    EPyUtils::FromPython(d["' + parameter['pythonName'] + '"], data.' + parameter['cplusplusName'] + ', '
                                          + RangeArgument(parameter['type']) + '"' + Header(parseInfo, 'class') + '.' + parameter['pythonName'] + '");\n')
                         else:
@@ -580,7 +580,7 @@ def CreatePybindHeaders(parseInfo):
             if (len(Header(parseInfo, 'linkedClass')) != 0):
                 linkedClassStr = Header(parseInfo, 'linkedClass') + '.'
 
-            if IsDirectScalar(parameter): #step 34c5 a
+            if IsDirectScalar(parameter): #revision2026 step R4.4.3.5a
                 memberStr = '&' + Header(parseInfo, 'class') + '::' + linkedClassStr + parameter['cplusplusName']
                 s += (spaces2 + '.def_property("' + parameter['pythonName'] + '", EPyUtils::MemberGetter(' + memberStr + '), EPyUtils::MemberSetter('
                       + memberStr + ', ' + RangeArgument(parameter['type']) + '"' + Header(parseInfo, 'class') + '.' + parameter['pythonName'] + '")')

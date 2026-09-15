@@ -1,7 +1,7 @@
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Sensor item definitions
 #
-# Details:  8 definitions; the input of the generators (revision plan step 33).
+# Details:  8 definitions; the input of the generators (revision2026 step R4.3).
 #           This IS Python: import it and read "definitions", a list of dicts.
 #
 #           ORDER MATTERS. The generators emit in the order the definitions appear,

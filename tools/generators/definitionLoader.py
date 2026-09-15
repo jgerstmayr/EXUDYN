@@ -4,9 +4,9 @@
 # Details:  Loads the definitions in definitions/ and hands them to the generators in the form
 #           their old line parser produced: one (parseInfo, parameterList) pair per class, every
 #           value a string, exactly as SplitString used to deliver it. The generators' per-class
-#           code is therefore unchanged - only its input moved (revision plan step 33, part 1).
+#           code is therefore unchanged - only its input moved (revision2026 step R4.3, part 1).
 #
-#           The conversion is the inverse of what step 31 folded into the new format: flags that
+#           The conversion is the inverse of what revision2026 step R4.1 folded into the new format: flags that
 #           became derived (declaration-only, interface, substructure) are put back as letters,
 #           values that became Python values are rendered back to their C++ spelling, the shape
 #           a type now carries becomes 'size' again, and the output variables become the dict
@@ -14,9 +14,9 @@
 #           by field before the old definition files were removed; tools/regenerate.py --check
 #           is the gate that keeps it so.
 #
-#           Since step 34a only the two documentation emitters (itemDocsEmitter.py,
+#           Since revision2026 step R4.4.1 only the two documentation emitters (itemDocsEmitter.py,
 #           structureDocsEmitter.py) consume the old representation; this adapter is deleted with
-#           them in step 50.
+#           them in revision2026 step R7.1.
 #
 # Usage:    import definitionLoader
 #           for parseInfo, parameterList in definitionLoader.LoadItemDefinitions(template): ...

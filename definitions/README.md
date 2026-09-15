@@ -1,9 +1,9 @@
 # definitions/ — the item and structure definitions as Python
 
-**The input of the code generators** (revision plan steps 31 and 33). It replaced the line-based
+**The input of the code generators** (revision2026 steps R4.1 and R4.3). It replaced the line-based
 tables `objectDefinition.py` and `systemStructuresDefinition.py`, which were removed; the detail
 and the measurements behind every decision are in
-[exudynRevisionLog2026.md](../docs/revision/exudynRevisionLog2026.md), steps 31-33.
+[exudynRevisionLog2026.md](../docs/revision/exudynRevisionLog2026.md), revision2026 steps R4.1-R4.3.
 
 To change an item or a structure, edit the file here and run `python tools/regenerate.py --check`
 (in `venvExuP313`): it validates the definitions and regenerates everything. The generators read

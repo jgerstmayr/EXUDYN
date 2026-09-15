@@ -28,7 +28,7 @@ import numpy as np #LoadSolutionFile
 from enum import Enum #for class HCBstaticModeSelection
 import os
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'useOldCSRformat', 'scipyInstalled', 'WarnNumpy2', 'CheckForSciPyAndWarn',
     'CheckForSciPyAndError', 'CheckForSciPyMatrix', 'CompressedRowSparseToDenseMatrix',

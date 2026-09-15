@@ -23,7 +23,7 @@ from math import sin, cos #, sqrt, atan2
 
 import copy
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'eulerParameters0', 'ComputeOrthonormalBasisVectors', 'ComputeOrthonormalBasis', 'GramSchmidt',
     'Skew', 'Skew2Vec', 'ComputeSkewMatrix', 'EulerParameters2G', 'EulerParameters2GLocal',

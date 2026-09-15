@@ -27,7 +27,7 @@ import exudyn.rigidBodyUtilities as erb
 # https://github.com/petercorke/robotics-toolbox-python
 
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'RotationX2T66Inverse', 'RotationY2T66Inverse', 'RotationZ2T66Inverse',
     'TranslationX2T66Inverse', 'TranslationY2T66Inverse', 'TranslationZ2T66Inverse',

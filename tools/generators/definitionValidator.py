@@ -18,9 +18,9 @@
 #              the name of a structure defined in definitions/ - a typo in a substructure type
 #              would otherwise reach the generated C++ unnoticed;
 #           6. an item parameter carries CFMustBeGiven exactly if its default lies outside its
-#              range form (UInt with InvalidIndex, PReal with 0, ...) - step 34c4 (e).
+#              range form (UInt with InvalidIndex, PReal with 0, ...) - revision2026 step R4.4.3.4e.
 #
-#           ALL violations are reported, not just the first. Revision plan step 32.
+#           ALL violations are reported, not just the first. revision2026 step R4.2.
 #
 # Usage:    python tools/generators/definitionValidator.py        (exit code 1 on violations)
 #           called by tools/regenerate.py before the generators run

@@ -20,7 +20,7 @@ from exudyn.extensionRegistry import extends
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'InteractiveDialog', 'AnimateModes', 'SolutionViewer', 'ConvertImages2Video',
     'InteractiveImages2Video',

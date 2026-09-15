@@ -5,7 +5,7 @@
 #           small-system tests in the performance suite. perfRigidPendulum and the two
 #           spring-damper tests run a handful of coordinates for ~1e6 steps, so they measure
 #           per-step overhead; their system vectors are 3-20 elements long and no vectorized
-#           linear algebra can show up in them (revision plan step 23, issue #2397).
+#           linear algebra can show up in them (revision2026 step R2.10, issue #2397).
 #
 #           This model instead uses a chain of nMasses point masses coupled by coordinate
 #           spring-dampers, integrated explicitly: 3*nMasses ODE2 coordinates, no linear solver,

@@ -19,7 +19,7 @@ from exudyn.advancedUtilities import PlotLineCode, IsListOrArray, IsEmptyList
 import copy
 import os
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'listMarkerStyles', 'listMarkerStylesFilled', 'componentNorm', 'ParseOutputFileHeader',
     'PlotSensorDefaults', 'PlotSensor', 'PlotFFT', 'FileStripSpaces', 'DataArrayFromSensorList',

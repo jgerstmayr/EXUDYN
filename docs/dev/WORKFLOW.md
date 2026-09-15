@@ -23,7 +23,7 @@ scripts in `tools/buildAndGenerate/` select environments themselves via
 > `version.txt`. The **base** Anaconda environment carries a stale **1.10.0**, so a
 > test suite run from it silently tests old binaries.
 
-Run the generators and the docs build from a Windows shell (PowerShell). Until plan step 70 adds a
+Run the generators and the docs build from a Windows shell (PowerShell). Until revision2026 step R0.5 adds a
 `.gitattributes`, generating from a different shell can still produce spurious line-ending diffs.
 
 Documentation build, from the repository root:
@@ -40,7 +40,7 @@ coupling — it is not a preference and should not grow.
 Advanced functionality legitimately needs more: scipy, networkx, Gym, stable-baselines, NGsolve
 and others. Those stay **optional**. Installing exudyn requires the minimum; a function that needs
 more raises at the point of use. Today those failures are not consistently `ImportError`, which is
-a known rough edge and a Phase 5 concern (steps 46–49) — not something to fix opportunistically.
+a known rough edge and a revision2026 phase R6 concern (revision2026 steps R6.1–R6.4) — not something to fix opportunistically.
 
 When adding code: a new *optional* dependency behind a clear failure is acceptable; a new
 *mandatory* one is not.
@@ -163,7 +163,7 @@ modes. Both are kept; this is not a leftover switch.
 | **release** | `''` | `1.11.14` | `exudynCPP` **+** `exudynCPPfast` **+** `exudynCPPnoAVX` (Windows) | **168.9 s** |
 | **development** | `'.dev1'` | `1.11.14.dev1` | one `exudynCPP`, except the Python versions kept for fast-variant speedup tests | **58.1 s** |
 
-Switch by editing the line and running `UpdateFiles()` from `tools/issueTracker/`. Step 65 turns
+Switch by editing the line and running `UpdateFiles()` from `tools/issueTracker/`. revision2026 step R8.3 turns
 this into `--release` / `--dev`.
 
 Two things follow from a switch:
@@ -287,7 +287,7 @@ still pass, since that is where the reference values come from. Marked `L` in th
 against `*` for sensitive.
 
 The distinction matters: sensitive tests are non-deterministic and can never be pinned down;
-these have a cause and are scheduled for investigation in revision plan **Phase 9, step 76**. The
+these have a cause and are scheduled for investigation in revision plan **phase R10, revision2026 step R10.1**. The
 list should shrink, and every entry removed is a real fix — treat it as a debt register, not an
 exemption.
 
@@ -366,7 +366,7 @@ still has to be kept in sync with the C++ `#ifdef`s by hand.
 Regenerate with `python tools/regenerate.py` (add `--check` to fail on Tier 1 drift). It validates
 `definitions/`, runs every generator and emitter in the required order from any directory, and
 reports Tier 1 (plan §4.2) and Tier 2 (plan §4.3) differences. The order lives in one place, its
-`generatorScripts` list — do not run the scripts by hand: step 33 is moving outputs from the old
+`generatorScripts` list — do not run the scripts by hand: revision2026 step R4.3 is moving outputs from the old
 generators to separate emitters in `tools/generators/` (all item outputs already are).
 `makeAllBinariesScripts.py` is not part of it; it writes only a volatile build date.
 
@@ -392,13 +392,13 @@ never as a subset**. Record the failed-test count and compare it against the run
 Two things that will otherwise look like breakage:
 
 - **Pin scipy to 1.15.2.** scipy 1.18.0 slows the suite from ~22 s to over 10 minutes, apparently
-  in the eigensolver path (plan fact 19). If a run suddenly takes minutes, check the scipy version
+  in the eigensolver path (revision2026 fact 19). If a run suddenly takes minutes, check the scipy version
   before looking for a regression in Exudyn.
 - **The global tolerance is 5e-14 and some models sit close to it.** A failure just above it — for
   example `movingGroundRobotTest.py` at `5.0688e-14`, with result and reference agreeing to ~13
   significant digits — is floating-point noise from a different numpy/BLAS build, not a real
-  break (plan fact 20). Compare the reported `RESULT` and `refsol` before treating it as one.
-  Per-model tolerances are plan step 40.
+  break (revision2026 fact 20). Compare the reported `RESULT` and `refsol` before treating it as one.
+  Per-model tolerances are revision2026 step R5.1.
 
 **Committed logs are protected — the runner diverts rather than overwriting.** All three runners
 (`runTestSuite.py`, `runTestExamples.py`, `runPerformanceTests.py`) write a release-named log into a
@@ -439,7 +439,7 @@ with `tools/buildAndGenerate/runTestExamples.bat` for releases and large steps o
 ### 4. Docs and plan are updated
 
 - `docs/theDoc/*.tex` and the RST sources, wherever user-visible behaviour changed.
-- The step status in `docs/revision/exudynRevisionPlan2026.md`. If a fact in plan §3 turned out to
+- The step status in `docs/revision/exudynRevisionPlan2026.md`. If a fact in info document §3 turned out to
   be wrong, correct it there rather than working around it.
 
 ## 5. Committing
@@ -452,7 +452,7 @@ After the gates pass:
 2. Present the maintainer with an overview: files changed, gate results (build, drift, test count),
    the issue resolved, and the proposed commit message.
 3. **Wait for explicit approval.** Claude commits only on a clear go-ahead.
-4. **Claude never pushes, to any remote, ever.** Plan step 9 adds a `pre-push` hook refusing
+4. **Claude never pushes, to any remote, ever.** revision2026 step R1.5 adds a `pre-push` hook refusing
    pushes to `github` from any ref but `master` / `release/*`; until then the rule is social.
 
 Commit message convention — reuse the tracker's own vocabulary so commits and issues speak the same

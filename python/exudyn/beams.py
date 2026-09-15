@@ -18,7 +18,7 @@ import exudyn #for sensor index
 import exudyn.itemInterface as eii
 
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'GenerateStraightLineANCFCable2D', 'GenerateStraightLineANCFCable',
     'GenerateBeamElementsAlongLine', 'GenerateStraightBeam', 'GenerateCircularArcANCFCable2D',

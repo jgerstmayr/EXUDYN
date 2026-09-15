@@ -8,14 +8,14 @@
 #           raises TypeError instead of vanishing.
 #
 # Author:   Johannes Gerstmayr
-# Date:     2026-09-15 (created; revision plan steps 36/37)
+# Date:     2026-09-15 (created; revision2026 steps R4.6/R4.7)
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'docmeta',
     ]

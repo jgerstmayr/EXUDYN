@@ -2,9 +2,9 @@
 # This is an EXUDYN maintainer tool
 #
 # Details:  The directories the generators read and write, derived from the location of this
-#           file rather than from the current working directory. Before revision plan step 33
+#           file rather than from the current working directory. Before revision2026 step R4.3
 #           every generator used '../../' paths and only worked when started from
-#           src/pythonGenerator/ (plan section 4.5); now they run from anywhere. Since step 33 part
+#           src/pythonGenerator/ (plan section 4.5); now they run from anywhere. Since revision2026 step R4.3 part
 #           2g this file lives in tools/generators/ with the emitters.
 #
 #           All directory names end with '/', because the generators build file names by

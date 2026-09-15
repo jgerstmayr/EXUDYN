@@ -252,4 +252,4 @@ python3 pythonDev/Examples/rigid3Dexample.py
 #A ~130-line pair of console dumps comparing setuptools-built vs VS2017-built performance
 #(Exudyn V1.0.3, writeSolution = 57.8% / 57.3%) was removed 2026-09-10. VS2017 is long gone and
 #the numbers are six years stale. Current build-time and suite figures live in the revision plan
-#(step 4), and PerformanceLogs/ holds the maintained per-release measurements.
+#(revision2026 step R0.4), and PerformanceLogs/ holds the maintained per-release measurements.

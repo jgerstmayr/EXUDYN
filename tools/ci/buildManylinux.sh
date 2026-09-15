@@ -38,7 +38,7 @@ fi
 #locate the repository regardless of the current working directory
 scriptDir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repoRoot="$(cd "$scriptDir/../.." && pwd)"
-mainDir="$repoRoot"       #the packaging root is the repository root since the flatten (step 25)
+mainDir="$repoRoot"       #the packaging root is the repository root since the flatten (revision2026 step R3.1)
 
 echo "=== exudyn manylinux build: $pyTag"
 echo "    repository : $repoRoot"
@@ -60,7 +60,7 @@ cd "$mainDir"
 #optionally disable the fast variant. 'pip wheel' gives no way to pass --nofast through, so this
 #used to edit setupPyConfig.json with sed and restore it from a trap - CI writing into a TRACKED
 #file mid-build, with a dirty working tree whenever the restore did not run. setup.py now reads
-#the same switch from the environment, so nothing is written to disk (revision plan step 82).
+#the same switch from the environment, so nothing is written to disk (revision2026 step R2.14).
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 if [ "${EXUDYN_NOFAST:-0}" = "1" ]; then
     echo "    fast variant: DISABLED (EXUDYN_NOFAST=1)"
@@ -91,7 +91,7 @@ echo "=== repaired wheel: $repairedWheel"
 #scipy is PINNED: newer releases have a much slower sparse eigenvalue solver. Measured on the
 #GitLab runner 2026-09-10 with an unpinned scipy, abaqusImportTest.py alone took 60.0 s of the
 #106 s test suite - 56% of the whole run for one otherwise unremarkable test. See revision
-#plan fact 19. Raise this pin deliberately, and re-measure when doing so.
+#revision2026 fact 19. Raise this pin deliberately, and re-measure when doing so.
 #The pin applies only where a cp<3.14 wheel exists. On 3.14 there is no scipy 1.15.2 wheel, so
 #pip fell back to building it from source and the job died on a missing OpenBLAS - BEFORE exudyn
 #was ever compiled. Unpinned there; re-pin once a 3.14 wheel of a fast-enough scipy is published.

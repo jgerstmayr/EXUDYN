@@ -2,7 +2,7 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 #
 # Details:  Type information of the Exudyn items, generated from definitions/ by
-#           tools/generators/typesEmitter.py (revision plan step 83d). Type names are the
+#           tools/generators/typesEmitter.py (revision2026 step R4.10.4). Type names are the
 #           values of exudyn.NodeType, exudyn.MarkerType, exudyn.AccessFunctionType and of the
 #           C++ enums CObjectType, LoadType, SensorType; defaults are Python source text.
 #           Use the query functions of exudyn.types instead of reading this dict directly.

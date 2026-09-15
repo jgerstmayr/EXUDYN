@@ -2,7 +2,7 @@
 # This is an EXUDYN maintainer tool
 #
 # Details:  The rule for the public names of a Python module of the exudyn package, and the text of
-#           its __all__ (revision plan step 107c). Public are the top-level functions, classes and
+#           its __all__ (revision2026 step R4.22.3). Public are the top-level functions, classes and
 #           assigned names (also inside top-level if/try blocks) that do not start with '_',
 #           except functions and classes marked @docmeta(public=False). Imported names are never
 #           public, so 'from module import *' exports what the module defines, not what it uses.
@@ -16,7 +16,7 @@
 
 import ast
 
-allComment = '#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)'
+allComment = '#public API of this module; kept complete by tools/checkAll.py (#2444)'
 
 
 def _IsPrivateByDecorator(node):

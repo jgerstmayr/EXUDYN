@@ -15,7 +15,7 @@
 import numpy as np
 from math import exp
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'StribeckFunction', 'RegularizedFrictionStep', 'RegularizedFriction', 'VonMisesStress',
     'UFvonMisesStress',

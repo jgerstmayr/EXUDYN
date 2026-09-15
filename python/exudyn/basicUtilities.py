@@ -20,7 +20,7 @@ import numpy as np
 import exudyn
 from exudyn.itemInterface import MarkerBodyRigid, VMarkerBodyRigid, SensorUserFunction
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'pi', 'sqrt2', 'g', 'ClearWorkspace', 'SmartRound2String', 'Normalize',
     'gaussIntegrationPoints', 'gaussIntegrationWeights', 'GaussIntegrate',
@@ -209,7 +209,7 @@ def LobattoIntegrate(functionOfX, integrationOrder, a, b):
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#model helpers, sensor recorder, solution files and restart (moved from utilities.py, revision plan step 107b)
+#model helpers, sensor recorder, solution files and restart (moved from utilities.py, revision2026 step R4.22.2)
 
 def GetOtherMarker(mbs, bodyNumber, existingMarker, show=True):
     """creates a new marker for body with bodyNumber using another marker existingMarker, such that the new marker has the same reference position as the existing marker, working for MarkerBodyPosition (no rotations included); this alleviates creation of markers and calculation of localPosition

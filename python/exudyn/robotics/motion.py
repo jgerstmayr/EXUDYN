@@ -17,7 +17,7 @@ import numpy as np
 from copy import copy, deepcopy
 import exudyn
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'BasicProfile', 'ProfileConstantAcceleration', 'ProfileLinearAccelerationsList', 'ProfilePTP',
     'Trajectory', 'BasicProfileLinearAcceleration',

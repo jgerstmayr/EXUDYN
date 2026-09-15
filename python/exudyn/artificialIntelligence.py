@@ -26,7 +26,7 @@ import numpy as np
 # for older versions the reset and step function behaves slightly differently
 # for step see https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/
 import stable_baselines3
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'useOldGym', 'OpenAIGymInterfaceEnv',
     ]

@@ -12,7 +12,7 @@
 #           They had drifted: CoordinatesTotal had no string (issue #2408) and the two energies
 #           never reached Python.
 #
-#           Revision plan step 31d.
+#           revision2026 step R4.1.4.
 #
 # Usage:    imported by tools/generators/pybindEmitter.py
 #

@@ -150,7 +150,7 @@ exu.Print('+++++++++++++++++++++++++++++++++++++++++++')
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Tests are grouped by what they actually measure, because the two groups answer different
-#questions and mixing them hides both (revision plan step 23, issue #2397):
+#questions and mixing them hides both (revision2026 step R2.10, issue #2397):
 #
 #  'small'  few coordinates, ~1e6 steps -> measures PER-STEP OVERHEAD. The system vectors are
 #           3-20 elements long, so vectorized linear algebra (AVX2) cannot show up here at all.

@@ -17,7 +17,7 @@
 #           nothing checks, and a mistyped letter changed the build silently. As a name it is a
 #           NameError at import, and an editor can complete it.
 #
-#           Layout (plan step 31e): three blocks, by where the vocabulary is USED -
+#           Layout (revision2026 step R4.1.5): three blocks, by where the vocabulary is USED -
 #             SHARED      types, default values and sentinels used by items AND structures
 #             ITEMS       destinations, item flags, closed header sets, item constructors and
 #                         the function library resolution
@@ -148,7 +148,7 @@ NoDefaultValue = _NoDefaultValue()
 #a constant (which only verifies spelling) and it removed 45 single-use names.
 #
 #A type is a str SUBCLASS carrying its constraints, so it compares and hashes exactly like
-#the plain name the generators look up (tools/generators/typeModel.py since step 34c3)
+#the plain name the generators look up (tools/generators/typeModel.py since revision2026 step R4.4.3.3)
 #- nothing downstream has to change - while minimum, greaterThan and size travel with it.
 #Calling a base type applies a constraint and yields the constrained type:
 #
@@ -410,7 +410,7 @@ TSTDstring                         = TypeSpec('STDstring')
 #--------------------------------------------------------------------- user-function signatures
 #the C++ std::function each PyFunction... type stands for; the generators render the stored
 #member (PythonUserFunctionBase< ... >), the Python interface and the docs from it. Names must
-#start with 'PyFunction' (revision plan step 34c3: moved here from tools/generators/itemModel.py)
+#start with 'PyFunction' (revision2026 step R4.4.3.3: moved here from tools/generators/itemModel.py)
 userFunctionSignatures = {'KeyPressUserFunction': 'std::function<bool(int, int, int)>', #renderer key press (VisualizationSettings.interactive)
                           #for MainSystem => see other MainSystemUserFunctions
                           'PyFunctionBoolMbsScalar': 'std::function<bool(const MainSystem&,Real)>',#PreStepUserFunction, PostStepUserFunction
@@ -509,7 +509,7 @@ def ItemFunctionDef(pythonName, implementation=None, description=None,
 
 def _TypeSumImplementation(cppName, types, conditional=()):
     """C++ body returning a bit combination of the enum cppName ('Node::Type', 'Marker::Type' or
-    'AccessFunctionType'), validated against definitions/enumTypes.py (revision plan step 83)"""
+    'AccessFunctionType'), validated against definitions/enumTypes.py (revision2026 step R4.10)"""
     import enumTypes
     valueNames = [value.name for enumType in enumTypes.enumTypes if enumType.cppName == cppName
                   for value in enumType.values]
@@ -530,7 +530,7 @@ def _TypeSumImplementation(cppName, types, conditional=()):
 
 def ItemRequestedTypes(kind, types, conditional=(), description=None):
     """Use site: the node or marker types an object (or load) requires, as a declared list instead
-    of C++ written into the definition (revision plan step 83a). kind is 'Node' or 'Marker'; types are
+    of C++ written into the definition (revision2026 step R4.10.1). kind is 'Node' or 'Marker'; types are
     value names of Node::Type / Marker::Type in definitions/enumTypes.py, combined as bits; an empty
     list is _None (no single type can be required). conditional holds (typeName, parameterName)
     pairs: the type is added when that parameter is not zero - the only condition the tree needs
@@ -561,7 +561,7 @@ def ItemTypes(kind, types, description):
 
 def ItemAccessFunctionTypes(types, description=None):
     """Use site: the access functions an object provides for markers and loads (GetAccessFunctionTypes),
-    as a declared list of AccessFunctionType value names (revision plan step 83c); a marker with
+    as a declared list of AccessFunctionType value names (revision2026 step R4.10.3); a marker with
     Position (Orientation) needs TranslationalVelocity_qt (AngularVelocity_qt)"""
     member = ItemFunctionDef('GetAccessFunctionTypes',
                              implementation=_TypeSumImplementation('AccessFunctionType', types),
@@ -613,7 +613,7 @@ def _ResolveFunctionReference(reference, className, classType, parentClass):
     if reference['description'] is not None:
         member['description'] = reference['description']
     member['cplusplusName'] = reference['cplusplusName'] or reference['pythonName']
-    for key in ('requestedTypes', 'conditionalTypes', 'accessFunctionTypes'): #declared lists (step 83)
+    for key in ('requestedTypes', 'conditionalTypes', 'accessFunctionTypes'): #declared lists (revision2026 step R4.10)
         if key in reference:
             member[key] = reference[key]
 
@@ -648,7 +648,7 @@ SFReturnCopy         = 'V'   #return value policy: copy
 SFPybindArgs         = 'G'   #add args for pybind
 SFConst              = 'C'   #const function
 SFNoPybind           = 'N'   #not in the Python interface (pybind11, stubs, dictionaries, docs); members
-                             #without it are in the interface - the generators read that as 'P' (step 110)
+                             #without it are in the interface - the generators read that as 'P' (revision2026 step R4.25)
 SFDeprecated         = 'X'   #deprecated; the description links to the relocated value
 
 class Deprecated:

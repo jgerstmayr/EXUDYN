@@ -2,7 +2,7 @@
 #
 # Line endings: text files are stored LF in the repository and checked out in the platform's
 # native form. All generation and building has happened on Windows so far, so this is what keeps
-# a generator run on Linux from producing whole-file diffs (revision plan step 70, fact 18).
+# a generator run on Linux from producing whole-file diffs (revision2026 step R0.5, fact 18).
 #
 # The index was already fully LF-normalised when this file was added (2003 text files), so it
 # introduced no renormalisation. If that ever changes, `git add --renormalize .` fixes it in one

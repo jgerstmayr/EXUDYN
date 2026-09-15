@@ -27,7 +27,7 @@ from exudyn.robotics import *
 
 import numpy as np
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'MobileRobot2MBS', 'MobileKinematics', 'Generatrix2Polynomial', 'GeneratrixRoll', 'FunDiffPoly',
     'FunDDiffPoly', 'MecanumXYphi2WheelVelocities', 'MecanumWheelVelocity2XYphi',

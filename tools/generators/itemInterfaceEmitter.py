@@ -4,7 +4,7 @@
 # Details:  Emits python/exudyn/itemInterface.py - the Python classes (ObjectMassPoint,
 #           VObjectMassPoint, ...) that users instantiate to build item dictionaries - directly
 #           from definitions/. The first emitter split out of pythonAutoGenerateObjects.py
-#           (revision plan step 33, part 2b); the code was moved from there, so the output is
+#           (revision2026 step R4.3, part 2b); the code was moved from there, so the output is
 #           byte-identical to what the monolith wrote.
 #
 # Usage:    python tools/generators/itemInterfaceEmitter.py [--output FILE]
@@ -180,7 +180,7 @@ def ItemClasses(definition):
             else:
                 tempVPythonDict += "None"
 
-            #range checks are done in C++ on every write path (revision plan step 34c4 b)
+            #range checks are done in C++ on every write path (revision2026 step R4.4.3.4b)
             parameterWithCheck = pythonName
             if (IsAVector(typeName)
                 or IsASimpleMatrix(typeName)
@@ -264,7 +264,7 @@ def EmitItemInterface(definitions):
             if definition.get('classType', '') == classType:
                 s += ItemClasses(definition)
 
-    #__all__ after the imports, from the same rule tools/checkAll.py checks (step 107c)
+    #__all__ after the imports, from the same rule tools/checkAll.py checks (revision2026 step R4.22.3)
     marker = '\n\n#helper function for level-1 copy of dicts'
     s = s.replace(marker, '\n\n' + publicApi.AllText(publicApi.PublicNames(s)) + marker, 1)
     return s

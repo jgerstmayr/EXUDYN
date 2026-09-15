@@ -6,7 +6,7 @@
 #           data (exudyn.types.items) is generated from definitions/; the rules here are the ones
 #           mbs.Assemble() checks in C++ (CSystem::CheckSystemIntegrity), so a query is a pre-check:
 #           the checks at assembly and in CheckPreAssembleConsistency stay authoritative.
-#           Revision plan step 83d. Nothing here is imported by exudyn.utilities.
+#           revision2026 step R4.10.4. Nothing here is imported by exudyn.utilities.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-15 (created)
@@ -17,7 +17,7 @@
 
 from exudyn.types.items import items
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'ItemNames', 'ItemInfo', 'Parameters', 'NodesForObject', 'MarkersForObject', 'ObjectsForMarker',
     'ConnectorsForMarkers', 'LoadsForMarker',

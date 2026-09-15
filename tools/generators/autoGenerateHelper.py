@@ -1629,7 +1629,7 @@ def ExtractExamplesWithKeyword(keyword, dirPath, checkPreString=True):
     #sorted(): listdir() returns DIRECTORY order, which is alphabetical on NTFS but hash
     #order on ext4. Without this the generated output differs between Windows and Linux
     #for no real reason - found 2026-09-11 by the first CI run of tools/regenerate.py
-    #(revision plan step 2, fact 18). key=str.lower reproduces the NTFS order the
+    #(revision2026 step R0.2, fact 18). key=str.lower reproduces the NTFS order the
     #committed output was generated in, so making this deterministic did not also
     #reshuffle every documentation file.
     fileNames = sorted([f for f in listdir(dirPath) if isfile(join(dirPath, f))],

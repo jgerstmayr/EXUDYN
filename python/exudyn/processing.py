@@ -23,7 +23,7 @@ import os
 import exudyn
 from exudyn.advancedUtilities import IsInteger, IsEmptyList
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'GetVersionPlatformString', 'SingleIndex2SubIndices', 'AddComputationIndexAndFunctionData',
     'WriteToFile', 'ProcessParameterList', 'ParameterVariation', 'GeneticOptimization', 'Minimize',

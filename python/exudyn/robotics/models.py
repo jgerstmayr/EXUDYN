@@ -34,7 +34,7 @@ import scipy.io
 # used by Khali:           Rx(alpha) * Tx(d) * Rz(theta) * Tz(r)
 # Important note:  d(khali)=a(corke)  and r(khali)=d(corke)  
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'Manipulator4Rsimple', 'Manipulator3RSimple', 'ManipulatorPANDA', 'ManipulatorUR5',
     'ManipulatorPuma560', 'LinkDict2Robot', 'LinkDictModDHKK2Robot',

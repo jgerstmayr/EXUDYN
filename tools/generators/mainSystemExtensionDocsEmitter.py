@@ -6,7 +6,7 @@
 #           tools/generators/generated/ (read by pybindEmitter.py, so this runs first),
 #           docs/theDoc/MainSystemExt.tex, MainSystemCreateExt.tex and stubAutoBindingsExt.pyi
 #           (read by createStubFiles.py). Moved out of utilitiesDocuGenerator.py (revision plan
-#           step 33, part 2e).
+#           revision2026 step R4.3, part 2e).
 #
 # Usage:    python tools/generators/mainSystemExtensionDocsEmitter.py
 #

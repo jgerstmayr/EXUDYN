@@ -4,7 +4,7 @@
 # Details:  the Renderer class.
 #           The calls are recorded by PybindInterface (pybindTypes.py) and replayed by
 #           tools/generators/pybindEmitter.py into pybind_manual_classes.h, the stub fragments and
-#           the Python-C++ interface documentation (revision plan step 33, part 2d).
+#           the Python-C++ interface documentation (revision2026 step R4.3, part 2d).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2018-05-18 (created in autoGeneratePyBindings.py), 2026-09-14 (moved to definitions/)

@@ -34,7 +34,7 @@ from copy import copy, deepcopy
 import time #for timer in InverseKinematicsNumerical
 
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'dictJointTypeText2Exudyn', 'dictJointType2HT', 'dictJointType2Axis',
     'dictJointType2coordinate6D', 'VRobotLink', 'RobotLink', 'VRobotTool', 'RobotTool',

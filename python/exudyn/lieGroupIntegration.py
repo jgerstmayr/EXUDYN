@@ -23,7 +23,7 @@ import numpy as np
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'ComputeStepWithRK1', 'ComputeStepWithRK1FromAcceleration', 'ComputeStepWithRK4',
     'RK_SolveEulersEOMWithProposedApproach', 'LieGroupExplicitRKInitialize',

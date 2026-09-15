@@ -272,7 +272,7 @@ namespace EXUstd {
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! false if the user switched range checks off with exudyn.special.exceptions.parameterRangeChecks;
-	//! defined next to exudyn.special in Pybind_manual_classes.cpp (revision plan steps 34c4, 95)
+	//! defined next to exudyn.special in Pybind_manual_classes.cpp (revision2026 steps R4.4.3.4, R6.5)
 	bool ParameterRangeChecksActive();
 
 	//checker functions for simulationSettings and visualizationSettings

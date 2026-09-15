@@ -8,7 +8,7 @@
 * 				  Real vectors and matrices become numpy arrays
 * 				- item indices carry their kind as template argument (NodeIndex, ObjectIndex, ...),
 * 				  so an ObjectIndex is rejected where a NodeIndex is expected
-* 				- revision plan step 34c: introduced in 34c2 with the behaviour of the helpers in
+* 				- revision2026 step R4.4.3: introduced in 34c2 with the behaviour of the helpers in
 * 				  PybindUtilities.h, which forward here; the generated code switches over in 34c4/34c5
 * 				- deliberately independent of PybindUtilities.h, which is rewritten later
 *
@@ -341,7 +341,7 @@ namespace EPyUtils {
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//structure members (SimulationSettings, VisualizationSettings, ...): the same conversion with a context
-	//"Class.member" for the message (revision plan step 34c5); declared after all FromPython overloads,
+	//"Class.member" for the message (revision2026 step R4.4.3.5); declared after all FromPython overloads,
 	//because MemberSetter must see them
 
 	//! a string member; None and other types raise

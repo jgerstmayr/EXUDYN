@@ -62,7 +62,7 @@ users see. A single group can be installed alone, e.g. `pip install --group docs
 > the environment.
 
 > **Why scipy 1.15.2?** scipy 1.18.0 slows the Exudyn test suite from ~22 s to over 10 minutes,
-> apparently in the eigensolver path (measured 2026-09-09, revision plan fact 19). The pin is in
+> apparently in the eigensolver path (measured 2026-09-09, revision2026 fact 19). The pin is in
 > the `dev` group; `exudyn[tests]` itself does not pin scipy.
 
 > **spyder-kernels** in the `ide` group is `3.*`, matching Spyder 6; for an older Spyder see the

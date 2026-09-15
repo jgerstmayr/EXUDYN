@@ -26,7 +26,7 @@ import numpy as np #LoadSolutionFile
 import copy as copy #to be able to copy e.g. lists
 from math import pi, sin, cos
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'color4red', 'color4green', 'color4blue', 'color4cyan', 'color4magenta', 'color4yellow',
     'color4orange', 'color4pink', 'color4lawngreen', 'color4springgreen', 'color4violet',

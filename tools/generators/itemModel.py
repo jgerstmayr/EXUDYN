@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN maintainer tool
 #
-# Details:  Facts about items that more than one emitter needs, in one place (revision plan step 33,
+# Details:  Facts about items that more than one emitter needs, in one place (revision2026 step R4.3,
 #           part 2b): the type tables and type predicates the item generator used to define inline,
 #           the user-function types, how a member of definitions/ renders to the strings of the old
 #           representation, and per-item accessors the emitters use instead of re-deriving them.
@@ -54,7 +54,7 @@ possibleTypes = {'Object':['_None','Ground','Connector','Constraint','Body','Sin
 useNewUserFunctions = True
 
 #the C++ signature of each user-function type; the table lives in definitions/definitionTypes.py
-#(revision plan step 34c3)
+#(revision2026 step R4.4.3.3)
 pyFunctionTypeConversion = definitionTypes.userFunctionSignatures
 pyFunctionTypeConversionUFtemplate = '{UFT}'
 if useNewUserFunctions:
@@ -310,7 +310,7 @@ def Flags(member, source, structureClassNames):
             flags += 'I'
     else:
         if 'N' not in flags:
-            flags = 'P' + flags  #SFNoPybind 'N' inverts P (step 110); 'N' stays, structureModel.HasFlag reads it
+            flags = 'P' + flags  #SFNoPybind 'N' inverts P (revision2026 step R4.25); 'N' stays, structureModel.HasFlag reads it
         if str(member.get('type', '')) in structureClassNames:
             flags = flags.replace('P', 'PS', 1) if 'P' in flags else 'S' + flags
     return flags
@@ -411,7 +411,7 @@ def SymbolicUserFunctions(definition):
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#direct member access for the emitters (revision plan step 34): each predicate states what a letter
+#direct member access for the emitters (revision2026 step R4.4): each predicate states what a letter
 #of the old string representation (lineType, cFlags) used to encode, read from the member itself
 def IsFunction(member):
     return 'Function' in member['kind']

@@ -43,7 +43,7 @@ import copy
 #add helpful Python extensions for MainSystem, regarding creation of bodies, point masses, connectors and joints
 
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'MainSystemCreateGround', 'MainSystemCreateMassPoint', 'MainSystemCreateRigidBody',
     'MainSystemCreateSpringDamper', 'MainSystemCreateCartesianSpringDamper',
@@ -3168,7 +3168,7 @@ def MainSystemCreateTorque(mbs,
 
      
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#distance sensor and system graph (moved from utilities.py, revision plan step 107b)
+#distance sensor and system graph (moved from utilities.py, revision2026 step R4.22.2)
 
 def __UFsensorDistance(mbs, t, sensorNumbers, factors, configuration):
     """internal function used for CreateDistanceSensor

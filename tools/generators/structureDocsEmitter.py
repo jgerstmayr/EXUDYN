@@ -2,9 +2,9 @@
 # This is an EXUDYN maintainer tool
 #
 # Details:  Emits the structure reference documentation from definitions/: docs/theDoc/interfaces.tex
-#           and docs/RST/structures/*.rst with StructuresAndSettingsIndex.rst (revision plan step 33,
+#           and docs/RST/structures/*.rst with StructuresAndSettingsIndex.rst (revision2026 step R4.3,
 #           part 2c). Moved out of src/pythonGenerator/pythonAutoGenerateSystemStructures.py; the
-#           output is byte-identical. Step 50 replaces the LaTeX/RST pipeline as a whole.
+#           output is byte-identical. revision2026 step R7.1 replaces the LaTeX/RST pipeline as a whole.
 #
 # Usage:    python tools/generators/structureDocsEmitter.py
 #

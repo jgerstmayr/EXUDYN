@@ -87,7 +87,7 @@ exemptImports = {
 
 #imports of modules that exist NOWHERE - neither on PyPI nor in this repository. These are real
 #broken imports in the files listed, not packaging gaps, so they are reported as a warning rather
-#than treated as an uncovered dependency. Raised as an issue; see revision plan step 80.
+#than treated as an uncovered dependency. Raised as an issue; see revision2026 step R2.12.
 knownMissingLocalModules = {
     'RL_Spot': 'Examples/FurtherExamples/spotReinforcementLearning.py imports it, but no such '
                'file is in the repository - the model module was never committed',
@@ -105,7 +105,7 @@ knownMissingLocalModules = {
 #therefore accepted everywhere without being required by [tests] or [all].
 #NOTE exudyn/artificialIntelligence.py imports stable_baselines3 at MODULE level with no guard,
 #and TestModels/allExudynModulesTest.py imports that module - so that one test cannot run in a
-#plain [tests] environment and is expected to skip. See revision plan step 80.
+#plain [tests] environment and is expected to skip. See revision2026 step R2.12.
 optionalExtras = ['rl']
 
 

@@ -14,7 +14,7 @@
 
 import sys
 
-#public API of this module; kept complete by tools/checkAll.py (revision plan step 107c)
+#public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'doDebug', 'argList', 'listMarkerStyles', 'x', 'y', 'updatePeriod', 'lineColor', 'lineStyle',
     'logX', 'logY', 'colorVariations', 'sizeXinInches', 'sizeYinInches', 'xColumns', 'yColumns',

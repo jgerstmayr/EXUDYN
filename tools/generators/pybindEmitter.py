@@ -6,12 +6,12 @@
 #           stubSymbolic.pyi and stubEnums.pyi, docs/theDoc/manual_interfaces.tex,
 #           docs/RST/cInterface/*.rst and docs/RST/confHelper.py; it also has
 #           outputVariableEmitter write OutputVariableTypes.h. Replaces the script body of
-#           src/pythonGenerator/autoGeneratePyBindings.py (revision plan step 33, part 2d); the
+#           src/pythonGenerator/autoGeneratePyBindings.py (revision2026 step R4.3, part 2d); the
 #           output is byte-identical.
 #
 #           Reads tools/generators/generated/MainSystemCreateExt.rst and MainSystemExt.rst,
 #           written by mainSystemExtensionDocsEmitter.py, which tools/regenerate.py runs before this
-#           emitter (step 33 part 2e; part 2f makes such inputs explicit).
+#           emitter (revision2026 step R4.3 part 2e; part 2f makes such inputs explicit).
 #
 # Usage:    python tools/generators/pybindEmitter.py
 #

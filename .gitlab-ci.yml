@@ -1,11 +1,11 @@
 # Exudyn GitLab CI
 #
 # Purpose: keep the wheels and the test suite running while GitHub master is frozen at 1.11.0
-# (revision plan decision D6, step 11). GitHub Actions only fire on pushes to master and on pull
+# (revision plan decision D6, revision2026 step R1.7). GitHub Actions only fire on pushes to master and on pull
 # requests, so between now and the v2.0 release they never run. This covers the blind spot that
 # matters most: Linux, which nobody builds by hand day to day.
 #
-# NOT covered here, deliberately - see revision plan step 11:
+# NOT covered here, deliberately - see revision2026 step R1.7:
 #   Windows  - this is the daily development machine, so breakage surfaces within hours anyway
 #   macOS    - runs at milestones on a real Mac; macOS failures arrive coupled with Linux ones,
 #              except visualization, which cannot be tested headlessly on any runner
@@ -54,7 +54,7 @@ wheels_linux:
   # returns non-zero on reproducible failures, and this job is allowed to go red.
 
 # Verify that the committed generated files still match what the generators produce
-# (revision plan step 2). Tier 1 - the API surface - is a hard gate and fails this job;
+# (revision2026 step R0.2). Tier 1 - the API surface - is a hard gate and fails this job;
 # Tier 2 - documentation - warns only, because a change to a reference list or an item
 # description legitimately moves the .rst files and blocking on that trains people to
 # ignore the job.
@@ -69,8 +69,8 @@ wheels_linux:
 # knowing about on its own.
 #
 # NOTE: this is the first time generation runs anywhere but Windows (revision plan
-# fact 18). .gitattributes (step 70) normalises the checkout to LF and the generators now
-# write UTF-8 explicitly (step 71), so it should be clean - but if the first runs show
+# fact 18). .gitattributes (revision2026 step R0.5) normalises the checkout to LF and the generators now
+# write UTF-8 explicitly (revision2026 step R0.6), so it should be clean - but if the first runs show
 # whole-file differences rather than real ones, suspect line endings before the generators.
 regenerated_files:
   stage: build
@@ -92,7 +92,7 @@ regenerated_files:
     expire_in: 7 days
 
 # Keep 'pip install exudyn[tests]' and '[all]' honest: the extras in pyproject.toml are
-# compared against the imports that actually occur in the code (revision plan step 80). This is a
+# compared against the imports that actually occur in the code (revision2026 step R2.12). This is a
 # pure AST scan - no build, no install, not even numpy - so it is cheap and independent of the
 # wheels, which is why it sits in the same stage rather than after them.
 check_extras:
@@ -106,7 +106,7 @@ check_extras:
   script:
     - python tools/checkExtras.py --check
 
-# Documented arguments must match the signatures in python/exudyn (revision plan step 38). The
+# Documented arguments must match the signatures in python/exudyn (revision2026 step R4.8). The
 # configuration and the baseline of findings that existed when the check was introduced are in
 # pyproject.toml [tool.pydoclint]; only new findings fail. A pure static scan, like check_extras.
 check_docstrings:
@@ -120,7 +120,7 @@ check_docstrings:
     - pydoclint --config=pyproject.toml python/exudyn
 
 # Every Python module in python/exudyn declares its public names in __all__, and the list must be
-# complete (revision plan step 107c); utilities.py composes them. A pure AST scan.
+# complete (revision2026 step R4.22.3); utilities.py composes them. A pure AST scan.
 check_all:
   stage: build
   image: python:3.13
@@ -130,7 +130,7 @@ check_all:
     - python tools/checkAll.py --check
 
 # Keep the compile list honest: sources.json is generated from the ClCompile entries of
-# cppsrc.vcxproj, and setup.py builds from the JSON (revision plan step 17). This fails when the
+# cppsrc.vcxproj, and setup.py builds from the JSON (revision2026 step R2.4). This fails when the
 # vcxproj, the JSON and the files on disk disagree - including on CASE, which is invisible on the
 # Windows development machine and fatal here.
 check_sources:

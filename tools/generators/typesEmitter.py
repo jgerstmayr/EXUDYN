@@ -2,7 +2,7 @@
 # This is an EXUDYN maintainer tool
 #
 # Details:  Emits python/exudyn/types/items.py - the type information of every item as Python data
-#           (revision plan step 83d): its kind, type bits, requested node and marker types, access
+#           (revision2026 step R4.10.4): its kind, type bits, requested node and marker types, access
 #           function types and output variables, and per parameter the type, size, range, default,
 #           must-be-given flag and description. Read from definitions/, so there is no second copy;
 #           the query functions in python/exudyn/types/__init__.py work on this data.
@@ -43,7 +43,7 @@ def Member(definition, pythonName):
 
 
 def TypeNames(definition):
-    """the type bits of an item: declared for nodes and markers (step 83c); parsed from the C++ body
+    """the type bits of an item: declared for nodes and markers (revision2026 step R4.10.3); parsed from the C++ body
     for objects, loads and sensors, whose enums are hand-written"""
     member = Member(definition, 'GetType')
     if member is not None and 'itemTypes' in member:
@@ -104,7 +104,7 @@ def ModuleText():
          '# AUTO GENERATED FILE - DO NOT EDIT\n'
          '#\n'
          '# Details:  Type information of the Exudyn items, generated from definitions/ by\n'
-         '#           tools/generators/typesEmitter.py (revision plan step 83d). Type names are the\n'
+         '#           tools/generators/typesEmitter.py (revision2026 step R4.10.4). Type names are the\n'
          '#           values of exudyn.NodeType, exudyn.MarkerType, exudyn.AccessFunctionType and of the\n'
          '#           C++ enums CObjectType, LoadType, SensorType; defaults are Python source text.\n'
          '#           Use the query functions of exudyn.types instead of reading this dict directly.\n'

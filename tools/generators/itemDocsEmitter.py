@@ -3,10 +3,10 @@
 #
 # Details:  Emits the item reference documentation from definitions/: docs/theDoc/itemDefinition.tex,
 #           docs/RST/items/*.rst with their index files, and docs/RST/confHelperItems.py (revision
-#           plan step 33, part 2b). This is what remained of src/pythonGenerator/
+#           revision2026 step R4.3, part 2b). This is what remained of src/pythonGenerator/
 #           pythonAutoGenerateObjects.py once its C++ headers, itemInterface.py and mini examples
 #           had their own emitters; the code is unchanged apart from the moves. It reads the old
-#           string records (definitionLoader), which is acceptable here: step 50 replaces the
+#           string records (definitionLoader), which is acceptable here: revision2026 step R7.1 replaces the
 #           LaTeX/RST documentation pipeline as a whole.
 #
 # Usage:    python tools/generators/itemDocsEmitter.py
@@ -48,7 +48,7 @@ localListItemNames = [] #string list for highlighting
 # [sParamComp=0, sParamMain=1, sComp=2, sMain=3]
 # return -1 if no destination
 
-#the item type tables and predicates live in tools/generators/itemModel.py (step 33, part 2b)
+#the item type tables and predicates live in tools/generators/itemModel.py (revision2026 step R4.3, part 2b)
 from itemModel import possibleTypes, useNewUserFunctions, pyFunctionTypeConversion, pyFunctionTypeConversionUFtemplate, \
     IsASafelyVector, IsAVector, \
     IsASimpleMatrix, IsAMatrixVectorSpecial, IsAArrayIndex, IsASetSafelyParameter, \
@@ -192,7 +192,7 @@ def WriteFile(parseInfo, parameterList):
                 #write latex doc:
                 parameterDescription = parameter['parameterDescription']
                 [parameterDescription, latexSymbol] = ExtractLatexSymbol(parameterDescription)
-                if parameter['cFlags'].find('Q') != -1: #CFMustBeGiven: the default is only a placeholder (step 34c4 e)
+                if parameter['cFlags'].find('Q') != -1: #CFMustBeGiven: the default is only a placeholder (revision2026 step R4.4.3.4e)
                     parameterDescription += '; \mybold{must be given}: the default is only a placeholder'
                 if len(latexSymbol) != 0:
                     #if there is a \n, it was wrongly converted => convert back!
@@ -512,7 +512,7 @@ def main():
     multiLineType = ''   #equations or miniExample
     cnt = 0
     
-    #the definitions come from definitions/ (revision plan step 33): definitionLoader yields
+    #the definitions come from definitions/ (revision2026 step R4.3): definitionLoader yields
     #each class in the form the old line parser built it, and the code below is what that
     #parser ran every time it reached writeFile
     parseInfoTemplate = copy.deepcopy(parseInfo)

@@ -3,7 +3,7 @@
 #
 # Details:  The big import of Exudyn's Python utilities: 'from exudyn.utilities import *' makes the
 #           utility modules available at once. It defines no functions of its own (revision plan
-#           step 107b); they are in basicUtilities, advancedUtilities, rigidBodyUtilities,
+#           revision2026 step R4.22.2); they are in basicUtilities, advancedUtilities, rigidBodyUtilities,
 #           graphicsDataUtilities, itemInterface, beams and mainSystemExtensions.
 #
 # Author:   Johannes Gerstmayr
@@ -28,10 +28,10 @@ from exudyn.itemInterface import * # noqa: F403, F401
 #for compatibility with older models:
 from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint,\
                          GenerateStraightBeam # noqa # pylint: disable=unused-import
-#MainSystem extensions that were defined here before step 107b:
+#MainSystem extensions that were defined here before revision2026 step R4.22.2:
 from exudyn.mainSystemExtensions import CreateDistanceSensorGeometry, CreateDistanceSensor, DrawSystemGraph # noqa: F401
 
-#the exported names are those of the imported modules (step 107c); helper imports such as np or sqrt
+#the exported names are those of the imported modules (revision2026 step R4.22.3); helper imports such as np or sqrt
 #are not part of it - import them explicitly
 __all__ = (_basicUtilities.__all__ + _advancedUtilities.__all__ + _rigidBodyUtilities.__all__
            + _graphicsDataUtilities.__all__ + _itemInterface.__all__

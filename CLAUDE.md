@@ -7,8 +7,9 @@ Instructions for Claude Code sessions on this repository. Humans: see
 
 | file | what it is |
 |---|---|
-| [docs/revision/exudynRevisionPlan2026.md](docs/revision/exudynRevisionPlan2026.md) | **Standing context.** The v1.11.0 → v2.0 plan: measured facts, decisions taken, numbered steps. Load it; cite steps by number; correct it in place if a fact turns out wrong. |
-| [docs/revision/exudynRevisionLog2026.md](docs/revision/exudynRevisionLog2026.md) | **What was already done.** The closed steps with their full findings. Consult it before re-deriving something; **never edit a closed entry** — if it turns out wrong, correct the plan's facts and append a dated note. |
+| [docs/revision/exudynRevisionInfo2026.md](docs/revision/exudynRevisionInfo2026.md) | **Standing context.** The v1.11.0 → v2.0 revision: rules and step numbering, measured facts, decisions taken, material for the user documentation. Correct a fact in place if it turns out wrong. |
+| [docs/revision/exudynRevisionPlan2026.md](docs/revision/exudynRevisionPlan2026.md) | **The steps**, by phase R0-R11, numbered `R<phase>.<step>` (sub-steps `R4.10.3`). Load it; cite steps by number. |
+| [docs/revision/exudynRevisionLog2026.md](docs/revision/exudynRevisionLog2026.md) | **What was already done**, in plan order. Consult it before re-deriving something; **never edit a closed entry** — if it turns out wrong, correct the facts in the info document and append a dated note. |
 | [docs/dev/CODING_STYLE.md](docs/dev/CODING_STYLE.md) | Naming, abbreviations, headers, what is deprecated |
 | [docs/dev/WORKFLOW.md](docs/dev/WORKFLOW.md) | Issue tracker, versioning, commit gates |
 
@@ -68,10 +69,13 @@ version.txt                               version — an OUTPUT of issueTracker.
 7. **Match the local style of the file you are editing** — see `CODING_STYLE.md`. Parts of the
    documented convention (Doxygen, the `#**` doc comments) are deprecated or mid-migration; do not
    propagate them into files that do not already use them, and do not migrate them outside a
-   Phase 3 step.
-8. **One step at a time.** Do the current plan step. Do not opportunistically fix things you notice
+   revision step for it.
+8. **Step numbers are permanent** (info document §1): cite "revision2026 step R4.10.3" in issues and
+   commits; in code comments cite the **issue number**, not the plan step. **Propose a new top-level
+   step or a new phase and wait for approval** before writing it anywhere; sub-steps may be added.
+9. **One step at a time.** Do the current plan step. Do not opportunistically fix things you notice
    elsewhere — raise an issue instead.
-9. **Human collaboration.** Humans shall be able to read the codes and docs, and to edit code and 
+10. **Human collaboration.** Humans shall be able to read the codes and docs, and to edit code and 
    docs. This requires to keep most things at one place (prefer linking or auto-generate vs. manual
    copy). It also means to avoid size growth without feature growth and regular clean up.
    

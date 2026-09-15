@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN maintainer tool
 #
-# Details:  One type model for all generators (revision plan step 34c3): how a type name of
+# Details:  One type model for all generators (revision2026 step R4.4.3.3): how a type name of
 #           definitions/ is spelled in each destination. It replaces eight hand-written tables
 #           (typeConversion and typeCasts for items and for structures, convertToDict,
 #           typeConversionStub, type2PyTyping, cppTypeNames) that overlapped and disagreed.
@@ -10,7 +10,7 @@
 #             destination 'cppStorage'  - the C++ member type (Index, Vector3D, std::string, ...)
 #                         'cppExchange' - the type a pybind value is cast to or from in the generated
 #                                         dict access (std::vector<Real>, py::array_t<Real>, ...);
-#                                         temporary, it goes when step 34c4/34c5 call FromPython
+#                                         temporary, it goes when revision2026 step R4.4.3.4/R4.4.3.5 call FromPython
 #                         'dictType'    - the 'type' entry of a structure's GetDictionaryWithTypeInfo
 #                         'stub'        - the type in the .pyi stubs (Tuple[float,float,float], ...)
 #                         'pyTyping'    - the type shown in docstrings and itemInterface type hints
@@ -18,7 +18,7 @@
 #
 #           Rules first, then 'names' (spellings the same for items and structures), then
 #           'exceptions': the remaining differences between items and structures, each with its
-#           reason (step 102 reduced them from 36 to 4 entries). A name without rule or exception passes through
+#           reason (revision2026 step R4.19 reduced them from 36 to 4 entries). A name without rule or exception passes through
 #           unchanged, as the old TypeConversion did - most C++ function signatures rely on it.
 #
 #           The facts come from definitions/definitionTypes.py: the range and item-kind forms of
@@ -70,7 +70,7 @@ def SizedName(typeName):
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#named spellings, the same for items and structures (step 102): destination -> {typeName: spelling}
+#named spellings, the same for items and structures (revision2026 step R4.19): destination -> {typeName: spelling}
 names = {
     'cppStorage': {
         'Int': 'Index',                             #C++ uses Index for every integer
@@ -147,7 +147,7 @@ def _CppStorage(typeName, context):
 
 
 def _CppExchange(typeName, context):
-    """the same for items and structures since step 102: variable sizes are std::vector, fixed sizes std::array"""
+    """the same for items and structures since revision2026 step R4.19: variable sizes are std::vector, fixed sizes std::array"""
     scalar = _Scalar(typeName, _scalarCpp)
     if scalar is not None and typeName not in itemIndexKinds:
         return scalar
@@ -218,7 +218,7 @@ def Render(typeName, destination, context):
 
 def ConstraintNote(typeName):
     """the range of a constrained type as the start of a C++ comment ('must be > 0; '), '' otherwise;
-    C++ stores PReal, UReal, ... as their base type (step 87: PReal is also the AVX packed-real macro)"""
+    C++ stores PReal, UReal, ... as their base type (revision2026 step R4.12: PReal is also the AVX packed-real macro)"""
     for spec in [dt.TReal, dt.Tfloat, dt.TIndex]:
         if str(typeName) == spec.constrainedForms['greaterThan']:
             return 'must be > 0; '

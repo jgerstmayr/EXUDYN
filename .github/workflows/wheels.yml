@@ -15,7 +15,7 @@ jobs:
   build_wheels:
     name: cp3${{ matrix.python-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    # NO continue-on-error: a failed wheel job must fail the workflow (revision plan step 20).
+    # NO continue-on-error: a failed wheel job must fail the workflow (revision2026 step R2.7).
     # fail-fast: false below already keeps the other jobs running, which is what was actually
     # wanted; continue-on-error additionally made a red build report green.
     strategy:
@@ -47,7 +47,7 @@ jobs:
         run: python -m cibuildwheel --output-dir wheelhouse .
         env:
           # everything else lives in [tool.cibuildwheel] in pyproject.toml (revision plan
-          # step 20). Only this one is here, because it is built from the matrix entry.
+          # revision2026 step R2.7). Only this one is here, because it is built from the matrix entry.
           CIBW_BUILD: "cp3${{ matrix.python-version }}-*"
 
       - uses: actions/upload-artifact@v7    # CHANGED: v4 -> v7

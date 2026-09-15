@@ -51,13 +51,13 @@ build/
 .eggs/
 wheelhouse/
 
-# build output; untracked 2026-09-09 (plan step 1)
+# build output; untracked 2026-09-09 (revision2026 step R0.1)
 dist/
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Generator scratch output
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# intermediate data formerly written by the generators (no longer written since step 33)
+# intermediate data formerly written by the generators (no longer written since revision2026 step R4.3)
 tools/generators/generated/*.npy
 # generator scratch file
 test.txt
@@ -76,7 +76,7 @@ python/TestModels/testData/netgenTestMesh*.pkl
 python/TestModels/testData/netgenTestMesh*.npz
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# LaTeX intermediates (theDoc.pdf itself is committed for now; see plan step 51)
+# LaTeX intermediates (theDoc.pdf itself is committed for now; see revision2026 step R7.3)
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 *.aux
 *.toc
@@ -116,7 +116,7 @@ tools/issueTracker/trackerlog_backup.txt
 
 # diverted test/performance logs: written when the release-named target already exists,
 # so a run never truncates a committed log (see testRunnerTools.ResolveLogFile).
-# One shared directory, so it is trivial to delete. Becomes logs/tmp/ at plan step 74.
+# One shared directory, so it is trivial to delete. Becomes logs/tmp/ at revision2026 step R3.8.
 python/logsTmp/
 
 # build byproducts from setup.py
@@ -137,7 +137,7 @@ python/TestModels/testExamplesLog_V*.txt
 # that holds its own .git, so an unignored nested repository is recorded by 'git add -A' as a
 # GITLINK - a bare commit pointer with no content, which looks like a broken submodule to
 # anyone cloning. Development-only Python material belongs in the second internal GitLab
-# repository (revision plan step 8), not here.
+# repository (revision2026 step R1.4), not here.
 experimental/
 Experimental/
 /tmp

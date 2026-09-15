@@ -1,26 +1,26 @@
 [build-system]
 #setuptools>=61 is what makes the [project] table below authoritative; on anything older it is
-#silently ignored and the wheel ends up with no metadata at all (revision plan step 14).
+#silently ignored and the wheel ends up with no metadata at all (revision2026 step R2.1).
 #pybind11<3.0: 3.0 (July 2025) is not yet compatible - a deliberate pin, not a stale one. It moved
-#here from setup_requires in step 15; note that this is honoured under build isolation ('pip
+#here from setup_requires in revision2026 step R2.2; note that this is honoured under build isolation ('pip
 #wheel .', 'python -m build') but NOT by a direct 'python setup.py bdist_wheel', where pybind11
 #must already be installed - see docs/howTo/condaEnvironments.md.
 #tomli: setup.py reads [tool.exudyn] below, and tomllib is stdlib only from 3.11 while
 #requires-python allows 3.10 and CI builds cp310. Same caveat as pybind11 - under a direct
 #'python setup.py bdist_wheel' this is NOT installed for you, so setup.py raises an ImportError
-#naming the install command rather than silently falling back to different defaults (step 82).
+#naming the install command rather than silently falling back to different defaults (revision2026 step R2.14).
 requires = ["setuptools>=61", "wheel", "pybind11<3.0", "tomli; python_version < '3.11'"]
 build-backend = "setuptools.build_meta"
 
 #Static package metadata. Everything here used to be keyword arguments to setup(); what is left
 #in setup.py is what genuinely depends on the build (version, packages, package_data,
-#ext_modules, cmdclass). See revision plan step 14.
+#ext_modules, cmdclass). See revision2026 step R2.1.
 [project]
 name = "exudyn"
 description = "EXUDYN flexible multibody dynamics simulation in C++ and Python"
 #the minimum Python version needed by THIS exudyn version, not the versions that are tested -
 #pypi.org uses it to pick which wheel to offer, so a too-high bound hides the package.
-#3.10 is the real floor since revision plan step 19: CI builds cp310-cp314, the classifiers say
+#3.10 is the real floor since revision2026 step R2.6: CI builds cp310-cp314, the classifiers say
 #3.10-3.14, and the last artefact of 3.7 support (the ReleaseP37 configuration) is gone. ">=3.6"
 #claimed wheels that have not existed for years; pip then offered an old release to a 3.6 user
 #instead of telling them the truth.
@@ -70,7 +70,7 @@ https://github.com/jgerstmayr/EXUDYN/tree/master/docs/theDoc/theDoc.pdf
 """
 
 #Optional dependency groups, checked against the imports actually present in the code by
-#'python tools/checkExtras.py' (revision plan step 80) - so these lists cannot quietly go stale.
+#'python tools/checkExtras.py' (revision2026 step R2.12) - so these lists cannot quietly go stale.
 #  pip install exudyn[tests]   everything TestModels/ needs to run the test suite
 #  pip install exudyn[all]     the above plus everything the package and the Examples refer to
 #  pip install exudyn[rl]      reinforcement learning; deliberately NOT part of [all], see below
@@ -117,7 +117,7 @@ rl = [
     "tensorboard",
     ]
 
-#Development environments (revision plan step 109). Dependency groups (PEP 735) are never published
+#Development environments (revision2026 step R4.24). Dependency groups (PEP 735) are never published
 #with the wheel - unlike the extras above, which users see as exudyn[...]. Install with pip >= 25.1
 #from the repository root, e.g. 'pip install --group dev'; see docs/howTo/condaEnvironments.md.
 #The test dependencies are the [tests] extra of the locally built wheel, not repeated here.
@@ -146,17 +146,17 @@ dev = [
     {include-group = "lint"},
     {include-group = "build"},
     {include-group = "ide"},
-    "scipy==1.15.2",        #scipy 1.18.0 slows the test suite from ~22 s to over 10 min (plan fact 19)
-    "jinja2",               #templates were measured in step 34b; kept available for the generators
-    "griffe",               #static API inspection (step 38 left it available)
+    "scipy==1.15.2",        #scipy 1.18.0 slows the test suite from ~22 s to over 10 min (revision2026 fact 19)
+    "jinja2",               #templates were measured in revision2026 step R4.4.2; kept available for the generators
+    "griffe",               #static API inspection (revision2026 step R4.8 left it available)
     ]
 
-#Docstring check of the Python package (revision plan step 38): 'pydoclint --config=pyproject.toml python/exudyn'.
+#Docstring check of the Python package (revision2026 step R4.8): 'pydoclint --config=pyproject.toml python/exudyn'.
 #Google style; type hints are neither required in signatures nor in docstrings, return types and
 #raised exceptions are not checked - the check is that documented arguments match the signature.
 #Findings present when the check was introduced are listed in the baseline, so only new ones fail;
 #fixed ones are removed with 'pydoclint --config=pyproject.toml --generate-baseline=True python/exudyn'.
-#itemInterface.py is generated and checked too (step 108); its docstrings come from itemInterfaceEmitter.py.
+#itemInterface.py is generated and checked too (revision2026 step R4.23); its docstrings come from itemInterfaceEmitter.py.
 [tool.pydoclint]
 style = 'google'
 arg-type-hints-in-signature = false
@@ -169,8 +169,8 @@ should-document-star-arguments = false
 baseline = 'tools/ci/pydoclintBaseline.txt'
 auto-regenerate-baseline = false
 
-#cibuildwheel settings that do not depend on the CI matrix (revision plan step 20). cibuildwheel
-#reads this table from the package directory it is pointed at, which since the flatten (step 25)
+#cibuildwheel settings that do not depend on the CI matrix (revision2026 step R2.7). cibuildwheel
+#reads this table from the package directory it is pointed at, which since the flatten (revision2026 step R3.1)
 #is the repository root - the same directory as this file. Only CIBW_BUILD stays in the workflow,
 #because it is built from the matrix entry.
 #Keeping them here rather than in workflow env: they are checked into the same file as the rest of
@@ -200,7 +200,7 @@ test-command = "cd /d {project}/python/TestModels && python runTestSuite.py -qui
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Build switches, read by setup.py. These are the DEFAULTS; they are never rewritten during a
-#build. Resolution order, highest first (revision plan step 82):
+#build. Resolution order, highest first (revision2026 step R2.14):
 #
 #  1. command line     --parallel / --no-parallel, --quiet / --no-quiet, ...
 #  2. environment      EXUDYN_COMPILE_PARALLEL=0|1, EXUDYN_QUIET_COMPILE=0|1, ...
@@ -209,7 +209,7 @@ test-command = "cd /d {project}/python/TestModels && python runTestSuite.py -qui
 #
 #This replaces setupPyConfig.json, which was TRACKED AND MUTABLE: tools/ci/buildManylinux.sh had
 #to rewrite it with sed and restore it from a trap, so a failed build left the working tree dirty,
-#and step 17 ended up shipping the maintainer's local toggles inside the sdist. The environment
+#and revision2026 step R2.4 ended up shipping the maintainer's local toggles inside the sdist. The environment
 #layer exists precisely so CI can override a switch without touching a file. The old file also
 #used the strings "True"/"False" because JSON was being hand-edited; these are real booleans.
 [tool.exudyn]

@@ -8,7 +8,7 @@
 #           IMPORTANT: run this AFTER issueTracker.ResolveIssue(), never before. ResolveIssue
 #           rewrites version.txt, and README.rst and docs/RST/Exudyn.rst embed the
 #           version string, so regenerating first leaves them one version behind and this tool
-#           then reports drift unrelated to your change (revision plan fact 21).
+#           then reports drift unrelated to your change (revision2026 fact 21).
 #
 #           Before running the generators it validates definitions/ (definitionValidator.py)
 #           and stops with exit code 3 if they are inconsistent.
@@ -35,7 +35,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'genera
 from autoGenerateHelper import IsEqualIgnoringDateStrings
 
 #the generators, their order and their inputs/outputs are declared in tools/generators/generate.py,
-#the single driver (revision plan step 33, part 2f); this tool runs it and compares with the commit
+#the single driver (revision2026 step R4.3, part 2f); this tool runs it and compares with the commit
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'generators'))
 import generate
 
@@ -208,7 +208,7 @@ def Main():
               + ' file(s) modified outside the tiers; ignored as unrelated work')
 
     if not args.no_run:
-        #the definitions are validated BEFORE anything is generated from them (plan step 32)
+        #the definitions are validated BEFORE anything is generated from them (revision2026 step R4.2)
         sys.path.insert(0, os.path.join(repositoryRoot, 'tools', 'generators'))
         import definitionValidator
         if definitionValidator.ValidateDefinitions(verbose=verbose):
@@ -255,7 +255,7 @@ def Main():
         print('Generated files differ from the commit. If the change was intended, commit it;')
         print('if not, a generator or its input has changed unexpectedly.')
         print('If only README.rst and docs/RST/Exudyn.rst differ, the version was bumped after')
-        print('the last regeneration - see revision plan fact 21, run this tool after ResolveIssue.')
+        print('the last regeneration - see revision2026 fact 21, run this tool after ResolveIssue.')
         if args.check:
             return 1
     elif tier2Drift:

@@ -71,7 +71,7 @@ the distribution before the code.
 **scipy version affects eigenvalue solver performance substantially.** Measured 2026-09-10: with an
 unpinned scipy, `abaqusImportTest.py` alone took 60 s of a 106 s test suite; pinning `scipy==1.15.2`
 returned it to normal. This is not only a test-suite concern — it applies to any Exudyn code using
-sparse eigenvalue solves. See revision plan fact 19/19a.
+sparse eigenvalue solves. See revision2026 fact 19/19a.
 
 **Intel MKL is not used.** Earlier notes described wiring MKL into the Visual Studio project behind
 a `USE_EXUDYN_MKL` define. That define no longer exists anywhere in the source, so the integration

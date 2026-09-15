@@ -17,7 +17,7 @@
 #           real defect: 'unknown' is not a version, setuptools rejects it much later with an
 #           InvalidVersion whose message names neither this file nor version.txt, and a generator
 #           run would happily stamp 'unknown' into generated sources. Missing the version file is
-#           now a hard, named error (revision plan step 28).
+#           now a hard, named error (revision2026 step R3.4).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-12 (rewritten)

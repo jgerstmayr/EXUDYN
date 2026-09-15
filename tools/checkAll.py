@@ -2,7 +2,7 @@
 # This is an EXUDYN maintainer tool
 #
 # Details:  Keeps the __all__ lists of the Python modules in python/exudyn complete (revision plan
-#           step 107c). For each module, the names declared in __all__ must equal its public names
+#           revision2026 step R4.22.3). For each module, the names declared in __all__ must equal its public names
 #           (rule in tools/generators/publicApi.py: top-level functions, classes and assigned
 #           names not starting with '_', except @docmeta(public=False)). A pure AST scan; nothing
 #           is imported.
