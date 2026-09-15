@@ -6,7 +6,8 @@
 #           sorted parameter list, typical paths and the old string records of every structure,
 #           rendered from definitions/ by definitionLoader. Moved out of
 #           src/pythonGenerator/pythonAutoGenerateSystemStructures.py (revision plan step 33, part 2c).
-#           The string records are replaced by direct member access in plan step 34.
+#           The header and stub emitters read the members directly (step 34a); only
+#           structureDocsEmitter.py still reads the string records, until step 50 replaces it.
 #
 # Usage:    import structureModel as sm
 #
@@ -107,17 +108,120 @@ def TopClassName(className):
 def HasTopClass(className):
     return TopClassName(className) != className
 
-#just extract and evaluate cflag
-def IsDeprecatedParameter(parameter):
-    return (parameter['cFlags'].find('X') != -1)
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#direct member access (revision plan step 34a): the header and structure-stub emitters read the
+#definitions/ members through these functions. The predicates shared with structureDocsEmitter.py
+#also accept the old string records it still reads; that second form goes with step 50.
+import itemModel as _im                                                 # noqa: E402
+
+#generation order: structures appended to one file (appendToFile) depend on it
+structureModules = definitionLoader.structureModules
+_structureClassNames = None
+
+
+def StructureDefinitions():
+    """all structure definitions in generation order"""
+    definitions = []
+    for moduleName in structureModules:
+        definitions += __import__(moduleName).definitions
+    return definitions
+
+
+def _IsRecord(member):
+    """True for an old string record, False for a definitions/ member"""
+    return 'kind' not in member
+
+
+def Header(definition, key):
+    """a class header value as the emitters use it: strings, 'True'/'False' for flags, None for
+    absent typicalPaths"""
+    if key == 'class':
+        return definition['className']
+    value = definition.get(key, None)
+    if key == 'typicalPaths' and value is None:
+        return None
+    if value is None:
+        return ''
+    if key in _im.booleanHeaderKeys:
+        return 'True' if value else 'False'
+    return _im.Mangle(str(value), key, 'structures')
+
+
+def _H(parseInfo, key):
+    """a header value of a definition or of an old parseInfo record"""
+    return Header(parseInfo, key) if 'className' in parseInfo else parseInfo[key]
+
+
+def IsVariable(member):
+    if _IsRecord(member):
+        return member['lineType'].find('V') != -1
+    return member['kind'] == 'StructureParameter'
+
+
+def IsFunction(member):
+    return not IsVariable(member)
+
+
+def IsLinked(member):
+    return bool(member.get('isLinked', False))
+
+
+def FromParent(member):
+    return bool(member.get('fromParent', False))
+
+
+def IsVirtualFunction(member):
+    return IsFunction(member) and bool(member.get('isVirtual', False))
+
+
+def HasFlag(member, letter):
+    """a flag of cFlags: SFPybind 'P', SFConst 'C', SFPybindArgs 'G', SFReturnCopy 'V', SFNoDictType 'D',
+    SFDeprecated 'X'"""
+    return letter in (member.get('cFlags', '') or '')
+
+
+def IsDeclarationOnly(member):
+    """a function whose body is written by hand (old flag D)"""
+    return IsFunction(member) and (HasFlag(member, 'D') or member.get('implementation', None) is None)
+
+
+def Description(member):
+    if _IsRecord(member):
+        return member['parameterDescription']
+    return member.get('description', '') or ''
+
+
+def DefaultCpp(member):
+    """the C++ default value of a variable, or the body of a function"""
+    if _IsRecord(member):
+        return member['defaultValue']
+    return _im.DefaultValueString(member)
+
+
+def Args(member):
+    return member.get('args', '') or ''
+
+
+def Size(member):
+    return _im.Size(member)
+
 
 #just extract and evaluate cflag
+def IsDeprecatedParameter(parameter):
+    return HasFlag(parameter, 'X')
+
+#a member whose type is a structure defined in definitions/ (a substructure)
 def IsStructureParameter(parameter):
-    return (parameter['cFlags'].find('S') != -1)
+    global _structureClassNames
+    if _IsRecord(parameter):
+        return (parameter['cFlags'].find('S') != -1)
+    if _structureClassNames is None:
+        _structureClassNames = set(d['className'] for d in StructureDefinitions())
+    return str(parameter.get('type', '')) in _structureClassNames
 
 #convert parameter to deprecation version and expiration data
 def DParameter2VersionExpiration(parameter):
-    changedInfo = parameter['defaultValue'] #workaround; contains 'version;EXP=....' where in EXP, the expire year is noted where the deprecated parameter will be removed
+    changedInfo = DefaultCpp(parameter) #workaround; contains 'version;EXP=....' where in EXP, the expire year is noted where the deprecated parameter will be removed
     if len(changedInfo.split(';')) < 2 or 'EXP=' not in changedInfo:
         raise ValueError('VersionExpiration: parameter '+str(parameter) + 'has illegal version')
     version = changedInfo.split(';')[0]
@@ -128,7 +232,7 @@ def DParameter2VersionExpiration(parameter):
 #extract parameterdescription depending on deprecated status (then it is the re-link)
 def ParameterDescription(parameter):
     IDP = IsDeprecatedParameter(parameter)
-    return 'DEPRECATED; Instead use '*IDP + parameter['parameterDescription']
+    return 'DEPRECATED; Instead use '*IDP + Description(parameter)
 
 def ParameterChanges2LatexRST(parameterChangesList, latexStr, rstStr):
     if len(parameterChangesList):
@@ -187,16 +291,16 @@ def LegacyStructures():
 
 
 def PythonClassName(parseInfo):
-    pythonClass = parseInfo['class']
-    if parseInfo['pythonClass'] != '':
-        pythonClass = parseInfo['pythonClass']
+    pythonClass = _H(parseInfo, 'class')
+    if _H(parseInfo, 'pythonClass') != '':
+        pythonClass = _H(parseInfo, 'pythonClass')
     return pythonClass
 
 
 def SortedParameters(parameterList):
     #create sorted parameter list; distinguish between structures (cFlags have 'S') and values: adds 0/1 before name for sorting ...
     parameterListSorted=sorted(parameterList, 
-                               key=lambda d: str(int(d['cFlags'].find('S')==-1))+d['pythonName'].upper())
+                               key=lambda d: str(int(not IsStructureParameter(d)))+d['pythonName'].upper())
     if not sortStructures:
         parameterListSorted = parameterList 
     return parameterListSorted
@@ -206,11 +310,11 @@ def HasPybindInterface(parseInfo, parameterList):
     """True if the structure has member variables in the Python interface; only those are documented"""
     hasPybindInterface = False
     for parameter in parameterList:
-        if (parameter['lineType'].find('V') != -1) and (parameter['cFlags'].find('P') != -1): #only if it is a member variable
+        if IsVariable(parameter) and HasFlag(parameter, 'P'): #only if it is a member variable
             hasPybindInterface = True
 
-    if (parseInfo['class'] == 'SolverLocalData'
-        #or parseInfo['class'] == 'SolverFileData'
+    if (_H(parseInfo, 'class') == 'SolverLocalData'
+        #or _H(parseInfo, 'class') == 'SolverFileData'
         ):
         hasPybindInterface = False
     return hasPybindInterface
@@ -219,9 +323,9 @@ def HasPybindInterface(parseInfo, parameterList):
 def TypicalPaths(parseInfo):
     """the typical access paths of a structure in Python, e.g. ['SC.visualizationSettings.nodes']"""
     typicalPaths = []
-    if parseInfo['typicalPaths'] != None:
-        typicalPaths = parseInfo['typicalPaths']
-        class2name = parseInfo['class']
+    if _H(parseInfo, 'typicalPaths') != None:
+        typicalPaths = _H(parseInfo, 'typicalPaths')
+        class2name = _H(parseInfo, 'class')
 
         if class2name.endswith('View'):
             typicalPaths += '.view'
@@ -259,7 +363,7 @@ def ParameterChangesList(parseInfo, parameterListSorted, typicalPaths):
             for path in typicalPaths:
                 oldParameterStr = path.replace('SC.','') +'.'+ parameter['pythonName']
                 baseParameter = oldParameterStr.split('.')[0]
-                newParameterStr = baseParameter+'.'+parameter['parameterDescription']
+                newParameterStr = baseParameter+'.'+Description(parameter)
                 (version, expDate) = DParameter2VersionExpiration(parameter)
                 parameterChangesList.append([oldParameterStr, newParameterStr, version, expDate])
     return parameterChangesList

@@ -25,8 +25,9 @@ from structureModel import *                                            # noqa: 
 import typeModel as tm                                                  # noqa: E402
 
 
-def StructureStub(parseInfo, parameterList):
-    """the stub text of one structure; empty if it has no Python interface"""
+def StructureStub(parseInfo):
+    """the stub text of one structure definition; empty if it has no Python interface"""
+    parameterList = parseInfo['members']
     stubStr = '' #string for .pyi file
     spaces4 = '    '
     if not HasPybindInterface(parseInfo, parameterList):
@@ -36,24 +37,24 @@ def StructureStub(parseInfo, parameterList):
     stubStr += '\n#information for '+ pythonClass + '\n'
     stubStr += 'class ' + pythonClass + ':\n'
     if ADD_DOCSTRINGS: 
-        stubStr += DocStringGoogleFromPlainText(parseInfo['classDescription'],
+        stubStr += DocStringGoogleFromPlainText(Header(parseInfo, 'classDescription'),
                                                 addSpaces=' '*4, multiline=True)
 
     for parameter in SortedParameters(parameterList):
         if IsDeprecatedParameter(parameter):
             continue
-        if (parameter['lineType'].find('V') != -1 and
-            parameter['cFlags'].find('P') != -1 and
+        if (IsVariable(parameter) and
+            HasFlag(parameter, 'P') and
             parameter['type'].find('ResizableVector') == -1): #only if it is a member variable
             stubStr += spaces4+parameter['pythonName']+': '
             stubStr += tm.Render(parameter['type'], 'stub', 'structures') + '\n'
             if ADD_DOCSTRINGS: 
-                stubStr += DocStringGoogleFromPlainText(text=ParameterDescription2DocString(parameter['parameterDescription']),
+                stubStr += DocStringGoogleFromPlainText(text=ParameterDescription2DocString(Description(parameter)),
                                                         addSpaces=' '*4, multiline=False)
 
-        if (parameter['lineType'].find('F') != -1) and (parameter['cFlags'].find('P') != -1): #only if it is a function
+        if (IsFunction(parameter)) and (HasFlag(parameter, 'P')): #only if it is a function
             functionName = Str2Latex(parameter['pythonName'])
-            argStr = parameter['args']
+            argStr = Args(parameter)
             if (argStr != ''):
                 #functionName += '(...)' #now added in SystemStructuresWriteDefRow
                 argSplit = argStr.split(',') #split into list of args
@@ -71,8 +72,8 @@ def StructureStub(parseInfo, parameterList):
 
 def main():
     globalStubStr = ''
-    for parseInfo, parameterList in LegacyStructures():
-        globalStubStr += StructureStub(parseInfo, parameterList)
+    for parseInfo in StructureDefinitions():
+        globalStubStr += StructureStub(parseInfo)
 
     globalStubStr = """
 #This is the stub file for system structures, such as SimulationSettings and VisualizationSettings

@@ -3,8 +3,8 @@
 #
 # Details:  Emits the C++ structure headers (SimulationSettings.h, VisualizationSettings.h, ...),
 #           DictionariesGetSet.h and pybind_modules.h from definitions/ (revision plan step 33,
-#           part 2c). Moved out of src/pythonGenerator/pythonAutoGenerateSystemStructures.py; the
-#           output is byte-identical.
+#           part 2c). Moved out of src/pythonGenerator/pythonAutoGenerateSystemStructures.py. Reads the
+#           members directly through the predicates of structureModel.py (step 34a).
 #
 # Usage:    python tools/generators/structureHeaderEmitter.py
 #
@@ -50,29 +50,31 @@ def RangeArgument(typeName):
 def IsDirectScalar(parameter):
     """a converted data member of the structure itself (not linked, not deprecated): its attribute
     access is bound with EPyUtils::MemberGetter/MemberSetter, without Get/Set functions in the header"""
-    return (parameter['type'] in convertedMemberTypes and parameter['lineType'].find('L') == -1
+    return (parameter['type'] in convertedMemberTypes and not IsLinked(parameter)
             and parameter['cplusplusName'].find('.') == -1 and not IsDeprecatedParameter(parameter))
 
 
 #************************************************
 #create the C++ header text of one structure
-def StructureCppHeader(parseInfo, parameterList):
-    """returns [header text, dictionary get/set text, implementation text]"""
+def StructureCppHeader(parseInfo):
+    """returns [header text, dictionary get/set text, implementation text]; parseInfo is the
+    structure definition of definitions/"""
+    parameterList = parseInfo['members']
     dateStr = GetDateStr()
     yearStr = dateStr.split('-')[0]
-    cppText = parseInfo['cppText'] #.replace('\\n','\n') #this is the string for latex documentation
+    cppText = Header(parseInfo, 'cppText') #.replace('\\n','\n') #this is the string for latex documentation
     sGetSetDictionarys = '' #goes into separate file
 
     #create name for #ifdef macro to include header files only once:
-    sHeaderOnce = parseInfo['writeFile'].split('.')[0]
+    sHeaderOnce = Header(parseInfo, 'writeFile').split('.')[0]
 
     #************************************
     #header
     s='' #generate a string for the output file
     #s+='//automatically generated file (pythonAutoGenerateInterfaces.py)\n'
     s+='/** ***********************************************************************************************\n'
-    s+='* @class        '+parseInfo['class']+'\n'
-    s+='* @brief        '+Str2Doxygen(parseInfo['classDescription'])+'\n'
+    s+='* @class        '+Header(parseInfo, 'class')+'\n'
+    s+='* @brief        '+Str2Doxygen(Header(parseInfo, 'classDescription'))+'\n'
     s+='*\n'
     s+='* @author       AUTO: Gerstmayr Johannes\n'
     s+='* @date         AUTO: 2019-07-01 (generated)\n'
@@ -86,7 +88,7 @@ def StructureCppHeader(parseInfo, parameterList):
     s+='************************************************************************************************ **/\n'
 
     #include header files only once:    
-    if parseInfo['appendToFile'] != 'True':
+    if Header(parseInfo, 'appendToFile') != 'True':
 #        s+='#ifdef _MSC_VER\n'
 #        s+='#pragma once\n'
 #        s+='#endif\n'
@@ -107,8 +109,8 @@ def StructureCppHeader(parseInfo, parameterList):
         s += cppText
         s += '\n'
 
-    classInitBackLink = ClassHasBackLink(parseInfo['class'])
-    classHasBackLink = ClassHasBackLink(parseInfo['class']) and HasTopClass(parseInfo['class'])
+    classInitBackLink = ClassHasBackLink(Header(parseInfo, 'class'))
+    classHasBackLink = ClassHasBackLink(Header(parseInfo, 'class')) and HasTopClass(Header(parseInfo, 'class'))
 
     implementationGetSetStr = '' #implementations that come in the end
     parameterListSorted = SortedParameters(parameterList)
@@ -117,10 +119,10 @@ def StructureCppHeader(parseInfo, parameterList):
     #class definition:
     strParentClass = ''
     constructorParentClass = ''
-    if len(parseInfo['parentClass']) != 0:
-        strParentClass = ': public ' + parseInfo['parentClass']
-        constructorParentClass = ': '+parseInfo['parentClass']+'()'
-    s+='class ' + parseInfo['class'] + strParentClass + ' // AUTO: \n'
+    if len(Header(parseInfo, 'parentClass')) != 0:
+        strParentClass = ': public ' + Header(parseInfo, 'parentClass')
+        constructorParentClass = ': '+Header(parseInfo, 'parentClass')+'()'
+    s+='class ' + Header(parseInfo, 'class') + strParentClass + ' // AUTO: \n'
     s+='{\n'
 
 
@@ -131,8 +133,8 @@ def StructureCppHeader(parseInfo, parameterList):
     sProtected = ''
     for parameter in parameterListSorted:
 
-        if ((parameter['lineType'].find('V') != -1) and 
-            (parameter['lineType'].find('L') == -1) and 
+        if ((IsVariable(parameter)) and 
+            (not IsLinked(parameter)) and 
             (parameter['cplusplusName'].find('.') == -1) and 
             (not IsDeprecatedParameter(parameter) or IsStructureParameter(parameter)) ): #only if it is a member variable, but not linked
             typeStr = tm.Render(parameter['type'], 'cppStorage', 'structures')
@@ -144,17 +146,17 @@ def StructureCppHeader(parseInfo, parameterList):
                 insertSpaces = ' '*(alignment-nChar)
             temp += insertSpaces + '//!< AUTO: ' + Str2Doxygen(ParameterDescription(parameter)) + '\n'
 
-            if (parameter['lineType'].find('p') != -1): #make variable private ==> no direct access via C++ or python!
+            if (FromParent(parameter)): #make variable private ==> no direct access via C++ or python!
                 sPrivate += temp
             else:
-                if (parameter['cFlags'].find('P') != -1): #pybind of member variables in this case done via public member variable
+                if (HasFlag(parameter, 'P')): #pybind of member variables in this case done via public member variable
                     sPublic += temp
                 else:
                     sProtected += temp
 
     if classHasBackLink:
-        #print('class with backlink:',parseInfo['class'])
-        sPrivate += '  ' + TopClassName(parseInfo['class']) + '* backlink; //!< AUTO: backlink for global access of structure\n'
+        #print('class with backlink:',Header(parseInfo, 'class'))
+        sPrivate += '  ' + TopClassName(Header(parseInfo, 'class')) + '* backlink; //!< AUTO: backlink for global access of structure\n'
 
     if (sPublic !='' or sProtected !=''):
         s+='public: // AUTO: \n'
@@ -175,35 +177,35 @@ def StructureCppHeader(parseInfo, parameterList):
     #count number of default parameters
     cntDefaultParameters = 0
     for parameter in parameterList:
-        if (parameter['lineType'].find('V') != -1): #only if it is a member variable
-            strDefault = parameter['defaultValue']
+        if (IsVariable(parameter)): #only if it is a member variable
+            strDefault = DefaultCpp(parameter)
             if len(strDefault): 
                 cntDefaultParameters += 1
 
     #constructor with default initialization:
-    if classInitBackLink or cntDefaultParameters or len(parseInfo['addConstructor']) != 0:
+    if classInitBackLink or cntDefaultParameters or len(Header(parseInfo, 'addConstructor')) != 0:
         s+='  //! AUTO: default constructor with parameter initialization\n'
-        s+='  '+parseInfo['class']+'()'+constructorParentClass+'\n'
+        s+='  '+Header(parseInfo, 'class')+'()'+constructorParentClass+'\n'
         s+='  {\n'
         if classHasBackLink:
-            #print('has backlink:',parseInfo['class'])
+            #print('has backlink:',Header(parseInfo, 'class'))
             s+='    '+'backlink=nullptr;\n'
 
     
         for parameter in parameterListSorted:
-            if (parameter['lineType'].find('V') != -1) and not IsDeprecatedParameter(parameter): #only if it is a member variable
-                strDefault = parameter['defaultValue']
+            if (IsVariable(parameter)) and not IsDeprecatedParameter(parameter): #only if it is a member variable
+                strDefault = DefaultCpp(parameter)
                 if len(strDefault): #only add initialization if default value exists
                     if parameter['type'] == 'String' or parameter['type'] == 'FileName':
                         strDefault = '"' + strDefault + '"'
                     s+='    ' + parameter['cplusplusName'] + ' = ' + strDefault + ';\n'
-        s+=parseInfo['addConstructor'].replace('\\n','\n')
+        s+=Header(parseInfo, 'addConstructor').replace('\\n','\n')
         s+='  };\n'
 
     #++++++++++++
     #add initializatio nof backlink
     if classInitBackLink:
-        s += '  void Init('+TopClassName(parseInfo['class']) + '* backlinkInit) //!< AUTO: called from parent structure\n'
+        s += '  void Init('+TopClassName(Header(parseInfo, 'class')) + '* backlinkInit) //!< AUTO: called from parent structure\n'
         s += '  {\n'
         if classHasBackLink: #not for top class itself
             s += '    backlink = backlinkInit;\n'
@@ -217,34 +219,34 @@ def StructureCppHeader(parseInfo, parameterList):
 
     #GetClone() function: #2020-01-03: not used any more
 #    s+='  //! AUTO: clone object; specifically for copying instances of derived class, for automatic memory management e.g. in ObjectContainer\n'
-#    s+='  virtual ' + parseInfo['class'] + '* GetClone() const { return new '+parseInfo['class']+'(*this); }\n'
+#    s+='  virtual ' + Header(parseInfo, 'class') + '* GetClone() const { return new '+Header(parseInfo, 'class')+'(*this); }\n'
 #    s+='  \n'
     sDictGet = ''
     sDictGet += '//! AUTO: read access to structure; converting into dictionary\n'
-    sDictGet += 'inline py::dict GetDictionaryWithTypeInfo(const ' + parseInfo['class'] + '& data) {\n'
+    sDictGet += 'inline py::dict GetDictionaryWithTypeInfo(const ' + Header(parseInfo, 'class') + '& data) {\n'
     sDictGet += '    auto structureDict = py::dict();\n'
     sDictGet += '    auto d = py::dict(); //local dict\n'
 
     sDictGetPure = ''
     sDictGetPure += '//! AUTO: read access to structure; converting into dictionary without type info\n'
-    sDictGetPure += 'inline py::dict GetDictionary(const ' + parseInfo['class'] + '& data) {\n'
+    sDictGetPure += 'inline py::dict GetDictionary(const ' + Header(parseInfo, 'class') + '& data) {\n'
     sDictGetPure += '    auto structureDict = py::dict();\n'
 
     sDictSet = ''
     sDictSet += '//! AUTO: write access to data structure; converting dictionary d into structure\n'
-    sDictSet += 'inline void SetDictionary(' + parseInfo['class'] + '& data, const py::dict& d) {\n'
+    sDictSet += 'inline void SetDictionary(' + Header(parseInfo, 'class') + '& data, const py::dict& d) {\n'
     
     #************************************
     #access functions and dictionaries for visualization dialog ...:
     
-    if (parseInfo['class'] == 'VisualizationSettings'):
+    if (Header(parseInfo, 'class') == 'VisualizationSettings'):
         parameterListSorted2 = copy.deepcopy(parameterList) #unsorted, sorting as in definition file
     else:
         parameterListSorted2 = copy.deepcopy(parameterListSorted) 
         
         
     for parameter in parameterListSorted2:
-        if (parameter['lineType'].find('V') != -1): #only if it is a member variable
+        if (IsVariable(parameter)): #only if it is a member variable
             ISP = bool(IsStructureParameter(parameter))
             IDP = bool(IsDeprecatedParameter(parameter))
             IDPNS = bool(IsDeprecatedParameter(parameter)) and not ISP #IDP but not structure
@@ -254,18 +256,18 @@ def StructureCppHeader(parseInfo, parameterList):
             if IDPNS:
                 lineBreakIDP = '\n    '
                 deprecationWarning = 'PyWarning("VisualizationSettings parameter '
-                deprecationWarning += ConvertClassName2member(parseInfo['class'])+'.'+parameter['pythonName']
-                deprecationWarning += ' is deprecated! use '+parameter['parameterDescription']+' instead!");'+lineBreakIDP
+                deprecationWarning += ConvertClassName2member(Header(parseInfo, 'class'))+'.'+parameter['pythonName']
+                deprecationWarning += ' is deprecated! use '+Description(parameter)+' instead!");'+lineBreakIDP
                 (version, expDate) = DParameter2VersionExpiration(parameter)
                 if expDate <= yearStr:
-                    print('parameter outdated '+expDate+':', parseInfo['class']+'::'+parameter['cplusplusName'])
+                    print('parameter outdated '+expDate+':', Header(parseInfo, 'class')+'::'+parameter['cplusplusName'])
                     continue #not included any more with backlinks!
                 
                 
             origType = parameter['type']
             typeStr = tm.Render(parameter['type'], 'cppStorage', 'structures')
             paramStr = parameter['cplusplusName']
-            paramAccessStr = paramStr if not IDPNS else 'backlink->'+parameter['parameterDescription']
+            paramAccessStr = paramStr if not IDPNS else 'backlink->'+Description(parameter)
 
             paramStrPure = parameter['cplusplusName'] #without 'cSolver.'
             if (paramStrPure.find('.') != -1): #for linked class; mainly solver
@@ -294,7 +296,7 @@ def StructureCppHeader(parseInfo, parameterList):
             if (((typeCastStr.find('std::vector') != -1 or typeCastStr.find('std::array') != -1) and not IsDirectScalar(parameter) and 
                  typeCastStr.find('std::ofstream') == -1 and typeCastStr.find('ExuFile::BinaryFileSettings') == -1) or 
                 typeWithRangeCheck or typeWithGetSetFunction or
-                (parameter['lineType'].find('L') == -1  and parameter['cplusplusName'].find('.') != -1)): #then it must get a set/get function!
+                (not IsLinked(parameter)  and parameter['cplusplusName'].find('.') != -1)): #then it must get a set/get function!
                 accessWritten = True
                 
                 paramSetStr = paramStrPure + 'Init'
@@ -342,14 +344,14 @@ def StructureCppHeader(parseInfo, parameterList):
             
             if IDPNS:
                 implementationGetSetStr += '\n'
-                cn = parseInfo['class']
+                cn = Header(parseInfo, 'class')
                 implementationGetSetStr += 'inline ' + setFunction[0] + cn + '::'+setFunction[1] + setFunction[2]
                 implementationGetSetStr += 'inline ' + getFunction[0] + cn + '::'+getFunction[1] + getFunction[2]
                 # print('implementationGetSetStr:',implementationGetSetStr)
             
             #++++++++++++++++++++++++++++++++++++++++++++++++++++++
             #read/write dictionary from hierarchical structure
-            if parameter['cFlags'].find('P') != -1 and parameter['cFlags'].find('D') == -1:
+            if HasFlag(parameter, 'P') and not HasFlag(parameter, 'D'):
 
                 if parameter['pythonName'] == 'itemIdentifier':
                     print("ERROR: pythonName may not be called 'itemIdentifier'") #this term needs to be reserved, as this is the key for a value object
@@ -368,7 +370,7 @@ def StructureCppHeader(parseInfo, parameterList):
                     #convert type:
                     pType = tm.Render(parameter['type'], 'dictType', 'structures')
                     #convert size
-                    pSize = parameter['size']
+                    pSize = Size(parameter)
                     if pSize.find('x') != -1: #e.g., 3x3, also 2x2x2 would be possible
                         v = pSize.split('x')
                         if len(v) != 2:
@@ -410,7 +412,7 @@ def StructureCppHeader(parseInfo, parameterList):
                         #set functions:
                         if parameter['type'] in convertedMemberTypes: #the same conversion and checks as the attribute (step 34c5 a, b)
                             sDictSet += ('    EPyUtils::FromPython(d["' + parameter['pythonName'] + '"], data.' + parameter['cplusplusName'] + ', '
-                                         + RangeArgument(parameter['type']) + '"' + parseInfo['class'] + '.' + parameter['pythonName'] + '");\n')
+                                         + RangeArgument(parameter['type']) + '"' + Header(parseInfo, 'class') + '.' + parameter['pythonName'] + '");\n')
                         else:
                             sDictSet += '    data.' + parameter['cplusplusName'] + ' = py::cast<' + typeCastStr + '>(d["' + parameter['pythonName']  + '"]);\n'
                         
@@ -418,27 +420,27 @@ def StructureCppHeader(parseInfo, parameterList):
     
     
         else: # linked variable
-            if parameter['lineType'].find('L') == -1:
+            if not IsLinked(parameter):
                 strVirtual = ''
                 strOverride = ''
-                if (parameter['lineType'].find('v') != -1):
+                if (IsVirtualFunction(parameter)):
                     strVirtual = 'virtual '
                     strOverride = ' override'
                 
                 typeStr = tm.Render(parameter['type'], 'cppStorage', 'structures')
                 functionStr = parameter['cplusplusName']
-                argsStr = parameter['args']
+                argsStr = Args(parameter)
                 strConst = ""
-                if parameter['cFlags'].find('C') != -1:
+                if HasFlag(parameter, 'C'):
                     strConst = " const"
                 
                 strDef = ''            
-                if parameter['cFlags'].find('D') != -1:
+                if IsDeclarationOnly(parameter):
                     strDef = ';'
                 else:
-                    strDef = ' {\n    ' + parameter['defaultValue'] + '\n  }\n' #defaultValue is the function body
+                    strDef = ' {\n    ' + DefaultCpp(parameter) + '\n  }\n' #defaultValue is the function body
     
-                s+='  //! AUTO: ' + Str2Doxygen(parameter['parameterDescription']) + '\n'
+                s+='  //! AUTO: ' + Str2Doxygen(Description(parameter)) + '\n'
                 s+='  '+strVirtual + typeStr + ' '
                 s+=functionStr + '(' + argsStr + ')' + strConst + strOverride + strDef + '\n'
     
@@ -450,7 +452,7 @@ def StructureCppHeader(parseInfo, parameterList):
     sDictSet += '}\n\n'
 
         
-    if ClassHasGetSetDictionary(parseInfo['class']):
+    if ClassHasGetSetDictionary(Header(parseInfo, 'class')):
         sGetSetDictionarys += sDictGet
         sGetSetDictionarys += sDictGetPure
         sGetSetDictionarys += sDictSet
@@ -460,19 +462,19 @@ def StructureCppHeader(parseInfo, parameterList):
     #************************************
     #ostream operator:
 #    s+=('  friend std::ostream& operator<<(std::ostream& os, const ' + 
-#       parseInfo['class'] + '& object);\n')
+#       Header(parseInfo, 'class') + '& object);\n')
 
     s+='  //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)\n'
     s+='  virtual void Print(std::ostream& os) const\n'
     s+='  {\n'
-    s+='    os << "' + parseInfo['class'] + '" << ":\\n";\n'
-    if len(parseInfo['parentClass']) != 0:
+    s+='    os << "' + Header(parseInfo, 'class') + '" << ":\\n";\n'
+    if len(Header(parseInfo, 'parentClass')) != 0:
         s+='    os << ":"; \n'
-        s+='    ' + parseInfo['parentClass'] + '::Print(os);\n'
+        s+='    ' + Header(parseInfo, 'parentClass') + '::Print(os);\n'
         
     #output each parameter
     for parameter in parameterListSorted:
-        if ((parameter['lineType'].find('V') != -1) and (parameter['lineType'].find('L') == -1) and 
+        if ((IsVariable(parameter)) and (not IsLinked(parameter)) and 
         (parameter['type']!='TemporaryComputationData') and (parameter['type']!='TemporaryComputationDataArray') and 
         (parameter['type'].find('std::ofstream')==-1) and #(parameter['type'].find('ExuFile::BinaryFileSettings')==-1) and 
         (parameter['type'].find('std::vector<Vector2D>')==-1) and (parameter['type'].find('CrossSectionType')==-1) and
@@ -503,8 +505,8 @@ def StructureCppHeader(parseInfo, parameterList):
     s+='    os << "\\n";\n'
     s+='  }\n\n' # end ostream operator
 
-    if len(parseInfo['parentClass']) == 0:
-        s+=('  friend std::ostream& operator<<(std::ostream& os, const ' + parseInfo['class'] + '& object)\n')
+    if len(Header(parseInfo, 'parentClass')) == 0:
+        s+=('  friend std::ostream& operator<<(std::ostream& os, const ' + Header(parseInfo, 'class') + '& object)\n')
         s+= '  {\n'
         s+= '    object.Print(os);\n'
         s+= '    return os;\n'
@@ -516,7 +518,8 @@ def StructureCppHeader(parseInfo, parameterList):
 
 #**************************************************************************************
 #create string containing the pybind11 headers/modules for a class
-def CreatePybindHeaders(parseInfo, parameterList):
+def CreatePybindHeaders(parseInfo):
+    parameterList = parseInfo['members']
     #print ('Create Pybind11 includes')
 
     #remove some \ and other texts from strings written into pybind interface
@@ -545,15 +548,15 @@ def CreatePybindHeaders(parseInfo, parameterList):
     #************************************
     #class definition:
     parentClass = ''
-    pythonClass = parseInfo['class']
-    if parseInfo['pythonClass'] != '':
-        pythonClass = parseInfo['pythonClass']
-        #print('pythonClass=', pythonClass, ', cClass=', parseInfo['class'])
+    pythonClass = Header(parseInfo, 'class')
+    if Header(parseInfo, 'pythonClass') != '':
+        pythonClass = Header(parseInfo, 'pythonClass')
+        #print('pythonClass=', pythonClass, ', cClass=', Header(parseInfo, 'class'))
         
         
-#    if len(parseInfo['parentClass']) != 0: #derived class does not work in pybind, if parent class is not defined!
-#        parentClass = ', ' + parseInfo['parentClass']
-    s += spaces1 + 'py::class_<' + parseInfo['class'] + parentClass + '>(m, "' + pythonClass + '"'
+#    if len(Header(parseInfo, 'parentClass')) != 0: #derived class does not work in pybind, if parent class is not defined!
+#        parentClass = ', ' + Header(parseInfo, 'parentClass')
+    s += spaces1 + 'py::class_<' + Header(parseInfo, 'class') + parentClass + '>(m, "' + pythonClass + '"'
     if addDocuClass:
         s += ', "'+pythonClass+' class"'
     s += ') // AUTO: \n'
@@ -561,51 +564,51 @@ def CreatePybindHeaders(parseInfo, parameterList):
 
     #create sorted parameter list; distinguish between structures (cFlags have 'S') and values: adds 0/1 before name for sorting ...
     parameterListSorted=sorted(parameterList, 
-                               key=lambda d: str(int(d['cFlags'].find('S')==-1))+d['pythonName'].upper())
+                               key=lambda d: str(int(not IsStructureParameter(d)))+d['pythonName'].upper())
     if not sortStructures:
         parameterListSorted = parameterList 
 
     #************************************
     #member variables access:
     for parameter in parameterListSorted:
-        if (parameter['lineType'].find('V') != -1) and (parameter['cFlags'].find('P') != -1): #only if it is a member variable
+        if (IsVariable(parameter)) and (HasFlag(parameter, 'P')): #only if it is a member variable
             ISP = bool(IsStructureParameter(parameter))
             IDP = bool(IsDeprecatedParameter(parameter))
 
             typeCastStr = tm.Render(parameter['type'], 'cppExchange', 'structures')
             linkedClassStr = ''
-            if (len(parseInfo['linkedClass']) != 0):
-                linkedClassStr = parseInfo['linkedClass'] + '.'
+            if (len(Header(parseInfo, 'linkedClass')) != 0):
+                linkedClassStr = Header(parseInfo, 'linkedClass') + '.'
 
             if IsDirectScalar(parameter): #step 34c5 a
-                memberStr = '&' + parseInfo['class'] + '::' + linkedClassStr + parameter['cplusplusName']
+                memberStr = '&' + Header(parseInfo, 'class') + '::' + linkedClassStr + parameter['cplusplusName']
                 s += (spaces2 + '.def_property("' + parameter['pythonName'] + '", EPyUtils::MemberGetter(' + memberStr + '), EPyUtils::MemberSetter('
-                      + memberStr + ', ' + RangeArgument(parameter['type']) + '"' + parseInfo['class'] + '.' + parameter['pythonName'] + '")')
+                      + memberStr + ', ' + RangeArgument(parameter['type']) + '"' + Header(parseInfo, 'class') + '.' + parameter['pythonName'] + '")')
                 if addDocuMember:
-                    s += ', "' + CleanPyDocStrings(parameter['parameterDescription']) + '"'
+                    s += ', "' + CleanPyDocStrings(Description(parameter)) + '"'
                 s += ')\n'
             elif ((typeCastStr.find('std::vector') == -1) and (typeCastStr.find('std::array') == -1) and 
-            (parameter['lineType'].find('L') == -1) and (parameter['cplusplusName'].find('.') == -1)
+            (not IsLinked(parameter)) and (parameter['cplusplusName'].find('.') == -1)
             and not IsTypeWithRangeCheck(parameter['type']) 
             and not (IsTypeWithSetGetFunction(parameter['type']) or (IDP and not ISP))): #then it has a set/get function! e.g. Int2, Int3, Float2, Float3, .... are array structures ==> must be converted
-                s += spaces2 + '.def_readwrite("' + parameter['pythonName'] + '", &' + parseInfo['class'] + '::' + linkedClassStr + parameter['cplusplusName']
+                s += spaces2 + '.def_readwrite("' + parameter['pythonName'] + '", &' + Header(parseInfo, 'class') + '::' + linkedClassStr + parameter['cplusplusName']
                 if addDocuMember:
                     #s += ', "member: ' + parameter['pythonName'] + '"'
-                    s += ', "' + CleanPyDocStrings(parameter['parameterDescription']) + '"'
+                    s += ', "' + CleanPyDocStrings(Description(parameter)) + '"'
                 s += ')\n' #extend this to incorporate 'read only' and other flags
             else:
                 sReturnValueProperty = '' #for structures that should also have write access
                 #not needed: done automatically as reference access for such structures with get/set function
-                # if parameter['lineType'].find('L') != -1:
+                # if IsLinked(parameter):
                 #     sReturnValueProperty += ', py::return_value_policy::reference'
                 #access with setter/getter functions and conversions to std::vector
                 #functionName = parameter['cplusplusName']
                 functionName = parameter['pythonName'] #for linked variables, this is easier to work with linking e.g. to cSolver
                 functionName = functionName[0].upper()+functionName[1:]
                 s += spaces2 + '.def_property("' + parameter['pythonName'] + '", '
-                s += '&' + parseInfo['class'] + '::PyGet' + functionName + ', '
+                s += '&' + Header(parseInfo, 'class') + '::PyGet' + functionName + ', '
                 if parameter['type'] != 'KeyPressUserFunction' or IsDeprecatedParameter(parameter):
-                    s += '&' + parseInfo['class'] + '::PySet' + functionName + sReturnValueProperty 
+                    s += '&' + Header(parseInfo, 'class') + '::PySet' + functionName + sReturnValueProperty 
                 else:
                     #this is quite brute force, and needs to be adjusted in case ...
                     ind12 = ' '*12
@@ -619,20 +622,20 @@ def CreatePybindHeaders(parseInfo, parameterList):
                 #    .def_property("name", &Pet::getName, &Pet::setName)
                 
     #s += '\n'
-    s += spaces2 + '// AUTO: access functions for ' + parseInfo['class'] + '\n'
+    s += spaces2 + '// AUTO: access functions for ' + Header(parseInfo, 'class') + '\n'
             
     for parameter in parameterListSorted:
-        if (parameter['lineType'].find('F') != -1) and (parameter['cFlags'].find('P') != -1): #only if it is a member function
+        if (IsFunction(parameter)) and (HasFlag(parameter, 'P')): #only if it is a member function
             s += spaces2 + '.def("' + parameter['pythonName']
-            s += '", &' + parseInfo['class'] + '::' + parameter['pythonName']
+            s += '", &' + Header(parseInfo, 'class') + '::' + parameter['pythonName']
             if parameter['type'] != 'void': #check return_value_policy if not void
-                if parameter['cFlags'].find('V') != -1: #pass by value (copy)
+                if HasFlag(parameter, 'V'): #pass by value (copy)
                     s += ', py::return_value_policy::copy'
                 else:
                     s += ', py::return_value_policy::reference' #extend this to incorporate 'read only' and other flags
             s += ', "' + RemoveLatexCommands(ParameterDescription(parameter)) + '"'
-            if (parameter['cFlags'].find('G') != -1): #add py::arg() in order that type completion shows args in python
-                argStr = parameter['args']
+            if (HasFlag(parameter, 'G')): #add py::arg() in order that type completion shows args in python
+                argStr = Args(parameter)
                 if (argStr != ''):
                     argSplit = argStr.split(',') #split into list of args
                     for item in argSplit:
@@ -647,14 +650,14 @@ def CreatePybindHeaders(parseInfo, parameterList):
                         s += ', py::arg("' + argName + '")' + defaultVal
             s+=')\n' 
     
-    s += spaces2 + '.def("__repr__", [](const ' + parseInfo['class'] + ' &item) { return "<' + parseInfo['class'] + ':\\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator\n'
+    s += spaces2 + '.def("__repr__", [](const ' + Header(parseInfo, 'class') + ' &item) { return "<' + Header(parseInfo, 'class') + ':\\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator\n'
     
-    if parseInfo['addDictionaryAccess'] == 'True':
-        s += spaces2 + '.def("GetDictionaryWithTypeInfo", [](const ' + parseInfo['class'] + ' &item) { return EPyUtils::GetDictionaryWithTypeInfo(item); }) //!< AUTO: add read as dictionary with type information access\n'
-    if ClassHasGetSetDictionary(parseInfo['class']):
-        s += spaces2 + '.def("GetDictionary", [](const ' + parseInfo['class'] + ' &item) { return EPyUtils::GetDictionary(item); }) //!< AUTO: add read for dictionary access\n'
-        s += spaces2 + '.def("SetDictionary", [](' + parseInfo['class'] + ' &item, const py::dict& d) { return EPyUtils::SetDictionary(item, d); }) //!< AUTO: add write from dictionary access\n'
-        s += pickleDictTemplate.replace('{ClassName}', parseInfo['class'])
+    if Header(parseInfo, 'addDictionaryAccess') == 'True':
+        s += spaces2 + '.def("GetDictionaryWithTypeInfo", [](const ' + Header(parseInfo, 'class') + ' &item) { return EPyUtils::GetDictionaryWithTypeInfo(item); }) //!< AUTO: add read as dictionary with type information access\n'
+    if ClassHasGetSetDictionary(Header(parseInfo, 'class')):
+        s += spaces2 + '.def("GetDictionary", [](const ' + Header(parseInfo, 'class') + ' &item) { return EPyUtils::GetDictionary(item); }) //!< AUTO: add read for dictionary access\n'
+        s += spaces2 + '.def("SetDictionary", [](' + Header(parseInfo, 'class') + ' &item, const py::dict& d) { return EPyUtils::SetDictionary(item, d); }) //!< AUTO: add write from dictionary access\n'
+        s += pickleDictTemplate.replace('{ClassName}', Header(parseInfo, 'class'))
 #		.def("GetDictionary", [](const VisualizationSettings &item) { return EPyUtils::GetDictionaryWithTypeInfo(item); }) //!< AUTO: add representation for object based on ostream operator
 
     s += spaces2 + '; // AUTO: end of class definition!!!\n'
@@ -718,28 +721,28 @@ def main():
     fileListHeaderOnce = [] #store all opened files, which get a "#endif " at the end for the #ifdef ... at the beginning
     globalImplementationGetSetStr = '' #implementation part added at end of each structure (visualization, etc.)
 
-    for parseInfo, parameterList in LegacyStructures():
-        [fileStr, getSetDict, implementationGetSetStr] = StructureCppHeader(parseInfo, parameterList)
+    for parseInfo in StructureDefinitions():
+        [fileStr, getSetDict, implementationGetSetStr] = StructureCppHeader(parseInfo)
         globalImplementationGetSetStr += implementationGetSetStr
         strFileMode = 'w'
 
-        if parseInfo['appendToFile'] == 'True':
+        if Header(parseInfo, 'appendToFile') == 'True':
             strFileMode = 'a'
         else:
-            fileListHeaderOnce += [directoryString+parseInfo['writeFile']]
+            fileListHeaderOnce += [directoryString+Header(parseInfo, 'writeFile')]
 
-        if not HasTopClass(parseInfo['class']) and globalImplementationGetSetStr != '':
+        if not HasTopClass(Header(parseInfo, 'class')) and globalImplementationGetSetStr != '':
             fileStr += '\n\n//! implementation:\n'+globalImplementationGetSetStr
             globalImplementationGetSetStr = ''
 
-        WriteFileDict(writeFilesDict, fileName=directoryString+parseInfo['writeFile'], 
+        WriteFileDict(writeFilesDict, fileName=directoryString+Header(parseInfo, 'writeFile'), 
                       text=fileStr, fileMode=strFileMode)
 
         #++++++++++++++++++++++++++++++
         #write Python/pybind11 includes
         pybindStr = ''
-        if parseInfo['writePybindIncludes'] == 'True':
-            pybindStr = CreatePybindHeaders(parseInfo, parameterList)
+        if Header(parseInfo, 'writePybindIncludes') == 'True':
+            pybindStr = CreatePybindHeaders(parseInfo)
             WriteFileDict(writeFilesDict, fileName=pybindFile, text=pybindStr, fileMode='a')
             WriteFileDict(writeFilesDict, fileName=getSetFile, text=getSetDict, fileMode='a')
 

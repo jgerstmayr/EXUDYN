@@ -2417,6 +2417,35 @@ Gates: full rebuild (`build/temp` deleted); full suite PASSED; hand checks:
 - a colour of 3 values raises "parameter VSettingsNodes.defaultColor expects 4 values, but
   received 3".
 
+**Done 2026-09-15, step 34a / 34c5 (c) - the structure emitters read the members directly.**
+- **Emitters:** `structureHeaderEmitter.py` and `structureStubEmitter.py` loop over
+  `structureModel.StructureDefinitions()` and take the definition itself
+  (`StructureCppHeader(definition)`, `CreatePybindHeaders(definition)`,
+  `StructureStub(definition)`).
+- **Predicates:** members are read through new functions in `structureModel.py`, in place of
+  `lineType`/`cFlags` letters and the rendered string fields:
+  - `IsVariable`, `IsFunction`, `IsLinked`, `FromParent`, `IsVirtualFunction`;
+  - `HasFlag`, `IsDeclarationOnly`, `IsStructureParameter` (type is a structure of
+    `definitions/`);
+  - `Description`, `DefaultCpp`, `Args`, `Size`, and `Header(definition, key)` for the class
+    header.
+  - About 220 accesses were rewritten.
+- **Shared with the docs emitter:** `SortedParameters`, `HasPybindInterface`, `TypicalPaths`,
+  `ParameterChangesList` and `IsDeprecatedParameter` are also used by `structureDocsEmitter.py`.
+  They accept both forms until step 50 (`_IsRecord`, `_H`).
+- **Items:** `itemHeaderEmitter.py` and `itemInterfaceEmitter.py` already read members directly,
+  so nothing was left to change there.
+- **Legacy form:** `definitionLoader.py`, `LegacyItems()` and `LegacyStructures()` remain for
+  `itemDocsEmitter.py` and `structureDocsEmitter.py` only, and go with step 50 (maintainer
+  decision). Their header comments say so.
+
+Gate:
+- the committed emitters over `LegacyStructures()` and the new ones over the definitions were run
+  in memory for all 53 structures (header, pybind glue, stub): same order, 0 differences;
+- a full `tools/regenerate.py` changed no generated file.
+
+No C++ or Python package change.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving

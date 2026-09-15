@@ -14,9 +14,9 @@
 #           by field before the old definition files were removed; tools/regenerate.py --check
 #           is the gate that keeps it so.
 #
-#           This adapter exists for as long as the generators consume the old representation.
-#           Splitting them into emitters that read definitions/ directly (step 33, part 2)
-#           removes it.
+#           Since step 34a only the two documentation emitters (itemDocsEmitter.py,
+#           structureDocsEmitter.py) consume the old representation; this adapter is deleted with
+#           them in step 50.
 #
 # Usage:    import definitionLoader
 #           for parseInfo, parameterList in definitionLoader.LoadItemDefinitions(template): ...
