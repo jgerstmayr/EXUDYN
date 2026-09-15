@@ -177,7 +177,7 @@ q += mbs.GetSensorValues(sOmega)
 q += mbs.GetSensorValues(sRot)
 #print('q=', q)
 
-u = NormL2(q)
+u = np.linalg.norm(q)
 exu.Print('solution of generalContactCylinderTest =',u)
 
 exudynTestGlobals.testError = u - (5.486908430912642) 

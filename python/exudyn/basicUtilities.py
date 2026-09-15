@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN python utility library
 #
-# Details:  Basic utility functions and constants, not depending on numpy or other python modules.
+# Details:  Basic utility functions and constants; they depend on numpy only, not on exudyn.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2020-03-10 (created)
@@ -12,12 +12,11 @@
 #           pi = 3.1415926535897932 \\
 #           sqrt2 = 2**0.5\\
 #           g=9.81\\
-#           eye2D (2x2 diagonal matrix)\\
-#           eye3D (3x3 diagonal matrix)\\
 #           Two variables 'gaussIntegrationPoints' and 'gaussIntegrationWeights' define integration points and weights for function GaussIntegrate(...)
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import math #always available in Python
+import numpy as np
 
 #define some constants which would require external libraries
 #pi = 3.1415926535897932 #define pi in order to avoid importing large libraries; identical to from math import pi
@@ -94,158 +93,21 @@ def SmartRound2String(x, prec=3):
         
 
 
-def DiagonalMatrix(rowsColumns, value=1):
-    """create a diagonal or identity matrix; used for interface.py, avoiding the need for numpy
-
-    Args:
-        rowsColumns: provides the number of rows and columns
-        value: initialization value for diagonal terms
-
-    Returns:
-        list of lists representing a matrix
-    """
-    m = []
-    for i in range(rowsColumns):
-        m += [rowsColumns*[0]]
-        m[i][i] = value
-    return m
-
-eye2D = DiagonalMatrix(rowsColumns=2,value=1.) #2x2 identity matrix
-eye3D = DiagonalMatrix(rowsColumns=3,value=1.) #3x3 identity matrix
-#eye4D = DiagonalMatrix(rowsColumns=4,value=1.) #4x4 identity matrix
-
-def NormL2(vector):
-    """compute L2 norm for vectors without switching to numpy or math module
-
-    Args:
-        vector as list or in numpy format
-
-    Returns:
-        L2-norm of vector
-    """
-    value = 0
-    for x in vector:
-        value += x**2
-    return value**0.5
-
-def VSum(vector):
-    """compute sum of all values of vector
-
-    Args:
-        vector as list or in numpy format
-
-    Returns:
-        sum of all components of vector
-    """
-    value = 0
-    for x in vector:
-        value += x
-    return value
-
-def VAdd(v0, v1):
-    """add two vectors instead using numpy
-
-    Args:
-        vectors v0 and v1 as list or in numpy format
-
-    Returns:
-        component-wise sum of v0 and v1
-    """
-    if len(v0) != len(v1): print("ERROR in VAdd: incompatible vectors!")
-    n = len(v0)
-    v = [0]*n
-    for i in range(n):
-        v[i] = v0[i]+v1[i]
-    return v
-
-def VSub(v0, v1):
-    """subtract two vectors instead using numpy: result = v0-v1
-
-    Args:
-        vectors v0 and v1 as list or in numpy format
-
-    Returns:
-        component-wise difference of v0 and v1
-    """
-    if len(v0) != len(v1): print("ERROR in VSub: incompatible vectors!")
-    n = len(v0)
-    v = [0]*n
-    for i in range(n):
-        v[i] = v0[i]-v1[i]
-    return v
-
-def VMult(v0, v1):
-    """scalar multiplication of two vectors instead using numpy: result = v0' * v1
-
-    Args:
-        vectors v0 and v1 as list or in numpy format
-
-    Returns:
-        sum of all component wise products: c0[0]*v1[0] + v0[1]*v1[0] + ...
-    """
-    if len(v0) != len(v1): print("ERROR in VMult: incompatible vectors!")
-    r = 0
-    for i in range(len(v0)):
-        r += v0[i]*v1[i]
-    return r
-
-def ScalarMult(scalar, v):
-    """multiplication vectors with scalar: result = scalar * v
-
-    Args:
-        value *scalar* and vector *v* as list or in numpy format
-
-    Returns:
-        scalar multiplication of all components of v: [scalar*v[0], scalar*v[1], ...]
-    """
-    res=[0]*len(v)
-    for i in range(len(v)):
-        res[i] += scalar*v[i]
-    return res
-
 def Normalize(v):
-    """take a 3D vector and return a normalized 3D vector (L2Norm=1)
+    """take a vector and return it normalized to L2-norm 1; a zero vector is returned as zero vector
 
     Args:
         vector v as list or in numpy format
 
     Returns:
-        vector v multiplied with scalar such that L2-norm of vector is 1
+        list: v multiplied with a scalar such that its L2-norm is 1, or the zero vector; a list, as
+        callers append the result to lists of normals
     """
-    #v=copy.deepcopy(vector) #copy, such that vector is not changed
-    v2=[0]*len(v)
-
-    fact = NormL2(v)
-    if fact != 0:
-        fact = 1./fact
-
-    for i in range(len(v2)): 
-        v2[i]=fact*v[i]
-    return v2
-    
-def Vec2Tilde(v):
-    r"""apply tilde operator (skew) to 3D-vector and return skew matrix
-
-    Args:
-        3D vector v as list or in numpy format
-
-    Returns:
-        matrix as list of lists with the skew-symmetric matrix from v: $\left[\!\! \begin{array}{ccc} 0 & -v[2] & v[1] \\ v[2] & 0 & -v[0] \\ -v[1] & v[0] & 0  \end{array} \!\!\right]$
-    """
-    print('Vec2Tilde is deprecated; use exudyn.rigidBodyUtilities.Skew(...)')
-    return [[0.,-v[2],v[1]],[v[2],0.,-v[0]],[-v[1],v[0],0.]]
-
-def Tilde2Vec(m):
-    """take skew symmetric matrix and return vector (inverse of Skew(...))
-
-    Args:
-        list of lists containing a skew-symmetric matrix (3x3)
-
-    Returns:
-        list containing the vector v (inverse function of Vec2Tilde(...))
-    """
-    print('Tilde2Vec is deprecated; use exudyn.rigidBodyUtilities.Skew2Vec(...)')
-    return [-m[1][2], m[0][2], -m[0][1]]
+    v = np.array(v, dtype=float)
+    norm = np.linalg.norm(v)
+    if norm != 0:
+        v /= norm
+    return v.tolist()
 
 #integration points per integration order (1, 3, ...); for interval [-1,1]
 gaussIntegrationPoints=[[0],

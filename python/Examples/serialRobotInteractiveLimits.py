@@ -524,7 +524,7 @@ if 0:
     measuredTorques=[]
     for sensorNumber in jointTorque0List:
         measuredTorques += [mbs.GetSensorValues(sensorNumber)[2]]
-    exu.Print("torques at tEnd=", VSum(measuredTorques))
+    exu.Print("torques at tEnd=", np.sum(measuredTorques))
     
     
     

@@ -86,12 +86,12 @@ You can view and download this file on Github: `pendulumFriction.py <https://git
    fFriction = 1          #friction force (norm); acts against velocity
    #user function for friction against velocity vector, including zeroZone
    def UserFunctionSpringDamper(mbs, t, itemIndex, u, v, k, d, offset):
-       vNorm = NormL2(v)
+       vNorm = np.linalg.norm(v)
        f=[v[0],v[1],v[2]]
        if abs(vNorm) < offset[0]:
-           f = ScalarMult(offset[1]/offset[0], f)
+           f = ((offset[1]/offset[0])*np.array(f))
        else:
-           f = ScalarMult(offset[1]/vNorm, f)
+           f = ((offset[1]/vNorm)*np.array(f))
        return f
    
    mbs.AddObject(CartesianSpringDamper(markerNumbers=[mGround0, mTip0], 
@@ -145,7 +145,7 @@ You can view and download this file on Github: `pendulumFriction.py <https://git
    
    p0 = mbs.GetSensorValues(sPos) #obtain values from marker
    exu.Print("p0=", p0, '(marker)')
-   u=NormL2(p0)
+   u=np.linalg.norm(p0)
    exu.Print('solution of pendulumFriction=',u)
    
    exudynTestGlobals.testError = u - (0.3999999877698205) #2020-04-22: 0.3999999877698205

@@ -118,7 +118,7 @@ if addSensors:
             v = mbs.GetSensorValues(sensorNumbers[i*3+1])
             omega = mbs.GetSensorValues(sensorNumbers[i*3+2])[2]
             
-            T += 0.5*NormL2(v)**2 * mass + 0.5*J*omega**2 + h*(-g[1])*mass
+            T += 0.5*np.linalg.norm(v)**2 * mass + 0.5*J*omega**2 + h*(-g[1])*mass
         return [T - 3.5*mass*(-g[1]) - 1.5] #1.5 is initial kinetic energy
         
     sUser = mbs.AddSensor(SensorUserFunction(sensorNumbers=listSensors,

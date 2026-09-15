@@ -49,7 +49,7 @@ Jzz=0.234375
 
 #vector to COM, where force is applied
 rp = [0.,1.,0.]
-rpt = np.array(Vec2Tilde(rp))
+rpt = Skew(rp)
 Fg = [0,0,-m*9.81]
 #inertia tensor w.r.t. fixed point
 JFP = np.diag([Jxx,Jyy,Jzz]) - m*np.dot(rpt,rpt)

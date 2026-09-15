@@ -75,7 +75,7 @@ You can view and download this file on Github: `rigidBodyCOMtest.py <https://git
        #exu.Print("RBinertia orig =", RBinertia)
        RBinertia = RBinertia.Translated(com) #this includes the correct terms in inertia
    
-       if NormL2(RBinertia.com) != 0 and i==1:
+       if np.linalg.norm(RBinertia.com) != 0 and i==1:
            exu.Print("AddRigidBody COM=", RBinertia.com)
            exu.Print("inertia6D=", RBinertia.GetInertia6D())
        #exu.Print("RBinertia trans=", RBinertia)
@@ -91,7 +91,7 @@ You can view and download this file on Github: `rigidBodyCOMtest.py <https://git
            #ep0 = [0,0,0]
            #ep_t0 = [0,0,0]
    
-           p0 = VSub([i*2*sx+sx,0.,zOff],com) #reference position
+           p0 = (np.array([i*2*sx+sx,0.,zOff]) - com) #reference position
            v0 = [0.,0.,0.] #initial translational velocity
    
            color=[0.8,0.1,0.1,1]
@@ -112,7 +112,7 @@ You can view and download this file on Github: `rigidBodyCOMtest.py <https://git
    
            val=0
            if i==0: val=1
-           mbs.CreateGenericJoint(bodyNumbers=[oRB, oRBlast], position=VAdd([-sx,0.,0],com), 
+           mbs.CreateGenericJoint(bodyNumbers=[oRB, oRBlast], position=(np.array([-sx,0.,0]) + com), 
                                   constrainedAxes=[1,1,1, val,val,0], useGlobalFrame=False)
    
            #for next chain body
@@ -169,7 +169,7 @@ You can view and download this file on Github: `rigidBodyCOMtest.py <https://git
    #h=0.00001:p0-p1= [ 2.64592348e-10 -5.90557048e-11  4.66975986e-10]
    
    #+++++++++++++++++++++++++++++++++++++++++++++
-   u=NormL2(p0) + NormL2(p1)
+   u=np.linalg.norm(p0) + np.linalg.norm(p1)
    exu.Print('solution of rigidBodyCOMtest=',u)
    
    exudynTestGlobals.testError = u - (3.409431467726293) #2020-04-22: 3.409431467726293

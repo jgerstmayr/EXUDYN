@@ -379,18 +379,18 @@ You can view and download this file on Github: `serialRobotKinematicTree.py <htt
        measuredTorques=[]
        for sensorNumber in sListTorques:
            measuredTorques += [abs(mbs.GetSensorValues(sensorNumber)) ]
-       exu.Print("torques at tEnd=", VSum(measuredTorques))
+       exu.Print("torques at tEnd=", np.sum(measuredTorques))
    
        measuredRot = []
        for sensorNumber in sListJointAngles :
            measuredRot += [(mbs.GetSensorValues(sensorNumber)) ]
-       exu.Print("rotations at tEnd=", VSum(measuredRot), ',', measuredRot)
+       exu.Print("rotations at tEnd=", np.sum(measuredRot), ',', measuredRot)
    
    else:
        q = mbs.GetObjectOutputBody(oKT, exu.OutputVariableType.Coordinates)
-       exu.Print("rotations at tEnd=", VSum(q), ',', q)
+       exu.Print("rotations at tEnd=", np.sum(q), ',', q)
        f = mbs.GetObjectOutputBody(oKT, exu.OutputVariableType.Force)
-       exu.Print("torques at tEnd=", VSum(f), ',', f)
+       exu.Print("torques at tEnd=", np.sum(f), ',', f)
        
    
    

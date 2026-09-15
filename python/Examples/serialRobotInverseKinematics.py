@@ -280,7 +280,7 @@ if True:
 
 
 q = mbs.GetObjectOutputBody(oKT, exu.OutputVariableType.Coordinates)
-exu.Print("rotations at tEnd=", VSum(q), ',', q)
+exu.Print("rotations at tEnd=", np.sum(q), ',', q)
     
 #%%++++++++++++++++++++++++++++++++++++++++++++
 if True:

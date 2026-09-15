@@ -533,7 +533,7 @@ lastRenderState = SC.renderer.GetState() #store model view
 measuredTorques=[]
 for sensorNumber in jointTorque0List:
     measuredTorques += [abs(mbs.GetSensorValues(sensorNumber))]
-exu.Print('torques at tEnd=', VSum(measuredTorques))
+exu.Print('torques at tEnd=', np.sum(measuredTorques))
 
 
 #%%+++++++++++++++++++++

@@ -866,7 +866,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 %
 \mysubsection{Module: basicUtilities}
 \label{sec:module:basicUtilities}
-  Basic utility functions and constants, not depending on numpy or other python modules.
+  Basic utility functions and constants; they depend on numpy only, not on exudyn.
 \begin{itemize}[leftmargin=1.4cm]
 \setlength{\itemindent}{-1.4cm}
 \item[]Author:    Johannes Gerstmayr
@@ -878,13 +878,11 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 \item[]            pi = 3.1415926535897932 
 \item[]            sqrt2 = 2**0.5
 \item[]            g=9.81
-\item[]            eye2D (2x2 diagonal matrix)
-\item[]            eye3D (3x3 diagonal matrix)
 \item[]            Two variables 'gaussIntegrationPoints' and 'gaussIntegrationWeights' define integration points and weights for function GaussIntegrate(...) 
 \ei
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L29}{ClearWorkspace}{}}}\label{sec:basicUtilities:ClearWorkspace}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L28}{ClearWorkspace}{}}}\label{sec:basicUtilities:ClearWorkspace}
 ()
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -923,7 +921,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L85}{SmartRound2String}{}}}\label{sec:basicUtilities:SmartRound2String}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L84}{SmartRound2String}{}}}\label{sec:basicUtilities:SmartRound2String}
 ({\it x}, {\it prec}= 3)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -934,196 +932,22 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L97}{DiagonalMatrix}{}}}\label{sec:basicUtilities:DiagonalMatrix}
-({\it rowsColumns}, {\it value}= 1)
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: create a diagonal or identity matrix; used for interface.py, avoiding the need for numpy
-\item[--]
-{\bf input}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]{\it rowsColumns}: provides the number of rows and columns
-\item[]{\it value}: initialization value for diagonal terms
-\end{itemize}
-\item[--]
-{\bf output}: list of lists representing a matrix
-\vspace{12pt}\end{itemize}
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L117}{NormL2}{}}}\label{sec:basicUtilities:NormL2}
-({\it vector})
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: compute L2 norm for vectors without switching to numpy or math module
-\item[--]
-{\bf input}: vector as list or in numpy format
-\item[--]
-{\bf output}: L2-norm of vector
-\vspace{12pt}\end{itemize}
-%
-%
-\noindent For examples on NormL2 see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-\bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py}{\texttt{bicycleIftommBenchmark.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/HydraulicActuatorStaticInitialization.py}{\texttt{HydraulicActuatorStaticInitialization.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py}{\texttt{NGsolvePistonEngine.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reinforcementLearningRobot.py}{\texttt{reinforcementLearningRobot.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springsDeactivateConnectors.py}{\texttt{springsDeactivateConnectors.py}} (Ex), 
- ...
-, 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py}{\texttt{distanceSensor.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py}{\texttt{explicitLieGroupIntegratorTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismIftomm.py}{\texttt{fourBarMechanismIftomm.py}} (TM), 
- ...
-
-\ei
-
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L131}{VSum}{}}}\label{sec:basicUtilities:VSum}
-({\it vector})
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: compute sum of all values of vector
-\item[--]
-{\bf input}: vector as list or in numpy format
-\item[--]
-{\bf output}: sum of all components of vector
-\vspace{12pt}\end{itemize}
-%
-%
-\noindent For examples on VSum see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-\bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py}{\texttt{serialRobotFlexible.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInteractiveLimits.py}{\texttt{serialRobotInteractiveLimits.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py}{\texttt{serialRobotInverseKinematics.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py}{\texttt{serialRobotKinematicTree.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py}{\texttt{serialRobotTSD.py}} (Ex), 
- ...
-, 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py}{\texttt{movingGroundRobotTest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py}{\texttt{serialRobotTest.py}} (TM)
-\ei
-
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L145}{VAdd}{}}}\label{sec:basicUtilities:VAdd}
-({\it v0}, {\it v1})
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: add two vectors instead using numpy
-\item[--]
-{\bf input}: vectors v0 and v1 as list or in numpy format
-\item[--]
-{\bf output}: component-wise sum of v0 and v1
-\vspace{12pt}\end{itemize}
-%
-%
-\noindent For examples on VAdd see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-\bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mobileMecanumWheelRobotWithLidar.py}{\texttt{mobileMecanumWheelRobotWithLidar.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py}{\texttt{NGsolvePistonEngine.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py}{\texttt{carRollingDiscTest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py}{\texttt{laserScannerTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py}{\texttt{mecanumWheelRollingDiscTest.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py}{\texttt{rigidBodyCOMtest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/simulatorCouplingTwoMbs.py}{\texttt{simulatorCouplingTwoMbs.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py}{\texttt{sliderCrank3Dbenchmark.py}} (TM), 
- ...
-
-\ei
-
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L161}{VSub}{}}}\label{sec:basicUtilities:VSub}
-({\it v0}, {\it v1})
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: subtract two vectors instead using numpy: result = v0-v1
-\item[--]
-{\bf input}: vectors v0 and v1 as list or in numpy format
-\item[--]
-{\bf output}: component-wise difference of v0 and v1
-\vspace{12pt}\end{itemize}
-%
-%
-\noindent For examples on VSub see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-\bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py}{\texttt{NGsolveCMStutorial.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveGeometry.py}{\texttt{NGsolveGeometry.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py}{\texttt{NGsolvePistonEngine.py}} (Ex), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ObjectFFRFconvergenceTestHinge.py}{\texttt{ObjectFFRFconvergenceTestHinge.py}} (Ex), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py}{\texttt{rigidBodyCOMtest.py}} (TM)
-\ei
-
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L177}{VMult}{}}}\label{sec:basicUtilities:VMult}
-({\it v0}, {\it v1})
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: scalar multiplication of two vectors instead using numpy: result = v0' * v1
-\item[--]
-{\bf input}: vectors v0 and v1 as list or in numpy format
-\item[--]
-{\bf output}: sum of all component wise products: c0[0]*v1[0] + v0[1]*v1[0] + ...
-\vspace{12pt}\end{itemize}
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L192}{ScalarMult}{}}}\label{sec:basicUtilities:ScalarMult}
-({\it scalar}, {\it v})
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: multiplication vectors with scalar: result = scalar * v
-\item[--]
-{\bf input}: value {\it scalar} and vector {\it v} as list or in numpy format
-\item[--]
-{\bf output}: scalar multiplication of all components of v: [scalar*v[0], scalar*v[1], ...]
-\vspace{12pt}\end{itemize}
-%
-%
-\noindent For examples on ScalarMult see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-\bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/pendulumFriction.py}{\texttt{pendulumFriction.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py}{\texttt{sliderCrank3Dbenchmark.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dtest.py}{\texttt{sliderCrank3Dtest.py}} (TM)
-\ei
-
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L206}{Normalize}{}}}\label{sec:basicUtilities:Normalize}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L96}{Normalize}{}}}\label{sec:basicUtilities:Normalize}
 ({\it v})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]
-{\bf function description}: take a 3D vector and return a normalized 3D vector (L2Norm=1)
+{\bf function description}: take a vector and return it normalized to L2-norm 1; a zero vector is returned as zero vector
 \item[--]
 {\bf input}: vector v as list or in numpy format
 \item[--]
-{\bf output}: vector v multiplied with scalar such that L2-norm of vector is 1
+{\bf output}: \vspace{-6pt}
+\begin{itemize}[leftmargin=1.2cm]
+\setlength{\itemindent}{-0.7cm}
+\item[]{\it list}: v multiplied with a scalar such that its L2-norm is 1, or the zero vector; a list, as
+\item[]callers append the result to lists of normals
+\end{itemize}
 \vspace{12pt}\end{itemize}
 %
 %
@@ -1141,44 +965,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L226}{Vec2Tilde}{}}}\label{sec:basicUtilities:Vec2Tilde}
-({\it v})
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: apply tilde operator (skew) to 3D-vector and return skew matrix
-\item[--]
-{\bf input}: 3D vector v as list or in numpy format
-\item[--]
-{\bf output}: matrix as list of lists with the skew-symmetric matrix from v: $\left[\!\! \begin{array}{ccc} 0 & -v[2] & v[1] \\ v[2] & 0 & -v[0] \\ -v[1] & v[0] & 0  \end{array} \!\!\right]$
-\vspace{12pt}\end{itemize}
-%
-%
-\noindent For examples on Vec2Tilde see Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-\bi
- \item \footnotesize \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py}{\texttt{explicitLieGroupMBSTest.py}} (TM)
-\ei
-
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L238}{Tilde2Vec}{}}}\label{sec:basicUtilities:Tilde2Vec}
-({\it m})
-\end{flushleft}
-\setlength{\itemindent}{0.7cm}
-\begin{itemize}[leftmargin=0.7cm]
-\item[--]
-{\bf function description}: take skew symmetric matrix and return vector (inverse of Skew(...))
-\item[--]
-{\bf input}: list of lists containing a skew-symmetric matrix (3x3)
-\item[--]
-{\bf output}: list containing the vector v (inverse function of Vec2Tilde(...))
-\vspace{12pt}\end{itemize}
-%
-\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
-\begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L266}{GaussIntegrate}{}}}\label{sec:basicUtilities:GaussIntegrate}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L128}{GaussIntegrate}{}}}\label{sec:basicUtilities:GaussIntegrate}
 ({\it functionOfX}, {\it integrationOrder}, {\it a}, {\it b})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -1200,7 +987,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L306}{LobattoIntegrate}{}}}\label{sec:basicUtilities:LobattoIntegrate}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L168}{LobattoIntegrate}{}}}\label{sec:basicUtilities:LobattoIntegrate}
 ({\it functionOfX}, {\it integrationOrder}, {\it a}, {\it b})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -6793,7 +6580,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \item[]Date:      2020-03-10 (created)
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L30}{ComputeOrthonormalBasisVectors}{}}}\label{sec:rigidBodyUtilities:ComputeOrthonormalBasisVectors}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L29}{ComputeOrthonormalBasisVectors}{}}}\label{sec:rigidBodyUtilities:ComputeOrthonormalBasisVectors}
 ({\it vector0})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -6806,7 +6593,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L58}{ComputeOrthonormalBasis}{}}}\label{sec:rigidBodyUtilities:ComputeOrthonormalBasis}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L57}{ComputeOrthonormalBasis}{}}}\label{sec:rigidBodyUtilities:ComputeOrthonormalBasis}
 ({\it vector0})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -6819,7 +6606,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L68}{GramSchmidt}{}}}\label{sec:rigidBodyUtilities:GramSchmidt}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L67}{GramSchmidt}{}}}\label{sec:rigidBodyUtilities:GramSchmidt}
 ({\it vector0}, {\it vector1})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -6839,7 +6626,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L89}{Skew}{}}}\label{sec:rigidBodyUtilities:Skew}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L88}{Skew}{}}}\label{sec:rigidBodyUtilities:Skew}
 ({\it vector})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -6857,8 +6644,8 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/createRollingDiscPenaltyTest.py}{\texttt{createRollingDiscPenaltyTest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorPythonTest.py}{\texttt{explicitLieGroupIntegratorPythonTest.py}} (TM), 
 \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py}{\texttt{explicitLieGroupIntegratorTest.py}} (TM), 
-\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/heavyTop.py}{\texttt{heavyTop.py}} (TM), 
-\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py}{\texttt{laserScannerTest.py}} (TM), 
+\\ \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py}{\texttt{explicitLieGroupMBSTest.py}} (TM), 
+\exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/heavyTop.py}{\texttt{heavyTop.py}} (TM), 
  ...
 
 \ei
@@ -6866,7 +6653,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L98}{Skew2Vec}{}}}\label{sec:rigidBodyUtilities:Skew2Vec}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L97}{Skew2Vec}{}}}\label{sec:rigidBodyUtilities:Skew2Vec}
 ({\it skew})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -6884,7 +6671,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L119}{ComputeSkewMatrix}{}}}\label{sec:rigidBodyUtilities:ComputeSkewMatrix}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L118}{ComputeSkewMatrix}{}}}\label{sec:rigidBodyUtilities:ComputeSkewMatrix}
 ({\it v})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -6906,7 +6693,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L189}{EulerParameters2G}{}}}\label{sec:rigidBodyUtilities:EulerParameters2G}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L188}{EulerParameters2G}{}}}\label{sec:rigidBodyUtilities:EulerParameters2G}
 ({\it eulerParameters})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -6921,7 +6708,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L203}{EulerParameters2GLocal}{}}}\label{sec:rigidBodyUtilities:EulerParameters2GLocal}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L202}{EulerParameters2GLocal}{}}}\label{sec:rigidBodyUtilities:EulerParameters2GLocal}
 ({\it eulerParameters})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -6944,7 +6731,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L217}{EulerParameters2RotationMatrix}{}}}\label{sec:rigidBodyUtilities:EulerParameters2RotationMatrix}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L216}{EulerParameters2RotationMatrix}{}}}\label{sec:rigidBodyUtilities:EulerParameters2RotationMatrix}
 ({\it eulerParameters})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -6968,7 +6755,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L232}{RotationMatrix2EulerParameters}{}}}\label{sec:rigidBodyUtilities:RotationMatrix2EulerParameters}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L231}{RotationMatrix2EulerParameters}{}}}\label{sec:rigidBodyUtilities:RotationMatrix2EulerParameters}
 ({\it rotationMatrix})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -6994,7 +6781,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L279}{AngularVelocity2EulerParameters\_t}{}}}\label{sec:rigidBodyUtilities:AngularVelocity2EulerParameters_t}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L278}{AngularVelocity2EulerParameters\_t}{}}}\label{sec:rigidBodyUtilities:AngularVelocity2EulerParameters_t}
 ({\it angularVelocity}, {\it eulerParameters})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7019,7 +6806,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L298}{RotationVector2RotationMatrix}{}}}\label{sec:rigidBodyUtilities:RotationVector2RotationMatrix}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L297}{RotationVector2RotationMatrix}{}}}\label{sec:rigidBodyUtilities:RotationVector2RotationMatrix}
 ({\it rotationVector})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7052,7 +6839,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L325}{RotationMatrix2RotationVector}{}}}\label{sec:rigidBodyUtilities:RotationMatrix2RotationVector}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L324}{RotationMatrix2RotationVector}{}}}\label{sec:rigidBodyUtilities:RotationMatrix2RotationVector}
 ({\it rotationMatrix})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7075,7 +6862,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L362}{ComputeRotationAxisFromRotationVector}{}}}\label{sec:rigidBodyUtilities:ComputeRotationAxisFromRotationVector}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L361}{ComputeRotationAxisFromRotationVector}{}}}\label{sec:rigidBodyUtilities:ComputeRotationAxisFromRotationVector}
 ({\it rotationVector})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7097,7 +6884,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L385}{RotationVector2G}{}}}\label{sec:rigidBodyUtilities:RotationVector2G}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L384}{RotationVector2G}{}}}\label{sec:rigidBodyUtilities:RotationVector2G}
 ({\it rotationVector})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7112,7 +6899,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L396}{RotationVector2GLocal}{}}}\label{sec:rigidBodyUtilities:RotationVector2GLocal}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L395}{RotationVector2GLocal}{}}}\label{sec:rigidBodyUtilities:RotationVector2GLocal}
 ({\it eulerParameters})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7127,7 +6914,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L414}{RotXYZ2RotationMatrix}{}}}\label{sec:rigidBodyUtilities:RotXYZ2RotationMatrix}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L413}{RotXYZ2RotationMatrix}{}}}\label{sec:rigidBodyUtilities:RotXYZ2RotationMatrix}
 ({\it rot})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7158,7 +6945,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L434}{RotationMatrix2RotXYZ}{}}}\label{sec:rigidBodyUtilities:RotationMatrix2RotXYZ}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L433}{RotationMatrix2RotXYZ}{}}}\label{sec:rigidBodyUtilities:RotationMatrix2RotXYZ}
 ({\it rotationMatrix})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7188,7 +6975,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L475}{RotXYZ2G}{}}}\label{sec:rigidBodyUtilities:RotXYZ2G}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L474}{RotXYZ2G}{}}}\label{sec:rigidBodyUtilities:RotXYZ2G}
 ({\it rot})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7203,7 +6990,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L493}{RotXYZ2G\_t}{}}}\label{sec:rigidBodyUtilities:RotXYZ2G_t}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L492}{RotXYZ2G\_t}{}}}\label{sec:rigidBodyUtilities:RotXYZ2G_t}
 ({\it rot}, {\it rot\_t})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7223,7 +7010,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L513}{RotXYZ2GLocal}{}}}\label{sec:rigidBodyUtilities:RotXYZ2GLocal}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L512}{RotXYZ2GLocal}{}}}\label{sec:rigidBodyUtilities:RotXYZ2GLocal}
 ({\it rot})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7238,7 +7025,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L531}{RotXYZ2GLocal\_t}{}}}\label{sec:rigidBodyUtilities:RotXYZ2GLocal_t}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L530}{RotXYZ2GLocal\_t}{}}}\label{sec:rigidBodyUtilities:RotXYZ2GLocal_t}
 ({\it rot}, {\it rot\_t})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7258,7 +7045,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L555}{AngularVelocity2RotXYZ\_t}{}}}\label{sec:rigidBodyUtilities:AngularVelocity2RotXYZ_t}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L554}{AngularVelocity2RotXYZ\_t}{}}}\label{sec:rigidBodyUtilities:AngularVelocity2RotXYZ_t}
 ({\it angularVelocity}, {\it rotation})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7278,7 +7065,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L578}{RotXYZ2EulerParameters}{}}}\label{sec:rigidBodyUtilities:RotXYZ2EulerParameters}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L577}{RotXYZ2EulerParameters}{}}}\label{sec:rigidBodyUtilities:RotXYZ2EulerParameters}
 ({\it alpha})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7298,7 +7085,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L612}{RotationMatrix2RotZYZ}{}}}\label{sec:rigidBodyUtilities:RotationMatrix2RotZYZ}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L611}{RotationMatrix2RotZYZ}{}}}\label{sec:rigidBodyUtilities:RotationMatrix2RotZYZ}
 ({\it rotationMatrix}, {\it flip})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7322,7 +7109,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L660}{RotationMatrixX}{}}}\label{sec:rigidBodyUtilities:RotationMatrixX}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L659}{RotationMatrixX}{}}}\label{sec:rigidBodyUtilities:RotationMatrixX}
 ({\it angleRad})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7355,7 +7142,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L673}{RotationMatrixY}{}}}\label{sec:rigidBodyUtilities:RotationMatrixY}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L672}{RotationMatrixY}{}}}\label{sec:rigidBodyUtilities:RotationMatrixY}
 ({\it angleRad})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7388,7 +7175,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L686}{RotationMatrixZ}{}}}\label{sec:rigidBodyUtilities:RotationMatrixZ}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L685}{RotationMatrixZ}{}}}\label{sec:rigidBodyUtilities:RotationMatrixZ}
 ({\it angleRad})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7421,7 +7208,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L699}{RotationMatrix2D}{}}}\label{sec:rigidBodyUtilities:RotationMatrix2D}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L698}{RotationMatrix2D}{}}}\label{sec:rigidBodyUtilities:RotationMatrix2D}
 ({\it angleRad})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7436,7 +7223,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L714}{HomogeneousTransformation}{}}}\label{sec:rigidBodyUtilities:HomogeneousTransformation}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L713}{HomogeneousTransformation}{}}}\label{sec:rigidBodyUtilities:HomogeneousTransformation}
 ({\it A}, {\it r})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7460,7 +7247,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L725}{HTtranslate}{}}}\label{sec:rigidBodyUtilities:HTtranslate}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L724}{HTtranslate}{}}}\label{sec:rigidBodyUtilities:HTtranslate}
 ({\it r})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7489,7 +7276,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L732}{HTtranslateX}{}}}\label{sec:rigidBodyUtilities:HTtranslateX}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L731}{HTtranslateX}{}}}\label{sec:rigidBodyUtilities:HTtranslateX}
 ({\it x})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7507,7 +7294,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L739}{HTtranslateY}{}}}\label{sec:rigidBodyUtilities:HTtranslateY}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L738}{HTtranslateY}{}}}\label{sec:rigidBodyUtilities:HTtranslateY}
 ({\it y})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7529,7 +7316,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L746}{HTtranslateZ}{}}}\label{sec:rigidBodyUtilities:HTtranslateZ}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L745}{HTtranslateZ}{}}}\label{sec:rigidBodyUtilities:HTtranslateZ}
 ({\it z})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7540,7 +7327,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L753}{HT0}{}}}\label{sec:rigidBodyUtilities:HT0}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L752}{HT0}{}}}\label{sec:rigidBodyUtilities:HT0}
 ()
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7566,7 +7353,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L758}{HTrotateX}{}}}\label{sec:rigidBodyUtilities:HTrotateX}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L757}{HTrotateX}{}}}\label{sec:rigidBodyUtilities:HTrotateX}
 ({\it angle})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7577,7 +7364,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L765}{HTrotateY}{}}}\label{sec:rigidBodyUtilities:HTrotateY}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L764}{HTrotateY}{}}}\label{sec:rigidBodyUtilities:HTrotateY}
 ({\it angle})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7595,7 +7382,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L772}{HTrotateZ}{}}}\label{sec:rigidBodyUtilities:HTrotateZ}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L771}{HTrotateZ}{}}}\label{sec:rigidBodyUtilities:HTrotateZ}
 ({\it angle})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7614,7 +7401,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L779}{HT2translation}{}}}\label{sec:rigidBodyUtilities:HT2translation}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L778}{HT2translation}{}}}\label{sec:rigidBodyUtilities:HT2translation}
 ({\it T})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7643,7 +7430,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L784}{HT2rotationMatrix}{}}}\label{sec:rigidBodyUtilities:HT2rotationMatrix}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L783}{HT2rotationMatrix}{}}}\label{sec:rigidBodyUtilities:HT2rotationMatrix}
 ({\it T})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7662,7 +7449,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L790}{InverseHT}{}}}\label{sec:rigidBodyUtilities:InverseHT}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L789}{InverseHT}{}}}\label{sec:rigidBodyUtilities:InverseHT}
 ({\it T})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7680,7 +7467,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L812}{RotationX2T66}{}}}\label{sec:rigidBodyUtilities:RotationX2T66}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L811}{RotationX2T66}{}}}\label{sec:rigidBodyUtilities:RotationX2T66}
 ({\it angle})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7691,7 +7478,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L825}{RotationY2T66}{}}}\label{sec:rigidBodyUtilities:RotationY2T66}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L824}{RotationY2T66}{}}}\label{sec:rigidBodyUtilities:RotationY2T66}
 ({\it angle})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7702,7 +7489,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L838}{RotationZ2T66}{}}}\label{sec:rigidBodyUtilities:RotationZ2T66}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L837}{RotationZ2T66}{}}}\label{sec:rigidBodyUtilities:RotationZ2T66}
 ({\it angle})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7713,7 +7500,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L851}{Translation2T66}{}}}\label{sec:rigidBodyUtilities:Translation2T66}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L850}{Translation2T66}{}}}\label{sec:rigidBodyUtilities:Translation2T66}
 ({\it translation3D})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7724,7 +7511,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L863}{TranslationX2T66}{}}}\label{sec:rigidBodyUtilities:TranslationX2T66}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L862}{TranslationX2T66}{}}}\label{sec:rigidBodyUtilities:TranslationX2T66}
 ({\it translation})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7735,7 +7522,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L868}{TranslationY2T66}{}}}\label{sec:rigidBodyUtilities:TranslationY2T66}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L867}{TranslationY2T66}{}}}\label{sec:rigidBodyUtilities:TranslationY2T66}
 ({\it translation})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7746,7 +7533,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L873}{TranslationZ2T66}{}}}\label{sec:rigidBodyUtilities:TranslationZ2T66}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L872}{TranslationZ2T66}{}}}\label{sec:rigidBodyUtilities:TranslationZ2T66}
 ({\it translation})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7757,7 +7544,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L878}{T66toRotationTranslation}{}}}\label{sec:rigidBodyUtilities:T66toRotationTranslation}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L877}{T66toRotationTranslation}{}}}\label{sec:rigidBodyUtilities:T66toRotationTranslation}
 ({\it T66})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7779,7 +7566,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L891}{InverseT66toRotationTranslation}{}}}\label{sec:rigidBodyUtilities:InverseT66toRotationTranslation}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L890}{InverseT66toRotationTranslation}{}}}\label{sec:rigidBodyUtilities:InverseT66toRotationTranslation}
 ({\it T66})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7794,7 +7581,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L904}{RotationTranslation2T66}{}}}\label{sec:rigidBodyUtilities:RotationTranslation2T66}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L903}{RotationTranslation2T66}{}}}\label{sec:rigidBodyUtilities:RotationTranslation2T66}
 ({\it A}, {\it v})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7814,7 +7601,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L918}{RotationTranslation2T66Inverse}{}}}\label{sec:rigidBodyUtilities:RotationTranslation2T66Inverse}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L917}{RotationTranslation2T66Inverse}{}}}\label{sec:rigidBodyUtilities:RotationTranslation2T66Inverse}
 ({\it A}, {\it v})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7841,7 +7628,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L932}{T66Inverse}{}}}\label{sec:rigidBodyUtilities:T66Inverse}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L931}{T66Inverse}{}}}\label{sec:rigidBodyUtilities:T66Inverse}
 ({\it T66})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7858,7 +7645,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L958}{T66toHT}{}}}\label{sec:rigidBodyUtilities:T66toHT}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L957}{T66toHT}{}}}\label{sec:rigidBodyUtilities:T66toHT}
 ({\it T66})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7880,7 +7667,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L974}{HT2T66Inverse}{}}}\label{sec:rigidBodyUtilities:HT2T66Inverse}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L973}{HT2T66Inverse}{}}}\label{sec:rigidBodyUtilities:HT2T66Inverse}
 ({\it T})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7895,7 +7682,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L992}{InertiaTensor2Inertia6D}{}}}\label{sec:rigidBodyUtilities:InertiaTensor2Inertia6D}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L991}{InertiaTensor2Inertia6D}{}}}\label{sec:rigidBodyUtilities:InertiaTensor2Inertia6D}
 ({\it inertiaTensor})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7906,7 +7693,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L998}{Inertia6D2InertiaTensor}{}}}\label{sec:rigidBodyUtilities:Inertia6D2InertiaTensor}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L997}{Inertia6D2InertiaTensor}{}}}\label{sec:rigidBodyUtilities:Inertia6D2InertiaTensor}
 ({\it inertia6D})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7924,7 +7711,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1405}{StrNodeType2NodeType}{}}}\label{sec:rigidBodyUtilities:StrNodeType2NodeType}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1404}{StrNodeType2NodeType}{}}}\label{sec:rigidBodyUtilities:StrNodeType2NodeType}
 ({\it sNodeType})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7937,7 +7724,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1423}{GetRigidBodyNode}{}}}\label{sec:rigidBodyUtilities:GetRigidBodyNode}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1422}{GetRigidBodyNode}{}}}\label{sec:rigidBodyUtilities:GetRigidBodyNode}
 ({\it nodeType}, {\it position}= [0,0,0], {\it velocity}= [0,0,0], {\it rotationMatrix}= [], {\it rotationParameters}= [], {\it angularVelocity}= [0,0,0])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7961,7 +7748,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1516}{AddRigidBody}{}}}\label{sec:rigidBodyUtilities:AddRigidBody}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1515}{AddRigidBody}{}}}\label{sec:rigidBodyUtilities:AddRigidBody}
 ({\it mainSys}, {\it inertia}, {\it nodeType}= exu.NodeType.RotationEulerParameters, {\it position}= [0,0,0], {\it velocity}= [0,0,0], {\it rotationMatrix}= [], {\it rotationParameters}= [], {\it angularVelocity}= [0,0,0], {\it gravity}= [0,0,0], {\it graphicsDataList}= [])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -7990,7 +7777,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1598}{AddRevoluteJoint}{}}}\label{sec:rigidBodyUtilities:AddRevoluteJoint}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1597}{AddRevoluteJoint}{}}}\label{sec:rigidBodyUtilities:AddRevoluteJoint}
 ({\it mbs}, {\it body0}, {\it body1}, {\it point}, {\it axis}, {\it useGlobalFrame}= True, {\it showJoint}= True, {\it axisRadius}= 0.1, {\it axisLength}= 0.4)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8023,7 +7810,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1687}{AddPrismaticJoint}{}}}\label{sec:rigidBodyUtilities:AddPrismaticJoint}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1686}{AddPrismaticJoint}{}}}\label{sec:rigidBodyUtilities:AddPrismaticJoint}
 ({\it mbs}, {\it body0}, {\it body1}, {\it point}, {\it axis}, {\it useGlobalFrame}= True, {\it showJoint}= True, {\it axisRadius}= 0.1, {\it axisLength}= 0.4)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8069,7 +7856,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{24pt}\end{itemize}
 %
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1019}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:TreeLink:__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1018}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:TreeLink:__init__}
 ({\it self}, {\it linkInertia}, {\it jointType}= exu.JointType.RevoluteZ, {\it jointHT}= HT0(), {\it parent}= None, {\it PDcontrol}= None, {\it graphicsDataList}= None)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8109,7 +7896,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{24pt}\end{itemize}
 %
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1056}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1055}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:__init__}
 ({\it self}, {\it mass}= 0, {\it inertiaTensor}= np.zeros([3,3]), {\it com}= np.zeros(3), {\it inertiaTensorAtCOM}= False)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8127,7 +7914,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1099}{\_\_add\_\_}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:__add__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1098}{\_\_add\_\_}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:__add__}
 ({\it self}, {\it otherBodyInertia})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8144,7 +7931,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1111}{\_\_iadd\_\_}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:__iadd__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1110}{\_\_iadd\_\_}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:__iadd__}
 ({\it self}, {\it otherBodyInertia})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8162,7 +7949,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1122}{SetWithCOMinertia}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:SetWithCOMinertia}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1121}{SetWithCOMinertia}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:SetWithCOMinertia}
 ({\it self}, {\it mass}, {\it inertiaTensorCOM}, {\it com})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8179,7 +7966,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1139}{Inertia}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:Inertia}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1138}{Inertia}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:Inertia}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8189,7 +7976,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1144}{InertiaCOM}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:InertiaCOM}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1143}{InertiaCOM}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:InertiaCOM}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8199,7 +7986,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1149}{COM}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:COM}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1148}{COM}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:COM}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8209,7 +7996,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1154}{Mass}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:Mass}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1153}{Mass}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:Mass}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8219,7 +8006,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1159}{Translated}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:Translated}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1158}{Translated}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:Translated}
 ({\it self}, {\it vec})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8229,7 +8016,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1179}{Rotated}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:Rotated}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1178}{Rotated}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:Rotated}
 ({\it self}, {\it rot})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8240,7 +8027,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1196}{Transformed}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:Transformed}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1195}{Transformed}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:Transformed}
 ({\it self}, {\it HT})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8250,7 +8037,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1218}{GetInertia6D}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:GetInertia6D}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1217}{GetInertia6D}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:GetInertia6D}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8260,7 +8047,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1225}{GetTypeName}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:GetTypeName}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1224}{GetTypeName}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:GetTypeName}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8270,7 +8057,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1230}{GetSpecialData}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:GetSpecialData}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1229}{GetSpecialData}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:GetSpecialData}
 ({\it self})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8280,7 +8067,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1236}{GetGraphics}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:GetGraphics}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1235}{GetGraphics}{}}}\label{sec:rigidBodyUtilities:RigidBodyInertia:GetGraphics}
 ({\it self}, {\it color}, {\it nTiles}= None, {\it roundness}= None)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8316,7 +8103,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{24pt}\end{itemize}
 %
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1309}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaCuboid(RigidBodyInertia):__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1308}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaCuboid(RigidBodyInertia):__init__}
 ({\it self}, {\it density}, {\it sideLengths})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8346,7 +8133,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \noindent\textcolor{steelblue}{{\bf class description}}:  create RigidBodyInertia with moment of inertia and mass of a rod with mass m and length L in local 1-direction (x-direction); inertia w.r.t. center of mass, com=[0,0,0]
 \vspace{3pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1324}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaRodX(RigidBodyInertia):__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1323}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaRodX(RigidBodyInertia):__init__}
 ({\it self}, {\it mass}, {\it length})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8365,7 +8152,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \noindent\textcolor{steelblue}{{\bf class description}}:  create RigidBodyInertia with moment of inertia and mass of mass point with given 'mass'; inertia w.r.t. center of mass, com=[0,0,0]; note that the inertia tensor gives zero and cannot be directly used in rigid bodies, however, it can be used to be added to another inertia tensor (e.g. to add unbalance)
 \vspace{3pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1335}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaMassPoint(RigidBodyInertia):__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1334}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaMassPoint(RigidBodyInertia):__init__}
 ({\it self}, {\it mass})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8386,7 +8173,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \noindent\textcolor{steelblue}{{\bf class description}}:  create RigidBodyInertia with moment of inertia and mass of sphere with mass and radius; inertia w.r.t. center of mass, com=[0,0,0]
 \vspace{3pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1346}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaSphere(RigidBodyInertia):__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1345}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaSphere(RigidBodyInertia):__init__}
 ({\it self}, {\it mass}= None, {\it radius}= None, {\it density}= None)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8416,7 +8203,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \noindent\textcolor{steelblue}{{\bf class description}}:  create RigidBodyInertia with moment of inertia and mass of hollow sphere with mass (concentrated at circumference) and radius; inertia w.r.t. center of mass, com=0
 \vspace{3pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1366}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaHollowSphere(RigidBodyInertia):__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1365}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaHollowSphere(RigidBodyInertia):__init__}
 ({\it self}, {\it mass}, {\it radius})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -8428,7 +8215,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \noindent\textcolor{steelblue}{{\bf class description}}:  create RigidBodyInertia with moment of inertia and mass of cylinder with density, length and outerRadius; axis defines the orientation of the cylinder axis (0=x-axis, 1=y-axis, 2=z-axis); for hollow cylinder use innerRadius != 0; inertia w.r.t. center of mass, com=[0,0,0]
 \vspace{3pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1378}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaCylinder(RigidBodyInertia):__init__}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1377}{\_\_init\_\_}{}}}\label{sec:rigidBodyUtilities:InertiaCylinder(RigidBodyInertia):__init__}
 ({\it self}, {\it density}, {\it length}, {\it outerRadius}, {\it axis}, {\it innerRadius}= 0)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -9369,7 +9156,7 @@ by inheritance with class MyClass(ROSInterface)
 \item[]Date:      2023-03-27
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L30}{MakeCorkeRobot}{}}}\label{sec:future:MakeCorkeRobot}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L29}{MakeCorkeRobot}{}}}\label{sec:future:MakeCorkeRobot}
 ({\it robotDic})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -9402,7 +9189,7 @@ by inheritance with class MyClass(ROSInterface)
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L83}{ComputeIK3R}{}}}\label{sec:future:ComputeIK3R}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L82}{ComputeIK3R}{}}}\label{sec:future:ComputeIK3R}
 ({\it robotDic}, {\it HT})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -9433,7 +9220,7 @@ by inheritance with class MyClass(ROSInterface)
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L159}{ComputeIKPuma560}{}}}\label{sec:future:ComputeIKPuma560}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L158}{ComputeIKPuma560}{}}}\label{sec:future:ComputeIKPuma560}
 ({\it robotDic}, {\it HT})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -9465,7 +9252,7 @@ by inheritance with class MyClass(ROSInterface)
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L289}{ComputeIKUR}{}}}\label{sec:future:ComputeIKUR}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/future.py\#L288}{ComputeIKUR}{}}}\label{sec:future:ComputeIKUR}
 ({\it robotDic}, {\it HTdes})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -10246,7 +10033,7 @@ by inheritance with class MyClass(ROSInterface)
 \item[]Date:      2021-22-09
 \ei
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L26}{VelocityManipulability}{}}}\label{sec:special:VelocityManipulability}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L25}{VelocityManipulability}{}}}\label{sec:special:VelocityManipulability}
 ({\it robot}, {\it HT}, {\it mode})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -10271,7 +10058,7 @@ by inheritance with class MyClass(ROSInterface)
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L61}{ForceManipulability}{}}}\label{sec:special:ForceManipulability}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L60}{ForceManipulability}{}}}\label{sec:special:ForceManipulability}
 ({\it robot}, {\it HT}, {\it mode}, {\it singularWeight}= 100)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -10297,7 +10084,7 @@ by inheritance with class MyClass(ROSInterface)
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L107}{StiffnessManipulability}{}}}\label{sec:special:StiffnessManipulability}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L106}{StiffnessManipulability}{}}}\label{sec:special:StiffnessManipulability}
 ({\it robot}, {\it JointStiffness}, {\it HT}, {\it mode}, {\it singularWeight}= 1000)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -10329,7 +10116,7 @@ by inheritance with class MyClass(ROSInterface)
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L156}{JointJacobian}{}}}\label{sec:special:JointJacobian}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L155}{JointJacobian}{}}}\label{sec:special:JointJacobian}
 ({\it robot}, {\it HTJoint}, {\it HTLink})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -10353,7 +10140,7 @@ by inheritance with class MyClass(ROSInterface)
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L218}{MassMatrix}{}}}\label{sec:special:MassMatrix}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L217}{MassMatrix}{}}}\label{sec:special:MassMatrix}
 ({\it robot}, {\it HT}, {\it jointJacobian})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -10384,7 +10171,7 @@ by inheritance with class MyClass(ROSInterface)
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L254}{DynamicManipulability}{}}}\label{sec:special:DynamicManipulability}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L253}{DynamicManipulability}{}}}\label{sec:special:DynamicManipulability}
 ({\it robot}, {\it HT}, {\it MassMatrix}, {\it Tmax}, {\it mode}, {\it singularWeight}= 1000)
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -10419,7 +10206,7 @@ by inheritance with class MyClass(ROSInterface)
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L305}{CalculateAllMeasures}{}}}\label{sec:special:CalculateAllMeasures}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/special.py\#L304}{CalculateAllMeasures}{}}}\label{sec:special:CalculateAllMeasures}
 ({\it robot}, {\it robotDic}, {\it q}, {\it mode}, {\it flag}= [0,0,0,0])
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}

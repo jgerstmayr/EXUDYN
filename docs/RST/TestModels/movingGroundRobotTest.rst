@@ -288,11 +288,11 @@ You can view and download this file on Github: `movingGroundRobotTest.py <https:
    
    
    fact=0.005 #to reach desired accuracy; #2026-09-09: switch 0.01->0.005 
-   exu.Print("torques at tEnd=", fact*VSum(measuredTorques))
+   exu.Print("torques at tEnd=", fact*np.sum(measuredTorques))
    
    #add larger test tolerance for 32/64bits difference
-   exudynTestGlobals.testError = (fact*VSum(measuredTorques) - 0.007681798995944785)  #until 2026-01-28 (unphysical inertia) #until 2022-04-21: 7680031232063571; until 2021-09-10: 76.8003123206452; until 2021-08-19 (changed robotics.py): 76.80031232091771; old controller: 77.12176106978085) #OLDER results: up to 2021-06-28: 0.7712176106955341; 2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507
-   exudynTestGlobals.testResult = fact*VSum(measuredTorques)   
+   exudynTestGlobals.testError = (fact*np.sum(measuredTorques) - 0.007681798995944785)  #until 2026-01-28 (unphysical inertia) #until 2022-04-21: 7680031232063571; until 2021-09-10: 76.8003123206452; until 2021-08-19 (changed robotics.py): 76.80031232091771; old controller: 77.12176106978085) #OLDER results: up to 2021-06-28: 0.7712176106955341; 2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507
+   exudynTestGlobals.testResult = fact*np.sum(measuredTorques)   
    
    #exu.Print('error=', exudynTestGlobals.testError)
    

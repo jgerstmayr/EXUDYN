@@ -579,7 +579,7 @@ class RobotEnv(OpenAIGymInterfaceEnv):
         X = self.dimGroundX
         Y = self.dimGroundY
         v = np.array([self.destination[0] - self.state[0], self.destination[1] - self.state[1]])
-        dist = NormL2(v)
+        dist = np.linalg.norm(v)
         
         phi = self.state[2]
         localSpeed = Rot2D(phi).T @ [self.state[3],self.state[4]]
@@ -587,7 +587,7 @@ class RobotEnv(OpenAIGymInterfaceEnv):
         
         reward = 1
         #take power of 0.5 of dist to penalize small distances
-        #reward -= (dist/(0.5*NormL2([X,Y])))**0.5
+        #reward -= (dist/(0.5*np.linalg.norm([X,Y])))**0.5
         
         #add penalty on rotations at a certain time (at beginning rotation may be needed...)
         #reward -= 0.2*abs(self.state[5])/self.maxPlatformAngVel
@@ -608,10 +608,10 @@ class RobotEnv(OpenAIGymInterfaceEnv):
             v0 = v*(1/dist)
             vDir = Rot2D(phi) @ [0,1]
             # print('v0=',v0,', dir=',vDir)
-            reward -= NormL2(vDir-v0)*0.5
+            reward -= np.linalg.norm(vDir-v0)*0.5
         
         # print('rew=', round(reward,3), ', vF=', round(0.5*abs(forwardSpeed),3), 
-        #       ', dir=', round(NormL2(vDir-v0)*0.5,4),
+        #       ', dir=', round(np.linalg.norm(vDir-v0)*0.5,4),
         #       'v0=', v0, 'vDir=',vDir)
         
         #reward -= max(0,abs(self.state[2])-pi)/(4*pi)

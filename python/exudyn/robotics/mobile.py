@@ -238,7 +238,7 @@ def MobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *a
         v0Wheel = mobileRobot['platformInitialVelocity'] #approx.
         initialRotation = RotationMatrixZ(-pi/2)
         pOff = [dx,dy,0-p0Car[2]]    #[dx,dy,0]
-        poseWheel = VAdd(p0Car, HT2rotationMatrix(mobileRobot['platformInitialPose'])  @ VAdd(p0Wheel,pOff))
+        poseWheel = (np.array(p0Car) + (HT2rotationMatrix(mobileRobot['platformInitialPose'])  @ (np.array(p0Wheel) + pOff)))
         #add a wheel body to the main platform body
         dictWheeln = mbs.CreateRigidBody(referencePosition=poseWheel,  
                                          referenceRotationMatrix=HT2rotationMatrix(mobileRobot['platformInitialPose']) @ initialRotation,  
@@ -253,7 +253,7 @@ def MobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *a
         #markers for rigid body:
         mWheel = mbs.AddMarker(MarkerBodyRigid(bodyNumber=dictWheeln['bodyNumber'], localPosition=[0,0,0]))
         mWheelsList += [mWheel]
-        mAxle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bPlatform, localPosition=VAdd(pOff,[0,0,p0Wheel[2]])))
+        mAxle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bPlatform, localPosition=np.array(pOff) + [0,0,p0Wheel[2]]))
         mAxlesList += [mAxle]
         jointLink = mbs.CreateRevoluteJoint(bodyNumbers=[bPlatform, dictWheeln['bodyNumber']], 
                                             position=pOff[0:2] + [pOff[2] + p0Wheel[2]], 

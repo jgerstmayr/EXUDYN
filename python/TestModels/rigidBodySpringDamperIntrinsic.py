@@ -165,7 +165,7 @@ exu.Print("omega3=", omega3)
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++
-u=NormL2(p1) + NormL2(p2) + NormL2(0.01*omega3)
+u=np.linalg.norm(p1) + np.linalg.norm(p2) + np.linalg.norm(0.01*omega3)
 exu.Print('solution of rigidBodySpringDamperIntrinsic test=',u)
 
 exudynTestGlobals.testError = u - (0.5472368463500464)

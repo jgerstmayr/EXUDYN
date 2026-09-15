@@ -89,7 +89,7 @@ for i, pos in enumerate(posList):
     sheavesRadii += [r]
 
     if i != 0:
-        Lref += NormL2(np.array(pos)-pLast)
+        Lref += np.linalg.norm(np.array(pos)-pLast)
     if i > 0 and i < len(posList)-1:
         #note that in this test example, Lref is slightly too long, leading to negative spring forces (compression) if not treated nonlinearly with default settings in ReevingSystemSprings
         Lref += r*pi #0.8*r*pi would always lead to tension

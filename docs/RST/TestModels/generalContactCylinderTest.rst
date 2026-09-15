@@ -194,7 +194,7 @@ You can view and download this file on Github: `generalContactCylinderTest.py <h
    q += mbs.GetSensorValues(sRot)
    #print('q=', q)
    
-   u = NormL2(q)
+   u = np.linalg.norm(q)
    exu.Print('solution of generalContactCylinderTest =',u)
    
    exudynTestGlobals.testError = u - (12.42377622187738 ) 

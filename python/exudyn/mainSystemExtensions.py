@@ -22,7 +22,7 @@ import exudyn.plot
 import exudyn.solver
 import exudyn.interactive
 import exudyn.graphics
-from exudyn.utilities import NormL2, Normalize
+from exudyn.utilities import Normalize
 
 from exudyn.rigidBodyUtilities import ComputeOrthonormalBasis, \
     RotationMatrix2EulerParameters, AngularVelocity2EulerParameters_t, RotationMatrix2RotXYZ, AngularVelocity2RotXYZ_t, \
@@ -431,7 +431,7 @@ def MainSystemCreateMassPoint(mbs,
     if returnDict:
         rDict = {'nodeNumber':nodeNumber, 'bodyNumber': bodyNumber}
     
-    if list(gravity) != [0.,0.,0.]: #        if NormL2(gravity) != 0.:
+    if list(gravity) != [0.,0.,0.]: #        if np.linalg.norm(gravity) != 0.:
         markerNumber = mbs.AddMarker(eii.MarkerBodyMass(bodyNumber=bodyNumber))
         loadNumber = mbs.AddLoad(eii.LoadMassProportional(markerNumber=markerNumber, loadVector=gravity))
         if returnDict:
@@ -2688,13 +2688,13 @@ def MainSystemCreateKinematicTree(mbs,
                                                   color=jointColors[i])
                 graphicsDataList[i].append(gJoint)
 
-            if NormL2(v) > 0:
+            if np.linalg.norm(v) > 0:
                 #links:
                 if linkRoundness < 1:
                     axis0 = Normalize(v)
                     axis2 = np.cross(axis0, parentAxis)
                     axis1 = -np.cross(axis0, axis2)
-                    lenV = NormL2(v) #will always have some extension
+                    lenV = np.linalg.norm(v) #will always have some extension
                     gLink = exudyn.graphics.Brick(centerPoint=[0.5*lenV,0,0],
                                                   size=[lenV + 1.6*jointRadius, jointWidth, 2*jointRadius],
                                                   color=linkColor,

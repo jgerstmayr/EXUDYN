@@ -223,7 +223,7 @@ for iWheel in range(nWheels):
 
 
     #add wheel body
-    dict0 = mbs.CreateRigidBody(referencePosition=VAdd(p0Wheel,pOff),  
+    dict0 = mbs.CreateRigidBody(referencePosition=(np.array(p0Wheel) + pOff),  
                                 referenceRotationMatrix=initialRotation,  
                                 initialVelocity=v0Wheel,  
                                 initialAngularVelocity=omega0Wheel,  

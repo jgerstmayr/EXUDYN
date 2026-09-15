@@ -122,7 +122,7 @@ mGHposition = mbs.GetMarkerOutput(mGH, variableType=exu.OutputVariableType.Posit
 mRHposition = mbs.GetMarkerOutput(mRH, variableType=exu.OutputVariableType.Position, 
                                  configuration=exu.ConfigurationType.Reference)
 
-dLH0 = NormL2(mGHposition - mRHposition)
+dLH0 = np.linalg.norm(mGHposition - mRHposition)
 # print('LH0=', LH0)
 # print('dLH0=', dLH0)
 

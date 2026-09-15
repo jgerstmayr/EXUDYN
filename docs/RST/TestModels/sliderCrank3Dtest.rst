@@ -73,7 +73,7 @@ You can view and download this file on Github: `sliderCrank3Dtest.py <https://gi
    
    #initial positions of points A-C
    pA = [0, yA, zA]
-   pB = VAdd([0, yA, zA], [0,0,lAB])
+   pB = np.array([0, yA, zA]) + [0,0,lAB]
    pC = [xD, 0, 0]
    
    vCB = np.array(pC) - np.array(pB)
@@ -131,7 +131,7 @@ You can view and download this file on Github: `sliderCrank3Dtest.py <https://gi
    graphicsBC = graphics.RigidLink(p0=[-0.5*lBC,0,0],p1=[0.5*lBC,0,0], axis1=[0,0,0], 
                                       radius=[0.01,0.01], thickness = 0.01, 
                                       width = [0.02,0.02], color=graphics.color.lightred)
-   pBC = ScalarMult(0.5,VAdd(pB,pC))
+   pBC = 0.5*(np.array(pB) + pC)
    dict1 = mbs.CreateRigidBody(referencePosition=pBC,  
                                referenceRotationMatrix=rotMatBC,  
                                initialVelocity=v1Init,  

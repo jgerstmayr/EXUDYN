@@ -127,7 +127,7 @@ You can view and download this file on Github: `symbolicUserFunctionTest.py <htt
    
    n = mbs.GetObject(oMassPoint)['nodeNumber']
    p = mbs.GetNodeOutput(n, exu.OutputVariableType.Position)
-   u = NormL2(p)
+   u = np.linalg.norm(p)
    
    exu.Print('u=',u)
    exu.Print('solution of symbolicUserFunctionTest=',u)

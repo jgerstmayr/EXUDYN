@@ -106,7 +106,7 @@ def ComputeStringLengths(pRigid):
     L0 = np.array(pRigid)+localPosMass0-pTower0
     L1 = np.array(pRigid)+localPosMass1-pTower1
     
-    return [NormL2(L0), NormL2(L1)]
+    return [np.linalg.norm(L0), np.linalg.norm(L1)]
 
 
 mbs.Assemble()

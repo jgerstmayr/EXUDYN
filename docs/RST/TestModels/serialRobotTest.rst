@@ -290,11 +290,11 @@ You can view and download this file on Github: `serialRobotTest.py <https://gith
    
    
    
-   exu.Print("torques at tEnd=", VSum(measuredTorques))
+   exu.Print("torques at tEnd=", np.sum(measuredTorques))
    
    #add larger test tolerance for 32/64bits difference
-   exudynTestGlobals.testError = (VSum(measuredTorques) - 0.7681856909852399)  #until 2022-04-21: 7680031232063571; until 2021-09-10: 76.8003123206452; until 2021-08-19 (changed robotics.py): 76.80031232091771; old controller: 77.12176106978085) #OLDER results: up to 2021-06-28: 0.7712176106955341; 2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507
-   exudynTestGlobals.testResult = VSum(measuredTorques)   
+   exudynTestGlobals.testError = (np.sum(measuredTorques) - 0.7681856909852399)  #until 2022-04-21: 7680031232063571; until 2021-09-10: 76.8003123206452; until 2021-08-19 (changed robotics.py): 76.80031232091771; old controller: 77.12176106978085) #OLDER results: up to 2021-06-28: 0.7712176106955341; 2020-08-25: 77.13193176752571 (32bits),   2020-08-24: (64bits)77.13193176846507
+   exudynTestGlobals.testResult = np.sum(measuredTorques)   
    
    #exu.Print('error=', exudynTestGlobals.testError)
    

@@ -118,7 +118,7 @@ u1 = mbs.GetNodeOutput(n1, exu.OutputVariableType.Coordinates)
 u2 = mbs.GetNodeOutput(n2, exu.OutputVariableType.Coordinates)
 #exu.Print("u2 =", u2)
 
-u=NormL2(u1) + NormL2(u2)
+u=np.linalg.norm(u1) + np.linalg.norm(u2)
 exu.Print('solution of genericODE2test=',u)
 
 exudynTestGlobals.testError = u - (0.03604546349898683) #2020-04-22: 0.03604546349898683

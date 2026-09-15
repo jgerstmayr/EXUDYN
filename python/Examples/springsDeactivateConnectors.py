@@ -98,7 +98,7 @@ for i in range(nSteps): #1000
 
     for spring in springList:
         dist = mbs.GetObjectOutput(spring, exu.OutputVariableType.Distance)
-        force = NormL2(mbs.GetObjectOutput(spring, exu.OutputVariableType.Force))
+        force = np.linalg.norm(mbs.GetObjectOutput(spring, exu.OutputVariableType.Force))
 
         dist0= mbs.GetObjectParameter(spring, 'referenceLength')
         #print('spring '+str(spring)+' length = ' + str(dist) + ', elongation = ' + str(dist-dist0))

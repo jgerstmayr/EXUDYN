@@ -18,7 +18,6 @@ import numpy as np #LoadSolutionFile
 import exudyn.itemInterface as eii
 import exudyn as exu 
 import exudyn.graphics as graphics
-from exudyn.basicUtilities import NormL2
 from exudyn.advancedUtilities import ExpectedType, RaiseTypeError, IsValidBool, IsValidRealInt, IsVector, IsSquareMatrix, IsValidObjectIndex
 from math import sin, cos #, sqrt, atan2
 
@@ -1182,7 +1181,7 @@ class RigidBodyInertia:
         Note:
             only allowed if COM=0 !
         """
-        if NormL2(self.com) != 0:
+        if np.linalg.norm(self.com) != 0:
             exu.Print("ERROR: RigidBodyInertia.Rotated only allowed in case of com=0")
             return 0
         try:
@@ -1588,7 +1587,7 @@ def AddRigidBody(mainSys, inertia,
                                                    nodeNumber=nodeNumber, 
                                                    visualization=eii.VObjectRigidBody(graphicsData=graphicsDataList)))
     
-    if NormL2(gravity) != 0.:
+    if np.linalg.norm(gravity) != 0.:
         markerNumber = mainSys.AddMarker(eii.MarkerBodyMass(bodyNumber=bodyNumber))
         mainSys.AddLoad(eii.LoadMassProportional(markerNumber=markerNumber, loadVector=gravity))
     

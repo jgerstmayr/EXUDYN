@@ -19,15 +19,20 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.67.dev1, 
++  Exudyn version = 1.11.68.dev1, 
 +  last change =  2026-09-15, 
-+  Number of issues = 2442, 
-+  Number of resolved issues = 2140 (67 in current version), 
++  Number of issues = 2443, 
++  Number of resolved issues = 2141 (68 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.68: resolved Issue 2442: basicUtilities: numpy-era vector helpers removed (change)
+    - issue author: Claude-JG
+    - description:  step 107a: NormL2 VSum VAdd VSub VMult ScalarMult Vec2Tilde Tilde2Vec DiagonalMatrix eye2D eye3D removed; uses in package/TestModels/Examples replaced by numpy (np.linalg.norm; np.sum; array arithmetic; np.dot; Skew); Normalize kept (zero vector allowed) and implemented with numpy; basicUtilities imports numpy
+    - date resolved: **2026-09-15 18:02**\ , date raised: 2026-09-15 
+    - resolved by: Claude-JG
  * Version 1.11.67: resolved Issue 2441: development environments: dependency groups instead of hand-written package lists (change)
     - issue author: Claude-JG
     - description:  step 109: [dependency-groups] docs/lint/build/ide/dev in pyproject.toml; docs/requirements.txt removed; CI and readthedocs install groups; condaEnvironments.md recipe uses pip install --group dev

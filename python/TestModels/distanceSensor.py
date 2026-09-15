@@ -252,7 +252,7 @@ s5 = (mbs.GetSensorValues(sVelocitySphere))
 
 exu.Print('sensors=',s1,s2,s3,s4,s5,'\n')
 
-u = NormL2(s1) + NormL2(s2) + NormL2(s3) + NormL2(s4) + NormL2(s5)
+u = np.linalg.norm(s1) + np.linalg.norm(s2) + np.linalg.norm(s3) + np.linalg.norm(s4) + np.linalg.norm(s5)
 
 exu.Print('solution of distanceSensor=',u)
 exudynTestGlobals.testResult = u

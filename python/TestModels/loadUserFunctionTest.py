@@ -15,7 +15,6 @@
 
 import exudyn as exu
 from exudyn.itemInterface import *
-from exudyn.basicUtilities import NormL2
 from exudyn.utilities import CreateSymbolicUserFunction
 from math import pi
 
@@ -113,7 +112,7 @@ for case in cases:
     if useGraphics:
         SC.renderer.Stop() #safely close rendering window!
     
-    result += NormL2(mbs.GetSensorValues(sMass))
+    result += np.linalg.norm(mbs.GetSensorValues(sMass))
 
 
 

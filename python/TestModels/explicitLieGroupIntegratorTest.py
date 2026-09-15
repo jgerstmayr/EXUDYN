@@ -203,7 +203,7 @@ for method in methods:
     pos=mbs.GetSensorValues(sPos) 
     coords=mbs.GetSensorValues(sCoords) 
     
-    err += NormL2(coords)+NormL2(pos)
+    err += np.linalg.norm(coords)+np.linalg.norm(pos)
     exu.Print(str(method)+",h=",h,":\n  omega =", omega, "\n  coords=", coords)
     if method == exu.DynamicSolverType.DOPRI5:
         nsteps = mbs.sys['dynamicSolver'].it.currentStepIndex-1 #total number of steps of automatic stepsize constrol

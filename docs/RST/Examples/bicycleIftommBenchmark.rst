@@ -324,7 +324,7 @@ You can view and download this file on Github: `bicycleIftommBenchmark.py <https
                pos = mbs.GetSensorValues(sensorNumbers[i*3+0])
                vel = mbs.GetSensorValues(sensorNumbers[i*3+1]) #vel
                omega = mbs.GetSensorValues(sensorNumbers[i*3+2]) #ang vel local
-               E += 0.5 * NormL2(vel)**2 * massBodies[i]
+               E += 0.5 * np.linalg.norm(vel)**2 * massBodies[i]
                E += 0.5 * np.array(omega) @ inertiaBodies[i] @ omega
                
                P -= np.dot(g,pos)*massBodies[i]

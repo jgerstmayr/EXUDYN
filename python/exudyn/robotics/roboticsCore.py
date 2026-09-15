@@ -1011,8 +1011,8 @@ class Robot:
                                                       radius=r, color=color)]
 
             #draw body as cylinder:
-            if ebu.NormL2(ebu.VSub(p1,p0)) > 1e-15:
-                graphicsList += [exudyn.graphics.Cylinder(pAxis=p1, vAxis=ebu.VSub(p0,p1), 
+            if np.linalg.norm(np.array(p1) - p0) > 1e-15:
+                graphicsList += [exudyn.graphics.Cylinder(pAxis=p1, vAxis=(np.array(p0) - p1), 
                                                       radius=0.5*wL, color=color)]
         
         return graphicsList

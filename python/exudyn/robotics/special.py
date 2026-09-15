@@ -16,7 +16,6 @@ from exudyn.docmeta import docmeta
 import numpy as np
 import exudyn
 import exudyn.robotics as rob
-from exudyn.basicUtilities import ScalarMult
 from exudyn.rigidBodyUtilities import RotationMatrix2RotZYZ, HT2rotationMatrix, HT2translation, Skew, HTtranslate
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -204,7 +203,7 @@ def JointJacobian(robot, HTJoint,HTLink):
                 Jomega[0:3, i] = u[i]
             else:  # prismatic joint
                 Jvel[0:3, i] = u[i]  # NOT TESTED!!!
-                Jomega[0:3, i] = ScalarMult(0, u[i]) # for prismatic joint
+                Jomega[0:3, i] = 0*np.array(u[i]) # for prismatic joint
 
 
         JJ[frame] = np.array([Jomega, Jvel])

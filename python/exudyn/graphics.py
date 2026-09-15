@@ -808,9 +808,9 @@ def Cylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,0.,1.], nTil
         p4 = points2[len(points2)-3:len(points2)]
         p5 = points3[len(points3)-3:len(points3)]
         points0 += list(pAxis) + pAxis1 + p2 + p3 + list(pAxis) + pAxis1 + p4 + p5
-        n1=np.cross(ebu.VSub(pAxis,pAxis1),ebu.VSub(p3,pAxis))
+        n1=np.cross((np.array(pAxis) - pAxis1),(np.array(p3) - pAxis))
         n1=list(ebu.Normalize(-nf*n1))
-        n2=np.cross(ebu.VSub(pAxis1,pAxis),ebu.VSub(p4,pAxis))
+        n2=np.cross((np.array(pAxis1) - pAxis),(np.array(p4) - pAxis))
         n2=list(ebu.Normalize(-nf*n2))
         normals0 += n1+n1+n1+n1+n2+n2+n2+n2  #8 additional normals
         if graphicsDataSwitchTriangleOrder:
@@ -1074,7 +1074,7 @@ def RigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1],
     Returns:
         graphicsData dictionary, to be used in visualization of EXUDYN objects
     """
-    linkAxis = ebu.VSub(p1,p0)
+    linkAxis = (np.array(p1) - p0)
     #linkAxis0 = ebu.Normalize(linkAxis)
     a0=list(axis0)
     a1=list(axis1)
@@ -1083,7 +1083,7 @@ def RigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1],
     data1 = {}
     data2 = {}
 
-    if ebu.NormL2(axis0) == 0:
+    if np.linalg.norm(axis0) == 0:
         data1 = Sphere(p0, radius[0], color, nTiles)
     else:
         a0=ebu.Normalize(a0)
@@ -1091,7 +1091,7 @@ def RigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1],
                                      list(width[0]*np.array(a0)), 
                                      radius[0], color, nTiles)
         
-    if ebu.NormL2(axis1) == 0:
+    if np.linalg.norm(axis1) == 0:
         data2 = Sphere(p1, radius[1], color, nTiles)
     else:
         a1=ebu.Normalize(a1)
@@ -1313,7 +1313,7 @@ def Arrow(pAxis, vAxis, radius, color=[0.,0.,0.,1.], headFactor = 2, headStretch
     Returns:
         graphicsData dictionary, to be used in visualization of EXUDYN objects
     """
-    L = ebu.NormL2(vAxis)
+    L = np.linalg.norm(vAxis)
     rHead = radius * headFactor
     xHead = L - headStretch*rHead
     contour=[[0,0],[0,radius],[xHead,radius],[xHead,rHead],[L,0]]

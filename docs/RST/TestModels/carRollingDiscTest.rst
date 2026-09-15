@@ -155,7 +155,7 @@ You can view and download this file on Github: `carRollingDiscTest.py <https://g
    
        #add wheel body
        b0 = mbs.CreateRigidBody(inertia = inertiaWheel, 
-                                referencePosition = VAdd(p0Wheel,pOff), 
+                                referencePosition = (np.array(p0Wheel) + pOff), 
                                 referenceRotationMatrix = initialRotation, #np.diag([1,1,1]),
                                 initialAngularVelocity = omega0Wheel,
                                 initialVelocity = v0Wheel,

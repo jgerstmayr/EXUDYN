@@ -819,11 +819,45 @@ The core investment. Every step is validated byte-for-byte by step 2.
     `[tool.pydoclint]`.
 107. *(Phase 3, after 36)* **Star-import surface of the utility modules** (#2438, maintainer request
     2026-09-15). `from exudyn.utilities import *` exports everything `utilities.py` imports,
-    including helpers such as `extends` (step 35) and `docmeta` (step 37), because the module has
-    no `__all__`; it also re-exports `basicUtilities`, `advancedUtilities`, `rigidBodyUtilities`
-    and `graphicsDataUtilities` by star import. Measure first which names the Examples and
-    TestModels rely on, then define `__all__` (or restructure the imports) so only the public API
-    is exported; the same for the other utility modules.
+    including helpers such as `extends` (step 35) and `docmeta` (step 37), `np`, `sqrt` and
+    `exudyn`, because no utility module has `__all__`; it also re-exports `basicUtilities`,
+    `advancedUtilities`, `rigidBodyUtilities`, `graphicsDataUtilities` and `itemInterface` by star
+    import, plus 23 deprecated `GraphicsData...` aliases. This is a v2.0 API change: user scripts
+    relying on removed names break, so every removal is listed in the changelog (step 52).
+    - **Ways to do it.** *Easy:* one `__all__` in `utilities.py` listing today's public names, helpers
+      left out - nothing else changes. *Long-term ideal:* every utility module has its own
+      `__all__`; `utilities.py` is a thin facade that only composes those lists; no module-level
+      compatibility aliases; users are steered to the topical modules (`exudyn.graphics`,
+      `exudyn.rigidBodyUtilities`, ...). *Recommended:* the ideal, reached in three sub-steps, each
+      with a full suite run and the Examples/TestModels switched in the same commit:
+    - **107a - numpy-era vector helpers in `basicUtilities.py`** (#2442). **DONE 2026-09-15.**
+      → [log](exudynRevisionLog2026.md#step-107a)
+    - **107b - `utilities.py`** (maintainer decisions 2026-09-15). (1) Remove the 23 deprecated
+      `GraphicsData...` aliases after replacing their uses by `exudyn.graphics.*`. (2) No new files;
+      module names are final, since removing a function from a module later breaks user scripts:
+      - the `@extends` functions (`CreateDistanceSensorGeometry`, `CreateDistanceSensor` with its
+        helper, `DrawSystemGraph`) move to `mainSystemExtensions.py`;
+      - the TCP/IP functions move to `advancedUtilities.py`;
+      - **all other functions move to `basicUtilities.py`**, which may import numpy and exudyn from
+        now on (so `exu.Print` stays), and becomes the module to import directly;
+      - `advancedUtilities.py` keeps its functions (moving them would break explicit imports).
+      `utilities.py` becomes the big import only: star imports and re-exports, no own functions,
+      no `extends`. Import order without cycles: `exudyn/__init__` loads the C++ module first, then
+      `mainSystemExtensions.py`, which imports `basicUtilities`/`advancedUtilities`/... but never
+      `utilities.py`; `utilities.py` imports everything, including `mainSystemExtensions.py`.
+      Signature defaults such as `exudyn.ConfigurationType.Current` are evaluated at import, which
+      works because the C++ module is loaded before any utility module.
+    - **107c - `__all__`.** Measure which implicitly exported names (`np`, `pi`, `sqrt`, `exudyn`,
+      the itemInterface classes, ...) Examples and TestModels take from `from exudyn.utilities
+      import *` (some do use `np` and `sqrt` that way; they get explicit imports). Then give every
+      utility module an `__all__` and let `utilities.py` compose them. A checker keeps the lists
+      complete: a small `ast` tool (like `tools/checkExtras.py`, run in CI) that fails if a public
+      top-level function or class of a module - one with a docstring and not
+      `@docmeta(public=False)`, the same rule the documentation reader uses - is missing from its
+      `__all__`, or if `__all__` names something the module does not define.
+    - **For every sub-step:** moved or removed names are checked in the package, TestModels,
+      Examples and docs, and listed in the log table *API changes for the v2.0 release notes*,
+      which step 52 carries into `CHANGELOG.md`.
 
 ### Phase 4 — Testing (~3 weeks)
 

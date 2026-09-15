@@ -77,7 +77,7 @@ You can view and download this file on Github: `sliderCrank3Dbenchmark.py <https
    
    #initial positions of points A-C
    pA = [0, yA, zA]
-   pB = VAdd([0, yA, zA], [0,0,lAB])
+   pB = np.array([0, yA, zA]) + [0,0,lAB]
    pC = [xD, 0, 0]
    
    vCB = np.array(pC) - np.array(pB)
@@ -140,7 +140,7 @@ You can view and download this file on Github: `sliderCrank3Dbenchmark.py <https
    graphicsBC = graphics.RigidLink(p0=[-0.5*lBC,0,0],p1=[0.5*lBC,0,0], axis1=[0,0,0], 
                                       radius=[0.01,0.01], thickness = 0.01, 
                                       width = [0.02,0.02], color=graphics.color.lightred)
-   pBC = ScalarMult(0.5,VAdd(pB,pC))
+   pBC = 0.5*(np.array(pB) + pC)
    b1 = mbs.CreateRigidBody(inertia=inertiaBC, 
                             nodeType=nodeType,
                             referencePosition=pBC, 
@@ -319,7 +319,7 @@ You can view and download this file on Github: `sliderCrank3Dbenchmark.py <https
    exu.Print('solution of 3D slidercrank iftomm benchmark=',p1, r1,v1,v1,w1)
    exu.Print('slider pos =', mbs.GetNodeOutput(n2, exu.OutputVariableType.Position))
    
-   u = NormL2(p1) + NormL2(r1) + NormL2(v1) + NormL2(w1)
+   u = np.linalg.norm(p1) + np.linalg.norm(r1) + np.linalg.norm(v1) + np.linalg.norm(w1)
    exu.Print('error norm=', u)
    exudynTestGlobals.testError = u - (0)
    exudynTestGlobals.testResult = u

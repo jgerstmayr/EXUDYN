@@ -63,7 +63,7 @@ You can view and download this file on Github: `NGsolveGeometry.py <https://gith
    
    #helper function for cylinder with netgen
    def CSGcylinder(p0,p1,r):
-       v = VSub(p1,p0)
+       v = (np.array(p1) - p0)
        v = Normalize(v)
        cyl = Cylinder(Pnt(p0[0],p0[1],p0[2]), Pnt(p1[0],p1[1],p1[2]), 
                       r) * Plane(Pnt(p0[0],p0[1],p0[2]), Vec(-v[0],-v[1],-v[2])) * Plane(Pnt(p1[0],p1[1],p1[2]), Vec(v[0],v[1],v[2])) 

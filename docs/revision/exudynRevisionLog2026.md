@@ -2741,6 +2741,50 @@ which `conf.py` does not use.
   resolves with every requirement already satisfied, i.e. the groups describe the environment
   that ran the gates. Not checkable locally: the readthedocs and GitHub runs.
 
+<a id="step-107a"></a>
+
+### Step 107a - numpy-era vector helpers removed from `basicUtilities.py`
+
+**DONE 2026-09-15** (#2442; table approved by the maintainer). `basicUtilities.py` stems from the
+time numpy was optional; it now imports numpy (not exudyn).
+
+| removed | replacement | uses replaced (package / TestModels / Examples) |
+|---|---|---|
+| `NormL2(v)` | `np.linalg.norm(v)` | 9 / 30 / 10 |
+| `VSum(v)` | `np.sum(v)` | 0 / 6 / 8 |
+| `VAdd(v0, v1)` | `np.array(v0) + v1` | 3 / 9 / 1 |
+| `VSub(v0, v1)` | `np.array(v0) - v1` | 7 / 1 / 3 |
+| `VMult(v0, v1)` | `np.dot(v0, v1)` | 0 / 0 / 0 |
+| `ScalarMult(s, v)` | `s*np.array(v)` | 1 / 4 / 0 |
+| `Vec2Tilde(v)` | `rigidBodyUtilities.Skew(v)` | 0 / 1 / 0 |
+| `Tilde2Vec(m)` | `rigidBodyUtilities.Skew2Vec(m)` | 0 / 0 / 0 |
+| `DiagonalMatrix(n, value)`, `eye2D`, `eye3D` | `value*np.eye(n)` | 0 / 0 / 0 |
+
+- Kept: `Normalize` (a zero vector is returned as zero vector, no exception), now computed with
+  numpy; it still returns a list, because `graphics.py` extends lists of normals with it.
+  `ClearWorkspace`, `SmartRound2String`, `GaussIntegrate`, `LobattoIntegrate`, `pi`, `sqrt2`, `g`
+  kept.
+- Replaced by a script with a bracket-aware argument parser, then tidied by hand;
+  `Examples/NGsolvePistonEngine.py` defines its own `VAdd`/`VSub`/`NormL2` and was left alone;
+  the symbolic `NormL2()` method is unrelated. The helpers returned lists, the replacements
+  arrays; every call site passes the result to Exudyn, to numpy or to arithmetic.
+- Checked: full suite PASSED (the changed TestModels give identical results); `graphics.py`
+  functions using the helpers (`Cylinder` with and without angle range, `RigidLink`,
+  `SolidOfRevolution`, `SolidExtrusion`, `Sphere`, `Brick`, `Arrow`, `Basis`, `CheckerBoard`)
+  produce the same data as before; the hand-written docs do not use the removed names.
+
+<a id="api-changes-v2"></a>
+
+### API changes for the v2.0 release notes
+
+Breaking changes of the Python API, collected as they happen; step 52 carries them into
+`CHANGELOG.md`.
+
+| step | change | what users do |
+|---|---|---|
+| 35 | MainSystem extensions bound by `@extends`; `mainSystemExtensions.py` is ordinary source | nothing |
+| 107a | `NormL2`, `VSum`, `VAdd`, `VSub`, `VMult`, `ScalarMult`, `Vec2Tilde`, `Tilde2Vec`, `DiagonalMatrix`, `eye2D`, `eye3D` removed from `exudyn.basicUtilities` (and so from `exudyn.utilities`) | use numpy: `np.linalg.norm`, `np.sum`, array arithmetic, `np.dot`, `Skew`/`Skew2Vec`, `np.eye` |
+
 ## Plan text of steps condensed on 2026-09-15
 
 When the plan was condensed, every done step was reduced to one line there. Its full plan text at

@@ -4,7 +4,7 @@
 Module: basicUtilities
 ======================
 
-Basic utility functions and constants, not depending on numpy or other python modules.
+Basic utility functions and constants; they depend on numpy only, not on exudyn.
 
 - Author:    Johannes Gerstmayr 
 - Date:      2020-03-10 (created) 
@@ -13,8 +13,6 @@ Basic utility functions and constants, not depending on numpy or other python mo
   | pi = 3.1415926535897932
   | sqrt2 = 2\*\*0.5
   | g=9.81
-  | eye2D (2x2 diagonal matrix)
-  | eye3D (3x3 diagonal matrix)
   | Two variables 'gaussIntegrationPoints' and 'gaussIntegrationWeights' define integration points and weights for function GaussIntegrate(...)
 
 
@@ -22,7 +20,7 @@ Basic utility functions and constants, not depending on numpy or other python mo
 
 Function: ClearWorkspace
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`ClearWorkspace <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L29>`__\ ()
+`ClearWorkspace <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L28>`__\ ()
 
 - | \ *function description*\ :
   | clear all workspace variables except for system variables with '_' at beginning,
@@ -58,157 +56,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: SmartRound2String
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`SmartRound2String <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L85>`__\ (\ ``x``\ , \ ``prec = 3``\ )
+`SmartRound2String <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L84>`__\ (\ ``x``\ , \ ``prec = 3``\ )
 
 - | \ *function description*\ :
   | round to max number of digits; may give more digits if this is shorter; using in general the format() with '.g' option, but keeping decimal point and using exponent where necessary
-
-
-
-----
-
-
-.. _sec-basicutilities-diagonalmatrix:
-
-Function: DiagonalMatrix
-^^^^^^^^^^^^^^^^^^^^^^^^
-`DiagonalMatrix <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L97>`__\ (\ ``rowsColumns``\ , \ ``value = 1``\ )
-
-- | \ *function description*\ :
-  | create a diagonal or identity matrix; used for interface.py, avoiding the need for numpy
-- | \ *input*\ :
-  | \ ``rowsColumns``\ : provides the number of rows and columns
-  | \ ``value``\ : initialization value for diagonal terms
-- | \ *output*\ :
-  | list of lists representing a matrix
-
-
-
-----
-
-
-.. _sec-basicutilities-norml2:
-
-Function: NormL2
-^^^^^^^^^^^^^^^^
-`NormL2 <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L117>`__\ (\ ``vector``\ )
-
-- | \ *function description*\ :
-  | compute L2 norm for vectors without switching to numpy or math module
-- | \ *input*\ :
-  | vector as list or in numpy format
-- | \ *output*\ :
-  | L2-norm of vector
-
-Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-
-    \ `bicycleIftommBenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/bicycleIftommBenchmark.py>`_\  (Ex), \ `HydraulicActuatorStaticInitialization.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/HydraulicActuatorStaticInitialization.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex), \ `reinforcementLearningRobot.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/reinforcementLearningRobot.py>`_\  (Ex), \ `springsDeactivateConnectors.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/springsDeactivateConnectors.py>`_\  (Ex), \ `distanceSensor.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/distanceSensor.py>`_\  (TM), \ `explicitLieGroupIntegratorTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupIntegratorTest.py>`_\  (TM), \ `fourBarMechanismIftomm.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/fourBarMechanismIftomm.py>`_\  (TM)
-
-
-
-----
-
-
-.. _sec-basicutilities-vsum:
-
-Function: VSum
-^^^^^^^^^^^^^^
-`VSum <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L131>`__\ (\ ``vector``\ )
-
-- | \ *function description*\ :
-  | compute sum of all values of vector
-- | \ *input*\ :
-  | vector as list or in numpy format
-- | \ *output*\ :
-  | sum of all components of vector
-
-Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-
-    \ `serialRobotFlexible.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotFlexible.py>`_\  (Ex), \ `serialRobotInteractiveLimits.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInteractiveLimits.py>`_\  (Ex), \ `serialRobotInverseKinematics.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInverseKinematics.py>`_\  (Ex), \ `serialRobotKinematicTree.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotKinematicTree.py>`_\  (Ex), \ `serialRobotTSD.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotTSD.py>`_\  (Ex), \ `movingGroundRobotTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/movingGroundRobotTest.py>`_\  (TM), \ `serialRobotTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/serialRobotTest.py>`_\  (TM)
-
-
-
-----
-
-
-.. _sec-basicutilities-vadd:
-
-Function: VAdd
-^^^^^^^^^^^^^^
-`VAdd <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L145>`__\ (\ ``v0``\ , \ ``v1``\ )
-
-- | \ *function description*\ :
-  | add two vectors instead using numpy
-- | \ *input*\ :
-  | vectors v0 and v1 as list or in numpy format
-- | \ *output*\ :
-  | component-wise sum of v0 and v1
-
-Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-
-    \ `mobileMecanumWheelRobotWithLidar.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/mobileMecanumWheelRobotWithLidar.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex), \ `carRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/carRollingDiscTest.py>`_\  (TM), \ `laserScannerTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/laserScannerTest.py>`_\  (TM), \ `mecanumWheelRollingDiscTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/mecanumWheelRollingDiscTest.py>`_\  (TM), \ `rigidBodyCOMtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py>`_\  (TM), \ `simulatorCouplingTwoMbs.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/simulatorCouplingTwoMbs.py>`_\  (TM), \ `sliderCrank3Dbenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py>`_\  (TM)
-
-
-
-----
-
-
-.. _sec-basicutilities-vsub:
-
-Function: VSub
-^^^^^^^^^^^^^^
-`VSub <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L161>`__\ (\ ``v0``\ , \ ``v1``\ )
-
-- | \ *function description*\ :
-  | subtract two vectors instead using numpy: result = v0-v1
-- | \ *input*\ :
-  | vectors v0 and v1 as list or in numpy format
-- | \ *output*\ :
-  | component-wise difference of v0 and v1
-
-Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-
-    \ `NGsolveCMStutorial.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveCMStutorial.py>`_\  (Ex), \ `NGsolveGeometry.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolveGeometry.py>`_\  (Ex), \ `NGsolvePistonEngine.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/NGsolvePistonEngine.py>`_\  (Ex), \ `ObjectFFRFconvergenceTestHinge.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/ObjectFFRFconvergenceTestHinge.py>`_\  (Ex), \ `rigidBodyCOMtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/rigidBodyCOMtest.py>`_\  (TM)
-
-
-
-----
-
-
-.. _sec-basicutilities-vmult:
-
-Function: VMult
-^^^^^^^^^^^^^^^
-`VMult <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L177>`__\ (\ ``v0``\ , \ ``v1``\ )
-
-- | \ *function description*\ :
-  | scalar multiplication of two vectors instead using numpy: result = v0' \* v1
-- | \ *input*\ :
-  | vectors v0 and v1 as list or in numpy format
-- | \ *output*\ :
-  | sum of all component wise products: c0[0]*v1[0] + v0[1]*v1[0] + ...
-
-
-
-----
-
-
-.. _sec-basicutilities-scalarmult:
-
-Function: ScalarMult
-^^^^^^^^^^^^^^^^^^^^
-`ScalarMult <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L192>`__\ (\ ``scalar``\ , \ ``v``\ )
-
-- | \ *function description*\ :
-  | multiplication vectors with scalar: result = scalar \* v
-- | \ *input*\ :
-  | value \ \*scalar\*\  and vector \ \*v\*\  as list or in numpy format
-- | \ *output*\ :
-  | scalar multiplication of all components of v: [scalar*v[0], scalar*v[1], ...]
-
-Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-
-    \ `pendulumFriction.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/pendulumFriction.py>`_\  (TM), \ `sliderCrank3Dbenchmark.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dbenchmark.py>`_\  (TM), \ `sliderCrank3Dtest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/sliderCrank3Dtest.py>`_\  (TM)
 
 
 
@@ -219,14 +70,15 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: Normalize
 ^^^^^^^^^^^^^^^^^^^
-`Normalize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L206>`__\ (\ ``v``\ )
+`Normalize <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L96>`__\ (\ ``v``\ )
 
 - | \ *function description*\ :
-  | take a 3D vector and return a normalized 3D vector (L2Norm=1)
+  | take a vector and return it normalized to L2-norm 1; a zero vector is returned as zero vector
 - | \ *input*\ :
   | vector v as list or in numpy format
 - | \ *output*\ :
-  | vector v multiplied with scalar such that L2-norm of vector is 1
+  | \ ``list``\ : v multiplied with a scalar such that its L2-norm is 1, or the zero vector; a list, as
+  | callers append the result to lists of normals
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -237,51 +89,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 ----
 
 
-.. _sec-basicutilities-vec2tilde:
-
-Function: Vec2Tilde
-^^^^^^^^^^^^^^^^^^^
-`Vec2Tilde <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L226>`__\ (\ ``v``\ )
-
-- | \ *function description*\ :
-  | apply tilde operator (skew) to 3D-vector and return skew matrix
-- | \ *input*\ :
-  | 3D vector v as list or in numpy format
-- | \ *output*\ :
-  | matrix as list of lists with the skew-symmetric matrix from v: \ :math:`\left[\!\! \begin{array}{ccc} 0 & -v[2] & v[1] \\ v[2] & 0 & -v[0] \\ -v[1] & v[0] & 0  \end{array} \!\!\right]`\
-
-Relevant Examples (Ex) and TestModels (TM) with weblink to github:
-
-    \ `explicitLieGroupMBSTest.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/explicitLieGroupMBSTest.py>`_\  (TM)
-
-
-
-----
-
-
-.. _sec-basicutilities-tilde2vec:
-
-Function: Tilde2Vec
-^^^^^^^^^^^^^^^^^^^
-`Tilde2Vec <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L238>`__\ (\ ``m``\ )
-
-- | \ *function description*\ :
-  | take skew symmetric matrix and return vector (inverse of Skew(...))
-- | \ *input*\ :
-  | list of lists containing a skew-symmetric matrix (3x3)
-- | \ *output*\ :
-  | list containing the vector v (inverse function of Vec2Tilde(...))
-
-
-
-----
-
-
 .. _sec-basicutilities-gaussintegrate:
 
 Function: GaussIntegrate
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`GaussIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L266>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
+`GaussIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L128>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
 
 - | \ *function description*\ :
   | compute numerical integration of functionOfX in interval [a,b] using Gaussian integration
@@ -302,7 +114,7 @@ Function: GaussIntegrate
 
 Function: LobattoIntegrate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`LobattoIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L306>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
+`LobattoIntegrate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L168>`__\ (\ ``functionOfX``\ , \ ``integrationOrder``\ , \ ``a``\ , \ ``b``\ )
 
 - | \ *function description*\ :
   | compute numerical integration of functionOfX in interval [a,b] using Lobatto integration

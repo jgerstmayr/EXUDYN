@@ -154,7 +154,7 @@ comOut3 = mbs.GetObjectOutputBody(oRigid3, variableType = exu.OutputVariableType
 exu.Print('phis=',phi, phi2, phi3, ', err=', abs(phi2-phi3) )
 exu.Print('coms=',comOut, comOut2, comOut3, ', err=', comOut3-comOut2)
 
-u = (phi+phi2+phi3+NormL2(comOut)+NormL2(comOut2)+NormL2(comOut3))
+u = (phi+phi2+phi3+np.linalg.norm(comOut)+np.linalg.norm(comOut2)+np.linalg.norm(comOut3))
 
 exu.Print('solution of rigidBody2Dtest =', u)
 exudynTestGlobals.testResult = u

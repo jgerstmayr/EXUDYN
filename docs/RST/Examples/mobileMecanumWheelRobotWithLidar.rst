@@ -262,7 +262,7 @@ You can view and download this file on Github: `mobileMecanumWheelRobotWithLidar
    
        dictWheel = mbs.CreateRigidBody(
                      inertia=inertiaWheel, 
-                     referencePosition=VAdd(p0Wheel, pOff), 
+                     referencePosition=(np.array(p0Wheel) + pOff), 
                      referenceRotationMatrix=initialRotation,
                      initialAngularVelocity=omega0Wheel,
                      initialVelocity=v0Wheel,
