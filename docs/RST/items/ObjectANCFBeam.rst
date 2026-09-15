@@ -60,7 +60,7 @@ DESCRIPTION of ObjectANCFBeam
 * | ``Velocity``\ : 
   | global velocity vector of local position vector
 * | ``VelocityLocal``\ : 
-  | global velocity vector of local position vector
+  | local (cross section) velocity vector of local position vector
 * | ``AngularVelocity``\ : 
   | global angular velocity vector of local (axis) position vector
 * | ``AngularVelocityLocal``\ : 

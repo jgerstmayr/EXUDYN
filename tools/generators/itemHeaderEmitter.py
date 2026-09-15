@@ -11,8 +11,8 @@
 #           (IsOwnVariable, IsInterfaceParameter, HasFlag, ...) - since plan step 34 no longer the
 #           string records of the old representation (lineType, cFlags letters).
 #
-#           The 7-line header comparison deciding whether a file is rewritten is kept as it was;
-#           it hides @brief changes and is fixed by plan step 86 (#2415).
+#           A header is rewritten if it differs in any line except the '* @date' lines (plan step
+#           86, #2415; before, the first 7 lines including @class and @brief were not compared).
 #
 # Usage:    python tools/generators/itemHeaderEmitter.py [--output-dir DIR]
 #
@@ -34,7 +34,7 @@ if toolsDirectory not in sys.path:
 import itemModel as im                                                              # noqa: E402
 from itemModel import *                                                             # noqa: E402,F403
 import typeModel as tm                                                              # noqa: E402
-from autoGenerateHelper import GenerateHeader, Str2Doxygen, CutLinesFromString, CountLines  # noqa: E402
+from autoGenerateHelper import GenerateHeader, Str2Doxygen, IsEqualIgnoringDateStrings, CountLines  # noqa: E402
 
 space4 = '    '
 space8 = space4+space4
@@ -928,44 +928,17 @@ def WriteItemHeaders(directoryString):
             fileStr[k] = chr(10).join(line.rstrip() for line in fileStr[k].split(chr(10)))
         symbolicUserFunctionSet += fileStr[3]
 
-        #+++++++++++++++++++++++++++++++
-        #write files if changes apply:
-        nLinesHeader = 7 # number of header lines which are ignored in file comparison
-        strFileMode = 'w'
-        fileName = directoryString + 'C'+definition['className']+'.h'
-        fileText = 'INVALID'
-        if os.path.isfile(fileName):
-            file=open(fileName,'r',encoding='utf8'); fileText = file.read();file.close()
-
-        if (CutLinesFromString(fileText,nLinesHeader) != CutLinesFromString(fileStr[0],nLinesHeader)):
-            #write computational 'C' class
-            file=open(fileName,strFileMode) 
-            file.write(fileStr[0])
-            file.close()
-            totalNumberOfFilesChanged += 1
-
-        fileName = directoryString + 'Main'+definition['className']+'.h'
-        fileText = 'INVALID'
-        if os.path.isfile(fileName):
-            file=open(fileName,'r',encoding='utf8'); fileText = file.read();file.close()
-        if (CutLinesFromString(fileText,nLinesHeader) != CutLinesFromString(fileStr[1],nLinesHeader)):
-            #write Main class
-            file=open(fileName,strFileMode) 
-            file.write(fileStr[1])
-            file.close()
-            totalNumberOfFilesChanged += 1
-
-        fileName = directoryString + 'Visu'+definition['className']+'.h'
-        fileText = 'INVALID'
-        if os.path.isfile(fileName):
-            file=open(fileName,'r',encoding='utf8'); fileText = file.read();file.close()
-        if (CutLinesFromString(fileText,nLinesHeader) != CutLinesFromString(fileStr[2],nLinesHeader)):
-            #write Visualization class
-            file=open(fileName,strFileMode) 
-            file.write(fileStr[2])
-            file.close()
-            totalNumberOfFilesChanged += 1
-
+        #write files if changes apply; only the '* @date' lines are ignored in the comparison (step 86)
+        for prefix, text in zip(['C', 'Main', 'Visu'], fileStr[0:3]):
+            fileName = directoryString + prefix + definition['className'] + '.h'
+            fileText = 'INVALID'
+            if os.path.isfile(fileName):
+                file=open(fileName,'r',encoding='utf8'); fileText = file.read();file.close()
+            if not IsEqualIgnoringDateStrings(fileText, text):
+                file=open(fileName,'w')
+                file.write(text)
+                file.close()
+                totalNumberOfFilesChanged += 1
 
         totalNumberOfLines += CountLines(fileStr[0]) + CountLines(fileStr[1]) + CountLines(fileStr[2])
 

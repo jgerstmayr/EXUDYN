@@ -2867,6 +2867,29 @@ pydoclint found 387 findings in `itemInterface.py`, which was excluded. Fixed in
 - Checked: regeneration (tier 1: only docstring lines of `itemInterface.py`), pydoclint,
   `checkAll`, `checkExtras`, wheel, full suite PASSED.
 
+<a id="step-86"></a>
+
+### Step 86 - generator correctness: header comparison, angular velocity texts
+
+**DONE 2026-09-15** (#2414, #2415).
+
+- **#2415.** `tools/generators/itemHeaderEmitter.py` (`WriteItemHeaders`, moved there in step 33
+  from `pythonAutoGenerateObjects.py`) decided whether to rewrite a C/Main/Visu header by
+  comparing the files without their first 7 lines, which include `@class` and `@brief`. It now
+  uses `IsEqualIgnoringDateStrings` (only the `* @date` lines are ignored), as the structure
+  headers already did; the three copied blocks became one loop. Regeneration was a no-op after
+  the change, so no header was stale. Checked by hand-editing the `@brief` of
+  `CObjectMassPoint.h`: the emitter now restores it (before: left unchanged).
+- **#2414.** `OVDAngularVelocityLocalBody` (used by `ObjectRigidBody`, `ObjectRigidBody2D`,
+  `ObjectMass1D`, `ObjectRotationalMass1D`) said "local (body-fixed) 3D velocity vector of node";
+  now "... 3D angular velocity vector of body". Neighbouring texts checked: `OVDAngularVelocityBody`
+  ("angular velocity of body") aligned to "global 3D angular velocity vector of body";
+  `ObjectANCFBeam` described `VelocityLocal` as "global velocity vector", although
+  `CObjectANCFBeam.cpp` returns $A^T v$; now "local (cross section) velocity vector". The other
+  angular velocity texts (nodes, joints, beams) are correct.
+- Documentation changes: `docs/RST/items/` (5 pages), `docs/theDoc/itemDefinition.tex`; no C++ or
+  Python output changed.
+
 <a id="api-changes-v2"></a>
 
 ### API changes for the v2.0 release notes

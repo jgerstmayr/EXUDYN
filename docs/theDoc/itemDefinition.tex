@@ -2019,8 +2019,8 @@ Displacement & $\LU{0}{\uv}\cConfig$ & global displacement vector; for interpret
 Velocity & $\LU{0}{\vv}\cConfig $ & global velocity vector; for interpretation see intermediate variables\\ \hline
 RotationMatrix & $\LU{0b}{\Rot}$ & vector with 9 components of the rotation matrix (row-major format)\\ \hline
 Rotation &  & vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix $\LU{0b}{\Rot}$\\ \hline
-AngularVelocity & $\LU{0}{\tomega}\cConfig$ & angular velocity of body\\ \hline
-AngularVelocityLocal & $\LU{b}{\tomega}\cConfig$ & local (body-fixed) 3D velocity vector of node\\ \hline
+AngularVelocity & $\LU{0}{\tomega}\cConfig$ & global 3D angular velocity vector of body\\ \hline
+AngularVelocityLocal & $\LU{b}{\tomega}\cConfig$ & local (body-fixed) 3D angular velocity vector of body\\ \hline
 \end{longtable}
 \end{center}
  \noindent
@@ -2159,8 +2159,8 @@ Displacement & $\LU{0}{\uv}\cConfig$ & global displacement vector; for interpret
 Velocity & $\LU{0}{\vv}\cConfig $ & global velocity vector; for interpretation see intermediate variables\\ \hline
 RotationMatrix & $\LU{0b}{\Rot}$ & vector with 9 components of the rotation matrix (row-major format)\\ \hline
 Rotation & $\theta$ & scalar rotation angle obtained from underlying node\\ \hline
-AngularVelocity & $\LU{0}{\tomega}\cConfig$ & angular velocity of body\\ \hline
-AngularVelocityLocal & $\LU{b}{\tomega}\cConfig$ & local (body-fixed) 3D velocity vector of node\\ \hline
+AngularVelocity & $\LU{0}{\tomega}\cConfig$ & global 3D angular velocity vector of body\\ \hline
+AngularVelocityLocal & $\LU{b}{\tomega}\cConfig$ & local (body-fixed) 3D angular velocity vector of body\\ \hline
 \end{longtable}
 \end{center}
  \noindent
@@ -2298,8 +2298,8 @@ Velocity & $\LU{0}{\vv}\cConfig(\pLocB) = \LU{0}{\dot\uv}\cConfig + \LU{0b}{\Rot
 VelocityLocal & $\LU{b}{\vv}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{\vv}\cConfig(\pLocB)$ & local (body-fixed) velocity vector of body-fixed point given by local position vector $\pLocB$\\ \hline
 RotationMatrix & $\mathrm{vec}(\LU{0b}{\Rot})=[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$ & vector with 9 components of the rotation matrix (row-major format)\\ \hline
 Rotation &  & vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz), recomputed from rotation matrix\\ \hline
-AngularVelocity & $\LU{0}{\tomega}\cConfig$ & angular velocity of body\\ \hline
-AngularVelocityLocal & $\LU{b}{\tomega}\cConfig$ & local (body-fixed) 3D velocity vector of node\\ \hline
+AngularVelocity & $\LU{0}{\tomega}\cConfig$ & global 3D angular velocity vector of body\\ \hline
+AngularVelocityLocal & $\LU{b}{\tomega}\cConfig$ & local (body-fixed) 3D angular velocity vector of body\\ \hline
 Acceleration & $\LU{0}{\av}\cConfig(\pLocB) = \LU{0}{\ddot\uv} + \LU{0}{\talpha} \times (\LU{0b}{\Rot} \pLocB) +  \LU{0}{\tomega} \times ( \LU{0}{\tomega} \times(\LU{0b}{\Rot} \pLocB))$ & global acceleration vector of body-fixed point given by local position vector $\pLocB$\\ \hline
 AccelerationLocal & $\LU{b}{\av}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{\av}\cConfig(\pLocB)$ & local (body-fixed) acceleration vector of body-fixed point given by local position vector $\pLocB$\\ \hline
 AngularAcceleration & $\LU{0}{\talpha}\cConfig$ & angular acceleration vector of body\\ \hline
@@ -2550,8 +2550,8 @@ Velocity & $\LU{0}{\vv}\cConfig(\pLocB) = \LU{0}{\dot\uv}\cConfig + \LU{0b}{\Rot
 VelocityLocal & $\LU{b}{\vv}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{\vv}\cConfig(\pLocB)$ & local (body-fixed) velocity vector of body-fixed point given by local position vector $\pLocB$\\ \hline
 RotationMatrix & $\mathrm{vec}(\LU{0b}{\Rot})=[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$ & vector with 9 components of the rotation matrix (row-major format)\\ \hline
 Rotation & $\theta_{0\mathrm{config}}$ & scalar rotation angle of body\\ \hline
-AngularVelocity & $\LU{0}{\tomega}\cConfig$ & angular velocity of body\\ \hline
-AngularVelocityLocal & $\LU{b}{\tomega}\cConfig$ & local (body-fixed) 3D velocity vector of node\\ \hline
+AngularVelocity & $\LU{0}{\tomega}\cConfig$ & global 3D angular velocity vector of body\\ \hline
+AngularVelocityLocal & $\LU{b}{\tomega}\cConfig$ & local (body-fixed) 3D angular velocity vector of body\\ \hline
 Acceleration & $\LU{0}{\av}\cConfig(\pLocB) = \LU{0}{\ddot\uv} + \LU{0}{\talpha} \times (\LU{0b}{\Rot} \pLocB) +  \LU{0}{\tomega} \times ( \LU{0}{\tomega} \times(\LU{0b}{\Rot} \pLocB))$ & global acceleration vector of body-fixed point given by local position vector $\pLocB$\\ \hline
 AccelerationLocal & $\LU{b}{\av}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{\av}\cConfig(\pLocB)$ & local (body-fixed) acceleration vector of body-fixed point given by local position vector $\pLocB$\\ \hline
 AngularAcceleration & $\LU{0}{\talpha}\cConfig$ & angular acceleration vector of body\\ \hline
@@ -4841,7 +4841,7 @@ The item \mybold{ObjectANCFBeam} with type = 'ANCFBeam' has the following parame
 Position &  & global position vector of local position vector\\ \hline
 Displacement &  & global displacement vector of local position vector\\ \hline
 Velocity &  & global velocity vector of local position vector\\ \hline
-VelocityLocal &  & global velocity vector of local position vector\\ \hline
+VelocityLocal &  & local (cross section) velocity vector of local position vector\\ \hline
 AngularVelocity &  & global angular velocity vector of local (axis) position vector\\ \hline
 AngularVelocityLocal &  & local angular velocity vector of local (axis) position vector\\ \hline
 Acceleration &  & global acceleration vector of local position vector\\ \hline

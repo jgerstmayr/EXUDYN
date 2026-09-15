@@ -64,9 +64,9 @@ DESCRIPTION of ObjectRigidBody
 * | ``Rotation``\ : 
   | vector with 3 components of the Euler angles in xyz-sequence (R=Rx*Ry*Rz), recomputed from rotation matrix
 * | ``AngularVelocity``\ : \ :math:`\LU{0}{\tomega}\cConfig`\ 
-  | angular velocity of body
+  | global 3D angular velocity vector of body
 * | ``AngularVelocityLocal``\ : \ :math:`\LU{b}{\tomega}\cConfig`\ 
-  | local (body-fixed) 3D velocity vector of node
+  | local (body-fixed) 3D angular velocity vector of body
 * | ``Acceleration``\ : \ :math:`\LU{0}{{\mathbf{a}}}\cConfig(\pLocB) = \LU{0}{\ddot{\mathbf{u}}} + \LU{0}{\talpha} \times (\LU{0b}{\Rot} \pLocB) +  \LU{0}{\tomega} \times ( \LU{0}{\tomega} \times(\LU{0b}{\Rot} \pLocB))`\ 
   | global acceleration vector of body-fixed point given by local position vector \ :math:`\pLocB`\ 
 * | ``AccelerationLocal``\ : \ :math:`\LU{b}{{\mathbf{a}}}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{{\mathbf{a}}}\cConfig(\pLocB)`\ 

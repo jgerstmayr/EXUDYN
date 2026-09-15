@@ -39,10 +39,10 @@ OVDAccelerationNode = r'$\LU{0}{\av}\cConfig = [\ddot q_0,\,\ddot q_1,\,\ddot q_
 OVDCoordinatesTotalNodeRotation = 'displacement/rotation coordinates of node including reference configuration'
 
 #used by 4 items
-OVDAngularVelocityBody = r'$\LU{0}{\tomega}\cConfig$angular velocity of body'
+OVDAngularVelocityBody = r'$\LU{0}{\tomega}\cConfig$global 3D angular velocity vector of body'
 
 #used by 4 items
-OVDAngularVelocityLocalBody = r'$\LU{b}{\tomega}\cConfig$local (body-fixed) 3D velocity vector of node'
+OVDAngularVelocityLocalBody = r'$\LU{b}{\tomega}\cConfig$local (body-fixed) 3D angular velocity vector of body'
 
 #used by 4 items
 OVDVelocityCoordinatesODE2 = r'all \hac{ODE2} velocity coordinates'

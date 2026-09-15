@@ -4227,7 +4227,7 @@ definitions.append(ItemDefinition(
         ItemOutputVariable(OVPosition, 'global position vector of local position vector'),
         ItemOutputVariable(OVDisplacement, 'global displacement vector of local position vector'),
         ItemOutputVariable(OVVelocity, 'global velocity vector of local position vector'),
-        ItemOutputVariable(OVVelocityLocal, 'global velocity vector of local position vector'),
+        ItemOutputVariable(OVVelocityLocal, 'local (cross section) velocity vector of local position vector'),
         ItemOutputVariable(OVAngularVelocity, 'global angular velocity vector of local (axis) position vector'),
         ItemOutputVariable(OVAngularVelocityLocal, 'local angular velocity vector of local (axis) position vector'),
         ItemOutputVariable(OVAcceleration, 'global acceleration vector of local position vector'),

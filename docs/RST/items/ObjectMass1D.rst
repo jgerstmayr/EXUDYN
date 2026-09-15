@@ -60,9 +60,9 @@ DESCRIPTION of ObjectMass1D
 * | ``Rotation``\ : 
   | vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence (\ :math:`\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)`\ ), recomputed from rotation matrix \ :math:`\LU{0b}{\Rot}`\ 
 * | ``AngularVelocity``\ : \ :math:`\LU{0}{\tomega}\cConfig`\ 
-  | angular velocity of body
+  | global 3D angular velocity vector of body
 * | ``AngularVelocityLocal``\ : \ :math:`\LU{b}{\tomega}\cConfig`\ 
-  | local (body-fixed) 3D velocity vector of node
+  | local (body-fixed) 3D angular velocity vector of body
 
 
 
