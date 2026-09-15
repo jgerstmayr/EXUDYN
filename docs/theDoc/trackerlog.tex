@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.79.dev1, 
+  \item Exudyn version = 1.11.80.dev1, 
   \item last change =  2026-09-15, 
   \item Number of issues = 2449, 
-  \item Number of resolved issues = 2152 (79 in current version), 
+  \item Number of resolved issues = 2153 (80 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.80}: {\bf \color{warningRed}  resolved BUG 2427}: {\bf the wheel build reuses stale object files after a header-only change}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: setuptools recompiles a .cpp only when the .cpp is newer than its .obj; it does not track included headers. Found in step 34c2: after rewriting src/Pymodules/PybindUtilities.h (included by 35 files) pip wheel . -w dist finished and produced an exudynCPP .pyd with the same md5 as the previous build in build/lib.win-amd64-cpython-313 - nothing was compiled; the test suite then passed against the old binary. Only deleting build/temp.win-amd64-cpython-313 forced the full compile (49 s). So the build gate proves nothing for header-only changes. Fix options: pass depends= (all headers or the include graph) to the Extension so setuptools compares them; or have the gate remove build/temp first. Plan step 100.}
+    \item {\bf notes: step 100: setup.py passes all src headers as depends= to the extensions}
+    \item   date resolved: {\bf 2026-09-15 20:37},
+date raised: 2026-09-14 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.79}: {\bf \color{warningRed}  resolved BUG 2448}: {\bf Wheel gate skips header-only changes}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
@@ -12878,12 +12886,6 @@ date raised: 2020-07-20
     \item issue author: Claude-JG
     \item {description: Found in step 34c4 (e): mbs.AddObject(ObjectANCFThinPlate()) raises ResizableArray<T>::operator[] i < 0 from C++ even with exudyn.special.exceptions.parameterRangeChecks = False; its default nodeNumbers (four InvalidIndex) are used while the object is added. Every other item class either adds with its defaults or names the parameter that must be given. Expected: a message that names ObjectANCFThinPlate.nodeNumbers - or CheckPreAssembleConsistency catching it - and no index access with invalid node numbers during Add. Plan step 103.}
     \item date raised: 2026-09-15 
-  \ei
-  \item open {\bf BUG 2427}:  {\bf the wheel build reuses stale object files after a header-only change}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item issue author: Claude-JG
-    \item {description: setuptools recompiles a .cpp only when the .cpp is newer than its .obj; it does not track included headers. Found in step 34c2: after rewriting src/Pymodules/PybindUtilities.h (included by 35 files) pip wheel . -w dist finished and produced an exudynCPP .pyd with the same md5 as the previous build in build/lib.win-amd64-cpython-313 - nothing was compiled; the test suite then passed against the old binary. Only deleting build/temp.win-amd64-cpython-313 forced the full compile (49 s). So the build gate proves nothing for header-only changes. Fix options: pass depends= (all headers or the include graph) to the Extension so setuptools compares them; or have the gate remove build/temp first. Plan step 100.}
-    \item date raised: 2026-09-14 
   \ei
   \item open {\bf BUG 2398}:  {\bf explicit integration costs O(N^2) per step with the default dense linear solver}
   \begin{itemize} \setlength\itemsep{-1pt}
