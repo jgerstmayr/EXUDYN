@@ -1,0 +1,332 @@
+python/exudyn/advancedUtilities.py
+    DOC103: Function `PlotLineCode`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [index: ]. Arguments in the docstring but not in the function signature: [index in range(0: ].
+    DOC001: Function/method `FindObjectIndex`: Potential formatting errors in docstring. Error message: Expected a colon in 'i, the integer object number and  globalVariables=globals()'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `FindNodeIndex`: Potential formatting errors in docstring. Error message: Expected a colon in 'i, the integer node number and  globalVariables=globals()'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC202: Function `FillInSubMatrix` has a return section in docstring, but there are no return statements or annotations
+    DOC101: Function `IndexFromValue`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `IndexFromValue`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [assumeConstantSampleRate: ].
+    DOC001: Function/method `RoundMatrix`: Potential formatting errors in docstring. Error message: Expected a colon in 'matrix as np.array, treshold as positive value'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC202: Function `SaveDictToHDF5` has a return section in docstring, but there are no return statements or annotations
+    DOC202: Function `LoadDictFromHDF5` has a return section in docstring, but there are no return statements or annotations
+    DOC102: Function `ConvertFunctionToSymbolic`: Docstring contains more arguments than in function signature.
+    DOC103: Function `ConvertFunctionToSymbolic`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ).
+    DOC104: Function `CreateSymbolicUserFunction`: Arguments are the same in the docstring and the function signature, but are in a different order.
+--------------------
+python/exudyn/artificialIntelligence.py
+    DOC102: Method `OpenAIGymInterfaceEnv.TestModel`: Docstring contains more arguments than in function signature.
+    DOC103: Method `OpenAIGymInterfaceEnv.TestModel`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [return_info: ].
+--------------------
+python/exudyn/basicUtilities.py
+    DOC001: Function/method `NormL2`: Potential formatting errors in docstring. Error message: Expected a colon in 'vector as list or in numpy format'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `VSum`: Potential formatting errors in docstring. Error message: Expected a colon in 'vector as list or in numpy format'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `VAdd`: Potential formatting errors in docstring. Error message: Expected a colon in 'vectors v0 and v1 as list or in numpy format'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `VSub`: Potential formatting errors in docstring. Error message: Expected a colon in 'vectors v0 and v1 as list or in numpy format'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `VMult`: Potential formatting errors in docstring. Error message: Expected a colon in 'vectors v0 and v1 as list or in numpy format'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `ScalarMult`: Potential formatting errors in docstring. Error message: Expected a colon in 'value *scalar* and vector *v* as list or in numpy format'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `Normalize`: Potential formatting errors in docstring. Error message: Expected a colon in 'vector v as list or in numpy format'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `Vec2Tilde`: Potential formatting errors in docstring. Error message: Expected a colon in '3D vector v as list or in numpy format'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `Tilde2Vec`: Potential formatting errors in docstring. Error message: Expected a colon in 'list of lists containing a skew-symmetric matrix (3x3)'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+--------------------
+python/exudyn/beams.py
+    DOC101: Function `GenerateBeamElementsAlongLine`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `GenerateBeamElementsAlongLine`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [EA: , EI: , GA: ].
+    DOC104: Function `CreateReevingCurve`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC101: Function `GenerateSlidingJoint`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `GenerateSlidingJoint`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [cableObjectList: , localMarkerIndexOfStartCable: , markerBodyPositionOfSlidingBody: , mbs: , slidingCoordinateStartPosition: ].
+    DOC101: Function `GenerateAleSlidingJoint`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `GenerateAleSlidingJoint`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [AleNode: , AleSlidingOffset: , activeConnector: , cableObjectList: , localMarkerIndexOfStartCable: , markerBodyPositionOfSlidingBody: , mbs: , penaltyStiffness: ].
+--------------------
+python/exudyn/FEM.py
+    DOC001: Function/method `ReadMatrixFromAnsysMMF`: Potential formatting errors in docstring. Error message: Expected a colon in 'fileName of MMF file'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `ReadNodalCoordinatesFromAnsysTxt`: Potential formatting errors in docstring. Error message: Expected a colon in 'fileName (file name ending must be .txt!)'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `ReadElementsFromAnsysTxt`: Potential formatting errors in docstring. Error message: Expected a colon in 'fileName (file name ending must be .txt!)'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC101: Method `ObjectFFRFinterface.AddObjectFFRF`: Docstring contains fewer arguments than in function signature.
+    DOC103: Method `ObjectFFRFinterface.AddObjectFFRF`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [massProportionalDamping: , stiffnessProportionalDamping: ].
+    DOC201: Method `ObjectFFRFinterface.AddObjectFFRF` does not have a return section in docstring
+    DOC101: Method `ObjectFFRFreducedOrderInterface.__init__`: Docstring contains fewer arguments than in function signature.
+    DOC103: Method `ObjectFFRFreducedOrderInterface.__init__`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [rigidBodyNodeType: ].
+    DOC202: Method `ObjectFFRFreducedOrderInterface.SaveToFile` has a return section in docstring, but there are no return statements or annotations
+    DOC104: Method `ObjectFFRFreducedOrderInterface.AddObjectFFRFreducedOrderWithUserFunctions`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC201: Method `ObjectFFRFreducedOrderInterface.AddObjectFFRFreducedOrderWithUserFunctions` does not have a return section in docstring
+    DOC102: Method `ObjectFFRFreducedOrderInterface.AddObjectFFRFreducedOrder`: Docstring contains more arguments than in function signature.
+    DOC103: Method `ObjectFFRFreducedOrderInterface.AddObjectFFRFreducedOrder`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [exu: ].
+    DOC201: Method `ObjectFFRFreducedOrderInterface.AddObjectFFRFreducedOrder` does not have a return section in docstring
+    DOC202: Method `FEMinterface.SaveToFile` has a return section in docstring, but there are no return statements or annotations
+    DOC101: Method `FEMinterface.LoadFromFile`: Docstring contains fewer arguments than in function signature.
+    DOC103: Method `FEMinterface.LoadFromFile`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [mode: ].
+    DOC101: Method `FEMinterface.CreateNGsolveBoundaryNodeSets`: Docstring contains fewer arguments than in function signature.
+    DOC103: Method `FEMinterface.CreateNGsolveBoundaryNodeSets`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [warnNodeSets: ].
+    DOC104: Method `FEMinterface.ImportMeshFromNGsolve`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC101: Method `FEMinterface.ComputeEigenmodesNGsolve`: Docstring contains fewer arguments than in function signature.
+    DOC103: Method `FEMinterface.ComputeEigenmodesNGsolve`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [bfK: , bfM: ].
+    DOC202: Method `FEMinterface.ComputeEigenmodesNGsolve` has a return section in docstring, but there are no return statements or annotations
+    DOC202: Method `FEMinterface.ComputeHurtyCraigBamptonModesNGsolve` has a return section in docstring, but there are no return statements or annotations
+    DOC101: Method `FEMinterface.ComputePostProcessingModesNGsolve`: Docstring contains fewer arguments than in function signature.
+    DOC103: Method `FEMinterface.ComputePostProcessingModesNGsolve`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [verbose: ].
+    DOC202: Method `FEMinterface.ComputePostProcessingModesNGsolve` has a return section in docstring, but there are no return statements or annotations
+    DOC201: Method `FEMinterface.GetNodePositionsAsArray` does not have a return section in docstring
+    DOC101: Method `FEMinterface.GetNodesInCube`: Docstring contains fewer arguments than in function signature.
+    DOC103: Method `FEMinterface.GetNodesInCube`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [pMax: , pMin: ].
+    DOC101: Method `FEMinterface.CreateLinearFEMObjectGenericODE2`: Docstring contains fewer arguments than in function signature.
+    DOC103: Method `FEMinterface.CreateLinearFEMObjectGenericODE2`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [color: ].
+    DOC101: Method `FEMinterface.CreateNonlinearFEMObjectGenericODE2NGsolve`: Docstring contains fewer arguments than in function signature.
+    DOC103: Method `FEMinterface.CreateNonlinearFEMObjectGenericODE2NGsolve`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [color: ].
+    DOC202: Method `FEMinterface.ComputeEigenmodes` has a return section in docstring, but there are no return statements or annotations
+    DOC202: Method `FEMinterface.ComputeEigenModesWithBoundaryNodes` has a return section in docstring, but there are no return statements or annotations
+    DOC202: Method `FEMinterface.ComputeHurtyCraigBamptonModes` has a return section in docstring, but there are no return statements or annotations
+    DOC202: Method `FEMinterface.ComputePostProcessingModes` has a return section in docstring, but there are no return statements or annotations
+--------------------
+python/exudyn/graphics.py
+    DOC101: Function `BrickXYZ`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `BrickXYZ`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [xMax: , xMin: , yMax: , yMin: , zMax: , zMin: ]. Arguments in the docstring but not in the function signature: [x/y/z/Min/Max: ].
+    DOC102: Function `Cylinder`: Docstring contains more arguments than in function signature.
+    DOC103: Function `Cylinder`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [alternatingColor: ].
+    DOC104: Function `RigidLink`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC102: Function `SolidOfRevolution`: Docstring contains more arguments than in function signature.
+    DOC103: Function `SolidOfRevolution`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [alternatingColor: ].
+    DOC104: Function `Arrow`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC102: Function `Basis`: Docstring contains more arguments than in function signature.
+    DOC103: Function `Basis`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [labels: , radius: ].
+    DOC102: Function `Frame`: Docstring contains more arguments than in function signature.
+    DOC103: Function `Frame`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [radius: ].
+    DOC102: Function `Quad`: Docstring contains more arguments than in function signature.
+    DOC103: Function `Quad`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [alternatingColor: , nTiles: , nTilesY: ].
+    DOC102: Function `CheckerBoard`: Docstring contains more arguments than in function signature.
+    DOC103: Function `CheckerBoard`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [materialIndex: , nTiles2: , size2: ].
+    DOC102: Function `LinkedCylinders`: Docstring contains more arguments than in function signature.
+    DOC103: Function `LinkedCylinders`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [kwargs: ].
+    DOC101: Function `BallBearingRings`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `BallBearingRings`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [axis: , boreDiameter: , heightCage: , innerEdgeChamfer: , innerGrooveRadius: , innerRingShoulderRadius: , outerEdgeChamfer: , outerGrooveRadius: , outerRingShoulderRadius: , outsideDiameter: , radiusCage: , width: , widthCage: ].
+    DOC101: Function `InvoluteGear`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `InvoluteGear`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [nTilesCylinder: ].
+    DOC103: Function `ToothedRack`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [nTilesCylinder: ]. Arguments in the docstring but not in the function signature: [smoothNormals: ].
+    DOC202: Function `BoundingBox` has a return section in docstring, but there are no return statements or annotations
+    DOC001: Function/method `ToPointsAndTrigs`: Potential formatting errors in docstring. Error message: Expected a colon in 'g contains a GraphicsData with type TriangleList'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC101: Function `Transform`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `Transform`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [graphicsData: , warn: ]. Arguments in the docstring but not in the function signature: [g: ].
+    DOC001: Function/method `MergeTriangleLists`: Potential formatting errors in docstring. Error message: Expected a colon in 'graphicsData dictionaries g1 and g2 obtained from GraphicsData functions'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC104: Function `FromPyMeshlabFile`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC101: Function `FromSTLfile`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `FromSTLfile`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [Aoff: , pOff: ].
+    DOC101: Function `AddEdgesAndSmoothenNormals`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `AddEdgesAndSmoothenNormals`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [addEdges: , edgeAngle: , edgeColor: , graphicsData: , roundDigits: , smoothNormals: , triangleColor: ].
+--------------------
+python/exudyn/graphicsDataUtilities.py
+    DOC001: Function/method `SwitchTripletOrder`: Potential formatting errors in docstring. Error message: Expected a colon in '3D vector as list or as np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `ComputeTriangleNormal`: Potential formatting errors in docstring. Error message: Expected a colon in '3D vector as list or as np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `ComputeTriangleArea`: Potential formatting errors in docstring. Error message: Expected a colon in '3D vector as list or as np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC101: Function `Compute6NodeTrigsNormals`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `Compute6NodeTrigsNormals`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [elementNodes: ].
+    DOC001: Function/method `ComputeTriangularMesh`: Potential formatting errors in docstring. Error message: Expected a colon in 'V1         V2'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC101: Function `SegmentsFromPoints`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `SegmentsFromPoints`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [closeCurve: , points: ].
+    DOC001: Function/method `GraphicsDataRectangle`: Potential formatting errors in docstring. Error message: Expected a colon in 'minimal and maximal cartesian coordinates in (x/y) plane; color provided as list of 4 RGBA values'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `GraphicsDataOrthoCubeLines`: Potential formatting errors in docstring. Error message: Expected a colon in 'minimal and maximal cartesian coordinates for orthogonal cube; color provided as list of 4 RGBA values'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+--------------------
+python/exudyn/GUI.py
+    DOC202: Function `EditDictionaryWithTypeInfo` has a return section in docstring, but there are no return statements or annotations
+--------------------
+python/exudyn/interactive.py
+    DOC104: Function `AnimateModes`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC202: Function `AnimateModes` has a return section in docstring, but there are no return statements or annotations
+    DOC202: Function `ConvertImages2Video` has a return section in docstring, but there are no return statements or annotations
+--------------------
+python/exudyn/kinematicTree.py
+    DOC101: Function `Inertia2T66`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `Inertia2T66`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [inertia: ].
+    DOC001: Function/method `Inertia66toMassCOMinertia`: Potential formatting errors in docstring. Error message: Expected a colon in '6x6 numpy array containing rigid body inertia according to Featherstone / Handbook of robotics [Siciliano2016]'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC201: Method `KinematicTree66.AddExternalForces` does not have a return section in docstring
+--------------------
+python/exudyn/lieGroupBasics.py
+    DOC001: Function/method `Sinc`: Potential formatting errors in docstring. Error message: Expected a colon in 'scalar float or int value'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `Cot`: Potential formatting errors in docstring. Error message: Expected a colon in 'scalar float or int value'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `ExpSO3`: Potential formatting errors in docstring. Error message: Expected a colon in '3D rotation vector as np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `ExpS3`: Potential formatting errors in docstring. Error message: Expected a colon in '3D rotation vector as np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `LogSO3`: Potential formatting errors in docstring. Error message: Expected a colon in '3x3 rotation matrix as np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `TExpSO3`: Potential formatting errors in docstring. Error message: Expected a colon in '3D rotation vector as np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `TExpSO3Inv`: Potential formatting errors in docstring. Error message: Expected a colon in '3D rotation vector as np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `ExpSE3`: Potential formatting errors in docstring. Error message: Expected a colon in '6D incremental motion vector as np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `LogSE3`: Potential formatting errors in docstring. Error message: Expected a colon in '4x4 homogeneous transformation matrix as np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `TExpSE3`: Potential formatting errors in docstring. Error message: Expected a colon in '6D incremental motion vector as np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `TExpSE3Inv`: Potential formatting errors in docstring. Error message: Expected a colon in '6D incremental motion vector as np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `ExpR3xSO3`: Potential formatting errors in docstring. Error message: Expected a colon in '6D incremental motion vector as np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `TExpR3xSO3`: Potential formatting errors in docstring. Error message: Expected a colon in '6D incremental motion vector as np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `TExpR3xSO3Inv`: Potential formatting errors in docstring. Error message: Expected a colon in '6D incremental motion vector as np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+--------------------
+python/exudyn/machines.py
+    DOC001: Function/method `InvInvolute`: Potential formatting errors in docstring. Error message: Expected a colon in 'y provides given value; if warn==True, a warning is displayed if no convergence is achieved'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `RotationMatrix2D`: Potential formatting errors in docstring. Error message: Expected a colon in 'angle around out-of-plane axis in radiant'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC101: Function `GetBallBearingData`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `GetBallBearingData`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [axis: , nBalls: ].
+    DOC104: Function `CreateBallBearing`: Arguments are the same in the docstring and the function signature, but are in a different order.
+--------------------
+python/exudyn/mainSystemExtensions.py
+    DOC102: Function `MainSystemCreateGround`: Docstring contains more arguments than in function signature.
+    DOC103: Function `MainSystemCreateGround`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [color: ].
+    DOC104: Function `MainSystemCreateSpringDamper`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC103: Function `MainSystemCreateTorsionalSpringDamper`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [springTorqueUserFunction: ]. Arguments in the docstring but not in the function signature: [springTorqueUserFunction : ].
+    DOC104: Function `MainSystemCreateRollingDiscPenalty`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC102: Function `MainSystemCreateKinematicTree`: Docstring contains more arguments than in function signature.
+    DOC103: Function `MainSystemCreateKinematicTree`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [showJoints: , showLinks: ].
+--------------------
+python/exudyn/physics.py
+    DOC104: Function `StribeckFunction`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC104: Function `RegularizedFriction`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC001: Function/method `UFvonMisesStress`: Potential formatting errors in docstring. Error message: Expected a colon in 'arguments according to `SensorUserFunction`; factors are ignored'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+--------------------
+python/exudyn/plot.py
+    DOC101: Function `ParseOutputFileHeader`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `ParseOutputFileHeader`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [lines: ].
+    DOC201: Function `PlotSensorDefaults` does not have a return section in docstring
+    DOC102: Function `PlotSensor`: Docstring contains more arguments than in function signature.
+    DOC103: Function `PlotSensor`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [[*kwargs]: ].
+    DOC202: Function `FileStripSpaces` has a return section in docstring, but there are no return statements or annotations
+    DOC001: Function/method `LoadImage`: Potential formatting errors in docstring. Error message: Expected a colon in 'fileName includes directory'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC101: Function `PlotImage`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `PlotImage`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [azim: , elev: ]. Arguments in the docstring but not in the function signature: [azim, elev: ].
+--------------------
+python/exudyn/processing.py
+    DOC102: Function `ProcessParameterList`: Docstring contains more arguments than in function signature.
+    DOC103: Function `ProcessParameterList`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [numberOfThreads: , resultsFile: , useDispyWebMonitor: , useMPI: ].
+    DOC102: Function `ParameterVariation`: Docstring contains more arguments than in function signature.
+    DOC103: Function `ParameterVariation`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [useDispyWebMonitor: , useMPI: ].
+    DOC102: Function `GeneticOptimization`: Docstring contains more arguments than in function signature.
+    DOC103: Function `GeneticOptimization`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [initialPopulationSize: , numberOfThreads: , randomizerInitialization: , resultsFile: , useDispyWebMonitor: , useMPI: ].
+    DOC102: Function `Minimize`: Docstring contains more arguments than in function signature.
+    DOC103: Function `Minimize`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [debugMode: ]. Arguments in the docstring but not in the function signature: [args: , resultsFile: , useScipyBounds: , verbose: ].
+    DOC102: Function `ComputeSensitivities`: Docstring contains more arguments than in function signature.
+    DOC103: Function `ComputeSensitivities`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [numberOfThreads: , resultsFile: , useMPI: ].
+--------------------
+python/exudyn/rigidBodyUtilities.py
+    DOC101: Function `ComputeOrthonormalBasisVectors`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `ComputeOrthonormalBasisVectors`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [vector0: ].
+    DOC101: Function `ComputeOrthonormalBasis`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `ComputeOrthonormalBasis`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [vector0: ].
+    DOC001: Function/method `ComputeSkewMatrix`: Potential formatting errors in docstring. Error message: Expected a colon in 'a vector v in np.array format, containing 3*n components or a matrix with m columns of same shape'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `EulerParameters2G`: Potential formatting errors in docstring. Error message: Expected a colon in 'vector of 4 eulerParameters as list or np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `EulerParameters2GLocal`: Potential formatting errors in docstring. Error message: Expected a colon in 'vector of 4 eulerParameters as list or np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `EulerParameters2RotationMatrix`: Potential formatting errors in docstring. Error message: Expected a colon in 'vector of 4 eulerParameters as list or np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `RotationMatrix2EulerParameters`: Potential formatting errors in docstring. Error message: Expected a colon in '3x3 rotation matrix as list of lists or as np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `RotationVector2RotationMatrix`: Potential formatting errors in docstring. Error message: Expected a colon in '3D rotation vector as list or np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `RotationMatrix2RotationVector`: Potential formatting errors in docstring. Error message: Expected a colon in '3x3 rotation matrix as list of lists or as np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `ComputeRotationAxisFromRotationVector`: Potential formatting errors in docstring. Error message: Expected a colon in '3D rotation vector as np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `RotationVector2G`: Potential formatting errors in docstring. Error message: Expected a colon in 'vector of rotation vector (len=3) as list or np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `RotationVector2GLocal`: Potential formatting errors in docstring. Error message: Expected a colon in 'vector of rotation vector (len=3) as list or np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `RotXYZ2RotationMatrix`: Potential formatting errors in docstring. Error message: Expected a colon in '3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `RotationMatrix2RotXYZ`: Potential formatting errors in docstring. Error message: Expected a colon in '3x3 rotation matrix as list of lists or np.array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `RotXYZ2G`: Potential formatting errors in docstring. Error message: Expected a colon in '3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `RotXYZ2GLocal`: Potential formatting errors in docstring. Error message: Expected a colon in '3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `RotationMatrixX`: Potential formatting errors in docstring. Error message: Expected a colon in 'angle around X-axis in radiant'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `RotationMatrixY`: Potential formatting errors in docstring. Error message: Expected a colon in 'angle around Y-axis in radiant'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `RotationMatrixZ`: Potential formatting errors in docstring. Error message: Expected a colon in 'angle around Z-axis in radiant'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `RotationMatrix2D`: Potential formatting errors in docstring. Error message: Expected a colon in 'angle around out-of-plane axis in radiant'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `T66toRotationTranslation`: Potential formatting errors in docstring. Error message: Expected a colon in 'T66 given as  6x6 numpy array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `InverseT66toRotationTranslation`: Potential formatting errors in docstring. Error message: Expected a colon in 'inverse T66 given as  6x6 numpy array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC001: Function/method `T66toHT`: Potential formatting errors in docstring. Error message: Expected a colon in 'T66 given as 6x6 numpy array'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC101: Method `TreeLink.__init__`: Docstring contains fewer arguments than in function signature.
+    DOC103: Method `TreeLink.__init__`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [graphicsDataList: , jointType: ]. Arguments in the docstring but not in the function signature: [graphicsData: ].
+    DOC101: Method `RigidBodyInertia.__add__`: Docstring contains fewer arguments than in function signature.
+    DOC103: Method `RigidBodyInertia.__add__`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [otherBodyInertia: ].
+    DOC201: Method `RigidBodyInertia.__add__` does not have a return section in docstring
+    DOC101: Method `RigidBodyInertia.__iadd__`: Docstring contains fewer arguments than in function signature.
+    DOC103: Method `RigidBodyInertia.__iadd__`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [otherBodyInertia: ].
+    DOC201: Method `RigidBodyInertia.__iadd__` does not have a return section in docstring
+    DOC101: Function `AddRigidBody`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `AddRigidBody`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [mainSys: ].
+    DOC101: Function `AddRevoluteJoint`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `AddRevoluteJoint`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [axisLength: , axisRadius: , showJoint: ].
+    DOC101: Function `AddPrismaticJoint`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `AddPrismaticJoint`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [axisLength: , axisRadius: , showJoint: ].
+--------------------
+python/exudyn/robotics/future.py
+    DOC102: Function `MakeCorkeRobot`: Docstring contains more arguments than in function signature.
+    DOC103: Function `MakeCorkeRobot`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [dhpara: ].
+    DOC103: Function `ComputeIKUR`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [HTdes: ]. Arguments in the docstring but not in the function signature: [HT: ].
+--------------------
+python/exudyn/robotics/mobile.py
+    DOC101: Function `MobileRobot2MBS`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `MobileRobot2MBS`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [flagGraphicsRollers: ].
+    DOC101: Method `MobileKinematics.__init__`: Docstring contains fewer arguments than in function signature.
+    DOC103: Method `MobileKinematics.__init__`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [flagAdjusted: , lcx: , lcy: ].
+    DOC102: Method `MobileKinematics.GetWheelVelocities`: Docstring contains more arguments than in function signature.
+    DOC103: Method `MobileKinematics.GetWheelVelocities`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [omega: , vx: , vy: ].
+    DOC101: Function `Generatrix2Polynomial`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `Generatrix2Polynomial`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [GeneratrixFunction: , nFit: , nTest: , tol: ].
+    DOC201: Function `Generatrix2Polynomial` does not have a return section in docstring
+    DOC102: Function `GeneratrixRoll`: Docstring contains more arguments than in function signature.
+    DOC103: Function `GeneratrixRoll`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [param: ]. Arguments in the docstring but not in the function signature: [param['dRoll']: , param['delta']: , param['r']: ].
+--------------------
+python/exudyn/robotics/models.py
+    DOC104: Function `LinkDict2Robot`: Arguments are the same in the docstring and the function signature, but are in a different order.
+--------------------
+python/exudyn/robotics/motion.py
+    DOC302: Class `ProfileConstantAcceleration`: The class docstring does not need a "Returns" section, because __init__() cannot return anything
+    DOC304: Class `ProfileConstantAcceleration`: Class docstring has an argument/parameter section; please put it in the __init__() docstring
+    DOC302: Class `ProfileLinearAccelerationsList`: The class docstring does not need a "Returns" section, because __init__() cannot return anything
+    DOC304: Class `ProfileLinearAccelerationsList`: Class docstring has an argument/parameter section; please put it in the __init__() docstring
+    DOC302: Class `ProfilePTP`: The class docstring does not need a "Returns" section, because __init__() cannot return anything
+    DOC304: Class `ProfilePTP`: Class docstring has an argument/parameter section; please put it in the __init__() docstring
+    DOC104: Method `Trajectory.__init__`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC101: Method `Trajectory.Evaluate`: Docstring contains fewer arguments than in function signature.
+    DOC103: Method `Trajectory.Evaluate`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [t: ].
+    DOC101: Method `Trajectory.EvaluateCoordinate`: Docstring contains fewer arguments than in function signature.
+    DOC103: Method `Trajectory.EvaluateCoordinate`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [coordinate: , t: ].
+--------------------
+python/exudyn/robotics/roboticsCore.py
+    DOC104: Method `VRobotLink.__init__`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC104: Method `RobotLink.__init__`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC103: Method `RobotTool.__init__`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [visualization: ]. Arguments in the docstring but not in the function signature: [graphicsData: ].
+    DOC103: Method `RobotBase.__init__`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [visualization: ]. Arguments in the docstring but not in the function signature: [graphicsData: ].
+    DOC104: Method `Robot.__init__`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC101: Method `InverseKinematicsNumerical.__init__`: Docstring contains fewer arguments than in function signature.
+    DOC103: Method `InverseKinematicsNumerical.__init__`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [flagDebug: , useAlternativeConstraints: ].
+--------------------
+python/exudyn/robotics/rosInterface.py
+    DOC103: Method `ROSInterface.InitPublisher`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [queueSize: ]. Arguments in the docstring but not in the function signature: [queSize: ].
+    DOC201: Method `ROSInterface.InitPublisher` does not have a return section in docstring
+    DOC103: Method `ROSInterface.ExuCallbackGeneric`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [subTopicName: ]. Arguments in the docstring but not in the function signature: [topic: ].
+    DOC201: Method `ROSInterface.ExuCallbackGeneric` does not have a return section in docstring
+    DOC201: Method `ROSInterface.InitSubscriber` does not have a return section in docstring
+--------------------
+python/exudyn/robotics/special.py
+    DOC104: Function `ForceManipulability`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC101: Function `JointJacobian`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `JointJacobian`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [HTJoint: , HTLink: ]. Arguments in the docstring but not in the function signature: [HT: ].
+    DOC104: Function `DynamicManipulability`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC102: Function `CalculateAllMeasures`: Docstring contains more arguments than in function signature.
+    DOC103: Function `CalculateAllMeasures`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [Tmax: ].
+--------------------
+python/exudyn/robotics/utilities.py
+    DOC101: Function `AddLidar`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `AddLidar`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [mbs: ].
+    DOC101: Function `LoadURDFrobot`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `LoadURDFrobot`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [manufacturer: ].
+--------------------
+python/exudyn/shells.py
+    DOC101: Method `ShellMesh.__init__`: Docstring contains fewer arguments than in function signature.
+    DOC103: Method `ShellMesh.__init__`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [thicknessAtNodes: ].
+--------------------
+python/exudyn/signalProcessing.py
+    DOC104: Function `FilterSensorOutput`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC104: Function `FilterSignal`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC001: Function/method `ComputeFFT`: Potential formatting errors in docstring. Error message: Expected a colon in 'time ... time vector in SECONDS in numpy format, having constant sampling rate (not checked!)'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+    DOC103: Function `GetInterpolatedSignalValue`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [dataArrayIndex: , timeArrayIndex: ]. Arguments in the docstring but not in the function signature: [dataArrayColumnIndex: , timeArrayColumnIndex: ].
+--------------------
+python/exudyn/solver.py
+    DOC104: Function `ComputeSystemDegreeOfFreedom`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC001: Function/method `CheckSolverInfoStatistics`: Potential formatting errors in docstring. Error message: Expected a colon in 'stat=exudyn.special.InfoStat() from previous step, numberOfEvaluations is a counter which is proportional to number of RHS evaluations in method'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
+--------------------
+python/exudyn/utilities.py
+    DOC202: Function `ShowOnlyObjects` has a return section in docstring, but there are no return statements or annotations
+    DOC101: Function `HighlightItem`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `HighlightItem`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [SC: , itemNumber: ]. Arguments in the docstring but not in the function signature: [itemNumbers: ].
+    DOC103: Function `LoadSolutionFile`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [safeMode: ]. Arguments in the docstring but not in the function signature: [saveMode: ].
+    DOC101: Function `BinaryReadRealVector`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `BinaryReadRealVector`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [file: , intType: , realType: ].
+    DOC104: Function `LoadBinarySolutionFile`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC202: Function `RecoverSolutionFile` has a return section in docstring, but there are no return statements or annotations
+    DOC202: Function `InitializeFromRestartFile` has a return section in docstring, but there are no return statements or annotations
+    DOC104: Function `DrawSystemGraph`: Arguments are the same in the docstring and the function signature, but are in a different order.
+    DOC101: Function `CreateTCPIPconnection`: Docstring contains fewer arguments than in function signature.
+    DOC103: Function `CreateTCPIPconnection`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [verbose: ].
+--------------------

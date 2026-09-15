@@ -117,6 +117,25 @@ rl = [
     "tensorboard",
     ]
 
+#Docstring check of the Python package (revision plan step 38): 'pydoclint --config=pyproject.toml python/exudyn'.
+#Google style; type hints are neither required in signatures nor in docstrings, return types and
+#raised exceptions are not checked - the check is that documented arguments match the signature.
+#Findings present when the check was introduced are listed in the baseline, so only new ones fail;
+#fixed ones are removed with 'pydoclint --config=pyproject.toml --generate-baseline=True python/exudyn'.
+#itemInterface.py is generated and excluded; its docstrings come from itemInterfaceEmitter.py.
+[tool.pydoclint]
+style = 'google'
+arg-type-hints-in-signature = false
+arg-type-hints-in-docstring = false
+check-return-types = false
+skip-checking-raises = true
+allow-init-docstring = true
+check-class-attributes = false
+should-document-star-arguments = false
+exclude = 'itemInterface\.py'
+baseline = 'tools/ci/pydoclintBaseline.txt'
+auto-regenerate-baseline = false
+
 #cibuildwheel settings that do not depend on the CI matrix (revision plan step 20). cibuildwheel
 #reads this table from the package directory it is pointed at, which since the flatten (step 25)
 #is the repository root - the same directory as this file. Only CIBW_BUILD stays in the workflow,
