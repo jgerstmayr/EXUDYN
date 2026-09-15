@@ -110,16 +110,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])
-  void PySetBackgroundColor(const std::array<float,4>& backgroundColorInit) { backgroundColor = backgroundColorInit; }
-  //! AUTO: Read (Copy) access to: red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])
-  std::array<float,4> PyGetBackgroundColor() const { return std::array<float,4>(backgroundColor); }
-
-  //! AUTO: Set function (needed in pybind) for: red, green, blue and alpha values for bottom background color in case that useGradientBackground = True
-  void PySetBackgroundColorBottom(const std::array<float,4>& backgroundColorBottomInit) { backgroundColorBottom = backgroundColorBottomInit; }
-  //! AUTO: Read (Copy) access to: red, green, blue and alpha values for bottom background color in case that useGradientBackground = True
-  std::array<float,4> PyGetBackgroundColorBottom() const { return std::array<float,4>(backgroundColorBottom); }
-
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use view0.scene.drawCoordinateSystem
   void PySetDrawCoordinateSystem(const Index& drawCoordinateSystemInit) ;
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use view0.scene.drawCoordinateSystem
@@ -134,11 +124,6 @@ public: // AUTO:
   void PySetShowComputationInfo(const bool& showComputationInfoInit) ;
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use view0.window.showComputationInfo
   bool PyGetShowComputationInfo() const ;
-
-  //! AUTO: Set function (needed in pybind) for: general text color (default); used for system texts in render window
-  void PySetTextColor(const std::array<float,4>& textColorInit) { textColor = textColorInit; }
-  //! AUTO: Read (Copy) access to: general text color (default); used for system texts in render window
-  std::array<float,4> PyGetTextColor() const { return std::array<float,4>(textColor); }
 
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use view0.window.globalFontSize
   void PySetTextSize(const float& globalFontSizeInit) ;
@@ -253,41 +238,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: RGBA color for relative value 0 used for contour plot; alpha is ignored
-  void PySetContourColor0(const std::array<float,4>& contourColor0Init) { contourColor0 = contourColor0Init; }
-  //! AUTO: Read (Copy) access to: RGBA color for relative value 0 used for contour plot; alpha is ignored
-  std::array<float,4> PyGetContourColor0() const { return std::array<float,4>(contourColor0); }
-
-  //! AUTO: Set function (needed in pybind) for: RGBA color for relative value 0.25 used for contour plot; alpha is ignored
-  void PySetContourColor1(const std::array<float,4>& contourColor1Init) { contourColor1 = contourColor1Init; }
-  //! AUTO: Read (Copy) access to: RGBA color for relative value 0.25 used for contour plot; alpha is ignored
-  std::array<float,4> PyGetContourColor1() const { return std::array<float,4>(contourColor1); }
-
-  //! AUTO: Set function (needed in pybind) for: RGBA color for relative value 0.25 used for contour plot; alpha is ignored
-  void PySetContourColor2(const std::array<float,4>& contourColor2Init) { contourColor2 = contourColor2Init; }
-  //! AUTO: Read (Copy) access to: RGBA color for relative value 0.25 used for contour plot; alpha is ignored
-  std::array<float,4> PyGetContourColor2() const { return std::array<float,4>(contourColor2); }
-
-  //! AUTO: Set function (needed in pybind) for: RGBA color for relative value 0.25 used for contour plot; alpha is ignored
-  void PySetContourColor3(const std::array<float,4>& contourColor3Init) { contourColor3 = contourColor3Init; }
-  //! AUTO: Read (Copy) access to: RGBA color for relative value 0.25 used for contour plot; alpha is ignored
-  std::array<float,4> PyGetContourColor3() const { return std::array<float,4>(contourColor3); }
-
-  //! AUTO: Set function (needed in pybind) for: RGBA color for relative value 0.25 used for contour plot; alpha is ignored
-  void PySetContourColor4(const std::array<float,4>& contourColor4Init) { contourColor4 = contourColor4Init; }
-  //! AUTO: Read (Copy) access to: RGBA color for relative value 0.25 used for contour plot; alpha is ignored
-  std::array<float,4> PyGetContourColor4() const { return std::array<float,4>(contourColor4); }
-
-  //! AUTO: Set function (needed in pybind) for: RGBA color if relative value in contour plot is larger than 1 (if automaticRange=False); alpha is ignored
-  void PySetContourColorMax(const std::array<float,4>& contourColorMaxInit) { contourColorMax = contourColorMaxInit; }
-  //! AUTO: Read (Copy) access to: RGBA color if relative value in contour plot is larger than 1 (if automaticRange=False); alpha is ignored
-  std::array<float,4> PyGetContourColorMax() const { return std::array<float,4>(contourColorMax); }
-
-  //! AUTO: Set function (needed in pybind) for: RGBA color if relative value in contour plot is smaller than 0 (if automaticRange=False); alpha is ignored
-  void PySetContourColorMin(const std::array<float,4>& contourColorMinInit) { contourColorMin = contourColorMinInit; }
-  //! AUTO: Read (Copy) access to: RGBA color if relative value in contour plot is smaller than 0 (if automaticRange=False); alpha is ignored
-  std::array<float,4> PyGetContourColorMin() const { return std::array<float,4>(contourColorMin); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -461,11 +411,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: default RGBA color for nodes; 4th value is alpha-transparency
-  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
-  //! AUTO: Read (Copy) access to: default RGBA color for nodes; 4th value is alpha-transparency
-  std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -545,11 +490,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: color for outputVariable to be drawn along cross section (vertically)
-  void PySetDrawVerticalColor(const std::array<float,4>& drawVerticalColorInit) { drawVerticalColor = drawVerticalColorInit; }
-  //! AUTO: Read (Copy) access to: color for outputVariable to be drawn along cross section (vertically)
-  std::array<float,4> PyGetDrawVerticalColor() const { return std::array<float,4>(drawVerticalColor); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -744,16 +684,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: default RGBA color for bodies; 4th value is alpha-transparency
-  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
-  //! AUTO: Read (Copy) access to: default RGBA color for bodies; 4th value is alpha-transparency
-  std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
-
-  //! AUTO: Set function (needed in pybind) for: global body size of xyz-cube
-  void PySetDefaultSize(const std::array<float,3>& defaultSizeInit) { defaultSize = defaultSizeInit; }
-  //! AUTO: Read (Copy) access to: global body size of xyz-cube
-  std::array<float,3> PyGetDefaultSize() const { return std::array<float,3>(defaultSize); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -832,11 +762,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: default RGBA color for connectors; 4th value is alpha-transparency
-  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
-  //! AUTO: Read (Copy) access to: default RGBA color for connectors; 4th value is alpha-transparency
-  std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -907,11 +832,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: default RGBA color for markers; 4th value is alpha-transparency
-  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
-  //! AUTO: Read (Copy) access to: default RGBA color for markers; 4th value is alpha-transparency
-  std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -985,11 +905,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: default RGBA color for loads; 4th value is alpha-transparency
-  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
-  //! AUTO: Read (Copy) access to: default RGBA color for loads; 4th value is alpha-transparency
-  std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -1085,21 +1000,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: list of position sensors which can be shown as trace inside render window if sensors have storeInternal=True; if this list is empty and showPositionTrace=True, then all available sensors are shown
-  void PySetListOfPositionSensors(const std::vector<Index>& listOfPositionSensorsInit) { listOfPositionSensors = listOfPositionSensorsInit; }
-  //! AUTO: Read (Copy) access to: list of position sensors which can be shown as trace inside render window if sensors have storeInternal=True; if this list is empty and showPositionTrace=True, then all available sensors are shown
-  std::vector<Index> PyGetListOfPositionSensors() const { return std::vector<Index>(listOfPositionSensors); }
-
-  //! AUTO: Set function (needed in pybind) for: list of sensors of with OutputVariableType RotationMatrix; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showTriads=True; the triad is drawn at the related position
-  void PySetListOfTriadSensors(const std::vector<Index>& listOfTriadSensorsInit) { listOfTriadSensors = listOfTriadSensorsInit; }
-  //! AUTO: Read (Copy) access to: list of sensors of with OutputVariableType RotationMatrix; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showTriads=True; the triad is drawn at the related position
-  std::vector<Index> PyGetListOfTriadSensors() const { return std::vector<Index>(listOfTriadSensors); }
-
-  //! AUTO: Set function (needed in pybind) for: list of sensors with 3D vector quantities; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showVectors=True; the vector quantity is drawn relative to the related position
-  void PySetListOfVectorSensors(const std::vector<Index>& listOfVectorSensorsInit) { listOfVectorSensors = listOfVectorSensorsInit; }
-  //! AUTO: Read (Copy) access to: list of sensors with 3D vector quantities; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showVectors=True; the vector quantity is drawn relative to the related position
-  std::vector<Index> PyGetListOfVectorSensors() const { return std::vector<Index>(listOfVectorSensors); }
-
   //! AUTO: Set function (needed in pybind) for: RGBA float values for traces in one array; using 6x4 values gives different colors for 6 traces; in case of triads, the 0/1/2-axes are drawn in red, green, and blue
   void PySetTraceColors(const std::vector<float>& traceColorsInit) { traceColors = traceColorsInit; }
   //! AUTO: Read (Copy) access to: RGBA float values for traces in one array; using 6x4 values gives different colors for 6 traces; in case of triads, the 0/1/2-axes are drawn in red, green, and blue
@@ -1185,11 +1085,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: default RGBA color for sensors; 4th value is alpha-transparency
-  void PySetDefaultColor(const std::array<float,4>& defaultColorInit) { defaultColor = defaultColorInit; }
-  //! AUTO: Read (Copy) access to: default RGBA color for sensors; 4th value is alpha-transparency
-  std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -1280,31 +1175,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: RGBA color for boudnding boxes, see showBoundingBoxes
-  void PySetColorBoundingBoxes(const std::array<float,4>& colorBoundingBoxesInit) { colorBoundingBoxes = colorBoundingBoxesInit; }
-  //! AUTO: Read (Copy) access to: RGBA color for boudnding boxes, see showBoundingBoxes
-  std::array<float,4> PyGetColorBoundingBoxes() const { return std::array<float,4>(colorBoundingBoxes); }
-
-  //! AUTO: Set function (needed in pybind) for: RGBA color for search tree, see showSearchTree
-  void PySetColorSearchTree(const std::array<float,4>& colorSearchTreeInit) { colorSearchTree = colorSearchTreeInit; }
-  //! AUTO: Read (Copy) access to: RGBA color for search tree, see showSearchTree
-  std::array<float,4> PyGetColorSearchTree() const { return std::array<float,4>(colorSearchTree); }
-
-  //! AUTO: Set function (needed in pybind) for: RGBA color for contact spheres, see showSpheres
-  void PySetColorSpheres(const std::array<float,4>& colorSpheresInit) { colorSpheres = colorSpheresInit; }
-  //! AUTO: Read (Copy) access to: RGBA color for contact spheres, see showSpheres
-  std::array<float,4> PyGetColorSpheres() const { return std::array<float,4>(colorSpheres); }
-
-  //! AUTO: Set function (needed in pybind) for: RGBA color for contact tori, see showTori
-  void PySetColorTori(const std::array<float,4>& colorToriInit) { colorTori = colorToriInit; }
-  //! AUTO: Read (Copy) access to: RGBA color for contact tori, see showTori
-  std::array<float,4> PyGetColorTori() const { return std::array<float,4>(colorTori); }
-
-  //! AUTO: Set function (needed in pybind) for: RGBA color for contact triangles, see showTriangles
-  void PySetColorTriangles(const std::array<float,4>& colorTrianglesInit) { colorTriangles = colorTrianglesInit; }
-  //! AUTO: Read (Copy) access to: RGBA color for contact triangles, see showTriangles
-  std::array<float,4> PyGetColorTriangles() const { return std::array<float,4>(colorTriangles); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -1394,31 +1264,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: if modelCentricView=True: offset to camera position in model view (and, if used, relative to tracked marker - instead of a tracked marker position, you could also just change the camera position in camera-centric views); camera rotation follows modelRotation in renderState
-  void PySetCameraPosition(const std::array<float,3>& cameraPositionInit) { cameraPosition = cameraPositionInit; }
-  //! AUTO: Read (Copy) access to: if modelCentricView=True: offset to camera position in model view (and, if used, relative to tracked marker - instead of a tracked marker position, you could also just change the camera position in camera-centric views); camera rotation follows modelRotation in renderState
-  std::array<float,3> PyGetCameraPosition() const { return std::array<float,3>(cameraPosition); }
-
-  //! AUTO: Set function (needed in pybind) for: normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; the clipped half-space is in direction of the normal; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance and openGL.advanced.clippingPlaneColor
-  void PySetClippingPlaneNormal(const std::array<float,3>& clippingPlaneNormalInit) { clippingPlaneNormal = clippingPlaneNormalInit; }
-  //! AUTO: Read (Copy) access to: normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; the clipped half-space is in direction of the normal; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance and openGL.advanced.clippingPlaneColor
-  std::array<float,3> PyGetClippingPlaneNormal() const { return std::array<float,3>(clippingPlaneNormal); }
-
-  //! AUTO: Set function (needed in pybind) for: the three values are [nearPlaneOffset, farPlaneOffset, flag]; if flag=0, the offsets are ignored and computed automatically, using x = 2 * maxSceneSize * zMaxSceneFactor, setting near plane to -x and far plane to +x in case of modelCentricView=True and setting near plane to 0.01 (minimal offset to eye point) and far plane to +x if modelCentricView=False; if flag=1, the near and far plane values are just overwritten; note that positive values for near plane make objects in front of the camera invisible while negative values make objects behind the camera plane visible; in case of camera-centric view, the eyepoint can be shifted backwards using cameraPosition accordingly.
-  void PySetNearFarPlaneOffset(const std::array<float,3>& nearFarPlaneOffsetInit) { nearFarPlaneOffset = nearFarPlaneOffsetInit; }
-  //! AUTO: Read (Copy) access to: the three values are [nearPlaneOffset, farPlaneOffset, flag]; if flag=0, the offsets are ignored and computed automatically, using x = 2 * maxSceneSize * zMaxSceneFactor, setting near plane to -x and far plane to +x in case of modelCentricView=True and setting near plane to 0.01 (minimal offset to eye point) and far plane to +x if modelCentricView=False; if flag=1, the near and far plane values are just overwritten; note that positive values for near plane make objects in front of the camera invisible while negative values make objects behind the camera plane visible; in case of camera-centric view, the eyepoint can be shifted backwards using cameraPosition accordingly.
-  std::array<float,3> PyGetNearFarPlaneOffset() const { return std::array<float,3>(nearFarPlaneOffset); }
-
-  //! AUTO: Set function (needed in pybind) for: choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one
-  void PySetTrackMarkerOrientation(const std::array<float,3>& trackMarkerOrientationInit) { trackMarkerOrientation = trackMarkerOrientationInit; }
-  //! AUTO: Read (Copy) access to: choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one
-  std::array<float,3> PyGetTrackMarkerOrientation() const { return std::array<float,3>(trackMarkerOrientation); }
-
-  //! AUTO: Set function (needed in pybind) for: choose which coordinates or marker are tracked (x,y,z)
-  void PySetTrackMarkerPosition(const std::array<float,3>& trackMarkerPositionInit) { trackMarkerPosition = trackMarkerPositionInit; }
-  //! AUTO: Read (Copy) access to: choose which coordinates or marker are tracked (x,y,z)
-  std::array<float,3> PyGetTrackMarkerPosition() const { return std::array<float,3>(trackMarkerPosition); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -1575,11 +1420,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: initial size of render window of respective view for specific view in pixels for
-  void PySetRenderWindowSize(const std::array<Index,2>& renderWindowSizeInit) { renderWindowSize = renderWindowSizeInit; }
-  //! AUTO: Read (Copy) access to: initial size of render window of respective view for specific view in pixels for
-  std::array<Index,2> PyGetRenderWindowSize() const { return std::array<Index,2>(renderWindowSize); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -1882,21 +1722,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: RGB default material color if face color has R-color channel -1
-  void PySetBaseColor(const std::array<float,3>& baseColorInit) { baseColor = baseColorInit; }
-  //! AUTO: Read (Copy) access to: RGB default material color if face color has R-color channel -1
-  std::array<float,3> PyGetBaseColor() const { return std::array<float,3>(baseColor); }
-
-  //! AUTO: Set function (needed in pybind) for: RGB emissive material color (enlightened material)
-  void PySetEmission(const std::array<float,3>& emissionInit) { emission = emissionInit; }
-  //! AUTO: Read (Copy) access to: RGB emissive material color (enlightened material)
-  std::array<float,3> PyGetEmission() const { return std::array<float,3>(emission); }
-
-  //! AUTO: Set function (needed in pybind) for: RGB specular material color
-  void PySetSpecular(const std::array<float,3>& specularInit) { specular = specularInit; }
-  //! AUTO: Read (Copy) access to: RGB specular material color
-  std::array<float,3> PyGetSpecular() const { return std::array<float,3>(specular); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -1969,11 +1794,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: scene RGBA color for background that is hit by reflection material; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; this is generally needed, as our scenes are usually not inside a closed geometry (like inside a room); this color is also used if maxReflectionDepth is reached
-  void PySetBackgroundColorReflections(const std::array<float,4>& backgroundColorReflectionsInit) { backgroundColorReflections = backgroundColorReflectionsInit; }
-  //! AUTO: Read (Copy) access to: scene RGBA color for background that is hit by reflection material; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; this is generally needed, as our scenes are usually not inside a closed geometry (like inside a room); this color is also used if maxReflectionDepth is reached
-  std::array<float,4> PyGetBackgroundColorReflections() const { return std::array<float,4>(backgroundColorReflections); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -2087,11 +1907,6 @@ public: // AUTO:
   void PySetEnable(const bool& useRaytracerInit) ;
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use view0.camera.useRaytracer
   bool PyGetEnable() const ;
-
-  //! AUTO: Set function (needed in pybind) for: scene RGBA fog color
-  void PySetGlobalFogColor(const std::array<float,4>& globalFogColorInit) { globalFogColor = globalFogColorInit; }
-  //! AUTO: Read (Copy) access to: scene RGBA fog color
-  std::array<float,4> PyGetGlobalFogColor() const { return std::array<float,4>(globalFogColor); }
 
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use openGL.light0.lightRadius
   void PySetLightRadius(const float& lightRadiusInit) ;
@@ -2240,26 +2055,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: RGBA color for clipping plane; if alpha-channel is 0, the cutting plane is not drawn; if alpha-channel is 1, the clippingPlaneColor is used; if alpha-channel is 2, the color of the object interior is used as clipping plane color (which may look strange in case of object-in-object); see also view.camera for clipping plane options
-  void PySetClippingPlaneColor(const std::array<float,4>& clippingPlaneColorInit) { clippingPlaneColor = clippingPlaneColorInit; }
-  //! AUTO: Read (Copy) access to: RGBA color for clipping plane; if alpha-channel is 0, the cutting plane is not drawn; if alpha-channel is 1, the clippingPlaneColor is used; if alpha-channel is 2, the color of the object interior is used as clipping plane color (which may look strange in case of object-in-object); see also view.camera for clipping plane options
-  std::array<float,4> PyGetClippingPlaneColor() const { return std::array<float,4>(clippingPlaneColor); }
-
-  //! AUTO: Set function (needed in pybind) for: global RGBA color for face normals
-  void PySetFaceNormalsColor(const std::array<float,4>& faceNormalsColorInit) { faceNormalsColor = faceNormalsColorInit; }
-  //! AUTO: Read (Copy) access to: global RGBA color for face normals
-  std::array<float,4> PyGetFaceNormalsColor() const { return std::array<float,4>(faceNormalsColor); }
-
-  //! AUTO: Set function (needed in pybind) for: centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True; only used in case that modelCentricView=True
-  void PySetInitialCenterPoint(const std::array<float,3>& initialCenterPointInit) { initialCenterPoint = initialCenterPointInit; }
-  //! AUTO: Read (Copy) access to: centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True; only used in case that modelCentricView=True
-  std::array<float,3> PyGetInitialCenterPoint() const { return std::array<float,3>(initialCenterPoint); }
-
-  //! AUTO: Set function (needed in pybind) for: global RGBA color for vertex normals
-  void PySetVertexNormalsColor(const std::array<float,4>& vertexNormalsColorInit) { vertexNormalsColor = vertexNormalsColorInit; }
-  //! AUTO: Read (Copy) access to: global RGBA color for vertex normals
-  std::array<float,4> PyGetVertexNormalsColor() const { return std::array<float,4>(vertexNormalsColor); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -2350,11 +2145,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: 4D position vector of GL_LIGHT[0,1,2,3]; 4th value should be 0 for directional lights that are (almost) infinitely far away, like the sun, but 1 for position-based lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position to be located at a reasonable location; the openGL renderer uses shadow volumes and approximates directional lights by enlarging the direction to 200 times maxSceneSize, while the raytracer uses the correct direction; see opengl manuals
-  void PySetPosition(const std::array<float,4>& positionInit) { position = positionInit; }
-  //! AUTO: Read (Copy) access to: 4D position vector of GL_LIGHT[0,1,2,3]; 4th value should be 0 for directional lights that are (almost) infinitely far away, like the sun, but 1 for position-based lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position to be located at a reasonable location; the openGL renderer uses shadow volumes and approximates directional lights by enlarging the direction to 200 times maxSceneSize, while the raytracer uses the correct direction; see opengl manuals
-  std::array<float,4> PyGetPosition() const { return std::array<float,4>(position); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -2484,11 +2274,6 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use openGL.advanced.enableLighting
   bool PyGetEnableLighting() const ;
 
-  //! AUTO: Set function (needed in pybind) for: global RGBA color for face edges
-  void PySetFaceEdgesColor(const std::array<float,4>& faceEdgesColorInit) { faceEdgesColor = faceEdgesColorInit; }
-  //! AUTO: Read (Copy) access to: global RGBA color for face edges
-  std::array<float,4> PyGetFaceEdgesColor() const { return std::array<float,4>(faceEdgesColor); }
-
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use view0.scene.facesTransparent
   void PySetFacesTransparent(const bool& facesTransparentInit) ;
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use view0.scene.facesTransparent
@@ -2584,11 +2369,6 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use openGL.light1.specular
   float PyGetLight1specular() const ;
 
-  //! AUTO: Set function (needed in pybind) for: global ambient light (needed for faces that are close to orthogonal to light or faces in shadow region); maps to OpenGL glLightModeli(GL_LIGHT_MODEL_AMBIENT,[r,g,b,a]); also used by raytracer
-  void PySetLightModelAmbient(const std::array<float,4>& lightModelAmbientInit) { lightModelAmbient = lightModelAmbientInit; }
-  //! AUTO: Read (Copy) access to: global ambient light (needed for faces that are close to orthogonal to light or faces in shadow region); maps to OpenGL glLightModeli(GL_LIGHT_MODEL_AMBIENT,[r,g,b,a]); also used by raytracer
-  std::array<float,4> PyGetLightModelAmbient() const { return std::array<float,4>(lightModelAmbient); }
-
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use openGL.advanced.lightModelLocalViewer
   void PySetLightModelLocalViewer(const bool& lightModelLocalViewerInit) ;
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use openGL.advanced.lightModelLocalViewer
@@ -2613,11 +2393,6 @@ public: // AUTO:
   void PySetMaterialAmbientAndDiffuse(const std::array<float,4>& materialSpecularInit) ;
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use openGL.materialSpecular
   std::array<float,4> PyGetMaterialAmbientAndDiffuse() const ;
-
-  //! AUTO: Set function (needed in pybind) for: RGBA specular color of material
-  void PySetMaterialSpecular(const std::array<float,4>& materialSpecularInit) { materialSpecular = materialSpecularInit; }
-  //! AUTO: Read (Copy) access to: RGBA specular color of material
-  std::array<float,4> PyGetMaterialSpecular() const { return std::array<float,4>(materialSpecular); }
 
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use view0.camera.perspective
   void PySetPerspective(const float& perspectiveInit) ;
@@ -2919,16 +2694,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: RGBA color for highlighted item; 4th value is alpha-transparency
-  void PySetHighlightColor(const std::array<float,4>& highlightColorInit) { highlightColor = highlightColorInit; }
-  //! AUTO: Read (Copy) access to: RGBA color for highlighted item; 4th value is alpha-transparency
-  std::array<float,4> PyGetHighlightColor() const { return std::array<float,4>(highlightColor); }
-
-  //! AUTO: Set function (needed in pybind) for: RGBA color for other items (which are not highlighted); 4th value is alpha-transparency
-  void PySetHighlightOtherColor(const std::array<float,4>& highlightOtherColorInit) { highlightOtherColor = highlightOtherColorInit; }
-  //! AUTO: Read (Copy) access to: RGBA color for other items (which are not highlighted); 4th value is alpha-transparency
-  std::array<float,4> PyGetHighlightOtherColor() const { return std::array<float,4>(highlightOtherColor); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -3015,11 +2780,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: Angular velocity vector for auto-rotation of scene (only visualization view is rotated, not the model itself!)
-  void PySetAutoRotationVelocity(const std::array<float,3>& autoRotationVelocityInit) { autoRotationVelocity = autoRotationVelocityInit; }
-  //! AUTO: Read (Copy) access to: Angular velocity vector for auto-rotation of scene (only visualization view is rotated, not the model itself!)
-  std::array<float,3> PyGetAutoRotationVelocity() const { return std::array<float,3>(autoRotationVelocity); }
-
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use interactive.advanced.highlightColor
   void PySetHighlightColor(const std::array<float,4>& highlightColorInit) ;
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use interactive.advanced.highlightColor

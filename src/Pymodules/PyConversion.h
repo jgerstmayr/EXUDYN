@@ -103,7 +103,7 @@ namespace EPyUtils {
 		RejectNone(value, context);
 		if (!std::is_same<T, Index>::value && Conversion::IsItemIndex(value))
 		{
-			PyError(STDstring("parameter ") + context + " expects a " + (std::is_same<T, bool>::value ? "bool" : "float") +
+			PyError(STDstring("parameter ") + context + " expects a " + (std::is_same<T, bool>::value ? "bool" : (std::is_floating_point<T>::value ? "float" : "value of its enum type")) +
 				", but received the item index " + EXUstd::ToString(value) + " of type " + EXUstd::ToString(value.get_type()));
 		}
 		destination = py::cast<T>(value);
@@ -136,27 +136,6 @@ namespace EPyUtils {
 				" (range checks can be switched off with exudyn.special.exceptions.parameterRangeChecks = False)");
 		}
 		destination = scalar;
-	}
-
-	//! pybind11 getter and setter for a scalar data member of a structure (SimulationSettings, ...),
-	//! used as .def_property("name", MemberGetter(&C::name), MemberSetter(&C::name, "C.name")); the setter
-	//! converts like the item parameters (revision plan step 34c5 a)
-	template<class TClass, class T>
-	inline auto MemberGetter(T TClass::* member)
-	{
-		return [member](const TClass& object) { return object.*member; };
-	}
-
-	template<class TClass, class T>
-	inline auto MemberSetter(T TClass::* member, const char* context)
-	{
-		return [member, context](TClass& object, const py::object& value) { FromPython(value, object.*member, context); };
-	}
-
-	template<class TClass, class T>
-	inline auto MemberSetter(T TClass::* member, RangeCheck range, const char* context)
-	{
-		return [member, range, context](TClass& object, const py::object& value) { FromPython(value, object.*member, range, context); };
 	}
 
 	//! a string; any other type raises
@@ -343,6 +322,103 @@ namespace EPyUtils {
 				EXUstd::ToString(arrayIndex.NumberOfItems()) + " items in list");
 		}
 		destination = SlimArray<Index, size>(arrayIndex, 0);
+	}
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//structure members (SimulationSettings, VisualizationSettings, ...): the same conversion with a context
+	//"Class.member" for the message (revision plan step 34c5); declared after all FromPython overloads,
+	//because MemberSetter must see them
+
+	//! a string member; None and other types raise
+	inline void FromPython(const py::object& value, STDstring& destination, const char* context)
+	{
+		if (!py::isinstance<py::str>(value))
+		{
+			PyError(STDstring("parameter ") + context + " expects a string, but received " + EXUstd::ToString(value));
+		}
+		destination = py::cast<std::string>(value);
+	}
+
+	//! a list or numpy array of exactly size values (Float3, Float4, Vector3D, ...)
+	template<class T, Index size>
+	inline void FromPython(const py::object& value, SlimVectorBase<T, size>& destination, const char* context)
+	{
+		if (!Conversion::IsListOrArray(value))
+		{
+			PyError(STDstring("parameter ") + context + " expects a list or array of " + EXUstd::ToString(size) + " values, but received " + EXUstd::ToString(value));
+		}
+		std::vector<T> stdlist = py::cast<std::vector<T>>(value);
+		if ((Index)stdlist.size() != size)
+		{
+			PyError(STDstring("parameter ") + context + " expects " + EXUstd::ToString(size) + " values, but received " + EXUstd::ToString((Index)stdlist.size()));
+		}
+		destination = stdlist;
+	}
+
+	//! a list or numpy array of integers of any length (plain indices, no item kind)
+	inline void FromPython(const py::object& value, ArrayIndex& destination, const char* context)
+	{
+		if (!Conversion::IsListOrArray(value))
+		{
+			PyError(STDstring("parameter ") + context + " expects a list of integers, but received " + EXUstd::ToString(value));
+		}
+		destination = ArrayIndex(py::cast<std::vector<Index>>(value));
+	}
+
+	//! a list or numpy array of exactly size integers (Index2, ...)
+	template<Index size>
+	inline void FromPython(const py::object& value, SlimArray<Index, size>& destination, const char* context)
+	{
+		ArrayIndex arrayIndex;
+		FromPython(value, arrayIndex, context);
+		if (arrayIndex.NumberOfItems() != size)
+		{
+			PyError(STDstring("parameter ") + context + " expects " + EXUstd::ToString(size) + " integers, but received " + EXUstd::ToString(arrayIndex.NumberOfItems()));
+		}
+		destination = SlimArray<Index, size>(arrayIndex, 0);
+	}
+
+	//! the Python value of a structure member: scalars, strings and enums as they are; float vectors
+	//! and index arrays as lists (colours are split and appended, not added)
+	template<class T>
+	inline const T& ToPythonMember(const T& value) { return value; }
+
+	template<class T, Index size>
+	inline std::array<T, size> ToPythonMember(const SlimVectorBase<T, size>& value)
+	{
+		std::array<T, size> list;
+		for (Index i = 0; i < size; i++) { list[i] = value[i]; }
+		return list;
+	}
+
+	template<Index size>
+	inline std::array<Index, size> ToPythonMember(const SlimArray<Index, size>& value)
+	{
+		std::array<Index, size> list;
+		for (Index i = 0; i < size; i++) { list[i] = value[i]; }
+		return list;
+	}
+
+	inline std::vector<Index> ToPythonMember(const ArrayIndex& value) { return std::vector<Index>(value.begin(), value.end()); }
+
+	//! pybind11 getter and setter of a structure data member, bound as
+	//! .def_property("name", MemberGetter(&C::name), MemberSetter(&C::name, [range,] "C.name"))
+	template<class TClass, class T>
+	inline auto MemberGetter(T TClass::* member)
+	{
+		return [member](const TClass& object) { return ToPythonMember(object.*member); };
+	}
+
+	template<class TClass, class T>
+	inline auto MemberSetter(T TClass::* member, const char* context)
+	{
+		return [member, context](TClass& object, const py::object& value) { FromPython(value, object.*member, context); };
+	}
+
+	template<class TClass, class T>
+	inline auto MemberSetter(T TClass::* member, RangeCheck range, const char* context)
+	{
+		return [member, range, context](TClass& object, const py::object& value) { FromPython(value, object.*member, range, context); };
 	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

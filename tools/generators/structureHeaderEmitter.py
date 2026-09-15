@@ -34,15 +34,23 @@ scalarRangeForms = {'bool': None, 'float': None, 'Real': None, 'Index': None, 'I
                     'PReal': 'positive', 'PFloat': 'positive', 'PInt': 'positive'}
 
 
+#further member types with a FromPython overload and a context (step 34c5 b); vectors and index
+#arrays are returned as lists through EPyUtils::ToPythonMember
+convertedMemberTypes = list(scalarRangeForms) + ['String', 'FileName', 'Float3', 'Float4', 'Index2', 'ArrayIndex',
+                                                 'LinearSolverType', 'DynamicSolverType', 'OutputVariableType',
+                                                 'ItemType', 'CrossSectionType']
+listMemberTypes = ['Float3', 'Float4', 'Index2', 'ArrayIndex']
+
+
 def RangeArgument(typeName):
-    rangeForm = scalarRangeForms[typeName]
+    rangeForm = scalarRangeForms.get(typeName, None)
     return '' if rangeForm is None else 'EPyUtils::RangeCheck::' + rangeForm + ', '
 
 
 def IsDirectScalar(parameter):
-    """a scalar data member of the structure itself (not linked, not deprecated): its attribute
+    """a converted data member of the structure itself (not linked, not deprecated): its attribute
     access is bound with EPyUtils::MemberGetter/MemberSetter, without Get/Set functions in the header"""
-    return (parameter['type'] in scalarRangeForms and parameter['lineType'].find('L') == -1
+    return (parameter['type'] in convertedMemberTypes and parameter['lineType'].find('L') == -1
             and parameter['cplusplusName'].find('.') == -1 and not IsDeprecatedParameter(parameter))
 
 
@@ -283,7 +291,7 @@ def StructureCppHeader(parseInfo, parameterList):
             setFunction = [] #return type, function decl, impl
                 
             typeCastStr = tm.Render(parameter['type'], 'cppExchange', 'structures')
-            if (((typeCastStr.find('std::vector') != -1 or typeCastStr.find('std::array') != -1) and 
+            if (((typeCastStr.find('std::vector') != -1 or typeCastStr.find('std::array') != -1) and not IsDirectScalar(parameter) and 
                  typeCastStr.find('std::ofstream') == -1 and typeCastStr.find('ExuFile::BinaryFileSettings') == -1) or 
                 typeWithRangeCheck or typeWithGetSetFunction or
                 (parameter['lineType'].find('L') == -1  and parameter['cplusplusName'].find('.') != -1)): #then it must get a set/get function!
@@ -386,7 +394,10 @@ def StructureCppHeader(parseInfo, parameterList):
                         #get functions:
                         sDictGet += '    d = py::dict(); //reset local dict\n'
                         sDictGet += '    d["itemIdentifier"] = std::string(""); //identifier for item\n'
-                        sDictGet += '    d["value"] = data.' + cValueStr + ';\n'
+                        valueStr = 'data.' + cValueStr
+                        if IsDirectScalar(parameter) and parameter['type'] in listMemberTypes: #lists, as the attribute (step 34c5 b)
+                            valueStr = 'EPyUtils::ToPythonMember(data.' + parameter['cplusplusName'] + ')'
+                        sDictGet += '    d["value"] = ' + valueStr + ';\n'
                         sDictGet += '    d["type"] = "' + pType + '";\n'
                         sDictGet += '    d["size"] = std::vector<int>' + pSize + ';\n' #only used for vectors/matrices (e.g. '3') and matrices (e.g. '3x3')
                         sDictGet += '    d["description"] = "' + descrStr + '";\n'
@@ -394,10 +405,10 @@ def StructureCppHeader(parseInfo, parameterList):
                         sDictGet += '\n'
 
                         sDictGetPure += '    structureDict["' + parameter['pythonName'] + '"] = '
-                        sDictGetPure += 'data.' + cValueStr + ';\n'
+                        sDictGetPure += valueStr + ';\n'
                         
                         #set functions:
-                        if parameter['type'] in scalarRangeForms: #the same conversion and checks as the attribute (step 34c5 a)
+                        if parameter['type'] in convertedMemberTypes: #the same conversion and checks as the attribute (step 34c5 a, b)
                             sDictSet += ('    EPyUtils::FromPython(d["' + parameter['pythonName'] + '"], data.' + parameter['cplusplusName'] + ', '
                                          + RangeArgument(parameter['type']) + '"' + parseInfo['class'] + '.' + parameter['pythonName'] + '");\n')
                         else:

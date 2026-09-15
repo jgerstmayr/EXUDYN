@@ -313,7 +313,7 @@ inline py::dict GetDictionary(const SolutionSettings& data) {
 inline void SetDictionary(SolutionSettings& data, const py::dict& d) {
     EPyUtils::FromPython(d["appendToFile"], data.appendToFile, "SolutionSettings.appendToFile");
     EPyUtils::FromPython(d["binarySolutionFile"], data.binarySolutionFile, "SolutionSettings.binarySolutionFile");
-    data.coordinatesSolutionFileName = py::cast<std::string>(d["coordinatesSolutionFileName"]);
+    EPyUtils::FromPython(d["coordinatesSolutionFileName"], data.coordinatesSolutionFileName, "SolutionSettings.coordinatesSolutionFileName");
     EPyUtils::FromPython(d["exportAccelerations"], data.exportAccelerations, "SolutionSettings.exportAccelerations");
     EPyUtils::FromPython(d["exportAlgebraicCoordinates"], data.exportAlgebraicCoordinates, "SolutionSettings.exportAlgebraicCoordinates");
     EPyUtils::FromPython(d["exportDataCoordinates"], data.exportDataCoordinates, "SolutionSettings.exportDataCoordinates");
@@ -323,16 +323,16 @@ inline void SetDictionary(SolutionSettings& data, const py::dict& d) {
     EPyUtils::FromPython(d["flushFilesImmediately"], data.flushFilesImmediately, "SolutionSettings.flushFilesImmediately");
     EPyUtils::FromPython(d["outputPrecision"], data.outputPrecision, EPyUtils::RangeCheck::nonNegative, "SolutionSettings.outputPrecision");
     EPyUtils::FromPython(d["recordImagesInterval"], data.recordImagesInterval, "SolutionSettings.recordImagesInterval");
-    data.restartFileName = py::cast<std::string>(d["restartFileName"]);
+    EPyUtils::FromPython(d["restartFileName"], data.restartFileName, "SolutionSettings.restartFileName");
     EPyUtils::FromPython(d["restartWritePeriod"], data.restartWritePeriod, EPyUtils::RangeCheck::nonNegative, "SolutionSettings.restartWritePeriod");
     EPyUtils::FromPython(d["sensorsAppendToFile"], data.sensorsAppendToFile, "SolutionSettings.sensorsAppendToFile");
     EPyUtils::FromPython(d["sensorsStoreAndWriteFiles"], data.sensorsStoreAndWriteFiles, "SolutionSettings.sensorsStoreAndWriteFiles");
     EPyUtils::FromPython(d["sensorsWriteFileFooter"], data.sensorsWriteFileFooter, "SolutionSettings.sensorsWriteFileFooter");
     EPyUtils::FromPython(d["sensorsWriteFileHeader"], data.sensorsWriteFileHeader, "SolutionSettings.sensorsWriteFileHeader");
     EPyUtils::FromPython(d["sensorsWritePeriod"], data.sensorsWritePeriod, EPyUtils::RangeCheck::nonNegative, "SolutionSettings.sensorsWritePeriod");
-    data.solutionInformation = py::cast<std::string>(d["solutionInformation"]);
+    EPyUtils::FromPython(d["solutionInformation"], data.solutionInformation, "SolutionSettings.solutionInformation");
     EPyUtils::FromPython(d["solutionWritePeriod"], data.solutionWritePeriod, EPyUtils::RangeCheck::nonNegative, "SolutionSettings.solutionWritePeriod");
-    data.solverInformationFileName = py::cast<std::string>(d["solverInformationFileName"]);
+    EPyUtils::FromPython(d["solverInformationFileName"], data.solverInformationFileName, "SolutionSettings.solverInformationFileName");
     EPyUtils::FromPython(d["writeFileFooter"], data.writeFileFooter, "SolutionSettings.writeFileFooter");
     EPyUtils::FromPython(d["writeFileHeader"], data.writeFileHeader, "SolutionSettings.writeFileHeader");
     EPyUtils::FromPython(d["writeInitialValues"], data.writeInitialValues, "SolutionSettings.writeInitialValues");
@@ -823,7 +823,7 @@ inline py::dict GetDictionary(const ExplicitIntegrationSettings& data) {
 inline void SetDictionary(ExplicitIntegrationSettings& data, const py::dict& d) {
     EPyUtils::FromPython(d["computeEndOfStepAccelerations"], data.computeEndOfStepAccelerations, "ExplicitIntegrationSettings.computeEndOfStepAccelerations");
     EPyUtils::FromPython(d["computeMassMatrixInversePerBody"], data.computeMassMatrixInversePerBody, "ExplicitIntegrationSettings.computeMassMatrixInversePerBody");
-    data.dynamicSolverType = py::cast<DynamicSolverType>(d["dynamicSolverType"]);
+    EPyUtils::FromPython(d["dynamicSolverType"], data.dynamicSolverType, "ExplicitIntegrationSettings.dynamicSolverType");
     EPyUtils::FromPython(d["eliminateConstraints"], data.eliminateConstraints, "ExplicitIntegrationSettings.eliminateConstraints");
     EPyUtils::FromPython(d["useLieGroupIntegration"], data.useLieGroupIntegration, "ExplicitIntegrationSettings.useLieGroupIntegration");
 }
@@ -1541,7 +1541,7 @@ inline void SetDictionary(SimulationSettings& data, const py::dict& d) {
     EPyUtils::FromPython(d["displayComputationTime"], data.displayComputationTime, "SimulationSettings.displayComputationTime");
     EPyUtils::FromPython(d["displayGlobalTimers"], data.displayGlobalTimers, "SimulationSettings.displayGlobalTimers");
     EPyUtils::FromPython(d["displayStatistics"], data.displayStatistics, "SimulationSettings.displayStatistics");
-    data.linearSolverType = py::cast<LinearSolverType>(d["linearSolverType"]);
+    EPyUtils::FromPython(d["linearSolverType"], data.linearSolverType, "SimulationSettings.linearSolverType");
     EPyUtils::FromPython(d["outputPrecision"], data.outputPrecision, EPyUtils::RangeCheck::nonNegative, "SimulationSettings.outputPrecision");
     EPyUtils::FromPython(d["pauseAfterEachStep"], data.pauseAfterEachStep, "SimulationSettings.pauseAfterEachStep");
 }
@@ -1568,7 +1568,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsGeneral& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetBackgroundColor();
+    d["value"] = EPyUtils::ToPythonMember(data.backgroundColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])";
@@ -1576,7 +1576,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsGeneral& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetBackgroundColorBottom();
+    d["value"] = EPyUtils::ToPythonMember(data.backgroundColorBottom);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "red, green, blue and alpha values for bottom background color in case that useGradientBackground = True";
@@ -1744,7 +1744,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsGeneral& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetTextColor();
+    d["value"] = EPyUtils::ToPythonMember(data.textColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "general text color (default); used for system texts in render window";
@@ -1822,8 +1822,8 @@ inline py::dict GetDictionary(const VSettingsGeneral& data) {
     auto structureDict = py::dict();
     structureDict["autoFitScene"] = data.autoFitScene;
     structureDict["axesTiling"] = data.axesTiling;
-    structureDict["backgroundColor"] = data.PyGetBackgroundColor();
-    structureDict["backgroundColorBottom"] = data.PyGetBackgroundColorBottom();
+    structureDict["backgroundColor"] = EPyUtils::ToPythonMember(data.backgroundColor);
+    structureDict["backgroundColorBottom"] = EPyUtils::ToPythonMember(data.backgroundColorBottom);
     structureDict["boundingBoxZoomAllFactor"] = data.boundingBoxZoomAllFactor;
     structureDict["boundingBoxZoomAllOffset"] = data.boundingBoxZoomAllOffset;
     structureDict["circleTiling"] = data.circleTiling;
@@ -1844,7 +1844,7 @@ inline py::dict GetDictionary(const VSettingsGeneral& data) {
     structureDict["showSolverTime"] = data.showSolverTime;
     structureDict["sphereTiling"] = data.sphereTiling;
     structureDict["textAlwaysInFront"] = data.textAlwaysInFront;
-    structureDict["textColor"] = data.PyGetTextColor();
+    structureDict["textColor"] = EPyUtils::ToPythonMember(data.textColor);
     structureDict["textHasBackground"] = data.textHasBackground;
     structureDict["textOffsetFactor"] = data.textOffsetFactor;
     structureDict["threadSafeGraphicsUpdate"] = data.threadSafeGraphicsUpdate;
@@ -1860,8 +1860,8 @@ inline py::dict GetDictionary(const VSettingsGeneral& data) {
 inline void SetDictionary(VSettingsGeneral& data, const py::dict& d) {
     EPyUtils::FromPython(d["autoFitScene"], data.autoFitScene, "VSettingsGeneral.autoFitScene");
     EPyUtils::FromPython(d["axesTiling"], data.axesTiling, EPyUtils::RangeCheck::positive, "VSettingsGeneral.axesTiling");
-    data.backgroundColor = py::cast<std::array<float,4>>(d["backgroundColor"]);
-    data.backgroundColorBottom = py::cast<std::array<float,4>>(d["backgroundColorBottom"]);
+    EPyUtils::FromPython(d["backgroundColor"], data.backgroundColor, "VSettingsGeneral.backgroundColor");
+    EPyUtils::FromPython(d["backgroundColorBottom"], data.backgroundColorBottom, "VSettingsGeneral.backgroundColorBottom");
     EPyUtils::FromPython(d["boundingBoxZoomAllFactor"], data.boundingBoxZoomAllFactor, EPyUtils::RangeCheck::positive, "VSettingsGeneral.boundingBoxZoomAllFactor");
     EPyUtils::FromPython(d["boundingBoxZoomAllOffset"], data.boundingBoxZoomAllOffset, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.boundingBoxZoomAllOffset");
     EPyUtils::FromPython(d["circleTiling"], data.circleTiling, EPyUtils::RangeCheck::positive, "VSettingsGeneral.circleTiling");
@@ -1875,14 +1875,14 @@ inline void SetDictionary(VSettingsGeneral& data, const py::dict& d) {
     EPyUtils::FromPython(d["reallyQuitTimeLimit"], data.reallyQuitTimeLimit, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.reallyQuitTimeLimit");
     EPyUtils::FromPython(d["rendererPrecision"], data.rendererPrecision, EPyUtils::RangeCheck::positive, "VSettingsGeneral.rendererPrecision");
     EPyUtils::FromPython(d["rendererStartupTimeout"], data.rendererStartupTimeout, EPyUtils::RangeCheck::positive, "VSettingsGeneral.rendererStartupTimeout");
-    data.renderWindowString = py::cast<std::string>(d["renderWindowString"]);
+    EPyUtils::FromPython(d["renderWindowString"], data.renderWindowString, "VSettingsGeneral.renderWindowString");
     EPyUtils::FromPython(d["showHelpOnStartup"], data.showHelpOnStartup, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.showHelpOnStartup");
     EPyUtils::FromPython(d["showSolutionInformation"], data.showSolutionInformation, "VSettingsGeneral.showSolutionInformation");
     EPyUtils::FromPython(d["showSolverInformation"], data.showSolverInformation, "VSettingsGeneral.showSolverInformation");
     EPyUtils::FromPython(d["showSolverTime"], data.showSolverTime, "VSettingsGeneral.showSolverTime");
     EPyUtils::FromPython(d["sphereTiling"], data.sphereTiling, EPyUtils::RangeCheck::positive, "VSettingsGeneral.sphereTiling");
     EPyUtils::FromPython(d["textAlwaysInFront"], data.textAlwaysInFront, "VSettingsGeneral.textAlwaysInFront");
-    data.textColor = py::cast<std::array<float,4>>(d["textColor"]);
+    EPyUtils::FromPython(d["textColor"], data.textColor, "VSettingsGeneral.textColor");
     EPyUtils::FromPython(d["textHasBackground"], data.textHasBackground, "VSettingsGeneral.textHasBackground");
     EPyUtils::FromPython(d["textOffsetFactor"], data.textOffsetFactor, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.textOffsetFactor");
     EPyUtils::FromPython(d["threadSafeGraphicsUpdate"], data.threadSafeGraphicsUpdate, "VSettingsGeneral.threadSafeGraphicsUpdate");
@@ -1915,7 +1915,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContourAdvanced& data) 
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetContourColor0();
+    d["value"] = EPyUtils::ToPythonMember(data.contourColor0);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "RGBA color for relative value 0 used for contour plot; alpha is ignored";
@@ -1923,7 +1923,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContourAdvanced& data) 
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetContourColor1();
+    d["value"] = EPyUtils::ToPythonMember(data.contourColor1);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "RGBA color for relative value 0.25 used for contour plot; alpha is ignored";
@@ -1931,7 +1931,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContourAdvanced& data) 
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetContourColor2();
+    d["value"] = EPyUtils::ToPythonMember(data.contourColor2);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "RGBA color for relative value 0.25 used for contour plot; alpha is ignored";
@@ -1939,7 +1939,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContourAdvanced& data) 
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetContourColor3();
+    d["value"] = EPyUtils::ToPythonMember(data.contourColor3);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "RGBA color for relative value 0.25 used for contour plot; alpha is ignored";
@@ -1947,7 +1947,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContourAdvanced& data) 
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetContourColor4();
+    d["value"] = EPyUtils::ToPythonMember(data.contourColor4);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "RGBA color for relative value 0.25 used for contour plot; alpha is ignored";
@@ -1955,7 +1955,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContourAdvanced& data) 
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetContourColorMax();
+    d["value"] = EPyUtils::ToPythonMember(data.contourColorMax);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "RGBA color if relative value in contour plot is larger than 1 (if automaticRange=False); alpha is ignored";
@@ -1963,7 +1963,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContourAdvanced& data) 
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetContourColorMin();
+    d["value"] = EPyUtils::ToPythonMember(data.contourColorMin);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "RGBA color if relative value in contour plot is smaller than 0 (if automaticRange=False); alpha is ignored";
@@ -1985,13 +1985,13 @@ inline py::dict GetDictionary(const VSettingsContourAdvanced& data) {
     auto structureDict = py::dict();
     structureDict["colorBarPrecision"] = data.colorBarPrecision;
     structureDict["colorBarTiling"] = data.colorBarTiling;
-    structureDict["contourColor0"] = data.PyGetContourColor0();
-    structureDict["contourColor1"] = data.PyGetContourColor1();
-    structureDict["contourColor2"] = data.PyGetContourColor2();
-    structureDict["contourColor3"] = data.PyGetContourColor3();
-    structureDict["contourColor4"] = data.PyGetContourColor4();
-    structureDict["contourColorMax"] = data.PyGetContourColorMax();
-    structureDict["contourColorMin"] = data.PyGetContourColorMin();
+    structureDict["contourColor0"] = EPyUtils::ToPythonMember(data.contourColor0);
+    structureDict["contourColor1"] = EPyUtils::ToPythonMember(data.contourColor1);
+    structureDict["contourColor2"] = EPyUtils::ToPythonMember(data.contourColor2);
+    structureDict["contourColor3"] = EPyUtils::ToPythonMember(data.contourColor3);
+    structureDict["contourColor4"] = EPyUtils::ToPythonMember(data.contourColor4);
+    structureDict["contourColorMax"] = EPyUtils::ToPythonMember(data.contourColorMax);
+    structureDict["contourColorMin"] = EPyUtils::ToPythonMember(data.contourColorMin);
     structureDict["showColorBar"] = data.showColorBar;
     return structureDict;
 }
@@ -2000,13 +2000,13 @@ inline py::dict GetDictionary(const VSettingsContourAdvanced& data) {
 inline void SetDictionary(VSettingsContourAdvanced& data, const py::dict& d) {
     EPyUtils::FromPython(d["colorBarPrecision"], data.colorBarPrecision, EPyUtils::RangeCheck::positive, "VSettingsContourAdvanced.colorBarPrecision");
     EPyUtils::FromPython(d["colorBarTiling"], data.colorBarTiling, EPyUtils::RangeCheck::positive, "VSettingsContourAdvanced.colorBarTiling");
-    data.contourColor0 = py::cast<std::array<float,4>>(d["contourColor0"]);
-    data.contourColor1 = py::cast<std::array<float,4>>(d["contourColor1"]);
-    data.contourColor2 = py::cast<std::array<float,4>>(d["contourColor2"]);
-    data.contourColor3 = py::cast<std::array<float,4>>(d["contourColor3"]);
-    data.contourColor4 = py::cast<std::array<float,4>>(d["contourColor4"]);
-    data.contourColorMax = py::cast<std::array<float,4>>(d["contourColorMax"]);
-    data.contourColorMin = py::cast<std::array<float,4>>(d["contourColorMin"]);
+    EPyUtils::FromPython(d["contourColor0"], data.contourColor0, "VSettingsContourAdvanced.contourColor0");
+    EPyUtils::FromPython(d["contourColor1"], data.contourColor1, "VSettingsContourAdvanced.contourColor1");
+    EPyUtils::FromPython(d["contourColor2"], data.contourColor2, "VSettingsContourAdvanced.contourColor2");
+    EPyUtils::FromPython(d["contourColor3"], data.contourColor3, "VSettingsContourAdvanced.contourColor3");
+    EPyUtils::FromPython(d["contourColor4"], data.contourColor4, "VSettingsContourAdvanced.contourColor4");
+    EPyUtils::FromPython(d["contourColorMax"], data.contourColorMax, "VSettingsContourAdvanced.contourColorMax");
+    EPyUtils::FromPython(d["contourColorMin"], data.contourColorMin, "VSettingsContourAdvanced.contourColorMin");
     EPyUtils::FromPython(d["showColorBar"], data.showColorBar, "VSettingsContourAdvanced.showColorBar");
 }
 
@@ -2114,7 +2114,7 @@ inline void SetDictionary(VSettingsContour& data, const py::dict& d) {
     EPyUtils::FromPython(d["maxValue"], data.maxValue, "VSettingsContour.maxValue");
     EPyUtils::FromPython(d["minValue"], data.minValue, "VSettingsContour.minValue");
     EPyUtils::FromPython(d["nodesColored"], data.nodesColored, "VSettingsContour.nodesColored");
-    data.outputVariable = py::cast<OutputVariableType>(d["outputVariable"]);
+    EPyUtils::FromPython(d["outputVariable"], data.outputVariable, "VSettingsContour.outputVariable");
     EPyUtils::FromPython(d["outputVariableComponent"], data.outputVariableComponent, "VSettingsContour.outputVariableComponent");
     EPyUtils::FromPython(d["reduceRange"], data.reduceRange, "VSettingsContour.reduceRange");
     EPyUtils::FromPython(d["rigidBodiesColored"], data.rigidBodiesColored, "VSettingsContour.rigidBodiesColored");
@@ -2134,7 +2134,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsNodes& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetDefaultColor();
+    d["value"] = EPyUtils::ToPythonMember(data.defaultColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "default RGBA color for nodes; 4th value is alpha-transparency";
@@ -2203,7 +2203,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsNodes& data) {
 inline py::dict GetDictionary(const VSettingsNodes& data) {
     auto structureDict = py::dict();
     structureDict["basisSize"] = data.basisSize;
-    structureDict["defaultColor"] = data.PyGetDefaultColor();
+    structureDict["defaultColor"] = EPyUtils::ToPythonMember(data.defaultColor);
     structureDict["defaultSize"] = data.defaultSize;
     structureDict["drawNodesAsPoint"] = data.drawNodesAsPoint;
     structureDict["show"] = data.show;
@@ -2217,7 +2217,7 @@ inline py::dict GetDictionary(const VSettingsNodes& data) {
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsNodes& data, const py::dict& d) {
     EPyUtils::FromPython(d["basisSize"], data.basisSize, "VSettingsNodes.basisSize");
-    data.defaultColor = py::cast<std::array<float,4>>(d["defaultColor"]);
+    EPyUtils::FromPython(d["defaultColor"], data.defaultColor, "VSettingsNodes.defaultColor");
     EPyUtils::FromPython(d["defaultSize"], data.defaultSize, "VSettingsNodes.defaultSize");
     EPyUtils::FromPython(d["drawNodesAsPoint"], data.drawNodesAsPoint, "VSettingsNodes.drawNodesAsPoint");
     EPyUtils::FromPython(d["show"], data.show, "VSettingsNodes.show");
@@ -2265,7 +2265,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsBeams& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetDrawVerticalColor();
+    d["value"] = EPyUtils::ToPythonMember(data.drawVerticalColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "color for outputVariable to be drawn along cross section (vertically)";
@@ -2321,7 +2321,7 @@ inline py::dict GetDictionary(const VSettingsBeams& data) {
     structureDict["crossSectionFilled"] = data.crossSectionFilled;
     structureDict["crossSectionTiling"] = data.crossSectionTiling;
     structureDict["drawVertical"] = data.drawVertical;
-    structureDict["drawVerticalColor"] = data.PyGetDrawVerticalColor();
+    structureDict["drawVerticalColor"] = EPyUtils::ToPythonMember(data.drawVerticalColor);
     structureDict["drawVerticalFactor"] = data.drawVerticalFactor;
     structureDict["drawVerticalLines"] = data.drawVerticalLines;
     structureDict["drawVerticalOffset"] = data.drawVerticalOffset;
@@ -2336,7 +2336,7 @@ inline void SetDictionary(VSettingsBeams& data, const py::dict& d) {
     EPyUtils::FromPython(d["crossSectionFilled"], data.crossSectionFilled, "VSettingsBeams.crossSectionFilled");
     EPyUtils::FromPython(d["crossSectionTiling"], data.crossSectionTiling, EPyUtils::RangeCheck::positive, "VSettingsBeams.crossSectionTiling");
     EPyUtils::FromPython(d["drawVertical"], data.drawVertical, "VSettingsBeams.drawVertical");
-    data.drawVerticalColor = py::cast<std::array<float,4>>(d["drawVerticalColor"]);
+    EPyUtils::FromPython(d["drawVerticalColor"], data.drawVerticalColor, "VSettingsBeams.drawVerticalColor");
     EPyUtils::FromPython(d["drawVerticalFactor"], data.drawVerticalFactor, EPyUtils::RangeCheck::nonNegative, "VSettingsBeams.drawVerticalFactor");
     EPyUtils::FromPython(d["drawVerticalLines"], data.drawVerticalLines, "VSettingsBeams.drawVerticalLines");
     EPyUtils::FromPython(d["drawVerticalOffset"], data.drawVerticalOffset, "VSettingsBeams.drawVerticalOffset");
@@ -2447,7 +2447,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsBodies& data) {
     structureDict["shells"] = GetDictionaryWithTypeInfo(data.shells);
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetDefaultColor();
+    d["value"] = EPyUtils::ToPythonMember(data.defaultColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "default RGBA color for bodies; 4th value is alpha-transparency";
@@ -2455,7 +2455,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsBodies& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetDefaultSize();
+    d["value"] = EPyUtils::ToPythonMember(data.defaultSize);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{3};
     d["description"] = "global body size of xyz-cube";
@@ -2494,8 +2494,8 @@ inline py::dict GetDictionary(const VSettingsBodies& data) {
     structureDict["beams"] = GetDictionary(data.beams);
     structureDict["kinematicTree"] = GetDictionary(data.kinematicTree);
     structureDict["shells"] = GetDictionary(data.shells);
-    structureDict["defaultColor"] = data.PyGetDefaultColor();
-    structureDict["defaultSize"] = data.PyGetDefaultSize();
+    structureDict["defaultColor"] = EPyUtils::ToPythonMember(data.defaultColor);
+    structureDict["defaultSize"] = EPyUtils::ToPythonMember(data.defaultSize);
     structureDict["deformationScaleFactor"] = data.deformationScaleFactor;
     structureDict["show"] = data.show;
     structureDict["showNumbers"] = data.showNumbers;
@@ -2507,8 +2507,8 @@ inline void SetDictionary(VSettingsBodies& data, const py::dict& d) {
     SetDictionary(data.beams, py::cast<py::dict>(d["beams"]));
     SetDictionary(data.kinematicTree, py::cast<py::dict>(d["kinematicTree"]));
     SetDictionary(data.shells, py::cast<py::dict>(d["shells"]));
-    data.defaultColor = py::cast<std::array<float,4>>(d["defaultColor"]);
-    data.defaultSize = py::cast<std::array<float,3>>(d["defaultSize"]);
+    EPyUtils::FromPython(d["defaultColor"], data.defaultColor, "VSettingsBodies.defaultColor");
+    EPyUtils::FromPython(d["defaultSize"], data.defaultSize, "VSettingsBodies.defaultSize");
     EPyUtils::FromPython(d["deformationScaleFactor"], data.deformationScaleFactor, "VSettingsBodies.deformationScaleFactor");
     EPyUtils::FromPython(d["show"], data.show, "VSettingsBodies.show");
     EPyUtils::FromPython(d["showNumbers"], data.showNumbers, "VSettingsBodies.showNumbers");
@@ -2528,7 +2528,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsConnectors& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetDefaultColor();
+    d["value"] = EPyUtils::ToPythonMember(data.defaultColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "default RGBA color for connectors; 4th value is alpha-transparency";
@@ -2605,7 +2605,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsConnectors& data) {
 inline py::dict GetDictionary(const VSettingsConnectors& data) {
     auto structureDict = py::dict();
     structureDict["contactPointsDefaultSize"] = data.contactPointsDefaultSize;
-    structureDict["defaultColor"] = data.PyGetDefaultColor();
+    structureDict["defaultColor"] = EPyUtils::ToPythonMember(data.defaultColor);
     structureDict["defaultSize"] = data.defaultSize;
     structureDict["jointAxesLength"] = data.jointAxesLength;
     structureDict["jointAxesRadius"] = data.jointAxesRadius;
@@ -2620,7 +2620,7 @@ inline py::dict GetDictionary(const VSettingsConnectors& data) {
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsConnectors& data, const py::dict& d) {
     EPyUtils::FromPython(d["contactPointsDefaultSize"], data.contactPointsDefaultSize, "VSettingsConnectors.contactPointsDefaultSize");
-    data.defaultColor = py::cast<std::array<float,4>>(d["defaultColor"]);
+    EPyUtils::FromPython(d["defaultColor"], data.defaultColor, "VSettingsConnectors.defaultColor");
     EPyUtils::FromPython(d["defaultSize"], data.defaultSize, "VSettingsConnectors.defaultSize");
     EPyUtils::FromPython(d["jointAxesLength"], data.jointAxesLength, "VSettingsConnectors.jointAxesLength");
     EPyUtils::FromPython(d["jointAxesRadius"], data.jointAxesRadius, "VSettingsConnectors.jointAxesRadius");
@@ -2637,7 +2637,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsMarkers& data) {
     auto d = py::dict(); //local dict
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetDefaultColor();
+    d["value"] = EPyUtils::ToPythonMember(data.defaultColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "default RGBA color for markers; 4th value is alpha-transparency";
@@ -2681,7 +2681,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsMarkers& data) {
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const VSettingsMarkers& data) {
     auto structureDict = py::dict();
-    structureDict["defaultColor"] = data.PyGetDefaultColor();
+    structureDict["defaultColor"] = EPyUtils::ToPythonMember(data.defaultColor);
     structureDict["defaultSize"] = data.defaultSize;
     structureDict["drawSimplified"] = data.drawSimplified;
     structureDict["show"] = data.show;
@@ -2691,7 +2691,7 @@ inline py::dict GetDictionary(const VSettingsMarkers& data) {
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsMarkers& data, const py::dict& d) {
-    data.defaultColor = py::cast<std::array<float,4>>(d["defaultColor"]);
+    EPyUtils::FromPython(d["defaultColor"], data.defaultColor, "VSettingsMarkers.defaultColor");
     EPyUtils::FromPython(d["defaultSize"], data.defaultSize, "VSettingsMarkers.defaultSize");
     EPyUtils::FromPython(d["drawSimplified"], data.drawSimplified, "VSettingsMarkers.drawSimplified");
     EPyUtils::FromPython(d["show"], data.show, "VSettingsMarkers.show");
@@ -2704,7 +2704,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsLoads& data) {
     auto d = py::dict(); //local dict
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetDefaultColor();
+    d["value"] = EPyUtils::ToPythonMember(data.defaultColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "default RGBA color for loads; 4th value is alpha-transparency";
@@ -2780,7 +2780,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsLoads& data) {
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const VSettingsLoads& data) {
     auto structureDict = py::dict();
-    structureDict["defaultColor"] = data.PyGetDefaultColor();
+    structureDict["defaultColor"] = EPyUtils::ToPythonMember(data.defaultColor);
     structureDict["defaultRadius"] = data.defaultRadius;
     structureDict["defaultSize"] = data.defaultSize;
     structureDict["drawSimplified"] = data.drawSimplified;
@@ -2794,7 +2794,7 @@ inline py::dict GetDictionary(const VSettingsLoads& data) {
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsLoads& data, const py::dict& d) {
-    data.defaultColor = py::cast<std::array<float,4>>(d["defaultColor"]);
+    EPyUtils::FromPython(d["defaultColor"], data.defaultColor, "VSettingsLoads.defaultColor");
     EPyUtils::FromPython(d["defaultRadius"], data.defaultRadius, "VSettingsLoads.defaultRadius");
     EPyUtils::FromPython(d["defaultSize"], data.defaultSize, "VSettingsLoads.defaultSize");
     EPyUtils::FromPython(d["drawSimplified"], data.drawSimplified, "VSettingsLoads.drawSimplified");
@@ -2819,7 +2819,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsTraces& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetListOfPositionSensors();
+    d["value"] = EPyUtils::ToPythonMember(data.listOfPositionSensors);
     d["type"] = "IndexArray";
     d["size"] = std::vector<int>{-1};
     d["description"] = "list of position sensors which can be shown as trace inside render window if sensors have storeInternal=True; if this list is empty and showPositionTrace=True, then all available sensors are shown";
@@ -2827,7 +2827,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsTraces& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetListOfTriadSensors();
+    d["value"] = EPyUtils::ToPythonMember(data.listOfTriadSensors);
     d["type"] = "IndexArray";
     d["size"] = std::vector<int>{-1};
     d["description"] = "list of sensors of with OutputVariableType RotationMatrix; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showTriads=True; the triad is drawn at the related position";
@@ -2835,7 +2835,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsTraces& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetListOfVectorSensors();
+    d["value"] = EPyUtils::ToPythonMember(data.listOfVectorSensors);
     d["type"] = "IndexArray";
     d["size"] = std::vector<int>{-1};
     d["description"] = "list of sensors with 3D vector quantities; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showVectors=True; the vector quantity is drawn relative to the related position";
@@ -2960,9 +2960,9 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsTraces& data) {
 inline py::dict GetDictionary(const VSettingsTraces& data) {
     auto structureDict = py::dict();
     structureDict["lineWidth"] = data.lineWidth;
-    structureDict["listOfPositionSensors"] = data.PyGetListOfPositionSensors();
-    structureDict["listOfTriadSensors"] = data.PyGetListOfTriadSensors();
-    structureDict["listOfVectorSensors"] = data.PyGetListOfVectorSensors();
+    structureDict["listOfPositionSensors"] = EPyUtils::ToPythonMember(data.listOfPositionSensors);
+    structureDict["listOfTriadSensors"] = EPyUtils::ToPythonMember(data.listOfTriadSensors);
+    structureDict["listOfVectorSensors"] = EPyUtils::ToPythonMember(data.listOfVectorSensors);
     structureDict["positionsShowEvery"] = data.positionsShowEvery;
     structureDict["sensorsMbsNumber"] = data.sensorsMbsNumber;
     structureDict["showCurrent"] = data.showCurrent;
@@ -2983,9 +2983,9 @@ inline py::dict GetDictionary(const VSettingsTraces& data) {
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsTraces& data, const py::dict& d) {
     EPyUtils::FromPython(d["lineWidth"], data.lineWidth, EPyUtils::RangeCheck::nonNegative, "VSettingsTraces.lineWidth");
-    data.listOfPositionSensors = py::cast<std::vector<Index>>(d["listOfPositionSensors"]);
-    data.listOfTriadSensors = py::cast<std::vector<Index>>(d["listOfTriadSensors"]);
-    data.listOfVectorSensors = py::cast<std::vector<Index>>(d["listOfVectorSensors"]);
+    EPyUtils::FromPython(d["listOfPositionSensors"], data.listOfPositionSensors, "VSettingsTraces.listOfPositionSensors");
+    EPyUtils::FromPython(d["listOfTriadSensors"], data.listOfTriadSensors, "VSettingsTraces.listOfTriadSensors");
+    EPyUtils::FromPython(d["listOfVectorSensors"], data.listOfVectorSensors, "VSettingsTraces.listOfVectorSensors");
     EPyUtils::FromPython(d["positionsShowEvery"], data.positionsShowEvery, EPyUtils::RangeCheck::positive, "VSettingsTraces.positionsShowEvery");
     EPyUtils::FromPython(d["sensorsMbsNumber"], data.sensorsMbsNumber, "VSettingsTraces.sensorsMbsNumber");
     EPyUtils::FromPython(d["showCurrent"], data.showCurrent, "VSettingsTraces.showCurrent");
@@ -3009,7 +3009,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsSensors& data) {
     structureDict["traces"] = GetDictionaryWithTypeInfo(data.traces);
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetDefaultColor();
+    d["value"] = EPyUtils::ToPythonMember(data.defaultColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "default RGBA color for sensors; 4th value is alpha-transparency";
@@ -3054,7 +3054,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsSensors& data) {
 inline py::dict GetDictionary(const VSettingsSensors& data) {
     auto structureDict = py::dict();
     structureDict["traces"] = GetDictionary(data.traces);
-    structureDict["defaultColor"] = data.PyGetDefaultColor();
+    structureDict["defaultColor"] = EPyUtils::ToPythonMember(data.defaultColor);
     structureDict["defaultSize"] = data.defaultSize;
     structureDict["drawSimplified"] = data.drawSimplified;
     structureDict["show"] = data.show;
@@ -3065,7 +3065,7 @@ inline py::dict GetDictionary(const VSettingsSensors& data) {
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsSensors& data, const py::dict& d) {
     SetDictionary(data.traces, py::cast<py::dict>(d["traces"]));
-    data.defaultColor = py::cast<std::array<float,4>>(d["defaultColor"]);
+    EPyUtils::FromPython(d["defaultColor"], data.defaultColor, "VSettingsSensors.defaultColor");
     EPyUtils::FromPython(d["defaultSize"], data.defaultSize, "VSettingsSensors.defaultSize");
     EPyUtils::FromPython(d["drawSimplified"], data.drawSimplified, "VSettingsSensors.drawSimplified");
     EPyUtils::FromPython(d["show"], data.show, "VSettingsSensors.show");
@@ -3078,7 +3078,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
     auto d = py::dict(); //local dict
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetColorBoundingBoxes();
+    d["value"] = EPyUtils::ToPythonMember(data.colorBoundingBoxes);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "RGBA color for boudnding boxes, see showBoundingBoxes";
@@ -3086,7 +3086,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetColorSearchTree();
+    d["value"] = EPyUtils::ToPythonMember(data.colorSearchTree);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "RGBA color for search tree, see showSearchTree";
@@ -3094,7 +3094,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetColorSpheres();
+    d["value"] = EPyUtils::ToPythonMember(data.colorSpheres);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "RGBA color for contact spheres, see showSpheres";
@@ -3102,7 +3102,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetColorTori();
+    d["value"] = EPyUtils::ToPythonMember(data.colorTori);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "RGBA color for contact tori, see showTori";
@@ -3110,7 +3110,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetColorTriangles();
+    d["value"] = EPyUtils::ToPythonMember(data.colorTriangles);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "RGBA color for contact triangles, see showTriangles";
@@ -3218,11 +3218,11 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsContact& data) {
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const VSettingsContact& data) {
     auto structureDict = py::dict();
-    structureDict["colorBoundingBoxes"] = data.PyGetColorBoundingBoxes();
-    structureDict["colorSearchTree"] = data.PyGetColorSearchTree();
-    structureDict["colorSpheres"] = data.PyGetColorSpheres();
-    structureDict["colorTori"] = data.PyGetColorTori();
-    structureDict["colorTriangles"] = data.PyGetColorTriangles();
+    structureDict["colorBoundingBoxes"] = EPyUtils::ToPythonMember(data.colorBoundingBoxes);
+    structureDict["colorSearchTree"] = EPyUtils::ToPythonMember(data.colorSearchTree);
+    structureDict["colorSpheres"] = EPyUtils::ToPythonMember(data.colorSpheres);
+    structureDict["colorTori"] = EPyUtils::ToPythonMember(data.colorTori);
+    structureDict["colorTriangles"] = EPyUtils::ToPythonMember(data.colorTriangles);
     structureDict["contactForcesFactor"] = data.contactForcesFactor;
     structureDict["contactPointsDefaultSize"] = data.contactPointsDefaultSize;
     structureDict["showBoundingBoxes"] = data.showBoundingBoxes;
@@ -3240,11 +3240,11 @@ inline py::dict GetDictionary(const VSettingsContact& data) {
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsContact& data, const py::dict& d) {
-    data.colorBoundingBoxes = py::cast<std::array<float,4>>(d["colorBoundingBoxes"]);
-    data.colorSearchTree = py::cast<std::array<float,4>>(d["colorSearchTree"]);
-    data.colorSpheres = py::cast<std::array<float,4>>(d["colorSpheres"]);
-    data.colorTori = py::cast<std::array<float,4>>(d["colorTori"]);
-    data.colorTriangles = py::cast<std::array<float,4>>(d["colorTriangles"]);
+    EPyUtils::FromPython(d["colorBoundingBoxes"], data.colorBoundingBoxes, "VSettingsContact.colorBoundingBoxes");
+    EPyUtils::FromPython(d["colorSearchTree"], data.colorSearchTree, "VSettingsContact.colorSearchTree");
+    EPyUtils::FromPython(d["colorSpheres"], data.colorSpheres, "VSettingsContact.colorSpheres");
+    EPyUtils::FromPython(d["colorTori"], data.colorTori, "VSettingsContact.colorTori");
+    EPyUtils::FromPython(d["colorTriangles"], data.colorTriangles, "VSettingsContact.colorTriangles");
     EPyUtils::FromPython(d["contactForcesFactor"], data.contactForcesFactor, "VSettingsContact.contactForcesFactor");
     EPyUtils::FromPython(d["contactPointsDefaultSize"], data.contactPointsDefaultSize, "VSettingsContact.contactPointsDefaultSize");
     EPyUtils::FromPython(d["showBoundingBoxes"], data.showBoundingBoxes, "VSettingsContact.showBoundingBoxes");
@@ -3265,7 +3265,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsCamera& data) {
     auto d = py::dict(); //local dict
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetCameraPosition();
+    d["value"] = EPyUtils::ToPythonMember(data.cameraPosition);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{3};
     d["description"] = "if modelCentricView=True: offset to camera position in model view (and, if used, relative to tracked marker - instead of a tracked marker position, you could also just change the camera position in camera-centric views); camera rotation follows modelRotation in renderState";
@@ -3281,7 +3281,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsCamera& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetClippingPlaneNormal();
+    d["value"] = EPyUtils::ToPythonMember(data.clippingPlaneNormal);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{3};
     d["description"] = "normal vector of clipping plane, e.g. [0,0,1] to set a xy-clipping plane; the clipped half-space is in direction of the normal; use [0,0,0] to deactivate clipping plane; Note that clipping is mainly made for triangles in order to visualize hidden objects and currently it only fully clips triangles, but does not exactly cut them; see also clippingPlaneDistance and openGL.advanced.clippingPlaneColor";
@@ -3297,7 +3297,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsCamera& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetNearFarPlaneOffset();
+    d["value"] = EPyUtils::ToPythonMember(data.nearFarPlaneOffset);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{3};
     d["description"] = "the three values are [nearPlaneOffset, farPlaneOffset, flag]; if flag=0, the offsets are ignored and computed automatically, using x = 2 * maxSceneSize * zMaxSceneFactor, setting near plane to -x and far plane to +x in case of modelCentricView=True and setting near plane to 0.01 (minimal offset to eye point) and far plane to +x if modelCentricView=False; if flag=1, the near and far plane values are just overwritten; note that positive values for near plane make objects in front of the camera invisible while negative values make objects behind the camera plane visible; in case of camera-centric view, the eyepoint can be shifted backwards using cameraPosition accordingly.";
@@ -3329,7 +3329,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsCamera& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetTrackMarkerOrientation();
+    d["value"] = EPyUtils::ToPythonMember(data.trackMarkerOrientation);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{3};
     d["description"] = "choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one";
@@ -3337,7 +3337,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsCamera& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetTrackMarkerPosition();
+    d["value"] = EPyUtils::ToPythonMember(data.trackMarkerPosition);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{3};
     d["description"] = "choose which coordinates or marker are tracked (x,y,z)";
@@ -3357,32 +3357,32 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsCamera& data) {
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const VSettingsCamera& data) {
     auto structureDict = py::dict();
-    structureDict["cameraPosition"] = data.PyGetCameraPosition();
+    structureDict["cameraPosition"] = EPyUtils::ToPythonMember(data.cameraPosition);
     structureDict["clippingPlaneDistance"] = data.clippingPlaneDistance;
-    structureDict["clippingPlaneNormal"] = data.PyGetClippingPlaneNormal();
+    structureDict["clippingPlaneNormal"] = EPyUtils::ToPythonMember(data.clippingPlaneNormal);
     structureDict["modelCentricView"] = data.modelCentricView;
-    structureDict["nearFarPlaneOffset"] = data.PyGetNearFarPlaneOffset();
+    structureDict["nearFarPlaneOffset"] = EPyUtils::ToPythonMember(data.nearFarPlaneOffset);
     structureDict["perspective"] = data.perspective;
     structureDict["trackMarker"] = data.trackMarker;
     structureDict["trackMarkerMbsNumber"] = data.trackMarkerMbsNumber;
-    structureDict["trackMarkerOrientation"] = data.PyGetTrackMarkerOrientation();
-    structureDict["trackMarkerPosition"] = data.PyGetTrackMarkerPosition();
+    structureDict["trackMarkerOrientation"] = EPyUtils::ToPythonMember(data.trackMarkerOrientation);
+    structureDict["trackMarkerPosition"] = EPyUtils::ToPythonMember(data.trackMarkerPosition);
     structureDict["useRaytracer"] = data.useRaytracer;
     return structureDict;
 }
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsCamera& data, const py::dict& d) {
-    data.cameraPosition = py::cast<std::array<float,3>>(d["cameraPosition"]);
+    EPyUtils::FromPython(d["cameraPosition"], data.cameraPosition, "VSettingsCamera.cameraPosition");
     EPyUtils::FromPython(d["clippingPlaneDistance"], data.clippingPlaneDistance, "VSettingsCamera.clippingPlaneDistance");
-    data.clippingPlaneNormal = py::cast<std::array<float,3>>(d["clippingPlaneNormal"]);
+    EPyUtils::FromPython(d["clippingPlaneNormal"], data.clippingPlaneNormal, "VSettingsCamera.clippingPlaneNormal");
     EPyUtils::FromPython(d["modelCentricView"], data.modelCentricView, "VSettingsCamera.modelCentricView");
-    data.nearFarPlaneOffset = py::cast<std::array<float,3>>(d["nearFarPlaneOffset"]);
+    EPyUtils::FromPython(d["nearFarPlaneOffset"], data.nearFarPlaneOffset, "VSettingsCamera.nearFarPlaneOffset");
     EPyUtils::FromPython(d["perspective"], data.perspective, EPyUtils::RangeCheck::nonNegative, "VSettingsCamera.perspective");
     EPyUtils::FromPython(d["trackMarker"], data.trackMarker, "VSettingsCamera.trackMarker");
     EPyUtils::FromPython(d["trackMarkerMbsNumber"], data.trackMarkerMbsNumber, "VSettingsCamera.trackMarkerMbsNumber");
-    data.trackMarkerOrientation = py::cast<std::array<float,3>>(d["trackMarkerOrientation"]);
-    data.trackMarkerPosition = py::cast<std::array<float,3>>(d["trackMarkerPosition"]);
+    EPyUtils::FromPython(d["trackMarkerOrientation"], data.trackMarkerOrientation, "VSettingsCamera.trackMarkerOrientation");
+    EPyUtils::FromPython(d["trackMarkerPosition"], data.trackMarkerPosition, "VSettingsCamera.trackMarkerPosition");
     EPyUtils::FromPython(d["useRaytracer"], data.useRaytracer, "VSettingsCamera.useRaytracer");
 }
 
@@ -3531,7 +3531,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsWindow& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetRenderWindowSize();
+    d["value"] = EPyUtils::ToPythonMember(data.renderWindowSize);
     d["type"] = "IndexArray";
     d["size"] = std::vector<int>{2};
     d["description"] = "initial size of render window of respective view for specific view in pixels for";
@@ -3579,7 +3579,7 @@ inline py::dict GetDictionary(const VSettingsWindow& data) {
     structureDict["globalFontSize"] = data.globalFontSize;
     structureDict["lockModelView"] = data.lockModelView;
     structureDict["maximize"] = data.maximize;
-    structureDict["renderWindowSize"] = data.PyGetRenderWindowSize();
+    structureDict["renderWindowSize"] = EPyUtils::ToPythonMember(data.renderWindowSize);
     structureDict["showComputationInfo"] = data.showComputationInfo;
     structureDict["showMouseCoordinates"] = data.showMouseCoordinates;
     structureDict["showRenderStateInfo"] = data.showRenderStateInfo;
@@ -3593,7 +3593,7 @@ inline void SetDictionary(VSettingsWindow& data, const py::dict& d) {
     EPyUtils::FromPython(d["globalFontSize"], data.globalFontSize, EPyUtils::RangeCheck::positive, "VSettingsWindow.globalFontSize");
     EPyUtils::FromPython(d["lockModelView"], data.lockModelView, "VSettingsWindow.lockModelView");
     EPyUtils::FromPython(d["maximize"], data.maximize, "VSettingsWindow.maximize");
-    data.renderWindowSize = py::cast<std::array<Index,2>>(d["renderWindowSize"]);
+    EPyUtils::FromPython(d["renderWindowSize"], data.renderWindowSize, "VSettingsWindow.renderWindowSize");
     EPyUtils::FromPython(d["showComputationInfo"], data.showComputationInfo, "VSettingsWindow.showComputationInfo");
     EPyUtils::FromPython(d["showMouseCoordinates"], data.showMouseCoordinates, "VSettingsWindow.showMouseCoordinates");
     EPyUtils::FromPython(d["showRenderStateInfo"], data.showRenderStateInfo, "VSettingsWindow.showRenderStateInfo");
@@ -3724,7 +3724,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsMaterial& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetBaseColor();
+    d["value"] = EPyUtils::ToPythonMember(data.baseColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{3};
     d["description"] = "RGB default material color if face color has R-color channel -1";
@@ -3732,7 +3732,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsMaterial& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetEmission();
+    d["value"] = EPyUtils::ToPythonMember(data.emission);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{3};
     d["description"] = "RGB emissive material color (enlightened material)";
@@ -3772,7 +3772,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsMaterial& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetSpecular();
+    d["value"] = EPyUtils::ToPythonMember(data.specular);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{3};
     d["description"] = "RGB specular material color";
@@ -3785,26 +3785,26 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsMaterial& data) {
 inline py::dict GetDictionary(const VSettingsMaterial& data) {
     auto structureDict = py::dict();
     structureDict["alpha"] = data.alpha;
-    structureDict["baseColor"] = data.PyGetBaseColor();
-    structureDict["emission"] = data.PyGetEmission();
+    structureDict["baseColor"] = EPyUtils::ToPythonMember(data.baseColor);
+    structureDict["emission"] = EPyUtils::ToPythonMember(data.emission);
     structureDict["ior"] = data.ior;
     structureDict["name"] = data.name;
     structureDict["reflectivity"] = data.reflectivity;
     structureDict["shininess"] = data.shininess;
-    structureDict["specular"] = data.PyGetSpecular();
+    structureDict["specular"] = EPyUtils::ToPythonMember(data.specular);
     return structureDict;
 }
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsMaterial& data, const py::dict& d) {
     EPyUtils::FromPython(d["alpha"], data.alpha, EPyUtils::RangeCheck::nonNegative, "VSettingsMaterial.alpha");
-    data.baseColor = py::cast<std::array<float,3>>(d["baseColor"]);
-    data.emission = py::cast<std::array<float,3>>(d["emission"]);
+    EPyUtils::FromPython(d["baseColor"], data.baseColor, "VSettingsMaterial.baseColor");
+    EPyUtils::FromPython(d["emission"], data.emission, "VSettingsMaterial.emission");
     EPyUtils::FromPython(d["ior"], data.ior, EPyUtils::RangeCheck::nonNegative, "VSettingsMaterial.ior");
-    data.name = py::cast<std::string>(d["name"]);
+    EPyUtils::FromPython(d["name"], data.name, "VSettingsMaterial.name");
     EPyUtils::FromPython(d["reflectivity"], data.reflectivity, EPyUtils::RangeCheck::nonNegative, "VSettingsMaterial.reflectivity");
     EPyUtils::FromPython(d["shininess"], data.shininess, EPyUtils::RangeCheck::nonNegative, "VSettingsMaterial.shininess");
-    data.specular = py::cast<std::array<float,3>>(d["specular"]);
+    EPyUtils::FromPython(d["specular"], data.specular, "VSettingsMaterial.specular");
 }
 
 //! AUTO: read access to structure; converting into dictionary
@@ -3813,7 +3813,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsRaytracerAdvanced& data
     auto d = py::dict(); //local dict
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetBackgroundColorReflections();
+    d["value"] = EPyUtils::ToPythonMember(data.backgroundColorReflections);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "scene RGBA color for background that is hit by reflection material; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; this is generally needed, as our scenes are usually not inside a closed geometry (like inside a room); this color is also used if maxReflectionDepth is reached";
@@ -3873,7 +3873,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsRaytracerAdvanced& data
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const VSettingsRaytracerAdvanced& data) {
     auto structureDict = py::dict();
-    structureDict["backgroundColorReflections"] = data.PyGetBackgroundColorReflections();
+    structureDict["backgroundColorReflections"] = EPyUtils::ToPythonMember(data.backgroundColorReflections);
     structureDict["searchTreeFactor"] = data.searchTreeFactor;
     structureDict["shadowScalingFactor"] = data.shadowScalingFactor;
     structureDict["shadowSmoothingSteps"] = data.shadowSmoothingSteps;
@@ -3885,7 +3885,7 @@ inline py::dict GetDictionary(const VSettingsRaytracerAdvanced& data) {
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsRaytracerAdvanced& data, const py::dict& d) {
-    data.backgroundColorReflections = py::cast<std::array<float,4>>(d["backgroundColorReflections"]);
+    EPyUtils::FromPython(d["backgroundColorReflections"], data.backgroundColorReflections, "VSettingsRaytracerAdvanced.backgroundColorReflections");
     EPyUtils::FromPython(d["searchTreeFactor"], data.searchTreeFactor, EPyUtils::RangeCheck::positive, "VSettingsRaytracerAdvanced.searchTreeFactor");
     EPyUtils::FromPython(d["shadowScalingFactor"], data.shadowScalingFactor, EPyUtils::RangeCheck::nonNegative, "VSettingsRaytracerAdvanced.shadowScalingFactor");
     EPyUtils::FromPython(d["shadowSmoothingSteps"], data.shadowSmoothingSteps, EPyUtils::RangeCheck::nonNegative, "VSettingsRaytracerAdvanced.shadowSmoothingSteps");
@@ -3911,7 +3911,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsRaytracer& data) {
     structureDict["material9"] = GetDictionaryWithTypeInfo(data.material9);
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetGlobalFogColor();
+    d["value"] = EPyUtils::ToPythonMember(data.globalFogColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "scene RGBA fog color";
@@ -4006,7 +4006,7 @@ inline py::dict GetDictionary(const VSettingsRaytracer& data) {
     structureDict["material7"] = GetDictionary(data.material7);
     structureDict["material8"] = GetDictionary(data.material8);
     structureDict["material9"] = GetDictionary(data.material9);
-    structureDict["globalFogColor"] = data.PyGetGlobalFogColor();
+    structureDict["globalFogColor"] = EPyUtils::ToPythonMember(data.globalFogColor);
     structureDict["globalFogDensity"] = data.globalFogDensity;
     structureDict["imageSizeFactor"] = data.imageSizeFactor;
     structureDict["keepWindowActive"] = data.keepWindowActive;
@@ -4032,7 +4032,7 @@ inline void SetDictionary(VSettingsRaytracer& data, const py::dict& d) {
     SetDictionary(data.material7, py::cast<py::dict>(d["material7"]));
     SetDictionary(data.material8, py::cast<py::dict>(d["material8"]));
     SetDictionary(data.material9, py::cast<py::dict>(d["material9"]));
-    data.globalFogColor = py::cast<std::array<float,4>>(d["globalFogColor"]);
+    EPyUtils::FromPython(d["globalFogColor"], data.globalFogColor, "VSettingsRaytracer.globalFogColor");
     EPyUtils::FromPython(d["globalFogDensity"], data.globalFogDensity, EPyUtils::RangeCheck::nonNegative, "VSettingsRaytracer.globalFogDensity");
     EPyUtils::FromPython(d["imageSizeFactor"], data.imageSizeFactor, EPyUtils::RangeCheck::positive, "VSettingsRaytracer.imageSizeFactor");
     EPyUtils::FromPython(d["keepWindowActive"], data.keepWindowActive, "VSettingsRaytracer.keepWindowActive");
@@ -4050,7 +4050,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsOpenGLAdvanced& data) {
     auto d = py::dict(); //local dict
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetClippingPlaneColor();
+    d["value"] = EPyUtils::ToPythonMember(data.clippingPlaneColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "RGBA color for clipping plane; if alpha-channel is 0, the cutting plane is not drawn; if alpha-channel is 1, the clippingPlaneColor is used; if alpha-channel is 2, the color of the object interior is used as clipping plane color (which may look strange in case of object-in-object); see also view.camera for clipping plane options";
@@ -4074,7 +4074,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsOpenGLAdvanced& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetFaceNormalsColor();
+    d["value"] = EPyUtils::ToPythonMember(data.faceNormalsColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "global RGBA color for face normals";
@@ -4082,7 +4082,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsOpenGLAdvanced& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetInitialCenterPoint();
+    d["value"] = EPyUtils::ToPythonMember(data.initialCenterPoint);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{3};
     d["description"] = "centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True; only used in case that modelCentricView=True";
@@ -4186,7 +4186,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsOpenGLAdvanced& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetVertexNormalsColor();
+    d["value"] = EPyUtils::ToPythonMember(data.vertexNormalsColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "global RGBA color for vertex normals";
@@ -4198,11 +4198,11 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsOpenGLAdvanced& data) {
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const VSettingsOpenGLAdvanced& data) {
     auto structureDict = py::dict();
-    structureDict["clippingPlaneColor"] = data.PyGetClippingPlaneColor();
+    structureDict["clippingPlaneColor"] = EPyUtils::ToPythonMember(data.clippingPlaneColor);
     structureDict["depthSorting"] = data.depthSorting;
     structureDict["enableLighting"] = data.enableLighting;
-    structureDict["faceNormalsColor"] = data.PyGetFaceNormalsColor();
-    structureDict["initialCenterPoint"] = data.PyGetInitialCenterPoint();
+    structureDict["faceNormalsColor"] = EPyUtils::ToPythonMember(data.faceNormalsColor);
+    structureDict["initialCenterPoint"] = EPyUtils::ToPythonMember(data.initialCenterPoint);
     structureDict["initialMaxSceneSize"] = data.initialMaxSceneSize;
     structureDict["initialModelRotation"] = data.initialModelRotation;
     structureDict["initialZoom"] = data.initialZoom;
@@ -4215,17 +4215,17 @@ inline py::dict GetDictionary(const VSettingsOpenGLAdvanced& data) {
     structureDict["showBoundingBox"] = data.showBoundingBox;
     structureDict["textLineSmooth"] = data.textLineSmooth;
     structureDict["textLineWidth"] = data.textLineWidth;
-    structureDict["vertexNormalsColor"] = data.PyGetVertexNormalsColor();
+    structureDict["vertexNormalsColor"] = EPyUtils::ToPythonMember(data.vertexNormalsColor);
     return structureDict;
 }
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsOpenGLAdvanced& data, const py::dict& d) {
-    data.clippingPlaneColor = py::cast<std::array<float,4>>(d["clippingPlaneColor"]);
+    EPyUtils::FromPython(d["clippingPlaneColor"], data.clippingPlaneColor, "VSettingsOpenGLAdvanced.clippingPlaneColor");
     EPyUtils::FromPython(d["depthSorting"], data.depthSorting, "VSettingsOpenGLAdvanced.depthSorting");
     EPyUtils::FromPython(d["enableLighting"], data.enableLighting, "VSettingsOpenGLAdvanced.enableLighting");
-    data.faceNormalsColor = py::cast<std::array<float,4>>(d["faceNormalsColor"]);
-    data.initialCenterPoint = py::cast<std::array<float,3>>(d["initialCenterPoint"]);
+    EPyUtils::FromPython(d["faceNormalsColor"], data.faceNormalsColor, "VSettingsOpenGLAdvanced.faceNormalsColor");
+    EPyUtils::FromPython(d["initialCenterPoint"], data.initialCenterPoint, "VSettingsOpenGLAdvanced.initialCenterPoint");
     EPyUtils::FromPython(d["initialMaxSceneSize"], data.initialMaxSceneSize, EPyUtils::RangeCheck::positive, "VSettingsOpenGLAdvanced.initialMaxSceneSize");
     data.initialModelRotation = py::cast<StdArray33F>(d["initialModelRotation"]);
     EPyUtils::FromPython(d["initialZoom"], data.initialZoom, EPyUtils::RangeCheck::nonNegative, "VSettingsOpenGLAdvanced.initialZoom");
@@ -4238,7 +4238,7 @@ inline void SetDictionary(VSettingsOpenGLAdvanced& data, const py::dict& d) {
     EPyUtils::FromPython(d["showBoundingBox"], data.showBoundingBox, "VSettingsOpenGLAdvanced.showBoundingBox");
     EPyUtils::FromPython(d["textLineSmooth"], data.textLineSmooth, "VSettingsOpenGLAdvanced.textLineSmooth");
     EPyUtils::FromPython(d["textLineWidth"], data.textLineWidth, EPyUtils::RangeCheck::nonNegative, "VSettingsOpenGLAdvanced.textLineWidth");
-    data.vertexNormalsColor = py::cast<std::array<float,4>>(d["vertexNormalsColor"]);
+    EPyUtils::FromPython(d["vertexNormalsColor"], data.vertexNormalsColor, "VSettingsOpenGLAdvanced.vertexNormalsColor");
 }
 
 //! AUTO: read access to structure; converting into dictionary
@@ -4287,7 +4287,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsLight& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetPosition();
+    d["value"] = EPyUtils::ToPythonMember(data.position);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "4D position vector of GL_LIGHT[0,1,2,3]; 4th value should be 0 for directional lights that are (almost) infinitely far away, like the sun, but 1 for position-based lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position to be located at a reasonable location; the openGL renderer uses shadow volumes and approximates directional lights by enlarging the direction to 200 times maxSceneSize, while the raytracer uses the correct direction; see opengl manuals";
@@ -4336,7 +4336,7 @@ inline py::dict GetDictionary(const VSettingsLight& data) {
     structureDict["enable"] = data.enable;
     structureDict["lightRadius"] = data.lightRadius;
     structureDict["linearAttenuation"] = data.linearAttenuation;
-    structureDict["position"] = data.PyGetPosition();
+    structureDict["position"] = EPyUtils::ToPythonMember(data.position);
     structureDict["quadraticAttenuation"] = data.quadraticAttenuation;
     structureDict["shadow"] = data.shadow;
     structureDict["specular"] = data.specular;
@@ -4351,7 +4351,7 @@ inline void SetDictionary(VSettingsLight& data, const py::dict& d) {
     EPyUtils::FromPython(d["enable"], data.enable, "VSettingsLight.enable");
     EPyUtils::FromPython(d["lightRadius"], data.lightRadius, "VSettingsLight.lightRadius");
     EPyUtils::FromPython(d["linearAttenuation"], data.linearAttenuation, "VSettingsLight.linearAttenuation");
-    data.position = py::cast<std::array<float,4>>(d["position"]);
+    EPyUtils::FromPython(d["position"], data.position, "VSettingsLight.position");
     EPyUtils::FromPython(d["quadraticAttenuation"], data.quadraticAttenuation, "VSettingsLight.quadraticAttenuation");
     EPyUtils::FromPython(d["shadow"], data.shadow, EPyUtils::RangeCheck::nonNegative, "VSettingsLight.shadow");
     EPyUtils::FromPython(d["specular"], data.specular, "VSettingsLight.specular");
@@ -4393,7 +4393,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsOpenGL& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetFaceEdgesColor();
+    d["value"] = EPyUtils::ToPythonMember(data.faceEdgesColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "global RGBA color for face edges";
@@ -4409,7 +4409,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsOpenGL& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetLightModelAmbient();
+    d["value"] = EPyUtils::ToPythonMember(data.lightModelAmbient);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "global ambient light (needed for faces that are close to orthogonal to light or faces in shadow region); maps to OpenGL glLightModeli(GL_LIGHT_MODEL_AMBIENT,[r,g,b,a]); also used by raytracer";
@@ -4433,7 +4433,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsOpenGL& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetMaterialSpecular();
+    d["value"] = EPyUtils::ToPythonMember(data.materialSpecular);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "RGBA specular color of material";
@@ -4469,12 +4469,12 @@ inline py::dict GetDictionary(const VSettingsOpenGL& data) {
     structureDict["drawFaceNormals"] = data.drawFaceNormals;
     structureDict["drawNormalsLength"] = data.drawNormalsLength;
     structureDict["drawVertexNormals"] = data.drawVertexNormals;
-    structureDict["faceEdgesColor"] = data.PyGetFaceEdgesColor();
+    structureDict["faceEdgesColor"] = EPyUtils::ToPythonMember(data.faceEdgesColor);
     structureDict["faceTransparencyGlobal"] = data.faceTransparencyGlobal;
-    structureDict["lightModelAmbient"] = data.PyGetLightModelAmbient();
+    structureDict["lightModelAmbient"] = EPyUtils::ToPythonMember(data.lightModelAmbient);
     structureDict["lineWidth"] = data.lineWidth;
     structureDict["materialShininess"] = data.materialShininess;
-    structureDict["materialSpecular"] = data.PyGetMaterialSpecular();
+    structureDict["materialSpecular"] = EPyUtils::ToPythonMember(data.materialSpecular);
     structureDict["multiSampling"] = data.multiSampling;
     structureDict["zMaxSceneFactor"] = data.zMaxSceneFactor;
     return structureDict;
@@ -4490,12 +4490,12 @@ inline void SetDictionary(VSettingsOpenGL& data, const py::dict& d) {
     EPyUtils::FromPython(d["drawFaceNormals"], data.drawFaceNormals, "VSettingsOpenGL.drawFaceNormals");
     EPyUtils::FromPython(d["drawNormalsLength"], data.drawNormalsLength, EPyUtils::RangeCheck::positive, "VSettingsOpenGL.drawNormalsLength");
     EPyUtils::FromPython(d["drawVertexNormals"], data.drawVertexNormals, "VSettingsOpenGL.drawVertexNormals");
-    data.faceEdgesColor = py::cast<std::array<float,4>>(d["faceEdgesColor"]);
+    EPyUtils::FromPython(d["faceEdgesColor"], data.faceEdgesColor, "VSettingsOpenGL.faceEdgesColor");
     EPyUtils::FromPython(d["faceTransparencyGlobal"], data.faceTransparencyGlobal, EPyUtils::RangeCheck::nonNegative, "VSettingsOpenGL.faceTransparencyGlobal");
-    data.lightModelAmbient = py::cast<std::array<float,4>>(d["lightModelAmbient"]);
+    EPyUtils::FromPython(d["lightModelAmbient"], data.lightModelAmbient, "VSettingsOpenGL.lightModelAmbient");
     EPyUtils::FromPython(d["lineWidth"], data.lineWidth, EPyUtils::RangeCheck::nonNegative, "VSettingsOpenGL.lineWidth");
     EPyUtils::FromPython(d["materialShininess"], data.materialShininess, "VSettingsOpenGL.materialShininess");
-    data.materialSpecular = py::cast<std::array<float,4>>(d["materialSpecular"]);
+    EPyUtils::FromPython(d["materialSpecular"], data.materialSpecular, "VSettingsOpenGL.materialSpecular");
     EPyUtils::FromPython(d["multiSampling"], data.multiSampling, EPyUtils::RangeCheck::positive, "VSettingsOpenGL.multiSampling");
     EPyUtils::FromPython(d["zMaxSceneFactor"], data.zMaxSceneFactor, EPyUtils::RangeCheck::positive, "VSettingsOpenGL.zMaxSceneFactor");
 }
@@ -4620,8 +4620,8 @@ inline void SetDictionary(VSettingsExportImages& data, const py::dict& d) {
     EPyUtils::FromPython(d["saveImageAsTextTexts"], data.saveImageAsTextTexts, "VSettingsExportImages.saveImageAsTextTexts");
     EPyUtils::FromPython(d["saveImageAsTextTriangles"], data.saveImageAsTextTriangles, "VSettingsExportImages.saveImageAsTextTriangles");
     EPyUtils::FromPython(d["saveImageFileCounter"], data.saveImageFileCounter, EPyUtils::RangeCheck::nonNegative, "VSettingsExportImages.saveImageFileCounter");
-    data.saveImageFileName = py::cast<std::string>(d["saveImageFileName"]);
-    data.saveImageFormat = py::cast<std::string>(d["saveImageFormat"]);
+    EPyUtils::FromPython(d["saveImageFileName"], data.saveImageFileName, "VSettingsExportImages.saveImageFileName");
+    EPyUtils::FromPython(d["saveImageFormat"], data.saveImageFormat, "VSettingsExportImages.saveImageFormat");
     EPyUtils::FromPython(d["saveImageSingleFile"], data.saveImageSingleFile, "VSettingsExportImages.saveImageSingleFile");
     EPyUtils::FromPython(d["saveImageTimeOut"], data.saveImageTimeOut, EPyUtils::RangeCheck::positive, "VSettingsExportImages.saveImageTimeOut");
     EPyUtils::FromPython(d["widthAlignment"], data.widthAlignment, EPyUtils::RangeCheck::positive, "VSettingsExportImages.widthAlignment");
@@ -4678,7 +4678,7 @@ inline py::dict GetDictionary(const VSettingsOpenVR& data) {
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsOpenVR& data, const py::dict& d) {
-    data.actionManifestFileName = py::cast<std::string>(d["actionManifestFileName"]);
+    EPyUtils::FromPython(d["actionManifestFileName"], data.actionManifestFileName, "VSettingsOpenVR.actionManifestFileName");
     EPyUtils::FromPython(d["enable"], data.enable, "VSettingsOpenVR.enable");
     EPyUtils::FromPython(d["logLevel"], data.logLevel, "VSettingsOpenVR.logLevel");
     EPyUtils::FromPython(d["showCompanionWindow"], data.showCompanionWindow, "VSettingsOpenVR.showCompanionWindow");
@@ -4690,7 +4690,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsInteractiveAdvanced& da
     auto d = py::dict(); //local dict
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetHighlightColor();
+    d["value"] = EPyUtils::ToPythonMember(data.highlightColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "RGBA color for highlighted item; 4th value is alpha-transparency";
@@ -4698,7 +4698,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsInteractiveAdvanced& da
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetHighlightOtherColor();
+    d["value"] = EPyUtils::ToPythonMember(data.highlightOtherColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
     d["description"] = "RGBA color for other items (which are not highlighted); 4th value is alpha-transparency";
@@ -4806,8 +4806,8 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsInteractiveAdvanced& da
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const VSettingsInteractiveAdvanced& data) {
     auto structureDict = py::dict();
-    structureDict["highlightColor"] = data.PyGetHighlightColor();
-    structureDict["highlightOtherColor"] = data.PyGetHighlightOtherColor();
+    structureDict["highlightColor"] = EPyUtils::ToPythonMember(data.highlightColor);
+    structureDict["highlightOtherColor"] = EPyUtils::ToPythonMember(data.highlightOtherColor);
     structureDict["joystickScaleRotation"] = data.joystickScaleRotation;
     structureDict["joystickScaleTranslation"] = data.joystickScaleTranslation;
     structureDict["keypressRotationStep"] = data.keypressRotationStep;
@@ -4825,8 +4825,8 @@ inline py::dict GetDictionary(const VSettingsInteractiveAdvanced& data) {
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsInteractiveAdvanced& data, const py::dict& d) {
-    data.highlightColor = py::cast<std::array<float,4>>(d["highlightColor"]);
-    data.highlightOtherColor = py::cast<std::array<float,4>>(d["highlightOtherColor"]);
+    EPyUtils::FromPython(d["highlightColor"], data.highlightColor, "VSettingsInteractiveAdvanced.highlightColor");
+    EPyUtils::FromPython(d["highlightOtherColor"], data.highlightOtherColor, "VSettingsInteractiveAdvanced.highlightOtherColor");
     EPyUtils::FromPython(d["joystickScaleRotation"], data.joystickScaleRotation, "VSettingsInteractiveAdvanced.joystickScaleRotation");
     EPyUtils::FromPython(d["joystickScaleTranslation"], data.joystickScaleTranslation, "VSettingsInteractiveAdvanced.joystickScaleTranslation");
     EPyUtils::FromPython(d["keypressRotationStep"], data.keypressRotationStep, "VSettingsInteractiveAdvanced.keypressRotationStep");
@@ -4857,7 +4857,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsInteractive& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.PyGetAutoRotationVelocity();
+    d["value"] = EPyUtils::ToPythonMember(data.autoRotationVelocity);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{3};
     d["description"] = "Angular velocity vector for auto-rotation of scene (only visualization view is rotated, not the model itself!)";
@@ -4920,7 +4920,7 @@ inline py::dict GetDictionary(const VSettingsInteractive& data) {
     structureDict["advanced"] = GetDictionary(data.advanced);
     structureDict["openVR"] = GetDictionary(data.openVR);
     structureDict["autoRotateModelView"] = data.autoRotateModelView;
-    structureDict["autoRotationVelocity"] = data.PyGetAutoRotationVelocity();
+    structureDict["autoRotationVelocity"] = EPyUtils::ToPythonMember(data.autoRotationVelocity);
     structureDict["highlightItemIndex"] = data.highlightItemIndex;
     structureDict["highlightItemType"] = data.highlightItemType;
     structureDict["highlightMbsNumber"] = data.highlightMbsNumber;
@@ -4935,9 +4935,9 @@ inline void SetDictionary(VSettingsInteractive& data, const py::dict& d) {
     SetDictionary(data.advanced, py::cast<py::dict>(d["advanced"]));
     SetDictionary(data.openVR, py::cast<py::dict>(d["openVR"]));
     EPyUtils::FromPython(d["autoRotateModelView"], data.autoRotateModelView, "VSettingsInteractive.autoRotateModelView");
-    data.autoRotationVelocity = py::cast<std::array<float,3>>(d["autoRotationVelocity"]);
+    EPyUtils::FromPython(d["autoRotationVelocity"], data.autoRotationVelocity, "VSettingsInteractive.autoRotationVelocity");
     EPyUtils::FromPython(d["highlightItemIndex"], data.highlightItemIndex, "VSettingsInteractive.highlightItemIndex");
-    data.highlightItemType = py::cast<ItemType>(d["highlightItemType"]);
+    EPyUtils::FromPython(d["highlightItemType"], data.highlightItemType, "VSettingsInteractive.highlightItemType");
     EPyUtils::FromPython(d["highlightMbsNumber"], data.highlightMbsNumber, EPyUtils::RangeCheck::nonNegative, "VSettingsInteractive.highlightMbsNumber");
     EPyUtils::FromPython(d["ignoreKeys"], data.ignoreKeys, "VSettingsInteractive.ignoreKeys");
     EPyUtils::FromPython(d["logMouseCoordinates"], data.logMouseCoordinates, "VSettingsInteractive.logMouseCoordinates");
