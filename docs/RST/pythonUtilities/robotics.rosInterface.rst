@@ -75,11 +75,10 @@ Class function: InitPublisher
 
 .. code-block:: python
 
-  s:
-         publisher for poses, pubType = PoseStamped,
-         publisher for system data, pubType = Float64MultiArray,
-         publisher for filtered force, pubType = WrenchStamped,
-         publisher for velocities, pubType = Twist,
+  publisher for poses, pubType = PoseStamped,
+  publisher for system data, pubType = Float64MultiArray,
+  publisher for filtered force, pubType = WrenchStamped,
+  publisher for velocities, pubType = Twist,
 
 
 ----
@@ -114,7 +113,8 @@ Class function: InitSubscriber
   | \ ``subType``\ : data type for topic to subscribe
 - | \ *author*\ :
   | Peter Manzl
-  | \ ``**note``\ : callback function will be automatic generated for each subscriber, depending
+- | \ *notes*\ :
+  | callback function will be automatic generated for each subscriber, depending
   | on subTopicName. Data will be found under self.subTopicName
 
 ----
@@ -129,7 +129,8 @@ Class function: CheckROSversion
   | check the current used ROS version
 - | \ *author*\ :
   | Martin Sereinig
-  | \ ``**note``\ : just supports ROS1, ROS2 support will be given in future releases
+- | \ *notes*\ :
+  | just supports ROS1, ROS2 support will be given in future releases
 
 ----
 
@@ -137,11 +138,10 @@ Class function: CheckROSversion
 
 Class function: PublishPoseUpdate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PublishPoseUpdate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L177>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``tExu``\ , \ ``getData = 'node'``\ )
+`PublishPoseUpdate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L176>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``tExu``\ , \ ``getData = 'node'``\ )
 
 - | \ *classFunction*\ :
   | Example method to be called once per frame/control cycle in Exudyn PreStepUserFunction
-  | \ ``**note``\ :        reads sensor values, creates message, publish and subscribe to ROS
 - | \ *input*\ :
   | \ ``mbs``\ :     mbs (exudyn.exudynCPP.MainSystem), multi-body simulation system from exudyn
   | \ ``tExu``\ :    tExu (float), elapsed time since simulation start
@@ -162,11 +162,10 @@ Class function: PublishPoseUpdate
 
 Class function: PublishTwistUpdate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PublishTwistUpdate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L236>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``tExu``\ , \ ``getData = 'node'``\ )
+`PublishTwistUpdate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L234>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``tExu``\ , \ ``getData = 'node'``\ )
 
 - | \ *classFunction*\ :
   | Example method to be called once per frame/control cycle in Exudyn PreStepUserFunction
-  | \ ``**note``\ :        reads sensor values, creates message, publish and subscribe to ROS
 - | \ *input*\ :
   | \ ``mbs``\ :     mbs (exudyn.exudynCPP.MainSystem), multi-body simulation system from exudyn
   | \ ``tExu``\ :    tExu (float), elapsed time since simulation start
@@ -182,7 +181,7 @@ Class function: PublishTwistUpdate
 
 Class function: PublishSystemStateUpdate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PublishSystemStateUpdate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L279>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``tExu``\ )
+`PublishSystemStateUpdate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L277>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``tExu``\ )
 
 - | \ *classFunction*\ :
   | method to be send system state data once per frame/control cycle in Exudyn PreStepUserFunction
@@ -192,5 +191,6 @@ Class function: PublishSystemStateUpdate
   | \ ``systemStateData``\ :   systemStateData (list), full Exudyn SystemState
 - | \ *author*\ :
   | Martin Sereinig
-  | \ ``**note``\ :        collects important exudyn system data and send it to ros-topic
+- | \ *notes*\ :
+  | collects important exudyn system data and send it to ros-topic
 

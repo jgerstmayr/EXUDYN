@@ -113,7 +113,7 @@ class ROSInterface:
     #**author: Martin Sereinig
     #**notes: find msgs types here
     #  http://docs.ros.org/en/melodic/api/std\_msgs/html/index-msg.html
-    #**examples: 
+    #**example: 
     #       publisher for poses, pubType = PoseStamped, 
     #       publisher for system data, pubType = Float64MultiArray,
     #       publisher for filtered force, pubType = WrenchStamped,
@@ -138,7 +138,7 @@ class ROSInterface:
     #       subTopicName: topic name to subscribe
     #       subType: data type for topic to subscribe
     #**author: Peter Manzl 
-    #**note: callback function will be automatic generated for each subscriber, depending
+    #**notes: callback function will be automatic generated for each subscriber, depending
     #        on subTopicName. Data will be found under self.subTopicName
     def InitSubscriber(self,subTopicNameSpace, subTopicName, subType): 
         exuSubscriber = rospy.Subscriber(subTopicNameSpace+subTopicName, subType, 
@@ -147,7 +147,7 @@ class ROSInterface:
 
     #**classFunction: check the current used ROS version
     #**author: Martin Sereinig
-    #**note: just supports ROS1, ROS2 support will be given in future releases 
+    #**notes: just supports ROS1, ROS2 support will be given in future releases 
     def CheckROSversion(self):
         # check and set ROSVersion 
         #os.system('rosversion -d')
@@ -161,7 +161,6 @@ class ROSInterface:
             return False        
 
     #**classFunction: Example method to be called once per frame/control cycle in Exudyn PreStepUserFunction
-    #**note:        reads sensor values, creates message, publish and subscribe to ROS 
     #**input:
     #  mbs:     mbs (exudyn.exudynCPP.MainSystem), multi-body simulation system from exudyn
     #  tExu:    tExu (float), elapsed time since simulation start
@@ -225,7 +224,6 @@ class ROSInterface:
 
 
     #**classFunction: Example method to be called once per frame/control cycle in Exudyn PreStepUserFunction
-    #**note:        reads sensor values, creates message, publish and subscribe to ROS 
     #**input:
     #  mbs:     mbs (exudyn.exudynCPP.MainSystem), multi-body simulation system from exudyn
     #  tExu:    tExu (float), elapsed time since simulation start
@@ -275,7 +273,7 @@ class ROSInterface:
     #  tExu:       tExu (float),  simulation time
     # systemStateData:   systemStateData (list), full Exudyn SystemState
     #**author: Martin Sereinig
-    #**note:        collects important exudyn system data and send it to ros-topic
+    #**notes:        collects important exudyn system data and send it to ros-topic
     def PublishSystemStateUpdate(self, mbs, tExu):
         if tExu - self.lastSystemStateUpdateTime >= self.systemStateUpdateInterval:
             self.lastSystemStateUpdateTime = tExu

@@ -115,9 +115,10 @@ Function: Text
   | \ ``color``\ : provided as list of 4 RGBA values
   | \ ``fontSize``\ : scalar fontSize or 0. for default; default font size in Exudyn is 12 (visualizationSettings.view0.window.globalFontSize)
   | \ ``offset``\ : offset in X/Y screen plane provided as list of 2 float values; this offset is not rotated with the model view and given relative to font size (offset [1,1] equals to offset of one character moved right and up)
-  | \ ``**nodes``\ : text size can be adjusted with visualizationSettings.view0.window.globalFontSize, which affects the text size (=font size) globally
 - | \ *output*\ :
   | graphicsData dictionary, to be used in visualization of EXUDYN objects
+- | \ *notes*\ :
+  | text size can be adjusted with visualizationSettings.view0.window.globalFontSize, which affects the text size (=font size) globally
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 

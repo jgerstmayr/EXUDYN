@@ -810,7 +810,8 @@ Class function: SaveToFile
   | \ ``mode``\ : default: numpy format ('NPZ'); alternatives: 'HDF5' (requires h5py package) and 'PKL' (pickle); NPY (deprecated, under Numpy 1.x)
 - | \ *output*\ :
   | stores file
-  | \ ``**nodes``\ : test with 10-node tets and 86154 nodes, 50752 elements and 20 modes (incl. stress modes) gives the timings for save+load: [NPY: 2.10s, PKL: 0.76s, HDF5: 0.69s] and file sizes [NPY: 1032MB, PKL: 580MB, HDF5: 581MB]
+- | \ *notes*\ :
+  | test with 10-node tets and 86154 nodes, 50752 elements and 20 modes (incl. stress modes) gives the timings for save+load: [NPY: 2.10s, PKL: 0.76s, HDF5: 0.69s] and file sizes [NPY: 1032MB, PKL: 580MB, HDF5: 581MB]
 
 ----
 
@@ -1187,12 +1188,13 @@ Class function: GetNodeWeightsFromSurfaceAreas
 
 - | \ *classFunction*\ :
   | return list of node weights based on surface triangle areas; surface triangles are identified as such for which all nodes of a triangle are on the surface
-  | \ ``**nodes``\ : requires that surface triangles have been already built during import of finite element mesh, or by calling VolumeToSurfaceElements!
 - | \ *input*\ :
   | \ ``nodeList``\ : list of local (Position) node numbers
   | \ ``normalizeWeights``\ : if True, weights are normalized to sum(weights)==1; otherwise, returned list contains areas according to nodes per
 - | \ *output*\ :
   | numpy array with weights according to indices in node list
+- | \ *notes*\ :
+  | requires that surface triangles have been already built during import of finite element mesh, or by calling VolumeToSurfaceElements!
 
 ----
 

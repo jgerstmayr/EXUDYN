@@ -19,15 +19,20 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.62.dev1, 
++  Exudyn version = 1.11.63.dev1, 
 +  last change =  2026-09-15, 
-+  Number of issues = 2435, 
-+  Number of resolved issues = 2135 (62 in current version), 
++  Number of issues = 2436, 
++  Number of resolved issues = 2136 (63 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.63: resolved Issue 2435: utility modules: malformed #\*\* tags silently dropped from the documentation (fix)
+    - issue author: Claude-JG
+    - description:  step 36a: #\*\*note (9) #\*\*nodes (3) #\*\*examples #\*\*compute #\*\*outputinput and two #\*\* continuation lines were not recognised; five #\*\*function lacked the colon; HT2T66Inverse had input and output swapped
+    - date resolved: **2026-09-15 13:25**\ , date raised: 2026-09-15 
+    - resolved by: Claude-JG
  * Version 1.11.62: resolved Issue 2434: MainSystem extensions: registry decorator instead of copy-and-append (change)
     - issue author: Claude-JG
     - description:  step 35: mainSystemExtensions.py becomes ordinary package source; functions bind to MainSystem via @extends(exudyn.MainSystem) and install() which raises on a collision with a C++ method; mainSystemExtensionsEmitter.py and mainSystemExtensionsHeader.py are deleted; the docs parsers read the decorator instead of #\*\*belongsTo

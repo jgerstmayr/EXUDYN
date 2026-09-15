@@ -729,6 +729,21 @@ The core investment. Every step is validated byte-for-byte by step 2.
     only where the output is not what a human would have written. Step 39 (delete it) then
     becomes the endpoint rather than a separate problem - once the sources hold real docstrings,
     the install-time transform has nothing left to do.
+
+    **Sequence (maintainer decision 2026-09-15).** 36 cannot land alone: the docs emitters parse the
+    `#**` comments, and `MainSystemExt.rst` (read by `pybindEmitter.py` and the `.pyi` stubs) comes
+    from them. The `#**` sources at `158ccd9` are backed up outside the repository before any
+    conversion (they also stay in git history). Sub-steps:
+    - **36a - malformed tags** (#2435). **DONE 2026-09-15.** Tags the parsers do not know were
+      silently dropped from the documentation: `#**note` (9), `#**nodes` (3), `#**examples`,
+      `#**compute`, `#**outputinput`, two `#**` continuation lines; five `#**function` without colon.
+    - **36b - a docstring reader.** `utilityDocsModel.py` reads Google-style docstrings with `griffe`
+      (dev-only; step 38 pulled forward) and hands the emitters the same dictionaries as the `#**`
+      parser. Gate: for every module, parsing the converted tree gives the same generated docs as
+      parsing the `#**` sources, apart from listed, intended differences.
+    - **36c - convert the sources**, module by module, with the existing converter and a hand pass.
+    - **36d - LaTeX to Markdown** inside the docstrings (`$...$` math stays; macros such as `\ac{}`,
+      `\texttt{}`, `\_` are replaced), a reference change of the generated docs of its own.
 37. Move the remaining flags — `author`, `date`, `status`, and a new `public=False` for functions
     that should not reach theDoc.pdf — into a `@docmeta(...)` decorator rather than forcing them
     into `Notes`. Documentation in docstrings; toolchain metadata in decorators, where a typo

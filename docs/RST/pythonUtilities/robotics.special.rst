@@ -131,8 +131,8 @@ Function: MassMatrix
   | Martin Sereinig
 - | \ *notes*\ :
   | Mass Matrix calculation calculated in joint coordinates regarding (std) DH parameter:
-  | \*\*       Dynamic equations in minimal coordinates as described in Mehrkörpersysteme by Woernle, , p206, eq6.90.
-  | \*\*       Caclulations in link coordinate system at the end of each link
+  | Dynamic equations in minimal coordinates as described in Mehrkörpersysteme by Woernle, , p206, eq6.90.
+  | Calculations in link coordinate system at the end of each link
 
 
 

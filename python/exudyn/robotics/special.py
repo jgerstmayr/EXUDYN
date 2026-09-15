@@ -204,8 +204,8 @@ def JointJacobian(robot, HTJoint,HTLink):
 #  MM: Mass matrix
 #**author: Martin Sereinig
 #**notes: Mass Matrix calculation calculated in joint coordinates regarding (std) DH parameter:
-#**       Dynamic equations in minimal coordinates as described in Mehrkörpersysteme by Woernle, \cite{woernle2016}, p206, eq6.90.
-#**       Caclulations in link coordinate system at the end of each link
+#        Dynamic equations in minimal coordinates as described in Mehrkörpersysteme by Woernle, \cite{woernle2016}, p206, eq6.90.
+#        Calculations in link coordinate system at the end of each link
 def MassMatrix(robot, HT, jointJacobian):
     # inertia (mass) matrix
     MM = np.zeros((len(robot.links), len(robot.links)))

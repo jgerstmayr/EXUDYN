@@ -58,7 +58,8 @@ Function: Generatrix2Polynomial
   | param: list containing data (lRoll, aPoly, ...)
 - | \ *author*\ :
   | Peter Manzl
-  | \ ``**note``\ : create and fit a polynomial of an order high enough to approximate the given GeneratrixFunction
+- | \ *notes*\ :
+  | create and fit a polynomial of an order high enough to approximate the given GeneratrixFunction
   | with a given tolerance. The error is measured as the Chebyshev distance.
 
 
@@ -108,7 +109,8 @@ Function: FunDiffPoly
   | f:
 - | \ *author*\ :
   | Peter Manzl
-  | \ ``**note``\ : helper function polynomial describing a generatrix function
+- | \ *notes*\ :
+  | helper function polynomial describing a generatrix function
 
 
 
@@ -130,7 +132,8 @@ Function: FunDDiffPoly
   | f:
 - | \ *author*\ :
   | Peter Manzl
-  | \ ``**note``\ : helper function polynomial describing a generatrix function
+- | \ *notes*\ :
+  | helper function polynomial describing a generatrix function
 
 
 .. _sec-module-robotics-mobile-class-mobilekinematics:

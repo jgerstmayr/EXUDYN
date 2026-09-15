@@ -2395,12 +2395,8 @@ this class holds all data for ObjectFFRF user functions
 \item[]{\it fileVersion}: FOR EXPERTS: this allows to store in older format, will be recovered when loading; must be integer; version must by > 0
 \item[]{\it mode}: default: numpy format ('NPZ'); alternatives: 'HDF5' (requires h5py package) and 'PKL' (pickle); NPY (deprecated, under Numpy 1.x)
 \end{itemize}
-\item[--]\textcolor{steelblue}{\bf output}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]stores file
-\item[]{\it **nodes}: test with 10-node tets and 86154 nodes, 50752 elements and 20 modes (incl. stress modes) gives the timings for save+load: [NPY: 2.10s, PKL: 0.76s, HDF5: 0.69s] and file sizes [NPY: 1032MB, PKL: 580MB, HDF5: 581MB]
-\end{itemize}
+\item[--]\textcolor{steelblue}{\bf output}: stores file
+\item[--]\textcolor{steelblue}{\bf notes}: test with 10-node tets and 86154 nodes, 50752 elements and 20 modes (incl. stress modes) gives the timings for save+load: [NPY: 2.10s, PKL: 0.76s, HDF5: 0.69s] and file sizes [NPY: 1032MB, PKL: 580MB, HDF5: 581MB]
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -2773,12 +2769,7 @@ this class holds all data for ObjectFFRF user functions
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
-\item[--]\textcolor{steelblue}{\bf classFunction}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]return list of node weights based on surface triangle areas; surface triangles are identified as such for which all nodes of a triangle are on the surface
-\item[]{\it **nodes}: requires that surface triangles have been already built during import of finite element mesh, or by calling VolumeToSurfaceElements!
-\end{itemize}
+\item[--]\textcolor{steelblue}{\bf classFunction}: return list of node weights based on surface triangle areas; surface triangles are identified as such for which all nodes of a triangle are on the surface
 \item[--]\textcolor{steelblue}{\bf input}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
@@ -2786,6 +2777,7 @@ this class holds all data for ObjectFFRF user functions
 \item[]{\it normalizeWeights}: if True, weights are normalized to sum(weights)==1; otherwise, returned list contains areas according to nodes per
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf output}: numpy array with weights according to indices in node list
+\item[--]\textcolor{steelblue}{\bf notes}: requires that surface triangles have been already built during import of finite element mesh, or by calling VolumeToSurfaceElements!
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -3258,10 +3250,11 @@ this class holds all data for ObjectFFRF user functions
 \item[]{\it color}: provided as list of 4 RGBA values
 \item[]{\it fontSize}: scalar fontSize or 0. for default; default font size in Exudyn is 12 (visualizationSettings.view0.window.globalFontSize)
 \item[]{\it offset}: offset in X/Y screen plane provided as list of 2 float values; this offset is not rotated with the model view and given relative to font size (offset [1,1] equals to offset of one character moved right and up)
-\item[]{\it **nodes}: text size can be adjusted with visualizationSettings.view0.window.globalFontSize, which affects the text size (=font size) globally
 \end{itemize}
 \item[--]
 {\bf output}: graphicsData dictionary, to be used in visualization of EXUDYN objects
+\item[--]
+{\bf notes}: text size can be adjusted with visualizationSettings.view0.window.globalFontSize, which affects the text size (=font size) globally
 \vspace{12pt}\end{itemize}
 %
 %
@@ -7839,6 +7832,23 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
+\noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L770}{T66Inverse}{}}}\label{sec:rigidBodyUtilities:T66Inverse}
+({\it T66})
+\end{flushleft}
+\setlength{\itemindent}{0.7cm}
+\begin{itemize}[leftmargin=0.7cm]
+\item[--]
+{\bf function description}: compute inverse of 6x6 coordinate transformation (Pl\"ucker transform)
+\item[--]
+{\bf input}: T66: 6x6 coordinate transformation (Pl\"ucker transform)
+\item[--]
+{\bf output}: return inverse 6x6 transformation matrix 'T66'
+\item[--]
+{\bf notes}: Skew(A@v) = A@Skew(v)@A.T; v=ApB: -BRA@Skew(ApB) = Skew(BpA)@BRA
+\vspace{12pt}\end{itemize}
+%
+\noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
+\begin{flushleft}
 \noindent {def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L788}{T66toHT}{}}}\label{sec:rigidBodyUtilities:T66toHT}
 ({\it T66})
 \end{flushleft}
@@ -7869,7 +7879,9 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \item[--]
 {\bf function description}: convert 4x4 homogeneous transformation into 6x6 coordinate transformation (Pl\"ucker transform); NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
 \item[--]
-{\bf output}: input: T66 (6x6 numpy array)
+{\bf input}: T: 4x4 homogeneous transformation (numpy array)
+\item[--]
+{\bf output}: T66 (6x6 numpy array)
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -9214,11 +9226,10 @@ The inertia tensor and center of mass must correspond when initializing the body
 \item[]{\it http}://docs.ros.org/en/melodic/api/std\_msgs/html/index-msg.html
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
-  s:
-         publisher for poses, pubType = PoseStamped,
-         publisher for system data, pubType = Float64MultiArray,
-         publisher for filtered force, pubType = WrenchStamped,
-         publisher for velocities, pubType = Twist,
+  publisher for poses, pubType = PoseStamped,
+  publisher for system data, pubType = Float64MultiArray,
+  publisher for filtered force, pubType = WrenchStamped,
+  publisher for velocities, pubType = Twist,
 \end{lstlisting}\vspace{-24pt}\bi\item[]\vspace{-24pt}\vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -9253,11 +9264,11 @@ The inertia tensor and center of mass must correspond when initializing the body
 \item[]{\it subTopicName}: topic name to subscribe
 \item[]{\it subType}: data type for topic to subscribe
 \end{itemize}
-\item[--]\textcolor{steelblue}{\bf author}: \vspace{-6pt}
+\item[--]\textcolor{steelblue}{\bf author}: Peter Manzl
+\item[--]\textcolor{steelblue}{\bf notes}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
-\item[]Peter Manzl
-\item[]{\it **note}: callback function will be automatic generated for each subscriber, depending
+\item[]callback function will be automatic generated for each subscriber, depending
 \item[]on subTopicName. Data will be found under self.subTopicName
 \end{itemize}
 \vspace{12pt}\end{itemize}
@@ -9270,27 +9281,18 @@ The inertia tensor and center of mass must correspond when initializing the body
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]\textcolor{steelblue}{\bf classFunction}: check the current used ROS version
-\item[--]\textcolor{steelblue}{\bf author}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]Martin Sereinig
-\item[]{\it **note}: just supports ROS1, ROS2 support will be given in future releases
-\end{itemize}
+\item[--]\textcolor{steelblue}{\bf author}: Martin Sereinig
+\item[--]\textcolor{steelblue}{\bf notes}: just supports ROS1, ROS2 support will be given in future releases
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L177}{PublishPoseUpdate}{}}}\label{sec:rosInterface:ROSInterface:PublishPoseUpdate}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L176}{PublishPoseUpdate}{}}}\label{sec:rosInterface:ROSInterface:PublishPoseUpdate}
 ({\it self}, {\it mbs}, {\it tExu}, {\it getData}= 'node')
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
-\item[--]\textcolor{steelblue}{\bf classFunction}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]Example method to be called once per frame/control cycle in Exudyn PreStepUserFunction
-\item[]{\it **note}:        reads sensor values, creates message, publish and subscribe to ROS
-\end{itemize}
+\item[--]\textcolor{steelblue}{\bf classFunction}: Example method to be called once per frame/control cycle in Exudyn PreStepUserFunction
 \item[--]\textcolor{steelblue}{\bf input}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
@@ -9313,17 +9315,12 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L236}{PublishTwistUpdate}{}}}\label{sec:rosInterface:ROSInterface:PublishTwistUpdate}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L234}{PublishTwistUpdate}{}}}\label{sec:rosInterface:ROSInterface:PublishTwistUpdate}
 ({\it self}, {\it mbs}, {\it tExu}, {\it getData}= 'node')
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
-\item[--]\textcolor{steelblue}{\bf classFunction}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]Example method to be called once per frame/control cycle in Exudyn PreStepUserFunction
-\item[]{\it **note}:        reads sensor values, creates message, publish and subscribe to ROS
-\end{itemize}
+\item[--]\textcolor{steelblue}{\bf classFunction}: Example method to be called once per frame/control cycle in Exudyn PreStepUserFunction
 \item[--]\textcolor{steelblue}{\bf input}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
@@ -9337,7 +9334,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
 \begin{flushleft}
-\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L279}{PublishSystemStateUpdate}{}}}\label{sec:rosInterface:ROSInterface:PublishSystemStateUpdate}
+\noindent \textcolor{steelblue}{def {\bf \exuUrl{https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L277}{PublishSystemStateUpdate}{}}}\label{sec:rosInterface:ROSInterface:PublishSystemStateUpdate}
 ({\it self}, {\it mbs}, {\it tExu})
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
@@ -9350,12 +9347,8 @@ The inertia tensor and center of mass must correspond when initializing the body
 \item[]{\it tExu}:       tExu (float),  simulation time
 \item[]{\it systemStateData}:   systemStateData (list), full Exudyn SystemState
 \end{itemize}
-\item[--]\textcolor{steelblue}{\bf author}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]Martin Sereinig
-\item[]{\it **note}:        collects important exudyn system data and send it to ros-topic
-\end{itemize}
+\item[--]\textcolor{steelblue}{\bf author}: Martin Sereinig
+\item[--]\textcolor{steelblue}{\bf notes}: collects important exudyn system data and send it to ros-topic
 \vspace{12pt}\end{itemize}
 %
 \mysubsubsection{Module: robotics.future}
@@ -9774,11 +9767,12 @@ The inertia tensor and center of mass must correspond when initializing the body
 \item[--]
 {\bf input}: param: list containing data (lRoll, aPoly, ...)
 \item[--]
-{\bf author}: \vspace{-6pt}
+{\bf author}: Peter Manzl
+\item[--]
+{\bf notes}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
-\item[]Peter Manzl
-\item[]{\it **note}: create and fit a polynomial of an order high enough to approximate the given GeneratrixFunction
+\item[]create and fit a polynomial of an order high enough to approximate the given GeneratrixFunction
 \item[]with a given tolerance. The error is measured as the Chebyshev distance.
 \end{itemize}
 \vspace{12pt}\end{itemize}
@@ -9838,12 +9832,9 @@ The inertia tensor and center of mass must correspond when initializing the body
 \item[--]
 {\bf output}: f:
 \item[--]
-{\bf author}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]Peter Manzl
-\item[]{\it **note}: helper function polynomial describing a generatrix function
-\end{itemize}
+{\bf author}: Peter Manzl
+\item[--]
+{\bf notes}: helper function polynomial describing a generatrix function
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -9865,12 +9856,9 @@ The inertia tensor and center of mass must correspond when initializing the body
 \item[--]
 {\bf output}: f:
 \item[--]
-{\bf author}: \vspace{-6pt}
-\begin{itemize}[leftmargin=1.2cm]
-\setlength{\itemindent}{-0.7cm}
-\item[]Peter Manzl
-\item[]{\it **note}: helper function polynomial describing a generatrix function
-\end{itemize}
+{\bf author}: Peter Manzl
+\item[--]
+{\bf notes}: helper function polynomial describing a generatrix function
 \vspace{12pt}\end{itemize}
 %
 \mysubsubsubsection{CLASS MobileKinematics (in module robotics.mobile)}
@@ -10382,8 +10370,8 @@ The inertia tensor and center of mass must correspond when initializing the body
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]Mass Matrix calculation calculated in joint coordinates regarding (std) DH parameter:
-\item[]**       Dynamic equations in minimal coordinates as described in Mehrkörpersysteme by Woernle, \cite{woernle2016}, p206, eq6.90.
-\item[]**       Caclulations in link coordinate system at the end of each link
+\item[]Dynamic equations in minimal coordinates as described in Mehrkörpersysteme by Woernle, \cite{woernle2016}, p206, eq6.90.
+\item[]Calculations in link coordinate system at the end of each link
 \end{itemize}
 \vspace{12pt}\end{itemize}
 %

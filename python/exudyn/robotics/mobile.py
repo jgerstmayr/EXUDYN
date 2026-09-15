@@ -392,7 +392,7 @@ class MobileKinematics:
 #   param: list containing data (lRoll, aPoly, ...)
 #   
 #**author: Peter Manzl
-#**note: create and fit a polynomial of an order high enough to approximate the given GeneratrixFunction
+#**notes: create and fit a polynomial of an order high enough to approximate the given GeneratrixFunction
 #   with a given tolerance. The error is measured as the Chebyshev distance.  
 def Generatrix2Polynomial(param, GeneratrixFunction, tol=1e-14, nFit=101, nTest = 1001): 
     u = np.linspace(-np.pi/4, np.pi/4 , nFit) # calculate error with more! 
@@ -478,7 +478,7 @@ def GeneratrixRoll(u, param):
 #**output:
 #   f: 
 #**author: Peter Manzl
-#**note: helper function polynomial describing a generatrix function 
+#**notes: helper function polynomial describing a generatrix function 
 def FunDiffPoly(x,a): 
     f = 0
     k = np.size(a)-1
@@ -493,7 +493,7 @@ def FunDiffPoly(x,a):
 #**output:
 #   f: 
 #**author: Peter Manzl
-#**note: helper function polynomial describing a generatrix function 
+#**notes: helper function polynomial describing a generatrix function 
 def FunDDiffPoly(x, a): 
     k = a.size -2  # order of the new polynomial 
     ddf = 0

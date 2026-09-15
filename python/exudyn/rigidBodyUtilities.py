@@ -726,7 +726,7 @@ def TranslationY2T66(translation):
 def TranslationZ2T66(translation):
     return Translation2T66([0,0,translation])
 
-#**function convert 6x6 coordinate transformation (Pl\"ucker transform) into rotation and translation
+#**function: convert 6x6 coordinate transformation (Pl\"ucker transform) into rotation and translation
 #**input: T66 given as  6x6 numpy array
 #**output: [A, v] with 3x3 rotation matrix A and 3D translation vector v
 def T66toRotationTranslation(T66):
@@ -734,7 +734,7 @@ def T66toRotationTranslation(T66):
     v = Skew2Vec(T66[3:6,0:3]@A.T) #this leads to identical backtransformation
     return [A, v] 
 
-#**function convert inverse 6x6 coordinate transformation (Pl\"ucker transform) into rotation and translation
+#**function: convert inverse 6x6 coordinate transformation (Pl\"ucker transform) into rotation and translation
 #**input: inverse T66 given as  6x6 numpy array
 #**output: [A, v] with 3x3 rotation matrix A and 3D translation vector v
 def InverseT66toRotationTranslation(T66):
@@ -742,7 +742,7 @@ def InverseT66toRotationTranslation(T66):
     v = -Skew2Vec(A@T66[3:6,0:3])
     return [A, v] 
 
-#**function convert rotation and translation into 6x6 coordinate transformation (Pl\"ucker transform)
+#**function: convert rotation and translation into 6x6 coordinate transformation (Pl\"ucker transform)
 #**input:
 #  A: 3x3 rotation matrix A
 #  v: 3D translation vector v
@@ -752,7 +752,7 @@ def RotationTranslation2T66(A, v):
         [A, np.zeros((3,3))], 
         [Skew(v)@A, A]]) 
 
-#**function convert rotation and translation into INVERSE 6x6 coordinate transformation (Pl\"ucker transform)
+#**function: convert rotation and translation into INVERSE 6x6 coordinate transformation (Pl\"ucker transform)
 #**input:
 #  A: 3x3 rotation matrix A
 #  v: 3D translation vector v
@@ -762,11 +762,11 @@ def RotationTranslation2T66Inverse(A, v):
         [A.T, np.zeros((3,3))], 
         [-A.T@Skew(v), A.T]]) 
 
-#**compute inverse of 6x6 coordinate transformation (Pl\"ucker transform)
+#**function: compute inverse of 6x6 coordinate transformation (Pl\"ucker transform)
 #**input:
 #  T66: 6x6 coordinate transformation (Pl\"ucker transform)
 #**output: return inverse 6x6 transformation matrix 'T66'
-#**note: Skew(A@v) = A@Skew(v)@A.T; v=ApB: -BRA@Skew(ApB) = Skew(BpA)@BRA
+#**notes: Skew(A@v) = A@Skew(v)@A.T; v=ApB: -BRA@Skew(ApB) = Skew(BpA)@BRA
 def T66Inverse(T66):
     A = T66[0:3,0:3] #BRA in Handbook of robotics
     v = Skew2Vec(T66[3:6,0:3]@A.T) #v=BpA in in Handbook of robotics ==> ApB=-BRA.T@BpA = -A.T@v
@@ -782,7 +782,7 @@ def T66Inverse(T66):
 #         [A.T, np.zeros((3,3))], 
 #         [A.T@Skew(A@v), A.T]])
 
-#**function convert 6x6 coordinate transformation (Pl\"ucker transform) into 4x4 homogeneous transformation; NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
+#**function: convert 6x6 coordinate transformation (Pl\"ucker transform) into 4x4 homogeneous transformation; NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
 #**input: T66 given as 6x6 numpy array
 #**output: homogeneous transformation (4x4 numpy array)
 def T66toHT(T66):
@@ -794,8 +794,8 @@ def T66toHT(T66):
     return T
 
 #**function: convert 4x4 homogeneous transformation into 6x6 coordinate transformation (Pl\"ucker transform); NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
-#**output: 4x4 homogeneous transformation in numpy array format
-#**outputinput: T66 (6x6 numpy array)
+#**input: T: 4x4 homogeneous transformation (numpy array)
+#**output: T66 (6x6 numpy array)
 def HT2T66Inverse(T):
     A = T[0:3,0:3].T 
     v = T[0:3,3]

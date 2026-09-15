@@ -983,6 +983,26 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 ----
 
 
+.. _sec-rigidbodyutilities-t66inverse:
+
+Function: T66Inverse
+^^^^^^^^^^^^^^^^^^^^
+`T66Inverse <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L770>`__\ (\ ``T66``\ )
+
+- | \ *function description*\ :
+  | compute inverse of 6x6 coordinate transformation (Plücker transform)
+- | \ *input*\ :
+  | T66: 6x6 coordinate transformation (Plücker transform)
+- | \ *output*\ :
+  | return inverse 6x6 transformation matrix 'T66'
+- | \ *notes*\ :
+  | Skew(A@v) = A@Skew(v)@A.T; v=ApB: -BRA@Skew(ApB) = Skew(BpA)@BRA
+
+
+
+----
+
+
 .. _sec-rigidbodyutilities-t66toht:
 
 Function: T66toHT
@@ -1013,8 +1033,10 @@ Function: HT2T66Inverse
 
 - | \ *function description*\ :
   | convert 4x4 homogeneous transformation into 6x6 coordinate transformation (Plücker transform); NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
+- | \ *input*\ :
+  | T: 4x4 homogeneous transformation (numpy array)
 - | \ *output*\ :
-  | input: T66 (6x6 numpy array)
+  | T66 (6x6 numpy array)
 
 
 
