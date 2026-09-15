@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-15  00:24:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -112,8 +112,8 @@ public: // AUTO:
         cMarkerSuperElementPosition->GetParameters().meshNodeNumbers = py::cast<std::vector<Index>>(d["meshNodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
         cMarkerSuperElementPosition->GetParameters().weightingFactors = py::cast<std::vector<Real>>(d["weightingFactors"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationMarkerSuperElementPosition->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "VshowMarkerNodes")) { visualizationMarkerSuperElementPosition->GetShowMarkerNodes() = py::cast<bool>(d["VshowMarkerNodes"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationMarkerSuperElementPosition->GetShow(), "MarkerSuperElementPosition.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VshowMarkerNodes")) { EPyUtils::FromPython(d["VshowMarkerNodes"], visualizationMarkerSuperElementPosition->GetShowMarkerNodes(), "MarkerSuperElementPosition.VshowMarkerNodes"); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
 
     //! AUTO:  dictionary read access
@@ -151,8 +151,8 @@ public: // AUTO:
         else if (parameterName.compare("bodyNumber") == 0) { EPyUtils::ItemIndexFromPython<ObjectIndex>(value, cMarkerSuperElementPosition->GetParameters().bodyNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("meshNodeNumbers") == 0) { cMarkerSuperElementPosition->GetParameters().meshNodeNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("weightingFactors") == 0) { cMarkerSuperElementPosition->GetParameters().weightingFactors = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationMarkerSuperElementPosition->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("VshowMarkerNodes") == 0) { visualizationMarkerSuperElementPosition->GetShowMarkerNodes() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationMarkerSuperElementPosition->GetShow(), "MarkerSuperElementPosition.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VshowMarkerNodes") == 0) { EPyUtils::FromPython(value, visualizationMarkerSuperElementPosition->GetShowMarkerNodes(), "MarkerSuperElementPosition.VshowMarkerNodes"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("MarkerSuperElementPosition::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }
 

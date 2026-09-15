@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:33:05 (last modified)
+* @date         2026-09-15  00:27:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -124,10 +124,10 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "massMatrixUserFunction")) { cObjectGenericODE2->GetParameters().massMatrixUserFunction = d["massMatrixUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "jacobianUserFunction")) { cObjectGenericODE2->GetParameters().jacobianUserFunction = d["jacobianUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectGenericODE2->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectGenericODE2->GetShow(), "ObjectGenericODE2.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectGenericODE2->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VtriangleMesh")) { EPyUtils::FromPython(d["VtriangleMesh"], visualizationObjectGenericODE2->GetTriangleMesh()); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "VshowNodes")) { visualizationObjectGenericODE2->GetShowNodes() = py::cast<bool>(d["VshowNodes"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VshowNodes")) { EPyUtils::FromPython(d["VshowNodes"], visualizationObjectGenericODE2->GetShowNodes(), "ObjectGenericODE2.VshowNodes"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VgraphicsDataUserFunction")) { visualizationObjectGenericODE2->GetGraphicsDataUserFunction() = d["VgraphicsDataUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
@@ -196,10 +196,10 @@ public: // AUTO:
         else if (parameterName.compare("forceUserFunction") == 0) { cObjectGenericODE2->GetParameters().forceUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("massMatrixUserFunction") == 0) { cObjectGenericODE2->GetParameters().massMatrixUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("jacobianUserFunction") == 0) { cObjectGenericODE2->GetParameters().jacobianUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationObjectGenericODE2->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectGenericODE2->GetShow(), "ObjectGenericODE2.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectGenericODE2->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VtriangleMesh") == 0) { EPyUtils::FromPython(value, visualizationObjectGenericODE2->GetTriangleMesh()); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("VshowNodes") == 0) { visualizationObjectGenericODE2->GetShowNodes() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VshowNodes") == 0) { EPyUtils::FromPython(value, visualizationObjectGenericODE2->GetShowNodes(), "ObjectGenericODE2.VshowNodes"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { visualizationObjectGenericODE2->GetGraphicsDataUserFunction() = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectGenericODE2::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

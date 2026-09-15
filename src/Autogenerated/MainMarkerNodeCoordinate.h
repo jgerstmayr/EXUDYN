@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:57:17 (last modified)
+* @date         2026-09-15  00:33:14 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -109,9 +109,9 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cMarkerNodeCoordinate->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::FromPython(d["coordinate"], cMarkerNodeCoordinate->GetParameters().coordinate, EPyUtils::RangeCheck::nonNegative, "MarkerNodeCoordinate.coordinate"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::RequireGiven(d["coordinate"], EXUstd::InvalidIndex, "MarkerNodeCoordinate.coordinate"); EPyUtils::FromPython(d["coordinate"], cMarkerNodeCoordinate->GetParameters().coordinate, EPyUtils::RangeCheck::nonNegative, "MarkerNodeCoordinate.coordinate"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationMarkerNodeCoordinate->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationMarkerNodeCoordinate->GetShow(), "MarkerNodeCoordinate.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
 
     //! AUTO:  dictionary read access
@@ -144,7 +144,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cMarkerNodeCoordinate->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("coordinate") == 0) { EPyUtils::FromPython(value, cMarkerNodeCoordinate->GetParameters().coordinate, EPyUtils::RangeCheck::nonNegative, "MarkerNodeCoordinate.coordinate"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationMarkerNodeCoordinate->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationMarkerNodeCoordinate->GetShow(), "MarkerNodeCoordinate.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("MarkerNodeCoordinate::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }
 

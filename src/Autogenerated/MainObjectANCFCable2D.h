@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:57:17 (last modified)
+* @date         2026-09-15  00:24:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -121,16 +121,16 @@ public: // AUTO:
         EPyUtils::FromPython(d["physicsAxialStiffness"], cObjectANCFCable2D->GetParameters().physicsAxialStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable2D.physicsAxialStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["physicsBendingDamping"], cObjectANCFCable2D->GetParameters().physicsBendingDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable2D.physicsBendingDamping"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["physicsAxialDamping"], cObjectANCFCable2D->GetParameters().physicsAxialDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable2D.physicsAxialDamping"); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectANCFCable2D->GetParameters().physicsReferenceAxialStrain = py::cast<Real>(d["physicsReferenceAxialStrain"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectANCFCable2D->GetParameters().physicsReferenceCurvature = py::cast<Real>(d["physicsReferenceCurvature"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectANCFCable2D->GetParameters().strainIsRelativeToReference = py::cast<Real>(d["strainIsRelativeToReference"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsReferenceAxialStrain"], cObjectANCFCable2D->GetParameters().physicsReferenceAxialStrain, "ObjectANCFCable2D.physicsReferenceAxialStrain"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsReferenceCurvature"], cObjectANCFCable2D->GetParameters().physicsReferenceCurvature, "ObjectANCFCable2D.physicsReferenceCurvature"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["strainIsRelativeToReference"], cObjectANCFCable2D->GetParameters().strainIsRelativeToReference, "ObjectANCFCable2D.strainIsRelativeToReference"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectANCFCable2D->GetParameters().nodeNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectANCFCable2D->GetParameters().useReducedOrderIntegration = py::cast<Index>(d["useReducedOrderIntegration"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["useReducedOrderIntegration"], cObjectANCFCable2D->GetParameters().useReducedOrderIntegration, "ObjectANCFCable2D.useReducedOrderIntegration"); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "axialForceUserFunction")) { cObjectANCFCable2D->GetParameters().axialForceUserFunction = d["axialForceUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "bendingMomentUserFunction")) { cObjectANCFCable2D->GetParameters().bendingMomentUserFunction = d["bendingMomentUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectANCFCable2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "VdrawHeight")) { visualizationObjectANCFCable2D->GetDrawHeight() = py::cast<float>(d["VdrawHeight"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectANCFCable2D->GetShow(), "ObjectANCFCable2D.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VdrawHeight")) { EPyUtils::FromPython(d["VdrawHeight"], visualizationObjectANCFCable2D->GetDrawHeight(), "ObjectANCFCable2D.VdrawHeight"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectANCFCable2D->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
@@ -195,15 +195,15 @@ public: // AUTO:
         else if (parameterName.compare("physicsAxialStiffness") == 0) { EPyUtils::FromPython(value, cObjectANCFCable2D->GetParameters().physicsAxialStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable2D.physicsAxialStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsBendingDamping") == 0) { EPyUtils::FromPython(value, cObjectANCFCable2D->GetParameters().physicsBendingDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable2D.physicsBendingDamping"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsAxialDamping") == 0) { EPyUtils::FromPython(value, cObjectANCFCable2D->GetParameters().physicsAxialDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable2D.physicsAxialDamping"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsReferenceAxialStrain") == 0) { cObjectANCFCable2D->GetParameters().physicsReferenceAxialStrain = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsReferenceCurvature") == 0) { cObjectANCFCable2D->GetParameters().physicsReferenceCurvature = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("strainIsRelativeToReference") == 0) { cObjectANCFCable2D->GetParameters().strainIsRelativeToReference = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsReferenceAxialStrain") == 0) { EPyUtils::FromPython(value, cObjectANCFCable2D->GetParameters().physicsReferenceAxialStrain, "ObjectANCFCable2D.physicsReferenceAxialStrain"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsReferenceCurvature") == 0) { EPyUtils::FromPython(value, cObjectANCFCable2D->GetParameters().physicsReferenceCurvature, "ObjectANCFCable2D.physicsReferenceCurvature"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("strainIsRelativeToReference") == 0) { EPyUtils::FromPython(value, cObjectANCFCable2D->GetParameters().strainIsRelativeToReference, "ObjectANCFCable2D.strainIsRelativeToReference"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumbers") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectANCFCable2D->GetParameters().nodeNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("useReducedOrderIntegration") == 0) { cObjectANCFCable2D->GetParameters().useReducedOrderIntegration = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("useReducedOrderIntegration") == 0) { EPyUtils::FromPython(value, cObjectANCFCable2D->GetParameters().useReducedOrderIntegration, "ObjectANCFCable2D.useReducedOrderIntegration"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("axialForceUserFunction") == 0) { cObjectANCFCable2D->GetParameters().axialForceUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("bendingMomentUserFunction") == 0) { cObjectANCFCable2D->GetParameters().bendingMomentUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationObjectANCFCable2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("VdrawHeight") == 0) { visualizationObjectANCFCable2D->GetDrawHeight() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectANCFCable2D->GetShow(), "ObjectANCFCable2D.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VdrawHeight") == 0) { EPyUtils::FromPython(value, visualizationObjectANCFCable2D->GetDrawHeight(), "ObjectANCFCable2D.VdrawHeight"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectANCFCable2D->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectANCFCable2D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

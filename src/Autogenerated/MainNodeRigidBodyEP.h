@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:16 (last modified)
+* @date         2026-09-15  00:24:57 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -135,12 +135,12 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         EPyUtils::FromPython(d["referenceCoordinates"], cNodeRigidBodyEP->GetParameters().referenceCoordinates); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "addConstraintEquation")) { cNodeRigidBodyEP->GetParameters().addConstraintEquation = py::cast<bool>(d["addConstraintEquation"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "addConstraintEquation")) { EPyUtils::FromPython(d["addConstraintEquation"], cNodeRigidBodyEP->GetParameters().addConstraintEquation, "NodeRigidBodyEP.addConstraintEquation"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "initialCoordinates")) { EPyUtils::FromPython(d["initialCoordinates"], GetParameters().initialCoordinates); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "initialVelocities")) { EPyUtils::FromPython(d["initialVelocities"], GetParameters().initialCoordinates_t); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationNodeRigidBodyEP->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "VdrawSize")) { visualizationNodeRigidBodyEP->GetDrawSize() = py::cast<float>(d["VdrawSize"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationNodeRigidBodyEP->GetShow(), "NodeRigidBodyEP.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationNodeRigidBodyEP->GetDrawSize(), "NodeRigidBodyEP.VdrawSize"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationNodeRigidBodyEP->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
 
@@ -183,9 +183,9 @@ public: // AUTO:
         else if (parameterName.compare("referenceCoordinates") == 0) { EPyUtils::FromPython(value, cNodeRigidBodyEP->GetParameters().referenceCoordinates); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("initialCoordinates") == 0) { EPyUtils::FromPython(value, GetParameters().initialCoordinates); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("initialVelocities") == 0) { EPyUtils::FromPython(value, GetParameters().initialCoordinates_t); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("addConstraintEquation") == 0) { cNodeRigidBodyEP->GetParameters().addConstraintEquation = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationNodeRigidBodyEP->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("VdrawSize") == 0) { visualizationNodeRigidBodyEP->GetDrawSize() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("addConstraintEquation") == 0) { EPyUtils::FromPython(value, cNodeRigidBodyEP->GetParameters().addConstraintEquation, "NodeRigidBodyEP.addConstraintEquation"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationNodeRigidBodyEP->GetShow(), "NodeRigidBodyEP.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VdrawSize") == 0) { EPyUtils::FromPython(value, visualizationNodeRigidBodyEP->GetDrawSize(), "NodeRigidBodyEP.VdrawSize"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationNodeRigidBodyEP->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("NodeRigidBodyEP::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }

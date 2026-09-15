@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-15  00:24:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -107,10 +107,10 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumber"], cLoadCoordinate->GetParameters().markerNumber); /* AUTO:  read out dictionary and cast to C++ type*/
-        cLoadCoordinate->GetParameters().load = py::cast<Real>(d["load"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["load"], cLoadCoordinate->GetParameters().load, "LoadCoordinate.load"); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "loadUserFunction")) { cLoadCoordinate->GetParameters().loadUserFunction = d["loadUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationLoadCoordinate->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationLoadCoordinate->GetShow(), "LoadCoordinate.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
 
     //! AUTO:  dictionary read access
@@ -144,9 +144,9 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumber") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cLoadCoordinate->GetParameters().markerNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("load") == 0) { cLoadCoordinate->GetParameters().load = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("load") == 0) { EPyUtils::FromPython(value, cLoadCoordinate->GetParameters().load, "LoadCoordinate.load"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("loadUserFunction") == 0) { cLoadCoordinate->GetParameters().loadUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationLoadCoordinate->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationLoadCoordinate->GetShow(), "LoadCoordinate.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("LoadCoordinate::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }
 

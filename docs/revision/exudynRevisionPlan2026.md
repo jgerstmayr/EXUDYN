@@ -1148,7 +1148,7 @@ The core investment. Every step is validated byte-for-byte by step 2.
       | **34c1 behaviour test first** *(DONE 2026-09-14: `parameterConversionTest.py`)*: one valid and several invalid values per type family through dict creation, `SetObjectParameter`/`GetObjectParameter` and settings structures; records acceptance, returned value and type (numpy vs list), exception type | no | passes on the current code |
       | **34c2 `src/Pymodules/PyConversion.h`** *(DONE 2026-09-14)*: `EPyUtils::FromPython(object, destination)` / `ToPython(value)` per C++ type (string, `SlimVectorBase<T,n>`, `ConstSizeMatrixBase` as `FromPython<T,rows,columns>`, `MatrixBase<T>`, `VectorBase<T>`), `ItemIndexFromPython<NodeIndex>` / `ItemIndexToPython<NodeIndex>` for single, array and fixed-count indices. A new header, kept apart from `PybindUtilities.h`, whose 35 covered helpers became one-line forwards in one marked block. The range argument and an error context (item and parameter name) come with 34c4, where they are first used | no | wheel (full rebuild, #2427), test suite, 34c1 |
       | **34c3 one type model** *(DONE 2026-09-14: `tools/generators/typeModel.py`; 36 exception entries left for 34c4/34c5)* in the generators: facts (family, element, size, item kind, user-function signature) on `TypeSpec` in `definitions/definitionTypes.py`; `typeModel.Render(type, destination)` for `cppStorage`, `python`, `docs` (docs keep the definition name: `Int`, `UReal`, `NodeIndex`); the eight tables, `ConvertParameter2Python`, `IsAVector`/`IsASafelyVector` go; a type without a rule fails at generation. Definition names or default strings may change where that makes the rules simpler | no | byte-identity per emitter |
-      | **34c4 items**, in parts, each its own commit: **(a)** *(DONE 2026-09-14)* the generated item code converts through `FromPython`/`ItemIndexFromPython`/`ToPython`/`ItemIndexToPython`, and `SetWithDictionary` and `SetParameter` are written by the same generator function (`ParameterWriteStatement`), behaviour unchanged; **(b)** *(DONE 2026-09-15)* range checks in C++ on every write path with the `exudyn.special` switch (step 95), the Python checks in `itemInterface.py` removed; **(c)** `None` raises (step 97); **(d)** item indices rejected by float/bool (step 98); **(e)** classes accept their defaults (step 99) | yes | wheel (full rebuild, #2427), test suite, 34c1 (a: 0 differences; b-e: only the intended reference changes), item-creation timing |
+      | **34c4 items**, in parts, each its own commit: **(a)** *(DONE 2026-09-14)* the generated item code converts through `FromPython`/`ItemIndexFromPython`/`ToPython`/`ItemIndexToPython`, and `SetWithDictionary` and `SetParameter` are written by the same generator function (`ParameterWriteStatement`), behaviour unchanged; **(b)** *(DONE 2026-09-15)* range checks in C++ on every write path with the `exudyn.special` switch (step 95), the Python checks in `itemInterface.py` removed; **(c)** *(DONE 2026-09-15)* `None` raises (step 97); **(d)** *(DONE 2026-09-15)* item indices rejected by float/bool (step 98); **(e)** *(DONE 2026-09-15)* classes accept their defaults, must-be-given parameters raise at Add (step 99); (c)-(e) committed together, because they rewrite the same generated headers | yes | wheel (full rebuild, #2427), test suite, 34c1 (a: 0 differences; b-e: only the intended reference changes), item-creation timing |
       | **34c5 structures** likewise; `definitionLoader`/`Legacy*()` deleted at the end | yes | same |
       | **34c6 clean up**: helpers of `PybindUtilities.h` with no remaining caller are deleted; the hand-written callers (`MainSystem.cpp`, `PyGeneralContact.h`, ...) switch to `FromPython`/`ToPython` first (maintainer decision 2026-09-14), so the old helpers lose their last callers | yes | same |
 
@@ -1591,13 +1591,13 @@ step; larger ones get their own. #2411 is step 83 and #2412 belongs to step 36.
     errors of `parameterConversionTest.py` took 1 s standalone and 9 s inside `runTestSuite.py`
     after scipy, matplotlib and ngsolve were imported - a cost wherever errors are caught in a loop.
     The frame itself (`f_code.co_filename`, `f_lineno`) carries the same information.
-97. *(with 34c4/34c5)* **`None` raises instead of converting** (#2424). Today every `bool`
+97. **DONE 2026-09-15 for items with 34c4 (c); structures in 34c5.** *(with 34c4/34c5)* **`None` raises instead of converting** (#2424). Exception kept: `Vector3DList`, `Matrix3DList` and `PyMatrixContainer` accept `None` as empty, because `None` is their default in `itemInterface.py`. Today every `bool`
     parameter reads `None` back as `False`; index arrays, `Vector3DList`, `Matrix3DList` and
     `PyMatrixContainer` read it back empty. Applied as its own reference update of
     `parameterConversionTest.py`; the test suite shows whether a model relies on it.
-98. *(with 34c4/34c5)* **Item indices are rejected by `float` and `bool` parameters** (#2425), where
+98. **DONE 2026-09-15 for items with 34c4 (d); structures in 34c5.** *(with 34c4/34c5)* **Item indices are rejected by `float` and `bool` parameters** (#2425), where
     this is simple - the index tag types make it a type test in `FromPython`.
-99. *(with 34c4)* **Item classes accept their own defaults** (#2426). 17 `itemInterface` classes
+99. **DONE 2026-09-15 with 34c4 (e):** flag `CFMustBeGiven` on 25 parameters, checked by validator rule 6. *(with 34c4)* **Item classes accept their own defaults** (#2426). 17 `itemInterface` classes
     raise on their defaults, because `InvalidIndex()` carries two meanings:
     - **set later:** a node, marker or object number that closes a loop and is only known at the
       end. It is valid only at `CheckPreAssembleConsistency`, which already checks indices and
@@ -1647,6 +1647,12 @@ step; larger ones get their own. #2411 is step 83 and #2412 belongs to step 36.
     Unify as far as possible, one change at a time. A unification stays only if the full test suite
     and `parameterConversionTest.py` pass, apart from intended reference changes. Every entry that
     must remain gets a comment giving the reason.
+103. *(Phase 9 candidate)* **`ObjectANCFThinPlate` added with its defaults fails inside C++**
+    (#2430). `mbs.AddObject(ObjectANCFThinPlate())` raises `ResizableArray<T>::operator[], i < 0`
+    even with range checks off: the four `InvalidIndex` node numbers are used while the object is
+    added. Every other item class either adds with its defaults or names the parameter that must be
+    given (34c4 e). Expected: a message naming `ObjectANCFThinPlate.nodeNumbers`, or
+    `CheckPreAssembleConsistency` catching it, with no index access during Add.
 
 ### Phase 9 — Deeper implementation problems (last)
 

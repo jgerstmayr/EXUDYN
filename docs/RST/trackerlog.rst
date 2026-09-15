@@ -19,15 +19,33 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.54.dev1, 
++  Exudyn version = 1.11.57.dev1, 
 +  last change =  2026-09-15, 
-+  Number of issues = 2430, 
-+  Number of resolved issues = 2127 (54 in current version), 
++  Number of issues = 2431, 
++  Number of resolved issues = 2130 (57 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.57: resolved Issue 2426: item classes reject their own default values (change)
+    - issue author: Claude-JG
+    - description:  Recorded by parameterConversionTest.py (step 34c1): 17 itemInterface classes raise ValueError when created with their defaults - e.g. MarkerNodeCoordinate(): coordinate=InvalidIndex() fails CheckForValidUInt; ObjectANCFThinPlate cannot be created with defaults in C++ either. The defaults carry two meanings: an index set later (closing a loop; valid only at CheckPreAssembleConsistency) and a value that must be given at creation (MarkerNodeCoordinate.coordinate; a default 0 would be dangerous). Suggestion: constructors never range-check an InvalidIndex() default; a new member flag in definitions/ marks must-be-given parameters and Add<Kind> raises for them in C++ naming item and parameter (same statement as the user line); set-later indices stay with CheckPreAssembleConsistency. Plan step 99.
+    - **notes:** item classes construct with their defaults (since 34c4 b). New item flag CFMustBeGiven (Q) on the 25 parameters whose default lies outside their range form; definitionValidator rule 6 requires the flag exactly there. Add/SetWithDictionary raises: parameter MarkerNodeCoordinate.coordinate must be given; the default -1 is only a placeholder. The same switch as range checks turns it off. Docs mark these parameters. Set-later item indices are not range checked and stay with CheckPreAssembleConsistency.
+    - date resolved: **2026-09-15 00:35**\ , date raised: 2026-09-14 
+    - resolved by: Claude-JG
+ * Version 1.11.56: :textred:`resolved BUG 2425` : item indices are accepted by float and bool parameters 
+    - issue author: Claude-JG
+    - description:  Recorded by parameterConversionTest.py (step 34c1): float parameters (e.g. LoadCoordinate.load - SimulationSettings.solutionSettings.sensorsWritePeriod) accept a NodeIndex or ObjectIndex and store its number; bool parameters accept them as well. Maintainer decision 2026-09-14: reject them where this is simple. Applied with the unified conversion (34c4/34c5) as its own reference change. Plan step 98.
+    - **notes:** Real - float and bool item parameters reject NodeIndex/ObjectIndex/MarkerIndex/LoadIndex/SensorIndex with a message naming item and parameter; Index parameters keep accepting them. parameterConversionTest: 618 intended changes (bool already rejected them). Structures follow in 34c5.
+    - date resolved: **2026-09-15 00:35**\ , date raised: 2026-09-14 
+    - resolved by: Claude-JG
+ * Version 1.11.55: :textred:`resolved BUG 2424` : None is silently converted when written into item and structure parameters 
+    - issue author: Claude-JG
+    - description:  Recorded by parameterConversionTest.py (step 34c1): every bool parameter accepts None and reads back False; index arrays - Vector3DList - Matrix3DList and PyMatrixContainer parameters accept None and read back empty. Maintainer decision 2026-09-14: None shall raise instead of converting unexpectedly; the test suite shows whether any model relies on it. Applied with the unified conversion (34c4/34c5) as its own reference change. Plan step 97.
+    - **notes:** bool - Real - float and Index item parameters raise for None on every write path (message names item and parameter); index arrays raise instead of becoming empty. Vector3DList - Matrix3DList and PyMatrixContainer still accept None as empty because None is their default in itemInterface.py. parameterConversionTest: 672 intended changes (537 bool - 135 index list). Structures follow in 34c5.
+    - date resolved: **2026-09-15 00:35**\ , date raised: 2026-09-14 
+    - resolved by: Claude-JG
  * Version 1.11.54: resolved Issue 2422: switch to disable parameter range checks at runtime (extension)
     - issue author: Claude-JG
     - description:  Range checks on item and structure parameters (UReal - PReal - UInt - PInt) raise in both the normal and the fast build. A release can carry a wrong range limit that is hard to test for; a flag in exudyn.special could let a user switch the checks off manually. Needs the checks in one place first (plan step 34c). Plan step 95.
@@ -7067,11 +7085,6 @@ Open issues
     - description:  tools/generators/typeModel.py holds 36 spellings the rules do not produce (step 34c3) - the same definition type is spelled differently for items and structures: Int is int for items and Index for structures; Float3/Float4 are exchanged as std::vector<float> for items and std::array<float n> for structures; NumpyVector/NumpyMatrix are stored as Vector/Matrix in items and py::array_t<Real> in structures; Vector2DList vs Vector3DList wrappers; Matrix2D reads Matrix2D in docs while the other fixed matrices read array_like; stub and dictType special names. Unify as far as possible - one spelling per type and destination - keeping each unification only if the full test suite and parameterConversionTest.py (apart from intended reference changes) do not fail; what must remain gets a comment with the reason. Plan step 102.
     - date raised: 2026-09-15 
 
- * **open issue 2426:** item classes reject their own default values
-    - issue author: Claude-JG
-    - description:  Recorded by parameterConversionTest.py (step 34c1): 17 itemInterface classes raise ValueError when created with their defaults - e.g. MarkerNodeCoordinate(): coordinate=InvalidIndex() fails CheckForValidUInt; ObjectANCFThinPlate cannot be created with defaults in C++ either. The defaults carry two meanings: an index set later (closing a loop; valid only at CheckPreAssembleConsistency) and a value that must be given at creation (MarkerNodeCoordinate.coordinate; a default 0 would be dangerous). Suggestion: constructors never range-check an InvalidIndex() default; a new member flag in definitions/ marks must-be-given parameters and Add<Kind> raises for them in C++ naming item and parameter (same statement as the user line); set-later indices stay with CheckPreAssembleConsistency. Plan step 99.
-    - date raised: 2026-09-14 
-
  * **open issue 2423:** every C++ user error inspects the Python source for its file and line
     - issue author: Claude-JG
     - description:  PyError and PyWarning call PyGetCurrentFileInformation (src/Main/Stdoutput.cpp:259); which calls inspect.getframeinfo - that resolves the module by scanning sys.modules and reads the source file. The cost grows with the number of imported modules: the ~38000 probe errors of parameterConversionTest.py (step 34c1) took 1 s standalone and 9 s inside runTestSuite.py after scipy; matplotlib and ngsolve were imported. It matters wherever errors are caught in a loop (parameter studies; try/except in user code). The frame alone (f_code.co_filename; f_lineno) gives the same information without the scan. Plan step 96.
@@ -8232,19 +8245,14 @@ Open issues
 Known bugs
 **********
 
+ * :textred:`open BUG 2430:` ObjectANCFThinPlate added with its defaults fails inside C++ with an index error
+    - issue author: Claude-JG
+    - description:  Found in step 34c4 (e): mbs.AddObject(ObjectANCFThinPlate()) raises ResizableArray<T>::operator[] i < 0 from C++ even with exudyn.special.exceptions.parameterRangeChecks = False; its default nodeNumbers (four InvalidIndex) are used while the object is added. Every other item class either adds with its defaults or names the parameter that must be given. Expected: a message that names ObjectANCFThinPlate.nodeNumbers - or CheckPreAssembleConsistency catching it - and no index access with invalid node numbers during Add. Plan step 103.
+    - date raised: 2026-09-15 
+
  * :textred:`open BUG 2427:` the wheel build reuses stale object files after a header-only change
     - issue author: Claude-JG
     - description:  setuptools recompiles a .cpp only when the .cpp is newer than its .obj; it does not track included headers. Found in step 34c2: after rewriting src/Pymodules/PybindUtilities.h (included by 35 files) pip wheel . -w dist finished and produced an exudynCPP .pyd with the same md5 as the previous build in build/lib.win-amd64-cpython-313 - nothing was compiled; the test suite then passed against the old binary. Only deleting build/temp.win-amd64-cpython-313 forced the full compile (49 s). So the build gate proves nothing for header-only changes. Fix options: pass depends= (all headers or the include graph) to the Extension so setuptools compares them; or have the gate remove build/temp first. Plan step 100.
-    - date raised: 2026-09-14 
-
- * :textred:`open BUG 2425:` item indices are accepted by float and bool parameters
-    - issue author: Claude-JG
-    - description:  Recorded by parameterConversionTest.py (step 34c1): float parameters (e.g. LoadCoordinate.load - SimulationSettings.solutionSettings.sensorsWritePeriod) accept a NodeIndex or ObjectIndex and store its number; bool parameters accept them as well. Maintainer decision 2026-09-14: reject them where this is simple. Applied with the unified conversion (34c4/34c5) as its own reference change. Plan step 98.
-    - date raised: 2026-09-14 
-
- * :textred:`open BUG 2424:` None is silently converted when written into item and structure parameters
-    - issue author: Claude-JG
-    - description:  Recorded by parameterConversionTest.py (step 34c1): every bool parameter accepts None and reads back False; index arrays - Vector3DList - Matrix3DList and PyMatrixContainer parameters accept None and read back empty. Maintainer decision 2026-09-14: None shall raise instead of converting unexpectedly; the test suite shows whether any model relies on it. Applied with the unified conversion (34c4/34c5) as its own reference change. Plan step 97.
     - date raised: 2026-09-14 
 
  * :textred:`open BUG 2415:` a changed class description never reaches the generated headers

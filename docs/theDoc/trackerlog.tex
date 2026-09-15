@@ -9,15 +9,40 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.54.dev1, 
+  \item Exudyn version = 1.11.57.dev1, 
   \item last change =  2026-09-15, 
-  \item Number of issues = 2430, 
-  \item Number of resolved issues = 2127 (54 in current version), 
+  \item Number of issues = 2431, 
+  \item Number of resolved issues = 2130 (57 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.57}:  resolved Issue 2426: {\bf item classes reject their own default values}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Recorded by parameterConversionTest.py (step 34c1): 17 itemInterface classes raise ValueError when created with their defaults - e.g. MarkerNodeCoordinate(): coordinate=InvalidIndex() fails CheckForValidUInt; ObjectANCFThinPlate cannot be created with defaults in C++ either. The defaults carry two meanings: an index set later (closing a loop; valid only at CheckPreAssembleConsistency) and a value that must be given at creation (MarkerNodeCoordinate.coordinate; a default 0 would be dangerous). Suggestion: constructors never range-check an InvalidIndex() default; a new member flag in definitions/ marks must-be-given parameters and Add<Kind> raises for them in C++ naming item and parameter (same statement as the user line); set-later indices stay with CheckPreAssembleConsistency. Plan step 99.}
+    \item {\bf notes: item classes construct with their defaults (since 34c4 b). New item flag CFMustBeGiven (Q) on the 25 parameters whose default lies outside their range form; definitionValidator rule 6 requires the flag exactly there. Add/SetWithDictionary raises: parameter MarkerNodeCoordinate.coordinate must be given; the default -1 is only a placeholder. The same switch as range checks turns it off. Docs mark these parameters. Set-later item indices are not range checked and stay with CheckPreAssembleConsistency.}
+    \item   date resolved: {\bf 2026-09-15 00:35},
+date raised: 2026-09-14 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.56}: {\bf \color{warningRed}  resolved BUG 2425}: {\bf item indices are accepted by float and bool parameters}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Recorded by parameterConversionTest.py (step 34c1): float parameters (e.g. LoadCoordinate.load - SimulationSettings.solutionSettings.sensorsWritePeriod) accept a NodeIndex or ObjectIndex and store its number; bool parameters accept them as well. Maintainer decision 2026-09-14: reject them where this is simple. Applied with the unified conversion (34c4/34c5) as its own reference change. Plan step 98.}
+    \item {\bf notes: Real - float and bool item parameters reject NodeIndex/ObjectIndex/MarkerIndex/LoadIndex/SensorIndex with a message naming item and parameter; Index parameters keep accepting them. parameterConversionTest: 618 intended changes (bool already rejected them). Structures follow in 34c5.}
+    \item   date resolved: {\bf 2026-09-15 00:35},
+date raised: 2026-09-14 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.55}: {\bf \color{warningRed}  resolved BUG 2424}: {\bf None is silently converted when written into item and structure parameters}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Recorded by parameterConversionTest.py (step 34c1): every bool parameter accepts None and reads back False; index arrays - Vector3DList - Matrix3DList and PyMatrixContainer parameters accept None and read back empty. Maintainer decision 2026-09-14: None shall raise instead of converting unexpectedly; the test suite shows whether any model relies on it. Applied with the unified conversion (34c4/34c5) as its own reference change. Plan step 97.}
+    \item {\bf notes: bool - Real - float and Index item parameters raise for None on every write path (message names item and parameter); index arrays raise instead of becoming empty. Vector3DList - Matrix3DList and PyMatrixContainer still accept None as empty because None is their default in itemInterface.py. parameterConversionTest: 672 intended changes (537 bool - 135 index list). Structures follow in 34c5.}
+    \item   date resolved: {\bf 2026-09-15 00:35},
+date raised: 2026-09-14 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.54}:  resolved Issue 2422: {\bf switch to disable parameter range checks at runtime}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -12656,22 +12681,16 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 2430}:  {\bf ObjectANCFThinPlate added with its defaults fails inside C++ with an index error}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Found in step 34c4 (e): mbs.AddObject(ObjectANCFThinPlate()) raises ResizableArray<T>::operator[] i < 0 from C++ even with exudyn.special.exceptions.parameterRangeChecks = False; its default nodeNumbers (four InvalidIndex) are used while the object is added. Every other item class either adds with its defaults or names the parameter that must be given. Expected: a message that names ObjectANCFThinPlate.nodeNumbers - or CheckPreAssembleConsistency catching it - and no index access with invalid node numbers during Add. Plan step 103.}
+    \item date raised: 2026-09-15 
+  \ei
   \item open {\bf BUG 2427}:  {\bf the wheel build reuses stale object files after a header-only change}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
     \item {description: setuptools recompiles a .cpp only when the .cpp is newer than its .obj; it does not track included headers. Found in step 34c2: after rewriting src/Pymodules/PybindUtilities.h (included by 35 files) pip wheel . -w dist finished and produced an exudynCPP .pyd with the same md5 as the previous build in build/lib.win-amd64-cpython-313 - nothing was compiled; the test suite then passed against the old binary. Only deleting build/temp.win-amd64-cpython-313 forced the full compile (49 s). So the build gate proves nothing for header-only changes. Fix options: pass depends= (all headers or the include graph) to the Extension so setuptools compares them; or have the gate remove build/temp first. Plan step 100.}
-    \item date raised: 2026-09-14 
-  \ei
-  \item open {\bf BUG 2425}:  {\bf item indices are accepted by float and bool parameters}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item issue author: Claude-JG
-    \item {description: Recorded by parameterConversionTest.py (step 34c1): float parameters (e.g. LoadCoordinate.load - SimulationSettings.solutionSettings.sensorsWritePeriod) accept a NodeIndex or ObjectIndex and store its number; bool parameters accept them as well. Maintainer decision 2026-09-14: reject them where this is simple. Applied with the unified conversion (34c4/34c5) as its own reference change. Plan step 98.}
-    \item date raised: 2026-09-14 
-  \ei
-  \item open {\bf BUG 2424}:  {\bf None is silently converted when written into item and structure parameters}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item issue author: Claude-JG
-    \item {description: Recorded by parameterConversionTest.py (step 34c1): every bool parameter accepts None and reads back False; index arrays - Vector3DList - Matrix3DList and PyMatrixContainer parameters accept None and read back empty. Maintainer decision 2026-09-14: None shall raise instead of converting unexpectedly; the test suite shows whether any model relies on it. Applied with the unified conversion (34c4/34c5) as its own reference change. Plan step 97.}
     \item date raised: 2026-09-14 
   \ei
   \item open {\bf BUG 2415}:  {\bf a changed class description never reaches the generated headers}

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:57:17 (last modified)
+* @date         2026-09-15  00:24:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -123,12 +123,12 @@ public: // AUTO:
         EPyUtils::FromPython(d["frictionStiffness"], cObjectContactFrictionCircleCable2D->GetParameters().frictionStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.frictionStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["frictionCoefficient"], cObjectContactFrictionCircleCable2D->GetParameters().frictionCoefficient, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.frictionCoefficient"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["circleRadius"], cObjectContactFrictionCircleCable2D->GetParameters().circleRadius, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.circleRadius"); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectContactFrictionCircleCable2D->GetParameters().useSegmentNormals = py::cast<bool>(d["useSegmentNormals"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectContactFrictionCircleCable2D->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        EPyUtils::FromPython(d["useSegmentNormals"], cObjectContactFrictionCircleCable2D->GetParameters().useSegmentNormals, "ObjectContactFrictionCircleCable2D.useSegmentNormals"); /* AUTO:  read out dictionary and cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectContactFrictionCircleCable2D->GetParameters().activeConnector, "ObjectContactFrictionCircleCable2D.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectContactFrictionCircleCable2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "VshowContactCircle")) { visualizationObjectContactFrictionCircleCable2D->GetShowContactCircle() = py::cast<bool>(d["VshowContactCircle"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "VdrawSize")) { visualizationObjectContactFrictionCircleCable2D->GetDrawSize() = py::cast<float>(d["VdrawSize"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectContactFrictionCircleCable2D->GetShow(), "ObjectContactFrictionCircleCable2D.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VshowContactCircle")) { EPyUtils::FromPython(d["VshowContactCircle"], visualizationObjectContactFrictionCircleCable2D->GetShowContactCircle(), "ObjectContactFrictionCircleCable2D.VshowContactCircle"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationObjectContactFrictionCircleCable2D->GetDrawSize(), "ObjectContactFrictionCircleCable2D.VdrawSize"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectContactFrictionCircleCable2D->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
@@ -194,11 +194,11 @@ public: // AUTO:
         else if (parameterName.compare("frictionStiffness") == 0) { EPyUtils::FromPython(value, cObjectContactFrictionCircleCable2D->GetParameters().frictionStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.frictionStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("frictionCoefficient") == 0) { EPyUtils::FromPython(value, cObjectContactFrictionCircleCable2D->GetParameters().frictionCoefficient, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.frictionCoefficient"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("circleRadius") == 0) { EPyUtils::FromPython(value, cObjectContactFrictionCircleCable2D->GetParameters().circleRadius, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.circleRadius"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("useSegmentNormals") == 0) { cObjectContactFrictionCircleCable2D->GetParameters().useSegmentNormals = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("activeConnector") == 0) { cObjectContactFrictionCircleCable2D->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationObjectContactFrictionCircleCable2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("VshowContactCircle") == 0) { visualizationObjectContactFrictionCircleCable2D->GetShowContactCircle() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("VdrawSize") == 0) { visualizationObjectContactFrictionCircleCable2D->GetDrawSize() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("useSegmentNormals") == 0) { EPyUtils::FromPython(value, cObjectContactFrictionCircleCable2D->GetParameters().useSegmentNormals, "ObjectContactFrictionCircleCable2D.useSegmentNormals"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectContactFrictionCircleCable2D->GetParameters().activeConnector, "ObjectContactFrictionCircleCable2D.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectContactFrictionCircleCable2D->GetShow(), "ObjectContactFrictionCircleCable2D.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VshowContactCircle") == 0) { EPyUtils::FromPython(value, visualizationObjectContactFrictionCircleCable2D->GetShowContactCircle(), "ObjectContactFrictionCircleCable2D.VshowContactCircle"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VdrawSize") == 0) { EPyUtils::FromPython(value, visualizationObjectContactFrictionCircleCable2D->GetDrawSize(), "ObjectContactFrictionCircleCable2D.VdrawSize"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectContactFrictionCircleCable2D->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectContactFrictionCircleCable2D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

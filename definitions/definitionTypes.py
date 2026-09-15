@@ -306,6 +306,9 @@ CFNoInterface        = 'n'   #EXCLUDED from the Python dictionary interface. Inv
                              #lineType 'V' (pythonAutoGenerateObjects.py:1123), so the 'I'
                              #that 1755 of 1850 function rows carried never had an effect.
 CFOptional           = 'O'   #optional parameter in the dictionary; otherwise the default
+CFMustBeGiven        = 'Q'   #the default is only a placeholder outside the parameter's range
+                             #(InvalidIndex for UInt, 0 for PReal, ...): Add<Kind> raises if it
+                             #is not replaced; the validator requires the flag exactly there
 
 #--------------------------------------------------------------------- default values (items)
 DVInvalidIndex = CppValue('EXUstd::InvalidIndex', 'exudyn.InvalidIndex()', 'invalid index')

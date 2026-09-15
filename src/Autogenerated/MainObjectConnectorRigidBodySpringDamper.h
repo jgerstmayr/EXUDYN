@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-15  00:24:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -119,13 +119,13 @@ public: // AUTO:
         EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker0); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker1"], cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::FromPython(d["offset"], cObjectConnectorRigidBodySpringDamper->GetParameters().offset); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "intrinsicFormulation")) { cObjectConnectorRigidBodySpringDamper->GetParameters().intrinsicFormulation = py::cast<bool>(d["intrinsicFormulation"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorRigidBodySpringDamper->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "intrinsicFormulation")) { EPyUtils::FromPython(d["intrinsicFormulation"], cObjectConnectorRigidBodySpringDamper->GetParameters().intrinsicFormulation, "ObjectConnectorRigidBodySpringDamper.intrinsicFormulation"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorRigidBodySpringDamper->GetParameters().activeConnector, "ObjectConnectorRigidBodySpringDamper.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "springForceTorqueUserFunction")) { cObjectConnectorRigidBodySpringDamper->GetParameters().springForceTorqueUserFunction = d["springForceTorqueUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "postNewtonStepUserFunction")) { cObjectConnectorRigidBodySpringDamper->GetParameters().postNewtonStepUserFunction = d["postNewtonStepUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectConnectorRigidBodySpringDamper->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "VdrawSize")) { visualizationObjectConnectorRigidBodySpringDamper->GetDrawSize() = py::cast<float>(d["VdrawSize"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectConnectorRigidBodySpringDamper->GetShow(), "ObjectConnectorRigidBodySpringDamper.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationObjectConnectorRigidBodySpringDamper->GetDrawSize(), "ObjectConnectorRigidBodySpringDamper.VdrawSize"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectConnectorRigidBodySpringDamper->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
@@ -187,12 +187,12 @@ public: // AUTO:
         else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker0); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { EPyUtils::FromPython(value, cObjectConnectorRigidBodySpringDamper->GetParameters().offset); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("intrinsicFormulation") == 0) { cObjectConnectorRigidBodySpringDamper->GetParameters().intrinsicFormulation = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("activeConnector") == 0) { cObjectConnectorRigidBodySpringDamper->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("intrinsicFormulation") == 0) { EPyUtils::FromPython(value, cObjectConnectorRigidBodySpringDamper->GetParameters().intrinsicFormulation, "ObjectConnectorRigidBodySpringDamper.intrinsicFormulation"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectConnectorRigidBodySpringDamper->GetParameters().activeConnector, "ObjectConnectorRigidBodySpringDamper.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("springForceTorqueUserFunction") == 0) { cObjectConnectorRigidBodySpringDamper->GetParameters().springForceTorqueUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("postNewtonStepUserFunction") == 0) { cObjectConnectorRigidBodySpringDamper->GetParameters().postNewtonStepUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationObjectConnectorRigidBodySpringDamper->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("VdrawSize") == 0) { visualizationObjectConnectorRigidBodySpringDamper->GetDrawSize() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorRigidBodySpringDamper->GetShow(), "ObjectConnectorRigidBodySpringDamper.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VdrawSize") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorRigidBodySpringDamper->GetDrawSize(), "ObjectConnectorRigidBodySpringDamper.VdrawSize"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectConnectorRigidBodySpringDamper->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectConnectorRigidBodySpringDamper::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

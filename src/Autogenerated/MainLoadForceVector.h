@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-15  00:24:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,10 +108,10 @@ public: // AUTO:
     {
         EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumber"], cLoadForceVector->GetParameters().markerNumber); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["loadVector"], cLoadForceVector->GetParameters().loadVector); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "bodyFixed")) { cLoadForceVector->GetParameters().bodyFixed = py::cast<bool>(d["bodyFixed"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "bodyFixed")) { EPyUtils::FromPython(d["bodyFixed"], cLoadForceVector->GetParameters().bodyFixed, "LoadForceVector.bodyFixed"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "loadVectorUserFunction")) { cLoadForceVector->GetParameters().loadVectorUserFunction = d["loadVectorUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationLoadForceVector->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationLoadForceVector->GetShow(), "LoadForceVector.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
 
     //! AUTO:  dictionary read access
@@ -148,9 +148,9 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumber") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cLoadForceVector->GetParameters().markerNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("loadVector") == 0) { EPyUtils::FromPython(value, cLoadForceVector->GetParameters().loadVector); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("bodyFixed") == 0) { cLoadForceVector->GetParameters().bodyFixed = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("bodyFixed") == 0) { EPyUtils::FromPython(value, cLoadForceVector->GetParameters().bodyFixed, "LoadForceVector.bodyFixed"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("loadVectorUserFunction") == 0) { cLoadForceVector->GetParameters().loadVectorUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationLoadForceVector->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationLoadForceVector->GetShow(), "LoadForceVector.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("LoadForceVector::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }
 

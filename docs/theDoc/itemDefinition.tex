@@ -1144,7 +1144,7 @@ The item \mybold{NodeGenericODE2} with type = 'GenericODE2' has the following pa
     referenceCoordinates &     Vector &      &     [] &     generic reference coordinates of node; must be consistent with numberOfODE2Coordinates\\ \hline
     initialCoordinates &     Vector &      &     [] &     initial displacement coordinates; must be consistent with numberOfODE2Coordinates\\ \hline
     initialCoordinates\_t &     Vector &      &     [] &     initial velocity coordinates; must be consistent with numberOfODE2Coordinates\\ \hline
-    numberOfODE2Coordinates &     PInt &      &     0 &     number of generic \hac{ODE2} coordinates\\ \hline
+    numberOfODE2Coordinates &     PInt &      &     0 &     number of generic \hac{ODE2} coordinates; \mybold{must be given}: the default is only a placeholder\\ \hline
     visualization &     VNodeGenericODE2 &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
 \end{center}
@@ -1228,7 +1228,7 @@ The item \mybold{NodeGenericODE1} with type = 'GenericODE1' has the following pa
     name &     String &      &     '' &     node's unique name\\ \hline
     referenceCoordinates &     Vector &      &     [] &     generic reference coordinates of node; must be consistent with numberOfODE1Coordinates\\ \hline
     initialCoordinates &     Vector &      &     [] &     initial displacement coordinates; must be consistent with numberOfODE1Coordinates\\ \hline
-    numberOfODE1Coordinates &     PInt &      &     0 &     number of generic \hac{ODE1} coordinates\\ \hline
+    numberOfODE1Coordinates &     PInt &      &     0 &     number of generic \hac{ODE1} coordinates; \mybold{must be given}: the default is only a placeholder\\ \hline
     visualization &     VNodeGenericODE1 &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
 \end{center}
@@ -1301,7 +1301,7 @@ The item \mybold{NodeGenericAE} with type = 'GenericAE' has the following parame
     name &     String &      &     '' &     node's unique name\\ \hline
     referenceCoordinates &     Vector &      &     [] &     generic reference coordinates of node; must be consistent with numberOfAECoordinates\\ \hline
     initialCoordinates &     Vector &      &     [] &     initial displacement coordinates; must be consistent with numberOfAECoordinates\\ \hline
-    numberOfAECoordinates &     PInt &      &     0 &     number of generic \hac{AE} coordinates\\ \hline
+    numberOfAECoordinates &     PInt &      &     0 &     number of generic \hac{AE} coordinates; \mybold{must be given}: the default is only a placeholder\\ \hline
     visualization &     VNodeGenericAE &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
 \end{center}
@@ -4802,7 +4802,7 @@ The item \mybold{ObjectANCFBeam} with type = 'ANCFBeam' has the following parame
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
     nodeNumbers &     NodeIndex2 &     2 &     [invalid [-1], invalid [-1]] &     \tabnewline two node numbers for beam element\\ \hline
-    physicsLength &     PReal &      &     0. &      [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive\\ \hline
+    physicsLength &     PReal &      &     0. &      [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive; \mybold{must be given}: the default is only a placeholder\\ \hline
     sectionData &     BeamSection &      &     BeamSection() &     data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.\\ \hline
     crossSectionPenaltyFactor &     Vector3D &     3 &     [1.,1.,1.] &     \tabnewline  [SI:1] additional penalty factors for cross section deformation, which are in total $k_{cs} = [f_{yy}\cdot EA,\, f_{zz}\cdot EA,\, f_{yz}\cdot (GA_y+GA_z)]\tp$\\ \hline
     crossSectionDamping &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline  [SI:1] viscous damping according to penalty factors for cross section deformation; the damping is relative to the stiffness and should be thus usually much smaller than 1; the viscous damping factors read  $d_{cs} = [d_{fyy}\cdot EA,\, d_{fzz}\cdot EA,\, d_{fyz}\cdot (GA_y+GA_z)]\tp$\\ \hline
@@ -4996,7 +4996,7 @@ The item \mybold{ObjectBeamGeometricallyExact} with type = 'BeamGeometricallyExa
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     objects's unique name\\ \hline
     nodeNumbers &     NodeIndex2 &     2 &     [invalid [-1], invalid [-1]] &     \tabnewline two node numbers for beam element\\ \hline
-    physicsLength &     PReal &      &     0. &      [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive\\ \hline
+    physicsLength &     PReal &      &     0. &      [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive; \mybold{must be given}: the default is only a placeholder\\ \hline
     sectionData &     BeamSection &      &     BeamSection() &     data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.\\ \hline
     visualization &     VObjectBeamGeometricallyExact &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
@@ -5897,7 +5897,7 @@ The item \mybold{ObjectJointRollingDisc} with type = 'JointRollingDisc' has the 
     markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector; $m0$ represents the ground and $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point\\ \hline
     constrainedAxes &     ArrayIndex &     3 &     [1,1,1] &     \tabnewline flags, which determine which constraints are active, in which $j_0$ represents lateral motion, $j_1$ longitudinal (forward/backward) motion and $j_2$ represents the normal (contact) direction\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint\\ \hline
-    discRadius &     PReal &      &     0 &     defines the disc radius\\ \hline
+    discRadius &     PReal &      &     0 &     defines the disc radius; \mybold{must be given}: the default is only a placeholder\\ \hline
     discAxis &     Vector3D &     3 &     [1,0,0] &     axis of disc defined in marker $m1$ frame\\ \hline
     planeNormal &     Vector3D &     3 &     [0,0,1] &     normal to the contact / rolling plane defined in marker $m0$ coordinates\\ \hline
     visualization &     VObjectJointRollingDisc &      &      &     parameters for visualization of item\\ \hline
@@ -8623,18 +8623,18 @@ The item \mybold{ObjectConnectorHydraulicActuatorSimple} with type = 'ConnectorH
     markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
     nodeNumbers &     ArrayNodeIndex &      &     [] &     currently a list with one node number of NodeGenericODE1 for 2 hydraulic pressures (reference values for this node must be zero); data node may be added in future for switching\\ \hline
     offsetLength &     UReal &      &     0. &     offset length [SI:m] of cylinder, representing minimal distance between the two bushings at stroke=0\\ \hline
-    strokeLength &     PReal &      &     0. &     stroke length [SI:m] of cylinder, representing maximum extension relative to $L_o$; the measured distance between the markers is $L_s+L_o$\\ \hline
-    chamberCrossSection0 &     PReal &      &     0. &     cross section [SI:m$^2$] of chamber (inner cylinder) at piston head (nut) side (0)\\ \hline
-    chamberCrossSection1 &     PReal &      &     0. &     cross section [SI:m$^2$] of chamber at piston rod side (1); usually smaller than chamberCrossSection0\\ \hline
-    hoseVolume0 &     PReal &      &     0. &     hose volume [SI:m$^3$] at piston head (nut) side (0); as the effective bulk modulus would go to infinity at stroke length zero, the hose volume must be greater than zero\\ \hline
-    hoseVolume1 &     PReal &      &     0. &     hose volume [SI:m$^3$] at piston rod side (1); as the effective bulk modulus would go to infinity at max. stroke length, the hose volume must be greater than zero\\ \hline
+    strokeLength &     PReal &      &     0. &     stroke length [SI:m] of cylinder, representing maximum extension relative to $L_o$; the measured distance between the markers is $L_s+L_o$; \mybold{must be given}: the default is only a placeholder\\ \hline
+    chamberCrossSection0 &     PReal &      &     0. &     cross section [SI:m$^2$] of chamber (inner cylinder) at piston head (nut) side (0); \mybold{must be given}: the default is only a placeholder\\ \hline
+    chamberCrossSection1 &     PReal &      &     0. &     cross section [SI:m$^2$] of chamber at piston rod side (1); usually smaller than chamberCrossSection0; \mybold{must be given}: the default is only a placeholder\\ \hline
+    hoseVolume0 &     PReal &      &     0. &     hose volume [SI:m$^3$] at piston head (nut) side (0); as the effective bulk modulus would go to infinity at stroke length zero, the hose volume must be greater than zero; \mybold{must be given}: the default is only a placeholder\\ \hline
+    hoseVolume1 &     PReal &      &     0. &     hose volume [SI:m$^3$] at piston rod side (1); as the effective bulk modulus would go to infinity at max. stroke length, the hose volume must be greater than zero; \mybold{must be given}: the default is only a placeholder\\ \hline
     valveOpening0 &     Real &      &     0. &     relative opening of valve $[-1 \ldots 1]$ [SI:1] at piston head (nut) side (0); positive value is valve opening towards system pressure, negative value is valve opening towards tank pressure; zero means closed valve\\ \hline
     valveOpening1 &     Real &      &     0. &     relative opening of valve $[-1 \ldots 1]$ [SI:1] at piston rod side (1); positive value is valve opening towards system pressure, negative value is valve opening towards tank pressure; zero means closed valve\\ \hline
     actuatorDamping &     UReal &      &     0. &     damping [SI:N/(m$\,$s)] of hydraulic actuator (against actuator axial velocity)\\ \hline
-    oilBulkModulus &     PReal &      &     0. &     bulk modulus of oil [SI:N/(m$^2$)]\\ \hline
+    oilBulkModulus &     PReal &      &     0. &     bulk modulus of oil [SI:N/(m$^2$)]; \mybold{must be given}: the default is only a placeholder\\ \hline
     cylinderBulkModulus &     UReal &      &     0. &     bulk modulus of cylinder [SI:N/(m$^2$)]; in fact, this is value represents the effect of the cylinder stiffness on the effective bulk modulus\\ \hline
     hoseBulkModulus &     UReal &      &     0. &     bulk modulus of hose [SI:N/(m$^2$)]; in fact, this is value represents the effect of the hose stiffness on the effective bulk modulus\\ \hline
-    nominalFlow &     PReal &      &     0. &     nominal flow of oil through valve [SI:m$^3$/s]\\ \hline
+    nominalFlow &     PReal &      &     0. &     nominal flow of oil through valve [SI:m$^3$/s]; \mybold{must be given}: the default is only a placeholder\\ \hline
     systemPressure &     Real &      &     0. &     system pressure [SI:N/(m$^2$)]\\ \hline
     tankPressure &     Real &      &     0. &     tank pressure [SI:N/(m$^2$)]\\ \hline
     useChamberVolumeChange &     Bool &      &     False &     if True, the pressure build up equations include the change of oil stiffness due to change of chamber volume\\ \hline
@@ -9075,7 +9075,7 @@ The item \mybold{ObjectConnectorRollingDiscPenalty} with type = 'ConnectorRollin
     name &     String &      &     '' &     constraints's unique name\\ \hline
     markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector; $m0$ represents a point at the plane surface (normal of surface plane defined by planeNormal); the ground can also be a moving rigid body; $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point\\ \hline
     nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact)\\ \hline
-    discRadius &     PReal &      &     0. &     defines the disc radius\\ \hline
+    discRadius &     PReal &      &     0. &     defines the disc radius; \mybold{must be given}: the default is only a placeholder\\ \hline
     discAxis &     Vector3D &     3 &     [1,0,0] &     axis of disc defined in marker $m1$ frame\\ \hline
     planeNormal &     Vector3D &     3 &     [0,0,1] &     normal to the contact / rolling plane (ground); note that the plane reference point can be arbitrarily chosen by the location of the marker $m0$\\ \hline
     dryFrictionAngle &     Real &      &     0. &     angle [SI:1 (rad)] which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle\\ \hline
@@ -10406,9 +10406,9 @@ The item \mybold{ObjectContactSphereTorus} with type = 'ContactSphereTorus' has 
     name &     String &      &     '' &     constraints's unique name\\ \hline
     markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers representing centers of sphere (marker 0) and center of torus (marker 1)\\ \hline
     nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused.\\ \hline
-    radiusSphere &     PReal &      &     0. &      radius of sphere [SI:m]\\ \hline
-    torusMajorRadius &     PReal &      &     0. &      major radius of torus [SI:m], representing center of rotated circle\\ \hline
-    torusMinorRadius &     PReal &      &     0. &      minor radius of torus [SI:m], representing radius of circle of ring\\ \hline
+    radiusSphere &     PReal &      &     0. &      radius of sphere [SI:m]; \mybold{must be given}: the default is only a placeholder\\ \hline
+    torusMajorRadius &     PReal &      &     0. &      major radius of torus [SI:m], representing center of rotated circle; \mybold{must be given}: the default is only a placeholder\\ \hline
+    torusMinorRadius &     PReal &      &     0. &      minor radius of torus [SI:m], representing radius of circle of ring; \mybold{must be given}: the default is only a placeholder\\ \hline
     torusAxis &     Vector3D &     3 &     [0,0,0] &     Vector containing rotation axis of torus; must be a unit vector.\\ \hline
     dynamicFriction &     UReal &      &     0. &     dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}\\ \hline
     frictionProportionalZone &     UReal &      &     0.001 &     limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), \refSection{sec:module:physics}\\ \hline
@@ -10517,7 +10517,7 @@ The item \mybold{ObjectContactSphereTriangle} with type = 'ContactSphereTriangle
     name &     String &      &     '' &     constraints's unique name\\ \hline
     markerNumbers &     ArrayMarkerIndex &     \tabnewline 2 &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers representing the center of the sphere (marker 0) and the reference point of the triangle (marker 1), where triangle nodal positions are defined in the local coordinates of marker 1.\\ \hline
     nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused.\\ \hline
-    radiusSphere &     PReal &      &     0. &      radius of sphere [SI:m]\\ \hline
+    radiusSphere &     PReal &      &     0. &      radius of sphere [SI:m]; \mybold{must be given}: the default is only a placeholder\\ \hline
     trianglePoints &     Vector3DList &      &     [] &      triangle points, defined in marker 1 local coordinates\\ \hline
     includeEdges &     UInt &      &     7 &     Binary flag, where 1 defines contact with edges 0, 2 with edge 1 and 4 with edge 2; 7 means that contact with all edges is included; edge 0 is the edge between node 0 and node 1\\ \hline
     dynamicFriction &     UReal &      &     0. &     dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, \refSection{sec:module:physics}\\ \hline
@@ -10749,7 +10749,7 @@ The item \mybold{ObjectConnectorDistance} with type = 'ConnectorDistance' has th
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     constraints's unique name\\ \hline
     markerNumbers &     ArrayMarkerIndex &     \tabnewline  &     [ invalid [-1], invalid [-1] ] &     \tabnewline list of markers used in connector\\ \hline
-    distance &     PReal &      &     0. &     prescribed distance [SI:m] of the used markers; must by greater than zero\\ \hline
+    distance &     PReal &      &     0. &     prescribed distance [SI:m] of the used markers; must by greater than zero; \mybold{must be given}: the default is only a placeholder\\ \hline
     activeConnector &     Bool &      &     True &     flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint\\ \hline
     visualization &     VObjectConnectorDistance &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
@@ -11934,7 +11934,7 @@ The item \mybold{MarkerNodeCoordinate} with type = 'NodeCoordinate' has the foll
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
     nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number to which marker is attached to\\ \hline
-    coordinate &     UInt &      &     invalid (-1) &     \tabnewline coordinate of node to which marker is attached to\\ \hline
+    coordinate &     UInt &      &     invalid (-1) &     \tabnewline coordinate of node to which marker is attached to; \mybold{must be given}: the default is only a placeholder\\ \hline
     visualization &     VMarkerNodeCoordinate &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
 \end{center}
@@ -12055,7 +12055,7 @@ The item \mybold{MarkerNodeODE1Coordinate} with type = 'NodeODE1Coordinate' has 
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
     nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number to which marker is attached to\\ \hline
-    coordinate &     UInt &      &     invalid (-1) &     \tabnewline coordinate of node to which marker is attached to\\ \hline
+    coordinate &     UInt &      &     invalid (-1) &     \tabnewline coordinate of node to which marker is attached to; \mybold{must be given}: the default is only a placeholder\\ \hline
     visualization &     VMarkerNodeODE1Coordinate &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
 \end{center}
@@ -12094,7 +12094,7 @@ The item \mybold{MarkerNodeRotationCoordinate} with type = 'NodeRotationCoordina
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
     nodeNumber &     NodeIndex &      &     invalid (-1) &     \tabnewline node number to which marker is attached to\\ \hline
-    rotationCoordinate &     UInt &      &     invalid (-1) &     \tabnewline rotation coordinate: 0=x, 1=y, 2=z\\ \hline
+    rotationCoordinate &     UInt &      &     invalid (-1) &     \tabnewline rotation coordinate: 0=x, 1=y, 2=z; \mybold{must be given}: the default is only a placeholder\\ \hline
     visualization &     VMarkerNodeRotationCoordinate &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
 \end{center}
@@ -12744,7 +12744,7 @@ The item \mybold{MarkerKinematicTreeRigid} with type = 'KinematicTreeRigid' has 
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     marker's unique name\\ \hline
     objectNumber &     ObjectIndex &      &     invalid (-1) &     \tabnewline body number to which marker is attached to\\ \hline
-    linkNumber &     UInt &      &     invalid (-1) &     \tabnewline number of link in KinematicTree to which marker is attached to\\ \hline
+    linkNumber &     UInt &      &     invalid (-1) &     \tabnewline number of link in KinematicTree to which marker is attached to; \mybold{must be given}: the default is only a placeholder\\ \hline
     localPosition &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline local (link-fixed) position of marker at link $n_l$, using the link ($n_l$) coordinate system\\ \hline
     visualization &     VMarkerKinematicTreeRigid &      &      &     parameters for visualization of item\\ \hline
 \end{longtable}
@@ -13707,7 +13707,7 @@ The item \mybold{SensorSuperElement} with type = 'SuperElement' has the followin
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     sensor's unique name\\ \hline
     bodyNumber &     ObjectIndex &      &     invalid (-1) &     \tabnewline body (=object) number to which sensor is attached to\\ \hline
-    meshNodeNumber &     UInt &      &     invalid (-1) &     \tabnewline mesh node number, which is a local node number with in the object (starting with 0); the node number may represent a real Node in mbs, or may be virtual and reconstructed from the object coordinates such as in ObjectFFRFreducedOrder\\ \hline
+    meshNodeNumber &     UInt &      &     invalid (-1) &     \tabnewline mesh node number, which is a local node number with in the object (starting with 0); the node number may represent a real Node in mbs, or may be virtual and reconstructed from the object coordinates such as in ObjectFFRFreducedOrder; \mybold{must be given}: the default is only a placeholder\\ \hline
     writeToFile &     Bool &      &     True &     True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''\\ \hline
     fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline
     outputVariableType &     OutputVariableType &     \tabnewline  &     OutputVariableType::\_None &     \tabnewline OutputVariableType for sensor, based on the output variables available for the mesh nodes (see special section for super element output variables, e.g, in ObjectFFRFreducedOrder, \refSection{sec:objectffrfreducedorder:superelementoutput})\\ \hline
@@ -13774,7 +13774,7 @@ The item \mybold{SensorKinematicTree} with type = 'KinematicTree' has the follow
     \bf Name & \bf type & \bf size & \bf default value & \bf description \\ \hline
     name &     String &      &     '' &     sensor's unique name\\ \hline
     objectNumber &     ObjectIndex &      &     invalid (-1) &     \tabnewline object number of KinematicTree to which sensor is attached to\\ \hline
-    linkNumber &     UInt &      &     invalid (-1) &     \tabnewline number of link in KinematicTree to measure quantities\\ \hline
+    linkNumber &     UInt &      &     invalid (-1) &     \tabnewline number of link in KinematicTree to measure quantities; \mybold{must be given}: the default is only a placeholder\\ \hline
     localPosition &     Vector3D &     3 &     [0.,0.,0.] &     \tabnewline local (link-fixed) position of sensor, defined in link ($n_l$) coordinate system\\ \hline
     writeToFile &     Bool &      &     True &     True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''\\ \hline
     fileName &     String &      &     '' &     directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist\\ \hline

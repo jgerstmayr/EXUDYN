@@ -23,7 +23,7 @@ The item \ **NodeGenericODE2**\  with type = 'GenericODE2' has the following par
 * | **initialCoordinates_t** [\ :math:`\dot {\mathbf{q}}\cIni = [\dot q_0,\,\ldots,\,\dot q_{n_c}]\tp\cIni`\ , type = Vector, default = []]:
   | initial velocity coordinates; must be consistent with numberOfODE2Coordinates
 * | **numberOfODE2Coordinates** [\ :math:`n_c`\ , type = PInt, default = 0]:
-  | number of generic \ :ref:`ODE2 <ODE2>`\  coordinates
+  | number of generic \ :ref:`ODE2 <ODE2>`\  coordinates; \ **must be given**\ : the default is only a placeholder
 * | **visualization** [type = VNodeGenericODE2]:
   | parameters for visualization of item
 

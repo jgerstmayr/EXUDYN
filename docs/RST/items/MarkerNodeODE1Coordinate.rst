@@ -19,7 +19,7 @@ The item \ **MarkerNodeODE1Coordinate**\  with type = 'NodeODE1Coordinate' has t
 * | **nodeNumber** [type = NodeIndex, default = invalid (-1)]:
   | node number to which marker is attached to
 * | **coordinate** [type = UInt, default = invalid (-1)]:
-  | coordinate of node to which marker is attached to
+  | coordinate of node to which marker is attached to; \ **must be given**\ : the default is only a placeholder
 * | **visualization** [type = VMarkerNodeODE1Coordinate]:
   | parameters for visualization of item
 

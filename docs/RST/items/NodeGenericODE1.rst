@@ -16,7 +16,7 @@ The item \ **NodeGenericODE1**\  with type = 'GenericODE1' has the following par
 * | **initialCoordinates** [\ :math:`{\mathbf{y}}\cIni = [y_0,\,\ldots,\,y_{nc}]\tp\cIni`\ , type = Vector, default = []]:
   | initial displacement coordinates; must be consistent with numberOfODE1Coordinates
 * | **numberOfODE1Coordinates** [\ :math:`n_c`\ , type = PInt, default = 0]:
-  | number of generic \ :ref:`ODE1 <ODE1>`\  coordinates
+  | number of generic \ :ref:`ODE1 <ODE1>`\  coordinates; \ **must be given**\ : the default is only a placeholder
 * | **visualization** [type = VNodeGenericODE1]:
   | parameters for visualization of item
 

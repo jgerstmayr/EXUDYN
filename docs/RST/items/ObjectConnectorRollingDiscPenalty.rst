@@ -25,7 +25,7 @@ The item \ **ObjectConnectorRollingDiscPenalty**\  with type = 'ConnectorRolling
 * | **nodeNumber** [\ :math:`n_d`\ , type = NodeIndex, default = invalid (-1)]:
   | node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact)
 * | **discRadius** [type = PReal, default = 0.]:
-  | defines the disc radius
+  | defines the disc radius; \ **must be given**\ : the default is only a placeholder
 * | **discAxis** [\ :math:`\LU{m1}{{\mathbf{w}}_{1}}, \;\; |\LU{m1}{{\mathbf{w}}_{1}}| = 1`\ , type = Vector3D, size = 3, default = [1,0,0]]:
   | axis of disc defined in marker \ :math:`m1`\  frame
 * | **planeNormal** [\ :math:`\LU{m0}{{\mathbf{v}}_{PN}}, \;\; |\LU{m0}{{\mathbf{v}}_{PN}}| = 1`\ , type = Vector3D, size = 3, default = [0,0,1]]:

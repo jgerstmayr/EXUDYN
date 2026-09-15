@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:33:05 (last modified)
+* @date         2026-09-15  00:27:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -122,13 +122,13 @@ public: // AUTO:
         EPyUtils::FromPython(d["forceVector"], cObjectFFRF->GetParameters().forceVector); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "forceUserFunction")) { cObjectFFRF->GetParameters().forceUserFunction = d["forceUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "massMatrixUserFunction")) { cObjectFFRF->GetParameters().massMatrixUserFunction = d["massMatrixUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "computeFFRFterms")) { cObjectFFRF->GetParameters().computeFFRFterms = py::cast<bool>(d["computeFFRFterms"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "objectIsInitialized")) { cObjectFFRF->GetObjectIsInitialized() = py::cast<bool>(d["objectIsInitialized"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "computeFFRFterms")) { EPyUtils::FromPython(d["computeFFRFterms"], cObjectFFRF->GetParameters().computeFFRFterms, "ObjectFFRF.computeFFRFterms"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "objectIsInitialized")) { EPyUtils::FromPython(d["objectIsInitialized"], cObjectFFRF->GetObjectIsInitialized(), "ObjectFFRF.objectIsInitialized"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectFFRF->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectFFRF->GetShow(), "ObjectFFRF.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectFFRF->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VtriangleMesh")) { EPyUtils::FromPython(d["VtriangleMesh"], visualizationObjectFFRF->GetTriangleMesh()); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "VshowNodes")) { visualizationObjectFFRF->GetShowNodes() = py::cast<bool>(d["VshowNodes"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VshowNodes")) { EPyUtils::FromPython(d["VshowNodes"], visualizationObjectFFRF->GetShowNodes(), "ObjectFFRF.VshowNodes"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -209,12 +209,12 @@ public: // AUTO:
         else if (parameterName.compare("forceVector") == 0) { EPyUtils::FromPython(value, cObjectFFRF->GetParameters().forceVector); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("forceUserFunction") == 0) { cObjectFFRF->GetParameters().forceUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("massMatrixUserFunction") == 0) { cObjectFFRF->GetParameters().massMatrixUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("computeFFRFterms") == 0) { cObjectFFRF->GetParameters().computeFFRFterms = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("objectIsInitialized") == 0) { cObjectFFRF->GetObjectIsInitialized() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationObjectFFRF->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("computeFFRFterms") == 0) { EPyUtils::FromPython(value, cObjectFFRF->GetParameters().computeFFRFterms, "ObjectFFRF.computeFFRFterms"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("objectIsInitialized") == 0) { EPyUtils::FromPython(value, cObjectFFRF->GetObjectIsInitialized(), "ObjectFFRF.objectIsInitialized"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRF->GetShow(), "ObjectFFRF.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectFFRF->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VtriangleMesh") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRF->GetTriangleMesh()); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("VshowNodes") == 0) { visualizationObjectFFRF->GetShowNodes() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VshowNodes") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRF->GetShowNodes(), "ObjectFFRF.VshowNodes"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectFFRF::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

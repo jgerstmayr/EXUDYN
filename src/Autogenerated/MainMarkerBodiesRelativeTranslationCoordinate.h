@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-15  00:24:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -112,9 +112,9 @@ public: // AUTO:
         EPyUtils::FromPython(d["localPosition0"], cMarkerBodiesRelativeTranslationCoordinate->GetParameters().localPosition0); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["localPosition1"], cMarkerBodiesRelativeTranslationCoordinate->GetParameters().localPosition1); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["axis0"], cMarkerBodiesRelativeTranslationCoordinate->GetParameters().axis0); /* AUTO:  read out dictionary and cast to C++ type*/
-        cMarkerBodiesRelativeTranslationCoordinate->GetParameters().offset = py::cast<Real>(d["offset"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["offset"], cMarkerBodiesRelativeTranslationCoordinate->GetParameters().offset, "MarkerBodiesRelativeTranslationCoordinate.offset"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationMarkerBodiesRelativeTranslationCoordinate->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationMarkerBodiesRelativeTranslationCoordinate->GetShow(), "MarkerBodiesRelativeTranslationCoordinate.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
 
     //! AUTO:  dictionary read access
@@ -155,8 +155,8 @@ public: // AUTO:
         else if (parameterName.compare("localPosition0") == 0) { EPyUtils::FromPython(value, cMarkerBodiesRelativeTranslationCoordinate->GetParameters().localPosition0); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("localPosition1") == 0) { EPyUtils::FromPython(value, cMarkerBodiesRelativeTranslationCoordinate->GetParameters().localPosition1); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("axis0") == 0) { EPyUtils::FromPython(value, cMarkerBodiesRelativeTranslationCoordinate->GetParameters().axis0); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("offset") == 0) { cMarkerBodiesRelativeTranslationCoordinate->GetParameters().offset = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationMarkerBodiesRelativeTranslationCoordinate->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("offset") == 0) { EPyUtils::FromPython(value, cMarkerBodiesRelativeTranslationCoordinate->GetParameters().offset, "MarkerBodiesRelativeTranslationCoordinate.offset"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationMarkerBodiesRelativeTranslationCoordinate->GetShow(), "MarkerBodiesRelativeTranslationCoordinate.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("MarkerBodiesRelativeTranslationCoordinate::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }
 

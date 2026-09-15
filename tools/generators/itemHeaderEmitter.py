@@ -82,6 +82,7 @@ def ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDiction
     typeName = TypeName(parameter)
     source = 'd["' + pyName + '"]' if fromDictionary else 'value'
     comment = ' /* AUTO:  read out dictionary and cast to C++ type*/'
+    context = className + '.' + pyName #names item and parameter in error messages
     if typeName in ['BodyGraphicsData', 'BodyGraphicsDataList']: #special conversion routines
         function = 'PyWriteBodyGraphicsDataList' if typeName == 'BodyGraphicsData' else 'PyWriteBodyGraphicsDataListOfLists'
         if fromDictionary: #a missing entry is not an error here
@@ -89,7 +90,8 @@ def ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDiction
         return function + '(value, ' + destStr + ')'
     if IsInternalSetGetParameter(typeName):
         return 'SetInternal' + typeName + '(' + source + '); /*! AUTO:  safely cast to C++ type*/'
-    if IsAMatrixVectorSpecial(typeName): #Vector3DList, Matrix3DList, PyMatrixContainer: not yet in PyConversion.h
+    if IsAMatrixVectorSpecial(typeName): #Vector3DList, Matrix3DList, PyMatrixContainer: not yet in PyConversion.h;
+        #None stays accepted as empty: it is the default of these parameters in itemInterface.py (step 34c4 c)
         return 'EPyUtils::Set' + typeName + 'Safely(' + source + ', ' + destStr + ');' + comment
     if typeName in ['Matrix3D', 'Matrix6D']: #fixed size: rows and columns are template arguments
         size = typeName[6:-1]
@@ -101,10 +103,15 @@ def ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDiction
     if 'PyFunction' in typeName: #py::object can be directly written
         return destStr + ' = ' + source + ';' + comment
     if typeName in rangeCheckForms: #the same check on every write path (step 34c4 b)
-        return ('EPyUtils::FromPython(' + source + ', ' + destStr + ', EPyUtils::RangeCheck::' + rangeCheckForms[typeName]
-                + ', "' + className + '.' + pyName + '");' + comment)
+        given = '' #must-be-given parameters: Add and dictionaries raise for the placeholder default (step 34c4 e)
+        if fromDictionary and HasFlag(parameter, 'Q'):
+            given = 'EPyUtils::RequireGiven(' + source + ', ' + DefaultValueString(parameter) + ', "' + context + '"); '
+        return (given + 'EPyUtils::FromPython(' + source + ', ' + destStr + ', EPyUtils::RangeCheck::' + rangeCheckForms[typeName]
+                + ', "' + context + '");' + comment)
     if typeCastStr == 'OutputVariableType' and fromDictionary:
         return destStr + ' = (OutputVariableType)py::cast<Index>(' + source + ');' + comment
+    if typeCastStr in ['bool', 'Real', 'float', 'Index']: #plain scalars: None raises (step 34c4 c)
+        return 'EPyUtils::FromPython(' + source + ', ' + destStr + ', "' + context + '");' + comment
     return destStr + ' = py::cast<' + typeCastStr + '>(' + source + ');' + comment
 
 

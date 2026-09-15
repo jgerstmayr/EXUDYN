@@ -192,6 +192,8 @@ def WriteFile(parseInfo, parameterList):
                 #write latex doc:
                 parameterDescription = parameter['parameterDescription']
                 [parameterDescription, latexSymbol] = ExtractLatexSymbol(parameterDescription)
+                if parameter['cFlags'].find('Q') != -1: #CFMustBeGiven: the default is only a placeholder (step 34c4 e)
+                    parameterDescription += '; \mybold{must be given}: the default is only a placeholder'
                 if len(latexSymbol) != 0:
                     #if there is a \n, it was wrongly converted => convert back!
                     symbolList+= "\\rowTable{" + parameter['pythonName'].replace('_','\\_') +"}{" + latexSymbol.replace('\n','\\n') + "}{}\n"  #this is the latex symbol string 

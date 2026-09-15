@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-15  00:24:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,11 +108,11 @@ public: // AUTO:
         EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectJointRevoluteZ->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectJointRevoluteZ->GetParameters().rotationMarker0); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker1"], cObjectJointRevoluteZ->GetParameters().rotationMarker1); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectJointRevoluteZ->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectJointRevoluteZ->GetParameters().activeConnector, "ObjectJointRevoluteZ.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectJointRevoluteZ->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "VaxisRadius")) { visualizationObjectJointRevoluteZ->GetAxisRadius() = py::cast<float>(d["VaxisRadius"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "VaxisLength")) { visualizationObjectJointRevoluteZ->GetAxisLength() = py::cast<float>(d["VaxisLength"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectJointRevoluteZ->GetShow(), "ObjectJointRevoluteZ.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VaxisRadius")) { EPyUtils::FromPython(d["VaxisRadius"], visualizationObjectJointRevoluteZ->GetAxisRadius(), "ObjectJointRevoluteZ.VaxisRadius"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VaxisLength")) { EPyUtils::FromPython(d["VaxisLength"], visualizationObjectJointRevoluteZ->GetAxisLength(), "ObjectJointRevoluteZ.VaxisLength"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectJointRevoluteZ->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
@@ -158,10 +158,10 @@ public: // AUTO:
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectJointRevoluteZ->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectJointRevoluteZ->GetParameters().rotationMarker0); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectJointRevoluteZ->GetParameters().rotationMarker1); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("activeConnector") == 0) { cObjectJointRevoluteZ->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationObjectJointRevoluteZ->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("VaxisRadius") == 0) { visualizationObjectJointRevoluteZ->GetAxisRadius() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("VaxisLength") == 0) { visualizationObjectJointRevoluteZ->GetAxisLength() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectJointRevoluteZ->GetParameters().activeConnector, "ObjectJointRevoluteZ.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectJointRevoluteZ->GetShow(), "ObjectJointRevoluteZ.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VaxisRadius") == 0) { EPyUtils::FromPython(value, visualizationObjectJointRevoluteZ->GetAxisRadius(), "ObjectJointRevoluteZ.VaxisRadius"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VaxisLength") == 0) { EPyUtils::FromPython(value, visualizationObjectJointRevoluteZ->GetAxisLength(), "ObjectJointRevoluteZ.VaxisLength"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectJointRevoluteZ->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectJointRevoluteZ::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

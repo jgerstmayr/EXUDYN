@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:57:17 (last modified)
+* @date         2026-09-15  00:33:14 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -116,9 +116,9 @@ public: // AUTO:
     {
         EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactSphereTorus->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactSphereTorus->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "radiusSphere")) { EPyUtils::FromPython(d["radiusSphere"], cObjectContactSphereTorus->GetParameters().radiusSphere, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.radiusSphere"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "torusMajorRadius")) { EPyUtils::FromPython(d["torusMajorRadius"], cObjectContactSphereTorus->GetParameters().torusMajorRadius, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.torusMajorRadius"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "torusMinorRadius")) { EPyUtils::FromPython(d["torusMinorRadius"], cObjectContactSphereTorus->GetParameters().torusMinorRadius, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.torusMinorRadius"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "radiusSphere")) { EPyUtils::RequireGiven(d["radiusSphere"], 0., "ObjectContactSphereTorus.radiusSphere"); EPyUtils::FromPython(d["radiusSphere"], cObjectContactSphereTorus->GetParameters().radiusSphere, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.radiusSphere"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "torusMajorRadius")) { EPyUtils::RequireGiven(d["torusMajorRadius"], 0., "ObjectContactSphereTorus.torusMajorRadius"); EPyUtils::FromPython(d["torusMajorRadius"], cObjectContactSphereTorus->GetParameters().torusMajorRadius, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.torusMajorRadius"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "torusMinorRadius")) { EPyUtils::RequireGiven(d["torusMinorRadius"], 0., "ObjectContactSphereTorus.torusMinorRadius"); EPyUtils::FromPython(d["torusMinorRadius"], cObjectContactSphereTorus->GetParameters().torusMinorRadius, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.torusMinorRadius"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["torusAxis"], cObjectContactSphereTorus->GetParameters().torusAxis); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "dynamicFriction")) { EPyUtils::FromPython(d["dynamicFriction"], cObjectContactSphereTorus->GetParameters().dynamicFriction, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTorus.dynamicFriction"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "frictionProportionalZone")) { EPyUtils::FromPython(d["frictionProportionalZone"], cObjectContactSphereTorus->GetParameters().frictionProportionalZone, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTorus.frictionProportionalZone"); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -128,9 +128,9 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "restitutionCoefficient")) { EPyUtils::FromPython(d["restitutionCoefficient"], cObjectContactSphereTorus->GetParameters().restitutionCoefficient, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.restitutionCoefficient"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "minimumImpactVelocity")) { EPyUtils::FromPython(d["minimumImpactVelocity"], cObjectContactSphereTorus->GetParameters().minimumImpactVelocity, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTorus.minimumImpactVelocity"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "impactModel")) { EPyUtils::FromPython(d["impactModel"], cObjectContactSphereTorus->GetParameters().impactModel, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTorus.impactModel"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectContactSphereTorus->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectContactSphereTorus->GetParameters().activeConnector, "ObjectContactSphereTorus.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectContactSphereTorus->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectContactSphereTorus->GetShow(), "ObjectContactSphereTorus.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectContactSphereTorus->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
@@ -205,8 +205,8 @@ public: // AUTO:
         else if (parameterName.compare("restitutionCoefficient") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTorus->GetParameters().restitutionCoefficient, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.restitutionCoefficient"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("minimumImpactVelocity") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTorus->GetParameters().minimumImpactVelocity, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTorus.minimumImpactVelocity"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("impactModel") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTorus->GetParameters().impactModel, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTorus.impactModel"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("activeConnector") == 0) { cObjectContactSphereTorus->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationObjectContactSphereTorus->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTorus->GetParameters().activeConnector, "ObjectContactSphereTorus.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectContactSphereTorus->GetShow(), "ObjectContactSphereTorus.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectContactSphereTorus->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectContactSphereTorus::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

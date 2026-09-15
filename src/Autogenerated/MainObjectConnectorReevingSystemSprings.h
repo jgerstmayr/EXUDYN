@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:57:17 (last modified)
+* @date         2026-09-15  00:27:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -109,20 +109,20 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorReevingSystemSprings->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "hasCoordinateMarkers")) { cObjectConnectorReevingSystemSprings->GetParameters().hasCoordinateMarkers = py::cast<bool>(d["hasCoordinateMarkers"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "hasCoordinateMarkers")) { EPyUtils::FromPython(d["hasCoordinateMarkers"], cObjectConnectorReevingSystemSprings->GetParameters().hasCoordinateMarkers, "ObjectConnectorReevingSystemSprings.hasCoordinateMarkers"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["coordinateFactors"], cObjectConnectorReevingSystemSprings->GetParameters().coordinateFactors); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["stiffnessPerLength"], cObjectConnectorReevingSystemSprings->GetParameters().stiffnessPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.stiffnessPerLength"); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "dampingPerLength")) { EPyUtils::FromPython(d["dampingPerLength"], cObjectConnectorReevingSystemSprings->GetParameters().dampingPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.dampingPerLength"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "dampingTorsional")) { EPyUtils::FromPython(d["dampingTorsional"], cObjectConnectorReevingSystemSprings->GetParameters().dampingTorsional, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.dampingTorsional"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "dampingShear")) { EPyUtils::FromPython(d["dampingShear"], cObjectConnectorReevingSystemSprings->GetParameters().dampingShear, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.dampingShear"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "regularizationForce")) { cObjectConnectorReevingSystemSprings->GetParameters().regularizationForce = py::cast<Real>(d["regularizationForce"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "referenceLength")) { cObjectConnectorReevingSystemSprings->GetParameters().referenceLength = py::cast<Real>(d["referenceLength"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "regularizationForce")) { EPyUtils::FromPython(d["regularizationForce"], cObjectConnectorReevingSystemSprings->GetParameters().regularizationForce, "ObjectConnectorReevingSystemSprings.regularizationForce"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "referenceLength")) { EPyUtils::FromPython(d["referenceLength"], cObjectConnectorReevingSystemSprings->GetParameters().referenceLength, "ObjectConnectorReevingSystemSprings.referenceLength"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::SetVector3DListSafely(d["sheavesAxes"], cObjectConnectorReevingSystemSprings->GetParameters().sheavesAxes); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectConnectorReevingSystemSprings->GetParameters().sheavesRadii = py::cast<std::vector<Real>>(d["sheavesRadii"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectConnectorReevingSystemSprings->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorReevingSystemSprings->GetParameters().activeConnector, "ObjectConnectorReevingSystemSprings.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectConnectorReevingSystemSprings->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "VropeRadius")) { visualizationObjectConnectorReevingSystemSprings->GetRopeRadius() = py::cast<float>(d["VropeRadius"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectConnectorReevingSystemSprings->GetShow(), "ObjectConnectorReevingSystemSprings.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VropeRadius")) { EPyUtils::FromPython(d["VropeRadius"], visualizationObjectConnectorReevingSystemSprings->GetRopeRadius(), "ObjectConnectorReevingSystemSprings.VropeRadius"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectConnectorReevingSystemSprings->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
@@ -180,19 +180,19 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectConnectorReevingSystemSprings->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("hasCoordinateMarkers") == 0) { cObjectConnectorReevingSystemSprings->GetParameters().hasCoordinateMarkers = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("hasCoordinateMarkers") == 0) { EPyUtils::FromPython(value, cObjectConnectorReevingSystemSprings->GetParameters().hasCoordinateMarkers, "ObjectConnectorReevingSystemSprings.hasCoordinateMarkers"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("coordinateFactors") == 0) { EPyUtils::FromPython(value, cObjectConnectorReevingSystemSprings->GetParameters().coordinateFactors); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("stiffnessPerLength") == 0) { EPyUtils::FromPython(value, cObjectConnectorReevingSystemSprings->GetParameters().stiffnessPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.stiffnessPerLength"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dampingPerLength") == 0) { EPyUtils::FromPython(value, cObjectConnectorReevingSystemSprings->GetParameters().dampingPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.dampingPerLength"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dampingTorsional") == 0) { EPyUtils::FromPython(value, cObjectConnectorReevingSystemSprings->GetParameters().dampingTorsional, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.dampingTorsional"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dampingShear") == 0) { EPyUtils::FromPython(value, cObjectConnectorReevingSystemSprings->GetParameters().dampingShear, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.dampingShear"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("regularizationForce") == 0) { cObjectConnectorReevingSystemSprings->GetParameters().regularizationForce = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("referenceLength") == 0) { cObjectConnectorReevingSystemSprings->GetParameters().referenceLength = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("regularizationForce") == 0) { EPyUtils::FromPython(value, cObjectConnectorReevingSystemSprings->GetParameters().regularizationForce, "ObjectConnectorReevingSystemSprings.regularizationForce"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("referenceLength") == 0) { EPyUtils::FromPython(value, cObjectConnectorReevingSystemSprings->GetParameters().referenceLength, "ObjectConnectorReevingSystemSprings.referenceLength"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("sheavesAxes") == 0) { EPyUtils::SetVector3DListSafely(value, cObjectConnectorReevingSystemSprings->GetParameters().sheavesAxes); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("sheavesRadii") == 0) { cObjectConnectorReevingSystemSprings->GetParameters().sheavesRadii = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("activeConnector") == 0) { cObjectConnectorReevingSystemSprings->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationObjectConnectorReevingSystemSprings->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("VropeRadius") == 0) { visualizationObjectConnectorReevingSystemSprings->GetRopeRadius() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectConnectorReevingSystemSprings->GetParameters().activeConnector, "ObjectConnectorReevingSystemSprings.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorReevingSystemSprings->GetShow(), "ObjectConnectorReevingSystemSprings.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VropeRadius") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorReevingSystemSprings->GetRopeRadius(), "ObjectConnectorReevingSystemSprings.VropeRadius"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectConnectorReevingSystemSprings->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectConnectorReevingSystemSprings::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

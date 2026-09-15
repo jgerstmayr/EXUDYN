@@ -16,7 +16,9 @@
 #           4. a fixed-size vector or matrix default has as many entries as its type;
 #           5. a type written as a bare name is either a type constant of definitionTypes.py or
 #              the name of a structure defined in definitions/ - a typo in a substructure type
-#              would otherwise reach the generated C++ unnoticed.
+#              would otherwise reach the generated C++ unnoticed;
+#           6. an item parameter carries CFMustBeGiven exactly if its default lies outside its
+#              range form (UInt with InvalidIndex, PReal with 0, ...) - step 34c4 (e).
 #
 #           ALL violations are reported, not just the first. Revision plan step 32.
 #
@@ -149,6 +151,23 @@ def _ParentFor(definition, destinationLetter):
                            'V': 'visuParentClass'}[destinationLetter], '')
 
 
+#range forms and the test their default must pass (rule 6)
+rangeForms = {'UReal': lambda x: x >= 0, 'UFloat': lambda x: x >= 0, 'UInt': lambda x: x >= 0,
+              'PReal': lambda x: x > 0, 'PFloat': lambda x: x > 0, 'PInt': lambda x: x > 0}
+
+
+def DefaultOutsideRange(member):
+    """True if an item parameter's default violates its range form (a placeholder)"""
+    import definitionTypes
+    test = rangeForms.get(str(member.get('type', '')), None)
+    value = member.get('defaultValue', None)
+    if test is None:
+        return False
+    if isinstance(value, definitionTypes.CppValue):
+        return value == definitionTypes.DVInvalidIndex #the only non-numeric default of a range form
+    return isinstance(value, (int, float)) and not test(value)
+
+
 def _DefaultEntries(value):
     """number of entries of a list-like default; None if it is not list-like"""
     if isinstance(value, (list, tuple)):
@@ -260,6 +279,15 @@ def ValidateDefinitions(verbose=True):
 
                 if not isItem:
                     continue
+
+                #---- 6. must-be-given flag exactly where the default is a placeholder
+                if not isFunction:
+                    counts['mustBeGiven'] += DefaultOutsideRange(member)
+                    flagged = 'Q' in (member.get('cFlags', '') or '')
+                    if DefaultOutsideRange(member) != flagged:
+                        violations.append(where + (': default ' + repr(member.get('defaultValue')) + ' violates type '
+                                          + str(member['type']) + ' - add cFlags=CFMustBeGiven, or give a valid default'
+                                          if not flagged else ': CFMustBeGiven, but the default is valid'))
 
                 for letter in str(member.get('destination', '')):
                     if letter not in 'CMV':

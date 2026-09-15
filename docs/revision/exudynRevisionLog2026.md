@@ -2290,6 +2290,67 @@ is replaced, and the switch is only set if it exists.
 Full suite PASSED (20.3 s) on a full rebuild. 20000 `mbs.AddObject(ObjectMassPoint(...))` took
 0.064 s; there is no comparable number from before the change.
 
+**Done 2026-09-15, step 34c4 (c), (d), (e) and steps 97-99 - `None`, item indices and placeholder
+defaults (#2424, #2425, #2426).** The three parts were built, recorded and tested one after
+another. They are committed together because they rewrite the same generated headers.
+
+**(c) `None` raises (#2424).**
+- `PyConversion.h` gained `RejectNone(value, context)` and a scalar
+  `FromPython(value, destination, context)` for `bool`/`Real`/`float`/`Index`. The range variant
+  calls the scalar one.
+- `ParameterWriteStatement` emits the scalar variant instead of `py::cast<T>`.
+- `ItemIndexFromPython` for index arrays raises on `None` instead of returning an empty list.
+- **Kept on purpose:** `Vector3DList`, `Matrix3DList` and `PyMatrixContainer` still accept `None`
+  as empty. `None` is their default in `itemInterface.py`, so rejecting it made
+  `ObjectGenericODE2()`, `ObjectFFRF()`, `ObjectKinematicTree()` and three more fail at Add.
+  The first attempt showed this: those six items lost all their paths in the test.
+- Reference: 672 changes, all in the `none` column: 537 `bool` parameters (read back `False`
+  before) and 135 index lists (read back `[]` before).
+
+**(d) item indices rejected by float/bool (#2425).**
+- `Conversion::IsItemIndex(value)` is new. The scalar `FromPython` raises for an item index unless
+  the destination is `Index`, with the message "parameter X.y expects a float, but received the
+  item index ...".
+- Reference: 618 changes, only the `nodeIndex`/`objectIndex` columns of `Real`/`float` parameters.
+  `bool` parameters already rejected them.
+
+**(e) classes accept their defaults; must-be-given parameters raise at Add (#2426).**
+- Since (b), every item class constructs with its defaults.
+- New item flag `CFMustBeGiven = 'Q'`. `G` was not free: structures use it for pybind args.
+- `definitionValidator.py` rule 6 requires the flag exactly on parameters whose default lies
+  outside their range form, and fails generation otherwise. It found 25, more than the 17 items
+  counted in 34c1: `ObjectConnectorHydraulicActuatorSimple` has seven,
+  `ObjectContactSphereTorus` three.
+  - The 25 are the six `UInt` parameters with an `InvalidIndex` default (`MarkerNodeCoordinate.coordinate`, ...) and 19
+    `PInt`/`PReal` parameters with a default of 0.
+  - Three of the Torus flags sit on `CFOptional` parameters: a key missing from a raw dict still
+    keeps the C++ default silently.
+- `itemHeaderEmitter.py` emits `EPyUtils::RequireGiven(d["x"], <default>, "Class.x")` in
+  `SetWithDictionary` before the range check. The message reads "parameter
+  MarkerNodeCoordinate.coordinate must be given; the default -1 is only a placeholder".
+  - It is switched off together with the range checks (`parameterRangeChecks`), because the values
+    it catches are exactly range violations.
+  - `SetParameter` keeps the plain range check.
+- The item docs add "**must be given**: the default is only a placeholder" to the parameter
+  description.
+- Reference: 0 differences. The test records exception types, and those did not change; the new
+  messages were checked by hand for all 17 items that fail at Add.
+- Set-later item indices (`NodeIndex`, ...) are not range checked. They stay with
+  `CheckPreAssembleConsistency`, as decided.
+- Found: `ObjectANCFThinPlate()` fails inside C++ at Add even with checks off (#2430, step 103).
+
+Gates:
+- each part on a full rebuild (`build/temp` deleted, #2427; the md5 of the `.pyd` changed);
+- full suite PASSED after each part;
+- `parameterConversionTest.py` over 3777 paths shows exactly the counts above;
+- hand checks:
+  - (c) `SetObjectParameter(o,'Vshow',None)` raises;
+  - (d) `ObjectMassPoint(physicsMass=exu.NodeIndex(1))` raises at Add;
+  - (e) `MarkerNodeCoordinate(nodeNumber=n)` raises at Add; with `coordinate=0` it is accepted,
+    and with the switch off it is accepted;
+  - `ObjectGenericODE2(nodeNumbers=[n])` is accepted.
+- 20000 `AddObject(ObjectMassPoint(...))`: 0.075 s, compared with 0.064 s after (b).
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving

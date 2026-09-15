@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:17 (last modified)
+* @date         2026-09-15  00:24:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -117,14 +117,14 @@ public: // AUTO:
         EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectJointALEMoving2D->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::ItemIndexFromPython<MarkerIndex>(d["slidingMarkerNumbers"], cObjectJointALEMoving2D->GetParameters().slidingMarkerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectJointALEMoving2D->GetParameters().slidingMarkerOffsets = py::cast<std::vector<Real>>(d["slidingMarkerOffsets"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectJointALEMoving2D->GetParameters().slidingOffset = py::cast<Real>(d["slidingOffset"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["slidingOffset"], cObjectJointALEMoving2D->GetParameters().slidingOffset, "ObjectJointALEMoving2D.slidingOffset"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectJointALEMoving2D->GetParameters().nodeNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "usePenaltyFormulation")) { cObjectJointALEMoving2D->GetParameters().usePenaltyFormulation = py::cast<bool>(d["usePenaltyFormulation"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        cObjectJointALEMoving2D->GetParameters().penaltyStiffness = py::cast<Real>(d["penaltyStiffness"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectJointALEMoving2D->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "usePenaltyFormulation")) { EPyUtils::FromPython(d["usePenaltyFormulation"], cObjectJointALEMoving2D->GetParameters().usePenaltyFormulation, "ObjectJointALEMoving2D.usePenaltyFormulation"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        EPyUtils::FromPython(d["penaltyStiffness"], cObjectJointALEMoving2D->GetParameters().penaltyStiffness, "ObjectJointALEMoving2D.penaltyStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectJointALEMoving2D->GetParameters().activeConnector, "ObjectJointALEMoving2D.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectJointALEMoving2D->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "VdrawSize")) { visualizationObjectJointALEMoving2D->GetDrawSize() = py::cast<float>(d["VdrawSize"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectJointALEMoving2D->GetShow(), "ObjectJointALEMoving2D.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationObjectJointALEMoving2D->GetDrawSize(), "ObjectJointALEMoving2D.VdrawSize"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectJointALEMoving2D->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
@@ -176,13 +176,13 @@ public: // AUTO:
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectJointALEMoving2D->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("slidingMarkerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectJointALEMoving2D->GetParameters().slidingMarkerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("slidingMarkerOffsets") == 0) { cObjectJointALEMoving2D->GetParameters().slidingMarkerOffsets = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("slidingOffset") == 0) { cObjectJointALEMoving2D->GetParameters().slidingOffset = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("slidingOffset") == 0) { EPyUtils::FromPython(value, cObjectJointALEMoving2D->GetParameters().slidingOffset, "ObjectJointALEMoving2D.slidingOffset"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumbers") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectJointALEMoving2D->GetParameters().nodeNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("usePenaltyFormulation") == 0) { cObjectJointALEMoving2D->GetParameters().usePenaltyFormulation = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("penaltyStiffness") == 0) { cObjectJointALEMoving2D->GetParameters().penaltyStiffness = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("activeConnector") == 0) { cObjectJointALEMoving2D->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationObjectJointALEMoving2D->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("VdrawSize") == 0) { visualizationObjectJointALEMoving2D->GetDrawSize() = py::cast<float>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("usePenaltyFormulation") == 0) { EPyUtils::FromPython(value, cObjectJointALEMoving2D->GetParameters().usePenaltyFormulation, "ObjectJointALEMoving2D.usePenaltyFormulation"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("penaltyStiffness") == 0) { EPyUtils::FromPython(value, cObjectJointALEMoving2D->GetParameters().penaltyStiffness, "ObjectJointALEMoving2D.penaltyStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectJointALEMoving2D->GetParameters().activeConnector, "ObjectJointALEMoving2D.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectJointALEMoving2D->GetShow(), "ObjectJointALEMoving2D.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VdrawSize") == 0) { EPyUtils::FromPython(value, visualizationObjectJointALEMoving2D->GetDrawSize(), "ObjectJointALEMoving2D.VdrawSize"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectJointALEMoving2D->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectJointALEMoving2D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

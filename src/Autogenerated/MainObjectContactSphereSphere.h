@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Weyrer Sebastian
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:57:17 (last modified)
+* @date         2026-09-15  00:24:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -117,7 +117,7 @@ public: // AUTO:
         EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactSphereSphere->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactSphereSphere->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["spheresRadii"], cObjectContactSphereSphere->GetParameters().spheresRadii); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "isHollowSphere1")) { cObjectContactSphereSphere->GetParameters().isHollowSphere1 = py::cast<bool>(d["isHollowSphere1"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "isHollowSphere1")) { EPyUtils::FromPython(d["isHollowSphere1"], cObjectContactSphereSphere->GetParameters().isHollowSphere1, "ObjectContactSphereSphere.isHollowSphere1"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "dynamicFriction")) { EPyUtils::FromPython(d["dynamicFriction"], cObjectContactSphereSphere->GetParameters().dynamicFriction, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereSphere.dynamicFriction"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "frictionProportionalZone")) { EPyUtils::FromPython(d["frictionProportionalZone"], cObjectContactSphereSphere->GetParameters().frictionProportionalZone, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereSphere.frictionProportionalZone"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["contactStiffness"], cObjectContactSphereSphere->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereSphere.contactStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -130,9 +130,9 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "restitutionCoefficient")) { EPyUtils::FromPython(d["restitutionCoefficient"], cObjectContactSphereSphere->GetParameters().restitutionCoefficient, EPyUtils::RangeCheck::positive, "ObjectContactSphereSphere.restitutionCoefficient"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "minimumImpactVelocity")) { EPyUtils::FromPython(d["minimumImpactVelocity"], cObjectContactSphereSphere->GetParameters().minimumImpactVelocity, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereSphere.minimumImpactVelocity"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "impactModel")) { EPyUtils::FromPython(d["impactModel"], cObjectContactSphereSphere->GetParameters().impactModel, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereSphere.impactModel"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "activeConnector")) { cObjectContactSphereSphere->GetParameters().activeConnector = py::cast<bool>(d["activeConnector"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectContactSphereSphere->GetParameters().activeConnector, "ObjectContactSphereSphere.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectContactSphereSphere->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectContactSphereSphere->GetShow(), "ObjectContactSphereSphere.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectContactSphereSphere->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
@@ -200,7 +200,7 @@ public: // AUTO:
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectContactSphereSphere->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectContactSphereSphere->GetParameters().nodeNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("spheresRadii") == 0) { EPyUtils::FromPython(value, cObjectContactSphereSphere->GetParameters().spheresRadii); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("isHollowSphere1") == 0) { cObjectContactSphereSphere->GetParameters().isHollowSphere1 = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("isHollowSphere1") == 0) { EPyUtils::FromPython(value, cObjectContactSphereSphere->GetParameters().isHollowSphere1, "ObjectContactSphereSphere.isHollowSphere1"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("dynamicFriction") == 0) { EPyUtils::FromPython(value, cObjectContactSphereSphere->GetParameters().dynamicFriction, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereSphere.dynamicFriction"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("frictionProportionalZone") == 0) { EPyUtils::FromPython(value, cObjectContactSphereSphere->GetParameters().frictionProportionalZone, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereSphere.frictionProportionalZone"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { EPyUtils::FromPython(value, cObjectContactSphereSphere->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereSphere.contactStiffness"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
@@ -213,8 +213,8 @@ public: // AUTO:
         else if (parameterName.compare("restitutionCoefficient") == 0) { EPyUtils::FromPython(value, cObjectContactSphereSphere->GetParameters().restitutionCoefficient, EPyUtils::RangeCheck::positive, "ObjectContactSphereSphere.restitutionCoefficient"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("minimumImpactVelocity") == 0) { EPyUtils::FromPython(value, cObjectContactSphereSphere->GetParameters().minimumImpactVelocity, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereSphere.minimumImpactVelocity"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("impactModel") == 0) { EPyUtils::FromPython(value, cObjectContactSphereSphere->GetParameters().impactModel, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereSphere.impactModel"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("activeConnector") == 0) { cObjectContactSphereSphere->GetParameters().activeConnector = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationObjectContactSphereSphere->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectContactSphereSphere->GetParameters().activeConnector, "ObjectContactSphereSphere.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectContactSphereSphere->GetShow(), "ObjectContactSphereSphere.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectContactSphereSphere->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectContactSphereSphere::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

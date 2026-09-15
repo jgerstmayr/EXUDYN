@@ -22,7 +22,7 @@ The item \ **ObjectConnectorDistance**\  with type = 'ConnectorDistance' has the
 * | **markerNumbers** [\ :math:`[m0,m1]\tp`\ , type = ArrayMarkerIndex, default = [ invalid [-1], invalid [-1] ]]:
   | list of markers used in connector
 * | **distance** [\ :math:`d_0`\ , type = PReal, default = 0.]:
-  | prescribed distance [SI:m] of the used markers; must by greater than zero
+  | prescribed distance [SI:m] of the used markers; must by greater than zero; \ **must be given**\ : the default is only a placeholder
 * | **activeConnector** [type = Bool, default = True]:
   | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
 * | **visualization** [type = VObjectConnectorDistance]:

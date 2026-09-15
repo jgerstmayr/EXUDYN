@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:57:17 (last modified)
+* @date         2026-09-15  00:33:14 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -109,10 +109,10 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         EPyUtils::ItemIndexFromPython<ObjectIndex>(d["objectNumber"], cMarkerKinematicTreeRigid->GetParameters().objectNumber); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::FromPython(d["linkNumber"], cMarkerKinematicTreeRigid->GetParameters().linkNumber, EPyUtils::RangeCheck::nonNegative, "MarkerKinematicTreeRigid.linkNumber"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::RequireGiven(d["linkNumber"], EXUstd::InvalidIndex, "MarkerKinematicTreeRigid.linkNumber"); EPyUtils::FromPython(d["linkNumber"], cMarkerKinematicTreeRigid->GetParameters().linkNumber, EPyUtils::RangeCheck::nonNegative, "MarkerKinematicTreeRigid.linkNumber"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["localPosition"], cMarkerKinematicTreeRigid->GetParameters().localPosition); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationMarkerKinematicTreeRigid->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationMarkerKinematicTreeRigid->GetShow(), "MarkerKinematicTreeRigid.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
 
     //! AUTO:  dictionary read access
@@ -148,7 +148,7 @@ public: // AUTO:
         else if (parameterName.compare("objectNumber") == 0) { EPyUtils::ItemIndexFromPython<ObjectIndex>(value, cMarkerKinematicTreeRigid->GetParameters().objectNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("linkNumber") == 0) { EPyUtils::FromPython(value, cMarkerKinematicTreeRigid->GetParameters().linkNumber, EPyUtils::RangeCheck::nonNegative, "MarkerKinematicTreeRigid.linkNumber"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("localPosition") == 0) { EPyUtils::FromPython(value, cMarkerKinematicTreeRigid->GetParameters().localPosition); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationMarkerKinematicTreeRigid->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationMarkerKinematicTreeRigid->GetShow(), "MarkerKinematicTreeRigid.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("MarkerKinematicTreeRigid::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }
 

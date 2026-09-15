@@ -19,7 +19,7 @@ The item \ **MarkerNodeRotationCoordinate**\  with type = 'NodeRotationCoordinat
 * | **nodeNumber** [type = NodeIndex, default = invalid (-1)]:
   | node number to which marker is attached to
 * | **rotationCoordinate** [type = UInt, default = invalid (-1)]:
-  | rotation coordinate: 0=x, 1=y, 2=z
+  | rotation coordinate: 0=x, 1=y, 2=z; \ **must be given**\ : the default is only a placeholder
 * | **visualization** [type = VMarkerNodeRotationCoordinate]:
   | parameters for visualization of item
 

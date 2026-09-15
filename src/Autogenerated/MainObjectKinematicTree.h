@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:32:16 (last modified)
+* @date         2026-09-15  00:27:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -134,9 +134,9 @@ public: // AUTO:
         cObjectKinematicTree->GetParameters().jointDControlVector = py::cast<std::vector<Real>>(d["jointDControlVector"]); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "forceUserFunction")) { cObjectKinematicTree->GetParameters().forceUserFunction = d["forceUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectKinematicTree->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "VshowLinks")) { visualizationObjectKinematicTree->GetShowLinks() = py::cast<bool>(d["VshowLinks"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "VshowJoints")) { visualizationObjectKinematicTree->GetShowJoints() = py::cast<bool>(d["VshowJoints"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectKinematicTree->GetShow(), "ObjectKinematicTree.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VshowLinks")) { EPyUtils::FromPython(d["VshowLinks"], visualizationObjectKinematicTree->GetShowLinks(), "ObjectKinematicTree.VshowLinks"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "VshowJoints")) { EPyUtils::FromPython(d["VshowJoints"], visualizationObjectKinematicTree->GetShowJoints(), "ObjectKinematicTree.VshowJoints"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectKinematicTree->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VgraphicsDataList")) { PyWriteBodyGraphicsDataListOfLists(d, "VgraphicsDataList", visualizationObjectKinematicTree->GetGraphicsDataList()); /*! AUTO: convert dict to BodyGraphicsDataList*/} 
         GetCObject()->ParametersHaveChanged();
@@ -228,9 +228,9 @@ public: // AUTO:
         else if (parameterName.compare("jointPControlVector") == 0) { cObjectKinematicTree->GetParameters().jointPControlVector = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("jointDControlVector") == 0) { cObjectKinematicTree->GetParameters().jointDControlVector = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("forceUserFunction") == 0) { cObjectKinematicTree->GetParameters().forceUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationObjectKinematicTree->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("VshowLinks") == 0) { visualizationObjectKinematicTree->GetShowLinks() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("VshowJoints") == 0) { visualizationObjectKinematicTree->GetShowJoints() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectKinematicTree->GetShow(), "ObjectKinematicTree.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VshowLinks") == 0) { EPyUtils::FromPython(value, visualizationObjectKinematicTree->GetShowLinks(), "ObjectKinematicTree.VshowLinks"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("VshowJoints") == 0) { EPyUtils::FromPython(value, visualizationObjectKinematicTree->GetShowJoints(), "ObjectKinematicTree.VshowJoints"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectKinematicTree->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsDataList") == 0) { PyWriteBodyGraphicsDataListOfLists(value, visualizationObjectKinematicTree->GetGraphicsDataList()); } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectKinematicTree::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user

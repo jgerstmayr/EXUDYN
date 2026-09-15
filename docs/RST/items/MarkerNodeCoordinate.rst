@@ -19,7 +19,7 @@ The item \ **MarkerNodeCoordinate**\  with type = 'NodeCoordinate' has the follo
 * | **nodeNumber** [type = NodeIndex, default = invalid (-1)]:
   | node number to which marker is attached to
 * | **coordinate** [type = UInt, default = invalid (-1)]:
-  | coordinate of node to which marker is attached to
+  | coordinate of node to which marker is attached to; \ **must be given**\ : the default is only a placeholder
 * | **visualization** [type = VMarkerNodeCoordinate]:
   | parameters for visualization of item
 

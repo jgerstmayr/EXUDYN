@@ -21,6 +21,8 @@ outcome: !RuntimeError !RuntimeError
   SensorSuperElement: (defaults)
 
 outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError
+  MarkerBodiesRelativeRotationCoordinate: bodyNumbers(class,dict,set)
+  MarkerBodiesRelativeTranslationCoordinate: bodyNumbers(class,dict,set)
   NodePointSlope1: initialCoordinates(class,dict,set) initialVelocities(class,dict,set) referenceCoordinates(class,dict,set)
   NodePointSlope12: initialCoordinates(class,dict,set) initialVelocities(class,dict,set) referenceCoordinates(class,dict,set)
   NodePointSlope23: initialCoordinates(class,dict,set) initialVelocities(class,dict,set) referenceCoordinates(class,dict,set)
@@ -32,11 +34,17 @@ outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !
   ObjectANCFCable: nodeNumbers(class,dict,set)
   ObjectANCFCable2D: nodeNumbers(class,dict,set)
   ObjectBeamGeometricallyExact: VsectionGeometry(class,dict) nodeNumbers(class,dict,set) sectionData(class,dict,set)
+  ObjectBeamGeometricallyExact2D: nodeNumbers(class,dict,set)
+  ObjectConnectorHydraulicActuatorSimple: nodeNumbers(class,dict,set)
   ObjectConnectorRigidBodySpringDamper: damping(class,dict,set) offset(class,dict,set) rotationMarker0(class,dict,set) rotationMarker1(class,dict,set) stiffness(class,dict,set)
   ObjectConnectorTorsionalSpringDamper: rotationMarker0(class,dict,set) rotationMarker1(class,dict,set)
   ObjectContactCurveCircles: rotationMarker0(class,dict,set)
-  ObjectFFRFreducedOrder: physicsCenterOfMassTilde(class,dict,set) physicsInertia(class,dict,set)
+  ObjectFFRF: nodeNumbers(class,dict,set)
+  ObjectFFRFreducedOrder: nodeNumbers(class,dict,set) physicsCenterOfMassTilde(class,dict,set) physicsInertia(class,dict,set)
+  ObjectGenericODE1: nodeNumbers(class,dict,set)
+  ObjectGenericODE2: nodeNumbers(class,dict,set)
   ObjectGround: referenceRotation(class,dict,set)
+  ObjectJointALEMoving2D: nodeNumbers(class,dict,set)
   ObjectJointGeneric: offsetUserFunctionParameters(class,dict,set) rotationMarker0(class,dict,set) rotationMarker1(class,dict,set)
   ObjectJointPrismaticX: rotationMarker0(class,dict,set) rotationMarker1(class,dict,set)
   ObjectJointRevoluteZ: rotationMarker0(class,dict,set) rotationMarker1(class,dict,set)
@@ -44,6 +52,7 @@ outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !
   ObjectMass1D: referenceRotation(class,dict,set)
   ObjectRigidBody: physicsInertia(class,dict,set)
   ObjectRotationalMass1D: referenceRotation(class,dict,set)
+  SensorUserFunction: sensorNumbers(class,dict,set)
   VisualizationSettings.openGL.advanced: initialModelRotation(dict)
 
 outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !TypeError
@@ -64,19 +73,7 @@ outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !
 outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError Matrix3DList
   ObjectKinematicTree: jointTransformations(class,dict,set) linkInertiasCOM(class,dict,set)
 
-outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError list0=[]
-  MarkerBodiesRelativeRotationCoordinate: bodyNumbers(class,dict,set)
-  MarkerBodiesRelativeTranslationCoordinate: bodyNumbers(class,dict,set)
-  ObjectBeamGeometricallyExact2D: nodeNumbers(class,dict,set)
-  ObjectConnectorHydraulicActuatorSimple: nodeNumbers(class,dict,set)
-  ObjectFFRF: nodeNumbers(class,dict,set)
-  ObjectFFRFreducedOrder: nodeNumbers(class,dict,set)
-  ObjectGenericODE1: nodeNumbers(class,dict,set)
-  ObjectGenericODE2: nodeNumbers(class,dict,set)
-  ObjectJointALEMoving2D: nodeNumbers(class,dict,set)
-  SensorUserFunction: sensorNumbers(class,dict,set)
-
-outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError list2:MarkerIndex list0=[]
+outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError list2:MarkerIndex !RuntimeError
   ObjectConnectorCartesianSpringDamper: markerNumbers(class,dict,set)
   ObjectConnectorCoordinate: markerNumbers(class,dict,set)
   ObjectConnectorCoordinateSpringDamper: markerNumbers(class,dict,set)
@@ -376,7 +373,7 @@ outcome: !RuntimeError !RuntimeError int=2.0 !TypeError !TypeError int=1.0 !Type
   VisualizationSettings.raytracer.advanced: searchTreeFactor(attribute) tilesPerThread(attribute)
   VisualizationSettings.sensors.traces: positionsShowEvery(attribute) triadsShowEvery(attribute) vectorsShowEvery(attribute)
 
-outcome: !RuntimeError float=0.0 float=2.0 float=2.5 !RuntimeError float=1.0 !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError float=0.0 float=0.0 !RuntimeError !RuntimeError
+outcome: !RuntimeError float=0.0 float=2.0 float=2.5 !RuntimeError float=1.0 !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError
   ObjectALEANCFCable2D: physicsAxialDamping(class,dict,set) physicsAxialStiffness(class,dict,set) physicsBendingDamping(class,dict,set) physicsBendingStiffness(class,dict,set) physicsLength(class,dict,set) physicsMassPerLength(class,dict,set) physicsMovingMassFactor(class,dict,set)
   ObjectANCFCable: physicsAxialDamping(class,dict,set) physicsAxialStiffness(class,dict,set) physicsBendingDamping(class,dict,set) physicsBendingStiffness(class,dict,set) physicsLength(class,dict,set) physicsMassPerLength(class,dict,set)
   ObjectANCFCable2D: physicsAxialDamping(class,dict,set) physicsAxialStiffness(class,dict,set) physicsBendingDamping(class,dict,set) physicsBendingStiffness(class,dict,set) physicsLength(class,dict,set) physicsMassPerLength(class,dict,set)
@@ -727,11 +724,11 @@ outcome: SensorIndex SensorIndex
   SensorObject: (defaults)
   SensorUserFunction: (defaults)
 
-outcome: bool=0.0 bool=0.0 bool=0.0 bool=0.0 !RuntimeError bool=0.0 !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError bool=0.0
+outcome: bool=0.0 bool=0.0 bool=0.0 bool=0.0 !RuntimeError bool=0.0 !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError
   ObjectFFRF: objectIsInitialized(class,dict,set)
   ObjectFFRFreducedOrder: objectIsInitialized(class,dict,set)
 
-outcome: bool=1.0 bool=0.0 bool=1.0 bool=1.0 !RuntimeError bool=1.0 !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError bool=0.0
+outcome: bool=1.0 bool=0.0 bool=1.0 bool=1.0 !RuntimeError bool=1.0 !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError
   LoadCoordinate: Vshow(class,dict,set)
   LoadForceVector: Vshow(class,dict,set) bodyFixed(class,dict,set)
   LoadMassProportional: Vshow(class,dict,set)
@@ -828,6 +825,8 @@ outcome: bool=1.0 bool=0.0 bool=1.0 bool=1.0 !RuntimeError bool=1.0 !RuntimeErro
   SensorObject: Vshow(class,dict,set) storeInternal(class,dict,set) writeToFile(class,dict,set)
   SensorSuperElement: Vshow(class,dict,set) storeInternal(class,dict,set) writeToFile(class,dict,set)
   SensorUserFunction: Vshow(class,dict,set) storeInternal(class,dict,set) writeToFile(class,dict,set)
+
+outcome: bool=1.0 bool=0.0 bool=1.0 bool=1.0 !RuntimeError bool=1.0 !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError bool=0.0
   SimulationSettings: cleanUpMemory(dict) displayComputationTime(dict) displayGlobalTimers(dict) displayStatistics(dict) pauseAfterEachStep(dict)
   SimulationSettings.linearSolverSettings: ignoreSingularJacobian(dict) reuseAnalyzedPattern(dict) showCausingItems(dict)
   SimulationSettings.parallel: useLoadBalancing(dict)
@@ -937,7 +936,7 @@ outcome: bool=1.0 bool=0.0 bool=1.0 bool=1.0 !TypeError bool=1.0 !TypeError !Typ
   VisualizationSettings.view3.scene: drawWorldBasis(attribute) facesTransparent(attribute) showFaceEdges(attribute) showFaces(attribute) showLines(attribute) showMeshEdges(attribute) showMeshFaces(attribute)
   VisualizationSettings.view3.window: alwaysOnTop(attribute) lockModelView(attribute) maximize(attribute) showComputationInfo(attribute) showMouseCoordinates(attribute) showRenderStateInfo(attribute) showWindow(attribute)
 
-outcome: float=-1.0 float=0.0 float=2.0 float=2.5 !RuntimeError float=1.0 !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError float=0.0 float=0.0 !RuntimeError !RuntimeError
+outcome: float=-1.0 float=0.0 float=2.0 float=2.5 !RuntimeError float=1.0 !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError
   LoadCoordinate: load(class,dict,set)
   MarkerBodiesRelativeRotationCoordinate: offset(class,dict,set)
   MarkerBodiesRelativeTranslationCoordinate: offset(class,dict,set)
@@ -985,6 +984,8 @@ outcome: float=-1.0 float=0.0 float=2.0 float=2.5 !RuntimeError float=1.0 !Runti
   ObjectJointSliding: VdrawSize(class,dict,set) axialForce(class,dict,set)
   ObjectJointSliding2D: VdrawSize(class,dict,set) axialForce(class,dict,set)
   ObjectJointSpherical: VjointRadius(class,dict,set)
+
+outcome: float=-1.0 float=0.0 float=2.0 float=2.5 !RuntimeError float=1.0 !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError float=0.0 float=0.0 !RuntimeError !RuntimeError
   SimulationSettings.linearSolverSettings: pivotThreshold(dict)
   SimulationSettings.solutionSettings: recordImagesInterval(dict) restartWritePeriod(dict) sensorsWritePeriod(dict) solutionWritePeriod(dict)
   SimulationSettings.staticSolver: adaptiveStepDecrease(dict) adaptiveStepIncrease(dict) loadStepDuration(dict) loadStepGeometricRange(dict) loadStepStart(dict) minimumStepSize(dict) stabilizerODE2term(dict)

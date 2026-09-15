@@ -14,7 +14,7 @@ The item \ **SensorSuperElement**\  with type = 'SuperElement' has the following
 * | **bodyNumber** [type = ObjectIndex, default = invalid (-1)]:
   | body (=object) number to which sensor is attached to
 * | **meshNodeNumber** [type = UInt, default = invalid (-1)]:
-  | mesh node number, which is a local node number with in the object (starting with 0); the node number may represent a real Node in mbs, or may be virtual and reconstructed from the object coordinates such as in ObjectFFRFreducedOrder
+  | mesh node number, which is a local node number with in the object (starting with 0); the node number may represent a real Node in mbs, or may be virtual and reconstructed from the object coordinates such as in ObjectFFRFreducedOrder; \ **must be given**\ : the default is only a placeholder
 * | **writeToFile** [type = Bool, default = True]:
   | True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''
 * | **fileName** [type = String, default = '']:

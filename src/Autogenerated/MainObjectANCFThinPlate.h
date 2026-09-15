@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:57:17 (last modified)
+* @date         2026-09-15  00:27:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -116,16 +116,16 @@ public: // AUTO:
     {
         EPyUtils::FromPython(d["physicsThickness"], cObjectANCFThinPlate->GetParameters().physicsThickness); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["physicsDensity"], cObjectANCFThinPlate->GetParameters().physicsDensity, EPyUtils::RangeCheck::nonNegative, "ObjectANCFThinPlate.physicsDensity"); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectANCFThinPlate->GetParameters().physicsMassProportionalDamping = py::cast<Real>(d["physicsMassProportionalDamping"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["physicsMassProportionalDamping"], cObjectANCFThinPlate->GetParameters().physicsMassProportionalDamping, "ObjectANCFThinPlate.physicsMassProportionalDamping"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetMatrix3DListSafely(d["physicsStrainCoefficients"], cObjectANCFThinPlate->GetParameters().physicsStrainCoefficients); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetMatrix3DListSafely(d["physicsCurvatureCoefficients"], cObjectANCFThinPlate->GetParameters().physicsCurvatureCoefficients); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectANCFThinPlate->GetParameters().strainIsRelativeToReference = py::cast<Real>(d["strainIsRelativeToReference"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["strainIsRelativeToReference"], cObjectANCFThinPlate->GetParameters().strainIsRelativeToReference, "ObjectANCFThinPlate.strainIsRelativeToReference"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["slopesScalingX"], cObjectANCFThinPlate->GetParameters().slopesScalingX); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["slopesScalingY"], cObjectANCFThinPlate->GetParameters().slopesScalingY); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectANCFThinPlate->GetParameters().nodeNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectANCFThinPlate->GetParameters().useReducedOrderIntegration = py::cast<Index>(d["useReducedOrderIntegration"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["useReducedOrderIntegration"], cObjectANCFThinPlate->GetParameters().useReducedOrderIntegration, "ObjectANCFThinPlate.useReducedOrderIntegration"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationObjectANCFThinPlate->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectANCFThinPlate->GetShow(), "ObjectANCFThinPlate.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectANCFThinPlate->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
@@ -178,15 +178,15 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsThickness") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().physicsThickness); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsDensity") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().physicsDensity, EPyUtils::RangeCheck::nonNegative, "ObjectANCFThinPlate.physicsDensity"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("physicsMassProportionalDamping") == 0) { cObjectANCFThinPlate->GetParameters().physicsMassProportionalDamping = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("physicsMassProportionalDamping") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().physicsMassProportionalDamping, "ObjectANCFThinPlate.physicsMassProportionalDamping"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsStrainCoefficients") == 0) { EPyUtils::SetMatrix3DListSafely(value, cObjectANCFThinPlate->GetParameters().physicsStrainCoefficients); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsCurvatureCoefficients") == 0) { EPyUtils::SetMatrix3DListSafely(value, cObjectANCFThinPlate->GetParameters().physicsCurvatureCoefficients); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("strainIsRelativeToReference") == 0) { cObjectANCFThinPlate->GetParameters().strainIsRelativeToReference = py::cast<Real>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("strainIsRelativeToReference") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().strainIsRelativeToReference, "ObjectANCFThinPlate.strainIsRelativeToReference"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("slopesScalingX") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().slopesScalingX); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("slopesScalingY") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().slopesScalingY); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumbers") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectANCFThinPlate->GetParameters().nodeNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("useReducedOrderIntegration") == 0) { cObjectANCFThinPlate->GetParameters().useReducedOrderIntegration = py::cast<Index>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationObjectANCFThinPlate->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("useReducedOrderIntegration") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().useReducedOrderIntegration, "ObjectANCFThinPlate.useReducedOrderIntegration"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectANCFThinPlate->GetShow(), "ObjectANCFThinPlate.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { visualizationObjectANCFThinPlate->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectANCFThinPlate::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

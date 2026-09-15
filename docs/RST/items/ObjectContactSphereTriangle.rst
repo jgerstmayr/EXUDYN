@@ -25,7 +25,7 @@ The item \ **ObjectContactSphereTriangle**\  with type = 'ContactSphereTriangle'
 * | **nodeNumber** [\ :math:`n_d`\ , type = NodeIndex, default = invalid (-1)]:
   | node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused.
 * | **radiusSphere** [\ :math:`r_S`\ , type = PReal, default = 0.]:
-  | radius of sphere [SI:m]
+  | radius of sphere [SI:m]; \ **must be given**\ : the default is only a placeholder
 * | **trianglePoints** [\ :math:`[\LU{m_1}{{\mathbf{p}}}_0,\LU{m_1}{{\mathbf{p}}}_1,\LU{m_1}{{\mathbf{p}}}_2]`\ , type = Vector3DList, default = []]:
   | triangle points, defined in marker 1 local coordinates
 * | **includeEdges** [type = UInt, default = 7]:

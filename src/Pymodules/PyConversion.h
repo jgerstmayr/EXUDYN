@@ -68,6 +68,14 @@ namespace EPyUtils {
 				py::isinstance<MarkerIndex>(value) || py::isinstance<LoadIndex>(value) ||
 				py::isinstance<SensorIndex>(value));
 		}
+
+		//! true for an item index of any kind (NodeIndex, ObjectIndex, MarkerIndex, LoadIndex, SensorIndex)
+		inline bool IsItemIndex(const py::object& value)
+		{
+			return py::isinstance<NodeIndex>(value) || py::isinstance<ObjectIndex>(value) ||
+				py::isinstance<MarkerIndex>(value) || py::isinstance<LoadIndex>(value) ||
+				py::isinstance<SensorIndex>(value);
+		}
 	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -77,12 +85,49 @@ namespace EPyUtils {
 	//! the range a scalar parameter must lie in (the U... and P... types of definitions/)
 	enum class RangeCheck { nonNegative, positive };
 
+	//! raises for None, which pybind11 would convert silently (bool: False; lists: empty); context names
+	//! item and parameter for the message, e.g. "ObjectMassPoint.physicsMass"
+	inline void RejectNone(const py::object& value, const char* context)
+	{
+		if (value.is_none())
+		{
+			PyError(STDstring("parameter ") + context + " received None; a value is required");
+		}
+	}
+
+	//! a bool, Real, float or Index scalar; context names item and parameter for the message;
+	//! an item index (NodeIndex, ...) is accepted only by Index, where it stands for its number
+	template<class T>
+	inline void FromPython(const py::object& value, T& destination, const char* context)
+	{
+		RejectNone(value, context);
+		if (!std::is_same<T, Index>::value && Conversion::IsItemIndex(value))
+		{
+			PyError(STDstring("parameter ") + context + " expects a " + (std::is_same<T, bool>::value ? "bool" : "float") +
+				", but received the item index " + EXUstd::ToString(value) + " of type " + EXUstd::ToString(value.get_type()));
+		}
+		destination = py::cast<T>(value);
+	}
+
+	//! raises if a must-be-given parameter (CFMustBeGiven in definitions/) still holds its placeholder default,
+	//! e.g. MarkerNodeCoordinate.coordinate = InvalidIndex; like the range checks, switched off by
+	//! exudyn.special.exceptions.parameterRangeChecks = False
+	inline void RequireGiven(const py::object& value, Real placeholder, const char* context)
+	{
+		if (Conversion::IsScalar(value) && py::cast<Real>(value) == placeholder && EXUstd::ParameterRangeChecksActive())
+		{
+			PyError(STDstring("parameter ") + context + " must be given; the default " + EXUstd::ToString(placeholder) +
+				" is only a placeholder");
+		}
+	}
+
 	//! a Real, float or Index scalar with a range; context names item and parameter for the message,
 	//! e.g. "ObjectMassPoint.physicsMass"; exudyn.special.exceptions.parameterRangeChecks = False accepts any value
 	template<class T>
 	inline void FromPython(const py::object& value, T& destination, RangeCheck range, const char* context)
 	{
-		T scalar = py::cast<T>(value);
+		T scalar;
+		FromPython(value, scalar, context);
 		bool valid = (range == RangeCheck::positive) ? (scalar > 0) : (scalar >= 0);
 		if (!valid && EXUstd::ParameterRangeChecksActive())
 		{
@@ -246,15 +291,11 @@ namespace EPyUtils {
 		destination = py::cast<Index>(value);
 	}
 
-	//! a list or numpy array of indices of this kind; None gives an empty list
+	//! a list or numpy array of indices of this kind; None raises
 	template<class TItemIndex>
 	inline void ItemIndexFromPython(const py::object& value, ArrayIndex& destination)
 	{
 		destination.SetNumberOfItems(0);
-		if (value.is_none())
-		{
-			return;
-		}
 		if (!Conversion::IsListOrArray(value))
 		{
 			PyError(STDstring("Expected list of ") + Conversion::ItemIndexName<TItemIndex>() + ", but received '" + EXUstd::ToString(value) +

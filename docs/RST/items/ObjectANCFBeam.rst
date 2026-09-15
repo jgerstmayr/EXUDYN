@@ -22,7 +22,7 @@ The item \ **ObjectANCFBeam**\  with type = 'ANCFBeam' has the following paramet
 * | **nodeNumbers** [type = NodeIndex2, size = 2, default = [invalid [-1], invalid [-1]]]:
   | two node numbers for beam element
 * | **physicsLength** [\ :math:`L`\ , type = PReal, default = 0.]:
-  | [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \ :math:`\rho A L`\ ; must be positive
+  | [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \ :math:`\rho A L`\ ; must be positive; \ **must be given**\ : the default is only a placeholder
 * | **sectionData** [type = BeamSection, default = BeamSection()]:
   | data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.
 * | **crossSectionPenaltyFactor** [\ :math:`k_{cs} = [f_{yy},\,f_{zz},\,f_{yz}]\tp`\ , type = Vector3D, size = 3, default = [1.,1.,1.]]:

@@ -27,15 +27,15 @@ The item \ **ObjectConnectorHydraulicActuatorSimple**\  with type = 'ConnectorHy
 * | **offsetLength** [\ :math:`L_o`\ , type = UReal, default = 0.]:
   | offset length [SI:m] of cylinder, representing minimal distance between the two bushings at stroke=0
 * | **strokeLength** [\ :math:`L_s`\ , type = PReal, default = 0.]:
-  | stroke length [SI:m] of cylinder, representing maximum extension relative to \ :math:`L_o`\ ; the measured distance between the markers is \ :math:`L_s+L_o`\ 
+  | stroke length [SI:m] of cylinder, representing maximum extension relative to \ :math:`L_o`\ ; the measured distance between the markers is \ :math:`L_s+L_o`\ ; \ **must be given**\ : the default is only a placeholder
 * | **chamberCrossSection0** [\ :math:`A_0`\ , type = PReal, default = 0.]:
-  | cross section [SI:m\ :math:`^2`\ ] of chamber (inner cylinder) at piston head (nut) side (0)
+  | cross section [SI:m\ :math:`^2`\ ] of chamber (inner cylinder) at piston head (nut) side (0); \ **must be given**\ : the default is only a placeholder
 * | **chamberCrossSection1** [\ :math:`A_1`\ , type = PReal, default = 0.]:
-  | cross section [SI:m\ :math:`^2`\ ] of chamber at piston rod side (1); usually smaller than chamberCrossSection0
+  | cross section [SI:m\ :math:`^2`\ ] of chamber at piston rod side (1); usually smaller than chamberCrossSection0; \ **must be given**\ : the default is only a placeholder
 * | **hoseVolume0** [\ :math:`V_{h,0}`\ , type = PReal, default = 0.]:
-  | hose volume [SI:m\ :math:`^3`\ ] at piston head (nut) side (0); as the effective bulk modulus would go to infinity at stroke length zero, the hose volume must be greater than zero
+  | hose volume [SI:m\ :math:`^3`\ ] at piston head (nut) side (0); as the effective bulk modulus would go to infinity at stroke length zero, the hose volume must be greater than zero; \ **must be given**\ : the default is only a placeholder
 * | **hoseVolume1** [\ :math:`V_{h,1}`\ , type = PReal, default = 0.]:
-  | hose volume [SI:m\ :math:`^3`\ ] at piston rod side (1); as the effective bulk modulus would go to infinity at max. stroke length, the hose volume must be greater than zero
+  | hose volume [SI:m\ :math:`^3`\ ] at piston rod side (1); as the effective bulk modulus would go to infinity at max. stroke length, the hose volume must be greater than zero; \ **must be given**\ : the default is only a placeholder
 * | **valveOpening0** [\ :math:`A_{v,0}`\ , type = Real, default = 0.]:
   | relative opening of valve \ :math:`[-1 \ldots 1]`\  [SI:1] at piston head (nut) side (0); positive value is valve opening towards system pressure, negative value is valve opening towards tank pressure; zero means closed valve
 * | **valveOpening1** [\ :math:`A_{v,1}`\ , type = Real, default = 0.]:
@@ -43,13 +43,13 @@ The item \ **ObjectConnectorHydraulicActuatorSimple**\  with type = 'ConnectorHy
 * | **actuatorDamping** [\ :math:`d_{HA}`\ , type = UReal, default = 0.]:
   | damping [SI:N/(m\ :math:`\,`\ s)] of hydraulic actuator (against actuator axial velocity)
 * | **oilBulkModulus** [\ :math:`K_{oil}`\ , type = PReal, default = 0.]:
-  | bulk modulus of oil [SI:N/(m\ :math:`^2`\ )]
+  | bulk modulus of oil [SI:N/(m\ :math:`^2`\ )]; \ **must be given**\ : the default is only a placeholder
 * | **cylinderBulkModulus** [\ :math:`K_{cyl}`\ , type = UReal, default = 0.]:
   | bulk modulus of cylinder [SI:N/(m\ :math:`^2`\ )]; in fact, this is value represents the effect of the cylinder stiffness on the effective bulk modulus
 * | **hoseBulkModulus** [\ :math:`K_{hose}`\ , type = UReal, default = 0.]:
   | bulk modulus of hose [SI:N/(m\ :math:`^2`\ )]; in fact, this is value represents the effect of the hose stiffness on the effective bulk modulus
 * | **nominalFlow** [\ :math:`Q_n`\ , type = PReal, default = 0.]:
-  | nominal flow of oil through valve [SI:m\ :math:`^3`\ /s]
+  | nominal flow of oil through valve [SI:m\ :math:`^3`\ /s]; \ **must be given**\ : the default is only a placeholder
 * | **systemPressure** [\ :math:`p_s`\ , type = Real, default = 0.]:
   | system pressure [SI:N/(m\ :math:`^2`\ )]
 * | **tankPressure** [\ :math:`p_t`\ , type = Real, default = 0.]:

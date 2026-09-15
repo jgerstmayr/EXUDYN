@@ -25,11 +25,11 @@ The item \ **ObjectContactSphereTorus**\  with type = 'ContactSphereTorus' has t
 * | **nodeNumber** [\ :math:`n_d`\ , type = NodeIndex, default = invalid (-1)]:
   | node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused.
 * | **radiusSphere** [\ :math:`r_S`\ , type = PReal, default = 0.]:
-  | radius of sphere [SI:m]
+  | radius of sphere [SI:m]; \ **must be given**\ : the default is only a placeholder
 * | **torusMajorRadius** [\ :math:`r_{M}`\ , type = PReal, default = 0.]:
-  | major radius of torus [SI:m], representing center of rotated circle
+  | major radius of torus [SI:m], representing center of rotated circle; \ **must be given**\ : the default is only a placeholder
 * | **torusMinorRadius** [\ :math:`r_{m}`\ , type = PReal, default = 0.]:
-  | minor radius of torus [SI:m], representing radius of circle of ring
+  | minor radius of torus [SI:m], representing radius of circle of ring; \ **must be given**\ : the default is only a placeholder
 * | **torusAxis** [\ :math:`{\mathbf{v}}_{axis}`\ , type = Vector3D, size = 3, default = [0,0,0]]:
   | Vector containing rotation axis of torus; must be a unit vector.
 * | **dynamicFriction** [\ :math:`\mu_d`\ , type = UReal, default = 0.]:

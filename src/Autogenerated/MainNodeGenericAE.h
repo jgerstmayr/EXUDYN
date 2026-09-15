@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  23:57:17 (last modified)
+* @date         2026-09-15  00:33:14 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -127,10 +127,10 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         cNodeGenericAE->GetParameters().referenceCoordinates = py::cast<std::vector<Real>>(d["referenceCoordinates"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        EPyUtils::FromPython(d["numberOfAECoordinates"], cNodeGenericAE->GetParameters().numberOfAECoordinates, EPyUtils::RangeCheck::positive, "NodeGenericAE.numberOfAECoordinates"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::RequireGiven(d["numberOfAECoordinates"], 0, "NodeGenericAE.numberOfAECoordinates"); EPyUtils::FromPython(d["numberOfAECoordinates"], cNodeGenericAE->GetParameters().numberOfAECoordinates, EPyUtils::RangeCheck::positive, "NodeGenericAE.numberOfAECoordinates"); /* AUTO:  read out dictionary and cast to C++ type*/
         GetParameters().initialCoordinates = py::cast<std::vector<Real>>(d["initialCoordinates"]); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "Vshow")) { visualizationNodeGenericAE->GetShow() = py::cast<bool>(d["Vshow"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationNodeGenericAE->GetShow(), "NodeGenericAE.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
 
     //! AUTO:  dictionary read access
@@ -166,7 +166,7 @@ public: // AUTO:
         else if (parameterName.compare("referenceCoordinates") == 0) { cNodeGenericAE->GetParameters().referenceCoordinates = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("initialCoordinates") == 0) { GetParameters().initialCoordinates = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("numberOfAECoordinates") == 0) { EPyUtils::FromPython(value, cNodeGenericAE->GetParameters().numberOfAECoordinates, EPyUtils::RangeCheck::positive, "NodeGenericAE.numberOfAECoordinates"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { visualizationNodeGenericAE->GetShow() = py::cast<bool>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationNodeGenericAE->GetShow(), "NodeGenericAE.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("NodeGenericAE::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }
 

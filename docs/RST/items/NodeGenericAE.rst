@@ -16,7 +16,7 @@ The item \ **NodeGenericAE**\  with type = 'GenericAE' has the following paramet
 * | **initialCoordinates** [\ :math:`{\mathbf{y}}\cIni = [y_0,\,\ldots,\,y_{nc}]\tp\cIni`\ , type = Vector, default = []]:
   | initial displacement coordinates; must be consistent with numberOfAECoordinates
 * | **numberOfAECoordinates** [\ :math:`n_c`\ , type = PInt, default = 0]:
-  | number of generic \ :ref:`AE <AE>`\  coordinates
+  | number of generic \ :ref:`AE <AE>`\  coordinates; \ **must be given**\ : the default is only a placeholder
 * | **visualization** [type = VNodeGenericAE]:
   | parameters for visualization of item
 
