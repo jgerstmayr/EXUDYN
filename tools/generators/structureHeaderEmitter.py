@@ -27,6 +27,25 @@ from structureModel import *                                            # noqa: 
 import typeModel as tm                                                  # noqa: E402
 
 
+#scalar types written through EPyUtils::FromPython (revision plan step 34c5 a): None and item
+#indices raise as for items; the U.../P... forms carry their range check
+scalarRangeForms = {'bool': None, 'float': None, 'Real': None, 'Index': None, 'Int': None,
+                    'UReal': 'nonNegative', 'UFloat': 'nonNegative', 'UInt': 'nonNegative',
+                    'PReal': 'positive', 'PFloat': 'positive', 'PInt': 'positive'}
+
+
+def RangeArgument(typeName):
+    rangeForm = scalarRangeForms[typeName]
+    return '' if rangeForm is None else 'EPyUtils::RangeCheck::' + rangeForm + ', '
+
+
+def IsDirectScalar(parameter):
+    """a scalar data member of the structure itself (not linked, not deprecated): its attribute
+    access is bound with EPyUtils::MemberGetter/MemberSetter, without Get/Set functions in the header"""
+    return (parameter['type'] in scalarRangeForms and parameter['lineType'].find('L') == -1
+            and parameter['cplusplusName'].find('.') == -1 and not IsDeprecatedParameter(parameter))
+
+
 #************************************************
 #create the C++ header text of one structure
 def StructureCppHeader(parseInfo, parameterList):
@@ -257,7 +276,7 @@ def StructureCppHeader(parseInfo, parameterList):
 
             accessWritten = False
 
-            typeWithRangeCheck = IsTypeWithRangeCheck(origType)
+            typeWithRangeCheck = IsTypeWithRangeCheck(origType) and not IsDirectScalar(parameter)
             typeWithGetSetFunction = IsTypeWithSetGetFunction(origType) or IDPNS
             
             getFunction = [] #return type, function decl, impl
@@ -378,7 +397,11 @@ def StructureCppHeader(parseInfo, parameterList):
                         sDictGetPure += 'data.' + cValueStr + ';\n'
                         
                         #set functions:
-                        sDictSet += '    data.' + parameter['cplusplusName'] + ' = py::cast<' + typeCastStr + '>(d["' + parameter['pythonName']  + '"]);\n'
+                        if parameter['type'] in scalarRangeForms: #the same conversion and checks as the attribute (step 34c5 a)
+                            sDictSet += ('    EPyUtils::FromPython(d["' + parameter['pythonName'] + '"], data.' + parameter['cplusplusName'] + ', '
+                                         + RangeArgument(parameter['type']) + '"' + parseInfo['class'] + '.' + parameter['pythonName'] + '");\n')
+                        else:
+                            sDictSet += '    data.' + parameter['cplusplusName'] + ' = py::cast<' + typeCastStr + '>(d["' + parameter['pythonName']  + '"]);\n'
                         
             #++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
@@ -543,7 +566,14 @@ def CreatePybindHeaders(parseInfo, parameterList):
             if (len(parseInfo['linkedClass']) != 0):
                 linkedClassStr = parseInfo['linkedClass'] + '.'
 
-            if ((typeCastStr.find('std::vector') == -1) and (typeCastStr.find('std::array') == -1) and 
+            if IsDirectScalar(parameter): #step 34c5 a
+                memberStr = '&' + parseInfo['class'] + '::' + linkedClassStr + parameter['cplusplusName']
+                s += (spaces2 + '.def_property("' + parameter['pythonName'] + '", EPyUtils::MemberGetter(' + memberStr + '), EPyUtils::MemberSetter('
+                      + memberStr + ', ' + RangeArgument(parameter['type']) + '"' + parseInfo['class'] + '.' + parameter['pythonName'] + '")')
+                if addDocuMember:
+                    s += ', "' + CleanPyDocStrings(parameter['parameterDescription']) + '"'
+                s += ')\n'
+            elif ((typeCastStr.find('std::vector') == -1) and (typeCastStr.find('std::array') == -1) and 
             (parameter['lineType'].find('L') == -1) and (parameter['cplusplusName'].find('.') == -1)
             and not IsTypeWithRangeCheck(parameter['type']) 
             and not (IsTypeWithSetGetFunction(parameter['type']) or (IDP and not ISP))): #then it has a set/get function! e.g. Int2, Int3, Float2, Float3, .... are array structures ==> must be converted

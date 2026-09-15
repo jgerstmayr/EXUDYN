@@ -138,6 +138,27 @@ namespace EPyUtils {
 		destination = scalar;
 	}
 
+	//! pybind11 getter and setter for a scalar data member of a structure (SimulationSettings, ...),
+	//! used as .def_property("name", MemberGetter(&C::name), MemberSetter(&C::name, "C.name")); the setter
+	//! converts like the item parameters (revision plan step 34c5 a)
+	template<class TClass, class T>
+	inline auto MemberGetter(T TClass::* member)
+	{
+		return [member](const TClass& object) { return object.*member; };
+	}
+
+	template<class TClass, class T>
+	inline auto MemberSetter(T TClass::* member, const char* context)
+	{
+		return [member, context](TClass& object, const py::object& value) { FromPython(value, object.*member, context); };
+	}
+
+	template<class TClass, class T>
+	inline auto MemberSetter(T TClass::* member, RangeCheck range, const char* context)
+	{
+		return [member, range, context](TClass& object, const py::object& value) { FromPython(value, object.*member, range, context); };
+	}
+
 	//! a string; any other type raises
 	inline void FromPython(const py::object& value, STDstring& destination)
 	{

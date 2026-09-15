@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -110,11 +110,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: global number of segments for drawing cylinders for axes and cones for arrows (reduce this number, e.g. to 4, if many axes are drawn)
-  void PySetAxesTiling(const Index& axesTilingInit) { axesTiling = EXUstd::GetSafelyPInt(axesTilingInit,"axesTiling"); }
-  //! AUTO: Read (Copy) access to: global number of segments for drawing cylinders for axes and cones for arrows (reduce this number, e.g. to 4, if many axes are drawn)
-  Index PyGetAxesTiling() const { return Index(axesTiling); }
-
   //! AUTO: Set function (needed in pybind) for: red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])
   void PySetBackgroundColor(const std::array<float,4>& backgroundColorInit) { backgroundColor = backgroundColorInit; }
   //! AUTO: Read (Copy) access to: red, green, blue and alpha values for background color of render window (white=[1,1,1,1]; black = [0,0,0,1])
@@ -124,31 +119,6 @@ public: // AUTO:
   void PySetBackgroundColorBottom(const std::array<float,4>& backgroundColorBottomInit) { backgroundColorBottom = backgroundColorBottomInit; }
   //! AUTO: Read (Copy) access to: red, green, blue and alpha values for bottom background color in case that useGradientBackground = True
   std::array<float,4> PyGetBackgroundColorBottom() const { return std::array<float,4>(backgroundColorBottom); }
-
-  //! AUTO: Set function (needed in pybind) for: factor on boundingBox for zoom all (without minimum offset)
-  void PySetBoundingBoxZoomAllFactor(const float& boundingBoxZoomAllFactorInit) { boundingBoxZoomAllFactor = EXUstd::GetSafelyPFloat(boundingBoxZoomAllFactorInit,"boundingBoxZoomAllFactor"); }
-  //! AUTO: Read (Copy) access to: factor on boundingBox for zoom all (without minimum offset)
-  float PyGetBoundingBoxZoomAllFactor() const { return float(boundingBoxZoomAllFactor); }
-
-  //! AUTO: Set function (needed in pybind) for: minimum offset to bounding box of scene in window - width or height, whatever is smaller; adjust for very small or large scenes; may be negative
-  void PySetBoundingBoxZoomAllOffset(const float& boundingBoxZoomAllOffsetInit) { boundingBoxZoomAllOffset = EXUstd::GetSafelyUFloat(boundingBoxZoomAllOffsetInit,"boundingBoxZoomAllOffset"); }
-  //! AUTO: Read (Copy) access to: minimum offset to bounding box of scene in window - width or height, whatever is smaller; adjust for very small or large scenes; may be negative
-  float PyGetBoundingBoxZoomAllOffset() const { return float(boundingBoxZoomAllOffset); }
-
-  //! AUTO: Set function (needed in pybind) for: global number of segments for circles; if smaller than 2, 2 segments are used (flat)
-  void PySetCircleTiling(const Index& circleTilingInit) { circleTiling = EXUstd::GetSafelyPInt(circleTilingInit,"circleTiling"); }
-  //! AUTO: Read (Copy) access to: global number of segments for circles; if smaller than 2, 2 segments are used (flat)
-  Index PyGetCircleTiling() const { return Index(circleTiling); }
-
-  //! AUTO: Set function (needed in pybind) for: size of coordinate system relative to font size
-  void PySetCoordinateSystemSize(const float& coordinateSystemSizeInit) { coordinateSystemSize = EXUstd::GetSafelyPFloat(coordinateSystemSizeInit,"coordinateSystemSize"); }
-  //! AUTO: Read (Copy) access to: size of coordinate system relative to font size
-  float PyGetCoordinateSystemSize() const { return float(coordinateSystemSize); }
-
-  //! AUTO: Set function (needed in pybind) for: global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)
-  void PySetCylinderTiling(const Index& cylinderTilingInit) { cylinderTiling = EXUstd::GetSafelyPInt(cylinderTilingInit,"cylinderTiling"); }
-  //! AUTO: Read (Copy) access to: global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)
-  Index PyGetCylinderTiling() const { return Index(cylinderTiling); }
 
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use view0.scene.drawCoordinateSystem
   void PySetDrawCoordinateSystem(const Index& drawCoordinateSystemInit) ;
@@ -160,65 +130,15 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use view0.scene.drawWorldBasis
   bool PyGetDrawWorldBasis() const ;
 
-  //! AUTO: Set function (needed in pybind) for: interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed
-  void PySetGraphicsUpdateInterval(const float& graphicsUpdateIntervalInit) { graphicsUpdateInterval = EXUstd::GetSafelyUFloat(graphicsUpdateIntervalInit,"graphicsUpdateInterval"); }
-  //! AUTO: Read (Copy) access to: interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed
-  float PyGetGraphicsUpdateInterval() const { return float(graphicsUpdateInterval); }
-
-  //! AUTO: Set function (needed in pybind) for: Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts
-  void PySetLinuxDisplayScaleFactor(const float& linuxDisplayScaleFactorInit) { linuxDisplayScaleFactor = EXUstd::GetSafelyPFloat(linuxDisplayScaleFactorInit,"linuxDisplayScaleFactor"); }
-  //! AUTO: Read (Copy) access to: Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts
-  float PyGetLinuxDisplayScaleFactor() const { return float(linuxDisplayScaleFactor); }
-
-  //! AUTO: Set function (needed in pybind) for: minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO
-  void PySetMinSceneSize(const float& minSceneSizeInit) { minSceneSize = EXUstd::GetSafelyPFloat(minSceneSizeInit,"minSceneSize"); }
-  //! AUTO: Read (Copy) access to: minimum scene size for initial scene size and for autoFitScene, to avoid division by zero; SET GREATER THAN ZERO
-  float PyGetMinSceneSize() const { return float(minSceneSize); }
-
-  //! AUTO: Set function (needed in pybind) for: global point size (absolute)
-  void PySetPointSize(const float& pointSizeInit) { pointSize = EXUstd::GetSafelyPFloat(pointSizeInit,"pointSize"); }
-  //! AUTO: Read (Copy) access to: global point size (absolute)
-  float PyGetPointSize() const { return float(pointSize); }
-
-  //! AUTO: Set function (needed in pybind) for: number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked
-  void PySetReallyQuitTimeLimit(const Real& reallyQuitTimeLimitInit) { reallyQuitTimeLimit = EXUstd::GetSafelyUReal(reallyQuitTimeLimitInit,"reallyQuitTimeLimit"); }
-  //! AUTO: Read (Copy) access to: number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked
-  Real PyGetReallyQuitTimeLimit() const { return Real(reallyQuitTimeLimit); }
-
-  //! AUTO: Set function (needed in pybind) for: precision of general floating point numbers shown in render window: total number of digits used  (max. 16)
-  void PySetRendererPrecision(const Index& rendererPrecisionInit) { rendererPrecision = EXUstd::GetSafelyPInt(rendererPrecisionInit,"rendererPrecision"); }
-  //! AUTO: Read (Copy) access to: precision of general floating point numbers shown in render window: total number of digits used  (max. 16)
-  Index PyGetRendererPrecision() const { return Index(rendererPrecision); }
-
-  //! AUTO: Set function (needed in pybind) for: OpenGL render windows startup timeout in ms (change might be necessary if CPU is very slow)
-  void PySetRendererStartupTimeout(const Index& rendererStartupTimeoutInit) { rendererStartupTimeout = EXUstd::GetSafelyPInt(rendererStartupTimeoutInit,"rendererStartupTimeout"); }
-  //! AUTO: Read (Copy) access to: OpenGL render windows startup timeout in ms (change might be necessary if CPU is very slow)
-  Index PyGetRendererStartupTimeout() const { return Index(rendererStartupTimeout); }
-
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use view0.window.showComputationInfo
   void PySetShowComputationInfo(const bool& showComputationInfoInit) ;
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use view0.window.showComputationInfo
   bool PyGetShowComputationInfo() const ;
 
-  //! AUTO: Set function (needed in pybind) for: seconds to show help message on startup (0=deactivate)
-  void PySetShowHelpOnStartup(const Index& showHelpOnStartupInit) { showHelpOnStartup = EXUstd::GetSafelyUInt(showHelpOnStartupInit,"showHelpOnStartup"); }
-  //! AUTO: Read (Copy) access to: seconds to show help message on startup (0=deactivate)
-  Index PyGetShowHelpOnStartup() const { return Index(showHelpOnStartup); }
-
-  //! AUTO: Set function (needed in pybind) for: global number of segments for spheres; if smaller than 2, 2 segments are used (flat)
-  void PySetSphereTiling(const Index& sphereTilingInit) { sphereTiling = EXUstd::GetSafelyPInt(sphereTilingInit,"sphereTiling"); }
-  //! AUTO: Read (Copy) access to: global number of segments for spheres; if smaller than 2, 2 segments are used (flat)
-  Index PyGetSphereTiling() const { return Index(sphereTiling); }
-
   //! AUTO: Set function (needed in pybind) for: general text color (default); used for system texts in render window
   void PySetTextColor(const std::array<float,4>& textColorInit) { textColor = textColorInit; }
   //! AUTO: Read (Copy) access to: general text color (default); used for system texts in render window
   std::array<float,4> PyGetTextColor() const { return std::array<float,4>(textColor); }
-
-  //! AUTO: Set function (needed in pybind) for: This is an additional out of plane offset for item texts (node number, etc.); the factor is relative to the maximum scene size and is only used, if textAlwaysInFront=False; this factor allows to draw text, e.g., in front of nodes
-  void PySetTextOffsetFactor(const float& textOffsetFactorInit) { textOffsetFactor = EXUstd::GetSafelyUFloat(textOffsetFactorInit,"textOffsetFactor"); }
-  //! AUTO: Read (Copy) access to: This is an additional out of plane offset for item texts (node number, etc.); the factor is relative to the maximum scene size and is only used, if textAlwaysInFront=False; this factor allows to draw text, e.g., in front of nodes
-  float PyGetTextOffsetFactor() const { return float(textOffsetFactor); }
 
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use view0.window.globalFontSize
   void PySetTextSize(const float& globalFontSizeInit) ;
@@ -285,7 +205,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -333,16 +253,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: precision of floating point values shown in color bar; total number of digits used (max. 16)
-  void PySetColorBarPrecision(const Index& colorBarPrecisionInit) { colorBarPrecision = EXUstd::GetSafelyPInt(colorBarPrecisionInit,"colorBarPrecision"); }
-  //! AUTO: Read (Copy) access to: precision of floating point values shown in color bar; total number of digits used (max. 16)
-  Index PyGetColorBarPrecision() const { return Index(colorBarPrecision); }
-
-  //! AUTO: Set function (needed in pybind) for: number of tiles (segements) shown in the colorbar for the contour plot
-  void PySetColorBarTiling(const Index& colorBarTilingInit) { colorBarTiling = EXUstd::GetSafelyPInt(colorBarTilingInit,"colorBarTiling"); }
-  //! AUTO: Read (Copy) access to: number of tiles (segements) shown in the colorbar for the contour plot
-  Index PyGetColorBarTiling() const { return Index(colorBarTiling); }
-
   //! AUTO: Set function (needed in pybind) for: RGBA color for relative value 0 used for contour plot; alpha is ignored
   void PySetContourColor0(const std::array<float,4>& contourColor0Init) { contourColor0 = contourColor0Init; }
   //! AUTO: Read (Copy) access to: RGBA color for relative value 0 used for contour plot; alpha is ignored
@@ -410,7 +320,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -505,7 +415,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -556,11 +466,6 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: default RGBA color for nodes; 4th value is alpha-transparency
   std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
 
-  //! AUTO: Set function (needed in pybind) for: tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4
-  void PySetTiling(const Index& tilingInit) { tiling = EXUstd::GetSafelyPInt(tilingInit,"tiling"); }
-  //! AUTO: Read (Copy) access to: tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4
-  Index PyGetTiling() const { return Index(tiling); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -592,7 +497,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -640,25 +545,10 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: number of segments to discretise the beams axis
-  void PySetAxialTiling(const Index& axialTilingInit) { axialTiling = EXUstd::GetSafelyPInt(axialTilingInit,"axialTiling"); }
-  //! AUTO: Read (Copy) access to: number of segments to discretise the beams axis
-  Index PyGetAxialTiling() const { return Index(axialTiling); }
-
-  //! AUTO: Set function (needed in pybind) for: number of quads drawn over height of beam, if drawn as flat objects; leads to higher accuracy of components drawn over beam height or with, but also to larger CPU costs for drawing
-  void PySetCrossSectionTiling(const Index& crossSectionTilingInit) { crossSectionTiling = EXUstd::GetSafelyPInt(crossSectionTilingInit,"crossSectionTiling"); }
-  //! AUTO: Read (Copy) access to: number of quads drawn over height of beam, if drawn as flat objects; leads to higher accuracy of components drawn over beam height or with, but also to larger CPU costs for drawing
-  Index PyGetCrossSectionTiling() const { return Index(crossSectionTiling); }
-
   //! AUTO: Set function (needed in pybind) for: color for outputVariable to be drawn along cross section (vertically)
   void PySetDrawVerticalColor(const std::array<float,4>& drawVerticalColorInit) { drawVerticalColor = drawVerticalColorInit; }
   //! AUTO: Read (Copy) access to: color for outputVariable to be drawn along cross section (vertically)
   std::array<float,4> PyGetDrawVerticalColor() const { return std::array<float,4>(drawVerticalColor); }
-
-  //! AUTO: Set function (needed in pybind) for: factor for outputVariable to be drawn along cross section (vertically)
-  void PySetDrawVerticalFactor(const float& drawVerticalFactorInit) { drawVerticalFactor = EXUstd::GetSafelyUFloat(drawVerticalFactorInit,"drawVerticalFactor"); }
-  //! AUTO: Read (Copy) access to: factor for outputVariable to be drawn along cross section (vertically)
-  float PyGetDrawVerticalFactor() const { return float(drawVerticalFactor); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -692,7 +582,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -724,11 +614,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: a factor multiplied with the thickness of shells/plates only for visualization (e.g. to make some effects more visible)
-  void PySetThicknessFactor(const float& thicknessFactorInit) { thicknessFactor = EXUstd::GetSafelyPFloat(thicknessFactorInit,"thicknessFactor"); }
-  //! AUTO: Read (Copy) access to: a factor multiplied with the thickness of shells/plates only for visualization (e.g. to make some effects more visible)
-  float PyGetThicknessFactor() const { return float(thicknessFactor); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -753,7 +638,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -815,7 +700,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -899,7 +784,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -952,11 +837,6 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: default RGBA color for connectors; 4th value is alpha-transparency
   std::array<float,4> PyGetDefaultColor() const { return std::array<float,4>(defaultColor); }
 
-  //! AUTO: Set function (needed in pybind) for: number of windings for springs drawn as helical spring
-  void PySetSpringNumberOfWindings(const Index& springNumberOfWindingsInit) { springNumberOfWindings = EXUstd::GetSafelyPInt(springNumberOfWindingsInit,"springNumberOfWindings"); }
-  //! AUTO: Read (Copy) access to: number of windings for springs drawn as helical spring
-  Index PyGetSpringNumberOfWindings() const { return Index(springNumberOfWindings); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -989,7 +869,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1059,7 +939,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1141,7 +1021,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1205,11 +1085,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: line width for traces
-  void PySetLineWidth(const float& lineWidthInit) { lineWidth = EXUstd::GetSafelyUFloat(lineWidthInit,"lineWidth"); }
-  //! AUTO: Read (Copy) access to: line width for traces
-  float PyGetLineWidth() const { return float(lineWidth); }
-
   //! AUTO: Set function (needed in pybind) for: list of position sensors which can be shown as trace inside render window if sensors have storeInternal=True; if this list is empty and showPositionTrace=True, then all available sensors are shown
   void PySetListOfPositionSensors(const std::vector<Index>& listOfPositionSensorsInit) { listOfPositionSensors = listOfPositionSensorsInit; }
   //! AUTO: Read (Copy) access to: list of position sensors which can be shown as trace inside render window if sensors have storeInternal=True; if this list is empty and showPositionTrace=True, then all available sensors are shown
@@ -1225,30 +1100,10 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: list of sensors with 3D vector quantities; this non-empty list needs to coincide in length with the listOfPositionSensors to be shown if showVectors=True; the vector quantity is drawn relative to the related position
   std::vector<Index> PyGetListOfVectorSensors() const { return std::vector<Index>(listOfVectorSensors); }
 
-  //! AUTO: Set function (needed in pybind) for: integer value i; out of available sensor data, show every i-th position
-  void PySetPositionsShowEvery(const Index& positionsShowEveryInit) { positionsShowEvery = EXUstd::GetSafelyPInt(positionsShowEveryInit,"positionsShowEvery"); }
-  //! AUTO: Read (Copy) access to: integer value i; out of available sensor data, show every i-th position
-  Index PyGetPositionsShowEvery() const { return Index(positionsShowEvery); }
-
-  //! AUTO: Set function (needed in pybind) for: maximum trace time span of past or future trace; given in seconds of simulation time; if zero, it is unused
-  void PySetTimeSpan(const Real& timeSpanInit) { timeSpan = EXUstd::GetSafelyUReal(timeSpanInit,"timeSpan"); }
-  //! AUTO: Read (Copy) access to: maximum trace time span of past or future trace; given in seconds of simulation time; if zero, it is unused
-  Real PyGetTimeSpan() const { return Real(timeSpan); }
-
   //! AUTO: Set function (needed in pybind) for: RGBA float values for traces in one array; using 6x4 values gives different colors for 6 traces; in case of triads, the 0/1/2-axes are drawn in red, green, and blue
   void PySetTraceColors(const std::vector<float>& traceColorsInit) { traceColors = traceColorsInit; }
   //! AUTO: Read (Copy) access to: RGBA float values for traces in one array; using 6x4 values gives different colors for 6 traces; in case of triads, the 0/1/2-axes are drawn in red, green, and blue
   std::vector<float> PyGetTraceColors() const { return std::vector<float>(traceColors); }
-
-  //! AUTO: Set function (needed in pybind) for: integer value i; out of available sensor data, show every i-th triad
-  void PySetTriadsShowEvery(const Index& triadsShowEveryInit) { triadsShowEvery = EXUstd::GetSafelyPInt(triadsShowEveryInit,"triadsShowEvery"); }
-  //! AUTO: Read (Copy) access to: integer value i; out of available sensor data, show every i-th triad
-  Index PyGetTriadsShowEvery() const { return Index(triadsShowEvery); }
-
-  //! AUTO: Set function (needed in pybind) for: integer value i; out of available sensor data, show every i-th vector
-  void PySetVectorsShowEvery(const Index& vectorsShowEveryInit) { vectorsShowEvery = EXUstd::GetSafelyPInt(vectorsShowEveryInit,"vectorsShowEvery"); }
-  //! AUTO: Read (Copy) access to: integer value i; out of available sensor data, show every i-th vector
-  Index PyGetVectorsShowEvery() const { return Index(vectorsShowEvery); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
@@ -1290,7 +1145,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1363,7 +1218,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1450,16 +1305,6 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: RGBA color for contact triangles, see showTriangles
   std::array<float,4> PyGetColorTriangles() const { return std::array<float,4>(colorTriangles); }
 
-  //! AUTO: Set function (needed in pybind) for: tiling for nonlinear/polynomial curves; higher values give smoother curves
-  void PySetTilingCurves(const Index& tilingCurvesInit) { tilingCurves = EXUstd::GetSafelyPInt(tilingCurvesInit,"tilingCurves"); }
-  //! AUTO: Read (Copy) access to: tiling for nonlinear/polynomial curves; higher values give smoother curves
-  Index PyGetTilingCurves() const { return Index(tilingCurves); }
-
-  //! AUTO: Set function (needed in pybind) for: tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates
-  void PySetTilingSpheres(const Index& tilingSpheresInit) { tilingSpheres = EXUstd::GetSafelyPInt(tilingSpheresInit,"tilingSpheres"); }
-  //! AUTO: Read (Copy) access to: tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates
-  Index PyGetTilingSpheres() const { return Index(tilingSpheres); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -1499,7 +1344,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1564,11 +1409,6 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: the three values are [nearPlaneOffset, farPlaneOffset, flag]; if flag=0, the offsets are ignored and computed automatically, using x = 2 * maxSceneSize * zMaxSceneFactor, setting near plane to -x and far plane to +x in case of modelCentricView=True and setting near plane to 0.01 (minimal offset to eye point) and far plane to +x if modelCentricView=False; if flag=1, the near and far plane values are just overwritten; note that positive values for near plane make objects in front of the camera invisible while negative values make objects behind the camera plane visible; in case of camera-centric view, the eyepoint can be shifted backwards using cameraPosition accordingly.
   std::array<float,3> PyGetNearFarPlaneOffset() const { return std::array<float,3>(nearFarPlaneOffset); }
 
-  //! AUTO: Set function (needed in pybind) for: parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 1 (extreme: 5), where larger values are possible but should be used with care; NOTE that the relation to the common field of view (FOV) angle alpha, with alpha=90°, is given by perspective = tan(alpha/2) = 1; mouse coordinates (F3) can not be shown with perspective>0
-  void PySetPerspective(const float& perspectiveInit) { perspective = EXUstd::GetSafelyUFloat(perspectiveInit,"perspective"); }
-  //! AUTO: Read (Copy) access to: parameter prescribes amount of perspective (0=no perspective=orthographic projection; positive values increase perspective; feasible values are 0.001 (little perspective) ... 1 (extreme: 5), where larger values are possible but should be used with care; NOTE that the relation to the common field of view (FOV) angle alpha, with alpha=90°, is given by perspective = tan(alpha/2) = 1; mouse coordinates (F3) can not be shown with perspective>0
-  float PyGetPerspective() const { return float(perspective); }
-
   //! AUTO: Set function (needed in pybind) for: choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one
   void PySetTrackMarkerOrientation(const std::array<float,3>& trackMarkerOrientationInit) { trackMarkerOrientation = trackMarkerOrientationInit; }
   //! AUTO: Read (Copy) access to: choose which orientation axes (x,y,z) are tracked; currently can only be all zero or all one
@@ -1612,7 +1452,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1658,16 +1498,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: 0 = no coordinate system shown, 1 = draw lines with text, 2 = draw arrows, 3 = draw arrows with text
-  void PySetDrawCoordinateSystem(const Index& drawCoordinateSystemInit) { drawCoordinateSystem = EXUstd::GetSafelyUInt(drawCoordinateSystemInit,"drawCoordinateSystem"); }
-  //! AUTO: Read (Copy) access to: 0 = no coordinate system shown, 1 = draw lines with text, 2 = draw arrows, 3 = draw arrows with text
-  Index PyGetDrawCoordinateSystem() const { return Index(drawCoordinateSystem); }
-
-  //! AUTO: Set function (needed in pybind) for: size of world basis coordinate system
-  void PySetWorldBasisSize(const float& worldBasisSizeInit) { worldBasisSize = EXUstd::GetSafelyPFloat(worldBasisSizeInit,"worldBasisSize"); }
-  //! AUTO: Read (Copy) access to: size of world basis coordinate system
-  float PyGetWorldBasisSize() const { return float(worldBasisSize); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -1699,7 +1529,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1745,11 +1575,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: general text font size (roughly measured in pixels); if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)
-  void PySetGlobalFontSize(const float& globalFontSizeInit) { globalFontSize = EXUstd::GetSafelyPFloat(globalFontSizeInit,"globalFontSize"); }
-  //! AUTO: Read (Copy) access to: general text font size (roughly measured in pixels); if useWindowsDisplayScaleFactor=True, the the textSize is multplied with the windows display scaling (monitor scaling; content scaling) factor for larger texts on on high resolution displays; for bitmap fonts, the maximum size of any font (standard/large/huge) is limited to 256 (which is not recommended, especially if you do not have a powerful graphics card)
-  float PyGetGlobalFontSize() const { return float(globalFontSize); }
-
   //! AUTO: Set function (needed in pybind) for: initial size of render window of respective view for specific view in pixels for
   void PySetRenderWindowSize(const std::array<Index,2>& renderWindowSizeInit) { renderWindowSize = renderWindowSizeInit; }
   //! AUTO: Read (Copy) access to: initial size of render window of respective view for specific view in pixels for
@@ -1786,7 +1611,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1845,7 +1670,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1948,7 +1773,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -1986,16 +1811,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all)
-  void PySetAlphaTransparency(const float& alphaTransparencyInit) { alphaTransparency = EXUstd::GetSafelyUFloat(alphaTransparencyInit,"alphaTransparency"); }
-  //! AUTO: Read (Copy) access to: alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all)
-  float PyGetAlphaTransparency() const { return float(alphaTransparency); }
-
-  //! AUTO: Set function (needed in pybind) for: font scaling value for MacOS systems (on Windows, system display scaling is used)
-  void PySetFontScalingMacOS(const float& fontScalingMacOSInit) { fontScalingMacOS = EXUstd::GetSafelyUFloat(fontScalingMacOSInit,"fontScalingMacOS"); }
-  //! AUTO: Read (Copy) access to: font scaling value for MacOS systems (on Windows, system display scaling is used)
-  float PyGetFontScalingMacOS() const { return float(fontScalingMacOS); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -2023,7 +1838,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2067,11 +1882,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: alpha-transparency, same as in alpha channel in RGBA colors; 1=opaque, 0=fully transparent; leads to extra rendering costs per transparent pixel
-  void PySetAlpha(const float& alphaInit) { alpha = EXUstd::GetSafelyUFloat(alphaInit,"alpha"); }
-  //! AUTO: Read (Copy) access to: alpha-transparency, same as in alpha channel in RGBA colors; 1=opaque, 0=fully transparent; leads to extra rendering costs per transparent pixel
-  float PyGetAlpha() const { return float(alpha); }
-
   //! AUTO: Set function (needed in pybind) for: RGB default material color if face color has R-color channel -1
   void PySetBaseColor(const std::array<float,3>& baseColorInit) { baseColor = baseColorInit; }
   //! AUTO: Read (Copy) access to: RGB default material color if face color has R-color channel -1
@@ -2081,21 +1891,6 @@ public: // AUTO:
   void PySetEmission(const std::array<float,3>& emissionInit) { emission = emissionInit; }
   //! AUTO: Read (Copy) access to: RGB emissive material color (enlightened material)
   std::array<float,3> PyGetEmission() const { return std::array<float,3>(emission); }
-
-  //! AUTO: Set function (needed in pybind) for: index of refraction for transparent materials (1=no refraction), >1 represents refraction
-  void PySetIor(const float& iorInit) { ior = EXUstd::GetSafelyUFloat(iorInit,"ior"); }
-  //! AUTO: Read (Copy) access to: index of refraction for transparent materials (1=no refraction), >1 represents refraction
-  float PyGetIor() const { return float(ior); }
-
-  //! AUTO: Set function (needed in pybind) for: controls reflectivity of material; 0=no reflections (rough, e.g. rubber), 1=fully reflective (mirror); this leads to large extra rendering costs per visible reflective pixel
-  void PySetReflectivity(const float& reflectivityInit) { reflectivity = EXUstd::GetSafelyUFloat(reflectivityInit,"reflectivity"); }
-  //! AUTO: Read (Copy) access to: controls reflectivity of material; 0=no reflections (rough, e.g. rubber), 1=fully reflective (mirror); this leads to large extra rendering costs per visible reflective pixel
-  float PyGetReflectivity() const { return float(reflectivity); }
-
-  //! AUTO: Set function (needed in pybind) for: controls shininess of specular component of lights; values < 5 is not very shiny, while > 50 is very shiny
-  void PySetShininess(const float& shininessInit) { shininess = EXUstd::GetSafelyUFloat(shininessInit,"shininess"); }
-  //! AUTO: Read (Copy) access to: controls shininess of specular component of lights; values < 5 is not very shiny, while > 50 is very shiny
-  float PyGetShininess() const { return float(shininess); }
 
   //! AUTO: Set function (needed in pybind) for: RGB specular material color
   void PySetSpecular(const std::array<float,3>& specularInit) { specular = specularInit; }
@@ -2132,7 +1927,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2179,26 +1974,6 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: scene RGBA color for background that is hit by reflection material; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; this is generally needed, as our scenes are usually not inside a closed geometry (like inside a room); this color is also used if maxReflectionDepth is reached
   std::array<float,4> PyGetBackgroundColorReflections() const { return std::array<float,4>(backgroundColorReflections); }
 
-  //! AUTO: Set function (needed in pybind) for: This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128
-  void PySetSearchTreeFactor(const Index& searchTreeFactorInit) { searchTreeFactor = EXUstd::GetSafelyPInt(searchTreeFactorInit,"searchTreeFactor"); }
-  //! AUTO: Read (Copy) access to: This factor can be used to increase the number of search tree bins, which can improve performance in case of inequilibrated scense; range=1..128
-  Index PyGetSearchTreeFactor() const { return Index(searchTreeFactor); }
-
-  //! AUTO: Set function (needed in pybind) for: if lightRadiusVariations>1, this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries
-  void PySetShadowScalingFactor(const Index& shadowScalingFactorInit) { shadowScalingFactor = EXUstd::GetSafelyUInt(shadowScalingFactorInit,"shadowScalingFactor"); }
-  //! AUTO: Read (Copy) access to: if lightRadiusVariations>1, this defines the downscaling factor of the shadow map, where 2 means that the resolution is 2 times smaller than the image resolution; additionally, multisampling is not used for shadow map computation if shadowScalingFactor>0, thus reducing the computational effort for shadow computation also in case of 1; range=0..16; larger values cause significant artifacts at shadow boundaries
-  Index PyGetShadowScalingFactor() const { return Index(shadowScalingFactor); }
-
-  //! AUTO: Set function (needed in pybind) for: if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing  steps may cause artifacts at shadow boundaries; only works for directional lights with position (e.g. 4th component in light0Position should be 1)
-  void PySetShadowSmoothingSteps(const Index& shadowSmoothingStepsInit) { shadowSmoothingSteps = EXUstd::GetSafelyUInt(shadowSmoothingStepsInit,"shadowSmoothingSteps"); }
-  //! AUTO: Read (Copy) access to: if lightRadiusVariations>1, this defines the number of smoothing steps at the low-resolution shadow map; smoothing reduces shadow artifacts caused by smaller values of lightRadiusVariations; range=0..32; smoothing  steps may cause artifacts at shadow boundaries; only works for directional lights with position (e.g. 4th component in light0Position should be 1)
-  Index PyGetShadowSmoothingSteps() const { return Index(shadowSmoothingSteps); }
-
-  //! AUTO: Set function (needed in pybind) for: Total number of sub-tiles per thread, used to evenly distribute rendering load to threads
-  void PySetTilesPerThread(const Index& tilesPerThreadInit) { tilesPerThread = EXUstd::GetSafelyPInt(tilesPerThreadInit,"tilesPerThread"); }
-  //! AUTO: Read (Copy) access to: Total number of sub-tiles per thread, used to evenly distribute rendering load to threads
-  Index PyGetTilesPerThread() const { return Index(tilesPerThread); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -2228,7 +2003,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2318,45 +2093,10 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: scene RGBA fog color
   std::array<float,4> PyGetGlobalFogColor() const { return std::array<float,4>(globalFogColor); }
 
-  //! AUTO: Set function (needed in pybind) for: global fog density; fog is deactivated if fogDensity=0, otherwise it is a density relative to scene max size; as it is relative, the factor has to be relatively high to be visible (usually >1)
-  void PySetGlobalFogDensity(const float& globalFogDensityInit) { globalFogDensity = EXUstd::GetSafelyUFloat(globalFogDensityInit,"globalFogDensity"); }
-  //! AUTO: Read (Copy) access to: global fog density; fog is deactivated if fogDensity=0, otherwise it is a density relative to scene max size; as it is relative, the factor has to be relatively high to be visible (usually >1)
-  float PyGetGlobalFogDensity() const { return float(globalFogDensity); }
-
-  //! AUTO: Set function (needed in pybind) for: Special size factor (1-16) to allow drawing with smaller resolution (faster); use this for long rendering times for adjustments, etc.
-  void PySetImageSizeFactor(const Index& imageSizeFactorInit) { imageSizeFactor = EXUstd::GetSafelyPInt(imageSizeFactorInit,"imageSizeFactor"); }
-  //! AUTO: Read (Copy) access to: Special size factor (1-16) to allow drawing with smaller resolution (faster); use this for long rendering times for adjustments, etc.
-  Index PyGetImageSizeFactor() const { return Index(imageSizeFactor); }
-
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use openGL.light0.lightRadius
   void PySetLightRadius(const float& lightRadiusInit) ;
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use openGL.light0.lightRadius
   float PyGetLightRadius() const ;
-
-  //! AUTO: Set function (needed in pybind) for: if lightRadiusVariations>1, this defines the number of positions that are used to compute the effect of distributed lights (larger is slower but better quality); range=1..256; avoid squares of integers; good values: 1 (hard shadow boundaries), 6, 13, 20, 31, 72, 130, 240; for lower values, use shadowSmoothingSteps=2..8
-  void PySetLightRadiusVariations(const Index& lightRadiusVariationsInit) { lightRadiusVariations = EXUstd::GetSafelyPInt(lightRadiusVariationsInit,"lightRadiusVariations"); }
-  //! AUTO: Read (Copy) access to: if lightRadiusVariations>1, this defines the number of positions that are used to compute the effect of distributed lights (larger is slower but better quality); range=1..256; avoid squares of integers; good values: 1 (hard shadow boundaries), 6, 13, 20, 31, 72, 130, 240; for lower values, use shadowSmoothingSteps=2..8
-  Index PyGetLightRadiusVariations() const { return Index(lightRadiusVariations); }
-
-  //! AUTO: Set function (needed in pybind) for: Maximum number of reflections computed for one ray (note that for each transparent face passed, the reflection depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)
-  void PySetMaxReflectionDepth(const Index& maxReflectionDepthInit) { maxReflectionDepth = EXUstd::GetSafelyUInt(maxReflectionDepthInit,"maxReflectionDepth"); }
-  //! AUTO: Read (Copy) access to: Maximum number of reflections computed for one ray (note that for each transparent face passed, the reflection depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)
-  Index PyGetMaxReflectionDepth() const { return Index(maxReflectionDepth); }
-
-  //! AUTO: Set function (needed in pybind) for: Maximum number of transparent faces that can be passed (note that for each reflection, the transparency depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)
-  void PySetMaxTransparencyDepth(const Index& maxTransparencyDepthInit) { maxTransparencyDepth = EXUstd::GetSafelyUInt(maxTransparencyDepthInit,"maxTransparencyDepth"); }
-  //! AUTO: Read (Copy) access to: Maximum number of transparent faces that can be passed (note that for each reflection, the transparency depth is reduced by 1); maximum is 32 (but should not be more than 2-4 usually!)
-  Index PyGetMaxTransparencyDepth() const { return Index(maxTransparencyDepth); }
-
-  //! AUTO: Set function (needed in pybind) for: Multi-sampling used for rendering of faces, lines and text; increases image quality along edges (lines, etc.) but INCREASES rendering costs dramatically (multiSampling=3 => 3x3=9 times slower); also used for shadow if shadowScalingFactor=0; values only accepted in range [1..4]
-  void PySetMultiSampling(const Index& multiSamplingInit) { multiSampling = EXUstd::GetSafelyPInt(multiSamplingInit,"multiSampling"); }
-  //! AUTO: Read (Copy) access to: Multi-sampling used for rendering of faces, lines and text; increases image quality along edges (lines, etc.) but INCREASES rendering costs dramatically (multiSampling=3 => 3x3=9 times slower); also used for shadow if shadowScalingFactor=0; values only accepted in range [1..4]
-  Index PyGetMultiSampling() const { return Index(multiSampling); }
-
-  //! AUTO: Set function (needed in pybind) for: Number of CPU-threads (max: 256) used for software rendering (should be approx. the number of available threads)
-  void PySetNumberOfThreads(const Index& numberOfThreadsInit) { numberOfThreads = EXUstd::GetSafelyPInt(numberOfThreadsInit,"numberOfThreads"); }
-  //! AUTO: Read (Copy) access to: Number of CPU-threads (max: 256) used for software rendering (should be approx. the number of available threads)
-  Index PyGetNumberOfThreads() const { return Index(numberOfThreads); }
 
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use raytracer.advanced.searchTreeFactor
   void PySetSearchTreeFactor(const Index& searchTreeFactorInit) ;
@@ -2436,7 +2176,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2515,26 +2255,6 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: centerpoint of scene (3D) at renderer startup; overwritten if autoFitScene = True; only used in case that modelCentricView=True
   std::array<float,3> PyGetInitialCenterPoint() const { return std::array<float,3>(initialCenterPoint); }
 
-  //! AUTO: Set function (needed in pybind) for: initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True
-  void PySetInitialMaxSceneSize(const float& initialMaxSceneSizeInit) { initialMaxSceneSize = EXUstd::GetSafelyPFloat(initialMaxSceneSizeInit,"initialMaxSceneSize"); }
-  //! AUTO: Read (Copy) access to: initial maximum scene size (auto: diagonal of cube with maximum scene coordinates); used for 'zoom all' functionality and for visibility of objects; overwritten if autoFitScene = True
-  float PyGetInitialMaxSceneSize() const { return float(initialMaxSceneSize); }
-
-  //! AUTO: Set function (needed in pybind) for: initial zoom of scene; overwritten/ignored if autoFitScene = True
-  void PySetInitialZoom(const float& initialZoomInit) { initialZoom = EXUstd::GetSafelyUFloat(initialZoomInit,"initialZoom"); }
-  //! AUTO: Read (Copy) access to: initial zoom of scene; overwritten/ignored if autoFitScene = True
-  float PyGetInitialZoom() const { return float(initialZoom); }
-
-  //! AUTO: Set function (needed in pybind) for: some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies
-  void PySetShadowPolygonOffset(const float& shadowPolygonOffsetInit) { shadowPolygonOffset = EXUstd::GetSafelyPFloat(shadowPolygonOffsetInit,"shadowPolygonOffset"); }
-  //! AUTO: Read (Copy) access to: some special drawing parameter for shadows which should be handled with care; defines some offset needed by openGL to avoid aritfacts for shadows and depends on maxSceneSize; this value may need to be reduced for larger models in order to achieve more accurate shadows, it may be needed to be increased for thin bodies
-  float PyGetShadowPolygonOffset() const { return float(shadowPolygonOffset); }
-
-  //! AUTO: Set function (needed in pybind) for: width of lines used for representation of text
-  void PySetTextLineWidth(const float& textLineWidthInit) { textLineWidth = EXUstd::GetSafelyUFloat(textLineWidthInit,"textLineWidth"); }
-  //! AUTO: Read (Copy) access to: width of lines used for representation of text
-  float PyGetTextLineWidth() const { return float(textLineWidth); }
-
   //! AUTO: Set function (needed in pybind) for: global RGBA color for vertex normals
   void PySetVertexNormalsColor(const std::array<float,4>& vertexNormalsColorInit) { vertexNormalsColor = vertexNormalsColorInit; }
   //! AUTO: Read (Copy) access to: global RGBA color for vertex normals
@@ -2582,7 +2302,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2635,11 +2355,6 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: 4D position vector of GL_LIGHT[0,1,2,3]; 4th value should be 0 for directional lights that are (almost) infinitely far away, like the sun, but 1 for position-based lights (and for attenuation factor being calculated); light0 is also used for shadows, so you need to adjust this position to be located at a reasonable location; the openGL renderer uses shadow volumes and approximates directional lights by enlarging the direction to 200 times maxSceneSize, while the raytracer uses the correct direction; see opengl manuals
   std::array<float,4> PyGetPosition() const { return std::array<float,4>(position); }
 
-  //! AUTO: Set function (needed in pybind) for: in OpenGL renderer, the shadow parameter \f$\in [0 ... 1]\f$ prescribes amount of shadow of light [0,1,2,3] that is added to the scene, using light position (or only direction), accumulating for each light; if this parameter is different from 0, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for each light if shadow>0, accumulating effects of each light source
-  void PySetShadow(const float& shadowInit) { shadow = EXUstd::GetSafelyUFloat(shadowInit,"shadow"); }
-  //! AUTO: Read (Copy) access to: in OpenGL renderer, the shadow parameter \f$\in [0 ... 1]\f$ prescribes amount of shadow of light [0,1,2,3] that is added to the scene, using light position (or only direction), accumulating for each light; if this parameter is different from 0, rendering of triangles becomes approx.\ 5 times more expensive, so take care in case of complex scenes; for complex object, such as spheres with fine resolution or for particle systems, the present approach has limitations and leads to artifacts and unrealistic shadows; for raytracer, shadow is included by a physics-based model for each light if shadow>0, accumulating effects of each light source
-  float PyGetShadow() const { return float(shadow); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -2672,7 +2387,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -2754,11 +2469,6 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use openGL.advanced.depthSorting
   bool PyGetDepthSorting() const ;
 
-  //! AUTO: Set function (needed in pybind) for: length of normals; used for debugging
-  void PySetDrawNormalsLength(const float& drawNormalsLengthInit) { drawNormalsLength = EXUstd::GetSafelyPFloat(drawNormalsLengthInit,"drawNormalsLength"); }
-  //! AUTO: Read (Copy) access to: length of normals; used for debugging
-  float PyGetDrawNormalsLength() const { return float(drawNormalsLength); }
-
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use openGL.light0.enable
   void PySetEnableLight0(const bool& enableInit) ;
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use openGL.light0.enable
@@ -2783,11 +2493,6 @@ public: // AUTO:
   void PySetFacesTransparent(const bool& facesTransparentInit) ;
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use view0.scene.facesTransparent
   bool PyGetFacesTransparent() const ;
-
-  //! AUTO: Set function (needed in pybind) for: in case that facesTransparent=True this represents the max alpha-transparency
-  void PySetFaceTransparencyGlobal(const float& faceTransparencyGlobalInit) { faceTransparencyGlobal = EXUstd::GetSafelyUFloat(faceTransparencyGlobalInit,"faceTransparencyGlobal"); }
-  //! AUTO: Read (Copy) access to: in case that facesTransparent=True this represents the max alpha-transparency
-  float PyGetFaceTransparencyGlobal() const { return float(faceTransparencyGlobal); }
 
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use openGL.advanced.initialCenterPoint
   void PySetInitialCenterPoint(const std::array<float,3>& initialCenterPointInit) ;
@@ -2904,11 +2609,6 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use openGL.advanced.lineSmooth
   bool PyGetLineSmooth() const ;
 
-  //! AUTO: Set function (needed in pybind) for: width of lines used for representation of lines, circles, points, etc.
-  void PySetLineWidth(const float& lineWidthInit) { lineWidth = EXUstd::GetSafelyUFloat(lineWidthInit,"lineWidth"); }
-  //! AUTO: Read (Copy) access to: width of lines used for representation of lines, circles, points, etc.
-  float PyGetLineWidth() const { return float(lineWidth); }
-
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use openGL.materialSpecular
   void PySetMaterialAmbientAndDiffuse(const std::array<float,4>& materialSpecularInit) ;
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use openGL.materialSpecular
@@ -2918,11 +2618,6 @@ public: // AUTO:
   void PySetMaterialSpecular(const std::array<float,4>& materialSpecularInit) { materialSpecular = materialSpecularInit; }
   //! AUTO: Read (Copy) access to: RGBA specular color of material
   std::array<float,4> PyGetMaterialSpecular() const { return std::array<float,4>(materialSpecular); }
-
-  //! AUTO: Set function (needed in pybind) for: NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 3, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
-  void PySetMultiSampling(const Index& multiSamplingInit) { multiSampling = EXUstd::GetSafelyPInt(multiSamplingInit,"multiSampling"); }
-  //! AUTO: Read (Copy) access to: NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 3, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!
-  Index PyGetMultiSampling() const { return Index(multiSampling); }
 
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use view0.camera.perspective
   void PySetPerspective(const float& perspectiveInit) ;
@@ -2984,11 +2679,6 @@ public: // AUTO:
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use openGL.advanced.textLineWidth
   float PyGetTextLineWidth() const ;
 
-  //! AUTO: Set function (needed in pybind) for: factor multiplied with maxSceneSize to avoid clipping of modelview; larger values reduce clipping of near or far objects, but may lead to artifacts (so-called Z-fighting)
-  void PySetZMaxSceneFactor(const float& zMaxSceneFactorInit) { zMaxSceneFactor = EXUstd::GetSafelyPFloat(zMaxSceneFactorInit,"zMaxSceneFactor"); }
-  //! AUTO: Read (Copy) access to: factor multiplied with maxSceneSize to avoid clipping of modelview; larger values reduce clipping of near or far objects, but may lead to artifacts (so-called Z-fighting)
-  float PyGetZMaxSceneFactor() const { return float(zMaxSceneFactor); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -3028,7 +2718,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -3078,26 +2768,6 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)
-  void PySetHeightAlignment(const Index& heightAlignmentInit) { heightAlignment = EXUstd::GetSafelyPInt(heightAlignmentInit,"heightAlignment"); }
-  //! AUTO: Read (Copy) access to: alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost)
-  Index PyGetHeightAlignment() const { return Index(heightAlignment); }
-
-  //! AUTO: Set function (needed in pybind) for: current value of the counter which is used to consecutively save frames (images) with consecutive numbers
-  void PySetSaveImageFileCounter(const Index& saveImageFileCounterInit) { saveImageFileCounter = EXUstd::GetSafelyUInt(saveImageFileCounterInit,"saveImageFileCounter"); }
-  //! AUTO: Read (Copy) access to: current value of the counter which is used to consecutively save frames (images) with consecutive numbers
-  Index PyGetSaveImageFileCounter() const { return Index(saveImageFileCounter); }
-
-  //! AUTO: Set function (needed in pybind) for: timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes
-  void PySetSaveImageTimeOut(const Index& saveImageTimeOutInit) { saveImageTimeOut = EXUstd::GetSafelyPInt(saveImageTimeOutInit,"saveImageTimeOut"); }
-  //! AUTO: Read (Copy) access to: timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes
-  Index PyGetSaveImageTimeOut() const { return Index(saveImageTimeOut); }
-
-  //! AUTO: Set function (needed in pybind) for: alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost)
-  void PySetWidthAlignment(const Index& widthAlignmentInit) { widthAlignment = EXUstd::GetSafelyPInt(widthAlignmentInit,"widthAlignment"); }
-  //! AUTO: Read (Copy) access to: alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost)
-  Index PyGetWidthAlignment() const { return Index(widthAlignment); }
-
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
@@ -3131,7 +2801,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -3193,7 +2863,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -3295,7 +2965,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -3354,11 +3024,6 @@ public: // AUTO:
   void PySetHighlightColor(const std::array<float,4>& highlightColorInit) ;
   //! AUTO: Read (Copy) access to: DEPRECATED; Instead use interactive.advanced.highlightColor
   std::array<float,4> PyGetHighlightColor() const ;
-
-  //! AUTO: Set function (needed in pybind) for: index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)
-  void PySetHighlightMbsNumber(const Index& highlightMbsNumberInit) { highlightMbsNumber = EXUstd::GetSafelyUInt(highlightMbsNumberInit,"highlightMbsNumber"); }
-  //! AUTO: Read (Copy) access to: index of main system (mbs) for which the item shall be highlighted; number is related to the ID in SystemContainer (first mbs = 0, second = 1, ...)
-  Index PyGetHighlightMbsNumber() const { return Index(highlightMbsNumber); }
 
   //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use interactive.advanced.highlightOtherColor
   void PySetHighlightOtherColor(const std::array<float,4>& highlightOtherColorInit) ;
@@ -3487,7 +3152,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-09-13 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
