@@ -90,6 +90,7 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/PARTS_ATEs_moving
    TestModels/pendulumFriction
    TestModels/parameterConversionTest
+   TestModels/typeInformationTest
    TestModels/pickleCopyMbs
    TestModels/plotSensorTest
    TestModels/postNewtonStepContactTest

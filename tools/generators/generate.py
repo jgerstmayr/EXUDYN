@@ -49,6 +49,7 @@ stages = [
           [A + 'nodes', A + 'objects', A + 'markers', A + 'loads', A + 'sensors', A + 'PySymbolicUserFunctionSet.h',
            A + 'PythonUserFunctionsTemplates.h', A + 'objectFactoryAutoReg.h']),
     Stage('tools/generators/itemInterfaceEmitter.py', ['definitions'], ['python/exudyn/itemInterface.py']),
+    Stage('tools/generators/typesEmitter.py', ['definitions'], ['python/exudyn/types/items.py']),
     Stage('tools/generators/miniExampleEmitter.py', ['definitions'], ['python/TestModels/MiniExamples']),
     Stage('tools/generators/itemDocsEmitter.py', ['definitions'],
           ['docs/RST/items', 'docs/theDoc/itemDefinition.tex', 'docs/RST/confHelperItems.py']),

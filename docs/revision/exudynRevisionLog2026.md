@@ -3098,6 +3098,36 @@ the other hand-written type enums stay).
 - Generated headers: 46 change (one spelling of the sums; access functions now inline).
 - Checked: regeneration, wheel, full suite PASSED.
 
+<a id="step-83d"></a>
+
+### Step 83d - `exudyn.types`: type information and compatibility queries
+
+**DONE 2026-09-15** (#2411). Step 83 is complete.
+
+- `tools/generators/typesEmitter.py` (stage in `generate.py`, tier 1 in `regenerate.py`) writes
+  `python/exudyn/types/items.py`: for the 97 items with a Python interface, `kind`, `types` (declared
+  for nodes/markers; parsed from the C++ body - or the hand-written parent class, e.g.
+  `CObjectANCFCable2DBase` - for objects, loads, sensors), `requestedNodeTypes`,
+  `requestedMarkerTypes` (+ `conditionalRequestedMarkerTypes`), `accessFunctionTypes`,
+  `outputVariables`, and per parameter and visualization parameter `type`, `size`, `range`
+  (`> 0`, `>= 0`), `default` (Python source text), `mustBeGiven`, `description`. One line per
+  parameter: 255 kB (pprint wrapped the descriptions into 1.2 MB).
+- `python/exudyn/types/__init__.py` (hand-written): `ItemNames`, `ItemInfo`, `Parameters`,
+  `NodesForObject`, `MarkersForObject`, `ObjectsForMarker`, `ConnectorsForMarkers`, `LoadsForMarker`.
+  Rules as in `CSystem::CheckSystemIntegrity`: node type contains the requested node type; a body
+  marker needs a body object providing the access function of its Position/Orientation (and
+  SuperElement/KinematicTree) bit; a connector's/load's requested marker type is contained in the
+  marker type. Three markers cast the object to one class in C++ and are listed explicitly
+  (`MarkerBodyCable2DShape`, `MarkerBodyCable2DCoordinates` -> ANCFCable2D/ALEANCFCable2D,
+  `MarkerBodyBeamShape` -> ANCFCable). Not imported by `exudyn.utilities`.
+- `setup.py` packages `exudyn.types`; `checkAll.py` treats `types/items.py` as generated.
+- Test `typeInformationTest.py` (suite reference 0): type names are values of `exu.NodeType`,
+  `exu.MarkerType`, `exu.AccessFunctionType`; parameter names equal the `itemInterface.py`
+  signatures; 9 marker/object and 6 connector/marker combinations built and assembled, the query
+  agrees with `mbs.Assemble()` in all (including the failing ones, e.g. `MarkerBodyRigid` on
+  `ObjectMassPoint`).
+- Checked: regeneration, checkAll, pydoclint, checkExtras, wheel, full suite PASSED.
+
 <a id="api-changes-v2"></a>
 
 ### API changes for the v2.0 release notes
@@ -3113,6 +3143,7 @@ Breaking changes of the Python API, collected as they happen; step 52 carries th
 | 107b | `from exudyn.utilities import *` no longer provides `extends` | not part of the user API |
 | 88 | item dicts for `Add<Kind>`/`Modify<Kind>` may leave out any parameter (default or current value kept); before, parameters without `CFOptional` raised `KeyError` | none; must-be-given parameters still raise |
 | 83b | `exu.MarkerType` added; `exu.AccessFunctionType` has all 13 values (before 9) | none |
+| 83d | new subpackage `exudyn.types`: item type information and compatibility queries | optional: `import exudyn.types as types; types.MarkersForObject('ObjectRigidBody')` |
 | 107c | star imports of exudyn modules export only what the module defines (`__all__`); `from exudyn.utilities import *` no longer provides `np`, `sin`, `cos`, `sqrt`, `math`, `copy`, `Enum`, `exudyn`, `exu`, `eii`, `graphics`, `docmeta` | import them explicitly: `import numpy as np`, `from math import sin, cos, sqrt`, `import exudyn as exu`, `import exudyn.graphics as graphics` |
 | 107a | `NormL2`, `VSum`, `VAdd`, `VSub`, `VMult`, `ScalarMult`, `Vec2Tilde`, `Tilde2Vec`, `DiagonalMatrix`, `eye2D`, `eye3D` removed from `exudyn.basicUtilities` (and so from `exudyn.utilities`) | use numpy: `np.linalg.norm`, `np.sum`, array arithmetic, `np.dot`, `Skew`/`Skew2Vec`, `np.eye` |
 

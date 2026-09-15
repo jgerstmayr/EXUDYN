@@ -34,7 +34,7 @@ import publicApi                                                                
 
 packageDirectory = os.path.join(repositoryRoot, 'python', 'exudyn')
 notChecked = ['__init__.py', 'utilities.py', 'robotics/__init__.py']
-generated = ['itemInterface.py']
+generated = ['itemInterface.py', 'types/items.py']
 
 
 def Modules():
