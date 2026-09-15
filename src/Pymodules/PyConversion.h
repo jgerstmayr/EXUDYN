@@ -297,6 +297,15 @@ namespace EPyUtils {
 		destination = py::cast<Index>(value);
 	}
 
+	//! one index as return value, e.g. Index nodeNumber = ItemIndexFromPython<NodeIndex>(value)
+	template<class TItemIndex>
+	inline Index ItemIndexFromPython(const py::object& value)
+	{
+		Index index;
+		ItemIndexFromPython<TItemIndex>(value, index);
+		return index;
+	}
+
 	//! a list or numpy array of indices of this kind; None raises
 	template<class TItemIndex>
 	inline void ItemIndexFromPython(const py::object& value, ArrayIndex& destination)

@@ -321,14 +321,14 @@ def StructureCppHeader(parseInfo):
                         matDim = 3
                         if typeStr == 'Matrix6D':
                             matDim = 6
-                        paramInitStr = 'EPyUtils::SetConstMatrixTemplateSafely<'+str(matDim)+', '+str(matDim)+'>('+paramStrPure+'Init, '+ paramStrPure+')'
+                        paramInitStr = 'EPyUtils::FromPython<Real, '+str(matDim)+', '+str(matDim)+'>('+paramStrPure+'Init, '+ paramStrPure+')'
 
                     setFunction.append('PySet' + functionStr + '(const ' + typeCastStr + refChar + ' ' + paramStrPure + 'Init) ')
                     setFunction.append('{ ' + lineBreakIDP + deprecationWarning + paramInitStr+'; '+lineBreakIDP+'}\n')
                         
                     if typeStr == 'Matrix3D' or typeStr == 'Matrix6D': #Matrix type (Matrix3D, ...)
                         getReturnStr = 'py::array_t<Real>' #this makes a numpy array instead of list of lists!
-                        typeCastStr = 'EPyUtils::Matrix2NumPyTemplate'
+                        typeCastStr = 'EPyUtils::ToPython'
 
                 
                 s+= '  '+setFunction[0] + setFunction[1] + setFunction[2]*(1-IDPNS) + ';\n'*IDPNS #spaces/linebreaks included

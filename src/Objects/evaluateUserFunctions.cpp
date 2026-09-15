@@ -256,7 +256,7 @@ void CObjectGenericODE2::EvaluateUserFunctionMassMatrix(EXUmath::MatrixContainer
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		//EPyUtils::NumPy2Matrix(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t), massMatrix);
+		//EPyUtils::FromPython(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t), massMatrix);
 		massMatrix.CopyOrAddTriplets(PyMatrixContainer(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t)), ltg);
 		//pout << "Mass=" << massMatrix.GetEXUdenseMatrix() << "\n";
 	}, "ObjectGenericODE2::massMatrixUserFunction");
@@ -309,7 +309,7 @@ void CObjectFFRF::EvaluateUserFunctionMassMatrix(Matrix& massMatrix, const MainS
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		EPyUtils::NumPy2Matrix(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t), massMatrix);
+		EPyUtils::FromPython(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t), massMatrix);
 	}, "ObjectFFRF::massMatrixUserFunction");
 }
 
@@ -329,7 +329,7 @@ void CObjectFFRFreducedOrder::EvaluateUserFunctionMassMatrix(Matrix& massMatrix,
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 	{
-		EPyUtils::NumPy2Matrix(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t), massMatrix);
+		EPyUtils::FromPython(parameters.massMatrixUserFunction.userFunction((const MainSystem&)mainSystem, t, objectNumber, coordinates, coordinates_t), massMatrix);
 	}, "ObjectFFRFreducedOrder::massMatrixUserFunction");
 }
 

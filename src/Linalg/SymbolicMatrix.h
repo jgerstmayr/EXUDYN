@@ -601,13 +601,13 @@ public:
 
 	SymbolicRealMatrix(const py::array_t<Real>& matrixInit) : exprMatrix(nullptr)
 	{
-		EPyUtils::NumPy2Matrix(matrixInit, matrix);
+		EPyUtils::FromPython(matrixInit, matrix);
 		//pout << "v=" << matrix << "\n";
 	}
 
 	SymbolicRealMatrix(const STDstring& name, const py::array_t<Real>& matrixInit) : exprMatrix(nullptr)
 	{
-		EPyUtils::NumPy2Matrix(matrixInit, matrix);
+		EPyUtils::FromPython(matrixInit, matrix);
 		if (SReal::recordExpressions) {
 			MatrixExpressionBase::newCount += 1 + (exprMatrix == 0);
 			exprMatrix = new MatrixExpressionNamedReal(matrix, name);
@@ -751,7 +751,7 @@ public:
 	void SetSymbolicMatrix(const py::array_t<Real>& matrixInit)
 	{
 		ResizableConstMatrix temp;
-		EPyUtils::NumPy2Matrix(matrixInit, temp);
+		EPyUtils::FromPython(matrixInit, temp);
 		if (IsExpressionNamedReal())
 		{
 			GetExpressionNamedReal().SetMatrix(temp);
@@ -804,8 +804,8 @@ public:
 	//! for Python usage: return numpy array:
 	//! 
 	virtual py::array_t<Real> PyEvaluate() const {
-		if (exprMatrix) { return EPyUtils::Matrix2NumPy(exprMatrix->Evaluate()); }
-		return EPyUtils::Matrix2NumPy(matrix);
+		if (exprMatrix) { return EPyUtils::ToPython(exprMatrix->Evaluate()); }
+		return EPyUtils::ToPython(matrix);
 	}
 
 	virtual Index NumberOfColumns() const {

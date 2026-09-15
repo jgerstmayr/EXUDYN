@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.58.dev1, 
+  \item Exudyn version = 1.11.59.dev1, 
   \item last change =  2026-09-15, 
   \item Number of issues = 2433, 
-  \item Number of resolved issues = 2131 (58 in current version), 
+  \item Number of resolved issues = 2132 (59 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.59}:  resolved Issue 2421: {\bf one Python/C++ conversion layer for item and structure parameters}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: The generated Main headers convert every item parameter twice (SetWithDictionary and SetParameter) through about 40 differently named PybindUtilities helpers (Get<Kind>IndexSafely - Set<Type>Safely - dict and value overloads); the generators pick the helper name from hand-written typeCasts/convertToDict tables. Item range checks exist only in itemInterface.py (165 CheckForValid calls) - so mbs.SetObjectParameter and mbs.AddObject with a raw dict bypass them - while structures check in C++ (EXUstd::GetSafelyUReal). Plan step 34c: behaviour test first; new header src/Pymodules/PyConversion.h (FromPython/ToPython) kept separate from PybindUtilities.h; one destination-based type model in the generators; items and structures switch to it; range checks move to C++ with current behaviour kept (also in the fast build); return shapes kept (Real vectors numpy - Float4 and index arrays lists).}
+    \item {\bf notes: steps 34c1-34c6: parameterConversionTest.py records the behaviour; src/Pymodules/PyConversion.h (FromPython/ToPython/ItemIndexFromPython/ItemIndexToPython/MemberGetter/MemberSetter) is the one conversion layer for generated item headers - structure members and the hand-written callers (MainSystem.cpp - MainSystemContainer.cpp - PyGeneralContact.h - solvers - symbolic); range checks in C++ with exudyn.special.exceptions.parameterRangeChecks; typeModel.py renders all type spellings; PybindUtilities.h 1104 -> 344 lines (forwarding block and 30 unused helpers deleted; kept: dict and type tests - GetSTDfunction - SetMatrixSafely - SetListOfArraysSafely - SetSlimArraySafely - reference numpy views).}
+    \item   date resolved: {\bf 2026-09-15 10:52},
+date raised: 2026-09-14 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.58}:  resolved Issue 2429: {\bf unify the item/structure type exceptions of typeModel.py}
 (cleanup)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

@@ -134,14 +134,14 @@ py::dict MainSystemContainer::RenderState2PyDict(const RenderState& state)
 	d["viewEnabled"] = state.viewEnabled;
 	d["windowOpen"] = state.windowOpen;
 
-	d["centerPoint"] = EPyUtils::SlimVector2NumPy(Vector3D({ state.centerPoint[0],state.centerPoint[1],state.centerPoint[2] }) );
-	d["rotationCenterPoint"] = EPyUtils::SlimVector2NumPy(Vector3D({ state.rotationCenterPoint[0],state.rotationCenterPoint[1],state.rotationCenterPoint[2] }) );
+	d["centerPoint"] = EPyUtils::ToPython(Vector3D({ state.centerPoint[0],state.centerPoint[1],state.centerPoint[2] }) );
+	d["rotationCenterPoint"] = EPyUtils::ToPython(Vector3D({ state.rotationCenterPoint[0],state.rotationCenterPoint[1],state.rotationCenterPoint[2] }) );
 	d["maxSceneSize"] = state.maxSceneSize;
 	d["zoom"] = state.zoom;
 
 	auto boundingBox = py::list();
-	boundingBox.append(EPyUtils::SlimVector2NumPy(Vector3D({ state.boundingBox.PMinX(),state.boundingBox.PMinY(),state.boundingBox.PMinZ() })));
-	boundingBox.append(EPyUtils::SlimVector2NumPy(Vector3D({ state.boundingBox.PMaxX(),state.boundingBox.PMaxY(),state.boundingBox.PMaxZ() })));
+	boundingBox.append(EPyUtils::ToPython(Vector3D({ state.boundingBox.PMinX(),state.boundingBox.PMinY(),state.boundingBox.PMinZ() })));
+	boundingBox.append(EPyUtils::ToPython(Vector3D({ state.boundingBox.PMaxX(),state.boundingBox.PMaxY(),state.boundingBox.PMaxZ() })));
 	d["boundingBox"] = boundingBox;
 
 	d["currentWindowSize"] = EPyUtils::SlimArrayIndex2NumPy(state.currentWindowSize);
@@ -157,19 +157,19 @@ py::dict MainSystemContainer::RenderState2PyDict(const RenderState& state)
 		}
 	}
 
-	auto rotMatrix = EPyUtils::Matrix2NumPyTemplate(m3D);
+	auto rotMatrix = EPyUtils::ToPython(m3D);
 	d["modelRotation"] = rotMatrix;
 
 	//++++++++++++++++++++++++++++++++++++++++++++
 	//current projection matrix:
 	Matrix4D m4D;
 	m4D.CopyFrom(state.projectionMatrix);
-	auto projectionMatrix = EPyUtils::Matrix2NumPyTemplate(m4D); //converts to double
+	auto projectionMatrix = EPyUtils::ToPython(m4D); //converts to double
 	d["projectionMatrix"] = projectionMatrix;
 	//++++++++++++++++++++++++++++++++++++++++++++
 
-	d["mouseCoordinates"] = EPyUtils::SlimVector2NumPy(state.mouseCoordinates);
-	d["openGLcoordinates"] = EPyUtils::SlimVector2NumPy(state.openGLcoordinates);
+	d["mouseCoordinates"] = EPyUtils::ToPython(state.mouseCoordinates);
+	d["openGLcoordinates"] = EPyUtils::ToPython(state.openGLcoordinates);
 
 	//++++++++++++++++++++++++++++++++++++++++++++
 	//last mouse selection
@@ -179,8 +179,8 @@ py::dict MainSystemContainer::RenderState2PyDict(const RenderState& state)
 	d["mouseSelectionZdepth"] = state.mouseSelectionZdepth;
 
 	//for space mouse (3D position + 3D rotation); read ONLY!
-	d["joystickPosition"] = EPyUtils::SlimVector2NumPy(state.joystickPosition);
-	d["joystickRotation"] = EPyUtils::SlimVector2NumPy(state.joystickRotation);
+	d["joystickPosition"] = EPyUtils::ToPython(state.joystickPosition);
+	d["joystickRotation"] = EPyUtils::ToPython(state.joystickRotation);
 	d["joystickAvailable"] = state.joystickAvailable;
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -191,23 +191,23 @@ py::dict MainSystemContainer::RenderState2PyDict(const RenderState& state)
 		auto VR = py::dict();
 
 		Matrix4D m4D;
-		m4D.CopyFrom(state.openVRstate.HMDpose); VR["HMDpose"] = EPyUtils::Matrix2NumPyTemplate(m4D);
-		m4D.CopyFrom(state.openVRstate.projectionLeft); VR["projectionLeft"] = EPyUtils::Matrix2NumPyTemplate(m4D);
-		m4D.CopyFrom(state.openVRstate.eyePosLeft); VR["eyePosLeft"] = EPyUtils::Matrix2NumPyTemplate(m4D);
-		m4D.CopyFrom(state.openVRstate.projectionRight); VR["projectionRight"] = EPyUtils::Matrix2NumPyTemplate(m4D);
-		m4D.CopyFrom(state.openVRstate.eyePosRight); VR["eyePosRight"] = EPyUtils::Matrix2NumPyTemplate(m4D);
+		m4D.CopyFrom(state.openVRstate.HMDpose); VR["HMDpose"] = EPyUtils::ToPython(m4D);
+		m4D.CopyFrom(state.openVRstate.projectionLeft); VR["projectionLeft"] = EPyUtils::ToPython(m4D);
+		m4D.CopyFrom(state.openVRstate.eyePosLeft); VR["eyePosLeft"] = EPyUtils::ToPython(m4D);
+		m4D.CopyFrom(state.openVRstate.projectionRight); VR["projectionRight"] = EPyUtils::ToPython(m4D);
+		m4D.CopyFrom(state.openVRstate.eyePosRight); VR["eyePosRight"] = EPyUtils::ToPython(m4D);
 
 		auto controllerPoseList = py::list();
 		for (auto mat : state.openVRstate.controllerPoses)
 		{
-			m4D.CopyFrom(mat); controllerPoseList.append(EPyUtils::Matrix2NumPyTemplate(m4D));
+			m4D.CopyFrom(mat); controllerPoseList.append(EPyUtils::ToPython(m4D));
 		}
 		VR["controllerPoses"] = controllerPoseList;
 
 		auto trackerPoseList = py::list();
 		for (auto mat : state.openVRstate.trackerPoses)
 		{
-			m4D.CopyFrom(mat); trackerPoseList.append(EPyUtils::Matrix2NumPyTemplate(m4D));
+			m4D.CopyFrom(mat); trackerPoseList.append(EPyUtils::ToPython(m4D));
 		}
 		VR["trackerPoses"] = trackerPoseList;
 
@@ -626,11 +626,11 @@ void MainRenderer::SetState(py::dict renderState, bool waitForRendererFullStartu
 
 		if (renderState.contains("centerPoint"))
 		{
-			EPyUtils::SetSlimVectorTemplateSafely<float, 3>(renderState["centerPoint"], state.centerPoint); //conversion to float works ...
+			EPyUtils::FromPython(renderState["centerPoint"], state.centerPoint); //conversion to float works ...
 		}
 		if (renderState.contains("rotationCenterPoint"))
 		{
-			EPyUtils::SetSlimVectorTemplateSafely<float, 3>(renderState["rotationCenterPoint"], state.rotationCenterPoint);
+			EPyUtils::FromPython(renderState["rotationCenterPoint"], state.rotationCenterPoint);
 		}
 		if (renderState.contains("maxSceneSize")) { state.maxSceneSize = py::cast<float>(renderState["maxSceneSize"]); }
 		if (renderState.contains("zoom")) { state.zoom = py::cast<float>(renderState["zoom"]); }
@@ -639,7 +639,7 @@ void MainRenderer::SetState(py::dict renderState, bool waitForRendererFullStartu
 		if (renderState.contains("currentWindowSize"))
 		{
 			Vector2D windowSize;
-			EPyUtils::SetVector2DSafely(renderState["currentWindowSize"], windowSize); //no effect when changing; maybe changes in future
+			EPyUtils::FromPython(renderState["currentWindowSize"], windowSize); //no effect when changing; maybe changes in future
 			state.currentWindowSize[0] = (Index)windowSize[0];
 			state.currentWindowSize[1] = (Index)windowSize[1];
 			GetSettingsView(viewID, VSC.GetVisualizationSettings()).window.renderWindowSize = state.currentWindowSize;
@@ -649,7 +649,7 @@ void MainRenderer::SetState(py::dict renderState, bool waitForRendererFullStartu
 			//check if all parts of modelRotation (translation part) shall be modified?
 			Matrix4DF& A = state.modelRotation;
 			Matrix3D R;
-			EPyUtils::SetNumpyMatrixSafely(renderState["modelRotation"], R);
+			EPyUtils::Conversion::NumpyToMatrix<Real>(renderState["modelRotation"], R);
 			//map rotation matrix to part of 16 components in A; other components untouched!
 			for (Index i = 0; i < 3; i++)
 			{
@@ -665,7 +665,7 @@ void MainRenderer::SetState(py::dict renderState, bool waitForRendererFullStartu
 		if (renderState.contains("projectionMatrix"))
 		{
 			Matrix4D m;
-			EPyUtils::SetNumpyMatrixSafely(renderState["projectionMatrix"], m);
+			EPyUtils::Conversion::NumpyToMatrix<Real>(renderState["projectionMatrix"], m);
 			state.projectionMatrix.CopyFrom(m);
 		}
 		//++++++++++++++++++++++++++++++++++++++++++++

@@ -104,7 +104,7 @@ public:
 	//! return a dense matrix from any other matrix: requires a copy - SLOW!
 	py::array_t<Real> Convert2DenseMatrix() const
 	{
-		return EPyUtils::Matrix2NumPy(GetEXUdenseMatrix());
+		return EPyUtils::ToPython(GetEXUdenseMatrix());
 	}
 
 

@@ -55,7 +55,7 @@ py::object MainSensor::GetSensorValues(const CSystemData& cSystemData, Configura
 
 py::array_t<Real> MainSensor::GetInternalStorage()
 {
-	return EPyUtils::Matrix2NumPy(GetCSensor()->GetInternalStorage());
+	return EPyUtils::ToPython(GetCSensor()->GetInternalStorage());
 }
 
 

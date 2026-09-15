@@ -20,7 +20,7 @@
 #include "System/ItemIndices.h"	
 //#include "Pymodules/PyMatrixVector.h"
 #include "Utilities/ExceptionsTemplates.h"
-#include "Pymodules/PyConversion.h"  //FromPython / ToPython; the helpers below forward there (step 34c2)
+#include "Pymodules/PyConversion.h"  //FromPython / ToPython (revision plan step 34c)
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -36,86 +36,6 @@ namespace py = pybind11;            //! namespace 'py' used throughout in code
 
 //! Exudyn python utilities namespace
 namespace EPyUtils { 
-
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//+++ forwarding to PyConversion.h (revision plan step 34c2); removed in 34c6 +++++++++++++++++++
-	//these keep the old names for the generated code and the hand-written callers until they call
-	//FromPython / ToPython / ItemIndexFromPython / ItemIndexToPython directly
-	inline bool IsNodeIndex(const py::object& pyObject) { return Conversion::IsItemIndexOfKind<NodeIndex>(pyObject); }
-	inline bool IsObjectIndex(const py::object& pyObject) { return Conversion::IsItemIndexOfKind<ObjectIndex>(pyObject); }
-	inline bool IsMarkerIndex(const py::object& pyObject) { return Conversion::IsItemIndexOfKind<MarkerIndex>(pyObject); }
-	inline bool IsLoadIndex(const py::object& pyObject) { return Conversion::IsItemIndexOfKind<LoadIndex>(pyObject); }
-	inline bool IsSensorIndex(const py::object& pyObject) { return Conversion::IsItemIndexOfKind<SensorIndex>(pyObject); }
-
-	template<class TItemIndex>
-	inline Index GetItemIndexSafelyForward(const py::object& pyObject) { Index index; ItemIndexFromPython<TItemIndex>(pyObject, index); return index; }
-	inline Index GetNodeIndexSafely(const py::object& pyObject) { return GetItemIndexSafelyForward<NodeIndex>(pyObject); }
-	inline Index GetObjectIndexSafely(const py::object& pyObject) { return GetItemIndexSafelyForward<ObjectIndex>(pyObject); }
-	inline Index GetMarkerIndexSafely(const py::object& pyObject) { return GetItemIndexSafelyForward<MarkerIndex>(pyObject); }
-	inline Index GetLoadIndexSafely(const py::object& pyObject) { return GetItemIndexSafelyForward<LoadIndex>(pyObject); }
-	inline Index GetSensorIndexSafely(const py::object& pyObject) { return GetItemIndexSafelyForward<SensorIndex>(pyObject); }
-
-	template<class TItemIndex>
-	inline ArrayIndex GetArrayItemIndexSafelyForward(const py::object& pyObject) { ArrayIndex indices; ItemIndexFromPython<TItemIndex>(pyObject, indices); return indices; }
-	inline ArrayIndex GetArrayNodeIndexSafely(const py::object& pyObject) { return GetArrayItemIndexSafelyForward<NodeIndex>(pyObject); }
-	inline ArrayIndex GetArrayObjectIndexSafely(const py::object& pyObject) { return GetArrayItemIndexSafelyForward<ObjectIndex>(pyObject); }
-	inline ArrayIndex GetArrayMarkerIndexSafely(const py::object& pyObject) { return GetArrayItemIndexSafelyForward<MarkerIndex>(pyObject); }
-	inline ArrayIndex GetArraySensorIndexSafely(const py::object& pyObject) { return GetArrayItemIndexSafelyForward<SensorIndex>(pyObject); }
-
-	inline Index2 GetNodeIndex2Safely(const py::object& pyObject) { Index2 indices; ItemIndexFromPython<NodeIndex>(pyObject, indices); return indices; }
-	inline Index3 GetNodeIndex3Safely(const py::object& pyObject) { Index3 indices; ItemIndexFromPython<NodeIndex>(pyObject, indices); return indices; }
-	inline Index4 GetNodeIndex4Safely(const py::object& pyObject) { Index4 indices; ItemIndexFromPython<NodeIndex>(pyObject, indices); return indices; }
-
-	inline std::vector<NodeIndex> GetArrayNodeIndex(const ArrayIndex& arrayIndex) { return ItemIndexToPython<NodeIndex>(arrayIndex); }
-	inline std::vector<ObjectIndex> GetArrayObjectIndex(const ArrayIndex& arrayIndex) { return ItemIndexToPython<ObjectIndex>(arrayIndex); }
-	inline std::vector<MarkerIndex> GetArrayMarkerIndex(const ArrayIndex& arrayIndex) { return ItemIndexToPython<MarkerIndex>(arrayIndex); }
-	inline std::vector<SensorIndex> GetArraySensorIndex(const ArrayIndex& arrayIndex) { return ItemIndexToPython<SensorIndex>(arrayIndex); }
-
-	inline bool SetStringSafely(const py::object& value, STDstring& destination) { FromPython(value, destination); return true; }
-	inline bool SetStringSafely(const py::dict& d, const char* itemName, STDstring& destination)
-	{
-		if (!d.contains(itemName) || !py::isinstance<py::str>(d[itemName]))
-		{
-			PyError(STDstring("ERROR: failed to convert '") + itemName + "' into string; dictionary:\n" + EXUstd::ToString(d));
-		}
-		FromPython(d[itemName], destination);
-		return true;
-	}
-
-	template<class T, Index size>
-	inline bool SetSlimVectorTemplateSafely(const py::object& value, SlimVectorBase<T, size>& destination) { FromPython(value, destination); return true; }
-	template<typename T, Index size>
-	inline bool SetSlimVectorTemplateSafely(const py::dict& d, const char* item, SlimVectorBase<T, size>& destination)
-	{
-		if (!d.contains(item) || !Conversion::IsListOrArray(d[item]))
-		{
-			PyError(STDstring("ERROR: failed to convert '") + item + "' into Vector" + EXUstd::ToString(size) + "D; dictionary:\n" + EXUstd::ToString(d));
-		}
-		FromPython(d[item], destination);
-		return true;
-	}
-
-	template<typename T, Index rows, Index columns>
-	inline bool SetConstMatrixTypeTemplateSafely(const py::object& value, ConstSizeMatrixBase<T, rows*columns>& destination) { FromPython<T, rows, columns>(value, destination); return true; }
-
-	template<typename T, class TMatrix>
-	inline bool SetNumpyMatrixSafelyTemplate(const py::object& value, TMatrix& destination) { Conversion::NumpyToMatrix<T>(value, destination); return true; }
-	template<typename T, class TVector>
-	inline bool SetNumpyVectorSafelyTemplate(const py::object& value, TVector& destination) { Conversion::NumpyToVector<T>(value, destination); return true; }
-
-	template<typename T, class TMatrix>
-	inline void NumPy2Matrix(const py::array_t<T>& pyArray, TMatrix& m) { Conversion::NumpyToMatrix<T>(pyArray, m); }
-	template<typename T>
-	inline void NumPy2Vector(const py::array_t<T>& pyArray, VectorBase<T>& v) { Conversion::NumpyToVector<T>(pyArray, v); }
-
-	inline py::array_t<Real> Vector2NumPy(const Vector& v) { return ToPython(v); }
-	template<Index dataSize>
-	inline py::array_t<Real> SlimVector2NumPy(const SlimVector<dataSize>& v) { return ToPython(v); }
-	template<class TMatrix>
-	py::array_t<Real> Matrix2NumPyTemplate(const TMatrix& matrix) { return ToPython(matrix); }
-	inline py::array_t<Real> Matrix2NumPy(const Matrix& matrix) { return ToPython(matrix); }
-	inline py::array_t<Index> MatrixI2NumPy(const MatrixI& matrix) { return ToPython(matrix); }
-	//+++ end of forwarding to PyConversion.h ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 	//! function to check if a specific item exists (but type is not checked) in the dictionary
@@ -175,101 +95,11 @@ namespace EPyUtils {
 		return (py::isinstance<py::list>(pyObject) || py::isinstance<py::array>(pyObject));
 	}
 
-	//! check if py::object is list (list of lists) or numpy array
-	//! if yes, return true; columns=0 means vector (list or 1D numpy array); otherwise it is a matrix
-	inline bool GetPyArrayOrListDimensions(const py::object& obj, int& rows, int& columns) 
-	{
-		rows = 0;
-		columns = 0;
-
-		//Check if the object is a numpy array
-		if (py::isinstance<py::array>(obj)) {
-			py::array arr = py::cast<py::array>(obj);
-			py::buffer_info info = arr.request();
-
-			rows = (Index)info.shape[0];
-			if (info.ndim == 2) {
-				columns = (Index)info.shape[1];
-			}
-			else
-			{
-				//return false => superfunction will raise Error anyways
-				PyWarning("Received numpy array with invalid dimension " + EXUstd::ToString(info.ndim));
-				return false;
-			}
-		}
-		//Check if the object is a list (or list of lists)
-		else if (py::isinstance<py::list>(obj)) 
-		{
-			py::list lst = py::cast<py::list>(obj);
-
-			rows = (Index)lst.size();
-			if (rows > 0 && py::isinstance<py::list>(lst[0])) {
-				// Object is a list of lists
-				py::list first_row = py::cast<py::list>(lst[0]);
-				columns = (Index)first_row.size();
-			}
-		}
-		else
-		{
-			return false;
-		}
-		return true;
-	}
-
 
 	
 
 
-
-
-
-
-
-
-
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	// some conversion functions for conversion of (internal, C++) index arrays to arrays of NodeIndex, MarkerIndex, ...
-
-
-
-
-
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-	inline bool CheckForValidFunction(const py::object pyObject)
-	{
-		if (py::isinstance<py::function>(pyObject))
-		{
-			return true;
-		}
-		else if (IsPyTypeInteger(pyObject))
-		{
-			if (py::cast<int>(pyObject) != 0) 
-			{ 
-				PyError(STDstring("Failed to convert PyFunction: must be either valid Python function or 0, but got ")+EXUstd::ToString(pyObject)); 
-			}
-			return false; //this is a valid value, but no function (0-function pointer means empty function (in C++: nullptr))
-		}
-		else
-		{
-			PyError(STDstring("Failed to convert PyFunction: must be either valid Python function or int, but got ")+ EXUstd::ToString(pyObject));
-		}
-		return false;
-	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! cast py::object to std::function; accept also zero
@@ -300,46 +130,6 @@ namespace EPyUtils {
 	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-	//inline bool SetVector2DSafely(const py::dict& d, const char* item, Vector2D& destination) {
-	//	return SetSlimVectorTemplateSafely<Real, 2>(d, item, destination); }
-
-	//Delete:
-	//inline bool SetVector3DSafely(const py::dict& d, const char* item, Vector3D& destination) {
-	//	return SetSlimVectorTemplateSafely<Real, 3>(d, item, destination);}
-
-	//inline bool SetVector4DSafely(const py::dict& d, const char* item, Vector4D& destination) {
-	//	return SetSlimVectorTemplateSafely<Real, 4>(d, item, destination);}
-
-	//inline bool SetVector6DSafely(const py::dict& d, const char* item, Vector6D& destination) {
-	//	return SetSlimVectorTemplateSafely<Real, 6>(d, item, destination);}
-
-	//inline bool SetVector7DSafely(const py::dict& d, const char* item, Vector7D& destination) {
-	//	return SetSlimVectorTemplateSafely<Real, 7>(d, item, destination);}
-
-
-	//! Set a ConstMatrix of any size from a py::object safely and return false (if failed) and true if value has been set
-	template<Index rows, Index columns>
-	inline bool SetConstMatrixTemplateSafely(const py::object& value, ConstSizeMatrix<rows*columns>& destination)
-	{
-		return SetConstMatrixTypeTemplateSafely<Real, rows, columns>(value, destination);
-	}
-
-	template<Index rows, Index columns>
-	inline bool SetConstMatrixTemplateSafely(const py::dict& d, const char* item, ConstSizeMatrix<rows*columns>& destination)
-	{
-
-		if (d.contains(item))
-		{
-			py::object other = d[item]; //this is necessary to make isinstance work
-			return SetConstMatrixTemplateSafely<rows,columns>(other, destination);
-		}
-		PyError(STDstring("ERROR: failed to convert '") + item + "' into Matrix; dictionary:\n" + EXUstd::ToString(d));
-
-		return false;
-	}
-
 
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -479,36 +269,6 @@ namespace EPyUtils {
 	//functions for py::object safe conversion:
 
 
-
-	inline bool SetVector2DSafely(const py::object& value, Vector2D& destination) {
-		return SetSlimVectorTemplateSafely<Real,2>(value, destination);
-	}
-	inline bool SetVector3DSafely(const py::object& value, Vector3D& destination) {
-		return SetSlimVectorTemplateSafely<Real, 3>(value, destination);
-	}
-	inline bool SetVector4DSafely(const py::object& value, Vector4D& destination) {
-		return SetSlimVectorTemplateSafely<Real, 4>(value, destination);
-	}
-	inline bool SetVector6DSafely(const py::object& value, Vector6D& destination) {
-		return SetSlimVectorTemplateSafely<Real, 6>(value, destination);
-	}
-	inline bool SetVector7DSafely(const py::object& value, Vector7D& destination) {
-		return SetSlimVectorTemplateSafely<Real, 7>(value, destination);
-	}
-
-	template<class T>
-	inline bool SetResizableArraySafely(const py::object& value, ResizableArray<T>& destination)
-	{
-		if (py::isinstance<py::list>(value) || py::isinstance<py::array>(value))
-		{
-			std::vector<T> stdlist = py::cast<std::vector<T>>(value); //! # read out dictionary and cast to C++ type
-			destination = stdlist;
-			return true;
-		}
-		PyError(STDstring("failed to convert array to ResizableArray: " + py::cast<std::string>(value)));
-		return false;
-	}
-
 	template<class T, Index size>
 	inline bool SetSlimArraySafely(const py::object& value, SlimArray<T, size>& destination)
 	{
@@ -553,7 +313,6 @@ namespace EPyUtils {
 	}
 
 
-
 	//!convert ArrayIndex to numpy vector; COPY
 	inline py::array_t<Index> ArrayIndex2NumPy(const ArrayIndex& v)
 	{
@@ -568,113 +327,16 @@ namespace EPyUtils {
 	}
 
 
-
-	//!convert Matrix to numpy matrix; COPY
-	template<class TMatrix>
-	py::array_t<float> MatrixF2NumPyTemplate(const TMatrix& matrix)
-	{
-		return py::array_t<float>(std::vector<std::ptrdiff_t>{(int)matrix.NumberOfRows(), (int)matrix.NumberOfColumns()}, matrix.GetDataPointer());
-	}
-
-
-
-
-	//!convert MatrixF to numpy matrix; COPY
-	inline py::array_t<float> MatrixF2NumPy(const MatrixF& matrix)
-	{
-		return py::array_t<float>(std::vector<std::ptrdiff_t>{(int)matrix.NumberOfRows(), (int)matrix.NumberOfColumns()}, matrix.GetDataPointer());
-	}
-
-
-
-
 	//!convert numpy matrix to Matrix
 	inline Matrix NumPy2Matrix(const py::array_t<Real>& pyArray)
 	{
 		Matrix m;
-		NumPy2Matrix(pyArray, m);
+		FromPython(pyArray, m);
 		return m;
 	}
-
-	//!convert numpy matrix to Matrix
-	inline MatrixI NumPy2MatrixI(const py::array_t<Index>& pyArray)
-	{
-		MatrixI m;
-		NumPy2Matrix(pyArray, m);
-		return m;
-	}
-
-	//!convert numpy matrix to ResizableMatrix
-	inline ResizableMatrix NumPy2ResizableMatrix(const py::array_t<Real>& pyArray)
-	{
-		ResizableMatrix m;
-		NumPy2Matrix(pyArray, m);
-		return m;
-	}
-
-	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//numpy conversions
-	template<typename T>
-	inline bool SetNumpyMatrixSafelyTemplate(const py::dict& d, const char* itemName, MatrixBase<T>& destination)
-	{
-		if (d.contains(itemName))
-		{
-			py::object other = d[itemName]; //this is necessary to make isinstance work
-			SetNumpyMatrixSafelyTemplate<T, MatrixBase<T>>(other, destination); //includes silent conversion from Real (e.g. for ANCFPlate)
-
-			//NumPy2Matrix<T>(py::cast<py::array_t<T>>(other), destination);
-			return true;
-		}
-		PyError(STDstring("ERROR: failed to convert '") + itemName + "' (expected: numpy matrix) into Matrix; dictionary:\n" + EXUstd::ToString(d));
-		return false;
-	}
-
-	inline bool SetNumpyMatrixISafely(const py::dict& d, const char* itemName, MatrixI& destination)
-	{
-		return SetNumpyMatrixSafelyTemplate<Index>(d, itemName, destination);
-	}
-
-	inline bool SetNumpyMatrixSafely(const py::dict& d, const char* itemName, Matrix& destination)
-	{
-		return SetNumpyMatrixSafelyTemplate<Real>(d, itemName, destination);
-	}
-
-
-
-	inline bool SetNumpyVectorSafely(const py::dict& d, const char* itemName, Vector& destination)
-	{
-		if (d.contains(itemName))
-		{
-			py::object other = d[itemName]; //this is necessary to make isinstance work
-
-			return SetNumpyVectorSafelyTemplate<Real, Vector>(other, destination);
-		}
-		PyError(STDstring("ERROR: failed to convert '") + itemName + "' (expected: numpy vector) into Vector; dictionary:\n" + EXUstd::ToString(d));
-		return false;
-	}
-
-	template<class TMatrix>
-	inline bool SetNumpyMatrixSafely(const py::object& value, TMatrix& destination)
-	{
-		return SetNumpyMatrixSafelyTemplate<Real, TMatrix>(value, destination);
-	}
-	inline bool SetNumpyMatrixISafely(const py::object& value, MatrixI& destination)
-	{
-		return SetNumpyMatrixSafelyTemplate<Index, MatrixI>(value, destination);
-		//NumPy2Matrix<Index>(py::cast<py::array_t<Index>>(value), destination);
-		//return true;
-	}
-
-	inline bool SetNumpyVectorSafely(const py::object& value, Vector& destination)
-	{
-		return SetNumpyVectorSafelyTemplate<Real, Vector>(value, destination);
-		//NumPy2Vector(py::cast<py::array_t<Real>>(value), destination);
-		//return true;
-	}
-
 
 
 } //namespace HPyUtils

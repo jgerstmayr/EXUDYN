@@ -438,7 +438,7 @@ NodeIndex MainSystem::AddMainNodePyClass(const py::object& pyObject)
 //! Consistently deleta a MainNode from Python
 void MainSystem::PyDeleteNode(const py::object& nodeNumber, bool suppressWarnings)
 {
-	Index deleteItemNumber = EPyUtils::GetNodeIndexSafely(nodeNumber);
+	Index deleteItemNumber = EPyUtils::ItemIndexFromPython<NodeIndex>(nodeNumber);
 	SystemHasChanged();
 	DeleteNode(deleteItemNumber, suppressWarnings);
 	InteractiveModeActions();
@@ -570,7 +570,7 @@ NodeIndex MainSystem::PyGetNodeNumber(STDstring nodeName)
 //! hook to read node's dictionary
 py::dict MainSystem::PyGetNode(const py::object& itemIndex)
 {
-	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
+	Index nodeNumber = EPyUtils::ItemIndexFromPython<NodeIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(nodeNumber, 0, mainSystemData.GetMainNodes().NumberOfItems()) )
 	{
 		return mainSystemData.GetMainNodes().GetItem(nodeNumber)->GetDictionary();
@@ -598,7 +598,7 @@ py::dict MainSystem::PyGetNode(const py::object& itemIndex)
 //! modify node's dictionary
 void MainSystem::PyModifyNode(const py::object& itemIndex, py::dict nodeDict)
 {
-	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
+	Index nodeNumber = EPyUtils::ItemIndexFromPython<NodeIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(nodeNumber, 0, mainSystemData.GetMainNodes().NumberOfItems()))
 	{
 		SystemHasChanged();
@@ -653,7 +653,7 @@ py::dict MainSystem::PyGetNodeDefaults(STDstring typeName)
 py::object MainSystem::PyGetNodeOutputVariable(const py::object& itemIndex, OutputVariableType variableType, ConfigurationType configuration) const
 {
 
-	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
+	Index nodeNumber = EPyUtils::ItemIndexFromPython<NodeIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(nodeNumber, 0, mainSystemData.GetMainNodes().NumberOfItems()))
 	{
 		GetMainSystemData().RaiseIfNotConsistentNorReference("GetNodeOutput", configuration, nodeNumber, ItemType::Node);
@@ -672,7 +672,7 @@ py::object MainSystem::PyGetNodeOutputVariable(const py::object& itemIndex, Outp
 //! get index in global ODE2 coordinate vector for first node coordinate
 Index MainSystem::PyGetNodeODE2Index(const py::object& itemIndex) const
 {
-	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
+	Index nodeNumber = EPyUtils::ItemIndexFromPython<NodeIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(nodeNumber, 0, mainSystemData.GetMainNodes().NumberOfItems()))
 	{
 		if (EXUstd::IsOfType(mainSystemData.GetMainNodes().GetItem(nodeNumber)->GetCNode()->GetNodeGroup(), CNodeGroup::ODE2variables)) //CNodeRigidBodyEP also has AEvariables
@@ -695,7 +695,7 @@ Index MainSystem::PyGetNodeODE2Index(const py::object& itemIndex) const
 //! get index in global ODE1 coordinate vector for first node coordinate
 Index MainSystem::PyGetNodeODE1Index(const py::object& itemIndex) const
 {
-	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
+	Index nodeNumber = EPyUtils::ItemIndexFromPython<NodeIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(nodeNumber, 0, mainSystemData.GetMainNodes().NumberOfItems()))
 	{
 		if (EXUstd::IsOfType(mainSystemData.GetMainNodes().GetItem(nodeNumber)->GetCNode()->GetNodeGroup(), CNodeGroup::ODE1variables)) //CNodeRigidBodyEP also has AEvariables
@@ -718,7 +718,7 @@ Index MainSystem::PyGetNodeODE1Index(const py::object& itemIndex) const
 //! get index in global AE coordinate vector for first node coordinate
 Index MainSystem::PyGetNodeAEIndex(const py::object& itemIndex) const
 {
-	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
+	Index nodeNumber = EPyUtils::ItemIndexFromPython<NodeIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(nodeNumber, 0, mainSystemData.GetMainNodes().NumberOfItems()))
 	{
 		if (EXUstd::IsOfType(mainSystemData.GetMainNodes().GetItem(nodeNumber)->GetCNode()->GetNodeGroup(), CNodeGroup::AEvariables)) //CNodeRigidBodyEP also has AEvariables
@@ -760,7 +760,7 @@ Index MainSystem::PyGetNodeAEIndex(const py::object& itemIndex) const
 //! Get (read) parameter 'parameterName' of 'nodeNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
 py::object MainSystem::PyGetNodeParameter(const py::object& itemIndex, const STDstring& parameterName) const
 {
-	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
+	Index nodeNumber = EPyUtils::ItemIndexFromPython<NodeIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(nodeNumber, 0, mainSystemData.GetMainNodes().NumberOfItems()))
 	{
 		return mainSystemData.GetMainNodes().GetItem(nodeNumber)->GetParameter(parameterName);
@@ -776,7 +776,7 @@ py::object MainSystem::PyGetNodeParameter(const py::object& itemIndex, const STD
 //! Set (write) parameter 'parameterName' of 'nodeNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
 void MainSystem::PySetNodeParameter(const py::object& itemIndex, const STDstring& parameterName, const py::object& value)
 {
-	Index nodeNumber = EPyUtils::GetNodeIndexSafely(itemIndex);
+	Index nodeNumber = EPyUtils::ItemIndexFromPython<NodeIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(nodeNumber, 0, mainSystemData.GetMainNodes().NumberOfItems()))
 	{
 		mainSystemData.GetMainNodes().GetItem(nodeNumber)->SetParameter(parameterName, value);
@@ -839,7 +839,7 @@ ObjectIndex MainSystem::AddMainObjectPyClass(const py::object& pyObject)
 //! Consistently deleta a MainObject from Python
 void MainSystem::PyDeleteObject(const py::object& objectNumber, bool deleteDependentItems, bool suppressWarnings)
 {
-	Index deleteItemNumber = EPyUtils::GetObjectIndexSafely(objectNumber);
+	Index deleteItemNumber = EPyUtils::ItemIndexFromPython<ObjectIndex>(objectNumber);
 	if (EXUstd::IndexIsInRange(deleteItemNumber, 0, mainSystemData.GetMainObjects().NumberOfItems()))
 	{
 		SystemHasChanged();
@@ -977,7 +977,7 @@ ObjectIndex MainSystem::PyGetObjectNumber(STDstring itemName)
 //! hook to read object's dictionary
 py::dict MainSystem::PyGetObject(const py::object& itemIndex, bool addGraphicsData)
 {
-	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<ObjectIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber,0,mainSystemData.GetMainObjects().NumberOfItems()) )
 	{
 		return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetDictionary(addGraphicsData);
@@ -1005,7 +1005,7 @@ py::dict MainSystem::PyGetObject(const py::object& itemIndex, bool addGraphicsDa
 //! modify object's dictionary
 void MainSystem::PyModifyObject(const py::object& itemIndex, py::dict d)
 {
-	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<ObjectIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainObjects().NumberOfItems()))
 	{
 		SystemHasChanged();
@@ -1061,7 +1061,7 @@ py::dict MainSystem::PyGetObjectDefaults(STDstring typeName)
 //! Get specific output variable with variable type
 py::object MainSystem::PyGetObjectOutputVariable(const py::object& itemIndex, OutputVariableType variableType, ConfigurationType configuration) const
 {
-	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<ObjectIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainObjects().NumberOfItems()))
 	{
 		GetMainSystemData().RaiseIfNotConsistentOrIllegalConfiguration("GetObjectOutput", configuration, itemNumber, ItemType::Object);
@@ -1097,7 +1097,7 @@ py::object MainSystem::PyGetObjectOutputVariableBody(const py::object& itemIndex
 		const std::vector<Real>& localPosition, ConfigurationType configuration) const
 {
 
-		Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
+		Index itemNumber = EPyUtils::ItemIndexFromPython<ObjectIndex>(itemIndex);
 		if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainObjects().NumberOfItems()))
 		{
 			GetMainSystemData().RaiseIfNotConsistentNorReference("GetObjectOutputBody", configuration, itemNumber, ItemType::Object);
@@ -1129,7 +1129,7 @@ py::object MainSystem::PyGetObjectOutputVariableBody(const py::object& itemIndex
 py::object MainSystem::PyGetObjectOutputVariableSuperElement(const py::object& itemIndex, OutputVariableType variableType, 
 	Index meshNodeNumber, ConfigurationType configuration) const
 {
-	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<ObjectIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainObjects().NumberOfItems()))
 	{
 		GetMainSystemData().RaiseIfNotConsistentNorReference("GetObjectOutputSuperElement", configuration, itemNumber, ItemType::Object);
@@ -1146,7 +1146,7 @@ py::object MainSystem::PyGetObjectOutputVariableSuperElement(const py::object& i
 //! Get (read) parameter 'parameterName' of 'objectNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
 py::object MainSystem::PyGetObjectParameter(const py::object& itemIndex, const STDstring& parameterName) const
 {
-	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<ObjectIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainObjects().NumberOfItems()))
 	{
 		return mainSystemData.GetMainObjects().GetItem(itemNumber)->GetParameter(parameterName);
@@ -1162,7 +1162,7 @@ py::object MainSystem::PyGetObjectParameter(const py::object& itemIndex, const S
 //! Set (write) parameter 'parameterName' of 'objectNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
 void MainSystem::PySetObjectParameter(const py::object& itemIndex, const STDstring& parameterName, const py::object& value)
 {
-	Index itemNumber = EPyUtils::GetObjectIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<ObjectIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainObjects().NumberOfItems()))
 	{
 		mainSystemData.GetMainObjects().GetItem(itemNumber)->SetParameter(parameterName, value);
@@ -1224,7 +1224,7 @@ MarkerIndex MainSystem::AddMainMarkerPyClass(const py::object& pyObject)
 //! Consistently delete a MainMarker from Python
 void MainSystem::PyDeleteMarker(const py::object& markerNumber, bool suppressWarnings)
 {
-	Index deleteItemNumber = EPyUtils::GetMarkerIndexSafely(markerNumber);
+	Index deleteItemNumber = EPyUtils::ItemIndexFromPython<MarkerIndex>(markerNumber);
 	SystemHasChanged();
 	DeleteMarker(deleteItemNumber, suppressWarnings);
 	InteractiveModeActions();
@@ -1364,7 +1364,7 @@ MarkerIndex MainSystem::PyGetMarkerNumber(STDstring itemName)
 //! hook to read object's dictionary
 py::dict MainSystem::PyGetMarker(const py::object& itemIndex)
 {
-	Index itemNumber = EPyUtils::GetMarkerIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<MarkerIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainMarkers().NumberOfItems()) )
 	{
 		return mainSystemData.GetMainMarkers().GetItem(itemNumber)->GetDictionary();
@@ -1392,7 +1392,7 @@ py::dict MainSystem::PyGetMarker(const py::object& itemIndex)
 //! modify object's dictionary
 void MainSystem::PyModifyMarker(const py::object& itemIndex, py::dict d)
 {
-	Index itemNumber = EPyUtils::GetMarkerIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<MarkerIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainMarkers().NumberOfItems()))
 	{
 		SystemHasChanged();
@@ -1433,7 +1433,7 @@ py::dict MainSystem::PyGetMarkerDefaults(STDstring typeName)
 //! Get (read) parameter 'parameterName' of 'markerNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
 py::object MainSystem::PyGetMarkerParameter(const py::object& itemIndex, const STDstring& parameterName) const
 {
-	Index itemNumber = EPyUtils::GetMarkerIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<MarkerIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainMarkers().NumberOfItems()))
 	{
 		return mainSystemData.GetMainMarkers().GetItem(itemNumber)->GetParameter(parameterName);
@@ -1449,7 +1449,7 @@ py::object MainSystem::PyGetMarkerParameter(const py::object& itemIndex, const S
 //! Set (write) parameter 'parameterName' of 'markerNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
 void MainSystem::PySetMarkerParameter(const py::object& itemIndex, const STDstring& parameterName, const py::object& value)
 {
-	Index itemNumber = EPyUtils::GetMarkerIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<MarkerIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainMarkers().NumberOfItems()))
 	{
 		mainSystemData.GetMainMarkers().GetItem(itemNumber)->SetParameter(parameterName, value);
@@ -1463,7 +1463,7 @@ void MainSystem::PySetMarkerParameter(const py::object& itemIndex, const STDstri
 //! Get specific output variable with variable type
 py::object MainSystem::PyGetMarkerOutputVariable(const py::object& itemIndex, OutputVariableType variableType, ConfigurationType configuration) const
 {
-	Index itemNumber = EPyUtils::GetMarkerIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<MarkerIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainMarkers().NumberOfItems()))
 	{
 		GetMainSystemData().RaiseIfNotConsistentNorReference("GetMarkerOutput", configuration, itemNumber, ItemType::Marker);
@@ -1530,7 +1530,7 @@ LoadIndex MainSystem::AddMainLoadPyClass(const py::object& pyObject)
 //! Consistently delete a MainLoad from Python
 void MainSystem::PyDeleteLoad(const py::object& loadNumber, bool deleteDependentMarkers, bool suppressWarnings)
 {
-	Index deleteItemNumber = EPyUtils::GetLoadIndexSafely(loadNumber);
+	Index deleteItemNumber = EPyUtils::ItemIndexFromPython<LoadIndex>(loadNumber);
 	SystemHasChanged();
 	DeleteLoad(deleteItemNumber, deleteDependentMarkers, suppressWarnings);
 	InteractiveModeActions();
@@ -1624,7 +1624,7 @@ LoadIndex MainSystem::PyGetLoadNumber(STDstring itemName)
 //! hook to read object's dictionary
 py::dict MainSystem::PyGetLoad(const py::object& itemIndex)
 {
-	Index itemNumber = EPyUtils::GetLoadIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<LoadIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainLoads().NumberOfItems()) )
 	{
 		return mainSystemData.GetMainLoads().GetItem(itemNumber)->GetDictionary();
@@ -1652,7 +1652,7 @@ py::dict MainSystem::PyGetLoad(const py::object& itemIndex)
 //! modify object's dictionary
 void MainSystem::PyModifyLoad(const py::object& itemIndex, py::dict d)
 {
-	Index itemNumber = EPyUtils::GetLoadIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<LoadIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainLoads().NumberOfItems()))
 	{
 		SystemHasChanged();
@@ -1694,7 +1694,7 @@ py::dict MainSystem::PyGetLoadDefaults(STDstring typeName)
 py::object MainSystem::PyGetLoadValues(const py::object& itemIndex) const
 {
 
-	Index itemNumber = EPyUtils::GetLoadIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<LoadIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainLoads().NumberOfItems()))
 	{
 		GetMainSystemData().RaiseIfNotConsistent("GetLoadValues", itemNumber, ItemType::Load);
@@ -1711,7 +1711,7 @@ py::object MainSystem::PyGetLoadValues(const py::object& itemIndex) const
 //! Get (read) parameter 'parameterName' of 'loadNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
 py::object MainSystem::PyGetLoadParameter(const py::object& itemIndex, const STDstring& parameterName) const
 {
-	Index itemNumber = EPyUtils::GetLoadIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<LoadIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainLoads().NumberOfItems()))
 	{
 		return mainSystemData.GetMainLoads().GetItem(itemNumber)->GetParameter(parameterName);
@@ -1727,7 +1727,7 @@ py::object MainSystem::PyGetLoadParameter(const py::object& itemIndex, const STD
 //! Set (write) parameter 'parameterName' of 'loadNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
 void MainSystem::PySetLoadParameter(const py::object& itemIndex, const STDstring& parameterName, const py::object& value)
 {
-	Index itemNumber = EPyUtils::GetLoadIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<LoadIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainLoads().NumberOfItems()))
 	{
 		mainSystemData.GetMainLoads().GetItem(itemNumber)->SetParameter(parameterName, value);
@@ -1789,7 +1789,7 @@ SensorIndex MainSystem::AddMainSensorPyClass(const py::object& pyObject)
 //! Consistently delete a MainSensor from Python
 void MainSystem::PyDeleteSensor(const py::object& sensorNumber, bool suppressWarnings)
 {
-	Index deleteItemNumber = EPyUtils::GetSensorIndexSafely(sensorNumber);
+	Index deleteItemNumber = EPyUtils::ItemIndexFromPython<SensorIndex>(sensorNumber);
 	SystemHasChanged();
 	DeleteSensor(deleteItemNumber, suppressWarnings);
 	InteractiveModeActions();
@@ -1877,7 +1877,7 @@ SensorIndex MainSystem::PyGetSensorNumber(STDstring itemName)
 //! hook to read object's dictionary
 py::dict MainSystem::PyGetSensor(const py::object& itemIndex)
 {
-	Index itemNumber = EPyUtils::GetSensorIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<SensorIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainSensors().NumberOfItems()) )
 	{
 		return mainSystemData.GetMainSensors().GetItem(itemNumber)->GetDictionary();
@@ -1905,7 +1905,7 @@ py::dict MainSystem::PyGetSensor(const py::object& itemIndex)
 //! modify object's dictionary
 void MainSystem::PyModifySensor(const py::object& itemIndex, py::dict d)
 {
-	Index itemNumber = EPyUtils::GetSensorIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<SensorIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainSensors().NumberOfItems()))
 	{
 		SystemHasChanged();
@@ -1947,7 +1947,7 @@ py::dict MainSystem::PyGetSensorDefaults(STDstring typeName)
 py::object MainSystem::PyGetSensorValues(const py::object& itemIndex, ConfigurationType configuration)
 {
 
-	Index itemNumber = EPyUtils::GetSensorIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<SensorIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainSensors().NumberOfItems()))
 	{
 		GetMainSystemData().RaiseIfNotConsistentNorReference("GetSensorValues", configuration, itemNumber, ItemType::Sensor);
@@ -1964,7 +1964,7 @@ py::object MainSystem::PyGetSensorValues(const py::object& itemIndex, Configurat
 py::array_t<Real> MainSystem::PyGetSensorStoredData(const py::object& itemIndex)
 {
 
-	Index itemNumber = EPyUtils::GetSensorIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<SensorIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainSensors().NumberOfItems()))
 	{
 		if (!mainSystemData.GetMainSensors().GetItem(itemNumber)->GetCSensor()->GetStoreInternalFlag())
@@ -1986,7 +1986,7 @@ py::array_t<Real> MainSystem::PyGetSensorStoredData(const py::object& itemIndex)
 //! Get (read) parameter 'parameterName' of 'sensorNumber' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
 py::object MainSystem::PyGetSensorParameter(const py::object& itemIndex, const STDstring& parameterName) const
 {
-	Index itemNumber = EPyUtils::GetSensorIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<SensorIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainSensors().NumberOfItems()))
 	{
 		return mainSystemData.GetMainSensors().GetItem(itemNumber)->GetParameter(parameterName);
@@ -2002,7 +2002,7 @@ py::object MainSystem::PyGetSensorParameter(const py::object& itemIndex, const S
 //! Set (write) parameter 'parameterName' of 'SensorNumber' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)
 void MainSystem::PySetSensorParameter(const py::object& itemIndex, const STDstring& parameterName, const py::object& value)
 {
-	Index itemNumber = EPyUtils::GetSensorIndexSafely(itemIndex);
+	Index itemNumber = EPyUtils::ItemIndexFromPython<SensorIndex>(itemIndex);
 	if (EXUstd::IndexIsInRange(itemNumber, 0, mainSystemData.GetMainSensors().NumberOfItems()))
 	{
 		mainSystemData.GetMainSensors().GetItem(itemNumber)->SetParameter(parameterName, value);

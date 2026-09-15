@@ -153,8 +153,8 @@ public:
 	{
 		Vector3D searchTreeBoxMinC;
 		Vector3D searchTreeBoxMaxC;
-		EPyUtils::SetVector3DSafely(pMin, searchTreeBoxMinC);
-		EPyUtils::SetVector3DSafely(pMax, searchTreeBoxMaxC);
+		EPyUtils::FromPython(pMin, searchTreeBoxMinC);
+		EPyUtils::FromPython(pMax, searchTreeBoxMaxC);
 		settings.searchTreeBoxMinInit = searchTreeBoxMinC;
 		settings.searchTreeBoxMaxInit = searchTreeBoxMaxC;
 	}
@@ -168,8 +168,8 @@ public:
 	{
 		Vector3D boxMinC;
 		Vector3D boxMaxC;
-		EPyUtils::SetVector3DSafely(pMin, boxMinC);
-		EPyUtils::SetVector3DSafely(pMax, boxMaxC);
+		EPyUtils::FromPython(pMin, boxMinC);
+		EPyUtils::FromPython(pMax, boxMaxC);
 
 		ArrayIndex arrayMarkerBasedSpheres;
 		ArrayIndex arrayTrigsRigidBodyBased;
@@ -200,10 +200,10 @@ public:
 		}
 		const ContactSpheresMarkerBased& data = spheresMarkerBased[localIndex];
 		auto d = py::dict();
-		d["position"] = EPyUtils::SlimVector2NumPy(data.position);
-		d["orientation"] = EPyUtils::Matrix2NumPyTemplate<Matrix3D>(data.orientation);
-		d["velocity"] = EPyUtils::SlimVector2NumPy(data.velocity);
-		d["angularVelocity"] = EPyUtils::SlimVector2NumPy(data.angularVelocity);
+		d["position"] = EPyUtils::ToPython(data.position);
+		d["orientation"] = EPyUtils::ToPython(data.orientation);
+		d["velocity"] = EPyUtils::ToPython(data.velocity);
+		d["angularVelocity"] = EPyUtils::ToPython(data.angularVelocity);
 		if (addData)
 		{
 			d["markerIndex"] = py::cast<MarkerIndex>(data.markerIndex);
@@ -251,8 +251,8 @@ public:
 		points(0, 0) = data.points[0][0]; points(0, 1) = data.points[0][1]; points(0, 2) = data.points[0][2];
 		points(1, 0) = data.points[1][0]; points(1, 1) = data.points[1][1]; points(1, 2) = data.points[1][2];
 		points(2, 0) = data.points[2][0]; points(2, 1) = data.points[2][1]; points(2, 2) = data.points[2][2];
-		d["points"] = EPyUtils::Matrix2NumPyTemplate<Matrix3D>(points);
-		d["normal"] = EPyUtils::SlimVector2NumPy(data.normal);
+		d["points"] = EPyUtils::ToPython(points);
+		d["normal"] = EPyUtils::ToPython(data.normal);
 
 		return d;
 	}
@@ -288,8 +288,8 @@ public:
 
 		Vector3D pStartC;
 		Vector3D directionC;
-		EPyUtils::SetVector3DSafely(pStart, pStartC);
-		EPyUtils::SetVector3DSafely(direction, directionC);
+		EPyUtils::FromPython(pStart, pStartC);
+		EPyUtils::FromPython(direction, directionC);
 
 		Index foundLocalIndex;
 		Contact::TypeIndex foundTypeIndex;
@@ -347,7 +347,7 @@ public:
 		d["sphereSphereContact"] = settings.sphereSphereContact;
 		d["sphereSphereFrictionRecycle"] = settings.sphereSphereFrictionRecycle;
 		d["globalContactIndexOffsets"] = EPyUtils::ArrayIndex2NumPy(globalContactIndexOffsets);
-		d["frictionPairings"] = EPyUtils::Matrix2NumPy(settings.frictionPairings);
+		d["frictionPairings"] = EPyUtils::ToPython(settings.frictionPairings);
 		d["frictionProportionalZone "] = settings.frictionProportionalZone;
 
 		//basic info on contact objects
@@ -357,8 +357,8 @@ public:
 		d["numberOfRigidBodyMarkerBased"] = rigidBodyMarkerBased.NumberOfItems();
 
 		auto box = py::list();
-		box.append(EPyUtils::SlimVector2NumPy<3>(searchTree.GetBox().PMin()));
-		box.append(EPyUtils::SlimVector2NumPy<3>(searchTree.GetBox().PMax()));
+		box.append(EPyUtils::ToPython(searchTree.GetBox().PMin()));
+		box.append(EPyUtils::ToPython(searchTree.GetBox().PMax()));
 		d["searchTreeBox"] = box;
 		auto sizeList = py::list();
 		sizeList.append(searchTree.SizeX());

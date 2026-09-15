@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-04-02 (last modfied)
+* @date         AUTO: 2026-09-15 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -41,14 +41,14 @@ public: // AUTO:
 
   // AUTO: access functions
   //! AUTO: Set function (needed in pybind) for: \f$\LU{c}{\Dm} \in \Rcal^{6 \times 6}\,\f$ [SI:Nsm\f$^2\f$, Nsm and Ns (mixed)] sectional linear damping matrix related to \f$\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Dm} \vp{\LU{c}{\tepsDot}}{\LU{c}{\tkappaDot}}\f$; note that this damping models is highly simplified and usually, it cannot be derived from material parameters; however, it can be used to adjust model damping to observed damping behavior. Set with list of lists or numpy array.
-  void PySetDampingMatrix(const py::object& dampingMatrixInit) { EPyUtils::SetConstMatrixTemplateSafely<6, 6>(dampingMatrixInit, dampingMatrix); }
+  void PySetDampingMatrix(const py::object& dampingMatrixInit) { EPyUtils::FromPython<Real, 6, 6>(dampingMatrixInit, dampingMatrix); }
   //! AUTO: Read (Copy) access to: \f$\LU{c}{\Dm} \in \Rcal^{6 \times 6}\,\f$ [SI:Nsm\f$^2\f$, Nsm and Ns (mixed)] sectional linear damping matrix related to \f$\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Dm} \vp{\LU{c}{\tepsDot}}{\LU{c}{\tkappaDot}}\f$; note that this damping models is highly simplified and usually, it cannot be derived from material parameters; however, it can be used to adjust model damping to observed damping behavior. Set with list of lists or numpy array.
-  py::array_t<Real> PyGetDampingMatrix() const { return EPyUtils::Matrix2NumPyTemplate(dampingMatrix); }
+  py::array_t<Real> PyGetDampingMatrix() const { return EPyUtils::ToPython(dampingMatrix); }
 
   //! AUTO: Set function (needed in pybind) for: \f$\LU{c}{\Jm} \in \Rcal^{3 \times 3}\,\f$ [SI:kg\f$\,\f$m\f$^2\f$] sectional inertia for shear-deformable beams. Set with list of lists or numpy array.
-  void PySetInertia(const py::object& inertiaInit) { EPyUtils::SetConstMatrixTemplateSafely<3, 3>(inertiaInit, inertia); }
+  void PySetInertia(const py::object& inertiaInit) { EPyUtils::FromPython<Real, 3, 3>(inertiaInit, inertia); }
   //! AUTO: Read (Copy) access to: \f$\LU{c}{\Jm} \in \Rcal^{3 \times 3}\,\f$ [SI:kg\f$\,\f$m\f$^2\f$] sectional inertia for shear-deformable beams. Set with list of lists or numpy array.
-  py::array_t<Real> PyGetInertia() const { return EPyUtils::Matrix2NumPyTemplate(inertia); }
+  py::array_t<Real> PyGetInertia() const { return EPyUtils::ToPython(inertia); }
 
   //! AUTO: Set function (needed in pybind) for: \f$\rho A\,\f$ [SI:kg/m] mass per unit length of the beam
   void PySetMassPerLength(const Real& massPerLengthInit) { massPerLength = EXUstd::GetSafelyUReal(massPerLengthInit,"massPerLength"); }
@@ -56,9 +56,9 @@ public: // AUTO:
   Real PyGetMassPerLength() const { return Real(massPerLength); }
 
   //! AUTO: Set function (needed in pybind) for: \f$\LU{c}{\Cm} \in \Rcal^{6 \times 6}\,\f$ [SI:Nm\f$^2\f$, Nm and N (mixed)] sectional stiffness matrix related to \f$\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Cm} \vp{\LU{c}{\teps}}{\LU{c}{\tkappa}}\f$ with sectional normal force \f$\LU{c}{\nv}\f$, torque \f$\LU{c}{\mv}\f$, strain \f$\LU{c}{\teps}\f$ and curvature \f$\LU{c}{\tkappa}\f$, all quantities expressed in the cross section frame \f$c\f$. Set with list of lists or numpy array.
-  void PySetStiffnessMatrix(const py::object& stiffnessMatrixInit) { EPyUtils::SetConstMatrixTemplateSafely<6, 6>(stiffnessMatrixInit, stiffnessMatrix); }
+  void PySetStiffnessMatrix(const py::object& stiffnessMatrixInit) { EPyUtils::FromPython<Real, 6, 6>(stiffnessMatrixInit, stiffnessMatrix); }
   //! AUTO: Read (Copy) access to: \f$\LU{c}{\Cm} \in \Rcal^{6 \times 6}\,\f$ [SI:Nm\f$^2\f$, Nm and N (mixed)] sectional stiffness matrix related to \f$\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Cm} \vp{\LU{c}{\teps}}{\LU{c}{\tkappa}}\f$ with sectional normal force \f$\LU{c}{\nv}\f$, torque \f$\LU{c}{\mv}\f$, strain \f$\LU{c}{\teps}\f$ and curvature \f$\LU{c}{\tkappa}\f$, all quantities expressed in the cross section frame \f$c\f$. Set with list of lists or numpy array.
-  py::array_t<Real> PyGetStiffnessMatrix() const { return EPyUtils::Matrix2NumPyTemplate(stiffnessMatrix); }
+  py::array_t<Real> PyGetStiffnessMatrix() const { return EPyUtils::ToPython(stiffnessMatrix); }
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const

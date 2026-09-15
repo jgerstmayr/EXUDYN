@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.58.dev1, 
++  Exudyn version = 1.11.59.dev1, 
 +  last change =  2026-09-15, 
 +  Number of issues = 2433, 
-+  Number of resolved issues = 2131 (58 in current version), 
++  Number of resolved issues = 2132 (59 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.59: resolved Issue 2421: one Python/C++ conversion layer for item and structure parameters (change)
+    - issue author: Claude-JG
+    - description:  The generated Main headers convert every item parameter twice (SetWithDictionary and SetParameter) through about 40 differently named PybindUtilities helpers (Get<Kind>IndexSafely - Set<Type>Safely - dict and value overloads); the generators pick the helper name from hand-written typeCasts/convertToDict tables. Item range checks exist only in itemInterface.py (165 CheckForValid calls) - so mbs.SetObjectParameter and mbs.AddObject with a raw dict bypass them - while structures check in C++ (EXUstd::GetSafelyUReal). Plan step 34c: behaviour test first; new header src/Pymodules/PyConversion.h (FromPython/ToPython) kept separate from PybindUtilities.h; one destination-based type model in the generators; items and structures switch to it; range checks move to C++ with current behaviour kept (also in the fast build); return shapes kept (Real vectors numpy - Float4 and index arrays lists).
+    - **notes:** steps 34c1-34c6: parameterConversionTest.py records the behaviour; src/Pymodules/PyConversion.h (FromPython/ToPython/ItemIndexFromPython/ItemIndexToPython/MemberGetter/MemberSetter) is the one conversion layer for generated item headers - structure members and the hand-written callers (MainSystem.cpp - MainSystemContainer.cpp - PyGeneralContact.h - solvers - symbolic); range checks in C++ with exudyn.special.exceptions.parameterRangeChecks; typeModel.py renders all type spellings; PybindUtilities.h 1104 -> 344 lines (forwarding block and 30 unused helpers deleted; kept: dict and type tests - GetSTDfunction - SetMatrixSafely - SetListOfArraysSafely - SetSlimArraySafely - reference numpy views).
+    - date resolved: **2026-09-15 10:52**\ , date raised: 2026-09-14 
+    - resolved by: Claude-JG
  * Version 1.11.58: resolved Issue 2429: unify the item/structure type exceptions of typeModel.py (cleanup)
     - issue author: Claude-JG
     - description:  tools/generators/typeModel.py holds 36 spellings the rules do not produce (step 34c3) - the same definition type is spelled differently for items and structures: Int is int for items and Index for structures; Float3/Float4 are exchanged as std::vector<float> for items and std::array<float n> for structures; NumpyVector/NumpyMatrix are stored as Vector/Matrix in items and py::array_t<Real> in structures; Vector2DList vs Vector3DList wrappers; Matrix2D reads Matrix2D in docs while the other fixed matrices read array_like; stub and dictType special names. Unify as far as possible - one spelling per type and destination - keeping each unification only if the full test suite and parameterConversionTest.py (apart from intended reference changes) do not fail; what must remain gets a comment with the reason. Plan step 102.
@@ -7099,11 +7105,6 @@ Open issues
  * **open issue 2423:** every C++ user error inspects the Python source for its file and line
     - issue author: Claude-JG
     - description:  PyError and PyWarning call PyGetCurrentFileInformation (src/Main/Stdoutput.cpp:259); which calls inspect.getframeinfo - that resolves the module by scanning sys.modules and reads the source file. The cost grows with the number of imported modules: the ~38000 probe errors of parameterConversionTest.py (step 34c1) took 1 s standalone and 9 s inside runTestSuite.py after scipy; matplotlib and ngsolve were imported. It matters wherever errors are caught in a loop (parameter studies; try/except in user code). The frame alone (f_code.co_filename; f_lineno) gives the same information without the scan. Plan step 96.
-    - date raised: 2026-09-14 
-
- * **open issue 2421:** one Python/C++ conversion layer for item and structure parameters
-    - issue author: Claude-JG
-    - description:  The generated Main headers convert every item parameter twice (SetWithDictionary and SetParameter) through about 40 differently named PybindUtilities helpers (Get<Kind>IndexSafely - Set<Type>Safely - dict and value overloads); the generators pick the helper name from hand-written typeCasts/convertToDict tables. Item range checks exist only in itemInterface.py (165 CheckForValid calls) - so mbs.SetObjectParameter and mbs.AddObject with a raw dict bypass them - while structures check in C++ (EXUstd::GetSafelyUReal). Plan step 34c: behaviour test first; new header src/Pymodules/PyConversion.h (FromPython/ToPython) kept separate from PybindUtilities.h; one destination-based type model in the generators; items and structures switch to it; range checks move to C++ with current behaviour kept (also in the fast build); return shapes kept (Real vectors numpy - Float4 and index arrays lists).
     - date raised: 2026-09-14 
 
  * **open issue 2418:** test suite models write output files into TestModels instead of solution/

@@ -55,13 +55,13 @@ namespace py = pybind11;
 //! get locally stored / last computed system residual
 py::array_t<Real> MainSolverImplicitSecondOrder::GetAAlgorithmic()
 {
-	return EPyUtils::Vector2NumPy(GetCSolver().data.aAlgorithmic);
+	return EPyUtils::ToPython(GetCSolver().data.aAlgorithmic);
 }
 
 //! get locally stored / last computed algorithmic accelerations at start of step
 py::array_t<Real> MainSolverImplicitSecondOrder::GetStartOfStepStateAAlgorithmic()
 {
-	return EPyUtils::Vector2NumPy(GetCSolver().data.startOfStepStateAAlgorithmic);
+	return EPyUtils::ToPython(GetCSolver().data.startOfStepStateAAlgorithmic);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -208,7 +208,7 @@ public:
 		}
 		else
 		{
-			return EPyUtils::Matrix2NumPyTemplate<ConstSizeMatrix<numberOfRowsColumns*numberOfRowsColumns>>(this->GetItemUnsafe(index));
+			return EPyUtils::ToPython(this->GetItemUnsafe(index));
 		}
 	}
 
@@ -224,7 +224,7 @@ public:
 		{
 			try
 			{
-				EPyUtils::SetConstMatrixTemplateSafely<numberOfRowsColumns, numberOfRowsColumns>(pyArray, this->GetItemUnsafe(index));
+				EPyUtils::FromPython<Real, numberOfRowsColumns, numberOfRowsColumns>(pyArray, this->GetItemUnsafe(index));
 			}
 			//mostly catches python errors:
 			catch (const pybind11::error_already_set& ex)
@@ -261,7 +261,7 @@ public:
 		for (const ConstSizeMatrix<numberOfRowsColumns*numberOfRowsColumns>& item : *this)
 		{
 			//list.append(py::array_t<Real>(item.NumberOfItems(), item.GetDataPointer())); //gives weird results!!!
-			list.append(EPyUtils::Matrix2NumPyTemplate<ConstSizeMatrix<numberOfRowsColumns*numberOfRowsColumns>>(item));
+			list.append(EPyUtils::ToPython(item));
 		}
 		return list;
 	}

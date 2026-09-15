@@ -695,8 +695,8 @@ public:
 	//! for Python usage: return numpy array:
 	//! 
 	virtual py::array_t<Real> PyEvaluate() const {
-		if (exprList) { return EPyUtils::Vector2NumPy(exprList->Evaluate()); }
-		return EPyUtils::Vector2NumPy(vector);
+		if (exprList) { return EPyUtils::ToPython(exprList->Evaluate()); }
+		return EPyUtils::ToPython(vector);
 	}
 
 	virtual Index NumberOfItems() const {
