@@ -81,40 +81,39 @@ def ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDiction
     BodyGraphicsData and OutputVariableType still differ between the two, as before"""
     typeName = TypeName(parameter)
     source = 'd["' + pyName + '"]' if fromDictionary else 'value'
-    comment = ' /* AUTO:  read out dictionary and cast to C++ type*/'
     context = className + '.' + pyName #names item and parameter in error messages
     if typeName in ['BodyGraphicsData', 'BodyGraphicsDataList']: #special conversion routines
         function = 'PyWriteBodyGraphicsDataList' if typeName == 'BodyGraphicsData' else 'PyWriteBodyGraphicsDataListOfLists'
         if fromDictionary: #a missing entry is not an error here
-            return function + '(d, "' + pyName + '", ' + destStr + '); /*! AUTO: convert dict to ' + typeName + '*/'
-        return function + '(value, ' + destStr + ')'
+            return function + '(d, "' + pyName + '", ' + destStr + ');'
+        return function + '(value, ' + destStr + ');'
     if IsInternalSetGetParameter(typeName):
-        return 'SetInternal' + typeName + '(' + source + '); /*! AUTO:  safely cast to C++ type*/'
+        return 'SetInternal' + typeName + '(' + source + ');'
     if IsAMatrixVectorSpecial(typeName): #Vector3DList, Matrix3DList, PyMatrixContainer: not yet in PyConversion.h;
         #None stays accepted as empty: it is the default of these parameters in itemInterface.py (step 34c4 c)
-        return 'EPyUtils::Set' + typeName + 'Safely(' + source + ', ' + destStr + ');' + comment
+        return 'EPyUtils::Set' + typeName + 'Safely(' + source + ', ' + destStr + ');'
     if typeName in ['Matrix3D', 'Matrix6D']: #fixed size: rows and columns are template arguments
         size = typeName[6:-1]
-        return 'EPyUtils::FromPython<Real, ' + size + ', ' + size + '>(' + source + ', ' + destStr + ');' + comment
+        return 'EPyUtils::FromPython<Real, ' + size + ', ' + size + '>(' + source + ', ' + destStr + ');'
     if IsASetSafelyParameter(typeName): #String, Vector2D ... Vector9D, NumpyVector, NumpyMatrix, NumpyMatrixI
-        return 'EPyUtils::FromPython(' + source + ', ' + destStr + ');' + comment
+        return 'EPyUtils::FromPython(' + source + ', ' + destStr + ');'
     if IsItemIndex(typeName):
-        return 'EPyUtils::ItemIndexFromPython<' + ItemIndexKind(typeName) + '>(' + source + ', ' + destStr + ');' + comment
+        return 'EPyUtils::ItemIndexFromPython<' + ItemIndexKind(typeName) + '>(' + source + ', ' + destStr + ');'
     if 'PyFunction' in typeName: #py::object can be directly written
-        return destStr + ' = ' + source + ';' + comment
+        return destStr + ' = ' + source + ';'
     if typeName in rangeCheckForms: #the same check on every write path (step 34c4 b)
         given = '' #must-be-given parameters: Add and dictionaries raise for the placeholder default (step 34c4 e)
         if fromDictionary and HasFlag(parameter, 'Q'):
             given = 'EPyUtils::RequireGiven(' + source + ', ' + DefaultValueString(parameter) + ', "' + context + '"); '
         return (given + 'EPyUtils::FromPython(' + source + ', ' + destStr + ', EPyUtils::RangeCheck::' + rangeCheckForms[typeName]
-                + ', "' + context + '");' + comment)
+                + ', "' + context + '");')
     if typeCastStr == 'OutputVariableType' and fromDictionary:
-        return destStr + ' = (OutputVariableType)py::cast<Index>(' + source + ');' + comment
+        return destStr + ' = (OutputVariableType)py::cast<Index>(' + source + ');'
     if typeName in ['Float3', 'Float4', 'ArrayIndex', 'Vector']: #the same overloads as the structure members (step 102)
-        return 'EPyUtils::FromPython(' + source + ', ' + destStr + ', "' + context + '");' + comment
+        return 'EPyUtils::FromPython(' + source + ', ' + destStr + ', "' + context + '");'
     if typeCastStr in ['bool', 'Real', 'float', 'Index']: #plain scalars: None raises (step 34c4 c)
-        return 'EPyUtils::FromPython(' + source + ', ' + destStr + ', "' + context + '");' + comment
-    return destStr + ' = py::cast<' + typeCastStr + '>(' + source + ');' + comment
+        return 'EPyUtils::FromPython(' + source + ', ' + destStr + ', "' + context + '");'
+    return destStr + ' = py::cast<' + typeCastStr + '>(' + source + ');'
 
 
 #%%************************************************
@@ -235,8 +234,8 @@ def ItemCppHeaders(definition):
     #add pointer to computation class in main class
     compClassVariable = compClassStr[0].lower()+compClassStr[1:]  #instance name is lower case
     visuClassVariable = visuClassStr[0].lower()+visuClassStr[1:]  #instance name is lower case
-    sList[3]+=space4 + compClassStr + '* ' + compClassVariable + '; //pointer to computational object (initialized in object factory) AUTO:\n'
-    sList[3]+=space4 + visuClassStr + '* ' + visuClassVariable + '; //pointer to computational object (initialized in object factory) AUTO:\n'
+    sList[3]+=space4 + compClassStr + '* ' + compClassVariable + '; //!< AUTO: pointer to computational object (initialized in object factory)\n'
+    sList[3]+=space4 + visuClassStr + '* ' + visuClassVariable + '; //!< AUTO: pointer to visualization object (initialized in object factory)\n'
 
     #add parameter member variables
     for i in range(2): # 0...comp parameters, 1...main parameters
@@ -521,7 +520,7 @@ def ItemCppHeaders(definition):
                     #     dictListRead[i]+='}\n        else\n'
                     #     dictListRead[i]+=space8+'    {d["' + pyName + '"] = 0;}\n'
                             
-                    dictListRead[i] +=' //! AUTO: cast variables into python (not needed for standard types) \n'
+                    dictListRead[i] +='\n'
                                                     
                 #+++++++++++++++++
                 #write to dictionary
@@ -532,7 +531,7 @@ def ItemCppHeaders(definition):
                     #if (TypeName(parameter) == 'String') | (TypeName(parameter) == 'Vector2D') | (TypeName(parameter) == 'Vector3D') | (TypeName(parameter) == 'Vector4D') | (TypeName(parameter) == 'Vector6D') | (TypeName(parameter) == 'Vector7D'):
                     dictListWrite[i] += ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDictionary=True, className=classStr)
                     if HasFlag(parameter, 'O'): #optional ==> means that we have to check first, if it exists in the dictionary
-                        dictListWrite[i]+='} '
+                        dictListWrite[i]+=' }'
                     dictListWrite[i]+='\n'
 
                     #+++++++++++++++++
@@ -549,16 +548,16 @@ def ItemCppHeaders(definition):
                         parameterReadStr += parRead
                     elif isPyFunction:
                         #parameterReadStr += destStr+' ? py::cast('+parRead+') : py::cast((int)0);'
-                        parameterReadStr += destStr+'.GetPythonDictionary();'
+                        parameterReadStr += destStr+'.GetPythonDictionary()'
                     elif 'BodyGraphicsData' in TypeName(parameter):
                         parameterReadStr += parRead.replace(', addGraphicsData',', true')
                     else:
                         parameterReadStr += 'py::cast(' + parRead + ')'
                     
-                    parameterReadStr += ';} //! AUTO: get parameter\n        else '
+                    parameterReadStr += '; } //! AUTO: get parameter\n        else '
                 
                 if parWrite != '':
-                    parameterWriteStr += 'if (parameterName.compare("' + pyName + '") == 0) { ' + parWrite + '; } //! AUTO: get parameter\n        else '
+                    parameterWriteStr += 'if (parameterName.compare("' + pyName + '") == 0) { ' + parWrite + ' } //! AUTO: set parameter\n        else '
 
                 #pybind access goes via function in MainSystem/ObjectFactory class, e.g.:
                 #   AddMarker(dict) --> return markerNumber
@@ -645,7 +644,7 @@ def ItemCppHeaders(definition):
     sList[3] += space4+'virtual py::object GetParameter(const STDstring& parameterName) const override \n'
     sList[3] += space4+'{\n        '
     sList[3] += parameterReadStr
-    sList[3] += ' {PyError(STDstring("' + classStr + '::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user\n'
+    sList[3] += '{PyError(STDstring("' + classStr + '::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user\n'
     sList[3] += space8+'return py::object();\n'
 #        if Header(definition, 'classType') == 'Object': #if parameters have changed, some functions may be necessary to be reset
 #            sList[3] += space8+'GetCObject()->ParametersHaveChanged();\n'
@@ -655,7 +654,7 @@ def ItemCppHeaders(definition):
     sList[3] += space4+'virtual void SetParameter(const STDstring& parameterName, const py::object& value) override \n'
     sList[3] += space4+'{\n        '
     sList[3] += parameterWriteStr
-    sList[3] += ' {PyError(STDstring("' + classStr + '::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user\n'
+    sList[3] += '{PyError(STDstring("' + classStr + '::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user\n'
     #notify object that parameters have changed
     if Header(definition, 'classType') == 'Object': #if parameters have changed (e.g. with ModifyObject(..) ), some functions may be necessary to be reset
         sList[3] += space8+'GetCObject()->ParametersHaveChanged();\n'
@@ -925,6 +924,8 @@ def WriteItemHeaders(directoryString):
 
     for definition in im.ItemDefinitions():
         fileStr = ItemCppHeaders(definition)
+        for k in range(3): #C, Main and Visu header: no trailing whitespace
+            fileStr[k] = chr(10).join(line.rstrip() for line in fileStr[k].split(chr(10)))
         symbolicUserFunctionSet += fileStr[3]
 
         #+++++++++++++++++++++++++++++++

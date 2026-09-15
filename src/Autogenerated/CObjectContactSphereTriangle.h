@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:41 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTCONTACTSPHERETRIANGLEPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CObjectContactSphereTriangleParameters
-class CObjectContactSphereTriangleParameters // AUTO: 
+class CObjectContactSphereTriangleParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers representing the center of the sphere (marker 0) and the reference point of the triangle (marker 1), where triangle nodal positions are defined in the local coordinates of marker 1.
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused.
     Real radiusSphere;                            //!< AUTO:  radius of sphere [SI:m]
@@ -73,7 +73,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -83,9 +83,9 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectContactSphereTriangle
-class CObjectContactSphereTriangle: public CObjectConnector // AUTO: 
+class CObjectContactSphereTriangle: public CObjectConnector // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     static constexpr Index nDataVariables = 4; //number of data variables for tangential and normal contact
     static constexpr Index dataIndexGap = 0; //!< index in data node representing gap
     static constexpr Index dataIndexVtangent = 1; //!< index in data node representing tangent velocity
@@ -93,7 +93,7 @@ protected: // AUTO:
     static constexpr Index dataIndexDeltaPlastic = 3; //!< index in data node representing plastic deformation, according to elasto-plastic adhesion model
     CObjectContactSphereTriangleParameters parameters; //! AUTO: contains all parameters for CObjectContactSphereTriangle
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-06-07  20:45:48 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef VISUALIZATIONOBJECTKINEMATICTREE__H
@@ -22,9 +22,9 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
-class VisualizationObjectKinematicTree: public VisualizationObjectSuperElement // AUTO: 
+class VisualizationObjectKinematicTree: public VisualizationObjectSuperElement // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     bool showLinks;                               //!< AUTO: set true, if links shall be shown; if graphicsDataList is empty, a standard drawing for links is used (drawing a cylinder from previous joint or base to next joint; size relative to frame size in KinematicTree visualization settings); else graphicsDataList are used per link; NOTE visualization of joint and COM frames can be modified via visualizationSettings.bodies.kinematicTree
     bool showJoints;                              //!< AUTO: set true, if joints shall be shown; if graphicsDataList is empty, a standard drawing for joints is used (drawing a cylinder for revolute joints; size relative to frame size in KinematicTree visualization settings)
     Float4 color;                                 //!< AUTO: RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used
@@ -32,7 +32,7 @@ protected: // AUTO:
     bool showNodes;                               //!< AUTO: unused in KinematicTree
     BodyGraphicsDataList graphicsDataList;        //!< AUTO: Structure contains data for link/joint visualization; data is defined as list of BodyGraphicsData where every BodyGraphicsData corresponds to one link/joint; must either be emtpy list or length must agree with number of links
 
-public: // AUTO: 
+public: // AUTO:
     //! AUTO: default constructor with parameter initialization
     VisualizationObjectKinematicTree()
     {

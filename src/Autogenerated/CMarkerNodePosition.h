@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-05  23:17:52 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CMARKERNODEPOSITIONPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CMarkerNodePositionParameters
-class CMarkerNodePositionParameters // AUTO: 
+class CMarkerNodePositionParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Index nodeNumber;                             //!< AUTO: node number to which marker is attached to
     //! AUTO: default constructor with parameter initialization
     CMarkerNodePositionParameters()
@@ -47,7 +47,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -57,12 +57,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CMarkerNodePosition
-class CMarkerNodePosition: public CMarker // AUTO: 
+class CMarkerNodePosition: public CMarker // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CMarkerNodePositionParameters parameters; //! AUTO: contains all parameters for CMarkerNodePosition
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

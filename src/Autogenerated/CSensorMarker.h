@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-06  23:20:45 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CSENSORMARKERPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CSensorMarkerParameters
-class CSensorMarkerParameters // AUTO: 
+class CSensorMarkerParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Index markerNumber;                           //!< AUTO: marker number to which sensor is attached to
     bool writeToFile;                             //!< AUTO: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''
     std::string fileName;                         //!< AUTO: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
@@ -55,7 +55,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -65,12 +65,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CSensorMarker
-class CSensorMarker: public CSensor // AUTO: 
+class CSensorMarker: public CSensor // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CSensorMarkerParameters parameters; //! AUTO: contains all parameters for CSensorMarker
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

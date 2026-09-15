@@ -1,16 +1,16 @@
 /** ***********************************************************************************************
 * @class        VisualizationObjectConnectorLinearSpringDamper
-* @brief        An linear spring-damper element acting on relative translations along given axis of local joint0 coordinate system; connects to position and orientation-based markers; the linear spring-damper is intended to act within prismatic joints or in situations where only one translational axis is free; if the two markers rotate relative to each other, the spring-damper will always act in the local joint0 coordinate system.
+* @brief        An linear spring-damper element acting on relative translations along given axis of local joint0 coordinate system. It connects to position and orientation-based markers; the linear spring-damper is intended to act within prismatic joints or in situations where only one translational axis is free; if the two markers rotate relative to each other, the spring-damper will always act in the local joint0 coordinate system.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-03  15:27:06 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef VISUALIZATIONOBJECTCONNECTORLINEARSPRINGDAMPER__H
@@ -22,14 +22,14 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
-class VisualizationObjectConnectorLinearSpringDamper: public VisualizationObject // AUTO: 
+class VisualizationObjectConnectorLinearSpringDamper: public VisualizationObject // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     float drawSize;                               //!< AUTO: drawing size = diameter of spring; size == -1.f means that default connector size is used
     bool drawAsCylinder;                          //!< AUTO: if this flag is True, the spring-damper is represented as cylinder; this may fit better if the spring-damper represents an actuator
     Float4 color;                                 //!< AUTO: RGBA connector color; if R==-1, use default color
 
-public: // AUTO: 
+public: // AUTO:
     //! AUTO: default constructor with parameter initialization
     VisualizationObjectConnectorLinearSpringDamper()
     {

@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:40 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTFFRFREDUCEDORDERPARAMETERS__H
@@ -27,14 +27,14 @@
 #include <pybind11/numpy.h>//for NumpyMatrix
 #include <pybind11/stl.h>//for NumpyMatrix
 #include <pybind11/pybind11.h>
-typedef py::array_t<Real> NumpyMatrix; 
+typedef py::array_t<Real> NumpyMatrix;
 #include "Pymodules/PyMatrixContainer.h"//for some \hac{FFRF} matrices
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectFFRFreducedOrderParameters
-class CObjectFFRFreducedOrderParameters // AUTO: 
+class CObjectFFRFreducedOrderParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex nodeNumbers;                       //!< AUTO: node numbers of rigid body node and NodeGenericODE2 for modal coordinates; the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame, the modal coordinates and the mode basis
     PyMatrixContainer massMatrixReduced;          //!< AUTO: body-fixed and ONLY flexible coordinates part of reduced mass matrix; provided as MatrixContainer(sparse/dense matrix)
     PyMatrixContainer stiffnessMatrixReduced;     //!< AUTO: body-fixed and ONLY flexible coordinates part of reduced stiffness matrix; provided as MatrixContainer(sparse/dense matrix)
@@ -87,7 +87,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -97,9 +97,9 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectFFRFreducedOrder
-class CObjectFFRFreducedOrder: public CObjectSuperElement // AUTO: 
+class CObjectFFRFreducedOrder: public CObjectSuperElement // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CObjectFFRFreducedOrderParameters parameters; //! AUTO: contains all parameters for CObjectFFRFreducedOrder
     bool objectIsInitialized;                     //!< AUTO: ALWAYS set to False! flag used to correctly initialize all \hac{FFRF} matrices; as soon as this flag is False, some internal (constant) \hac{FFRF} matrices are recomputed during Assemble()
     Real physicsMass;                             //!< AUTO: total mass [SI:kg] of FFRFreducedOrder object
@@ -117,7 +117,7 @@ protected: // AUTO:
     mutable ResizableVector tempVector;           //!< AUTO: temporary vector at computation of ODE2Lhs
     mutable ResizableVector tempVector2;          //!< AUTO: second temporary vector at computation of ODE2Lhs
 
-public: // AUTO: 
+public: // AUTO:
     static constexpr Index ffrfNodeDim = 3; //dimension of nodes (=displacement coordinates per node)
     static constexpr Index rigidBodyNodeNumber = 0; //node number of rigid body node (usually = 0)
     static constexpr Index genericNodeNumber = 1;//node number for modal coordinates

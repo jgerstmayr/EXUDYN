@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:40 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTALEANCFCABLE2DPARAMETERS__H
@@ -25,9 +25,9 @@
 #include "Objects/CObjectANCFCable2DBase.h"
 
 //! AUTO: Parameters for class CObjectALEANCFCable2DParameters
-class CObjectALEANCFCable2DParameters // AUTO: 
+class CObjectALEANCFCable2DParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Real physicsLength;                           //!< AUTO:  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
     Real physicsMassPerLength;                    //!< AUTO:  [SI:kg/m] total mass per length of beam (including axially moving parts / fluid)
     Real physicsMovingMassFactor;                 //!< AUTO: this factor denotes the amount of \f$\rho A\f$ which is moving; physicsMovingMassFactor=1 means, that all mass is moving; physicsMovingMassFactor=0 means, that no mass is moving; factor can be used to simulate e.g. pipe conveying fluid, in which \f$\rho A\f$ is the mass of the pipe+fluid, while \f$physicsMovingMassFactor \cdot \rho A\f$ is the mass per unit length of the fluid
@@ -74,7 +74,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -84,14 +84,14 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectALEANCFCable2D
-class CObjectALEANCFCable2D: public CObjectANCFCable2DBase // AUTO: 
+class CObjectALEANCFCable2D: public CObjectANCFCable2DBase // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     mutable bool massTermsALEComputed; //!< flag which shows that ALE mass terms have been computed; will be set to false at time when parameters are set
     mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> preComputedM1, preComputedM2, preComputedB1, preComputedB2; //!< if massTermsALEComputed=true, this contains the constant mass terms for faster computation
     CObjectALEANCFCable2DParameters parameters; //! AUTO: contains all parameters for CObjectALEANCFCable2D
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

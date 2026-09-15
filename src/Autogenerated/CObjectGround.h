@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:39 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTGROUNDPARAMETERS__H
@@ -26,9 +26,9 @@
 #include "Pymodules/PythonUserFunctions.h" //! AUTO: needed for user functions, without pybind11
 
 //! AUTO: Parameters for class CObjectGroundParameters
-class CObjectGroundParameters // AUTO: 
+class CObjectGroundParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Vector3D referencePosition;                   //!< AUTO: reference point = reference position for ground object; local position is added on top of reference position for a ground object
     Matrix3D referenceRotation;                   //!< AUTO: the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates
     //! AUTO: default constructor with parameter initialization
@@ -51,7 +51,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -61,13 +61,13 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectGround
-class CObjectGround: public CObjectBody // AUTO: 
+class CObjectGround: public CObjectBody // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     static constexpr Index nODE2coordinates = 0;
     CObjectGroundParameters parameters; //! AUTO: contains all parameters for CObjectGround
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

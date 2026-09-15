@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:39 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTMASSPOINT2DPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CObjectMassPoint2DParameters
-class CObjectMassPoint2DParameters // AUTO: 
+class CObjectMassPoint2DParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Real physicsMass;                             //!< AUTO: mass [SI:kg] of mass point
     Index nodeNumber;                             //!< AUTO: node number (type NodeIndex) for mass point
     //! AUTO: default constructor with parameter initialization
@@ -49,7 +49,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -59,13 +59,13 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectMassPoint2D
-class CObjectMassPoint2D: public CObjectBody // AUTO: 
+class CObjectMassPoint2D: public CObjectBody // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     static constexpr Index nODE2coordinates = 2;
     CObjectMassPoint2DParameters parameters; //! AUTO: contains all parameters for CObjectMassPoint2D
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

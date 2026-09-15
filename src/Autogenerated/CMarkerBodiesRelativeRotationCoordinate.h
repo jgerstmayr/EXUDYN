@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-02-05  22:16:40 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CMARKERBODIESRELATIVEROTATIONCOORDINATEPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CMarkerBodiesRelativeRotationCoordinateParameters
-class CMarkerBodiesRelativeRotationCoordinateParameters // AUTO: 
+class CMarkerBodiesRelativeRotationCoordinateParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex bodyNumbers;                       //!< AUTO: list of body numbers for which relative coordinate is computed
     Index nodeNumber;                             //!< AUTO: node number of NodeGenericData with 1 coordinate which contains previous angle for continuation of angles (initialize accordingly if needed); if node is not supplied, angles will have jump outside \f$\pm \pi\f$
     Vector3D localPosition0;                      //!< AUTO: local position on body 0; i.e. local (body-fixed) position where position is measured and force is applied to
@@ -57,7 +57,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -67,12 +67,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CMarkerBodiesRelativeRotationCoordinate
-class CMarkerBodiesRelativeRotationCoordinate: public CMarker // AUTO: 
+class CMarkerBodiesRelativeRotationCoordinate: public CMarker // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CMarkerBodiesRelativeRotationCoordinateParameters parameters; //! AUTO: contains all parameters for CMarkerBodiesRelativeRotationCoordinate
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:39 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CNODEPOINT2DSLOPE1PARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CNodePoint2DSlope1Parameters
-class CNodePoint2DSlope1Parameters // AUTO: 
+class CNodePoint2DSlope1Parameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Vector4D referenceCoordinates;                //!< AUTO: reference coordinates (x-pos,y-pos; x-slopex, y-slopex) of node; global position of node without displacement
     //! AUTO: default constructor with parameter initialization
     CNodePoint2DSlope1Parameters()
@@ -47,7 +47,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -57,12 +57,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CNodePoint2DSlope1
-class CNodePoint2DSlope1: public CNodeODE2 // AUTO: 
+class CNodePoint2DSlope1: public CNodeODE2 // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CNodePoint2DSlope1Parameters parameters; //! AUTO: contains all parameters for CNodePoint2DSlope1
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

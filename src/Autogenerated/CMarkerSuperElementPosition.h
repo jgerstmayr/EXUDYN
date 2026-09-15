@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-06-29  16:19:12 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CMARKERSUPERELEMENTPOSITIONPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CMarkerSuperElementPositionParameters
-class CMarkerSuperElementPositionParameters // AUTO: 
+class CMarkerSuperElementPositionParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Index bodyNumber;                             //!< AUTO: body number to which marker is attached to
     ArrayIndex meshNodeNumbers;                   //!< AUTO: a list of \f$n_m\f$ mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers
     Vector weightingFactors;                      //!< AUTO: a list of \f$n_m\f$ weighting factors per node to compute the final local position; the sum of these weights shall be 1, such that a summation of all nodal positions times weights gives the average position of the marker
@@ -51,7 +51,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -61,12 +61,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CMarkerSuperElementPosition
-class CMarkerSuperElementPosition: public CMarker // AUTO: 
+class CMarkerSuperElementPosition: public CMarker // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CMarkerSuperElementPositionParameters parameters; //! AUTO: contains all parameters for CMarkerSuperElementPosition
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

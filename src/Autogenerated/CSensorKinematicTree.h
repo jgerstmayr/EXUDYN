@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-05  23:27:45 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CSENSORKINEMATICTREEPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CSensorKinematicTreeParameters
-class CSensorKinematicTreeParameters // AUTO: 
+class CSensorKinematicTreeParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Index objectNumber;                           //!< AUTO: object number of KinematicTree to which sensor is attached to
     Index linkNumber;                             //!< AUTO: number of link in KinematicTree to measure quantities
     Vector3D localPosition;                       //!< AUTO: local (link-fixed) position of sensor, defined in link (\f$n_l\f$) coordinate system
@@ -59,7 +59,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -69,12 +69,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CSensorKinematicTree
-class CSensorKinematicTree: public CSensor // AUTO: 
+class CSensorKinematicTree: public CSensor // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CSensorKinematicTreeParameters parameters; //! AUTO: contains all parameters for CSensorKinematicTree
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

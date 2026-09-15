@@ -1,16 +1,16 @@
 /** ***********************************************************************************************
 * @class        VisualizationObjectConnectorRigidBodySpringDamper
-* @brief        An 3D spring-damper element acting on relative displacements and relative rotations of two rigid body (position+orientation) markers; connects to (position+orientation)-based markers and represents a penalty-based rigid joint (or prismatic, revolute, etc.)
+* @brief        An 3D spring-damper element acting on relative displacements and relative rotations of two rigid body (position+orientation) markers. It represents a penalty-based rigid joint (or prismatic, revolute, etc.)
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-03  15:27:06 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef VISUALIZATIONOBJECTCONNECTORRIGIDBODYSPRINGDAMPER__H
@@ -22,13 +22,13 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
-class VisualizationObjectConnectorRigidBodySpringDamper: public VisualizationObject // AUTO: 
+class VisualizationObjectConnectorRigidBodySpringDamper: public VisualizationObject // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     float drawSize;                               //!< AUTO: drawing size = diameter of spring; size == -1.f means that default connector size is used
     Float4 color;                                 //!< AUTO: RGBA connector color; if R==-1, use default color
 
-public: // AUTO: 
+public: // AUTO:
     //! AUTO: default constructor with parameter initialization
     VisualizationObjectConnectorRigidBodySpringDamper()
     {

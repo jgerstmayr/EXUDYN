@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:42 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTJOINTSLIDING2DPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CObjectJointSliding2DParameters
-class CObjectJointSliding2DParameters // AUTO: 
+class CObjectJointSliding2DParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: marker m0: position or rigid body marker of mass point or rigid body; marker m1: updated marker to Cable2D element, where the sliding joint currently is attached to; must be initialized with an appropriate (global) marker number according to the starting position of the sliding object; this marker changes with time (PostNewtonStep)
     ArrayIndex slidingMarkerNumbers;              //!< AUTO: these markers are used to update marker m1, if the sliding position exceeds the current cable's range; the markers must be sorted such that marker \f$m_{si}\f$ at x=cable(i).length is equal to marker(i+1) at x=0 of cable(i+1)
     Vector slidingMarkerOffsets;                  //!< AUTO: this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker m0: offset=0, marker m1: offset=Length(cable0), marker m2: offset=Length(cable0)+Length(cable1), ...
@@ -61,7 +61,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -71,12 +71,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectJointSliding2D
-class CObjectJointSliding2D: public CObjectConstraint // AUTO: 
+class CObjectJointSliding2D: public CObjectConstraint // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CObjectJointSliding2DParameters parameters; //! AUTO: contains all parameters for CObjectJointSliding2D
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

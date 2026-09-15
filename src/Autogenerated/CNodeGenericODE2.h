@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-02-05  22:13:55 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CNODEGENERICODE2PARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CNodeGenericODE2Parameters
-class CNodeGenericODE2Parameters // AUTO: 
+class CNodeGenericODE2Parameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Vector referenceCoordinates;                  //!< AUTO: generic reference coordinates of node; must be consistent with numberOfODE2Coordinates
     Index numberOfODE2Coordinates;                //!< AUTO: number of generic \hac{ODE2} coordinates
     //! AUTO: default constructor with parameter initialization
@@ -49,7 +49,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -59,12 +59,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CNodeGenericODE2
-class CNodeGenericODE2: public CNodeODE2 // AUTO: 
+class CNodeGenericODE2: public CNodeODE2 // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CNodeGenericODE2Parameters parameters; //! AUTO: contains all parameters for CNodeGenericODE2
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
@@ -75,7 +75,7 @@ public: // AUTO:
     //! AUTO:  return number of second order diff. eq. coordinates
     virtual Index GetNumberOfODE2Coordinates() const override
     {
-        return parameters.numberOfODE2Coordinates;;
+        return parameters.numberOfODE2Coordinates;
     }
 
     //! AUTO:  return node type (for node treatment in computation)

@@ -1,16 +1,16 @@
 /** ***********************************************************************************************
 * @class        VisualizationObjectContactSphereTriangle
-* @brief        [UNDER DEVELOPMENT] A simple contact connector between a sphere (marker0) and a triangle (marker1). Penalty-based contact is computed from penetration of the sphere with the triangle, including contact with edges if desired.
+* @brief        A simple contact connector between a sphere (marker0) and a triangle (marker1). Penalty-based contact is computed from penetration of the sphere with the triangle, including contact with edges if desired.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-17  16:55:55 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef VISUALIZATIONOBJECTCONTACTSPHERETRIANGLE__H
@@ -22,12 +22,12 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
-class VisualizationObjectContactSphereTriangle: public VisualizationObject // AUTO: 
+class VisualizationObjectContactSphereTriangle: public VisualizationObject // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     Float4 color;                                 //!< AUTO: RGBA connector color; if R==-1, use default color
 
-public: // AUTO: 
+public: // AUTO:
     //! AUTO: default constructor with parameter initialization
     VisualizationObjectContactSphereTriangle()
     {

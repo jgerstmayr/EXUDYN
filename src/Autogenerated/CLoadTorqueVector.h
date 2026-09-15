@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:42 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CLOADTORQUEVECTORPARAMETERS__H
@@ -27,9 +27,9 @@
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CLoadTorqueVectorParameters
-class CLoadTorqueVectorParameters // AUTO: 
+class CLoadTorqueVectorParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Index markerNumber;                           //!< AUTO: marker's number to which load is applied
     Vector3D loadVector;                          //!< AUTO: vector-valued load [SI:N]; in case of a user function, this vector is ignored
     bool bodyFixed;                               //!< AUTO: if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower torque; if false: global coordinates are used
@@ -56,7 +56,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -66,12 +66,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CLoadTorqueVector
-class CLoadTorqueVector: public CLoad // AUTO: 
+class CLoadTorqueVector: public CLoad // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CLoadTorqueVectorParameters parameters; //! AUTO: contains all parameters for CLoadTorqueVector
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

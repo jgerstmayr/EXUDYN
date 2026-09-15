@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:39 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CNODEPOINTSLOPE23PARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CNodePointSlope23Parameters
-class CNodePointSlope23Parameters // AUTO: 
+class CNodePointSlope23Parameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Vector9D referenceCoordinates;                //!< AUTO: reference coordinates (x-pos,y-pos,z-pos; x-slopey, y-slopey, z-slopey; x-slopez, y-slopez, z-slopez) of node; global position of node without displacement
     //! AUTO: default constructor with parameter initialization
     CNodePointSlope23Parameters()
@@ -47,7 +47,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -57,12 +57,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CNodePointSlope23
-class CNodePointSlope23: public CNodeODE2 // AUTO: 
+class CNodePointSlope23: public CNodeODE2 // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CNodePointSlope23Parameters parameters; //! AUTO: contains all parameters for CNodePointSlope23
 
-public: // AUTO: 
+public: // AUTO:
     static constexpr Index nODE2coordinates = 9;//AUTO: number of coordinates, used for fixed-size templates
 
     // AUTO: access functions

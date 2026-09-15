@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-03  15:27:07 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef VISUALIZATIONOBJECTCONNECTORROLLINGDISCPENALTY__H
@@ -22,13 +22,13 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
-class VisualizationObjectConnectorRollingDiscPenalty: public VisualizationObject // AUTO: 
+class VisualizationObjectConnectorRollingDiscPenalty: public VisualizationObject // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     float discWidth;                              //!< AUTO: width of disc for drawing
     Float4 color;                                 //!< AUTO: RGBA connector color; if R==-1, use default color
 
-public: // AUTO: 
+public: // AUTO:
     //! AUTO: default constructor with parameter initialization
     VisualizationObjectConnectorRollingDiscPenalty()
     {

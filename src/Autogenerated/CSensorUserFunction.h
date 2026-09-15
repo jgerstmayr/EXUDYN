@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-06  23:20:45 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CSENSORUSERFUNCTIONPARAMETERS__H
@@ -26,9 +26,9 @@
 #include "Pymodules/PythonUserFunctions.h" //! AUTO: needed for user functions, without pybind11
 
 //! AUTO: Parameters for class CSensorUserFunctionParameters
-class CSensorUserFunctionParameters // AUTO: 
+class CSensorUserFunctionParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex sensorNumbers;                     //!< AUTO: optional list of \f$n\f$ sensor numbers for use in user function
     Vector factors;                               //!< AUTO: optional list of \f$m\f$ factors which can be used, e.g., for weighting sensor values
     bool writeToFile;                             //!< AUTO: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''
@@ -59,7 +59,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -69,12 +69,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CSensorUserFunction
-class CSensorUserFunction: public CSensor // AUTO: 
+class CSensorUserFunction: public CSensor // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CSensorUserFunctionParameters parameters; //! AUTO: contains all parameters for CSensorUserFunction
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:40 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTBEAMGEOMETRICALLYEXACT2DPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CObjectBeamGeometricallyExact2DParameters
-class CObjectBeamGeometricallyExact2DParameters // AUTO: 
+class CObjectBeamGeometricallyExact2DParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex nodeNumbers;                       //!< AUTO: two node numbers for beam element
     Real physicsLength;                           //!< AUTO:  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
     Real physicsMassPerLength;                    //!< AUTO:  [SI:kg/m] mass per length of beam
@@ -69,7 +69,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -79,16 +79,16 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectBeamGeometricallyExact2D
-class CObjectBeamGeometricallyExact2D: public CObjectBody // AUTO: 
+class CObjectBeamGeometricallyExact2D: public CObjectBody // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     static constexpr Index maxNNodes = 3; //!< max number of nodes
     static constexpr Index maxODE2coordinates = 9; //!< max size of coordinates used e.g. for ConstSizeVectors
     mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set
     mutable ConstSizeMatrix<maxODE2coordinates*maxODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation
     CObjectBeamGeometricallyExact2DParameters parameters; //! AUTO: contains all parameters for CObjectBeamGeometricallyExact2D
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

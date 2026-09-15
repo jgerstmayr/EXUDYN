@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-02-05  22:16:39 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CMARKERNODECOORDINATEPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CMarkerNodeCoordinateParameters
-class CMarkerNodeCoordinateParameters // AUTO: 
+class CMarkerNodeCoordinateParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Index nodeNumber;                             //!< AUTO: node number to which marker is attached to
     Index coordinate;                             //!< AUTO: coordinate of node to which marker is attached to
     //! AUTO: default constructor with parameter initialization
@@ -49,7 +49,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -59,12 +59,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CMarkerNodeCoordinate
-class CMarkerNodeCoordinate: public CMarker // AUTO: 
+class CMarkerNodeCoordinate: public CMarker // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CMarkerNodeCoordinateParameters parameters; //! AUTO: contains all parameters for CMarkerNodeCoordinate
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

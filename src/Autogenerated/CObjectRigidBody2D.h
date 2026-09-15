@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:40 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTRIGIDBODY2DPARAMETERS__H
@@ -26,9 +26,9 @@
 #include "Pymodules/PythonUserFunctions.h" //! AUTO: needed for user functions, without pybind11
 
 //! AUTO: Parameters for class CObjectRigidBody2DParameters
-class CObjectRigidBody2DParameters // AUTO: 
+class CObjectRigidBody2DParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Real physicsMass;                             //!< AUTO: mass [SI:kg] of rigid body
     Real physicsInertia;                          //!< AUTO: inertia [SI:kgm\f$^2\f$] of rigid body w.r.t. reference point; this is equal to the center of mass, if physicsCenterOfMass = 0
     Vector2D physicsCenterOfMass;                 //!< AUTO: local position of \hac{COM} relative to the body's reference point; if the vector of the \hac{COM} is [0,0], the computation will not consider additional terms for the \hac{COM} and it is faster
@@ -55,7 +55,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -65,13 +65,13 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectRigidBody2D
-class CObjectRigidBody2D: public CObjectBody // AUTO: 
+class CObjectRigidBody2D: public CObjectBody // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     static constexpr Index nODE2coordinates = 3;
     CObjectRigidBody2DParameters parameters; //! AUTO: contains all parameters for CObjectRigidBody2D
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

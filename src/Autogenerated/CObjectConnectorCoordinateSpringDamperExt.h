@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:41 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTCONNECTORCOORDINATESPRINGDAMPEREXTPARAMETERS__H
@@ -27,9 +27,9 @@
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectConnectorCoordinateSpringDamperExtParameters
-class CObjectConnectorCoordinateSpringDamperExtParameters // AUTO: 
+class CObjectConnectorCoordinateSpringDamperExtParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData for 3 data coordinates (friction mode, last sticking position, limit stop state), see description for details; must exist in case of bristle friction model or limit stops
     Real stiffness;                               //!< AUTO: stiffness [SI:N/m] of spring; acts against relative value of coordinates
@@ -92,7 +92,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -102,12 +102,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectConnectorCoordinateSpringDamperExt
-class CObjectConnectorCoordinateSpringDamperExt: public CObjectConnector // AUTO: 
+class CObjectConnectorCoordinateSpringDamperExt: public CObjectConnector // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CObjectConnectorCoordinateSpringDamperExtParameters parameters; //! AUTO: contains all parameters for CObjectConnectorCoordinateSpringDamperExt
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

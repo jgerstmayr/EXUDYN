@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:39 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CNODERIGIDBODYEPPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CNodeRigidBodyEPParameters
-class CNodeRigidBodyEPParameters // AUTO: 
+class CNodeRigidBodyEPParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Vector7D referenceCoordinates;                //!< AUTO: reference coordinates (3 position coordinates and 4 Euler parameters) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)
     bool addConstraintEquation;                   //!< AUTO: True: automatically add Euler parameter constraint for node; False: Euler parameter constraint is not added, must be done manually (e.g., with CoordinateVectorConstraint)
     //! AUTO: default constructor with parameter initialization
@@ -49,7 +49,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -59,15 +59,15 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CNodeRigidBodyEP
-class CNodeRigidBodyEP: public CNodeRigidBody // AUTO: 
+class CNodeRigidBodyEP: public CNodeRigidBody // AUTO:
 {
-protected: // AUTO: 
-    static constexpr Index nRotationCoordinates = 4;//AUTO: 
+protected: // AUTO:
+    static constexpr Index nRotationCoordinates = 4;//AUTO:
     static constexpr Index nDisplacementCoordinates = 3;
     Index globalAECoordinateIndex;
     CNodeRigidBodyEPParameters parameters; //! AUTO: contains all parameters for CNodeRigidBodyEP
 
-public: // AUTO: 
+public: // AUTO:
     static constexpr bool useNodeAE = true;//AUTO: decide old/new mode for EP constraints; will be always true in future
 
     // AUTO: access functions
@@ -163,7 +163,7 @@ public: // AUTO:
     //! AUTO:  provide nodal values efficiently for rigid body computation
     virtual void CollectCurrentNodeData1(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, Vector3D& angularVelocityLocal) const override;
 
-    //! AUTO:  obtain G matrices, position, velocity, rotation matrix A (local to global), local angular velocity 
+    //! AUTO:  obtain G matrices, position, velocity, rotation matrix A (local to global), local angular velocity
     virtual void CollectCurrentNodeMarkerData(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G, Vector3D& pos, Vector3D& vel, Matrix3D& A, Vector3D& angularVelocityLocal) const override;
 
     //! AUTO:  return internally stored reference coordinates of node

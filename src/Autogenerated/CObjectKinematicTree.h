@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:40 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTKINEMATICTREEPARAMETERS__H
@@ -34,9 +34,9 @@
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectKinematicTreeParameters
-class CObjectKinematicTreeParameters // AUTO: 
+class CObjectKinematicTreeParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Index nodeNumber;                             //!< AUTO: node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; \f$n\f$ being the number of minimal coordinates
     Vector3D gravity;                             //!< AUTO: gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree
     Vector3D baseOffset;                          //!< AUTO: offset vector for base, in global coordinates
@@ -91,7 +91,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -101,9 +101,9 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectKinematicTree
-class CObjectKinematicTree: public CObjectSuperElement // AUTO: 
+class CObjectKinematicTree: public CObjectSuperElement // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CObjectKinematicTreeParameters parameters; //! AUTO: contains all parameters for CObjectKinematicTree
     mutable ResizableVector tempVector;           //!< AUTO: temporary vector during computation of mass and ODE2LHS
     mutable ResizableVector tempVector2;          //!< AUTO: second temporary vector during computation of mass and ODE2LHS
@@ -120,7 +120,7 @@ protected: // AUTO:
     mutable Transformation66List jointTempT66;    //!< AUTO: temporary list containing 66 transformations per joint
     mutable Vector6DList jointForces;             //!< AUTO: temporary list containing 6D torques/forces per joint/link
 
-public: // AUTO: 
+public: // AUTO:
     static constexpr Index noParent = -1;//AUTO: number which defines that this link has no parent
     //! AUTO: default constructor with parameter initialization
     CObjectKinematicTree()

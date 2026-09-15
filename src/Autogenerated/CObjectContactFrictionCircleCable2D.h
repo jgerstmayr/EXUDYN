@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:41 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTCONTACTFRICTIONCIRCLECABLE2DPARAMETERS__H
@@ -25,9 +25,9 @@
 constexpr Index CObjectContactFrictionCircleCable2DmaxNumberOfSegments = 12; //maximum number of contact segments
 
 //! AUTO: Parameters for class CObjectContactFrictionCircleCable2DParameters
-class CObjectContactFrictionCircleCable2DParameters // AUTO: 
+class CObjectContactFrictionCircleCable2DParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: a marker \f$m0\f$ with position and orientation and a marker \f$m1\f$ of type BodyCable2DShape; together defining the contact geometry
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with 3 \f$\times n_{cs}\f$  dataCoordinates (used for active set strategy \f$\ra\f$ hold the gap of the last discontinuous iteration, friction state (+-1=slip, 0=stick, -2=undefined) and the last sticking position; initialize coordinates with list [0.1]*\f$n_{cs}\f$+[-2]*\f$n_{cs}\f$+[0.]*\f$n_{cs}\f$, meaning that there is no initial contact with undefined slip/stick
     Index numberOfContactSegments;                //!< AUTO: number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker
@@ -68,7 +68,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -78,12 +78,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectContactFrictionCircleCable2D
-class CObjectContactFrictionCircleCable2D: public CObjectConnector // AUTO: 
+class CObjectContactFrictionCircleCable2D: public CObjectConnector // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CObjectContactFrictionCircleCable2DParameters parameters; //! AUTO: contains all parameters for CObjectContactFrictionCircleCable2D
 
-public: // AUTO: 
+public: // AUTO:
     static const Index isStickCase = 0; //AUTO: value which represents stick
     static const Index isUndefinedCase = -2; //AUTO: value which represents undefined stick/slip
     static const Index absValueSlipCase = 1; //AUTO: slip may be +-1 !

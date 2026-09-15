@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:39 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTMASS1DPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CObjectMass1DParameters
-class CObjectMass1DParameters // AUTO: 
+class CObjectMass1DParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Real physicsMass;                             //!< AUTO: mass [SI:kg] of mass
     Index nodeNumber;                             //!< AUTO: node number (type NodeIndex) for Node1D
     Vector3D referencePosition;                   //!< AUTO: a reference position, used to transform the 1D coordinate to a position
@@ -53,7 +53,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -63,12 +63,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectMass1D
-class CObjectMass1D: public CObjectBody // AUTO: 
+class CObjectMass1D: public CObjectBody // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CObjectMass1DParameters parameters; //! AUTO: contains all parameters for CObjectMass1D
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:40 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTCONNECTORTORSIONALSPRINGDAMPERPARAMETERS__H
@@ -27,9 +27,9 @@
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectConnectorTorsionalSpringDamperParameters
-class CObjectConnectorTorsionalSpringDamperParameters // AUTO: 
+class CObjectConnectorTorsionalSpringDamperParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with 1 dataCoordinate for continuous rotation reconstruction; if this node is left to invalid index, it will not be used
     Real stiffness;                               //!< AUTO: torsional stiffness [SI:Nm/rad] against relative rotation
@@ -70,7 +70,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -80,12 +80,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectConnectorTorsionalSpringDamper
-class CObjectConnectorTorsionalSpringDamper: public CObjectConnector // AUTO: 
+class CObjectConnectorTorsionalSpringDamper: public CObjectConnector // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CObjectConnectorTorsionalSpringDamperParameters parameters; //! AUTO: contains all parameters for CObjectConnectorTorsionalSpringDamper
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
@@ -178,7 +178,7 @@ public: // AUTO:
     //! AUTO:  function called after discontinuous iterations have been completed for one step (e.g. to finalize history variables and set initial values for next step)
     virtual void PostDiscontinuousIterationStep() override
     {
-        
+
     }
 
     //! AUTO:  compute spring damper force-torque helper function

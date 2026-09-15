@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:41 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTCONNECTORREEVINGSYSTEMSPRINGSPARAMETERS__H
@@ -25,9 +25,9 @@
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectConnectorReevingSystemSpringsParameters
-class CObjectConnectorReevingSystemSpringsParameters // AUTO: 
+class CObjectConnectorReevingSystemSpringsParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of position or rigid body markers used in reeving system and optional two coordinate markers (\f$m_{c0}, \, m_{c1}\f$); the first marker \f$m_0\f$ and the last rigid body marker \f$m_{nr-1}\f$ represent the ends of the rope and are directly connected to a position; the markers \f$m_1, \, \ldots, \, m_{nr-2}\f$ can be connected to sheaves, for which a radius and an axis can be prescribed. The coordinate markers are optional and represent prescribed length at the rope ends (marker \f$m_{c0}\f$ is added length at start, marker \f$m_{c1}\f$ is added length at end of the rope in the reeving system)
     bool hasCoordinateMarkers;                    //!< AUTO: flag, which determines, the list of markers (markerNumbers) contains two coordinate markers at the end of the list, representing the prescribed change of length at both ends
     Vector2D coordinateFactors;                   //!< AUTO: factors which are multiplied with the values of coordinate markers; this can be used, e.g., to change directions or to transform rotations (revolutions of a sheave) into change of length
@@ -70,7 +70,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -80,13 +80,13 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectConnectorReevingSystemSprings
-class CObjectConnectorReevingSystemSprings: public CObjectConnector // AUTO: 
+class CObjectConnectorReevingSystemSprings: public CObjectConnector // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CObjectConnectorReevingSystemSpringsParameters parameters; //! AUTO: contains all parameters for CObjectConnectorReevingSystemSprings
     mutable Vector3DList tempPositionsList;       //!< AUTO: temporary list of vectors representing the rope local positions
 
-public: // AUTO: 
+public: // AUTO:
     //! AUTO: default constructor with parameter initialization
     CObjectConnectorReevingSystemSprings()
     {

@@ -4,13 +4,13 @@
 *
 * @author       Manzl Peter
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:41 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTCONTACTCONVEXROLLPARAMETERS__H
@@ -27,9 +27,9 @@ constexpr Index CObjectContactConvexRollMaxIterationsContact = 20; // maximum nu
 constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of equidistant sample points to check convexity of given polynomial at assembly time.
 
 //! AUTO: Parameters for class CObjectContactConvexRollParameters
-class CObjectContactConvexRollParameters // AUTO: 
+class CObjectContactConvexRollParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector; \f$m0\f$ represents the ground, which can undergo translations but not rotations, and \f$m1\f$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the roll's center point
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact)
     Real contactStiffness;                        //!< AUTO: normal contact stiffness [SI:N/m]
@@ -72,7 +72,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -82,18 +82,18 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectContactConvexRoll
-class CObjectContactConvexRoll: public CObjectConnector // AUTO: 
+class CObjectContactConvexRoll: public CObjectConnector // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     static constexpr Index nDataVariables = 3; //number of data variables for tangential and normal contact
     mutable bool objectIsInitialized; //!< flag which shows that polynomials have not been computed
     CObjectContactConvexRollParameters parameters; //! AUTO: contains all parameters for CObjectContactConvexRoll
     mutable Vector coefficientsHullDerivative;    //!< AUTO: polynomial coefficients of the polynomial \f$\mathrm{hull}^\prime(x)\f$
     mutable Vector coefficientsHullDDerivative;   //!< AUTO: second derivative of the hull polynomial.
     Real rBoundingSphere;                         //!< AUTO: The  radius of the bounding sphere for the contact pre-check, calculated from the polynomial coefficients of the hull
-    Vector3D pContact;                            //!< AUTO: The  current potential contact point. Contact occures if pContact[2] < 0. 
+    Vector3D pContact;                            //!< AUTO: The  current potential contact point. Contact occures if pContact[2] < 0.
 
-public: // AUTO: 
+public: // AUTO:
     //! AUTO: default constructor with parameter initialization
     CObjectContactConvexRoll()
     {
@@ -130,11 +130,11 @@ public: // AUTO:
     //! AUTO:  Read (Reference) access to:The  radius of the bounding sphere for the contact pre-check, calculated from the polynomial coefficients of the hull
     Real& GetRBoundingSphere() { return rBoundingSphere; }
 
-    //! AUTO:  Write (Reference) access to:The  current potential contact point. Contact occures if pContact[2] < 0. 
+    //! AUTO:  Write (Reference) access to:The  current potential contact point. Contact occures if pContact[2] < 0.
     void SetPContact(const Vector3D& value) { pContact = value; }
-    //! AUTO:  Read (Reference) access to:The  current potential contact point. Contact occures if pContact[2] < 0. 
+    //! AUTO:  Read (Reference) access to:The  current potential contact point. Contact occures if pContact[2] < 0.
     const Vector3D& GetPContact() const { return pContact; }
-    //! AUTO:  Read (Reference) access to:The  current potential contact point. Contact occures if pContact[2] < 0. 
+    //! AUTO:  Read (Reference) access to:The  current potential contact point. Contact occures if pContact[2] < 0.
     Vector3D& GetPContact() { return pContact; }
 
     //! AUTO:  default (read) function to return Marker numbers
@@ -216,7 +216,7 @@ public: // AUTO:
     //! AUTO:  Check if one of the bounding spheres at the end of the roller is in contact with the ground
     bool PreContactCheckRoller(const Matrix3D& Rotm, const Vector3D& displacement, Real lRoller, Real R, Vector3D& pC) const;
 
-    //! AUTO:  Find the point of the roller closest the ground, contact occures when return[2] < 0  
+    //! AUTO:  Find the point of the roller closest the ground, contact occures when return[2] < 0
     Vector3D FindContactPoint(const Matrix3D& Rotm, const Vector& poly, Real lRoller) const;
 
     //! AUTO:  PolynomialRollXOFAngle: calculate the x-Value of the polynomial matching the slope of the contact

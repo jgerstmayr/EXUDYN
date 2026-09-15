@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:39 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTMASSPOINTPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CObjectMassPointParameters
-class CObjectMassPointParameters // AUTO: 
+class CObjectMassPointParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Real physicsMass;                             //!< AUTO: mass [SI:kg] of mass point
     Index nodeNumber;                             //!< AUTO: node number (type NodeIndex) for mass point
     //! AUTO: default constructor with parameter initialization
@@ -49,7 +49,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -59,13 +59,13 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectMassPoint
-class CObjectMassPoint: public CObjectBody // AUTO: 
+class CObjectMassPoint: public CObjectBody // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     static constexpr Index nODE2coordinates = 3;
     CObjectMassPointParameters parameters; //! AUTO: contains all parameters for CObjectMassPoint
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

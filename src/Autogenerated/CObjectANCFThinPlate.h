@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:40 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTANCFTHINPLATEPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CObjectANCFThinPlateParameters
-class CObjectANCFThinPlateParameters // AUTO: 
+class CObjectANCFThinPlateParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Vector physicsThickness;                      //!< AUTO:  [SI:m] thickness of plate either provided as scalar or as vector (4 values, same order as local element node numbers) values that are linearly interpolated from nodal values; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients
     Real physicsDensity;                          //!< AUTO:  [SI:kg/m\f$^3\f$] density of the plate, possibly averaged over thickness
     Real physicsMassProportionalDamping;          //!< AUTO: mass-proportional damping coefficient \f$\alpha\f$ [SI:1/s]; adds massmatrix proportional damping forces \f$\fv_d = \alpha \Mm \dot{\qv}\f$
@@ -65,7 +65,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -75,15 +75,15 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectANCFThinPlate
-class CObjectANCFThinPlate: public CObjectBody // AUTO: 
+class CObjectANCFThinPlate: public CObjectBody // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     static constexpr Index nODE2coordinates = 36; //!< fixed size of coordinates used e.g. for ConstSizeVectors
     mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set
     mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation
     CObjectANCFThinPlateParameters parameters; //! AUTO: contains all parameters for CObjectANCFThinPlate
 
-public: // AUTO: 
+public: // AUTO:
     static constexpr Index nNodes = 4; //!< number of nodes
     static constexpr Index nSF = 12; //!< number of shape functions
     static constexpr Index nnc = 9; //!< number of node coordinates

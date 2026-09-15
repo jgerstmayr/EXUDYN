@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:41 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTCONTACTCURVECIRCLESPARAMETERS__H
@@ -26,9 +26,9 @@
 constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number of markers upon which arrays do not require memory allocation
 
 //! AUTO: Parameters for class CObjectContactCurveCirclesParameters
-class CObjectContactCurveCirclesParameters // AUTO: 
+class CObjectContactCurveCirclesParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of \f$n_c+1\f$ markers; marker \f$m0\f$ represents the marker carrying the curve; all other markers represent centers of \f$n_c\f$ circles, used in connector
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with nDataVariablesPerSegment dataCoordinates per segment, needed for discontinuous iteration; data variables contain values from last PostNewton iteration: data[0+3*i] is the circle number, data[1+3*i] is the gap, data[2+3*i] is the tangential velocity (and thus contains information if it is stick or slip)
     Vector circlesRadii;                          //!< AUTO: Vector containing radii of \f$n_c\f$ circles [SI:m]; number according to size of markerNumbers-1
@@ -71,7 +71,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -81,16 +81,16 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectContactCurveCircles
-class CObjectContactCurveCircles: public CObjectConnector // AUTO: 
+class CObjectContactCurveCircles: public CObjectConnector // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CObjectContactCurveCirclesParameters parameters; //! AUTO: contains all parameters for CObjectContactCurveCircles
     mutable Vector gapPerSegment;                 //!< AUTO: temporary vector for computed gap
     mutable Vector gapPerSegment_t;               //!< AUTO: temporary vector for computed gap velocity
     mutable Vector segmentsForceLocalX;           //!< AUTO: temporary vector for contact force per segment in local X-direction
     mutable Vector segmentsForceLocalY;           //!< AUTO: temporary vector for contact force per segment in local Y-direction
 
-public: // AUTO: 
+public: // AUTO:
     static constexpr Index nDataVariablesPerSegment = 3; //number of data variables per circle marker
     static constexpr Index dataIndexCircle = 0; //!< index in data node (per segment) representing circle number
     static constexpr Index dataIndexGap = 1; //!< index in data node (per segment) representing gap

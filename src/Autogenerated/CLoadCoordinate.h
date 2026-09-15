@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-02  20:40:05 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CLOADCOORDINATEPARAMETERS__H
@@ -27,9 +27,9 @@
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CLoadCoordinateParameters
-class CLoadCoordinateParameters // AUTO: 
+class CLoadCoordinateParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Index markerNumber;                           //!< AUTO: marker's number to which load is applied
     Real load;                                    //!< AUTO: scalar load [SI:N]; in case of a user function, this value is ignored
     PythonUserFunctionBase< std::function<Real(const MainSystem&,Real,Real)> > loadUserFunction;//!< AUTO: A Python function which defines the time-dependent load and replaces the load; see description below; see also notes on loadFactor and drawing in LoadForceVector!
@@ -54,7 +54,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -64,12 +64,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CLoadCoordinate
-class CLoadCoordinate: public CLoad // AUTO: 
+class CLoadCoordinate: public CLoad // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CLoadCoordinateParameters parameters; //! AUTO: contains all parameters for CLoadCoordinate
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

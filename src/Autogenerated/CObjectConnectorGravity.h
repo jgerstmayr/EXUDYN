@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:41 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTCONNECTORGRAVITYPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CObjectConnectorGravityParameters
-class CObjectConnectorGravityParameters // AUTO: 
+class CObjectConnectorGravityParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector
     Real gravitationalConstant;                   //!< AUTO: gravitational constant [SI:m\f$^3\f$kg\f$^{-1}\f$s\f$^{-2}\f$)]; while not recommended, a negative constant gan represent a repulsive force
     Real mass0;                                   //!< AUTO: mass [SI:kg] of object attached to marker \f$m0\f$
@@ -57,7 +57,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -67,12 +67,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectConnectorGravity
-class CObjectConnectorGravity: public CObjectConnector // AUTO: 
+class CObjectConnectorGravity: public CObjectConnector // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CObjectConnectorGravityParameters parameters; //! AUTO: contains all parameters for CObjectConnectorGravity
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

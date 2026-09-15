@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2024-02-03  15:27:06 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef VISUALIZATIONOBJECTALEANCFCABLE2D__H
@@ -22,13 +22,13 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
-class VisualizationObjectALEANCFCable2D: public VisualizationObject // AUTO: 
+class VisualizationObjectALEANCFCable2D: public VisualizationObject // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     float drawHeight;                             //!< AUTO: if beam is drawn with rectangular shape, this is the drawing height
     Float4 color;                                 //!< AUTO: RGBA color of the object; if R==-1, use default color
 
-public: // AUTO: 
+public: // AUTO:
     //! AUTO: default constructor with parameter initialization
     VisualizationObjectALEANCFCable2D()
     {

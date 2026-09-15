@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-06-29  16:19:12 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CMARKEROBJECTODE2COORDINATESPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CMarkerObjectODE2CoordinatesParameters
-class CMarkerObjectODE2CoordinatesParameters // AUTO: 
+class CMarkerObjectODE2CoordinatesParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Index objectNumber;                           //!< AUTO: body number to which marker is attached to
     //! AUTO: default constructor with parameter initialization
     CMarkerObjectODE2CoordinatesParameters()
@@ -47,7 +47,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -57,12 +57,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CMarkerObjectODE2Coordinates
-class CMarkerObjectODE2Coordinates: public CMarker // AUTO: 
+class CMarkerObjectODE2Coordinates: public CMarker // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CMarkerObjectODE2CoordinatesParameters parameters; //! AUTO: contains all parameters for CMarkerObjectODE2Coordinates
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

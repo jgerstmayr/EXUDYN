@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-05-05  23:27:44 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CSENSORBODYPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CSensorBodyParameters
-class CSensorBodyParameters // AUTO: 
+class CSensorBodyParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Index bodyNumber;                             //!< AUTO: body (=object) number to which sensor is attached to
     Vector3D localPosition;                       //!< AUTO: local (body-fixed) body position of sensor
     bool writeToFile;                             //!< AUTO: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''
@@ -57,7 +57,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -67,12 +67,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CSensorBody
-class CSensorBody: public CSensor // AUTO: 
+class CSensorBody: public CSensor // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CSensorBodyParameters parameters; //! AUTO: contains all parameters for CSensorBody
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

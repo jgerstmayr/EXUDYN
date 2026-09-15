@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes, Weyrer Sebastian
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:41 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTCONTACTSPHERESPHEREPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CObjectContactSphereSphereParameters
-class CObjectContactSphereSphereParameters // AUTO: 
+class CObjectContactSphereSphereParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers representing centers of spheres, used in connector
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is the plastic overlap of the Edinburgh Adhesive Elasto-Plastic Model, initialized usually with 0 and set back to 0 in case that spheres have been separated.
     Vector2D spheresRadii;                        //!< AUTO: list containing radius of sphere 0 and radius of sphere 1 [SI:m].
@@ -79,7 +79,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -89,9 +89,9 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectContactSphereSphere
-class CObjectContactSphereSphere: public CObjectConnector // AUTO: 
+class CObjectContactSphereSphere: public CObjectConnector // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     static constexpr Index nDataVariables = 4; //number of data variables for tangential and normal contact
     static constexpr Index dataIndexGap = 0; //!< index in data node representing gap
     static constexpr Index dataIndexVtangent = 1; //!< index in data node representing tangent velocity
@@ -99,7 +99,7 @@ protected: // AUTO:
     static constexpr Index dataIndexDeltaPlastic = 3; //!< index in data node representing plastic deformation, according to elasto-plastic adhesion model
     CObjectContactSphereSphereParameters parameters; //! AUTO: contains all parameters for CObjectContactSphereSphere
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

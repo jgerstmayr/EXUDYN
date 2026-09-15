@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:40 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTFFRFPARAMETERS__H
@@ -27,14 +27,14 @@
 #include <pybind11/numpy.h>//for NumpyMatrix
 #include <pybind11/stl.h>//for NumpyMatrix
 #include <pybind11/pybind11.h>
-typedef py::array_t<Real> NumpyMatrix; 
+typedef py::array_t<Real> NumpyMatrix;
 #include "Pymodules/PyMatrixContainer.h"//for some \hac{FFRF} matrices
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectFFRFParameters
-class CObjectFFRFParameters // AUTO: 
+class CObjectFFRFParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex nodeNumbers;                       //!< AUTO: node numbers which provide the coordinates for the object (consecutively as provided in this list); the \f$(n_\mathrm{nf}+1)\f$ nodes represent the nodes of the FE mesh (except for node 0); the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame
     PyMatrixContainer massMatrixFF;               //!< AUTO: body-fixed and ONLY flexible coordinates part of mass matrix of object given in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format
     PyMatrixContainer stiffnessMatrixFF;          //!< AUTO: body-fixed and ONLY flexible coordinates part of stiffness matrix of object in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format
@@ -69,7 +69,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -79,9 +79,9 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectFFRF
-class CObjectFFRF: public CObjectSuperElement // AUTO: 
+class CObjectFFRF: public CObjectSuperElement // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CObjectFFRFParameters parameters; //! AUTO: contains all parameters for CObjectFFRF
     ArrayIndex coordinateIndexPerNode;            //!< AUTO: this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
     bool objectIsInitialized;                     //!< AUTO: ALWAYS set to False! flag used to correctly initialize all \hac{FFRF} matrices; as soon as this flag is False, internal (constant) \hac{FFRF} matrices are recomputed during Assemble()
@@ -98,7 +98,7 @@ protected: // AUTO:
     mutable ResizableMatrix tempMatrix;           //!< AUTO: temporary matrix
     mutable ResizableMatrix tempMatrix2;          //!< AUTO: other temporary matrix
 
-public: // AUTO: 
+public: // AUTO:
     static constexpr Index ffrfNodeDim = 3; //dimension of nodes (=displacement coordinates per node)
     static constexpr Index rigidBodyNodeNumber  = 0; //number of rigid body node (usually = 0)
     //! AUTO: default constructor with parameter initialization

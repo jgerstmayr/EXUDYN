@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:41 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTCONNECTORROLLINGDISCPENALTYPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CObjectConnectorRollingDiscPenaltyParameters
-class CObjectConnectorRollingDiscPenaltyParameters // AUTO: 
+class CObjectConnectorRollingDiscPenaltyParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector; \f$m0\f$ represents a point at the plane surface (normal of surface plane defined by planeNormal); the ground can also be a moving rigid body; \f$m1\f$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact)
     Real discRadius;                              //!< AUTO: defines the disc radius
@@ -73,7 +73,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -83,13 +83,13 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectConnectorRollingDiscPenalty
-class CObjectConnectorRollingDiscPenalty: public CObjectConnector // AUTO: 
+class CObjectConnectorRollingDiscPenalty: public CObjectConnector // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     static constexpr Index nDataVariables = 3; //number of data variables for tangential and normal contact
     CObjectConnectorRollingDiscPenaltyParameters parameters; //! AUTO: contains all parameters for CObjectConnectorRollingDiscPenalty
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

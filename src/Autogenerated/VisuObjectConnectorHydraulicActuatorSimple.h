@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-13  20:45:49 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef VISUALIZATIONOBJECTCONNECTORHYDRAULICACTUATORSIMPLE__H
@@ -22,9 +22,9 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
-class VisualizationObjectConnectorHydraulicActuatorSimple: public VisualizationObject // AUTO: 
+class VisualizationObjectConnectorHydraulicActuatorSimple: public VisualizationObject // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     float cylinderRadius;                         //!< AUTO: radius for drawing of cylinder
     float rodRadius;                              //!< AUTO: radius for drawing of rod
     float pistonRadius;                           //!< AUTO: radius for drawing of piston (if drawn transparent)
@@ -35,7 +35,7 @@ protected: // AUTO:
     Float4 colorCylinder;                         //!< AUTO: RGBA cylinder color; if R==-1, use default connector color
     Float4 colorPiston;                           //!< AUTO: RGBA piston color
 
-public: // AUTO: 
+public: // AUTO:
     //! AUTO: default constructor with parameter initialization
     VisualizationObjectConnectorHydraulicActuatorSimple()
     {

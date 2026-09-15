@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:39 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CNODERIGIDBODYRXYZPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CNodeRigidBodyRxyzParameters
-class CNodeRigidBodyRxyzParameters // AUTO: 
+class CNodeRigidBodyRxyzParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Vector6D referenceCoordinates;                //!< AUTO: reference coordinates (3 position and 3 xyz Euler angles) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)
     //! AUTO: default constructor with parameter initialization
     CNodeRigidBodyRxyzParameters()
@@ -47,7 +47,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -57,14 +57,14 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CNodeRigidBodyRxyz
-class CNodeRigidBodyRxyz: public CNodeRigidBody // AUTO: 
+class CNodeRigidBodyRxyz: public CNodeRigidBody // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     static constexpr Index nRotationCoordinates = 3;
     static constexpr Index nDisplacementCoordinates = 3;
     CNodeRigidBodyRxyzParameters parameters; //! AUTO: contains all parameters for CNodeRigidBodyRxyz
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
@@ -135,7 +135,7 @@ public: // AUTO:
     //! AUTO:  provide nodal values efficiently for rigid body computation
     virtual void CollectCurrentNodeData1(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, Vector3D& angularVelocityLocal) const override;
 
-    //! AUTO:  obtain G matrices, position, velocity, rotation matrix A (local to global), local angular velocity 
+    //! AUTO:  obtain G matrices, position, velocity, rotation matrix A (local to global), local angular velocity
     virtual void CollectCurrentNodeMarkerData(ConstSizeMatrix<maxRotationCoordinates * nDim3D>& Glocal, ConstSizeMatrix<maxRotationCoordinates * nDim3D>& G, Vector3D& pos, Vector3D& vel, Matrix3D& A, Vector3D& angularVelocityLocal) const override;
 
     //! AUTO:  return internally stored reference coordinates of node

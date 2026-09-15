@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:40 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTGENERICODE2PARAMETERS__H
@@ -27,14 +27,14 @@
 //#include <pybind11/numpy.h>//for NumpyMatrix
 //#include <pybind11/stl.h>//for NumpyMatrix
 //#include <pybind11/pybind11.h>
-//typedef py::array_t<Real> NumpyMatrix; 
+//typedef py::array_t<Real> NumpyMatrix;
 #include "Pymodules/PyMatrixContainer.h"//for some \hac{FFRF} matrices
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectGenericODE2Parameters
-class CObjectGenericODE2Parameters // AUTO: 
+class CObjectGenericODE2Parameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex nodeNumbers;                       //!< AUTO: node numbers which provide the coordinates for the object (consecutively as provided in this list)
     PyMatrixContainer massMatrix;                 //!< AUTO: mass matrix of object as MatrixContainer (or numpy array / list of lists)
     PyMatrixContainer stiffnessMatrix;            //!< AUTO: stiffness matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with dampingMatrix and jacobianUserFunction
@@ -71,7 +71,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -81,15 +81,15 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectGenericODE2
-class CObjectGenericODE2: public CObjectSuperElement // AUTO: 
+class CObjectGenericODE2: public CObjectSuperElement // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CObjectGenericODE2Parameters parameters; //! AUTO: contains all parameters for CObjectGenericODE2
     mutable Vector tempCoordinates;               //!< AUTO: temporary vector containing coordinates
     mutable Vector tempCoordinates_t;             //!< AUTO: temporary vector containing velocity coordinates
     mutable Vector tempCoordinates_tt;            //!< AUTO: temporary vector containing acceleration coordinates
 
-public: // AUTO: 
+public: // AUTO:
     //! AUTO: default constructor with parameter initialization
     CObjectGenericODE2()
     {

@@ -1,16 +1,16 @@
 /** ***********************************************************************************************
 * @class        VisualizationMarkerNodeCoordinates
-* @brief        A node-Marker attached to all ODE2 coordinates of a node; this marker allows to connect a coordinate-based constraint or connector to a nodal coordinate (also NodeGround); for ODE1 coordinates use MarkerNodeODE1Coordinates (under development).
+* @brief        A node-Marker attached to all \hac{ODE2} coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! For \hac{ODE1} coordinates use \texttt{MarkerNodeODE1Coordinates}.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2021-06-27  17:08:55 (last modfied)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef VISUALIZATIONMARKERNODECOORDINATES__H
@@ -22,11 +22,11 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
-class VisualizationMarkerNodeCoordinates: public VisualizationMarker // AUTO: 
+class VisualizationMarkerNodeCoordinates: public VisualizationMarker // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
 
-public: // AUTO: 
+public: // AUTO:
     //! AUTO: default constructor with parameter initialization
     VisualizationMarkerNodeCoordinates()
     {

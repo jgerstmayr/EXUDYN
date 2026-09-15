@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:42 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CLOADMASSPROPORTIONALPARAMETERS__H
@@ -27,9 +27,9 @@
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CLoadMassProportionalParameters
-class CLoadMassProportionalParameters // AUTO: 
+class CLoadMassProportionalParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Index markerNumber;                           //!< AUTO: marker's number to which load is applied
     Vector3D loadVector;                          //!< AUTO: vector-valued load [SI:N/kg = m/s\f$^2\f$]; typically, this will be the gravity vector in global coordinates; in case of a user function, this v is ignored
     PythonUserFunctionBase< std::function<StdVector3D(const MainSystem&,Real,StdVector3D)> > loadVectorUserFunction;//!< AUTO: A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector!
@@ -54,7 +54,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -64,12 +64,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CLoadMassProportional
-class CLoadMassProportional: public CLoad // AUTO: 
+class CLoadMassProportional: public CLoad // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CLoadMassProportionalParameters parameters; //! AUTO: contains all parameters for CLoadMassProportional
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

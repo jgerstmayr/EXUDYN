@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:40 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTANCFCABLEPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CObjectANCFCableParameters
-class CObjectANCFCableParameters // AUTO: 
+class CObjectANCFCableParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Real physicsLength;                           //!< AUTO:  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
     Real physicsMassPerLength;                    //!< AUTO:  [SI:kg/m] mass per length of beam
     Real physicsBendingStiffness;                 //!< AUTO:  [SI:Nm\f$^2\f$] bending stiffness of beam; the bending moment is \f$m = EI (\kappa - \kappa_0)\f$, in which \f$\kappa\f$ is the material measure of curvature
@@ -65,7 +65,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -75,14 +75,14 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectANCFCable
-class CObjectANCFCable: public CObjectBody // AUTO: 
+class CObjectANCFCable: public CObjectBody // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set
     mutable ConstSizeMatrix<12*12> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation
     CObjectANCFCableParameters parameters; //! AUTO: contains all parameters for CObjectANCFCable
 
-public: // AUTO: 
+public: // AUTO:
     static constexpr Index nODE2coordinates = 12; //!< fixed size element coordinates used e.g. for ConstSizeVectors
     static constexpr Index nShapeFunctions = 4; //!< number of shape functions
     static constexpr Index nNodalCoordinates = 6; //!< number of nodal coordinates

@@ -1,16 +1,16 @@
 /** ***********************************************************************************************
 * @class        VisualizationMarkerBodiesRelativeTranslationCoordinate
-* @brief        A coordinate-based Marker attached to two bodies which computes the relative translation between the bodies according to the given axis; this marker can be used together with coordinate-based constraints and connectors (e.g., CoordinateSpringDamper and CoordinateConstraint). Note that it is assumed that the two bodies can only move along the given axis (e.g., constrained by a prismatic joint) -- otherwise results may be unexpected.
+* @brief        A coordinate-based Marker attached to two rigid bodies or beams which computes the relative translation between the bodies according to the given axis. This marker can be used together with coordinate-based constraints and connectors (e.g., CoordinateSpringDamper and CoordinateConstraint). NOTE: it is assumed that the two bodies can only move along the given axis (e.g., constrained by a prismatic joint) -- otherwise results may be unexpected. NOTE: this approach is not compatible with FFRF-based flexible bodies and currently requires and intermediate rigid body.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-06-29  15:57:06 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef VISUALIZATIONMARKERBODIESRELATIVETRANSLATIONCOORDINATE__H
@@ -22,11 +22,11 @@
 #include "Utilities/BasicDefinitions.h"
 #include "System/ItemIndices.h"
 
-class VisualizationMarkerBodiesRelativeTranslationCoordinate: public VisualizationMarker // AUTO: 
+class VisualizationMarkerBodiesRelativeTranslationCoordinate: public VisualizationMarker // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
 
-public: // AUTO: 
+public: // AUTO:
     //! AUTO: default constructor with parameter initialization
     VisualizationMarkerBodiesRelativeTranslationCoordinate()
     {

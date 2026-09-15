@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:41 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTCONNECTORHYDRAULICACTUATORSIMPLEPARAMETERS__H
@@ -25,9 +25,9 @@
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectConnectorHydraulicActuatorSimpleParameters
-class CObjectConnectorHydraulicActuatorSimpleParameters // AUTO: 
+class CObjectConnectorHydraulicActuatorSimpleParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector
     ArrayIndex nodeNumbers;                       //!< AUTO: currently a list with one node number of NodeGenericODE1 for 2 hydraulic pressures (reference values for this node must be zero); data node may be added in future for switching
     Real offsetLength;                            //!< AUTO: offset length [SI:m] of cylinder, representing minimal distance between the two bushings at stroke=0
@@ -84,7 +84,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -94,12 +94,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectConnectorHydraulicActuatorSimple
-class CObjectConnectorHydraulicActuatorSimple: public CObjectConnector // AUTO: 
+class CObjectConnectorHydraulicActuatorSimple: public CObjectConnector // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CObjectConnectorHydraulicActuatorSimpleParameters parameters; //! AUTO: contains all parameters for CObjectConnectorHydraulicActuatorSimple
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

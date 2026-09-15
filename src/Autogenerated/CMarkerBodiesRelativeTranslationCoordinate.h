@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-02-05  22:16:39 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CMARKERBODIESRELATIVETRANSLATIONCOORDINATEPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CMarkerBodiesRelativeTranslationCoordinateParameters
-class CMarkerBodiesRelativeTranslationCoordinateParameters // AUTO: 
+class CMarkerBodiesRelativeTranslationCoordinateParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex bodyNumbers;                       //!< AUTO: list of body numbers for which relative coordinate is computed
     Vector3D localPosition0;                      //!< AUTO: local position on body 0; i.e. local (body-fixed) position where position is measured and force is applied to
     Vector3D localPosition1;                      //!< AUTO: local position on body 1; i.e. local (body-fixed) position where position is measured and force is applied to
@@ -55,7 +55,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -65,12 +65,12 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CMarkerBodiesRelativeTranslationCoordinate
-class CMarkerBodiesRelativeTranslationCoordinate: public CMarker // AUTO: 
+class CMarkerBodiesRelativeTranslationCoordinate: public CMarker // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CMarkerBodiesRelativeTranslationCoordinateParameters parameters; //! AUTO: contains all parameters for CMarkerBodiesRelativeTranslationCoordinate
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters

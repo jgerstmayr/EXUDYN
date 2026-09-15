@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-14  07:50:40 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef COBJECTGENERICODE1PARAMETERS__H
@@ -27,13 +27,13 @@
 #include <pybind11/numpy.h>//for NumpyMatrix
 #include <pybind11/stl.h>//for NumpyMatrix
 #include <pybind11/pybind11.h>
-typedef py::array_t<Real> NumpyMatrix; 
+typedef py::array_t<Real> NumpyMatrix;
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 
 //! AUTO: Parameters for class CObjectGenericODE1Parameters
-class CObjectGenericODE1Parameters // AUTO: 
+class CObjectGenericODE1Parameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     ArrayIndex nodeNumbers;                       //!< AUTO: node numbers which provide the coordinates for the object (consecutively as provided in this list)
     Matrix systemMatrix;                          //!< AUTO: system matrix (state space matrix) of first order ODE
     Vector rhsVector;                             //!< AUTO: a constant rhs vector (e.g., for constant input)
@@ -62,7 +62,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -72,14 +72,14 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CObjectGenericODE1
-class CObjectGenericODE1: public CObject // AUTO: 
+class CObjectGenericODE1: public CObject // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     CObjectGenericODE1Parameters parameters; //! AUTO: contains all parameters for CObjectGenericODE1
     mutable Vector tempCoordinates;               //!< AUTO: temporary vector containing coordinates
     mutable Vector tempCoordinates_t;             //!< AUTO: temporary vector containing velocity coordinates
 
-public: // AUTO: 
+public: // AUTO:
     //! AUTO: default constructor with parameter initialization
     CObjectGenericODE1()
     {

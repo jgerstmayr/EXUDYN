@@ -4,13 +4,13 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2025-06-29  16:12:53 (last modified)
+* @date         2026-09-15  11:13:32 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #ifndef CMARKERBODYCABLE2DSHAPEPARAMETERS__H
@@ -24,9 +24,9 @@
 
 
 //! AUTO: Parameters for class CMarkerBodyCable2DShapeParameters
-class CMarkerBodyCable2DShapeParameters // AUTO: 
+class CMarkerBodyCable2DShapeParameters // AUTO:
 {
-public: // AUTO: 
+public: // AUTO:
     Index bodyNumber;                             //!< AUTO: body number to which marker is attached to
     Index numberOfSegments;                       //!< AUTO: number of number of segments; each segment is a line and is associated to a data (history) variable; must be same as in according contact element
     Real verticalOffset;                          //!< AUTO: vertical offset from beam axis in positive (local) Y-direction; this offset accounts for consistent computation of positions and velocities at the surface of the beam
@@ -51,7 +51,7 @@ public: // AUTO:
 * @note         Bug reports, support and further information:
                 - email: johannes.gerstmayr@uibk.ac.at
                 - weblink: https://github.com/jgerstmayr/EXUDYN
-                
+
 ************************************************************************************************ */
 
 #include <ostream>
@@ -61,13 +61,13 @@ public: // AUTO:
 #include "System/ItemIndices.h"
 
 //! AUTO: CMarkerBodyCable2DShape
-class CMarkerBodyCable2DShape: public CMarker // AUTO: 
+class CMarkerBodyCable2DShape: public CMarker // AUTO:
 {
-protected: // AUTO: 
+protected: // AUTO:
     static constexpr Index maxNumberOfSegments = 12; //maximum number of contact segments
     CMarkerBodyCable2DShapeParameters parameters; //! AUTO: contains all parameters for CMarkerBodyCable2DShape
 
-public: // AUTO: 
+public: // AUTO:
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
