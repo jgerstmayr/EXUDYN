@@ -125,6 +125,10 @@ first from a full clone, in chunks under GitLab's 1.17 GiB pack limit, then push
 
 These were checked against the tree. Several correct earlier assumptions.
 
+**Paths (note 2026-09-15):** facts measured before step 25 name paths below `main/` (e.g.
+`main/obj/cppsrc.vcxproj`, `main/src/...`). Step 25 removed that level, so read them without `main/`
+(`msvc/cppsrc.vcxproj`, `src/...`); see CLAUDE.md for the current layout.
+
 1. **`main/obj/cppsrc.vcxproj` is live and current**, not stale. 133 `ClCompile` entries;
    `setup.py` lists exactly 133 `.cpp` files; it contains every recent addition
    (`Symbolic.cpp`, `Raytracing.cpp`, `CObjectANCFThinPlate.cpp`, `GlfwClientExtended.cpp`,
@@ -272,7 +276,6 @@ These were checked against the tree. Several correct earlier assumptions.
     step 40's **per-model tolerances** — a flaky gate gets ignored. Until then, a near-tolerance
     failure should be checked against this fact, comparing the reported `RESULT` against `refsol`,
     before being treated as a real break.
-
 
 21. **Regeneration must run *after* `ResolveIssue`, not before.** `ResolveIssue` rewrites
     `version.txt`, and `README.rst` plus `docs/RST/Exudyn.rst` embed the version string
@@ -498,49 +501,27 @@ the repository root, so a new cwd-relative path fails the gate.
 
 ## 5. The plan
 
-Order: **Phase 0 → 2a → (1 + 2 together as v2.0) → 3 → 4 → 5 → 6 → 7 → 8 → 9.**
+Step numbers are stable and cited elsewhere, so they are never renumbered. Steps added after the
+first analysis sit in their phase, which is why the numbers within a phase are not in order. A done
+step keeps one line here; its findings, and the plan text it had when it closed, are in the log.
 
 ### Phase 0 — Freeze current behaviour (~1 week) — do first
 
-1. **DONE 2026-09-09** — root `.gitignore` added; `PerformanceLogs/`, `TestSuiteLogs/`,
-   `TestExamplesLogs/` and `testData/*.npy` deliberately kept tracked (D7). →
-   [log](exudynRevisionLog2026.md#step-1)
-2. **DONE 2026-09-11.** `tools/regenerate.py` written and verified by fault injection, and now
-   wired into CI as the `regenerated_files` job. Wiring it found that generation was **not
-   platform-independent** (issue #2370); that is fixed, so the gate passes on Linux. →
-   [log](exudynRevisionLog2026.md#step-2)
+1. **DONE 2026-09-09** — root `.gitignore` added. → [log](exudynRevisionLog2026.md#step-1)
+2. **DONE 2026-09-11** — `tools/regenerate.py`, verified by fault injection and wired into CI as the `regenerated_files` job. → [log](exudynRevisionLog2026.md#step-2)
+3. **DONE 2026-09-09** — the commit itself is the golden snapshot; a full regeneration produces no drift. → [log](exudynRevisionLog2026.md#step-3)
+4. **DONE 2026-09-10** — baseline measured on every platform in active use. → [log](exudynRevisionLog2026.md#step-4)
+70. **DONE 2026-09-09** — `.gitattributes` for line endings and binaries. → [log](exudynRevisionLog2026.md#step-70)
+71. **DONE 2026-09-09** — explicit `encoding='utf8'` at all generator read and write sites. → [log](exudynRevisionLog2026.md#step-71)
 
-3. **DONE 2026-09-09** — the *commit itself* is the golden snapshot: a full regeneration on
-   `910e2b5` produces no drift, the first time this has been true. `goldenFiles_V1.11.5_910e2b5.zip`
-   is the out-of-band convenience copy. → [log](exudynRevisionLog2026.md#step-3)
-4. **DONE 2026-09-10** — baseline measured on every platform in active use. The Windows/Linux gap
-   is the `/mnt/c` mount (~2×), not the compiler; the real toolchain difference is 1.7×. The
-   parallel-compile monkeypatch is active on cp312+ and does not fall back. macOS deferred to the
-   new Mac. → [log](exudynRevisionLog2026.md#step-4)
 ### Phase 2a — Repository restart (~1 week, then a long freeze)
 
-5. **DONE 2026-09-09** — this working clone *is* that clone (depth-1 of GitHub `master` at
-   `e44aca1`). GitLab rejected the shallow push; resolved by seeding the server with full history
-   in 50-commit chunks, after which the shallow clone pushes normally. `.git` stays at 65 MB. →
-   [log](exudynRevisionLog2026.md#step-5)
-6. **DONE** — the old local repository is archived read-only (zipped, copy on the university
-   server). It remains the only copy of the fine-grained history. →
-   [log](exudynRevisionLog2026.md#step-6)
-7. **DONE 2026-09-09** — `origin` is the internal GitLab, `github` the public repository; `v2-dev`
-   tracks `origin/v2-dev`, `master` tracks `github/master`. Current layout and rules in section 2a.
-    [log](exudynRevisionLog2026.md#step-7)
-8. **DONE 2026-09-10 - and there was nothing to move.** No tracked path matched `experimental`,
-   `scratch`, `tmp`, `backup`, `draft`, `unused`, `deprecated` or `archive`, and no gitlinks.
-   `.gitignore` now blocks the shape pre-emptively; the destination for development-only material
-   is the second internal repository (step 77). `main/src/Main/Experimental.h` stays (fact 25). →
-   [log](exudynRevisionLog2026.md#step-8)
-9. **DONE 2026-09-09** — `tools/hooks/pre-push` refuses any ref but `master`, `release/*` and tags
-   when the target is GitHub, matching on both remote name and URL. Activated per clone with
-   `git config core.hooksPath tools/hooks`. → [log](exudynRevisionLog2026.md#step-9)
-10. **DONE 2026-09-10** — one-time secret and PII scan of the tree to be published; the dead
-    absolute include at `OpenVRinterface.cpp:19` removed, the personal account identifier purged,
-    and `tools/hooks/pre-commit` added so it cannot return. →
-    [log](exudynRevisionLog2026.md#step-10)
+5. **DONE 2026-09-09** — this working clone *is* that clone (depth-1 of GitHub `master` at `e44aca1`). → [log](exudynRevisionLog2026.md#step-5)
+6. **DONE** — the old local repository is archived read-only (zipped, copy on the university server). → [log](exudynRevisionLog2026.md#step-6)
+7. **DONE 2026-09-09** — `origin` is the internal GitLab, `github` the public repository. → [log](exudynRevisionLog2026.md#step-7)
+8. **DONE 2026-09-10** — nothing experimental to move out of the tree. → [log](exudynRevisionLog2026.md#step-8)
+9. **DONE 2026-09-09** — `tools/hooks/pre-push` refuses any ref but `master`, `release/*` and tags towards GitHub. → [log](exudynRevisionLog2026.md#step-9)
+10. **DONE 2026-09-10** — one-time secret and PII scan of the tree to be published. → [log](exudynRevisionLog2026.md#step-10)
 11. **PARTLY DONE 2026-09-09 (implementation), 2026-09-10 (first green pipeline).**
     `.gitlab-ci.yml` builds and tests manylinux wheels cp310-cp314 on the shared runners plus a
     `sphinx-build -W` docs job; all six jobs passed on the first run. Windows, macOS and aarch64
@@ -554,91 +535,27 @@ Order: **Phase 0 → 2a → (1 + 2 together as v2.0) → 3 → 4 → 5 → 6 →
 12. At v2.0: fast-forward `master`, push once with tags. Ordinary push; clones, permalinks and
     issue references stay valid; GitHub renders the layout change as renames.
 13. Retroactively tag past releases where the commits can be identified.
+77. *(Phase 2a, when there is material)* **Second internal GitLab repository for development-only
+    Python.** Models that never make it to `Examples`, one-off study scripts, and internal
+    experiments live there rather than in the public tree. Not created yet — do it when there is
+    something to put in it, not before. Note the consequence for step 8: with a destination that
+    is a *repository*, the sibling-directory and nested-repo shapes stop being the answer, and
+    `experimental/` in `.gitignore` is only a safety net for work in progress.
 
 ### Phase 1 — Make the wheel boring (~2 weeks)
 
 Stay on setuptools. scikit-build-core or meson would cost the fast build and the zero-dependency
 promise for no gain.
 
-14. **DONE 2026-09-11.** Static metadata moved to a `[project]` table in
-    `main/pyproject.toml`; `setup()` keeps only what the build computes. The `Dynamic:`
-    block of the wheel metadata went from ten entries to one. `build-system.requires`
-    needed setuptools **>=61** for the table to be read at all. →
-    [log](exudynRevisionLog2026.md#step-14)
-15. **DONE 2026-09-11.** `pybind11<3.0` moved into `build-system.requires`;
-    `setup_requires` removed. The step was bigger than it looked: the documented include
-    path `include/pybind11` **does not exist**, the vendored copy at `include/pybind11local/`
-    is inert, and the headers actually came from an undeclared `main/.eggs/` download.
-    Verified by deleting `.eggs/` and rebuilding. →
-    [log](exudynRevisionLog2026.md#step-15)
-16. **DONE 2026-09-11 — rescoped first; the original premise was wrong.** setuptools' parallel
-    `build_ext --parallel` parallelises **across extensions**, not across the source files
-    *within* one. Exudyn compiles 133 `.cpp` files in a single extension, so the supported
-    mechanism gives at most 3x on a release build and **nothing** on a `.dev1` build, against
-    the monkeypatch's measured ~13x. There is no like-for-like replacement, and the ~1 min
-    wheel is an invariant (§7). So the monkeypatch **stays**, and this step becomes fixing
-    its four real defects:
-    - `quietCompile` (766-769) rebinds the **global** `sys.stdout` from N worker threads,
-      each truncating the same `setuppy.output.txt`; output interleaves and the restore races.
-    - the outer bare `except` (882-886) also swallows `KeyboardInterrupt`/`SystemExit`, and
-      its message *"trying serial compilation"* is misleading: it wraps only the patching,
-      not the compile, so a compilation failure is not what it reports.
-    - the Windows `except: raise ValueError(...)` (858-859) **destroys the compiler
-      diagnostic**, replacing a real `CompileError` with an argv dump.
-    - `nObjects = len(objects)+2` (761) is a fudge — it is why the progress counter reports
-      135 for 133 files.
-    All four are fixed; the patch is kept and now carries a comment saying why it cannot be
-    replaced. Verified on Windows (56.8 s wheel, unchanged) and in manylinux cp313 (full
-    build + test suite, plus a quiet build reporting `completed 133/133`). →
-    [log](exudynRevisionLog2026.md#step-16)
-17. **DONE 2026-09-11.** `tools/gen_sources.py` derives `main/sources.json` from the
-    `ClCompile` entries of `cppsrc.vcxproj`; `setup.py` reads the JSON and no longer holds a
-    source list. `--check` compares vcxproj, JSON and the files on disk **case-exactly** and
-    runs in CI as `check_sources`. Its first run found a live bug: the vcxproj said
-    `src\tests\UnitTestBase.cpp`, which resolves on Windows and fails on Linux. →
-    [log](exudynRevisionLog2026.md#step-17)
-18. **DONE 2026-09-11.** All three deleted (405 lines). None could configure: the complete
-    one referenced a `pybind11/` directory that does not exist, and the other two listed 63
-    of 133 files and still named sources deleted years ago. The complete one was also a
-    *fourth* copy of the source list, which step 17 had just consolidated. Vendored
-    `include/Eigen/CMakeLists.txt` left untouched. →
-    [log](exudynRevisionLog2026.md#step-18)
-19. **DONE 2026-09-12.** Six configurations reduced to two, `Debug|x64` and `Release|x64`:
-    `cppsrc.vcxproj` 853 → 660 lines, both solution `GlobalSection`s rewritten, and the
-    `ReleaseP37` group dropped from `pythonDev.pyproj`. MSBuild evaluates both survivors
-    cleanly. `requires-python` also went `>=3.6` → `>=3.10`, which step 24 deferred to here.
-    **32-bit support removed too** (maintainer's call, beyond the original step text):
-    `main/libs/libs32/` and `setup.py`'s bitness branch are gone, and a 32-bit interpreter
-    now fails with an explicit message instead of linking 64-bit libraries. The install
-    guide still describes 32-bit and is issue #2388.
-    →  [log](exudynRevisionLog2026.md#step-19)
-20. **DONE 2026-09-12.** Ten of eleven `CIBW_*` variables moved into `[tool.cibuildwheel]`
-    in `main/pyproject.toml`; only `CIBW_BUILD` stays, being built from the matrix.
-    `continue-on-error` removed — `fail-fast: false` is what keeps siblings running, while
-    `continue-on-error` made a red build report green. The old form had silently swallowed
-    `CIBW_BUILD_VERBOSITY` into a YAML comment; a config file validates keys. Verified by
-    identical `--print-build-identifiers` output before and after. →
-    [log](exudynRevisionLog2026.md#step-20)
-21. **DONE 2026-09-12.** The default `config` dict is the schema; an unknown key, a value
-    other than `"True"`/`"False"`, a non-object document or malformed JSON now **fail**,
-    naming the key and listing the valid ones. A *missing* file stays a warning with
-    defaults — an sdist legitimately has none. Verified by fault injection, and the `sed`
-    rewrite in `buildManylinux.sh` still validates. `issueTracker.py` now also reports the
-    issue number it assigns. →  [log](exudynRevisionLog2026.md#step-21)
-22. **DONE 2026-09-12.** Unaligned load/store in every AVX loop that can see a
-    `LinkedDataVector`: 40 casts in the two parallel-vector headers plus the six
-    `ParallelPReal*` helpers in `Vector.cpp`, and `_mm_store_u` added to `Use_avx.h`.
-    The sanitizer run that aborted now reports zero misalignments; the non-AVX2 build is
-    bit-identical to before; Windows timing unchanged within noise. Enabling AVX2 on
-    Linux remains step 23's call, and now has measured FMA-rounding data (#2396). →
-    [log](exudynRevisionLog2026.md#step-22)
-    *(Historical note: the cause originally recorded here was wrong. It said
-    `BasicDefinitions.h:78` leaves `EXUDYN_USE_ALIGNED_VECTORS` undefined so `VectorBase`
-    allocates with plain `new T[]`. In fact the `#undef` is immediately followed by a `#define`,
-    aligned allocation was already active, and `VectorBase` used `_aligned_malloc`/
-    `posix_memalign` with a matching free. The real defect was a `LinkedDataVector` sub-range,
-    which starts at an arbitrary element offset inside another buffer and which no allocator can
-    align. Starting from the fix proposed here would have changed code that was already correct.)*
+14. **DONE 2026-09-11** — Static metadata moved to a `[project]` table in `main/pyproject.toml`. → [log](exudynRevisionLog2026.md#step-14)
+15. **DONE 2026-09-11** — `pybind11<3.0` moved into `build-system.requires`. → [log](exudynRevisionLog2026.md#step-15)
+16. **DONE 2026-09-11** — build parallelism: rescoped, setuptools parallelises across extensions only. → [log](exudynRevisionLog2026.md#step-16)
+17. **DONE 2026-09-11** — `tools/gen_sources.py` derives `main/sources.json` from the `ClCompile` entries of `cppsrc.vcxproj`. → [log](exudynRevisionLog2026.md#step-17)
+18. **DONE 2026-09-11** — the dead CMake build files deleted (405 lines). → [log](exudynRevisionLog2026.md#step-18)
+19. **DONE 2026-09-12** — VS configurations reduced to `Debug|x64` and `Release|x64`. → [log](exudynRevisionLog2026.md#step-19)
+20. **DONE 2026-09-12** — Ten of eleven `CIBW_*` variables moved into `[tool.cibuildwheel]` in `main/pyproject.toml`. → [log](exudynRevisionLog2026.md#step-20)
+21. **DONE 2026-09-12** — the default `config` dict of `setup.py` is the schema. → [log](exudynRevisionLog2026.md#step-21)
+22. **DONE 2026-09-12** — unaligned load/store in AVX loops over `LinkedDataVector`. → [log](exudynRevisionLog2026.md#step-22)
 23. **Consolidate to two shipped variants**: *default* (baseline ISA, all checks active) and
     *fast* (AVX2 together with `__FAST_EXUDYN_LINALG`), both in one wheel, selected at import by
     a CPUID check that also verifies OS XSAVE/YMM state. Identical on Windows and Linux once
@@ -698,11 +615,28 @@ promise for no gain.
     **Tolerance (decision 2026-09-12, maintainer):** the FMA-rounding differences of #2396 are
     **not** to be handled by per-test tolerance patches here; they are resolved together with the
     consolidated test suite. Until then AVX2 stays off on Linux and #2396 stays open.
-24. **DONE 2026-09-11.** Classifiers now 3.10–3.14, matching the wheels CI actually builds;
-    the README and `long_description` were already handled by step 14.
-    `MANIFEST.in`'s `include ../LICENSE.txt` could never work — it points outside the sdist
-    root — so it is now a comment pointing at step 25, which is what makes the include
-    possible. →  [log](exudynRevisionLog2026.md#step-24)
+24. **DONE 2026-09-11** — Classifiers now 3.10–3.14, matching the wheels CI actually builds. → [log](exudynRevisionLog2026.md#step-24)
+84. *(Phase 1, small)* **Build and packaging hygiene** (#2372, #2380, #2387).
+    `pyproject.toml` uses the `license = { text = ... }` table that setuptools removes after
+    2027-02-18; the replacement is an SPDX expression, and `LICENSE.txt` is a custom licence, so
+    this needs a decision on the identifier (#2372). `quietCompile` rebinds `sys.stdout`, which the
+    compiler subprocess on Linux bypasses - capture the subprocess output instead (#2380). 20
+    `ClInclude` entries in `cppsrc.vcxproj` have the wrong directory case and 5 do not exist;
+    browse-only today, but the same defect in a `ClCompile` entry breaks the build (#2387).
+91. *(Phase 1, with 23)* **Decide AVX2 on Linux with a benchmark that can resolve it** (#2396,
+    #2397). With `-mavx2 -mfma` four tests shift by 1e-9..1e-6 through FMA contraction, and the
+    performance suite cannot show any gain (0.1 %) because its vectors are 3-20 elements long. The
+    long-vector sweep that does resolve it is commented out in `PyTest()`
+    (`src/Pymodules/pythonTests.cpp`); revive it as a benchmark, then decide - enable with a
+    tolerance, or `-ffp-contract=off`, or keep AVX2 off.
+100. *(Phase 1 tooling, before the next header-only change)* **The wheel build does not see header
+    changes** (#2427). setuptools recompiles a `.cpp` only when it is newer than its `.obj`, and it
+    does not track included headers. In 34c2, `pip wheel . -w dist --no-deps` after a rewrite of
+    `PybindUtilities.h` (included by 35 files) produced a `.pyd` with the same md5 as the build
+    before, and the test suite passed against the old binary. Deleting
+    `build/temp.win-amd64-cpython-313` forced the full compile (49 s). Until this is fixed, the build
+    gate must remove that directory after a header change. Fix: pass `depends=` (the headers) to
+    the `Extension`, or let `setup.py` compare header times itself.
 
 ### Phase 2 — Repository shape (~1 week, one commit)
 
@@ -711,70 +645,10 @@ byte-identical in that commit. Git stores no rename information; it infers renam
 similarity at display time, so a file both moved and edited in one commit shows as delete+add.
 Editing the vcxproj in the same commit is fine — it is modified, not moved.
 
-25. **DONE 2026-09-12.** Flattened: 1475 pure renames in one commit, repairs in the next.
-    `main/` is gone. Four breakages showed up only by running, not by inspection - see the
-    log. Step 27's acceptance gate passed in VS2022. →
-    [log](exudynRevisionLog2026.md#step-25)
-
-    **Path-dependency inventory (measured 2026-09-12, before any move).** 2172 tracked files, of
-    which **1477 are under `main/`**. What actually breaks is not the moving — `git mv` is
-    cheap — but everything that hard-codes a path:
-
-    | what | count | effect of the flatten |
-    |---|---|---|
-    | `cppsrc.vcxproj` file references | **541**, all `..\src\…` | **none — they survive unchanged.** They are relative to `main/obj/`; with `main/obj/` → `msvc/` and `main/src/` → `src/` the two stay siblings, so `..\src\…` still resolves. Step 26's "fix all vcxproj relative paths" is therefore **wrong**: nothing to fix. |
-    | `main_sln_Template.sln` project refs | 2 | `obj\cppsrc.vcxproj` → `msvc\…`, `pythonDev\pythonDev.pyproj` → `python\…` |
-    | generator relative paths | **31** in `main/src/pythonGenerator/*.py` | **all change depth**: the generators sit 3 levels below the root today (`../../../docs/…`) and 2 after (`../../docs/…`). This is the real work. |
-    | `exudynVersion.py` | 4-path cascade | step 28; the flatten is what makes a single path possible |
-    | `tools/regenerate.py` | 8 | `main/…` prefixes in the tier lists |
-    | `tools/gen_sources.py` | 12 | `main/obj/cppsrc.vcxproj`, `main/sources.json`, `main/src` |
-    | `tools/checkExtras.py` | 6 | `scanTargets`, and `main/pyproject.toml` |
-    | `.gitlab-ci.yml` | 7 | artifact paths and the `main` package dir |
-    | `.github/workflows/wheels.yml` | 1 | `cibuildwheel … main` → `.` |
-    | `conf.py` | 2 | `main/src/pythonGenerator/exudynVersion.py`, `exclude_patterns` |
-    | `MANIFEST.in`, `setup.py` | several | `src/`, `include/`, `libs/` become root-relative; `package_dir` changes |
-
-    So the order that minimises risk is: **move, then repair the 31 generator paths, then the
-    tooling, then regenerate and diff** — and the acceptance gate of step 27 (VS2022 opens,
-    `Debug|x64` builds, mixed-mode breakpoint hit) can only be done by the maintainer, so the
-    commit is prepared and held until that passes.
-26. **DONE 2026-09-12** with step 25. *(Corrected 2026-09-12: there are **no** vcxproj relative
-    paths to fix — all 541 are `..\src\…` and stay valid as long as `msvc/` and `src/` are
-    siblings at the root. Only the two project references in the `.sln` change.)*
-27. **DONE 2026-09-12.** Acceptance gate, checked by the maintainer by hand — CI cannot verify
-    any of it: both projects load in VS2022, `Debug|x64` *and* `Release|x64` build, Exudyn runs,
-    and mixed-mode breakpoints hit in **both** `python/pytest.py` and
-    `CSystem::ComputeSystemODE2RHS`. So the flattened layout is confirmed for the primary
-    development environment, not only for the wheel build.
-28. **DONE 2026-09-12.** *(Restated 2026-09-11, and corrected again after measuring.)* There
-    was no duplicated truth to merge: the file `issueTracker.py` writes was already the single
-    source, and `versionName.txt`, `versionCpp.cpp`, the version line in `README.rst` and
-    `docs/RST/Exudyn.rst` and `trackerlog.{tex,rst,html}` are all generated from it. What was
-    wrong was where it lived and how it was read:
-
-    - **where:** it sat in `docs/theDoc/`, a build input buried in the documentation tree and,
-      before step 25, *above* the packaging root — which is why an sdist could not determine its
-      own version (#2383). It is now **`version.txt` at the repository root**, where a version
-      source is conventionally looked for. It stays in `doc2rst.py`'s parsed-file list, because
-      it is also a documentation input: that is what produces the
-      `Exudyn version = 1.11.4 (McLaughlin)` line in the generated RST.
-    - **how:** `exudynVersion.py` guessed **four** relative paths in sequence and fell back to
-      the string `'unknown'`. `'unknown'` is not a version — setuptools rejected it much later
-      with an `InvalidVersion` naming neither file, and the generators would have stamped it into
-      generated sources instead of failing. It now anchors on the repository root, walking upwards
-      for a directory holding both `pyproject.toml` and `version.txt`, and **raises** otherwise
-      (#2405). One accessor, one location, one failure mode.
-
-    **Corrected fact:** the claim that "seven batch scripts under `tools/buildAndGenerate/` each
-    parse it their own way" is true, but that directory is *gitignored* (`.gitignore:118`) and
-    untracked, deliberately, until the step 68 cleanup — they are local maintainer scripts, not
-    part of the repository. They were repointed at the new path anyway so the maintainer's working
-    copy keeps running. One of them (`buildInstallSingleVersion.bat`) reads a path one level short
-    of the others; it is reached through `execWithPythonVersion.bat`'s
-    `cd ..\tools\makeWindowsBinaries\` — a directory that no longer exists — so the correct
-    depth cannot be determined without fixing the caller first. Its relative depth was preserved
-    verbatim rather than guessed. Left for step 68 with the rest.
-
+25. **DONE 2026-09-12** — Flattened: 1475 pure renames in one commit, repairs in the next. → [log](exudynRevisionLog2026.md#step-25)
+26. **DONE 2026-09-12** — vcxproj paths (with step 25; nothing to fix). → [log](exudynRevisionLog2026.md#step-26)
+27. **DONE 2026-09-12** — acceptance gate of the flattening, checked by hand in VS2022. → [log](exudynRevisionLog2026.md#step-27)
+28. **DONE 2026-09-12** — one version source, written by `issueTracker.py`. → [log](exudynRevisionLog2026.md#step-28)
 29. **DEFERRED 2026-09-12 — the maintainer's own work.** The original proposal (move `docs/demo`,
     22 MB, to release assets or git-lfs) is **withdrawn**: the `.gif` files are embedded in the
     GitHub front page, so moving them out of the repository would break it, and git-lfs would add
@@ -782,403 +656,61 @@ Editing the vcxproj in the same commit is fine — it is modified, not moved.
     maintainer resized the images and animations in place and committed them on 2026-09-12
     (`57633e9`): 22 MB down to 11 MB, references in the docs and the landing page intact. Nothing
     for this plan to do; re-open only if the directory grows again.
-30. **DONE 2026-09-10.** `docs/howTo/` cut from 26 `.txt` files to 8 `.md`. Rule applied: keep what
-    could not be rederived in five minutes. Survivors and the new `buildQuirks.md` are listed in
-    `docs/dev/README.md`. → [log](exudynRevisionLog2026.md#step-30)
+30. **DONE 2026-09-10** — `docs/howTo/` cut from 26 `.txt` files to 8 `.md`. → [log](exudynRevisionLog2026.md#step-30)
+68. *(Phase 2, then 1/7)* **Revise `tools/buildAndGenerate/`.** **Cleanup DONE 2026-09-14 (with step 33
+    part 2f):** all scripts rewritten portable (`condaActivate.bat`, paths from `%~dp0`), stale
+    `main\` paths removed, `makeSphinxDoc.bat` added, `README.md` written, directory committed and
+    the `.gitignore` entry removed. *Open:* absorption by step 54's `tools/release.py`.
+    Original text: the 15 Windows/WSL batch scripts
+    entered the tree in 2026-09 and were never on GitHub. Sequence deliberately: **first** decide
+    the directory structure and move them with `git mv` in the Phase 2 flattening commit (so the
+    moves stay tracked), **then** check which scripts still work, keep only what is useful, strip
+    what does not belong on GitHub — several contain hard-coded local paths such as
+    `%USERPROFILE%\Anaconda\scripts\activate.bat`, and `execWithPythonVersion.bat` still ends
+    with a `cd` into the long-gone `tools\makeWindowsBinaries\` — and add a README describing what
+    each remaining script is for. Only then does step 54's `tools/release.py` absorb them; it must
+    port these scripts, not reimplement alongside them.
+
+    **Until this step runs, `tools/buildAndGenerate/` stays out of the repository.** It is listed in
+    `.gitignore` with a pointer back here, so it neither clutters `git status` nor gets committed by
+    accident with the hard-coded local paths still in it. **Committing it is part of this step** —
+    remove the `.gitignore` entry at the same time as the cleanup, in the same commit.
+
+    `tools/issueTracker/` is the opposite case and was committed on 2026-09-09 despite this step
+    still being open, because it is *already in use* as the version source of truth (steps 65–67
+    will restructure it). Its `trackerlog.txt` was scanned for step 10 first: no credentials, no
+    email addresses, no absolute local paths. `trackerlog.html` and `trackerlog_backup.txt` are
+    regenerated on every tracker write and are ignored — `docs/RST/trackerlog.rst` and
+    `docs/theDoc/trackerlog.tex` already carry the same content in tracked form.
+
+    Related: `generateSetupFile.py` existed internally to generate `setup.py` by extracting the
+    `.cpp` file names. It is deliberately **not** brought into this repository — step 17's
+    `tools/gen_sources.py` supersedes it.
+74. *(Phase 2, with the flattening)* **Give the logs their own directory.** Today they sit in three
+    sibling directories next to the models — `TestSuiteLogs/`, `TestExamplesLogs/`,
+    `PerformanceLogs/` — plus the `logsTmp/` added by step 72. Consolidate into a top-level `logs/`
+    with one subdirectory per kind (`testmodels`, `examples`, `performance`) and a single shared
+    `logs/tmp/`, which is what makes clearing scratch logs one delete. Do it inside the Phase 2
+    `git mv` commit so the moves stay tracked, and update the three `logFileName` expressions plus
+    `testRunnerTools.tmpLogDir` in the same commit.
+75. *(Phase 2, with the flattening)* **Move runners and helpers out of the model directories.**
+    `TestModels/` currently mixes the models with `runTestSuite.py`, `runTestExamples.py`,
+    `runPerformanceTests.py`, `runUnitTests.py`, `runTestSuiteRefSol.py`, `modelUnitTests.py` and
+    `testRunnerTools.py`, which is why step 69's coverage check needs
+    `NotTestModels()` to name seven files that are not tests. Separate them so the model
+    directories contain models only. Performance
+    models get their own directory as well; a model used for both performance and TestModels moves
+    to performance. Sequence with step 69 — a completeness check over a directory of models only
+    is far simpler than one that must know which files to ignore.
 
 ### Phase 3 — Code generation and docstrings (~6–8 weeks)
 
 The core investment. Every step is validated byte-for-byte by step 2.
 
-31. **DONE 2026-09-14.** Convert `objectDefinition.py` / `systemStructuresDefinition.py` into structured data - 
-    the format to be defined, but preferably Python code, the structures defined in dicts,
-    thus allowing copy operations for derived objects and definition of enums, default strings,
-    values, etc., that could also be defined in a common file that is included in several
-    definition files and thus allows synchronization.
-
-    The structures shall be split into one file for ALL simulation settings, one for ALL
-    visualization settings, one for ALL solver settings, one for ALL solvers, and one for 
-    remaining structures. This simplifies search/replace and synchronization of similar
-    structures.
-    The objects shall be put into single files per each item category: Node, Object, Marker,
-    Load and Sensor.
-
-    The documentation in code-generation tools such as systemStructuresDefinition.py, 
-    objectDefinition.py, etc. as well as in comments of Python code are latex-based. This means 
-    that a conversion to .rst is first needed. It would be a good idea to convert all these comments
-    into markdown (possibly just using the present way it is done) - with a good proposal how 
-    to treat formulas (the $y=f(x)$ format is really handy). 
-    Also note that there are several latex macros that could be checked first, in particular
-    regarding tables, which are widely used for description of parameters (name, type, formula, 
-    description) - see also theDoc/docincludes.sty, which is not a style but a macro defs file,
-    just named such for the outdated doxygen workflow.
-
-    As step 31 is larger, it may be good to split into 31a, b, c, ...
-
-    ### Status
-
-    Detail - the measured groundwork, the decisions taken and the per-commit reports - lives in
-    the revision log, [Step 31](exudynRevisionLog2026.md#step-31). Only the state is kept here.
-
-    **DONE 2026-09-14: 31a, 31b, 31d, 31e, 31g, 31h. MOVED: 31c to step 50, 31f to step 83.**
-    The generators still read the old definition files; `definitions/` is emitted from them until
-    step 33 re-points generation. See [definitions/README.md](../../definitions/README.md).
-
-    - **31a - emit real Python from the parsed representation. DONE 2026-09-13** (`a78d969`).
-      Items go to `definitions/itemDefs{Nodes,Objects,Markers,Loads,Sensors}.py`, structures to
-      `definitions/structureDefs{SimulationSettings,VisualizationSettings,SolverData,Solvers,Other}.py`,
-      with `definitions/definitionTypes.py` as the single hand-written source of the vocabulary
-      and `tools/generators/definitionEmitter.py` as the emitter. Round-trip lossless.
-    - **31b - factor the emitted data. DONE 2026-09-13** (`96e3792`, `7f4e3bd`, and the
-      `CFVisualization` removal). Dead vocabulary removed, constraints folded into the type
-      constructors, `size=` retired as a field.
-    - **31c - moved to step 50**: the documentation format needs the same converter and the
-      same macro decision as step 50, so it is done there.
-    - **31d - an `OutputVariableType` registrator. DONE 2026-09-13** (`18f1a36`, `b8834eb`).
-      The four hand-synced places became one table, `definitions/outputVariableTypes.py`, which
-      generates `src/Autogenerated/OutputVariableTypes.h` and the Python enum; #2408 is fixed and
-      `KineticEnergy` / `PotentialEnergy` reach Python. The item `outputVariables` became a list
-      of `ItemOutputVariable(OVPosition, description)` in the second commit.
-    - **31e - simplify and group the type and flag vocabulary. DONE 2026-09-14.** Simplified by
-      31b and 31g; `definitions/definitionTypes.py` is now grouped by usage into SHARED / ITEMS /
-      STRUCTURES blocks, one-off types split by where they are used, most-used first. One module
-      and one import stay - `from definitionTypes import *` is emitted into 11 files. No name was
-      unused, so nothing was removed.
-    - **31f - moved to step 83** (issue #2411): exposing the type information to Python, and
-      `requestedNodeType` / `requestedMarkerType` as declared type lists. It generates from
-      `definitions/`, so it has to follow step 33.
-    - **31g - values become values. DONE 2026-09-13** (`47ccc87`, `253d1b3`). Every value in the
-      definition files is still a string, so `defaultValue=DVZeroReal` reads as text where a
-      number is meant and neither search-and-replace nor a type checker can see through it.
-      `DVTrue`/`DVFalse` become `True`/`False`, `DVZeroReal` becomes `0.`, `DVZeroIndex` becomes
-      `0`, and integers and floats in both the item and the structure files are written as
-      numbers. Measured over 1695 parameter defaults: 373 C++ constructor calls, 371 `true`/`false`
-      (all on `bool`/`Bool` - **except one on a `UInt`**, which is worth a look), 250 floats, 226
-      empty, 173 integers, 55 named C++ constants.
-
-      The emitter renders them back with a **C++-faithful formatter**, so the generated set stays
-      byte-identical: integral floats as `0.` / `1.`, small magnitudes in exponent form, no `+`
-      and no leading zero in the exponent, and the `f` suffix re-added from the declared type -
-      derivable, because all 112 suffixed defaults are on a float type (`float` 84, `UFloat` 17,
-      `PFloat` 11). Three spellings cannot be recovered from the value and are normalised once:
-      `6.67430e-11`, `0.90` and `1.e-3`. Without this the alternative was ~239 respelt literals in
-      the generated C++ and in `itemInterface.py`, which would blunt the golden gate.
-
-      `DVInvalidIndex`, `DVDefaultColor` and `DVZeroVector3D` become a small **class** rather than
-      a string constant, knowing its three renderings - the C++ literal, the Python value and the
-      readable form for the documentation - which is the same three-way split the number formatter
-      needs, so both share one interface.
-
-      Also here: `'1.10.80;EXP=2030'` is stored in `defaultValue` on **93 deprecated structure
-      members**. It is a version and an expiry date, not a default value, and gets its own field.
-
-    - **31h - a function declaration library. DONE 2026-09-14.** The item
-      files are dominated by functions that are copies: **1850 functions against 985 parameters**,
-      and **64% of the functions are verbatim repeats** of another declaration -
-      `CheckPreAssembleConsistency` 49 times identically, `GetOutputVariableBody` 16 times,
-      `UpdateGraphics` 93 times in 3 variants. They exist only because the C++ header generator
-      needs a declaration for a body written by hand in the `.cpp`; they are not documented
-      anywhere - **verified: a function description reaches only the generated C++ header as a
-      `//! AUTO:` comment**, and appears in no `.rst`, no `.tex` and not in `itemInterface.py`.
-
-      Keying the shared declarations, measured three ways:
-
-      | key | unambiguous keys | uses covered |
-      |---|---|---|
-      | name only | 183 of 240 | 865 of 1850 (47%) |
-      | category + name | 224 of 282 | 1169 (63%) |
-      | category + parent class + name | 365 of 423 | 1356 (73%) |
-
-      So the helper is **per item category** - `DefineObjectFunction`, `DefineNodeFunction`,
-      `DefineMarkerFunction`, `DefineLoadFunction`, `DefineSensorFunction` - keyed by the C++
-      method name, resolved against the class's declared `cParentClass` where the name alone is
-      ambiguous within the category, with `parentClass=` as the explicit override. `GetPosition`
-      is the example: its 11 declarations collapse to five (category, parent) groups, three of
-      which are already unique.
-
-      The residual 58 ambiguous keys (494 uses) are almost all two-declaration groups, and the
-      commonest reason is a **const/non-const accessor pair under one name** - `GetMarkerNumbers`
-      is declared 32 times as `const ArrayIndex&` and 32 times as `ArrayIndex&`, and the parent
-      (`src/System/CObjectConnector.h:69,71`) declares it as a pair too. One call emitting both
-      halves removes that class of ambiguity.
-
-      `implementation=` carries the per-class body, which is what actually varies (1025 of 1850
-      functions have one; 825 are declaration only). `description=` is given **only where it
-      genuinely differs**: 57 names carry drifting descriptions today for no reason -
-      `UpdateGraphics` has two texts for 93 uses (88 versus 5), and `SetNodeNumber`'s most common
-      description reads *"Get global node number"*, a copy-paste error in the generated comment of
-      a setter.
-
-      **Result: `definitions/itemFunctions.py`, 162 entries standing for 1463 declarations.** The
-      resolution keys are `classType` and `cParentClass`, but BOTH default to `None` and are named
-      only where the classes genuinely change the declaration - 144 of 161 (classType, name) pairs
-      have one signature across all their parents, and five names have one across all item types.
-      That took the library from 273 entries to 162 at a cost of 23 extra `description=` overrides
-      (579 to 602). The library is six lists - `sharedFunctions`, then one per item type - so the
-      part a maintainer has to keep in sync with the C++ stays small and grouped.
-
-      **Unified descriptions applied 2026-09-14**: 163 function descriptions in
-      `objectDefinition.py`, scoped to the item type each decision was taken for, so a
-      node-worded text cannot reach an object. Only `//! AUTO:` comments in `src/Autogenerated/`
-      changed; the `description=` overrides fell from 602 to 439.
-
-      **On the duplication this introduces:** the library still states what the parent's C++
-      header declares. Rather than parse C++ to remove it, step 32 turns it into a *checked*
-      invariant - a validation pass confirms each library declaration exists in the parent class
-      header (`src/System/CObject*.h`, `CNode*.h`, `CMarker*.h`), so a parent signature that
-      changes without the library following is a generator error rather than silent drift. That is
-      the reason to run 32 after 31h.
-
-    - **`outputVariables` as real data. DONE 2026-09-13** with 31d: a list of
-      `ItemOutputVariable(OVPosition, description)` in place of one string holding a dict literal
-      that both generators had to `eval()`. Only the 15 texts shared by four or more items are
-      named; naming all 69 repeated texts would have cost 69 constants to save 130 lines.
-
-32. **DONE 2026-09-14. Validate the definitions on load.** Step 31a changed what this step has to do. Because
-    the definitions are now Python, a large part of the schema validates itself at import time,
-    with a real traceback naming the file and line: an unknown flag or type is a `NameError`, an
-    unknown parent class or `classType` is a `NameError`, an impossible shape raises in `_sized`
-    (`definitions/definitionTypes.py:192`), and giving both `minimum` and `greaterThan` raises in
-    `TypeSpec.__call__`. What no constructor can see is the **cross-cutting** part, and that is
-    what step 32 still owes:
-
-    - output-variable keys that name no `OutputVariableType`;
-    - `fromParent` members that the named parent class does not declare;
-    - duplicate `pythonName` within one class, and names colliding with a parent member;
-    - shape versus default value - a `TVectorND(3)` whose default has six entries;
-    - the size/type agreement that was checkable **nowhere** before 31b (the
-      `#future: also add size check ...` note at `pythonAutoGenerateObjects.py:904`); #2410 was
-      exactly this defect and was found by hand;
-    - **every shared function declaration really exists in the parent class header** (31h) - the
-      check that makes the declaration library a stated invariant instead of a silent second copy.
-
-    Deliverable: a `ValidateDefinitions()` pass over the loaded modules, called by
-    `tools/regenerate.py` before the generators run, reporting every violation rather than the
-    first.
-
-    **Result:** `tools/generators/definitionValidator.py`, called by `tools/regenerate.py` before
-    the generators (exit code 3). It checks 1655 virtual item functions against the parsed C++
-    parent chains (C, Main and Visualization bases; return type, argument types, constness -
-    parameter names may differ), 194 `fromParent` parameters against the parents' data members,
-    duplicate signatures, and 36 shaped defaults. Today's tree: **0 violations**; each check was
-    shown to fire by mutation. Output-variable keys need no check - an unknown `OV*` is a
-    `NameError` at import. Not covered: the 7 `fromParent` members of structures, whose parents
-    are not hand-written C++ classes. The parent-header check would have caught the 31h
-    `isVirtual` defect (`9297236`).
-
-33. **Re-point the generators at `definitions/`, then split them.** The intermediate
-    representation this step used to propose now exists: it is the loaded `definitions/` modules.
-    Until part 1 the generators still parsed `objectDefinition.py` /
-    `systemStructuresDefinition.py`, so the repository held **two** inputs, kept in step by an
-    emitter. That was the defect to close, and the order matters:
-
-    1. **Re-point first.** Replace `SplitString` parsing with a loader over `definitions/`, and
-       delete `objectDefinition.py` and `systemStructuresDefinition.py`. The proof is that
-       generated output stays byte-identical, which the round-trip harness already establishes is
-       possible - this is a swap of input, not of behaviour. Until this lands, every definition
-       change has to be made twice.
-
-       **DONE 2026-09-14.** `tools/generators/definitionLoader.py` yields each class as the old
-       parser's `(parseInfo, parameterList)`; both generators loop over it with their per-class
-       code unchanged. The two old files, `definitionEmitter.py` and `emitDefinitions.py` are
-       deleted. Tier 1 (C++, pybind, `itemInterface.py`, stubs) is **byte-identical**; Tier 2
-       differs in exactly one way, proven by normalising it away in all 53 changed files: the
-       `size` column of the reference tables, which now follows the type (`Matrix3D` shows
-       `size = 9` where nothing was declared; the scalar `size = 1` on 73 structure members is
-       gone). Found on the way: the emitter had dropped every structure's `writeFile` and the
-       empty-but-present `typicalPaths` of `SimulationSettings` - both restored in
-       `definitions/`, and the validator now also checks bare type names (a typo in a
-       substructure type). A deliberate description edit in `definitions/` reached the C++ header
-       and `itemInterface.py`, so the new input is live.
-    2. **Split second.** Only then break the monolith into independent emitters - C++ headers,
-       pybind, stubs, item interface, RST, LaTeX - each with `main()` + argparse and an explicit
-       `--output`, none reading by relative path (see §4.5, the known cwd dependencies).
-
-       Part 2 covers **every** script in `src/pythonGenerator/`, not only the two that read
-       `definitions/`. Inventory (lines; what it reads; what it writes):
-
-       | script | lines | reads | writes |
-       |---|---|---|---|
-       | `pythonAutoGenerateObjects.py` | 2320 | `definitions/` items | C/Main/Visu headers, `objectFactoryAutoReg.h`, `itemInterface.py`, mini examples, item RST + `itemDefinition.tex` |
-       | `pythonAutoGenerateSystemStructures.py` | 1300 | `definitions/` structures | structure headers + pybind/get-set glue, `stubSystemStructures.pyi`, structure RST + `interfaces.tex`, `systemStructuresData.npy` |
-       | `autoGeneratePyBindings.py` | 4480 | **its own body** (409 `Def*`/`AddEnumValue` calls), `outputVariableTypes.py`, `MainSystem*Ext.rst` | `pybind_manual_classes.h`, `OutputVariableTypes.h`, `stubAutoBindings/Symbolic/Enums.pyi`, cInterface RST + `manual_interfaces.tex`, `confHelper.py` |
-       | `utilitiesDocuGenerator.py` | 1120 | the `#**` comments of 27 modules in `python/exudyn/`, `mainSystemExtensionsHeader.py` | `mainSystemExtensions.py` (**shipped**), pythonUtilities RST + tex, `MainSystem*Ext.rst/.tex`, `stubAutoBindingsExt.pyi`, `confHelperPyUtilities.py`, `utilitiesDocuData.npy` |
-       | `createStubFiles.py` | 100 | `stubHeader.pyi` + the five stub fragments | `exudyn/__init__.pyi`, `exudyn/symbolic.pyi` |
-       | `doc2rst.py`, `latexConverter.py` | 680, 830 | `docs/theDoc/*.tex` | top-level RST, `README.rst`, `index.rst` |
-       | `autoGenerateDocstrings.py` | 760 | `#**` comments | docstrings, at wheel build (`setup.py`) |
-       | `makeAllBinariesScripts.py` | 25 | - | `buildDate.tex` (volatile) |
-       | `autoGenerateHelper.py`, `exudynVersion.py` | 1820, 85 | - | shared helpers; the version string |
-       | `mainSystemExtensionsHeader.py` | 3100 | - | not a script: the source of `mainSystemExtensions.py` (see 2e) |
-
-       Both `.npy` files have **no reader** anywhere in the repository - dead outputs.
-
-       Sub-steps, each its own commit behind the byte-identity gate:
-       - **2a - no cwd dependency. DONE 2026-09-14.** `generatorPaths.py`; all generators run
-         from any directory (verified from an unrelated one: no drift, nothing written there).
-       - **2b - item emitters. DONE 2026-09-14; `pythonAutoGenerateObjects.py` is deleted.**
-         `itemHeaderEmitter.py` (C/Main/Visu headers, user-function headers,
-         `objectFactoryAutoReg.h`), `itemInterfaceEmitter.py`, `miniExampleEmitter.py`,
-         `itemDocsEmitter.py` (item RST, `itemDefinition.tex`, `confHelperItems.py`).
-         History: `itemInterface.py` DONE 2026-09-14
-         (`tools/generators/itemInterfaceEmitter.py`, shared facts in `itemModel.py`); item C++
-         headers DONE 2026-09-14 (`itemHeaderEmitter.py`; its moved code still reads the old
-         string records through `itemModel.LegacyItems()` - replacing them with direct member
-         access belongs to step 34). Split
-         `pythonAutoGenerateObjects.py` (one `WriteFile`
-         returning nine strings) by output: C/Main/Visu C++ headers, `itemInterface.py`, item
-         RST + LaTeX, mini examples, `objectFactoryAutoReg.h`. Each reads `definitions/`
-         directly; `itemInterface.py` first, as the smallest self-contained output with the
-         largest user surface.
-       - **2c - structure emitters. DONE 2026-09-14; `pythonAutoGenerateSystemStructures.py` is
-         deleted.** `structureModel.py` (shared tables, predicates, typical paths, the old string
-         records), `structureHeaderEmitter.py` (structure headers, `DictionariesGetSet.h`,
-         `pybind_modules.h`), `structureStubEmitter.py` (`stubSystemStructures.pyi`),
-         `structureDocsEmitter.py` (structure RST, `interfaces.tex`); `systemStructuresData.npy`
-         is no longer written. `definitionLoader.py` stays: both item and structure emitters
-         still read the old string records through it, which step 34 replaces.
-         Original scope: the same for `pythonAutoGenerateSystemStructures.py`: C++
-         headers, pybind/get-set glue, stub fragment, RST + LaTeX. `definitionLoader.py` is
-         deleted when its last consumer is gone; `systemStructuresData.npy` is dropped.
-       - **2d - the manual pybind interface becomes data.** *Move DONE 2026-09-14;
-         `autoGeneratePyBindings.py` is deleted.* Ten `definitions/pybind*.py` files (module,
-         `SystemContainer`, `Renderer`, `MainSystem`, `SystemData`, `symbolic`, `GeneralContact`,
-         data structures, enums, chapter introduction) record their calls on a
-         `PybindInterface` (`definitions/pybindTypes.py`); `tools/generators/pybindEmitter.py`
-         replays them. The string manipulations of the old script became named steering calls
-         (`BeginCppWrittenByHand`, `EndStubSection`, ...). *Validator checks DONE 2026-09-14 (#2419):*
-         argument/default/type list lengths, duplicate declarations, balanced Begin/End calls; the
-         four definition errors they found are fixed. *Enum registrators DONE 2026-09-14
-         (#2420):* `definitions/enumTypes.py` -> `src/Autogenerated/EnumTypes.h` (`enumEmitter.py`) and
-         `pybindEnums.py`. **2d is complete.**
-         Original scope: `autoGeneratePyBindings.py` is not a
-         generator over definitions: its body *is* the definition of the hand-written Python
-         interface (module functions, `SystemContainer`, `MainSystem`, enums, `symbolic`) -
-         the same mix of data and emitter step 31 removed for the items. Move the declarations
-         into `definitions/pybind*.py`, one file per interface, keeping the existing declarative
-         call style, and write one emitter for `pybind_manual_classes.h`, the three stub
-         fragments and the documentation. Enum values go the way `OutputVariableType` went in
-         31d. `definitionValidator.py` gains the checks that apply (duplicate names, argument
-         lists vs defaults).
-       - **2e - utilitiesDocuGenerator.py is split by concern. DONE 2026-09-14; the script is
-         deleted.** `utilityDocsModel.py` (the `#**` parser and helpers),
-         `mainSystemExtensionsEmitter.py` (i), `mainSystemExtensionDocsEmitter.py` (ii, now run
-         before `pybindEmitter.py`, which reads its RST), `utilityDocsEmitter.py` (iii);
-         `utilitiesDocuData.npy` is no longer written. Original scope: it does three unrelated jobs:
-         (i) it **assembles a shipped module**, `mainSystemExtensions.py`, by copying
-         `mainSystemExtensionsHeader.py` (3100 lines of real package code) and appending - that part is replaced by step 35
-         (`@extends` registry; the module becomes ordinary package code), so 2e only isolates it;
-         (ii) it produces the `MainSystem` extension documentation and `stubAutoBindingsExt.pyi`,
-         which 2d's emitter consumes - that hand-off becomes an explicit input; (iii) it
-         documents the 27 utility modules from `#**` comments - kept as one emitter now, and
-         re-pointed at Google-style docstrings via griffe by steps 36 and 38. The dead
-         `utilitiesDocuData.npy` is dropped.
-       - **2f - one driver, explicit intermediates.** *Driver DONE 2026-09-14:*
-         `tools/generators/generate.py` declares 13 stages with the paths each reads and writes and
-         derives the run order (cycles refused); `regenerate.py` calls it. *Scripts DONE 2026-09-14:*
-         `tools/buildAndGenerate/` is portable and under version control (step 68). **2f complete.**
-         Original scope: today the scripts hand data to each other
-         through `src/pythonGenerator/generated/` in an order only `tools/regenerate.py` knows
-         (`utilitiesDocuGenerator` must run before `createStubFiles`, and its `MainSystem*Ext.rst`
-         is read by `pybindEmitter.py`). Each emitter declares inputs and outputs; one
-         driver, `tools/generators/generate.py` with `main()` + argparse, runs them in dependency
-         order; `createStubFiles.py` becomes its last stage. `regenerate.py` calls the driver.
-         The maintainer's `tools/buildAndGenerate/` batch scripts (generation, wheels, tests;
-         gitignored and untracked today although `CLAUDE.md` lists the directory) call the
-         driver instead of individual generator scripts, and the directory comes under version
-         control; `runPythonScripts.bat` already calls `tools/regenerate.py` locally.
-       - **2g - move out. DONE 2026-09-14; step 33 part 2 is complete.** `autoGenerateHelper.py`,
-         `generatorPaths.py`, `createStubFiles.py`, `stubHeader.pyi` and `generated/` moved to
-         `tools/generators/` with `git mv`; `setup.py` and `MANIFEST.in` follow. Only 3 of the
-         helper's 43 definitions were unused by the emitters, so it moved whole.
-         Original scope: the emitters and the shrunken remainder of `autoGenerateHelper.py`
-         (only what the emitters still use) live in `tools/generators/`; `src/pythonGenerator/`
-         then holds only what later steps delete.
-
-       **Deliberately not in step 33**, because another step removes them rather than
-       restructures them: `doc2rst.py` and `latexConverter.py` (step 50), `autoGenerateDocstrings.py`
-       (step 39), `makeAllBinariesScripts.py` (its only output is LaTeX's `buildDate.tex`, gone
-       with step 50). What of `autoGenerateHelper.py` they still need stays with them until then.
-
-       Ordering with neighbouring steps: 2d before 38 (griffe changes how stub fragments are
-       made); 2e before 35, which then only has to replace an isolated piece; 36 can run in
-       parallel with 2b-2d.
-
-    Doing these in the other order means splitting code that is about to be rewritten.
-
-34. **Templates where they pay, after 33.** The generators build C++ headers, the pybind glue and
-    `itemInterface.py` by string concatenation, which is where the format and the logic are most
-    tangled. Introduce Jinja2 **per emitter, opt-in**, starting with whichever emitter step 33
-    leaves largest; do not convert all six as one act. Jinja2 stays a dev-only dependency - the
-    runtime requirement stays numpy-only - and the byte-identity gate applies per emitter.
-    Worthless before 33 lands, because it would template code that is still reading the old
-    format.
-
-    Sub-steps (added 2026-09-14), each behind the byte-identity gate:
-    - **34a - direct member access.** The emitters stop reading the string records of the old
-      representation (`lineType`, `cFlags` letters, rendered `defaultValue`) and ask the members
-      through named predicates in `itemModel.py` / `structureModel.py`. A template needs exactly
-      this view of a member, so it comes first. **DONE 2026-09-15** for every emitter except the
-      two docs emitters: `itemHeaderEmitter.py` (2026-09-14), `itemInterfaceEmitter.py`,
-      `structureHeaderEmitter.py` and `structureStubEmitter.py` (2026-09-15). `itemDocsEmitter.py`
-      and `structureDocsEmitter.py` keep the string records; `definitionLoader.py`,
-      `itemModel.LegacyItems()` and `structureModel.LegacyStructures()` are deleted with them in
-      step 50 (maintainer decision 2026-09-15).
-    - **34c - one conversion layer between Python and C++** (#2421, decided 2026-09-14), before
-      34b, because it makes each member one uniform line and removes most of what a template would
-      otherwise have to choose. Measured: the generated Main headers convert every item parameter
-      twice (`SetWithDictionary` and `SetParameter`, e.g. `MainObjectConnectorSpringDamper.h`
-      lines 109 and 168) through about 40 differently named helpers of `PybindUtilities.h` (1104
-      lines; ~700 generated calls, led by `SetStringSafely` 217, `SetSlimVectorTemplateSafely` 152,
-      `GetArrayMarkerIndexSafely` 72; ~60 hand-written calls, 36 in `MainSystem.cpp`). The
-      generators choose the helper from eight hand-written type tables that overlap and disagree
-      (`Float4`: `std::vector<float>` for items, `std::array<float,4>` for structures; `Int`:
-      `int` vs `Index`). Item range checks exist only in `itemInterface.py` (165 `CheckForValid...`
-      calls), so `mbs.SetObjectParameter` and `mbs.AddObject` with a raw dict bypass them;
-      structures check in C++ (`EXUstd::GetSafelyUReal`, raises). Neither is switched off in the
-      fast build.
-
-      **Behaviour kept, recorded by 34c1:** a range violation raises, for items and structures, in
-      both builds (a user switch is step 95); Real vectors and matrices (`Vector`, `Vector3D`,
-      `NumpyMatrix`, ...) are accepted as list or numpy and returned as numpy; `Float4` (colours)
-      and index arrays are returned as lists - colours are split and appended, not added; single
-      indices are returned as `NodeIndex`/`ObjectIndex`/.... Anything that looks inconsistent is
-      listed and decided by the maintainer, never unified silently.
-
-      | sub-step | changes generated C++ | gate |
-      |---|---|---|
-      | **34c1 behaviour test first** *(DONE 2026-09-14: `parameterConversionTest.py`)*: one valid and several invalid values per type family through dict creation, `SetObjectParameter`/`GetObjectParameter` and settings structures; records acceptance, returned value and type (numpy vs list), exception type | no | passes on the current code |
-      | **34c2 `src/Pymodules/PyConversion.h`** *(DONE 2026-09-14)*: `EPyUtils::FromPython(object, destination)` / `ToPython(value)` per C++ type (string, `SlimVectorBase<T,n>`, `ConstSizeMatrixBase` as `FromPython<T,rows,columns>`, `MatrixBase<T>`, `VectorBase<T>`), `ItemIndexFromPython<NodeIndex>` / `ItemIndexToPython<NodeIndex>` for single, array and fixed-count indices. A new header, kept apart from `PybindUtilities.h`, whose 35 covered helpers became one-line forwards in one marked block. The range argument and an error context (item and parameter name) come with 34c4, where they are first used | no | wheel (full rebuild, #2427), test suite, 34c1 |
-      | **34c3 one type model** *(DONE 2026-09-14: `tools/generators/typeModel.py`; 36 exception entries left for 34c4/34c5)* in the generators: facts (family, element, size, item kind, user-function signature) on `TypeSpec` in `definitions/definitionTypes.py`; `typeModel.Render(type, destination)` for `cppStorage`, `python`, `docs` (docs keep the definition name: `Int`, `UReal`, `NodeIndex`); the eight tables, `ConvertParameter2Python`, `IsAVector`/`IsASafelyVector` go; a type without a rule fails at generation. Definition names or default strings may change where that makes the rules simpler | no | byte-identity per emitter |
-      | **34c4 items**, in parts, each its own commit: **(a)** *(DONE 2026-09-14)* the generated item code converts through `FromPython`/`ItemIndexFromPython`/`ToPython`/`ItemIndexToPython`, and `SetWithDictionary` and `SetParameter` are written by the same generator function (`ParameterWriteStatement`), behaviour unchanged; **(b)** *(DONE 2026-09-15)* range checks in C++ on every write path with the `exudyn.special` switch (step 95), the Python checks in `itemInterface.py` removed; **(c)** *(DONE 2026-09-15)* `None` raises (step 97); **(d)** *(DONE 2026-09-15)* item indices rejected by float/bool (step 98); **(e)** *(DONE 2026-09-15)* classes accept their defaults, must-be-given parameters raise at Add (step 99); (c)-(e) committed together, because they rewrite the same generated headers | yes | wheel (full rebuild, #2427), test suite, 34c1 (a: 0 differences; b-e: only the intended reference changes), item-creation timing |
-      | **34c5 structures**, in parts: **(a)** *(DONE 2026-09-15)* scalar members (`bool`, `Real`, `float`, `Index`, `Int` and the `U`/`P` forms) convert through `FromPython` on both write paths - `SetDictionary` and the attribute, bound as `.def_property(name, EPyUtils::MemberGetter(&C::x), EPyUtils::MemberSetter(&C::x, [range,] "C.x"))` - so `SetDictionary` range-checks, and `None`/item indices raise as for items (steps 97, 98); **(b)** *(DONE 2026-09-15)* `String`/`FileName`, `Float3`/`Float4`, `Index2`, `ArrayIndex` and the enums likewise, returned as lists through `EPyUtils::ToPythonMember`; not converted, because they are not plain members or have one use: deprecated members (forward through `backlink`, removed at expiry), the `MainSolver` members linked to `cSolver`, `StdArray33F` (`initialModelRotation`), `ArrayFloat`, `Vector2DList`, `KeyPressUserFunction`; **(c)** *(DONE 2026-09-15 with 34a)* the structure header and stub emitters read the members directly; `definitionLoader`/`Legacy*()` stay for the two docs emitters and go with step 50 (maintainer decision 2026-09-15) | yes | same |
-      | **34c6 clean up** *(DONE 2026-09-15; 34c complete, #2421 resolved)*: helpers of `PybindUtilities.h` with no remaining caller are deleted; the hand-written callers (`MainSystem.cpp`, `PyGeneralContact.h`, ...) switch to `FromPython`/`ToPython` first (maintainer decision 2026-09-14), so the old helpers lose their last callers | yes | same |
-
-      The later rewrite of `PybindUtilities.h` itself (reduce to what is still needed, unify, fewer
-      templates) is not part of 34c.
-
-      **Recorded by 34c1, decided 2026-09-14** - behaviour that exists today and that a unified
-      conversion would change if it were not reproduced on purpose (counts are parameter paths in
-      `parameterConversionTestReference.txt`). Each change is applied in 34c4/34c5 as its own
-      reference update, so the test suite shows what depends on it:
-      - range checks run only in the `itemInterface` classes: 90 `U` and 15 `P` item parameters
-        accept a negative (or zero) value through `SetObjectParameter` and a raw dict. `Set...Parameter`
-        was deliberately unchecked as the lower level. **Decision:** every write path gets the same
-        check, and one `exudyn.special` flag switches item and structure range checks off - so the
-        flag (step 95) is built in 34c4, together with the checks;
-      - structures check on attribute set, but `SetDictionary` skips the check (191 parameters).
-        `SetDictionary` is used for loading and saving settings. **Decision:** checked as well (34c5);
-      - `None` is accepted by every `bool` (read back `False`) and by index arrays, `Vector3DList`,
-        `Matrix3DList` and `PyMatrixContainer` parameters (read back empty). **Decision:** raise
-        (step 97, #2424);
-      - `float` and `bool` parameters accept a `NodeIndex`/`ObjectIndex` (read back as its number).
-        **Decision:** reject where simple (step 98, #2425);
-      - 17 item classes reject their own defaults (`MarkerNodeCoordinate(coordinate=InvalidIndex())`
-        fails `CheckForValidUInt`), and `ObjectANCFThinPlate` cannot be created with defaults at all -
-        step 99 (#2426);
-      - 4-element float vectors (`Vcolor`) read back as lists, Real vectors as numpy - kept: colours
-        are split and appended, not added.
-    - **34b - Jinja2 per emitter**, as above, starting with `itemHeaderEmitter.py` (the largest),
-      after 34c.
+31. **DONE 2026-09-14** — `objectDefinition.py` / `systemStructuresDefinition.py` converted into `definitions/`. → [log](exudynRevisionLog2026.md#step-31)
+32. **DONE 2026-09-14** — validate the definitions on load (`definitionValidator.py`). → [log](exudynRevisionLog2026.md#step-32)
+33. **DONE 2026-09-14** — re-point the generators at `definitions/`, then split them into emitters (`tools/generators/`). → [log](exudynRevisionLog2026.md#step-33)
+34. **DONE 2026-09-15** — emitters read members directly (34a); one Python/C++ conversion layer `PyConversion.h` (34c); Jinja2 measured and not adopted (34b). → [log](exudynRevisionLog2026.md#step-34)
 35. Replace the copy-and-append scheme for `mainSystemExtensionsHeader.py` with an
     `@extends(exu.MainSystem, 'CreateMassPoint')` registry decorator binding at the definition
     site, plus an explicit `install()` that raises on collision with an existing C++ method. The
@@ -1209,7 +741,6 @@ The core investment. Every step is validated byte-for-byte by step 2.
     the real signature.
 39. Delete `autoGenerateDocstrings.py` and the `TreeConvert2Temp` transform in `build_py`,
     including the bare `except` that ships broken docstrings behind a printed warning.
-
 83. *(Phase 3, after 33)* **Expose the type information to Python** (issue #2411; was 31f).
     Structures have a generated `GetDictionaryWithTypeInfo()`
     (`pythonAutoGenerateSystemStructures.py:531`) feeding the settings dialog (`GUI.py:323`);
@@ -1238,7 +769,6 @@ The core investment. Every step is validated byte-for-byte by step 2.
     `types=[MarkerPosition], conditional=[(MarkerOrientation, 'dynamicFriction != 0')]`.
     **Survey first** whether any case in the tree needs more than one condition; if none does,
     that is the whole grammar.
-
 94. *(Phase 3, with a large file move - 33 or later)* **Group `src/Autogenerated/` by item type.**
     The directory holds several hundred generated headers side by side. Item headers move into
     subdirectories `nodes/`, `objects/`, `markers/`, `loads/`, `sensors/`; the common generated
@@ -1250,6 +780,28 @@ The core investment. Every step is validated byte-for-byte by step 2.
 > Migration note for 36: ~1,200 doc comments across 27 files. Convert mechanically with
 > `autoGenerateDocstrings.py`, diff the generated RST against the pre-migration output, and
 > hand-edit only where the diff is non-trivial.
+86. *(Phase 3, before 33, small)* **Generator correctness** (#2414, #2415). The generator compares
+    a C/Main/Visu header after cutting 7 lines, which removes `@class` and `@brief` as well as the
+    two `@date` lines - so a changed class description is never written and `regenerate.py
+    --check` cannot see it (#2415, `pythonAutoGenerateObjects.py:2029`); compare with
+    `IsEqualIgnoringDateStrings` instead. Four items describe `AngularVelocityLocal` as a "3D
+    velocity vector"; fix the text, check the neighbouring `AngularVelocity` texts (#2414). Both
+    move published documentation, so they are gated as documentation changes.
+87. *(Phase 3, with 33)* **Keep the constrained types at the C++ boundary** (#2409). `PReal`,
+    `UReal`, `PInt`, `UInt` are mapped to plain `Real` / `Index` in `typeConversion`, so the
+    generated headers lose the intent that the Python-side `CheckForValid*` guards enforce. Add the
+    four typedefs and emit the constrained name; no behaviour changes, the headers say more.
+88. *(Phase 3, after it)* **Remove `CFOptional`** (#2417). It wraps 448 parameter reads in
+    `DictItemExists`, but nothing tests the behaviour, so it guarantees nothing. Parameters whose
+    default value is not usable are the place where "required" belongs - as a checked property,
+    not a hand-set flag. Update `modelUnitTests.py:184`, which relies on omitted parameters.
+97. **DONE 2026-09-15** — `None` raises instead of converting. → [log](exudynRevisionLog2026.md#step-97)
+98. **DONE 2026-09-15** — Item indices are rejected by `float` and `bool` parameters. → [log](exudynRevisionLog2026.md#step-98)
+99. **DONE 2026-09-15** — item classes accept their own defaults; `CFMustBeGiven` for placeholder defaults. → [log](exudynRevisionLog2026.md#step-99)
+101. **DONE 2026-09-14** — Generated files without a generator. → [log](exudynRevisionLog2026.md#step-101)
+102. **DONE 2026-09-15** — One spelling per type: unify the item/structure exceptions of `typeModel.py`. → [log](exudynRevisionLog2026.md#step-102)
+104. **DONE 2026-09-15** — `src/Autogenerated/StructuralElementsDataStructures.h` has no generator and no user. → [log](exudynRevisionLog2026.md#step-104)
+106. **DONE 2026-09-15** — Wrong and stray comments in the generated item headers. → [log](exudynRevisionLog2026.md#step-106)
 
 ### Phase 4 — Testing (~3 weeks)
 
@@ -1259,7 +811,6 @@ The core investment. Every step is validated byte-for-byte by step 2.
 41. Mark fast vs slow: ~2-minute PR subset, full nightly.
 42. Wire the `lest` C++ unit tests into the VS `Debug` configuration. They are currently gated on
     `PERFORM_UNIT_TESTS`, enabled only for Python 3.7, so they never run anywhere.
-
 42a. **Close the coverage hole the lest suite has in exactly the classes AVX touches.** Measured
     2026-09-12 by listing the `CASE(...)` names in `src/Tests/*.h` against the headers in
     `src/Linalg/`. Covered today: `Vector`, `ResizableVector`, `ConstSizeVector`,
@@ -1281,10 +832,49 @@ The core investment. Every step is validated byte-for-byte by step 2.
 43. Add ruff, plus a pyright or mypy pass validating the `.pyi` against the package.
 44. Add an ASan/UBSan Linux job. For a C++ library invoking arbitrary user callbacks this catches
     the class of bug users report as "it crashed with no message".
-45. ~~Rename `main/pythonDev/pytest.py`~~ — done differently in step 25: the file is now the
-    untracked local scratch copy `python/pytest.py`, created from `python/pytestTemplate.py` by
-    `tools/setupLocalWorkspace.py` (#2403). It no longer ships, so it cannot shadow the `pytest`
-    package in any installed environment.
+45. **DONE** — rename `pytest.py` - done differently in step 25 (`python/pytestTemplate.py`). → [log](exudynRevisionLog2026.md#step-45)
+64. *(Phase 4)* **Parallelise `runTestSuite.py`.** It runs 142 models serially in ~20 s, which is
+    already short enough to gate every commit, so this is comfort rather than necessity. The
+    constraint is correctness, not speed: several models write to the same output files
+    (`coordinatesSolution` and friends), so only tests with disjoint output paths may run
+    concurrently. Derive the grouping from the declared output filenames rather than guessing.
+69. **DONE 2026-09-11** — Complete and verify the test list. → [log](exudynRevisionLog2026.md#step-69)
+72. **DONE 2026-09-10** — `testRunnerTools.ResolveLogFile()` decides the log target before the first write. → [log](exudynRevisionLog2026.md#step-72)
+73. *(Phase 4, release testing)* **Cover every compiled variant in the release tests.** Windows
+    release builds produce **three** modules — `exudynCPP`, `exudynCPPfast`
+    (`__FAST_EXUDYN_LINALG`) and `exudynCPPnoAVX` — and the suite exercises only whichever one
+    `__init__.py` selects. The fast and noAVX binaries therefore ship essentially untested, which
+    matters more after step 23 consolidates to two shipped variants selected by a CPUID check.
+
+    Selection is already scriptable: `__init__.py:35-42` reads `sys.exudynFast` and
+    `sys.exudynCPUhasAVX2` *before* the C++ module is imported, and `runTestSuite.py` imports `sys`
+    at line 15 but `exudyn` only at line 33 — so `-fast` / `-noavx` options can set them. Verified
+    2026-09-09 that this loads exactly one binary: with `sys.exudynFast=True`, `sys.modules` holds
+    `exudyn.exudynCPPfast` and no `exudyn.exudynCPP`.
+
+    The blocking obstacle is already removed: `runTestSuite.py` used to `import exudyn.exudynCPP`
+    unconditionally just to report the binary path and build date, which would have pulled the
+    default binary into the process alongside the intended one and then reported the wrong module
+    as the one under test. It now resolves whichever module `sys.modules` actually holds.
+
+    What remains: the `-fast` / `-noavx` options themselves, and a release procedure that runs all
+    three and keeps all three logs. Sequence after step 47 (rewriting binary selection) if that
+    lands first — the two touch the same logic.
+85. *(Phase 4, small)* **Test and example hygiene** (#2368, #2377). `ANCFbeltDrive.py` yields 0.0
+    against its recorded reference -0.484 since it was retuned to a 10 s run - find which is
+    right before it enters the suite (#2368). Three imports name modules that exist nowhere or
+    only by accident of `sys.path` (`RL_Spot`, `timeIntegrationOfRotationVectorFormulas`, a bare
+    `rosInterface`); fix or remove them and shrink `knownMissingLocalModules` in
+    `tools/checkExtras.py` accordingly (#2377).
+93. *(Phase 4, with 64 and 69)* **Test-suite output goes to `solution/`** (#2418). Models write
+    solution and sensor files next to themselves (`coordinatesSolution.txt` and friends), which
+    litters `TestModels/` and makes runs collide - the blocker for running the suite in parallel.
+    In the test suite every model writes into `solution/` with unique per-model file names, and
+    file writes are **avoided widely**: sensors mostly `storeInternal=True`,
+    `writeSolutionToFile` mostly `False`. Files are written only sparsely, so writing stays
+    tested, and those tests re-read the written solution and sensor files and check them.
+    `TestExamples` stay serial: they only check that the examples still run against the current
+    API, raising on e.g. a changed argument or function.
 
 ### Phase 5 — Error handling and UX (ongoing, after Phase 1)
 
@@ -1297,11 +887,38 @@ The core investment. Every step is validated byte-for-byte by step 2.
     so user-function tracebacks survive instead of being stringified
     (`ExceptionsTemplates.h:50`).
 49. Document the error taxonomy.
+95. **DONE 2026-09-15** — A user switch for parameter range checks. → [log](exudynRevisionLog2026.md#step-95)
+96. *(Phase 5)* **C++ user errors inspect the Python source** (#2423). `PyError`/`PyWarning` call
+    `PyGetCurrentFileInformation` (`src/Main/Stdoutput.cpp:259`), which calls
+    `inspect.getframeinfo`; that scans `sys.modules` and reads the source file. The ~38000 probe
+    errors of `parameterConversionTest.py` took 1 s standalone and 9 s inside `runTestSuite.py`
+    after scipy, matplotlib and ngsolve were imported - a cost wherever errors are caught in a loop.
+    The frame itself (`f_code.co_filename`, `f_lineno`) carries the same information.
+105. *(after 34c6, before the error-message work of Phase 5)* **One exception type per kind of
+    parameter error** (#2432). Today a wrong parameter value raises one of three types, depending on
+    the path:
+    - `RuntimeError` from `PyError` or a pybind11 `cast_error`;
+    - `TypeError` from a pybind11 signature mismatch;
+    - `ValueError` from the former Python checks.
+
+    34c4/34c5 moved most paths to `RuntimeError`. **Decision (2026-09-15):** correct this throughout
+    the revision at one step. For example, `TypeError` for a wrong type (string, list, `None`, an item
+    index into a scalar) and `ValueError` for a range violation or a wrong size, raised from
+    `PyConversion.h`. Applied as its own reference update of `parameterConversionTest.py`.
 
 ### Phase 6 — Documentation (~3 weeks)
 
-50. Make RST/Sphinx primary and generate the PDF via `latexpdf`. Deletes `latexConverter.py` and
-    `doc2rst.py`.
+50. Sphinx (readthedocs) stays; the sources become **MyST Markdown** (`myst-parser`, dev-only):
+    hand-written chapters are converted from `.tex`, generated reference pages come from the docs
+    emitters as `.md`, remaining `.rst` files are converted as they are touched; new documentation
+    is Markdown from now on (decision 2026-09-15). The PDF is generated via `latexpdf` (front page
+    through `latex_elements`). Deletes `latexConverter.py` and `doc2rst.py`.
+
+    **Python docstrings become Markdown too, early rather than late** (can run before step 50):
+    list the LaTeX in `#**`-style comments by searching for `\` (expected: `$` math and
+    abbreviation macros only) and replace it by plain Markdown.
+
+    **Known:** the LaTeX PDF build currently fails (files missing or changed); this surfaces here.
 
     **Absorbs 31c, the documentation format of the definitions** (`definitions/`): item and
     structure descriptions carry LaTeX macros today (`\hac{ODE2}`, `$\Jm_P$`); the format they
@@ -1330,16 +947,48 @@ The core investment. Every step is validated byte-for-byte by step 2.
     will be still needed from the old latex converters, like the abbreviation list at the end of
     doc2rst, etc.). Further, the autoGenerateHelper.py - which is in a terrible state, probably 
     most terrible in the project - will not require most of its functions, so cleanup is needed.
-
+50b. *(after 50, when the documentation is Markdown)* **Carry the revision into the documentation.**
+    Extract every change recorded in this plan and in `exudynRevisionLog2026.md` - new flags and
+    switches (e.g. `exudyn.special.exceptions.parameterRangeChecks`), conversion and error behaviour,
+    definitions and generators, tools and workflow - and update the user and developer
+    documentation accordingly. The plan and log are records, not documentation; afterwards the plan
+    is reduced to an archive.
 51. Stop committing generated RST and `theDoc.pdf`; build in CI, publish the PDF as a release
     asset.
 52. Convert `trackerlog.tex` into `CHANGELOG.md`.
+90. *(Phase 6)* **Rewrite the installation documentation** (#2388). `gettingStarted.tex` still
+    describes Python 3.6/3.7, 32-bit Anaconda and wheel names from 2020; rewrite against what is
+    shipped (cp310-cp314, 64-bit only). With step 50 this moves to the RST side.
 
 ### Phase 7 — Process
 
 53. Issue and PR templates, and a `CONTRIBUTING.md` stating the actual policy now that a branch
     exists to target.
 54. `tools/release.py`: bump → regenerate → test → build → tag.
+65. *(Phase 7)* **Give `issueTracker.py` a CLI.** Today it is driven by importing the module and
+    calling functions from its own directory. Add argparse — `raise`, `resolve`, `list`, `show`,
+    `modify`, and **`--release` / `--dev` to switch the build mode** (fact 26), which is currently a
+    hand edit of `versionDev` at line 56-57 followed by `UpdateFiles()`. A small Tkinter front-end
+    over the same commands is wanted afterwards. Remove the cwd dependency and the hard-coded
+    Windows path separators
+    (`'..\\..\\main\\src\\Autogenerated\\'`), and add tests around
+    `ResolvedIssues2Version`/`GetMajorMinorMicroVersion`, which no test covers today despite being
+    the version's only definition. Fix the known inconsistencies listed in `docs/dev/WORKFLOW.md`
+    while there: the `NORMAL`-vs-`med` priority mismatch and the stale
+    `cd ..\tools\makeWindowsBinaries\` in `execWithPythonVersion.bat`. A web mask can follow later;
+    the CLI is the part that unblocks scripting and CI.
+66. *(Phase 7)* **Fold minor-version bumps into the tracker.** A 1.11 → 1.12 bump currently means
+    hand-editing the `versionResolved` list and `versionNames` dict inside `issueTracker.py`. Make
+    it a command that records the baseline automatically. Keep it an explicit maintainer action,
+    never automatic.
+67. *(Phase 7, after 65)* **Migrate `trackerlog.txt` to one file per issue** under
+    `docs/dev/issues/` — `OPEN-0042-short-name.md`, moved to `issues/closed/` on resolution — with
+    a generated index. This is the intended end state: reviewable diffs, no comma-escaping trap, no
+    single-file merge conflicts. Two things must be carried across, not dropped: the **micro
+    version is derived from the resolved count**, so the migration either preserves that derivation
+    or replaces it with a deliberate alternative; and the resolved-issue rendering already produces
+    what step 52 wants from `CHANGELOG.md`, so **one mechanism should produce both** rather than
+    two diverging ones. Sequence 67 after 52, or merge them.
 
 ### Phase 8 — Compiled user extensions (after Phase 5)
 
@@ -1382,305 +1031,26 @@ is needed — plugins inherit from `CObject` directly.
     dict-builder class stays an explicit `from myplugin import ObjectMyThing` rather than being
     injected into `exudyn.itemInterface`, so every script says where its item types came from.
 
-### Added 2026-09 — maintainer toolchain, test coverage, encoding (steps 64–75)
-
-Added after `tools/` entered the working tree. Existing numbers are stable and are never
-renumbered, so these continue the sequence rather than slotting into their phases.
-
-64. *(Phase 4)* **Parallelise `runTestSuite.py`.** It runs 142 models serially in ~20 s, which is
-    already short enough to gate every commit, so this is comfort rather than necessity. The
-    constraint is correctness, not speed: several models write to the same output files
-    (`coordinatesSolution` and friends), so only tests with disjoint output paths may run
-    concurrently. Derive the grouping from the declared output filenames rather than guessing.
-
-65. *(Phase 7)* **Give `issueTracker.py` a CLI.** Today it is driven by importing the module and
-    calling functions from its own directory. Add argparse — `raise`, `resolve`, `list`, `show`,
-    `modify`, and **`--release` / `--dev` to switch the build mode** (fact 26), which is currently a
-    hand edit of `versionDev` at line 56-57 followed by `UpdateFiles()`. A small Tkinter front-end
-    over the same commands is wanted afterwards. Remove the cwd dependency and the hard-coded
-    Windows path separators
-    (`'..\\..\\main\\src\\Autogenerated\\'`), and add tests around
-    `ResolvedIssues2Version`/`GetMajorMinorMicroVersion`, which no test covers today despite being
-    the version's only definition. Fix the known inconsistencies listed in `docs/dev/WORKFLOW.md`
-    while there: the `NORMAL`-vs-`med` priority mismatch and the stale
-    `cd ..\tools\makeWindowsBinaries\` in `execWithPythonVersion.bat`. A web mask can follow later;
-    the CLI is the part that unblocks scripting and CI.
-
-66. *(Phase 7)* **Fold minor-version bumps into the tracker.** A 1.11 → 1.12 bump currently means
-    hand-editing the `versionResolved` list and `versionNames` dict inside `issueTracker.py`. Make
-    it a command that records the baseline automatically. Keep it an explicit maintainer action,
-    never automatic.
-
-67. *(Phase 7, after 65)* **Migrate `trackerlog.txt` to one file per issue** under
-    `docs/dev/issues/` — `OPEN-0042-short-name.md`, moved to `issues/closed/` on resolution — with
-    a generated index. This is the intended end state: reviewable diffs, no comma-escaping trap, no
-    single-file merge conflicts. Two things must be carried across, not dropped: the **micro
-    version is derived from the resolved count**, so the migration either preserves that derivation
-    or replaces it with a deliberate alternative; and the resolved-issue rendering already produces
-    what step 52 wants from `CHANGELOG.md`, so **one mechanism should produce both** rather than
-    two diverging ones. Sequence 67 after 52, or merge them.
-
-68. *(Phase 2, then 1/7)* **Revise `tools/buildAndGenerate/`.** **Cleanup DONE 2026-09-14 (with step 33
-    part 2f):** all scripts rewritten portable (`condaActivate.bat`, paths from `%~dp0`), stale
-    `main\` paths removed, `makeSphinxDoc.bat` added, `README.md` written, directory committed and
-    the `.gitignore` entry removed. *Open:* absorption by step 54's `tools/release.py`.
-    Original text: the 15 Windows/WSL batch scripts
-    entered the tree in 2026-09 and were never on GitHub. Sequence deliberately: **first** decide
-    the directory structure and move them with `git mv` in the Phase 2 flattening commit (so the
-    moves stay tracked), **then** check which scripts still work, keep only what is useful, strip
-    what does not belong on GitHub — several contain hard-coded local paths such as
-    `%USERPROFILE%\Anaconda\scripts\activate.bat`, and `execWithPythonVersion.bat` still ends
-    with a `cd` into the long-gone `tools\makeWindowsBinaries\` — and add a README describing what
-    each remaining script is for. Only then does step 54's `tools/release.py` absorb them; it must
-    port these scripts, not reimplement alongside them.
-
-    **Until this step runs, `tools/buildAndGenerate/` stays out of the repository.** It is listed in
-    `.gitignore` with a pointer back here, so it neither clutters `git status` nor gets committed by
-    accident with the hard-coded local paths still in it. **Committing it is part of this step** —
-    remove the `.gitignore` entry at the same time as the cleanup, in the same commit.
-
-    `tools/issueTracker/` is the opposite case and was committed on 2026-09-09 despite this step
-    still being open, because it is *already in use* as the version source of truth (steps 65–67
-    will restructure it). Its `trackerlog.txt` was scanned for step 10 first: no credentials, no
-    email addresses, no absolute local paths. `trackerlog.html` and `trackerlog_backup.txt` are
-    regenerated on every tracker write and are ignored — `docs/RST/trackerlog.rst` and
-    `docs/theDoc/trackerlog.tex` already carry the same content in tracked form.
-
-    Related: `generateSetupFile.py` existed internally to generate `setup.py` by extracting the
-    `.cpp` file names. It is deliberately **not** brought into this repository — step 17's
-    `tools/gen_sources.py` supersedes it.
-
-69. **DONE 2026-09-11.** *(Phase 4, before 40)* **Complete and verify the test list.**
-    `CheckTestCoverage()` closes the hole; the 19 unlisted models were triaged by running each one;
-    five were trimmed and added (111 executed, up from 106) and 14 are excluded with a reason each.
-    Two drifted models became issues #2368 and #2369 rather than tests. →
-    [log](exudynRevisionLog2026.md#step-69)
-
-70. **DONE 2026-09-09.** *(Phase 0/2)* `.gitattributes` added: `* text=auto`, `eol=crlf` for
-    `.bat`/`.cmd` and the VS project files, `eol=lf` for `.sh`, explicit `binary` by type. It
-    introduced **no** renormalisation - the index was already fully LF-normalised. →
-    [log](exudynRevisionLog2026.md#step-70)
-
-71. **DONE 2026-09-09.** *(Phase 0, hard prerequisite for step 2)* All 12 generator write sites and
-    6 read sites given an explicit `encoding='utf8'`, and the four trailing spaces at
-    `pythonAutoGenerateSystemStructures.py:1357` removed (facts 16 and 17). →
-    [log](exudynRevisionLog2026.md#step-71)
-
-72. **DONE 2026-09-10.** *(Phase 4, small)* `testRunnerTools.ResolveLogFile()` decides the log
-    target before the first write and diverts to `main/pythonDev/logsTmp/` rather than clobbering
-    a committed log; `--overwrite-log` replaces deliberately. Folded in: package versions and CPU
-    in the header, and a per-test overview table. → [log](exudynRevisionLog2026.md#step-72)
-
-73. *(Phase 4, release testing)* **Cover every compiled variant in the release tests.** Windows
-    release builds produce **three** modules — `exudynCPP`, `exudynCPPfast`
-    (`__FAST_EXUDYN_LINALG`) and `exudynCPPnoAVX` — and the suite exercises only whichever one
-    `__init__.py` selects. The fast and noAVX binaries therefore ship essentially untested, which
-    matters more after step 23 consolidates to two shipped variants selected by a CPUID check.
-
-    Selection is already scriptable: `__init__.py:35-42` reads `sys.exudynFast` and
-    `sys.exudynCPUhasAVX2` *before* the C++ module is imported, and `runTestSuite.py` imports `sys`
-    at line 15 but `exudyn` only at line 33 — so `-fast` / `-noavx` options can set them. Verified
-    2026-09-09 that this loads exactly one binary: with `sys.exudynFast=True`, `sys.modules` holds
-    `exudyn.exudynCPPfast` and no `exudyn.exudynCPP`.
-
-    The blocking obstacle is already removed: `runTestSuite.py` used to `import exudyn.exudynCPP`
-    unconditionally just to report the binary path and build date, which would have pulled the
-    default binary into the process alongside the intended one and then reported the wrong module
-    as the one under test. It now resolves whichever module `sys.modules` actually holds.
-
-    What remains: the `-fast` / `-noavx` options themselves, and a release procedure that runs all
-    three and keeps all three logs. Sequence after step 47 (rewriting binary selection) if that
-    lands first — the two touch the same logic.
-
-
-74. *(Phase 2, with the flattening)* **Give the logs their own directory.** Today they sit in three
-    sibling directories next to the models — `TestSuiteLogs/`, `TestExamplesLogs/`,
-    `PerformanceLogs/` — plus the `logsTmp/` added by step 72. Consolidate into a top-level `logs/`
-    with one subdirectory per kind (`testmodels`, `examples`, `performance`) and a single shared
-    `logs/tmp/`, which is what makes clearing scratch logs one delete. Do it inside the Phase 2
-    `git mv` commit so the moves stay tracked, and update the three `logFileName` expressions plus
-    `testRunnerTools.tmpLogDir` in the same commit.
-
-75. *(Phase 2, with the flattening)* **Move runners and helpers out of the model directories.**
-    `TestModels/` currently mixes the models with `runTestSuite.py`, `runTestExamples.py`,
-    `runPerformanceTests.py`, `runUnitTests.py`, `runTestSuiteRefSol.py`, `modelUnitTests.py` and
-    `testRunnerTools.py`, which is why step 69's coverage check needs
-    `NotTestModels()` to name seven files that are not tests. Separate them so the model
-    directories contain models only. Performance
-    models get their own directory as well; a model used for both performance and TestModels moves
-    to performance. Sequence with step 69 — a completeness check over a directory of models only
-    is far simpler than one that must know which files to ignore.
-
-### Added 2026-09-14 — steps from the open issues (steps 84–93)
-
-Every open issue has a plan step (see §12). Small issues with little code are bundled into one
-step; larger ones get their own. #2411 is step 83 and #2412 belongs to step 36.
-
-84. *(Phase 1, small)* **Build and packaging hygiene** (#2372, #2380, #2387).
-    `pyproject.toml` uses the `license = { text = ... }` table that setuptools removes after
-    2027-02-18; the replacement is an SPDX expression, and `LICENSE.txt` is a custom licence, so
-    this needs a decision on the identifier (#2372). `quietCompile` rebinds `sys.stdout`, which the
-    compiler subprocess on Linux bypasses - capture the subprocess output instead (#2380). 20
-    `ClInclude` entries in `cppsrc.vcxproj` have the wrong directory case and 5 do not exist;
-    browse-only today, but the same defect in a `ClCompile` entry breaks the build (#2387).
-
-85. *(Phase 4, small)* **Test and example hygiene** (#2368, #2377). `ANCFbeltDrive.py` yields 0.0
-    against its recorded reference -0.484 since it was retuned to a 10 s run - find which is
-    right before it enters the suite (#2368). Three imports name modules that exist nowhere or
-    only by accident of `sys.path` (`RL_Spot`, `timeIntegrationOfRotationVectorFormulas`, a bare
-    `rosInterface`); fix or remove them and shrink `knownMissingLocalModules` in
-    `tools/checkExtras.py` accordingly (#2377).
-
-86. *(Phase 3, before 33, small)* **Generator correctness** (#2414, #2415). The generator compares
-    a C/Main/Visu header after cutting 7 lines, which removes `@class` and `@brief` as well as the
-    two `@date` lines - so a changed class description is never written and `regenerate.py
-    --check` cannot see it (#2415, `pythonAutoGenerateObjects.py:2029`); compare with
-    `IsEqualIgnoringDateStrings` instead. Four items describe `AngularVelocityLocal` as a "3D
-    velocity vector"; fix the text, check the neighbouring `AngularVelocity` texts (#2414). Both
-    move published documentation, so they are gated as documentation changes.
-
-87. *(Phase 3, with 33)* **Keep the constrained types at the C++ boundary** (#2409). `PReal`,
-    `UReal`, `PInt`, `UInt` are mapped to plain `Real` / `Index` in `typeConversion`, so the
-    generated headers lose the intent that the Python-side `CheckForValid*` guards enforce. Add the
-    four typedefs and emit the constrained name; no behaviour changes, the headers say more.
-
-88. *(Phase 3, after it)* **Remove `CFOptional`** (#2417). It wraps 448 parameter reads in
-    `DictItemExists`, but nothing tests the behaviour, so it guarantees nothing. Parameters whose
-    default value is not usable are the place where "required" belongs - as a checked property,
-    not a hand-set flag. Update `modelUnitTests.py:184`, which relies on omitted parameters.
-
-89. *(Phase 9)* **`ObjectContactConvexRoll.pContact` becomes a data variable** (#2413). The
-    computed contact point is stored in the parameter structure and read by the visualization, so
-    it is neither system state nor configuration-dependent and keeps no history.
-
-90. *(Phase 6)* **Rewrite the installation documentation** (#2388). `gettingStarted.tex` still
-    describes Python 3.6/3.7, 32-bit Anaconda and wheel names from 2020; rewrite against what is
-    shipped (cp310-cp314, 64-bit only). With step 50 this moves to the RST side.
-
-91. *(Phase 1, with 23)* **Decide AVX2 on Linux with a benchmark that can resolve it** (#2396,
-    #2397). With `-mavx2 -mfma` four tests shift by 1e-9..1e-6 through FMA contraction, and the
-    performance suite cannot show any gain (0.1 %) because its vectors are 3-20 elements long. The
-    long-vector sweep that does resolve it is commented out in `PyTest()`
-    (`src/Pymodules/pythonTests.cpp`); revive it as a benchmark, then decide - enable with a
-    tolerance, or `-ffp-contract=off`, or keep AVX2 off.
-
-92. *(Phase 9)* **Explicit integration cost** (#2398, #2400). With the default dense linear solver
-    an explicit step on a chain of point masses costs O(N^2) (168 ms per step at N=2000; 400 times
-    faster with `EigenSparse`), and `computeMassMatrixInversePerBody` changes nothing unless a
-    sparse solver is selected as well. At least warn at large N; better, avoid the global solve
-    in explicit integration where the flag makes it unnecessary.
-
-93. *(Phase 4, with 64 and 69)* **Test-suite output goes to `solution/`** (#2418). Models write
-    solution and sensor files next to themselves (`coordinatesSolution.txt` and friends), which
-    litters `TestModels/` and makes runs collide - the blocker for running the suite in parallel.
-    In the test suite every model writes into `solution/` with unique per-model file names, and
-    file writes are **avoided widely**: sensors mostly `storeInternal=True`,
-    `writeSolutionToFile` mostly `False`. Files are written only sparsely, so writing stays
-    tested, and those tests re-read the written solution and sensor files and check them.
-    `TestExamples` stay serial: they only check that the examples still run against the current
-    API, raising on e.g. a changed argument or function.
-95. **DONE 2026-09-15 with 34c4 (b).** *(Phase 5, after 34c)* **A user switch for parameter range checks** (#2422): `exudyn.special.exceptions.parameterRangeChecks`. Range checks on
-    item and structure parameters (`UReal`, `PReal`, `UInt`, `PInt`) raise in the normal and in
-    the fast build. A release can carry a wrong range limit that is hard to test for; a flag in
-    `exudyn.special` would let the user switch the checks off. Needs the checks in one place first,
-    which 34c provides. **Built in 34c4** (maintainer decision 2026-09-14): 34c4 gives every write
-    path the range check, including `Set<Kind>Parameter`, which was unchecked until now, so the
-    switch has to exist from the same commit. One flag covers items and structures.
-96. *(Phase 5)* **C++ user errors inspect the Python source** (#2423). `PyError`/`PyWarning` call
-    `PyGetCurrentFileInformation` (`src/Main/Stdoutput.cpp:259`), which calls
-    `inspect.getframeinfo`; that scans `sys.modules` and reads the source file. The ~38000 probe
-    errors of `parameterConversionTest.py` took 1 s standalone and 9 s inside `runTestSuite.py`
-    after scipy, matplotlib and ngsolve were imported - a cost wherever errors are caught in a loop.
-    The frame itself (`f_code.co_filename`, `f_lineno`) carries the same information.
-97. **DONE 2026-09-15 for items with 34c4 (c); structures in 34c5.** *(with 34c4/34c5)* **`None` raises instead of converting** (#2424). Exception kept: `Vector3DList`, `Matrix3DList` and `PyMatrixContainer` accept `None` as empty, because `None` is their default in `itemInterface.py`. Today every `bool`
-    parameter reads `None` back as `False`; index arrays, `Vector3DList`, `Matrix3DList` and
-    `PyMatrixContainer` read it back empty. Applied as its own reference update of
-    `parameterConversionTest.py`; the test suite shows whether a model relies on it.
-98. **DONE 2026-09-15 for items with 34c4 (d); structures in 34c5.** *(with 34c4/34c5)* **Item indices are rejected by `float` and `bool` parameters** (#2425), where
-    this is simple - the index tag types make it a type test in `FromPython`.
-99. **DONE 2026-09-15 with 34c4 (e):** flag `CFMustBeGiven` on 25 parameters, checked by validator rule 6. *(with 34c4)* **Item classes accept their own defaults** (#2426). 17 `itemInterface` classes
-    raise on their defaults, because `InvalidIndex()` carries two meanings:
-    - **set later:** a node, marker or object number that closes a loop and is only known at the
-      end. It is valid only at `CheckPreAssembleConsistency`, which already checks indices and
-      types;
-    - **must be given at creation:** `MarkerNodeCoordinate.coordinate`, where a default of 0 would
-      be dangerous.
-
-    Suggestion:
-    - Keep the keyword style (every argument has a default; the model files stay self-explanatory)
-      and the `InvalidIndex()` defaults.
-    - A constructor never range-checks an `InvalidIndex()` default.
-    - A new member flag in `definitions/` marks the must-be-given parameters. `Add<Kind>` raises for
-      them in C++, naming item and parameter; `mbs.AddMarker(MarkerNodeCoordinate(...))` is one
-      statement, so the error still points at the user's line.
-    - Set-later indices stay with `CheckPreAssembleConsistency`.
-    - The 17 classes are the starting list for the flag. `ObjectANCFThinPlate`, which also fails in
-      C++, is looked at on its own.
-100. *(Phase 1 tooling, before the next header-only change)* **The wheel build does not see header
-    changes** (#2427). setuptools recompiles a `.cpp` only when it is newer than its `.obj`, and it
-    does not track included headers. In 34c2, `pip wheel . -w dist --no-deps` after a rewrite of
-    `PybindUtilities.h` (included by 35 files) produced a `.pyd` with the same md5 as the build
-    before, and the test suite passed against the old binary. Deleting
-    `build/temp.win-amd64-cpython-313` forced the full compile (49 s). Until this is fixed, the build
-    gate must remove that directory after a header change. Fix: pass `depends=` (the headers) to
-    the `Extension`, or let `setup.py` compare header times itself.
-101. **DONE 2026-09-14.** *(with step 33's drift gate)* **Generated files without a generator** (#2428). Twelve tracked
-    headers in `src/Autogenerated/` are no longer written by any emitter: the C, Main and Visu
-    headers of `MarkerBody`, `MarkerGenericBodyPosition`, `ObjectContactFrictionCircleCable2DOld` and
-    `ObjectJointSliding2DNew`. Their items are not in `definitions/`; only the Main header includes
-    the C and Visu headers, and nothing includes the Main header. `MainMarkerBody.h` still calls the
-    former `HPyUtils` namespace. Delete them (maintainer approval: tracked files), and let
-    `regenerate.py --check` report files in `src/Autogenerated/` that no stage declares as written.
-    Done: the twelve files deleted (approved 2026-09-14); `itemHeaderEmitter.py` raises for any
-    `C|Main|Visu<Kind>...h` in the output directory whose item has no definition. The check is
-    local to the item emitter, because the stage declarations of `generate.py` are directory
-    patterns and cannot name the expected files.
-102. **DONE 2026-09-15: 36 exceptions reduced to 4 (details in the log).** *(with 34c4/34c5, before 34c6)* **One spelling per type: unify the item/structure exceptions of
-    `typeModel.py`** (#2429). Step 34c3 left 36 spellings the rules do not produce. The same
-    definition type is spelled differently for items and structures, for example:
-    - `Int` is `int` for items and `Index` for structures;
-    - `Float3`/`Float4` are exchanged as `std::vector<float>` for items and `std::array<float,n>`
-      for structures;
-    - `NumpyVector`/`NumpyMatrix` are stored as `Vector`/`Matrix` in items and `py::array_t<Real>`
-      in structures;
-    - `Matrix2D` reads `Matrix2D` in the docs, while the other fixed matrices read `array_like`.
-
-    Unify as far as possible, one change at a time. A unification stays only if the full test suite
-    and `parameterConversionTest.py` pass, apart from intended reference changes. Every entry that
-    must remain gets a comment giving the reason.
-103. *(Phase 9 candidate)* **`ObjectANCFThinPlate` added with its defaults fails inside C++**
-    (#2430). `mbs.AddObject(ObjectANCFThinPlate())` raises `ResizableArray<T>::operator[], i < 0`
-    even with range checks off: the four `InvalidIndex` node numbers are used while the object is
-    added. Every other item class either adds with its defaults or names the parameter that must be
-    given (34c4 e). Expected: a message naming `ObjectANCFThinPlate.nodeNumbers`, or
-    `CheckPreAssembleConsistency` catching it, with no index access during Add.
-104. **DONE 2026-09-15: file deleted (approved).** *(with step 101's check)* **`src/Autogenerated/StructuralElementsDataStructures.h` has no
-    generator and no user** (#2431). `tools/regenerate.py` does not write it (unchanged since the
-    step-25 move), and every include uses the hand-written `src/Main/StructuralElementsDataStructures.h`.
-    It still holds the old `EXUstd::GetSafely` setters. Delete it (maintainer approval: tracked
-    file), and extend the leftover check of step 101 beyond item headers.
-105. *(after 34c6, before the error-message work of Phase 5)* **One exception type per kind of
-    parameter error** (#2432). Today a wrong parameter value raises one of three types, depending on
-    the path:
-    - `RuntimeError` from `PyError` or a pybind11 `cast_error`;
-    - `TypeError` from a pybind11 signature mismatch;
-    - `ValueError` from the former Python checks.
-
-    34c4/34c5 moved most paths to `RuntimeError`. **Decision (2026-09-15):** correct this throughout
-    the revision at one step. For example, `TypeError` for a wrong type (string, list, `None`, an item
-    index into a scalar) and `ValueError` for a range violation or a wrong size, raised from
-    `PyConversion.h`. Applied as its own reference update of `parameterConversionTest.py`.
-106. **DONE 2026-09-15.** **Wrong and stray comments in the generated item headers** (#2433, reported
-    by the maintainer). SetParameter lines carried the dictionary comment and were labelled "get
-    parameter"; there were stray `;;`, a wrong pointer comment and trailing whitespace. Fixed in
-    `itemHeaderEmitter.py` and the three `CNodeGeneric*` definitions.
-
 ### Phase 9 — Deeper implementation problems (last)
 
 A holding phase for problems that are real, reproducible, and too deep to fix while the
 restructuring is in flight. They are recorded here rather than worked around silently, so the
 debt stays visible and each item can be closed on evidence.
 
+89. *(Phase 9)* **`ObjectContactConvexRoll.pContact` becomes a data variable** (#2413). The
+    computed contact point is stored in the parameter structure and read by the visualization, so
+    it is neither system state nor configuration-dependent and keeps no history.
+92. *(Phase 9)* **Explicit integration cost** (#2398, #2400). With the default dense linear solver
+    an explicit step on a chain of point masses costs O(N^2) (168 ms per step at N=2000; 400 times
+    faster with `EigenSparse`), and `computeMassMatrixInversePerBody` changes nothing unless a
+    sparse solver is selected as well. At least warn at large N; better, avoid the global solve
+    in explicit integration where the flag makes it unnecessary.
+103. *(Phase 9 candidate)* **`ObjectANCFThinPlate` added with its defaults fails inside C++**
+    (#2430). `mbs.AddObject(ObjectANCFThinPlate())` raises `ResizableArray<T>::operator[], i < 0`
+    even with range checks off: the four `InvalidIndex` node numbers are used while the object is
+    added. Every other item class either adds with its defaults or names the parameter that must be
+    given (34c4 e). Expected: a message naming `ObjectANCFThinPlate.nodeNumbers`, or
+    `CheckPreAssembleConsistency` catching it, with no index access during Add.
 76. **Resolve the Windows/Linux differences in contact and friction models.** Measured 2026-09-10
     on manylinux_2_28 / cp313 / numpy 2.4.6, against the Windows reference values (Linux tolerance
     `3e-11`), relative error:
@@ -1714,14 +1084,6 @@ debt stays visible and each item can be closed on evidence.
     `sphereTriangleTest.py` in with the chaotic contact tests, excluded it from the exit code
     permanently, and hidden a four-order-of-magnitude divergence behind a policy decision. That is
     the argument for populating these lists from measurement, restated as a concrete near miss.
-
-77. *(Phase 2a, when there is material)* **Second internal GitLab repository for development-only
-    Python.** Models that never make it to `Examples`, one-off study scripts, and internal
-    experiments live there rather than in the public tree. Not created yet — do it when there is
-    something to put in it, not before. Note the consequence for step 8: with a destination that
-    is a *repository*, the sibling-directory and nested-repo shapes stop being the answer, and
-    `experimental/` in `.gitignore` is only a safety net for work in progress.
-
 78. *(before the rendering revision)* **Remove OpenVR.** It **blocks the rendering revision**, it
     is not testable in CI or by most users, and it carries a vendored SDK and a prebuilt binary.
     Scope: `main/src/Graphics/OpenVRinterface.cpp` and its header, every `__EXUDYN_USE_OPENVR`
@@ -1729,79 +1091,10 @@ debt stays visible and each item can be closed on evidence.
     `main/libs/openvr_api.dll` + `.lib`. Users needing OpenVR take Exudyn <= 1.11; say so in the
     release notes rather than leaving them to discover it. `docs/howTo/openVR.txt` was already
     removed with step 30.
-
-79. **DONE 2026-09-10.** `docs/doxygen/` removed - four tracked files, 126 KB, no generated output
-    committed, and by the end it produced neither the PDF nor the graphs. `docs/dev/ARCHITECTURE.md`
-    is the replacement for the one thing it was wanted for. →
-    [log](exudynRevisionLog2026.md#step-79)
-
-80. **DONE 2026-09-11.** Installable extras — `pip install exudyn[tests]`,
-    `exudyn[all]`, `exudyn[rl]` — in `[project.optional-dependencies]`, `[all]` built on
-    the PEP 508 self-reference `"exudyn[tests]"`. The substance is `tools/checkExtras.py`:
-    an AST scan of `TestModels/`, `exudyn/` and `Examples/` that **fails** when an import
-    is installed by no extra, so the lists cannot quietly go stale. Run as the
-    `check_extras` CI job. Verified by fault injection. →
-    [log](exudynRevisionLog2026.md#step-80)
-
-81. **DONE 2026-09-12 — the source distribution builds and installs.** It shipped all 133 `.cpp`
-    files and **none** of the 432 headers, so nobody could compile it from pypi.org. `MANIFEST.in`
-    now ships the headers, `include/` (Eigen really is used, by `src/Linalg/LinearSolver.h`),
-    `libs/`, `sources.json` and `setupPyConfig.json` — and, once step 25 made them reachable,
-    `version.txt` and `LICENSE.txt`, which had both been *above* the old packaging root (as
-    `docs/theDoc/version.txt`) where setuptools cannot follow a `../`.
-
-    Two further blockers only appeared once the tarball was actually built, which is the whole
-    argument for testing this rather than reasoning about the manifest:
-
-    - `src/pythonGenerator/autoGenerateDocstrings.py` was missing. `setup.py`'s `load_converter()`
-      raises `FileNotFoundError('Converter not found at …')` — a hard stop, not a warning. Added,
-      along with `stubHeader.pyi` and the five generated `.pyi` inputs, without which every sdist
-      install shipped an unmerged `__init__.pyi`.
-    - **the real one, #2376:** `createStubFiles.py` failed on the missing `stubHeader.pyi`, and
-      the bare `except` around it swallowed the failure *and left the process in
-      `src/pythonGenerator/`*. Everything after that is relative to the packaging root, so the
-      build then reported "no setupPyConfig.json found" and
-      `src/Autogenerated/versionCpp.cpp: No such file or directory`, and the metadata degraded to
-      the package name `UNKNOWN` — three misleading symptoms from one unrelated cause. The chdir
-      is now in a `finally` and the exception is printed.
-
-    Verified end to end: `setup.py sdist` → `pip wheel` from the tarball in a clean directory →
-    `exudyn-1.11.43.dev1-cp313-cp313-win_amd64.whl` → installed to a separate target → `import
-    exudyn` reports the right version and a `SystemContainer` runs. #2383 resolved.
-
-82. **DONE 2026-09-12.** `setupPyConfig.json` retired. The six switches (`USEGLFW`,
-    `compileParallel`, `quietCompile`, `minimalCppFiles`, `useOpenVR`, `compileExudynFast`) had
-    **three** sources with no written precedence, and the file being *tracked and mutable* cost
-    three separate things:
-
-    - `tools/ci/buildManylinux.sh` rewrote it with `sed -i` and restored it from a `trap`, so CI
-      wrote into a tracked file mid-build and a failed restore left the tree dirty — and it is
-      why step 17 shipped the maintainer’s local toggles inside the sdist;
-    - **the defaults disagreed with the committed file**: `compileParallel` and `quietCompile`
-      were `False` in `setup.py` and `"True"` in the JSON, so a build *without* it — an sdist
-      build, legitimately — silently took a slower, louder path than the maintainer runs;
-    - the CLI could only turn switches **on**. With `quietCompile` committed as true there was
-      no way to ask for a verbose build.
-
-    Now: defaults in `[tool.exudyn]` in `pyproject.toml` as real booleans (the `"True"`-as-a-
-    string schema of step 21 went with the file that needed it), and four explicit layers —
-    **command line > environment > `[tool.exudyn]` > built-in default**. CI exports
-    `EXUDYN_COMPILE_EXUDYN_FAST=0`; **nothing is written to disk during a build**. Every flag has
-    both forms (`--quiet` / `--no-quiet`), keeping the historical `--noglfw` and `--nofast`.
-
-    One constraint worth remembering: `requires-python = ">=3.10"` and CI builds cp310, but
-    `tomllib` is stdlib only from **3.11**. `tomli` is in `build-system.requires` behind a
-    marker, and a missing parser raises an `ImportError` naming the install command — the same
-    shape as the pybind11 fix (#2373), because `python setup.py bdist_wheel` has no build
-    isolation. A silent fallback to built-in defaults was rejected: it recreates the second
-    defect above in a new place.
-
-    Verified layer by layer rather than asserted: table alone, environment beating the table,
-    CLI beating the environment, and `--no-quiet --nofast` turning off values committed as true;
-    plus the four error paths (unknown key, `"True"` as a string, conflicting flags, bad
-    environment value). The working-tree fingerprint is byte-identical before and after a build
-    with the CI override, and the sdist now carries the maintainer’s switches. #2407.
----
+79. **DONE 2026-09-10** — `docs/doxygen/` removed. → [log](exudynRevisionLog2026.md#step-79)
+80. **DONE 2026-09-11** — installable extras `exudyn[tests]`, `exudyn[all]`, `exudyn[rl]`. → [log](exudynRevisionLog2026.md#step-80)
+81. **DONE 2026-09-12** — the source distribution builds and installs. → [log](exudynRevisionLog2026.md#step-81)
+82. **DONE 2026-09-12** — `setupPyConfig.json` retired. → [log](exudynRevisionLog2026.md#step-82)
 
 ## 6. Decisions taken
 
@@ -1924,4 +1217,4 @@ detail is `docs/dev/WORKFLOW.md`. In short:
 step, or into an existing step where it belongs. Small issues with little code may share a step;
 larger ones get their own. The tracker (`tools/issueTracker/trackerlog.txt`) is the authority for
 the issue itself; the plan says when and with what it is done. The issues open on 2026-09-14 became
-steps 83-93, see *Added 2026-09-14 — steps from the open issues* in §5.
+steps 83-93; later issues became steps 95-106. All of them sit in their phase in §5.
