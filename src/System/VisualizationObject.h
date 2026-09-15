@@ -65,8 +65,6 @@ public:
 //! base class for visualization of object
 class VisualizationObjectSuperElement: public VisualizationObject
 {
-protected:
-	bool show; //true: shall be drawn; false: no not draw; will be initialized in specialized class
 public:
 	//! compute graphics update by adding graphics items to graphicsData in VisualizationSystem
 	//implementation in VisuNodePoint

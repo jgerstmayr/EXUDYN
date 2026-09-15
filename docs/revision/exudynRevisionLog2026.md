@@ -2978,6 +2978,25 @@ The gate no longer needs `build/` removed. Steps 86, 87 and 110 had been gated w
 them changed compiled code (docs, comments, identical output). Full suite PASSED on the rebuilt
 binary.
 
+<a id="step-111"></a>
+
+### Step 111 - super element `Vshow` read an uninitialised member
+
+**DONE 2026-09-15** (#2447).
+
+`VisualizationObjectSuperElement` (`src/System/VisualizationObject.h`) declared its own
+`bool show`, hiding `VisualizationObject::show`. The generated constructors of `ObjectFFRF`,
+`ObjectFFRFreducedOrder`, `ObjectGenericODE2` and `ObjectKinematicTree` set the hidden one to
+`true`, while `GetShow()`/`SetShow()` of the base class - used by the dictionaries, `Vshow` and
+`VisualizationSystem::UpdateGraphics` - read the base member, which nothing initialised. An item
+added without `Vshow` (any item not created through `itemInterface.py`) therefore had an
+undefined `show`, read as `False` here, and could be invisible. The duplicate declaration is
+removed; the constructors now initialise the one member.
+
+- `parameterConversionTest` reference: the `Vshow(omit)` row with `bool=0.0` is gone; the four
+  items read back the default like all others.
+- Checked: wheel (rebuilt through the header dependency of step 100), full suite PASSED.
+
 <a id="api-changes-v2"></a>
 
 ### API changes for the v2.0 release notes

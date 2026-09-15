@@ -951,12 +951,6 @@ outcome: numpy1x1i=[-1.0] numpy1x1i=[0.0] numpy1x1i=[2.0] !RuntimeError !ValueEr
   ObjectFFRFreducedOrder: VtriangleMesh(set)
   ObjectGenericODE2: VtriangleMesh(set)
 
-outcome: str=bool=0.0
-  ObjectFFRF: Vshow(omit)
-  ObjectFFRFreducedOrder: Vshow(omit)
-  ObjectGenericODE2: Vshow(omit)
-  ObjectKinematicTree: Vshow(omit)
-
 outcome: str=default
   LoadCoordinate: Vshow(omit) load(omit) loadUserFunction(omit) markerNumber(omit)
   LoadForceVector: Vshow(omit) bodyFixed(omit) loadVector(omit) loadVectorUserFunction(omit) markerNumber(omit)
@@ -1024,10 +1018,10 @@ outcome: str=default
   ObjectContactSphereSphere: Vcolor(omit) Vshow(omit) activeConnector(omit) adhesionCoefficient(omit) adhesionExponent(omit) constantPullOffForce(omit) contactDamping(omit) contactPlasticityRatio(omit) contactStiffness(omit) contactStiffnessExponent(omit) dynamicFriction(omit) frictionProportionalZone(omit) impactModel(omit) isHollowSphere1(omit) markerNumbers(omit) minimumImpactVelocity(omit) nodeNumber(omit) restitutionCoefficient(omit) spheresRadii(omit)
   ObjectContactSphereTorus: Vcolor(omit) Vshow(omit) activeConnector(omit) contactDamping(omit) contactStiffness(omit) contactStiffnessExponent(omit) dynamicFriction(omit) frictionProportionalZone(omit) impactModel(omit) markerNumbers(omit) minimumImpactVelocity(omit) nodeNumber(omit) restitutionCoefficient(omit) torusAxis(omit)
   ObjectContactSphereTriangle: Vcolor(omit) Vshow(omit) activeConnector(omit) contactDamping(omit) contactStiffness(omit) contactStiffnessExponent(omit) dynamicFriction(omit) frictionProportionalZone(omit) impactModel(omit) includeEdges(omit) markerNumbers(omit) minimumImpactVelocity(omit) nodeNumber(omit) restitutionCoefficient(omit) trianglePoints(omit)
-  ObjectFFRF: Vcolor(omit) VshowNodes(omit) VtriangleMesh(omit) computeFFRFterms(omit) dampingMatrixFF(omit) forceUserFunction(omit) forceVector(omit) massMatrixFF(omit) massMatrixUserFunction(omit) nodeNumbers(omit) objectIsInitialized(omit) stiffnessMatrixFF(omit)
-  ObjectFFRFreducedOrder: Vcolor(omit) VshowNodes(omit) VtriangleMesh(omit) computeFFRFterms(omit) dampingMatrixReduced(omit) forceUserFunction(omit) mPhitTPsi(omit) mPhitTPsiTilde(omit) mPsiTildePsi(omit) mPsiTildePsiTilde(omit) mXRefTildePsi(omit) mXRefTildePsiTilde(omit) massMatrixReduced(omit) massMatrixUserFunction(omit) modeBasis(omit) nodeNumbers(omit) objectIsInitialized(omit) outputVariableModeBasis(omit) outputVariableTypeModeBasis(omit) physicsCenterOfMass(omit) physicsCenterOfMassTilde(omit) physicsInertia(omit) physicsMass(omit) referencePositions(omit) stiffnessMatrixReduced(omit)
+  ObjectFFRF: Vcolor(omit) Vshow(omit) VshowNodes(omit) VtriangleMesh(omit) computeFFRFterms(omit) dampingMatrixFF(omit) forceUserFunction(omit) forceVector(omit) massMatrixFF(omit) massMatrixUserFunction(omit) nodeNumbers(omit) objectIsInitialized(omit) stiffnessMatrixFF(omit)
+  ObjectFFRFreducedOrder: Vcolor(omit) Vshow(omit) VshowNodes(omit) VtriangleMesh(omit) computeFFRFterms(omit) dampingMatrixReduced(omit) forceUserFunction(omit) mPhitTPsi(omit) mPhitTPsiTilde(omit) mPsiTildePsi(omit) mPsiTildePsiTilde(omit) mXRefTildePsi(omit) mXRefTildePsiTilde(omit) massMatrixReduced(omit) massMatrixUserFunction(omit) modeBasis(omit) nodeNumbers(omit) objectIsInitialized(omit) outputVariableModeBasis(omit) outputVariableTypeModeBasis(omit) physicsCenterOfMass(omit) physicsCenterOfMassTilde(omit) physicsInertia(omit) physicsMass(omit) referencePositions(omit) stiffnessMatrixReduced(omit)
   ObjectGenericODE1: Vshow(omit) nodeNumbers(omit) rhsUserFunction(omit) rhsVector(omit) systemMatrix(omit)
-  ObjectGenericODE2: Vcolor(omit) VgraphicsDataUserFunction(omit) VshowNodes(omit) VtriangleMesh(omit) dampingMatrix(omit) forceUserFunction(omit) forceVector(omit) jacobianUserFunction(omit) massMatrix(omit) massMatrixUserFunction(omit) nodeNumbers(omit) stiffnessMatrix(omit)
+  ObjectGenericODE2: Vcolor(omit) VgraphicsDataUserFunction(omit) Vshow(omit) VshowNodes(omit) VtriangleMesh(omit) dampingMatrix(omit) forceUserFunction(omit) forceVector(omit) jacobianUserFunction(omit) massMatrix(omit) massMatrixUserFunction(omit) nodeNumbers(omit) stiffnessMatrix(omit)
   ObjectGround: VgraphicsData(omit) VgraphicsDataUserFunction(omit) Vshow(omit) referencePosition(omit) referenceRotation(omit)
   ObjectJointALEMoving2D: Vcolor(omit) VdrawSize(omit) Vshow(omit) activeConnector(omit) markerNumbers(omit) nodeNumbers(omit) penaltyStiffness(omit) slidingMarkerNumbers(omit) slidingMarkerOffsets(omit) slidingOffset(omit) usePenaltyFormulation(omit)
   ObjectJointGeneric: VaxesLength(omit) VaxesRadius(omit) Vcolor(omit) Vshow(omit) activeConnector(omit) alternativeConstraints(omit) constrainedAxes(omit) markerNumbers(omit) offsetUserFunction(omit) offsetUserFunctionParameters(omit) offsetUserFunction_t(omit) rotationMarker0(omit) rotationMarker1(omit)
@@ -1039,7 +1033,7 @@ outcome: str=default
   ObjectJointSliding: Vcolor(omit) VdrawSize(omit) Vshow(omit) activeConnector(omit) axialForce(omit) constrainRotations(omit) constrainTranslations(omit) markerNumbers(omit) nodeNumber(omit) slidingMarkerNumbers(omit) slidingMarkerOffsets(omit)
   ObjectJointSliding2D: Vcolor(omit) VdrawSize(omit) Vshow(omit) activeConnector(omit) axialForce(omit) classicalFormulation(omit) constrainRotation(omit) markerNumbers(omit) nodeNumber(omit) slidingMarkerNumbers(omit) slidingMarkerOffsets(omit)
   ObjectJointSpherical: Vcolor(omit) VjointRadius(omit) Vshow(omit) activeConnector(omit) constrainedAxes(omit) markerNumbers(omit)
-  ObjectKinematicTree: Vcolor(omit) VgraphicsDataList(omit) VshowJoints(omit) VshowLinks(omit) baseOffset(omit) forceUserFunction(omit) gravity(omit) jointDControlVector(omit) jointForceVector(omit) jointOffsets(omit) jointPControlVector(omit) jointPositionOffsetVector(omit) jointTransformations(omit) jointTypes(omit) jointVelocityOffsetVector(omit) linkCOMs(omit) linkForces(omit) linkInertiasCOM(omit) linkMasses(omit) linkParents(omit) linkTorques(omit) nodeNumber(omit)
+  ObjectKinematicTree: Vcolor(omit) VgraphicsDataList(omit) Vshow(omit) VshowJoints(omit) VshowLinks(omit) baseOffset(omit) forceUserFunction(omit) gravity(omit) jointDControlVector(omit) jointForceVector(omit) jointOffsets(omit) jointPControlVector(omit) jointPositionOffsetVector(omit) jointTransformations(omit) jointTypes(omit) jointVelocityOffsetVector(omit) linkCOMs(omit) linkForces(omit) linkInertiasCOM(omit) linkMasses(omit) linkParents(omit) linkTorques(omit) nodeNumber(omit)
   ObjectMass1D: VgraphicsData(omit) Vshow(omit) nodeNumber(omit) physicsMass(omit) referencePosition(omit) referenceRotation(omit)
   ObjectMassPoint: VgraphicsData(omit) Vshow(omit) nodeNumber(omit) physicsMass(omit)
   ObjectMassPoint2D: VgraphicsData(omit) Vshow(omit) nodeNumber(omit) physicsMass(omit)

@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.80.dev1, 
++  Exudyn version = 1.11.81.dev1, 
 +  last change =  2026-09-15, 
 +  Number of issues = 2449, 
-+  Number of resolved issues = 2153 (80 in current version), 
++  Number of resolved issues = 2154 (81 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.81: :textred:`resolved BUG 2447` : Super element Vshow is False when left out of the dict 
+    - issue author: Claude-JG
+    - description:  ObjectFFRF; ObjectFFRFreducedOrder; ObjectGenericODE2 and ObjectKinematicTree: AddObject without Vshow gives Vshow=False; although definitions/ and itemInterface.py give True and the generated Visu constructor sets show=true. Found by the omit probe of parameterConversionTest.py (plan step 88). Likely the parent VisualizationObjectSuperElement constructor or a shadowed member.
+    - **notes:** step 111: duplicate bool show in VisualizationObjectSuperElement hid the base member; removed
+    - date resolved: **2026-09-15 20:45**\ , date raised: 2026-09-15 
+    - resolved by: Claude-JG
  * Version 1.11.80: :textred:`resolved BUG 2427` : the wheel build reuses stale object files after a header-only change 
     - issue author: Claude-JG
     - description:  setuptools recompiles a .cpp only when the .cpp is newer than its .obj; it does not track included headers. Found in step 34c2: after rewriting src/Pymodules/PybindUtilities.h (included by 35 files) pip wheel . -w dist finished and produced an exudynCPP .pyd with the same md5 as the previous build in build/lib.win-amd64-cpython-313 - nothing was compiled; the test suite then passed against the old binary. Only deleting build/temp.win-amd64-cpython-313 forced the full compile (49 s). So the build gate proves nothing for header-only changes. Fix options: pass depends= (all headers or the include graph) to the Extension so setuptools compares them; or have the gate remove build/temp first. Plan step 100.
@@ -8352,11 +8358,6 @@ Open issues
 **********
 Known bugs
 **********
-
- * :textred:`open BUG 2447:` Super element Vshow is False when left out of the dict
-    - issue author: Claude-JG
-    - description:  ObjectFFRF; ObjectFFRFreducedOrder; ObjectGenericODE2 and ObjectKinematicTree: AddObject without Vshow gives Vshow=False; although definitions/ and itemInterface.py give True and the generated Visu constructor sets show=true. Found by the omit probe of parameterConversionTest.py (plan step 88). Likely the parent VisualizationObjectSuperElement constructor or a shadowed member.
-    - date raised: 2026-09-15 
 
  * :textred:`open BUG 2430:` ObjectANCFThinPlate added with its defaults fails inside C++ with an index error
     - issue author: Claude-JG

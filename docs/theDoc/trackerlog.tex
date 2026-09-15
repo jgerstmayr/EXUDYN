@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.80.dev1, 
+  \item Exudyn version = 1.11.81.dev1, 
   \item last change =  2026-09-15, 
   \item Number of issues = 2449, 
-  \item Number of resolved issues = 2153 (80 in current version), 
+  \item Number of resolved issues = 2154 (81 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.81}: {\bf \color{warningRed}  resolved BUG 2447}: {\bf Super element Vshow is False when left out of the dict}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: ObjectFFRF; ObjectFFRFreducedOrder; ObjectGenericODE2 and ObjectKinematicTree: AddObject without Vshow gives Vshow=False; although definitions/ and itemInterface.py give True and the generated Visu constructor sets show=true. Found by the omit probe of parameterConversionTest.py (plan step 88). Likely the parent VisualizationObjectSuperElement constructor or a shadowed member.}
+    \item {\bf notes: step 111: duplicate bool show in VisualizationObjectSuperElement hid the base member; removed}
+    \item   date resolved: {\bf 2026-09-15 20:45},
+date raised: 2026-09-15 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.80}: {\bf \color{warningRed}  resolved BUG 2427}: {\bf the wheel build reuses stale object files after a header-only change}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
@@ -12875,12 +12883,6 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
-  \item open {\bf BUG 2447}:  {\bf Super element Vshow is False when left out of the dict}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item issue author: Claude-JG
-    \item {description: ObjectFFRF; ObjectFFRFreducedOrder; ObjectGenericODE2 and ObjectKinematicTree: AddObject without Vshow gives Vshow=False; although definitions/ and itemInterface.py give True and the generated Visu constructor sets show=true. Found by the omit probe of parameterConversionTest.py (plan step 88). Likely the parent VisualizationObjectSuperElement constructor or a shadowed member.}
-    \item date raised: 2026-09-15 
-  \ei
   \item open {\bf BUG 2430}:  {\bf ObjectANCFThinPlate added with its defaults fails inside C++ with an index error}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
