@@ -154,7 +154,6 @@ Function: ComputeTriangularMesh
   | \ ``vertices``\ : list of pairs of coordinates of vertices in mesh [x,y]
   | \ ``segments``\ : list of segments, which are pairs of node numbers [i,j], defining the boundary of the mesh;
   | the ordering of the nodes is such that left triangle = inside, right triangle = outside, compare example with segment [V1,V2]:
-
   | inside
   | V1         V2
   | O----------O

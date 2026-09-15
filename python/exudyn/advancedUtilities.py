@@ -512,11 +512,11 @@ def ConvertDictToScipySparse(sparseDict):
                       shape=sparseDict['shape'])
 
 def SaveDictToHDF5(fileName, dataDict):
-    r"""recursively saves a hierarchical dictionary dataDict to a HDF5 file with given fileName; limitations for certain types and Python or symbolic user functions
+    """recursively saves a hierarchical dictionary dataDict to a HDF5 file with given fileName; limitations for certain types and Python or symbolic user functions
 
     Args:
         fileName: file name (possibly including path) for HDF5 file, including file ending
-        dataDict: the dictionary containing the hierarchical data to be saved; the data may contain the following data types in hierarchical form: int, bool, float, str (utf-8), list, dict, numpy array, scipy csr\_matrix, Python function
+        dataDict: the dictionary containing the hierarchical data to be saved; the data may contain the following data types in hierarchical form: int, bool, float, str (utf-8), list, dict, numpy array, scipy csr_matrix, Python function
 
     Returns:
         None

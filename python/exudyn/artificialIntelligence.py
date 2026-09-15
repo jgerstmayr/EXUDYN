@@ -85,7 +85,7 @@ class OpenAIGymInterfaceEnv(Env):
         return 0#override this class and return state size!
 
     def SetupSpaces(self):
-        r"""OVERRIDE this function to set up self.action\_space and self.observation\_space
+        """OVERRIDE this function to set up self.action_space and self.observation_space
         """
         pass #override this class!
 
@@ -105,10 +105,10 @@ class OpenAIGymInterfaceEnv(Env):
 
     
     def State2InitialValues(self):
-        r"""OVERRIDE this function to maps the current state to mbs initial values
+        """OVERRIDE this function to maps the current state to mbs initial values
 
         Returns:
-            return [initialValues, initialValues\_t] where initialValues[\_t] are ODE2 vectors of coordinates[\_t] for the mbs
+            return [initialValues, initialValues_t] where initialValues[_t] are ODE2 vectors of coordinates[_t] for the mbs
         """
         return [[0],[0]]#override this class and return the two vectors!
 

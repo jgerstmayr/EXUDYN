@@ -690,10 +690,10 @@ class Robot:
                                      jointLoadUserFunctionList=[], 
                                      createJointTorqueLoads=True, rotationMarkerBase=None,
                                      rigidBodyNodeType=exudyn.NodeType.RotationEulerParameters): 
-        r"""Add items to existing mbs from the robot structure inside this robot class; robot is attached to baseMarker (can be ground object or moving/deformable body);
+        """Add items to existing mbs from the robot structure inside this robot class; robot is attached to baseMarker (can be ground object or moving/deformable body);
         The (serial) robot is built as rigid bodies (containing rigid body nodes), where bodies represent the links which are connected by joints;
         Add optional jointSpringDamperUserFunctionList for individual control of joints; otherwise use PDcontrol in RobotLink structure; additional joint torques/forces can be added via spring damper, using mbs.SetObjectParameter(...) function;
-        See several Python examples, e.g., \texttt{serialRobotTestTSD.py}, in Examples or TestModels;
+        See several Python examples, e.g., `serialRobotTestTSD.py`, in Examples or TestModels;
         For more efficient models, use CreateKinematicTree(...) function!
 
         Args:
@@ -1289,7 +1289,7 @@ class InverseKinematicsNumerical():
     
     @docmeta(author='Peter Manzl, Johannes Gerstmayr')
     def SolveSafe(self, T, q0 = None):
-        r"""This Method can be used to solve the inverse kinematics problem by solving
+        """This Method can be used to solve the inverse kinematics problem by solving
         the static problem of a serial robot using steps to interpolate between start and end position close to the function Solve.
         This helps the function Solve() to find the correct solutions.
 
@@ -1302,7 +1302,7 @@ class InverseKinematicsNumerical():
             success: flag to indicate if method was successful
 
         Note:
-            still under development; errors in orientations of solution may occure. works similar to ikine\_LM function of the robotics toolbox from peter corke
+            still under development; errors in orientations of solution may occure. works similar to ikine_LM function of the robotics toolbox from peter corke
         """
         T0 = self.GetCurrentRobotHT()
         TInterp = self.InterpolateHTs(T0, T, rotStep=np.pi/3) # no steps in between needed!
@@ -1346,7 +1346,7 @@ class InverseKinematicsNumerical():
     
     @docmeta(author='Peter Manzl, Johannes Gerstmayr')
     def Solve(self, T, q0 = None): 
-        r"""This Method can be used to solve the inverse kinematics problem by solving
+        """This Method can be used to solve the inverse kinematics problem by solving
          the static problem of a serial robot using steps to interpolate between start and end position close to the function Solve.
         T his helps the fucntion Solve to find the correct solutions.
 
@@ -1358,7 +1358,7 @@ class InverseKinematicsNumerical():
             [q, success]; q: The solution for the joint angles in which the robot's tool center point (TCP) reaches the desired homogeneous transformation matrix T; success=False indicates that all trials for inverse kinematics failed, leading to q=None
 
         Note:
-            still under development; errors in orientations of solution may occure. works similar to ikine\_LM function of the robotics toolbox from peter corke
+            still under development; errors in orientations of solution may occure. works similar to ikine_LM function of the robotics toolbox from peter corke
         """
         # check type of T 
         T = np.array(T)

@@ -715,13 +715,9 @@ CLASS HCBstaticModeSelection(Enum) (in module FEM)
 **class description**: 
 
     helper calss for function ComputeHurtyCraigBamptonModes, declaring some computation options. It offers the following options:
-    
     - allBoundaryNodes:     compute a single static mode for every boundary coordinate
-    
     - RBE2:                 static modes only for rigid body motion at boundary nodes; using rigid boundary surfaces (additional stiffening)
-    
     - RBE3:                 static modes only for rigid body motion at boundary nodes; averaged rigid body motion at boundary surfaces (leads to deformation at boundaries)
-    
     - noStaticModes:        do not compute static modes, only eigen modes (not recommended; usually only for tests)
 
 

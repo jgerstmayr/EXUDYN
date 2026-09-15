@@ -287,7 +287,7 @@ Function: GaussIntegrate
   | compute numerical integration of functionOfX in interval [a,b] using Gaussian integration
 - | \ *input*\ :
   | \ ``functionOfX``\ : scalar, vector or matrix-valued function with scalar argument (X or other variable)
-  | \ ``integrationOrder``\ : odd number in \{1,3,5,7,9\}; currently maximum order is 9
+  | \ ``integrationOrder``\ : odd number in {1,3,5,7,9}; currently maximum order is 9
   | \ ``a``\ : integration range start
   | \ ``b``\ : integration range end
 - | \ *output*\ :
@@ -308,7 +308,7 @@ Function: LobattoIntegrate
   | compute numerical integration of functionOfX in interval [a,b] using Lobatto integration
 - | \ *input*\ :
   | \ ``functionOfX``\ : scalar, vector or matrix-valued function with scalar argument (X or other variable)
-  | \ ``integrationOrder``\ : odd number in \{1,3,5\}; currently maximum order is 5
+  | \ ``integrationOrder``\ : odd number in {1,3,5}; currently maximum order is 5
   | \ ``a``\ : integration range start
   | \ ``b``\ : integration range end
 - | \ *output*\ :

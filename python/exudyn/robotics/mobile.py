@@ -477,7 +477,7 @@ def Generatrix2Polynomial(param, GeneratrixFunction, tol=1e-14, nFit=101, nTest 
 
 @docmeta(author='Peter Manzl')
 def GeneratrixRoll(u, param): 
-    r"""generatrix function for a roll of a Mecanum wheel
+    """generatrix function for a roll of a Mecanum wheel
 
     Args:
         u: parameter, max. +- pi/2
@@ -491,7 +491,7 @@ def GeneratrixRoll(u, param):
 
     Note:
         parametric equation, x,y are the generatrix of the roll in
-        its local frame with the axis of rotation x, see \cite{Gfrerrer2008}.
+        its local frame with the axis of rotation x, see [Gfrerrer2008].
     """
     x = param['dRoll']*np.cos(param['delta'])**2/np.sin(param['delta']) * np.tan(u) + param['r'] *np.sin(param['delta'])*np.sin(u);
     y = np.sqrt(np.cos(param['delta'])**2 * np.tan(u)**2 + 1) * (param['r']*np.cos(u)- param['dRoll']);

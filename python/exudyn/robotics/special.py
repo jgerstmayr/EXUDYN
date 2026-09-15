@@ -35,7 +35,7 @@ def VelocityManipulability(robot, HT, mode):
         velocity manipulability measure as scalar value, defined as $\sqrt(det(JJ^T))$
 
     Note:
-        compute velocity dependent manipulability definded by Yoshikawa, see \cite{Yoshikawa1985}
+        compute velocity dependent manipulability definded by Yoshikawa, see [Yoshikawa1985]
     """
     if mode == 'all':
         J = robot.Jacobian(HT, [], 'all')
@@ -71,7 +71,7 @@ def ForceManipulability(robot, HT, mode,singularWeight=100):
         force manipulability measure as scalar value, defined as $\sqrt((det(JJ^T))^{-1})$
 
     Note:
-        compute force dependent manipulability definded by Yoshikawa, see \cite{Yoshikawa1985}
+        compute force dependent manipulability definded by Yoshikawa, see [Yoshikawa1985]
     """
     if mode == 'all':
         J = robot.Jacobian( HT, [], 'all')
@@ -103,7 +103,7 @@ def ForceManipulability(robot, HT, mode,singularWeight=100):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-@docmeta(author='Martin Sereinig', status='this function is {\\bf currently under development} and under testing!')
+@docmeta(author='Martin Sereinig', status='this function is **currently under development** and under testing!')
 def StiffnessManipulability(robot, JointStiffness, HT, mode,singularWeight=1000):
     """compute cartesian stiffness measure for given pose (homogeneous transformation)
 
@@ -161,10 +161,10 @@ def JointJacobian(robot, HTJoint,HTLink):
         HT: actual pose as homogeneous transformaton matrix
 
     Returns:
-        Link(body)-Jacobi matrix JJ: $\LU{i}{JJ_i}=[\LU{i}{J_{Ri}},\; \LU{i}{J_{Ti}}]$ for each link i, seperated in rotational ($J_R$) and translational ($J_T$) part of Jacobian matrix located in the $i^{th}$ coordiante system, see \cite{woernle2016}
+        Link(body)-Jacobi matrix JJ: $\LU{i}{JJ_i}=[\LU{i}{J_{Ri}},\; \LU{i}{J_{Ti}}]$ for each link i, seperated in rotational ($J_R$) and translational ($J_T$) part of Jacobian matrix located in the $i^{th}$ coordiante system, see [woernle2016]
 
     Note:
-        runs over number of HTs given in HT (may be less than number of links), caclulations in link coordinate system located at the end of each link regarding Standard  Denavid-Hartenberg parameters, see \cite{Corke2013}
+        runs over number of HTs given in HT (may be less than number of links), caclulations in link coordinate system located at the end of each link regarding Standard  Denavid-Hartenberg parameters, see [Corke2013]
     """
     n = len(HTJoint)
     # center of mass (COM) in global coordinate frame
@@ -216,7 +216,7 @@ def JointJacobian(robot, HTJoint,HTLink):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @docmeta(author='Martin Sereinig')
 def MassMatrix(robot, HT, jointJacobian):
-    r"""compute mass matrix from jointJacobian
+    """compute mass matrix from jointJacobian
 
     Args:
         robot: robot structure
@@ -228,7 +228,7 @@ def MassMatrix(robot, HT, jointJacobian):
 
     Note:
         Mass Matrix calculation calculated in joint coordinates regarding (std) DH parameter:
-        Dynamic equations in minimal coordinates as described in Mehrkörpersysteme by Woernle, \cite{woernle2016}, p206, eq6.90.
+        Dynamic equations in minimal coordinates as described in Mehrkörpersysteme by Woernle, [woernle2016], p206, eq6.90.
         Calculations in link coordinate system at the end of each link
     """
     # inertia (mass) matrix
@@ -250,9 +250,9 @@ def MassMatrix(robot, HT, jointJacobian):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-@docmeta(author='Martin Sereinig', status='this function is {\\bf currently under development} and under testing!')
+@docmeta(author='Martin Sereinig', status='this function is **currently under development** and under testing!')
 def DynamicManipulability(robot, HT, MassMatrix, Tmax, mode, singularWeight=1000):
-    r"""compute dynamic manipulability measure for given pose (homogeneous transformation)
+    """compute dynamic manipulability measure for given pose (homogeneous transformation)
 
     Args:
         robot: robot structure
@@ -267,7 +267,7 @@ def DynamicManipulability(robot, HT, MassMatrix, Tmax, mode, singularWeight=1000
         dynamic manipulability matrix
 
     Note:
-        acceleration dependent manipulability definded by Chiacchio, see \cite{Chiacchio1998}, eq.32. The eigenvectors and eigenvalues of N ([eigenvec eigenval]=eig(N))gives the direction and value of minimal and maximal accaleration )
+        acceleration dependent manipulability definded by Chiacchio, see [Chiacchio1998], eq.32. The eigenvectors and eigenvalues of N ([eigenvec eigenval]=eig(N))gives the direction and value of minimal and maximal accaleration )
     """
     MM = MassMatrix
     B = MM
@@ -301,7 +301,7 @@ def DynamicManipulability(robot, HT, MassMatrix, Tmax, mode, singularWeight=1000
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-@docmeta(author='Martin Sereinig', status='this function is {\\bf currently under development} and under testing!')
+@docmeta(author='Martin Sereinig', status='this function is **currently under development** and under testing!')
 def CalculateAllMeasures(robot,robotDic,q,mode, flag = [0,0,0,0] ):
     """calculation of 4 different manipulability measures using a certain serial robot
 

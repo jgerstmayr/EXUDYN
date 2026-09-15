@@ -26,7 +26,7 @@ def StribeckFunction(vel, muDynamic, muStaticOffset, muViscous=0, expVel=1e-3, r
         muStaticOffset: $\mu_{s_{off}}$, offset to dynamic friction, which gives muStaticFriction = muDynamic + muStaticOffset
         muViscous: $\mu_v$, viscous part, acting proportional to velocity except for regVel
         regVel: $v_{reg}$,  small regularization velocity in which the friction is linear around zero velocity (e.g., to get Newton converged)
-        expVel: $v_{exp}$,  velocity (relative to regVel, at which the muStaticOffset decreases exponentially, at vel=expVel, the factor to muStaticOffset is exp(-1) = 36.8\%)
+        expVel: $v_{exp}$,  velocity (relative to regVel, at which the muStaticOffset decreases exponentially, at vel=expVel, the factor to muStaticOffset is exp(-1) = 36.8%)
 
     Returns:
         returns velocity dependent friction coefficient (if muDynamic and muStaticOffset are friction coefficients) or friction force (if muDynamic and muStaticOffset are on force level)
@@ -54,7 +54,7 @@ def RegularizedFrictionStep(x,x0,h0,x1,h1):
 
 #regularized friction model:
 def RegularizedFriction(vel, muDynamic, muStaticOffset, velStatic, velDynamic, muViscous=0):
-    r"""describes regularized friction function, with increased static friction, dynamic friction and optional viscous part
+    """describes regularized friction function, with increased static friction, dynamic friction and optional viscous part
 
     Args:
         vel: input velocity
@@ -68,7 +68,7 @@ def RegularizedFriction(vel, muDynamic, muStaticOffset, velStatic, velDynamic, m
         returns velocity dependent friction coefficient (if muDynamic and muStaticOffset are friction coefficients) or friction force (if muDynamic and muStaticOffset are on force level)
 
     Note:
-        see references: Flores et al. \cite{Flores2008}, Qian et al. \cite{Qian2018}
+        see references: Flores et al. [Flores2008], Qian et al. [Qian2018]
     """
     vs = velStatic
     vd = velDynamic
@@ -107,10 +107,10 @@ def VonMisesStress(stress6D):
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def UFvonMisesStress(mbs, t, sensorNumbers, factors, configuration):
-    r"""Sensor user function to compute equivalent von-Mises stress from sensor with Stress or StressLocal OutputVariableType; if more than 1 sensor is given in sensorNumbers, then the maximum stress is computed
+    """Sensor user function to compute equivalent von-Mises stress from sensor with Stress or StressLocal OutputVariableType; if more than 1 sensor is given in sensorNumbers, then the maximum stress is computed
 
     Args:
-        arguments according to \texttt{SensorUserFunction}; factors are ignored
+        arguments according to `SensorUserFunction`; factors are ignored
 
     Returns:
         returns scalar (maximum) equivalent von-Mises stress

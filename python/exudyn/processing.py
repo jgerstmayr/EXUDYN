@@ -378,7 +378,7 @@ def ParameterVariation(parameterFunction, parameters,
                        useLogSpace=False, debugMode=False, addComputationIndex=False,
                        useMultiProcessing=False, showProgress = True, parameterFunctionData={}, clusterHostNames=[],
                        numberOfThreads=None, resultsFile='', **kwargs):
-    r"""calls successively the function parameterFunction(parameterDict) with variation of parameters in given range; parameterDict is a dictionary, containing the current values of parameters,
+    """calls successively the function parameterFunction(parameterDict) with variation of parameters in given range; parameterDict is a dictionary, containing the current values of parameters,
     e.g., parameterDict=['mass':13, 'stiffness':12000] to be computed and returns a value or a list of values which is then stored for each parameter
 
     Args:
@@ -397,7 +397,7 @@ def ParameterVariation(parameterFunction, parameters,
         useMPI: if given in **kwargs and set True, and if Python package mpi4py is installed, mpi parallelization is used; for hints see parameterVariationExample.py
 
     Returns:
-        returns [parameterList, values], containing, e.g., parameterList=\{'mass':[1,1,1,2,2,2,3,3,3], 'stiffness':[4,5,6, 4,5,6, 4,5,6]\} and the result values of the parameter variation accoring to the parameterList,
+        returns [parameterList, values], containing, e.g., parameterList={'mass':[1,1,1,2,2,2,3,3,3], 'stiffness':[4,5,6, 4,5,6, 4,5,6]} and the result values of the parameter variation accoring to the parameterList,
                values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem ..., can also contain tuples, etc.)
 
     Example:
@@ -536,7 +536,7 @@ def GeneticOptimization(objectiveFunction, parameters,
                         clusterHostNames = [],
                         parameterFunctionData = {}, 
                         **kwargs):
-    r"""compute minimum of given objectiveFunction
+    """compute minimum of given objectiveFunction
 
     Args:
         objectiveFunction: function, which takes the form parameterFunction(parameterDict) and which returns a value or list (or numpy array) which reflects the size of the objective to be minimized
@@ -546,7 +546,7 @@ def GeneticOptimization(objectiveFunction, parameters,
         numberOfGenerations: number of generations; NOTE: it is required that elitistRatio*populationSize >= 1
         elitistRatio: the number of surviving individuals in every generation is equal to the previous population times the elitistRatio
         crossoverProbability: if > 0: children are generated from two (randomly selected) parents by gene-crossover; if 0, no crossover is used
-        crossoverAmount: if crossoverProbability > 0, then this amount is the probability of genes to cross; 0.1: small amount of genes cross, 0.5: 50\% of genes cross
+        crossoverAmount: if crossoverProbability > 0, then this amount is the probability of genes to cross; 0.1: small amount of genes cross, 0.5: 50% of genes cross
         rangeReductionFactor: reduction of mutation range (boundary) relative to range of last generation; helps algorithm to converge to more accurate values
         distanceFactor: children only survive at a certain relative distance of the current range; must be small enough (< 0.5) to allow individuals to survive; ignored if distanceFactor=0; as a rule of thumb, the distanceFactor should be zero in case that there is only one significant minimum, but if there are many local minima, the distanceFactor should be used to search at several different local minima
         childDistribution: string with name of distribution for producing childs: "normal" (Gaussian, with sigma defining range), "uniform" (exactly in range of childs)
@@ -1230,11 +1230,11 @@ def ComputeSensitivities(parameterFunction, parameters, scaledByReference=False,
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def PlotOptimizationResults2D(parameterList, valueList, xLogScale=False, yLogScale=False):
-    r"""visualize results of optimization for every parameter (2D plots)
+    """visualize results of optimization for every parameter (2D plots)
 
     Args:
-        parameterList: taken from output parameterList of \texttt{GeneticOptimization}, containing a dictinary with lists of parameters
-        valueList: taken from output valueList of \texttt{GeneticOptimization}; containing a list of floats that result from the objective function
+        parameterList: taken from output parameterList of `GeneticOptimization`, containing a dictinary with lists of parameters
+        valueList: taken from output valueList of `GeneticOptimization`; containing a list of floats that result from the objective function
         xLogScale: use log scale for x-axis
         yLogScale: use log scale for y-axis
 
@@ -1288,12 +1288,12 @@ def PlotOptimizationResults2D(parameterList, valueList, xLogScale=False, yLogSca
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @docmeta(author='Peter Manzl')
 def PlotSensitivityResults(valRef, valuesSorted, sensitivity, fVar=None, strYAxis = None):
-    r"""visualize results of Sensitivityanalyis for every parameter (2D plots)
+    """visualize results of Sensitivityanalyis for every parameter (2D plots)
 
     Args:
         valRef: The output values of the reference solution
         valuesSorted: The output values of the analysed function sorted by the parameter which was varied
-        sensitivity: The sensitivity Matrix calculated by the function \texttt{ComputeSensitivities()}
+        sensitivity: The sensitivity Matrix calculated by the function `ComputeSensitivities()`
         fVar: The list of variation stepsizes. It is assumed to be 1e-3 if not defined.
         strYAxis: A list of strings to label the plots yAxis
 

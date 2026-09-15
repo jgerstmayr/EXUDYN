@@ -1058,7 +1058,7 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
                     useItemTypes = False, addItemTypeNames=True, multiLine=True, fontSizeFactor=1., 
                     layoutDistanceFactor=3., layoutIterations=100, showLegend = True, tightLayout = True, 
                     showGraph = True, addItemData = False, addAnnotations = False):
-    r"""helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph; the graph visualization uses randomizer, which results in different graphs after every run!
+    """helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph; the graph visualization uses randomizer, which results in different graphs after every run!
 
     Args:
         mbs: MainSystem to be operated with
@@ -1072,13 +1072,13 @@ def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False,
         showLegend: shows legend for different item types
         layoutDistanceFactor: this factor influences the arrangement of labels; larger distance values lead to circle-like results
         layoutIterations: more iterations lead to better arrangement of the layout, but need more time for larger systems (use 1000-10000 to get good results)
-        tightLayout: if True, uses matplotlib plt.tight\_layout() which may raise warning
+        tightLayout: if True, uses matplotlib plt.tight_layout() which may raise warning
         showGraph: if True, graph is plotted with matplotlib
         addItemData: if True, specific data is added to the graph nodes, to be used for deeper analysis of system graphs
         addAnnotations: add data node graphs (not shown), except for graphics data, item numbers, names and types (which are already available in graph data or edges)
 
     Returns:
-        :[Any, Any, Any]: returns [networkx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw\_networkx\_labels(...)
+        :[Any, Any, Any]: returns [networkx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw_networkx_labels(...)
     """
     
     try:

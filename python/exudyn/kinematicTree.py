@@ -73,13 +73,13 @@ def MassCOMinertia2T66(mass, centerOfMass, inertia):
         [mass*C.T, mass*np.eye(3) ]])
 
 def Inertia2T66(inertia):
-    r"""convert inertia as produced with RigidBodyInertia class into 6x6 inertia matrix (as used in KinematicTree66, Featherstone / Handbook of robotics \cite{Siciliano2016})
+    """convert inertia as produced with RigidBodyInertia class into 6x6 inertia matrix (as used in KinematicTree66, Featherstone / Handbook of robotics [Siciliano2016])
 
     Returns:
         6x6 numpy array for further use in minimal coordinates formulation
 
     Note:
-        within the 6x6 matrix, the inertia tensor is defined w.r.t.\ the center of mass, while RigidBodyInertia defines the inertia tensor w.r.t.\ the reference point; however, this function correctly transforms all quantities of inertia.
+        within the 6x6 matrix, the inertia tensor is defined w.r.t. the center of mass, while RigidBodyInertia defines the inertia tensor w.r.t. the reference point; however, this function correctly transforms all quantities of inertia.
     """
     C = erb.Skew(inertia.com)
     mass = inertia.mass
@@ -91,10 +91,10 @@ def Inertia2T66(inertia):
         [mass*C.T, mass*np.eye(3) ]])
 
 def Inertia66toMassCOMinertia(inertia66):
-    r"""convert 6x6 inertia matrix into mass, COM and inertia
+    """convert 6x6 inertia matrix into mass, COM and inertia
 
     Args:
-        6x6 numpy array containing rigid body inertia according to Featherstone / Handbook of robotics \cite{Siciliano2016}
+        6x6 numpy array containing rigid body inertia according to Featherstone / Handbook of robotics [Siciliano2016]
 
     Returns:
         [mass, centerOfMass, inertia]
@@ -122,7 +122,7 @@ dictOfJointTransformMotionSubspace66 = {
     }
 
 def JointTransformMotionSubspace66(jointType, q):
-    r"""return 6x6 Pl\"ucker joint transformation matrix evaluated for scalar joint coordinate q and motion subspace ('free modes' in Table 2.6 in Handbook of robotics \cite{Siciliano2016})
+    """return 6x6 Plücker joint transformation matrix evaluated for scalar joint coordinate q and motion subspace ('free modes' in Table 2.6 in Handbook of robotics [Siciliano2016])
     """
     [T,MS] = dictOfJointTransformMotionSubspace66[jointType]
     return [T(q), MS]
@@ -157,11 +157,11 @@ def JointTransformMotionSubspace(jointType, q):
 #definition of a kinematic tree
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class KinematicTree33:
-    r"""class to define a kinematic tree in Python, which can be used for building serial or tree-structured multibody systems
+    """class to define a kinematic tree in Python, which can be used for building serial or tree-structured multibody systems
     (or robots) with a minimal coordinates formulation, using rotation matrices and 3D offsets; for efficient computation, use the C++ ObjectKinematicTree
 
     Note:
-        The formulation and structures widely follows the more efficient formulas (but still implemented in Python!) with 3D vectors and rotation matrices as proposed in Handbook of robotics \cite{Siciliano2016}, Chapter 3, but with the rotation matrices (\texttt{listOfRotations}) being transposed in the Python implementation as compared to the description in the book, being thus compliant with other Exudyn functions; the 3D vector/matrix Python implementation does not offer advantages as compared to the formulation with Pl\"ucker coordinates, BUT it reflects the formulas of the C++ implementation and is used for testing
+        The formulation and structures widely follows the more efficient formulas (but still implemented in Python!) with 3D vectors and rotation matrices as proposed in Handbook of robotics [Siciliano2016], Chapter 3, but with the rotation matrices (`listOfRotations`) being transposed in the Python implementation as compared to the description in the book, being thus compliant with other Exudyn functions; the 3D vector/matrix Python implementation does not offer advantages as compared to the formulation with Plücker coordinates, BUT it reflects the formulas of the C++ implementation and is used for testing
     """
     def __init__(self, 
                  listOfJointTypes,
@@ -173,13 +173,13 @@ class KinematicTree33:
                  listOfParents=[],
                  gravity=[0,0,-9.81],
                  ):
-        r"""initialize kinematic tree
+        """initialize kinematic tree
 
         Args:
             listOfJointTypes: mandatory list of joint types 'Rx', 'Ry', 'Rz' denoting revolute joints; 'Px', 'Py', 'Pz', denoting prismatic joints
-            listOfRotations: per link rotation matrix, transforming coordinates of the joint coordinate system w.r.t. the previous coordinate system (this is the inverse of Pl\"ucker coordinate transforms (6x6))
+            listOfRotations: per link rotation matrix, transforming coordinates of the joint coordinate system w.r.t. the previous coordinate system (this is the inverse of Plücker coordinate transforms (6x6))
             listOfOffsets: per link offset vector from pervious coordinate system to the joint coordinate system
-            listOfInertia3D: per link 3D inertia matrix, w.r.t.\ reference point (not COM!)
+            listOfInertia3D: per link 3D inertia matrix, w.r.t. reference point (not COM!)
             listOfCOM: per link vector from reference point to center of mass (COM), in link coordinates
             listOfMass: mass per link
             listOfParents: list of parent object indices (int), according to the index in jointTypes and transformations; use empty list for kinematic chain and use -1 if no parent exists (parent=base or world frame)
@@ -229,7 +229,7 @@ class KinematicTree33:
 
 
     def ForwardDynamicsCRB(self, q=[], q_t=[], torques=[], forces=[]):
-        r"""compute forward dynamics using composite rigid body algorithm
+        """compute forward dynamics using composite rigid body algorithm
 
         Args:
             q: joint space coordinates for the model at which the forward dynamics is evaluated
@@ -238,7 +238,7 @@ class KinematicTree33:
             forces: forces acting on the bodies using special format
 
         Returns:
-            returns acceleration vector q\_tt of joint coordinates
+            returns acceleration vector q_tt of joint coordinates
         """
         if forces != []:
             raise ValueError('ForwardDynamicsCRB: forces not implemented')
@@ -254,7 +254,7 @@ class KinematicTree33:
     def ComputeMassMatrixAndForceTerms(self, q, q_t, externalForces=[]):
         r"""compute generalized mass matrix M and generalized force terms for
         kinematic tree, using current state (joint) variables q and
-        joint velocities q\_t. The generalized force terms f = fGeneralized
+        joint velocities q_t. The generalized force terms f = fGeneralized
         contain Coriolis and gravity if given in the kinematicTree.
 
         Args:
@@ -263,7 +263,7 @@ class KinematicTree33:
             externalForces: list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
 
         Returns:
-            mass matrix $\Mm$ and RHS vector $\fv_{RHS}$ for equations of motion $M(q) \cdot q_{tt} + f(q,q_t,externalForces) = \tau$; RHS is $\fv_{RHS}=\tau - f(q,q_t,externalForces)$; $\tau$ can be added outside of \texttt{ComputeMassMatrixAndForceTerms}
+            mass matrix $\Mm$ and RHS vector $\fv_{RHS}$ for equations of motion $M(q) \cdot q_{tt} + f(q,q_t,externalForces) = \tau$; RHS is $\fv_{RHS}=\tau - f(q,q_t,externalForces)$; $\tau$ can be added outside of `ComputeMassMatrixAndForceTerms`
         """
         #gravity6D = np.hstack((np.zeros(3),self.gravity))
         n = self.Size()
@@ -447,11 +447,11 @@ def CRF(v):
 #definition of a kinematic tree
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class KinematicTree66:
-    r"""class to define a kinematic tree, which can be used for building serial or tree-structured multibody systems
-    (or robots) with a minimal coordinates formulation, using Pl\"ucker coordinate transforms (6x6); for efficient computation, use the C++ ObjectKinematicTree
+    """class to define a kinematic tree, which can be used for building serial or tree-structured multibody systems
+    (or robots) with a minimal coordinates formulation, using Plücker coordinate transforms (6x6); for efficient computation, use the C++ ObjectKinematicTree
 
     Note:
-        The formulation and structures widely follow Roy Featherstone (http://royfeatherstone.org/) / Handbook of robotics \cite{Siciliano2016}
+        The formulation and structures widely follow Roy Featherstone (http://royfeatherstone.org/) / Handbook of robotics [Siciliano2016]
     """
     def __init__(self, 
                  listOfJointTypes,
@@ -460,11 +460,11 @@ class KinematicTree66:
                  listOfParents=[],
                  gravity=[0,0,-9.81],
                  ):
-        r"""initialize kinematic tree
+        """initialize kinematic tree
 
         Args:
             listOfJointTypes: mandatory list of joint types 'Rx', 'Ry', 'Rz' denoting revolute joints; 'Px', 'Py', 'Pz', denoting prismatic joints
-            listOfTransformations: provide a list of Pl\"ucker coordinate transforms (6x6 numpy matrices), describing the (constant) link transformation from the link coordinate system (previous/parent joint) to this joint coordinate system
+            listOfTransformations: provide a list of Plücker coordinate transforms (6x6 numpy matrices), describing the (constant) link transformation from the link coordinate system (previous/parent joint) to this joint coordinate system
             listOfInertias: provide a list of inertias as (6x6 numpy matrices), as produced by the function MassCOMinertia2T66
             listOfParents: list of parent object indices (int), according to the index in jointTypes and transformations; use empty list for kinematic chain and use -1 if no parent exists (parent=base or world frame)
             gravity: a 3D list/array containing the gravity applied to the kinematic tree (in world frame)
@@ -502,7 +502,7 @@ class KinematicTree66:
 
 
     def ForwardDynamicsCRB(self, q=[], q_t=[], torques=[], forces=[]):
-        r"""compute forward dynamics using composite rigid body algorithm
+        """compute forward dynamics using composite rigid body algorithm
 
         Args:
             q: joint space coordinates for the model at which the forward dynamics is evaluated
@@ -511,7 +511,7 @@ class KinematicTree66:
             forces: forces acting on the bodies using special format
 
         Returns:
-            returns acceleration vector q\_tt of joint coordinates
+            returns acceleration vector q_tt of joint coordinates
         """
         if forces != []:
             raise ValueError('ForwardDynamicsCRB: forces not implemented')
@@ -527,7 +527,7 @@ class KinematicTree66:
     def ComputeMassMatrixAndForceTerms(self, q, q_t, externalForces=[]):
         r"""compute generalized mass matrix M and generalized force terms for
         kinematic tree, using current state (joint) variables q and
-        joint velocities q\_t. The generalized force terms f = fGeneralized
+        joint velocities q_t. The generalized force terms f = fGeneralized
         contain Coriolis and gravity if given in the kinematicTree.
 
         Args:
@@ -536,7 +536,7 @@ class KinematicTree66:
             externalForces: list of torque/forces in global (world) frame per joint; may be empty list, containing 6D vectors or matrices with 6D vectors in columns that are summed up for each link
 
         Returns:
-            mass matrix $\Mm$ and RHS vector $\fv_{RHS}$ for equations of motion $M(q) \cdot q_{tt} + f(q,q_t,externalForces) = \tau$; RHS is $\fv_{RHS}=\tau - f(q,q_t,externalForces)$; $\tau$ can be added outside of \texttt{ComputeMassMatrixAndForceTerms}
+            mass matrix $\Mm$ and RHS vector $\fv_{RHS}$ for equations of motion $M(q) \cdot q_{tt} + f(q,q_t,externalForces) = \tau$; RHS is $\fv_{RHS}=\tau - f(q,q_t,externalForces)$; $\tau$ can be added outside of `ComputeMassMatrixAndForceTerms`
         """
         gravity6D = np.hstack((np.zeros(3),self.gravity))
         n = self.Size()

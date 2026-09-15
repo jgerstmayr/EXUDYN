@@ -1269,7 +1269,7 @@ Class function: __init__
   | initialize RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. reference point!!!) and center of mass com
 - | \ *input*\ :
   | \ ``mass``\ : mass of rigid body (dimensions need to be consistent, should be in SI-units)
-  | \ ``inertiaTensor``\ : tensor given w.r.t.\ reference point, NOT w.r.t.\ center of mass!
+  | \ ``inertiaTensor``\ : tensor given w.r.t. reference point, NOT w.r.t. center of mass!
   | \ ``com``\ : center of mass relative to reference point, in same coordinate system as inertiaTensor
   | \ ``inertiaTensorAtCOM``\ : bool flag: if False (default), the inertiaTensor has to be provided w.r.t. the reference point; if True, it has to be provided at the center of mass
 
@@ -1319,10 +1319,10 @@ Class function: SetWithCOMinertia
 `SetWithCOMinertia <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/rigidBodyUtilities.py\#L1122>`__\ (\ ``self``\ , \ ``mass``\ , \ ``inertiaTensorCOM``\ , \ ``com``\ )
 
 - | \ *classFunction*\ :
-  | set RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t.\ com) and center of mass com
+  | set RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. com) and center of mass com
 - | \ *input*\ :
   | \ ``mass``\ : mass of rigid body (dimensions need to be consistent, should be in SI-units)
-  | \ ``inertiaTensorCOM``\ : tensor given w.r.t.\ reference point, NOT w.r.t.\ center of mass!
+  | \ ``inertiaTensorCOM``\ : tensor given w.r.t. reference point, NOT w.r.t. center of mass!
   | \ ``com``\ : center of mass relative to reference point, in same coordinate system as inertiaTensor
 
 ----

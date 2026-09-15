@@ -62,7 +62,7 @@ def Cot(x):
 
 @docmeta(author='Stefan Holzinger')
 def R3xSO3Matrix2RotationMatrix(G): 
-    r"""computes 3x3 rotation matrix from 7x7 R3xSO(3) matrix, see \cite{Bruels2011}
+    """computes 3x3 rotation matrix from 7x7 R3xSO(3) matrix, see [Bruels2011]
 
     Args:
         G: 7x7 matrix as np.array
@@ -75,7 +75,7 @@ def R3xSO3Matrix2RotationMatrix(G):
 
 @docmeta(author='Stefan Holzinger')
 def R3xSO3Matrix2Translation(G):
-    r"""computes translation part of R3xSO(3) matrix, see \cite{Bruels2011}
+    """computes translation part of R3xSO(3) matrix, see [Bruels2011]
 
     Args:
         G: 7x7 matrix as np.array
@@ -88,7 +88,7 @@ def R3xSO3Matrix2Translation(G):
 
 @docmeta(author='Stefan Holzinger')
 def R3xSO3Matrix(x,R):
-    r"""builds 7x7 matrix as element of the Lie group R3xSO(3), see \cite{Bruels2011}
+    """builds 7x7 matrix as element of the Lie group R3xSO(3), see [Bruels2011]
 
     Args:
         x: 3D vector as np.array representing the translation part corresponding to R3
@@ -117,7 +117,7 @@ def R3xSO3Matrix(x,R):
 
 @docmeta(author='Stefan Holzinger')
 def ExpSO3(Omega):
-    r"""compute the matrix exponential map on the Lie group SO(3), see \cite{Mueller2017}
+    """compute the matrix exponential map on the Lie group SO(3), see [Mueller2017]
 
     Args:
         3D rotation vector as np.array
@@ -134,7 +134,7 @@ def ExpSO3(Omega):
 
 @docmeta(author='Stefan Holzinger')
 def ExpS3(Omega):
-    r"""compute the quaternion exponential map on the Lie group S(3), see \cite{Terze2016, Mueller2017}
+    """compute the quaternion exponential map on the Lie group S(3), see [Terze2016, Mueller2017]
 
     Args:
         3D rotation vector as np.array
@@ -195,7 +195,7 @@ def LogSO3(R):
 
 @docmeta(author='Stefan Holzinger')
 def TExpSO3(Omega):
-    r"""compute the tangent operator corresponding to ExpSO3, see \cite{Bruels2011}
+    """compute the tangent operator corresponding to ExpSO3, see [Bruels2011]
 
     Args:
         3D rotation vector as np.array
@@ -223,7 +223,7 @@ def TExpSO3(Omega):
 
 @docmeta(author='Stefan Holzinger')
 def TExpSO3Inv(Omega):
-    r"""compute the inverse of the tangent operator TExpSO3, see \cite{Sonneville2014}
+    """compute the inverse of the tangent operator TExpSO3, see [Sonneville2014]
     this function was improved, see coordinateMaps.pdf by Stefan Holzinger
 
     Args:
@@ -252,7 +252,7 @@ def TExpSO3Inv(Omega):
 
 @docmeta(author='Stefan Holzinger')
 def ExpSE3(x):
-    r"""compute the matrix exponential map on the Lie group SE(3), see \cite{Bruels2011}
+    """compute the matrix exponential map on the Lie group SE(3), see [Bruels2011]
 
     Args:
         6D incremental motion vector as np.array
@@ -269,7 +269,7 @@ def ExpSE3(x):
 
 @docmeta(author='Stefan Holzinger')
 def LogSE3(H):
-    r"""compute the matrix logarithm on the Lie group SE(3), see \cite{Sonneville2014}
+    """compute the matrix logarithm on the Lie group SE(3), see [Sonneville2014]
 
     Args:
         4x4 homogeneous transformation matrix as np.array
@@ -290,7 +290,7 @@ def LogSE3(H):
 
 @docmeta(author='Stefan Holzinger')
 def TExpSE3(x):
-    r"""compute the tangent operator corresponding to ExpSE3, see \cite{Bruels2011}
+    """compute the tangent operator corresponding to ExpSE3, see [Bruels2011]
 
     Args:
         6D incremental motion vector as np.array
@@ -343,7 +343,7 @@ def TExpSE3(x):
 
 @docmeta(author='Stefan Holzinger')
 def TExpSE3Inv(x):
-    r"""compute the inverse of tangent operator TExpSE3, see \cite{Sonneville2014}
+    """compute the inverse of tangent operator TExpSE3, see [Sonneville2014]
 
     Args:
         6D incremental motion vector as np.array
@@ -383,7 +383,7 @@ def TExpSE3Inv(x):
 
 @docmeta(author='Stefan Holzinger')
 def ExpR3xSO3(x):
-    r"""compute the matrix exponential map on the Lie group R3xSO(3), see \cite{Bruels2011}
+    """compute the matrix exponential map on the Lie group R3xSO(3), see [Bruels2011]
 
     Args:
         6D incremental motion vector as np.array
@@ -399,7 +399,7 @@ def ExpR3xSO3(x):
 
 @docmeta(author='Stefan Holzinger')
 def TExpR3xSO3(x):
-    r"""compute the tangent operator corresponding to ExpR3xSO3, see \cite{Bruels2011}
+    """compute the tangent operator corresponding to ExpR3xSO3, see [Bruels2011]
 
     Args:
         6D incremental motion vector as np.array
@@ -496,7 +496,7 @@ def CompositionRuleSemiDirectProductR3AndS3(q0, incrementalMotionVector):
 
 @docmeta(author='Stefan Holzinger')
 def CompositionRuleDirectProductR3AndR3RotVec(q0, incrementalMotionVector):
-    r"""compute composition operation for pairs in the group obtained from the direct product of R3 and R3, see \cite{HolzingerGerstmayr2020}
+    """compute composition operation for pairs in the group obtained from the direct product of R3 and R3, see [HolzingerGerstmayr2020]
     the rotation vector is used as rotation parametrizations
     this composition operation can be used in formulations which represent the translational velocities in the global (inertial) frame
 
@@ -614,8 +614,8 @@ def CompositionRuleSemiDirectProductR3AndR3RotXYZAngles(q0, incrementalMotionVec
 
 @docmeta(author='Stefan Holzinger')
 def CompositionRuleForEulerParameters(q, p):
-    r"""compute composition operation for Euler parameters (unit quaternions)
-    this composition operation is quaternion multiplication, see \cite{Terze2016}
+    """compute composition operation for Euler parameters (unit quaternions)
+    this composition operation is quaternion multiplication, see [Terze2016]
 
     Args:
         q: 4D vector as np.array containing Euler parameters
@@ -635,7 +635,7 @@ def CompositionRuleForEulerParameters(q, p):
 
 @docmeta(author='Stefan Holzinger')
 def CompositionRuleForRotationVectors(v0, Omega):
-    r"""compute composition operation for rotation vectors v0 and Omega, see \cite{Holzinger2021}
+    """compute composition operation for rotation vectors v0 and Omega, see [Holzinger2021]
 
     Args:
         v0: 3D rotation vector as np.array
@@ -662,7 +662,7 @@ def CompositionRuleForRotationVectors(v0, Omega):
 
 @docmeta(author='Stefan Holzinger')
 def CompositionRuleRotXYZAnglesRotationVector(alpha0, Omega):
-    r"""compute composition operation for RotXYZ angles, see \cite{Holzinger2021}
+    """compute composition operation for RotXYZ angles, see [Holzinger2021]
 
     Args:
         alpha0: 3D vector as np.array containing RotXYZ angles

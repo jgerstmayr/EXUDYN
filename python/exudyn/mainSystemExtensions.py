@@ -696,7 +696,7 @@ def MainSystemCreateSpringDamper(mbs,
                                  bodyOrNodeList=[None, None], 
                                  bodyList=[None, None],
                                  show=True, drawSize=-1, color=exudyn.graphics.color.default):
-    r"""helper function to create SpringDamper connector, using arguments from ObjectConnectorSpringDamper; similar interface as CreateDistanceConstraint(...), see there for for further information
+    """helper function to create SpringDamper connector, using arguments from ObjectConnectorSpringDamper; similar interface as CreateDistanceConstraint(...), see there for for further information
 
     Args:
         mbs: the MainSystem where items are created
@@ -709,7 +709,7 @@ def MainSystemCreateSpringDamper(mbs,
         damping: scalar damping coefficient
         force: scalar additional force applied
         velocityOffset: scalar offset: if referenceLength is changed over time, the velocityOffset may be changed accordingly to emulate a reference motion
-        springForceUserFunction: a user function springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL\_t, stiffness, damping, force)->float ; this function replaces the internal connector force computation
+        springForceUserFunction: a user function springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force)->float ; this function replaces the internal connector force computation
         bodyOrNodeList: alternative to bodyNumbers; a list of object numbers (with specific localPosition0/1) or node numbers; may alse be mixed types; to use this case, set bodyNumbers = [None,None]
         show: if True, connector visualization is drawn
         drawSize: general drawing size of connector
@@ -1429,7 +1429,7 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
                                  useGlobalFrame=True,
                                  offsetUserFunction=0, offsetUserFunction_t=0,
                                  show=True, axesRadius=0.1, axesLength=0.4, color=exudyn.graphics.color.default):
-    r"""Create generic joint between two bodies; definition of joint position (position) and axes (rotationMatrixAxes) in global coordinates (useGlobalFrame=True) or in local coordinates of body0 (useGlobalFrame=False), where rotationMatrixAxes is an additional rotation to body0; all markers, markerRotation and other quantities are automatically computed
+    """Create generic joint between two bodies; definition of joint position (position) and axes (rotationMatrixAxes) in global coordinates (useGlobalFrame=True) or in local coordinates of body0 (useGlobalFrame=False), where rotationMatrixAxes is an additional rotation to body0; all markers, markerRotation and other quantities are automatically computed
 
     Args:
         mbs: the MainSystem where joint and markers shall be created
@@ -1440,7 +1440,7 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
         constrainedAxes: flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; each entry may only be 0 (=free) axis or 1 (=constrained axis); ALL constrained Axes are defined relative to reference rotation of body0 times rotation0
         useGlobalFrame: if False, the position is defined in the local coordinate system of body0, otherwise it is defined in global coordinates
         offsetUserFunction: a user function offsetUserFunction(mbs, t, itemNumber, offsetUserFunctionParameters)->float ; this function replaces the internal (constant) by a user-defined offset. This allows to realize rheonomic joints and allows kinematic simulation
-        offsetUserFunction_t: a user function offsetUserFunction\_t(mbs, t, itemNumber, offsetUserFunctionParameters)->float ; this function replaces the internal (constant) by a user-defined offset velocity; this function is used instead of offsetUserFunction, if velocityLevel (index2) time integration
+        offsetUserFunction_t: a user function offsetUserFunction_t(mbs, t, itemNumber, offsetUserFunctionParameters)->float ; this function replaces the internal (constant) by a user-defined offset velocity; this function is used instead of offsetUserFunction, if velocityLevel (index2) time integration
         show: if True, connector visualization is drawn
         axesRadius: radius of axes for connector graphical representation
         axesLength: length of axes for connector graphical representation
@@ -1676,7 +1676,7 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
                                         offsetUserFunction = 0,
                                         offsetUserFunction_t = 0,
                                         show=True, drawSize=-1., color=exudyn.graphics.color.default):
-    r"""Create coordinate constraint for two bodies, or body on ground; markers and NodePointGround are automatically created when needed
+    """Create coordinate constraint for two bodies, or body on ground; markers and NodePointGround are automatically created when needed
 
     Args:
         mbs: the MainSystem where joint and markers shall be created
@@ -1685,7 +1685,7 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
         coordinates: a list of two coordinates for the respective bodies (in case of ground, it shall be None)
         offset: an fixed offset between the two coordinate values
         factorValue1: an additional factor multiplied with coordinate value1 used in algebraic equation, to enable (e.g. gear) ratio between coordinates
-        velocityLevel: If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; if True, the offsetUserFunction\_t is considered and offsetUserFunction is ignored
+        velocityLevel: If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; if True, the offsetUserFunction_t is considered and offsetUserFunction is ignored
         offsetUserFunction: a Python function which defines the time-dependent offset; see description in CoordinateConstraint
         offsetUserFunction_t: time derivative of offsetUserFunction; needed for velocity level constraints; see description in CoordinateConstraint
         show: if True, connector visualization is drawn

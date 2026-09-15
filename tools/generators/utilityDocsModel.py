@@ -16,6 +16,7 @@
 
 import ast
 import io
+import re
 import os
 import sys
 
@@ -315,6 +316,29 @@ def _TagValue(lines):
     """a tag value as the #** parser produced it for a tag whose text starts on the next line"""
     return '\n' + ''.join(line + '\n' for line in lines)
 
+_citeKeys = r'[A-Za-z]+\d{4}[a-z]?(?:,\s*[A-Za-z]+\d{4}[a-z]?)*'
+
+def Markdown2Latex(s):
+    """the Markdown of the docstrings (step 36d) in the LaTeX flavour the emitters convert to
+    .tex and RST: `code`, [Key] citations, [text](#label) references (an abbreviation if the
+    label has no ':'), **bold**, *italics*, and _ escaped outside $math$ and code"""
+    parts = re.split(r'(\$[^$]*\$|`[^`]*`)', s)
+    for i, part in enumerate(parts):
+        if part.startswith('$'):
+            continue
+        if part.startswith('`'):
+            parts[i] = '\\texttt{' + part[1:-1].replace('_', '\\_') + '}'
+            continue
+        part = part.replace('%', '\\%')
+        part = re.sub(r'\[Section\]\(#([^)]*)\)', r'\\refSection{\1}', part)
+        part = re.sub(r'\[([^\]]*)s\]\(#\1\)', r'\\acp{\1}', part)
+        part = re.sub(r'\[([^\]]*)\]\(#\1\)', r'\\ac{\1}', part)
+        part = re.sub(r'\[(' + _citeKeys + r')\](?!\()', r'\\cite{\1}', part)
+        part = re.sub(r'\*\*([A-Za-z][A-Za-z ]*[A-Za-z])\*\*', r'{\\bf \1}', part)
+        part = re.sub(r'(?<![*\w])\*([A-Za-z]+)\*(?![*\w])', r'{\\it \1}', part)
+        parts[i] = part
+    return ''.join(parts)
+
 def _DocstringItem(node, summaryTag, fileLines, fileName):
     """dictionary of one documented function or class; None if it is not documented"""
     docstring = ast.get_docstring(node, clean=False)
@@ -331,7 +355,7 @@ def _DocstringItem(node, summaryTag, fileLines, fileName):
                     if not value:
                         return None
                 elif value is not None:
-                    item[keyword.arg] = ' ' + value + '\n'
+                    item[keyword.arg] = ' ' + Markdown2Latex(value) + '\n'
         elif decorator.func.id == 'extends':
             target = decorator.args[0]
             item['belongsTo'] = target.attr if isinstance(target, ast.Attribute) else target.id
@@ -354,6 +378,8 @@ def _DocstringItem(node, summaryTag, fileLines, fileName):
                              + 'section requires: ' + repr(line))
         values[current].append(line[len(prefix):])
     for tag, lines in values.items():
+        if tag != 'example':
+            lines = [Markdown2Latex(line) for line in lines]
         if tag == summaryTag and len(lines) != 0: #the summary was written on the tag line
             item[tag] = ' ' + lines[0] + '\n' + _TagValue(lines[1:])[1:]
         else:

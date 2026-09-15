@@ -21,10 +21,10 @@ from exudyn.extensionRegistry import extends
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 class InteractiveDialog:
-    r"""create an interactive dialog, which allows to interact with simulations
+    """create an interactive dialog, which allows to interact with simulations
     the dialog has a 'Run' button, which initiates the simulation and a 'Stop' button which stops/pauses simulation; 'Quit' closes the simulation model
-    for examples, see \texttt{simulateInteractively.py} and \texttt{massSpringFrictionInteractive.py}
-    use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and sliders
+    for examples, see `simulateInteractively.py` and `massSpringFrictionInteractive.py`
+    use __init__ method to setup this class with certain buttons, edit boxes and sliders
 
     Example:
         #the following example is only demonstrating the structure of dialogItems and plots
@@ -609,7 +609,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 
     Note:
         Uses class InteractiveDialog in the background, which can be used to adjust animation creation. If meshes are large, animation artifacts may appear, which are resolved by using a larger update period.
-        Press 'Run' to start animation; Chose 'Mode shape', according component for contour plot; to record one cycle for animation, choose 'One cycle', run once to get the according range in the contour plot, press 'Record frames' and press 'Run', now images can be found in subfolder 'images' (for further info on animation creation see \refSection{sec:overview:basics:animations}); now deactivate 'Record frames' by pressing 'Off' and chose another mode
+        Press 'Run' to start animation; Chose 'Mode shape', according component for contour plot; to record one cycle for animation, choose 'One cycle', run once to get the according range in the contour plot, press 'Record frames' and press 'Run', now images can be found in subfolder 'images' (for further info on animation creation see [Section](#sec:overview:basics:animations)); now deactivate 'Record frames' by pressing 'Off' and chose another mode
     """
     SC = systemContainer
     mbs = mainSystem

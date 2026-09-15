@@ -44,7 +44,7 @@ Function: Inertia2T66
 - | \ *output*\ :
   | 6x6 numpy array for further use in minimal coordinates formulation
 - | \ *notes*\ :
-  | within the 6x6 matrix, the inertia tensor is defined w.r.t.\ the center of mass, while RigidBodyInertia defines the inertia tensor w.r.t.\ the reference point; however, this function correctly transforms all quantities of inertia.
+  | within the 6x6 matrix, the inertia tensor is defined w.r.t. the center of mass, while RigidBodyInertia defines the inertia tensor w.r.t. the reference point; however, this function correctly transforms all quantities of inertia.
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
@@ -161,7 +161,7 @@ Class function: __init__
   | \ ``listOfJointTypes``\ : mandatory list of joint types 'Rx', 'Ry', 'Rz' denoting revolute joints; 'Px', 'Py', 'Pz', denoting prismatic joints
   | \ ``listOfRotations``\ : per link rotation matrix, transforming coordinates of the joint coordinate system w.r.t. the previous coordinate system (this is the inverse of Plücker coordinate transforms (6x6))
   | \ ``listOfOffsets``\ : per link offset vector from pervious coordinate system to the joint coordinate system
-  | \ ``listOfInertia3D``\ : per link 3D inertia matrix, w.r.t.\ reference point (not COM!)
+  | \ ``listOfInertia3D``\ : per link 3D inertia matrix, w.r.t. reference point (not COM!)
   | \ ``listOfCOM``\ : per link vector from reference point to center of mass (COM), in link coordinates
   | \ ``listOfMass``\ : mass per link
   | \ ``listOfParents``\ : list of parent object indices (int), according to the index in jointTypes and transformations; use empty list for kinematic chain and use -1 if no parent exists (parent=base or world frame)

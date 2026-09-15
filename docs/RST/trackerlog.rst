@@ -19,15 +19,20 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.64.dev1, 
++  Exudyn version = 1.11.65.dev1, 
 +  last change =  2026-09-15, 
-+  Number of issues = 2437, 
-+  Number of resolved issues = 2137 (64 in current version), 
++  Number of issues = 2439, 
++  Number of resolved issues = 2138 (65 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.65: resolved Issue 2437: utility modules: docstring text becomes Markdown (change)
+    - issue author: Claude-JG
+    - description:  step 36d: LaTeX macros in docstrings and @docmeta replaced by Markdown (backquoted code; [Key] citations; [text](#label) references and abbreviations; bold/italics; umlauts); utilityDocsModel.Markdown2Latex feeds the existing emitters
+    - date resolved: **2026-09-15 16:40**\ , date raised: 2026-09-15 
+    - resolved by: Claude-JG
  * Version 1.11.64: resolved Issue 2436: utility modules: Google-style docstrings and @docmeta instead of #\*\* comments (change)
     - issue author: Claude-JG
     - description:  step 36b/36c and 37: all utility modules converted; utilityDocsModel reads docstrings and decorators with ast; the #\*\* parser is deleted; generated docs unchanged apart from listed whitespace and recovered text
@@ -7118,6 +7123,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 2438:** utility modules: star imports export helper names
+    - issue author: Claude-JG
+    - description:  from exudyn.utilities import \* also exports imported helpers (extends; docmeta; module imports); define __all__ or restructure so only the public API is exported; check what examples and test models rely on first (plan step 107)
+    - date raised: 2026-09-15 
 
  * **open issue 2432:** parameter conversion errors raise inconsistent exception types
     - issue author: Claude-JG

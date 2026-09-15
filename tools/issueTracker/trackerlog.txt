@@ -2,7 +2,7 @@
 # Johannes Gerstmayr
 # date = 2026-09-15
 # release = 1.11
-# version = 64
+# version = 65
 # line format: number, issue name, issue author, status, description, type, priority, date raised, deadline, date resolved, resolved author, file(name), line(number), notes
 # type: BUG, NEW FEATURE, CHANGE, IDEA, EXTENSION, NEW TEST, FIX
 # status: RAISED, RESOLVED, WORK, TESTING(=currently tested)
@@ -2445,3 +2445,5 @@
 2434,MainSystem extensions: registry decorator instead of copy-and-append,Claude-JG,RESOLVED, step 35: mainSystemExtensions.py becomes ordinary package source; functions bind to MainSystem via @extends(exudyn.MainSystem) and install() which raises on a collision with a C++ method; mainSystemExtensionsEmitter.py and mainSystemExtensionsHeader.py are deleted; the docs parsers read the decorator instead of #**belongsTo,CHANGE,,2026-09-15,2027-03-14,2026-09-15 12:22,Claude-JG,,,
 2435,utility modules: malformed #** tags silently dropped from the documentation,Claude-JG,RESOLVED, step 36a: #**note (9) #**nodes (3) #**examples #**compute #**outputinput and two #** continuation lines were not recognised; five #**function lacked the colon; HT2T66Inverse had input and output swapped,FIX,,2026-09-15,2027-03-14,2026-09-15 13:25,Claude-JG,,,
 2436,utility modules: Google-style docstrings and @docmeta instead of #** comments,Claude-JG,RESOLVED, step 36b/36c and 37: all utility modules converted; utilityDocsModel reads docstrings and decorators with ast; the #** parser is deleted; generated docs unchanged apart from listed whitespace and recovered text,CHANGE,,2026-09-15,2027-03-14,2026-09-15 13:46,Claude-JG,,,
+2437,utility modules: docstring text becomes Markdown,Claude-JG,RESOLVED, step 36d: LaTeX macros in docstrings and @docmeta replaced by Markdown (backquoted code; [Key] citations; [text](#label) references and abbreviations; bold/italics; umlauts); utilityDocsModel.Markdown2Latex feeds the existing emitters,CHANGE,,2026-09-15,2027-03-14,2026-09-15 16:40,Claude-JG,,,
+2438,utility modules: star imports export helper names,Claude-JG,RAISED  , from exudyn.utilities import * also exports imported helpers (extends; docmeta; module imports); define __all__ or restructure so only the public API is exported; check what examples and test models rely on first (plan step 107),CHANGE,,2026-09-15,2027-03-14,,,,,

@@ -111,7 +111,7 @@ class ROSInterface:
         return
     @docmeta(author='Martin Sereinig')
     def InitPublisher(self, pubTopicName='', pubType = Empty, queueSize = 10): 
-        r"""function to create a publisher
+        """function to create a publisher
 
         Args:
             pubTopicName: topic name to publish, actual topic will be /exudyn/pubTopicName
@@ -120,7 +120,7 @@ class ROSInterface:
 
         Note:
             find msgs types here
-            http://docs.ros.org/en/melodic/api/std\_msgs/html/index-msg.html
+            http://docs.ros.org/en/melodic/api/std_msgs/html/index-msg.html
 
         Example:
             publisher for poses, pubType = PoseStamped,

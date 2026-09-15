@@ -2650,6 +2650,33 @@ and leaves the modules as they are), `help()` shows the docstrings, full suite P
 Open: 36d (LaTeX to Markdown in the docstrings); step 39 can now delete the install-time
 converter, which has nothing left to convert.
 
+<a id="step-36d"></a>
+
+### Step 36d - Markdown inside the docstrings; step 36 complete
+
+**DONE 2026-09-15** (#2437). Measured first, over the docstrings and `@docmeta` strings of the 31
+modules, outside `$...$` math (69 math spans, kept): `\_` 45, `\cite` 38, `\"` 21, `\texttt` 16,
+`\ac` 12 and `\acp` 1, `\refSection` 11, `\ ` 8, `\\` 5, `\{`/`\}` 3 each, `{\bf}` 3,
+`{\it}` 2, `\%` 2, `\#` 1; the remaining `\n` are Python code in examples. Converted by a one-off
+script (scratchpad):
+- `\texttt{x}` -> `` `x` ``, `\cite{K}` -> `[K]`, `\ac{X}` -> `[X](#X)`, `\acp{X}` -> `[Xs](#X)`,
+  `\refSection{L}` -> `[Section](#L)`, `{\bf x}` -> `**x**`, `{\it x}` -> `*x*`, accents -> UTF-8,
+  `\_ \% \# \{ \}` -> the plain character, `\ ` -> space, `\\` at a line end removed.
+- Math spans and `Example:` sections untouched; 72 docstrings keep `r"""` because their math
+  (or example code) contains a backslash.
+
+The emitters still work on LaTeX: `utilityDocsModel.Markdown2Latex` maps the Markdown back
+(`code`, citations, references, bold/italics, `%` escaped) for every tag except `example`. So the
+generated documentation stays almost unchanged, which made the result reviewable. Differences,
+all intended:
+- RST: `\{ \}` and the `\ ` after `w.r.t.` no longer appear literally; the `\\` line breaks of
+  `HCBstaticModeSelection` and `ComputeTriangularMesh` no longer add blank lines.
+- TeX (degradation accepted, maintainer decision; step 50 drops it): `_` and braces are no longer
+  escaped, and accents are UTF-8.
+- Citations: `[Key]` becomes `\cite{}` again, which the RST converter drops, as before; the
+  bibliography link is a step-50 matter.
+Tier 1 unchanged. Wheel built, full suite PASSED.
+
 ## Plan text of steps condensed on 2026-09-15
 
 When the plan was condensed, every done step was reduced to one line there. Its full plan text at

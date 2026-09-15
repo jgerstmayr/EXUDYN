@@ -555,7 +555,7 @@
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]{\it fileName}: file name (possibly including path) for HDF5 file, including file ending
-\item[]{\it dataDict}: the dictionary containing the hierarchical data to be saved; the data may contain the following data types in hierarchical form: int, bool, float, str (utf-8), list, dict, numpy array, scipy csr\_matrix, Python function
+\item[]{\it dataDict}: the dictionary containing the hierarchical data to be saved; the data may contain the following data types in hierarchical form: int, bool, float, str (utf-8), list, dict, numpy array, scipy csr_matrix, Python function
 \end{itemize}
 \item[--]
 {\bf output}: None
@@ -736,7 +736,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
-\item[--]\textcolor{steelblue}{\bf classFunction}: OVERRIDE this function to set up self.action\_space and self.observation\_space
+\item[--]\textcolor{steelblue}{\bf classFunction}: OVERRIDE this function to set up self.action_space and self.observation_space
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -768,7 +768,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]\textcolor{steelblue}{\bf classFunction}: OVERRIDE this function to maps the current state to mbs initial values
-\item[--]\textcolor{steelblue}{\bf output}: return [initialValues, initialValues\_t] where initialValues[\_t] are ODE2 vectors of coordinates[\_t] for the mbs
+\item[--]\textcolor{steelblue}{\bf output}: return [initialValues, initialValues_t] where initialValues[_t] are ODE2 vectors of coordinates[_t] for the mbs
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -893,7 +893,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 {\bf function description}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
-\item[]clear all workspace variables except for system variables with '\_' at beginning,
+\item[]clear all workspace variables except for system variables with '_' at beginning,
 \item[]'func' or 'module' in name; it also deletes all items in exudyn.sys and exudyn.variables,
 \item[]EXCEPT from exudyn.sys['renderState'] for pertaining the previous view of the renderer
 \end{itemize}
@@ -1190,7 +1190,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]{\it functionOfX}: scalar, vector or matrix-valued function with scalar argument (X or other variable)
-\item[]{\it integrationOrder}: odd number in \{1,3,5,7,9\}; currently maximum order is 9
+\item[]{\it integrationOrder}: odd number in {1,3,5,7,9}; currently maximum order is 9
 \item[]{\it a}: integration range start
 \item[]{\it b}: integration range end
 \end{itemize}
@@ -1212,7 +1212,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]{\it functionOfX}: scalar, vector or matrix-valued function with scalar argument (X or other variable)
-\item[]{\it integrationOrder}: odd number in \{1,3,5\}; currently maximum order is 5
+\item[]{\it integrationOrder}: odd number in {1,3,5}; currently maximum order is 5
 \item[]{\it a}: integration range start
 \item[]{\it b}: integration range end
 \end{itemize}
@@ -1737,7 +1737,7 @@ in general, set up a model with CreateMBS(), map state to initial values, initia
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]
-{\bf function description}: convert list of sparse triplets (or numpy array with one sparse triplet per row) into scipy.sparse csr\_matrix
+{\bf function description}: convert list of sparse triplets (or numpy array with one sparse triplet per row) into scipy.sparse csr_matrix
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -2261,7 +2261,7 @@ this class holds all data for ObjectFFRFreducedOrder user functions
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
-\item[--]\textcolor{steelblue}{\bf classFunction}: CMS mass matrix user function; qReduced and qReduced\_t contain the coordiantes of the rigid body node and the modal coordinates in one vector!
+\item[--]\textcolor{steelblue}{\bf classFunction}: CMS mass matrix user function; qReduced and qReduced_t contain the coordiantes of the rigid body node and the modal coordinates in one vector!
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -2271,7 +2271,7 @@ this class holds all data for ObjectFFRFreducedOrder user functions
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
-\item[--]\textcolor{steelblue}{\bf classFunction}: CMS force matrix user function; qReduced and qReduced\_t contain the coordiantes of the rigid body node and the modal coordinates in one vector!
+\item[--]\textcolor{steelblue}{\bf classFunction}: CMS force matrix user function; qReduced and qReduced_t contain the coordiantes of the rigid body node and the modal coordinates in one vector!
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -2318,10 +2318,10 @@ this class holds all data for ObjectFFRFreducedOrder user functions
 
 %
 \mysubsubsection{CLASS HCBstaticModeSelection(Enum) (in module FEM)}
-\noindent\textcolor{steelblue}{{\bf class description}}:  helper calss for function ComputeHurtyCraigBamptonModes, declaring some computation options. It offers the following options:\\
-- allBoundaryNodes:     compute a single static mode for every boundary coordinate\\
-- RBE2:                 static modes only for rigid body motion at boundary nodes; using rigid boundary surfaces (additional stiffening)\\
-- RBE3:                 static modes only for rigid body motion at boundary nodes; averaged rigid body motion at boundary surfaces (leads to deformation at boundaries)\\
+\noindent\textcolor{steelblue}{{\bf class description}}:  helper calss for function ComputeHurtyCraigBamptonModes, declaring some computation options. It offers the following options:
+- allBoundaryNodes:     compute a single static mode for every boundary coordinate
+- RBE2:                 static modes only for rigid body motion at boundary nodes; using rigid boundary surfaces (additional stiffening)
+- RBE3:                 static modes only for rigid body motion at boundary nodes; averaged rigid body motion at boundary surfaces (leads to deformation at boundaries)
 - noStaticModes:        do not compute static modes, only eigen modes (not recommended; usually only for tests)
 \vspace{3pt} \\ 
 \mysubsubsection{CLASS FEMinterface (in module FEM)}
@@ -2537,11 +2537,11 @@ export to EXUDYN objects
 \item[]{\it verbose}: set True to print out some status information
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf output}: creates according nodes, elements, in FEM and returns [bfM, bfK, fes] which are the (mass matrix M, stiffness matrix K) bilinear forms and the finite element space fes
-\item[--]\textcolor{steelblue}{\bf author}: Johannes Gerstmayr, Joachim Sch\"oberl
+\item[--]\textcolor{steelblue}{\bf author}: Johannes Gerstmayr, Joachim Schöberl
 \item[--]\textcolor{steelblue}{\bf notes}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
-\item[]The interface to NETGEN/NGsolve has been created together with Joachim Sch\"oberl, main developer
+\item[]The interface to NETGEN/NGsolve has been created together with Joachim Schöberl, main developer
 \item[]of NETGEN/NGsolve \cite{Schoeberl1997,NGsolve2014}; Thank's a lot!
 \item[]download NGsolve at: https://ngsolve.org/
 \item[]NGsolve needs Python 3.7 (64bit) ==> use according EXUDYN version!
@@ -2576,7 +2576,7 @@ export to EXUDYN objects
 \item[]{\it verbose}: if True, output some relevant information during solving
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf output}: eigenmodes are stored internally in FEMinterface as 'modeBasis' and eigenvalues as 'eigenValues'
-\item[--]\textcolor{steelblue}{\bf author}: Johannes Gerstmayr, Joachim Sch\"oberl
+\item[--]\textcolor{steelblue}{\bf author}: Johannes Gerstmayr, Joachim Schöberl
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -2598,7 +2598,7 @@ export to EXUDYN objects
 \item[]{\it verbose}: if True, output some relevant information during solving
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf output}: stores computed modes in self.modeBasis and abs(eigenvalues) in self.eigenValues
-\item[--]\textcolor{steelblue}{\bf author}: Johannes Gerstmayr, Joachim Sch\"oberl
+\item[--]\textcolor{steelblue}{\bf author}: Johannes Gerstmayr, Joachim Schöberl
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -2617,7 +2617,7 @@ export to EXUDYN objects
 \item[]{\it outputVariableType}: specify either exudyn.OutputVariableType.StressLocal or exudyn.OutputVariableType.StrainLocal as the desired output variables
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf output}: post processing modes are stored in FEMinterface in local variable postProcessingModes as a dictionary, where 'matrix' represents the modes and 'outputVariableType' stores the type of mode as a OutputVariableType
-\item[--]\textcolor{steelblue}{\bf author}: Johannes Gerstmayr, Joachim Sch\"oberl
+\item[--]\textcolor{steelblue}{\bf author}: Johannes Gerstmayr, Joachim Schöberl
 \item[--]\textcolor{steelblue}{\bf notes}: This function is implemented in Python and rather slow for larger meshes; for NGsolve / Netgen meshes, see the according ComputePostProcessingModesNGsolve function, which is usually much faster
 \vspace{12pt}\end{itemize}
 %
@@ -2911,11 +2911,11 @@ export to EXUDYN objects
 \item[]{\it meshOrder}: use 1 for linear elements and 2 for second order elements (recommended to use 2 for much higher accuracy!)
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf output}: return list [oGenericODE2, nodeList] containing object number of GenericODE2 as well as the list of mbs node numbers of all NodePoint nodes
-\item[--]\textcolor{steelblue}{\bf author}: Johannes Gerstmayr, Joachim Sch\"oberl
+\item[--]\textcolor{steelblue}{\bf author}: Johannes Gerstmayr, Joachim Schöberl
 \item[--]\textcolor{steelblue}{\bf notes}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
-\item[]The interface to NETGEN/NGsolve has been created together with Joachim Sch\"oberl, main developer
+\item[]The interface to NETGEN/NGsolve has been created together with Joachim Schöberl, main developer
 \item[]of NETGEN/NGsolve \cite{Schoeberl1997,NGsolve2014}; Thank's a lot!
 \item[]download NGsolve at: https://ngsolve.org/
 \item[]NGsolve needs Python 3.7 (64bit) ==> use according EXUDYN version!
@@ -3009,7 +3009,7 @@ export to EXUDYN objects
 \setlength{\itemindent}{-0.7cm}
 \item[]{\it material}: specify material properties for computation of stresses, using a material class, e.g. material = KirchhoffMaterial(Emodulus, nu, rho); not needed for strains
 \item[]{\it outputVariableType}: specify either exudyn.OutputVariableType.StressLocal or exudyn.OutputVariableType.StrainLocal as the desired output variables
-\item[]{\it numberOfThreads}: if numberOfThreads=1, it uses single threaded computation; if numberOfThreads>1, it uses the multiprocessing pools functionality, which requires that all code in your main file must be encapsulated within an if clause "if \_\_name\_\_ == '\_\_main\_\_':", see examples; if numberOfThreads==-1, it uses all threads/CPUs available
+\item[]{\it numberOfThreads}: if numberOfThreads=1, it uses single threaded computation; if numberOfThreads>1, it uses the multiprocessing pools functionality, which requires that all code in your main file must be encapsulated within an if clause "if __name__ == '__main__':", see examples; if numberOfThreads==-1, it uses all threads/CPUs available
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf output}: post processing modes are stored in FEMinterface in local variable postProcessingModes as a dictionary, where 'matrix' represents the modes and 'outputVariableType' stores the type of mode as a OutputVariableType
 \item[--]\textcolor{steelblue}{\bf notes}: This function is implemented in Python and rather slow for larger meshes; for NGsolve / Netgen meshes, see the according ComputePostProcessingModesNGsolve function, which is usually much faster
@@ -4668,7 +4668,7 @@ export to EXUDYN objects
 \setlength{\itemindent}{-0.7cm}
 \item[]{\it vertices}: list of pairs of coordinates of vertices in mesh [x,y]
 \item[]{\it segments}: list of segments, which are pairs of node numbers [i,j], defining the boundary of the mesh;
-\item[]the ordering of the nodes is such that left triangle = inside, right triangle = outside, compare example with segment [V1,V2]:\\
+\item[]the ordering of the nodes is such that left triangle = inside, right triangle = outside, compare example with segment [V1,V2]:
 \item[]inside
 \item[]V1         V2
 \item[]O----------O
@@ -4965,7 +4965,7 @@ export to EXUDYN objects
 \noindent\textcolor{steelblue}{{\bf class description}}:  create an interactive dialog, which allows to interact with simulations
 the dialog has a 'Run' button, which initiates the simulation and a 'Stop' button which stops/pauses simulation; 'Quit' closes the simulation model
 for examples, see \texttt{simulateInteractively.py} and \texttt{massSpringFrictionInteractive.py}
-use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and sliders
+use __init__ method to setup this class with certain buttons, edit boxes and sliders
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]
@@ -5195,7 +5195,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \item[--]
 {\bf output}: 6x6 numpy array for further use in minimal coordinates formulation
 \item[--]
-{\bf notes}: within the 6x6 matrix, the inertia tensor is defined w.r.t.\ the center of mass, while RigidBodyInertia defines the inertia tensor w.r.t.\ the reference point; however, this function correctly transforms all quantities of inertia.
+{\bf notes}: within the 6x6 matrix, the inertia tensor is defined w.r.t. the center of mass, while RigidBodyInertia defines the inertia tensor w.r.t. the reference point; however, this function correctly transforms all quantities of inertia.
 \vspace{12pt}\end{itemize}
 %
 %
@@ -5235,7 +5235,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]
-{\bf function description}: return 6x6 Pl\"ucker joint transformation matrix evaluated for scalar joint coordinate q and motion subspace ('free modes' in Table 2.6 in Handbook of robotics \cite{Siciliano2016})
+{\bf function description}: return 6x6 Plücker joint transformation matrix evaluated for scalar joint coordinate q and motion subspace ('free modes' in Table 2.6 in Handbook of robotics \cite{Siciliano2016})
 \vspace{12pt}\end{itemize}
 %
 %
@@ -5291,7 +5291,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]
-{\bf notes}: The formulation and structures widely follows the more efficient formulas (but still implemented in Python!) with 3D vectors and rotation matrices as proposed in Handbook of robotics \cite{Siciliano2016}, Chapter 3, but with the rotation matrices (\texttt{listOfRotations}) being transposed in the Python implementation as compared to the description in the book, being thus compliant with other Exudyn functions; the 3D vector/matrix Python implementation does not offer advantages as compared to the formulation with Pl\"ucker coordinates, BUT it reflects the formulas of the C++ implementation and is used for testing
+{\bf notes}: The formulation and structures widely follows the more efficient formulas (but still implemented in Python!) with 3D vectors and rotation matrices as proposed in Handbook of robotics \cite{Siciliano2016}, Chapter 3, but with the rotation matrices (\texttt{listOfRotations}) being transposed in the Python implementation as compared to the description in the book, being thus compliant with other Exudyn functions; the 3D vector/matrix Python implementation does not offer advantages as compared to the formulation with Plücker coordinates, BUT it reflects the formulas of the C++ implementation and is used for testing
 \vspace{24pt}\end{itemize}
 %
 \begin{flushleft}
@@ -5305,9 +5305,9 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]{\it listOfJointTypes}: mandatory list of joint types 'Rx', 'Ry', 'Rz' denoting revolute joints; 'Px', 'Py', 'Pz', denoting prismatic joints
-\item[]{\it listOfRotations}: per link rotation matrix, transforming coordinates of the joint coordinate system w.r.t. the previous coordinate system (this is the inverse of Pl\"ucker coordinate transforms (6x6))
+\item[]{\it listOfRotations}: per link rotation matrix, transforming coordinates of the joint coordinate system w.r.t. the previous coordinate system (this is the inverse of Plücker coordinate transforms (6x6))
 \item[]{\it listOfOffsets}: per link offset vector from pervious coordinate system to the joint coordinate system
-\item[]{\it listOfInertia3D}: per link 3D inertia matrix, w.r.t.\ reference point (not COM!)
+\item[]{\it listOfInertia3D}: per link 3D inertia matrix, w.r.t. reference point (not COM!)
 \item[]{\it listOfCOM}: per link vector from reference point to center of mass (COM), in link coordinates
 \item[]{\it listOfMass}: mass per link
 \item[]{\it listOfParents}: list of parent object indices (int), according to the index in jointTypes and transformations; use empty list for kinematic chain and use -1 if no parent exists (parent=base or world frame)
@@ -5351,7 +5351,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \item[]{\it torques}: a vector of torques applied at joint coordinates or list/array with zero length
 \item[]{\it forces}: forces acting on the bodies using special format
 \end{itemize}
-\item[--]\textcolor{steelblue}{\bf output}: returns acceleration vector q\_tt of joint coordinates
+\item[--]\textcolor{steelblue}{\bf output}: returns acceleration vector q_tt of joint coordinates
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -5366,7 +5366,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \setlength{\itemindent}{-0.7cm}
 \item[]compute generalized mass matrix M and generalized force terms for
 \item[]kinematic tree, using current state (joint) variables q and
-\item[]joint velocities q\_t. The generalized force terms f = fGeneralized
+\item[]joint velocities q_t. The generalized force terms f = fGeneralized
 \item[]contain Coriolis and gravity if given in the kinematicTree.
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf input}: \vspace{-6pt}
@@ -5388,7 +5388,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 %
 \mysubsubsection{CLASS KinematicTree66 (in module kinematicTree)}
 \noindent\textcolor{steelblue}{{\bf class description}}:  class to define a kinematic tree, which can be used for building serial or tree-structured multibody systems
-(or robots) with a minimal coordinates formulation, using Pl\"ucker coordinate transforms (6x6); for efficient computation, use the C++ ObjectKinematicTree
+(or robots) with a minimal coordinates formulation, using Plücker coordinate transforms (6x6); for efficient computation, use the C++ ObjectKinematicTree
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]
@@ -5406,7 +5406,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]{\it listOfJointTypes}: mandatory list of joint types 'Rx', 'Ry', 'Rz' denoting revolute joints; 'Px', 'Py', 'Pz', denoting prismatic joints
-\item[]{\it listOfTransformations}: provide a list of Pl\"ucker coordinate transforms (6x6 numpy matrices), describing the (constant) link transformation from the link coordinate system (previous/parent joint) to this joint coordinate system
+\item[]{\it listOfTransformations}: provide a list of Plücker coordinate transforms (6x6 numpy matrices), describing the (constant) link transformation from the link coordinate system (previous/parent joint) to this joint coordinate system
 \item[]{\it listOfInertias}: provide a list of inertias as (6x6 numpy matrices), as produced by the function MassCOMinertia2T66
 \item[]{\it listOfParents}: list of parent object indices (int), according to the index in jointTypes and transformations; use empty list for kinematic chain and use -1 if no parent exists (parent=base or world frame)
 \item[]{\it gravity}: a 3D list/array containing the gravity applied to the kinematic tree (in world frame)
@@ -5449,7 +5449,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \item[]{\it torques}: a vector of torques applied at joint coordinates or list/array with zero length
 \item[]{\it forces}: forces acting on the bodies using special format
 \end{itemize}
-\item[--]\textcolor{steelblue}{\bf output}: returns acceleration vector q\_tt of joint coordinates
+\item[--]\textcolor{steelblue}{\bf output}: returns acceleration vector q_tt of joint coordinates
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -5464,7 +5464,7 @@ use \_\_init\_\_ method to setup this class with certain buttons, edit boxes and
 \setlength{\itemindent}{-0.7cm}
 \item[]compute generalized mass matrix M and generalized force terms for
 \item[]kinematic tree, using current state (joint) variables q and
-\item[]joint velocities q\_t. The generalized force terms f = fGeneralized
+\item[]joint velocities q_t. The generalized force terms f = fGeneralized
 \item[]contain Coriolis and gravity if given in the kinematicTree.
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf input}: \vspace{-6pt}
@@ -6546,7 +6546,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 {\bf output}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
-\item[]returns [parameterList, values], containing, e.g., parameterList=\{'mass':[1,1,1,2,2,2,3,3,3], 'stiffness':[4,5,6, 4,5,6, 4,5,6]\} and the result values of the parameter variation accoring to the parameterList,
+\item[]returns [parameterList, values], containing, e.g., parameterList={'mass':[1,1,1,2,2,2,3,3,3], 'stiffness':[4,5,6, 4,5,6, 4,5,6]} and the result values of the parameter variation accoring to the parameterList,
 \item[]values=[7,8,9 ,3,4,5, 6,7,8] (depends on solution of problem ..., can also contain tuples, etc.)
 \end{itemize}
 \item[--]
@@ -7218,7 +7218,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \item[]{\it rot\_t}: 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s
 \end{itemize}
 \item[--]
-{\bf output}: 3x3 matrix G\_t as np.array
+{\bf output}: 3x3 matrix G_t as np.array
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -7253,7 +7253,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \item[]{\it rot\_t}: 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s
 \end{itemize}
 \item[--]
-{\bf output}: 3x3 matrix GLocal\_t as np.array
+{\bf output}: 3x3 matrix GLocal_t as np.array
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -7763,7 +7763,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]
-{\bf function description}: convert 6x6 coordinate transformation (Pl\"ucker transform) into rotation and translation
+{\bf function description}: convert 6x6 coordinate transformation (Plücker transform) into rotation and translation
 \item[--]
 {\bf input}: T66 given as  6x6 numpy array
 \item[--]
@@ -7785,7 +7785,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]
-{\bf function description}: convert inverse 6x6 coordinate transformation (Pl\"ucker transform) into rotation and translation
+{\bf function description}: convert inverse 6x6 coordinate transformation (Plücker transform) into rotation and translation
 \item[--]
 {\bf input}: inverse T66 given as  6x6 numpy array
 \item[--]
@@ -7800,7 +7800,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]
-{\bf function description}: convert rotation and translation into 6x6 coordinate transformation (Pl\"ucker transform)
+{\bf function description}: convert rotation and translation into 6x6 coordinate transformation (Plücker transform)
 \item[--]
 {\bf input}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
@@ -7820,7 +7820,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]
-{\bf function description}: convert rotation and translation into INVERSE 6x6 coordinate transformation (Pl\"ucker transform)
+{\bf function description}: convert rotation and translation into INVERSE 6x6 coordinate transformation (Plücker transform)
 \item[--]
 {\bf input}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
@@ -7847,9 +7847,9 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]
-{\bf function description}: compute inverse of 6x6 coordinate transformation (Pl\"ucker transform)
+{\bf function description}: compute inverse of 6x6 coordinate transformation (Plücker transform)
 \item[--]
-{\bf input}: T66: 6x6 coordinate transformation (Pl\"ucker transform)
+{\bf input}: T66: 6x6 coordinate transformation (Plücker transform)
 \item[--]
 {\bf output}: return inverse 6x6 transformation matrix 'T66'
 \item[--]
@@ -7864,7 +7864,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]
-{\bf function description}: convert 6x6 coordinate transformation (Pl\"ucker transform) into 4x4 homogeneous transformation; NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
+{\bf function description}: convert 6x6 coordinate transformation (Plücker transform) into 4x4 homogeneous transformation; NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
 \item[--]
 {\bf input}: T66 given as 6x6 numpy array
 \item[--]
@@ -7886,7 +7886,7 @@ NOTE: This module only contains links for extensions of C++ classes. The descrip
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
 \item[--]
-{\bf function description}: convert 4x4 homogeneous transformation into 6x6 coordinate transformation (Pl\"ucker transform); NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
+{\bf function description}: convert 4x4 homogeneous transformation into 6x6 coordinate transformation (Plücker transform); NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
 \item[--]
 {\bf input}: T: 4x4 homogeneous transformation (numpy array)
 \item[--]
@@ -8119,7 +8119,7 @@ The inertia tensor and center of mass must correspond when initializing the body
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]{\it mass}: mass of rigid body (dimensions need to be consistent, should be in SI-units)
-\item[]{\it inertiaTensor}: tensor given w.r.t.\ reference point, NOT w.r.t.\ center of mass!
+\item[]{\it inertiaTensor}: tensor given w.r.t. reference point, NOT w.r.t. center of mass!
 \item[]{\it com}: center of mass relative to reference point, in same coordinate system as inertiaTensor
 \item[]{\it inertiaTensorAtCOM}: bool flag: if False (default), the inertiaTensor has to be provided w.r.t. the reference point; if True, it has to be provided at the center of mass
 \end{itemize}
@@ -8167,12 +8167,12 @@ The inertia tensor and center of mass must correspond when initializing the body
 \end{flushleft}
 \setlength{\itemindent}{0.7cm}
 \begin{itemize}[leftmargin=0.7cm]
-\item[--]\textcolor{steelblue}{\bf classFunction}: set RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t.\ com) and center of mass com
+\item[--]\textcolor{steelblue}{\bf classFunction}: set RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. com) and center of mass com
 \item[--]\textcolor{steelblue}{\bf input}: \vspace{-6pt}
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]{\it mass}: mass of rigid body (dimensions need to be consistent, should be in SI-units)
-\item[]{\it inertiaTensorCOM}: tensor given w.r.t.\ reference point, NOT w.r.t.\ center of mass!
+\item[]{\it inertiaTensorCOM}: tensor given w.r.t. reference point, NOT w.r.t. center of mass!
 \item[]{\it com}: center of mass relative to reference point, in same coordinate system as inertiaTensor
 \end{itemize}
 \vspace{12pt}\end{itemize}
@@ -9129,7 +9129,7 @@ by solving the static problem of a serial robot
 \item[]{\it success}: flag to indicate if method was successful
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf author}: Peter Manzl, Johannes Gerstmayr
-\item[--]\textcolor{steelblue}{\bf notes}: still under development; errors in orientations of solution may occure. works similar to ikine\_LM function of the robotics toolbox from peter corke
+\item[--]\textcolor{steelblue}{\bf notes}: still under development; errors in orientations of solution may occure. works similar to ikine_LM function of the robotics toolbox from peter corke
 \vspace{12pt}\end{itemize}
 %
 \noindent\rule{8cm}{0.75pt}\vspace{1pt} \\ 
@@ -9154,7 +9154,7 @@ by solving the static problem of a serial robot
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf output}: [q, success]; q: The solution for the joint angles in which the robot's tool center point (TCP) reaches the desired homogeneous transformation matrix T; success=False indicates that all trials for inverse kinematics failed, leading to q=None
 \item[--]\textcolor{steelblue}{\bf author}: Peter Manzl, Johannes Gerstmayr
-\item[--]\textcolor{steelblue}{\bf notes}: still under development; errors in orientations of solution may occure. works similar to ikine\_LM function of the robotics toolbox from peter corke
+\item[--]\textcolor{steelblue}{\bf notes}: still under development; errors in orientations of solution may occure. works similar to ikine_LM function of the robotics toolbox from peter corke
 \vspace{12pt}\end{itemize}
 %
 %
@@ -9232,7 +9232,7 @@ by inheritance with class MyClass(ROSInterface)
 \begin{itemize}[leftmargin=1.2cm]
 \setlength{\itemindent}{-0.7cm}
 \item[]find msgs types here
-\item[]{\it http}://docs.ros.org/en/melodic/api/std\_msgs/html/index-msg.html
+\item[]{\it http}://docs.ros.org/en/melodic/api/std_msgs/html/index-msg.html
 \end{itemize}
 \item[--]\textcolor{steelblue}{\bf example}: \vspace{-12pt}\ei\begin{lstlisting}[language=Python, xleftmargin=36pt]
   publisher for poses, pubType = PoseStamped,
@@ -10511,7 +10511,7 @@ by inheritance with class MyClass(ROSInterface)
 \setlength{\itemindent}{-0.7cm}
 \item[]Interface to roboticstoolbox (RTB) for loading internal robot models. Function retrieves internal model available from roboticstoolbox.models.URDF, usually stored in
 \item[]site-packages/rtbdata/xacro/. See the github project of roboticstoolbox-python of P. Corke and J. Haviland for more details.
-\item[]The model name is the short name used internally in the RTB. For available names, see the list roboticstoolbox.models.URDF.\_\_all\_\_ !
+\item[]The model name is the short name used internally in the RTB. For available names, see the list roboticstoolbox.models.URDF.__all__ !
 \end{itemize}
 \item[--]
 {\bf input}: \vspace{-6pt}

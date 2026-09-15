@@ -133,11 +133,11 @@ def SolveStatic(mbs, simulationSettings = None,
                 showCausingItems = True,
                 autoAssemble = True,
                 ):
-    r"""solves the static mbs problem using simulationSettings; check theDoc.pdf for MainSolverStatic for further details of the static solver; this function is also available in exudyn (using exudyn.SolveStatic(...))
+    """solves the static mbs problem using simulationSettings; check theDoc.pdf for MainSolverStatic for further details of the static solver; this function is also available in exudyn (using exudyn.SolveStatic(...))
 
     Args:
         mbs: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
-        simulationSettings: specific simulation settings out of exu.SimulationSettings(), as described in \refSection{sec:SolutionSettings}; use options for newton, discontinuous settings, etc., from staticSolver sub-items
+        simulationSettings: specific simulation settings out of exu.SimulationSettings(), as described in [Section](#sec:SolutionSettings); use options for newton, discontinuous settings, etc., from staticSolver sub-items
         updateInitialValues: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation
         storeSolver: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
         showHints: show additional hints, if solver fails
@@ -145,7 +145,7 @@ def SolveStatic(mbs, simulationSettings = None,
         autoAssemble: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 
     Returns:
-        :bool: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
+        :bool: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf [Section](#sec:solverSubstructures) and the items described in [Section](#sec:MainSolverStatic))
 
     Example:
         import exudyn as exu
@@ -206,11 +206,11 @@ def SolveDynamic(mbs,
                 showCausingItems = True,
                 autoAssemble = True,
                 ):
-    r"""solves the dynamic mbs problem using simulationSettings and solver type; check theDoc.pdf for MainSolverImplicitSecondOrder for further details of the dynamic solver; this function is also available in exudyn (using exudyn.SolveDynamic(...))
+    """solves the dynamic mbs problem using simulationSettings and solver type; check theDoc.pdf for MainSolverImplicitSecondOrder for further details of the dynamic solver; this function is also available in exudyn (using exudyn.SolveDynamic(...))
 
     Args:
         mbs: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
-        simulationSettings: specific simulation settings out of exu.SimulationSettings(), as described in \refSection{sec:SolutionSettings}; use options for newton, discontinuous settings, etc., from timeIntegration; therein, implicit second order solvers use settings from generalizedAlpha and explict solvers from explicitIntegration; be careful with settings, as the influence accuracy (step size!), convergence and performance (see special \refSection{sec:overview:basics:speedup})
+        simulationSettings: specific simulation settings out of exu.SimulationSettings(), as described in [Section](#sec:SolutionSettings); use options for newton, discontinuous settings, etc., from timeIntegration; therein, implicit second order solvers use settings from generalizedAlpha and explict solvers from explicitIntegration; be careful with settings, as the influence accuracy (step size!), convergence and performance (see special [Section](#sec:overview:basics:speedup))
         solverType: use exudyn.DynamicSolverType to set specific solver (default=generalized alpha)
         updateInitialValues: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation
         storeSolver: if True, the staticSolver object is stored in the mbs.sys dictionary as mbs.sys['staticSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
@@ -219,7 +219,7 @@ def SolveDynamic(mbs,
         autoAssemble: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 
     Returns:
-        :bool: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
+        :bool: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf [Section](#sec:solverSubstructures) and the items described in [Section](#sec:MainSolverStatic))
 
     Example:
         import exudyn as exu
@@ -501,7 +501,7 @@ def ComputeODE2Eigenvalues(mbs,
                            ignoreAlgebraicEquations=False, singularValuesTolerance=1e-12,
                            autoAssemble = True,
                            ):
-    r"""compute eigenvalues for unconstrained ODE2 part of mbs, which represent the square of the eigenfrequencies (in radiant) of the undamped system; the computation may include constraints in case that ignoreAlgebraicEquations=False (however, this currently does not generally work with non-holonomic systems); for algebraic constraints, however, a dense singular value decomposition of the constraint jacobian is used for the nullspace projection; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState, SetSystemState, see \refSection{sec:mbs:systemData}); note that mass and stiffness matrices are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.
+    r"""compute eigenvalues for unconstrained ODE2 part of mbs, which represent the square of the eigenfrequencies (in radiant) of the undamped system; the computation may include constraints in case that ignoreAlgebraicEquations=False (however, this currently does not generally work with non-holonomic systems); for algebraic constraints, however, a dense singular value decomposition of the constraint jacobian is used for the nullspace projection; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState, SetSystemState, see [Section](#sec:mbs:systemData)); note that mass and stiffness matrices are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.
 
     Args:
         mbs: the MainSystem containing the assembled system
@@ -744,7 +744,7 @@ def ComputeSystemDegreeOfFreedom(mbs,
                 threshold = 1e-12, verbose=False, useSVD=False,
                 autoAssemble = True,
                 ):
-    r"""compute system DOF numerically, considering Gr{\"u}bler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True)
+    """compute system DOF numerically, considering Grübler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True)
 
     Args:
         mbs: MainSystem for which DOF shall be computed

@@ -192,10 +192,10 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
         majorTicksX: number of major ticks on x-axis; default: 10
         majorTicksY: number of major ticks on y-axis; default: 10
         colorCodeOffset: int offset for color code, color codes going from 0 to 27 (see PlotLineCode(...)); automatic line/color codes are used if no colors and lineStyles are used
-        colors: color is automatically selected from colorCodeOffset if colors=[]; otherwise chose from 'b', 'g', 'r', 'c', 'm', 'y', 'k' and many other colors see https://matplotlib.org/stable/gallery/color/named\_colors.html
+        colors: color is automatically selected from colorCodeOffset if colors=[]; otherwise chose from 'b', 'g', 'r', 'c', 'm', 'y', 'k' and many other colors see https://matplotlib.org/stable/gallery/color/named_colors.html
         lineStyles: line style is automatically selected from colorCodeOffset if lineStyles=[]; otherwise define for all lines with string or with list of strings, chosing from '-', '--', '-.', ':', or ''
         lineWidths: float to define line width by float (default=1); either use single float for all sensors or list of floats with length >= number of sensors
-        markerStyles: if different from [], marker styles are defined as list of marker style strings or single string for one sensor; chose from '.', 'o', 'x', '+' ... check listMarkerStylesFilled and listMarkerStyles in exudyn.plot and see https://matplotlib.org/stable/api/markers\_api.html ; ADD a space to markers to make them empty (transparent), e.g. 'o ' will create an empty circle
+        markerStyles: if different from [], marker styles are defined as list of marker style strings or single string for one sensor; chose from '.', 'o', 'x', '+' ... check listMarkerStylesFilled and listMarkerStyles in exudyn.plot and see https://matplotlib.org/stable/api/markers_api.html ; ADD a space to markers to make them empty (transparent), e.g. 'o ' will create an empty circle
         markerSizes: float to define marker size by float (default=6); either use single float for all sensors or list of floats with length >= number of sensors
         markerDensity: if int, it defines approx. the total number of markers used along each graph; if float, this defines the distance of markers relative to the diagonal of the plot (default=0.08); if None, it adds a marker to every data point if marker style is specified for sensor
         newFigure: if True, a new matplotlib.pyplot figure is created; otherwise, existing figures are overwritten
@@ -209,7 +209,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
               minorTicksYon: if True, turn minor ticks for y-axis on
               logScaleX: use log scale for x-axis
               logScaleY: use log scale for y-axis
-              fileCommentChar: if exists, defines the comment character in files (\#, %, ...)
+              fileCommentChar: if exists, defines the comment character in files (#, %, ...)
               fileDelimiterChar: if exists, defines the character indicating the columns for data (',', ' ', ';', ...)
 
     Returns:

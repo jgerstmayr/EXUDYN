@@ -27,7 +27,7 @@ g = 9.81 #gravity constant
 
 
 def ClearWorkspace():
-    r"""clear all workspace variables except for system variables with '\_' at beginning,
+    r"""clear all workspace variables except for system variables with '_' at beginning,
     'func' or 'module' in name; it also deletes all items in exudyn.sys and exudyn.variables,
     EXCEPT from exudyn.sys['renderState'] for pertaining the previous view of the renderer
 
@@ -190,10 +190,10 @@ def VMult(v0, v1):
     return r
 
 def ScalarMult(scalar, v):
-    r"""multiplication vectors with scalar: result = scalar * v
+    """multiplication vectors with scalar: result = scalar * v
 
     Args:
-        value {\it scalar} and vector {\it v} as list or in numpy format
+        value *scalar* and vector *v* as list or in numpy format
 
     Returns:
         scalar multiplication of all components of v: [scalar*v[0], scalar*v[1], ...]
@@ -264,11 +264,11 @@ gaussIntegrationWeights=[[2],
                          ]
 
 def GaussIntegrate(functionOfX, integrationOrder, a, b):
-    r"""compute numerical integration of functionOfX in interval [a,b] using Gaussian integration
+    """compute numerical integration of functionOfX in interval [a,b] using Gaussian integration
 
     Args:
         functionOfX: scalar, vector or matrix-valued function with scalar argument (X or other variable)
-        integrationOrder: odd number in \{1,3,5,7,9\}; currently maximum order is 9
+        integrationOrder: odd number in {1,3,5,7,9}; currently maximum order is 9
         a: integration range start
         b: integration range end
 
@@ -304,11 +304,11 @@ lobattoIntegrationWeights=[[ 1., 1.],
                            [ 1./6., 5./6., 5./6., 1./6.]]
 
 def LobattoIntegrate(functionOfX, integrationOrder, a, b):
-    r"""compute numerical integration of functionOfX in interval [a,b] using Lobatto integration
+    """compute numerical integration of functionOfX in interval [a,b] using Lobatto integration
 
     Args:
         functionOfX: scalar, vector or matrix-valued function with scalar argument (X or other variable)
-        integrationOrder: odd number in \{1,3,5\}; currently maximum order is 5
+        integrationOrder: odd number in {1,3,5}; currently maximum order is 5
         a: integration range start
         b: integration range end
 

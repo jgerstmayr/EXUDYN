@@ -222,13 +222,13 @@ def Manipulator3RSimple():
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @docmeta(author='Martin Sereinig')
 def ManipulatorPANDA():
-    r"""generate Franka Emika Panda manipulator as myRobot dictionary, settings are done in function
+    """generate Franka Emika Panda manipulator as myRobot dictionary, settings are done in function
 
     Returns:
         myRobot dictionary
 
     Note:
-        all Parameter according to Gaz et. al \cite{GazDeLuca2019}
+        all Parameter according to Gaz et. al [GazDeLuca2019]
         DH-parameters(std): [theta, d, a, alpha], according to P. Corke
         Standard DH Parameters, masses, inertias and com according P.Corke and Gaz et. al (they working with modified DH parameter)
         changes to standard DH Parameter checked with P.Corke toolbox

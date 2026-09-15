@@ -168,7 +168,7 @@ def CSRtoScipySparseCSR(sparseMatrixCSR):
         return sparseMatrixCSR
 
 def SparseTripletsToScipySparseCSR(sparseTriplets):
-    r"""convert list of sparse triplets (or numpy array with one sparse triplet per row) into scipy.sparse csr\_matrix
+    """convert list of sparse triplets (or numpy array with one sparse triplet per row) into scipy.sparse csr_matrix
     """
     if IsListOrArray(sparseTriplets):
         if type(sparseTriplets) == list:
@@ -1719,7 +1719,7 @@ class ObjectFFRFreducedOrderInterface:
 
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def UFmassFFRFreducedOrder(self, exu, mbs, t, qReduced, qReduced_t):
-        r"""CMS mass matrix user function; qReduced and qReduced\_t contain the coordiantes of the rigid body node and the modal coordinates in one vector!
+        """CMS mass matrix user function; qReduced and qReduced_t contain the coordiantes of the rigid body node and the modal coordinates in one vector!
         """
 
         Avec = mbs.GetNodeOutput(self.nRigidBody,  exu.OutputVariableType.RotationMatrix)
@@ -1771,7 +1771,7 @@ class ObjectFFRFreducedOrderInterface:
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     def UFforceFFRFreducedOrder(self, exu, mbs, t, qReduced, qReduced_t):
-        r"""CMS force matrix user function; qReduced and qReduced\_t contain the coordiantes of the rigid body node and the modal coordinates in one vector!
+        """CMS force matrix user function; qReduced and qReduced_t contain the coordiantes of the rigid body node and the modal coordinates in one vector!
         """
         force = np.zeros(self.nODE2FFRFreduced)
 
@@ -1874,10 +1874,10 @@ class ObjectFFRFreducedOrderInterface:
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class HCBstaticModeSelection(Enum):
-    r"""helper calss for function ComputeHurtyCraigBamptonModes, declaring some computation options. It offers the following options:\\
-    - allBoundaryNodes:     compute a single static mode for every boundary coordinate\\
-    - RBE2:                 static modes only for rigid body motion at boundary nodes; using rigid boundary surfaces (additional stiffening)\\
-    - RBE3:                 static modes only for rigid body motion at boundary nodes; averaged rigid body motion at boundary surfaces (leads to deformation at boundaries)\\
+    """helper calss for function ComputeHurtyCraigBamptonModes, declaring some computation options. It offers the following options:
+    - allBoundaryNodes:     compute a single static mode for every boundary coordinate
+    - RBE2:                 static modes only for rigid body motion at boundary nodes; using rigid boundary surfaces (additional stiffening)
+    - RBE3:                 static modes only for rigid body motion at boundary nodes; averaged rigid body motion at boundary surfaces (leads to deformation at boundaries)
     - noStaticModes:        do not compute static modes, only eigen modes (not recommended; usually only for tests)
     """
     allBoundaryNodes = 1    #compute a single static mode for every boundary coordinate; if this is used, 6 constraints need to be added to the ObjectFFRFreducedOrder, otherwise there is additional rigid body motion!
@@ -1890,14 +1890,14 @@ class HCBstaticModeSelection(Enum):
 #+++++   FEMinterface - finite element interface class   ++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 class FEMinterface:
-    r"""general interface to different FEM / mesh imports and export to EXUDYN functions
-    use this class to import meshes from different meshing or FEM programs (NETGEN/NGsolve \cite{NGsolve2022}, ABAQUS, ANSYS, ..) and store it in a unique format
+    """general interface to different FEM / mesh imports and export to EXUDYN functions
+    use this class to import meshes from different meshing or FEM programs (NETGEN/NGsolve [NGsolve2022], ABAQUS, ANSYS, ..) and store it in a unique format
     do mesh operations, compute eigenmodes and reduced basis, etc.
     load/store the data efficiently with LoadFromFile(...), SaveToFile(...)  if import functions are slow
     export to EXUDYN objects
     """
     def __init__(self):
-        r"""initalize all data of the FEMinterface by, e.g., \texttt{fem = FEMinterface()}
+        """initalize all data of the FEMinterface by, e.g., `fem = FEMinterface()`
 
         Example:
             #**** this is not an example, just a description for internal variables ****
@@ -2388,10 +2388,10 @@ class FEMinterface:
         return list(boundaryNodes)  #convert to list before returning
 
     def CreateNGsolveBoundaryNodeSets(self, mesh, boundaryNamesList=None, warnNodeSets=True):
-        r"""create node sets for given (or all) boundaries in NGsolve; node sets are added to existing node sets
+        """create node sets for given (or all) boundaries in NGsolve; node sets are added to existing node sets
 
         Args:
-            mesh: a previously created \texttt{ngs.mesh} (NGsolve mesh, see examples)
+            mesh: a previously created `ngs.mesh` (NGsolve mesh, see examples)
             boundaryNamesList: a List of boundary names used to define mesh boundaries or None; if given, node sets are only created for the given boundary names
 
         Returns:
@@ -2436,14 +2436,14 @@ class FEMinterface:
 
         return nodeSets
 
-    @docmeta(author='Johannes Gerstmayr, Joachim Sch\\"oberl')
+    @docmeta(author='Johannes Gerstmayr, Joachim Schöberl')
     def ImportMeshFromNGsolve(self, mesh, density=None, youngsModulus=None, poissonsRatio=None, 
                               materials = None, createBoundaryNodeSets = True, boundaryNamesList=None,
                               verbose = False, meshOrder = 1, **kwargs):
-        r"""import mesh from NETGEN/NGsolve and setup mechanical problem
+        """import mesh from NETGEN/NGsolve and setup mechanical problem
 
         Args:
-            mesh: a previously created \texttt{ngs.mesh} (NGsolve mesh, see examples)
+            mesh: a previously created `ngs.mesh` (NGsolve mesh, see examples)
             youngsModulus: In case of single material: Young's modulus used for mechanical model
             poissonsRatio: In case of single material: Poisson's ratio used for mechanical model
             density: In case of single material: density used for mechanical model
@@ -2457,8 +2457,8 @@ class FEMinterface:
             creates according nodes, elements, in FEM and returns [bfM, bfK, fes] which are the (mass matrix M, stiffness matrix K) bilinear forms and the finite element space fes
 
         Note:
-            The interface to NETGEN/NGsolve has been created together with Joachim Sch\"oberl, main developer
-            of NETGEN/NGsolve \cite{Schoeberl1997,NGsolve2014}; Thank's a lot!
+            The interface to NETGEN/NGsolve has been created together with Joachim Schöberl, main developer
+            of NETGEN/NGsolve [Schoeberl1997,NGsolve2014]; Thank's a lot!
             download NGsolve at: https://ngsolve.org/
             NGsolve needs Python 3.7 (64bit) ==> use according EXUDYN version!
             note that node/element indices in the NGsolve mesh are 1-based and need to be converted to 0-base!
@@ -2636,7 +2636,7 @@ class FEMinterface:
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    @docmeta(author='Johannes Gerstmayr, Joachim Sch\\"oberl')
+    @docmeta(author='Johannes Gerstmayr, Joachim Schöberl')
     def ComputeEigenmodesNGsolve(self, bfM, bfK,
                                  nModes, 
                                  maxEigensolveIterations = 40,
@@ -2680,14 +2680,14 @@ class FEMinterface:
         if verbose: print ("eigenfrequencies (Hz) =",(0.5/np.pi)*np.sqrt(np.abs(res[0][excludeRigidBodyModes:excludeRigidBodyModes + nModes])))
 
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
-    @docmeta(author='Johannes Gerstmayr, Joachim Sch\\"oberl')
+    @docmeta(author='Johannes Gerstmayr, Joachim Schöberl')
     def ComputeHurtyCraigBamptonModesNGsolve(self,
                                       bfM, bfK,
                                       boundaryNodesList,
                                       nEigenModes, 
                                       maxEigensolveIterations = 40,
                                       verbose = False):
-        r"""compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part \refSection{sec:theory:CMS}. This function uses internal computational functionality of NGsolve and is often much faster than the scipy variant
+        """compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part [Section](#sec:theory:CMS). This function uses internal computational functionality of NGsolve and is often much faster than the scipy variant
 
         Args:
             bfM: bilinearform for mass matrix as retured in ImportMeshFromNGsolve(...)
@@ -2827,7 +2827,7 @@ class FEMinterface:
 
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    @docmeta(author='Johannes Gerstmayr, Joachim Sch\\"oberl')
+    @docmeta(author='Johannes Gerstmayr, Joachim Schöberl')
     def ComputePostProcessingModesNGsolve(self, fes, material = 0, 
                                           outputVariableType = 'OutputVariableType.StressLocal', 
                                           verbose = False):
@@ -3422,15 +3422,15 @@ class FEMinterface:
         return [oGenericODE2, allNodeList]
         
     #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    @docmeta(author='Johannes Gerstmayr, Joachim Sch\\"oberl')
+    @docmeta(author='Johannes Gerstmayr, Joachim Schöberl')
     def CreateNonlinearFEMObjectGenericODE2NGsolve(self, mbs, mesh, 
                                                    density, youngsModulus, poissonsRatio, 
                                                    meshOrder=1, color=[0.9,0.4,0.4,1.]):
-        r"""create GenericODE2 object fully nonlinear FEM model using NGsolve; uses always the sparse matrix mode, independent of the solver settings; this model can be directly used inside the multibody system as a static or dynamic nonlinear FEM subsystem undergoing large deformations; computation is several magnitudes slower than ObjectFFRFreducedOrder
+        """create GenericODE2 object fully nonlinear FEM model using NGsolve; uses always the sparse matrix mode, independent of the solver settings; this model can be directly used inside the multibody system as a static or dynamic nonlinear FEM subsystem undergoing large deformations; computation is several magnitudes slower than ObjectFFRFreducedOrder
 
         Args:
             mbs: multibody system to which the GenericODE2 is added
-            mesh: a previously created \texttt{ngs.mesh} (NGsolve mesh, see examples)
+            mesh: a previously created `ngs.mesh` (NGsolve mesh, see examples)
             youngsModulus: Young's modulus used for mechanical model
             poissonsRatio: Poisson's ratio used for mechanical model
             density: density used for mechanical model
@@ -3440,8 +3440,8 @@ class FEMinterface:
             return list [oGenericODE2, nodeList] containing object number of GenericODE2 as well as the list of mbs node numbers of all NodePoint nodes
 
         Note:
-            The interface to NETGEN/NGsolve has been created together with Joachim Sch\"oberl, main developer
-            of NETGEN/NGsolve \cite{Schoeberl1997,NGsolve2014}; Thank's a lot!
+            The interface to NETGEN/NGsolve has been created together with Joachim Schöberl, main developer
+            of NETGEN/NGsolve [Schoeberl1997,NGsolve2014]; Thank's a lot!
             download NGsolve at: https://ngsolve.org/
             NGsolve needs Python 3.7 (64bit) ==> use according EXUDYN version!
             note that node/element indices in the NGsolve mesh are 1-based and need to be converted to 0-base!
@@ -3685,7 +3685,7 @@ class FEMinterface:
                                   numberOfRigidBodyModes = None,
                                   verboseMode = False,
                                   timerTreshold = 20000):
-        r"""compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part \refSection{sec:theory:CMS}. Note that this function may need significant time, depending on your hardware, but 50.000 nodes will require approx. 1-2 minutes and more nodes typically raise time more than linearly.
+        """compute static  and eigen modes based on Hurty-Craig-Bampton, for details see theory part [Section](#sec:theory:CMS). Note that this function may need significant time, depending on your hardware, but 50.000 nodes will require approx. 1-2 minutes and more nodes typically raise time more than linearly.
 
         Args:
             boundaryNodesList: [nodeList0, nodeList1, ...] a list of node lists, each of them representing a set of 'Position' nodes for which a rigid body interface (displacement/rotation and force/torque) is created; NOTE THAT boundary nodes may not overlap between the different node lists (no duplicated node indices!)
@@ -4168,12 +4168,12 @@ class FEMinterface:
     def ComputePostProcessingModes(self, material=0, 
                                    outputVariableType='OutputVariableType.StressLocal',
                                    numberOfThreads=1):
-        r"""compute special stress or strain modes in order to enable visualization of stresses and strains in ObjectFFRFreducedOrder;
+        """compute special stress or strain modes in order to enable visualization of stresses and strains in ObjectFFRFreducedOrder;
 
         Args:
             material: specify material properties for computation of stresses, using a material class, e.g. material = KirchhoffMaterial(Emodulus, nu, rho); not needed for strains
             outputVariableType: specify either exudyn.OutputVariableType.StressLocal or exudyn.OutputVariableType.StrainLocal as the desired output variables
-            numberOfThreads: if numberOfThreads=1, it uses single threaded computation; if numberOfThreads>1, it uses the multiprocessing pools functionality, which requires that all code in your main file must be encapsulated within an if clause "if \_\_name\_\_ == '\_\_main\_\_':", see examples; if numberOfThreads==-1, it uses all threads/CPUs available
+            numberOfThreads: if numberOfThreads=1, it uses single threaded computation; if numberOfThreads>1, it uses the multiprocessing pools functionality, which requires that all code in your main file must be encapsulated within an if clause "if __name__ == '__main__':", see examples; if numberOfThreads==-1, it uses all threads/CPUs available
 
         Returns:
             post processing modes are stored in FEMinterface in local variable postProcessingModes as a dictionary, where 'matrix' represents the modes and 'outputVariableType' stores the type of mode as a OutputVariableType

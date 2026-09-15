@@ -290,7 +290,7 @@ def ShrinkMeshNormalToSurface(points, triangles, distance):
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def ComputeTriangularMesh(vertices, segments):
-    r"""helper function to compute triangular mesh from list of vertices (=points) and segments;
+    """helper function to compute triangular mesh from list of vertices (=points) and segments;
     computes triangular meshes for non-convex case. In order to make it efficient, it first computes
     neighbors and then defines triangles at segments to be inside/outside. Finally neighboring
     relations are used to define all triangles inside/outside
@@ -299,7 +299,7 @@ def ComputeTriangularMesh(vertices, segments):
     Args:
         vertices: list of pairs of coordinates of vertices in mesh [x,y]
         segments: list of segments, which are pairs of node numbers [i,j], defining the boundary of the mesh;
-                  the ordering of the nodes is such that left triangle = inside, right triangle = outside, compare example with segment [V1,V2]:\\
+                  the ordering of the nodes is such that left triangle = inside, right triangle = outside, compare example with segment [V1,V2]:
            inside
         V1         V2
         O----------O

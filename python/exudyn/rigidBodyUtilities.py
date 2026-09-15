@@ -296,7 +296,7 @@ def AngularVelocity2EulerParameters_t(angularVelocity, eulerParameters):
 #            ROTATION VECTOR
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def RotationVector2RotationMatrix(rotationVector):
-    r"""rotaton matrix from rotation vector, see appendix B in \cite{Simo1988}
+    r"""rotaton matrix from rotation vector, see appendix B in [Simo1988]
 
     Args:
         3D rotation vector as list or np.array
@@ -412,7 +412,7 @@ def RotationVector2GLocal(eulerParameters):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 def RotXYZ2RotationMatrix(rot):
-    r"""compute rotation matrix from consecutive xyz \acp{Rot} (Tait-Bryan angles); A=Ax*Ay*Az; rot=[rotX, rotY, rotZ]
+    """compute rotation matrix from consecutive xyz [Rots](#Rot) (Tait-Bryan angles); A=Ax*Ay*Az; rot=[rotX, rotY, rotZ]
 
     Args:
         3D vector of Tait-Bryan rotation parameters [X,Y,Z] in radiant
@@ -432,7 +432,7 @@ def RotXYZ2RotationMatrix(rot):
                      [-c0*s1*c2 + s0*s2, c0*s1*s2 + s0*c2, c0*c1 ]]);
 
 def RotationMatrix2RotXYZ(rotationMatrix):
-    r"""convert rotation matrix to xyz Euler angles (Tait-Bryan angles);  A=Ax*Ay*Az;
+    """convert rotation matrix to xyz Euler angles (Tait-Bryan angles);  A=Ax*Ay*Az;
 
     Args:
         3x3 rotation matrix as list of lists or np.array
@@ -442,8 +442,8 @@ def RotationMatrix2RotXYZ(rotationMatrix):
 
     Note:
         due to gimbal lock / singularity at rot[1] = pi/2, -pi/2, ... the reconstruction of
-        \texttt{RotationMatrix2RotXYZ( RotXYZ2RotationMatrix(rot) )} may fail, but
-        \texttt{RotXYZ2RotationMatrix( RotationMatrix2RotXYZ( RotXYZ2RotationMatrix(rot) ) )} works always
+        `RotationMatrix2RotXYZ( RotXYZ2RotationMatrix(rot) )` may fail, but
+        `RotXYZ2RotationMatrix( RotationMatrix2RotXYZ( RotXYZ2RotationMatrix(rot) ) )` works always
     """
     R=np.array(rotationMatrix)
     #rot=np.array([0,0,0])
@@ -498,7 +498,7 @@ def RotXYZ2G_t(rot, rot_t):
         rot_t: 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s
 
     Returns:
-        3x3 matrix G\_t as np.array
+        3x3 matrix G_t as np.array
     """
     c0 = cos(rot[0])
     s0 = sin(rot[0])
@@ -536,7 +536,7 @@ def RotXYZ2GLocal_t(rot, rot_t):
         rot_t: 3D vector of time derivative of Tait-Bryan rotation parameters [X,Y,Z] in radiant/s
 
     Returns:
-        3x3 matrix GLocal\_t as np.array
+        3x3 matrix GLocal_t as np.array
     """
     c1 = cos(rot[1])
     s1 = sin(rot[1])
@@ -576,7 +576,7 @@ def AngularVelocity2RotXYZ_t(angularVelocity, rotation):
   
     
 def RotXYZ2EulerParameters(alpha):
-    r"""compute four Euler parameters from given RotXYZ angles, see \cite{Henderson1977}
+    """compute four Euler parameters from given RotXYZ angles, see [Henderson1977]
 
     Args:
         alpha: 3D vector as np.array containing RotXYZ angles
@@ -712,7 +712,7 @@ def RotationMatrix2D(angleRad):
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #functions for homogeneous transformations (HT)
 def HomogeneousTransformation(A, r):
-    r"""compute \ac{HT} matrix from rotation matrix A and translation vector r
+    """compute [HT](#HT) matrix from rotation matrix A and translation vector r
     """
     T = np.zeros((4,4))
     T[0:3,0:3] = A
@@ -723,72 +723,72 @@ def HomogeneousTransformation(A, r):
 HT = HomogeneousTransformation #shortcut
 
 def HTtranslate(r):
-    r"""\ac{HT} for translation with vector r
+    """[HT](#HT) for translation with vector r
     """
     T = np.eye(4)
     T[0:3,3] = r
     return T
 
 def HTtranslateX(x):
-    r"""\ac{HT} for translation along x axis with value x
+    """[HT](#HT) for translation along x axis with value x
     """
     T = np.eye(4)
     T[0,3] = x
     return T
 
 def HTtranslateY(y):
-    r"""\ac{HT} for translation along y axis with value y
+    """[HT](#HT) for translation along y axis with value y
     """
     T = np.eye(4)
     T[1,3] = y
     return T
 
 def HTtranslateZ(z):
-    r"""\ac{HT} for translation along z axis with value z
+    """[HT](#HT) for translation along z axis with value z
     """
     T = np.eye(4)
     T[2,3] = z
     return T
 
 def HT0():
-    r"""identity \ac{HT}:
+    """identity [HT](#HT):
     """
     return np.eye(4)
 
 def HTrotateX(angle):
-    r"""\ac{HT} for rotation around axis X (first axis)
+    """[HT](#HT) for rotation around axis X (first axis)
     """
     T = np.eye(4)
     T[0:3,0:3] = RotationMatrixX(angle)
     return T
     
 def HTrotateY(angle):
-    r"""\ac{HT} for rotation around axis X (first axis)
+    """[HT](#HT) for rotation around axis X (first axis)
     """
     T = np.eye(4)
     T[0:3,0:3] = RotationMatrixY(angle)
     return T
     
 def HTrotateZ(angle):
-    r"""\ac{HT} for rotation around axis X (first axis)
+    """[HT](#HT) for rotation around axis X (first axis)
     """
     T = np.eye(4)
     T[0:3,0:3] = RotationMatrixZ(angle)
     return T
 
 def HT2translation(T):
-    r"""return translation part of \ac{HT}
+    """return translation part of [HT](#HT)
     """
     return T[0:3,3]
 
 def HT2rotationMatrix(T):
-    r"""return rotation matrix of \ac{HT}
+    """return rotation matrix of [HT](#HT)
     """
     return T[0:3,0:3]
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def InverseHT(T):
-    r"""return inverse \ac{HT} such that inv(T)*T = np.eye(4)
+    """return inverse [HT](#HT) such that inv(T)*T = np.eye(4)
     """
     Tinv = np.eye(4)
     Ainv = T[0:3,0:3].T #inverse rotation part
@@ -810,7 +810,7 @@ def InverseHT(T):
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #functions for 6x6 coordinate transformation matrices (\ac{T66}), see Featherstone / Handbook of robotics \cite{Siciliano2016}
 def RotationX2T66(angle):
-    r"""compute 6x6 coordinate transformation matrix for rotation around X axis; output: first 3 components for rotation, second 3 components for translation! See Featherstone / Handbook of robotics \cite{Siciliano2016}
+    """compute 6x6 coordinate transformation matrix for rotation around X axis; output: first 3 components for rotation, second 3 components for translation! See Featherstone / Handbook of robotics [Siciliano2016]
     """
     c = cos(angle);
     s = sin(angle);
@@ -876,7 +876,7 @@ def TranslationZ2T66(translation):
     return Translation2T66([0,0,translation])
 
 def T66toRotationTranslation(T66):
-    r"""convert 6x6 coordinate transformation (Pl\"ucker transform) into rotation and translation
+    """convert 6x6 coordinate transformation (Plücker transform) into rotation and translation
 
     Args:
         T66 given as  6x6 numpy array
@@ -889,7 +889,7 @@ def T66toRotationTranslation(T66):
     return [A, v] 
 
 def InverseT66toRotationTranslation(T66):
-    r"""convert inverse 6x6 coordinate transformation (Pl\"ucker transform) into rotation and translation
+    """convert inverse 6x6 coordinate transformation (Plücker transform) into rotation and translation
 
     Args:
         inverse T66 given as  6x6 numpy array
@@ -902,7 +902,7 @@ def InverseT66toRotationTranslation(T66):
     return [A, v] 
 
 def RotationTranslation2T66(A, v):
-    r"""convert rotation and translation into 6x6 coordinate transformation (Pl\"ucker transform)
+    """convert rotation and translation into 6x6 coordinate transformation (Plücker transform)
 
     Args:
         A: 3x3 rotation matrix A
@@ -916,7 +916,7 @@ def RotationTranslation2T66(A, v):
         [Skew(v)@A, A]]) 
 
 def RotationTranslation2T66Inverse(A, v):
-    r"""convert rotation and translation into INVERSE 6x6 coordinate transformation (Pl\"ucker transform)
+    """convert rotation and translation into INVERSE 6x6 coordinate transformation (Plücker transform)
 
     Args:
         A: 3x3 rotation matrix A
@@ -930,10 +930,10 @@ def RotationTranslation2T66Inverse(A, v):
         [-A.T@Skew(v), A.T]]) 
 
 def T66Inverse(T66):
-    r"""compute inverse of 6x6 coordinate transformation (Pl\"ucker transform)
+    """compute inverse of 6x6 coordinate transformation (Plücker transform)
 
     Args:
-        T66: 6x6 coordinate transformation (Pl\"ucker transform)
+        T66: 6x6 coordinate transformation (Plücker transform)
 
     Returns:
         return inverse 6x6 transformation matrix 'T66'
@@ -956,7 +956,7 @@ def T66Inverse(T66):
 #         [A.T@Skew(A@v), A.T]])
 
 def T66toHT(T66):
-    r"""convert 6x6 coordinate transformation (Pl\"ucker transform) into 4x4 homogeneous transformation; NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
+    """convert 6x6 coordinate transformation (Plücker transform) into 4x4 homogeneous transformation; NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
 
     Args:
         T66 given as 6x6 numpy array
@@ -972,7 +972,7 @@ def T66toHT(T66):
     return T
 
 def HT2T66Inverse(T):
-    r"""convert 4x4 homogeneous transformation into 6x6 coordinate transformation (Pl\"ucker transform); NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
+    """convert 4x4 homogeneous transformation into 6x6 coordinate transformation (Plücker transform); NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
 
     Args:
         T: 4x4 homogeneous transformation (numpy array)
@@ -1054,11 +1054,11 @@ class RigidBodyInertia:
         i2 = i1.Translated([1,0,0])
     """
     def __init__(self, mass=0, inertiaTensor=np.zeros([3,3]), com=np.zeros(3), inertiaTensorAtCOM = False):
-        r"""initialize RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. reference point!!!) and center of mass com
+        """initialize RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. reference point!!!) and center of mass com
 
         Args:
             mass: mass of rigid body (dimensions need to be consistent, should be in SI-units)
-            inertiaTensor: tensor given w.r.t.\ reference point, NOT w.r.t.\ center of mass!
+            inertiaTensor: tensor given w.r.t. reference point, NOT w.r.t. center of mass!
             com: center of mass relative to reference point, in same coordinate system as inertiaTensor
             inertiaTensorAtCOM: bool flag: if False (default), the inertiaTensor has to be provided w.r.t. the reference point; if True, it has to be provided at the center of mass
         """
@@ -1120,11 +1120,11 @@ class RigidBodyInertia:
         return self
         
     def SetWithCOMinertia(self, mass, inertiaTensorCOM, com):
-        r"""set RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t.\ com) and center of mass com
+        """set RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. com) and center of mass com
 
         Args:
             mass: mass of rigid body (dimensions need to be consistent, should be in SI-units)
-            inertiaTensorCOM: tensor given w.r.t.\ reference point, NOT w.r.t.\ center of mass!
+            inertiaTensorCOM: tensor given w.r.t. reference point, NOT w.r.t. center of mass!
             com: center of mass relative to reference point, in same coordinate system as inertiaTensor
         """
         if np.array(inertiaTensorCOM).shape != (3,3): #shape is a tuple

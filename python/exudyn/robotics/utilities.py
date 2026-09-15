@@ -81,9 +81,9 @@ def AddLidar(mbs, generalContactIndex,
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def GetRoboticsToolboxInternalModel(modelName='', ignoreURDFerrors=True):
-    r"""Interface to roboticstoolbox (RTB) for loading internal robot models. Function retrieves internal model available from roboticstoolbox.models.URDF, usually stored in
+    """Interface to roboticstoolbox (RTB) for loading internal robot models. Function retrieves internal model available from roboticstoolbox.models.URDF, usually stored in
     site-packages/rtbdata/xacro/. See the github project of roboticstoolbox-python of P. Corke and J. Haviland for more details.
-    The model name is the short name used internally in the RTB. For available names, see the list roboticstoolbox.models.URDF.\_\_all\_\_ !
+    The model name is the short name used internally in the RTB. For available names, see the list roboticstoolbox.models.URDF.__all__ !
 
     Args:
         modelName: string for model, such as UR5, Puma560, Panda or LBR
