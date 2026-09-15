@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,15 +114,15 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactCircleCable2D->GetParameters().markerNumbers);
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactCircleCable2D->GetParameters().nodeNumber);
-        EPyUtils::FromPython(d["numberOfContactSegments"], cObjectContactCircleCable2D->GetParameters().numberOfContactSegments, "ObjectContactCircleCable2D.numberOfContactSegments");
-        EPyUtils::FromPython(d["contactStiffness"], cObjectContactCircleCable2D->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactCircleCable2D.contactStiffness");
-        EPyUtils::FromPython(d["contactDamping"], cObjectContactCircleCable2D->GetParameters().contactDamping, EPyUtils::RangeCheck::nonNegative, "ObjectContactCircleCable2D.contactDamping");
-        EPyUtils::FromPython(d["circleRadius"], cObjectContactCircleCable2D->GetParameters().circleRadius, EPyUtils::RangeCheck::nonNegative, "ObjectContactCircleCable2D.circleRadius");
-        EPyUtils::FromPython(d["offset"], cObjectContactCircleCable2D->GetParameters().offset, "ObjectContactCircleCable2D.offset");
+        if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactCircleCable2D->GetParameters().markerNumbers); }
+        if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactCircleCable2D->GetParameters().nodeNumber); }
+        if (EPyUtils::DictItemExists(d, "numberOfContactSegments")) { EPyUtils::FromPython(d["numberOfContactSegments"], cObjectContactCircleCable2D->GetParameters().numberOfContactSegments, "ObjectContactCircleCable2D.numberOfContactSegments"); }
+        if (EPyUtils::DictItemExists(d, "contactStiffness")) { EPyUtils::FromPython(d["contactStiffness"], cObjectContactCircleCable2D->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactCircleCable2D.contactStiffness"); }
+        if (EPyUtils::DictItemExists(d, "contactDamping")) { EPyUtils::FromPython(d["contactDamping"], cObjectContactCircleCable2D->GetParameters().contactDamping, EPyUtils::RangeCheck::nonNegative, "ObjectContactCircleCable2D.contactDamping"); }
+        if (EPyUtils::DictItemExists(d, "circleRadius")) { EPyUtils::FromPython(d["circleRadius"], cObjectContactCircleCable2D->GetParameters().circleRadius, EPyUtils::RangeCheck::nonNegative, "ObjectContactCircleCable2D.circleRadius"); }
+        if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::FromPython(d["offset"], cObjectContactCircleCable2D->GetParameters().offset, "ObjectContactCircleCable2D.offset"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectContactCircleCable2D->GetParameters().activeConnector, "ObjectContactCircleCable2D.activeConnector"); }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectContactCircleCable2D->GetShow(), "ObjectContactCircleCable2D.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VshowContactCircle")) { EPyUtils::FromPython(d["VshowContactCircle"], visualizationObjectContactCircleCable2D->GetShowContactCircle(), "ObjectContactCircleCable2D.VshowContactCircle"); }
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationObjectContactCircleCable2D->GetDrawSize(), "ObjectContactCircleCable2D.VdrawSize"); }

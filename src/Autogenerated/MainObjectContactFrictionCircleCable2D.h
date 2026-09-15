@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,18 +114,18 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactFrictionCircleCable2D->GetParameters().markerNumbers);
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactFrictionCircleCable2D->GetParameters().nodeNumber);
-        EPyUtils::FromPython(d["numberOfContactSegments"], cObjectContactFrictionCircleCable2D->GetParameters().numberOfContactSegments, EPyUtils::RangeCheck::positive, "ObjectContactFrictionCircleCable2D.numberOfContactSegments");
-        EPyUtils::FromPython(d["contactStiffness"], cObjectContactFrictionCircleCable2D->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.contactStiffness");
-        EPyUtils::FromPython(d["contactDamping"], cObjectContactFrictionCircleCable2D->GetParameters().contactDamping, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.contactDamping");
-        EPyUtils::FromPython(d["frictionVelocityPenalty"], cObjectContactFrictionCircleCable2D->GetParameters().frictionVelocityPenalty, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.frictionVelocityPenalty");
-        EPyUtils::FromPython(d["frictionStiffness"], cObjectContactFrictionCircleCable2D->GetParameters().frictionStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.frictionStiffness");
-        EPyUtils::FromPython(d["frictionCoefficient"], cObjectContactFrictionCircleCable2D->GetParameters().frictionCoefficient, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.frictionCoefficient");
-        EPyUtils::FromPython(d["circleRadius"], cObjectContactFrictionCircleCable2D->GetParameters().circleRadius, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.circleRadius");
-        EPyUtils::FromPython(d["useSegmentNormals"], cObjectContactFrictionCircleCable2D->GetParameters().useSegmentNormals, "ObjectContactFrictionCircleCable2D.useSegmentNormals");
+        if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactFrictionCircleCable2D->GetParameters().markerNumbers); }
+        if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactFrictionCircleCable2D->GetParameters().nodeNumber); }
+        if (EPyUtils::DictItemExists(d, "numberOfContactSegments")) { EPyUtils::FromPython(d["numberOfContactSegments"], cObjectContactFrictionCircleCable2D->GetParameters().numberOfContactSegments, EPyUtils::RangeCheck::positive, "ObjectContactFrictionCircleCable2D.numberOfContactSegments"); }
+        if (EPyUtils::DictItemExists(d, "contactStiffness")) { EPyUtils::FromPython(d["contactStiffness"], cObjectContactFrictionCircleCable2D->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.contactStiffness"); }
+        if (EPyUtils::DictItemExists(d, "contactDamping")) { EPyUtils::FromPython(d["contactDamping"], cObjectContactFrictionCircleCable2D->GetParameters().contactDamping, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.contactDamping"); }
+        if (EPyUtils::DictItemExists(d, "frictionVelocityPenalty")) { EPyUtils::FromPython(d["frictionVelocityPenalty"], cObjectContactFrictionCircleCable2D->GetParameters().frictionVelocityPenalty, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.frictionVelocityPenalty"); }
+        if (EPyUtils::DictItemExists(d, "frictionStiffness")) { EPyUtils::FromPython(d["frictionStiffness"], cObjectContactFrictionCircleCable2D->GetParameters().frictionStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.frictionStiffness"); }
+        if (EPyUtils::DictItemExists(d, "frictionCoefficient")) { EPyUtils::FromPython(d["frictionCoefficient"], cObjectContactFrictionCircleCable2D->GetParameters().frictionCoefficient, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.frictionCoefficient"); }
+        if (EPyUtils::DictItemExists(d, "circleRadius")) { EPyUtils::FromPython(d["circleRadius"], cObjectContactFrictionCircleCable2D->GetParameters().circleRadius, EPyUtils::RangeCheck::nonNegative, "ObjectContactFrictionCircleCable2D.circleRadius"); }
+        if (EPyUtils::DictItemExists(d, "useSegmentNormals")) { EPyUtils::FromPython(d["useSegmentNormals"], cObjectContactFrictionCircleCable2D->GetParameters().useSegmentNormals, "ObjectContactFrictionCircleCable2D.useSegmentNormals"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectContactFrictionCircleCable2D->GetParameters().activeConnector, "ObjectContactFrictionCircleCable2D.activeConnector"); }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectContactFrictionCircleCable2D->GetShow(), "ObjectContactFrictionCircleCable2D.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VshowContactCircle")) { EPyUtils::FromPython(d["VshowContactCircle"], visualizationObjectContactFrictionCircleCable2D->GetShowContactCircle(), "ObjectContactFrictionCircleCable2D.VshowContactCircle"); }
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationObjectContactFrictionCircleCable2D->GetDrawSize(), "ObjectContactFrictionCircleCable2D.VdrawSize"); }

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,10 +106,10 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumber"], cLoadCoordinate->GetParameters().markerNumber);
-        EPyUtils::FromPython(d["load"], cLoadCoordinate->GetParameters().load, "LoadCoordinate.load");
+        if (EPyUtils::DictItemExists(d, "markerNumber")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumber"], cLoadCoordinate->GetParameters().markerNumber); }
+        if (EPyUtils::DictItemExists(d, "load")) { EPyUtils::FromPython(d["load"], cLoadCoordinate->GetParameters().load, "LoadCoordinate.load"); }
         if (EPyUtils::DictItemExists(d, "loadUserFunction")) { cLoadCoordinate->GetParameters().loadUserFunction = d["loadUserFunction"]; }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationLoadCoordinate->GetShow(), "LoadCoordinate.Vshow"); }
     }
 

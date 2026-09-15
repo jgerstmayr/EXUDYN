@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:11:21 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,9 +108,9 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cMarkerNodeRotationCoordinate->GetParameters().nodeNumber);
-        EPyUtils::RequireGiven(d["rotationCoordinate"], EXUstd::InvalidIndex, "MarkerNodeRotationCoordinate.rotationCoordinate"); EPyUtils::FromPython(d["rotationCoordinate"], cMarkerNodeRotationCoordinate->GetParameters().rotationCoordinate, EPyUtils::RangeCheck::nonNegative, "MarkerNodeRotationCoordinate.rotationCoordinate");
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cMarkerNodeRotationCoordinate->GetParameters().nodeNumber); }
+        if (EPyUtils::DictItemExists(d, "rotationCoordinate")) { EPyUtils::RequireGiven(d["rotationCoordinate"], EXUstd::InvalidIndex, "MarkerNodeRotationCoordinate.rotationCoordinate"); EPyUtils::FromPython(d["rotationCoordinate"], cMarkerNodeRotationCoordinate->GetParameters().rotationCoordinate, EPyUtils::RangeCheck::nonNegative, "MarkerNodeRotationCoordinate.rotationCoordinate"); } else { EPyUtils::RequireGiven(py::cast(cMarkerNodeRotationCoordinate->GetParameters().rotationCoordinate), EXUstd::InvalidIndex, "MarkerNodeRotationCoordinate.rotationCoordinate"); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationMarkerNodeRotationCoordinate->GetShow(), "MarkerNodeRotationCoordinate.Vshow"); }
     }
 

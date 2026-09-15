@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,19 +114,19 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactCurveCircles->GetParameters().markerNumbers);
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactCurveCircles->GetParameters().nodeNumber);
-        EPyUtils::FromPython(d["circlesRadii"], cObjectContactCurveCircles->GetParameters().circlesRadii);
-        EPyUtils::SetPyMatrixContainerSafely(d["segmentsData"], cObjectContactCurveCircles->GetParameters().segmentsData);
-        EPyUtils::SetPyMatrixContainerSafely(d["polynomialData"], cObjectContactCurveCircles->GetParameters().polynomialData);
-        EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectContactCurveCircles->GetParameters().rotationMarker0);
+        if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactCurveCircles->GetParameters().markerNumbers); }
+        if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactCurveCircles->GetParameters().nodeNumber); }
+        if (EPyUtils::DictItemExists(d, "circlesRadii")) { EPyUtils::FromPython(d["circlesRadii"], cObjectContactCurveCircles->GetParameters().circlesRadii); }
+        if (EPyUtils::DictItemExists(d, "segmentsData")) { EPyUtils::SetPyMatrixContainerSafely(d["segmentsData"], cObjectContactCurveCircles->GetParameters().segmentsData); }
+        if (EPyUtils::DictItemExists(d, "polynomialData")) { EPyUtils::SetPyMatrixContainerSafely(d["polynomialData"], cObjectContactCurveCircles->GetParameters().polynomialData); }
+        if (EPyUtils::DictItemExists(d, "rotationMarker0")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectContactCurveCircles->GetParameters().rotationMarker0); }
         if (EPyUtils::DictItemExists(d, "dynamicFriction")) { EPyUtils::FromPython(d["dynamicFriction"], cObjectContactCurveCircles->GetParameters().dynamicFriction, EPyUtils::RangeCheck::nonNegative, "ObjectContactCurveCircles.dynamicFriction"); }
         if (EPyUtils::DictItemExists(d, "frictionProportionalZone")) { EPyUtils::FromPython(d["frictionProportionalZone"], cObjectContactCurveCircles->GetParameters().frictionProportionalZone, EPyUtils::RangeCheck::nonNegative, "ObjectContactCurveCircles.frictionProportionalZone"); }
-        EPyUtils::FromPython(d["contactStiffness"], cObjectContactCurveCircles->GetParameters().contactStiffness, "ObjectContactCurveCircles.contactStiffness");
+        if (EPyUtils::DictItemExists(d, "contactStiffness")) { EPyUtils::FromPython(d["contactStiffness"], cObjectContactCurveCircles->GetParameters().contactStiffness, "ObjectContactCurveCircles.contactStiffness"); }
         if (EPyUtils::DictItemExists(d, "contactDamping")) { EPyUtils::FromPython(d["contactDamping"], cObjectContactCurveCircles->GetParameters().contactDamping, "ObjectContactCurveCircles.contactDamping"); }
         if (EPyUtils::DictItemExists(d, "contactModel")) { EPyUtils::FromPython(d["contactModel"], cObjectContactCurveCircles->GetParameters().contactModel, EPyUtils::RangeCheck::nonNegative, "ObjectContactCurveCircles.contactModel"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectContactCurveCircles->GetParameters().activeConnector, "ObjectContactCurveCircles.activeConnector"); }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectContactCurveCircles->GetShow(), "ObjectContactCurveCircles.Vshow"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectContactCurveCircles->GetColor(), "ObjectContactCurveCircles.Vcolor"); }
         GetCObject()->ParametersHaveChanged();

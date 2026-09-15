@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -112,18 +112,18 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorTorsionalSpringDamper->GetParameters().markerNumbers);
+        if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorTorsionalSpringDamper->GetParameters().markerNumbers); }
         if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectConnectorTorsionalSpringDamper->GetParameters().nodeNumber); }
-        EPyUtils::FromPython(d["stiffness"], cObjectConnectorTorsionalSpringDamper->GetParameters().stiffness, "ObjectConnectorTorsionalSpringDamper.stiffness");
-        EPyUtils::FromPython(d["damping"], cObjectConnectorTorsionalSpringDamper->GetParameters().damping, "ObjectConnectorTorsionalSpringDamper.damping");
-        EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker0);
-        EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker1"], cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker1);
+        if (EPyUtils::DictItemExists(d, "stiffness")) { EPyUtils::FromPython(d["stiffness"], cObjectConnectorTorsionalSpringDamper->GetParameters().stiffness, "ObjectConnectorTorsionalSpringDamper.stiffness"); }
+        if (EPyUtils::DictItemExists(d, "damping")) { EPyUtils::FromPython(d["damping"], cObjectConnectorTorsionalSpringDamper->GetParameters().damping, "ObjectConnectorTorsionalSpringDamper.damping"); }
+        if (EPyUtils::DictItemExists(d, "rotationMarker0")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker0); }
+        if (EPyUtils::DictItemExists(d, "rotationMarker1")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker1"], cObjectConnectorTorsionalSpringDamper->GetParameters().rotationMarker1); }
         if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::FromPython(d["offset"], cObjectConnectorTorsionalSpringDamper->GetParameters().offset, "ObjectConnectorTorsionalSpringDamper.offset"); }
         if (EPyUtils::DictItemExists(d, "velocityOffset")) { EPyUtils::FromPython(d["velocityOffset"], cObjectConnectorTorsionalSpringDamper->GetParameters().velocityOffset, "ObjectConnectorTorsionalSpringDamper.velocityOffset"); }
         if (EPyUtils::DictItemExists(d, "torque")) { EPyUtils::FromPython(d["torque"], cObjectConnectorTorsionalSpringDamper->GetParameters().torque, "ObjectConnectorTorsionalSpringDamper.torque"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorTorsionalSpringDamper->GetParameters().activeConnector, "ObjectConnectorTorsionalSpringDamper.activeConnector"); }
         if (EPyUtils::DictItemExists(d, "springTorqueUserFunction")) { cObjectConnectorTorsionalSpringDamper->GetParameters().springTorqueUserFunction = d["springTorqueUserFunction"]; }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectConnectorTorsionalSpringDamper->GetShow(), "ObjectConnectorTorsionalSpringDamper.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationObjectConnectorTorsionalSpringDamper->GetDrawSize(), "ObjectConnectorTorsionalSpringDamper.VdrawSize"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectConnectorTorsionalSpringDamper->GetColor(), "ObjectConnectorTorsionalSpringDamper.Vcolor"); }

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,16 +106,16 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectJointGeneric->GetParameters().markerNumbers);
+        if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectJointGeneric->GetParameters().markerNumbers); }
         if (EPyUtils::DictItemExists(d, "constrainedAxes")) { EPyUtils::FromPython(d["constrainedAxes"], cObjectJointGeneric->GetParameters().constrainedAxes, "ObjectJointGeneric.constrainedAxes"); }
-        EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectJointGeneric->GetParameters().rotationMarker0);
-        EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker1"], cObjectJointGeneric->GetParameters().rotationMarker1);
+        if (EPyUtils::DictItemExists(d, "rotationMarker0")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectJointGeneric->GetParameters().rotationMarker0); }
+        if (EPyUtils::DictItemExists(d, "rotationMarker1")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker1"], cObjectJointGeneric->GetParameters().rotationMarker1); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectJointGeneric->GetParameters().activeConnector, "ObjectJointGeneric.activeConnector"); }
-        EPyUtils::FromPython(d["offsetUserFunctionParameters"], cObjectJointGeneric->GetParameters().offsetUserFunctionParameters);
+        if (EPyUtils::DictItemExists(d, "offsetUserFunctionParameters")) { EPyUtils::FromPython(d["offsetUserFunctionParameters"], cObjectJointGeneric->GetParameters().offsetUserFunctionParameters); }
         if (EPyUtils::DictItemExists(d, "offsetUserFunction")) { cObjectJointGeneric->GetParameters().offsetUserFunction = d["offsetUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "offsetUserFunction_t")) { cObjectJointGeneric->GetParameters().offsetUserFunction_t = d["offsetUserFunction_t"]; }
         if (EPyUtils::DictItemExists(d, "alternativeConstraints")) { EPyUtils::FromPython(d["alternativeConstraints"], cObjectJointGeneric->GetParameters().alternativeConstraints, "ObjectJointGeneric.alternativeConstraints"); }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectJointGeneric->GetShow(), "ObjectJointGeneric.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VaxesRadius")) { EPyUtils::FromPython(d["VaxesRadius"], visualizationObjectJointGeneric->GetAxesRadius(), "ObjectJointGeneric.VaxesRadius"); }
         if (EPyUtils::DictItemExists(d, "VaxesLength")) { EPyUtils::FromPython(d["VaxesLength"], visualizationObjectJointGeneric->GetAxesLength(), "ObjectJointGeneric.VaxesLength"); }

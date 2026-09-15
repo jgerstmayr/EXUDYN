@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -115,15 +115,15 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectGenericODE2->GetParameters().nodeNumbers);
-        EPyUtils::SetPyMatrixContainerSafely(d["massMatrix"], cObjectGenericODE2->GetParameters().massMatrix);
-        EPyUtils::SetPyMatrixContainerSafely(d["stiffnessMatrix"], cObjectGenericODE2->GetParameters().stiffnessMatrix);
-        EPyUtils::SetPyMatrixContainerSafely(d["dampingMatrix"], cObjectGenericODE2->GetParameters().dampingMatrix);
-        EPyUtils::FromPython(d["forceVector"], cObjectGenericODE2->GetParameters().forceVector);
+        if (EPyUtils::DictItemExists(d, "nodeNumbers")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectGenericODE2->GetParameters().nodeNumbers); }
+        if (EPyUtils::DictItemExists(d, "massMatrix")) { EPyUtils::SetPyMatrixContainerSafely(d["massMatrix"], cObjectGenericODE2->GetParameters().massMatrix); }
+        if (EPyUtils::DictItemExists(d, "stiffnessMatrix")) { EPyUtils::SetPyMatrixContainerSafely(d["stiffnessMatrix"], cObjectGenericODE2->GetParameters().stiffnessMatrix); }
+        if (EPyUtils::DictItemExists(d, "dampingMatrix")) { EPyUtils::SetPyMatrixContainerSafely(d["dampingMatrix"], cObjectGenericODE2->GetParameters().dampingMatrix); }
+        if (EPyUtils::DictItemExists(d, "forceVector")) { EPyUtils::FromPython(d["forceVector"], cObjectGenericODE2->GetParameters().forceVector); }
         if (EPyUtils::DictItemExists(d, "forceUserFunction")) { cObjectGenericODE2->GetParameters().forceUserFunction = d["forceUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "massMatrixUserFunction")) { cObjectGenericODE2->GetParameters().massMatrixUserFunction = d["massMatrixUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "jacobianUserFunction")) { cObjectGenericODE2->GetParameters().jacobianUserFunction = d["jacobianUserFunction"]; }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectGenericODE2->GetShow(), "ObjectGenericODE2.Vshow"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectGenericODE2->GetColor(), "ObjectGenericODE2.Vcolor"); }
         if (EPyUtils::DictItemExists(d, "VtriangleMesh")) { EPyUtils::FromPython(d["VtriangleMesh"], visualizationObjectGenericODE2->GetTriangleMesh()); }

@@ -4,7 +4,7 @@
 *
 * @author       Manzl Peter
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,9 +114,9 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactConvexRoll->GetParameters().markerNumbers);
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactConvexRoll->GetParameters().nodeNumber);
-        EPyUtils::FromPython(d["contactStiffness"], cObjectContactConvexRoll->GetParameters().contactStiffness, "ObjectContactConvexRoll.contactStiffness");
+        if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactConvexRoll->GetParameters().markerNumbers); }
+        if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactConvexRoll->GetParameters().nodeNumber); }
+        if (EPyUtils::DictItemExists(d, "contactStiffness")) { EPyUtils::FromPython(d["contactStiffness"], cObjectContactConvexRoll->GetParameters().contactStiffness, "ObjectContactConvexRoll.contactStiffness"); }
         if (EPyUtils::DictItemExists(d, "contactDamping")) { EPyUtils::FromPython(d["contactDamping"], cObjectContactConvexRoll->GetParameters().contactDamping, "ObjectContactConvexRoll.contactDamping"); }
         if (EPyUtils::DictItemExists(d, "dynamicFriction")) { EPyUtils::FromPython(d["dynamicFriction"], cObjectContactConvexRoll->GetParameters().dynamicFriction, EPyUtils::RangeCheck::nonNegative, "ObjectContactConvexRoll.dynamicFriction"); }
         if (EPyUtils::DictItemExists(d, "staticFrictionOffset")) { EPyUtils::FromPython(d["staticFrictionOffset"], cObjectContactConvexRoll->GetParameters().staticFrictionOffset, EPyUtils::RangeCheck::nonNegative, "ObjectContactConvexRoll.staticFrictionOffset"); }
@@ -127,7 +127,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "coefficientsHull")) { EPyUtils::FromPython(d["coefficientsHull"], cObjectContactConvexRoll->GetParameters().coefficientsHull); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectContactConvexRoll->GetParameters().activeConnector, "ObjectContactConvexRoll.activeConnector"); }
         if (EPyUtils::DictItemExists(d, "rBoundingSphere")) { EPyUtils::FromPython(d["rBoundingSphere"], cObjectContactConvexRoll->GetRBoundingSphere(), EPyUtils::RangeCheck::nonNegative, "ObjectContactConvexRoll.rBoundingSphere"); }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectContactConvexRoll->GetShow(), "ObjectContactConvexRoll.Vshow"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectContactConvexRoll->GetColor(), "ObjectContactConvexRoll.Vcolor"); }
         GetCObject()->ParametersHaveChanged();

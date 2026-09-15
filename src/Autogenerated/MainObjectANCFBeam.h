@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:11:21 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,12 +114,12 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectANCFBeam->GetParameters().nodeNumbers);
-        EPyUtils::RequireGiven(d["physicsLength"], 0., "ObjectANCFBeam.physicsLength"); EPyUtils::FromPython(d["physicsLength"], cObjectANCFBeam->GetParameters().physicsLength, EPyUtils::RangeCheck::positive, "ObjectANCFBeam.physicsLength");
-        EPyUtils::FromPython(d["crossSectionPenaltyFactor"], cObjectANCFBeam->GetParameters().crossSectionPenaltyFactor);
-        EPyUtils::FromPython(d["crossSectionDamping"], cObjectANCFBeam->GetParameters().crossSectionDamping);
-        EPyUtils::FromPython(d["name"], name);
-        SetInternalBeamSection(d["sectionData"]);
+        if (EPyUtils::DictItemExists(d, "nodeNumbers")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectANCFBeam->GetParameters().nodeNumbers); }
+        if (EPyUtils::DictItemExists(d, "physicsLength")) { EPyUtils::RequireGiven(d["physicsLength"], 0., "ObjectANCFBeam.physicsLength"); EPyUtils::FromPython(d["physicsLength"], cObjectANCFBeam->GetParameters().physicsLength, EPyUtils::RangeCheck::positive, "ObjectANCFBeam.physicsLength"); } else { EPyUtils::RequireGiven(py::cast(cObjectANCFBeam->GetParameters().physicsLength), 0., "ObjectANCFBeam.physicsLength"); }
+        if (EPyUtils::DictItemExists(d, "crossSectionPenaltyFactor")) { EPyUtils::FromPython(d["crossSectionPenaltyFactor"], cObjectANCFBeam->GetParameters().crossSectionPenaltyFactor); }
+        if (EPyUtils::DictItemExists(d, "crossSectionDamping")) { EPyUtils::FromPython(d["crossSectionDamping"], cObjectANCFBeam->GetParameters().crossSectionDamping); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
+        if (EPyUtils::DictItemExists(d, "sectionData")) { SetInternalBeamSection(d["sectionData"]); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectANCFBeam->GetShow(), "ObjectANCFBeam.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VsectionGeometry")) { visualizationObjectANCFBeam->GetSectionGeometry() = py::cast<BeamSectionGeometry>(d["VsectionGeometry"]); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectANCFBeam->GetColor(), "ObjectANCFBeam.Vcolor"); }

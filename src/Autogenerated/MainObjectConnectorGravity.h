@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -105,13 +105,13 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorGravity->GetParameters().markerNumbers);
-        EPyUtils::FromPython(d["gravitationalConstant"], cObjectConnectorGravity->GetParameters().gravitationalConstant, "ObjectConnectorGravity.gravitationalConstant");
-        EPyUtils::FromPython(d["mass0"], cObjectConnectorGravity->GetParameters().mass0, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorGravity.mass0");
-        EPyUtils::FromPython(d["mass1"], cObjectConnectorGravity->GetParameters().mass1, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorGravity.mass1");
+        if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorGravity->GetParameters().markerNumbers); }
+        if (EPyUtils::DictItemExists(d, "gravitationalConstant")) { EPyUtils::FromPython(d["gravitationalConstant"], cObjectConnectorGravity->GetParameters().gravitationalConstant, "ObjectConnectorGravity.gravitationalConstant"); }
+        if (EPyUtils::DictItemExists(d, "mass0")) { EPyUtils::FromPython(d["mass0"], cObjectConnectorGravity->GetParameters().mass0, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorGravity.mass0"); }
+        if (EPyUtils::DictItemExists(d, "mass1")) { EPyUtils::FromPython(d["mass1"], cObjectConnectorGravity->GetParameters().mass1, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorGravity.mass1"); }
         if (EPyUtils::DictItemExists(d, "minDistanceRegularization")) { EPyUtils::FromPython(d["minDistanceRegularization"], cObjectConnectorGravity->GetParameters().minDistanceRegularization, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorGravity.minDistanceRegularization"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorGravity->GetParameters().activeConnector, "ObjectConnectorGravity.activeConnector"); }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectConnectorGravity->GetShow(), "ObjectConnectorGravity.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationObjectConnectorGravity->GetDrawSize(), "ObjectConnectorGravity.VdrawSize"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectConnectorGravity->GetColor(), "ObjectConnectorGravity.Vcolor"); }

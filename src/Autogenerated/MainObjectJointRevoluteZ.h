@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -105,11 +105,11 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectJointRevoluteZ->GetParameters().markerNumbers);
-        EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectJointRevoluteZ->GetParameters().rotationMarker0);
-        EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker1"], cObjectJointRevoluteZ->GetParameters().rotationMarker1);
+        if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectJointRevoluteZ->GetParameters().markerNumbers); }
+        if (EPyUtils::DictItemExists(d, "rotationMarker0")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectJointRevoluteZ->GetParameters().rotationMarker0); }
+        if (EPyUtils::DictItemExists(d, "rotationMarker1")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker1"], cObjectJointRevoluteZ->GetParameters().rotationMarker1); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectJointRevoluteZ->GetParameters().activeConnector, "ObjectJointRevoluteZ.activeConnector"); }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectJointRevoluteZ->GetShow(), "ObjectJointRevoluteZ.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VaxisRadius")) { EPyUtils::FromPython(d["VaxisRadius"], visualizationObjectJointRevoluteZ->GetAxisRadius(), "ObjectJointRevoluteZ.VaxisRadius"); }
         if (EPyUtils::DictItemExists(d, "VaxisLength")) { EPyUtils::FromPython(d["VaxisLength"], visualizationObjectJointRevoluteZ->GetAxisLength(), "ObjectJointRevoluteZ.VaxisLength"); }

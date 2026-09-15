@@ -2931,6 +2931,30 @@ get a section). So the flag matters, and the 38 exceptions are real solver inter
 - Checked: the effective flags of all 883 members (every letter through `HasFlag`) are identical
   before and after; regeneration is a no-op; wheel, full suite PASSED.
 
+<a id="step-88"></a>
+
+### Step 88 - `CFOptional` removed: every item parameter may be left out of a dict
+
+**DONE 2026-09-15** (#2417, #2446 raised for it by mistake as a duplicate).
+
+- Before: 448 of the dictionary writes in `Main<Item>::SetWithDictionary` were wrapped in
+  `DictItemExists` (`CFOptional`); leaving out any other parameter raised `KeyError`, e.g.
+  `mbs.AddNode({'nodeType':'Point'})` or `mbs.ModifyNode(n, {'initialCoordinates': ...})`.
+- Now (`itemHeaderEmitter.py`): every write is guarded; a parameter left out keeps its current
+  value, which is the default on `Add`. A must-be-given parameter (`CFMustBeGiven`, step 99) left
+  out raises if its value is still the placeholder (`else { EPyUtils::RequireGiven(py::cast(value),
+  placeholder, ...) }`), so `ModifyMarker(m, {'name': ...})` works once `coordinate` was given.
+- `CFOptional` removed from `definitionTypes.py` and 448 definitions; `itemModel.HasFlag` docstring.
+- **Tested now** (the plan's point: nothing tested it): `parameterConversionTest.py` gets an `omit`
+  probe per parameter - the item added with that parameter left out. Reference: 17 must-be-given
+  parameters raise, all others read back the default, except `Vshow` of four super elements, which
+  reads back `False` (#2447, plan step 111).
+- `modelUnitTests.py:184` needed no change: its partial dicts are now allowed rather than required
+  to contain the omitted parameters as optional ones.
+- **Stale binary found** (#2448, plan step 112): the first wheel after regenerating was built in 4 s
+  from `build/` with the old headers' binary. Gated here with a clean build (`build/` removed, 50 s).
+- Checked: regeneration (97 generated headers), clean wheel build, full suite PASSED.
+
 <a id="api-changes-v2"></a>
 
 ### API changes for the v2.0 release notes
@@ -2944,6 +2968,7 @@ Breaking changes of the Python API, collected as they happen; step 52 carries th
 | 107b | 23 deprecated `GraphicsData...` aliases removed from `exudyn.utilities` (e.g. `GraphicsDataOrthoCubePoint`, `GraphicsDataCylinder`, `GraphicsDataCheckerBoard`) | use `exudyn.graphics`: `graphics.Brick`, `graphics.Cylinder`, `graphics.CheckerBoard`, ... (full list in the step 107b log) |
 | 107b | functions of `exudyn.utilities` moved to `basicUtilities`, `advancedUtilities` (TCP/IP) and `mainSystemExtensions` (distance sensor, `DrawSystemGraph`) | nothing when importing from `exudyn.utilities`; imports from the new modules also work |
 | 107b | `from exudyn.utilities import *` no longer provides `extends` | not part of the user API |
+| 88 | item dicts for `Add<Kind>`/`Modify<Kind>` may leave out any parameter (default or current value kept); before, parameters without `CFOptional` raised `KeyError` | none; must-be-given parameters still raise |
 | 107c | star imports of exudyn modules export only what the module defines (`__all__`); `from exudyn.utilities import *` no longer provides `np`, `sin`, `cos`, `sqrt`, `math`, `copy`, `Enum`, `exudyn`, `exu`, `eii`, `graphics`, `docmeta` | import them explicitly: `import numpy as np`, `from math import sin, cos, sqrt`, `import exudyn as exu`, `import exudyn.graphics as graphics` |
 | 107a | `NormL2`, `VSum`, `VAdd`, `VSub`, `VMult`, `ScalarMult`, `Vec2Tilde`, `Tilde2Vec`, `DiagonalMatrix`, `eye2D`, `eye3D` removed from `exudyn.basicUtilities` (and so from `exudyn.utilities`) | use numpy: `np.linalg.norm`, `np.sum`, array arithmetic, `np.dot`, `Skew`/`Skew2Vec`, `np.eye` |
 

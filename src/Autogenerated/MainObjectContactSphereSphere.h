@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Weyrer Sebastian
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,13 +114,13 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactSphereSphere->GetParameters().markerNumbers);
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactSphereSphere->GetParameters().nodeNumber);
-        EPyUtils::FromPython(d["spheresRadii"], cObjectContactSphereSphere->GetParameters().spheresRadii);
+        if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactSphereSphere->GetParameters().markerNumbers); }
+        if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactSphereSphere->GetParameters().nodeNumber); }
+        if (EPyUtils::DictItemExists(d, "spheresRadii")) { EPyUtils::FromPython(d["spheresRadii"], cObjectContactSphereSphere->GetParameters().spheresRadii); }
         if (EPyUtils::DictItemExists(d, "isHollowSphere1")) { EPyUtils::FromPython(d["isHollowSphere1"], cObjectContactSphereSphere->GetParameters().isHollowSphere1, "ObjectContactSphereSphere.isHollowSphere1"); }
         if (EPyUtils::DictItemExists(d, "dynamicFriction")) { EPyUtils::FromPython(d["dynamicFriction"], cObjectContactSphereSphere->GetParameters().dynamicFriction, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereSphere.dynamicFriction"); }
         if (EPyUtils::DictItemExists(d, "frictionProportionalZone")) { EPyUtils::FromPython(d["frictionProportionalZone"], cObjectContactSphereSphere->GetParameters().frictionProportionalZone, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereSphere.frictionProportionalZone"); }
-        EPyUtils::FromPython(d["contactStiffness"], cObjectContactSphereSphere->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereSphere.contactStiffness");
+        if (EPyUtils::DictItemExists(d, "contactStiffness")) { EPyUtils::FromPython(d["contactStiffness"], cObjectContactSphereSphere->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereSphere.contactStiffness"); }
         if (EPyUtils::DictItemExists(d, "contactDamping")) { EPyUtils::FromPython(d["contactDamping"], cObjectContactSphereSphere->GetParameters().contactDamping, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereSphere.contactDamping"); }
         if (EPyUtils::DictItemExists(d, "contactStiffnessExponent")) { EPyUtils::FromPython(d["contactStiffnessExponent"], cObjectContactSphereSphere->GetParameters().contactStiffnessExponent, EPyUtils::RangeCheck::positive, "ObjectContactSphereSphere.contactStiffnessExponent"); }
         if (EPyUtils::DictItemExists(d, "constantPullOffForce")) { EPyUtils::FromPython(d["constantPullOffForce"], cObjectContactSphereSphere->GetParameters().constantPullOffForce, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereSphere.constantPullOffForce"); }
@@ -131,7 +131,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "minimumImpactVelocity")) { EPyUtils::FromPython(d["minimumImpactVelocity"], cObjectContactSphereSphere->GetParameters().minimumImpactVelocity, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereSphere.minimumImpactVelocity"); }
         if (EPyUtils::DictItemExists(d, "impactModel")) { EPyUtils::FromPython(d["impactModel"], cObjectContactSphereSphere->GetParameters().impactModel, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereSphere.impactModel"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectContactSphereSphere->GetParameters().activeConnector, "ObjectContactSphereSphere.activeConnector"); }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectContactSphereSphere->GetShow(), "ObjectContactSphereSphere.Vshow"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectContactSphereSphere->GetColor(), "ObjectContactSphereSphere.Vcolor"); }
         GetCObject()->ParametersHaveChanged();

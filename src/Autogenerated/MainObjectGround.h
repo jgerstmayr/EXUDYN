@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,9 +106,9 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::FromPython(d["referencePosition"], cObjectGround->GetParameters().referencePosition);
+        if (EPyUtils::DictItemExists(d, "referencePosition")) { EPyUtils::FromPython(d["referencePosition"], cObjectGround->GetParameters().referencePosition); }
         if (EPyUtils::DictItemExists(d, "referenceRotation")) { EPyUtils::FromPython<Real, 3, 3>(d["referenceRotation"], cObjectGround->GetParameters().referenceRotation); }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectGround->GetShow(), "ObjectGround.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VgraphicsDataUserFunction")) { visualizationObjectGround->GetGraphicsDataUserFunction() = d["VgraphicsDataUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "VgraphicsData")) { PyWriteBodyGraphicsDataList(d, "VgraphicsData", visualizationObjectGround->GetGraphicsData()); }

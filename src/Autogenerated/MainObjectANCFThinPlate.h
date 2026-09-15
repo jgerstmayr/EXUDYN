@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,17 +114,17 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::FromPython(d["physicsThickness"], cObjectANCFThinPlate->GetParameters().physicsThickness);
-        EPyUtils::FromPython(d["physicsDensity"], cObjectANCFThinPlate->GetParameters().physicsDensity, EPyUtils::RangeCheck::nonNegative, "ObjectANCFThinPlate.physicsDensity");
-        EPyUtils::FromPython(d["physicsMassProportionalDamping"], cObjectANCFThinPlate->GetParameters().physicsMassProportionalDamping, "ObjectANCFThinPlate.physicsMassProportionalDamping");
-        EPyUtils::SetMatrix3DListSafely(d["physicsStrainCoefficients"], cObjectANCFThinPlate->GetParameters().physicsStrainCoefficients);
-        EPyUtils::SetMatrix3DListSafely(d["physicsCurvatureCoefficients"], cObjectANCFThinPlate->GetParameters().physicsCurvatureCoefficients);
-        EPyUtils::FromPython(d["strainIsRelativeToReference"], cObjectANCFThinPlate->GetParameters().strainIsRelativeToReference, "ObjectANCFThinPlate.strainIsRelativeToReference");
-        EPyUtils::FromPython(d["slopesScalingX"], cObjectANCFThinPlate->GetParameters().slopesScalingX);
-        EPyUtils::FromPython(d["slopesScalingY"], cObjectANCFThinPlate->GetParameters().slopesScalingY);
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectANCFThinPlate->GetParameters().nodeNumbers);
-        EPyUtils::FromPython(d["useReducedOrderIntegration"], cObjectANCFThinPlate->GetParameters().useReducedOrderIntegration, "ObjectANCFThinPlate.useReducedOrderIntegration");
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "physicsThickness")) { EPyUtils::FromPython(d["physicsThickness"], cObjectANCFThinPlate->GetParameters().physicsThickness); }
+        if (EPyUtils::DictItemExists(d, "physicsDensity")) { EPyUtils::FromPython(d["physicsDensity"], cObjectANCFThinPlate->GetParameters().physicsDensity, EPyUtils::RangeCheck::nonNegative, "ObjectANCFThinPlate.physicsDensity"); }
+        if (EPyUtils::DictItemExists(d, "physicsMassProportionalDamping")) { EPyUtils::FromPython(d["physicsMassProportionalDamping"], cObjectANCFThinPlate->GetParameters().physicsMassProportionalDamping, "ObjectANCFThinPlate.physicsMassProportionalDamping"); }
+        if (EPyUtils::DictItemExists(d, "physicsStrainCoefficients")) { EPyUtils::SetMatrix3DListSafely(d["physicsStrainCoefficients"], cObjectANCFThinPlate->GetParameters().physicsStrainCoefficients); }
+        if (EPyUtils::DictItemExists(d, "physicsCurvatureCoefficients")) { EPyUtils::SetMatrix3DListSafely(d["physicsCurvatureCoefficients"], cObjectANCFThinPlate->GetParameters().physicsCurvatureCoefficients); }
+        if (EPyUtils::DictItemExists(d, "strainIsRelativeToReference")) { EPyUtils::FromPython(d["strainIsRelativeToReference"], cObjectANCFThinPlate->GetParameters().strainIsRelativeToReference, "ObjectANCFThinPlate.strainIsRelativeToReference"); }
+        if (EPyUtils::DictItemExists(d, "slopesScalingX")) { EPyUtils::FromPython(d["slopesScalingX"], cObjectANCFThinPlate->GetParameters().slopesScalingX); }
+        if (EPyUtils::DictItemExists(d, "slopesScalingY")) { EPyUtils::FromPython(d["slopesScalingY"], cObjectANCFThinPlate->GetParameters().slopesScalingY); }
+        if (EPyUtils::DictItemExists(d, "nodeNumbers")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectANCFThinPlate->GetParameters().nodeNumbers); }
+        if (EPyUtils::DictItemExists(d, "useReducedOrderIntegration")) { EPyUtils::FromPython(d["useReducedOrderIntegration"], cObjectANCFThinPlate->GetParameters().useReducedOrderIntegration, "ObjectANCFThinPlate.useReducedOrderIntegration"); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectANCFThinPlate->GetShow(), "ObjectANCFThinPlate.Vshow"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectANCFThinPlate->GetColor(), "ObjectANCFThinPlate.Vcolor"); }
         GetCObject()->ParametersHaveChanged();

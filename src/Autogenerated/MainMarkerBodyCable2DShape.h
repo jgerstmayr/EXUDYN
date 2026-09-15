@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -105,10 +105,10 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<ObjectIndex>(d["bodyNumber"], cMarkerBodyCable2DShape->GetParameters().bodyNumber);
-        EPyUtils::FromPython(d["numberOfSegments"], cMarkerBodyCable2DShape->GetParameters().numberOfSegments, EPyUtils::RangeCheck::positive, "MarkerBodyCable2DShape.numberOfSegments");
-        EPyUtils::FromPython(d["verticalOffset"], cMarkerBodyCable2DShape->GetParameters().verticalOffset, "MarkerBodyCable2DShape.verticalOffset");
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "bodyNumber")) { EPyUtils::ItemIndexFromPython<ObjectIndex>(d["bodyNumber"], cMarkerBodyCable2DShape->GetParameters().bodyNumber); }
+        if (EPyUtils::DictItemExists(d, "numberOfSegments")) { EPyUtils::FromPython(d["numberOfSegments"], cMarkerBodyCable2DShape->GetParameters().numberOfSegments, EPyUtils::RangeCheck::positive, "MarkerBodyCable2DShape.numberOfSegments"); }
+        if (EPyUtils::DictItemExists(d, "verticalOffset")) { EPyUtils::FromPython(d["verticalOffset"], cMarkerBodyCable2DShape->GetParameters().verticalOffset, "MarkerBodyCable2DShape.verticalOffset"); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationMarkerBodyCable2DShape->GetShow(), "MarkerBodyCable2DShape.Vshow"); }
     }
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,12 +108,12 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cSensorNode->GetParameters().nodeNumber);
-        EPyUtils::FromPython(d["writeToFile"], cSensorNode->GetParameters().writeToFile, "SensorNode.writeToFile");
-        EPyUtils::FromPython(d["fileName"], cSensorNode->GetParameters().fileName);
-        cSensorNode->GetParameters().outputVariableType = (OutputVariableType)py::cast<Index>(d["outputVariableType"]);
-        EPyUtils::FromPython(d["storeInternal"], cSensorNode->GetParameters().storeInternal, "SensorNode.storeInternal");
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cSensorNode->GetParameters().nodeNumber); }
+        if (EPyUtils::DictItemExists(d, "writeToFile")) { EPyUtils::FromPython(d["writeToFile"], cSensorNode->GetParameters().writeToFile, "SensorNode.writeToFile"); }
+        if (EPyUtils::DictItemExists(d, "fileName")) { EPyUtils::FromPython(d["fileName"], cSensorNode->GetParameters().fileName); }
+        if (EPyUtils::DictItemExists(d, "outputVariableType")) { cSensorNode->GetParameters().outputVariableType = (OutputVariableType)py::cast<Index>(d["outputVariableType"]); }
+        if (EPyUtils::DictItemExists(d, "storeInternal")) { EPyUtils::FromPython(d["storeInternal"], cSensorNode->GetParameters().storeInternal, "SensorNode.storeInternal"); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationSensorNode->GetShow(), "SensorNode.Vshow"); }
     }
 

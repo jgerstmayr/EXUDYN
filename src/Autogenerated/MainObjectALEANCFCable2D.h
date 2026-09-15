@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,21 +114,21 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::FromPython(d["physicsLength"], cObjectALEANCFCable2D->GetParameters().physicsLength, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsLength");
-        EPyUtils::FromPython(d["physicsMassPerLength"], cObjectALEANCFCable2D->GetParameters().physicsMassPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsMassPerLength");
-        EPyUtils::FromPython(d["physicsMovingMassFactor"], cObjectALEANCFCable2D->GetParameters().physicsMovingMassFactor, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsMovingMassFactor");
-        EPyUtils::FromPython(d["physicsBendingStiffness"], cObjectALEANCFCable2D->GetParameters().physicsBendingStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsBendingStiffness");
-        EPyUtils::FromPython(d["physicsAxialStiffness"], cObjectALEANCFCable2D->GetParameters().physicsAxialStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsAxialStiffness");
-        EPyUtils::FromPython(d["physicsBendingDamping"], cObjectALEANCFCable2D->GetParameters().physicsBendingDamping, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsBendingDamping");
-        EPyUtils::FromPython(d["physicsAxialDamping"], cObjectALEANCFCable2D->GetParameters().physicsAxialDamping, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsAxialDamping");
-        EPyUtils::FromPython(d["physicsReferenceAxialStrain"], cObjectALEANCFCable2D->GetParameters().physicsReferenceAxialStrain, "ObjectALEANCFCable2D.physicsReferenceAxialStrain");
-        EPyUtils::FromPython(d["physicsReferenceCurvature"], cObjectALEANCFCable2D->GetParameters().physicsReferenceCurvature, "ObjectALEANCFCable2D.physicsReferenceCurvature");
-        EPyUtils::FromPython(d["physicsUseCouplingTerms"], cObjectALEANCFCable2D->GetParameters().physicsUseCouplingTerms, "ObjectALEANCFCable2D.physicsUseCouplingTerms");
-        EPyUtils::FromPython(d["physicsAddALEvariation"], cObjectALEANCFCable2D->GetParameters().physicsAddALEvariation, "ObjectALEANCFCable2D.physicsAddALEvariation");
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectALEANCFCable2D->GetParameters().nodeNumbers);
-        EPyUtils::FromPython(d["useReducedOrderIntegration"], cObjectALEANCFCable2D->GetParameters().useReducedOrderIntegration, "ObjectALEANCFCable2D.useReducedOrderIntegration");
-        EPyUtils::FromPython(d["strainIsRelativeToReference"], cObjectALEANCFCable2D->GetParameters().strainIsRelativeToReference, "ObjectALEANCFCable2D.strainIsRelativeToReference");
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "physicsLength")) { EPyUtils::FromPython(d["physicsLength"], cObjectALEANCFCable2D->GetParameters().physicsLength, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsLength"); }
+        if (EPyUtils::DictItemExists(d, "physicsMassPerLength")) { EPyUtils::FromPython(d["physicsMassPerLength"], cObjectALEANCFCable2D->GetParameters().physicsMassPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsMassPerLength"); }
+        if (EPyUtils::DictItemExists(d, "physicsMovingMassFactor")) { EPyUtils::FromPython(d["physicsMovingMassFactor"], cObjectALEANCFCable2D->GetParameters().physicsMovingMassFactor, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsMovingMassFactor"); }
+        if (EPyUtils::DictItemExists(d, "physicsBendingStiffness")) { EPyUtils::FromPython(d["physicsBendingStiffness"], cObjectALEANCFCable2D->GetParameters().physicsBendingStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsBendingStiffness"); }
+        if (EPyUtils::DictItemExists(d, "physicsAxialStiffness")) { EPyUtils::FromPython(d["physicsAxialStiffness"], cObjectALEANCFCable2D->GetParameters().physicsAxialStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsAxialStiffness"); }
+        if (EPyUtils::DictItemExists(d, "physicsBendingDamping")) { EPyUtils::FromPython(d["physicsBendingDamping"], cObjectALEANCFCable2D->GetParameters().physicsBendingDamping, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsBendingDamping"); }
+        if (EPyUtils::DictItemExists(d, "physicsAxialDamping")) { EPyUtils::FromPython(d["physicsAxialDamping"], cObjectALEANCFCable2D->GetParameters().physicsAxialDamping, EPyUtils::RangeCheck::nonNegative, "ObjectALEANCFCable2D.physicsAxialDamping"); }
+        if (EPyUtils::DictItemExists(d, "physicsReferenceAxialStrain")) { EPyUtils::FromPython(d["physicsReferenceAxialStrain"], cObjectALEANCFCable2D->GetParameters().physicsReferenceAxialStrain, "ObjectALEANCFCable2D.physicsReferenceAxialStrain"); }
+        if (EPyUtils::DictItemExists(d, "physicsReferenceCurvature")) { EPyUtils::FromPython(d["physicsReferenceCurvature"], cObjectALEANCFCable2D->GetParameters().physicsReferenceCurvature, "ObjectALEANCFCable2D.physicsReferenceCurvature"); }
+        if (EPyUtils::DictItemExists(d, "physicsUseCouplingTerms")) { EPyUtils::FromPython(d["physicsUseCouplingTerms"], cObjectALEANCFCable2D->GetParameters().physicsUseCouplingTerms, "ObjectALEANCFCable2D.physicsUseCouplingTerms"); }
+        if (EPyUtils::DictItemExists(d, "physicsAddALEvariation")) { EPyUtils::FromPython(d["physicsAddALEvariation"], cObjectALEANCFCable2D->GetParameters().physicsAddALEvariation, "ObjectALEANCFCable2D.physicsAddALEvariation"); }
+        if (EPyUtils::DictItemExists(d, "nodeNumbers")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectALEANCFCable2D->GetParameters().nodeNumbers); }
+        if (EPyUtils::DictItemExists(d, "useReducedOrderIntegration")) { EPyUtils::FromPython(d["useReducedOrderIntegration"], cObjectALEANCFCable2D->GetParameters().useReducedOrderIntegration, "ObjectALEANCFCable2D.useReducedOrderIntegration"); }
+        if (EPyUtils::DictItemExists(d, "strainIsRelativeToReference")) { EPyUtils::FromPython(d["strainIsRelativeToReference"], cObjectALEANCFCable2D->GetParameters().strainIsRelativeToReference, "ObjectALEANCFCable2D.strainIsRelativeToReference"); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectALEANCFCable2D->GetShow(), "ObjectALEANCFCable2D.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VdrawHeight")) { EPyUtils::FromPython(d["VdrawHeight"], visualizationObjectALEANCFCable2D->GetDrawHeight(), "ObjectALEANCFCable2D.VdrawHeight"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectALEANCFCable2D->GetColor(), "ObjectALEANCFCable2D.Vcolor"); }

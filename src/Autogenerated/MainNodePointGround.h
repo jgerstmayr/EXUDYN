@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -117,8 +117,8 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::FromPython(d["referenceCoordinates"], cNodePointGround->GetParameters().referenceCoordinates);
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "referenceCoordinates")) { EPyUtils::FromPython(d["referenceCoordinates"], cNodePointGround->GetParameters().referenceCoordinates); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationNodePointGround->GetShow(), "NodePointGround.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationNodePointGround->GetDrawSize(), "NodePointGround.VdrawSize"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationNodePointGround->GetColor(), "NodePointGround.Vcolor"); }

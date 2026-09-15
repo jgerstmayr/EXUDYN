@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -105,10 +105,10 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectJointSpherical->GetParameters().markerNumbers);
+        if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectJointSpherical->GetParameters().markerNumbers); }
         if (EPyUtils::DictItemExists(d, "constrainedAxes")) { EPyUtils::FromPython(d["constrainedAxes"], cObjectJointSpherical->GetParameters().constrainedAxes, "ObjectJointSpherical.constrainedAxes"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectJointSpherical->GetParameters().activeConnector, "ObjectJointSpherical.activeConnector"); }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectJointSpherical->GetShow(), "ObjectJointSpherical.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VjointRadius")) { EPyUtils::FromPython(d["VjointRadius"], visualizationObjectJointSpherical->GetJointRadius(), "ObjectJointSpherical.VjointRadius"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectJointSpherical->GetColor(), "ObjectJointSpherical.Vcolor"); }

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:11:21 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,13 +114,13 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorRollingDiscPenalty->GetParameters().markerNumbers);
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectConnectorRollingDiscPenalty->GetParameters().nodeNumber);
-        EPyUtils::RequireGiven(d["discRadius"], 0., "ObjectConnectorRollingDiscPenalty.discRadius"); EPyUtils::FromPython(d["discRadius"], cObjectConnectorRollingDiscPenalty->GetParameters().discRadius, EPyUtils::RangeCheck::positive, "ObjectConnectorRollingDiscPenalty.discRadius");
+        if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorRollingDiscPenalty->GetParameters().markerNumbers); }
+        if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectConnectorRollingDiscPenalty->GetParameters().nodeNumber); }
+        if (EPyUtils::DictItemExists(d, "discRadius")) { EPyUtils::RequireGiven(d["discRadius"], 0., "ObjectConnectorRollingDiscPenalty.discRadius"); EPyUtils::FromPython(d["discRadius"], cObjectConnectorRollingDiscPenalty->GetParameters().discRadius, EPyUtils::RangeCheck::positive, "ObjectConnectorRollingDiscPenalty.discRadius"); } else { EPyUtils::RequireGiven(py::cast(cObjectConnectorRollingDiscPenalty->GetParameters().discRadius), 0., "ObjectConnectorRollingDiscPenalty.discRadius"); }
         if (EPyUtils::DictItemExists(d, "discAxis")) { EPyUtils::FromPython(d["discAxis"], cObjectConnectorRollingDiscPenalty->GetParameters().discAxis); }
         if (EPyUtils::DictItemExists(d, "planeNormal")) { EPyUtils::FromPython(d["planeNormal"], cObjectConnectorRollingDiscPenalty->GetParameters().planeNormal); }
         if (EPyUtils::DictItemExists(d, "dryFrictionAngle")) { EPyUtils::FromPython(d["dryFrictionAngle"], cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionAngle, "ObjectConnectorRollingDiscPenalty.dryFrictionAngle"); }
-        EPyUtils::FromPython(d["contactStiffness"], cObjectConnectorRollingDiscPenalty->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorRollingDiscPenalty.contactStiffness");
+        if (EPyUtils::DictItemExists(d, "contactStiffness")) { EPyUtils::FromPython(d["contactStiffness"], cObjectConnectorRollingDiscPenalty->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorRollingDiscPenalty.contactStiffness"); }
         if (EPyUtils::DictItemExists(d, "contactDamping")) { EPyUtils::FromPython(d["contactDamping"], cObjectConnectorRollingDiscPenalty->GetParameters().contactDamping, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorRollingDiscPenalty.contactDamping"); }
         if (EPyUtils::DictItemExists(d, "dryFriction")) { EPyUtils::FromPython(d["dryFriction"], cObjectConnectorRollingDiscPenalty->GetParameters().dryFriction); }
         if (EPyUtils::DictItemExists(d, "dryFrictionProportionalZone")) { EPyUtils::FromPython(d["dryFrictionProportionalZone"], cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionProportionalZone, "ObjectConnectorRollingDiscPenalty.dryFrictionProportionalZone"); }
@@ -128,7 +128,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "rollingFrictionViscous")) { EPyUtils::FromPython(d["rollingFrictionViscous"], cObjectConnectorRollingDiscPenalty->GetParameters().rollingFrictionViscous, "ObjectConnectorRollingDiscPenalty.rollingFrictionViscous"); }
         if (EPyUtils::DictItemExists(d, "useLinearProportionalZone")) { EPyUtils::FromPython(d["useLinearProportionalZone"], cObjectConnectorRollingDiscPenalty->GetParameters().useLinearProportionalZone, "ObjectConnectorRollingDiscPenalty.useLinearProportionalZone"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorRollingDiscPenalty->GetParameters().activeConnector, "ObjectConnectorRollingDiscPenalty.activeConnector"); }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectConnectorRollingDiscPenalty->GetShow(), "ObjectConnectorRollingDiscPenalty.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VdiscWidth")) { EPyUtils::FromPython(d["VdiscWidth"], visualizationObjectConnectorRollingDiscPenalty->GetDiscWidth(), "ObjectConnectorRollingDiscPenalty.VdiscWidth"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectConnectorRollingDiscPenalty->GetColor(), "ObjectConnectorRollingDiscPenalty.Vcolor"); }

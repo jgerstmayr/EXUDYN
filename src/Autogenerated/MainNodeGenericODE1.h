@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:11:21 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -126,10 +126,10 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::FromPython(d["referenceCoordinates"], cNodeGenericODE1->GetParameters().referenceCoordinates, "NodeGenericODE1.referenceCoordinates");
-        EPyUtils::RequireGiven(d["numberOfODE1Coordinates"], 0, "NodeGenericODE1.numberOfODE1Coordinates"); EPyUtils::FromPython(d["numberOfODE1Coordinates"], cNodeGenericODE1->GetParameters().numberOfODE1Coordinates, EPyUtils::RangeCheck::positive, "NodeGenericODE1.numberOfODE1Coordinates");
-        EPyUtils::FromPython(d["initialCoordinates"], GetParameters().initialCoordinates, "NodeGenericODE1.initialCoordinates");
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "referenceCoordinates")) { EPyUtils::FromPython(d["referenceCoordinates"], cNodeGenericODE1->GetParameters().referenceCoordinates, "NodeGenericODE1.referenceCoordinates"); }
+        if (EPyUtils::DictItemExists(d, "numberOfODE1Coordinates")) { EPyUtils::RequireGiven(d["numberOfODE1Coordinates"], 0, "NodeGenericODE1.numberOfODE1Coordinates"); EPyUtils::FromPython(d["numberOfODE1Coordinates"], cNodeGenericODE1->GetParameters().numberOfODE1Coordinates, EPyUtils::RangeCheck::positive, "NodeGenericODE1.numberOfODE1Coordinates"); } else { EPyUtils::RequireGiven(py::cast(cNodeGenericODE1->GetParameters().numberOfODE1Coordinates), 0, "NodeGenericODE1.numberOfODE1Coordinates"); }
+        if (EPyUtils::DictItemExists(d, "initialCoordinates")) { EPyUtils::FromPython(d["initialCoordinates"], GetParameters().initialCoordinates, "NodeGenericODE1.initialCoordinates"); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationNodeGenericODE1->GetShow(), "NodeGenericODE1.Vshow"); }
     }
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -112,11 +112,11 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::FromPython(d["physicsMass"], cObjectRigidBody2D->GetParameters().physicsMass, EPyUtils::RangeCheck::nonNegative, "ObjectRigidBody2D.physicsMass");
-        EPyUtils::FromPython(d["physicsInertia"], cObjectRigidBody2D->GetParameters().physicsInertia, EPyUtils::RangeCheck::nonNegative, "ObjectRigidBody2D.physicsInertia");
+        if (EPyUtils::DictItemExists(d, "physicsMass")) { EPyUtils::FromPython(d["physicsMass"], cObjectRigidBody2D->GetParameters().physicsMass, EPyUtils::RangeCheck::nonNegative, "ObjectRigidBody2D.physicsMass"); }
+        if (EPyUtils::DictItemExists(d, "physicsInertia")) { EPyUtils::FromPython(d["physicsInertia"], cObjectRigidBody2D->GetParameters().physicsInertia, EPyUtils::RangeCheck::nonNegative, "ObjectRigidBody2D.physicsInertia"); }
         if (EPyUtils::DictItemExists(d, "physicsCenterOfMass")) { EPyUtils::FromPython(d["physicsCenterOfMass"], cObjectRigidBody2D->GetParameters().physicsCenterOfMass); }
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectRigidBody2D->GetParameters().nodeNumber);
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectRigidBody2D->GetParameters().nodeNumber); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectRigidBody2D->GetShow(), "ObjectRigidBody2D.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VgraphicsDataUserFunction")) { visualizationObjectRigidBody2D->GetGraphicsDataUserFunction() = d["VgraphicsDataUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "VgraphicsData")) { PyWriteBodyGraphicsDataList(d, "VgraphicsData", visualizationObjectRigidBody2D->GetGraphicsData()); }

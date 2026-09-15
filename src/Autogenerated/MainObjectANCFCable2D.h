@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -115,20 +115,20 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::FromPython(d["physicsLength"], cObjectANCFCable2D->GetParameters().physicsLength, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable2D.physicsLength");
-        EPyUtils::FromPython(d["physicsMassPerLength"], cObjectANCFCable2D->GetParameters().physicsMassPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable2D.physicsMassPerLength");
-        EPyUtils::FromPython(d["physicsBendingStiffness"], cObjectANCFCable2D->GetParameters().physicsBendingStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable2D.physicsBendingStiffness");
-        EPyUtils::FromPython(d["physicsAxialStiffness"], cObjectANCFCable2D->GetParameters().physicsAxialStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable2D.physicsAxialStiffness");
-        EPyUtils::FromPython(d["physicsBendingDamping"], cObjectANCFCable2D->GetParameters().physicsBendingDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable2D.physicsBendingDamping");
-        EPyUtils::FromPython(d["physicsAxialDamping"], cObjectANCFCable2D->GetParameters().physicsAxialDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable2D.physicsAxialDamping");
-        EPyUtils::FromPython(d["physicsReferenceAxialStrain"], cObjectANCFCable2D->GetParameters().physicsReferenceAxialStrain, "ObjectANCFCable2D.physicsReferenceAxialStrain");
-        EPyUtils::FromPython(d["physicsReferenceCurvature"], cObjectANCFCable2D->GetParameters().physicsReferenceCurvature, "ObjectANCFCable2D.physicsReferenceCurvature");
-        EPyUtils::FromPython(d["strainIsRelativeToReference"], cObjectANCFCable2D->GetParameters().strainIsRelativeToReference, "ObjectANCFCable2D.strainIsRelativeToReference");
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectANCFCable2D->GetParameters().nodeNumbers);
-        EPyUtils::FromPython(d["useReducedOrderIntegration"], cObjectANCFCable2D->GetParameters().useReducedOrderIntegration, "ObjectANCFCable2D.useReducedOrderIntegration");
+        if (EPyUtils::DictItemExists(d, "physicsLength")) { EPyUtils::FromPython(d["physicsLength"], cObjectANCFCable2D->GetParameters().physicsLength, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable2D.physicsLength"); }
+        if (EPyUtils::DictItemExists(d, "physicsMassPerLength")) { EPyUtils::FromPython(d["physicsMassPerLength"], cObjectANCFCable2D->GetParameters().physicsMassPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable2D.physicsMassPerLength"); }
+        if (EPyUtils::DictItemExists(d, "physicsBendingStiffness")) { EPyUtils::FromPython(d["physicsBendingStiffness"], cObjectANCFCable2D->GetParameters().physicsBendingStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable2D.physicsBendingStiffness"); }
+        if (EPyUtils::DictItemExists(d, "physicsAxialStiffness")) { EPyUtils::FromPython(d["physicsAxialStiffness"], cObjectANCFCable2D->GetParameters().physicsAxialStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable2D.physicsAxialStiffness"); }
+        if (EPyUtils::DictItemExists(d, "physicsBendingDamping")) { EPyUtils::FromPython(d["physicsBendingDamping"], cObjectANCFCable2D->GetParameters().physicsBendingDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable2D.physicsBendingDamping"); }
+        if (EPyUtils::DictItemExists(d, "physicsAxialDamping")) { EPyUtils::FromPython(d["physicsAxialDamping"], cObjectANCFCable2D->GetParameters().physicsAxialDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable2D.physicsAxialDamping"); }
+        if (EPyUtils::DictItemExists(d, "physicsReferenceAxialStrain")) { EPyUtils::FromPython(d["physicsReferenceAxialStrain"], cObjectANCFCable2D->GetParameters().physicsReferenceAxialStrain, "ObjectANCFCable2D.physicsReferenceAxialStrain"); }
+        if (EPyUtils::DictItemExists(d, "physicsReferenceCurvature")) { EPyUtils::FromPython(d["physicsReferenceCurvature"], cObjectANCFCable2D->GetParameters().physicsReferenceCurvature, "ObjectANCFCable2D.physicsReferenceCurvature"); }
+        if (EPyUtils::DictItemExists(d, "strainIsRelativeToReference")) { EPyUtils::FromPython(d["strainIsRelativeToReference"], cObjectANCFCable2D->GetParameters().strainIsRelativeToReference, "ObjectANCFCable2D.strainIsRelativeToReference"); }
+        if (EPyUtils::DictItemExists(d, "nodeNumbers")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectANCFCable2D->GetParameters().nodeNumbers); }
+        if (EPyUtils::DictItemExists(d, "useReducedOrderIntegration")) { EPyUtils::FromPython(d["useReducedOrderIntegration"], cObjectANCFCable2D->GetParameters().useReducedOrderIntegration, "ObjectANCFCable2D.useReducedOrderIntegration"); }
         if (EPyUtils::DictItemExists(d, "axialForceUserFunction")) { cObjectANCFCable2D->GetParameters().axialForceUserFunction = d["axialForceUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "bendingMomentUserFunction")) { cObjectANCFCable2D->GetParameters().bendingMomentUserFunction = d["bendingMomentUserFunction"]; }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectANCFCable2D->GetShow(), "ObjectANCFCable2D.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VdrawHeight")) { EPyUtils::FromPython(d["VdrawHeight"], visualizationObjectANCFCable2D->GetDrawHeight(), "ObjectANCFCable2D.VdrawHeight"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectANCFCable2D->GetColor(), "ObjectANCFCable2D.Vcolor"); }

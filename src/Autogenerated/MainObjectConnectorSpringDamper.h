@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,15 +106,15 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorSpringDamper->GetParameters().markerNumbers);
-        EPyUtils::FromPython(d["referenceLength"], cObjectConnectorSpringDamper->GetParameters().referenceLength, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorSpringDamper.referenceLength");
-        EPyUtils::FromPython(d["stiffness"], cObjectConnectorSpringDamper->GetParameters().stiffness, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorSpringDamper.stiffness");
-        EPyUtils::FromPython(d["damping"], cObjectConnectorSpringDamper->GetParameters().damping, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorSpringDamper.damping");
+        if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorSpringDamper->GetParameters().markerNumbers); }
+        if (EPyUtils::DictItemExists(d, "referenceLength")) { EPyUtils::FromPython(d["referenceLength"], cObjectConnectorSpringDamper->GetParameters().referenceLength, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorSpringDamper.referenceLength"); }
+        if (EPyUtils::DictItemExists(d, "stiffness")) { EPyUtils::FromPython(d["stiffness"], cObjectConnectorSpringDamper->GetParameters().stiffness, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorSpringDamper.stiffness"); }
+        if (EPyUtils::DictItemExists(d, "damping")) { EPyUtils::FromPython(d["damping"], cObjectConnectorSpringDamper->GetParameters().damping, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorSpringDamper.damping"); }
         if (EPyUtils::DictItemExists(d, "force")) { EPyUtils::FromPython(d["force"], cObjectConnectorSpringDamper->GetParameters().force, "ObjectConnectorSpringDamper.force"); }
         if (EPyUtils::DictItemExists(d, "velocityOffset")) { EPyUtils::FromPython(d["velocityOffset"], cObjectConnectorSpringDamper->GetParameters().velocityOffset, "ObjectConnectorSpringDamper.velocityOffset"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorSpringDamper->GetParameters().activeConnector, "ObjectConnectorSpringDamper.activeConnector"); }
         if (EPyUtils::DictItemExists(d, "springForceUserFunction")) { cObjectConnectorSpringDamper->GetParameters().springForceUserFunction = d["springForceUserFunction"]; }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectConnectorSpringDamper->GetShow(), "ObjectConnectorSpringDamper.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationObjectConnectorSpringDamper->GetDrawSize(), "ObjectConnectorSpringDamper.VdrawSize"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectConnectorSpringDamper->GetColor(), "ObjectConnectorSpringDamper.Vcolor"); }

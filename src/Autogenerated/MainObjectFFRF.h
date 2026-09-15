@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -115,16 +115,16 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectFFRF->GetParameters().nodeNumbers);
-        EPyUtils::SetPyMatrixContainerSafely(d["massMatrixFF"], cObjectFFRF->GetParameters().massMatrixFF);
-        EPyUtils::SetPyMatrixContainerSafely(d["stiffnessMatrixFF"], cObjectFFRF->GetParameters().stiffnessMatrixFF);
-        EPyUtils::SetPyMatrixContainerSafely(d["dampingMatrixFF"], cObjectFFRF->GetParameters().dampingMatrixFF);
-        EPyUtils::FromPython(d["forceVector"], cObjectFFRF->GetParameters().forceVector);
+        if (EPyUtils::DictItemExists(d, "nodeNumbers")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectFFRF->GetParameters().nodeNumbers); }
+        if (EPyUtils::DictItemExists(d, "massMatrixFF")) { EPyUtils::SetPyMatrixContainerSafely(d["massMatrixFF"], cObjectFFRF->GetParameters().massMatrixFF); }
+        if (EPyUtils::DictItemExists(d, "stiffnessMatrixFF")) { EPyUtils::SetPyMatrixContainerSafely(d["stiffnessMatrixFF"], cObjectFFRF->GetParameters().stiffnessMatrixFF); }
+        if (EPyUtils::DictItemExists(d, "dampingMatrixFF")) { EPyUtils::SetPyMatrixContainerSafely(d["dampingMatrixFF"], cObjectFFRF->GetParameters().dampingMatrixFF); }
+        if (EPyUtils::DictItemExists(d, "forceVector")) { EPyUtils::FromPython(d["forceVector"], cObjectFFRF->GetParameters().forceVector); }
         if (EPyUtils::DictItemExists(d, "forceUserFunction")) { cObjectFFRF->GetParameters().forceUserFunction = d["forceUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "massMatrixUserFunction")) { cObjectFFRF->GetParameters().massMatrixUserFunction = d["massMatrixUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "computeFFRFterms")) { EPyUtils::FromPython(d["computeFFRFterms"], cObjectFFRF->GetParameters().computeFFRFterms, "ObjectFFRF.computeFFRFterms"); }
         if (EPyUtils::DictItemExists(d, "objectIsInitialized")) { EPyUtils::FromPython(d["objectIsInitialized"], cObjectFFRF->GetObjectIsInitialized(), "ObjectFFRF.objectIsInitialized"); }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectFFRF->GetShow(), "ObjectFFRF.Vshow"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectFFRF->GetColor(), "ObjectFFRF.Vcolor"); }
         if (EPyUtils::DictItemExists(d, "VtriangleMesh")) { EPyUtils::FromPython(d["VtriangleMesh"], visualizationObjectFFRF->GetTriangleMesh()); }

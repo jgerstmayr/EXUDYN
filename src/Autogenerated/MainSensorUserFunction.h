@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,13 +106,13 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<SensorIndex>(d["sensorNumbers"], cSensorUserFunction->GetParameters().sensorNumbers);
-        EPyUtils::FromPython(d["factors"], cSensorUserFunction->GetParameters().factors, "SensorUserFunction.factors");
-        EPyUtils::FromPython(d["writeToFile"], cSensorUserFunction->GetParameters().writeToFile, "SensorUserFunction.writeToFile");
-        EPyUtils::FromPython(d["fileName"], cSensorUserFunction->GetParameters().fileName);
+        if (EPyUtils::DictItemExists(d, "sensorNumbers")) { EPyUtils::ItemIndexFromPython<SensorIndex>(d["sensorNumbers"], cSensorUserFunction->GetParameters().sensorNumbers); }
+        if (EPyUtils::DictItemExists(d, "factors")) { EPyUtils::FromPython(d["factors"], cSensorUserFunction->GetParameters().factors, "SensorUserFunction.factors"); }
+        if (EPyUtils::DictItemExists(d, "writeToFile")) { EPyUtils::FromPython(d["writeToFile"], cSensorUserFunction->GetParameters().writeToFile, "SensorUserFunction.writeToFile"); }
+        if (EPyUtils::DictItemExists(d, "fileName")) { EPyUtils::FromPython(d["fileName"], cSensorUserFunction->GetParameters().fileName); }
         if (EPyUtils::DictItemExists(d, "sensorUserFunction")) { cSensorUserFunction->GetParameters().sensorUserFunction = d["sensorUserFunction"]; }
-        EPyUtils::FromPython(d["storeInternal"], cSensorUserFunction->GetParameters().storeInternal, "SensorUserFunction.storeInternal");
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "storeInternal")) { EPyUtils::FromPython(d["storeInternal"], cSensorUserFunction->GetParameters().storeInternal, "SensorUserFunction.storeInternal"); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationSensorUserFunction->GetShow(), "SensorUserFunction.Vshow"); }
     }
 

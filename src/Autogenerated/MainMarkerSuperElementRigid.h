@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,13 +108,13 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<ObjectIndex>(d["bodyNumber"], cMarkerSuperElementRigid->GetParameters().bodyNumber);
-        EPyUtils::FromPython(d["offset"], cMarkerSuperElementRigid->GetParameters().offset);
-        EPyUtils::FromPython(d["meshNodeNumbers"], cMarkerSuperElementRigid->GetParameters().meshNodeNumbers, "MarkerSuperElementRigid.meshNodeNumbers");
-        EPyUtils::FromPython(d["weightingFactors"], cMarkerSuperElementRigid->GetParameters().weightingFactors, "MarkerSuperElementRigid.weightingFactors");
-        EPyUtils::FromPython(d["useAlternativeApproach"], cMarkerSuperElementRigid->GetParameters().useAlternativeApproach, "MarkerSuperElementRigid.useAlternativeApproach");
-        EPyUtils::FromPython(d["rotationsExponentialMap"], cMarkerSuperElementRigid->GetParameters().rotationsExponentialMap, "MarkerSuperElementRigid.rotationsExponentialMap");
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "bodyNumber")) { EPyUtils::ItemIndexFromPython<ObjectIndex>(d["bodyNumber"], cMarkerSuperElementRigid->GetParameters().bodyNumber); }
+        if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::FromPython(d["offset"], cMarkerSuperElementRigid->GetParameters().offset); }
+        if (EPyUtils::DictItemExists(d, "meshNodeNumbers")) { EPyUtils::FromPython(d["meshNodeNumbers"], cMarkerSuperElementRigid->GetParameters().meshNodeNumbers, "MarkerSuperElementRigid.meshNodeNumbers"); }
+        if (EPyUtils::DictItemExists(d, "weightingFactors")) { EPyUtils::FromPython(d["weightingFactors"], cMarkerSuperElementRigid->GetParameters().weightingFactors, "MarkerSuperElementRigid.weightingFactors"); }
+        if (EPyUtils::DictItemExists(d, "useAlternativeApproach")) { EPyUtils::FromPython(d["useAlternativeApproach"], cMarkerSuperElementRigid->GetParameters().useAlternativeApproach, "MarkerSuperElementRigid.useAlternativeApproach"); }
+        if (EPyUtils::DictItemExists(d, "rotationsExponentialMap")) { EPyUtils::FromPython(d["rotationsExponentialMap"], cMarkerSuperElementRigid->GetParameters().rotationsExponentialMap, "MarkerSuperElementRigid.rotationsExponentialMap"); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationMarkerSuperElementRigid->GetShow(), "MarkerSuperElementRigid.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VshowMarkerNodes")) { EPyUtils::FromPython(d["VshowMarkerNodes"], visualizationMarkerSuperElementRigid->GetShowMarkerNodes(), "MarkerSuperElementRigid.VshowMarkerNodes"); }
     }

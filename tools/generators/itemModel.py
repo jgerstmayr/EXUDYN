@@ -445,7 +445,7 @@ def IsDeclarationOnly(member):
 
 
 def HasFlag(member, letter):
-    """a flag stored in cFlags: CFConst 'C', CFOptional 'O', CFMutable 'U', CFReadOnly 'R'"""
+    """a flag stored in cFlags: CFConst 'C', CFMutable 'U', CFReadOnly 'R'"""
     return letter in (member.get('cFlags', '') or '')
 
 

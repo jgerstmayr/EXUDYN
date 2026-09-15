@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -115,17 +115,17 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectFFRFreducedOrder->GetParameters().nodeNumbers);
-        EPyUtils::SetPyMatrixContainerSafely(d["massMatrixReduced"], cObjectFFRFreducedOrder->GetParameters().massMatrixReduced);
-        EPyUtils::SetPyMatrixContainerSafely(d["stiffnessMatrixReduced"], cObjectFFRFreducedOrder->GetParameters().stiffnessMatrixReduced);
-        EPyUtils::SetPyMatrixContainerSafely(d["dampingMatrixReduced"], cObjectFFRFreducedOrder->GetParameters().dampingMatrixReduced);
+        if (EPyUtils::DictItemExists(d, "nodeNumbers")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectFFRFreducedOrder->GetParameters().nodeNumbers); }
+        if (EPyUtils::DictItemExists(d, "massMatrixReduced")) { EPyUtils::SetPyMatrixContainerSafely(d["massMatrixReduced"], cObjectFFRFreducedOrder->GetParameters().massMatrixReduced); }
+        if (EPyUtils::DictItemExists(d, "stiffnessMatrixReduced")) { EPyUtils::SetPyMatrixContainerSafely(d["stiffnessMatrixReduced"], cObjectFFRFreducedOrder->GetParameters().stiffnessMatrixReduced); }
+        if (EPyUtils::DictItemExists(d, "dampingMatrixReduced")) { EPyUtils::SetPyMatrixContainerSafely(d["dampingMatrixReduced"], cObjectFFRFreducedOrder->GetParameters().dampingMatrixReduced); }
         if (EPyUtils::DictItemExists(d, "forceUserFunction")) { cObjectFFRFreducedOrder->GetParameters().forceUserFunction = d["forceUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "massMatrixUserFunction")) { cObjectFFRFreducedOrder->GetParameters().massMatrixUserFunction = d["massMatrixUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "computeFFRFterms")) { EPyUtils::FromPython(d["computeFFRFterms"], cObjectFFRFreducedOrder->GetParameters().computeFFRFterms, "ObjectFFRFreducedOrder.computeFFRFterms"); }
-        EPyUtils::FromPython(d["modeBasis"], cObjectFFRFreducedOrder->GetParameters().modeBasis);
+        if (EPyUtils::DictItemExists(d, "modeBasis")) { EPyUtils::FromPython(d["modeBasis"], cObjectFFRFreducedOrder->GetParameters().modeBasis); }
         if (EPyUtils::DictItemExists(d, "outputVariableModeBasis")) { EPyUtils::FromPython(d["outputVariableModeBasis"], cObjectFFRFreducedOrder->GetParameters().outputVariableModeBasis); }
         if (EPyUtils::DictItemExists(d, "outputVariableTypeModeBasis")) { cObjectFFRFreducedOrder->GetParameters().outputVariableTypeModeBasis = (OutputVariableType)py::cast<Index>(d["outputVariableTypeModeBasis"]); }
-        EPyUtils::FromPython(d["referencePositions"], cObjectFFRFreducedOrder->GetParameters().referencePositions);
+        if (EPyUtils::DictItemExists(d, "referencePositions")) { EPyUtils::FromPython(d["referencePositions"], cObjectFFRFreducedOrder->GetParameters().referencePositions); }
         if (EPyUtils::DictItemExists(d, "mPsiTildePsi")) { EPyUtils::FromPython(d["mPsiTildePsi"], cObjectFFRFreducedOrder->GetParameters().mPsiTildePsi); }
         if (EPyUtils::DictItemExists(d, "mPsiTildePsiTilde")) { EPyUtils::FromPython(d["mPsiTildePsiTilde"], cObjectFFRFreducedOrder->GetParameters().mPsiTildePsiTilde); }
         if (EPyUtils::DictItemExists(d, "mPhitTPsi")) { EPyUtils::FromPython(d["mPhitTPsi"], cObjectFFRFreducedOrder->GetParameters().mPhitTPsi); }
@@ -133,11 +133,11 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "mXRefTildePsi")) { EPyUtils::FromPython(d["mXRefTildePsi"], cObjectFFRFreducedOrder->GetParameters().mXRefTildePsi); }
         if (EPyUtils::DictItemExists(d, "mXRefTildePsiTilde")) { EPyUtils::FromPython(d["mXRefTildePsiTilde"], cObjectFFRFreducedOrder->GetParameters().mXRefTildePsiTilde); }
         if (EPyUtils::DictItemExists(d, "objectIsInitialized")) { EPyUtils::FromPython(d["objectIsInitialized"], cObjectFFRFreducedOrder->GetObjectIsInitialized(), "ObjectFFRFreducedOrder.objectIsInitialized"); }
-        EPyUtils::FromPython(d["physicsMass"], cObjectFFRFreducedOrder->GetPhysicsMass(), EPyUtils::RangeCheck::nonNegative, "ObjectFFRFreducedOrder.physicsMass");
-        EPyUtils::FromPython<Real, 3, 3>(d["physicsInertia"], cObjectFFRFreducedOrder->GetPhysicsInertia());
-        EPyUtils::FromPython(d["physicsCenterOfMass"], cObjectFFRFreducedOrder->GetPhysicsCenterOfMass());
-        EPyUtils::FromPython<Real, 3, 3>(d["physicsCenterOfMassTilde"], cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde());
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "physicsMass")) { EPyUtils::FromPython(d["physicsMass"], cObjectFFRFreducedOrder->GetPhysicsMass(), EPyUtils::RangeCheck::nonNegative, "ObjectFFRFreducedOrder.physicsMass"); }
+        if (EPyUtils::DictItemExists(d, "physicsInertia")) { EPyUtils::FromPython<Real, 3, 3>(d["physicsInertia"], cObjectFFRFreducedOrder->GetPhysicsInertia()); }
+        if (EPyUtils::DictItemExists(d, "physicsCenterOfMass")) { EPyUtils::FromPython(d["physicsCenterOfMass"], cObjectFFRFreducedOrder->GetPhysicsCenterOfMass()); }
+        if (EPyUtils::DictItemExists(d, "physicsCenterOfMassTilde")) { EPyUtils::FromPython<Real, 3, 3>(d["physicsCenterOfMassTilde"], cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde()); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectFFRFreducedOrder->GetShow(), "ObjectFFRFreducedOrder.Vshow"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectFFRFreducedOrder->GetColor(), "ObjectFFRFreducedOrder.Vcolor"); }
         if (EPyUtils::DictItemExists(d, "VtriangleMesh")) { EPyUtils::FromPython(d["VtriangleMesh"], visualizationObjectFFRFreducedOrder->GetTriangleMesh()); }

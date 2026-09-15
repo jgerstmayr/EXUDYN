@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -115,25 +115,25 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectKinematicTree->GetParameters().nodeNumber);
-        EPyUtils::FromPython(d["gravity"], cObjectKinematicTree->GetParameters().gravity);
-        EPyUtils::FromPython(d["baseOffset"], cObjectKinematicTree->GetParameters().baseOffset);
-        cObjectKinematicTree->GetParameters().jointTypes = py::cast<std::vector<Joint::Type>>(d["jointTypes"]);
-        EPyUtils::FromPython(d["linkParents"], cObjectKinematicTree->GetParameters().linkParents, "ObjectKinematicTree.linkParents");
-        EPyUtils::SetMatrix3DListSafely(d["jointTransformations"], cObjectKinematicTree->GetParameters().jointTransformations);
-        EPyUtils::SetVector3DListSafely(d["jointOffsets"], cObjectKinematicTree->GetParameters().jointOffsets);
-        EPyUtils::SetMatrix3DListSafely(d["linkInertiasCOM"], cObjectKinematicTree->GetParameters().linkInertiasCOM);
-        EPyUtils::SetVector3DListSafely(d["linkCOMs"], cObjectKinematicTree->GetParameters().linkCOMs);
-        EPyUtils::FromPython(d["linkMasses"], cObjectKinematicTree->GetParameters().linkMasses, "ObjectKinematicTree.linkMasses");
-        EPyUtils::SetVector3DListSafely(d["linkForces"], cObjectKinematicTree->GetParameters().linkForces);
-        EPyUtils::SetVector3DListSafely(d["linkTorques"], cObjectKinematicTree->GetParameters().linkTorques);
-        EPyUtils::FromPython(d["jointForceVector"], cObjectKinematicTree->GetParameters().jointForceVector, "ObjectKinematicTree.jointForceVector");
-        EPyUtils::FromPython(d["jointPositionOffsetVector"], cObjectKinematicTree->GetParameters().jointPositionOffsetVector, "ObjectKinematicTree.jointPositionOffsetVector");
-        EPyUtils::FromPython(d["jointVelocityOffsetVector"], cObjectKinematicTree->GetParameters().jointVelocityOffsetVector, "ObjectKinematicTree.jointVelocityOffsetVector");
-        EPyUtils::FromPython(d["jointPControlVector"], cObjectKinematicTree->GetParameters().jointPControlVector, "ObjectKinematicTree.jointPControlVector");
-        EPyUtils::FromPython(d["jointDControlVector"], cObjectKinematicTree->GetParameters().jointDControlVector, "ObjectKinematicTree.jointDControlVector");
+        if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectKinematicTree->GetParameters().nodeNumber); }
+        if (EPyUtils::DictItemExists(d, "gravity")) { EPyUtils::FromPython(d["gravity"], cObjectKinematicTree->GetParameters().gravity); }
+        if (EPyUtils::DictItemExists(d, "baseOffset")) { EPyUtils::FromPython(d["baseOffset"], cObjectKinematicTree->GetParameters().baseOffset); }
+        if (EPyUtils::DictItemExists(d, "jointTypes")) { cObjectKinematicTree->GetParameters().jointTypes = py::cast<std::vector<Joint::Type>>(d["jointTypes"]); }
+        if (EPyUtils::DictItemExists(d, "linkParents")) { EPyUtils::FromPython(d["linkParents"], cObjectKinematicTree->GetParameters().linkParents, "ObjectKinematicTree.linkParents"); }
+        if (EPyUtils::DictItemExists(d, "jointTransformations")) { EPyUtils::SetMatrix3DListSafely(d["jointTransformations"], cObjectKinematicTree->GetParameters().jointTransformations); }
+        if (EPyUtils::DictItemExists(d, "jointOffsets")) { EPyUtils::SetVector3DListSafely(d["jointOffsets"], cObjectKinematicTree->GetParameters().jointOffsets); }
+        if (EPyUtils::DictItemExists(d, "linkInertiasCOM")) { EPyUtils::SetMatrix3DListSafely(d["linkInertiasCOM"], cObjectKinematicTree->GetParameters().linkInertiasCOM); }
+        if (EPyUtils::DictItemExists(d, "linkCOMs")) { EPyUtils::SetVector3DListSafely(d["linkCOMs"], cObjectKinematicTree->GetParameters().linkCOMs); }
+        if (EPyUtils::DictItemExists(d, "linkMasses")) { EPyUtils::FromPython(d["linkMasses"], cObjectKinematicTree->GetParameters().linkMasses, "ObjectKinematicTree.linkMasses"); }
+        if (EPyUtils::DictItemExists(d, "linkForces")) { EPyUtils::SetVector3DListSafely(d["linkForces"], cObjectKinematicTree->GetParameters().linkForces); }
+        if (EPyUtils::DictItemExists(d, "linkTorques")) { EPyUtils::SetVector3DListSafely(d["linkTorques"], cObjectKinematicTree->GetParameters().linkTorques); }
+        if (EPyUtils::DictItemExists(d, "jointForceVector")) { EPyUtils::FromPython(d["jointForceVector"], cObjectKinematicTree->GetParameters().jointForceVector, "ObjectKinematicTree.jointForceVector"); }
+        if (EPyUtils::DictItemExists(d, "jointPositionOffsetVector")) { EPyUtils::FromPython(d["jointPositionOffsetVector"], cObjectKinematicTree->GetParameters().jointPositionOffsetVector, "ObjectKinematicTree.jointPositionOffsetVector"); }
+        if (EPyUtils::DictItemExists(d, "jointVelocityOffsetVector")) { EPyUtils::FromPython(d["jointVelocityOffsetVector"], cObjectKinematicTree->GetParameters().jointVelocityOffsetVector, "ObjectKinematicTree.jointVelocityOffsetVector"); }
+        if (EPyUtils::DictItemExists(d, "jointPControlVector")) { EPyUtils::FromPython(d["jointPControlVector"], cObjectKinematicTree->GetParameters().jointPControlVector, "ObjectKinematicTree.jointPControlVector"); }
+        if (EPyUtils::DictItemExists(d, "jointDControlVector")) { EPyUtils::FromPython(d["jointDControlVector"], cObjectKinematicTree->GetParameters().jointDControlVector, "ObjectKinematicTree.jointDControlVector"); }
         if (EPyUtils::DictItemExists(d, "forceUserFunction")) { cObjectKinematicTree->GetParameters().forceUserFunction = d["forceUserFunction"]; }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectKinematicTree->GetShow(), "ObjectKinematicTree.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VshowLinks")) { EPyUtils::FromPython(d["VshowLinks"], visualizationObjectKinematicTree->GetShowLinks(), "ObjectKinematicTree.VshowLinks"); }
         if (EPyUtils::DictItemExists(d, "VshowJoints")) { EPyUtils::FromPython(d["VshowJoints"], visualizationObjectKinematicTree->GetShowJoints(), "ObjectKinematicTree.VshowJoints"); }

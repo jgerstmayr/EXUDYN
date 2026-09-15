@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,15 +114,15 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectJointSliding->GetParameters().markerNumbers);
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["slidingMarkerNumbers"], cObjectJointSliding->GetParameters().slidingMarkerNumbers);
-        EPyUtils::FromPython(d["slidingMarkerOffsets"], cObjectJointSliding->GetParameters().slidingMarkerOffsets, "ObjectJointSliding.slidingMarkerOffsets");
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectJointSliding->GetParameters().nodeNumber);
+        if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectJointSliding->GetParameters().markerNumbers); }
+        if (EPyUtils::DictItemExists(d, "slidingMarkerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["slidingMarkerNumbers"], cObjectJointSliding->GetParameters().slidingMarkerNumbers); }
+        if (EPyUtils::DictItemExists(d, "slidingMarkerOffsets")) { EPyUtils::FromPython(d["slidingMarkerOffsets"], cObjectJointSliding->GetParameters().slidingMarkerOffsets, "ObjectJointSliding.slidingMarkerOffsets"); }
+        if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectJointSliding->GetParameters().nodeNumber); }
         if (EPyUtils::DictItemExists(d, "constrainRotations")) { EPyUtils::FromPython(d["constrainRotations"], cObjectJointSliding->GetParameters().constrainRotations, "ObjectJointSliding.constrainRotations"); }
         if (EPyUtils::DictItemExists(d, "constrainTranslations")) { EPyUtils::FromPython(d["constrainTranslations"], cObjectJointSliding->GetParameters().constrainTranslations, "ObjectJointSliding.constrainTranslations"); }
         if (EPyUtils::DictItemExists(d, "axialForce")) { EPyUtils::FromPython(d["axialForce"], cObjectJointSliding->GetParameters().axialForce, "ObjectJointSliding.axialForce"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectJointSliding->GetParameters().activeConnector, "ObjectJointSliding.activeConnector"); }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectJointSliding->GetShow(), "ObjectJointSliding.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationObjectJointSliding->GetDrawSize(), "ObjectJointSliding.VdrawSize"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectJointSliding->GetColor(), "ObjectJointSliding.Vcolor"); }

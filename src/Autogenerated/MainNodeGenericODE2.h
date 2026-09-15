@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:11:21 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -134,11 +134,11 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::FromPython(d["referenceCoordinates"], cNodeGenericODE2->GetParameters().referenceCoordinates, "NodeGenericODE2.referenceCoordinates");
-        EPyUtils::RequireGiven(d["numberOfODE2Coordinates"], 0, "NodeGenericODE2.numberOfODE2Coordinates"); EPyUtils::FromPython(d["numberOfODE2Coordinates"], cNodeGenericODE2->GetParameters().numberOfODE2Coordinates, EPyUtils::RangeCheck::positive, "NodeGenericODE2.numberOfODE2Coordinates");
-        EPyUtils::FromPython(d["initialCoordinates"], GetParameters().initialCoordinates, "NodeGenericODE2.initialCoordinates");
-        EPyUtils::FromPython(d["initialCoordinates_t"], GetParameters().initialCoordinates_t, "NodeGenericODE2.initialCoordinates_t");
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "referenceCoordinates")) { EPyUtils::FromPython(d["referenceCoordinates"], cNodeGenericODE2->GetParameters().referenceCoordinates, "NodeGenericODE2.referenceCoordinates"); }
+        if (EPyUtils::DictItemExists(d, "numberOfODE2Coordinates")) { EPyUtils::RequireGiven(d["numberOfODE2Coordinates"], 0, "NodeGenericODE2.numberOfODE2Coordinates"); EPyUtils::FromPython(d["numberOfODE2Coordinates"], cNodeGenericODE2->GetParameters().numberOfODE2Coordinates, EPyUtils::RangeCheck::positive, "NodeGenericODE2.numberOfODE2Coordinates"); } else { EPyUtils::RequireGiven(py::cast(cNodeGenericODE2->GetParameters().numberOfODE2Coordinates), 0, "NodeGenericODE2.numberOfODE2Coordinates"); }
+        if (EPyUtils::DictItemExists(d, "initialCoordinates")) { EPyUtils::FromPython(d["initialCoordinates"], GetParameters().initialCoordinates, "NodeGenericODE2.initialCoordinates"); }
+        if (EPyUtils::DictItemExists(d, "initialCoordinates_t")) { EPyUtils::FromPython(d["initialCoordinates_t"], GetParameters().initialCoordinates_t, "NodeGenericODE2.initialCoordinates_t"); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationNodeGenericODE2->GetShow(), "NodeGenericODE2.Vshow"); }
     }
 

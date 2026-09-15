@@ -176,6 +176,13 @@ You can view and download this file on Github: `parameterConversionTest.py <http
    
        for member in members:
            GetParameter = lambda mbs, i: getattr(mbs, 'Get' + kind + 'Parameter')(i, member)
+           #left out of the dict: the default is kept ('str=default'), a must-be-given parameter raises (step 88)
+           def RunOmit():
+               mbs2 = SC.AddSystem()
+               value = Describe(GetParameter(mbs2, Add(mbs2, {m: v for m, v in defaults.items() if m != member})))
+               mbs3 = SC.AddSystem()
+               return 'default' if value == Describe(GetParameter(mbs3, Add(mbs3, dict(defaults)))) else value
+           Record(className + '.' + member + ' omit', [Outcome(RunOmit)])
            for path in ['set', 'dict', 'class']:
                row = []
                for probeName, probe in probes:

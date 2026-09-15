@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -115,9 +115,9 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorCoordinateSpringDamperExt->GetParameters().markerNumbers);
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectConnectorCoordinateSpringDamperExt->GetParameters().nodeNumber);
-        EPyUtils::FromPython(d["stiffness"], cObjectConnectorCoordinateSpringDamperExt->GetParameters().stiffness, "ObjectConnectorCoordinateSpringDamperExt.stiffness");
+        if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorCoordinateSpringDamperExt->GetParameters().markerNumbers); }
+        if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectConnectorCoordinateSpringDamperExt->GetParameters().nodeNumber); }
+        if (EPyUtils::DictItemExists(d, "stiffness")) { EPyUtils::FromPython(d["stiffness"], cObjectConnectorCoordinateSpringDamperExt->GetParameters().stiffness, "ObjectConnectorCoordinateSpringDamperExt.stiffness"); }
         if (EPyUtils::DictItemExists(d, "damping")) { EPyUtils::FromPython(d["damping"], cObjectConnectorCoordinateSpringDamperExt->GetParameters().damping, "ObjectConnectorCoordinateSpringDamperExt.damping"); }
         if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::FromPython(d["offset"], cObjectConnectorCoordinateSpringDamperExt->GetParameters().offset, "ObjectConnectorCoordinateSpringDamperExt.offset"); }
         if (EPyUtils::DictItemExists(d, "velocityOffset")) { EPyUtils::FromPython(d["velocityOffset"], cObjectConnectorCoordinateSpringDamperExt->GetParameters().velocityOffset, "ObjectConnectorCoordinateSpringDamperExt.velocityOffset"); }
@@ -137,7 +137,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "useLimitStops")) { EPyUtils::FromPython(d["useLimitStops"], cObjectConnectorCoordinateSpringDamperExt->GetParameters().useLimitStops, "ObjectConnectorCoordinateSpringDamperExt.useLimitStops"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorCoordinateSpringDamperExt->GetParameters().activeConnector, "ObjectConnectorCoordinateSpringDamperExt.activeConnector"); }
         if (EPyUtils::DictItemExists(d, "springForceUserFunction")) { cObjectConnectorCoordinateSpringDamperExt->GetParameters().springForceUserFunction = d["springForceUserFunction"]; }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectConnectorCoordinateSpringDamperExt->GetShow(), "ObjectConnectorCoordinateSpringDamperExt.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationObjectConnectorCoordinateSpringDamperExt->GetDrawSize(), "ObjectConnectorCoordinateSpringDamperExt.VdrawSize"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectConnectorCoordinateSpringDamperExt->GetColor(), "ObjectConnectorCoordinateSpringDamperExt.Vcolor"); }

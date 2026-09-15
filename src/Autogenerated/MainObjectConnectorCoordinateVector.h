@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -109,17 +109,17 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorCoordinateVector->GetParameters().markerNumbers);
-        EPyUtils::FromPython(d["scalingMarker0"], cObjectConnectorCoordinateVector->GetParameters().scalingMarker0);
-        EPyUtils::FromPython(d["scalingMarker1"], cObjectConnectorCoordinateVector->GetParameters().scalingMarker1);
-        EPyUtils::FromPython(d["quadraticTermMarker0"], cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker0);
-        EPyUtils::FromPython(d["quadraticTermMarker1"], cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker1);
-        EPyUtils::FromPython(d["offset"], cObjectConnectorCoordinateVector->GetParameters().offset);
-        EPyUtils::FromPython(d["velocityLevel"], cObjectConnectorCoordinateVector->GetParameters().velocityLevel, "ObjectConnectorCoordinateVector.velocityLevel");
+        if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorCoordinateVector->GetParameters().markerNumbers); }
+        if (EPyUtils::DictItemExists(d, "scalingMarker0")) { EPyUtils::FromPython(d["scalingMarker0"], cObjectConnectorCoordinateVector->GetParameters().scalingMarker0); }
+        if (EPyUtils::DictItemExists(d, "scalingMarker1")) { EPyUtils::FromPython(d["scalingMarker1"], cObjectConnectorCoordinateVector->GetParameters().scalingMarker1); }
+        if (EPyUtils::DictItemExists(d, "quadraticTermMarker0")) { EPyUtils::FromPython(d["quadraticTermMarker0"], cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker0); }
+        if (EPyUtils::DictItemExists(d, "quadraticTermMarker1")) { EPyUtils::FromPython(d["quadraticTermMarker1"], cObjectConnectorCoordinateVector->GetParameters().quadraticTermMarker1); }
+        if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::FromPython(d["offset"], cObjectConnectorCoordinateVector->GetParameters().offset); }
+        if (EPyUtils::DictItemExists(d, "velocityLevel")) { EPyUtils::FromPython(d["velocityLevel"], cObjectConnectorCoordinateVector->GetParameters().velocityLevel, "ObjectConnectorCoordinateVector.velocityLevel"); }
         if (EPyUtils::DictItemExists(d, "constraintUserFunction")) { cObjectConnectorCoordinateVector->GetParameters().constraintUserFunction = d["constraintUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "jacobianUserFunction")) { cObjectConnectorCoordinateVector->GetParameters().jacobianUserFunction = d["jacobianUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorCoordinateVector->GetParameters().activeConnector, "ObjectConnectorCoordinateVector.activeConnector"); }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectConnectorCoordinateVector->GetShow(), "ObjectConnectorCoordinateVector.Vshow"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectConnectorCoordinateVector->GetColor(), "ObjectConnectorCoordinateVector.Vcolor"); }
         GetCObject()->ParametersHaveChanged();

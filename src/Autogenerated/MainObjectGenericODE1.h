@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -115,11 +115,11 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectGenericODE1->GetParameters().nodeNumbers);
+        if (EPyUtils::DictItemExists(d, "nodeNumbers")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectGenericODE1->GetParameters().nodeNumbers); }
         if (EPyUtils::DictItemExists(d, "systemMatrix")) { EPyUtils::FromPython(d["systemMatrix"], cObjectGenericODE1->GetParameters().systemMatrix); }
         if (EPyUtils::DictItemExists(d, "rhsVector")) { EPyUtils::FromPython(d["rhsVector"], cObjectGenericODE1->GetParameters().rhsVector); }
         if (EPyUtils::DictItemExists(d, "rhsUserFunction")) { cObjectGenericODE1->GetParameters().rhsUserFunction = d["rhsUserFunction"]; }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectGenericODE1->GetShow(), "ObjectGenericODE1.Vshow"); }
         GetCObject()->ParametersHaveChanged();
     }

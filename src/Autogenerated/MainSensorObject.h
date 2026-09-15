@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,12 +108,12 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<ObjectIndex>(d["objectNumber"], cSensorObject->GetParameters().objectNumber);
-        EPyUtils::FromPython(d["writeToFile"], cSensorObject->GetParameters().writeToFile, "SensorObject.writeToFile");
-        EPyUtils::FromPython(d["fileName"], cSensorObject->GetParameters().fileName);
-        cSensorObject->GetParameters().outputVariableType = (OutputVariableType)py::cast<Index>(d["outputVariableType"]);
-        EPyUtils::FromPython(d["storeInternal"], cSensorObject->GetParameters().storeInternal, "SensorObject.storeInternal");
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "objectNumber")) { EPyUtils::ItemIndexFromPython<ObjectIndex>(d["objectNumber"], cSensorObject->GetParameters().objectNumber); }
+        if (EPyUtils::DictItemExists(d, "writeToFile")) { EPyUtils::FromPython(d["writeToFile"], cSensorObject->GetParameters().writeToFile, "SensorObject.writeToFile"); }
+        if (EPyUtils::DictItemExists(d, "fileName")) { EPyUtils::FromPython(d["fileName"], cSensorObject->GetParameters().fileName); }
+        if (EPyUtils::DictItemExists(d, "outputVariableType")) { cSensorObject->GetParameters().outputVariableType = (OutputVariableType)py::cast<Index>(d["outputVariableType"]); }
+        if (EPyUtils::DictItemExists(d, "storeInternal")) { EPyUtils::FromPython(d["storeInternal"], cSensorObject->GetParameters().storeInternal, "SensorObject.storeInternal"); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationSensorObject->GetShow(), "SensorObject.Vshow"); }
     }
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,12 +108,12 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<ObjectIndex>(d["bodyNumbers"], cMarkerBodiesRelativeTranslationCoordinate->GetParameters().bodyNumbers);
-        EPyUtils::FromPython(d["localPosition0"], cMarkerBodiesRelativeTranslationCoordinate->GetParameters().localPosition0);
-        EPyUtils::FromPython(d["localPosition1"], cMarkerBodiesRelativeTranslationCoordinate->GetParameters().localPosition1);
-        EPyUtils::FromPython(d["axis0"], cMarkerBodiesRelativeTranslationCoordinate->GetParameters().axis0);
-        EPyUtils::FromPython(d["offset"], cMarkerBodiesRelativeTranslationCoordinate->GetParameters().offset, "MarkerBodiesRelativeTranslationCoordinate.offset");
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "bodyNumbers")) { EPyUtils::ItemIndexFromPython<ObjectIndex>(d["bodyNumbers"], cMarkerBodiesRelativeTranslationCoordinate->GetParameters().bodyNumbers); }
+        if (EPyUtils::DictItemExists(d, "localPosition0")) { EPyUtils::FromPython(d["localPosition0"], cMarkerBodiesRelativeTranslationCoordinate->GetParameters().localPosition0); }
+        if (EPyUtils::DictItemExists(d, "localPosition1")) { EPyUtils::FromPython(d["localPosition1"], cMarkerBodiesRelativeTranslationCoordinate->GetParameters().localPosition1); }
+        if (EPyUtils::DictItemExists(d, "axis0")) { EPyUtils::FromPython(d["axis0"], cMarkerBodiesRelativeTranslationCoordinate->GetParameters().axis0); }
+        if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::FromPython(d["offset"], cMarkerBodiesRelativeTranslationCoordinate->GetParameters().offset, "MarkerBodiesRelativeTranslationCoordinate.offset"); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationMarkerBodiesRelativeTranslationCoordinate->GetShow(), "MarkerBodiesRelativeTranslationCoordinate.Vshow"); }
     }
 

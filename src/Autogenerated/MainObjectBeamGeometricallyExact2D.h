@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,19 +114,19 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers);
-        EPyUtils::FromPython(d["physicsLength"], cObjectBeamGeometricallyExact2D->GetParameters().physicsLength, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsLength");
-        EPyUtils::FromPython(d["physicsMassPerLength"], cObjectBeamGeometricallyExact2D->GetParameters().physicsMassPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsMassPerLength");
-        EPyUtils::FromPython(d["physicsCrossSectionInertia"], cObjectBeamGeometricallyExact2D->GetParameters().physicsCrossSectionInertia, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsCrossSectionInertia");
-        EPyUtils::FromPython(d["physicsBendingStiffness"], cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsBendingStiffness");
-        EPyUtils::FromPython(d["physicsAxialStiffness"], cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsAxialStiffness");
-        EPyUtils::FromPython(d["physicsShearStiffness"], cObjectBeamGeometricallyExact2D->GetParameters().physicsShearStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsShearStiffness");
-        EPyUtils::FromPython(d["physicsBendingDamping"], cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingDamping, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsBendingDamping");
-        EPyUtils::FromPython(d["physicsAxialDamping"], cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialDamping, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsAxialDamping");
-        EPyUtils::FromPython(d["physicsShearDamping"], cObjectBeamGeometricallyExact2D->GetParameters().physicsShearDamping, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsShearDamping");
-        EPyUtils::FromPython(d["physicsReferenceCurvature"], cObjectBeamGeometricallyExact2D->GetParameters().physicsReferenceCurvature, "ObjectBeamGeometricallyExact2D.physicsReferenceCurvature");
-        EPyUtils::FromPython(d["includeReferenceRotations"], cObjectBeamGeometricallyExact2D->GetParameters().includeReferenceRotations, "ObjectBeamGeometricallyExact2D.includeReferenceRotations");
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "nodeNumbers")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectBeamGeometricallyExact2D->GetParameters().nodeNumbers); }
+        if (EPyUtils::DictItemExists(d, "physicsLength")) { EPyUtils::FromPython(d["physicsLength"], cObjectBeamGeometricallyExact2D->GetParameters().physicsLength, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsLength"); }
+        if (EPyUtils::DictItemExists(d, "physicsMassPerLength")) { EPyUtils::FromPython(d["physicsMassPerLength"], cObjectBeamGeometricallyExact2D->GetParameters().physicsMassPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsMassPerLength"); }
+        if (EPyUtils::DictItemExists(d, "physicsCrossSectionInertia")) { EPyUtils::FromPython(d["physicsCrossSectionInertia"], cObjectBeamGeometricallyExact2D->GetParameters().physicsCrossSectionInertia, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsCrossSectionInertia"); }
+        if (EPyUtils::DictItemExists(d, "physicsBendingStiffness")) { EPyUtils::FromPython(d["physicsBendingStiffness"], cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsBendingStiffness"); }
+        if (EPyUtils::DictItemExists(d, "physicsAxialStiffness")) { EPyUtils::FromPython(d["physicsAxialStiffness"], cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsAxialStiffness"); }
+        if (EPyUtils::DictItemExists(d, "physicsShearStiffness")) { EPyUtils::FromPython(d["physicsShearStiffness"], cObjectBeamGeometricallyExact2D->GetParameters().physicsShearStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsShearStiffness"); }
+        if (EPyUtils::DictItemExists(d, "physicsBendingDamping")) { EPyUtils::FromPython(d["physicsBendingDamping"], cObjectBeamGeometricallyExact2D->GetParameters().physicsBendingDamping, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsBendingDamping"); }
+        if (EPyUtils::DictItemExists(d, "physicsAxialDamping")) { EPyUtils::FromPython(d["physicsAxialDamping"], cObjectBeamGeometricallyExact2D->GetParameters().physicsAxialDamping, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsAxialDamping"); }
+        if (EPyUtils::DictItemExists(d, "physicsShearDamping")) { EPyUtils::FromPython(d["physicsShearDamping"], cObjectBeamGeometricallyExact2D->GetParameters().physicsShearDamping, EPyUtils::RangeCheck::nonNegative, "ObjectBeamGeometricallyExact2D.physicsShearDamping"); }
+        if (EPyUtils::DictItemExists(d, "physicsReferenceCurvature")) { EPyUtils::FromPython(d["physicsReferenceCurvature"], cObjectBeamGeometricallyExact2D->GetParameters().physicsReferenceCurvature, "ObjectBeamGeometricallyExact2D.physicsReferenceCurvature"); }
+        if (EPyUtils::DictItemExists(d, "includeReferenceRotations")) { EPyUtils::FromPython(d["includeReferenceRotations"], cObjectBeamGeometricallyExact2D->GetParameters().includeReferenceRotations, "ObjectBeamGeometricallyExact2D.includeReferenceRotations"); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectBeamGeometricallyExact2D->GetShow(), "ObjectBeamGeometricallyExact2D.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VdrawHeight")) { EPyUtils::FromPython(d["VdrawHeight"], visualizationObjectBeamGeometricallyExact2D->GetDrawHeight(), "ObjectBeamGeometricallyExact2D.VdrawHeight"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectBeamGeometricallyExact2D->GetColor(), "ObjectBeamGeometricallyExact2D.Vcolor"); }

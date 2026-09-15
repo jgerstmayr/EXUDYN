@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:11:21 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -105,10 +105,10 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorDistance->GetParameters().markerNumbers);
-        EPyUtils::RequireGiven(d["distance"], 0., "ObjectConnectorDistance.distance"); EPyUtils::FromPython(d["distance"], cObjectConnectorDistance->GetParameters().distance, EPyUtils::RangeCheck::positive, "ObjectConnectorDistance.distance");
+        if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorDistance->GetParameters().markerNumbers); }
+        if (EPyUtils::DictItemExists(d, "distance")) { EPyUtils::RequireGiven(d["distance"], 0., "ObjectConnectorDistance.distance"); EPyUtils::FromPython(d["distance"], cObjectConnectorDistance->GetParameters().distance, EPyUtils::RangeCheck::positive, "ObjectConnectorDistance.distance"); } else { EPyUtils::RequireGiven(py::cast(cObjectConnectorDistance->GetParameters().distance), 0., "ObjectConnectorDistance.distance"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorDistance->GetParameters().activeConnector, "ObjectConnectorDistance.activeConnector"); }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectConnectorDistance->GetShow(), "ObjectConnectorDistance.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationObjectConnectorDistance->GetDrawSize(), "ObjectConnectorDistance.VdrawSize"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectConnectorDistance->GetColor(), "ObjectConnectorDistance.Vcolor"); }

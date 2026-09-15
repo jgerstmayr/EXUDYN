@@ -526,12 +526,14 @@ def ItemCppHeaders(definition):
                 #write to dictionary
                 if (not HasFlag(parameter, 'R')): #'R' means read only!
                     dictListWrite[i]+=space8
-                    if HasFlag(parameter, 'O'): #optional ==> means that we have to check first, if it exists in the dictionary
-                        dictListWrite[i]+='if (EPyUtils::DictItemExists(d, "' +  pyName + '")) { '
-                    #if (TypeName(parameter) == 'String') | (TypeName(parameter) == 'Vector2D') | (TypeName(parameter) == 'Vector3D') | (TypeName(parameter) == 'Vector4D') | (TypeName(parameter) == 'Vector6D') | (TypeName(parameter) == 'Vector7D'):
+                    #a parameter left out of the dict keeps its current value, the default on Add (step 88);
+                    #a must-be-given parameter left out raises if its value is still the placeholder
+                    dictListWrite[i]+='if (EPyUtils::DictItemExists(d, "' +  pyName + '")) { '
                     dictListWrite[i] += ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDictionary=True, className=classStr)
-                    if HasFlag(parameter, 'O'): #optional ==> means that we have to check first, if it exists in the dictionary
-                        dictListWrite[i]+=' }'
+                    dictListWrite[i]+=' }'
+                    if HasFlag(parameter, 'Q'):
+                        dictListWrite[i]+=(' else { EPyUtils::RequireGiven(py::cast(' + destStr + '), ' + DefaultValueString(parameter)
+                                           + ', "' + classStr + '.' + pyName + '"); }')
                     dictListWrite[i]+='\n'
 
                     #+++++++++++++++++

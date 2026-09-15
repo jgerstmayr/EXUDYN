@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,19 +108,19 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorReevingSystemSprings->GetParameters().markerNumbers);
+        if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorReevingSystemSprings->GetParameters().markerNumbers); }
         if (EPyUtils::DictItemExists(d, "hasCoordinateMarkers")) { EPyUtils::FromPython(d["hasCoordinateMarkers"], cObjectConnectorReevingSystemSprings->GetParameters().hasCoordinateMarkers, "ObjectConnectorReevingSystemSprings.hasCoordinateMarkers"); }
-        EPyUtils::FromPython(d["coordinateFactors"], cObjectConnectorReevingSystemSprings->GetParameters().coordinateFactors);
-        EPyUtils::FromPython(d["stiffnessPerLength"], cObjectConnectorReevingSystemSprings->GetParameters().stiffnessPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.stiffnessPerLength");
+        if (EPyUtils::DictItemExists(d, "coordinateFactors")) { EPyUtils::FromPython(d["coordinateFactors"], cObjectConnectorReevingSystemSprings->GetParameters().coordinateFactors); }
+        if (EPyUtils::DictItemExists(d, "stiffnessPerLength")) { EPyUtils::FromPython(d["stiffnessPerLength"], cObjectConnectorReevingSystemSprings->GetParameters().stiffnessPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.stiffnessPerLength"); }
         if (EPyUtils::DictItemExists(d, "dampingPerLength")) { EPyUtils::FromPython(d["dampingPerLength"], cObjectConnectorReevingSystemSprings->GetParameters().dampingPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.dampingPerLength"); }
         if (EPyUtils::DictItemExists(d, "dampingTorsional")) { EPyUtils::FromPython(d["dampingTorsional"], cObjectConnectorReevingSystemSprings->GetParameters().dampingTorsional, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.dampingTorsional"); }
         if (EPyUtils::DictItemExists(d, "dampingShear")) { EPyUtils::FromPython(d["dampingShear"], cObjectConnectorReevingSystemSprings->GetParameters().dampingShear, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorReevingSystemSprings.dampingShear"); }
         if (EPyUtils::DictItemExists(d, "regularizationForce")) { EPyUtils::FromPython(d["regularizationForce"], cObjectConnectorReevingSystemSprings->GetParameters().regularizationForce, "ObjectConnectorReevingSystemSprings.regularizationForce"); }
         if (EPyUtils::DictItemExists(d, "referenceLength")) { EPyUtils::FromPython(d["referenceLength"], cObjectConnectorReevingSystemSprings->GetParameters().referenceLength, "ObjectConnectorReevingSystemSprings.referenceLength"); }
-        EPyUtils::SetVector3DListSafely(d["sheavesAxes"], cObjectConnectorReevingSystemSprings->GetParameters().sheavesAxes);
-        EPyUtils::FromPython(d["sheavesRadii"], cObjectConnectorReevingSystemSprings->GetParameters().sheavesRadii, "ObjectConnectorReevingSystemSprings.sheavesRadii");
+        if (EPyUtils::DictItemExists(d, "sheavesAxes")) { EPyUtils::SetVector3DListSafely(d["sheavesAxes"], cObjectConnectorReevingSystemSprings->GetParameters().sheavesAxes); }
+        if (EPyUtils::DictItemExists(d, "sheavesRadii")) { EPyUtils::FromPython(d["sheavesRadii"], cObjectConnectorReevingSystemSprings->GetParameters().sheavesRadii, "ObjectConnectorReevingSystemSprings.sheavesRadii"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorReevingSystemSprings->GetParameters().activeConnector, "ObjectConnectorReevingSystemSprings.activeConnector"); }
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectConnectorReevingSystemSprings->GetShow(), "ObjectConnectorReevingSystemSprings.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VropeRadius")) { EPyUtils::FromPython(d["VropeRadius"], visualizationObjectConnectorReevingSystemSprings->GetRopeRadius(), "ObjectConnectorReevingSystemSprings.VropeRadius"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectConnectorReevingSystemSprings->GetColor(), "ObjectConnectorReevingSystemSprings.Vcolor"); }

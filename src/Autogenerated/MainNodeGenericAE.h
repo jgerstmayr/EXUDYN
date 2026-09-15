@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:11:21 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -126,10 +126,10 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::FromPython(d["referenceCoordinates"], cNodeGenericAE->GetParameters().referenceCoordinates, "NodeGenericAE.referenceCoordinates");
-        EPyUtils::RequireGiven(d["numberOfAECoordinates"], 0, "NodeGenericAE.numberOfAECoordinates"); EPyUtils::FromPython(d["numberOfAECoordinates"], cNodeGenericAE->GetParameters().numberOfAECoordinates, EPyUtils::RangeCheck::positive, "NodeGenericAE.numberOfAECoordinates");
-        EPyUtils::FromPython(d["initialCoordinates"], GetParameters().initialCoordinates, "NodeGenericAE.initialCoordinates");
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "referenceCoordinates")) { EPyUtils::FromPython(d["referenceCoordinates"], cNodeGenericAE->GetParameters().referenceCoordinates, "NodeGenericAE.referenceCoordinates"); }
+        if (EPyUtils::DictItemExists(d, "numberOfAECoordinates")) { EPyUtils::RequireGiven(d["numberOfAECoordinates"], 0, "NodeGenericAE.numberOfAECoordinates"); EPyUtils::FromPython(d["numberOfAECoordinates"], cNodeGenericAE->GetParameters().numberOfAECoordinates, EPyUtils::RangeCheck::positive, "NodeGenericAE.numberOfAECoordinates"); } else { EPyUtils::RequireGiven(py::cast(cNodeGenericAE->GetParameters().numberOfAECoordinates), 0, "NodeGenericAE.numberOfAECoordinates"); }
+        if (EPyUtils::DictItemExists(d, "initialCoordinates")) { EPyUtils::FromPython(d["initialCoordinates"], GetParameters().initialCoordinates, "NodeGenericAE.initialCoordinates"); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationNodeGenericAE->GetShow(), "NodeGenericAE.Vshow"); }
     }
 

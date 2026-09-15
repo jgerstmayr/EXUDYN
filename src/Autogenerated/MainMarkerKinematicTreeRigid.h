@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:11:21 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,10 +108,10 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<ObjectIndex>(d["objectNumber"], cMarkerKinematicTreeRigid->GetParameters().objectNumber);
-        EPyUtils::RequireGiven(d["linkNumber"], EXUstd::InvalidIndex, "MarkerKinematicTreeRigid.linkNumber"); EPyUtils::FromPython(d["linkNumber"], cMarkerKinematicTreeRigid->GetParameters().linkNumber, EPyUtils::RangeCheck::nonNegative, "MarkerKinematicTreeRigid.linkNumber");
-        EPyUtils::FromPython(d["localPosition"], cMarkerKinematicTreeRigid->GetParameters().localPosition);
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "objectNumber")) { EPyUtils::ItemIndexFromPython<ObjectIndex>(d["objectNumber"], cMarkerKinematicTreeRigid->GetParameters().objectNumber); }
+        if (EPyUtils::DictItemExists(d, "linkNumber")) { EPyUtils::RequireGiven(d["linkNumber"], EXUstd::InvalidIndex, "MarkerKinematicTreeRigid.linkNumber"); EPyUtils::FromPython(d["linkNumber"], cMarkerKinematicTreeRigid->GetParameters().linkNumber, EPyUtils::RangeCheck::nonNegative, "MarkerKinematicTreeRigid.linkNumber"); } else { EPyUtils::RequireGiven(py::cast(cMarkerKinematicTreeRigid->GetParameters().linkNumber), EXUstd::InvalidIndex, "MarkerKinematicTreeRigid.linkNumber"); }
+        if (EPyUtils::DictItemExists(d, "localPosition")) { EPyUtils::FromPython(d["localPosition"], cMarkerKinematicTreeRigid->GetParameters().localPosition); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationMarkerKinematicTreeRigid->GetShow(), "MarkerKinematicTreeRigid.Vshow"); }
     }
 

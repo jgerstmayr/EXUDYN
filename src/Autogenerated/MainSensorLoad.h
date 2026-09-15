@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-15  20:06:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -105,11 +105,11 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        EPyUtils::ItemIndexFromPython<LoadIndex>(d["loadNumber"], cSensorLoad->GetParameters().loadNumber);
-        EPyUtils::FromPython(d["writeToFile"], cSensorLoad->GetParameters().writeToFile, "SensorLoad.writeToFile");
-        EPyUtils::FromPython(d["fileName"], cSensorLoad->GetParameters().fileName);
-        EPyUtils::FromPython(d["storeInternal"], cSensorLoad->GetParameters().storeInternal, "SensorLoad.storeInternal");
-        EPyUtils::FromPython(d["name"], name);
+        if (EPyUtils::DictItemExists(d, "loadNumber")) { EPyUtils::ItemIndexFromPython<LoadIndex>(d["loadNumber"], cSensorLoad->GetParameters().loadNumber); }
+        if (EPyUtils::DictItemExists(d, "writeToFile")) { EPyUtils::FromPython(d["writeToFile"], cSensorLoad->GetParameters().writeToFile, "SensorLoad.writeToFile"); }
+        if (EPyUtils::DictItemExists(d, "fileName")) { EPyUtils::FromPython(d["fileName"], cSensorLoad->GetParameters().fileName); }
+        if (EPyUtils::DictItemExists(d, "storeInternal")) { EPyUtils::FromPython(d["storeInternal"], cSensorLoad->GetParameters().storeInternal, "SensorLoad.storeInternal"); }
+        if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationSensorLoad->GetShow(), "SensorLoad.Vshow"); }
     }
 
