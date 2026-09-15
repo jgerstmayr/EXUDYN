@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  00:24:58 (last modified)
+* @date         2026-09-15  10:17:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -131,7 +131,7 @@ public: // AUTO:
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectALEANCFCable2D->GetShow(), "ObjectALEANCFCable2D.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VdrawHeight")) { EPyUtils::FromPython(d["VdrawHeight"], visualizationObjectALEANCFCable2D->GetDrawHeight(), "ObjectALEANCFCable2D.VdrawHeight"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectALEANCFCable2D->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectALEANCFCable2D->GetColor(), "ObjectALEANCFCable2D.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -157,7 +157,7 @@ public: // AUTO:
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectALEANCFCable2D->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VdrawHeight"] = (float)visualizationObjectALEANCFCable2D->GetDrawHeight(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["Vcolor"] = (std::vector<float>)visualizationObjectALEANCFCable2D->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["Vcolor"] = EPyUtils::ToPythonMember(visualizationObjectALEANCFCable2D->GetColor()); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
     }
 
@@ -181,7 +181,7 @@ public: // AUTO:
         else if (parameterName.compare("strainIsRelativeToReference") == 0) { return py::cast((Real)cObjectALEANCFCable2D->GetParameters().strainIsRelativeToReference);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectALEANCFCable2D->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawHeight") == 0) { return py::cast((float)visualizationObjectALEANCFCable2D->GetDrawHeight());} //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectALEANCFCable2D->GetColor());} //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectALEANCFCable2D->GetColor()));} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectALEANCFCable2D::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
     }
@@ -207,7 +207,7 @@ public: // AUTO:
         else if (parameterName.compare("strainIsRelativeToReference") == 0) { EPyUtils::FromPython(value, cObjectALEANCFCable2D->GetParameters().strainIsRelativeToReference, "ObjectALEANCFCable2D.strainIsRelativeToReference"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectALEANCFCable2D->GetShow(), "ObjectALEANCFCable2D.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawHeight") == 0) { EPyUtils::FromPython(value, visualizationObjectALEANCFCable2D->GetDrawHeight(), "ObjectALEANCFCable2D.VdrawHeight"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { visualizationObjectALEANCFCable2D->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectALEANCFCable2D->GetColor(), "ObjectALEANCFCable2D.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectALEANCFCable2D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

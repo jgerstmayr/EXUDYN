@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  00:27:29 (last modified)
+* @date         2026-09-15  10:17:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -139,7 +139,7 @@ public: // AUTO:
         EPyUtils::FromPython<Real, 3, 3>(d["physicsCenterOfMassTilde"], cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde()); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectFFRFreducedOrder->GetShow(), "ObjectFFRFreducedOrder.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectFFRFreducedOrder->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectFFRFreducedOrder->GetColor(), "ObjectFFRFreducedOrder.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VtriangleMesh")) { EPyUtils::FromPython(d["VtriangleMesh"], visualizationObjectFFRFreducedOrder->GetTriangleMesh()); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VshowNodes")) { EPyUtils::FromPython(d["VshowNodes"], visualizationObjectFFRFreducedOrder->GetShowNodes(), "ObjectFFRFreducedOrder.VshowNodes"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
@@ -175,7 +175,7 @@ public: // AUTO:
         d["tempUserFunctionForce"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetTempUserFunctionForce()); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectFFRFreducedOrder->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["Vcolor"] = (std::vector<float>)visualizationObjectFFRFreducedOrder->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["Vcolor"] = EPyUtils::ToPythonMember(visualizationObjectFFRFreducedOrder->GetColor()); //! AUTO: cast variables into python (not needed for standard types) 
         d["VtriangleMesh"] = EPyUtils::ToPython(visualizationObjectFFRFreducedOrder->GetTriangleMesh()); //! AUTO: cast variables into python (not needed for standard types) 
         d["VshowNodes"] = (bool)visualizationObjectFFRFreducedOrder->GetShowNodes(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
@@ -209,7 +209,7 @@ public: // AUTO:
         else if (parameterName.compare("physicsCenterOfMassTilde") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde());} //! AUTO: get parameter
         else if (parameterName.compare("tempUserFunctionForce") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetTempUserFunctionForce());} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectFFRFreducedOrder->GetShow());} //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectFFRFreducedOrder->GetColor());} //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectFFRFreducedOrder->GetColor()));} //! AUTO: get parameter
         else if (parameterName.compare("VtriangleMesh") == 0) { return EPyUtils::ToPython(visualizationObjectFFRFreducedOrder->GetTriangleMesh());} //! AUTO: get parameter
         else if (parameterName.compare("VshowNodes") == 0) { return py::cast((bool)visualizationObjectFFRFreducedOrder->GetShowNodes());} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectFFRFreducedOrder::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
@@ -244,7 +244,7 @@ public: // AUTO:
         else if (parameterName.compare("mXRefTildePsiTilde") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().mXRefTildePsiTilde); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("physicsCenterOfMassTilde") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde()); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRFreducedOrder->GetShow(), "ObjectFFRFreducedOrder.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { visualizationObjectFFRFreducedOrder->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRFreducedOrder->GetColor(), "ObjectFFRFreducedOrder.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VtriangleMesh") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRFreducedOrder->GetTriangleMesh()); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VshowNodes") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRFreducedOrder->GetShowNodes(), "ObjectFFRFreducedOrder.VshowNodes"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectFFRFreducedOrder::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zw\"olfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  00:27:29 (last modified)
+* @date         2026-09-15  10:17:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -126,7 +126,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "objectIsInitialized")) { EPyUtils::FromPython(d["objectIsInitialized"], cObjectFFRF->GetObjectIsInitialized(), "ObjectFFRF.objectIsInitialized"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectFFRF->GetShow(), "ObjectFFRF.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectFFRF->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectFFRF->GetColor(), "ObjectFFRF.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VtriangleMesh")) { EPyUtils::FromPython(d["VtriangleMesh"], visualizationObjectFFRF->GetTriangleMesh()); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VshowNodes")) { EPyUtils::FromPython(d["VshowNodes"], visualizationObjectFFRF->GetShowNodes(), "ObjectFFRF.VshowNodes"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
@@ -145,7 +145,7 @@ public: // AUTO:
         d["forceUserFunction"] = (py::object)cObjectFFRF->GetParameters().forceUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
         d["massMatrixUserFunction"] = (py::object)cObjectFFRF->GetParameters().massMatrixUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
         d["computeFFRFterms"] = (bool)cObjectFFRF->GetParameters().computeFFRFterms; //! AUTO: cast variables into python (not needed for standard types) 
-        d["coordinateIndexPerNode"] = (std::vector<Index>)cObjectFFRF->GetCoordinateIndexPerNode(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["coordinateIndexPerNode"] = EPyUtils::ToPythonMember(cObjectFFRF->GetCoordinateIndexPerNode()); //! AUTO: cast variables into python (not needed for standard types) 
         d["objectIsInitialized"] = (bool)cObjectFFRF->GetObjectIsInitialized(); //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsMass"] = (Real)cObjectFFRF->GetPhysicsMass(); //! AUTO: cast variables into python (not needed for standard types) 
         d["physicsInertia"] = EPyUtils::ToPython(cObjectFFRF->GetPhysicsInertia()); //! AUTO: cast variables into python (not needed for standard types) 
@@ -159,7 +159,7 @@ public: // AUTO:
         d["tempVelSkew"] = EPyUtils::ToPython(cObjectFFRF->GetTempVelSkew()); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectFFRF->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["Vcolor"] = (std::vector<float>)visualizationObjectFFRF->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["Vcolor"] = EPyUtils::ToPythonMember(visualizationObjectFFRF->GetColor()); //! AUTO: cast variables into python (not needed for standard types) 
         d["VtriangleMesh"] = EPyUtils::ToPython(visualizationObjectFFRF->GetTriangleMesh()); //! AUTO: cast variables into python (not needed for standard types) 
         d["VshowNodes"] = (bool)visualizationObjectFFRF->GetShowNodes(); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
@@ -177,7 +177,7 @@ public: // AUTO:
         else if (parameterName.compare("forceUserFunction") == 0) { return cObjectFFRF->GetParameters().forceUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
         else if (parameterName.compare("massMatrixUserFunction") == 0) { return cObjectFFRF->GetParameters().massMatrixUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
         else if (parameterName.compare("computeFFRFterms") == 0) { return py::cast((bool)cObjectFFRF->GetParameters().computeFFRFterms);} //! AUTO: get parameter
-        else if (parameterName.compare("coordinateIndexPerNode") == 0) { return py::cast((std::vector<Index>)cObjectFFRF->GetCoordinateIndexPerNode());} //! AUTO: get parameter
+        else if (parameterName.compare("coordinateIndexPerNode") == 0) { return py::cast(EPyUtils::ToPythonMember(cObjectFFRF->GetCoordinateIndexPerNode()));} //! AUTO: get parameter
         else if (parameterName.compare("objectIsInitialized") == 0) { return py::cast((bool)cObjectFFRF->GetObjectIsInitialized());} //! AUTO: get parameter
         else if (parameterName.compare("physicsMass") == 0) { return py::cast((Real)cObjectFFRF->GetPhysicsMass());} //! AUTO: get parameter
         else if (parameterName.compare("physicsInertia") == 0) { return EPyUtils::ToPython(cObjectFFRF->GetPhysicsInertia());} //! AUTO: get parameter
@@ -190,7 +190,7 @@ public: // AUTO:
         else if (parameterName.compare("tempRefPosSkew") == 0) { return EPyUtils::ToPython(cObjectFFRF->GetTempRefPosSkew());} //! AUTO: get parameter
         else if (parameterName.compare("tempVelSkew") == 0) { return EPyUtils::ToPython(cObjectFFRF->GetTempVelSkew());} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectFFRF->GetShow());} //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectFFRF->GetColor());} //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectFFRF->GetColor()));} //! AUTO: get parameter
         else if (parameterName.compare("VtriangleMesh") == 0) { return EPyUtils::ToPython(visualizationObjectFFRF->GetTriangleMesh());} //! AUTO: get parameter
         else if (parameterName.compare("VshowNodes") == 0) { return py::cast((bool)visualizationObjectFFRF->GetShowNodes());} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectFFRF::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
@@ -212,7 +212,7 @@ public: // AUTO:
         else if (parameterName.compare("computeFFRFterms") == 0) { EPyUtils::FromPython(value, cObjectFFRF->GetParameters().computeFFRFterms, "ObjectFFRF.computeFFRFterms"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("objectIsInitialized") == 0) { EPyUtils::FromPython(value, cObjectFFRF->GetObjectIsInitialized(), "ObjectFFRF.objectIsInitialized"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRF->GetShow(), "ObjectFFRF.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { visualizationObjectFFRF->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRF->GetColor(), "ObjectFFRF.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VtriangleMesh") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRF->GetTriangleMesh()); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VshowNodes") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRF->GetShowNodes(), "ObjectFFRF.VshowNodes"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectFFRF::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Holzinger Stefan
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  00:24:58 (last modified)
+* @date         2026-09-15  10:17:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -137,7 +137,7 @@ public: // AUTO:
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationNodeRigidBodyRotVecLG->GetShow(), "NodeRigidBodyRotVecLG.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationNodeRigidBodyRotVecLG->GetDrawSize(), "NodeRigidBodyRotVecLG.VdrawSize"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationNodeRigidBodyRotVecLG->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationNodeRigidBodyRotVecLG->GetColor(), "NodeRigidBodyRotVecLG.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
 
     //! AUTO:  dictionary read access
@@ -151,7 +151,7 @@ public: // AUTO:
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationNodeRigidBodyRotVecLG->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VdrawSize"] = (float)visualizationNodeRigidBodyRotVecLG->GetDrawSize(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["Vcolor"] = (std::vector<float>)visualizationNodeRigidBodyRotVecLG->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["Vcolor"] = EPyUtils::ToPythonMember(visualizationNodeRigidBodyRotVecLG->GetColor()); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
     }
 
@@ -164,7 +164,7 @@ public: // AUTO:
         else if (parameterName.compare("initialVelocities") == 0) { return EPyUtils::ToPython(GetParameters().initialCoordinates_t);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationNodeRigidBodyRotVecLG->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationNodeRigidBodyRotVecLG->GetDrawSize());} //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationNodeRigidBodyRotVecLG->GetColor());} //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationNodeRigidBodyRotVecLG->GetColor()));} //! AUTO: get parameter
         else  {PyError(STDstring("NodeRigidBodyRotVecLG::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
     }
@@ -179,7 +179,7 @@ public: // AUTO:
         else if (parameterName.compare("initialVelocities") == 0) { EPyUtils::FromPython(value, GetParameters().initialCoordinates_t); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationNodeRigidBodyRotVecLG->GetShow(), "NodeRigidBodyRotVecLG.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { EPyUtils::FromPython(value, visualizationNodeRigidBodyRotVecLG->GetDrawSize(), "NodeRigidBodyRotVecLG.VdrawSize"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { visualizationNodeRigidBodyRotVecLG->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationNodeRigidBodyRotVecLG->GetColor(), "NodeRigidBodyRotVecLG.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("NodeRigidBodyRotVecLG::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }
 

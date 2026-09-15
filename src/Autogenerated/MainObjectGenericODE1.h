@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  00:24:58 (last modified)
+* @date         2026-09-15  10:17:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -133,7 +133,7 @@ public: // AUTO:
         d["systemMatrix"] = EPyUtils::ToPython(cObjectGenericODE1->GetParameters().systemMatrix); //! AUTO: cast variables into python (not needed for standard types) 
         d["rhsVector"] = EPyUtils::ToPython(cObjectGenericODE1->GetParameters().rhsVector); //! AUTO: cast variables into python (not needed for standard types) 
         d["rhsUserFunction"] = (py::object)cObjectGenericODE1->GetParameters().rhsUserFunction; //! AUTO: cast variables into python (not needed for standard types) 
-        d["coordinateIndexPerNode"] = (std::vector<Index>)cObjectGenericODE1->GetParameters().coordinateIndexPerNode; //! AUTO: cast variables into python (not needed for standard types) 
+        d["coordinateIndexPerNode"] = EPyUtils::ToPythonMember(cObjectGenericODE1->GetParameters().coordinateIndexPerNode); //! AUTO: cast variables into python (not needed for standard types) 
         d["tempCoordinates"] = EPyUtils::ToPython(cObjectGenericODE1->GetTempCoordinates()); //! AUTO: cast variables into python (not needed for standard types) 
         d["tempCoordinates_t"] = EPyUtils::ToPython(cObjectGenericODE1->GetTempCoordinates_t()); //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
@@ -149,7 +149,7 @@ public: // AUTO:
         else if (parameterName.compare("systemMatrix") == 0) { return EPyUtils::ToPython(cObjectGenericODE1->GetParameters().systemMatrix);} //! AUTO: get parameter
         else if (parameterName.compare("rhsVector") == 0) { return EPyUtils::ToPython(cObjectGenericODE1->GetParameters().rhsVector);} //! AUTO: get parameter
         else if (parameterName.compare("rhsUserFunction") == 0) { return cObjectGenericODE1->GetParameters().rhsUserFunction.GetPythonDictionary();;} //! AUTO: get parameter
-        else if (parameterName.compare("coordinateIndexPerNode") == 0) { return py::cast((std::vector<Index>)cObjectGenericODE1->GetParameters().coordinateIndexPerNode);} //! AUTO: get parameter
+        else if (parameterName.compare("coordinateIndexPerNode") == 0) { return py::cast(EPyUtils::ToPythonMember(cObjectGenericODE1->GetParameters().coordinateIndexPerNode));} //! AUTO: get parameter
         else if (parameterName.compare("tempCoordinates") == 0) { return EPyUtils::ToPython(cObjectGenericODE1->GetTempCoordinates());} //! AUTO: get parameter
         else if (parameterName.compare("tempCoordinates_t") == 0) { return EPyUtils::ToPython(cObjectGenericODE1->GetTempCoordinates_t());} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectGenericODE1->GetShow());} //! AUTO: get parameter

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  00:33:14 (last modified)
+* @date         2026-09-15  10:17:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -130,7 +130,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectContactSphereTriangle->GetParameters().activeConnector, "ObjectContactSphereTriangle.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectContactSphereTriangle->GetShow(), "ObjectContactSphereTriangle.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectContactSphereTriangle->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectContactSphereTriangle->GetColor(), "ObjectContactSphereTriangle.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -155,7 +155,7 @@ public: // AUTO:
         d["activeConnector"] = (bool)cObjectContactSphereTriangle->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectContactSphereTriangle->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["Vcolor"] = (std::vector<float>)visualizationObjectContactSphereTriangle->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["Vcolor"] = EPyUtils::ToPythonMember(visualizationObjectContactSphereTriangle->GetColor()); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
     }
 
@@ -178,7 +178,7 @@ public: // AUTO:
         else if (parameterName.compare("impactModel") == 0) { return py::cast((Index)cObjectContactSphereTriangle->GetParameters().impactModel);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectContactSphereTriangle->GetParameters().activeConnector);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectContactSphereTriangle->GetShow());} //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectContactSphereTriangle->GetColor());} //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectContactSphereTriangle->GetColor()));} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectContactSphereTriangle::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
     }
@@ -203,7 +203,7 @@ public: // AUTO:
         else if (parameterName.compare("impactModel") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTriangle->GetParameters().impactModel, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTriangle.impactModel"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTriangle->GetParameters().activeConnector, "ObjectContactSphereTriangle.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectContactSphereTriangle->GetShow(), "ObjectContactSphereTriangle.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { visualizationObjectContactSphereTriangle->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectContactSphereTriangle->GetColor(), "ObjectContactSphereTriangle.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectContactSphereTriangle::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

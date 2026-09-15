@@ -110,6 +110,8 @@ def ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDiction
                 + ', "' + context + '");' + comment)
     if typeCastStr == 'OutputVariableType' and fromDictionary:
         return destStr + ' = (OutputVariableType)py::cast<Index>(' + source + ');' + comment
+    if typeName in ['Float3', 'Float4', 'ArrayIndex', 'Vector']: #the same overloads as the structure members (step 102)
+        return 'EPyUtils::FromPython(' + source + ', ' + destStr + ', "' + context + '");' + comment
     if typeCastStr in ['bool', 'Real', 'float', 'Index']: #plain scalars: None raises (step 34c4 c)
         return 'EPyUtils::FromPython(' + source + ', ' + destStr + ', "' + context + '");' + comment
     return destStr + ' = py::cast<' + typeCastStr + '>(' + source + ');' + comment
@@ -479,6 +481,8 @@ def ItemCppHeaders(definition):
                         parRead = 'EPyUtils::ItemIndexToPython<NodeIndex>((ArrayIndex)' + destStr + ')'  #Index2/Index3/Index4 as ArrayIndex
                     else:
                         parRead = '(' + typeCastStr + ')' + destStr
+                elif TypeName(parameter) in ['Float3', 'Float4', 'ArrayIndex']: #lists, as the structure members (step 102)
+                    parRead = 'EPyUtils::ToPythonMember(' + destStr + ')'
                 elif isPyFunction:
                     parRead = '(py::object)'+destStr
                 else:

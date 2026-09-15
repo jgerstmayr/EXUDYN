@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  00:24:58 (last modified)
+* @date         2026-09-15  10:17:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -113,7 +113,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectJointRevoluteZ->GetShow(), "ObjectJointRevoluteZ.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VaxisRadius")) { EPyUtils::FromPython(d["VaxisRadius"], visualizationObjectJointRevoluteZ->GetAxisRadius(), "ObjectJointRevoluteZ.VaxisRadius"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VaxisLength")) { EPyUtils::FromPython(d["VaxisLength"], visualizationObjectJointRevoluteZ->GetAxisLength(), "ObjectJointRevoluteZ.VaxisLength"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectJointRevoluteZ->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectJointRevoluteZ->GetColor(), "ObjectJointRevoluteZ.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -130,7 +130,7 @@ public: // AUTO:
         d["Vshow"] = (bool)visualizationObjectJointRevoluteZ->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VaxisRadius"] = (float)visualizationObjectJointRevoluteZ->GetAxisRadius(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VaxisLength"] = (float)visualizationObjectJointRevoluteZ->GetAxisLength(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["Vcolor"] = (std::vector<float>)visualizationObjectJointRevoluteZ->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["Vcolor"] = EPyUtils::ToPythonMember(visualizationObjectJointRevoluteZ->GetColor()); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
     }
 
@@ -145,7 +145,7 @@ public: // AUTO:
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectJointRevoluteZ->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VaxisRadius") == 0) { return py::cast((float)visualizationObjectJointRevoluteZ->GetAxisRadius());} //! AUTO: get parameter
         else if (parameterName.compare("VaxisLength") == 0) { return py::cast((float)visualizationObjectJointRevoluteZ->GetAxisLength());} //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectJointRevoluteZ->GetColor());} //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectJointRevoluteZ->GetColor()));} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectJointRevoluteZ::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
     }
@@ -162,7 +162,7 @@ public: // AUTO:
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectJointRevoluteZ->GetShow(), "ObjectJointRevoluteZ.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VaxisRadius") == 0) { EPyUtils::FromPython(value, visualizationObjectJointRevoluteZ->GetAxisRadius(), "ObjectJointRevoluteZ.VaxisRadius"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VaxisLength") == 0) { EPyUtils::FromPython(value, visualizationObjectJointRevoluteZ->GetAxisLength(), "ObjectJointRevoluteZ.VaxisLength"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { visualizationObjectJointRevoluteZ->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectJointRevoluteZ->GetColor(), "ObjectJointRevoluteZ.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectJointRevoluteZ::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

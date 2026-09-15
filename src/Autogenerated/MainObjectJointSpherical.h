@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  00:24:58 (last modified)
+* @date         2026-09-15  10:17:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,12 +106,12 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectJointSpherical->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "constrainedAxes")) { cObjectJointSpherical->GetParameters().constrainedAxes = py::cast<std::vector<Index>>(d["constrainedAxes"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "constrainedAxes")) { EPyUtils::FromPython(d["constrainedAxes"], cObjectJointSpherical->GetParameters().constrainedAxes, "ObjectJointSpherical.constrainedAxes"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectJointSpherical->GetParameters().activeConnector, "ObjectJointSpherical.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectJointSpherical->GetShow(), "ObjectJointSpherical.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VjointRadius")) { EPyUtils::FromPython(d["VjointRadius"], visualizationObjectJointSpherical->GetJointRadius(), "ObjectJointSpherical.VjointRadius"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectJointSpherical->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectJointSpherical->GetColor(), "ObjectJointSpherical.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -121,12 +121,12 @@ public: // AUTO:
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
         d["markerNumbers"] = EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectJointSpherical->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
-        d["constrainedAxes"] = (std::vector<Index>)cObjectJointSpherical->GetParameters().constrainedAxes; //! AUTO: cast variables into python (not needed for standard types) 
+        d["constrainedAxes"] = EPyUtils::ToPythonMember(cObjectJointSpherical->GetParameters().constrainedAxes); //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectJointSpherical->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectJointSpherical->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VjointRadius"] = (float)visualizationObjectJointSpherical->GetJointRadius(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["Vcolor"] = (std::vector<float>)visualizationObjectJointSpherical->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["Vcolor"] = EPyUtils::ToPythonMember(visualizationObjectJointSpherical->GetColor()); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
     }
 
@@ -135,11 +135,11 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectJointSpherical->GetParameters().markerNumbers));} //! AUTO: get parameter
-        else if (parameterName.compare("constrainedAxes") == 0) { return py::cast((std::vector<Index>)cObjectJointSpherical->GetParameters().constrainedAxes);} //! AUTO: get parameter
+        else if (parameterName.compare("constrainedAxes") == 0) { return py::cast(EPyUtils::ToPythonMember(cObjectJointSpherical->GetParameters().constrainedAxes));} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectJointSpherical->GetParameters().activeConnector);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectJointSpherical->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VjointRadius") == 0) { return py::cast((float)visualizationObjectJointSpherical->GetJointRadius());} //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectJointSpherical->GetColor());} //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectJointSpherical->GetColor()));} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectJointSpherical::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
     }
@@ -150,11 +150,11 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectJointSpherical->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("constrainedAxes") == 0) { cObjectJointSpherical->GetParameters().constrainedAxes = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("constrainedAxes") == 0) { EPyUtils::FromPython(value, cObjectJointSpherical->GetParameters().constrainedAxes, "ObjectJointSpherical.constrainedAxes"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectJointSpherical->GetParameters().activeConnector, "ObjectJointSpherical.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectJointSpherical->GetShow(), "ObjectJointSpherical.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VjointRadius") == 0) { EPyUtils::FromPython(value, visualizationObjectJointSpherical->GetJointRadius(), "ObjectJointSpherical.VjointRadius"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { visualizationObjectJointSpherical->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectJointSpherical->GetColor(), "ObjectJointSpherical.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectJointSpherical::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

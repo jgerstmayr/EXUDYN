@@ -2446,6 +2446,39 @@ Gate:
 
 No C++ or Python package change.
 
+**Done 2026-09-15, step 102 - one spelling per type (#2429).** The `exceptions` table of
+`tools/generators/typeModel.py` went from 36 entries to 4:
+- **Same for both contexts:** 20 entries were not differences between items and structures, but
+  spellings that happened to be listed for one context only. They moved to a context-free `names`
+  table: `Int` -> `Index`, the `Py...List` wrapper classes, the dict-type and stub vocabularies,
+  and `JointTypeList`.
+- **User function signature:** `KeyPressUserFunction` joined
+  `definitionTypes.userFunctionSignatures`. `Render` answers every signature for both C++
+  destinations, and `Any` in stubs.
+- **`cppExchange`:** now has one rule for both contexts: variable sizes are `std::vector`, fixed
+  sizes `std::array`. The item rule `std::vector<float>` for `Float4` had its last user in the item
+  headers.
+  - Item `Float3`/`Float4`, `ArrayIndex` and `Vector` parameters now convert through the same
+    `FromPython(value, destination, "Class.parameter")` overloads as the structure members.
+  - They read back through `ToPythonMember`: colours and index lists are lists, `Vector` stays
+    numpy.
+  - New in `PyConversion.h`: the `VectorBase<T>` context overload and `Conversion::IsSequence`.
+    The context overloads accept tuples, as the `std::vector` casts did before; for example
+    `color=(1,0,0,1)` is used in the examples.
+- **Remaining, with its reason:** `NumpyVector`/`NumpyMatrix` storage. Items store
+  `Vector`/`Matrix` members, while structures use these types only as return values of solver
+  functions (`py::array_t`).
+
+`Render` over every type name used, compared with before:
+- **Spellings that changed:** `pyTyping` `Matrix2D` (now `array_like`, like the other fixed
+  matrices), the item `cppExchange` of `Float4`/`Matrix2D`/`Matrix3D`, and the structure
+  `cppExchange` of `NumpyVector`/`NumpyMatrix`.
+- **Effect on output:** none of these spellings reaches a generated file any more. The regenerated
+  headers differ only by the new conversion statements (67 files).
+
+Gates: full rebuild; `parameterConversionTest.py` 0 differences over 3777 paths; full suite PASSED;
+hand check of a tuple and a numpy colour through `SetObjectParameter`/`GetObject`.
+
 ## Resolved facts
 
 Facts that were true, were fixed, and are kept only so the fix is not undone by someone re-deriving

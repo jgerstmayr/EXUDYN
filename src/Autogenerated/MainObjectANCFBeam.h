@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  00:33:14 (last modified)
+* @date         2026-09-15  10:17:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -122,7 +122,7 @@ public: // AUTO:
         SetInternalBeamSection(d["sectionData"]); /*! AUTO:  safely cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectANCFBeam->GetShow(), "ObjectANCFBeam.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VsectionGeometry")) { visualizationObjectANCFBeam->GetSectionGeometry() = py::cast<BeamSectionGeometry>(d["VsectionGeometry"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectANCFBeam->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectANCFBeam->GetColor(), "ObjectANCFBeam.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -139,7 +139,7 @@ public: // AUTO:
         d["sectionData"] = GetInternalBeamSection(); //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectANCFBeam->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VsectionGeometry"] = (BeamSectionGeometry)visualizationObjectANCFBeam->GetSectionGeometry(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["Vcolor"] = (std::vector<float>)visualizationObjectANCFBeam->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["Vcolor"] = EPyUtils::ToPythonMember(visualizationObjectANCFBeam->GetColor()); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
     }
 
@@ -154,7 +154,7 @@ public: // AUTO:
         else if (parameterName.compare("crossSectionDamping") == 0) { return EPyUtils::ToPython(cObjectANCFBeam->GetParameters().crossSectionDamping);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectANCFBeam->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VsectionGeometry") == 0) { return py::cast((BeamSectionGeometry)visualizationObjectANCFBeam->GetSectionGeometry());} //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectANCFBeam->GetColor());} //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectANCFBeam->GetColor()));} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectANCFBeam::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
     }
@@ -171,7 +171,7 @@ public: // AUTO:
         else if (parameterName.compare("crossSectionDamping") == 0) { EPyUtils::FromPython(value, cObjectANCFBeam->GetParameters().crossSectionDamping); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectANCFBeam->GetShow(), "ObjectANCFBeam.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VsectionGeometry") == 0) { visualizationObjectANCFBeam->GetSectionGeometry() = py::cast<BeamSectionGeometry>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { visualizationObjectANCFBeam->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectANCFBeam->GetColor(), "ObjectANCFBeam.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectANCFBeam::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

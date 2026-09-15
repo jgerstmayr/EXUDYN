@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  00:24:58 (last modified)
+* @date         2026-09-15  10:17:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -127,7 +127,7 @@ public: // AUTO:
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectANCFCable->GetShow(), "ObjectANCFCable.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "Vradius")) { EPyUtils::FromPython(d["Vradius"], visualizationObjectANCFCable->GetRadius(), "ObjectANCFCable.Vradius"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectANCFCable->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectANCFCable->GetColor(), "ObjectANCFCable.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -149,7 +149,7 @@ public: // AUTO:
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectANCFCable->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["Vradius"] = (float)visualizationObjectANCFCable->GetRadius(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["Vcolor"] = (std::vector<float>)visualizationObjectANCFCable->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["Vcolor"] = EPyUtils::ToPythonMember(visualizationObjectANCFCable->GetColor()); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
     }
 
@@ -169,7 +169,7 @@ public: // AUTO:
         else if (parameterName.compare("useReducedOrderIntegration") == 0) { return py::cast((Index)cObjectANCFCable->GetParameters().useReducedOrderIntegration);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectANCFCable->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("Vradius") == 0) { return py::cast((float)visualizationObjectANCFCable->GetRadius());} //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectANCFCable->GetColor());} //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectANCFCable->GetColor()));} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectANCFCable::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
     }
@@ -191,7 +191,7 @@ public: // AUTO:
         else if (parameterName.compare("useReducedOrderIntegration") == 0) { EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().useReducedOrderIntegration, "ObjectANCFCable.useReducedOrderIntegration"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectANCFCable->GetShow(), "ObjectANCFCable.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vradius") == 0) { EPyUtils::FromPython(value, visualizationObjectANCFCable->GetRadius(), "ObjectANCFCable.Vradius"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { visualizationObjectANCFCable->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectANCFCable->GetColor(), "ObjectANCFCable.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectANCFCable::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

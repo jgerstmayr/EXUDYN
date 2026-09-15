@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  00:24:58 (last modified)
+* @date         2026-09-15  10:17:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -131,9 +131,9 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        cNode1D->GetParameters().referenceCoordinates = py::cast<std::vector<Real>>(d["referenceCoordinates"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "initialCoordinates")) { GetParameters().initialCoordinates = py::cast<std::vector<Real>>(d["initialCoordinates"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "initialVelocities")) { GetParameters().initialCoordinates_t = py::cast<std::vector<Real>>(d["initialVelocities"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        EPyUtils::FromPython(d["referenceCoordinates"], cNode1D->GetParameters().referenceCoordinates, "Node1D.referenceCoordinates"); /* AUTO:  read out dictionary and cast to C++ type*/
+        if (EPyUtils::DictItemExists(d, "initialCoordinates")) { EPyUtils::FromPython(d["initialCoordinates"], GetParameters().initialCoordinates, "Node1D.initialCoordinates"); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "initialVelocities")) { EPyUtils::FromPython(d["initialVelocities"], GetParameters().initialCoordinates_t, "Node1D.initialVelocities"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationNode1D->GetShow(), "Node1D.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
     }
@@ -168,9 +168,9 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override 
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("referenceCoordinates") == 0) { cNode1D->GetParameters().referenceCoordinates = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("initialCoordinates") == 0) { GetParameters().initialCoordinates = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("initialVelocities") == 0) { GetParameters().initialCoordinates_t = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("referenceCoordinates") == 0) { EPyUtils::FromPython(value, cNode1D->GetParameters().referenceCoordinates, "Node1D.referenceCoordinates"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("initialCoordinates") == 0) { EPyUtils::FromPython(value, GetParameters().initialCoordinates, "Node1D.initialCoordinates"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("initialVelocities") == 0) { EPyUtils::FromPython(value, GetParameters().initialCoordinates_t, "Node1D.initialVelocities"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationNode1D->GetShow(), "Node1D.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("Node1D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
     }

@@ -51,6 +51,12 @@ namespace EPyUtils {
 			return py::isinstance<py::list>(value) || py::isinstance<py::array>(value);
 		}
 
+		//! list, tuple or numpy array: what the parameter conversions with a context accept as a sequence
+		inline bool IsSequence(const py::object& value)
+		{
+			return IsListOrArray(value) || py::isinstance<py::tuple>(value);
+		}
+
 		//! the name used in error messages for an item index kind
 		template<class TItemIndex> const char* ItemIndexName();
 		template<> inline const char* ItemIndexName<NodeIndex>() { return "NodeIndex"; }
@@ -343,7 +349,7 @@ namespace EPyUtils {
 	template<class T, Index size>
 	inline void FromPython(const py::object& value, SlimVectorBase<T, size>& destination, const char* context)
 	{
-		if (!Conversion::IsListOrArray(value))
+		if (!Conversion::IsSequence(value))
 		{
 			PyError(STDstring("parameter ") + context + " expects a list or array of " + EXUstd::ToString(size) + " values, but received " + EXUstd::ToString(value));
 		}
@@ -358,11 +364,23 @@ namespace EPyUtils {
 	//! a list or numpy array of integers of any length (plain indices, no item kind)
 	inline void FromPython(const py::object& value, ArrayIndex& destination, const char* context)
 	{
-		if (!Conversion::IsListOrArray(value))
+		if (!Conversion::IsSequence(value))
 		{
 			PyError(STDstring("parameter ") + context + " expects a list of integers, but received " + EXUstd::ToString(value));
 		}
 		destination = ArrayIndex(py::cast<std::vector<Index>>(value));
+	}
+
+	//! a list, tuple or 1D numpy array of any length (Vector)
+	template<class T>
+	inline void FromPython(const py::object& value, VectorBase<T>& destination, const char* context)
+	{
+		if (!Conversion::IsSequence(value))
+		{
+			PyError(STDstring("parameter ") + context + " expects a list or array, but received " + EXUstd::ToString(value));
+		}
+		std::vector<T> stdlist = py::cast<std::vector<T>>(value);
+		destination = stdlist;
 	}
 
 	//! a list or numpy array of exactly size integers (Index2, ...)

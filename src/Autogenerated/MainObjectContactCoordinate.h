@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  00:24:58 (last modified)
+* @date         2026-09-15  10:17:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -123,7 +123,7 @@ public: // AUTO:
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectContactCoordinate->GetShow(), "ObjectContactCoordinate.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationObjectContactCoordinate->GetDrawSize(), "ObjectContactCoordinate.VdrawSize"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectContactCoordinate->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectContactCoordinate->GetColor(), "ObjectContactCoordinate.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -141,7 +141,7 @@ public: // AUTO:
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectContactCoordinate->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VdrawSize"] = (float)visualizationObjectContactCoordinate->GetDrawSize(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["Vcolor"] = (std::vector<float>)visualizationObjectContactCoordinate->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["Vcolor"] = EPyUtils::ToPythonMember(visualizationObjectContactCoordinate->GetColor()); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
     }
 
@@ -157,7 +157,7 @@ public: // AUTO:
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectContactCoordinate->GetParameters().activeConnector);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectContactCoordinate->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationObjectContactCoordinate->GetDrawSize());} //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectContactCoordinate->GetColor());} //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectContactCoordinate->GetColor()));} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectContactCoordinate::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
     }
@@ -175,7 +175,7 @@ public: // AUTO:
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectContactCoordinate->GetParameters().activeConnector, "ObjectContactCoordinate.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectContactCoordinate->GetShow(), "ObjectContactCoordinate.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { EPyUtils::FromPython(value, visualizationObjectContactCoordinate->GetDrawSize(), "ObjectContactCoordinate.VdrawSize"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { visualizationObjectContactCoordinate->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectContactCoordinate->GetColor(), "ObjectContactCoordinate.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectContactCoordinate::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

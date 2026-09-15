@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  00:24:58 (last modified)
+* @date         2026-09-15  10:17:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -110,8 +110,8 @@ public: // AUTO:
     {
         EPyUtils::ItemIndexFromPython<ObjectIndex>(d["bodyNumber"], cMarkerSuperElementRigid->GetParameters().bodyNumber); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["offset"], cMarkerSuperElementRigid->GetParameters().offset); /* AUTO:  read out dictionary and cast to C++ type*/
-        cMarkerSuperElementRigid->GetParameters().meshNodeNumbers = py::cast<std::vector<Index>>(d["meshNodeNumbers"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cMarkerSuperElementRigid->GetParameters().weightingFactors = py::cast<std::vector<Real>>(d["weightingFactors"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["meshNodeNumbers"], cMarkerSuperElementRigid->GetParameters().meshNodeNumbers, "MarkerSuperElementRigid.meshNodeNumbers"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["weightingFactors"], cMarkerSuperElementRigid->GetParameters().weightingFactors, "MarkerSuperElementRigid.weightingFactors"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["useAlternativeApproach"], cMarkerSuperElementRigid->GetParameters().useAlternativeApproach, "MarkerSuperElementRigid.useAlternativeApproach"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["rotationsExponentialMap"], cMarkerSuperElementRigid->GetParameters().rotationsExponentialMap, "MarkerSuperElementRigid.rotationsExponentialMap"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
@@ -126,7 +126,7 @@ public: // AUTO:
         d["markerType"] = (std::string)GetTypeName();
         d["bodyNumber"] = (ObjectIndex)cMarkerSuperElementRigid->GetParameters().bodyNumber; //! AUTO: cast variables into python (not needed for standard types) 
         d["offset"] = EPyUtils::ToPython(cMarkerSuperElementRigid->GetParameters().offset); //! AUTO: cast variables into python (not needed for standard types) 
-        d["meshNodeNumbers"] = (std::vector<Index>)cMarkerSuperElementRigid->GetParameters().meshNodeNumbers; //! AUTO: cast variables into python (not needed for standard types) 
+        d["meshNodeNumbers"] = EPyUtils::ToPythonMember(cMarkerSuperElementRigid->GetParameters().meshNodeNumbers); //! AUTO: cast variables into python (not needed for standard types) 
         d["weightingFactors"] = EPyUtils::ToPython(cMarkerSuperElementRigid->GetParameters().weightingFactors); //! AUTO: cast variables into python (not needed for standard types) 
         d["useAlternativeApproach"] = (bool)cMarkerSuperElementRigid->GetParameters().useAlternativeApproach; //! AUTO: cast variables into python (not needed for standard types) 
         d["rotationsExponentialMap"] = (Index)cMarkerSuperElementRigid->GetParameters().rotationsExponentialMap; //! AUTO: cast variables into python (not needed for standard types) 
@@ -142,7 +142,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("bodyNumber") == 0) { return py::cast((ObjectIndex)cMarkerSuperElementRigid->GetParameters().bodyNumber);} //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { return EPyUtils::ToPython(cMarkerSuperElementRigid->GetParameters().offset);} //! AUTO: get parameter
-        else if (parameterName.compare("meshNodeNumbers") == 0) { return py::cast((std::vector<Index>)cMarkerSuperElementRigid->GetParameters().meshNodeNumbers);} //! AUTO: get parameter
+        else if (parameterName.compare("meshNodeNumbers") == 0) { return py::cast(EPyUtils::ToPythonMember(cMarkerSuperElementRigid->GetParameters().meshNodeNumbers));} //! AUTO: get parameter
         else if (parameterName.compare("weightingFactors") == 0) { return EPyUtils::ToPython(cMarkerSuperElementRigid->GetParameters().weightingFactors);} //! AUTO: get parameter
         else if (parameterName.compare("useAlternativeApproach") == 0) { return py::cast((bool)cMarkerSuperElementRigid->GetParameters().useAlternativeApproach);} //! AUTO: get parameter
         else if (parameterName.compare("rotationsExponentialMap") == 0) { return py::cast((Index)cMarkerSuperElementRigid->GetParameters().rotationsExponentialMap);} //! AUTO: get parameter
@@ -159,8 +159,8 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("bodyNumber") == 0) { EPyUtils::ItemIndexFromPython<ObjectIndex>(value, cMarkerSuperElementRigid->GetParameters().bodyNumber); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { EPyUtils::FromPython(value, cMarkerSuperElementRigid->GetParameters().offset); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("meshNodeNumbers") == 0) { cMarkerSuperElementRigid->GetParameters().meshNodeNumbers = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("weightingFactors") == 0) { cMarkerSuperElementRigid->GetParameters().weightingFactors = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("meshNodeNumbers") == 0) { EPyUtils::FromPython(value, cMarkerSuperElementRigid->GetParameters().meshNodeNumbers, "MarkerSuperElementRigid.meshNodeNumbers"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("weightingFactors") == 0) { EPyUtils::FromPython(value, cMarkerSuperElementRigid->GetParameters().weightingFactors, "MarkerSuperElementRigid.weightingFactors"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("useAlternativeApproach") == 0) { EPyUtils::FromPython(value, cMarkerSuperElementRigid->GetParameters().useAlternativeApproach, "MarkerSuperElementRigid.useAlternativeApproach"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("rotationsExponentialMap") == 0) { EPyUtils::FromPython(value, cMarkerSuperElementRigid->GetParameters().rotationsExponentialMap, "MarkerSuperElementRigid.rotationsExponentialMap"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationMarkerSuperElementRigid->GetShow(), "MarkerSuperElementRigid.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter

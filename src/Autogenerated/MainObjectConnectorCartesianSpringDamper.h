@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  00:24:58 (last modified)
+* @date         2026-09-15  10:17:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -115,7 +115,7 @@ public: // AUTO:
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectConnectorCartesianSpringDamper->GetShow(), "ObjectConnectorCartesianSpringDamper.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationObjectConnectorCartesianSpringDamper->GetDrawSize(), "ObjectConnectorCartesianSpringDamper.VdrawSize"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectConnectorCartesianSpringDamper->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectConnectorCartesianSpringDamper->GetColor(), "ObjectConnectorCartesianSpringDamper.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -133,7 +133,7 @@ public: // AUTO:
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectConnectorCartesianSpringDamper->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VdrawSize"] = (float)visualizationObjectConnectorCartesianSpringDamper->GetDrawSize(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["Vcolor"] = (std::vector<float>)visualizationObjectConnectorCartesianSpringDamper->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["Vcolor"] = EPyUtils::ToPythonMember(visualizationObjectConnectorCartesianSpringDamper->GetColor()); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
     }
 
@@ -149,7 +149,7 @@ public: // AUTO:
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorCartesianSpringDamper->GetParameters().activeConnector);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorCartesianSpringDamper->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationObjectConnectorCartesianSpringDamper->GetDrawSize());} //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectConnectorCartesianSpringDamper->GetColor());} //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectConnectorCartesianSpringDamper->GetColor()));} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectConnectorCartesianSpringDamper::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
     }
@@ -167,7 +167,7 @@ public: // AUTO:
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectConnectorCartesianSpringDamper->GetParameters().activeConnector, "ObjectConnectorCartesianSpringDamper.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorCartesianSpringDamper->GetShow(), "ObjectConnectorCartesianSpringDamper.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorCartesianSpringDamper->GetDrawSize(), "ObjectConnectorCartesianSpringDamper.VdrawSize"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { visualizationObjectConnectorCartesianSpringDamper->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorCartesianSpringDamper->GetColor(), "ObjectConnectorCartesianSpringDamper.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectConnectorCartesianSpringDamper::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

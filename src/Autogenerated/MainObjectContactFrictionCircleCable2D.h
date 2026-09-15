@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  00:24:58 (last modified)
+* @date         2026-09-15  10:17:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -129,7 +129,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectContactFrictionCircleCable2D->GetShow(), "ObjectContactFrictionCircleCable2D.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VshowContactCircle")) { EPyUtils::FromPython(d["VshowContactCircle"], visualizationObjectContactFrictionCircleCable2D->GetShowContactCircle(), "ObjectContactFrictionCircleCable2D.VshowContactCircle"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationObjectContactFrictionCircleCable2D->GetDrawSize(), "ObjectContactFrictionCircleCable2D.VdrawSize"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectContactFrictionCircleCable2D->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectContactFrictionCircleCable2D->GetColor(), "ObjectContactFrictionCircleCable2D.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -153,7 +153,7 @@ public: // AUTO:
         d["Vshow"] = (bool)visualizationObjectContactFrictionCircleCable2D->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VshowContactCircle"] = (bool)visualizationObjectContactFrictionCircleCable2D->GetShowContactCircle(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VdrawSize"] = (float)visualizationObjectContactFrictionCircleCable2D->GetDrawSize(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["Vcolor"] = (std::vector<float>)visualizationObjectContactFrictionCircleCable2D->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["Vcolor"] = EPyUtils::ToPythonMember(visualizationObjectContactFrictionCircleCable2D->GetColor()); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
     }
 
@@ -175,7 +175,7 @@ public: // AUTO:
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectContactFrictionCircleCable2D->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VshowContactCircle") == 0) { return py::cast((bool)visualizationObjectContactFrictionCircleCable2D->GetShowContactCircle());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationObjectContactFrictionCircleCable2D->GetDrawSize());} //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectContactFrictionCircleCable2D->GetColor());} //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectContactFrictionCircleCable2D->GetColor()));} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectContactFrictionCircleCable2D::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
     }
@@ -199,7 +199,7 @@ public: // AUTO:
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectContactFrictionCircleCable2D->GetShow(), "ObjectContactFrictionCircleCable2D.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VshowContactCircle") == 0) { EPyUtils::FromPython(value, visualizationObjectContactFrictionCircleCable2D->GetShowContactCircle(), "ObjectContactFrictionCircleCable2D.VshowContactCircle"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { EPyUtils::FromPython(value, visualizationObjectContactFrictionCircleCable2D->GetDrawSize(), "ObjectContactFrictionCircleCable2D.VdrawSize"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { visualizationObjectContactFrictionCircleCable2D->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectContactFrictionCircleCable2D->GetColor(), "ObjectContactFrictionCircleCable2D.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectContactFrictionCircleCable2D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

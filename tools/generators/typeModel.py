@@ -16,10 +16,9 @@
 #                         'pyTyping'    - the type shown in docstrings and itemInterface type hints
 #             context     'items' or 'structures'
 #
-#           Rules first; everything the rules do not produce is listed in 'exceptions' below. Only
-#           spellings of type names that occur in definitions/ are kept - an entry of the old tables
-#           that no member used was dropped. Those differences between items and structures are
-#           the list that steps 34c4/34c5 decide. A name without rule or exception passes through
+#           Rules first, then 'names' (spellings the same for items and structures), then
+#           'exceptions': the remaining differences between items and structures, each with its
+#           reason (step 102 reduced them from 36 to 4 entries). A name without rule or exception passes through
 #           unchanged, as the old TypeConversion did - most C++ function signatures rely on it.
 #
 #           The facts come from definitions/definitionTypes.py: the range and item-kind forms of
@@ -71,41 +70,45 @@ def SizedName(typeName):
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#spellings the rules do not produce; (destination, context) -> {typeName: spelling}
-exceptions = {
-    ('cppStorage', 'items'): {
-        'NumpyVector': 'Vector', 'NumpyMatrix': 'Matrix', 'NumpyMatrixI': 'MatrixI',
+#named spellings, the same for items and structures (step 102): destination -> {typeName: spelling}
+names = {
+    'cppStorage': {
+        'Int': 'Index',                             #C++ uses Index for every integer
+        'NumpyMatrixI': 'MatrixI',
     },
-    ('cppStorage', 'structures'): {
+    'cppExchange': {
         'Int': 'Index',
-        'NumpyVector': 'py::array_t<Real>', 'NumpyMatrix': 'py::array_t<Real>',  #items store Vector / Matrix
-        'KeyPressUserFunction': 'std::function<bool(int, int, int)>',
-    },
-    ('cppExchange', 'items'): {
         'JointTypeList': 'std::vector<Joint::Type>',
         'NumpyVector': 'py::array_t<Real>', 'NumpyMatrix': 'py::array_t<Real>', 'NumpyMatrixI': 'py::array_t<Index>',
-        #lists of fixed-size items are exchanged through their Py... wrapper classes
-        'Vector3DList': 'PyVector3DList', 'Vector6DList': 'PyVector6DList', 'Matrix3DList': 'PyMatrix3DList',
+        #lists of fixed-size vectors and matrices are exchanged through their Py... wrapper classes
+        'Vector2DList': 'PyVector2DList', 'Vector3DList': 'PyVector3DList', 'Vector6DList': 'PyVector6DList',
+        'Matrix3DList': 'PyMatrix3DList',
     },
-    ('cppExchange', 'structures'): {
-        'Int': 'Index',
-        'KeyPressUserFunction': 'std::function<bool(int, int, int)>',
-        'Vector2DList': 'PyVector2DList',
-    },
-    ('dictType', 'structures'): {
+    'dictType': {                                   #the 'type' entry of GetDictionaryWithTypeInfo
         'ResizableVector': 'Vector', 'NumpyVector': 'Vector', 'NumpyMatrix': 'Matrix',
         'StdArray33F': 'MatrixFloat',
         'Index2': 'IndexArray', 'Index4': 'IndexArray', 'ArrayIndex': 'IndexArray',
         'ArrayFloat': 'VectorFloat', 'Float3': 'VectorFloat', 'Float4': 'VectorFloat',
     },
-    ('stub', 'structures'): {
-        'ArrayIndex': 'List[int]', 'ArrayFloat': 'List[float]',
-        'Index2': 'Tuple[int,int]',
-        'KeyPressUserFunction': 'Any', 'void': 'None', 'std::string': 'str',
+    'stub': {
+        'ArrayIndex': 'List[int]', 'ArrayFloat': 'List[float]', 'Index2': 'Tuple[int,int]',
+        'void': 'None', 'std::string': 'str',
     },
-    ('pyTyping', 'items'): {
+    'pyTyping': {
         'Vector': 'array_like', 'ArrayIndex': 'array_like',
-        'Matrix2D': 'Matrix2D',           #the other fixed-size matrices read array_like
+    },
+}
+
+#the differences between items and structures that remain, each with its reason:
+#(destination, context) -> {typeName: spelling}
+exceptions = {
+    ('cppStorage', 'items'): {
+        #items store numpy parameters as Vector/Matrix members; structures use these types only as
+        #return values of solver functions, which hand out py::array_t directly
+        'NumpyVector': 'Vector', 'NumpyMatrix': 'Matrix',
+    },
+    ('cppStorage', 'structures'): {
+        'NumpyVector': 'py::array_t<Real>', 'NumpyMatrix': 'py::array_t<Real>',
     },
 }
 
@@ -144,24 +147,12 @@ def _CppStorage(typeName, context):
 
 
 def _CppExchange(typeName, context):
+    """the same for items and structures since step 102: variable sizes are std::vector, fixed sizes std::array"""
     scalar = _Scalar(typeName, _scalarCpp)
     if scalar is not None and typeName not in itemIndexKinds:
         return scalar
     family, size = SizedName(typeName)
-    if context == 'items':
-        if typeName in userFunctionSignatures:
-            return userFunctionSignatures[typeName]
-        if typeName == 'Vector' or family == 'Vector':
-            return 'std::vector<Real>'
-        if family == 'Float':
-            return 'std::vector<float>'
-        if family == 'Index' or typeName == 'ArrayIndex':
-            return 'std::vector<Index>'
-        if family == 'Matrix' and size == 6:
-            return 'std::array<std::array<Real,6>,6>'
-        return None
-    #structures: fixed sizes are std::array
-    if typeName in ['Vector', 'Vector3D']:
+    if typeName == 'Vector' or family == 'Vector':
         return 'std::vector<Real>'
     if typeName == 'ArrayIndex':
         return 'std::vector<Index>'
@@ -206,6 +197,12 @@ def Render(typeName, destination, context):
     special = exceptions.get((destination, context), {})
     if typeName in special:
         return special[typeName]
+    if typeName in names.get(destination, {}):
+        return names[destination][typeName]
+    if typeName in userFunctionSignatures and destination in ['cppStorage', 'cppExchange']:
+        return userFunctionSignatures[typeName]    #items wrap it for storage, see CppMemberType
+    if typeName in userFunctionSignatures and destination == 'stub':
+        return 'Any'
     if destination == 'cppStorage':
         result = _CppStorage(typeName, context)
     elif destination == 'cppExchange':

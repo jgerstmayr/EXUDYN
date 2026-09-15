@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  00:27:29 (last modified)
+* @date         2026-09-15  10:17:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -119,25 +119,25 @@ public: // AUTO:
         EPyUtils::FromPython(d["gravity"], cObjectKinematicTree->GetParameters().gravity); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython(d["baseOffset"], cObjectKinematicTree->GetParameters().baseOffset); /* AUTO:  read out dictionary and cast to C++ type*/
         cObjectKinematicTree->GetParameters().jointTypes = py::cast<std::vector<Joint::Type>>(d["jointTypes"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectKinematicTree->GetParameters().linkParents = py::cast<std::vector<Index>>(d["linkParents"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["linkParents"], cObjectKinematicTree->GetParameters().linkParents, "ObjectKinematicTree.linkParents"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetMatrix3DListSafely(d["jointTransformations"], cObjectKinematicTree->GetParameters().jointTransformations); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetVector3DListSafely(d["jointOffsets"], cObjectKinematicTree->GetParameters().jointOffsets); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetMatrix3DListSafely(d["linkInertiasCOM"], cObjectKinematicTree->GetParameters().linkInertiasCOM); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetVector3DListSafely(d["linkCOMs"], cObjectKinematicTree->GetParameters().linkCOMs); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectKinematicTree->GetParameters().linkMasses = py::cast<std::vector<Real>>(d["linkMasses"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["linkMasses"], cObjectKinematicTree->GetParameters().linkMasses, "ObjectKinematicTree.linkMasses"); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetVector3DListSafely(d["linkForces"], cObjectKinematicTree->GetParameters().linkForces); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::SetVector3DListSafely(d["linkTorques"], cObjectKinematicTree->GetParameters().linkTorques); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectKinematicTree->GetParameters().jointForceVector = py::cast<std::vector<Real>>(d["jointForceVector"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectKinematicTree->GetParameters().jointPositionOffsetVector = py::cast<std::vector<Real>>(d["jointPositionOffsetVector"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectKinematicTree->GetParameters().jointVelocityOffsetVector = py::cast<std::vector<Real>>(d["jointVelocityOffsetVector"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectKinematicTree->GetParameters().jointPControlVector = py::cast<std::vector<Real>>(d["jointPControlVector"]); /* AUTO:  read out dictionary and cast to C++ type*/
-        cObjectKinematicTree->GetParameters().jointDControlVector = py::cast<std::vector<Real>>(d["jointDControlVector"]); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["jointForceVector"], cObjectKinematicTree->GetParameters().jointForceVector, "ObjectKinematicTree.jointForceVector"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["jointPositionOffsetVector"], cObjectKinematicTree->GetParameters().jointPositionOffsetVector, "ObjectKinematicTree.jointPositionOffsetVector"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["jointVelocityOffsetVector"], cObjectKinematicTree->GetParameters().jointVelocityOffsetVector, "ObjectKinematicTree.jointVelocityOffsetVector"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["jointPControlVector"], cObjectKinematicTree->GetParameters().jointPControlVector, "ObjectKinematicTree.jointPControlVector"); /* AUTO:  read out dictionary and cast to C++ type*/
+        EPyUtils::FromPython(d["jointDControlVector"], cObjectKinematicTree->GetParameters().jointDControlVector, "ObjectKinematicTree.jointDControlVector"); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "forceUserFunction")) { cObjectKinematicTree->GetParameters().forceUserFunction = d["forceUserFunction"]; /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectKinematicTree->GetShow(), "ObjectKinematicTree.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VshowLinks")) { EPyUtils::FromPython(d["VshowLinks"], visualizationObjectKinematicTree->GetShowLinks(), "ObjectKinematicTree.VshowLinks"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VshowJoints")) { EPyUtils::FromPython(d["VshowJoints"], visualizationObjectKinematicTree->GetShowJoints(), "ObjectKinematicTree.VshowJoints"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectKinematicTree->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectKinematicTree->GetColor(), "ObjectKinematicTree.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VgraphicsDataList")) { PyWriteBodyGraphicsDataListOfLists(d, "VgraphicsDataList", visualizationObjectKinematicTree->GetGraphicsDataList()); /*! AUTO: convert dict to BodyGraphicsDataList*/} 
         GetCObject()->ParametersHaveChanged();
     }
@@ -151,7 +151,7 @@ public: // AUTO:
         d["gravity"] = EPyUtils::ToPython(cObjectKinematicTree->GetParameters().gravity); //! AUTO: cast variables into python (not needed for standard types) 
         d["baseOffset"] = EPyUtils::ToPython(cObjectKinematicTree->GetParameters().baseOffset); //! AUTO: cast variables into python (not needed for standard types) 
         d["jointTypes"] = (std::vector<Joint::Type>)cObjectKinematicTree->GetParameters().jointTypes; //! AUTO: cast variables into python (not needed for standard types) 
-        d["linkParents"] = (std::vector<Index>)cObjectKinematicTree->GetParameters().linkParents; //! AUTO: cast variables into python (not needed for standard types) 
+        d["linkParents"] = EPyUtils::ToPythonMember(cObjectKinematicTree->GetParameters().linkParents); //! AUTO: cast variables into python (not needed for standard types) 
         d["jointTransformations"] = (PyMatrix3DList)cObjectKinematicTree->GetParameters().jointTransformations; //! AUTO: cast variables into python (not needed for standard types) 
         d["jointOffsets"] = (PyVector3DList)cObjectKinematicTree->GetParameters().jointOffsets; //! AUTO: cast variables into python (not needed for standard types) 
         d["linkInertiasCOM"] = (PyMatrix3DList)cObjectKinematicTree->GetParameters().linkInertiasCOM; //! AUTO: cast variables into python (not needed for standard types) 
@@ -169,7 +169,7 @@ public: // AUTO:
         d["Vshow"] = (bool)visualizationObjectKinematicTree->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VshowLinks"] = (bool)visualizationObjectKinematicTree->GetShowLinks(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VshowJoints"] = (bool)visualizationObjectKinematicTree->GetShowJoints(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["Vcolor"] = (std::vector<float>)visualizationObjectKinematicTree->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["Vcolor"] = EPyUtils::ToPythonMember(visualizationObjectKinematicTree->GetColor()); //! AUTO: cast variables into python (not needed for standard types) 
         d["VgraphicsDataList"] = PyGetBodyGraphicsDataListOfLists(visualizationObjectKinematicTree->GetGraphicsDataList(), addGraphicsData); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
     }
@@ -182,7 +182,7 @@ public: // AUTO:
         else if (parameterName.compare("gravity") == 0) { return EPyUtils::ToPython(cObjectKinematicTree->GetParameters().gravity);} //! AUTO: get parameter
         else if (parameterName.compare("baseOffset") == 0) { return EPyUtils::ToPython(cObjectKinematicTree->GetParameters().baseOffset);} //! AUTO: get parameter
         else if (parameterName.compare("jointTypes") == 0) { return py::cast((std::vector<Joint::Type>)cObjectKinematicTree->GetParameters().jointTypes);} //! AUTO: get parameter
-        else if (parameterName.compare("linkParents") == 0) { return py::cast((std::vector<Index>)cObjectKinematicTree->GetParameters().linkParents);} //! AUTO: get parameter
+        else if (parameterName.compare("linkParents") == 0) { return py::cast(EPyUtils::ToPythonMember(cObjectKinematicTree->GetParameters().linkParents));} //! AUTO: get parameter
         else if (parameterName.compare("jointTransformations") == 0) { return py::cast((PyMatrix3DList)cObjectKinematicTree->GetParameters().jointTransformations);} //! AUTO: get parameter
         else if (parameterName.compare("jointOffsets") == 0) { return py::cast((PyVector3DList)cObjectKinematicTree->GetParameters().jointOffsets);} //! AUTO: get parameter
         else if (parameterName.compare("linkInertiasCOM") == 0) { return py::cast((PyMatrix3DList)cObjectKinematicTree->GetParameters().linkInertiasCOM);} //! AUTO: get parameter
@@ -199,7 +199,7 @@ public: // AUTO:
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectKinematicTree->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VshowLinks") == 0) { return py::cast((bool)visualizationObjectKinematicTree->GetShowLinks());} //! AUTO: get parameter
         else if (parameterName.compare("VshowJoints") == 0) { return py::cast((bool)visualizationObjectKinematicTree->GetShowJoints());} //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectKinematicTree->GetColor());} //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectKinematicTree->GetColor()));} //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsDataList") == 0) { return PyGetBodyGraphicsDataListOfLists(visualizationObjectKinematicTree->GetGraphicsDataList(), true);} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectKinematicTree::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
@@ -214,24 +214,24 @@ public: // AUTO:
         else if (parameterName.compare("gravity") == 0) { EPyUtils::FromPython(value, cObjectKinematicTree->GetParameters().gravity); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("baseOffset") == 0) { EPyUtils::FromPython(value, cObjectKinematicTree->GetParameters().baseOffset); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("jointTypes") == 0) { cObjectKinematicTree->GetParameters().jointTypes = py::cast<std::vector<Joint::Type>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("linkParents") == 0) { cObjectKinematicTree->GetParameters().linkParents = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("linkParents") == 0) { EPyUtils::FromPython(value, cObjectKinematicTree->GetParameters().linkParents, "ObjectKinematicTree.linkParents"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("jointTransformations") == 0) { EPyUtils::SetMatrix3DListSafely(value, cObjectKinematicTree->GetParameters().jointTransformations); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("jointOffsets") == 0) { EPyUtils::SetVector3DListSafely(value, cObjectKinematicTree->GetParameters().jointOffsets); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("linkInertiasCOM") == 0) { EPyUtils::SetMatrix3DListSafely(value, cObjectKinematicTree->GetParameters().linkInertiasCOM); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("linkCOMs") == 0) { EPyUtils::SetVector3DListSafely(value, cObjectKinematicTree->GetParameters().linkCOMs); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("linkMasses") == 0) { cObjectKinematicTree->GetParameters().linkMasses = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("linkMasses") == 0) { EPyUtils::FromPython(value, cObjectKinematicTree->GetParameters().linkMasses, "ObjectKinematicTree.linkMasses"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("linkForces") == 0) { EPyUtils::SetVector3DListSafely(value, cObjectKinematicTree->GetParameters().linkForces); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("linkTorques") == 0) { EPyUtils::SetVector3DListSafely(value, cObjectKinematicTree->GetParameters().linkTorques); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("jointForceVector") == 0) { cObjectKinematicTree->GetParameters().jointForceVector = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("jointPositionOffsetVector") == 0) { cObjectKinematicTree->GetParameters().jointPositionOffsetVector = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("jointVelocityOffsetVector") == 0) { cObjectKinematicTree->GetParameters().jointVelocityOffsetVector = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("jointPControlVector") == 0) { cObjectKinematicTree->GetParameters().jointPControlVector = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("jointDControlVector") == 0) { cObjectKinematicTree->GetParameters().jointDControlVector = py::cast<std::vector<Real>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("jointForceVector") == 0) { EPyUtils::FromPython(value, cObjectKinematicTree->GetParameters().jointForceVector, "ObjectKinematicTree.jointForceVector"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("jointPositionOffsetVector") == 0) { EPyUtils::FromPython(value, cObjectKinematicTree->GetParameters().jointPositionOffsetVector, "ObjectKinematicTree.jointPositionOffsetVector"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("jointVelocityOffsetVector") == 0) { EPyUtils::FromPython(value, cObjectKinematicTree->GetParameters().jointVelocityOffsetVector, "ObjectKinematicTree.jointVelocityOffsetVector"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("jointPControlVector") == 0) { EPyUtils::FromPython(value, cObjectKinematicTree->GetParameters().jointPControlVector, "ObjectKinematicTree.jointPControlVector"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("jointDControlVector") == 0) { EPyUtils::FromPython(value, cObjectKinematicTree->GetParameters().jointDControlVector, "ObjectKinematicTree.jointDControlVector"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("forceUserFunction") == 0) { cObjectKinematicTree->GetParameters().forceUserFunction = value; /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectKinematicTree->GetShow(), "ObjectKinematicTree.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VshowLinks") == 0) { EPyUtils::FromPython(value, visualizationObjectKinematicTree->GetShowLinks(), "ObjectKinematicTree.VshowLinks"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VshowJoints") == 0) { EPyUtils::FromPython(value, visualizationObjectKinematicTree->GetShowJoints(), "ObjectKinematicTree.VshowJoints"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { visualizationObjectKinematicTree->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectKinematicTree->GetColor(), "ObjectKinematicTree.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsDataList") == 0) { PyWriteBodyGraphicsDataListOfLists(value, visualizationObjectKinematicTree->GetGraphicsDataList()); } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectKinematicTree::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

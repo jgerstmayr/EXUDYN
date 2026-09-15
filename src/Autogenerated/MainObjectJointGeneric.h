@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  00:24:58 (last modified)
+* @date         2026-09-15  10:17:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -107,7 +107,7 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectJointGeneric->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/
-        if (EPyUtils::DictItemExists(d, "constrainedAxes")) { cObjectJointGeneric->GetParameters().constrainedAxes = py::cast<std::vector<Index>>(d["constrainedAxes"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "constrainedAxes")) { EPyUtils::FromPython(d["constrainedAxes"], cObjectJointGeneric->GetParameters().constrainedAxes, "ObjectJointGeneric.constrainedAxes"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectJointGeneric->GetParameters().rotationMarker0); /* AUTO:  read out dictionary and cast to C++ type*/
         EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker1"], cObjectJointGeneric->GetParameters().rotationMarker1); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectJointGeneric->GetParameters().activeConnector, "ObjectJointGeneric.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/} 
@@ -119,7 +119,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectJointGeneric->GetShow(), "ObjectJointGeneric.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VaxesRadius")) { EPyUtils::FromPython(d["VaxesRadius"], visualizationObjectJointGeneric->GetAxesRadius(), "ObjectJointGeneric.VaxesRadius"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VaxesLength")) { EPyUtils::FromPython(d["VaxesLength"], visualizationObjectJointGeneric->GetAxesLength(), "ObjectJointGeneric.VaxesLength"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectJointGeneric->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectJointGeneric->GetColor(), "ObjectJointGeneric.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -129,7 +129,7 @@ public: // AUTO:
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
         d["markerNumbers"] = EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectJointGeneric->GetParameters().markerNumbers); //! AUTO: cast variables into python (not needed for standard types) 
-        d["constrainedAxes"] = (std::vector<Index>)cObjectJointGeneric->GetParameters().constrainedAxes; //! AUTO: cast variables into python (not needed for standard types) 
+        d["constrainedAxes"] = EPyUtils::ToPythonMember(cObjectJointGeneric->GetParameters().constrainedAxes); //! AUTO: cast variables into python (not needed for standard types) 
         d["rotationMarker0"] = EPyUtils::ToPython(cObjectJointGeneric->GetParameters().rotationMarker0); //! AUTO: cast variables into python (not needed for standard types) 
         d["rotationMarker1"] = EPyUtils::ToPython(cObjectJointGeneric->GetParameters().rotationMarker1); //! AUTO: cast variables into python (not needed for standard types) 
         d["activeConnector"] = (bool)cObjectJointGeneric->GetParameters().activeConnector; //! AUTO: cast variables into python (not needed for standard types) 
@@ -141,7 +141,7 @@ public: // AUTO:
         d["Vshow"] = (bool)visualizationObjectJointGeneric->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VaxesRadius"] = (float)visualizationObjectJointGeneric->GetAxesRadius(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VaxesLength"] = (float)visualizationObjectJointGeneric->GetAxesLength(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["Vcolor"] = (std::vector<float>)visualizationObjectJointGeneric->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["Vcolor"] = EPyUtils::ToPythonMember(visualizationObjectJointGeneric->GetColor()); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
     }
 
@@ -150,7 +150,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name);} //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectJointGeneric->GetParameters().markerNumbers));} //! AUTO: get parameter
-        else if (parameterName.compare("constrainedAxes") == 0) { return py::cast((std::vector<Index>)cObjectJointGeneric->GetParameters().constrainedAxes);} //! AUTO: get parameter
+        else if (parameterName.compare("constrainedAxes") == 0) { return py::cast(EPyUtils::ToPythonMember(cObjectJointGeneric->GetParameters().constrainedAxes));} //! AUTO: get parameter
         else if (parameterName.compare("rotationMarker0") == 0) { return EPyUtils::ToPython(cObjectJointGeneric->GetParameters().rotationMarker0);} //! AUTO: get parameter
         else if (parameterName.compare("rotationMarker1") == 0) { return EPyUtils::ToPython(cObjectJointGeneric->GetParameters().rotationMarker1);} //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectJointGeneric->GetParameters().activeConnector);} //! AUTO: get parameter
@@ -161,7 +161,7 @@ public: // AUTO:
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectJointGeneric->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VaxesRadius") == 0) { return py::cast((float)visualizationObjectJointGeneric->GetAxesRadius());} //! AUTO: get parameter
         else if (parameterName.compare("VaxesLength") == 0) { return py::cast((float)visualizationObjectJointGeneric->GetAxesLength());} //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectJointGeneric->GetColor());} //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectJointGeneric->GetColor()));} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectJointGeneric::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
     }
@@ -172,7 +172,7 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectJointGeneric->GetParameters().markerNumbers); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("constrainedAxes") == 0) { cObjectJointGeneric->GetParameters().constrainedAxes = py::cast<std::vector<Index>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("constrainedAxes") == 0) { EPyUtils::FromPython(value, cObjectJointGeneric->GetParameters().constrainedAxes, "ObjectJointGeneric.constrainedAxes"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectJointGeneric->GetParameters().rotationMarker0); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectJointGeneric->GetParameters().rotationMarker1); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectJointGeneric->GetParameters().activeConnector, "ObjectJointGeneric.activeConnector"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
@@ -183,7 +183,7 @@ public: // AUTO:
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectJointGeneric->GetShow(), "ObjectJointGeneric.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VaxesRadius") == 0) { EPyUtils::FromPython(value, visualizationObjectJointGeneric->GetAxesRadius(), "ObjectJointGeneric.VaxesRadius"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VaxesLength") == 0) { EPyUtils::FromPython(value, visualizationObjectJointGeneric->GetAxesLength(), "ObjectJointGeneric.VaxesLength"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { visualizationObjectJointGeneric->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectJointGeneric->GetColor(), "ObjectJointGeneric.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectJointGeneric::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

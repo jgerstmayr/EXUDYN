@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.57.dev1, 
+  \item Exudyn version = 1.11.58.dev1, 
   \item last change =  2026-09-15, 
   \item Number of issues = 2433, 
-  \item Number of resolved issues = 2130 (57 in current version), 
+  \item Number of resolved issues = 2131 (58 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.58}:  resolved Issue 2429: {\bf unify the item/structure type exceptions of typeModel.py}
+(cleanup)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: tools/generators/typeModel.py holds 36 spellings the rules do not produce (step 34c3) - the same definition type is spelled differently for items and structures: Int is int for items and Index for structures; Float3/Float4 are exchanged as std::vector<float> for items and std::array<float n> for structures; NumpyVector/NumpyMatrix are stored as Vector/Matrix in items and py::array\_t<Real> in structures; Vector2DList vs Vector3DList wrappers; Matrix2D reads Matrix2D in docs while the other fixed matrices read array\_like; stub and dictType special names. Unify as far as possible - one spelling per type and destination - keeping each unification only if the full test suite and parameterConversionTest.py (apart from intended reference changes) do not fail; what must remain gets a comment with the reason. Plan step 102.}
+    \item {\bf notes: typeModel.py exceptions reduced from 36 to 4: spellings that are the same for items and structures moved to a context-free names table (Int->Index; Py wrapper lists; dict type and stub vocabularies); KeyPressUserFunction joined definitionTypes.userFunctionSignatures; cppExchange has one rule for both contexts (variable sizes std::vector - fixed sizes std::array); item Float3/Float4 - ArrayIndex and Vector parameters convert through the same FromPython overloads as structure members (tuples accepted as before). Remaining: NumpyVector/NumpyMatrix storage (items store Vector/Matrix - structures only return py::array\_t from solver functions). parameterConversionTest 0 differences; suite passed.}
+    \item   date resolved: {\bf 2026-09-15 10:20},
+date raised: 2026-09-15 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.57}:  resolved Issue 2426: {\bf item classes reject their own default values}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

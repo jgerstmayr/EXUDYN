@@ -1635,7 +1635,7 @@ step; larger ones get their own. #2411 is step 83 and #2412 belongs to step 36.
     `C|Main|Visu<Kind>...h` in the output directory whose item has no definition. The check is
     local to the item emitter, because the stage declarations of `generate.py` are directory
     patterns and cannot name the expected files.
-102. *(with 34c4/34c5, before 34c6)* **One spelling per type: unify the item/structure exceptions of
+102. **DONE 2026-09-15: 36 exceptions reduced to 4 (details in the log).** *(with 34c4/34c5, before 34c6)* **One spelling per type: unify the item/structure exceptions of
     `typeModel.py`** (#2429). Step 34c3 left 36 spellings the rules do not produce. The same
     definition type is spelled differently for items and structures, for example:
     - `Int` is `int` for items and `Index` for structures;

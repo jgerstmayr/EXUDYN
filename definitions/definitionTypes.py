@@ -412,7 +412,8 @@ TSTDstring                         = TypeSpec('STDstring')
 #the C++ std::function each PyFunction... type stands for; the generators render the stored
 #member (PythonUserFunctionBase< ... >), the Python interface and the docs from it. Names must
 #start with 'PyFunction' (revision plan step 34c3: moved here from tools/generators/itemModel.py)
-userFunctionSignatures = {#for MainSystem => see other MainSystemUserFunctions
+userFunctionSignatures = {'KeyPressUserFunction': 'std::function<bool(int, int, int)>', #renderer key press (VisualizationSettings.interactive)
+                          #for MainSystem => see other MainSystemUserFunctions
                           'PyFunctionBoolMbsScalar': 'std::function<bool(const MainSystem&,Real)>',#PreStepUserFunction, PostStepUserFunction
                           'PyFunctionVector2DMbsScalar': 'std::function<StdVector2D(const MainSystem&,Real)>',#PreStepUserFunction, PostStepUserFunction
                           #for items:

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  00:24:58 (last modified)
+* @date         2026-09-15  10:17:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -129,7 +129,7 @@ public: // AUTO:
         EPyUtils::FromPython(d["name"], name); /* AUTO:  read out dictionary and cast to C++ type*/
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectBeamGeometricallyExact2D->GetShow(), "ObjectBeamGeometricallyExact2D.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         if (EPyUtils::DictItemExists(d, "VdrawHeight")) { EPyUtils::FromPython(d["VdrawHeight"], visualizationObjectBeamGeometricallyExact2D->GetDrawHeight(), "ObjectBeamGeometricallyExact2D.VdrawHeight"); /* AUTO:  read out dictionary and cast to C++ type*/} 
-        if (EPyUtils::DictItemExists(d, "Vcolor")) { visualizationObjectBeamGeometricallyExact2D->GetColor() = py::cast<std::vector<float>>(d["Vcolor"]); /* AUTO:  read out dictionary and cast to C++ type*/} 
+        if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectBeamGeometricallyExact2D->GetColor(), "ObjectBeamGeometricallyExact2D.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/} 
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -153,7 +153,7 @@ public: // AUTO:
         d["name"] = (std::string)name; //! AUTO: cast variables into python (not needed for standard types) 
         d["Vshow"] = (bool)visualizationObjectBeamGeometricallyExact2D->GetShow(); //! AUTO: cast variables into python (not needed for standard types) 
         d["VdrawHeight"] = (float)visualizationObjectBeamGeometricallyExact2D->GetDrawHeight(); //! AUTO: cast variables into python (not needed for standard types) 
-        d["Vcolor"] = (std::vector<float>)visualizationObjectBeamGeometricallyExact2D->GetColor(); //! AUTO: cast variables into python (not needed for standard types) 
+        d["Vcolor"] = EPyUtils::ToPythonMember(visualizationObjectBeamGeometricallyExact2D->GetColor()); //! AUTO: cast variables into python (not needed for standard types) 
         return d; 
     }
 
@@ -175,7 +175,7 @@ public: // AUTO:
         else if (parameterName.compare("includeReferenceRotations") == 0) { return py::cast((bool)cObjectBeamGeometricallyExact2D->GetParameters().includeReferenceRotations);} //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectBeamGeometricallyExact2D->GetShow());} //! AUTO: get parameter
         else if (parameterName.compare("VdrawHeight") == 0) { return py::cast((float)visualizationObjectBeamGeometricallyExact2D->GetDrawHeight());} //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { return py::cast((std::vector<float>)visualizationObjectBeamGeometricallyExact2D->GetColor());} //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectBeamGeometricallyExact2D->GetColor()));} //! AUTO: get parameter
         else  {PyError(STDstring("ObjectBeamGeometricallyExact2D::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read");} // AUTO: add warning for user
         return py::object();
     }
@@ -199,7 +199,7 @@ public: // AUTO:
         else if (parameterName.compare("includeReferenceRotations") == 0) { EPyUtils::FromPython(value, cObjectBeamGeometricallyExact2D->GetParameters().includeReferenceRotations, "ObjectBeamGeometricallyExact2D.includeReferenceRotations"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectBeamGeometricallyExact2D->GetShow(), "ObjectBeamGeometricallyExact2D.Vshow"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else if (parameterName.compare("VdrawHeight") == 0) { EPyUtils::FromPython(value, visualizationObjectBeamGeometricallyExact2D->GetDrawHeight(), "ObjectBeamGeometricallyExact2D.VdrawHeight"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { visualizationObjectBeamGeometricallyExact2D->GetColor() = py::cast<std::vector<float>>(value); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
+        else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectBeamGeometricallyExact2D->GetColor(), "ObjectBeamGeometricallyExact2D.Vcolor"); /* AUTO:  read out dictionary and cast to C++ type*/; } //! AUTO: get parameter
         else  {PyError(STDstring("ObjectBeamGeometricallyExact2D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified");} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }
