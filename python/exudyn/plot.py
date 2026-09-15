@@ -14,6 +14,7 @@
 
 import numpy as np #for loading
 import exudyn #for sensor index
+from exudyn.extensionRegistry import extends
 from exudyn.advancedUtilities import PlotLineCode, IsListOrArray, IsEmptyList
 import copy
 import os
@@ -198,7 +199,6 @@ def PlotSensorDefaults():
 #        fileDelimiterChar: if exists, defines the character indicating the columns for data (',', ' ', ';', ...)
 #**output::[Any, Any, Any, Any]: plots the sensor data; returns [plt, fig, ax, line] in which plt is matplotlib.pyplot, fig is the figure (or None), ax is the axis (or None) and line is the return value of plt.plot (or None) which could be changed hereafter
 #**notes: adjust default values by modifying the variables exudyn.plot.plotSensorDefault..., e.g., exudyn.plot.plotSensorDefaultFontSize
-#**belongsTo: MainSystem
 #**example: 
 ##assume to have some position-based nodes 0 and 1:
 #s0=mbs.AddSensor(SensorNode(nodeNumber=0, fileName='s0.txt',
@@ -225,6 +225,7 @@ def PlotSensorDefaults():
 ##plot y over x:
 #mbs.PlotSensor(sensorNumbers=s0, componentsX=[0], components=[1], xLabel='x-Position', yLabel='y-Position')
 ##for further examples, see also Examples/plotSensorExamples.py
+@extends(exudyn.MainSystem)
 def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=None, labels=[], 
                colorCodeOffset=0, newFigure=True, closeAll=False, 
                componentsX=[], title='', figureName='', fontSize=16, 

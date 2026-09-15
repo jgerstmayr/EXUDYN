@@ -19,15 +19,20 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.61.dev1, 
++  Exudyn version = 1.11.62.dev1, 
 +  last change =  2026-09-15, 
-+  Number of issues = 2434, 
-+  Number of resolved issues = 2134 (61 in current version), 
++  Number of issues = 2435, 
++  Number of resolved issues = 2135 (62 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.62: resolved Issue 2434: MainSystem extensions: registry decorator instead of copy-and-append (change)
+    - issue author: Claude-JG
+    - description:  step 35: mainSystemExtensions.py becomes ordinary package source; functions bind to MainSystem via @extends(exudyn.MainSystem) and install() which raises on a collision with a C++ method; mainSystemExtensionsEmitter.py and mainSystemExtensionsHeader.py are deleted; the docs parsers read the decorator instead of #\*\*belongsTo
+    - date resolved: **2026-09-15 12:22**\ , date raised: 2026-09-15 
+    - resolved by: Claude-JG
  * Version 1.11.61: resolved Issue 2433: generated item headers carry wrong and stray comments (cleanup)
     - issue author: Claude-JG
     - description:  Reported by the maintainer 2026-09-15: MainLoadCoordinate.h and all other Main headers write /\* AUTO: read out dictionary and cast to C++ type\*/ inside SetParameter and label every SetParameter line get parameter; GetParameter of user functions ends with ;; ; the visualization pointer is commented as computational object; CNodeGeneric{AE-ODE1-ODE2} return ...;; from their definitions; lines carry trailing whitespace. Plan step 106.

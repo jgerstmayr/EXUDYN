@@ -711,14 +711,12 @@ The core investment. Every step is validated byte-for-byte by step 2.
 32. **DONE 2026-09-14** — validate the definitions on load (`definitionValidator.py`). → [log](exudynRevisionLog2026.md#step-32)
 33. **DONE 2026-09-14** — re-point the generators at `definitions/`, then split them into emitters (`tools/generators/`). → [log](exudynRevisionLog2026.md#step-33)
 34. **DONE 2026-09-15** — emitters read members directly (34a); one Python/C++ conversion layer `PyConversion.h` (34c); Jinja2 measured and not adopted (34b). → [log](exudynRevisionLog2026.md#step-34)
-35. Replace the copy-and-append scheme for `mainSystemExtensionsHeader.py` with an
-    `@extends(exu.MainSystem, 'CreateMassPoint')` registry decorator binding at the definition
-    site, plus an explicit `install()` that raises on collision with an existing C++ method. The
-    module moves into the package as ordinary Python; the generator only reads it.
+35. **DONE 2026-09-15** — MainSystem extensions bound by `@extends(exudyn.MainSystem)` and `install()` instead of copy-and-append (#2434). → [log](exudynRevisionLog2026.md#step-35)
 36. Migrate the `#**` convention to **Google-style** docstrings across all 27 utility modules.
     Google style is mandatory project-wide (issue #2412); the rule itself has to be written into
     `docs/dev/CODING_STYLE.md`, `CONTRIBUTING.md`, `CLAUDE.md` and early in the user
-    documentation, which is that issue's work and not this step's. Eight of the eleven tags map
+    documentation, which is that issue's work and not this step's. The text inside the sections
+    is Markdown (`$...$` math, no LaTeX macros; decision 2026-09-15, see step 50). Eight of the eleven tags map
     to standard sections — `function`/`class`/`classFunction` → summary, `input` → `Args`,
     `output` → `Returns`, `notes` → `Note`, `example` → `Example`. `belongsTo` disappears into
     `@extends`.

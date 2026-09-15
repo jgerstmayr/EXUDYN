@@ -16,6 +16,7 @@ from math import sin, pi #for animation
 #import time        
 import copy           #copy numpy objects
 import exudyn
+from exudyn.extensionRegistry import extends
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -771,7 +772,6 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 #  title: if empty, it uses default; otherwise define specific title
 #  checkRenderEngineStopFlag: if True, stopping renderer (pressing Q or Escape) also causes stopping the interactive dialog
 #**output::None: updates current visualization state, renders the scene continuously (after pressing button 'Run')
-#**belongsTo: MainSystem
 #**example:
 ##HERE, mbs must contain same model as solution stored in coordinatesSolution.txt
 #
@@ -781,6 +781,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 #from exudyn.interactive import SolutionViewer #import function
 #sol = LoadSolutionFile('coordinatesSolution.txt') #load solution: adjust to your file name
 #mbs.SolutionViewer(sol) #call via MainSystem
+@extends(exudyn.MainSystem)
 def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, runOnStart = True, runMode=2, 
                    fontSize=12, title='', checkRenderEngineStopFlag=True):
     from exudyn.utilities import SetSolutionState, LoadSolutionFile

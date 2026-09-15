@@ -16,6 +16,7 @@
 
 #import exudyn #does not work out of exudyn.__init__.py
 import exudyn as exu
+from exudyn.extensionRegistry import extends, install
 import exudyn.plot
 import exudyn.solver
 import exudyn.interactive
@@ -264,7 +265,6 @@ def JointTypeToAxis(jointType):
 #  color: color of node
 #  show: True: show ground object; 
 #**output::ObjectIndex: returns ground object index 
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -275,6 +275,7 @@ def JointTypeToAxis(jointType):
 # ground=mbs.CreateGround(referencePosition = [2,0,0],
 #                         graphicsDataList = [exu.graphics.CheckerBoard(point=[0,0,0], normal=[0,1,0],size=4)])
 # 
+@extends(exudyn.MainSystem)
 def MainSystemCreateGround(mbs,
                            name = '',   
                            referencePosition = [0.,0.,0.],
@@ -325,7 +326,6 @@ def MainSystemCreateGround(mbs,
 #  create2D: if True, create NodePoint2D and MassPoint2D
 #  returnDict: if False, returns object index; if True, returns dict of all information on created object and node
 #**output::Union[dict, ObjectIndex]: returns mass point object index or dict with all data on request (if returnDict=True)
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -343,6 +343,7 @@ def MainSystemCreateGround(mbs,
 # simulationSettings.timeIntegration.numberOfSteps = 1000
 # simulationSettings.timeIntegration.endTime = 2
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
+@extends(exudyn.MainSystem)
 def MainSystemCreateMassPoint(mbs,
                            name = '',
                            referencePosition = [0.,0.,0.],
@@ -454,7 +455,6 @@ def MainSystemCreateMassPoint(mbs,
 #  create2D: if True, create NodeRigidBody2D and ObjectRigidBody2D
 #  returnDict: if False, returns object index; if True, returns dict of all information on created object and node
 #**output::Union[dict, ObjectIndex]: returns rigid body object index (or dict with 'nodeNumber', 'objectNumber' and possibly 'loadNumber' and 'markerBodyMass' if returnDict=True)
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -477,6 +477,7 @@ def MainSystemCreateMassPoint(mbs,
 # simulationSettings.timeIntegration.endTime = 2
 # 
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
+@extends(exudyn.MainSystem)
 def MainSystemCreateRigidBody(mbs,
                            name = '',
                            referencePosition = [0.,0.,0.],
@@ -688,7 +689,6 @@ def MainSystemCreateRigidBody(mbs,
 #  color: color of connector
 #  bodyList: DEPRECATED
 #**output::ObjectIndex: returns index of newly created object
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -715,6 +715,7 @@ def MainSystemCreateRigidBody(mbs,
 # simulationSettings.timeIntegration.endTime = 2
 # SC.visualizationSettings.nodes.drawNodesAsPoint=False
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
+@extends(exudyn.MainSystem)
 def MainSystemCreateSpringDamper(mbs,
                                  name='',
                                  bodyNumbers=[None, None], 
@@ -797,7 +798,6 @@ def MainSystemCreateSpringDamper(mbs,
 #  drawSize: general drawing size of connector
 #  color: color of connector
 #**output::ObjectIndex: returns index of newly created object
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -824,6 +824,7 @@ def MainSystemCreateSpringDamper(mbs,
 # SC.visualizationSettings.nodes.drawNodesAsPoint=False
 # 
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
+@extends(exudyn.MainSystem)
 def MainSystemCreateCartesianSpringDamper(mbs,
                                  name='',
                                  bodyNumbers=[None, None], 
@@ -896,9 +897,9 @@ def MainSystemCreateCartesianSpringDamper(mbs,
 #  drawSize: general drawing size of connector
 #  color: color of connector
 #**output::ObjectIndex: returns index of newly created object
-#**belongsTo: MainSystem
 #**example:
 # #coming later
+@extends(exudyn.MainSystem)
 def MainSystemCreateRigidBodySpringDamper(mbs,
                                  name='',
                                  bodyNumbers=[None, None], 
@@ -1002,9 +1003,9 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
 #  drawSize: general drawing size of connector
 #  color: color of connector
 #**output::ObjectIndex: returns index of newly created object
-#**belongsTo: MainSystem
 #**example:
 # #coming later
+@extends(exudyn.MainSystem)
 def MainSystemCreateTorsionalSpringDamper(mbs,
                                           name='',
                                           bodyNumbers=[None, None], 
@@ -1135,7 +1136,6 @@ def MainSystemCreateTorsionalSpringDamper(mbs,
 #  axisLength: length of axis for connector graphical representation
 #  color: color of connector
 #**output::ObjectIndex: returns index of created joint
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -1159,6 +1159,7 @@ def MainSystemCreateTorsionalSpringDamper(mbs,
 # simulationSettings.timeIntegration.endTime = 2
 # 
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
+@extends(exudyn.MainSystem)
 def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None], 
                                   position=[], axis=[], useGlobalFrame=True, 
                                   show=True, axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default):
@@ -1233,7 +1234,6 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
 #  axisLength: length of axis for connector graphical representation
 #  color: color of connector
 #**output::ObjectIndex: returns index of created joint
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -1259,6 +1259,7 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
 # simulationSettings.timeIntegration.endTime = 2
 # 
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
+@extends(exudyn.MainSystem)
 def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None], 
                                   position=[], axis=[], useGlobalFrame=True, 
                                   show=True, axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default):
@@ -1325,7 +1326,6 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
 #  jointRadius: radius of sphere for connector graphical representation
 #  color: color of connector
 #**output::ObjectIndex: returns index of created joint
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -1350,6 +1350,7 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
 # simulationSettings.timeIntegration.endTime = 2
 # 
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
+@extends(exudyn.MainSystem)
 def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None], 
                                   position=[], constrainedAxes=[1,1,1], useGlobalFrame=True, 
                                   show=True, jointRadius=0.1, color=exudyn.graphics.color.default):
@@ -1406,7 +1407,6 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
 #  axesLength: length of axes for connector graphical representation
 #  color: color of connector
 #**output::ObjectIndex: returns index of created joint
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -1433,6 +1433,7 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
 # simulationSettings.timeIntegration.endTime = 2
 # 
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
+@extends(exudyn.MainSystem)
 def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None], 
                                  position=[], 
                                  rotationMatrixAxes=np.eye(3), 
@@ -1507,7 +1508,6 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
 #  drawSize: general drawing size of node
 #  color: color of connector
 #**output::ObjectIndex: returns index of created joint
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -1544,6 +1544,7 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
 # simulationSettings.timeIntegration.endTime = 2
 # 
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
+@extends(exudyn.MainSystem)
 def MainSystemCreateDistanceConstraint(mbs, name='', 
                                        bodyNumbers=[None, None], 
                                        localPosition0 = [0.,0.,0.],
@@ -1648,7 +1649,6 @@ def MainSystemCreateDistanceConstraint(mbs, name='',
 #  drawSize: general drawing size of node
 #  color: color of connector
 #**output::ObjectIndex: returns index of created joint
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -1678,6 +1678,7 @@ def MainSystemCreateDistanceConstraint(mbs, name='',
 # simulationSettings.timeIntegration.endTime = 2
 # 
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
+@extends(exudyn.MainSystem)
 def MainSystemCreateCoordinateConstraint(mbs, name='', 
                                         bodyNumbers=[None, None], 
                                         coordinates=[None, None], 
@@ -1789,7 +1790,6 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
 #  discWidth: disc with, only used for drawing
 #  color: color of connector
 #**output::ObjectIndex: returns index of created joint
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -1819,6 +1819,7 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
 # simulationSettings.timeIntegration.endTime = 2
 #
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
+@extends(exudyn.MainSystem)
 def MainSystemCreateRollingDisc(mbs, name='', bodyNumbers=[None, None], 
                                 axisPosition=[], axisVector = [1,0,0],
                                 discRadius = 0., planePosition = [0,0,0], planeNormal = [0,0,1], 
@@ -1897,7 +1898,6 @@ def MainSystemCreateRollingDisc(mbs, name='', bodyNumbers=[None, None],
 #  discWidth: disc with, only used for drawing
 #  color: color of connector
 #**output::ObjectIndex: returns index of created joint
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -1928,6 +1928,7 @@ def MainSystemCreateRollingDisc(mbs, name='', bodyNumbers=[None, None],
 # simulationSettings.timeIntegration.endTime = 2
 
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
+@extends(exudyn.MainSystem)
 def MainSystemCreateRollingDiscPenalty(mbs, name='', bodyNumbers=[None, None], 
                                   axisPosition=[], axisVector = [1,0,0],
                                   discRadius = 0., planePosition = [0,0,0], planeNormal = [0,0,1], 
@@ -2032,7 +2033,7 @@ def MainSystemCreateRollingDiscPenalty(mbs, name='', bodyNumbers=[None, None],
 #  show: if True, connector visualization is drawn
 #  color: color of connector
 #**output::ObjectIndex: returns index of created joint
-#**belongsTo: MainSystem
+@extends(exudyn.MainSystem)
 def MainSystemCreateSphereSphereContact(mbs, name='', bodyNumbers=[None, None], 
                                        localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.], 
                                        spheresRadii = [-1,-1], isHollowSphere1 = False,
@@ -2169,7 +2170,7 @@ def MainSystemCreateSphereSphereContact(mbs, name='', bodyNumbers=[None, None],
 #  show: if True, connector visualization is drawn
 #  color: color of connector
 #**output::dict: dictionary containing oContact0 and oContact1 with ObjectIndex of each contact object
-#**belongsTo: MainSystem
+@extends(exudyn.MainSystem)
 def MainSystemCreateSphereQuadContact(mbs, name='', bodyNumbers=[None, None], 
                                        localPosition0 = [0.,0.,0.], radiusSphere = 0,
                                        quadPoints = exudyn.Vector3DList([[0,0,0],[1,0,0],[1,1,0],[0,1,0]]),
@@ -2305,7 +2306,7 @@ def MainSystemCreateSphereQuadContact(mbs, name='', bodyNumbers=[None, None],
 #  show: if True, connector visualization is drawn
 #  color: color of connector
 #**output::ObjectIndex: returns index of created joint
-#**belongsTo: MainSystem
+@extends(exudyn.MainSystem)
 def MainSystemCreateSphereTriangleContact(mbs, name='', bodyNumbers=[None, None], 
                                        localPosition0 = [0.,0.,0.], radiusSphere = 0,
                                        trianglePoints = exudyn.Vector3DList([[0,0,0],[1,0,0],[0,1,0]]),
@@ -2434,7 +2435,7 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', bodyNumbers=[None, None]
 #  linkRoundness: for automatic generation of graphics for links, roundness=0 give brick-shape, roundness<1 give transition of brick to ellipsoid and roundness=1 give cylinders
 #  show: show kinematic tree
 #**output::ObjectIndex: returns kinematic tree object index
-#**belongsTo: MainSystem
+@extends(exudyn.MainSystem)
 def MainSystemCreateKinematicTree(mbs,
                            name = '',
                            listOfTreeLinks = [],
@@ -2727,7 +2728,6 @@ def MainSystemCreateKinematicTree(mbs,
 #  verbose: if True, additional information will be printed in the console upon calling the function
 #**output::dict: dictionary mapping each created SuperElementRigid marker name to its marker number, plus an additional entry under 'FFRFReducedOrderObjectDict' containing information about the created FFRF reduced order object
 #**author: Sebastian Weyrer
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.FEM import * # includes fem functionality
@@ -2768,6 +2768,7 @@ def MainSystemCreateKinematicTree(mbs,
 # SC.visualizationSettings.nodes.show = False
 #
 # mbs.SolveDynamic(simulationSettings)
+@extends(exudyn.MainSystem)
 def MainSystemCreateFFRFReducedOrderObject(mbs, name, femInterface,
                                            referencePosition=[0., 0., 0.],
                                            initialVelocity=[0., 0., 0.],
@@ -2916,7 +2917,6 @@ def MainSystemCreateFFRFReducedOrderObject(mbs, name, femInterface,
 #  loadVectorUserFunction: A Python function f(mbs, t, load)->loadVector which defines the time-dependent load and replaces loadVector in every time step; the arg load is the static loadVector
 #  show: if True, load is drawn
 #**output::LoadIndex: returns load index
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -2937,6 +2937,7 @@ def MainSystemCreateFFRFReducedOrderObject(mbs, name, femInterface,
 # simulationSettings.timeIntegration.numberOfSteps = 1000
 # simulationSettings.timeIntegration.endTime = 2
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
+@extends(exudyn.MainSystem)
 def MainSystemCreateForce(mbs,
                 name = '',   
                 bodyNumber = None,
@@ -3001,7 +3002,6 @@ def MainSystemCreateForce(mbs,
 #  loadVectorUserFunction: A Python function f(mbs, t, load)->loadVector which defines the time-dependent load and replaces loadVector in every time step; the arg load is the static loadVector
 #  show: if True, load is drawn
 #**output::LoadIndex: returns load index
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -3023,6 +3023,7 @@ def MainSystemCreateForce(mbs,
 # simulationSettings.timeIntegration.numberOfSteps = 1000
 # simulationSettings.timeIntegration.endTime = 2
 # mbs.SolveDynamic(simulationSettings = simulationSettings)
+@extends(exudyn.MainSystem)
 def MainSystemCreateTorque(mbs,
                 name = '',
                 bodyNumber = None,
@@ -3091,136 +3092,5 @@ def MainSystemCreateTorque(mbs,
 # #def InitializeFromRestartFile(mbs, simulationSettings, restartFileName, verbose=True):
 
      
-#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#AUTO AUTO AUTO AUTO AUTO AUTO AUTO AUTO AUTO AUTO AUTO AUTO 
-#NOTE that the following text is autogenerated, do not modify!
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.SolutionViewer=exu.interactive.SolutionViewer
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateGround=MainSystemCreateGround
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateMassPoint=MainSystemCreateMassPoint
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateRigidBody=MainSystemCreateRigidBody
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateSpringDamper=MainSystemCreateSpringDamper
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateCartesianSpringDamper=MainSystemCreateCartesianSpringDamper
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateRigidBodySpringDamper=MainSystemCreateRigidBodySpringDamper
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateTorsionalSpringDamper=MainSystemCreateTorsionalSpringDamper
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateRevoluteJoint=MainSystemCreateRevoluteJoint
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreatePrismaticJoint=MainSystemCreatePrismaticJoint
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateSphericalJoint=MainSystemCreateSphericalJoint
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateGenericJoint=MainSystemCreateGenericJoint
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateDistanceConstraint=MainSystemCreateDistanceConstraint
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateCoordinateConstraint=MainSystemCreateCoordinateConstraint
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateRollingDisc=MainSystemCreateRollingDisc
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateRollingDiscPenalty=MainSystemCreateRollingDiscPenalty
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateSphereSphereContact=MainSystemCreateSphereSphereContact
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateSphereQuadContact=MainSystemCreateSphereQuadContact
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateSphereTriangleContact=MainSystemCreateSphereTriangleContact
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateKinematicTree=MainSystemCreateKinematicTree
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateFFRFReducedOrderObject=MainSystemCreateFFRFReducedOrderObject
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateForce=MainSystemCreateForce
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateTorque=MainSystemCreateTorque
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.PlotSensor=exu.plot.PlotSensor
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.SolveStatic=exu.solver.SolveStatic
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.SolveDynamic=exu.solver.SolveDynamic
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.ComputeLinearizedSystem=exu.solver.ComputeLinearizedSystem
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.ComputeODE2Eigenvalues=exu.solver.ComputeODE2Eigenvalues
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.ComputeSystemDegreeOfFreedom=exu.solver.ComputeSystemDegreeOfFreedom
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateDistanceSensorGeometry=exu.utilities.CreateDistanceSensorGeometry
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.CreateDistanceSensor=exu.utilities.CreateDistanceSensor
-
-
-#link MainSystem function to Python function:
-exu.MainSystem.DrawSystemGraph=exu.utilities.DrawSystemGraph
-
+#bind all functions marked with @extends (in this module, plot, solver, utilities, interactive) to their classes
+install()

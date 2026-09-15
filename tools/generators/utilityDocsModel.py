@@ -429,6 +429,11 @@ def ParsePythonFile(fileName):
                 if not newTag:
                     if len(line.strip()) > 1 and line.strip()[0] == '#': #comment needed to add into docu info
                         currentInfo += line.strip()[1:]+"\n"
+                    elif line.startswith('@extends('): #@extends(exudyn.MainSystem): bound as method
+                        if fillInMode != '':
+                            functionDict[fillInMode] = currentInfo
+                            fillInMode = ''
+                        functionDict['belongsTo'] = line[len('@extends('):].split(')')[0].split(',')[0].split('.')[-1]
                     elif HasDefinitionIdentifier(line): #parse arguments
                         if verbose: print("function def line:",line)
                         storedLineNumber = lineCnt #beginning of function definition, for hyperref

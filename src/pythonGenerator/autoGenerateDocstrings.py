@@ -245,6 +245,7 @@ class DocBlock:
 TAG_PATTERN = re.compile(r"^\s*#\*\*(\w+)\s*:(.*)$")
 DEF_PATTERN = re.compile(r"^\s*def\s+([A-Za-z_]\w*)\s*\(")
 CLASS_PATTERN = re.compile(r"^\s*class\s+([A-Za-z_]\w*)\s*[\(:]")
+EXTENDS_PATTERN = re.compile(r"^\s*@extends\(\s*[\w.]*?(\w+)\s*[,)]")  # @extends(exudyn.MainSystem) ends a tag block
 COMMENT_LINE_PATTERN = re.compile(r"^\s*#(.*)$")
 
 # Set of recognized tags
@@ -401,8 +402,11 @@ class SpecialTagParser:
                 continue
 
             # While collecting a block, collect content lines for specific tags
+            extends_match = EXTENDS_PATTERN.match(line)
             if current_db is not None:
-                if def_match or class_match:
+                if extends_match:
+                    current_db.belongs_to = extends_match.group(1)
+                if def_match or class_match or extends_match:
                     # Finalize summary if needed (e.g., ensure it ends with a period)
                     if current_db.summary:
                         current_db.summary = CleanStringForPyiDescription(current_db.summary, enforcePeriod=True)

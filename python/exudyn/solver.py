@@ -15,6 +15,7 @@
 #import is necessary, otherwise the solvers cannot be called
 import numpy as np
 import exudyn
+from exudyn.extensionRegistry import extends
 
 solverCheckMemoryAllocations = True
 solverCheckMemoryAllocationsThreshold = 100000 #treshold for warning on too many news during solving
@@ -132,7 +133,6 @@ def SolverErrorMessage(solver, mbs, isStatic=False,
 #   showCausingItems: if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
 #   autoAssemble: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 #**output::bool: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.itemInterface import *
@@ -154,6 +154,7 @@ def SolverErrorMessage(solver, mbs, isStatic=False,
 # exu.Print("iterations = ", mbs.sys['staticSolver'].it)
 # exu.Print("pos=", mbs.GetObjectOutputBody(body,localPosition=[0,0,0], 
 #       variableType=exu.OutputVariableType.Position))
+@extends(exudyn.MainSystem)
 def SolveStatic(mbs, simulationSettings = None, 
                 updateInitialValues = False,
                 storeSolver = True,
@@ -199,7 +200,6 @@ def SolveStatic(mbs, simulationSettings = None,
 #   showCausingItems: if linear solver fails, this option helps to identify objects, etc. which are related to a singularity in the linearized system matrix
 #   autoAssemble: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 #**output::bool: returns True, if successful, False if fails; if storeSolver = True, mbs.sys contains staticSolver, which allows to investigate solver problems (check theDoc.pdf \refSection{sec:solverSubstructures} and the items described in \refSection{sec:MainSolverStatic})
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.itemInterface import *
@@ -222,6 +222,7 @@ def SolveStatic(mbs, simulationSettings = None,
 # exu.Print("iterations = ", mbs.sys['dynamicSolver'].it)
 # exu.Print("pos=", mbs.GetObjectOutputBody(body,localPosition=[0,0,0], 
 #       variableType=exu.OutputVariableType.Position))
+@extends(exudyn.MainSystem)
 def SolveDynamic(mbs,
                 simulationSettings = None, 
                 solverType = exudyn.DynamicSolverType.GeneralizedAlpha,
@@ -352,7 +353,6 @@ def RestoreSimulationSettings(simulationSettings, store):
 #   autoAssemble: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 #**output::[ArrayLike, ArrayLike, ArrayLike]: [M, K, D]; list containing numpy mass matrix M, stiffness matrix K and damping matrix D; for constraints, see options with arguments above, return values may change to [M, K, D, C, N]
 #**notes: consider paper of Agundez, Vallejo, Freire, Mikkola, "The dependent coordinates in the linearization of constrained multibody systems: Handling and elimination", https://www.sciencedirect.com/science/article/pii/S0020740324000791
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.utilities import *
@@ -376,6 +376,7 @@ def RestoreSimulationSettings(simulationSettings, store):
 # mbs.Assemble()
 # [M,K,D] = mbs.ComputeLinearizedSystem()
 # exu.Print('M=\n',M,'\nK=\n',K,'\nD=\n',D) 
+@extends(exudyn.MainSystem)
 def ComputeLinearizedSystem(mbs, 
                             simulationSettings = None,
                             projectIntoConstraintNullspace = False,
@@ -481,7 +482,6 @@ def ComputeLinearizedSystem(mbs,
 #   singularValuesTolerance: tolerance used to distinguish between zero and nonzero singular values for algebraic constraints projection
 #   autoAssemble: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 #**output::[ArrayLike, ArrayLike]: [eigenValues, eigenVectors]; eigenValues being a numpy array of eigen values ($\omega_i^2$, being the squared eigen frequencies in ($\omega_i$ in rad/s)!), eigenVectors a numpy array containing the eigenvectors in every column
-#**belongsTo: MainSystem
 #**author: Johannes Gerstmayr, Michael Pieber
 #**example:
 #  #take any example from the Examples or TestModels folder, e.g., 'cartesianSpringDamper.py' and run it
@@ -515,6 +515,7 @@ def ComputeLinearizedSystem(mbs,
 # #compute complex eigenvalues:
 # [eigenvaluesComplex, ev] = mbs.ComputeODE2Eigenvalues(computeComplexEigenvalues=True,
 #                                                       useAbsoluteValues=False)
+@extends(exudyn.MainSystem)
 def ComputeODE2Eigenvalues(mbs, 
                            simulationSettings = None,
                            useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates=[],
@@ -719,7 +720,6 @@ def ComputeODE2Eigenvalues(mbs,
 #  autoAssemble: if True: if mbs.systemIsConsistent=False (system is not assembled), call mbs.Assemble() before solver calls
 #**output::dict: returns dictionary with key words 'degreeOfFreedom', 'redundantConstraints', 'nODE2', 'nODE1', 'nAE', 'nPureAE', where: degreeOfFreedom = the system degree of freedom computed numerically, redundantConstraints=the number of redundant constraints, nODE2=number of ODE2 coordinates, nODE1=number of ODE1 coordinates, nAE=total number of constraints, nPureAE=number of constraints on algebraic variables (e.g., lambda=0) that are not coupled to ODE2 coordinates
 #**notes: this approach could possibly fail with special constraints! Currently only works with dense matrices, thus it will be slow for larger systems
-#**belongsTo: MainSystem
 #**example:
 # import exudyn as exu
 # from exudyn.utilities import *
@@ -742,6 +742,7 @@ def ComputeODE2Eigenvalues(mbs,
 # #
 # mbs.Assemble()
 # dof = mbs.ComputeSystemDegreeOfFreedom(verbose=1)['degreeOfFreedom'] #print out details
+@extends(exudyn.MainSystem)
 def ComputeSystemDegreeOfFreedom(mbs, 
                 simulationSettings = None,
                 threshold = 1e-12, verbose=False, useSVD=False,

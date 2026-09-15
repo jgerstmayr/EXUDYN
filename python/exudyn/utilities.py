@@ -18,6 +18,7 @@ import numpy as np
 from math import sqrt #, sin, cos, pi
 
 import exudyn
+from exudyn.extensionRegistry import extends
 #for convenience, exudyn.utilities imports a lot of things globally
 from exudyn.basicUtilities import * # noqa: F403, F401
 from exudyn.advancedUtilities import * # noqa: F403, F401
@@ -308,7 +309,7 @@ def __UFsensorDistance(mbs, t, sensorNumbers, factors, configuration):
 #  searchTreeCellSize: size of search tree (X,Y,Z); use larger values in directions where more triangles are located
 #**output::int: returns ngc, which is the number of GeneralContact in mbs, to be used in CreateDistanceSensor(...); keep the gContact as deletion may corrupt data
 #**notes: should be used by CreateDistanceSensor(...) and AddLidar(...) for simple initialization of GeneralContact; old name: DistanceSensorSetupGeometry(...)
-#**belongsTo: MainSystem
+@extends(exudyn.MainSystem)
 def CreateDistanceSensorGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerIndex, searchTreeCellSize=[8,8,8]):
     gContact = mbs.AddGeneralContact()
     gContact.SetFrictionPairings(0*np.eye(1)) #may not be empty
@@ -341,7 +342,7 @@ def CreateDistanceSensorGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerInde
 #  color: optional color for 'laser beam' to be drawn
 #**output::SensorIndex: creates sensor and returns according sensor number of SensorUserFunction
 #**notes: use generalContactIndex = CreateDistanceSensorGeometry(...) before to create GeneralContact module containing geometry; old name: AddDistanceSensor(...)
-#**belongsTo: MainSystem
+@extends(exudyn.MainSystem)
 def CreateDistanceSensor(mbs, generalContactIndex,
                       positionOrMarker, dirSensor, minDistance=-1e7, 
                       maxDistance=1e7, cylinderRadius=0, 
@@ -1007,7 +1008,7 @@ def AnimateSolution(mbs, solution, rowIncrement = 1, timeout=0.04, createImages 
 #   addItemData: if True, specific data is added to the graph nodes, to be used for deeper analysis of system graphs
 #   addAnnotations: add data node graphs (not shown), except for graphics data, item numbers, names and types (which are already available in graph data or edges)
 #**output::[Any, Any, Any]: returns [networkx, G, items] with nx being networkx, G the graph and item what is returned by nx.draw\_networkx\_labels(...)
-#**belongsTo: MainSystem
+@extends(exudyn.MainSystem)
 def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False, 
                     useItemTypes = False, addItemTypeNames=True, multiLine=True, fontSizeFactor=1., 
                     layoutDistanceFactor=3., layoutIterations=100, showLegend = True, tightLayout = True, 
