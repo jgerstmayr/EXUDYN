@@ -215,6 +215,67 @@ The enumeration type  NodeType is used for defining node types for 3D rigid bodi
 
 
 
+.. _sec-markertype:
+
+
+MarkerType
+==========
+
+The enumeration type MarkerType lists the properties of a marker as bits; a connector or load requests a combination of them (GetRequestedMarkerType), which the marker type must contain.
+
+
+
+\ The class **MarkerType** has the following **functions and structures**:
+
+* | **\_None**:
+  | no type is used
+* | **Body**:
+  | marker is attached to a body (must also be Object)
+* | **Node**:
+  | marker is attached to a node
+* | **Object**:
+  | marker is attached to an object
+* | **SuperElement**:
+  | marker only applicable to super elements; accesses (virtual) nodes of super elements
+* | **KinematicTree**:
+  | marker only applicable to KinematicTree; accesses (virtual) nodes of KinematicTree
+* | **Position**:
+  | can measure position, apply distance constraint
+* | **Orientation**:
+  | can measure rotation, apply general rigid body constraint (if Position is set)
+* | **Coordinate**:
+  | access any coordinate (always available)
+* | **Coordinates**:
+  | access all coordinates (always available)
+* | **BodyLine**:
+  | line load (vector load applied to line)
+* | **BodySurface**:
+  | surface load / connector (e.g. for revolute joint with FE-mesh)
+* | **BodyVolume**:
+  | volume load, usually gravity
+* | **BodyMass**:
+  | mass proportional load, usually gravity
+* | **BodySurfaceNormal**:
+  | surface pressure (uses scalar load)
+* | **MultiNodal**:
+  | multinodal marker uses a weighting matrix to transform node values into the marker value
+* | **ReducedCoordinates**:
+  | marker uses reduced (modal) coordinates of a super element
+* | **ODE1**:
+  | marker addresses ODE1 coordinate(s) (standard is ODE2)
+* | **JacobianDerivativeNonZero**:
+  | the derivative of the marker jacobian is non-zero (e.g. for rotations)
+* | **JacobianDerivativeAvailable**:
+  | the derivative of the marker jacobian is implemented
+* | **HasPostNewton**:
+  | the PostNewton function has to be called
+* | **Beam2DShape**:
+  | access to 2D beam shape
+* | **Beam3DShape**:
+  | access to 3D beam shape
+
+
+
 .. _sec-jointtype:
 
 
@@ -241,6 +302,47 @@ The enumeration type  JointType is used for defining joint types, used in Kinema
   | prismatic joint type with translation along local Y axis
 * | **PrismaticZ**:
   | prismatic joint type with translation along local Z axis
+
+
+
+.. _sec-accessfunctiontype:
+
+
+AccessFunctionType
+==================
+
+The enumeration type AccessFunctionType lists the access functions (jacobians) an object provides for markers, as bits; its values share the bits of MarkerType. A marker can be attached to an object only if the object provides the access function the marker needs.
+
+
+
+\ The class **AccessFunctionType** has the following **functions and structures**:
+
+* | **\_None**:
+  | no access function
+* | **TranslationalVelocity\_qt**:
+  | for application of forces, position constraints
+* | **AngularVelocity\_qt**:
+  | for application of torques, rotational constraints
+* | **Coordinate\_q**:
+  | for application of generalized forces
+* | **DisplacementLineIntegral\_q**:
+  | for line loads
+* | **DisplacementSurfaceIntegral\_q**:
+  | for surface loads
+* | **DisplacementVolumeIntegral\_q**:
+  | for distributed (body-volume) loads
+* | **DisplacementMassIntegral\_q**:
+  | for distributed (body-mass) loads
+* | **DisplacementSurfaceNormalIntegral\_q**:
+  | for surface loads; pressure acts normal to the surface
+* | **SuperElement**:
+  | for super elements, using TranslationalVelocity_qt and AngularVelocity_qt
+* | **KinematicTree**:
+  | for KinematicTree, using TranslationalVelocity_qt and AngularVelocity_qt
+* | **JacobianTtimesVector\_q**:
+  | derivative of jacobian^T times vector (provided in markerData.vectorValue)
+* | **SuperElementAlternativeRotationMode**:
+  | for super elements, alternative rotation mode
 
 
 

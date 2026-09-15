@@ -109,8 +109,12 @@ def StringFunctionText(enum, indent):
         for value in enum.values:
             if value.value is None:
                 s += indent + '    if (var == ' + value.name + ') { t = "_None/Undefined"; }\n'
-            else:
-                s += indent + '    if (var & ' + value.name + ') { t += "' + value.name[len(enum.stringPrefix):] + '"; }\n'
+            elif value.stringText != '':
+                text = value.stringText if value.stringText is not None else value.name[len(enum.stringPrefix):]
+                condition = 'var & ' + value.name
+                if value.stringIf:
+                    condition = '(' + condition + ') && ' + value.stringIf
+                s += indent + '    if (' + condition + ') { t += "' + text + '"; }\n'
         s += indent + '    if (t.length() == 0) { CHECKandTHROWstring(' + errorText + '); }\n'
         s += indent + '    return t;\n'
     else:
@@ -154,6 +158,8 @@ def EmitHeader():
     for enum in enumTypes:
         if enum.Namespace() not in namespaces:
             namespaces.append(enum.Namespace())
+    #namespaced enums first: enum classes may refer to their values (AccessFunctionType = Marker::...)
+    namespaces = [n for n in namespaces if n != ''] + ([''] if '' in namespaces else [])
     for namespace in namespaces:
         members = [e for e in enumTypes if e.Namespace() == namespace]
         if namespace == '':

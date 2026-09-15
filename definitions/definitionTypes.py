@@ -521,9 +521,8 @@ def ItemRequestedTypes(kind, types, conditional=(), description=None):
                   for value in enumType.values]
     if kind not in ('Node', 'Marker'):
         raise ValueError('ItemRequestedTypes: kind must be Node or Marker, not ' + repr(kind))
-    #Marker::Type is still hand-written in src/Main/OutputVariable.h (#2451, step 114); the compiler checks those names
     for name in list(types) + [c[0] for c in conditional]:
-        if name == '_None' or (valueNames and name not in valueNames):
+        if name == '_None' or name not in valueNames:
             raise ValueError('ItemRequestedTypes: ' + repr(name) + ' is not a value of ' + cppName)
     terms = ['(Index)' + kind + '::' + name for name in types]
     terms += ['(parameters.' + parameter + ' != 0)*(Index)' + kind + '::' + name for name, parameter in conditional]

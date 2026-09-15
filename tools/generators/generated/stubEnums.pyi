@@ -152,6 +152,55 @@ class NodeType(Enum):
     PointSlope23 = int
     """node with 2 slope vectors in y and z direction"""
 
+class MarkerType(Enum):
+    """The enumeration type MarkerType lists the properties of a marker as bits; a connector or load requests a combination of them (GetRequestedMarkerType), which the marker type must contain."""
+    _None = int
+    """no type is used"""
+    Body = int
+    """marker is attached to a body (must also be Object)"""
+    Node = int
+    """marker is attached to a node"""
+    Object = int
+    """marker is attached to an object"""
+    SuperElement = int
+    """marker only applicable to super elements; accesses (virtual) nodes of super elements"""
+    KinematicTree = int
+    """marker only applicable to KinematicTree; accesses (virtual) nodes of KinematicTree"""
+    Position = int
+    """can measure position, apply distance constraint"""
+    Orientation = int
+    """can measure rotation, apply general rigid body constraint (if Position is set)"""
+    Coordinate = int
+    """access any coordinate (always available)"""
+    Coordinates = int
+    """access all coordinates (always available)"""
+    BodyLine = int
+    """line load (vector load applied to line)"""
+    BodySurface = int
+    """surface load / connector (e.g. for revolute joint with FE-mesh)"""
+    BodyVolume = int
+    """volume load, usually gravity"""
+    BodyMass = int
+    """mass proportional load, usually gravity"""
+    BodySurfaceNormal = int
+    """surface pressure (uses scalar load)"""
+    MultiNodal = int
+    """multinodal marker uses a weighting matrix to transform node values into the marker value"""
+    ReducedCoordinates = int
+    """marker uses reduced (modal) coordinates of a super element"""
+    ODE1 = int
+    """marker addresses ODE1 coordinate(s) (standard is ODE2)"""
+    JacobianDerivativeNonZero = int
+    """the derivative of the marker jacobian is non-zero (e.g. for rotations)"""
+    JacobianDerivativeAvailable = int
+    """the derivative of the marker jacobian is implemented"""
+    HasPostNewton = int
+    """the PostNewton function has to be called"""
+    Beam2DShape = int
+    """access to 2D beam shape"""
+    Beam3DShape = int
+    """access to 3D beam shape"""
+
 class JointType(Enum):
     """The enumeration type  JointType is used for defining joint types, used in KinematicTree."""
     _None = int
@@ -168,6 +217,38 @@ class JointType(Enum):
     """prismatic joint type with translation along local Y axis"""
     PrismaticZ = int
     """prismatic joint type with translation along local Z axis"""
+
+class AccessFunctionType(Enum):
+    """The enumeration type AccessFunctionType lists the access functions (jacobians) an object provides for markers, as bits; its values share the bits of MarkerType.
+
+    A marker can be attached to an object only if the object provides the access function the marker needs.
+    """
+    _None = int
+    """no access function"""
+    TranslationalVelocity_qt = int
+    """for application of forces, position constraints"""
+    AngularVelocity_qt = int
+    """for application of torques, rotational constraints"""
+    Coordinate_q = int
+    """for application of generalized forces"""
+    DisplacementLineIntegral_q = int
+    """for line loads"""
+    DisplacementSurfaceIntegral_q = int
+    """for surface loads"""
+    DisplacementVolumeIntegral_q = int
+    """for distributed (body-volume) loads"""
+    DisplacementMassIntegral_q = int
+    """for distributed (body-mass) loads"""
+    DisplacementSurfaceNormalIntegral_q = int
+    """for surface loads; pressure acts normal to the surface"""
+    SuperElement = int
+    """for super elements, using TranslationalVelocity_qt and AngularVelocity_qt"""
+    KinematicTree = int
+    """for KinematicTree, using TranslationalVelocity_qt and AngularVelocity_qt"""
+    JacobianTtimesVector_q = int
+    """derivative of jacobian^T times vector (provided in markerData.vectorValue)"""
+    SuperElementAlternativeRotationMode = int
+    """for super elements, alternative rotation mode"""
 
 class DynamicSolverType(Enum):
     """The enumeration type  DynamicSolverType is used for selecting dynamic solvers for simulation."""

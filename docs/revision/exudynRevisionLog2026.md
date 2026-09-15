@@ -3045,6 +3045,29 @@ commented-out term.)
   (Index)Kind::B)`, a single type as `Kind::A`); the documentation does not change.
 - Checked: regeneration, wheel build, full suite PASSED.
 
+<a id="step-83b"></a>
+
+### Step 83b - `Marker::Type` and `AccessFunctionType` generated and in Python
+
+**DONE 2026-09-15** (#2451, planned as step 114; maintainer decision: both generated and exposed,
+the other hand-written type enums stay).
+
+- `definitions/enumTypes.py`: `MarkerType` (`Marker::Type`, 23 bits) and `AccessFunctionType`
+  (values as `(Index)Marker::...` expressions, `(1 << 30)`, `(1 << 31)`). Removed from
+  `src/Main/OutputVariable.h` together with its "keep these lists synchronized" comments; the
+  hand-written `py::enum_<AccessFunctionType>` in `PybindModule.cpp` (9 of 13 values) removed.
+- `enumEmitter.py`: `EnumValue(stringText=, stringIf=)` reproduces `Marker::GetTypeString`
+  (`Line` for `BodyLine`, the Jacobian/PostNewton flags omitted, `Object` only without `Body`);
+  namespaced enums are emitted before the enum classes, because `AccessFunctionType` uses
+  `Marker::`. `OutputVariable.h` includes `EnumTypes.h` before `LoadType`.
+- Python: `exu.MarkerType` (new) and `exu.AccessFunctionType` (now all 13 values, with
+  descriptions); stubs and the enum documentation follow. `ItemRequestedTypes` validates marker
+  names now.
+- Values checked against the old header through the built module: every `MarkerType` bit and every
+  `AccessFunctionType` value equal (`SuperElementAlternativeRotationMode` is `1 << 31` in both,
+  -2147483648 as int). The integrity-check message still reads "expected marker type 'Position'".
+- Checked: regeneration (EnumTypes.h, pybind_manual_classes.h, stubs; docs), wheel, full suite PASSED.
+
 <a id="api-changes-v2"></a>
 
 ### API changes for the v2.0 release notes
@@ -3059,6 +3082,7 @@ Breaking changes of the Python API, collected as they happen; step 52 carries th
 | 107b | functions of `exudyn.utilities` moved to `basicUtilities`, `advancedUtilities` (TCP/IP) and `mainSystemExtensions` (distance sensor, `DrawSystemGraph`) | nothing when importing from `exudyn.utilities`; imports from the new modules also work |
 | 107b | `from exudyn.utilities import *` no longer provides `extends` | not part of the user API |
 | 88 | item dicts for `Add<Kind>`/`Modify<Kind>` may leave out any parameter (default or current value kept); before, parameters without `CFOptional` raised `KeyError` | none; must-be-given parameters still raise |
+| 83b | `exu.MarkerType` added; `exu.AccessFunctionType` has all 13 values (before 9) | none |
 | 107c | star imports of exudyn modules export only what the module defines (`__all__`); `from exudyn.utilities import *` no longer provides `np`, `sin`, `cos`, `sqrt`, `math`, `copy`, `Enum`, `exudyn`, `exu`, `eii`, `graphics`, `docmeta` | import them explicitly: `import numpy as np`, `from math import sin, cos, sqrt`, `import exudyn as exu`, `import exudyn.graphics as graphics` |
 | 107a | `NormL2`, `VSum`, `VAdd`, `VSub`, `VMult`, `ScalarMult`, `Vec2Tilde`, `Tilde2Vec`, `DiagonalMatrix`, `eye2D`, `eye3D` removed from `exudyn.basicUtilities` (and so from `exudyn.utilities`) | use numpy: `np.linalg.norm`, `np.sum`, array arithmetic, `np.dot`, `Skew`/`Skew2Vec`, `np.eye` |
 

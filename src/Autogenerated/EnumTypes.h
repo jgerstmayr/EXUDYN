@@ -18,6 +18,198 @@
 #include "Utilities/ReleaseAssert.h"
 #include "Utilities/BasicDefinitions.h"
 
+namespace Node {
+    //! node types are used for integrity checks to verify that a node is suitable for an object; bit 11 was LieGroupWithDataCoordinates (never used)
+    enum Type {
+        _None = 0,                          //!< node has no type
+        Ground = 1 << 0,                    //!< ground node
+        Position2D = 1 << 1,                //!< 2D position node 
+        Orientation2D = 1 << 2,             //!< node with 2D rotation
+        Point2DSlope1 = 1 << 3,             //!< 2D node with 1 slope vector
+        Position = 1 << 4,                  //!< 3D position node
+        Orientation = 1 << 5,               //!< 3D orientation node
+        RigidBody = 1 << 6,                 //!< node that can be used for rigid bodies
+        RotationEulerParameters = 1 << 7,   //!< node with 3D orientations that are modelled with Euler parameters (unit quaternions)
+        RotationRxyz = 1 << 8,              //!< node with 3D orientations that are modelled with Tait-Bryan angles
+        RotationRotationVector = 1 << 9,    //!< node with 3D orientations that are modelled with the rotation vector
+        LieGroupWithDirectUpdate = 1 << 10, //!< node to be solved with Lie group methods, without data coordinates
+        GenericODE2 = 1 << 12,              //!< node with general ODE2 variables
+        GenericODE1 = 1 << 13,              //!< node with general ODE1 variables
+        GenericAE = 1 << 14,                //!< node with general algebraic variables
+        GenericData = 1 << 15,              //!< node with general data variables
+        PointSlope1 = 1 << 16,              //!< node with 1 slope vector
+        PointSlope12 = 1 << 17,             //!< node with 2 slope vectors in x and y direction
+        PointSlope23 = 1 << 18              //!< node with 2 slope vectors in y and z direction
+    };
+
+    //! transform type into string (e.g. for error messages); this is slow and cannot be used during computation!
+    inline STDstring GetTypeString(Type var)
+    {
+        STDstring t; //empty string
+        if (var == _None) { t = "_None/Undefined"; }
+        if (var & Ground) { t += "Ground"; }
+        if (var & Position2D) { t += "Position2D"; }
+        if (var & Orientation2D) { t += "Orientation2D"; }
+        if (var & Point2DSlope1) { t += "Point2DSlope1"; }
+        if (var & Position) { t += "Position"; }
+        if (var & Orientation) { t += "Orientation"; }
+        if (var & RigidBody) { t += "RigidBody"; }
+        if (var & RotationEulerParameters) { t += "RotationEulerParameters"; }
+        if (var & RotationRxyz) { t += "RotationRxyz"; }
+        if (var & RotationRotationVector) { t += "RotationRotationVector"; }
+        if (var & LieGroupWithDirectUpdate) { t += "LieGroupWithDirectUpdate"; }
+        if (var & GenericODE2) { t += "GenericODE2"; }
+        if (var & GenericODE1) { t += "GenericODE1"; }
+        if (var & GenericAE) { t += "GenericAE"; }
+        if (var & GenericData) { t += "GenericData"; }
+        if (var & PointSlope1) { t += "PointSlope1"; }
+        if (var & PointSlope12) { t += "PointSlope12"; }
+        if (var & PointSlope23) { t += "PointSlope23"; }
+        if (t.length() == 0) { CHECKandTHROWstring("Node::GetTypeString(...) called for invalid type!"); }
+        return t;
+    }
+} //namespace Node
+
+namespace Marker {
+    //! markers transfer observable and controllable quantities into object/node coordinates; available types are e.g. Node: 2+4+16, Body: 1+4+16; SuperElementAlternativeRotationMode of AccessFunctionType uses bit 31
+    enum Type {
+        _None = 0,                             //!< no type is used
+        Body = 1 << 0,                         //!< marker is attached to a body (must also be Object)
+        Node = 1 << 1,                         //!< marker is attached to a node
+        Object = 1 << 2,                       //!< marker is attached to an object
+        SuperElement = 1 << 3,                 //!< marker only applicable to super elements; accesses (virtual) nodes of super elements
+        KinematicTree = 1 << 4,                //!< marker only applicable to KinematicTree; accesses (virtual) nodes of KinematicTree
+        Position = 1 << 5,                     //!< can measure position, apply distance constraint
+        Orientation = 1 << 6,                  //!< can measure rotation, apply general rigid body constraint (if Position is set)
+        Coordinate = 1 << 7,                   //!< access any coordinate (always available)
+        Coordinates = 1 << 8,                  //!< access all coordinates (always available)
+        BodyLine = 1 << 9,                     //!< line load (vector load applied to line)
+        BodySurface = 1 << 10,                 //!< surface load / connector (e.g. for revolute joint with FE-mesh)
+        BodyVolume = 1 << 11,                  //!< volume load, usually gravity
+        BodyMass = 1 << 12,                    //!< mass proportional load, usually gravity
+        BodySurfaceNormal = 1 << 13,           //!< surface pressure (uses scalar load)
+        MultiNodal = 1 << 14,                  //!< multinodal marker uses a weighting matrix to transform node values into the marker value
+        ReducedCoordinates = 1 << 15,          //!< marker uses reduced (modal) coordinates of a super element
+        ODE1 = 1 << 16,                        //!< marker addresses ODE1 coordinate(s) (standard is ODE2)
+        JacobianDerivativeNonZero = 1 << 17,   //!< the derivative of the marker jacobian is non-zero (e.g. for rotations)
+        JacobianDerivativeAvailable = 1 << 18, //!< the derivative of the marker jacobian is implemented
+        HasPostNewton = 1 << 19,               //!< the PostNewton function has to be called
+        Beam2DShape = 1 << 20,                 //!< access to 2D beam shape
+        Beam3DShape = 1 << 21,                 //!< access to 3D beam shape
+        EndOfEnumList = 1 << 22                //!< the (2^i) maximum of the list
+    };
+
+    //! transform type into string (e.g. for error messages); this is slow and cannot be used during computation!
+    inline STDstring GetTypeString(Type var)
+    {
+        STDstring t; //empty string
+        if (var == _None) { t = "_None/Undefined"; }
+        if (var & Body) { t += "Body"; }
+        if (var & Node) { t += "Node"; }
+        if ((var & Object) && !(var & Body)) { t += "Object"; }
+        if (var & SuperElement) { t += "SuperElement"; }
+        if (var & KinematicTree) { t += "KinematicTree"; }
+        if (var & Position) { t += "Position"; }
+        if (var & Orientation) { t += "Orientation"; }
+        if (var & Coordinate) { t += "Coordinate"; }
+        if (var & Coordinates) { t += "Coordinates"; }
+        if (var & BodyLine) { t += "Line"; }
+        if (var & BodySurface) { t += "Surface"; }
+        if (var & BodyVolume) { t += "Volume"; }
+        if (var & BodyMass) { t += "Mass"; }
+        if (var & BodySurfaceNormal) { t += "SurfaceNormal"; }
+        if (var & MultiNodal) { t += "MultiNodal"; }
+        if (var & ReducedCoordinates) { t += "ReducedCoordinates"; }
+        if (var & ODE1) { t += "ODE1"; }
+        if (var & Beam2DShape) { t += "Beam2DShape"; }
+        if (var & Beam3DShape) { t += "Beam3DShape"; }
+        if (t.length() == 0) { CHECKandTHROWstring("Marker::GetTypeString(...) called for invalid type!"); }
+        return t;
+    }
+} //namespace Marker
+
+namespace Joint {
+    //! used for KinematicTree
+    enum Type {
+        _None = 0,      //!< node has no type
+        RevoluteX = 1,  //!< revolute joint type with rotation around local X axis
+        RevoluteY = 2,  //!< revolute joint type with rotation around local Y axis
+        RevoluteZ = 3,  //!< revolute joint type with rotation around local Z axis
+        PrismaticX = 4, //!< prismatic joint type with translation along local X axis
+        PrismaticY = 5, //!< prismatic joint type with translation along local Y axis
+        PrismaticZ = 6  //!< prismatic joint type with translation along local Z axis
+    };
+
+    //! transform type into string (e.g. for error messages); this is slow and cannot be used during computation!
+    inline STDstring GetTypeString(Type var)
+    {
+        switch (var)
+        {
+        case _None: return "_None/Undefined";
+        case RevoluteX: return "RevoluteX";
+        case RevoluteY: return "RevoluteY";
+        case RevoluteZ: return "RevoluteZ";
+        case PrismaticX: return "PrismaticX";
+        case PrismaticY: return "PrismaticY";
+        case PrismaticZ: return "PrismaticZ";
+        default: CHECKandTHROWstring("Joint::GetTypeString(...) called for invalid type!"); return "";
+        }
+    }
+} //namespace Joint
+
+namespace Contact {
+    //! type of attachment and type of contact element in GeneralContact
+    enum Type {
+        _None = 0,                  //!< no type is used
+        MarkerBased = 1 << 0,       //!< attached to a marker
+        NodeBased = 1 << 1,         //!< attached to a node
+        ObjectBased = 1 << 2,       //!< attached to an object
+        RigidBodyAttached = 1 << 3, //!< attached to rigid body (using marker)
+        Sphere = 1 << 4,            //!< sphere (circle) attached e.g. to Marker
+        ANCFCable2D = 1 << 5,       //!< very special contact, only accepting ANCFCable2D elements (using cubic spline)
+        Line2D = 1 << 6,            //!< line (x/y line for 2D contact, represent planes with z in [-infty,+infty]
+        Triangle = 1 << 7           //!< triangle
+    };
+
+    //! transform type into string (e.g. for error messages); this is slow and cannot be used during computation!
+    inline STDstring GetTypeString(Type var)
+    {
+        STDstring t; //empty string
+        if (var == _None) { t = "_None/Undefined"; }
+        if (var & MarkerBased) { t += "MarkerBased"; }
+        if (var & NodeBased) { t += "NodeBased"; }
+        if (var & ObjectBased) { t += "ObjectBased"; }
+        if (var & RigidBodyAttached) { t += "RigidBodyAttached"; }
+        if (var & Sphere) { t += "Sphere"; }
+        if (var & ANCFCable2D) { t += "ANCFCable2D"; }
+        if (var & Line2D) { t += "Line2D"; }
+        if (var & Triangle) { t += "Triangle"; }
+        if (t.length() == 0) { CHECKandTHROWstring("Contact::GetTypeString(...) called for invalid type!"); }
+        return t;
+    }
+
+    //! maps contact types to arrays in GeneralContact
+    enum TypeIndex {
+        IndexSpheresMarkerBased = 0,  //!< spheres attached to markers
+        IndexANCFCable2D = 1,         //!< ANCFCable2D contact items
+        IndexTrigsRigidBodyBased = 2, //!< triangles attached to rigid body (or rigid body marker)
+        IndexEndOfEnumList = 3        //!< signals end of list
+    };
+
+    //! transform type into string (e.g. for error messages); this is slow and cannot be used during computation!
+    inline STDstring GetTypeIndexString(TypeIndex var)
+    {
+        switch (var)
+        {
+        case IndexSpheresMarkerBased: return "SpheresMarkerBased";
+        case IndexANCFCable2D: return "ANCFCable2D";
+        case IndexTrigsRigidBodyBased: return "TrigsRigidBodyBased";
+        case IndexEndOfEnumList: return "EndOfEnumList";
+        default: CHECKandTHROWstring("Contact::GetTypeIndexString(...) called for invalid type!"); return "";
+        }
+    }
+} //namespace Contact
+
 //! EndOfEnumList must remain the (consecutive) maximum of the list
 enum class ConfigurationType {
     _None = 0,         //!< no configuration; usually not valid, but may be used, e.g., if no configurationType is required
@@ -53,6 +245,23 @@ inline std::ostream& operator<<(std::ostream& os, ItemType value)
     default: return os << "ItemType::invalid";
     }
 }
+
+//! determines which connectors and loads can be applied to an object; underscores mark the derivative w.r.t. q
+enum class AccessFunctionType {
+    _None = 0,                                                              //!< no access function
+    TranslationalVelocity_qt = (Index)Marker::Position,                     //!< for application of forces, position constraints
+    AngularVelocity_qt = (Index)Marker::Orientation,                        //!< for application of torques, rotational constraints
+    Coordinate_q = (Index)Marker::Coordinate,                               //!< for application of generalized forces
+    DisplacementLineIntegral_q = (Index)Marker::BodyLine,                   //!< for line loads
+    DisplacementSurfaceIntegral_q = (Index)Marker::BodySurface,             //!< for surface loads
+    DisplacementVolumeIntegral_q = (Index)Marker::BodyVolume,               //!< for distributed (body-volume) loads
+    DisplacementMassIntegral_q = (Index)Marker::BodyMass,                   //!< for distributed (body-mass) loads
+    DisplacementSurfaceNormalIntegral_q = (Index)Marker::BodySurfaceNormal, //!< for surface loads; pressure acts normal to the surface
+    SuperElement = (Index)Marker::SuperElement,                             //!< for super elements, using TranslationalVelocity_qt and AngularVelocity_qt
+    KinematicTree = (Index)Marker::KinematicTree,                           //!< for KinematicTree, using TranslationalVelocity_qt and AngularVelocity_qt
+    JacobianTtimesVector_q = (1 << 30),                                     //!< derivative of jacobian^T times vector (provided in markerData.vectorValue)
+    SuperElementAlternativeRotationMode = (1 << 31)                         //!< for super elements, alternative rotation mode
+};
 
 enum class DynamicSolverType {
     GeneralizedAlpha = 1,  //!< an implicit solver for index 3 problems; intended to be used for solving directly the index 3 constraints using the spectralRadius sufficiently small (usually 0.5 .. 1)
@@ -142,139 +351,5 @@ inline std::ostream& operator<<(std::ostream& os, LinearSolverType value)
     default: return os << "LinearSolverType::invalid";
     }
 }
-
-namespace Node {
-    //! node types are used for integrity checks to verify that a node is suitable for an object; bit 11 was LieGroupWithDataCoordinates (never used)
-    enum Type {
-        _None = 0,                          //!< node has no type
-        Ground = 1 << 0,                    //!< ground node
-        Position2D = 1 << 1,                //!< 2D position node 
-        Orientation2D = 1 << 2,             //!< node with 2D rotation
-        Point2DSlope1 = 1 << 3,             //!< 2D node with 1 slope vector
-        Position = 1 << 4,                  //!< 3D position node
-        Orientation = 1 << 5,               //!< 3D orientation node
-        RigidBody = 1 << 6,                 //!< node that can be used for rigid bodies
-        RotationEulerParameters = 1 << 7,   //!< node with 3D orientations that are modelled with Euler parameters (unit quaternions)
-        RotationRxyz = 1 << 8,              //!< node with 3D orientations that are modelled with Tait-Bryan angles
-        RotationRotationVector = 1 << 9,    //!< node with 3D orientations that are modelled with the rotation vector
-        LieGroupWithDirectUpdate = 1 << 10, //!< node to be solved with Lie group methods, without data coordinates
-        GenericODE2 = 1 << 12,              //!< node with general ODE2 variables
-        GenericODE1 = 1 << 13,              //!< node with general ODE1 variables
-        GenericAE = 1 << 14,                //!< node with general algebraic variables
-        GenericData = 1 << 15,              //!< node with general data variables
-        PointSlope1 = 1 << 16,              //!< node with 1 slope vector
-        PointSlope12 = 1 << 17,             //!< node with 2 slope vectors in x and y direction
-        PointSlope23 = 1 << 18              //!< node with 2 slope vectors in y and z direction
-    };
-
-    //! transform type into string (e.g. for error messages); this is slow and cannot be used during computation!
-    inline STDstring GetTypeString(Type var)
-    {
-        STDstring t; //empty string
-        if (var == _None) { t = "_None/Undefined"; }
-        if (var & Ground) { t += "Ground"; }
-        if (var & Position2D) { t += "Position2D"; }
-        if (var & Orientation2D) { t += "Orientation2D"; }
-        if (var & Point2DSlope1) { t += "Point2DSlope1"; }
-        if (var & Position) { t += "Position"; }
-        if (var & Orientation) { t += "Orientation"; }
-        if (var & RigidBody) { t += "RigidBody"; }
-        if (var & RotationEulerParameters) { t += "RotationEulerParameters"; }
-        if (var & RotationRxyz) { t += "RotationRxyz"; }
-        if (var & RotationRotationVector) { t += "RotationRotationVector"; }
-        if (var & LieGroupWithDirectUpdate) { t += "LieGroupWithDirectUpdate"; }
-        if (var & GenericODE2) { t += "GenericODE2"; }
-        if (var & GenericODE1) { t += "GenericODE1"; }
-        if (var & GenericAE) { t += "GenericAE"; }
-        if (var & GenericData) { t += "GenericData"; }
-        if (var & PointSlope1) { t += "PointSlope1"; }
-        if (var & PointSlope12) { t += "PointSlope12"; }
-        if (var & PointSlope23) { t += "PointSlope23"; }
-        if (t.length() == 0) { CHECKandTHROWstring("Node::GetTypeString(...) called for invalid type!"); }
-        return t;
-    }
-} //namespace Node
-
-namespace Joint {
-    //! used for KinematicTree
-    enum Type {
-        _None = 0,      //!< node has no type
-        RevoluteX = 1,  //!< revolute joint type with rotation around local X axis
-        RevoluteY = 2,  //!< revolute joint type with rotation around local Y axis
-        RevoluteZ = 3,  //!< revolute joint type with rotation around local Z axis
-        PrismaticX = 4, //!< prismatic joint type with translation along local X axis
-        PrismaticY = 5, //!< prismatic joint type with translation along local Y axis
-        PrismaticZ = 6  //!< prismatic joint type with translation along local Z axis
-    };
-
-    //! transform type into string (e.g. for error messages); this is slow and cannot be used during computation!
-    inline STDstring GetTypeString(Type var)
-    {
-        switch (var)
-        {
-        case _None: return "_None/Undefined";
-        case RevoluteX: return "RevoluteX";
-        case RevoluteY: return "RevoluteY";
-        case RevoluteZ: return "RevoluteZ";
-        case PrismaticX: return "PrismaticX";
-        case PrismaticY: return "PrismaticY";
-        case PrismaticZ: return "PrismaticZ";
-        default: CHECKandTHROWstring("Joint::GetTypeString(...) called for invalid type!"); return "";
-        }
-    }
-} //namespace Joint
-
-namespace Contact {
-    //! type of attachment and type of contact element in GeneralContact
-    enum Type {
-        _None = 0,                  //!< no type is used
-        MarkerBased = 1 << 0,       //!< attached to a marker
-        NodeBased = 1 << 1,         //!< attached to a node
-        ObjectBased = 1 << 2,       //!< attached to an object
-        RigidBodyAttached = 1 << 3, //!< attached to rigid body (using marker)
-        Sphere = 1 << 4,            //!< sphere (circle) attached e.g. to Marker
-        ANCFCable2D = 1 << 5,       //!< very special contact, only accepting ANCFCable2D elements (using cubic spline)
-        Line2D = 1 << 6,            //!< line (x/y line for 2D contact, represent planes with z in [-infty,+infty]
-        Triangle = 1 << 7           //!< triangle
-    };
-
-    //! transform type into string (e.g. for error messages); this is slow and cannot be used during computation!
-    inline STDstring GetTypeString(Type var)
-    {
-        STDstring t; //empty string
-        if (var == _None) { t = "_None/Undefined"; }
-        if (var & MarkerBased) { t += "MarkerBased"; }
-        if (var & NodeBased) { t += "NodeBased"; }
-        if (var & ObjectBased) { t += "ObjectBased"; }
-        if (var & RigidBodyAttached) { t += "RigidBodyAttached"; }
-        if (var & Sphere) { t += "Sphere"; }
-        if (var & ANCFCable2D) { t += "ANCFCable2D"; }
-        if (var & Line2D) { t += "Line2D"; }
-        if (var & Triangle) { t += "Triangle"; }
-        if (t.length() == 0) { CHECKandTHROWstring("Contact::GetTypeString(...) called for invalid type!"); }
-        return t;
-    }
-
-    //! maps contact types to arrays in GeneralContact
-    enum TypeIndex {
-        IndexSpheresMarkerBased = 0,  //!< spheres attached to markers
-        IndexANCFCable2D = 1,         //!< ANCFCable2D contact items
-        IndexTrigsRigidBodyBased = 2, //!< triangles attached to rigid body (or rigid body marker)
-        IndexEndOfEnumList = 3        //!< signals end of list
-    };
-
-    //! transform type into string (e.g. for error messages); this is slow and cannot be used during computation!
-    inline STDstring GetTypeIndexString(TypeIndex var)
-    {
-        switch (var)
-        {
-        case IndexSpheresMarkerBased: return "SpheresMarkerBased";
-        case IndexANCFCable2D: return "ANCFCable2D";
-        case IndexTrigsRigidBodyBased: return "TrigsRigidBodyBased";
-        case IndexEndOfEnumList: return "EndOfEnumList";
-        default: CHECKandTHROWstring("Contact::GetTypeIndexString(...) called for invalid type!"); return "";
-        }
-    }
-} //namespace Contact
 
 #endif //ENUMTYPES__H

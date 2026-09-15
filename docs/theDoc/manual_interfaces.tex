@@ -2004,6 +2004,44 @@ The enumeration type  NodeType is used for defining node types for 3D rigid bodi
 \end{center}
 
 %++++++++++++++++++++
+\mysubsubsection{MarkerType}
+\label{sec:MarkerType}
+The enumeration type MarkerType lists the properties of a marker as bits; a connector or load requests a combination of them (GetRequestedMarkerType), which the marker type must contain.
+
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  \_None & no type is used\\ \hline  
+  Body & marker is attached to a body (must also be Object)\\ \hline  
+  Node & marker is attached to a node\\ \hline  
+  Object & marker is attached to an object\\ \hline  
+  SuperElement & marker only applicable to super elements; accesses (virtual) nodes of super elements\\ \hline  
+  KinematicTree & marker only applicable to KinematicTree; accesses (virtual) nodes of KinematicTree\\ \hline  
+  Position & can measure position, apply distance constraint\\ \hline  
+  Orientation & can measure rotation, apply general rigid body constraint (if Position is set)\\ \hline  
+  Coordinate & access any coordinate (always available)\\ \hline  
+  Coordinates & access all coordinates (always available)\\ \hline  
+  BodyLine & line load (vector load applied to line)\\ \hline  
+  BodySurface & surface load / connector (e.g. for revolute joint with FE-mesh)\\ \hline  
+  BodyVolume & volume load, usually gravity\\ \hline  
+  BodyMass & mass proportional load, usually gravity\\ \hline  
+  BodySurfaceNormal & surface pressure (uses scalar load)\\ \hline  
+  MultiNodal & multinodal marker uses a weighting matrix to transform node values into the marker value\\ \hline  
+  ReducedCoordinates & marker uses reduced (modal) coordinates of a super element\\ \hline  
+  ODE1 & marker addresses ODE1 coordinate(s) (standard is ODE2)\\ \hline  
+  JacobianDerivativeNonZero & the derivative of the marker jacobian is non-zero (e.g. for rotations)\\ \hline  
+  JacobianDerivativeAvailable & the derivative of the marker jacobian is implemented\\ \hline  
+  HasPostNewton & the PostNewton function has to be called\\ \hline  
+  Beam2DShape & access to 2D beam shape\\ \hline  
+  Beam3DShape & access to 3D beam shape\\ \hline  
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
 \mysubsubsection{JointType}
 \label{sec:JointType}
 The enumeration type  JointType is used for defining joint types, used in KinematicTree.
@@ -2022,6 +2060,34 @@ The enumeration type  JointType is used for defining joint types, used in Kinema
   PrismaticX & prismatic joint type with translation along local X axis\\ \hline  
   PrismaticY & prismatic joint type with translation along local Y axis\\ \hline  
   PrismaticZ & prismatic joint type with translation along local Z axis\\ \hline  
+\end{longtable}
+\end{center}
+
+%++++++++++++++++++++
+\mysubsubsection{AccessFunctionType}
+\label{sec:AccessFunctionType}
+The enumeration type AccessFunctionType lists the access functions (jacobians) an object provides for markers, as bits; its values share the bits of MarkerType. A marker can be attached to an object only if the object provides the access function the marker needs.
+
+
+
+\begin{center}
+\footnotesize
+\begin{longtable}{| p{8cm} | p{8cm} |} 
+\hline
+{\bf function/structure name} & {\bf description}\\ \hline
+  \_None & no access function\\ \hline  
+  TranslationalVelocity\_qt & for application of forces, position constraints\\ \hline  
+  AngularVelocity\_qt & for application of torques, rotational constraints\\ \hline  
+  Coordinate\_q & for application of generalized forces\\ \hline  
+  DisplacementLineIntegral\_q & for line loads\\ \hline  
+  DisplacementSurfaceIntegral\_q & for surface loads\\ \hline  
+  DisplacementVolumeIntegral\_q & for distributed (body-volume) loads\\ \hline  
+  DisplacementMassIntegral\_q & for distributed (body-mass) loads\\ \hline  
+  DisplacementSurfaceNormalIntegral\_q & for surface loads; pressure acts normal to the surface\\ \hline  
+  SuperElement & for super elements, using TranslationalVelocity\_qt and AngularVelocity\_qt\\ \hline  
+  KinematicTree & for KinematicTree, using TranslationalVelocity\_qt and AngularVelocity\_qt\\ \hline  
+  JacobianTtimesVector\_q & derivative of jacobian^T times vector (provided in markerData.vectorValue)\\ \hline  
+  SuperElementAlternativeRotationMode & for super elements, alternative rotation mode\\ \hline  
 \end{longtable}
 \end{center}
 

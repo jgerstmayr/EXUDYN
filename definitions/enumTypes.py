@@ -21,16 +21,20 @@
 # EnumValue:
 #   value            integer (bit position with bits=True) or a C++ expression string
 #   python           False: the value exists in C++ only
+#   stringText       text in a bit string function instead of the name; '' omits the value there
+#   stringIf         additional C++ condition for that text, e.g. '!(var & Body)'
 # Author:   Johannes Gerstmayr
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 class EnumValue:
-    def __init__(self, name, value, description, python=True):
+    def __init__(self, name, value, description, python=True, stringText=None, stringIf=''):
         self.name = name
         self.value = value
         self.description = description
         self.python = python
+        self.stringText = stringText
+        self.stringIf = stringIf
 
 
 class EnumType:
@@ -101,6 +105,35 @@ enumTypes = [
               ],
              bits=True, stringFunction='GetTypeString',
              cppNote='node types are used for integrity checks to verify that a node is suitable for an object; bit 11 was LieGroupWithDataCoordinates (never used)'),
+    EnumType('MarkerType', 'Marker::Type',
+             'The enumeration type MarkerType lists the properties of a marker as bits; a connector or load requests a combination of them (GetRequestedMarkerType), which the marker type must contain.\n\n',
+             [EnumValue('_None', None, 'no type is used'),
+              EnumValue('Body', 0, 'marker is attached to a body (must also be Object)'),
+              EnumValue('Node', 1, 'marker is attached to a node'),
+              EnumValue('Object', 2, 'marker is attached to an object', stringIf='!(var & Body)'),
+              EnumValue('SuperElement', 3, 'marker only applicable to super elements; accesses (virtual) nodes of super elements'),
+              EnumValue('KinematicTree', 4, 'marker only applicable to KinematicTree; accesses (virtual) nodes of KinematicTree'),
+              EnumValue('Position', 5, 'can measure position, apply distance constraint'),
+              EnumValue('Orientation', 6, 'can measure rotation, apply general rigid body constraint (if Position is set)'),
+              EnumValue('Coordinate', 7, 'access any coordinate (always available)'),
+              EnumValue('Coordinates', 8, 'access all coordinates (always available)'),
+              EnumValue('BodyLine', 9, 'line load (vector load applied to line)', stringText='Line'),
+              EnumValue('BodySurface', 10, 'surface load / connector (e.g. for revolute joint with FE-mesh)', stringText='Surface'),
+              EnumValue('BodyVolume', 11, 'volume load, usually gravity', stringText='Volume'),
+              EnumValue('BodyMass', 12, 'mass proportional load, usually gravity', stringText='Mass'),
+              EnumValue('BodySurfaceNormal', 13, 'surface pressure (uses scalar load)', stringText='SurfaceNormal'),
+              EnumValue('MultiNodal', 14, 'multinodal marker uses a weighting matrix to transform node values into the marker value'),
+              EnumValue('ReducedCoordinates', 15, 'marker uses reduced (modal) coordinates of a super element'),
+              EnumValue('ODE1', 16, 'marker addresses ODE1 coordinate(s) (standard is ODE2)'),
+              EnumValue('JacobianDerivativeNonZero', 17, 'the derivative of the marker jacobian is non-zero (e.g. for rotations)', stringText=''),
+              EnumValue('JacobianDerivativeAvailable', 18, 'the derivative of the marker jacobian is implemented', stringText=''),
+              EnumValue('HasPostNewton', 19, 'the PostNewton function has to be called', stringText=''),
+              EnumValue('Beam2DShape', 20, 'access to 2D beam shape'),
+              EnumValue('Beam3DShape', 21, 'access to 3D beam shape'),
+              EnumValue('EndOfEnumList', 22, 'the (2^i) maximum of the list', python=False, stringText=''),
+              ],
+             bits=True, stringFunction='GetTypeString',
+             cppNote='markers transfer observable and controllable quantities into object/node coordinates; available types are e.g. Node: 2+4+16, Body: 1+4+16; SuperElementAlternativeRotationMode of AccessFunctionType uses bit 31'),
     EnumType('JointType', 'Joint::Type',
              'The enumeration type  JointType is used for defining joint types, used in KinematicTree.\n\n',
              [EnumValue('_None', 0, 'node has no type'),
@@ -113,6 +146,23 @@ enumTypes = [
               ],
              stringFunction='GetTypeString',
              cppNote='used for KinematicTree'),
+    EnumType('AccessFunctionType', 'AccessFunctionType',
+             'The enumeration type AccessFunctionType lists the access functions (jacobians) an object provides for markers, as bits; its values share the bits of MarkerType. A marker can be attached to an object only if the object provides the access function the marker needs.\n\n',
+             [EnumValue('_None', None, 'no access function'),
+              EnumValue('TranslationalVelocity_qt', '(Index)Marker::Position', 'for application of forces, position constraints'),
+              EnumValue('AngularVelocity_qt', '(Index)Marker::Orientation', 'for application of torques, rotational constraints'),
+              EnumValue('Coordinate_q', '(Index)Marker::Coordinate', 'for application of generalized forces'),
+              EnumValue('DisplacementLineIntegral_q', '(Index)Marker::BodyLine', 'for line loads'),
+              EnumValue('DisplacementSurfaceIntegral_q', '(Index)Marker::BodySurface', 'for surface loads'),
+              EnumValue('DisplacementVolumeIntegral_q', '(Index)Marker::BodyVolume', 'for distributed (body-volume) loads'),
+              EnumValue('DisplacementMassIntegral_q', '(Index)Marker::BodyMass', 'for distributed (body-mass) loads'),
+              EnumValue('DisplacementSurfaceNormalIntegral_q', '(Index)Marker::BodySurfaceNormal', 'for surface loads; pressure acts normal to the surface'),
+              EnumValue('SuperElement', '(Index)Marker::SuperElement', 'for super elements, using TranslationalVelocity_qt and AngularVelocity_qt'),
+              EnumValue('KinematicTree', '(Index)Marker::KinematicTree', 'for KinematicTree, using TranslationalVelocity_qt and AngularVelocity_qt'),
+              EnumValue('JacobianTtimesVector_q', '(1 << 30)', 'derivative of jacobian^T times vector (provided in markerData.vectorValue)'),
+              EnumValue('SuperElementAlternativeRotationMode', '(1 << 31)', 'for super elements, alternative rotation mode'),
+              ],
+             cppNote='determines which connectors and loads can be applied to an object; underscores mark the derivative w.r.t. q'),
     EnumType('DynamicSolverType', 'DynamicSolverType',
              'The enumeration type  DynamicSolverType is used for selecting dynamic solvers for simulation.\n\n',
              [EnumValue('GeneralizedAlpha', 1, 'an implicit solver for index 3 problems; intended to be used for solving directly the index 3 constraints using the spectralRadius sufficiently small (usually 0.5 .. 1)'),

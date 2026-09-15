@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.83.dev1, 
++  Exudyn version = 1.11.84.dev1, 
 +  last change =  2026-09-15, 
 +  Number of issues = 2452, 
-+  Number of resolved issues = 2156 (83 in current version), 
++  Number of resolved issues = 2157 (84 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.84: resolved Issue 2451: Marker::Type is not in the enum registrator (change)
+    - issue author: Claude-JG
+    - description:  Marker::Type is hand-written in src/Main/OutputVariable.h with a comment to keep it synchronized with AccessFunctionType; NodeType and the others are generated from definitions/enumTypes.py (step 33). ItemRequestedTypes (step 83a) can therefore validate node type names but not marker type names; and step 83b needs the marker type names in Python.
+    - **notes:** step 83b: Marker::Type and AccessFunctionType generated from enumTypes.py and bound to Python
+    - date resolved: **2026-09-15 22:36**\ , date raised: 2026-09-15 
+    - resolved by: Claude-JG
  * Version 1.11.83: resolved Issue 2450: Declared requested node and marker types (change)
     - issue author: Claude-JG
     - description:  Plan step 83a: GetRequestedNodeType / GetRequestedMarkerType are written as C++ inside 70 item definitions. Replace them by ItemRequestedTypes(kind; types; conditional) with a generated body; survey: the only conditional is Orientation if dynamicFriction != 0 (ObjectContactSphereSphere; ObjectContactSphereTriangle).
@@ -7225,11 +7231,6 @@ Version 0.1
 ***********
 Open issues
 ***********
-
- * **open issue 2451:** Marker::Type is not in the enum registrator
-    - issue author: Claude-JG
-    - description:  Marker::Type is hand-written in src/Main/OutputVariable.h with a comment to keep it synchronized with AccessFunctionType; NodeType and the others are generated from definitions/enumTypes.py (step 33). ItemRequestedTypes (step 83a) can therefore validate node type names but not marker type names; and step 83b needs the marker type names in Python.
-    - date raised: 2026-09-15 
 
  * **open issue 2432:** parameter conversion errors raise inconsistent exception types
     - issue author: Claude-JG
