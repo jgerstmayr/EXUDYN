@@ -394,6 +394,23 @@ recognisable, actionable exception type belongs to phase R6 (steps R6.1–R6.4).
 
 ---
 
+27. **AVX2 on Linux buys nothing for the multibody work, and only the dense factorization gains**
+    (step R2.16, measured 2026-09-16 on an AMD Ryzen 9 9950X, 32 threads, WSL, g++, five builds of
+    the same tree). `EigenDense` factorization of a 1500x1500 system: **3.43 s -> 1.52 s (0.44)**
+    with `-mavx2 -mfma`, the one clear win, because Eigen vectorizes only when the flag allows it.
+    `EXUdense` factorization 0.93. Everything else is unchanged or worse: the explicit long-vector
+    runs (6e3 to 3e5 coordinates) stay within run-to-run noise, which on this machine is +-30 % for
+    `ODE2RHS`, and the sparse implicit case does not move at all. `-march=native` (AVX-512, 12k
+    `zmm` instructions in the module) is **no better than `-mavx2 -mfma`** anywhere. The reason is
+    where the time sits: `ODE2RHS` is 73-91 % of the explicit runs and consists of per-object 3x3
+    and short-vector work, and `ConstSizeMatrix` carries its size at runtime - see step R11.3.
+    **`-ffp-contract=off` is mandatory whenever AVX2 is enabled**: without it, FMA contraction
+    shifts `ANCFcontactCircleTest`, `ANCFslidingAndALEjointTest` and `connectorGravityTest` past
+    the 3e-11 tolerance (#2396); with it, the failing set is the baseline one again, and no
+    measurable time is lost. Contact tests (`sphereTriangle*`, `contactSphereSphere`) vary by
+    orders of magnitude between any two runs and carry no information here (fact 24).
+
+
 ## 4. The frozen generated set (phase R0)
 
 The committed generated files at `e44aca1` are the reference snapshot, after a rebuild

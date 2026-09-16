@@ -169,6 +169,39 @@ promise for no gain.
     **not** to be handled by per-test tolerance patches here; they are resolved together with the
     consolidated test suite. Until then AVX2 stays off on Linux and #2396 stays open.
 
+    **The variants are now defined (maintainer decision 2026-09-16, after the measurement of step
+    R2.16 and fact 27).** One meaning of "fast" on every platform, and the vector extensions belong
+    to it:
+
+    | module | contents | shipped |
+    |---|---|---|
+    | `exudynCPP` | baseline ISA, all checks | always |
+    | `exudynCPPfast` | `__FAST_EXUDYN_LINALG` (no range checks, no try/catch) **and** AVX2, with `-ffp-contract=off` on gcc/clang | when `compileExudynFast` |
+    | ~~`exudynCPPnoAVX`~~ | **dropped**: the default module is now the safe one | - |
+
+    - This removes today's asymmetry, where `useAVX` puts `/arch:AVX2` into the **default** Windows
+      module while Linux has none, so the same model can differ in the last digits between the two
+      platforms. Afterwards, both platforms build the same two modules with the same meaning, and
+      Windows ships one module *fewer* than today.
+    - `-ffp-contract=off` is not optional for the fast module: without it FMA contraction moves
+      three tests past the tolerance (#2396, step R2.16); with it the failing set equals the
+      baseline's, so **one set of reference values holds for both modules** - which is what closes
+      #2396 and the corresponding branch of fact 24.
+    - **Build switches**, in the four-layer mechanism of step R2.14 (`[tool.exudyn]`, environment,
+      command line), so a user or CI can reduce what is built:
+      `compileExudynFast` (default **on**; off = only the default module is built),
+      `useAVX2` (default **on**, effective **only inside the fast module**; off = fast without
+      vector extensions, i.e. the checks-off module alone),
+      `useAVX512` (default **off**, requires `useAVX2`; fact 27: no gain on Zen 5, so it exists to
+      be measured, not to be shipped).
+      The one-off `EXUDYN_EXTRA_COMPILE_ARGS` of step R2.16 stays for experiments and is not part
+      of this schema.
+    - **Selection at import** stays a CPUID check (with the OS XSAVE/YMM state), and
+      `python/exudyn/__init__.py` gets simpler, not more complicated: two candidates instead of
+      three, and the `sys.exudynCPUhasAVX2` special case for the noAVX module disappears.
+    - **Also to be updated when this lands**: `docs/RST/TroubleShootingAndFAQ.rst`,
+      `docs/theDoc/` and `definitions/pybindModule.py` all name `exudynCPPnoAVX` today.
+
 <a id="r2-11"></a>
 **R2.11** **DONE 2026-09-11** — Classifiers now 3.10–3.14, matching the wheels CI actually builds. → [log](exudynRevisionLog2026.md#r2-11)
 
@@ -185,12 +218,7 @@ promise for no gain.
 **R2.15** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r2-15) — *(phase R2, small)* **Build and packaging hygiene** (#2372, #2380, #2387): SPDX licence, quiet Linux compile, project file entries checked.
 
 <a id="r2-16"></a>
-**R2.16** *(phase R2, with R2.10)* **Decide AVX2 on Linux with a benchmark that can resolve it** (#2396,
-    #2397). With `-mavx2 -mfma` four tests shift by 1e-9..1e-6 through FMA contraction, and the
-    performance suite cannot show any gain (0.1 %) because its vectors are 3-20 elements long. The
-    long-vector sweep that does resolve it is commented out in `PyTest()`
-    (`src/Pymodules/pythonTests.cpp`); revive it as a benchmark, then decide - enable with a
-    tolerance, or `-ffp-contract=off`, or keep AVX2 off.
+**R2.16** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r2-16) — *(phase R2, with R2.10)* **AVX2 on Linux decided by measurement** (#2396, #2397): stays OFF for the default wheel; if R2.10 builds a fast variant, it must use `-ffp-contract=off`.
 
 <a id="r2-17"></a>
 **R2.17** **DONE 2026-09-15** → [log](exudynRevisionLog2026.md#r2-17) — *(phase R2 tooling, before the next header-only change)* **The wheel build does not see header
@@ -588,7 +616,28 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 
     What remains: the `-fast` / `-noavx` options themselves, and a release procedure that runs all
     three and keeps all three logs. Sequence after step R6.2 (rewriting binary selection) if that
-    lands first — the two touch the same logic.
+    lands first — the two touch the same logic. After step R2.10 there are **two** variants, not
+    three, and `-noavx` is gone with the module it selected.
+
+<a id="r5-11-1"></a>
+**R5.11.1** *(sub-step of R5.11; maintainer decision 2026-09-16)* **How much of the matrix the fast
+    variant needs.** The fast module is the same source compiled with two macros, so what can break
+    in it is compiling, loading and the numerical effect of AVX2 — not Python-version behaviour.
+    Therefore:
+
+    | what | against which Python versions |
+    |---|---|
+    | full `runTestSuite.py`, default module | every supported version (unchanged) |
+    | full `runTestSuite.py`, fast module | the **oldest** and the **second newest**, today 3.10 and 3.13 |
+    | examples | one version (unchanged) |
+    | `runPerformanceTests.py` | fast module, plus one default-module run for comparison |
+
+    The newest version (today 3.14) is deliberately **not** the fast-mode target: right after a
+    release its packages are the unstable part, so a failure there would almost never be about the
+    fast module. Today `exudynCPPfast` is built only for Python 3.10 in development versions
+    (`setup.py`) and only `runPerformanceTests.py` ever sets `sys.exudynFast`, so the fast binary
+    ships untested — this sub-step is what makes the second variant of step R2.10 affordable
+    *and* covered.
 
 <a id="r5-12"></a>
 **R5.12** *(phase R5, small)* **Test and example hygiene** (#2368, #2377). `ANCFbeltDrive.py` yields 0.0
@@ -894,3 +943,28 @@ debt stays visible and each item can be closed on evidence.
     `main/libs/openvr_api.dll` + `.lib`. Users needing OpenVR take Exudyn <= 1.11; say so in the
     release notes rather than leaving them to discover it. `docs/howTo/openVR.txt` was already
     removed with step R3.6.
+
+<a id="r11-2"></a>
+**R11.2** *(before R11.3; maintainer decision 2026-09-16)* **A maintained micro-benchmark for the
+    linear algebra, inside Exudyn** (#2397, from step R2.16). The sweep that would answer "does
+    vectorization pay" is dead code in `PyTest()` (`src/Pymodules/pythonTests.cpp`): it is inside
+    comment blocks and `if (0)`, `exu.Test()` is not even bound in a release build
+    (`EXUDYN_RELEASE`), and it timed hand-written loops rather than the vector code the solver uses.
+    Replace it by a benchmark that is compiled into every build and runs the **real** operations -
+    `Vector`/`ResizableVectorParallel` add, subtract, scale and `MultAdd`, `SlimVector`/`Matrix3D`
+    products, `ConstSizeMatrix` and matrix-vector products - over a size sweep that crosses
+    `ResizableVectorParallelThreadingLimit`, single- and multithreaded. Exposed as
+    `exudyn.special.RunLinalgBenchmark()` (flags for sizes, repeats, which groups) so the user
+    interface grows by one function; `exu.special` already exists (`PySpecial` in
+    `src/Main/Experimental.h`, bound from `definitions/pybindModule.py`). This also lets a user
+    measure their own CPU: which build flags and how many threads make sense there. The tool-level
+    benchmark `tools/benchmarks/avx2Benchmark.py` stays as the solver-level counterpart.
+
+<a id="r11-3"></a>
+**R11.3** *(after R11.2)* **Make the hot linear algebra vectorizable.** Step R2.16 measured that the
+    solver time of long-vector models sits in `ODE2RHS` (73-91 % of the explicit runs), i.e. in
+    per-object 3x3 and short-vector work, not in the long-vector loops that AVX2 accelerates, and
+    `ConstSizeMatrix` carries its size at runtime, so the compiler cannot unroll it. Candidates:
+    compile-time sizes where the size is known, more use of homogeneous transformations in the
+    rigid-body kinematics, and the object loop of `ODE2RHS` itself. Steered by the benchmark of
+    R11.2; a compile-flag decision alone (step R2.16) cannot achieve this.

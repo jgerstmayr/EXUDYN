@@ -535,7 +535,12 @@ class BuildExt(_build_ext):
          #'-std=c++17', #==>chosen automatic
          #++++++++++++++++++++++++++++++
          #SPEEDUP OPTIONS; do not activate in standard:
-         #'-mavx2', '-mfma', #full optimization with AVX2
+         #'-mavx2', '-mfma', #AVX2; MEASURED 2026-09-16 (#2397, revision2026 fact 27) on a Ryzen
+         #9950X: no gain for multibody work (explicit and sparse runs within noise), the only win is
+         #EigenDense factorization 0.45x; -march=native (AVX-512) is no better. If enabled, ALWAYS
+         #add '-ffp-contract=off' - without it FMA contraction moves three tests past the 3e-11
+         #tolerance (#2396), and MSVC does not contract by default. Use EXUDYN_EXTRA_COMPILE_ARGS
+         #to try flags for one build instead of editing this list.
          #'-Ofast', #-O3 and ffast-math #NO noticeable speedup on AMD 9950X
          #'-march=native', #compile for local host architecture; speedup for AVX2/512 CPUs
          #'-ffast-math', #NO noticeable speedup on AMD 9950X #bundles unsafe math optimizations (order not preserved, rounding, etc.)
@@ -616,6 +621,19 @@ class BuildExt(_build_ext):
             opts.append(cpp_flag(self.compiler))
             if has_flag(self.compiler, '-fvisibility=hidden'):
                 opts.append('-fvisibility=hidden')
+
+        #extra flags for ONE build, without editing this file: needed to compare optimisation
+        #variants (-mavx2 -mfma, -march=native, -ffp-contract=off, ...) of the same source tree
+        #(#2397). The CFLAGS environment variable does NOT do this - setuptools does not pass it
+        #into the compile command here - and a benchmark that silently compiles the default flags
+        #is worse than no benchmark.
+        extraArgs = os.environ.get('EXUDYN_EXTRA_COMPILE_ARGS', '').split()
+        extraLinkArgs = os.environ.get('EXUDYN_EXTRA_LINK_ARGS', '').split()
+        if extraArgs or extraLinkArgs:
+            print('setup.py: EXTRA compile args: ' + str(extraArgs)
+                  + ', extra link args: ' + str(extraLinkArgs))
+        opts = opts + extraArgs
+        link_opts = link_opts + extraLinkArgs
 
         for ext in self.extensions:
             ext.define_macros = ext.define_macros + [('VERSION_INFO', '"{}"'.format(self.distribution.get_version()))]

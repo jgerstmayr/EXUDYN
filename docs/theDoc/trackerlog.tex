@@ -9,15 +9,33 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.90.dev1, 
+  \item Exudyn version = 1.11.92.dev1, 
   \item last change =  2026-09-16, 
   \item Number of issues = 2454, 
-  \item Number of resolved issues = 2163 (90 in current version), 
+  \item Number of resolved issues = 2165 (92 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.92}:  resolved Issue 2397: {\bf the only benchmark that resolves AVX2 is commented out inside exu.Test()}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: measured 2026-09-12: runPerformanceTests.py gives 20.118 s without AVX2 and 20.137 s with -mavx2 -mfma in the same container - 0.1 percent; with per test differences in both directions. Four of the six performance tests are tiny systems run for about 1e6 steps; so the vectors are 3 to 20 elements long and per step overhead dominates; AVX2 only pays on long vectors. A sweep that does resolve it exists in PyTest() in src/Pymodules/pythonTests.cpp (exposed as exu.Test()); with recorded results in comments (speedup 3.1 for n=502; 3.5 for n=1002; plus an AVX/multithreaded/serial table for sizes 16 to 200002) - but it is entirely inside comment blocks and if (0); so exu.Test() runs none of it and the numbers cannot be reproduced. revision2026 step R2.10 cannot judge whether the fast variant earns its place in the wheel until there is a maintained benchmark over vector length}
+    \item {\bf notes: revision2026 step R2.16: tools/benchmarks/avx2Benchmark.py with solver sub timers replaces the dead sweep in PyTest(); an in-Exudyn micro-benchmark is step R11.2}
+    \item   date resolved: {\bf 2026-09-16 08:54},
+date raised: 2026-09-12 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.91}:  resolved Issue 2396: {\bf enabling AVX2 on Linux shifts results by 1e-9..1e-6 through FMA contraction}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: measured 2026-09-12 once the alignment defect was fixed: a manylinux cp313 build with -mavx2 -mfma runs the whole suite; but four tests that pass without AVX2 then fail against the 3e-11 tolerance - ANCFcontactCircleTest (-2.185e-08); ANCFslidingAndALEjointTest (2.236e-06); connectorGravityTest (-1.956e-07) and raytracerNOGLFWtest (-1.368e-06). All are rounding scale: a fused multiply-add rounds once where a separate multiply and add round twice. The same build WITHOUT -mavx2 reproduces the previous results bit for bit; so this is a property of AVX2; not of the alignment fix. Relevant to revision2026 step R2.10 (two shipped variants) and to the tolerance discussion in fact 24: either the reference values are variant dependent; or the tolerance has to admit FMA level differences}
+    \item {\bf notes: revision2026 step R2.16: caused by FMA contraction; -ffp-contract=off removes it; AVX2 stays off for the default Linux wheel; a fast variant must use the flag}
+    \item   date resolved: {\bf 2026-09-16 08:54},
+date raised: 2026-09-12 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.90}:  resolved Issue 2387: {\bf 20 ClInclude entries in cppsrc.vcxproj have the wrong case; 5 entries do not exist}
 (fix)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

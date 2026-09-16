@@ -1251,6 +1251,87 @@ alongside the wheels — a stale extras list and a broken build are independent 
 
 Gates: wheel build and install (Windows), full test suite passed, regeneration, checkAll.
 
+<a id="r2-16"></a>
+### R2.16 - AVX2 on Linux, decided by measurement
+
+**DONE 2026-09-16** (#2396, #2397).
+
+**The first attempt measured nothing, and that is the lesson of this step.** The three variants
+were built by setting `CFLAGS`; setuptools never puts that into the compile command here, so all
+three wheels were the identical default build - visible only afterwards, in `setuppy.output.txt`
+(no `-mavx2` in any of the 133 commands) and in `objdump` (0 `vfmadd`). The timings looked like a
+clean "no effect" result. Two things came out of it: `setup.py` got
+**`EXUDYN_EXTRA_COMPILE_ARGS`** (and `EXUDYN_EXTRA_LINK_ARGS`), which append flags to one build
+without editing a tracked file, and the benchmark script now **aborts** when the requested flag is
+not in the compile log.
+
+**The benchmark.** The sweep named in the plan (`PyTest()`, `src/Pymodules/pythonTests.cpp`) could
+not be revived: it is inside comment blocks and `if (0)`, `exu.Test()` is not bound in a release
+build at all (`EXUDYN_RELEASE`), and it timed hand-written loops rather than the vector code the
+solver runs. Instead `tools/benchmarks/avx2Benchmark.py` times whole solver runs with long system
+vectors - explicit RK44 chains with 6e3, 6e4 and 3e5 coordinates (the last also multithreaded), an
+implicit sparse run with 6e4, and implicit dense runs with `EXUdense` and `EigenDense` - and, on
+the maintainer's hint, reads the solver sub timers (`mbs.sys['dynamicSolver'].timer`, enabled by
+`displayComputationTime` together with `storeSolver=True`), so a change can be attributed to
+`ODE2RHS`, `factorization`, `totalJacobian` or `newtonIncrement` instead of guessed. It also prints
+every result, so two builds can be compared for rounding as well as for speed.
+
+**Measured** on an AMD Ryzen 9 9950X (32 threads, WSL, g++), five builds of the same tree,
+3 repeats per case, minimum time kept:
+
+| case | baseline | `-mavx2 -mfma` | `+ -ffp-contract=off` | `-march=native` | `native + no-contract` |
+|---|---|---|---|---|---|
+| explicit 6e3 | 2.60 s | 1.01 | 1.00 | 0.99 | 0.99 |
+| explicit 6e4 | 2.84 s | 0.99 | 1.03 | 1.00 | 1.01 |
+| explicit 3e5 | 4.78 s | 1.10 | 1.34 | 1.10 | 1.25 |
+| explicit 3e5, 4 threads | 2.40 s | 1.05 | 0.91 | 1.02 | 1.06 |
+| implicit sparse 6e4 | 1.40 s | 1.00 | 1.01 | 1.02 | 1.01 |
+| implicit dense `EXUdense` | 0.45 s | 0.96 | 0.94 | 0.93 | 0.92 |
+| implicit dense `EigenDense` | 3.43 s | **0.45** | **0.45** | **0.44** | **0.44** |
+
+The `EigenDense` row is the only clear effect, and it is all in `factorization` (3.17 s -> 1.33 s):
+Eigen vectorizes when the flag permits it. The explicit rows move by more than 10 % in both
+directions between runs of the *same* build, so nothing there is a signal - the `ODE2RHS` of the
+baseline was 1.33 s in one round and 1.99 s in another. `-march=native` produces AVX-512 code
+(12k `zmm` instructions) and is never better than plain AVX2.
+
+**Why so little: the sub timers answer it.** `ODE2RHS` is 73-91 % of the explicit runs, and that is
+per-object 3x3 and short-vector work - no flag vectorizes it. The long-vector loops that AVX2 does
+accelerate (`newtonIncrement`, `integrationFormula`) are 3-13 % together. This is what steps R11.2
+and R11.3 exist for, added on the maintainer's instruction: first a maintained micro-benchmark
+inside Exudyn (`exudyn.special.RunLinalgBenchmark()`), then the linear algebra itself.
+
+**FMA rounding (#2396) is a flag question, not an AVX2 question.** Full suite per build, compared
+by the *set* of failing tests (this WSL environment lacks some optional packages, so the baseline
+itself fails 31 of 114):
+
+| build | failing | difference to the baseline set |
+|---|---|---|
+| baseline | 31 | - |
+| `-mavx2 -mfma` | 34 | **+ ANCFcontactCircleTest, ANCFslidingAndALEjointTest, connectorGravityTest** |
+| `-mavx2 -mfma -ffp-contract=off` | 28 | none (only contact tests differ, in both directions) |
+| `-march=native` | 33 | + ANCFcontactCircleTest, ANCFslidingAndALEjointTest, connectorGravityTest |
+| `native -ffp-contract=off` | 28 | none |
+
+So the three tests of #2396 are caused by contraction, not by vectorization, and `-ffp-contract=off`
+removes them at no measurable cost. MSVC does not contract by default, which is why Windows never
+showed this. The contact tests (`sphereTriangle*`, `contactSphereSphere`, `ANCFgeneralContactCircle`)
+differ by orders of magnitude between any two runs and were excluded from the comparison (fact 24).
+
+**Decision (maintainer, 2026-09-16).**
+
+1. **AVX2 stays off for the shipped Linux wheel.** There is no measured gain for multibody work,
+   and the only win is in a dense solver most models do not use.
+2. **If step R2.10 builds a *fast* variant, it must carry `-ffp-contract=off`** together with
+   `-mavx2 -mfma`. Then its results stay comparable to the default variant and to Windows, which
+   removes the "variant-dependent reference values" branch of fact 24.
+3. **`-march=native` is not worth a variant**: AVX-512 gives nothing here.
+4. **The question "why does vectorization not pay" is not closed, it is moved** to R11.2/R11.3 -
+   the code needs the change, not the compiler flags.
+
+Also recorded as fact 27. `setup.py` keeps the AVX2 flags commented out in `c_opts['unix']`, now
+with a reference to this measurement instead of the old "does not compile" note.
+
 <a id="r2-17"></a>
 ### R2.17 - the wheel build sees header changes
 
