@@ -149,11 +149,10 @@ Real PyReadRealFromSysDictionary(const STDstring& key)
 PYBIND11_MODULE(exudynCPPfast, m) {
 	m.doc() = "EXUDYN binding Python<->C++\n This is the 'fast' version without range/memory/whatsoever checks and uses /fp:fast compiler options!\n -> usage:\nSC=exu.SystemContainer()\nmbs=SC.AddSystem()\n see theDoc.pdf for tutorials, interface description and further information"; // module docstring
 #pragma message("***** pybind: building exudynCPPfast module *****")
-#elif defined(__EXUDYN_COMPILE_NOAVX)
-PYBIND11_MODULE(exudynCPPnoAVX, m) {
-	m.doc() = "EXUDYN binding Python<->C++\n This is the version without AVX(2) compiler options for high CPU compatibility!\n -> usage:\nSC=exu.SystemContainer()\nmbs=SC.AddSystem()\n see theDoc.pdf for tutorials, interface description and further information"; // module docstring
-#pragma message("***** pybind: building exudynCPPnoAVX module *****")
 #else
+//NOTE: the third module exudynCPPnoAVX was dropped in revision2026 step R2.10 (#2466): the
+//default module below is compiled for the BASELINE instruction set on every platform, so a CPU
+//without AVX2 needs no separate module any more. The vector extensions belong to the fast one.
 PYBIND11_MODULE(exudynCPP, m) {
 	m.doc() = "EXUDYN binding Python<->C++\n -> usage:\nSC=exu.SystemContainer()\nmbs=SC.AddSystem()\n see theDoc.pdf for tutorials, interface description and further information"; // module docstring
 //#pragma message("***** pybind: building exudynCPP module *****")

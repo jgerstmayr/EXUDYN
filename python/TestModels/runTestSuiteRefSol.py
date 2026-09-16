@@ -13,121 +13,126 @@ import sys
 #%%+++++++++++++++++++++++++++++++++++++++
 #return reference solutions for test examples in dictionary
 def TestExamplesReferenceSolution():
-    
+
+    #ALL values below were re-measured on 2026-09-16 (revision2026 step R2.10, #2466) with the
+    #BASELINE-ISA Windows module. Until then the default Windows module was compiled with
+    #/arch:AVX2 while Linux had none, so these values were AVX2 values and Linux could not meet
+    #them; that is what UnresolvedOnLinux() below is a list of. 85 of the 113 values moved, 33 of
+    #them by more than the 5e-14 tolerance - the AVX branches of Use_avx.h sum in a different
+    #order. The previous (AVX2) values are in git history, one commit back.
     refSol = {
-        'abaqusImportTest.py': 0.0005885208722206333,               #new 2023-04-20; 5 modes as 8 modes have sensitive "half mode included"
-        'allExudynModulesTest.py': 1,                               #new 2026-02-03; test all modules (if some major error is contained...)
-        'ANCFBeamTest.py': 1.010486312300459,                       #new 2023-04-04, after resolving local kappa bug
-        'ANCFcable2DuserFunction.py': 0.6015588367721232,           #new 2023-12-13
-        'ANCFCableBeamDampingTest.py': 0.18992335572078087,         #new 2026-03-25, checking damping between ANCFCable2D and ANCFBeam
+        'abaqusImportTest.py': 0.0005885208722206048,               #new 2023-04-20; 5 modes as 8 modes have sensitive "half mode included"
+        'allExudynModulesTest.py': 1.0,                               #new 2026-02-03; test all modules (if some major error is contained...)
+        'ANCFBeamTest.py': 1.0104863123004104,                       #new 2023-04-04, after resolving local kappa bug
+        'ANCFcable2DuserFunction.py': 0.6015588367721973,           #new 2023-12-13
+        'ANCFCableBeamDampingTest.py': 0.18992335572077274,         #new 2026-03-25, checking damping between ANCFCable2D and ANCFBeam
         'ANCFcontactCircleTest.py':-0.4842698420787613,
         'ANCFcontactFrictionTest.py':-0.014187561328096003,         #with old ObjectContactFrictionCircleCable2D until : 2022-03-09: -0.014188649931059739,
-        'ANCFgeneralContactCircle.py':-0.5816542531620952,          #new 2022-07-11 (CState Parallel); #before some update to contact module(iterations decreased!):-0.5816521429557808, #2022-02-01
-        'ANCFmovingRigidBodyTest.py':-0.12893096934983617,          #new 2022-12-25; old solution differs for 1e-10 since several updates -0.12893096921737698,
-        'ANCFslidingAndALEjointTest.py':-4.426408394755261,         #before 2023-05-01 (loads jacobian): -4.426408390697862,         #before 2022-12-25(resolved BUG 1274): -4.426403044189653; with old ObjectContactFrictionCircleCable2D until: 2022-03-09: -4.42640304418963,
-        'ballBearingTest.py':0.037852414023965573,                  #new 2025-07-03
-        'bricardMechanism.py': 4.172189649307425,
-        'carRollingDiscTest.py':-0.23940048717113782,
-        'compareAbaqusAnsysRotorEigenfrequencies.py':0.0004185480476228555,
+        'ANCFgeneralContactCircle.py':-0.581654253165756,          #new 2022-07-11 (CState Parallel); #before some update to contact module(iterations decreased!):-0.5816521429557808, #2022-02-01
+        'ANCFmovingRigidBodyTest.py':-0.12893096934990356,          #new 2022-12-25; old solution differs for 1e-10 since several updates -0.12893096921737698,
+        'ANCFslidingAndALEjointTest.py':-4.426408394755277,         #before 2023-05-01 (loads jacobian): -4.426408390697862,         #before 2022-12-25(resolved BUG 1274): -4.426403044189653; with old ObjectContactFrictionCircleCable2D until: 2022-03-09: -4.42640304418963,
+        'ballBearingTest.py':0.03785241402944885,                  #new 2025-07-03
+        'bricardMechanism.py': 4.172189649306508,
+        'carRollingDiscTest.py':-0.2394004871711386,
+        'compareAbaqusAnsysRotorEigenfrequencies.py':0.0004185480476228394,
         'compareFullModifiedNewton.py':0.00020079676000188396,
-        'complexEigenvaluesTest.py':0.42816392078752413,            #new 2024-05-04 testing ComputeODE2Eigenvalues2 for complex case
-        'computeODE2AEeigenvaluesTest.py': 0.38811732950413347,
-        'computeODE2EigenvaluesTest.py':-2.749026293713541e-11,
+        'complexEigenvaluesTest.py':0.42816392078752485,            #new 2024-05-04 testing ComputeODE2Eigenvalues2 for complex case
+        'computeODE2AEeigenvaluesTest.py': 0.3881173295041342,
+        'computeODE2EigenvaluesTest.py':-2.747979063144612e-11,
         'connectorGravityTest.py': 1014867.2330320379,
-        'connectorRigidBodySpringDamperTest.py':0.1827622474318292, #new 2022-07-11 (CState Parallel); 
+        'connectorRigidBodySpringDamperTest.py':0.18276224743555652, #new 2022-07-11 (CState Parallel); 
         'contactCoordinateTest.py':0.0553131995062827,
-        'contactCurveExample.py':0.3096143279681347,                #new 2025-05-11
-        'contactSphereSphereTest.py': 0.5348463536059522,           #new 2025-02-03
+        'contactCurveExample.py':0.3096143279681373,                #new 2025-05-11
+        'contactSphereSphereTest.py': 0.5348463502652304,           #new 2025-02-03
         'contactSphereSphereTestEAPM.py': 0.20000219249662216,      #new 2025-02-03
-        'ConvexContactTest.py':0.011770267410694153,                #new 2022-07-11 (CState Parallel); #before 2022-01-25?: 0.05737886603111926, 
-        'coordinateSpringDamperExt.py':17.084935539925155,          #new 2023-01-23
-        'coordinateVectorConstraint.py':-1.0825265797698322,
-        'coordinateVectorConstraintGenericODE2.py':-1.0825265797698322,
-        'createKinematicTreeTest.py':3.3408301427304914,            #new 2025-06-14
-        'createFunctionsTest.py':0.042288339665601055,              #new 2025-05-11
-        'createRollingDiscPenaltyTest.py':2.1129927199922243,       #new 2025-02-27
-        'createRollingDiscTest.py':4.009716209090299,               #new 2025-03-05
-        'createSphereQuadContact.py':1.124377662163088,             #new 2025-06-29
-        'createSphereQuadContact2.py':0.15616582432927872,          #new 2025-07-05
-        'createSphereTriangleContact.py':4.8409602192504355,        #new 2026-09-11 (revision2026 step R5.9); tEnd shortened 0.65->0.25 on adding
-        'deleteItemsTest.py':-0.9860528006518329,                   #new 2025-05-10
-        'distanceSensor.py':1.867764310778691,
-        'driveTrainTest.py':-9.269855516524927e-08,                 #new 2023-05-20 (mainSystemExtensions); before:-9.269311940229841e-08,
-        'explicitLieGroupIntegratorPythonTest.py':149.8473939540758,
-        'explicitLieGroupIntegratorTest.py':0.16164013319819065,
+        'ConvexContactTest.py':0.011770267410492958,                #new 2022-07-11 (CState Parallel); #before 2022-01-25?: 0.05737886603111926, 
+        'coordinateSpringDamperExt.py':17.084935539349033,          #new 2023-01-23
+        'coordinateVectorConstraint.py':-1.0825265797698307,
+        'coordinateVectorConstraintGenericODE2.py':-1.0825265797698307,
+        'createKinematicTreeTest.py':3.3408301427307276,            #new 2025-06-14
+        'createFunctionsTest.py':0.04228833966560114,              #new 2025-05-11
+        'createRollingDiscPenaltyTest.py':2.1129927199922123,       #new 2025-02-27
+        'createRollingDiscTest.py':4.009716209090303,               #new 2025-03-05
+        'createSphereQuadContact.py':1.1243776621604573,             #new 2025-06-29
+        'createSphereQuadContact2.py':0.15616582432943388,          #new 2025-07-05
+        'createSphereTriangleContact.py':4.840960219289836,        #new 2026-09-11 (revision2026 step R5.9); tEnd shortened 0.65->0.25 on adding
+        'deleteItemsTest.py':-0.9860528006518324,                   #new 2025-05-10
+        'distanceSensor.py':1.86776431077868,
+        'driveTrainTest.py':-9.26985560534277e-08,                 #new 2023-05-20 (mainSystemExtensions); before:-9.269311940229841e-08,
+        'explicitLieGroupIntegratorPythonTest.py':149.84739395407578,
+        'explicitLieGroupIntegratorTest.py':0.16164013319819118,
         'explicitLieGroupMBSTest.py':3.028987107923892,             #new 2026-09-11 (revision2026 step R5.9); endTime shortened 1->0.1 on adding, step size unchanged
         'fourBarMechanismTest.py':-2.376335780518213,
-        'fourBarMechanismIftomm.py':0.1721665271840173,
-        'generalContactCylinderTest.py':12.246626442545603,         #new 2024-03-17 (spurious trig-sphere contact forces)
-        'generalContactCylinderTrigsTest.py':5.486908430912642,     #new 2024-03-17 (internal sphere-sphere contact)
-        'generalContactFrictionTests.py':12.030182715125177,        #changed 2025-05-06 (seems to now be closer to linux; differences with object8); new 2024-03-17: 12.027740342293988 (doubled damping; fixed sphere-sphere and trig-sphere contact); old: 12.464092000879125,        #new 2022-07-11 (CState Parallel); #before 2022-01-25 (changed some velocity computation in GeneralContact): 10.133183086232139, #changed GeneralContact and implicit solver; before 2022-01-18: 10.132106712933348 , 
-        'generalContactImplicit1.py':0.775815593379039,             #new 2026-09-11 (revision2026 step R5.9)
-        'generalContactImplicit2.py':0.500000053786963,             #new 2026-09-11 (revision2026 step R5.9)
-        'generalContactSpheresTest.py':-1.1138547720263323,         #new 2022-07-22 (parallel Lie group updates); new 2022-07-11 (CState Parallel); #before 2022-01-25(minor diff, due to round off errors in multithreading; now changed to 1 thread):-1.113854772026123, #changed GeneralContact and implicit solver; before 2022-01-18: -1.0947542400425323, #before 2021-12-02: -1.0947542400427703,
+        'fourBarMechanismIftomm.py':0.17216652717785863,
+        'generalContactCylinderTest.py':12.24658398056691,         #new 2024-03-17 (spurious trig-sphere contact forces)
+        'generalContactCylinderTrigsTest.py':5.48690843091258,     #new 2024-03-17 (internal sphere-sphere contact)
+        'generalContactFrictionTests.py':12.022654145378834,        #changed 2025-05-06 (seems to now be closer to linux; differences with object8); new 2024-03-17: 12.027740342293988 (doubled damping; fixed sphere-sphere and trig-sphere contact); old: 12.464092000879125,        #new 2022-07-11 (CState Parallel); #before 2022-01-25 (changed some velocity computation in GeneralContact): 10.133183086232139, #changed GeneralContact and implicit solver; before 2022-01-18: 10.132106712933348 , 
+        'generalContactImplicit1.py':0.7758155402165082,             #new 2026-09-11 (revision2026 step R5.9)
+        'generalContactImplicit2.py':0.5000000537869635,             #new 2026-09-11 (revision2026 step R5.9)
+        'generalContactSpheresTest.py':-1.113854772025744,         #new 2022-07-22 (parallel Lie group updates); new 2022-07-11 (CState Parallel); #before 2022-01-25(minor diff, due to round off errors in multithreading; now changed to 1 thread):-1.113854772026123, #changed GeneralContact and implicit solver; before 2022-01-18: -1.0947542400425323, #before 2021-12-02: -1.0947542400427703,
         'genericJointUserFunctionTest.py':1.1922383967562884,
-        'genericODE2test.py':0.036045463499024655,                  #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 0.036045463498793825,
+        'genericODE2test.py':0.03604546349894506,                  #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 0.036045463498793825,
         'geneticOptimizationTest.py':0.10117518366826603,           #before 2022-02-20 (accuracy of internal sensors is higher); 0.10117518367051619, #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 0.10117518366934351,
         'geometricallyExactBeam2Dtest.py':-2.211502835379855,       #2026-01-09 update due to autodifferentiation
-        'geometricallyExactBeamTest.py':1.0128209428598958,         #before 2023-01-29: 1.012822053539261; before 2023-05-05: 1.0128218992948643 (changed Texp function); new 2023-04-06 may still include small errors in implementation
-        'gridGeomExactBeam2D.py':-1.582796574326255,                #new 2024-01-28
-        'heavyTop.py':33.42312575174431,                            #new 2022-07-11 (CState Parallel); 
-        'hydraulicActuatorSimpleTest.py':7.130440021870293,
-        'jointArgsTest.py':0.004269049550098547,                    #2025-05-10
-        'kinematicTreeAndMBStest.py':2.6388120463802767e-05,        #original but too sensitive to disturbances: 263.88120463802767,
-        'kinematicTreeConstraintTest.py':1.8135975384620484 ,
-        'kinematicTreeTest.py':-1.309383960216414,
+        'geometricallyExactBeamTest.py':1.012820942859896,         #before 2023-01-29: 1.012822053539261; before 2023-05-05: 1.0128218992948643 (changed Texp function); new 2023-04-06 may still include small errors in implementation
+        'gridGeomExactBeam2D.py':-1.5827965743262553,                #new 2024-01-28
+        'heavyTop.py':33.423125751743804,                            #new 2022-07-11 (CState Parallel); 
+        'hydraulicActuatorSimpleTest.py':7.130440021870289,
+        'jointArgsTest.py':0.00426904955009082,                    #2025-05-10
+        'kinematicTreeAndMBStest.py':2.6388120463802584e-05,        #original but too sensitive to disturbances: 263.88120463802767,
+        'kinematicTreeConstraintTest.py':1.8135975384620298 ,
+        'kinematicTreeTest.py':-1.3093839602164064,
         'laserScannerTest.py':2.695064443768281 ,                   #new 2024-04-29
-        'linearFEMgenericODE2.py': 0.3876719712975609,              #new 2024-10-06 for jacobianUserFunction in GenericODE2
-        'loadUserFunctionTest.py': 1.8051173706570725,              #new 2024-10-10 for visualization of time-dependent loads
-        'LShapeGeomExactBeam2D.py':-0.9181474510515214,             #2026-01-09 update due to autodifferentiation
-        'mainSystemExtensionsTests.py': 57.64639446941554,          #updated 2023-11-16; updated 2023-06-09; old: new 2023-05-19
-        'mainSystemUserFunctionsTest.py': 4.069301305919624,        #new 2024-10-17
-        'manualExplicitIntegrator.py':2.059698629692295,
+        'linearFEMgenericODE2.py': 0.38767197129755937,              #new 2024-10-06 for jacobianUserFunction in GenericODE2
+        'loadUserFunctionTest.py': 1.8051173706570727,              #new 2024-10-10 for visualization of time-dependent loads
+        'LShapeGeomExactBeam2D.py':-0.9181474510515215,             #2026-01-09 update due to autodifferentiation
+        'mainSystemExtensionsTests.py': 57.646394469414666,          #updated 2023-11-16; updated 2023-06-09; old: new 2023-05-19
+        'mainSystemUserFunctionsTest.py': 4.069301305919595,        #new 2024-10-17
+        'manualExplicitIntegrator.py':2.0596986296922988,
         'matrixContainerTest.py':56.5,                              #new 2024-10-09
-        'mecanumWheelRollingDiscTest.py':0.2714267238324343,
-        'movingGroundRobotTest.py':0.0038408994979977364,           #updated 2026-09-09, with factor 0.5 for tolerance too close
-        'NGsolveCMStest.py': 0.06953224923173523,                   #changed 2025-05-05 (new .pkl file with newer ngsolve); until: 2024-10-11: 0.06953227339277462
-        'objectFFRFreducedOrderAccelerations.py':0.1000057024588858,#before 2022-07-22 (because often small fails); 0.5000285122944431,#before 2022-02-20 (accuracy of internal sensors is higher): 0.5000285122930983,
-        'objectFFRFreducedOrderTest.py':0.0053552332680605694,      #until 2022-03-18 (div result by 5): 0.026776166340247865,
+        'mecanumWheelRollingDiscTest.py':0.2714267238324344,
+        'movingGroundRobotTest.py':0.003840899497986155,           #updated 2026-09-09, with factor 0.5 for tolerance too close
+        'NGsolveCMStest.py': 0.06953224923173146,                   #re-measured 2026-09-16 (#2466) against the COMMITTED testData/netgenTestMesh.pkl; the model rewrites that tracked file whenever its load fails, and the result then moves by 2.4e-8 (#2469); changed 2025-05-05 (new .pkl file with newer ngsolve); until 2024-10-11: 0.06953227339277462
+        'objectFFRFreducedOrderAccelerations.py':0.10000570245889191,#before 2022-07-22 (because often small fails); 0.5000285122944431,#before 2022-02-20 (accuracy of internal sensors is higher): 0.5000285122930983,
+        'objectFFRFreducedOrderTest.py':0.005355233268058772,      #until 2022-03-18 (div result by 5): 0.026776166340247865,
         'objectFFRFTest.py':0.0064600108120842666,                  #before 2022-02-20 (accuracy of internal sensors is higher): 0.006460010812070858,
-        'objectFFRFTest2.py':0.03552188069017914,                   #before 2022-02-20 (accuracy of internal sensors is higher): 0.03552188069032863,
-        'objectGenericODE2Test.py':-2.316378897486015e-05,
-        'PARTS_ATEs_moving.py':0.44656762760262214,
-        'pendulumFriction.py':0.39999998776982304,
-        'parameterConversionTest.py':0,                             #new 2026-09-14: number of differences to parameterConversionTestReference.txt (revision2026 step R4.4.3.1)
-        'typeInformationTest.py':0,                                 #new 2026-09-15: number of disagreements of exudyn.types with the C++ module (revision2026 step R4.10.4)
-        'pickleCopyMbs.py':0.2583013564103496,                      #new 2025-05-10
-        'plotSensorTest.py':1,
+        'objectFFRFTest2.py':0.035521880690182486,                   #before 2022-02-20 (accuracy of internal sensors is higher): 0.03552188069032863,
+        'objectGenericODE2Test.py':-2.316378897585508e-05,
+        'PARTS_ATEs_moving.py':0.44656762760262064,
+        'pendulumFriction.py':0.39999998776982154,
+        'parameterConversionTest.py':0.0,                             #new 2026-09-14: number of differences to parameterConversionTestReference.txt (revision2026 step R4.4.3.1)
+        'typeInformationTest.py':0.0,                                 #new 2026-09-15: number of disagreements of exudyn.types with the C++ module (revision2026 step R4.10.4)
+        'pickleCopyMbs.py':0.2583013564103506,                      #new 2025-05-10
+        'plotSensorTest.py':1.0,
         'postNewtonStepContactTest.py':0.057286638346409235,
         'raytracerNOGLFWtest.py':0.28151013387134,                  #new 2026-01-03
-        'reevingSystemSpringsTest.py':2.2155575717433007,           #new 2023-07-17 (old solution contained compression forces: 2.213190117855691),
+        'reevingSystemSpringsTest.py':2.215557571743302,           #new 2023-07-17 (old solution contained compression forces: 2.213190117855691),
         'relativeRotationTranslationMechanism.py': 1.509631854432179,#new 2026-09-11
-        'revoluteJointPrismaticJointTest.py':1.2538806799249342,    #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver (modified Newton restart, etc.); before 2022-01-18: 1.2538806799243265,
-        'rigidBody2Dtest.py': -0.5055295700922415,                  #new 2025-02-05: added arbitrary COM to 2D rigid body
+        'revoluteJointPrismaticJointTest.py':1.2538806799241744,    #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver (modified Newton restart, etc.); before 2022-01-18: 1.2538806799243265,
+        'rigidBody2Dtest.py': -0.5055295700922418,                  #new 2025-02-05: added arbitrary COM to 2D rigid body
         'rigidBodyAsUserFunctionTest.py':8.950865271552148,
         'rigidBodyCOMtest.py':3.409431467726291,
-        'rigidBodySpringDamperIntrinsic.py':0.5472368463500464,     #new 2023-11-30 (intrinsic formulation for rigid body spring damper)
-        'rollingCoinTest.py':1.063438118935288,                     #until 2024-04-29 (without force): 0.0020040999273379673
-        'rollingDiscTangentialForces.py':1.0342017388721547,        #new 2024-05-04: RollingDiscPenalty: switch to local computation of tangential forces
-        'rollingCoinPenaltyTest.py':0.03489603106689881,
-        'rotatingTableTest.py':7.838680375029869,                   #until 2024-05-04 (before slight change in RollingDiscPenalty): 7.838680371309492
-        'scissorPrismaticRevolute2D.py':27.20255648904422,          #new 2022-07-11 (CState Parallel); #added JacobianODE2, but example computed with numDiff forODE2connectors, 2022-01-18: 27.202556489044145,
+        'rigidBodySpringDamperIntrinsic.py':0.5472368462985283,     #new 2023-11-30 (intrinsic formulation for rigid body spring damper)
+        'rollingCoinTest.py':1.0634381189361193,                     #until 2024-04-29 (without force): 0.0020040999273379673
+        'rollingDiscTangentialForces.py':1.0342017404650015,        #new 2024-05-04: RollingDiscPenalty: switch to local computation of tangential forces
+        'rollingCoinPenaltyTest.py':0.03489603106786701,
+        'rotatingTableTest.py':7.838680375029852,                   #until 2024-05-04 (before slight change in RollingDiscPenalty): 7.838680371309492
+        'scissorPrismaticRevolute2D.py':27.20255648904438,          #new 2022-07-11 (CState Parallel); #added JacobianODE2, but example computed with numDiff forODE2connectors, 2022-01-18: 27.202556489044145,
         'sensorUserFunctionTest.py':45.0,            
-        'serialRobotTest.py':0.7681856909852399,                    #until 2022-04-21: 0.7680031232063571 wrong static torque compensation
-        'sliderCrank3Dbenchmark.py':7.256859913349651,              #new 2026-09-11 (revision2026 step R5.9); tEnd shortened 5->0.5, the value the file itself calls converged
-        'sliderCrank3Dtest.py':3.3642761780921897,
+        'serialRobotTest.py':0.7681856909844541,                    #until 2022-04-21: 0.7680031232063571 wrong static torque compensation
+        'sliderCrank3Dbenchmark.py':7.256859912845965,              #new 2026-09-11 (revision2026 step R5.9); tEnd shortened 5->0.5, the value the file itself calls converged
+        'sliderCrank3Dtest.py':3.364276178092191,
         'sliderCrankFloatingTest.py':0.591649163378833,
-        'solverExplicitODE1ODE2test.py':3.3767933275970896,         #new 2022-07-11 (CState Parallel); 
-        'sparseMatrixSpringDamperTest.py':-0.06779862812271394,     #changed to analytic Spring-Damper jacobian (missing d(vel)/dpos term): -0.06779862983767654,
-        'sphereTriangleTest.py':3.8226410966196975,                 #new 2025-06-14
-        'sphereTriangleTest2.py':4.356119232231812,                 #changed: 2026-01-23 (sparse acc(vel) initialization); new 2025-06-22
-        'sphericalJointTest.py':4.409080446575089,                  #new 2022-07-11 (CState Parallel); 
-        'springDamperUserFunctionTest.py':0.5062872273010911,
+        'solverExplicitODE1ODE2test.py':3.3767933275918964,         #new 2022-07-11 (CState Parallel); 
+        'sparseMatrixSpringDamperTest.py':-0.06779862812271391,     #changed to analytic Spring-Damper jacobian (missing d(vel)/dpos term): -0.06779862983767654,
+        'sphereTriangleTest2.py':4.35608275479331,                 #changed: 2026-01-23 (sparse acc(vel) initialization); new 2025-06-22
+        'sphericalJointTest.py':4.409080446575154,                  #new 2022-07-11 (CState Parallel); 
+        'springDamperUserFunctionTest.py':0.5062872273010924,
         'stiffFlyballGovernor.py':0.8962488779114738,
-        'superElementRigidJointTest.py':0.015217208913989071,       #before 2022-02-20 (accuracy of internal sensors is higher): 0.015217208913983024,
+        'superElementRigidJointTest.py':0.015217208913989099,       #before 2022-02-20 (accuracy of internal sensors is higher): 0.015217208913983024,
         'symbolicUserFunctionTest.py':0.10039884426884882,          #2023-12-13
         'symbolicModuleTest.py':0.9484129575069745,                 #2023-12-14
-        'taskmanagerTest.py':-0.23406814272950335,                  #2024-10-08
+        'taskmanagerTest.py':-0.23406814272950313,                  #2024-10-08
         'velocityVerletTest.py':4.365184132226787,                  #2024-10-07
         }
 
@@ -255,6 +260,13 @@ def DeliberatelyNotRun():
         'simulatorCouplingTwoMbs.py':
             'did not finish within 300s headless; needs investigation before it can be a test',
 
+        #--- unstable, not merely inaccurate
+        'sphereTriangleTest.py':
+            'the explicit integrator goes unstable in a certain configuration: 3.8226 on an '
+            'AVX2 Windows build, 69880 on a baseline build and 59370 on Linux. A smaller step '
+            'size removes the divergence but leaves a solution that looks wrong on inspection, '
+            'so this is a model defect, not a tolerance question; phase R10 (#2466)',
+
         #--- not test models in the reference-value sense
         'interfaceTest.py':
             'API smoke script: no exudynTestGlobals, produces no value; 13.9s',
@@ -323,9 +335,6 @@ def UnresolvedOnLinux():
         #already excluded; they are the same kind of reproducible platform difference (#2379).
         'sliderCrank3Dbenchmark.py',            #rel. 2.0e-10
         'generalContactImplicit1.py',           #rel. 6.8e-08
-        #the outlier by far: reference 3.8226, Linux gives 59370.97 - four orders of
-        #magnitude, so this is a divergence rather than an accuracy difference
-        'sphereTriangleTest.py',                #rel. 1.6e+04
         ])
 
     return unresolved
@@ -342,11 +351,11 @@ def MiniExamplesReferenceSolution():
         'ObjectANCFThinPlate.py':0.0,
         'ObjectConnectorSpringDamper.py':0.9733828995763039, #until 2022-01-25 (before analytical Jac for SpringDamper):0.9733828995759499,
         'ObjectConnectorCartesianSpringDamper.py':-0.0009999999999750209,
-        'ObjectConnectorRigidBodySpringDamper.py':-0.5349299545315868,
-        'ObjectConnectorLinearSpringDamper.py':0.0004999866342439289, #previously had error, did not run
+        'ObjectConnectorRigidBodySpringDamper.py':-0.534929955894111,
+        'ObjectConnectorLinearSpringDamper.py':0.0004999866342440002, #previously had error, did not run
         'ObjectConnectorTorsionalSpringDamper.py':0.0004999866342439527,
         'ObjectConnectorCoordinateSpringDamper.py':0.0019995154213252597,
-        'ObjectConnectorGravity.py':1.000000000000048,
+        'ObjectConnectorGravity.py':1.0000000000000484,
         'ObjectConnectorDistance.py':-0.9861806726069355,
         'ObjectConnectorCoordinate.py':0.04999999999999982,
         'ObjectGenericODE2.py':1.0039999999354785,

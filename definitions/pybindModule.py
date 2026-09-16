@@ -27,8 +27,9 @@ pb.AddDocu('These are the access functions to the \\codeName\\ module. General u
                 'in \\refSection{sec:generalPythonInterface} and examples are provided there. '+
                 'The C++ module \\texttt{exudyn} is the root level object linked between Python and C++.'+
                 'In the installed site-packages, the according file is usually denoted as \\texttt{exudynCPP.pyd} for the regular module, '+
-                '\\texttt{exudynCPPfast.pyd} for the module without range checks and \\texttt{exudynCPPnoAVX.pyd} '+
-                'for the module compiled without AVX vector extensions (may depend on your installation).')
+                'which is compiled for the baseline instruction set and runs on any 64-bit CPU, and '+
+                '\\texttt{exudynCPPfast.pyd} for the optional module without range checks, which additionally '+
+                'uses the AVX2 vector extensions (may depend on your installation).')
 
 pb.AddDocuCodeBlock(code="""
 #import exudyn module:

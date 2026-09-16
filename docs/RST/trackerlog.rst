@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.103.dev1, 
++  Exudyn version = 1.11.104.dev1, 
 +  last change =  2026-09-16, 
-+  Number of issues = 2466, 
-+  Number of resolved issues = 2176 (103 in current version), 
++  Number of issues = 2470, 
++  Number of resolved issues = 2177 (104 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.104: resolved Issue 2466: two shipped C++ modules: exudynCPPnoAVX dropped, AVX2 belongs to exudynCPPfast (extension)
+    - issue author: Claude-JG
+    - description:  revision2026 step R2.10: the default module exudynCPP is compiled for the BASELINE instruction set on every platform and exudynCPPfast carries __FAST_EXUDYN_LINALG and AVX2; the third module exudynCPPnoAVX and the sys.exudynCPUhasAVX2 switch are removed. New build switches useAVX2 (default on; effective only inside the fast module) and useAVX512 (default off; requires useAVX2). All Windows reference values re-measured on the baseline module.
+    - **notes:** setup.py: useAVX2/useAVX512 switches, vector flags moved into exudynCPPfast (with -ffp-contract=off on gcc/clang), exudynCPPnoAVX removed, fast module built for Python 3.13 in a development version. python/exudyn/__init__.py: two candidates and an OS-level AVX2 check replacing the numpy __cpu_features__ read. All 113 Windows reference values re-measured on the baseline module (85 moved, 33 of them past tolerance); sphereTriangleTest.py moved to DeliberatelyNotRun. Suite and pytest green.
+    - date resolved: **2026-09-16 23:20**\ , date raised: 2026-09-16 
+    - resolved by: Claude-JG
  * Version 1.11.103: :textred:`resolved BUG 2465` : the two AVX vector classes have no unit tests 
     - issue author: Claude-JG
     - description:  ResizableVectorParallel and LinkedDataVectorParallel are covered by no lest case; #2394 (a misaligned __m256d load on a LinkedDataVector sub-range) lived there and was found by a sanitizer on a whole test model. A defect in these classes is invisible in the TestModels on Windows and can change results silently. revision2026 step R5.4.
@@ -8460,6 +8466,21 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2469:` NGsolveCMStest reference value follows an untracked mesh cache
+    - issue author: Claude-JG
+    - description:  NGsolveCMStest.py loads python/TestModels/testData/netgenTestMesh.pkl - a TRACKED file - and silently OVERWRITES it whenever the load fails. That happened during revision2026 step R2.10 and the result moved by 2.4e-8, far outside the 5e-14 tolerance, back to the value recorded before 2025-05-05; restoring the committed file restored the value. A test must not rewrite its own committed input: either treat the mesh as read-only and fail loudly, or generate it deterministically.
+    - date raised: 2026-09-16 
+
+ * :textred:`open BUG 2468:` deleting build/temp is not enough after a compile-flag change
+    - issue author: Claude-JG
+    - description:  The documented gate (revision2026 step R2.17, #2427) says to delete build/temp.win-amd64-cpython-313 after a header change. That is insufficient for a FLAG change: build/lib.win-amd64-cpython-313 keeps the previously linked .pyd and the wheel is assembled from it, so a rebuild silently ships the old binary. This produced three contradictory measurements in revision2026 step R2.10 before the whole build/ directory was removed. Fix the gate instruction and preferably make setup.py handle it.
+    - date raised: 2026-09-16 
+
+ * :textred:`open BUG 2467:` exudynCPPfast crashes in the test suite (segmentation fault)
+    - issue author: Claude-JG
+    - description:  Running runTestSuite.py against exudynCPPfast segfaults reproducibly: with AVX2 after TestModel 74 (objectFFRFTest.py), without AVX2 after 75 (objectFFRFTest2.py). Both models pass standalone under the same module, so this is accumulated corruption, and the shifting crash point shows it is __FAST_EXUDYN_LINALG (no range checks), not the vector extensions. Found in revision2026 step R2.10; the fast module was built for one Python version only and the suite had apparently never been run against it.
+    - date raised: 2026-09-16 
 
  * :textred:`open BUG 2463:` the two GitHub workflows pin different action versions
     - issue author: Claude-JG

@@ -70,6 +70,8 @@ config['minimalCppFiles'] = False
 config['useOpenVR'] = False
 config['compileExudynFast'] = True    #not for all Python versions
 config['performUnitTests'] = False    #the lest C++ unit tests in src/Tests/ (#2464)
+config['useAVX2'] = True              #ONLY inside exudynCPPfast; the default module is baseline (#2466)
+config['useAVX512'] = False           #requires useAVX2; exists to be measured, not to be shipped (#2466)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def LoadTomlBytes(fileName):
@@ -130,6 +132,8 @@ configEnvironmentNames = {
     'useOpenVR':         'EXUDYN_USE_OPENVR',
     'compileExudynFast': 'EXUDYN_COMPILE_EXUDYN_FAST',
     'performUnitTests':  'EXUDYN_PERFORM_UNIT_TESTS',
+    'useAVX2':           'EXUDYN_USE_AVX2',
+    'useAVX512':         'EXUDYN_USE_AVX512',
     }
 
 for key, environmentName in configEnvironmentNames.items():
@@ -160,6 +164,10 @@ if '-h' in sys.argv or '-help' in sys.argv: #also works for --h, --help
     print("  --quiet / --no-quiet        ... print a counter instead of every compiler command")
     print("  --minimal / --no-minimal    ... compile only the minimal set - for testing only")
     print("  --unittests / --no-unittests ... compile the lest C++ unit tests into the module")
+    print("  --avx2 / --no-avx2          ... AVX2 in the FAST module; the default module is")
+    print("                  always built for the baseline ISA and runs on any 64-bit CPU")
+    print("  --avx512 / --no-avx512      ... AVX-512 instead of AVX2 (needs --avx2); for")
+    print("                  measurement only - no gain measured so far")
     print("  install     ... install exudyn library after compilation")
     print("  bdist_wheel ... build python wheel")
     print("  ")
@@ -192,6 +200,8 @@ configCommandLineFlags = [
     ('--openvr',   '--no-openvr',   'useOpenVR',         'OpenVR'),
     ('--fast',     '--nofast',      'compileExudynFast', 'exudynCPPfast variant'),
     ('--unittests','--no-unittests','performUnitTests',  'C++ unit tests (lest)'),
+    ('--avx2',     '--no-avx2',     'useAVX2',           'AVX2 in the fast module'),
+    ('--avx512',   '--no-avx512',   'useAVX512',         'AVX-512 in the fast module'),
     ]
 
 for flagTrue, flagFalse, key, message in configCommandLineFlags:
@@ -208,7 +218,9 @@ for flagTrue, flagFalse, key, message in configCommandLineFlags:
 if config['compileParallel']:
     print("          in case that parallel compile fails, use --no-parallel")
 
-useAVX = False              #this flag is used to create separate version without AVX
+#vector extensions belong to the FAST module only (revision2026 step R2.10, #2466); the filled-in
+#values need the platform detection below and are therefore set further down
+vectorExtensionCopts = []
 
 myIncludeDirs=[]
 msvcGLFWlibs =[] #add only if flag set
@@ -307,11 +319,8 @@ if config['USEGLFW']:
         msvcGLFWlibs += ['openvr_api.lib'] #openvr_api.dll needs to be in directory of exudynCPP.pyd
         unixGLFWlibs += ['-lopenvr_api']   #linux (openVR dev tools must be installed); MacOS (untested, library needs to be installed/placed in exudyn site-packages folder)
         
-if (not (sys.version_info.major == 3 and sys.version_info.minor == 6) #since V1.2.29 avx2 deactivated for Python3.6
-    and not isMacOS and not isLinux): #AVX2 flag only used under windows
-    print('compile with AVX2')
-    useAVX = True
-
+if config['useAVX512'] and not config['useAVX2']:
+    raise ValueError('useAVX512 requires useAVX2; AVX-512 is built on top of it')
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #check EXUDYN version
@@ -404,15 +413,39 @@ ext_modules = [
                      ]+myIncludeDirs,
         library_dirs = addLibrary_dirs,
 		define_macros=[],
-        extra_compile_args=['/arch:AVX2']*useAVX,
+        extra_compile_args=[], #baseline ISA on EVERY platform since revision2026 step R2.10 (#2466)
         depends=headerFiles,
         language='c++'
     ),
 ]
 
 if config['compileExudynFast']:
-    if not (pyVersionString == '3.10') and isDevelopmentVersion: 
+    #a development version builds the fast module for ONE Python version only, to keep the wheel
+    #matrix affordable; 3.13 is the most used version (maintainer decision 2026-09-16, #2466 -
+    #it was 3.10 before). A release version builds it for every Python version.
+    if not (pyVersionString == '3.13') and isDevelopmentVersion:
         config['compileExudynFast'] = False
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the vector extensions of the FAST module (revision2026 step R2.10, #2466). Until 2026-09-16 the
+#/arch:AVX2 flag went into the DEFAULT Windows module while Linux had none, so the same model
+#could differ in the last digits between the two platforms, and a third module exudynCPPnoAVX
+#existed on Windows alone for CPUs without AVX2. Now the default module is the baseline one on
+#every platform and AVX2 is part of what 'fast' means; there is nothing left to fall back to.
+if config['compileExudynFast'] and config['useAVX2'] and not isMacOS:
+    if isLinux:
+        if config['useAVX512']:
+            vectorExtensionCopts = ['-mavx512f', '-mavx512dq', '-mfma']
+        else:
+            vectorExtensionCopts = ['-mavx2', '-mfma']
+        #NOT optional: gcc/clang contract a*b+c into a single FMA by default, which shifts results
+        #by 1e-9..1e-6 and moved three tests past the 3e-11 tolerance (#2396, revision2026 step
+        #R2.16). With contraction off, the fast module's failing set equals the baseline's, which
+        #is what lets ONE set of reference values hold for both modules. MSVC does not contract.
+        vectorExtensionCopts += ['-ffp-contract=off']
+    else:
+        vectorExtensionCopts = ['/arch:AVX512'] if config['useAVX512'] else ['/arch:AVX2']
+    print('***  exudynCPPfast gets vector extensions: ' + ' '.join(vectorExtensionCopts) + '  ***')
 
 if config['compileExudynFast']:
     print('***  preparing C++ module also for __FAST_EXUDYN_LINALG  ***')
@@ -424,22 +457,7 @@ if config['compileExudynFast']:
                          ]+myIncludeDirs,
             library_dirs = addLibrary_dirs,
 		    define_macros=[('__FAST_EXUDYN_LINALG', '')],
-            extra_compile_args=['/arch:AVX2']*useAVX,
-            depends=headerFiles,
-            language='c++'
-        ),
-        ]
-
-if useAVX and (not isDevelopmentVersion or pyVersionString == '3.10'):
-    print('***  preparing additional C++ module without AVX in release mode ***')
-    ext_modules += [
-        Extension(
-            'exudyn.exudynCPPnoAVX', #this is the slow C++ library but should run on old CPUs
-            cppFiles,
-            include_dirs=[get_pybind_include(), #does some magic for Pybind11
-                         ]+myIncludeDirs,
-            library_dirs = addLibrary_dirs,
-		    define_macros=[('__EXUDYN_COMPILE_NOAVX', '')],
+            extra_compile_args=vectorExtensionCopts,
             depends=headerFiles,
             language='c++'
         ),

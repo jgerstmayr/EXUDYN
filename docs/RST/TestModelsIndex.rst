@@ -114,7 +114,6 @@ This section includes all TestModels for Exudyn.They can also be found and downl
    TestModels/sliderCrankFloatingTest
    TestModels/solverExplicitODE1ODE2test
    TestModels/sparseMatrixSpringDamperTest
-   TestModels/sphereTriangleTest
    TestModels/sphereTriangleTest2
    TestModels/sphericalJointTest
    TestModels/springDamperUserFunctionTest

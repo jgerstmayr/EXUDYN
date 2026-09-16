@@ -54,13 +54,7 @@ Typical \ **error messages if 32/64 bits versions are mixed**\ :
 
   |  →  ... and similar messages with: ModuleNotFoundError, Warning, with AVX2, without AVX2
   |  →  A known reason is that your CPU \ **does not support AVX2**\ , while Exudyn is compiled with the AVX2 option\ (modern Intel Core-i3, Core-i5 and Core-i7 processors as well as AMD processors, especially Zen and Zen-2 architectures should have no problems with AVX2; however, low-cost Celeron, Pentium and older AMD processors do \ **not**\  support AVX2, e.g.,  Intel Celeron G3900, Intel core 2 quad q6600, Intel Pentium Gold G5400T; check the system settings of your computer to find out the processor type; typical CPU manufacturer pages or Wikipedia provide information on this).
-  |  →  \ **solution**\ : the release versions without the .dev1 ending in the wheel contain C++ libraries which are compiled without AVX/AVX2; the module loader will usually detect automatically, if your CPU supports AVX/AVX2; if not, it will load the exudynCPPnoAVX.cp ... .pyd file; if this does not work, try
-
-\ ``import sys``\ 
-
-\ ``sys.exudynCPUhasAVX2 = False``\ 
-
-to explicitly load the version without AVX2.
+  |  →  \ **solution**\ : since Exudyn 2.0 there is nothing to do: the regular module \ ``exudynCPP``\  is compiled for the baseline instruction set on every platform and runs on a CPU without AVX2. Only the optional \ ``exudynCPPfast``\  module, which you get by setting \ ``sys.exudynFast = True``\  before importing Exudyn, uses AVX2; that request is silently ignored on a CPU which does not support it. The separate \ ``exudynCPPnoAVX``\  module and the \ ``sys.exudynCPUhasAVX2``\  switch no longer exist.
   |  →  you can also compile for your specific Python version without AVX if you adjust the \ ``setup.py``\  file in the \ ``main``\  folder.
   |  →  \ **DEPRECATED workaround**\  to solve the AVX problem: use the Python 3.6 version (up to Exudyn V1.2.28 only the 32bit version), which is compiled without AVX2.
   |  →  The \ ``ModuleNotFoundError``\  may also happen if something went wrong during installation (paths, problems with Anaconda, ..) \ :math:`\ra`\  very often a new installation of Anaconda and Exudyn helps.

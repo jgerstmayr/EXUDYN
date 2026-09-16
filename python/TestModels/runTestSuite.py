@@ -121,11 +121,11 @@ dateStr = str(now.year) + '-' + NumTo2digits(now.month) + '-' + NumTo2digits(now
 #date and time of exudyn library:
 import os #for retrieving file information
 from datetime import datetime #datetime contains .fromtimestamp(...)
-#do NOT import exudyn.exudynCPP here: __init__.py may have selected exudynCPPfast or
-#exudynCPPnoAVX, and naming the default module would load a SECOND C++ binary into the
-#process and then report the wrong one as the module under test
+#do NOT import exudyn.exudynCPP here: __init__.py may have selected exudynCPPfast, and naming
+#the default module would load a SECOND C++ binary into the process and then report the wrong
+#one as the module under test. Two candidates since revision2026 step R2.10 (#2466).
 exuCPPfile = ''
-for exuCPPname in ['exudynCPP', 'exudynCPPfast', 'exudynCPPnoAVX']:
+for exuCPPname in ['exudynCPP', 'exudynCPPfast']:
     exuCPPmodule = sys.modules.get('exudyn.'+exuCPPname, None)
     if exuCPPmodule is not None:
         exuCPPfile = exuCPPmodule.__file__

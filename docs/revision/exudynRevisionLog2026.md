@@ -1066,6 +1066,83 @@ have to be measured apart before the variants are designed.
 with the consolidated test suite, not by per-test tolerance patches here. AVX2 stays off on Linux
 until then.
 
+<a id="r2-10"></a>
+### R2.10 - two shipped variants, one meaning on every platform
+
+**DONE 2026-09-16** (#2466; uncovered #2467, #2468, #2469).
+
+A Windows wheel could contain three C++ modules and a Linux wheel one, and the DEFAULT module was
+not the same thing on the two platforms: `/arch:AVX2` went into `exudynCPP` on Windows while Linux
+had no vector extensions at all, and a third module `exudynCPPnoAVX` existed on Windows alone for
+CPUs without AVX2. Now:
+
+| module | contents | built |
+|---|---|---|
+| `exudynCPP` | baseline ISA, all checks | always, every platform |
+| `exudynCPPfast` | `__FAST_EXUDYN_LINALG` **and** AVX2, `-ffp-contract=off` on gcc/clang | when `compileExudynFast` |
+
+Windows therefore ships one module FEWER than before, and `python/exudyn/__init__.py` got shorter:
+two candidates instead of three, no `sys.exudynCPUhasAVX2`, and no cascade of fallbacks. The AVX2
+check now decides one thing only - whether a `sys.exudynFast` request can be honoured - so a wrong
+answer costs speed and never a crash. It asks the operating system (`IsProcessorFeaturePresent` on
+Windows, `/proc/cpuinfo` on Linux, `sysctl` on macOS) instead of reading
+`numpy.core._multiarray_umath.__cpu_features__`, which does not exist in numpy >= 2.0 - where the
+old code simply ASSUMED AVX2 - and was skipped entirely on Linux.
+
+**The measurement this step turned on.** The plan required the Windows baseline to be measured
+before any reference value moved. It was, and the answer was not the expected one:
+
+| default module | test suite |
+|---|---|
+| with `/arch:AVX2` (as shipped until now) | PASSED |
+| baseline ISA | **33 of 114 models failed** |
+
+85 of the 113 values moved at all; 33 moved past the 5e-14 tolerance. Most are ordinary rounding
+(1e-14..1e-12) from the AVX branches of `Use_avx.h` summing in a different order, but three contact
+models moved by 1e-5..1e-3 and one diverged outright. Per the maintainer: those models contain
+stick-slip and rolling contact, which amplify any perturbation - "this is like lotto, already with
+a small number of spheres" - so the large numbers are the models being chaotic, not the baseline
+module being wrong. The new values ARE the reference values now; the previous AVX2 ones are one
+commit back in git history.
+
+**The result worth keeping**: the 33 models are, entry for entry, the set that `UnresolvedOnLinux()`
+lists. Those "known unresolved Windows/Linux differences" (#2379) were the AVX2 asymmetry, not an
+unexplained platform property - Linux was being judged against Windows AVX2 numbers. That list
+should now shrink to almost nothing; confirming it needs a Linux run, which this machine cannot do.
+
+`sphereTriangleTest.py` was moved to `DeliberatelyNotRun()`: 3.8226 with AVX2, 69880 on the
+baseline, 59370 on Linux. The maintainer checked the Linux run visually - a smaller step size
+removes the divergence of the explicit integrator but leaves a solution that looks wrong, so this
+is a model defect for phase R10 rather than a tolerance question.
+
+**Build switches** follow the four-layer mechanism of step R2.14: `useAVX2` (default on, effective
+ONLY inside the fast module) and `useAVX512` (default off, requires `useAVX2`; it exists to be
+measured, since fact 27 found no gain on Zen 5). `use_AVX512` in `BasicDefinitions.h` is now
+derived from `__AVX512F__` instead of being a commented-out line. In a development version the fast
+module is built for Python 3.13 only (3.10 before), the version most people use.
+
+Timing on Windows cp313: both modules from a clean tree in **86 s**.
+
+**Three defects found on the way**, none of them caused by this step, all raised rather than fixed:
+
+- **#2467, the serious one**: `exudynCPPfast` segfaults in the suite, reproducibly, after
+  TestModel 74 with AVX2 and after 75 without it. Both models pass standalone, and moving the crash
+  point by removing AVX2 shows it is the missing range checks, not the vector extensions. The fast
+  module had been built for one Python version and the suite had apparently never been run against
+  it. Step R2.10.1.
+- **#2468**: deleting `build/temp.*` after a flag change is not enough -
+  `build/lib.win-amd64-cpython-313` keeps the previously linked `.pyd` and the wheel is assembled
+  from it. This cost three contradictory measurements here (a build that "had" AVX2 and behaved
+  exactly like one that did not) before the whole `build/` directory was removed. The gate
+  instruction of step R2.17 is wrong as written. Step R2.17.1.
+- **#2469**: `NGsolveCMStest` reads the TRACKED `testData/netgenTestMesh.pkl` and overwrites it when the load
+  fails; its result then moves by 2.4e-8 - here it flipped back to the value recorded before
+  2025-05-05, and restoring the committed file restored it. A test must not rewrite its own committed input. Step R2.10.2.
+
+Also worth a note for whoever next measures compiler flags: `EXUDYN_EXTRA_COMPILE_ARGS` produced no
+visible effect in a `pip wheel` build here, and its confirmation print is invisible because pip
+hides build output unless `-v` is given or the build fails. That is how #2468 stayed hidden so long.
+
 <a id="r2-11"></a>
 ### R2.11 — metadata drift
 

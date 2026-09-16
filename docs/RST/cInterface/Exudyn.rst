@@ -6,7 +6,7 @@ Exudyn
 
 
 
-These are the access functions to the Exudyn module. General usage is explained in Section :ref:`sec-generalpythoninterface`\  and examples are provided there. The C++ module \ ``exudyn``\  is the root level object linked between Python and C++.In the installed site-packages, the according file is usually denoted as \ ``exudynCPP.pyd``\  for the regular module, \ ``exudynCPPfast.pyd``\  for the module without range checks and \ ``exudynCPPnoAVX.pyd``\  for the module compiled without AVX vector extensions (may depend on your installation).
+These are the access functions to the Exudyn module. General usage is explained in Section :ref:`sec-generalpythoninterface`\  and examples are provided there. The C++ module \ ``exudyn``\  is the root level object linked between Python and C++.In the installed site-packages, the according file is usually denoted as \ ``exudynCPP.pyd``\  for the regular module, which is compiled for the baseline instruction set and runs on any 64-bit CPU, and \ ``exudynCPPfast.pyd``\  for the optional module without range checks, which additionally uses the AVX2 vector extensions (may depend on your installation).
 
 .. code-block:: python
    :linenos:

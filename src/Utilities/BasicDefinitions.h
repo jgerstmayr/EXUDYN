@@ -108,7 +108,7 @@
 
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//MULTITHREADED computation using ngsolve taskmanager; thanks to Joachim Schöberl
+//MULTITHREADED computation using ngsolve taskmanager; thanks to Joachim Schï¿½berl
 //DELETE:
 //removed 2025-06-18:
 //#if !defined(__APPLE__) //currently simd makes problems on different Apple platforms - needs sse2neon.h
@@ -125,7 +125,12 @@
 //#define __AVX2__
 #ifdef __AVX2__				//enabled by compiler; will also create many intrinsics automatically (e.g. for SlimVector<4>)
 	#define use_AVX2		//!< this is used for specific vector operations, e.g., in Vector.AddLarge(...)
-	//#define use_AVX512
+	//AVX-512 follows the same rule: the compiler flag decides, not a hand-edited line here. The
+	//build switch is useAVX512 in pyproject.toml (revision2026 step R2.10, #2466); it exists to be
+	//measured, since no gain was found on Zen 5 (fact 27).
+	#ifdef __AVX512F__
+		#define use_AVX512
+	#endif
 	#ifdef use_AVX2
 		#ifdef DoublePrecision
 			#define exuMemoryAlignment 4		//alignment of Real times sizeof(Real) for vectors; for AVX	

@@ -109,98 +109,26 @@ promise for no gain.
 **R2.9** **DONE 2026-09-12** — unaligned load/store in AVX loops over `LinkedDataVector`. → [log](exudynRevisionLog2026.md#r2-9)
 
 <a id="r2-10"></a>
-**R2.10** **Consolidate to two shipped variants**: *default* (baseline ISA, all checks active) and
-    *fast* (AVX2 together with `__FAST_EXUDYN_LINALG`), both in one wheel, selected at import by
-    a CPUID check that also verifies OS XSAVE/YMM state. Identical on Windows and Linux once
-    step R2.9 lands; macOS builds a single variant with no switches. Per fact 6, the variants must
-    remain **whole separate modules** — compiling only part of the module twice would let the
-    linker keep one copy of an inline template instantiation and call AVX2 code on a baseline
-    CPU.
+**R2.10** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r2-10) — **Two shipped variants,
+    one meaning on every platform** (#2466): `exudynCPP` is baseline ISA everywhere, `exudynCPPfast`
+    carries `__FAST_EXUDYN_LINALG` **and** AVX2, and `exudynCPPnoAVX` is gone together with the
+    `sys.exudynCPUhasAVX2` switch. All 113 Windows reference values were re-measured on the
+    baseline module: 85 moved, 33 of them past tolerance, which is the same set that
+    `UnresolvedOnLinux()` lists — the Windows/Linux differences of #2379 WERE the AVX2 asymmetry.
 
-    **The prerequisite is now measured, not assumed (2026-09-12).** Step R2.9 made a Linux A/B
-    possible for the first time. Same container, same toolchain, `-O3`, only `-mavx2 -mfma`
-    differing, `runPerformanceTests.py`:
+<a id="r2-10-1"></a>
+**R2.10.1** *(sub-step of R2.10)* **`exudynCPPfast` segfaults in the test suite** (#2467). With
+    AVX2 the run dies after TestModel 74, without AVX2 after 75; both models pass standalone, so
+    it is accumulated corruption from the missing range checks, not the vector extensions. The
+    fast module was built for one Python version only and the suite had never been run against it.
+    **Until this is fixed, the fast module cannot be recommended**, and the claim that one set of
+    reference values holds for both modules is verified on Linux only (step R2.16), not here.
 
-    | build | total |
-    |---|---|
-    | baseline (no AVX2) | **20.118 s** |
-    | AVX2 + FMA | **20.137 s** |
-
-    **0.1 %** — the suite cannot resolve AVX2 at all, and the per-test times differ in both
-    directions, so even the sign is noise. The reason is visible in the models: four of the six
-    tests are *tiny systems run for ~1e6 steps* (`perfRigidPendulum` is a single rigid body,
-    `perfSpringDamperExplicit`/`UserFunction` a spring-damper), so the vectors are 3-20 elements
-    long and per-step overhead dominates. AVX2 only pays on long vectors, which these never have.
-
-    **A benchmark that does resolve it already exists — and is commented out.** `PyTest()` in
-    `src/Pymodules/pythonTests.cpp`, exposed as `exu.Test()` ("internal test, do not use"),
-    contains a vector add/MultAdd sweep whose *recorded* results sit in the source as comments:
-    *"speedup for n=502: 3.1, n=1002: 3.5"*, plus a table of AVX vs multithreaded vs serial for
-    sizes from 16 to 200002. All of it is inside `/* */` and `if (0)`, so `exu.Test()` runs none
-    of it today, and the numbers can be neither reproduced nor trusted. (Its six `(PReal*)` casts
-    are dead code for the same reason, which is why step R2.9 left them alone.)
-
-    **The suite now reports per-test timings in two groups (2026-09-12).** `small` = few
-    coordinates run for ~1e6 steps, which measures per-step overhead; `large` = many coordinates
-    and few steps, where long vectors are visible. A new `perfLargeMassSpringChain.py` fills the
-    large group properly: 2000 point masses, **6000 ODE2 coordinates**, explicit Euler,
-    deterministic and ~4.8 s on Windows.
-
-    Re-running the Linux A/B with the grouped suite:
-
-    | group | no AVX2 | AVX2 + FMA | change |
-    |---|---|---|---|
-    | small | 9.715 s | 9.711 s | 0.0 % |
-    | large | 13.512 s | 13.432 s | −0.6 % |
-    | `perfLargeMassSpringChain` alone | 3.378 s | 3.184 s | **−5.7 %** |
-
-    So the grouping does what it was meant to: the only test that moves is the one built for long
-    vectors, and it moves in the right direction. But the effect is **single-digit percent on one
-    test**, not the 3–4× the commented-out micro-benchmark claims — because real models spend
-    their time in object evaluation and the solver, not in long-vector arithmetic. This is one A/B
-    run and per-test noise is a few percent, so treat the −5.7 % as indicative, not settled.
-
-    **What that implies for step R2.10**: if AVX2 buys a few percent on realistic models, the case
-    for shipping a second whole module rests on `__FAST_EXUDYN_LINALG` (dropping range checks),
-    not on AVX2 — and those two must therefore be measured *separately* before the variants are
-    designed. The micro-benchmark of issue #2397 is still needed to bound what AVX2 can do at all.
-
-    **Tolerance (decision 2026-09-12, maintainer):** the FMA-rounding differences of #2396 are
-    **not** to be handled by per-test tolerance patches here; they are resolved together with the
-    consolidated test suite. Until then AVX2 stays off on Linux and #2396 stays open.
-
-    **The variants are now defined (maintainer decision 2026-09-16, after the measurement of step
-    R2.16 and fact 27).** One meaning of "fast" on every platform, and the vector extensions belong
-    to it:
-
-    | module | contents | shipped |
-    |---|---|---|
-    | `exudynCPP` | baseline ISA, all checks | always |
-    | `exudynCPPfast` | `__FAST_EXUDYN_LINALG` (no range checks, no try/catch) **and** AVX2, with `-ffp-contract=off` on gcc/clang | when `compileExudynFast` |
-    | ~~`exudynCPPnoAVX`~~ | **dropped**: the default module is now the safe one | - |
-
-    - This removes today's asymmetry, where `useAVX` puts `/arch:AVX2` into the **default** Windows
-      module while Linux has none, so the same model can differ in the last digits between the two
-      platforms. Afterwards, both platforms build the same two modules with the same meaning, and
-      Windows ships one module *fewer* than today.
-    - `-ffp-contract=off` is not optional for the fast module: without it FMA contraction moves
-      three tests past the tolerance (#2396, step R2.16); with it the failing set equals the
-      baseline's, so **one set of reference values holds for both modules** - which is what closes
-      #2396 and the corresponding branch of fact 24.
-    - **Build switches**, in the four-layer mechanism of step R2.14 (`[tool.exudyn]`, environment,
-      command line), so a user or CI can reduce what is built:
-      `compileExudynFast` (default **on**; off = only the default module is built),
-      `useAVX2` (default **on**, effective **only inside the fast module**; off = fast without
-      vector extensions, i.e. the checks-off module alone),
-      `useAVX512` (default **off**, requires `useAVX2`; fact 27: no gain on Zen 5, so it exists to
-      be measured, not to be shipped).
-      The one-off `EXUDYN_EXTRA_COMPILE_ARGS` of step R2.16 stays for experiments and is not part
-      of this schema.
-    - **Selection at import** stays a CPUID check (with the OS XSAVE/YMM state), and
-      `python/exudyn/__init__.py` gets simpler, not more complicated: two candidates instead of
-      three, and the `sys.exudynCPUhasAVX2` special case for the noAVX module disappears.
-    - **Also to be updated when this lands**: `docs/RST/TroubleShootingAndFAQ.rst`,
-      `docs/theDoc/` and `definitions/pybindModule.py` all name `exudynCPPnoAVX` today.
+<a id="r2-10-2"></a>
+**R2.10.2** *(sub-step of R2.10)* **`NGsolveCMStest` rewrites its own committed input** (#2469):
+    the TRACKED `testData/netgenTestMesh.pkl` is overwritten whenever the load fails, and the result then
+    moves by 2.4e-8 — far outside the 5e-14 tolerance. Restoring the committed file restored the
+    value. Treat the mesh as read-only and fail loudly, or generate it deterministically.
 
 <a id="r2-11"></a>
 **R2.11** **DONE 2026-09-11** — Classifiers now 3.10–3.14, matching the wheels CI actually builds. → [log](exudynRevisionLog2026.md#r2-11)
@@ -229,6 +157,15 @@ promise for no gain.
     `build/temp.win-amd64-cpython-313` forced the full compile (49 s). Until this is fixed, the build
     gate must remove that directory after a header change (seen again in step R4.13, #2448, duplicate). Fix: pass `depends=` (the headers) to
     the `Extension`, or let `setup.py` compare header times itself.
+
+<a id="r2-17-1"></a>
+**R2.17.1** *(sub-step of R2.17)* **Deleting `build/temp` is not enough** (#2468). After a
+    compile-FLAG change, `build/lib.win-amd64-cpython-313` still holds the previously linked
+    `.pyd` and the wheel is assembled from it, so the rebuild silently ships the old binary. This
+    produced three contradictory measurements in step R2.10 before the whole `build/` directory
+    was removed. Correct the gate instruction in `docs/dev/WORKFLOW.md` and preferably make
+    `setup.py` handle it.
+
 
 ## R3 — Repository shape (~1 week, one commit)  <!-- old Phase 2 -->
 

@@ -252,6 +252,11 @@ performUnitTests = false    #compile the lest C++ unit tests (src/Tests/) into t
                             #are then run by exudyn.special.RunCppUnitTests() and by
                             #runTestSuite.py. A developer tool: off for a shipped wheel, on in
                             #the VS Debug configuration (revision2026 step R5.3, #2464)
+useAVX2 = true              #vector extensions, effective ONLY inside exudynCPPfast; the default
+                            #module is baseline ISA on every platform and needs no CPU check
+                            #(revision2026 step R2.10, #2466)
+useAVX512 = false           #AVX-512 instead of AVX2 in the fast module; requires useAVX2. Exists
+                            #to be measured, not to be shipped: no gain on Zen 5 (fact 27)
 
 [tool.setuptools]
 zip-safe = false

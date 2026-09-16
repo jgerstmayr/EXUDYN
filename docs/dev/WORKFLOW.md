@@ -160,8 +160,8 @@ modes. Both are kept; this is not a leftover switch.
 
 | mode | `versionDev` | version | modules built | cp313 build |
 |---|---|---|---|---|
-| **release** | `''` | `1.11.14` | `exudynCPP` **+** `exudynCPPfast` **+** `exudynCPPnoAVX` (Windows) | **168.9 s** |
-| **development** | `'.dev1'` | `1.11.14.dev1` | one `exudynCPP`, except the Python versions kept for fast-variant speedup tests | **58.1 s** |
+| **release** | `''` | `1.11.14` | `exudynCPP` **+** `exudynCPPfast` (both platforms) | **86 s** (2026-09-16, two modules; was 168.9 s with three) |
+| **development** | `'.dev1'` | `1.11.14.dev1` | one `exudynCPP`; `exudynCPPfast` only on Python 3.13 | **58.1 s** |
 
 Switch by editing the line and running `UpdateFiles()` from `tools/issueTracker/`. revision2026 step R8.3 turns
 this into `--release` / `--dev`.

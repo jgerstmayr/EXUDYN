@@ -37,78 +37,59 @@ __useExudynFast = hasattr(sys, 'exudynFast')
 if __useExudynFast:
     __useExudynFast = sys.exudynFast #could also be False!
 
-__cpuHasAVX2 = hasattr(sys, 'exudynCPUhasAVX2')
-if __cpuHasAVX2:
-    __cpuHasAVX2 = sys.exudynCPUhasAVX2 #could also be False!
-
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#use numpy.core to find if AVX+AVX2 is available ...
-try:
-    thisCpuHasAVX2 = False #assume this for now!
-    if sys.platform != 'darwin' and sys.platform != 'linux': #MacOS does not support AVX2; no AVX2 for linux right now; therefore there are not non-AVX modules compiled ...
-        import numpy
-        if numpy.__version__ <= '2.0': #otherwise _multiarray_umath not available (moved to _core and raises warnings)
-            from numpy.core._multiarray_umath import __cpu_features__
-            if (('AVX' in __cpu_features__) and ('AVX2' in __cpu_features__) and
-                (__cpu_features__['AVX'] == True) and (__cpu_features__['AVX2'] == True)):
-                thisCpuHasAVX2 = True
-        
-        else: #Numpy2.0 way, using numpy config:
-            thisCpuHasAVX2 = True  #assume that we have AVX2 for future cases
-
-            # try: #try this way, may fail in future
-            #     numpyInfo = numpy.__config__.CONFIG['SIMD Extensions']['found']
-            #     #some CPUs only show 'AVX', not 'AVX2'
-            #     if ('AVX2' in numpyInfo) or ('AVX' in numpyInfo): #this also works for Numpy 1.26 but not for 1.22 ....
-            #         thisCpuHasAVX2 = True
-            # except:
-            #     pass
-        
-        if thisCpuHasAVX2:
-            if not __cpuHasAVX2 and hasattr(sys, 'exudynCPUhasAVX2'):
-                print('WARNING: user deactivated AVX2 support')
-            else:
-                __cpuHasAVX2 = True
-        elif __cpuHasAVX2:
-            print('\n*********\nWARNING: user activated AVX2 support, but no AVX2 support has been detected on current CPU; may crash\n*********\n\n')
-        # else: #we do not know what the user has, but assume AVX!
-        #     if not hasattr(sys, 'exudynCPUhasAVX2'):
-        #         __cpuHasAVX2 = True #standard case!
-    else:
-        __cpuHasAVX2 = True #for MacOS and Linux, this means that there is no exudynCPPnoAVX version!
-    del thisCpuHasAVX2 #remove from exudyn scope
-except:
-    print('Warning: during import of exudyn, detection of AVX2 compatibility failed')
+#SINCE revision2026 step R2.10 (#2466) there are exactly TWO modules, with the same meaning on
+#every platform: exudynCPP is built for the BASELINE instruction set and runs on any 64-bit CPU,
+#and exudynCPPfast has no range checks and carries the vector extensions (AVX2). The third module
+#exudynCPPnoAVX is gone, together with the sys.exudynCPUhasAVX2 switch that selected it: the
+#default module IS the safe one now, so nothing has to be detected in order to import exudyn.
+#
+#The AVX2 check below therefore decides ONE thing only - whether a user's sys.exudynFast request
+#can be honoured. A wrong answer costs speed, never a crash, which is why it may be this simple.
+#It replaces a read of numpy.core._multiarray_umath.__cpu_features__, which no longer exists in
+#numpy >= 2.0 (where the old code simply ASSUMED AVX2) and was skipped altogether on Linux.
+def __CpuHasAVX2():
+    """True if this CPU *and* the operating system support AVX2; False whenever that cannot be
+    established, so that the safe module is used."""
+    try:
+        if sys.platform == 'win32':
+            import ctypes
+            #IsProcessorFeaturePresent also covers the OS XSAVE/YMM state, which CPUID alone
+            #does not: a CPU may have AVX2 while the OS does not preserve the YMM registers
+            PF_AVX2_INSTRUCTIONS_AVAILABLE = 40
+            return bool(ctypes.windll.kernel32.IsProcessorFeaturePresent(
+                PF_AVX2_INSTRUCTIONS_AVAILABLE))
+        if sys.platform.startswith('linux'):
+            with open('/proc/cpuinfo') as cpuInfoFile:
+                for line in cpuInfoFile:
+                    if line.startswith('flags'):
+                        return 'avx2' in line.split()
+            return False
+        if sys.platform == 'darwin': #Apple silicon has no AVX at all; Intel Macs may
+            import subprocess
+            return subprocess.run(['sysctl', '-n', 'hw.optional.avx2_0'],
+                                  capture_output=True, text=True).stdout.strip() == '1'
+    except Exception:
+        pass
+    return False #unknown platform or a failed check: use the module that always works
 
 try:
     #for regular loading in installed python package
-    if __useExudynFast and __cpuHasAVX2:
-        try:
-            from .exudynCPPfast import *
-            print('Imported exudyn fast version without range checks')
-        except:
+    if __useExudynFast:
+        if not __CpuHasAVX2():
             __useExudynFast = False
-            print('Import of exudyn fast version failed; falling back to regular version')
-    else:
-        __useExudynFast = False #in case __useExudynFast=True but no AVX
-
-    if not __useExudynFast:
-        if __cpuHasAVX2:
-            try:
-                from .exudynCPP import *
-            except:
-                try: #fallback
-                    from .exudynCPPnoAVX import *
-                except:
-                    raise ImportError('Warning: Import of exudyn C++ module (with AVX2) failed; check your installation or try to import without AVX by settings sys.exudynCPUhasAVX2=False')
+            print('exudyn fast version needs AVX2, which this CPU does not report; '
+                  'using the regular version')
         else:
             try:
-                from .exudynCPPnoAVX import *
+                from .exudynCPPfast import *
+                print('Imported exudyn fast version without range checks')
             except:
-                try: #fallback
-                    from .exudynCPP import *
-                except:
-                    raise ImportError('Import of exudyn C++ module (without AVX2) failed; non-AVX2 versions are only available in release versions (without .dev1 appendix); check your installation, Python version, conda environment and site-packages for exudyn; try re-installation')
+                __useExudynFast = False
+                print('Import of exudyn fast version failed; falling back to regular version')
+
+    if not __useExudynFast:
+        from .exudynCPP import *
 
 except:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders); no exudynFast! :
