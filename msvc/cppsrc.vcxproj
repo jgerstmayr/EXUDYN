@@ -633,6 +633,7 @@
     <ClInclude Include="..\src\Tests\AllBasicLinalgUnitTests.h" />
     <ClInclude Include="..\src\Tests\AllMatrixUnitTests.h" />
     <ClInclude Include="..\src\Tests\AllVectorUnitTests.h" />
+    <ClInclude Include="..\src\Tests\AVXVectorUnitTests.h" />
     <ClInclude Include="..\src\Tests\TemplatedVectorArrayUnitTests.h" />
     <ClInclude Include="..\src\Tests\UnitTestBase.h" />
     <ClInclude Include="..\src\Utilities\AdvancedMath.h" />

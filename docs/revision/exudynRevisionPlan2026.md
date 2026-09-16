@@ -554,24 +554,17 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     report (#2458).
 
 <a id="r5-4"></a>
-**R5.4** **Close the coverage hole the lest suite has in exactly the classes AVX touches.** Measured
-    2026-09-12 by listing the `CASE(...)` names in `src/Tests/*.h` against the headers in
-    `src/Linalg/`. Covered today: `Vector`, `ResizableVector`, `ConstSizeVector`,
-    `LinkedDataVector`, `SlimVector`, `Matrix`, plus `ResizableArray`, `SlimArray` and
-    `ObjectContainer`. **Not covered at all:**
+**R5.4** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-4) — **The AVX classes have
+    unit tests**: `ResizableVectorParallel` and `LinkedDataVectorParallel`, every operation over 19
+    lengths around the packet boundary and, for the linked one, every offset from 0 to `AVXRealSize`
+    — the #2394 case. Verified by mutation. The remaining backfill is R5.4.1.
 
-    - `ResizableVectorParallel.h`, `LinkedDataVectorParallel.h` — the two AVX classes. #2394 (a
-      misaligned `__m256d` load on a `LinkedDataVector` sub-range) lived here and was found by a
-      sanitizer on a whole test model, not by a unit test. Every AVX path needs cases that run
-      **both** code paths: an aligned buffer and a deliberately offset sub-range, at lengths
-      around the `AVXRealSize` boundary (n-1, n, n+1), compared against the scalar result.
+<a id="r5-4-1"></a>
+**R5.4.1** *(sub-step of R5.4)* **The ordinary backfill**, in this order, none of it AVX-specific:
+
     - `ResizableMatrix.h`, `ConstSizeMatrix.h`, `LinkedDataMatrix.h`, `MatrixContainer.h`
     - `RigidBodyMath.h`, `KinematicsBasics.h`, `Geometry.h`, `BoundingBox.h`, `SearchTree.h`
     - `Symbolic.h`, `SymbolicVector.h`, `SymbolicMatrix.h`, `LinearSolver.h`
-
-    The AVX ones come first: they are the only place where a defect is *invisible* in the
-    TestModels on Windows and can silently change results, and where the build flag differs per
-    platform. The rest is ordinary backfill and can follow.
 
 <a id="r5-5"></a>
 **R5.5** Add ruff, plus a pyright or mypy pass validating the `.pyi` against the package.

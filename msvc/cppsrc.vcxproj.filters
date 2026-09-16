@@ -467,6 +467,9 @@
     <ClInclude Include="..\src\Tests\AllVectorUnitTests.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Tests\AVXVectorUnitTests.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Tests\TemplatedVectorArrayUnitTests.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>

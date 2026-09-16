@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.102.dev1, 
++  Exudyn version = 1.11.103.dev1, 
 +  last change =  2026-09-16, 
-+  Number of issues = 2465, 
-+  Number of resolved issues = 2175 (102 in current version), 
++  Number of issues = 2466, 
++  Number of resolved issues = 2176 (103 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.103: :textred:`resolved BUG 2465` : the two AVX vector classes have no unit tests 
+    - issue author: Claude-JG
+    - description:  ResizableVectorParallel and LinkedDataVectorParallel are covered by no lest case; #2394 (a misaligned __m256d load on a LinkedDataVector sub-range) lived there and was found by a sanitizer on a whole test model. A defect in these classes is invisible in the TestModels on Windows and can change results silently. revision2026 step R5.4.
+    - **notes:** revision2026 step R5.4: new src/Tests/AVXVectorUnitTests.h with 7 cases; each over 19 lengths around the AVX packet boundary built from AVXRealSize; LinkedDataVectorParallel at every offset from 0 to AVXRealSize into a padded buffer; results compared against a scalar loop; one length above the multithreading limit. Verified by mutation: a remainder loop started one item late gives 2 failed tests.
+    - date resolved: **2026-09-16 20:40**\ , date raised: 2026-09-16 
+    - resolved by: Claude-JG
  * Version 1.11.102: :textred:`resolved BUG 2464` : the lest C++ unit tests are compiled nowhere 
     - issue author: Claude-JG
     - description:  src/Tests/ is gated on PERFORM_UNIT_TESTS; setup.py added that define for Python 3.7 only, and 3.7 stopped being built long ago (requires-python >=3.10), so the unit tests run in no wheel; no CI job and no local build. The VS Debug configuration does not define it either. revision2026 step R5.3.

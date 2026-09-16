@@ -4144,6 +4144,46 @@ that build prints `ALL CPP UNIT TESTS SUCCESSFUL`; against a default build it no
 skipped and how to get them. What those tests actually cover - and the hole in exactly the AVX
 classes - is step R5.4.
 
+<a id="r5-4"></a>
+### R5.4 - the AVX classes have unit tests
+
+**DONE 2026-09-16** (#2465).
+
+`ResizableVectorParallel` and `LinkedDataVectorParallel` had **no unit test at all**, and they are the
+two classes where a defect is least visible: the TestModels pass on Windows while the numbers quietly
+change, and the build flag differs per platform. #2394 - a misaligned `__m256d` load on a sub-range of
+a `LinkedDataVector` - lived exactly here and was found by a sanitizer on a whole model, not by a test.
+
+`src/Tests/AVXVectorUnitTests.h` adds **7 cases**. What makes them worth having is not the count:
+
+- **Every case runs 19 lengths**, built from `AVXRealSize` rather than written out - empty, below one
+  packet, exactly one, one more, and the same around two and three packets. Each operation has an AVX
+  loop over whole packets and a scalar loop over the remainder, and a defect in either is invisible at
+  most lengths. Building the list from `AVXRealSize` means the boundary is still the boundary on an
+  AVX-512 build, where a packet is 8 and not 4.
+- **Offset sub-ranges**, the #2394 case: `LinkedDataVectorParallel` is linked at every offset from 0
+  to `AVXRealSize` into a padded buffer, at every one of those lengths - 95 combinations per case. The
+  padding before and behind the sub-range is checked to be untouched, so an overrun is a failure and
+  not a lucky pass.
+- **Results are compared against the same operation in a plain scalar loop**, so a case says what the
+  operation means rather than what it currently returns. The values and scalars are chosen to be
+  exactly representable, which is what allows an exact comparison even though the AVX branch uses a
+  fused multiply-add and the remainder loop does not (revision2026 fact 27).
+- **The length above `ResizableVectorParallelThreadingLimit`** exercises the third branch, the
+  multithreaded one. Honest limitation: that branch is only actually taken when the task manager has
+  more than one thread; with one thread this runs the serial branch and still checks the boundary.
+
+**Verified by mutation, not by passing.** With the remainder loop of `operator+=` started one item too
+late - a textbook boundary defect - the suite reports **2 failed tests**; with the line restored, 0.
+The tests take 0.01 s.
+
+Two things found on the way: `BasicLinalg.h` does not include the two parallel headers at all (they
+come in through the solver), which is part of why they were never unit tested; and `AVXRealSize` is
+defined only under `use_AVX2`/`use_AVX512`, so the test file falls back to 4 and compiles in a build
+without AVX, where the two classes are aliases of their scalar base classes.
+
+The ordinary backfill - matrices, rigid body math, symbolic, the linear solver - is step R5.4.1.
+
 <a id="r5-7"></a>
 ### R5.7 — rename `pytest.py` - done differently in step R3.1 (`python/pytestTemplate.py`)
 

@@ -50,6 +50,7 @@ using namespace EXUmath;
     #include "AllMatrixUnitTests.h" 
     #include "TemplatedVectorArrayUnitTests.h" 
 	#include "AllBasicLinalgUnitTests.h"
+    #include "AVXVectorUnitTests.h"   //revision2026 step R5.4, #2465
 #endif
 
 extern bool linalgPrintUsePythonFormat; //!< true: use python format for output of vectors and matrices; false: use matlab format
@@ -322,6 +323,10 @@ int UnitTestBase::PerformVectorAndArrayTests(int flags)
 
 	//basiclinalg tests:
 	failCounter += lest::run(basic_linalg_poly_test, arglist_lest, stringStream);
+
+	//the vectorized vector classes; every case runs a range of lengths around the AVX packet
+	//boundary and, for the linked one, offset sub-ranges (revision2026 step R5.4, #2465)
+	failCounter += lest::run(avxVector_specific_test, arglist_lest, stringStream);
 
 #endif
     if (failCounter) {
