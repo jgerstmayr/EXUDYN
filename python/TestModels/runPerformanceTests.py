@@ -195,6 +195,7 @@ examplesTestErrorList={}
 invalidResult = 1234567890123456 #should not happen occasionally
 totalTime = 0
 testTimings = {}    #file name -> CPU time, for the grouped summary at the end
+allRuns = []        #every single simulation run of every model (revision2026 step R5.15, #2460)
 
 from runTestSuiteRefSol import PerformanceTestsReferenceSolution
 performanceTestRefSol = PerformanceTestsReferenceSolution()
@@ -210,6 +211,7 @@ for file in testFileList:
     exudynTestGlobals.testResult = invalidResult #strange default value to see if there is a missing testResult
     timeStart= -time.time()
     exudynTestGlobals.testTolFact = 1 #special factor for some examples which make problems, e.g., due to sparse eigenvalue solver
+    exudynTestGlobals.timings = [] #filled by the model, one dict per simulation run
     try:
         exec(open(file).read(), globals())
     except Exception as e:
@@ -238,6 +240,7 @@ for file in testFileList:
     exu.Print('****************************************************')
 
     testTimings[name] = timeStart
+    allRuns += exudynTestGlobals.timings
     testExamplesCnt += 1
 
 exu.Print('\n')
@@ -247,13 +250,49 @@ exu.SetWriteToFile(filename=logFileName, flagWriteToFile=True, flagAppend=True) 
 if psutilExists:
     exu.Print('CPU usage (%/thread)= '+str(psutil.cpu_percent(interval=1, percpu=True)))
 
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the single simulation runs (revision2026 step R5.15, issue #2460). A model may solve several
+#sizes or thread counts, and each of those is a measurement of its own: the time here is the
+#SOLVER time (solver.timer.total), without model build, assembly and Python overhead, so it is
+#the number to compare between machines and between builds. The wall-clock table above still
+#shows what the file as a whole costs.
+if len(allRuns) != 0:
+    exu.Print('')
+    exu.Print('+++++ SINGLE RUNS (solver time) +++++')
+    exu.Print('%-48s %10s %24s %12s' % ('run', 'solver[s]', 'result', 'error'))
+    runsFailed = []
+    for run in allRuns:
+        reference = performanceTestRefSol.get(run['name'], None)
+        if reference is None:
+            errorString = 'NO REFERENCE'
+            runsFailed += [run['name']]
+        else:
+            error = run['result'] - reference
+            errorString = '%12.3e' % error
+            if not abs(error) < testTolerance:
+                errorString += ' *FAILED*'
+                runsFailed += [run['name']]
+        exu.Print('%-48s %10.3f %24.16g %12s' % (run['name'], run['time'], run['result'],
+                                                 errorString))
+    exu.Print('')
+    if len(runsFailed) == 0:
+        exu.Print('ALL ' + str(len(allRuns)) + ' SINGLE RUNS SUCCESSFUL')
+    else:
+        exu.Print(str(len(runsFailed)) + ' SINGLE RUN(S) OUT OF ' + str(len(allRuns)) + ' FAILED: '
+                  + ', '.join(runsFailed))
+        testsFailed += runsFailed   #a failed run fails the suite, like a failed file
+    exu.Print('')
+
 exu.Print('****************************************************')
 if len(testsFailed) == 0:
     exu.Print('ALL ' + str(totalTests) + ' PERFORMANCE TESTS SUCCESSFUL')
 else:
-    exu.Print(str(len(testsFailed)) + ' PERFORMANCE TEST(S) OUT OF '+ str(totalTests) + ' FAILED: ')
+    exu.Print(str(len(testsFailed)) + ' PERFORMANCE TEST(S) FAILED, OUT OF '+ str(totalTests)
+              + ' test files and ' + str(len(allRuns)) + ' single runs: ')
     for i in testsFailed:
-        exu.Print('  PERFORMANCE TEST ' + str(i) + ' (' + testFileList[i] + ') FAILED')
+        #a file is reported by its index, a single run of a file by its name (issue #2460)
+        exu.Print('  PERFORMANCE TEST ' + (str(i) + ' (' + testFileList[i] + ')'
+                                           if isinstance(i, int) else str(i)) + ' FAILED')
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #per-test timings, grouped. The group subtotals are the point: 'small' measures per-step

@@ -144,6 +144,42 @@ def CpuInfoString():
 
 
 #%%******************************************************************************************************
+def AddTiming(testGlobals, name, mbs, result, solverName='dynamicSolver'):
+    """
+    Record one simulation run of a performance model (issue #2460).
+
+    A performance model may solve the same system at several sizes or with several thread counts,
+    and every one of those runs is a measurement in its own right. The model calls this after each
+    mbs.SolveDynamic/SolveStatic; runPerformanceTests.py prints the collected runs as a table and
+    judges each result against its own reference value.
+
+    The time reported is the SOLVER time (solver.timer.total), not the wall-clock time of the file:
+    it excludes building the model, assembling and the Python overhead around it. timer.total is
+    filled unconditionally in the solver, so displayComputationTime may stay False and the value is
+    also valid in the exudynFast build, where the sub-timers are compiled away.
+
+    Args:
+        testGlobals: the exudynTestGlobals instance of the model; a model run standalone has no
+            timings list and then nothing is recorded
+        name (str): what distinguishes this run, e.g. 'perfLargeMassSpringChain:rigid-n5000-implicit'
+        mbs: the MainSystem that was solved; the solver is taken from mbs.sys[solverName]
+        result (float): the test result of this run, compared against its reference value
+        solverName (str): the key in mbs.sys, 'dynamicSolver' or 'staticSolver'
+    """
+    timings = getattr(testGlobals, 'timings', None)
+    if timings is None:     #model started standalone, not through runPerformanceTests.py
+        return
+
+    solverTime = -1.0       #says 'not measured', never silently a wrong time
+    try:
+        solverTime = mbs.sys[solverName].timer.total
+    except Exception:
+        pass
+
+    timings.append({'name': name, 'time': solverTime, 'result': float(result)})
+
+
+#%%******************************************************************************************************
 def CheckTestCoverage(modelsDir, refSolNames, notTestModels, deliberatelyNotRun):
     """
     Verify that the reference lists and the files on disk still describe the same set of tests.

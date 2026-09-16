@@ -11,6 +11,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
+import testRunnerTools
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics #only import if it does not conflict
 from exudyn.FEM import *
@@ -202,6 +203,10 @@ exu.Print('solution of perfObjectFFRFreducedOrder=',result)
 
 #factor 0.05: make error smaller, as there are small changes for different runs (because of scipy sparse eigenvalue solver!)
 exudynTestGlobals.testResult = result
+#one run per file; the summary of runPerformanceTests.py reports the SOLVER time of it,
+#without model build and Python overhead (issue #2460)
+testRunnerTools.AddTiming(exudynTestGlobals, 'perfObjectFFRFreducedOrder.py', mbs, result)
+
 
 if useGraphics:
     SC.renderer.DoIdleTasks()

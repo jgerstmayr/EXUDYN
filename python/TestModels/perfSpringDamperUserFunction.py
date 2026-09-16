@@ -11,6 +11,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
+import testRunnerTools
 from exudyn.itemInterface import *
 import numpy as np
 
@@ -106,4 +107,8 @@ u = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
 exu.Print('result perfSpringDamperUserFunction=',u[0])
 
 exudynTestGlobals.testResult = u[0]
+#one run per file; the summary of runPerformanceTests.py reports the SOLVER time of it,
+#without model build and Python overhead (issue #2460)
+testRunnerTools.AddTiming(exudynTestGlobals, 'perfSpringDamperUserFunction.py', mbs, u[0])
+
 

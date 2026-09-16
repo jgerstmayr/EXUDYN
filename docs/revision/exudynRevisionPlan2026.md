@@ -667,30 +667,10 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     tool versions pinned in `.github/workflows/` against it in the same step.
 
 <a id="r5-15"></a>
-**R5.15** *(phase R5; maintainer request 2026-09-16)* **Rework the performance suite so that it
-    measures something.** Today `runPerformanceTests.py` prints one CPU time per model and a total,
-    and the models cover one size and one thread count each. Changes:
-
-    - **Per-run timings as data**: every performance model appends a dict to
-      `exudynTestGlobals.timings` - the solver time (`solver.timer.total`), the result and a name
-      describing the run - and `runPerformanceTests.py` prints the summary of all runs at the end.
-      That makes a single model with several runs (sizes, thread counts) reportable.
-    - **Variation instead of one point**: `perfLargeMassSpringChain` over nBodies = 1000, 5000,
-      20000; `generalContactSpheresTest` over numberOfThreads = 1, 4, 8.
-    - **`perfLargeMassSpringChain` gets a rigid-body mode** (`CreateRigidBody` plus
-      `RigidBodySpringDamper`), which makes the object computation heavier and adds
-      nonlinearities; the current mass-point mode stays behind a flag. The two smaller sizes also
-      run implicitly. `computeMassMatrixInversePerBody=True` is switched ON - it is what the flag
-      exists for; without it the test mostly measures the Eigen solver (#2400).
-    - **Runtime target**: each test between about **1.5 s and 5 s** on the maintainer Windows
-      machine, so a run is above noise but still quick. Measured 2026-09 (V1.11.35, Linux):
-      `perf3DRigidBodies` 4.94 s (a little long), `perfRigidPendulum` 4.22 s,
-      `generalContactSpheresTest` 2.88 s, `perfSpringDamperExplicit` 2.84 s (too short on Windows),
-      `perfObjectFFRFreducedOrder` 2.77 s, `perfSpringDamperUserFunction` 2.46 s.
-    - **New reference values** where a model changes; measured on Windows and confirmed by the
-      maintainer. Note that `generalContactSpheresTest` is also a TestModel: its TestModels run must
-      stay single-threaded and deterministic, only the performance run varies threads.
-    - The performance suite stays **serial** - timings under parallel load are meaningless.
+**R5.15** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-15) — **Performance suite reports
+    single runs**: every run appends solver time, result and a run name to `exudynTestGlobals.timings`,
+    reported and judged one by one; `perfLargeMassSpringChain` is a rigid body chain over 1000/5000/20000
+    bodies, explicit and implicit; `generalContactSpheresTest` runs with 1, 4 and 8 threads.
 
 <a id="r5-16"></a>
 **R5.16** *(phase R5; maintainer request 2026-09-16)* **Run the examples in parallel, with a short

@@ -11,6 +11,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
+import testRunnerTools
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics #only import if it does not conflict
 
@@ -102,7 +103,7 @@ mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-tEnd = 1
+tEnd = 0.7   #2026-09-16: shortened to stay inside the 1.5 - 5 s target (issue #2460)
 h=0.001  #use small step size to detext contact switching
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
@@ -153,6 +154,10 @@ result = (abs(u0)+abs(rot0)).sum()
 exu.Print('solution of perf3DRigidBodies=',result)
 
 exudynTestGlobals.testResult = result
+#one run per file; the summary of runPerformanceTests.py reports the SOLVER time of it,
+#without model build and Python overhead (issue #2460)
+testRunnerTools.AddTiming(exudynTestGlobals, 'perf3DRigidBodies.py', mbs, result)
+
 
 
 

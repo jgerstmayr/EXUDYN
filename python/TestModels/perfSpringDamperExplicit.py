@@ -11,6 +11,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
+import testRunnerTools
 from exudyn.itemInterface import *
 
 import numpy as np #for postprocessing
@@ -68,7 +69,7 @@ mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker,
 
 mbs.Assemble()
 
-tEnd = 500     #end time of simulation
+tEnd = 650     #end time of simulation; 2026-09-16: was 500, too short to measure (issue #2460)
 h = 0.0001    #step size; leads to 1000 steps
 
 simulationSettings = exu.SimulationSettings()
@@ -96,6 +97,10 @@ result = abs(pos).sum()
 exu.Print('solution of perfSpringDamperExplicit=',result)
 
 exudynTestGlobals.testResult = result
+#one run per file; the summary of runPerformanceTests.py reports the SOLVER time of it,
+#without model build and Python overhead (issue #2460)
+testRunnerTools.AddTiming(exudynTestGlobals, 'perfSpringDamperExplicit.py', mbs, result)
+
 
 
 

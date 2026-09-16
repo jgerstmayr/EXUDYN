@@ -11,6 +11,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
+import testRunnerTools
 from exudyn.itemInterface import *
 
 useGraphics = True #without test
@@ -85,6 +86,10 @@ result = abs(pos).sum()
 exu.Print('solution of perfRigidPendulum=',result)
 
 exudynTestGlobals.testResult = result
+#one run per file; the summary of runPerformanceTests.py reports the SOLVER time of it,
+#without model build and Python overhead (issue #2460)
+testRunnerTools.AddTiming(exudynTestGlobals, 'perfRigidPendulum.py', mbs, result)
+
 exudynTestGlobals.testTolFact = 1e5 #larger error due to many implicit steps?
 
 if useGraphics:

@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.97.dev1, 
++  Exudyn version = 1.11.98.dev1, 
 +  last change =  2026-09-16, 
-+  Number of issues = 2460, 
-+  Number of resolved issues = 2170 (97 in current version), 
++  Number of issues = 2461, 
++  Number of resolved issues = 2171 (98 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.98: resolved Issue 2460: performance suite reports only one wall-clock time per model (extension)
+    - issue author: Claude-JG
+    - description:  runPerformanceTests.py wraps each model in time.time() and prints one number per file; that number contains model build; assembly and Python overhead; and every model covers exactly one problem size and one thread count. revision2026 step R5.15: record the solver time of every single simulation run in exudynTestGlobals.timings and report them; vary the size of perfLargeMassSpringChain and the thread count of generalContactSpheresTest; make perfLargeMassSpringChain a rigid body chain so that it measures the object computation.
+    - **notes:** revision2026 step R5.15: testRunnerTools.AddTiming records solver.timer.total; the result and a run name per simulation in exudynTestGlobals.timings; runPerformanceTests.py prints and judges the 13 single runs; perfLargeMassSpringChain is a rigid body chain over 1000/5000/20000 bodies (explicit and implicit; computeMassMatrixInversePerBody on); generalContactSpheresTest runs with 1/4/8 threads in the performance path only; new reference values for the reworked models and for perf3DRigidBodies and perfSpringDamperExplicit.
+    - date resolved: **2026-09-16 17:51**\ , date raised: 2026-09-16 
+    - resolved by: Claude-JG
  * Version 1.11.97: resolved Issue 2459: no way to run a fast subset of the test models (add)
     - issue author: Claude-JG
     - description:  revision2026 step R5.2: every runner was all-or-nothing, so a pull-request run had to include the models that take longest and those needing optional packages (ngsolve, stable-baselines3). Added SlowTests() and OptionalPackageTests() as data in runTestSuiteRefSol.py, runTestSuite.py --fast and pytest markers slow/optionalPackage/sensitive/unresolvedOnLinux reading the same data

@@ -377,13 +377,28 @@ def MiniExamplesReferenceSolution():
 def PerformanceTestsReferenceSolution():
 
     refSol = {
-        'generalContactSpheresTest.py': -5.98425321234168, #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: -5.946497644233068,
-        'perf3DRigidBodies.py':5.307943301446709,
+        #the file-level value of a model with several runs is the result of its LAST run; the
+        #single runs below are what is actually judged (revision2026 step R5.15, issue #2460)
+        'generalContactSpheresTest.py': -1.779402864432933, #2026-09-16: performance run shortened to tEnd*0.2; before: -5.98425321234168
+        'perf3DRigidBodies.py':4.541173417942123, #2026-09-16: tEnd 1 -> 0.7; before: 5.307943301446709
         'perfObjectFFRFreducedOrder.py':21.00863102425483, 
         'perfRigidPendulum.py':2.4735499200766586, #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 2.4745344452543323,
         'perfSpringDamperExplicit.py':0.52,
         'perfSpringDamperUserFunction.py':0.5065575310983877,
-        'perfLargeMassSpringChain.py':0.03136079550415616, #2026-09-12, Windows cp313; explicit Euler, deterministic (repeated runs bit-identical)
+        'perfLargeMassSpringChain.py':0.01426191722384829, #2026-09-16: rigid body chain, last run n=20000; before (mass points): 0.03136079550415616
+
+        #the single runs of the models that solve several sizes or thread counts. Measured
+        #2026-09-16 on Windows cp313; deterministic (repeated runs bit-identical).
+        #The three contact runs solve the SAME system with 1, 4 and 8 threads, so they share one
+        #value - a deviation between thread counts is a finding, not a tolerance question.
+        'generalContactSpheresTest:nt1': -1.779402864432934,
+        'generalContactSpheresTest:nt4': -1.779402864432934,
+        'generalContactSpheresTest:nt8': -1.779402864432934,
+        'perfLargeMassSpringChain:rigid-n1000-explicit' : 0.00969140311923411,
+        'perfLargeMassSpringChain:rigid-n1000-implicit' : 0.02018347680683519,
+        'perfLargeMassSpringChain:rigid-n5000-explicit' : 0.03706120534025104,
+        'perfLargeMassSpringChain:rigid-n5000-implicit' : 0.01663000270673365,
+        'perfLargeMassSpringChain:rigid-n20000-explicit': 0.01426191722384829,
         }
 
     return refSol

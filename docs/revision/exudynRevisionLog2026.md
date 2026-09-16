@@ -4348,6 +4348,58 @@ directory through plain Python calls, which this setting does not reach. That is
 
 ## R6 — Error handling and UX
 
+<a id="r5-15"></a>
+### R5.15 - the performance suite reports single runs
+
+**DONE 2026-09-16** (#2460).
+
+The suite printed one wall-clock number per file, which contains the model build, the assembly and
+the Python overhead around the solver, and each model measured exactly one problem size with one
+thread count. Three changes, on the maintainer's request.
+
+**A run is the unit of measurement, not a file.** Every performance model now calls
+`testRunnerTools.AddTiming(exudynTestGlobals, name, mbs, result)` after each simulation, which
+appends `{name, time, result}` to `exudynTestGlobals.timings`; `runPerformanceTests.py` prints them
+as a table and judges **each** against its own entry in `PerformanceTestsReferenceSolution()`. The
+time is the solver time `solver.timer.total` - filled unconditionally in `CSolverBase`, so it needs
+no `displayComputationTime` and is valid in the `exudynFast` build, where the sub-timers are
+compiled away. The old per-file wall-clock table stays: the difference between the two is the
+model build, which is worth seeing.
+
+**perfLargeMassSpringChain became a rigid body chain** (`CreateRigidBody` with `RotationRxyz` -
+Euler parameters carry an algebraic constraint and the explicit integrator refuses them - connected
+by `RigidBodySpringDamper`), over 1000, 5000 and 20000 bodies, the two smaller sizes also implicit.
+That moves the weight onto the object computation instead of the sparse solver, which is what the
+model was added for. `computeMassMatrixInversePerBody` is now ON: no two bodies share a node here,
+which is the precondition, and with it off the explicit runs largely measure Eigen (#2400). The
+mass point chain stays behind `useRigidBodies=False`. The step size is constant across the sizes
+(5e-4 explicit, 5e-3 implicit) and only the number of steps is tuned, so the per-step cost can be
+compared between the three sizes directly.
+
+**generalContactSpheresTest runs with 1, 4 and 8 threads** in the performance path only - as a
+TestModel it stays single-threaded and deterministic, and its result is unchanged. The three runs
+solve the same system and share one reference value, so a deviation between thread counts fails
+rather than being absorbed by a tolerance; measured, they agree to 1e-15.
+
+Measured 2026-09-16, Windows cp313 (solver time), all inside the 1.5 - 5 s target:
+
+| run | solver [s] |
+|---|---|
+| perfRigidPendulum.py | 5.14 |
+| perfSpringDamperExplicit.py | 2.96 |
+| perfSpringDamperUserFunction.py | 2.72 |
+| perf3DRigidBodies.py | 4.48 |
+| perfObjectFFRFreducedOrder.py | 3.58 |
+| generalContactSpheresTest:nt1 / nt4 / nt8 | 4.75 / 2.03 / 1.16 |
+| perfLargeMassSpringChain rigid n1000 explicit / implicit | 1.58 / 1.23 |
+| perfLargeMassSpringChain rigid n5000 explicit / implicit | 1.58 / 1.01 |
+| perfLargeMassSpringChain rigid n20000 explicit | 1.66 |
+
+The contact model scales by **4.1x from 1 to 8 threads**, which is the number the old suite could
+not show at all. New reference values were needed for `perf3DRigidBodies` (tEnd 1 -> 0.7, it was
+the longest test), `perfSpringDamperExplicit` (tEnd 500 -> 650, it was too short to measure) and
+both reworked models. Total suite 31 s -> 40 s for 13 measured runs instead of 7.
+
 <a id="r6-5"></a>
 ### R6.5 — A user switch for parameter range checks
 
@@ -4362,3 +4414,4 @@ directory through plain Python calls, which this setting does not reach. That is
     which R4.4.3 provides. **Built in R4.4.3.4** (maintainer decision 2026-09-14): R4.4.3.4 gives every write
     path the range check, including `Set<Kind>Parameter`, which was unchecked until now, so the
     switch has to exist from the same commit. One flag covers items and structures.
+

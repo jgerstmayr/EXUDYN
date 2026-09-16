@@ -177,12 +177,14 @@ mbs.Assemble()
 exu.Print("finish gContact")
 
 tEnd = 0.1
-if isPerformanceTest: tEnd *= 0.5
+#the performance run solves this three times, with 1, 4 and 8 threads, and the single-threaded
+#run is the longest one: 100 steps put it at the upper end of the 1.5 - 5 s target (issue #2460)
+if isPerformanceTest: tEnd *= 0.2
 h= 0.0002
 simulationSettings = exu.SimulationSettings()
 simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-#simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.writeSolutionToFile = True
+#the performance run must not measure file writing, and it solves the system three times
+simulationSettings.solutionSettings.writeSolutionToFile = not isPerformanceTest
 simulationSettings.solutionSettings.solutionWritePeriod = 0.02
 simulationSettings.solutionSettings.sensorsWritePeriod = h*10
 simulationSettings.solutionSettings.outputPrecision = 5 #make files smaller
@@ -193,7 +195,7 @@ simulationSettings.displayComputationTime = True
 #simulationSettings.displayStatistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.parallel.numberOfThreads = 1 #use 1 thread to create reproducible results (due to round off errors in sparse vector?)
-if isPerformanceTest: simulationSettings.parallel.numberOfThreads = 8
+#the performance run varies the thread count below; the test run stays at 1 thread
 
 simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2 = False
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
@@ -228,15 +230,28 @@ simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
 simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody = True ##2022-12-16: increase performance for multi-threading, Newton increment faster by factor 6 for 8 threads
 
-mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
+#the performance run solves the same system with several thread counts, to show how the contact
+#computation scales; every run is reported separately (revision2026 step R5.15, issue #2460). The
+#TEST run is untouched: one run with a single thread, which is what makes it reproducible.
+threadList = [1, 4, 8] if isPerformanceTest else [1]
+if isPerformanceTest:
+    import testRunnerTools
 
-u = mbs.GetNodeOutput(sNodeNum, exu.OutputVariableType.Coordinates)
-uSum = u[0] + u[1] + u[2]
-exu.Print("u =", u)
-exu.Print('solution of generalContactSpheresTest=',uSum)
+for numberOfThreads in threadList:
+    simulationSettings.parallel.numberOfThreads = numberOfThreads
+    mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
+
+    u = mbs.GetNodeOutput(sNodeNum, exu.OutputVariableType.Coordinates)
+    uSum = u[0] + u[1] + u[2]
+    exu.Print("u =", u)
+    exu.Print('solution of generalContactSpheresTest=',uSum)
+
+    if isPerformanceTest:
+        testRunnerTools.AddTiming(exudynTestGlobals,
+                                  'generalContactSpheresTest:nt'+str(numberOfThreads), mbs, uSum)
 
 if isPerformanceTest: 
-    exudynTestGlobals.testError = uSum - (-5.946497644233068) 
+    exudynTestGlobals.testError = uSum - (-1.779402864432934) #2026-09-16: shorter performance run (issue #2460)
 else:
     exudynTestGlobals.testError = uSum - (-1.0947542400425323) 
 

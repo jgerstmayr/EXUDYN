@@ -252,8 +252,11 @@ if TSScope.runTestExamples:
         #MiniExamples are deliberately absent: they live in MiniExamples/, not here, and have
         #their own generated manifest. raytracerNOGLFWtest.py is added back because
         #TestExamplesReferenceSolution() pops it on macOS only - the file still exists there.
+        #PerformanceTestsReferenceSolution() also holds values for the SINGLE RUNS of a model that
+        #solves several sizes or thread counts ('...:nt8'); those are not file names (issue #2460)
         refSolNames=(set(TSScope.examplesTestRefSol.keys())
-                     | set(PerformanceTestsReferenceSolution().keys())
+                     | set(k for k in PerformanceTestsReferenceSolution().keys()
+                           if k.endswith('.py'))
                      | set(['raytracerNOGLFWtest.py'])),
         notTestModels=NotTestModels(),
         deliberatelyNotRun=DeliberatelyNotRun())
