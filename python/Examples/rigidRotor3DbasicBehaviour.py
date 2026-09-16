@@ -248,7 +248,7 @@ import matplotlib.ticker as ticker
 if True:
     plt.close('all') #close all plots
 
-    dataDisp = np.loadtxt('solution/rotorDisplacement.txt', comments='#', delimiter=',')
+    dataDisp = np.loadtxt(OutputFilePath('solution/rotorDisplacement.txt'), comments='#', delimiter=',')
 
     plt.plot(dataDisp[:,0], dataDisp[:,3], 'b-') #numerical solution
     plt.xlabel("time (s)")

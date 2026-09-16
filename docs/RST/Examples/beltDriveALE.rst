@@ -502,7 +502,7 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
        SC.visualizationSettings.general.autoFitScene = False
        SC.visualizationSettings.general.graphicsUpdateInterval=0.02
        
-       sol = LoadSolutionFile('solution/testCoords.txt', safeMode=True)#, maxRows=100)
+       sol = LoadSolutionFile(OutputFilePath('solution/testCoords.txt'), safeMode=True)#, maxRows=100)
        mbs.SolutionViewer(sol)
    
    

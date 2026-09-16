@@ -357,7 +357,7 @@ You can view and download this file on Github: `serialRobotTSD.py <https://githu
        doJointTorques = False
        if doJointTorques:
            for i in range(6):
-               data = np.loadtxt("solution/jointTorque" + str(i) + ".txt", comments='#', delimiter=',')
+               data = np.loadtxt(OutputFilePath("solution/jointTorque" + str(i) + ".txt"), comments='#', delimiter=',')
                plt.plot(data[:,0], data[:,3], PlotLineCode(i), label="joint torque"+str(i)) #z-rotation
        
            plt.xlabel("time (s)")
@@ -376,8 +376,8 @@ You can view and download this file on Github: `serialRobotTSD.py <https://githu
            plt.close("all")
            
            for i in range(6):
-               data = np.loadtxt("solution/joint" + str(i) + "Rot.txt", comments='#', delimiter=',')
-               # data = np.loadtxt("solution/joint" + str(i) + "AngVel.txt", comments='#', delimiter=',')
+               data = np.loadtxt(OutputFilePath("solution/joint" + str(i) + "Rot.txt"), comments='#', delimiter=',')
+               # data = np.loadtxt(OutputFilePath("solution/joint" + str(i) + "AngVel.txt"), comments='#', delimiter=',')
                plt.plot(data[:,0], data[:,1], PlotLineCode(i), label="joint"+str(i)) #z-rotation
                
            plt.xlabel("time (s)")

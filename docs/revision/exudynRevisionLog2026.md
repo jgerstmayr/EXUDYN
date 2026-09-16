@@ -4400,6 +4400,48 @@ not show at all. New reference values were needed for `perf3DRigidBodies` (tEnd 
 the longest test), `perfSpringDamperExplicit` (tEnd 500 -> 650, it was too short to measure) and
 both reworked models. Total suite 31 s -> 40 s for 13 measured runs instead of 7.
 
+<a id="r5-16"></a>
+### R5.16 - the examples run in parallel, with a short timeout
+
+**DONE 2026-09-16** (#2461).
+
+`runTestExamples.py` exec'd 171 examples one after the other into a single interpreter: **360 s**,
+the slowest part of a nightly run by far (the whole TestModels suite is 22 s). An example is an
+**API check**, not a numerical one - it has done its job once it has built its model and reached
+the solver - so each example now runs in its own interpreter, in parallel, and a timeout after the
+solver was reached counts as a **pass**. **360 s → 49 s**, with the same five failures as before
+(missing optional packages and GLFW), so nothing was traded away for the speed.
+
+**How a timeout is judged.** The worker wraps `SolveDynamic`/`SolveStatic`/`SolveSystem` and prints
+a marker the first time one is entered. A timeout with the marker present means the example built,
+assembled and was solving - a pass; a timeout without it means the example hung before the solver -
+a failure. The solver itself still stops after `exu.special.solver.timeout` = 1 s, so the process
+timeout (60 s, `--timeout=`) is a backstop. Run with `--timeout=8` the four NGsolve-meshing examples
+are correctly reported as hanging before the solver, and two long ones pass on the timeout.
+
+**Isolation, and what it exposed.** Every example gets `exu.config.outputDirectory` of its own -
+thirteen of them write `solution/coordinatesSolution.txt`, which in parallel is a data race. That
+only works if an example that **reads its own output back** says so, since by the rule of step R5.13
+a plain user path is never redirected: 43 examples now wrap such a read in `OutputFilePath(...)`.
+Three findings came out of running the examples in isolation, each of them hidden until now by the
+shared namespace or by files left over in `solution/` from an earlier run:
+
+- `chainDriveExample.py` used `sin`, `cos` and `arcsin` **without importing them** - it only ran
+  because an earlier example had star-imported them into the shared namespace. Fixed in the example.
+- `minimizeExample.py` and `dispyParameterVariationExample.py` read
+  `solution/paramVarDisplacementRef.txt`, which **another example** (`parameterVariationExample.py`)
+  writes. They are not self-contained and are now skipped with that reason.
+- Several examples deleted or re-read output by a name they had let Exudyn write - the same defect
+  class that `plotSensorTest.py` had in step R5.1.
+
+The worker still provides the `from exudyn.utilities import *` namespace the old shared interpreter
+gave every example; that is a weaker API check than a bare interpreter would be, but it is what the
+serial runner did, and tightening it is a separate question from this step.
+
+`PrepareExampleSource()` and `ExampleSkipReason()` moved from the runner into `testRunnerTools.py`,
+so the runner and the worker apply the same rules; `--serial` keeps the old in-process run for
+debugging a single example.
+
 <a id="r6-5"></a>
 ### R6.5 — A user switch for parameter range checks
 

@@ -97,7 +97,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
 #plot y-acceleration:
-data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
+data = np.loadtxt(OutputFilePath('coordinatesSolution.txt'), comments='#', delimiter=',')
 plt.figure()
 plt.plot(data[:,0], data[:,1+2*nODE2+1], 'b-')
 

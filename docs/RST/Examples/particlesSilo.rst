@@ -280,8 +280,8 @@ You can view and download this file on Github: `particlesSilo.py <https://github
        SC.visualizationSettings.general.graphicsUpdateInterval=0.5
        
        print('load solution file')
-       #sol = LoadSolutionFile('solution/test2.txt', safeMode=False)
-       sol = LoadSolutionFile('solution/test.txt', safeMode=True, verbose = True)#, maxRows=100)
+       #sol = LoadSolutionFile(OutputFilePath('solution/test2.txt'), safeMode=False)
+       sol = LoadSolutionFile(OutputFilePath('solution/test.txt'), safeMode=True, verbose = True)#, maxRows=100)
        print('start SolutionViewer')
        mbs.SolutionViewer(sol)
    

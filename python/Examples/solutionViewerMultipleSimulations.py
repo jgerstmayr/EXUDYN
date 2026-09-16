@@ -128,7 +128,7 @@ if useGraphics:
 if True:
     #%%
     
-    t=LoadSolutionFile('solution/coordinatesSolution.txt', verbose=False, safeMode=True)
+    t=LoadSolutionFile(OutputFilePath('solution/coordinatesSolution.txt'), verbose=False, safeMode=True)
     mbs.SolutionViewer(solution=t)
 
 

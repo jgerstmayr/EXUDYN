@@ -242,7 +242,7 @@ def ParameterFunction(parameterSet):
     
     #++++++++++++++++++++++++++++++++++++++++++
     #evaluate error:
-    #data = np.loadtxt(sensorFileName, comments='#', delimiter=',')
+    #data = np.loadtxt(OutputFilePath(sensorFileName), comments='#', delimiter=',')
     data = mbs.GetSensorStoredData(sFloating)
 
     errorNorm = max(abs(data[:,1])) + max(abs(data[:,2])) #max displacement in x and y direction

@@ -772,7 +772,7 @@ if True:
             mbs.SolveDynamic(simulationSettings)
         else:
             SC.visualizationSettings.general.autoFitScene = False
-            sol = LoadSolutionFile('coordinatesSolution.txt')
+            sol = LoadSolutionFile(OutputFilePath('coordinatesSolution.txt'))
             if False: #directly show animation
                 AnimateSolution(mbs, solution=sol, rowIncrement = 1, timeout=0.01, 
                                 createImages = False, runLoop = True)

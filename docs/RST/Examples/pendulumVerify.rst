@@ -354,7 +354,7 @@ You can view and download this file on Github: `pendulumVerify.py <https://githu
            SC.renderer.DoIdleTasks()
            SC.renderer.Stop() #safely close rendering window!
            
-   data = np.loadtxt('solution/displacementTip.txt', comments='#', delimiter=',')
+   data = np.loadtxt(OutputFilePath('solution/displacementTip.txt'), comments='#', delimiter=',')
    print("tip disp=", data[-1,1:])
    
 

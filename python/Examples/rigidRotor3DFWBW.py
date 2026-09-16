@@ -231,10 +231,10 @@ if False:
     plt.close('all') #close all plots
 
         
-    dataDispFW = np.loadtxt('solution/runupDisplacementFW.txt', comments='#', delimiter=',')
-    dataOmegaFW = np.loadtxt('solution/runupAngularVelocityFW.txt', comments='#', delimiter=',')
-    dataDispBW = np.loadtxt('solution/runupDisplacementBW.txt', comments='#', delimiter=',')
-    dataOmegaBW = np.loadtxt('solution/runupAngularVelocityBW.txt', comments='#', delimiter=',')
+    dataDispFW = np.loadtxt(OutputFilePath('solution/runupDisplacementFW.txt'), comments='#', delimiter=',')
+    dataOmegaFW = np.loadtxt(OutputFilePath('solution/runupAngularVelocityFW.txt'), comments='#', delimiter=',')
+    dataDispBW = np.loadtxt(OutputFilePath('solution/runupDisplacementBW.txt'), comments='#', delimiter=',')
+    dataOmegaBW = np.loadtxt(OutputFilePath('solution/runupAngularVelocityBW.txt'), comments='#', delimiter=',')
     plt.rcParams.update({'font.size': 12})
 
     if False:

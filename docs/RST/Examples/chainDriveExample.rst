@@ -26,6 +26,7 @@ You can view and download this file on Github: `chainDriveExample.py <https://gi
    from exudyn.utilities import *
    import exudyn.graphics as graphics
    import numpy as np
+   from numpy import sin, cos, arcsin   #used below; not exported by exudyn.utilities
    
    #**function: unique drawing for chain plate; reference position is at first roller; 
    #link is oriented into x-axis, thickness in z-axis, height in y-axis (height of rectangular part);

@@ -162,7 +162,7 @@ You can view and download this file on Github: `solutionViewerTest.py <https://g
    mbs.SolveDynamic(simulationSettings, showHints=True)
    
    if True: #use this to reload the solution and use SolutionViewer
-       #sol = LoadSolutionFile('coordinatesSolution.txt')
+       #sol = LoadSolutionFile(OutputFilePath('coordinatesSolution.txt'))
        
        mbs.SolutionViewer() #can also be entered in IPython ...
    

@@ -198,7 +198,7 @@ You can view and download this file on Github: `fourBarMechanism3D.py <https://g
    
    
    if False:
-       sol = LoadSolutionFile('coordinatesSolution.txt')
+       sol = LoadSolutionFile(OutputFilePath('coordinatesSolution.txt'))
        
        mbs.SolutionViewer(sol)
    

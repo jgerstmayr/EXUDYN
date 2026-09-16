@@ -14,6 +14,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
+from exudyn.basicUtilities import OutputFilePath
 from exudyn.itemInterface import *
 from exudyn.processing import ParameterVariation
 
@@ -114,7 +115,7 @@ def ParameterFunction(parameterSet):
     #+++++++++++++++++++++++++++++++++++++++++++++++++++++
     #evaluate difference between reference and optimized solution
     #reference solution:
-    dataRef = np.loadtxt('solution/paramVarDisplacementRef.txt', comments='#', delimiter=',')
+    dataRef = np.loadtxt(OutputFilePath('solution/paramVarDisplacementRef.txt'), comments='#', delimiter=',')
     #data = np.loadtxt(fileName, comments='#', delimiter=',')
     data = mbs.GetSensorStoredData(sForce)
     diff = data[:,1]-dataRef[:,1]

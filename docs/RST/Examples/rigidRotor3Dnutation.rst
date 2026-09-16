@@ -140,7 +140,7 @@ You can view and download this file on Github: `rigidRotor3Dnutation.py <https:/
    #import matplotlib.ticker as ticker
    #
    #if True:
-   #    data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
+   #    data = np.loadtxt(OutputFilePath('coordinatesSolution.txt'), comments='#', delimiter=',')
    #    n=steps
    #    #plt.plot(data[:,2], data[:,3], 'r-') #numerical solution
    #    #plt.plot(data[:,0], data[:,2], 'b-') #numerical solution

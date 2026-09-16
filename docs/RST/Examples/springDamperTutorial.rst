@@ -129,12 +129,12 @@ You can view and download this file on Github: `springDamperTutorial.py <https:/
        refSol[i,0] = t
        refSol[i,1] = np.exp(-omega0*dRel*t)*(C1*np.cos(omega*t) + C2*np.sin(omega*t))+x0
    
-   data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
+   data = np.loadtxt(OutputFilePath('coordinatesSolution.txt'), comments='#', delimiter=',')
    plt.plot(data[:,0], data[:,1], 'b-', label='displacement (m); numerical solution') 
    plt.plot(refSol[:,0], refSol[:,1], 'r-', label='displacement (m); exact solution')
    
    #show force in constraint/support:
-   data = np.loadtxt('solution/groundForce.txt', comments='#', delimiter=',')
+   data = np.loadtxt(OutputFilePath('solution/groundForce.txt'), comments='#', delimiter=',')
    plt.plot(data[:,0], data[:,1]*1e-3, 'g-', label='force (kN)') #numerical solution
    
    ax=plt.gca() # get current axes

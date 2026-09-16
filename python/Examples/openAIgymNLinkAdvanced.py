@@ -696,7 +696,7 @@ if __name__ == '__main__': #this is only executed when file is direct called in 
         env.SC.visualizationSettings.openGL.light0.shadow = 0.25
         env.SC.visualizationSettings.openGL.light0.position = [3,8,4,0]
         
-        solution = LoadSolutionFile(solutionFile)
+        solution = LoadSolutionFile(OutputFilePath(solutionFile))
         
         SolutionViewer(env.mbs, solution, timeout=0.005, rowIncrement=5) #loads solution file via name stored in mbs
 

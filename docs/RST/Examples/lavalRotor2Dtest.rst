@@ -138,7 +138,7 @@ You can view and download this file on Github: `lavalRotor2Dtest.py <https://git
    import matplotlib.ticker as ticker
    
    if True:
-       data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
+       data = np.loadtxt(OutputFilePath('coordinatesSolution.txt'), comments='#', delimiter=',')
        n=steps
        #plt.plot(data[:,0], data[:,6], 'r-') #numerical solution
        plt.plot(data[n-500:n-1,1], data[n-500:n-1,2], 'r-') #numerical solution

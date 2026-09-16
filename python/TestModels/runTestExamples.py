@@ -55,6 +55,12 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
     quietMode = True
     writeFileNames = False
     overwriteLog = False    #--overwrite-log: replace an existing log instead of diverting to tmp
+    #the examples are an API check, not a numerical one, so they run in parallel processes with a
+    #short timeout (revision2026 step R5.16); --serial restores the old in-process run
+    runParallel = True
+    numberOfProcesses = 0   #0: testRunnerTools picks it from the number of cores
+    exampleTimeout = 60     #seconds per example; a timeout after the solver was reached is a pass
+    solverTimeout = 1       #seconds per solver call inside an example
     #copyLog = False         #copy log to final TestSuiteLogs
     # if sys.version_info.major == 3 and sys.version_info.minor == 7:
     #     copyLog = True #for P3.7 tests always copy log to WorkingRelease
@@ -65,6 +71,15 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
                 quietMode = True
             elif sys.argv[i+1] == '--overwrite-log':
                 overwriteLog = True
+            elif sys.argv[i+1] == '--serial':
+                runParallel = False
+            elif sys.argv[i+1].startswith('--parallel'):
+                #--parallel, or --parallel=N to fix the number of interpreters
+                runParallel = True
+                if '=' in sys.argv[i+1]:
+                    numberOfProcesses = int(sys.argv[i+1].split('=')[1])
+            elif sys.argv[i+1].startswith('--timeout='):
+                exampleTimeout = float(sys.argv[i+1].split('=')[1])
             else:
                 print("ERROR in runTestExamples: unknown command line argument '"+sys.argv[i+1]+"'")
     
@@ -176,165 +191,96 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
     examplesTestSolList={}
     examplesTestErrorList={}
     
-    nSkipped = 0
-    
-
-    exu.special.solver.timeout = 1
+    #a few examples write with a plain path into 'solution/', as a user would; everything an
+    #example writes THROUGH exudyn goes into its own directory (revision2026 step R5.16)
+    os.makedirs('solution', exist_ok=True)
 
     timeStart= -time.time()
     dirPath = '../Examples/'
     listExamples = GetFileNames(dirPath, '.py')
     # listExamples = [dirPath+'xExudynConfigSpecial.py']
     
-    totalExamples = len(listExamples)
+    totalExamples = len(listExamples)   #including the ones that cannot be run, see below
     examplesFailed = []
-    fastMode = False #skip verbose and slow examples
     
-    testExamplesCnt = 0
+    #the examples that cannot run at all are decided once, from the same rules the worker uses
+    skipReasons = {}
     for exampleFileName in listExamples:
-        CloseAll() #plots
-        name = exampleFileName #.split('.')[0] #without '.py'
-        exu.Print('\n\n******************************************')
-        s = 'EXAMPLE ' + str(testExamplesCnt) + ' ("' + exampleFileName + '"):'
-        #print('******************\n'+s+'\n****************\n')
-        exu.Print(s)
-        if not writeToConsole:
-            if quietMode and not writeFileNames: 
-                print(' Ex'+str(testExamplesCnt),end='',sep='',flush=True)
-            else:
-                print(s,flush=True)
-        exu.Print('******************************************')
-
-        thisCnt = testExamplesCnt
-        testExamplesCnt += 1
-
-        # if thisCnt < 0 or (thisCnt >= 30 and thisCnt < 68) or thisCnt > 80:
-        # if thisCnt < 30 or thisCnt > 80:
-        #     print('skip',end='')
-        #     continue
-
-        
-        
         with open(dirPath+exampleFileName, 'r', encoding='utf-8') as file:
             fileString = file.read()
+        reason = testRunnerTools.ExampleSkipReason(exampleFileName, fileString)
+        if reason != '':
+            skipReasons[exampleFileName] = reason
 
-        #examples that cannot be tested:
-        if (
-            'nMassOscillatorEigenmodes' in exampleFileName
-            or 'multiprocessingTest' in exampleFileName     #uses multiprocessing directly, incompatible with exec(...)
-            or 'netgenSTLtest' in exampleFileName           #gives netgen specific error, not clear why this occurs with exec(...) but not when directly executing the file.
-            #++++++++++++++++++++++++++++++++++
-            # or 'NGsolveFFRF' in exampleFileName             #output of Netgen that cannot be turned off
-            # or 'NGsolveGeometry' in exampleFileName         #output of Netgen that cannot be turned off
-            # or 'ObjectFFRFconvergenceTestBeam' in exampleFileName      #output of Netgen that cannot be turned off
-            # or 'pendulumVerify' in exampleFileName          #output of Netgen that cannot be turned off
-            # or 'shapeOptimization' in exampleFileName       #output of Netgen that cannot be turned off
-            #++++++++++++++++++++++++++++++++++
-            #or 'dispyParameterVariationExample' in exampleFileName #hangs, dispy not available; but runs in regular mode ...
-            #or 'GeneticOptimization' in fileString
-            #or 'ParameterVariation' in fileString
-            or 'stable_baselines3' in fileString
-            or 'massSpringFrictionInteractive' in exampleFileName #cannot work, interactive
-            or 'nMassOscillatorInteractive' in exampleFileName    #cannot work, interactive
-            or 'performanceMultiThreadingNG' in exampleFileName
-            or 'URDF' in exampleFileName
-            or 'rospy' in fileString                #not possible without ros installed
-            or 'TCPIP' in fileString                #not possible without MATLAB client
-            #or 'testData/' in fileString           #numpy file
-            #or 'GeneralContact' in fileString
-            #or 'mbs.SolveStatic' in fileString
-            ):
-            s = '  ... "'+exampleFileName+'" skipped'
+    runList = [f for f in listExamples if f not in skipReasons]
+    nSkipped = len(skipReasons)
+    for exampleFileName in sorted(skipReasons):
+        exu.Print('  ... "'+exampleFileName+'" skipped: '+skipReasons[exampleFileName])
+
+    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #An example is an API CHECK: it has done its job once it has built its model, assembled it and
+    #reached the solver, and the solver inside it stops after solverTimeout seconds anyway. The
+    #process timeout is therefore short ON PURPOSE, and a timeout after the solver was reached
+    #counts as a pass - only a timeout BEFORE it means the example hung while building
+    #(revision2026 step R5.16). Each example runs in its own interpreter, which is what allows
+    #them to run in parallel and keeps a crashing example from taking the runner with it.
+    exampleTimings = {}
+    if runParallel:
+        print('running '+str(len(runList))+' examples in parallel, timeout '
+              +str(exampleTimeout)+' s', flush=True)
+        exu.Print('running '+str(len(runList))+' examples in parallel, timeout '
+                  +str(exampleTimeout)+' s, solver timeout '+str(solverTimeout)+' s')
+        results = testRunnerTools.RunExamplesInParallel(
+            runList, dirPath, '../logsTmp/exampleOutput',
+            numberOfProcesses=numberOfProcesses, timeout=exampleTimeout,
+            solverTimeout=solverTimeout, quietMode=quietMode)
+
+        for testExamplesCnt, exampleFileName in enumerate(runList):
+            r = results[exampleFileName]
+            exu.Print('\n\n******************************************')
+            exu.Print('EXAMPLE ' + str(testExamplesCnt) + ' ("' + exampleFileName + '"):')
+            exu.Print('******************************************')
+            exu.Print(r['output'])
+            exampleTimings[exampleFileName] = r['seconds']
+            if r['timedOut'] and not r['failed']:
+                exu.Print('  ... timeout after '+str(exampleTimeout)
+                          +' s while solving - counted as PASSED')
+            elif r['failed']:
+                exStr = ('*FAILED*: EXAMPLE ' + str(testExamplesCnt) + ' ("' + exampleFileName
+                         + '") ' + ('hung before reaching the solver'
+                                    if r['timedOut'] else 'terminated with an error'))
+                exu.Print(exStr)
+                examplesFailed += [str(testExamplesCnt)+' : '+exampleFileName]
+    else:
+        #the in-process run, kept for debugging a single example with the debugger attached
+        exu.special.solver.timeout = solverTimeout
+        for testExamplesCnt, exampleFileName in enumerate(runList):
+            CloseAll() #plots
+            exu.Print('\n\n******************************************')
+            s = 'EXAMPLE ' + str(testExamplesCnt) + ' ("' + exampleFileName + '"):'
             exu.Print(s)
-            if not writeToConsole and not writeFileNames: 
-                if quietMode: 
-                    print('not',end='',sep='')
+            if not writeToConsole:
+                if quietMode and not writeFileNames:
+                    print(' Ex'+str(testExamplesCnt),end='',sep='',flush=True)
                 else:
-                    print(s)
-            nSkipped += 1
-            continue
+                    print(s,flush=True)
+            exu.Print('******************************************')
 
-        if fastMode:
-            if ('humanRobotInteraction' in exampleFileName #lots of warnings
-                # or 'ngsolve' in fileString
-                #or 'particlesSilo' in exampleFileName
-                #or 'NGsolvePistonEngine' in exampleFileName
-                or 'massSpringFrictionInteractive' in exampleFileName
-                ):
-                s = '  ... "'+exampleFileName+'" skipped'
-                exu.Print(s)
-                if not writeToConsole and not writeFileNames:
-                    if quietMode: 
-                        print('not',end='',sep='')
-                    else:
-                        print(s)
-                nSkipped += 1
-                continue
+            with open(dirPath+exampleFileName, 'r', encoding='utf-8') as file:
+                fileString = file.read()
 
-
-        if 'mbs.SolveStatic' in fileString:
-            exu.special.solver.timeout = 4
-
-
-        #skip everything after plot sensor
-        fPlot = fileString.find('mbs.PlotSensor(')
-        if fPlot != -1:
-            fileString = fileString[:fPlot]+'pass\n'
-        
-        fileString = fileString.replace('mbs.SolutionViewer(', 'pass #mbs.SolutionViewer(')
-        fileString = fileString.replace('SC.renderer.Start(', 'pass #SC.renderer.Start(')
-        fileString = fileString.replace('SC.renderer.Stop(', 'pass #SC.renderer.Stop(')
-        #fileString = fileString.replace('SC.renderer.DoIdleTasks()', 'pass')
-        fileString = fileString.replace('SC.renderer.DoIdleTasks()', 'pass')
-        fileString = fileString.replace('useRenderer=True', 'useRenderer=False') #InverseKinematicsNumericalExample.py
-        fileString = fileString.replace('useGraphics = True', 'useGraphics = False') 
-        
-        fileString = fileString.replace('netgen.Redraw()', '') 
-        fileString = fileString.replace('import netgen.gui ', 'pass #')
-        fileString = fileString.replace('while SC.renderer.IsActive():', 'while False:')
-        fileString = fileString.replace('plt.show()', '') 
-        fileString = fileString.replace('plt.tight_layout()', '') 
-        fileString = fileString.replace('ClearWorkspace()', '') 
-        fileString = fileString.replace('(verbose=True)', '(verbose=False)') #ComputeSystemDegreeOfFreedom 
-        fileString = fileString.replace('sys.exit()', 'pass')
-
-        #massSpringFrictionInteractive.py:
-        fileString = fileString.replace('def SimulationUF(mbs, dialog):', 
-                                        'def SimulationUF(mbs, dialog):\n    if mbs.systemData.GetTime() > 0.1: dialog.OnQuit()') #InverseKinematicsNumericalExample.py
-
-        fileString = fileString.replace('InteractiveDialog(', 'if False: InteractiveDialog(') 
-        
-        fileString = fileString.replace('AnimateModes(', 'import sys;sys.exit();AnimateModes(') #InverseKinematicsNumericalExample.py
-
-        fileString = fileString.replace('print(', 'exu.Print(') #may fail ...
-
-        if quietMode:
-            fileString = fileString.replace('verbose = True', 'verbose = False') 
-            fileString = fileString.replace('showProgress = True', 'showProgress = False') 
-
-
-        if 'exudyn.processing' in fileString and ('useMultiProcessing = True' in fileString or 
-                                                  'useMultiProcessing=True' in fileString):
-            if not quietMode: print('replace useMultiProcessing=True')
-            fileString = fileString.replace('useMultiProcessing=True','useMultiProcessing=False')
-            fileString = fileString.replace('useMultiProcessing = True','useMultiProcessing=False')
-
-        if 'GeneticOptimization' in fileString:
-            if not quietMode: print('replace numberOfGenerations and populationSize')
-            fileString = fileString.replace('numberOfGenerations','numberOfGenerations=1,#')
-            fileString = fileString.replace('populationSize ','populationSize = 10,#')
-        
-        try:
-            exec(fileString, globals())
-        except SystemExit: #e.g. for AnimateModes, we trigger end of script with sys.exit(), see above
-            print('(sys.exit)',flush=True, end='')
-        except Exception as e:
-            exStr = '*FAILED*: EXAMPLE ' + str(thisCnt) + ' ("' + exampleFileName + '") raised exception:\n'+str(e)
-            exu.Print(exStr)
-            print(exStr, flush=True)
-            examplesFailed += [str(thisCnt)+' : '+exampleFileName]
-        # finally:
-            
+            timeExample = -time.time()
+            try:
+                exec(testRunnerTools.PrepareExampleSource(fileString, quietMode), globals())
+            except SystemExit: #AnimateModes ends the script with sys.exit(), see PrepareExampleSource
+                print('(sys.exit)',flush=True, end='')
+            except Exception as e:
+                exStr = ('*FAILED*: EXAMPLE ' + str(testExamplesCnt) + ' ("' + exampleFileName
+                         + '") raised exception:\n'+str(e))
+                exu.Print(exStr)
+                print(exStr, flush=True)
+                examplesFailed += [str(testExamplesCnt)+' : '+exampleFileName]
+            exampleTimings[exampleFileName] = timeExample + time.time()
 
     timeStart += time.time()
             
@@ -356,6 +302,14 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
         exu.Print(str(len(examplesFailed)) + ' Examples OUT OF '+ str(totalExamples) + ' FAILED: ')
         for ef in examplesFailed:
             exu.Print('  Example ' + ef + ' FAILED')
+
+    #the examples that cost the most; with a short timeout these are the ones that need it
+    if len(exampleTimings) != 0:
+        exu.Print('')
+        exu.Print('slowest examples:')
+        for exampleFileName in sorted(exampleTimings, key=exampleTimings.get, reverse=True)[:10]:
+            exu.Print('  %-50s %6.2f s' % (exampleFileName, exampleTimings[exampleFileName]))
+        exu.Print('')
 
     exu.Print('Skipped '+str(nSkipped)+' examples')
     exu.Print('******************************************')

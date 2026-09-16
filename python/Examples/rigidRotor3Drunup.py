@@ -197,8 +197,8 @@ import matplotlib.ticker as ticker
 if False:
     plt.close('all') #close all plots
 
-    dataDisp = np.loadtxt('solution/runupDisplacement.txt', comments='#', delimiter=',')
-    dataOmega = np.loadtxt('solution/runupAngularVelocity.txt', comments='#', delimiter=',')
+    dataDisp = np.loadtxt(OutputFilePath('solution/runupDisplacement.txt'), comments='#', delimiter=',')
+    dataOmega = np.loadtxt(OutputFilePath('solution/runupAngularVelocity.txt'), comments='#', delimiter=',')
 
     plt.plot(dataDisp[:,0], dataDisp[:,3], 'b-') #numerical solution
     plt.xlabel("time (s)")

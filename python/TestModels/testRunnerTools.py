@@ -304,6 +304,275 @@ def FormatTestOverview(title, names, results, errors, tolerances=None, times=Non
 
 
 #%%******************************************************************************************************
+#examples that cannot be tested at all, with the reason. An example is a script written for a human,
+#not a test, so some of them can only fail here: they wait for input, need a service (ROS, MATLAB)
+#or a package that is not part of the test environment, or are incompatible with being exec'd.
+#Moved here from runTestExamples.py in revision2026 step R5.16, so that the runner and the worker
+#process apply exactly the same rules.
+def ExampleSkipReason(exampleFileName, fileString):
+    """
+    Decide whether an example can be run at all.
+
+    Args:
+        exampleFileName (str): the plain file name, e.g. 'fourBarMechanism.py'
+        fileString (str): the source of the example
+
+    Returns:
+        str: the reason to skip it, or '' if it can run
+    """
+    byName = {
+        'nMassOscillatorEigenmodes': 'interactive',
+        'multiprocessingTest': 'uses multiprocessing directly, incompatible with exec(...)',
+        'netgenSTLtest': 'netgen specific error under exec(...), not when run directly',
+        'massSpringFrictionInteractive': 'interactive dialog',
+        'nMassOscillatorInteractive': 'interactive dialog',
+        'performanceMultiThreadingNG': 'needs NGsolve and a long run to say anything',
+        'URDF': 'needs URDF model files that are not in the repository',
+        #these two read solution/paramVarDisplacementRef.txt, which parameterVariationExample.py
+        #writes: they only ever worked because that file was left over in the shared solution
+        #directory from an earlier run (found by revision2026 step R5.16)
+        'minimizeExample': 'needs the output of parameterVariationExample.py',
+        'dispyParameterVariationExample': 'needs the output of parameterVariationExample.py',
+        }
+    for key, reason in byName.items():
+        if key in exampleFileName:
+            return reason
+
+    byContent = {
+        'stable_baselines3': 'needs stable-baselines3 and a training run',
+        'rospy': 'needs a ROS installation',
+        'TCPIP': 'needs a MATLAB client on the other end',
+        }
+    for key, reason in byContent.items():
+        if key in fileString:
+            return reason
+
+    return ''
+
+
+#%%******************************************************************************************************
+def PrepareExampleSource(fileString, quietMode=True):
+    """
+    Turn an example into something that can run unattended (revision2026 step R5.16).
+
+    The examples are written to be looked at: they open the renderer, show plots, wait in dialogs
+    and print progress. This removes exactly that, and nothing else - what is left is the model and
+    the solver call, which is what the run checks.
+
+    Moved out of runTestExamples.py unchanged, so that the worker process transforms the source the
+    same way the old in-process runner did.
+
+    Args:
+        fileString (str): the source of the example
+        quietMode (bool): also switch off the verbose output of the example itself
+
+    Returns:
+        str: the source to execute
+    """
+    #everything after the first PlotSensor is presentation, not model
+    fPlot = fileString.find('mbs.PlotSensor(')
+    if fPlot != -1:
+        fileString = fileString[:fPlot]+'pass\n'
+
+    for old, new in [
+        ('mbs.SolutionViewer(', 'pass #mbs.SolutionViewer('),
+        ('SC.renderer.Start(', 'pass #SC.renderer.Start('),
+        ('SC.renderer.Stop(', 'pass #SC.renderer.Stop('),
+        ('SC.renderer.DoIdleTasks()', 'pass'),
+        ('useRenderer=True', 'useRenderer=False'),
+        ('useGraphics = True', 'useGraphics = False'),
+        ('netgen.Redraw()', ''),
+        ('import netgen.gui ', 'pass #'),
+        ('while SC.renderer.IsActive():', 'while False:'),
+        ('plt.show()', ''),
+        ('plt.tight_layout()', ''),
+        ('ClearWorkspace()', ''),
+        ('(verbose=True)', '(verbose=False)'),     #ComputeSystemDegreeOfFreedom
+        ('sys.exit()', 'pass'),
+        #massSpringFrictionInteractive.py: leave the dialog after a tenth of a second
+        ('def SimulationUF(mbs, dialog):',
+         'def SimulationUF(mbs, dialog):\n    if mbs.systemData.GetTime() > 0.1: dialog.OnQuit()'),
+        ('InteractiveDialog(', 'if False: InteractiveDialog('),
+        ('AnimateModes(', 'import sys;sys.exit();AnimateModes('),
+        ('print(', 'exu.Print('),                  #may fail ...
+        ]:
+        fileString = fileString.replace(old, new)
+
+    if quietMode:
+        fileString = fileString.replace('verbose = True', 'verbose = False')
+        fileString = fileString.replace('showProgress = True', 'showProgress = False')
+
+    #multiprocessing inside an exec'd script does not work on Windows
+    if 'exudyn.processing' in fileString and ('useMultiProcessing = True' in fileString or
+                                              'useMultiProcessing=True' in fileString):
+        fileString = fileString.replace('useMultiProcessing=True', 'useMultiProcessing=False')
+        fileString = fileString.replace('useMultiProcessing = True', 'useMultiProcessing=False')
+
+    #an optimisation run would take minutes and says nothing about the API
+    if 'GeneticOptimization' in fileString:
+        fileString = fileString.replace('numberOfGenerations', 'numberOfGenerations=1,#')
+        fileString = fileString.replace('populationSize ', 'populationSize = 10,#')
+
+    return fileString
+
+
+#%%******************************************************************************************************
+#the marker the example bootstrap prints as soon as a solver is entered. From that moment on, the
+#example has built its model, assembled it and reached the solver, which is what the examples run
+#checks; a timeout after it therefore counts as a PASS (revision2026 step R5.16).
+exampleSolvingMarker = '#__EXUDYN_EXAMPLE_SOLVING__'
+
+runExampleBootstrap = """
+import sys, time
+sys.argv = [{exampleFileName!r}]
+import matplotlib
+matplotlib.use('Agg')  #a worker must never open a window
+import exudyn as exu
+#the serial runner exec'd all examples into ONE namespace, so an example could use a name that an
+#earlier one had star-imported; several do. The worker provides the same namespace explicitly,
+#so that this rework does not turn those into failures - it is the API check that matters here.
+from exudyn.utilities import *
+import exudyn.graphics as graphics
+#every example writes into its OWN directory, so that the 13 examples writing
+#'solution/coordinatesSolution.txt' cannot overwrite each other while running in parallel. An
+#example that reads its own output back says so with OutputFilePath(...), which follows the same
+#setting - by the rule of revision2026 step R5.13 a plain user path is never redirected.
+import os
+os.makedirs({outputDirectory!r}+'/solution', exist_ok=True)
+exu.config.outputDirectory = {outputDirectory!r}
+#the solvers stop themselves after this many seconds; an example is an API check, and the first
+#time steps are what it has to survive
+exu.special.solver.timeout = {solverTimeout!r}
+
+#report reaching the solver, once; the parent needs it to judge a timeout
+_reachedSolver = [False]
+def _Announce():
+    if not _reachedSolver[0]:
+        _reachedSolver[0] = True
+        print({marker!r}, flush=True)
+
+for _name in ['SolveDynamic', 'SolveStatic', 'SolveSystem']:
+    _original = getattr(exu.MainSystem, _name, None)
+    if _original is not None:
+        def _Wrapped(*args, _original=_original, **kwargs):
+            _Announce()
+            return _original(*args, **kwargs)
+        setattr(exu.MainSystem, _name, _Wrapped)
+
+import testRunnerTools
+_source = open({examplePath!r}, encoding='utf8').read()
+exec(testRunnerTools.PrepareExampleSource(_source, {quietMode!r}), globals())
+"""
+
+
+#%%******************************************************************************************************
+def RunExampleInProcess(exampleFileName, examplesDirectory, outputDirectory='', timeout=60,
+                        solverTimeout=1, quietMode=True, pythonExecutable=None):
+    """
+    Run ONE example in a fresh interpreter (revision2026 step R5.16).
+
+    An example is an API check, not a numerical one: it has served its purpose once it has built
+    its model and reached the solver - the solver itself stops after solverTimeout seconds. The
+    process timeout is therefore short on purpose, and a timeout AFTER the solver was reached is a
+    pass; a timeout before it is a failure, because then the example hung while building.
+
+    Args:
+        exampleFileName (str): the plain file name of the example
+        examplesDirectory (str): where the examples are, relative to the working directory
+        outputDirectory (str): exudyn.config.outputDirectory for this example; '' (the default)
+            lets it write where a user would, which an example that names its files needs
+        timeout (float): seconds after which the process is killed
+        solverTimeout (float): seconds after which the solvers inside the example stop
+        quietMode (bool): switch off verbose output of the example
+        pythonExecutable (str): interpreter to use; default sys.executable
+
+    Returns:
+        dict with 'seconds', 'output', 'failed', 'timedOut' and 'reachedSolver'
+    """
+    import subprocess
+
+    source = runExampleBootstrap.format(exampleFileName=exampleFileName,
+                                        examplePath=examplesDirectory + exampleFileName,
+                                        outputDirectory=outputDirectory,
+                                        solverTimeout=solverTimeout,
+                                        quietMode=quietMode,
+                                        marker=exampleSolvingMarker)
+    start = time.perf_counter()
+    timedOut = False
+    try:
+        completed = subprocess.run([pythonExecutable or sys.executable, '-c', source],
+                                   capture_output=True, text=True, errors='replace',
+                                   timeout=timeout)
+        output = completed.stdout + completed.stderr
+        failed = completed.returncode != 0
+    except subprocess.TimeoutExpired as e:
+        timedOut = True
+        output = ((e.stdout or '') if isinstance(e.stdout, str) else (e.stdout or b'').decode(
+                  'utf8', 'replace'))
+        output += ((e.stderr or '') if isinstance(e.stderr, str) else (e.stderr or b'').decode(
+                   'utf8', 'replace'))
+        failed = True
+
+    reachedSolver = (exampleSolvingMarker in output)
+    if timedOut and reachedSolver:
+        #the example built its model and was solving; that is all this run can tell us
+        failed = False
+
+    return {'seconds': time.perf_counter()-start,
+            'output': '\n'.join([line for line in output.split('\n')
+                                 if not line.startswith(exampleSolvingMarker)]).rstrip(),
+            'failed': failed, 'timedOut': timedOut, 'reachedSolver': reachedSolver}
+
+
+#%%******************************************************************************************************
+def RunExamplesInParallel(exampleFileNames, examplesDirectory, outputDirectory,
+                          numberOfProcesses=0, printProgress=True, timeout=60, solverTimeout=1,
+                          quietMode=True):
+    """
+    Run the examples in parallel, each in its own interpreter (revision2026 step R5.16).
+
+    Args:
+        exampleFileNames (list): the examples, in the order the log should report them
+        examplesDirectory (str): where the examples are
+        outputDirectory (str): root of the per-example output directories
+        numberOfProcesses (int): parallel interpreters; 0 uses os.cpu_count()//2, 2 to 8
+        printProgress (bool): one line per finished example on the real console
+        timeout (float): seconds per example
+        solverTimeout (float): seconds per solver call inside an example
+
+    Returns:
+        dict: example file name -> dict as returned by RunExampleInProcess
+    """
+    from concurrent.futures import ThreadPoolExecutor
+
+    if numberOfProcesses <= 0:
+        numberOfProcesses = min(8, max(2, (os.cpu_count() or 4)//2))
+
+    results = {}
+    finished = [0]
+
+    def Run(exampleFileName):
+        r = RunExampleInProcess(exampleFileName, examplesDirectory,
+                                outputDirectory=outputDirectory + '/' + exampleFileName[:-3],
+                                timeout=timeout, solverTimeout=solverTimeout,
+                                quietMode=quietMode)
+        finished[0] += 1
+        if printProgress:
+            print('  finished {:3d}/{:3d}: {:<46s}{:6.2f}s{}'.format(
+                  finished[0], len(exampleFileNames), exampleFileName, r['seconds'],
+                  ' (timeout, was solving)' if r['timedOut'] and not r['failed'] else
+                  (' *FAILED*' if r['failed'] else '')), flush=True)
+        return r
+
+    #threads only start and wait for processes, so the GIL is irrelevant here
+    with ThreadPoolExecutor(max_workers=numberOfProcesses) as pool:
+        for exampleFileName, r in zip(exampleFileNames, pool.map(Run, exampleFileNames)):
+            results[exampleFileName] = r
+
+    return results
+
+
+#%%******************************************************************************************************
 #the marker the bootstrap below prints, so that the result survives the process boundary
 resultMarker = '#__EXUDYN_TEST_RESULT__'
 

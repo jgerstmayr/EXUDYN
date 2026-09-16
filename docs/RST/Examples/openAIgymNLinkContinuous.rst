@@ -523,7 +523,7 @@ You can view and download this file on Github: `openAIgymNLinkContinuous.py <htt
            #visualize (and make animations) in exudyn:
            from exudyn.interactive import SolutionViewer
            env.SC.visualizationSettings.general.autoFitScene = False
-           solution = LoadSolutionFile(solutionFile)
+           solution = LoadSolutionFile(OutputFilePath(solutionFile))
            
            SolutionViewer(env.mbs, solution, timeout=0.005, rowIncrement=2) #loads solution file via name stored in mbs
    

@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.98.dev1, 
++  Exudyn version = 1.11.99.dev1, 
 +  last change =  2026-09-16, 
-+  Number of issues = 2461, 
-+  Number of resolved issues = 2171 (98 in current version), 
++  Number of issues = 2462, 
++  Number of resolved issues = 2172 (99 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.99: resolved Issue 2461: the examples run serially and take six minutes (extension)
+    - issue author: Claude-JG
+    - description:  runTestExamples.py execs 171 examples one after the other into a single interpreter; 360 seconds on Windows. The examples are an API check - an example has done its job once it has built its model and reached the solver. revision2026 step R5.16: run them in separate interpreters in parallel; give every example its own output directory; and count a timeout as a pass once the solver was reached.
+    - **notes:** revision2026 step R5.16: testRunnerTools.RunExampleInProcess/RunExamplesInParallel run every example in its own interpreter and its own output directory; a timeout after the solver was reached counts as a pass; PrepareExampleSource and ExampleSkipReason moved into testRunnerTools; 43 examples wrap a read of their own output in OutputFilePath; chainDriveExample imports sin/cos/arcsin; minimizeExample and dispyParameterVariationExample are skipped as not self-contained. 360 s -> 49 s.
+    - date resolved: **2026-09-16 18:57**\ , date raised: 2026-09-16 
+    - resolved by: Claude-JG
  * Version 1.11.98: resolved Issue 2460: performance suite reports only one wall-clock time per model (extension)
     - issue author: Claude-JG
     - description:  runPerformanceTests.py wraps each model in time.time() and prints one number per file; that number contains model build; assembly and Python overhead; and every model covers exactly one problem size and one thread count. revision2026 step R5.15: record the solver time of every single simulation run in exudynTestGlobals.timings and report them; vary the size of perfLargeMassSpringChain and the thread count of generalContactSpheresTest; make perfLargeMassSpringChain a rigid body chain so that it measures the object computation.

@@ -141,7 +141,7 @@ mbs.PlotSensor(sensorNumbers=sVel, components=0, newFigure=False, colorCodeOffse
 mbs.PlotSensor(sensorNumbers=sForce, components=0, newFigure=False, factors=[1e-3], colorCodeOffset=2)
 
 #internal data and file names; compute difference to external data:
-extData = np.loadtxt('solution/sDisp.txt', comments='#', delimiter=',')
+extData = np.loadtxt(OutputFilePath('solution/sDisp.txt'), comments='#', delimiter=',')
 mbs.PlotSensor(sensorNumbers=['solution/sDisp.txt',sDisp,sDisp], components=0, xLabel='time in seconds',
             offsets=[0,0,-extData],
             markerStyles=['','x',''], lineStyles=['-','','-'], markerDensity=0.05,

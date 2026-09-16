@@ -360,7 +360,7 @@ You can view and download this file on Github: `kinematicTreeAndMBS.py <https://
        exu.Print("joint angles =", qq, ", case ", sCases[i])
    
    if False: #use this to reload the solution and use SolutionViewer
-       #sol = LoadSolutionFile('coordinatesSolution.txt')
+       #sol = LoadSolutionFile(OutputFilePath('coordinatesSolution.txt'))
        
        mbs.SolutionViewer() #can also be entered in IPython ...
    

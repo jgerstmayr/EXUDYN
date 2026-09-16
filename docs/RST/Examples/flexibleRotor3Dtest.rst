@@ -188,7 +188,7 @@ You can view and download this file on Github: `flexibleRotor3Dtest.py <https://
    import matplotlib.ticker as ticker
    
    if useGraphics:
-       data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
+       data = np.loadtxt(OutputFilePath('coordinatesSolution.txt'), comments='#', delimiter=',')
        n=steps
        plt.rcParams.update({'font.size': 24})
    

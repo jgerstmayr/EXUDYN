@@ -443,7 +443,7 @@ if useGraphics:
     SC.visualizationSettings.general.autoFitScene = False
     SC.visualizationSettings.general.graphicsUpdateInterval=0.02
     
-    sol = LoadSolutionFile('solution/coordinatesSolution.txt', safeMode=True)#, maxRows=100)
+    sol = LoadSolutionFile(OutputFilePath('solution/coordinatesSolution.txt'), safeMode=True)#, maxRows=100)
     mbs.SolutionViewer(sol)
 
 

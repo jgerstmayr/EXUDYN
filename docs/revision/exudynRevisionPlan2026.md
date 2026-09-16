@@ -673,12 +673,9 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     bodies, explicit and implicit; `generalContactSpheresTest` runs with 1, 4 and 8 threads.
 
 <a id="r5-16"></a>
-**R5.16** *(phase R5; maintainer request 2026-09-16)* **Run the examples in parallel, with a short
-    timeout.** `runTestExamples.py` runs 177 examples serially and is the slow part of a nightly
-    run. The examples are an **API check**, not a numerical one: an example has served its purpose
-    once it builds its model and survives the first time steps. So run them with the process pool of
-    step R5.8 and give them a timeout that is short by design, with the timeout counting as a pass
-    when the model was already assembled and stepping. Keep a way to run one example to the end.
+**R5.16** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-16) — **Examples run in parallel**
+    with a short timeout: each example in its own interpreter and its own output directory, a timeout
+    after the solver was reached counts as a pass. 360 s → 49 s.
 
 ## R6 — Error handling and UX (ongoing, after R2)  <!-- old Phase 5 -->
 

@@ -216,7 +216,7 @@ if useGraphics:
         mbs.PlotSensor(sensorNumbers=[mbs.variables['sALEpos'],mbs.variables['sALEvel']], components=[0,0])
     
     plt.figure("midpoint")
-    data0 = np.loadtxt('solution/beamALEmidPoint.txt', comments='#', delimiter=',') 
+    data0 = np.loadtxt(OutputFilePath('solution/beamALEmidPoint.txt'), comments='#', delimiter=',') 
     y0 = data0[0,2]
     plt.plot(data0[:,0],data0[:,2]-y0,'b-',label='midPointDeflection')
     ax=plt.gca()

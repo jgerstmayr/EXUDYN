@@ -384,7 +384,7 @@ if useGraphics and True:
     SC.visualizationSettings.general.autoFitScene = False
     SC.visualizationSettings.general.graphicsUpdateInterval=0.02
     # from exudyn.interactive import SolutionViewer
-    # sol = LoadSolutionFile('solution/coordinatesSolution.txt', safeMode=True)#, maxRows=100)
+    # sol = LoadSolutionFile(OutputFilePath('solution/coordinatesSolution.txt'), safeMode=True)#, maxRows=100)
     # SolutionViewer(mbs, sol)
     mbs.SolutionViewer()
 

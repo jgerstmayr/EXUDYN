@@ -15,6 +15,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import numpy as np
+from exudyn.basicUtilities import OutputFilePath
 
 #this is the function that is called via dispy; parameterSet contains the dictionary of current parameters and 
 #optional 'functionData' with additional data passed to this function (e.g. numpy arrays)
@@ -142,7 +143,7 @@ if __name__ == '__main__':
     #print("refval =", refval)
 
     # add reference solution to function data
-    referenceSolution = np.loadtxt('solution/paramVarDisplacementRef.txt', comments='#', delimiter=',')
+    referenceSolution = np.loadtxt(OutputFilePath('solution/paramVarDisplacementRef.txt'), comments='#', delimiter=',')
     functionData = {'refSol': referenceSolution}
 
 

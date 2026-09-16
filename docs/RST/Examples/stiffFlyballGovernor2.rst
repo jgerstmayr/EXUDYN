@@ -387,29 +387,29 @@ You can view and download this file on Github: `stiffFlyballGovernor2.py <https:
        import matplotlib.ticker as ticker
        plt.close('all')
        
-       data = np.loadtxt('solution/flyballSliderPosition.txt', comments='#', delimiter=',')
+       data = np.loadtxt(OutputFilePath('solution/flyballSliderPosition.txt'), comments='#', delimiter=',')
        #plt.plot(data[:,0], data[:,3], 'r-') #z coordinate of slider
-       #data = np.loadtxt('solution/flyballShaftAngularVelocity.txt', comments='#', delimiter=',')
+       #data = np.loadtxt(OutputFilePath('solution/flyballShaftAngularVelocity.txt'), comments='#', delimiter=',')
        plt.plot(data[:,0], data[:,1], 'b-') #z coordinate of slider
        plt.plot(data[:,0], data[:,2], 'g-') #z coordinate of slider
        plt.plot(data[:,0], data[:,3], 'k-') #z coordinate of slider
    
-       data = np.loadtxt('solution/flyballSliderRotation.txt', comments='#', delimiter=',')
+       data = np.loadtxt(OutputFilePath('solution/flyballSliderRotation.txt'), comments='#', delimiter=',')
        plt.plot(data[:,0], data[:,1], 'r--') #z coordinate of slider
        plt.plot(data[:,0], data[:,2], 'g--') #z coordinate of slider
        plt.plot(data[:,0], data[:,3], 'b--') #z coordinate of slider
    
        if False:
-           #data = np.loadtxt('solution/flyballSliderPositionRxyz.txt', comments='#', delimiter=',')    #rigid joints?
-           data = np.loadtxt('solution/flyballSliderPositionRK4Rxyz.txt', comments='#', delimiter=',') #compliant joints
+           #data = np.loadtxt(OutputFilePath('solution/flyballSliderPositionRxyz.txt'), comments='#', delimiter=',')    #rigid joints?
+           data = np.loadtxt(OutputFilePath('solution/flyballSliderPositionRK4Rxyz.txt'), comments='#', delimiter=',') #compliant joints
            #plt.plot(data[:,0], data[:,3], 'r:') #z coordinate of slider
            plt.plot(data[:,0], data[:,1], 'b:') #z coordinate of slider
            plt.plot(data[:,0], data[:,2], 'g:') #z coordinate of slider
            plt.plot(data[:,0], data[:,3], 'k:') #z coordinate of slider
        
-   #    data = np.loadtxt('solution/flyballSliderPositionRK4Rxyz.txt', comments='#', delimiter=',')
+   #    data = np.loadtxt(OutputFilePath('solution/flyballSliderPositionRK4Rxyz.txt'), comments='#', delimiter=',')
    #    plt.plot(data[:,0], data[:,3], 'g:') #z coordinate of slider
-   #    data = np.loadtxt('solution/flyballShaftAngularVelocityRK4Rxyz.txt', comments='#', delimiter=',')
+   #    data = np.loadtxt(OutputFilePath('solution/flyballShaftAngularVelocityRK4Rxyz.txt'), comments='#', delimiter=',')
    #    plt.plot(data[:,0], data[:,3], 'k:') #z coordinate of slider
        
        ax=plt.gca() # get current axes

@@ -484,7 +484,7 @@ You can view and download this file on Github: `serialRobotKinematicTreeDigging.
        # SC.visualizationSettings.general.graphicsUpdateInterval=0.5
        
        # print('load solution file')
-       # sol = LoadSolutionFile('solution/test.sol', safeMode=True)#, maxRows=100)
+       # sol = LoadSolutionFile(OutputFilePath('solution/test.sol'), safeMode=True)#, maxRows=100)
        # print('start SolutionViewer')
        # mbs.SolutionViewer(sol)
        mbs.SolutionViewer()

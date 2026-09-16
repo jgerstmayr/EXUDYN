@@ -316,7 +316,7 @@ You can view and download this file on Github: `leggedRobot.py <https://github.c
            import matplotlib.pyplot as plt
            import matplotlib.ticker as ticker
    
-           data = np.loadtxt('solution/rollingDiscPos.txt', comments='#', delimiter=',') 
+           data = np.loadtxt(OutputFilePath('solution/rollingDiscPos.txt'), comments='#', delimiter=',') 
            plt.plot(data[:,0], data[:,1], 'r-',label='coin pos x') 
            plt.plot(data[:,0], data[:,2], 'g-',label='coin pos y') 
            plt.plot(data[:,0], data[:,3], 'b-',label='coin pos z') 

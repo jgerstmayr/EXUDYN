@@ -421,10 +421,10 @@ if addSensors:
     #     import matplotlib.ticker as ticker
 
     # 1=roll angle, 2=roll angular velocity, 3=forward speed, 4=potential energy, 5=kinetic energy, 6=mechanical energy, 7=steer angle, and 8=steer velocity
-    data = np.loadtxt('solution/uncontrolledBicycleGonzalez.txt')#, comments='#', delimiter='') 
+    data = np.loadtxt(OutputFilePath('solution/uncontrolledBicycleGonzalez.txt'))#, comments='#', delimiter='') 
     plt.plot(data[:,0], data[:,9], 'b:',label='') 
 
-    data2 = np.loadtxt('solution/uncontrolledBicycleSanjurjo.txt')#, comments='#', delimiter='') 
+    data2 = np.loadtxt(OutputFilePath('solution/uncontrolledBicycleSanjurjo.txt'))#, comments='#', delimiter='') 
     plt.plot(data2[:,0], data2[:,3+8], 'g:',label='') 
 
     plt.figure('steer vel')
@@ -455,7 +455,7 @@ if addSensors:
     plt.figure('total energy')
     mbs.PlotSensor(sensorNumbers=[sEnergy], components=[2])
 
-    dataE = np.loadtxt('solution/sensorKineticPotentialEnergy.txt', comments='#', delimiter=',')
+    dataE = np.loadtxt(OutputFilePath('solution/sensorKineticPotentialEnergy.txt'), comments='#', delimiter=',')
     performance = 100*(max(dataE[:,3]) - min(dataE[:,3])) / dataE[0,3]
     print("performance = ", performance, "(must by < 1e-3)")
     
@@ -468,9 +468,9 @@ if addSensors:
 #%%+++++++++++++++++
 #merge result files for IFToMM
 if True:
-    dataM1 = np.loadtxt('solution/sensorResultsM1.txt', comments='#', delimiter=',')
-    dataM2 = np.loadtxt('solution/sensorResultsM2.txt', comments='#', delimiter=',')
-    dataM3 = np.loadtxt('solution/sensorResultsM3.txt', comments='#', delimiter=',')
+    dataM1 = np.loadtxt(OutputFilePath('solution/sensorResultsM1.txt'), comments='#', delimiter=',')
+    dataM2 = np.loadtxt(OutputFilePath('solution/sensorResultsM2.txt'), comments='#', delimiter=',')
+    dataM3 = np.loadtxt(OutputFilePath('solution/sensorResultsM3.txt'), comments='#', delimiter=',')
     
     data = np.hstack((dataM1,dataM2[:,1:],dataM3[:,1:]))
     np.savetxt('solution/bicycleResultsIFToMM.txt', data, fmt='%1.15e')

@@ -276,7 +276,7 @@ You can view and download this file on Github: `openAIgymInterfaceTest.py <https
        #visualize (and make animations) in exudyn:
        from exudyn.interactive import SolutionViewer
        env.SC.visualizationSettings.general.autoFitScene = False
-       solution = LoadSolutionFile(solutionFile)
+       solution = LoadSolutionFile(OutputFilePath(solutionFile))
        env.mbs.SolutionViewer(solution) #loads solution file via name stored in mbs
    
 

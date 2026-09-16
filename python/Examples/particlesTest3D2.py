@@ -212,6 +212,6 @@ else:
     
     print('load solution file')
     sol = LoadSolutionFile('particles3Db.txt', safeMode=True)
-    #sol = LoadSolutionFile('coordinatesSolution2.txt')
+    #sol = LoadSolutionFile(OutputFilePath('coordinatesSolution2.txt'))
     print('start SolutionViewer')
     mbs.SolutionViewer(sol)

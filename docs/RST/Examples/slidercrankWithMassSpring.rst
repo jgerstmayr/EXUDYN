@@ -208,7 +208,7 @@ You can view and download this file on Github: `slidercrankWithMassSpring.py <ht
        #animate solution
    #        mbs.WaitForUserToContinue
    #        fileName = 'coordinatesSolution.txt'
-   #        solution = LoadSolutionFile('coordinatesSolution.txt')
+   #        solution = LoadSolutionFile(OutputFilePath('coordinatesSolution.txt'))
    #        AnimateSolution(mbs, solution, 10, 0.025, True)
        #+++++++++++++++++++++++++++++++++++++
    
@@ -225,7 +225,7 @@ You can view and download this file on Github: `slidercrankWithMassSpring.py <ht
    
    plotResults = useGraphics#constrainGroundBody #comparison only works in case of fixed ground
    if plotResults:
-       data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
+       data = np.loadtxt(OutputFilePath('coordinatesSolution.txt'), comments='#', delimiter=',')
                                
        vODE2=mbs.systemData.GetODE2Coordinates()
        nODE2=len(vODE2) #number of ODE2 coordinates

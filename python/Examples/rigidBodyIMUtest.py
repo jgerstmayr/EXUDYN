@@ -236,10 +236,10 @@ if True:
     plt.close("all")
     ax=plt.gca() # get current axes
 
-    dataRot = np.loadtxt('solutionIMU'+mStr+'/rotationMatrix.txt', comments='#', delimiter=',')
-    dataAcc = np.loadtxt('solutionIMU'+mStr+'/accelerationGlobal.txt', comments='#', delimiter=',')
-    dataVel = np.loadtxt('solutionIMU'+mStr+'/velocityGlobal.txt', comments='#', delimiter=',')
-    dataPos = np.loadtxt('solutionIMU'+mStr+'/displacementGlobal.txt', comments='#', delimiter=',')
+    dataRot = np.loadtxt(OutputFilePath('solutionIMU'+mStr+'/rotationMatrix.txt'), comments='#', delimiter=',')
+    dataAcc = np.loadtxt(OutputFilePath('solutionIMU'+mStr+'/accelerationGlobal.txt'), comments='#', delimiter=',')
+    dataVel = np.loadtxt(OutputFilePath('solutionIMU'+mStr+'/velocityGlobal.txt'), comments='#', delimiter=',')
+    dataPos = np.loadtxt(OutputFilePath('solutionIMU'+mStr+'/displacementGlobal.txt'), comments='#', delimiter=',')
 
     n = len(dataAcc)
     accLocal = np.zeros((n,4))

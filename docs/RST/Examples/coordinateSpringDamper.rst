@@ -130,7 +130,7 @@ You can view and download this file on Github: `coordinateSpringDamper.py <https
    print('refSol=',refSol[steps,1])
    print('error exact-numerical=',refSol[steps,1] - uCartesianSpringDamper)
    
-   data = np.loadtxt('coordinatesSolution.txt', comments='#', delimiter=',')
+   data = np.loadtxt(OutputFilePath('coordinatesSolution.txt'), comments='#', delimiter=',')
    plt.plot(data[:,0], data[:,1], 'b-') #numerical solution
    plt.plot(refSol[:,0], refSol[:,1], 'r-') #exact solution
    

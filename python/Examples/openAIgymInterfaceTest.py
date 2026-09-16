@@ -264,6 +264,6 @@ if __name__ == '__main__': #this is only executed when file is direct called in 
     #visualize (and make animations) in exudyn:
     from exudyn.interactive import SolutionViewer
     env.SC.visualizationSettings.general.autoFitScene = False
-    solution = LoadSolutionFile(solutionFile)
+    solution = LoadSolutionFile(OutputFilePath(solutionFile))
     env.mbs.SolutionViewer(solution) #loads solution file via name stored in mbs
 
