@@ -4084,6 +4084,35 @@ are installed by hand (maintainer approved the install, 2026-09-16). `pytest.py`
 untracked scratch file that would shadow the pytest module, so pytest must not be started from
 there - noted in `pyproject.toml` and in `WORKFLOW.md`.
 
+<a id="r5-2"></a>
+### R5.2 - fast vs slow, as data rather than decorators
+
+**DONE 2026-09-16** (#2459).
+
+**What "fast vs slow" means here had to be decided first.** The plan line said "~2-minute PR
+subset, full nightly", but the models are not what makes a nightly run long: the whole suite is
+**22 s**, and only nine models take more than 0.6 s (`parameterConversionTest` 4.4 s,
+`createSphereQuadContact` 1.4 s, `sphereTriangleTest2` 1.3 s, ...). The 177 examples and the
+performance tests are the slow part - they became steps R5.15 and R5.16 on the maintainer's
+request. So this step splits along two axes that really matter for a pull-request runner:
+**duration** and **optional packages** (ngsolve, stable-baselines3), and additionally exposes the
+existing **sensitive** and **unresolvedOnLinux** sets as markers.
+
+**The lists are data, in `runTestSuiteRefSol.py`** (`SlowTests()` with the measured times,
+`OptionalPackageTests()` with the package per model), read by both runners - no decorator is
+written into any of the 137 models, and the two runners cannot drift apart:
+
+| run | command | time |
+|---|---|---|
+| pull request | `runTestSuite.py --fast` | **12 s** (22 s full) |
+| pull request | `pytest -m 'not slow and not optionalPackage' -n 8` | **9 s** |
+| full | `runTestSuite.py` / `pytest` | 22 s / 11 s with `-n 8` |
+| nightly | `makeAndTestAllBinaries.bat` | models + performance + examples, unchanged |
+
+The pytest markers (`slow`, `optionalPackage`, `sensitive`, `unresolvedOnLinux`) are declared in
+`pyproject.toml` and attached in `pytest_generate_tests`, so `-m` works without any per-model edit.
+Documented in `docs/dev/WORKFLOW.md` ("Which tests run when").
+
 <a id="r5-7"></a>
 ### R5.7 — rename `pytest.py` - done differently in step R3.1 (`python/pytestTemplate.py`)
 

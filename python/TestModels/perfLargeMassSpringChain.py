@@ -72,7 +72,6 @@ simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.sensorsWritePeriod = 2e7 #no sensor output
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.displayComputationTime = False
 

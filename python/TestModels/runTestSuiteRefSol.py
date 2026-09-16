@@ -156,6 +156,40 @@ def TestExamplesReferenceSolution():
 
 
 #%%+++++++++++++++++++++++++++++++++++++++
+#test models that take noticeably longer than the rest, measured 2026-09-16 on Windows cp313;
+#the whole suite is 22 seconds, so 'slow' here means 'above 0.6 s', not 'minutes'. Data, not
+#decorators: runTestSuite.py --fast and the pytest marker of revision2026 step R5.2 both read this
+#list, so there is one definition. Update it when a model changes substantially.
+def SlowTests():
+
+    return {
+        'parameterConversionTest.py': 4.4,   #walks every parameter of every item
+        'createSphereQuadContact.py': 1.4,
+        'sphereTriangleTest2.py': 1.3,
+        'createSphereTriangleContact.py': 1.0,
+        'abaqusImportTest.py': 0.9,          #reads and converts several meshes
+        'taskmanagerTest.py': 0.8,
+        'objectFFRFTest2.py': 0.7,
+        'explicitLieGroupMBSTest.py': 0.6,
+        'objectFFRFTest.py': 0.6,
+        }
+
+
+#%%+++++++++++++++++++++++++++++++++++++++
+#test models that need an OPTIONAL package, i.e. one that is not in [project.optional-dependencies]
+#'tests' or that a small CI runner should not have to install. A pull-request run can skip these
+#(runTestSuite.py --fast, pytest -m 'not optionalPackage'), a nightly run must not.
+#Derived 2026-09-16 from the imports of the models themselves.
+def OptionalPackageTests():
+
+    return {
+        'ACFtest.py': 'ngsolve',
+        'NGsolveCMStest.py': 'ngsolve',
+        'allExudynModulesTest.py': 'stable_baselines3',  #the RL part; skipped without it
+        }
+
+
+#%%+++++++++++++++++++++++++++++++++++++++
 #return the .py files in TestModels/ which are NOT test models: the runners themselves and
 #the shared infrastructure they import. These are excluded from the coverage check
 #(testRunnerTools.CheckTestCoverage) for a structural reason, not a per-test one, which is

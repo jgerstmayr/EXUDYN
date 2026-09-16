@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.96.dev1, 
+  \item Exudyn version = 1.11.97.dev1, 
   \item last change =  2026-09-16, 
-  \item Number of issues = 2458, 
-  \item Number of resolved issues = 2169 (96 in current version), 
+  \item Number of issues = 2460, 
+  \item Number of resolved issues = 2170 (97 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.97}:  resolved Issue 2459: {\bf no way to run a fast subset of the test models}
+(add)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: revision2026 step R5.2: every runner was all-or-nothing, so a pull-request run had to include the models that take longest and those needing optional packages (ngsolve, stable-baselines3). Added SlowTests() and OptionalPackageTests() as data in runTestSuiteRefSol.py, runTestSuite.py --fast and pytest markers slow/optionalPackage/sensitive/unresolvedOnLinux reading the same data}
+    \item {\bf notes: revision2026 step R5.2: SlowTests/OptionalPackageTests as data; runTestSuite.py --fast (12 s) and pytest markers; nightly unchanged}
+    \item   date resolved: {\bf 2026-09-16 17:09},
+date raised: 2026-09-16 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.96}:  resolved Issue 2457: {\bf test models are not available as pytest cases}
 (add)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

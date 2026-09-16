@@ -259,6 +259,23 @@ tools/buildAndGenerate/makeUbuntuManyLinuxWheels.bat      # all five, via docker
 Regular CI sets `EXUDYN_NOFAST=1`, which skips the `__FAST_EXUDYN_LINALG` binary and roughly halves
 build time. Ordinary test runs do not exercise that binary. **Release builds must not set it.**
 
+### Which tests run when
+
+| run | what | how |
+|---|---|---|
+| commit gate / pull request | test models without the slow ones and without optional packages | `runTestSuite.py --fast` (12 s) or `pytest -m "not slow and not optionalPackage"` (9 s with `-n 8`) |
+| full local check | all test models and mini examples | `runTestSuite.py` (22 s) or `pytest` |
+| nightly / release | models, performance tests and all examples | `tools/buildAndGenerate/makeAndTestAllBinaries.bat`, which calls the three runners |
+
+The two lists behind this live in `runTestSuiteRefSol.py` as data - `SlowTests()` (measured,
+above 0.6 s) and `OptionalPackageTests()` (needs ngsolve, stable-baselines3, ...) - and are read
+both by `--fast` and by the pytest markers, so the two runners always skip the same models.
+`pytest` additionally marks `sensitive` and `unresolvedOnLinux` from the same file.
+
+**The models are not the slow part of a nightly run**: the whole suite is 22 seconds, while the
+177 examples and the performance tests dominate. Those are addressed by revision2026 steps R5.15
+and R5.16, not by this split.
+
 ### pytest
 
 `pytest` (from the repository root, configured in `pyproject.toml`) runs

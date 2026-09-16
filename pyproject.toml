@@ -162,6 +162,13 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ['python/TestModels']
 addopts = '-q'
+#markers of revision2026 step R5.2; the data behind them lives in runTestSuiteRefSol.py
+markers = [
+    'slow: takes noticeably longer than the other models',
+    'optionalPackage: needs a package outside the tests extra (ngsolve, stable_baselines3, ...)',
+    'sensitive: chaotic or unseeded - runs, but its value is not judged',
+    'unresolvedOnLinux: known Windows/Linux difference - value judged on Windows only',
+    ]
 
 #Docstring check of the Python package (revision2026 step R4.8): 'pydoclint --config=pyproject.toml python/exudyn'.
 #Google style; type hints are neither required in signatures nor in docstrings, return types and

@@ -55,6 +55,11 @@ overwriteLog = False    #--overwrite-log: replace an existing log instead of div
 #copyLog = False         #copy log to final TestSuiteLogs
 # if sys.version_info.major == 3 and sys.version_info.minor == 7:
 #     copyLog = True #for P3.7 tests always copy log to WorkingRelease
+#--fast: the pull-request subset (revision2026 step R5.2) - without the models that take
+#noticeably longer and without those needing an optional package. Both lists are data in
+#runTestSuiteRefSol.py, shared with the pytest markers.
+TSScope.fastSubset = False
+
 #--parallel: run the models in separate interpreters (revision2026 step R5.8); serial by default,
 #so that the gating run stays exactly what it has always been
 TSScope.parallel = False
@@ -69,6 +74,8 @@ if len(sys.argv) > 1:
             outputLocal = True
         elif sys.argv[i+1] == '--exit-code':
             useExitCode = True
+        elif sys.argv[i+1] == '--fast':
+            TSScope.fastSubset = True
         elif sys.argv[i+1].startswith('--parallel'):
             #--parallel runs every model in its own interpreter, the number of workers after '='
             #(revision2026 step R5.8); possible since each model writes into its own directory
@@ -255,6 +262,14 @@ if TSScope.runTestExamples:
     TSScope.testFileList=[] #automatically create list from reference solution ...
     for key in TSScope.examplesTestRefSol.keys():
         TSScope.testFileList+=[key]
+
+    if TSScope.fastSubset: #revision2026 step R5.2
+        from runTestSuiteRefSol import SlowTests, OptionalPackageTests
+        skipped = set(SlowTests()) | set(OptionalPackageTests())
+        TSScope.testFileList = [f for f in TSScope.testFileList if f not in skipped]
+        exu.Print('--fast: ' + str(len(skipped)) + ' slow or optional-package models are skipped: '
+                  + ', '.join(sorted(skipped)))
+
     TSScope.totalTests = len(TSScope.testFileList)
     
     #in parallel mode every model runs in its own interpreter FIRST, and the loop below then

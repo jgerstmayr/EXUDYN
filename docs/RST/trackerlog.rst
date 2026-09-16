@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.96.dev1, 
++  Exudyn version = 1.11.97.dev1, 
 +  last change =  2026-09-16, 
-+  Number of issues = 2458, 
-+  Number of resolved issues = 2169 (96 in current version), 
++  Number of issues = 2460, 
++  Number of resolved issues = 2170 (97 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.97: resolved Issue 2459: no way to run a fast subset of the test models (add)
+    - issue author: Claude-JG
+    - description:  revision2026 step R5.2: every runner was all-or-nothing, so a pull-request run had to include the models that take longest and those needing optional packages (ngsolve, stable-baselines3). Added SlowTests() and OptionalPackageTests() as data in runTestSuiteRefSol.py, runTestSuite.py --fast and pytest markers slow/optionalPackage/sensitive/unresolvedOnLinux reading the same data
+    - **notes:** revision2026 step R5.2: SlowTests/OptionalPackageTests as data; runTestSuite.py --fast (12 s) and pytest markers; nightly unchanged
+    - date resolved: **2026-09-16 17:09**\ , date raised: 2026-09-16 
+    - resolved by: Claude-JG
  * Version 1.11.96: resolved Issue 2457: test models are not available as pytest cases (add)
     - issue author: Claude-JG
     - description:  revision2026 step R5.1: runTestSuite.py was the only way to run the test models, so there was no selection by name, no IDE or CI reporting and no standard parallel runner; added python/TestModels/test_testModels.py with one parametrized case per model and mini example, sharing reference values and tolerances with the suite
@@ -7303,6 +7309,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 2458:** runTestSuite.py checks hasattr(exu.solver, RunCppUnitTests) instead of exu.special
+    - issue author: Claude-JG
+    - description:  found 2026-09-16 while preparing revision2026 step R5.3: the C++ unit tests are gated on hasattr(exu.solver, "RunCppUnitTests"), but the function is bound on exu.special (Pybind_manual_classes.cpp, inside #ifdef PERFORM_UNIT_TESTS); exu.solver is the Python module exudyn.solver and never has that attribute, so the check is always False and the tests are reported as skipped even in a build that contains them. Belongs to revision2026 step R5.3
+    - date raised: 2026-09-16 
 
  * :textblue:`open issue 2455:` pydoclint reports two violations in exudyn/__init__.py RequireVersion
     - issue author: Claude-JG

@@ -36,7 +36,8 @@ if modelsDirectory not in sys.path:
 import testRunnerTools                                                          # noqa: E402
 from runTestSuiteRefSol import (TestExamplesReferenceSolution,                  # noqa: E402
                                 TestExamplesToleranceFactors, SensitiveTests,
-                                UnresolvedOnLinux, MiniExamplesReferenceSolution)
+                                UnresolvedOnLinux, MiniExamplesReferenceSolution,
+                                SlowTests, OptionalPackageTests)
 
 invalidResult = 1234567890123456    #the value that says 'the model set no result'
 solutionDirectory = 'solution'      #each model writes into solutionDirectory/<model> (#2418)
@@ -51,9 +52,27 @@ isMacOS = (sys.platform == 'darwin')
 notJudged = SensitiveTests() | (UnresolvedOnLinux() if (not isWindows and not isMacOS) else set())
 
 
+#markers come from the data in runTestSuiteRefSol.py, not from decorators in 137 model files
+#(revision2026 step R5.2): 'pytest -m "not slow and not optionalPackage"' is the pull-request set,
+#a plain 'pytest' the nightly one
+def Markers(modelName):
+    marks = []
+    if modelName in SlowTests():
+        marks += [pytest.mark.slow]
+    if modelName in OptionalPackageTests():
+        marks += [pytest.mark.optionalPackage]
+    if modelName in SensitiveTests():
+        marks += [pytest.mark.sensitive]
+    if modelName in UnresolvedOnLinux():
+        marks += [pytest.mark.unresolvedOnLinux]
+    return marks
+
+
 def pytest_generate_tests(metafunc):
     if 'modelName' in metafunc.fixturenames:
-        metafunc.parametrize('modelName', sorted(TestExamplesReferenceSolution().keys()))
+        names = sorted(TestExamplesReferenceSolution().keys())
+        metafunc.parametrize('modelName', [pytest.param(name, marks=Markers(name))
+                                           for name in names])
     if 'miniExampleName' in metafunc.fixturenames:
         metafunc.parametrize('miniExampleName', sorted(MiniExamplesReferenceSolution().keys()))
 
