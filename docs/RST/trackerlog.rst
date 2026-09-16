@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.105.dev1, 
-+  last change =  2026-09-16, 
++  Exudyn version = 1.11.106.dev1, 
++  last change =  2026-09-17, 
 +  Number of issues = 2470, 
-+  Number of resolved issues = 2178 (105 in current version), 
++  Number of resolved issues = 2179 (106 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.106: :textred:`resolved BUG 2467` : exudynCPPfast crashes in the test suite (segmentation fault) 
+    - issue author: Claude-JG
+    - description:  Running runTestSuite.py against exudynCPPfast segfaults reproducibly: with AVX2 after TestModel 74 (objectFFRFTest.py), without AVX2 after 75 (objectFFRFTest2.py). Both models pass standalone under the same module, so this is accumulated corruption, and the shifting crash point shows it is __FAST_EXUDYN_LINALG (no range checks), not the vector extensions. Found in revision2026 step R2.10; the fast module was built for one Python version only and the suite had apparently never been run against it.
+    - **notes:** Root cause: MainObjectANCFThinPlate::SetWithDictionary calls ParametersHaveChanged() with whatever the user wrote into the dictionary, BEFORE the object factory validates the item, and CObjectANCFThinPlate::ParametersHaveChanged computes the slope scaling from the nodes - reading cSystemData->GetCNodes()[-1] for a default/invalid node number. In exudynCPP the range check of the array turns that into a Python exception, so it was invisible; in exudynCPPfast the checks are compiled out and the process died. Found with AddressSanitizer (access-violation at 0xffffffffffffffff in CObject::GetCNode). ThinPlate is the only object that dereferences nodes in ParametersHaveChanged. Fixed by computing the scaling only when the node numbers address existing nodes; the factory reports the invalid number right afterwards. The full suite now completes under exudynCPPfast. revision2026 step R2.10.1.
+    - date resolved: **2026-09-17 00:11**\ , date raised: 2026-09-16 
+    - resolved by: Claude-JG
  * Version 1.11.105: :textred:`resolved BUG 2468` : deleting build/temp is not enough after a compile-flag change 
     - issue author: Claude-JG
     - description:  The documented gate (revision2026 step R2.17, #2427) says to delete build/temp.win-amd64-cpython-313 after a header change. That is insufficient for a FLAG change: build/lib.win-amd64-cpython-313 keeps the previously linked .pyd and the wheel is assembled from it, so a rebuild silently ships the old binary. This produced three contradictory measurements in revision2026 step R2.10 before the whole build/ directory was removed. Fix the gate instruction and preferably make setup.py handle it.
@@ -8476,11 +8482,6 @@ Known bugs
  * :textred:`open BUG 2469:` NGsolveCMStest reference value follows an untracked mesh cache
     - issue author: Claude-JG
     - description:  NGsolveCMStest.py loads python/TestModels/testData/netgenTestMesh.pkl - a TRACKED file - and silently OVERWRITES it whenever the load fails. That happened during revision2026 step R2.10 and the result moved by 2.4e-8, far outside the 5e-14 tolerance, back to the value recorded before 2025-05-05; restoring the committed file restored the value. A test must not rewrite its own committed input: either treat the mesh as read-only and fail loudly, or generate it deterministically.
-    - date raised: 2026-09-16 
-
- * :textred:`open BUG 2467:` exudynCPPfast crashes in the test suite (segmentation fault)
-    - issue author: Claude-JG
-    - description:  Running runTestSuite.py against exudynCPPfast segfaults reproducibly: with AVX2 after TestModel 74 (objectFFRFTest.py), without AVX2 after 75 (objectFFRFTest2.py). Both models pass standalone under the same module, so this is accumulated corruption, and the shifting crash point shows it is __FAST_EXUDYN_LINALG (no range checks), not the vector extensions. Found in revision2026 step R2.10; the fast module was built for one Python version only and the suite had apparently never been run against it.
     - date raised: 2026-09-16 
 
  * :textred:`open BUG 2463:` the two GitHub workflows pin different action versions

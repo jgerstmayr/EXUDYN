@@ -572,13 +572,37 @@ TReal CObjectANCFThinPlate::ComputeElementEnergy(const ConstSizeVectorBase<Real,
 // MAIN COMPUTATIONAL FUNCTIONS
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+//! the node numbers are usable: they exist in the system and address a node that has been created.
+//! MainObject...::SetWithDictionary calls ParametersHaveChanged() with whatever the user wrote
+//! into the dictionary, BEFORE the object factory checks the item; with an invalid node number
+//! the scaling computation below reads cSystemData->GetCNodes()[-1]. In the regular module the
+//! range check of the array turns that into a Python exception, which is why this was invisible;
+//! in exudynCPPfast the checks are compiled out and the process died (#2467, revision2026 step
+//! R2.10.1). The consistency check of the factory reports the invalid number right afterwards, so
+//! there is nothing to report here - only nothing to compute.
+//(a file-local function, not a member: the class declaration is generated - CLAUDE.md rule 1)
+static bool NodeNumbersAreUsable(const CObjectANCFThinPlate& object)
+{
+    const CSystemData* cSystemData = object.GetCSystemData();
+    if (cSystemData == nullptr) { return false; }
+
+    const Index numberOfNodesInSystem = cSystemData->GetCNodes().NumberOfItems();
+    for (Index i = 0; i < object.GetNumberOfNodes(); i++)
+    {
+        const Index nodeNumber = object.GetNodeNumber(i);
+        if (nodeNumber < 0 || nodeNumber >= numberOfNodesInSystem) { return false; }
+        if (cSystemData->GetCNodes()[nodeNumber] == nullptr) { return false; }
+    }
+    return true;
+}
+
 void CObjectANCFThinPlate::ParametersHaveChanged()
 {
     //recompute mass matrix
     massMatrixComputed = false;
 
     //compute scaling for flat elements if not provided by user
-    if (parameters.slopesScalingX[0] <= 0)
+    if (parameters.slopesScalingX[0] <= 0 && NodeNumbersAreUsable(*this))
     {
         ConstSizeVector<nODE2coordinates> qANCFref;
         ComputeReferenceObjectCoordinates(qANCFref);

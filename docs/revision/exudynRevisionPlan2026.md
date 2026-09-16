@@ -117,12 +117,22 @@ promise for no gain.
     `UnresolvedOnLinux()` lists — the Windows/Linux differences of #2379 WERE the AVX2 asymmetry.
 
 <a id="r2-10-1"></a>
-**R2.10.1** *(sub-step of R2.10)* **`exudynCPPfast` segfaults in the test suite** (#2467). With
-    AVX2 the run dies after TestModel 74, without AVX2 after 75; both models pass standalone, so
-    it is accumulated corruption from the missing range checks, not the vector extensions. The
-    fast module was built for one Python version only and the suite had never been run against it.
-    **Until this is fixed, the fast module cannot be recommended**, and the claim that one set of
-    reference values holds for both modules is verified on Linux only (step R2.16), not here.
+**R2.10.1** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r2-10-1) — *(sub-step of R2.10)*
+    **`exudynCPPfast` no longer segfaults** (#2467). `MainObjectANCFThinPlate::SetWithDictionary`
+    called `ParametersHaveChanged()` before the factory validated the item, and that computed the
+    slope scaling from `GetCNodes()[-1]`. The regular module was saved by the array range check;
+    the fast module, which compiles those out, died. The suite now completes under both modules.
+
+<a id="r2-10-3"></a>
+**R2.10.3** *(sub-step of R2.10)* **Which reference values judge `exudynCPPfast`?** With the crash
+    gone the suite runs under the fast module and reports **33 failures** — precisely the AVX2
+    differences of R2.10, because the fast module has AVX2 and the reference values are now
+    baseline. The plan assumed one set of values holds for both modules; R2.16 established that for
+    **Linux** (where `-ffp-contract=off` makes the failing sets equal), but on Windows AVX2 itself
+    moves results, so it does not hold here. Three ways out, a **maintainer decision**: default
+    `useAVX2` to off (fast = checks-off only, identical numbers, and AVX2 stays a measurement
+    switch); give the fast module its own reference set; or judge it only on the models that are
+    not chaotic. Note the measured context: AVX2 bought ~0.1 % on the performance suite (fact 27).
 
 <a id="r2-10-2"></a>
 **R2.10.2** *(sub-step of R2.10)* **`NGsolveCMStest` rewrites its own committed input** (#2469):

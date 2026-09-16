@@ -28,7 +28,6 @@ outcome: !RuntimeError !RuntimeError
   NodeGenericODE1: (defaults)
   NodeGenericODE2: (defaults)
   ObjectANCFBeam: (defaults)
-  ObjectANCFThinPlate: (defaults)
   ObjectBeamGeometricallyExact: (defaults)
   ObjectConnectorDistance: (defaults)
   ObjectConnectorHydraulicActuatorSimple: (defaults)
@@ -52,6 +51,7 @@ outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !
   ObjectANCFBeam: VsectionGeometry(class,dict) nodeNumbers(class,dict,set) sectionData(class,dict,set)
   ObjectANCFCable: nodeNumbers(class,dict,set)
   ObjectANCFCable2D: nodeNumbers(class,dict,set)
+  ObjectANCFThinPlate: nodeNumbers(class,dict,set)
   ObjectBeamGeometricallyExact: VsectionGeometry(class,dict) nodeNumbers(class,dict,set) sectionData(class,dict,set)
   ObjectBeamGeometricallyExact2D: nodeNumbers(class,dict,set)
   ObjectConnectorHydraulicActuatorSimple: nodeNumbers(class,dict,set)
@@ -90,6 +90,7 @@ outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !
   SensorSuperElement: outputVariableType(set)
 
 outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError Matrix3DList
+  ObjectANCFThinPlate: physicsCurvatureCoefficients(class,dict,set) physicsStrainCoefficients(class,dict,set)
   ObjectKinematicTree: jointTransformations(class,dict,set) linkInertiasCOM(class,dict,set)
 
 outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError list2:MarkerIndex !RuntimeError
@@ -170,6 +171,7 @@ outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !
   ObjectANCFBeam: Vcolor(class,dict,set)
   ObjectANCFCable: Vcolor(class,dict,set)
   ObjectANCFCable2D: Vcolor(class,dict,set)
+  ObjectANCFThinPlate: Vcolor(class,dict,set)
   ObjectBeamGeometricallyExact: Vcolor(class,dict,set)
   ObjectBeamGeometricallyExact2D: Vcolor(class,dict,set)
   ObjectConnectorCartesianSpringDamper: Vcolor(class,dict,set)
@@ -230,6 +232,7 @@ outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !
 
 outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError numpy4f=[1.0,2.0,3.0,4.0] !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError
   NodePoint2DSlope1: initialCoordinates(class,dict,set) initialVelocities(class,dict,set) referenceCoordinates(class,dict,set)
+  ObjectANCFThinPlate: slopesScalingX(class,dict,set) slopesScalingY(class,dict,set)
 
 outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError list3=[1.0,2.0,3.0] !RuntimeError list3=[1.0,2.0,3.0] !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError
   VisualizationSettings.bodies: defaultSize(attribute,dict)
@@ -392,6 +395,7 @@ outcome: !RuntimeError float=0.0 float=2.0 float=2.5 !RuntimeError float=1.0 !Ru
   ObjectALEANCFCable2D: physicsAxialDamping(class,dict,set) physicsAxialStiffness(class,dict,set) physicsBendingDamping(class,dict,set) physicsBendingStiffness(class,dict,set) physicsLength(class,dict,set) physicsMassPerLength(class,dict,set) physicsMovingMassFactor(class,dict,set)
   ObjectANCFCable: physicsAxialDamping(class,dict,set) physicsAxialStiffness(class,dict,set) physicsBendingDamping(class,dict,set) physicsBendingStiffness(class,dict,set) physicsLength(class,dict,set) physicsMassPerLength(class,dict,set)
   ObjectANCFCable2D: physicsAxialDamping(class,dict,set) physicsAxialStiffness(class,dict,set) physicsBendingDamping(class,dict,set) physicsBendingStiffness(class,dict,set) physicsLength(class,dict,set) physicsMassPerLength(class,dict,set)
+  ObjectANCFThinPlate: physicsDensity(class,dict,set)
   ObjectBeamGeometricallyExact2D: physicsAxialDamping(class,dict,set) physicsAxialStiffness(class,dict,set) physicsBendingDamping(class,dict,set) physicsBendingStiffness(class,dict,set) physicsCrossSectionInertia(class,dict,set) physicsLength(class,dict,set) physicsMassPerLength(class,dict,set) physicsShearDamping(class,dict,set) physicsShearStiffness(class,dict,set)
   ObjectConnectorCoordinateSpringDamperExt: fDynamicFriction(class,dict,set) fStaticFrictionOffset(class,dict,set) frictionProportionalZone(class,dict,set) limitStopsDamping(class,dict,set) limitStopsStiffness(class,dict,set) stickingDamping(class,dict,set) stickingStiffness(class,dict,set)
   ObjectConnectorGravity: mass0(class,dict,set) mass1(class,dict,set) minDistanceRegularization(class,dict,set)
@@ -595,6 +599,7 @@ outcome: ObjectIndex ObjectIndex
   ObjectALEANCFCable2D: (defaults)
   ObjectANCFCable: (defaults)
   ObjectANCFCable2D: (defaults)
+  ObjectANCFThinPlate: (defaults)
   ObjectBeamGeometricallyExact2D: (defaults)
   ObjectConnectorCartesianSpringDamper: (defaults)
   ObjectConnectorCoordinate: (defaults)
@@ -715,6 +720,7 @@ outcome: bool=1.0 bool=0.0 bool=1.0 bool=1.0 !RuntimeError bool=1.0 !RuntimeErro
   ObjectANCFBeam: Vshow(class,dict,set)
   ObjectANCFCable: Vshow(class,dict,set)
   ObjectANCFCable2D: Vshow(class,dict,set)
+  ObjectANCFThinPlate: Vshow(class,dict,set)
   ObjectBeamGeometricallyExact: Vshow(class,dict,set)
   ObjectBeamGeometricallyExact2D: Vshow(class,dict,set) includeReferenceRotations(class,dict,set)
   ObjectConnectorCartesianSpringDamper: Vshow(class,dict,set) activeConnector(class,dict,set)
@@ -842,6 +848,7 @@ outcome: float=-1.0 float=0.0 float=2.0 float=2.5 !RuntimeError float=1.0 !Runti
   ObjectALEANCFCable2D: VdrawHeight(class,dict,set) physicsReferenceAxialStrain(class,dict,set) physicsReferenceCurvature(class,dict,set) strainIsRelativeToReference(class,dict,set)
   ObjectANCFCable: Vradius(class,dict,set) physicsReferenceAxialStrain(class,dict,set) strainIsRelativeToReference(class,dict,set)
   ObjectANCFCable2D: VdrawHeight(class,dict,set) physicsReferenceAxialStrain(class,dict,set) physicsReferenceCurvature(class,dict,set) strainIsRelativeToReference(class,dict,set)
+  ObjectANCFThinPlate: physicsMassProportionalDamping(class,dict,set) strainIsRelativeToReference(class,dict,set)
   ObjectBeamGeometricallyExact2D: VdrawHeight(class,dict,set) physicsReferenceCurvature(class,dict,set)
   ObjectConnectorCartesianSpringDamper: VdrawSize(class,dict,set)
   ObjectConnectorCoordinate: VdrawSize(class,dict,set) factorValue1(class,dict,set) offset(class,dict,set)
@@ -901,6 +908,7 @@ outcome: int=-1.0 int=0.0 int=2.0 !RuntimeError !RuntimeError int=1.0 !RuntimeEr
   ObjectALEANCFCable2D: useReducedOrderIntegration(class,dict,set)
   ObjectANCFCable: useReducedOrderIntegration(class,dict,set)
   ObjectANCFCable2D: useReducedOrderIntegration(class,dict,set)
+  ObjectANCFThinPlate: useReducedOrderIntegration(class,dict,set)
   ObjectContactCircleCable2D: numberOfContactSegments(class,dict,set)
   VisualizationSettings.contour: outputVariableComponent(attribute,dict)
   VisualizationSettings.interactive: highlightItemIndex(attribute,dict)
@@ -914,6 +922,7 @@ outcome: int=-1.0 int=0.0 int=2.0 !RuntimeError !RuntimeError int=1.0 !RuntimeEr
   VisualizationSettings.view3.camera: trackMarker(attribute,dict) trackMarkerMbsNumber(attribute,dict)
 
 outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !RuntimeError numpy1f=[1.0] numpy2f=[1.0,2.0] numpy3f=[1.0,2.0,3.0] numpy4f=[1.0,2.0,3.0,4.0] numpy3f=[1.0,2.0,3.0] !RuntimeError !RuntimeError !RuntimeError numpy2f=[0.0,1.0] !RuntimeError
+  ObjectANCFThinPlate: physicsThickness(class,dict)
   ObjectConnectorCoordinateVector: offset(class,dict)
   ObjectContactConvexRoll: coefficientsHull(class,dict)
   ObjectContactCurveCircles: circlesRadii(class,dict)
@@ -923,6 +932,7 @@ outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !RuntimeError 
   ObjectGenericODE2: forceVector(class,dict)
 
 outcome: numpy1f=[-1.0] numpy1f=[0.0] numpy1f=[2.0] numpy1f=[2.5] !ValueError numpy1f=[1.0] numpy2f=[1.0,2.0] numpy3f=[1.0,2.0,3.0] numpy4f=[1.0,2.0,3.0,4.0] numpy3f=[1.0,2.0,3.0] !RuntimeError !RuntimeError !RuntimeError numpy2f=[0.0,1.0] !RuntimeError
+  ObjectANCFThinPlate: physicsThickness(set)
   ObjectConnectorCoordinateVector: offset(set)
   ObjectContactConvexRoll: coefficientsHull(set)
   ObjectContactCurveCircles: circlesRadii(set)
@@ -994,6 +1004,7 @@ outcome: str=default
   ObjectANCFBeam: Vcolor(omit) VsectionGeometry(omit) Vshow(omit) crossSectionDamping(omit) crossSectionPenaltyFactor(omit) nodeNumbers(omit) sectionData(omit)
   ObjectANCFCable: Vcolor(omit) Vradius(omit) Vshow(omit) nodeNumbers(omit) physicsAxialDamping(omit) physicsAxialStiffness(omit) physicsBendingDamping(omit) physicsBendingStiffness(omit) physicsLength(omit) physicsMassPerLength(omit) physicsReferenceAxialStrain(omit) strainIsRelativeToReference(omit) useReducedOrderIntegration(omit)
   ObjectANCFCable2D: Vcolor(omit) VdrawHeight(omit) Vshow(omit) axialForceUserFunction(omit) bendingMomentUserFunction(omit) nodeNumbers(omit) physicsAxialDamping(omit) physicsAxialStiffness(omit) physicsBendingDamping(omit) physicsBendingStiffness(omit) physicsLength(omit) physicsMassPerLength(omit) physicsReferenceAxialStrain(omit) physicsReferenceCurvature(omit) strainIsRelativeToReference(omit) useReducedOrderIntegration(omit)
+  ObjectANCFThinPlate: Vcolor(omit) Vshow(omit) nodeNumbers(omit) physicsCurvatureCoefficients(omit) physicsDensity(omit) physicsMassProportionalDamping(omit) physicsStrainCoefficients(omit) physicsThickness(omit) slopesScalingX(omit) slopesScalingY(omit) strainIsRelativeToReference(omit) useReducedOrderIntegration(omit)
   ObjectBeamGeometricallyExact: Vcolor(omit) VsectionGeometry(omit) Vshow(omit) nodeNumbers(omit) sectionData(omit)
   ObjectBeamGeometricallyExact2D: Vcolor(omit) VdrawHeight(omit) Vshow(omit) includeReferenceRotations(omit) nodeNumbers(omit) physicsAxialDamping(omit) physicsAxialStiffness(omit) physicsBendingDamping(omit) physicsBendingStiffness(omit) physicsCrossSectionInertia(omit) physicsLength(omit) physicsMassPerLength(omit) physicsReferenceCurvature(omit) physicsShearDamping(omit) physicsShearStiffness(omit)
   ObjectConnectorCartesianSpringDamper: Vcolor(omit) VdrawSize(omit) Vshow(omit) activeConnector(omit) damping(omit) markerNumbers(omit) offset(omit) springForceUserFunction(omit) stiffness(omit)

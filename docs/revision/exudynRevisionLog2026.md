@@ -1178,6 +1178,50 @@ Two corrections to what step R2.10 recorded on the way: `EXUDYN_EXTRA_COMPILE_AR
 always did - the stale `build/lib` made it look inert - and pip hides the build output that would
 have said so, unless `-v` is passed or the build fails.
 
+<a id="r2-10-1"></a>
+### R2.10.1 - exudynCPPfast no longer segfaults
+
+**DONE 2026-09-17** (#2467).
+
+Step R2.10 found that `runTestSuite.py` against `exudynCPPfast` dies with a segmentation fault,
+and that removing AVX2 only moved the crash one model later - so the cause was the missing range
+checks, not the vector extensions. This step found the actual line.
+
+**How.** Running the models one by one in a single process narrowed it to ONE model,
+`parameterConversionTest.py`, which probes every parameter of every item with deliberately wrong
+values. It does not crash on its own, so the state mattered; a probe trace named the last probe,
+but the ground truth came from a build with **AddressSanitizer**
+(`EXUDYN_EXTRA_COMPILE_ARGS="/fsanitize=address /GL- /Od /bigobj /Z7"`, which the switch of step
+R2.17.1 now makes reliable): access-violation at `0xffffffffffffffff` in `CObject::GetCNode`,
+called from `CObjectANCFThinPlate::ComputeReferenceObjectCoordinates`, from
+`ParametersHaveChanged`, from `MainObjectANCFThinPlate::SetWithDictionary`.
+
+**The defect.** `SetWithDictionary` ends with `GetCObject()->ParametersHaveChanged()`, which runs
+with whatever the user put in the dictionary and **before** the object factory validates the item.
+`CObjectANCFThinPlate::ParametersHaveChanged` computes the slope scaling of a flat element from
+its nodes, so with a default or invalid node number it reads `cSystemData->GetCNodes()[-1]`. In
+`exudynCPP` the range check of the array turns that into a clean Python exception - which is why
+nobody ever saw it - and in `exudynCPPfast` the checks are gone and the process dies. The range
+check was doing validation work that validation should have done.
+
+`CObjectANCFThinPlate` is the **only** object that dereferences nodes in `ParametersHaveChanged`,
+so the fix is local: compute the scaling only when every node number addresses an existing node.
+Nothing is reported there - the factory reports the invalid number a moment later, and reporting it
+twice would be worse. The helper is a file-local function, not a member: the class declaration is
+generated (CLAUDE.md rule 1).
+
+**Result.** The whole suite completes under `exudynCPPfast`, and all 113 models run in one process
+under it. `parameterConversionTest` records behaviour, so its reference file changed by exactly
+what the fix means: `ObjectANCFThinPlate.nodeNumbers` now lands in the same outcome row as
+`ObjectANCFCable2D.nodeNumbers` and its peers, instead of the row it reached by crashing out early.
+
+**What this exposes** is recorded as step R2.10.3: the fast module now runs the suite and fails 33
+models - exactly the AVX2 set of R2.10, because the fast module carries AVX2 while the reference
+values are baseline. The assumption that one set of reference values holds for both modules was
+established on Linux (R2.16); on Windows it does not hold, and the maintainer has to decide whether
+`useAVX2` should default to off, whether the fast module gets its own values, or whether it is
+judged only on the models that are not chaotic.
+
 <a id="r2-11"></a>
 ### R2.11 — metadata drift
 
