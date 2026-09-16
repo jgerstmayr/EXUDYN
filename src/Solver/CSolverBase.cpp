@@ -124,8 +124,9 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 
 	//timer.Reset(simulationSettings.displayComputationTime); //done in SolveSteps
 
-	STDstring solutionFileName = GetSolutionFileName(simulationSettings);
-	STDstring solverFileName = solutionSettings.solverInformationFileName;
+	//exudyn.config.outputDirectory is prepended here, where the files are opened (#2418)
+	STDstring solutionFileName = ResolveOutputFileName(GetSolutionFileName(simulationSettings));
+	STDstring solverFileName = ResolveOutputFileName(solutionSettings.solverInformationFileName);
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//open solution file
@@ -197,12 +198,13 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
                 auto fileMode = std::ofstream::out;
                 if (solutionSettings.sensorsAppendToFile) { fileMode = std::ofstream::app; }
 
-                CheckPathAndCreateDirectories(item->GetFileName());
-                sensorFile->open(item->GetFileName(), fileMode);
+                STDstring sensorFileName = ResolveOutputFileName(item->GetFileName()); //#2418
+                CheckPathAndCreateDirectories(sensorFileName);
+                sensorFile->open(sensorFileName, fileMode);
 
                 if (!sensorFile->is_open()) //failed to open file ...  e.g. invalid file name
                 {
-                    SysError(STDstring("failed to open sensor file '") + item->GetFileName() + "' (sensor number " + EXUstd::ToString(cnt) + ")", file.solverFile);
+                    SysError(STDstring("failed to open sensor file '") + sensorFileName + "' (sensor number " + EXUstd::ToString(cnt) + ")", file.solverFile);
                     file.sensorFileList.back() = nullptr; //mark this ofstream as unwriteable
                 }
                 else

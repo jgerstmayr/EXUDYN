@@ -39,6 +39,10 @@ public:
     void SetSuppressWarnings(Index flag) { suppressWarnings = flag; } //global flag
     Index GetSuppressWarnings() const { return suppressWarnings; }
 
+    //! directory prepended to solution, sensor and image files when they are opened (#2418)
+    void SetOutputDirectory(const std::string& directory) { outputDirectory = directory; }
+    std::string GetOutputDirectory() const { return outputDirectory; }
+
     //! links to global outputBuffer
     void SetPrintDelayMilliSeconds(Index delayMilliSeconds) { outputBuffer.SetDelayMilliSeconds(delayMilliSeconds); }
     Index GetPrintDelayMilliSeconds() const { return outputBuffer.GetDelayMilliSeconds(); }
@@ -63,6 +67,7 @@ public:
     {
         os << "  Version() = " << GetExudynBuildVersionString(true) << "\n";
         os << "  suppressWarnings = " << GetSuppressWarnings() << "\n";
+        os << "  outputDirectory = " << GetOutputDirectory() << "\n";
         os << "  outputPrecision = " << GetOutputPrecision() << "\n";
         os << "  linalgOutputFormatPython = " << GetLinalgPrintUsePythonFormat() << "\n";
         os << "  printDelayMilliSeconds = " << GetPrintDelayMilliSeconds() << "\n";

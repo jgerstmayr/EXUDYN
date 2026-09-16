@@ -105,6 +105,29 @@ bool CheckPathAndCreateDirectories(const STDstring& pathAndFileName)
 	return returnValue;
 }
 
+//! see Stdoutput.h; set from Python as exudyn.config.outputDirectory (#2418)
+STDstring outputDirectory = "";
+
+STDstring ResolveOutputFileName(const STDstring& fileName)
+{
+	if (outputDirectory.empty() || fileName.empty()) { return fileName; }
+
+	//absolute paths: '/...', '\...', '\\server\...' and 'C:\...'; checked here and not before the
+	//run, so that the error names the file that is actually opened
+	bool isAbsolute = (fileName[0] == '/' || fileName[0] == '\\' ||
+		(fileName.size() > 1 && fileName[1] == ':'));
+	if (isAbsolute)
+	{
+		throw EXUexception(STDstring("exudyn.config.outputDirectory is set to '") + outputDirectory +
+			"', but the file name '" + fileName + "' is an absolute path; use a relative file name "
+			"or reset exudyn.config.outputDirectory = ''");
+	}
+
+	char last = outputDirectory[outputDirectory.size() - 1];
+	if (last == '/' || last == '\\') { return outputDirectory + fileName; }
+	return outputDirectory + "/" + fileName;
+}
+
 
 
 
@@ -234,7 +257,8 @@ void OutputBuffer::SetWriteToFile(STDstring filename, bool flagWriteToFile, bool
 	writeToFile = flagWriteToFile;
 	writeAppend = flagAppend;
 	writeFlushAlways = flagFlushAlways;
-	writeFilename = filename;
+	//exudyn.Print writes an output of the run as well, so it follows outputDirectory (#2454)
+	writeFilename = ResolveOutputFileName(filename);
 
 	if (writeToFile) //if file is already open, close it!
 	{
@@ -242,7 +266,7 @@ void OutputBuffer::SetWriteToFile(STDstring filename, bool flagWriteToFile, bool
 	}
 	if (flagWriteToFile)        //now open file with new file name
 	{
-		CheckPathAndCreateDirectories(filename);
+		CheckPathAndCreateDirectories(writeFilename);
 
 		if (writeAppend)
 		{ 

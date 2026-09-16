@@ -14,6 +14,7 @@
 
 
 from exudyn.docmeta import docmeta
+from exudyn.basicUtilities import OutputFilePath #exudyn.config.outputDirectory (#2454)
 import numpy as np
 import sys
 import time
@@ -90,6 +91,8 @@ def AddComputationIndexAndFunctionData(ind, cnt, addComputationIndex, parameterF
 #function: internal output function for ParameterVariation and GeneticOptimization
 # write header or values to output file and increase counter
 def WriteToFile(resultsFile, parameters, currentGeneration, values, globalCnt, writeHeader = False, fileType='genetic optimization', multiProcessingMode=''):
+    #the results file of a parameter variation is an output of the run as well (#2454)
+    resultsFile = OutputFilePath(resultsFile, 'ParameterVariation/GeneticOptimization')
     if resultsFile != '':
 
         if writeHeader:

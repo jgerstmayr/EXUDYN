@@ -26,9 +26,10 @@ __all__ = [
     'gaussIntegrationPoints', 'gaussIntegrationWeights', 'GaussIntegrate',
     'lobattoIntegrationPoints', 'lobattoIntegrationWeights', 'LobattoIntegrate', 'GetOtherMarker',
     'GetJointArgs', 'ShowOnlyObjects', 'HighlightItem', 'UFsensorRecord', 'AddSensorRecorder',
-    'LoadSolutionFile', 'NumpyInt8ArrayToString', 'BinaryReadIndex', 'BinaryReadReal',
-    'BinaryReadString', 'BinaryReadArrayIndex', 'BinaryReadRealVector', 'LoadBinarySolutionFile',
-    'RecoverSolutionFile', 'InitializeFromRestartFile', 'SetSolutionState', 'AnimateSolution',
+    'OutputFilePath', 'LoadSolutionFile', 'NumpyInt8ArrayToString', 'BinaryReadIndex',
+    'BinaryReadReal', 'BinaryReadString', 'BinaryReadArrayIndex', 'BinaryReadRealVector',
+    'LoadBinarySolutionFile', 'RecoverSolutionFile', 'InitializeFromRestartFile',
+    'SetSolutionState', 'AnimateSolution',
     ]
 
 #define some constants which would require external libraries
@@ -439,6 +440,48 @@ def AddSensorRecorder(mbs, sensorNumber, endTime, sensorsWritePeriod, sensorOutp
                                                    sensorUserFunction=UFsensorRecord))
     
     return sUserRecord
+
+
+def OutputFilePath(fileName, callerInfo=''):
+    """merge a local file name with the global exudyn.config.outputDirectory, exactly as the solver
+    does when it writes solution, sensor, image and print files (#2454)
+
+    Note:
+        The rule in Exudyn is: everything WRITTEN as output of a run follows
+        exudyn.config.outputDirectory, and a file is READ from there only if its name comes from
+        Exudyn itself - the simulation settings (SolutionViewer) or a sensor definition
+        (PlotSensor). A file name that you pass to a function such as LoadSolutionFile is read
+        exactly as given; wrap it in OutputFilePath(...) yourself if you want the output directory.
+        Model data (mesh import, FEMinterface/ObjectFFRFreducedOrderInterface SaveToFile and
+        LoadFromFile, SaveDictToHDF5/LoadDictFromHDF5) is never redirected.
+
+    Args:
+        fileName: file name as given by the user or stored in a sensor or in the simulation settings
+        callerInfo: name of the calling function, used in the error message
+
+    Returns:
+        fileName unchanged if exudyn.config.outputDirectory is empty, otherwise the merged path
+
+    Example:
+        exudyn.config.outputDirectory = 'run17'
+        OutputFilePath('solution/sensor.txt') #'run17/solution/sensor.txt'
+    """
+    outputDirectory = exudyn.config.outputDirectory
+    if outputDirectory == '' or fileName == '':
+        return fileName
+
+    #an absolute file name and a set output directory contradict each other; raise the same way as
+    #the C++ writers, but name the function the user called
+    if (fileName[0] == '/' or fileName[0] == '\\'
+        or (len(fileName) > 1 and fileName[1] == ':')):
+        raise ValueError((callerInfo + ': ' if callerInfo != '' else '')
+                         + 'the file name "' + fileName + '" is an absolute path, while '
+                         'exudyn.config.outputDirectory is set to "' + outputDirectory + '"; '
+                         'use a relative file name or reset exudyn.config.outputDirectory = ""')
+
+    if outputDirectory[-1] in '/\\':
+        return outputDirectory + fileName
+    return outputDirectory + '/' + fileName
 
 
 def LoadSolutionFile(fileName, safeMode=False, maxRows=-1, verbose=True, hasHeader=True):

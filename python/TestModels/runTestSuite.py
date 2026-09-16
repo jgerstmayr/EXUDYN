@@ -81,6 +81,9 @@ TSScope.runTestExamples = True
 TSScope.runMiniExamples = True
 TSScope.runCppUnitTests = True
 
+#root for everything the models write; each model gets its own subdirectory below it (#2418)
+TSScope.solutionDirectory = 'solution'
+
 TSScope.printTestResults = False #print list, which can be imported for new reference values
 if platform.architecture()[0] == '32bit' and isWindows:
     TSScope.testTolerance = 2e-12 #2022-03-17: use 2e-12 instead of 2e-13 to complete all tests; larger tolerance, because reference values are computed with 64bit version (WHY?)
@@ -255,6 +258,10 @@ if TSScope.runTestExamples:
         exu.Print('  START TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '"):')
         exu.Print('******************************************')
         SC.Reset() #??needed
+        #every model writes into its own directory, so two models cannot collide on a file name
+        #such as solution/coordinatesSolution.txt - the prerequisite for running the suite in
+        #parallel (#2418). Models keep their own relative file names; only the root moves.
+        exu.config.outputDirectory = TSScope.solutionDirectory + '/' + TSScope.file[:-3]
         exudynTestGlobals.testError = -1 #default value !=-1, if there is an error in the calculation
         exudynTestGlobals.testResult = TSScope.invalidResult #strange default value to see if there is a missing testResult
         TSScope.testTimeStart = time.perf_counter()
@@ -341,6 +348,7 @@ if TSScope.runMiniExamples:
         exu.Print('  START MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '"):')
         SC.Reset()
         testError = -1
+        exu.config.outputDirectory = TSScope.solutionDirectory + '/MiniExamples/' + file[:-3] #(#2418)
         fileDir = 'MiniExamples/'+file
         miniTimeStart = time.perf_counter()
         try:
@@ -380,6 +388,7 @@ if TSScope.runCppUnitTests:
     else:
         TSScope.runCppUnitTests = False #will display that they were skipped 
 TSScope.timeStart += time.time()
+exu.config.outputDirectory = '' #the setting is global and would otherwise outlive the run (#2418)
         
         
 exu.Print('\n')

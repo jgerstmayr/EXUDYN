@@ -16,6 +16,7 @@ import numpy as np #for loading
 import exudyn #for sensor index
 from exudyn.extensionRegistry import extends
 from exudyn.advancedUtilities import PlotLineCode, IsListOrArray, IsEmptyList
+from exudyn.basicUtilities import OutputFilePath #merge with exudyn.config.outputDirectory (#2454)
 import copy
 import os
 
@@ -409,6 +410,8 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
         if type(sensorNumber) == str: #direct path to file name
             sensorDict={}
             sensorDict['fileName'] = sensorNumber #sensorNumber must contain a file name, otherwise will fail
+            sensorDict['userFileName'] = True #given by the user: read as given, not relative to
+                                              #exudyn.config.outputDirectory (#2454)
             sensorDict['outputVariableType']=''
             sensorDict['name'] = sensorNumber.split('/')[-1].split('\\')[-1].split('.')[0] #use filename without path and ending
             
@@ -475,7 +478,12 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
         else:
             sComponent = str(component)
 
-        sensorFileNames += [sensorDict['fileName']]
+        #the file name of a SENSOR was written by the solver into exudyn.config.outputDirectory, so
+        #it is read from there; a file name passed by the user keeps its own path (#2454)
+        if sensorDict.get('userFileName', False):
+            sensorFileNames += [sensorDict['fileName']]
+        else:
+            sensorFileNames += [OutputFilePath(sensorDict['fileName'], 'PlotSensor')]
         sensorLabels += [sensorName+', '+variableStr+sComponent]
         sensorTypes += [variableStr]
     
@@ -683,6 +691,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
         if matplotlib.get_backend().lower() != 'agg': #this is used to avoid showing the figures, if they are just saved
             handle.show() 
         
+        fileName = OutputFilePath(fileName, 'PlotSensor') #saved figure is an output too (#2454)
         if fileName != '':
             try:
                 os.makedirs(os.path.dirname(fileName), exist_ok=True)

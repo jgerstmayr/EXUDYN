@@ -121,7 +121,7 @@ pb.EndCppWrittenByHand() #this function is defined in __init__.py ==> do not add
 
 
 pb.DefPyFunctionAccess(cClass='', pyName='SetWriteToFile', cName='PySetWriteToFile', 
-                            description="set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write \\texttt{exu.SetWriteToFile('', False)} to close the output file; in case of flagFlushAlways=True, file will be finalized immediately in every print command, but may be slower;",
+                            description="set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write \\texttt{exu.SetWriteToFile('', False)} to close the output file; in case of flagFlushAlways=True, file will be finalized immediately in every print command, but may be slower; the filename is relative to exudyn.config.outputDirectory, which is prepended when the file is opened; an absolute filename together with a non-empty outputDirectory raises an error;",
                             argList=['filename', 'flagWriteToFile', 'flagAppend', 'flagFlushAlways'],
                             defaultArgs=['', 'True', 'False', 'False'],
                             example="exudyn.config.printToConsole = False #no output to console\\\\exu.SetWriteToFile(filename='testOutput.log', flagWriteToFile=True, flagAppend=False, flagFlushAlways=False)\\\\exu.Print('print this to file')\\\\exu.SetWriteToFile('', False) #terminate writing to file which closes the file",
@@ -243,6 +243,8 @@ pb.DefLatexDataAccess('config','global config settings, like precision, print be
                        dataType='Config', isTopLevel = True)
 pb.DefLatexDataAccess('config.suppressWarnings','flag to suppress all warnings (default=False)',
                         dataType='Config', isTopLevel = True)
+pb.DefLatexDataAccess('config.outputDirectory','directory which is prepended to all files written by the solver: the coordinates solution file, the solver information file, sensor files and exported images; default="" (files are written exactly as given). An absolute file name together with a non-empty outputDirectory raises an error when the file is opened. NOTE: this setting is global and stays active as long as the exudyn module is loaded, so running two models one after the other in the same process will put both outputs into the same directory; normally you should specify the output folder directly in the file names and use this setting only for a test runner or a batch script. The rule is: everything WRITTEN as output of a run follows the setting, while a file is READ from there only if its name comes from Exudyn itself. Writing: the coordinates solution file, the solver information file, sensor files, exported images, the exudyn.Print log (SetWriteToFile), the figure saved by PlotSensor and the results file of ParameterVariation/GeneticOptimization. Reading: SolutionViewer (name taken from the simulation settings) and PlotSensor for a sensor given by its number (name taken from the sensor). NOT affected: a file name you pass yourself, e.g. to LoadSolutionFile, LoadBinarySolutionFile, RecoverSolutionFile, InitializeFromRestartFile or PlotSensor as a string, and all model data such as mesh import, FEMinterface/ObjectFFRFreducedOrderInterface SaveToFile/LoadFromFile and SaveDictToHDF5/LoadDictFromHDF5; use exudyn.basicUtilities.OutputFilePath(fileName, callerInfo) in your script if you want those in the output directory as well',
+                        dataType='Config', isTopLevel = True)
 pb.DefLatexDataAccess('config.outputPrecision','change precision (number of digits) in C++ and Python output',
                         dataType='Config', isTopLevel = True)
 pb.DefLatexDataAccess('config.linalgOutputFormatPython','True (default): use Python format for output of vectors and matrices; False: use Matlab format',
@@ -255,7 +257,7 @@ pb.DefLatexDataAccess('config.printToConsole','enables or disables writing to co
                         dataType='Config', isTopLevel = True)
 pb.DefLatexDataAccess('config.printToFile','flag that shows if writing to file with exudyn.Print(...) is enabled; flag is readonly',
                         dataType='Config', isTopLevel = True)
-pb.DefLatexDataAccess('config.printFileName','file name for writing to file with exudyn.Print(...); flag is readonly',
+pb.DefLatexDataAccess('config.printFileName','file name for writing to file with exudyn.Print(...), as resolved when the file was opened: it is relative to config.outputDirectory, which is prepended by SetWriteToFile(...); flag is readonly',
                         dataType='Config', isTopLevel = True)
 pb.DefLatexDataAccess('config.printToFileAppend','flag that shows if append mode is used for writing to file with exudyn.Print(...); flag is readonly',
                         dataType='Config', isTopLevel = True)

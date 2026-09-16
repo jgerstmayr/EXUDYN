@@ -58,6 +58,14 @@ mbs.AddObject(RevoluteJoint2D(markerNumbers=[mG0,mR1]))
 
 mbs.AddLoad(Force(markerNumber = mR2, loadVector = [0, -massRigid*g, 0]))
 
+#this model is the designated writing test of the suite (#2418): while most test models keep their
+#results internally (storeInternal=True) and write nothing, this one writes the coordinates
+#solution file AND a sensor file, and reads both back, so that both writers stay tested
+sensorEnd = mbs.AddSensor(SensorBody(bodyNumber=oRigid, localPosition=[a,0.,0.],
+                                     outputVariableType=exu.OutputVariableType.Position,
+                                     fileName='solution/endPointPosition.txt',
+                                     storeInternal=True))
+
 mbs.Assemble()
 #exu.Print(mbs)
 
@@ -88,8 +96,26 @@ mbs.SolveDynamic(simulationSettings)#, experimentalNewSolver=False)
 #%%*****************************************
 #post processing for mass point system
 
-dataM = np.loadtxt('solution/modifiedNewton.txt', comments='#', delimiter=',')
-dataF = np.loadtxt('solution/fullNewton.txt', comments='#', delimiter=',')
+#OutputFilePath merges the file name with exudyn.config.outputDirectory, which the test suite
+#sets per model and which is '' when this model is run standalone (#2454)
+import os
+from exudyn.basicUtilities import OutputFilePath
+def OutputFile(name):
+    return OutputFilePath(name, 'compareFullModifiedNewton')
+
+dataM = np.loadtxt(OutputFile('solution/modifiedNewton.txt'), comments='#', delimiter=',')
+dataF = np.loadtxt(OutputFile('solution/fullNewton.txt'), comments='#', delimiter=',')
+
+#the sensor file must contain what the internal storage holds; this is the check that keeps the
+#file writer honest now that the other models store internally
+sensorFromFile = np.loadtxt(OutputFile('solution/endPointPosition.txt'), comments='#', delimiter=',')
+sensorInternal = mbs.GetSensorStoredData(sensorEnd)
+sensorDeviation = np.max(np.abs(sensorFromFile - sensorInternal))
+exu.Print("compareFullModifiedNewton sensor file vs internal =", sensorDeviation)
+if sensorFromFile.shape != sensorInternal.shape or sensorDeviation > 1e-8: #file output has ~10 digits (solutionSettings.outputPrecision), internal data is exact
+    raise ValueError('sensor file and internal sensor data disagree: shapes '
+                     + str(sensorFromFile.shape) + ' and ' + str(sensorInternal.shape)
+                     + ', largest deviation ' + str(sensorDeviation))
 
 # exu.Print("solFullNewton     =",sum(abs(dataF[:,5])))
 # exu.Print("solModifiedNewton =",sum(abs(dataM[:,5])))
@@ -100,9 +126,9 @@ exu.Print("compareFullModifiedNewton u=",u)
 exudynTestGlobals.testError = u - (0.0001583478719999567 ) #2020-12-18: 0.0001583478719999567 
 exudynTestGlobals.testResult = u
 
-import os
-os.remove('solution/modifiedNewton.txt')
-os.remove('solution/fullNewton.txt')
+os.remove(OutputFile('solution/modifiedNewton.txt'))
+os.remove(OutputFile('solution/fullNewton.txt'))
+os.remove(OutputFile('solution/endPointPosition.txt'))
 
 if useGraphics:
     # plt.plot(dataM[:,0], dataM[:,3+2], 'b-') #plot column i over column 0 (time)

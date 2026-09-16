@@ -4166,6 +4166,78 @@ Folded in, since they touch the same log and the same code:
     in the header, and a per-test overview table. → [log](exudynRevisionLog2026.md#r5-10)
 
 
+<a id="r5-13"></a>
+### R5.13 - test-suite output goes to its own directory
+
+**DONE 2026-09-16** (#2418, #2454).
+
+**Measured first.** A full suite run touches only 13 files, so the problem was never the amount of
+output - it is that the names collide: `solution/coordinatesSolution.txt` is used by **8** models,
+`solution/coordinatesSolutionCMStest.txt` by 6, sensor names such as `solution/rollingDiscTrail.txt`
+by 4 each, and one model still wrote `coordinatesSolution.txt` next to itself. Two models running
+at the same time would overwrite each other's results, which is what blocked step R5.8.
+
+**Decision (maintainer, 2026-09-16): a central output directory in Exudyn**, rather than renaming
+~200 file-name strings in ~40 models, which would leave the next new model free to collide again.
+
+**`exudyn.config.outputDirectory` (#2454).** When set, it is prepended to every file the **solver**
+opens: the coordinates solution file, the solver information file, sensor files and exported images.
+Implementation is one helper, `ResolveOutputFileName()` in `src/Main/Stdoutput.cpp`, called at the
+four places where those files are opened - so there is no second copy of the rule.
+
+- **Absolute file names raise an error**, as required by the maintainer: not as a pre-check, but
+  when the file is opened, so the message names the file that actually failed. `C:\...`, `/...`,
+  `\\server\...` are all recognised; the error says to use a relative name or to reset the setting.
+- **The setting is global and lives as long as the module is loaded.** That is written into its
+  description in `definitions/pybindModule.py`: running two models one after the other in the same
+  process puts both outputs into the same place, so users should normally put the folder into the
+  file names and keep this setting for test runners and batch scripts.
+- **The Python side follows one rule** (maintainer, 2026-09-16, refined twice): everything
+  **written** as output of a run follows the setting, and a file is **read** from there only when
+  its name comes from Exudyn itself. So `SolutionViewer` resolves the name it takes from the
+  simulation settings, and `PlotSensor` resolves the name stored in a sensor - but a file name that
+  the user passes (`LoadSolutionFile`, `LoadBinarySolutionFile`, `RecoverSolutionFile`,
+  `InitializeFromRestartFile`, `PlotSensor('name.txt')`) is read exactly as given. The figure saved
+  by `PlotSensor` and the results file of `ParameterVariation`/`GeneticOptimization` are written
+  output and follow the setting. `exudyn.basicUtilities.OutputFilePath(fileName, callerInfo)` is the
+  one helper for all of it: it merges the name and raises, naming the calling function, when the
+  name is absolute while the setting is not empty.
+  *An earlier version redirected the loaders as well; the maintainer rejected it because the name
+  says outputDirectory and a name typed at the call site is the user's own path.*
+- **`exudyn.Print` to file follows it too**: `SetWriteToFile()` resolves the name when it opens
+  the file, so `config.printFileName` reports the resolved path. The print log is output of a run.
+- **Model DATA is deliberately NOT covered** (maintainer decision 2026-09-16, after a first attempt
+  that did cover it): mesh import, `FEMinterface`/`ObjectFFRFreducedOrderInterface`
+  `SaveToFile`/`LoadFromFile`, `SaveDictToHDF5`/`LoadDictFromHDF5` and graphics import read and
+  write exactly what they are given. The name says `outputDirectory`, and a mesh is not output.
+  The attempt to include them proved the point inside one suite run: `NGsolveCMStest` reads the
+  **tracked input** mesh `testData/netgenTestMesh.pkl`, silently recomputed it instead and moved the
+  result by 2.4e-8, and `pickleCopyMbs` failed because `h5py` does not create directories. Adding a
+  `useOutputDirectory` flag to those functions would have papered over that; it was reverted.
+- **Instead the three models that write data files name the directory themselves**
+  (`NGsolveCMStest`, `abaqusImportTest`, `pickleCopyMbs`): they build their file name with
+  `OutputFilePath(...)`, which is a two-line change per model and keeps the library consistent.
+  A side effect: `NGsolveCMStest` no longer writes its generated round-trip meshes into the tracked
+  `testData/` directory, one item of R5.13.1 fixed in passing.
+
+**In the test suite.** `runTestSuite.py` sets `solution/<modelName>` before each model (and
+`solution/MiniExamples/<name>` for the mini examples), and resets the setting to `''` at the end of
+the run. Models keep their own relative file names; only the root moves. Verified: after a full run
+every written file sits under `solution/<model>/`, nothing is written next to the models any more,
+and the suite passes.
+
+**The writing path stays tested.** `compareFullModifiedNewton.py` is now the designated writing
+test: it already wrote and re-read two coordinates solution files, and it now also writes a sensor
+file **and** stores the same sensor internally, then compares the two. Deviation measured 5e-11,
+which is the file output precision (`solutionSettings.outputPrecision`), so the check runs at 1e-8;
+a shape or value mismatch raises. Its `os.remove` calls were moved to the resolved paths.
+
+**Not done here, and why.** The models still *write*; only the collisions are gone. Turning 24
+solution writers and 32 sensor writers into `storeInternal=True` touches the plotting code of 11
+models under `useGraphics`, and three models write generated meshes into the tracked `testData/`
+directory through plain Python calls, which this setting does not reach. That is step R5.13.1.
+
+
 ## R6 — Error handling and UX
 
 <a id="r6-5"></a>

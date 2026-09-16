@@ -9,15 +9,33 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.92.dev1, 
+  \item Exudyn version = 1.11.94.dev1, 
   \item last change =  2026-09-16, 
-  \item Number of issues = 2454, 
-  \item Number of resolved issues = 2165 (92 in current version), 
+  \item Number of issues = 2456, 
+  \item Number of resolved issues = 2167 (94 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.94}:  resolved Issue 2454: {\bf exudyn.config.outputDirectory: global output directory for solver written files}
+(add)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: revision2026 step R5.13: solver written files (coordinates solution; solver information; sensor files; exported images) are prefixed with exudyn.config.outputDirectory when it is set. An absolute file name together with a non-empty outputDirectory raises an error when the file is opened. The setting is global and lives as long as the module is loaded; it is meant for test runners and batch scripts; users should put the folder into the file names. Needed so that the test suite can give every model its own output directory (\#2418) - the prerequisite for running the suite in parallel}
+    \item {\bf notes: revision2026 step R5.13: ResolveOutputFileName() in Stdoutput.cpp, applied to solution, solver information, sensor and image files; absolute names raise on open}
+    \item   date resolved: {\bf 2026-09-16 10:16},
+date raised: 2026-09-16 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.93}:  resolved Issue 2418: {\bf test suite models write output files into TestModels instead of solution/}
+(testing)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: models write solution and sensor files next to themselves (coordinatesSolution.txt and others) so TestModels/ fills with output and runs collide on the same file names - which blocks running the suite in parallel (revision2026 step R5.8). In the test suite all output goes to solution/ with unique per-model names; file writes are avoided widely (sensors storeInternal and writeSolutionToFile False) and done only sparsely so writing stays tested - those tests re-read the written files and check them. TestExamples stay serial: they only check that examples still run against the current API. revision2026 step R5.13.}
+    \item {\bf notes: revision2026 step R5.13: exudyn.config.outputDirectory plus one output directory per model in runTestSuite.py; compareFullModifiedNewton is the designated writing test}
+    \item   date resolved: {\bf 2026-09-16 10:16},
+date raised: 2026-09-14 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.92}:  resolved Issue 2397: {\bf the only benchmark that resolves AVX2 is commented out inside exu.Test()}
 (check)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

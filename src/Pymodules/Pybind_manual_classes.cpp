@@ -423,6 +423,7 @@ void Init_Pybind_manual_classes(py::module& m) {
 		//+++++++++++++++++++++++++++++++++++++++++++
 		.def_property("outputPrecision", &ExudynConfig::GetOutputPrecision, &ExudynConfig::SetOutputPrecision)
 		.def_property("suppressWarnings", &ExudynConfig::GetSuppressWarnings, &ExudynConfig::SetSuppressWarnings)
+		.def_property("outputDirectory", &ExudynConfig::GetOutputDirectory, &ExudynConfig::SetOutputDirectory)
 		.def_property("linalgOutputFormatPython", &ExudynConfig::GetLinalgPrintUsePythonFormat, &ExudynConfig::SetLinalgPrintUsePythonFormat)
 
 		.def_property("printDelayMilliSeconds", &ExudynConfig::GetPrintDelayMilliSeconds, &ExudynConfig::SetPrintDelayMilliSeconds)

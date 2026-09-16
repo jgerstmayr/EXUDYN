@@ -104,3 +104,10 @@ extern OutputBuffer outputBuffer;  //!< link outputBuffer to change options
 //! this function requires C++17 std libraries
 //! works with local path
 bool CheckPathAndCreateDirectories(const STDstring& pathAndFileName);
+
+extern STDstring outputDirectory; //!< global directory prepended to written files; exudyn.config.outputDirectory (#2418)
+
+//! prepend outputDirectory to fileName (solution, solver information, sensor and image files);
+//! raises an exception if fileName is an absolute path while outputDirectory is set, because the
+//! two would contradict each other; returns fileName unchanged if outputDirectory is empty
+STDstring ResolveOutputFileName(const STDstring& fileName);

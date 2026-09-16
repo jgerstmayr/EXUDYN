@@ -53,7 +53,8 @@ for element in elements:
     fem.ReadMassMatrixFromAbaqus(inputFileName+'_MASS1.mtx')
     fem.ReadStiffnessMatrixFromAbaqus(inputFileName+'_STIF1.mtx')
     if True:
-        fn = 'solution/testFEM'
+        from exudyn.basicUtilities import OutputFilePath
+        fn = OutputFilePath('solution/testFEM', 'abaqusImportTest') #output of the test (#2418)
         #test save and import
         if np.__version__ <= '2.0': #load save does not work yet!
             fem.SaveToFile(fn)
@@ -103,7 +104,7 @@ for element in elements:
     
     cms = ObjectFFRFreducedOrderInterface(fem)
     if True: #try save/load
-        fn = 'solution/testCMS'
+        fn = OutputFilePath('solution/testCMS', 'abaqusImportTest') #output of the test (#2418)
         cms.SaveToFile(fn)
         cms = ObjectFFRFreducedOrderInterface()
         cms.LoadFromFile(fn)

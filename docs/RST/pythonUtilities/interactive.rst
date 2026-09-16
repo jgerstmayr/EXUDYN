@@ -63,7 +63,7 @@ Function: SolutionViewer
 
 Function: ConvertImages2Video
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ConvertImages2Video <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L962>`__\ (\ ``workingDir = 'images'``\ , \ ``inputPattern = 'frame%05d.png'``\ , \ ``outputFile = 'animation.mp4'``\ , \ ``inputFrameRate = 25``\ , \ ``outputFrameRate = 25``\ , \ ``compressionCRF = 28``\ , \ ``startNumber = 0``\ , \ ``totalFrames = None``\ )
+`ConvertImages2Video <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L965>`__\ (\ ``workingDir = 'images'``\ , \ ``inputPattern = 'frame%05d.png'``\ , \ ``outputFile = 'animation.mp4'``\ , \ ``inputFrameRate = 25``\ , \ ``outputFrameRate = 25``\ , \ ``compressionCRF = 28``\ , \ ``startNumber = 0``\ , \ ``totalFrames = None``\ )
 
 - | \ *function description*\ :
   | function to call ffmpeg in the background and convert images to video; requires ffmpeg-python to be installed
@@ -97,7 +97,7 @@ Function: ConvertImages2Video
 
 Function: InteractiveImages2Video
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`InteractiveImages2Video <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L1020>`__\ (\ ``closeAfterCreation = False``\ , \ ``fontSize = 11``\ )
+`InteractiveImages2Video <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L1023>`__\ (\ ``closeAfterCreation = False``\ , \ ``fontSize = 11``\ )
 
 - | \ *function description*\ :
   | interactive dialog to convert generated images to videos using ffmpeg library; see also ConvertImages2Video() for meaning of values; requires ffmpeg-python to be installed

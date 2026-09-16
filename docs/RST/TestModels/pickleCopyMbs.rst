@@ -105,12 +105,19 @@ You can view and download this file on Github: `pickleCopyMbs.py <https://github
    mbsDict['variables'] = {} 
    mbsDict['systemVariables'] = {}
    
-   #save mbs data (could also use dill)
-   with open('solution/mbs.pkl', 'wb') as f:
+   #save mbs data (could also use dill); the files are output of the test, so they go into
+   #exudyn.config.outputDirectory, which the test suite sets per model (#2418)
+   import os
+   from exudyn.basicUtilities import OutputFilePath
+   pickleFileName = OutputFilePath('solution/mbs.pkl', 'pickleCopyMbs')
+   hdf5FileName = OutputFilePath('solution/mbs.h5', 'pickleCopyMbs')
+   os.makedirs(os.path.dirname(pickleFileName), exist_ok=True)
+   
+   with open(pickleFileName, 'wb') as f:
        pickle.dump(mbsDict, f) #, pickle.HIGHEST_PROTOCOL)
    
    #load mbs data
-   with open('solution/mbs.pkl', 'rb') as f:
+   with open(pickleFileName, 'rb') as f:
        mbsCopy = pickle.load(f)
    
    SC = exu.SystemContainer()
@@ -133,8 +140,8 @@ You can view and download this file on Github: `pickleCopyMbs.py <https://github
        mbsDict = mbs.GetDictionary()
        mbsDict['variables'] = {} 
        mbsDict['systemVariables'] = {}
-       SaveDictToHDF5('solution/mbs.h5', mbsDict) #problems with Python functions as sub-dicts
-       mbsCopy2 = LoadDictFromHDF5('solution/mbs.h5', globals())
+       SaveDictToHDF5(hdf5FileName, mbsDict) #problems with Python functions as sub-dicts
+       mbsCopy2 = LoadDictFromHDF5(hdf5FileName, globals())
        # print('loaded_data:\n', mbsCopy2)
        
        SC = exu.SystemContainer()

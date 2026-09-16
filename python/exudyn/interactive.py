@@ -813,7 +813,7 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
         sol = LoadSolutionFile('coordinatesSolution.txt') #load solution: adjust to your file name
         mbs.SolutionViewer(sol) #call via MainSystem
     """
-    from exudyn.basicUtilities import SetSolutionState, LoadSolutionFile
+    from exudyn.basicUtilities import SetSolutionState, LoadSolutionFile, OutputFilePath
     
     mbs = mainSystem
     SC = mbs.GetSystemContainer()
@@ -831,7 +831,10 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
             else:
                 filename+='.txt' #this is the default ending for text
                 
-        solution = LoadSolutionFile(filename) #load solution file of previous simulation
+        #the name comes from the simulation settings, i.e. it is the name the SOLVER wrote with,
+        #so it is resolved with exudyn.config.outputDirectory here; LoadSolutionFile itself reads a
+        #file name given by the user as it is (#2454)
+        solution = LoadSolutionFile(OutputFilePath(filename, 'SolutionViewer'))
 
     nRows = solution['nRows']
     if nRows == 0:

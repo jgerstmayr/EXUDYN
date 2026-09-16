@@ -2600,7 +2600,8 @@ void GlfwRenderer::SaveImage(Index viewID)
 	//at this time, the scene must have been rendered (called directly from render loop after Render() )
 	if (basicVisualizationSystemContainer->SaveImageRequest(viewID))
 	{
-		STDstring filename = visSettings->exportImages.saveImageFileName;
+		//exudyn.config.outputDirectory applies to images as well (#2418)
+		STDstring filename = ResolveOutputFileName(visSettings->exportImages.saveImageFileName);
 
 		if (!visSettings->exportImages.saveImageSingleFile)
 		{

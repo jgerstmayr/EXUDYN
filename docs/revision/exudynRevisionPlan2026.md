@@ -648,15 +648,19 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     `tools/checkExtras.py` accordingly (#2377).
 
 <a id="r5-13"></a>
-**R5.13** *(phase R5, with R5.8 and R5.9)* **Test-suite output goes to `solution/`** (#2418). Models write
-    solution and sensor files next to themselves (`coordinatesSolution.txt` and friends), which
-    litters `TestModels/` and makes runs collide - the blocker for running the suite in parallel.
-    In the test suite every model writes into `solution/` with unique per-model file names, and
-    file writes are **avoided widely**: sensors mostly `storeInternal=True`,
-    `writeSolutionToFile` mostly `False`. Files are written only sparsely, so writing stays
-    tested, and those tests re-read the written solution and sensor files and check them.
-    `TestExamples` stay serial: they only check that the examples still run against the current
-    API, raising on e.g. a changed argument or function.
+**R5.13** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-13) — *(phase R5, with R5.8 and R5.9)* **Test-suite output goes to its own directory** (#2418, #2454): `exudyn.config.outputDirectory` and one output directory per model; no model writes next to itself any more.
+
+<a id="r5-13-1"></a>
+**R5.13.1** *(sub-step of R5.13)* **Stop writing what nothing reads.** Step R5.13 removed the
+    collisions; the writing itself is still there: 24 models set `writeSolutionToFile=True` and
+    32 write sensor files, although the values are read back only by `compareFullModifiedNewton`
+    (the designated writing test) and, under `useGraphics`, by 11 models that plot from the files.
+    Convert those to `storeInternal=True` with `mbs.PlotSensor`, and set `writeSolutionToFile=False`
+    where the file is never read. Also: `NGsolveCMStest`, `abaqusImportTest` and `pickleCopyMbs`
+    write generated meshes into the **tracked** `testData/` input directory
+    (`netgenTestMesh2.hdf5/.pkl`, `netgenTestMesh22.npz`), and `geneticOptimizationTest`,
+    `pickleCopyMbs` and the FEM tests write `.npz`/`.pkl`/`.h5` files through plain Python calls,
+    which `exudyn.config.outputDirectory` does not reach - these need the path in the model.
 
 ## R6 — Error handling and UX (ongoing, after R2)  <!-- old Phase 5 -->
 

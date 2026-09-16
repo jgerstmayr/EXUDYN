@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.92.dev1, 
++  Exudyn version = 1.11.94.dev1, 
 +  last change =  2026-09-16, 
-+  Number of issues = 2454, 
-+  Number of resolved issues = 2165 (92 in current version), 
++  Number of issues = 2456, 
++  Number of resolved issues = 2167 (94 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.94: resolved Issue 2454: exudyn.config.outputDirectory: global output directory for solver written files (add)
+    - issue author: Claude-JG
+    - description:  revision2026 step R5.13: solver written files (coordinates solution; solver information; sensor files; exported images) are prefixed with exudyn.config.outputDirectory when it is set. An absolute file name together with a non-empty outputDirectory raises an error when the file is opened. The setting is global and lives as long as the module is loaded; it is meant for test runners and batch scripts; users should put the folder into the file names. Needed so that the test suite can give every model its own output directory (#2418) - the prerequisite for running the suite in parallel
+    - **notes:** revision2026 step R5.13: ResolveOutputFileName() in Stdoutput.cpp, applied to solution, solver information, sensor and image files; absolute names raise on open
+    - date resolved: **2026-09-16 10:16**\ , date raised: 2026-09-16 
+    - resolved by: Claude-JG
+ * Version 1.11.93: resolved Issue 2418: test suite models write output files into TestModels instead of solution/ (testing)
+    - issue author: Claude-JG
+    - description:  models write solution and sensor files next to themselves (coordinatesSolution.txt and others) so TestModels/ fills with output and runs collide on the same file names - which blocks running the suite in parallel (revision2026 step R5.8). In the test suite all output goes to solution/ with unique per-model names; file writes are avoided widely (sensors storeInternal and writeSolutionToFile False) and done only sparsely so writing stays tested - those tests re-read the written files and check them. TestExamples stay serial: they only check that examples still run against the current API. revision2026 step R5.13.
+    - **notes:** revision2026 step R5.13: exudyn.config.outputDirectory plus one output directory per model in runTestSuite.py; compareFullModifiedNewton is the designated writing test
+    - date resolved: **2026-09-16 10:16**\ , date raised: 2026-09-14 
+    - resolved by: Claude-JG
  * Version 1.11.92: resolved Issue 2397: the only benchmark that resolves AVX2 is commented out inside exu.Test() (check)
     - issue author: Claude-JG
     - description:  measured 2026-09-12: runPerformanceTests.py gives 20.118 s without AVX2 and 20.137 s with -mavx2 -mfma in the same container - 0.1 percent; with per test differences in both directions. Four of the six performance tests are tiny systems run for about 1e6 steps; so the vectors are 3 to 20 elements long and per step overhead dominates; AVX2 only pays on long vectors. A sweep that does resolve it exists in PyTest() in src/Pymodules/pythonTests.cpp (exposed as exu.Test()); with recorded results in comments (speedup 3.1 for n=502; 3.5 for n=1002; plus an AVX/multithreaded/serial table for sizes 16 to 200002) - but it is entirely inside comment blocks and if (0); so exu.Test() runs none of it and the numbers cannot be reproduced. revision2026 step R2.10 cannot judge whether the fast variant earns its place in the wheel until there is a maintained benchmark over vector length
@@ -7280,6 +7292,11 @@ Version 0.1
 Open issues
 ***********
 
+ * :textblue:`open issue 2455:` pydoclint reports two violations in exudyn/__init__.py RequireVersion
+    - issue author: Claude-JG
+    - description:  found 2026-09-16 during revision2026 step R5.13; pre-existing and unrelated to that step: DOC111 (type hints in the docstring arg list while --arg-type-hints-in-docstring is False) and DOC202 (return section without a return statement) in RequireVersion; belongs to revision2026 step R5.5 (ruff and type checking)
+    - date raised: 2026-09-16 
+
  * **open issue 2432:** parameter conversion errors raise inconsistent exception types
     - issue author: Claude-JG
     - description:  Recorded by parameterConversionTest.py: a wrong value for an item or structure parameter raises RuntimeError (PyError after a C++ check or a pybind11 cast_error) - TypeError (pybind11 signature mismatch) or ValueError (Python checks) depending on the path; 34c4/34c5 moved most paths to RuntimeError. Maintainer decision 2026-09-15: exception types shall be corrected throughout the revision at an appropriate step - e.g. TypeError for a wrong type (str - list - None - item index into a scalar) and ValueError for a range violation or a wrong size - raised from PyConversion.h and PyError variants; reference update of parameterConversionTest.py. revision2026 step R6.7.
@@ -7288,11 +7305,6 @@ Open issues
  * **open issue 2423:** every C++ user error inspects the Python source for its file and line
     - issue author: Claude-JG
     - description:  PyError and PyWarning call PyGetCurrentFileInformation (src/Main/Stdoutput.cpp:259); which calls inspect.getframeinfo - that resolves the module by scanning sys.modules and reads the source file. The cost grows with the number of imported modules: the ~38000 probe errors of parameterConversionTest.py (revision2026 step R4.4.3.1) took 1 s standalone and 9 s inside runTestSuite.py after scipy; matplotlib and ngsolve were imported. It matters wherever errors are caught in a loop (parameter studies; try/except in user code). The frame alone (f_code.co_filename; f_lineno) gives the same information without the scan. revision2026 step R6.6.
-    - date raised: 2026-09-14 
-
- * **open issue 2418:** test suite models write output files into TestModels instead of solution/
-    - issue author: Claude-JG
-    - description:  models write solution and sensor files next to themselves (coordinatesSolution.txt and others) so TestModels/ fills with output and runs collide on the same file names - which blocks running the suite in parallel (revision2026 step R5.8). In the test suite all output goes to solution/ with unique per-model names; file writes are avoided widely (sensors storeInternal and writeSolutionToFile False) and done only sparsely so writing stays tested - those tests re-read the written files and check them. TestExamples stay serial: they only check that examples still run against the current API. revision2026 step R5.13.
     - date raised: 2026-09-14 
 
  * **open issue 2413:** ObjectContactConvexRoll.pContact is computed state stored in parameters
