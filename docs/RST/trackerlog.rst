@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.94.dev1, 
++  Exudyn version = 1.11.95.dev1, 
 +  last change =  2026-09-16, 
-+  Number of issues = 2456, 
-+  Number of resolved issues = 2167 (94 in current version), 
++  Number of issues = 2457, 
++  Number of resolved issues = 2168 (95 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.95: resolved Issue 2456: runTestSuite.py runs the models serially (change)
+    - issue author: Claude-JG
+    - description:  revision2026 step R5.8: the 114 test models ran one after the other in a single interpreter (about 22 seconds); with each model writing into its own output directory since step R5.13 they can run in separate processes. Added --parallel[=N]; the models are reported in the order of the reference list; serial stays the default for the commit gate because multithreaded solvers and ARPACK shift the last digits under load
+    - **notes:** revision2026 step R5.8: --parallel[=N] runs each model in its own interpreter (22 s -> 11 s with 8 workers); results reported in reference-list order; serial remains the default
+    - date resolved: **2026-09-16 14:24**\ , date raised: 2026-09-16 
+    - resolved by: Claude-JG
  * Version 1.11.94: resolved Issue 2454: exudyn.config.outputDirectory: global output directory for solver written files (add)
     - issue author: Claude-JG
     - description:  revision2026 step R5.13: solver written files (coordinates solution; solver information; sensor files; exported images) are prefixed with exudyn.config.outputDirectory when it is set. An absolute file name together with a non-empty outputDirectory raises an error when the file is opened. The setting is global and lives as long as the module is loaded; it is meant for test runners and batch scripts; users should put the folder into the file names. Needed so that the test suite can give every model its own output directory (#2418) - the prerequisite for running the suite in parallel

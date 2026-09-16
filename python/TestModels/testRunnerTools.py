@@ -15,6 +15,7 @@
 import os
 import sys
 import platform
+import time
 
 #shared temporary log directory for all runners; a single directory is easy to delete.
 #relative to the runner's working directory, which is the models directory.
@@ -242,3 +243,137 @@ def FormatTestOverview(title, names, results, errors, tolerances=None, times=Non
         s += '  Excluded from the exit code on Linux only - on Windows these must pass.\n'
 
     return s
+
+
+#%%******************************************************************************************************
+#the marker the bootstrap below prints, so that the result survives the process boundary
+resultMarker = '#__EXUDYN_TEST_RESULT__'
+
+#bootstrap executed by 'python -c' in the worker process: one model, one fresh interpreter.
+#It must set the same globals the in-process runner sets before exec'ing a model, and it must set
+#exudyn.config.outputDirectory BEFORE the model runs, so that the model writes into its own
+#directory (#2418) and two models cannot collide on a file name (revision2026 step R5.8).
+runModelBootstrap = """
+import sys, time
+sys.argv = [{fileName!r}]
+import matplotlib
+matplotlib.use('Agg')  #a worker must never open a window
+import exudyn as exu
+exu.config.outputDirectory = {outputDirectory!r}
+from modelUnitTests import exudynTestGlobals
+exudynTestGlobals.useGraphics = False
+exudynTestGlobals.performTests = True
+exudynTestGlobals.testResult = {invalidResult!r}
+exudynTestGlobals.testError = -1
+start = time.perf_counter()
+try:
+    exec(open({fileName!r}, encoding='utf8').read(), globals())
+finally:
+    try: #models return numpy scalars; the parent parses plain text, so convert here
+        _testResult = float(exudynTestGlobals.testResult)
+    except Exception:
+        _testResult = float('nan')
+    print({resultMarker!r}, repr(_testResult), repr(time.perf_counter()-start))
+"""
+
+
+#%%******************************************************************************************************
+def RunModelInProcess(fileName, solutionDirectory, invalidResult, timeout=1800,
+                      pythonExecutable=None):
+    """
+    Run ONE test model in a fresh interpreter and return what the suite needs to judge it.
+
+    A separate process is what makes parallel runs safe: the models share module state, global
+    settings (exudyn.config), the renderer and the system container when they are exec'd into one
+    interpreter, and several of them rely on that state being fresh.
+
+    Args:
+        fileName: name of the model file, relative to the models directory
+        solutionDirectory: root for the output; the model writes into solutionDirectory/<model>
+        invalidResult: the value the suite uses for 'no result was set'
+        timeout: seconds after which the model is killed and counted as failed
+        pythonExecutable: interpreter to use; default sys.executable
+
+    Returns:
+        dict with 'result', 'seconds', 'output' (everything the model printed) and 'failed'
+    """
+    import subprocess
+
+    source = runModelBootstrap.format(fileName=fileName,
+                                      outputDirectory=solutionDirectory + '/' + fileName[:-3],
+                                      invalidResult=invalidResult,
+                                      resultMarker=resultMarker)
+    start = time.perf_counter()
+    try:
+        completed = subprocess.run([pythonExecutable or sys.executable, '-c', source],
+                                   capture_output=True, text=True, errors='replace',
+                                   timeout=timeout)
+        output = completed.stdout + completed.stderr
+        failed = completed.returncode != 0
+    except subprocess.TimeoutExpired:
+        return {'result': invalidResult, 'seconds': time.perf_counter()-start,
+                'output': 'TIMEOUT after ' + str(timeout) + ' seconds', 'failed': True}
+
+    result = invalidResult
+    seconds = time.perf_counter() - start
+    keptLines = []
+    for line in output.split('\n'):
+        if line.startswith(resultMarker):
+            parts = line[len(resultMarker):].split(' ')
+            try: #the model may have printed something odd; never let parsing kill the suite
+                result = float(parts[1])
+                seconds = float(parts[2])
+            except (IndexError, ValueError):
+                pass
+        else:
+            keptLines += [line]
+
+    return {'result': result, 'seconds': seconds, 'output': '\n'.join(keptLines).rstrip(),
+            'failed': failed}
+
+
+#%%******************************************************************************************************
+def RunModelsInParallel(fileNames, solutionDirectory, invalidResult, numberOfProcesses=0,
+                        printProgress=True, timeout=1800):
+    """
+    Run the test models in parallel, each in its own interpreter (revision2026 step R5.8).
+
+    The models write into separate directories (step R5.13), which is what makes this safe; the
+    order of the RESULTS is the order of fileNames, independent of the order they finish in, so the
+    log and the exit code do not depend on the scheduling.
+
+    Args:
+        fileNames: list of model file names, in the order the log should report them
+        solutionDirectory: root for the model output directories
+        invalidResult: the value the suite uses for 'no result was set'
+        numberOfProcesses: number of parallel interpreters; 0 (default) uses os.cpu_count()//2,
+            at least 2, at most 8 - the models themselves use threads, so more processes than that
+            mostly compete for the same cores
+        printProgress: write one line per finished model to the real console
+        timeout: seconds per model
+
+    Returns:
+        dict: file name -> dict as returned by RunModelInProcess
+    """
+    from concurrent.futures import ThreadPoolExecutor
+
+    if numberOfProcesses <= 0:
+        numberOfProcesses = min(8, max(2, (os.cpu_count() or 4)//2))
+
+    results = {}
+    finished = [0]
+
+    def Run(fileName):
+        r = RunModelInProcess(fileName, solutionDirectory, invalidResult, timeout=timeout)
+        finished[0] += 1
+        if printProgress:
+            print('  finished {:3d}/{:3d}: {:<46s}{:6.2f}s'.format(
+                  finished[0], len(fileNames), fileName, r['seconds']), flush=True)
+        return r
+
+    #threads only start and wait for processes, so the GIL is irrelevant here
+    with ThreadPoolExecutor(max_workers=numberOfProcesses) as pool:
+        for fileName, r in zip(fileNames, pool.map(Run, fileNames)):
+            results[fileName] = r
+
+    return results

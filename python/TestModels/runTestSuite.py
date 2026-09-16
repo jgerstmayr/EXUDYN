@@ -55,6 +55,11 @@ overwriteLog = False    #--overwrite-log: replace an existing log instead of div
 #copyLog = False         #copy log to final TestSuiteLogs
 # if sys.version_info.major == 3 and sys.version_info.minor == 7:
 #     copyLog = True #for P3.7 tests always copy log to WorkingRelease
+#--parallel: run the models in separate interpreters (revision2026 step R5.8); serial by default,
+#so that the gating run stays exactly what it has always been
+TSScope.parallel = False
+TSScope.numberOfProcesses = 0 #0: chosen by testRunnerTools.RunModelsInParallel
+
 if len(sys.argv) > 1:
     for i in range(len(sys.argv)-1):
         #print("arg", i+1, "=", sys.argv[i+1])
@@ -64,6 +69,12 @@ if len(sys.argv) > 1:
             outputLocal = True
         elif sys.argv[i+1] == '--exit-code':
             useExitCode = True
+        elif sys.argv[i+1].startswith('--parallel'):
+            #--parallel runs every model in its own interpreter, the number of workers after '='
+            #(revision2026 step R5.8); possible since each model writes into its own directory
+            TSScope.parallel = True
+            if '=' in sys.argv[i+1]:
+                TSScope.numberOfProcesses = int(sys.argv[i+1].split('=')[1])
         elif sys.argv[i+1] == '--overwrite-log':
             overwriteLog = True
         # elif sys.argv[i+1] == '-copylog': #not needed any more
@@ -249,6 +260,17 @@ if TSScope.runTestExamples:
         TSScope.testFileList+=[key]
     TSScope.totalTests = len(TSScope.testFileList)
     
+    #in parallel mode every model runs in its own interpreter FIRST, and the loop below then
+    #reports the results in the order of testFileList, so log and exit code do not depend on the
+    #order in which the models finished (revision2026 step R5.8)
+    TSScope.parallelResults = {}
+    if TSScope.parallel:
+        exu.Print('running ' + str(TSScope.totalTests) + ' test models in parallel')
+        print('running ' + str(TSScope.totalTests) + ' test models in parallel', flush=True)
+        TSScope.parallelResults = testRunnerTools.RunModelsInParallel(
+            TSScope.testFileList, TSScope.solutionDirectory, TSScope.invalidResult,
+            numberOfProcesses=TSScope.numberOfProcesses, printProgress=writeToConsole)
+
     TSScope.testExamplesCnt = 0
     for TSScope.file in TSScope.testFileList:
         import platform #if platform is overwritten
@@ -266,12 +288,23 @@ if TSScope.runTestExamples:
         exudynTestGlobals.testResult = TSScope.invalidResult #strange default value to see if there is a missing testResult
         TSScope.testTimeStart = time.perf_counter()
         try:
-            exec(open(TSScope.file, encoding='utf8').read(), globals())
+            if TSScope.parallel:
+                #already run in its own interpreter; reproduce its output in the log here
+                TSScope.modelRun = TSScope.parallelResults[TSScope.file]
+                exu.Print(TSScope.modelRun['output'])
+                exudynTestGlobals.testResult = TSScope.modelRun['result']
+                if TSScope.modelRun['failed']:
+                    exu.Print('TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file
+                              + '") terminated with an error, see its output above')
+            else:
+                exec(open(TSScope.file, encoding='utf8').read(), globals())
         except Exception as e:
             exu.Print('TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '") raised exception:\n'+str(e))
             print('TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '") raised exception:\n'+str(e), flush=True)
         finally:
-            TSScope.examplesTestTimeList[TSScope.name] = time.perf_counter() - TSScope.testTimeStart
+            TSScope.examplesTestTimeList[TSScope.name] = (TSScope.parallelResults[TSScope.file]['seconds']
+                                                          if TSScope.parallel else
+                                                          time.perf_counter() - TSScope.testTimeStart)
             TSScope.examplesTestErrorList[TSScope.name] = exudynTestGlobals.testError
             TSScope.examplesTestSolList[TSScope.name] = exudynTestGlobals.testResult
             

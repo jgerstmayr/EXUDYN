@@ -584,11 +584,7 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 **R5.7** **DONE** — rename `pytest.py` - done differently in step R3.1 (`python/pytestTemplate.py`). → [log](exudynRevisionLog2026.md#r5-7)
 
 <a id="r5-8"></a>
-**R5.8** *(phase R5)* **Parallelise `runTestSuite.py`.** It runs 142 models serially in ~20 s, which is
-    already short enough to gate every commit, so this is comfort rather than necessity. The
-    constraint is correctness, not speed: several models write to the same output files
-    (`coordinatesSolution` and friends), so only tests with disjoint output paths may run
-    concurrently. Derive the grouping from the declared output filenames rather than guessing.
+**R5.8** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-8) — *(phase R5)* **`runTestSuite.py --parallel[=N]`**: every model in its own interpreter, 22 s → 9-11 s; serial stays the default for the commit gate.
 
 <a id="r5-9"></a>
 **R5.9** **DONE 2026-09-11** — Complete and verify the test list. → [log](exudynRevisionLog2026.md#r5-9)

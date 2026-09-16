@@ -259,6 +259,20 @@ tools/buildAndGenerate/makeUbuntuManyLinuxWheels.bat      # all five, via docker
 Regular CI sets `EXUDYN_NOFAST=1`, which skips the `__FAST_EXUDYN_LINALG` binary and roughly halves
 build time. Ordinary test runs do not exercise that binary. **Release builds must not set it.**
 
+### Running the suite in parallel
+
+`runTestSuite.py --parallel` runs every test model in its own interpreter; `--parallel=N` sets the
+number of workers (default: half the cores, at least 2, at most 8). Measured on a 32-thread
+machine: **22 s serial, 11 s with 8 workers, 9 s with 16**; the limit is the interpreter start of
+each model, not the models themselves. It is possible because every model writes into its own
+output directory (`exudyn.config.outputDirectory`, revision2026 step R5.13).
+
+The log reports the models in the order of the reference list, whatever order they finish in, so
+log and exit code do not depend on scheduling. **The gating run stays serial by default**: models
+that use multithreaded solvers or ARPACK can shift in the last digits when the machine is loaded
+(measured: `NGsolveCMStest`, `objectFFRFreducedOrderTest`, `superElementRigidJointTest`, all far
+inside their tolerance). Use `--parallel` while developing, and the serial run for a commit gate.
+
 ### Reproducible vs sensitive tests
 
 `runTestSuite.py --exit-code` returns non-zero when tests fail — CI depends on this, and without it

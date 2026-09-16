@@ -4059,6 +4059,50 @@ removed; the constructors now initialise the one member.
     `tools/setupLocalWorkspace.py` (#2403). It no longer ships, so it cannot shadow the `pytest`
     package in any installed environment.
 
+<a id="r5-8"></a>
+### R5.8 - runTestSuite.py runs the models in parallel
+
+**DONE 2026-09-16** (#2456).
+
+Possible only after step R5.13: with every model writing into its own output directory, two models
+can no longer overwrite each other's files, which was the blocking constraint named in the plan.
+
+**Separate interpreters, not threads.** `testRunnerTools.RunModelInProcess()` runs one model with
+`python -c` in a fresh process, with `matplotlib.use('Agg')`, `useGraphics=False` and
+`exudyn.config.outputDirectory` set before the model starts. The result crosses the process
+boundary as one marked line (`#__EXUDYN_TEST_RESULT__ <result> <seconds>`), converted to a plain
+float in the child because models return numpy scalars. A crashed model keeps the invalid result
+value and therefore fails the comparison exactly as before; a model that hangs is killed after 30
+minutes and reported as `TIMEOUT`. Both paths were checked with a deliberately failing model.
+
+In-process execution was not an option: the models share `exudyn.config`, the system container,
+module state and the renderer, and several of them depend on that state being fresh.
+
+**Order is independent of scheduling.** `RunModelsInParallel()` submits the models to a thread pool
+that only waits for processes, and returns a dictionary; `runTestSuite.py` then walks
+`testFileList` in its usual order and reports each model with its stored output, so the log, the
+overview table and the exit code do not depend on which model finished first.
+
+**Measured** on a 32-thread machine, full suite including mini examples:
+
+| mode | time |
+|---|---|
+| serial (default) | **22 s** |
+| `--parallel=4` | 16 s |
+| `--parallel` (8 workers, the default choice) | **11 s** |
+| `--parallel=16` | 9 s |
+
+The gain stops there because each model pays an interpreter start of a few tenths of a second; the
+models themselves are short.
+
+**Serial stays the default for the commit gate, and the run says why.** Comparing all 137 reported
+results serial against parallel, three differ - `NGsolveCMStest` (4e-18), `objectFFRFreducedOrderTest`
+(2e-15) and `superElementRigidJointTest` (5e-17), all far inside their tolerances and all of them
+multithreaded or ARPACK-based, i.e. sensitive to machine load rather than to this change. Making
+parallel the default would put that noise into the gate for no real gain on a 20 second suite.
+
+Documented in `docs/dev/WORKFLOW.md` ("Running the suite in parallel").
+
 <a id="r5-9"></a>
 ### R5.9 — complete and verify the test list
 
