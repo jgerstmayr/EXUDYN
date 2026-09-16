@@ -159,13 +159,11 @@ promise for no gain.
     the `Extension`, or let `setup.py` compare header times itself.
 
 <a id="r2-17-1"></a>
-**R2.17.1** *(sub-step of R2.17)* **Deleting `build/temp` is not enough** (#2468). After a
-    compile-FLAG change, `build/lib.win-amd64-cpython-313` still holds the previously linked
-    `.pyd` and the wheel is assembled from it, so the rebuild silently ships the old binary. This
-    produced three contradictory measurements in step R2.10 before the whole `build/` directory
-    was removed. Correct the gate instruction in `docs/dev/WORKFLOW.md` and preferably make
-    `setup.py` handle it.
-
+**R2.17.1** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r2-17-1) — *(sub-step of R2.17)*
+    **A compile-FLAG change now discards the previous build** (#2468). `setup.py` writes the
+    effective options to `build/exudynBuildFlags.txt` and, when they differ, deletes the object
+    files **and** the linked modules before compiling — #2427 covered headers, nothing covered
+    flags, and `build/lib.*` kept the old `.pyd`.
 
 ## R3 — Repository shape (~1 week, one commit)  <!-- old Phase 2 -->
 

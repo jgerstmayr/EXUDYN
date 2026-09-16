@@ -1143,6 +1143,41 @@ Also worth a note for whoever next measures compiler flags: `EXUDYN_EXTRA_COMPIL
 visible effect in a `pip wheel` build here, and its confirmation print is invisible because pip
 hides build output unless `-v` is given or the build fails. That is how #2468 stayed hidden so long.
 
+<a id="r2-17-1"></a>
+### R2.17.1 - a compile-flag change discards the previous build
+
+**DONE 2026-09-16** (#2468).
+
+Step R2.17 gave the `Extension` a `depends=` list of every header, so a header change rebuilds
+(#2427). Nothing compared the COMPILER OPTIONS of this build with the last one, and setuptools has
+no notion of them: switching AVX2 on or off, or setting `EXUDYN_EXTRA_COMPILE_ARGS`, reused every
+`.obj` **and** the `.pyd` already sitting in `build/lib.win-amd64-cpython-313`, which is what the
+wheel is assembled from. The build printed `Successfully built exudyn` and shipped the old binary.
+
+In step R2.10 this cost three contradictory measurements: a wheel built with `/arch:AVX2` behaved
+exactly like one built without it, which briefly made the whole AVX2 question look like noise. The
+manual remedy in the gate instruction - delete `build/temp.*` - is **not** sufficient, and it was
+the documented one.
+
+`setup.py` now writes the effective options of every extension (compiler, shared options, per-
+extension options, defines and link options) to `build/exudynBuildFlags.txt` after a successful
+build, and compares them at the start of the next one. On a difference it removes the object
+directory and every linked module of those extensions, says so, and recompiles. The stamp sits
+NEXT to `build/temp*` and `build/lib*` rather than inside either: under MSVC `build_temp` is
+`build/temp.../Release`, so a stamp anchored to its parent would be deleted along with the objects
+and could never report a change again - which is exactly what the first attempt here did.
+
+**Verified by the experiment that failed before.** From a clean tree, one build (7 380 480 byte
+module), then a second with `EXUDYN_EXTRA_COMPILE_ARGS="/arch:AVX2"` and **nothing deleted by**
+**hand**: the build reports the difference, removes the objects and the module, and produces a
+**7 400 448** byte module - the size of the AVX2 wheel built this morning. Running the suite
+against it gives the 32 failures step R2.10 predicts for an AVX2 module judged by baseline
+reference values, and a plain rebuild afterwards returns to the baseline module and a green suite.
+
+Two corrections to what step R2.10 recorded on the way: `EXUDYN_EXTRA_COMPILE_ARGS` works and
+always did - the stale `build/lib` made it look inert - and pip hides the build output that would
+have said so, unless `-v` is passed or the build fails.
+
 <a id="r2-11"></a>
 ### R2.11 — metadata drift
 

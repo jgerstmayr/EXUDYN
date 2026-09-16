@@ -173,8 +173,8 @@ Two things follow from a switch:
 - **A `.dev1` version is not installed by a plain `pip install exudyn`** — only with `--pre` or an
   exact version. A development build therefore cannot reach users by accident.
 
-Use development mode for ordinary work: it builds one module instead of three and is roughly 3×
-faster. Switch to release only when producing a release.
+Use development mode for ordinary work: outside Python 3.13 it builds one module instead of two
+and is roughly 2× faster. Switch to release only when producing a release.
 
 **Minor bumps (1.11 → 1.12) are manual and are the maintainer's decision.** They require editing
 two constants in `issueTracker.py`: append the current total resolved count as `version12xResolved`
@@ -367,6 +367,15 @@ Run in this order; stop at the first failure.
 Required for any change to C++, `main/setup.py`, or `main/obj/cppsrc.vcxproj`. VS2022
 `Debug|x64` or `Release|x64` from `exudyn.sln` (created by `tools/setupLocalWorkspace.py`), or
 `tools/buildAndGenerate/buildInstallSingleVersion.bat`.
+
+**Stale binaries: nothing to do by hand any more.** A header change rebuilds because the
+`Extension` lists every header in `depends=` (#2427), and a change of compiler OPTIONS is caught by
+`build/exudynBuildFlags.txt`, which makes `setup.py` delete the objects and the linked modules
+before compiling (#2468). Both were once manual steps, and the manual advice — *delete
+`build/temp.*`* — was **wrong for a flag change**: `build/lib.*` keeps the previously linked `.pyd`
+and the wheel is assembled from that. If you ever doubt a measurement, delete the whole `build/`
+directory; that is always sufficient. Note that `pip wheel` hides the build output which would tell
+you what happened, unless you pass `-v` or the build fails.
 
 ### 2. Regeneration is clean — and runs *after* `ResolveIssue`
 

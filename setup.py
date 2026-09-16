@@ -10,6 +10,7 @@ import setuptools
 import time
 import json
 import contextlib     #redirect_stdout for the quiet parallel compile (revision2026 step R2.3)
+import glob           #finding stale linked modules on a flag change (revision2026 step R2.17.1)
 
 
 #from src.pythonGenerator.exudynVersion import exudynVersionString #does not run under MacOS
@@ -672,7 +673,66 @@ class BuildExt(_build_ext):
             ext.define_macros = ext.define_macros + [('VERSION_INFO', '"{}"'.format(self.distribution.get_version()))]
             ext.extra_compile_args += opts
             ext.extra_link_args = link_opts
+
+        self.DiscardBuildOutputIfFlagsChanged()
         _build_ext.build_extensions(self)
+        self.WriteBuildFlagStamp()
+
+    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    #A FLAG change is invisible to setuptools (revision2026 step R2.17.1, #2468). It rebuilds a
+    #.cpp when the source or one of its 'depends' is newer than the .obj - which #2427 fixed for
+    #headers - but nothing compares the COMPILER OPTIONS of this build with those of the last one.
+    #So switching AVX2 on or off, or setting EXUDYN_EXTRA_COMPILE_ARGS, reuses every .obj and the
+    #previously linked .pyd in build/lib.*/ is packed into the wheel: the build says 'Successfully
+    #built' and ships the old binary. In step R2.10 that produced three contradictory measurements
+    #before the whole build/ directory was deleted by hand.
+    def BuildFlagSignature(self):
+        """Everything that changes generated code, as one string: the compiler, the shared
+        options and, per extension, its own options and defines."""
+        parts = ['compiler=' + self.compiler.compiler_type]
+        for ext in sorted(self.extensions, key=lambda e: e.name):
+            parts.append(ext.name
+                         + ' args=' + ' '.join(ext.extra_compile_args)
+                         + ' link=' + ' '.join(ext.extra_link_args)
+                         + ' defines=' + ' '.join(str(d) for d in ext.define_macros))
+        return '\n'.join(parts) + '\n'
+
+    def BuildFlagStampFileName(self):
+        #next to build/temp* and build/lib*, NOT inside either of them: both are deleted when the
+        #flags change, and a stamp deleted with them could never report a change (build_temp is
+        #'build/temp.../Release' under MSVC, so its dirname is not the top-level build directory)
+        buildRoot = os.path.dirname(self.build_lib) or 'build'
+        return os.path.join(buildRoot, 'exudynBuildFlags.txt')
+
+    def DiscardBuildOutputIfFlagsChanged(self):
+        stampFileName = self.BuildFlagStampFileName()
+        if not os.path.isfile(stampFileName):
+            return #a fresh build/ directory: nothing stale can be in it
+
+        with open(stampFileName) as stampFile:
+            if stampFile.read() == self.BuildFlagSignature():
+                return
+
+        import shutil
+        print('setup.py: *** the compiler options differ from the previous build ***')
+        #the object files first: they were compiled with the old options
+        if os.path.isdir(self.build_temp):
+            print('           removing ' + self.build_temp)
+            shutil.rmtree(self.build_temp, ignore_errors=True)
+        #and the linked modules, so that a failure to relink cannot ship the old binary
+        for ext in self.extensions:
+            extPath = os.path.join(self.build_lib, *ext.name.split('.'))
+            for suffix in ['.pyd', '.so', '.dll', '.dylib']:
+                for staleName in glob.glob(extPath + '*' + suffix):
+                    print('           removing ' + staleName)
+                    os.remove(staleName)
+        print('           (revision2026 step R2.17.1, #2468; a full recompile follows)')
+
+    def WriteBuildFlagStamp(self):
+        stampFileName = self.BuildFlagStampFileName()
+        os.makedirs(os.path.dirname(stampFileName), exist_ok=True)
+        with open(stampFileName, 'w') as stampFile:
+            stampFile.write(self.BuildFlagSignature())
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #parallel compile, works for linux:

@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.104.dev1, 
++  Exudyn version = 1.11.105.dev1, 
 +  last change =  2026-09-16, 
 +  Number of issues = 2470, 
-+  Number of resolved issues = 2177 (104 in current version), 
++  Number of resolved issues = 2178 (105 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.105: :textred:`resolved BUG 2468` : deleting build/temp is not enough after a compile-flag change 
+    - issue author: Claude-JG
+    - description:  The documented gate (revision2026 step R2.17, #2427) says to delete build/temp.win-amd64-cpython-313 after a header change. That is insufficient for a FLAG change: build/lib.win-amd64-cpython-313 keeps the previously linked .pyd and the wheel is assembled from it, so a rebuild silently ships the old binary. This produced three contradictory measurements in revision2026 step R2.10 before the whole build/ directory was removed. Fix the gate instruction and preferably make setup.py handle it.
+    - **notes:** setup.py writes the effective compiler options of every extension to build/exudynBuildFlags.txt and compares them at the start of the next build; on a difference it removes the object directory AND the linked modules, then recompiles. The stamp sits next to build/temp\* and build/lib\*, not inside either (MSVC build_temp is build/temp.../Release). Verified: two builds differing only in EXUDYN_EXTRA_COMPILE_ARGS=/arch:AVX2, nothing deleted by hand, give 7380480 and 7400448 byte modules and the expected 0 vs 32 test failures. revision2026 step R2.17.1.
+    - date resolved: **2026-09-16 23:47**\ , date raised: 2026-09-16 
+    - resolved by: Claude-JG
  * Version 1.11.104: resolved Issue 2466: two shipped C++ modules: exudynCPPnoAVX dropped, AVX2 belongs to exudynCPPfast (extension)
     - issue author: Claude-JG
     - description:  revision2026 step R2.10: the default module exudynCPP is compiled for the BASELINE instruction set on every platform and exudynCPPfast carries __FAST_EXUDYN_LINALG and AVX2; the third module exudynCPPnoAVX and the sys.exudynCPUhasAVX2 switch are removed. New build switches useAVX2 (default on; effective only inside the fast module) and useAVX512 (default off; requires useAVX2). All Windows reference values re-measured on the baseline module.
@@ -8470,11 +8476,6 @@ Known bugs
  * :textred:`open BUG 2469:` NGsolveCMStest reference value follows an untracked mesh cache
     - issue author: Claude-JG
     - description:  NGsolveCMStest.py loads python/TestModels/testData/netgenTestMesh.pkl - a TRACKED file - and silently OVERWRITES it whenever the load fails. That happened during revision2026 step R2.10 and the result moved by 2.4e-8, far outside the 5e-14 tolerance, back to the value recorded before 2025-05-05; restoring the committed file restored the value. A test must not rewrite its own committed input: either treat the mesh as read-only and fail loudly, or generate it deterministically.
-    - date raised: 2026-09-16 
-
- * :textred:`open BUG 2468:` deleting build/temp is not enough after a compile-flag change
-    - issue author: Claude-JG
-    - description:  The documented gate (revision2026 step R2.17, #2427) says to delete build/temp.win-amd64-cpython-313 after a header change. That is insufficient for a FLAG change: build/lib.win-amd64-cpython-313 keeps the previously linked .pyd and the wheel is assembled from it, so a rebuild silently ships the old binary. This produced three contradictory measurements in revision2026 step R2.10 before the whole build/ directory was removed. Fix the gate instruction and preferably make setup.py handle it.
     - date raised: 2026-09-16 
 
  * :textred:`open BUG 2467:` exudynCPPfast crashes in the test suite (segmentation fault)
