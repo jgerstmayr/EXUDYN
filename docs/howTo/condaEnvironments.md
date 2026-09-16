@@ -40,7 +40,7 @@ conda create -n venvExuP313 python=3.13 -y
 conda activate venvExuP313
 cd EXUDYN_git                                 #the repository root, where pyproject.toml is
 python -m pip install --upgrade pip           #dependency groups need pip >= 25.1
-pip install --group dev                       #docs, lint, build and IDE tools, scipy pin, jinja2, griffe
+pip install --group dev                       #docs, lint, build, test and IDE tools, scipy pin, jinja2, griffe
 pip wheel . -w dist --no-deps                 #build Exudyn
 pip install --pre --find-links=dist "exudyn[tests]"   #the local wheel plus what TestModels/ needs
 ```
@@ -49,7 +49,8 @@ pip install --pre --find-links=dist "exudyn[tests]"   #the local wheel plus what
 |---|---|---|
 | `docs` | sphinx and its theme and extensions | `sphinx-build`, the CI `docs` jobs, readthedocs |
 | `lint` | `pydoclint` (pinned; the baseline holds its messages) | CI `check_docstrings` |
-| `build` | `setuptools`, `wheel`, `pybind11<3.0` | a direct `python setup.py bdist_wheel`, which has no build isolation |
+| `build` | `setuptools>=77`, `wheel`, `pybind11<3.0`, `tomli`, `cibuildwheel` | a direct `python setup.py bdist_wheel`, which has no build isolation; a local CI-identical wheel |
+| `test` | `pytest`, `pytest-xdist` | `pytest -n 8` (revision2026 step R5.1); the suite itself runs without them |
 | `ide` | `spyder-kernels`, `ipykernel`, `ipywidgets` | Spyder and Jupyter |
 | `dev` | all of the above, plus `scipy==1.15.2`, `jinja2`, `griffe` | the development environment |
 

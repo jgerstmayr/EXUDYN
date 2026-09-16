@@ -134,9 +134,18 @@ lint = [
     "pydoclint==0.9.1",     #the baseline tools/ci/pydoclintBaseline.txt holds this version's messages
     ]
 build = [
-    "setuptools",
+    "setuptools>=77",       #same floor as build-system.requires: SPDX licence expression (#2372)
     "wheel",
     "pybind11<3.0",         #a direct 'python setup.py bdist_wheel' has no build isolation
+    "tomli; python_version < '3.11'",   #setup.py reads [tool.exudyn]; tomllib is stdlib from 3.11
+    "cibuildwheel==3.4.1",  #the version .github/workflows/wheels.yml pins, so a wheel can be built
+                            #locally exactly as CI builds it
+    ]
+#the pytest tools of revision2026 step R5.1; DEV tools, not a dependency of the package - the test
+#suite itself runs without them, which is why they are not in [project.optional-dependencies]
+test = [
+    "pytest>=8",
+    "pytest-xdist>=3",      #'pytest -n 8'; the models run in separate processes anyway
     ]
 ide = [
     "spyder-kernels==3.*",  #must match the Spyder version, see docs/howTo/condaEnvironments.md
@@ -148,6 +157,7 @@ dev = [
     {include-group = "lint"},
     {include-group = "build"},
     {include-group = "ide"},
+    {include-group = "test"},
     "scipy==1.15.2",        #scipy 1.18.0 slows the test suite from ~22 s to over 10 min (revision2026 fact 19)
     "jinja2",               #templates were measured in revision2026 step R4.4.2; kept available for the generators
     "griffe",               #static API inspection (revision2026 step R4.8 left it available)
@@ -238,6 +248,10 @@ quietCompile = true         #print a counter instead of every compiler command l
 minimalCppFiles = false     #compile the 54-file minimal set - for testing only
 useOpenVR = false           #compile with the OpenVR library
 compileExudynFast = true    #additionally build the exudynCPPfast variant (no range checks)
+performUnitTests = false    #compile the lest C++ unit tests (src/Tests/) into the module; they
+                            #are then run by exudyn.special.RunCppUnitTests() and by
+                            #runTestSuite.py. A developer tool: off for a shipped wheel, on in
+                            #the VS Debug configuration (revision2026 step R5.3, #2464)
 
 [tool.setuptools]
 zip-safe = false

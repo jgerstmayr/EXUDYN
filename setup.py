@@ -69,6 +69,7 @@ config['quietCompile'] = True
 config['minimalCppFiles'] = False
 config['useOpenVR'] = False
 config['compileExudynFast'] = True    #not for all Python versions
+config['performUnitTests'] = False    #the lest C++ unit tests in src/Tests/ (#2464)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def LoadTomlBytes(fileName):
@@ -128,6 +129,7 @@ configEnvironmentNames = {
     'minimalCppFiles':   'EXUDYN_MINIMAL_CPP_FILES',
     'useOpenVR':         'EXUDYN_USE_OPENVR',
     'compileExudynFast': 'EXUDYN_COMPILE_EXUDYN_FAST',
+    'performUnitTests':  'EXUDYN_PERFORM_UNIT_TESTS',
     }
 
 for key, environmentName in configEnvironmentNames.items():
@@ -157,6 +159,7 @@ if '-h' in sys.argv or '-help' in sys.argv: #also works for --h, --help
     print("  --fast / --nofast           ... build the fast CPP library; this needs an extra run")
     print("  --quiet / --no-quiet        ... print a counter instead of every compiler command")
     print("  --minimal / --no-minimal    ... compile only the minimal set - for testing only")
+    print("  --unittests / --no-unittests ... compile the lest C++ unit tests into the module")
     print("  install     ... install exudyn library after compilation")
     print("  bdist_wheel ... build python wheel")
     print("  ")
@@ -188,6 +191,7 @@ configCommandLineFlags = [
     ('--minimal',  '--no-minimal',  'minimalCppFiles',   'minimal C++ file set'),
     ('--openvr',   '--no-openvr',   'useOpenVR',         'OpenVR'),
     ('--fast',     '--nofast',      'compileExudynFast', 'exudynCPPfast variant'),
+    ('--unittests','--no-unittests','performUnitTests',  'C++ unit tests (lest)'),
     ]
 
 for flagTrue, flagFalse, key, message in configCommandLineFlags:
@@ -560,10 +564,21 @@ class BuildExt(_build_ext):
         ]+unixCppGLFWflag+commonCopts,
     }
 
-    #perform C++ unit tests: for 64bits, Python 3.6
-    if sys.version_info.major == 3 and sys.version_info.minor == 7: #since V1.2.29
+    #The lest C++ unit tests in src/Tests/ are compiled into the module only with this switch,
+    #and are then run by exudyn.special.RunCppUnitTests(), which runTestSuite.py calls when it
+    #finds it. They were gated on Python 3.7 until 2026-09-16, and 3.7 stopped being built long
+    #ago - requires-python is >=3.10 - so they ran NOWHERE: not in a wheel, not in CI, not in a
+    #local build (revision2026 step R5.3, #2464). They stay OFF by default, being a developer
+    #tool that costs compile time and module size in a shipped wheel:
+    #  pip wheel . -w dist --no-deps --config-settings=--build-option=--unittests
+    #  EXUDYN_PERFORM_UNIT_TESTS=1 pip wheel . -w dist --no-deps
+    #  [tool.exudyn] performUnitTests = true
+    #The VS project defines PERFORM_UNIT_TESTS in its Debug configuration, so debugging always
+    #has them.
+    if config['performUnitTests']:
         print('***************************\nadd flag PERFORM_UNIT_TESTS\n***************************\n')
         c_opts['msvc'] += ['/D', 'PERFORM_UNIT_TESTS']
+        c_opts['unix'] += ['-DPERFORM_UNIT_TESTS']
 	
     l_opts = {
         'msvc': [

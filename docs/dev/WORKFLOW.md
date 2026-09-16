@@ -267,6 +267,7 @@ build time. Ordinary test runs do not exercise that binary. **Release builds mus
 | full local check | all test models and mini examples | `runTestSuite.py` (22 s) or `pytest` |
 | nightly / release | models, performance tests and all examples | `tools/buildAndGenerate/makeAndTestAllBinaries.bat`, which calls the three runners |
 | examples | all 171 examples, in parallel, as an API check | `runTestExamples.py` (49 s; `--serial`, `--parallel=N`, `--timeout=S`) |
+| C++ unit tests | the `lest` tests in `src/Tests/` | only in a build with the `performUnitTests` switch, or the VS `Debug` configuration; then `runTestSuite.py` runs them |
 
 The two lists behind this live in `runTestSuiteRefSol.py` as data - `SlowTests()` (measured,
 above 0.6 s) and `OptionalPackageTests()` (needs ngsolve, stable-baselines3, ...) - and are read

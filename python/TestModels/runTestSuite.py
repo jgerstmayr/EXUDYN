@@ -428,7 +428,10 @@ if TSScope.runMiniExamples:
         for key,value in miniExamplesTestSolList.items(): print("'"+key+"':"+str(value)+",")
     
 if TSScope.runCppUnitTests:
-    if hasattr(exu.solver, 'RunCppUnitTests'):
+    #the binding is on exu.special, not exu.solver - checking the wrong module made the tests LOOK
+    #skipped even in a build that has them (#2458). It exists only when the module was compiled
+    #with PERFORM_UNIT_TESTS, which is the performUnitTests build switch (revision2026 step R5.3).
+    if hasattr(exu.special, 'RunCppUnitTests'):
         exu.Print('\n******************************************')
         exu.Print('RUN CPP UNIT TESTS:')
         exu.Print('******************************************')
@@ -510,9 +513,10 @@ if TSScope.runCppUnitTests:
     else:
         exu.Print(str(numberOfCppUnitTestsFailed) + ' CPP UNIT TESTS FAILED: see above section for detailed information')
     # localFileName += '-cpp'+str(numberOfCppUnitTestsFailed)
-    totalFails+=len(numberOfCppUnitTestsFailed)
+    totalFails+=numberOfCppUnitTestsFailed #RunCppUnitTests returns a COUNT, not a list (#2458)
 else:
-    exu.Print('CPP UNIT TESTS SKIPPED')
+    exu.Print('CPP UNIT TESTS SKIPPED: this build has no lest unit tests; rebuild with the '
+              'performUnitTests switch (revision2026 step R5.3)')
     # localFileName += '-nocpp'
 
 #per-test overview at the end of the log: value, error, effective tolerance and runtime, one

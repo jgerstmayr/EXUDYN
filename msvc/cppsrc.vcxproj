@@ -63,7 +63,10 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_MYDEBUG</PreprocessorDefinitions>
+      <!-- PERFORM_UNIT_TESTS compiles the lest unit tests in src/Tests/ into the module, where
+           exudyn.special.RunCppUnitTests() and runTestSuite.py find them. Debug only: they cost
+           compile time and module size, and this is the configuration they are for (#2464). -->
+      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_MYDEBUG;PERFORM_UNIT_TESTS</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalOptions>/bigobj /Zc:twoPhase-</AdditionalOptions>

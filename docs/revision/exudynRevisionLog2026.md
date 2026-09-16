@@ -4113,6 +4113,37 @@ The pytest markers (`slow`, `optionalPackage`, `sensitive`, `unresolvedOnLinux`)
 `pyproject.toml` and attached in `pytest_generate_tests`, so `-m` works without any per-model edit.
 Documented in `docs/dev/WORKFLOW.md` ("Which tests run when").
 
+<a id="r5-3"></a>
+### R5.3 - the lest C++ unit tests can run again
+
+**DONE 2026-09-16** (#2464, #2458).
+
+The unit tests in `src/Tests/` are compiled only with `PERFORM_UNIT_TESTS`, and `setup.py` added that
+define **for Python 3.7 only**. Python 3.7 stopped being built long ago - `requires-python` is
+`>=3.10` - so the tests ran **nowhere**: not in a wheel, not in CI, not in a local build, and not in
+the VS `Debug` configuration either, which never defined it. Three changes:
+
+- **A build switch `performUnitTests`**, in the same machinery as the other build switches
+  (revision2026 step R2.14), so it can be set four ways with the documented precedence:
+  `--unittests` / `--no-unittests`, `EXUDYN_PERFORM_UNIT_TESTS=1`, `[tool.exudyn]` in
+  `pyproject.toml`, and the built-in default. It is **off by default**: a shipped wheel should not
+  pay compile time and module size for a developer tool. The unix compiler options get
+  `-DPERFORM_UNIT_TESTS` too, which the Python 3.7 branch had never done - the tests were
+  Windows-only even in the one configuration that had them.
+- **`PERFORM_UNIT_TESTS` in the VS `Debug` configuration** of `msvc/cppsrc.vcxproj`, which is what
+  the plan line asked for: debugging the C++ side always has the unit tests.
+- **Two defects in the suite's own reporting**, both dead code until now (#2458):
+  `runTestSuite.py` asked `hasattr(exu.solver, 'RunCppUnitTests')` while the binding is on
+  `exu.special`, so the tests would have been reported as skipped even in a build that has them;
+  and the summary did `totalFails += len(numberOfCppUnitTestsFailed)` on an `int`, which would have
+  raised a `TypeError` at the end of a run that got that far.
+
+Verified 2026-09-16 on Windows cp313: a wheel built with `EXUDYN_PERFORM_UNIT_TESTS=1` exposes
+`exudyn.special.RunCppUnitTests()`, which reports **ALL TESTS PASSED**, and `runTestSuite.py` against
+that build prints `ALL CPP UNIT TESTS SUCCESSFUL`; against a default build it now says why they were
+skipped and how to get them. What those tests actually cover - and the hole in exactly the AVX
+classes - is step R5.4.
+
 <a id="r5-7"></a>
 ### R5.7 — rename `pytest.py` - done differently in step R3.1 (`python/pytestTemplate.py`)
 
@@ -4347,6 +4378,32 @@ directory through plain Python calls, which this setting does not reach. That is
 
 
 ## R6 — Error handling and UX
+
+<a id="r5-14"></a>
+### R5.14 - the development tools are declared
+
+**DONE 2026-09-16** (#2462).
+
+Step R4.24 had already turned the development environment into PEP 735 dependency groups; what was
+missing is what steps R5.1 and R2.14 added afterwards. Three gaps, all of the same kind - something
+installed by hand and therefore invisible to the next contributor and to CI:
+
+- a **`test` group** with `pytest` and `pytest-xdist`. They stay DEV tools, not
+  `[project.optional-dependencies]`: `runTestSuite.py` runs without them, and only the pytest
+  collector of step R5.1 needs them.
+- the **`build` group now matches `build-system.requires`**: `setuptools>=77` (the SPDX licence
+  expression of #2372) instead of an unbounded `setuptools`, and `tomli` for Python 3.10, which
+  `setup.py` needs to read `[tool.exudyn]` when there is no build isolation.
+- **`cibuildwheel==3.4.1`**, the version `.github/workflows/wheels.yml` pins, so that a wheel can be
+  built locally exactly as CI builds it instead of with whatever version happens to be installed.
+
+`ruff` and a type checker are named in the plan line but deliberately **not** added: declaring a
+tool before its configuration exists gives a contributor a tool that reports findings nobody has
+agreed on. They belong to step R5.5, together with their settings.
+
+Found on the way and NOT fixed here, because it touches `.github/workflows/`: the two workflows pin
+different action versions - `wheels.yml` `actions/setup-python@v6`, `documentation.yaml`
+`actions/checkout@v3` and `actions/setup-python@v4` (#2463, sub-step R5.14.1, awaiting approval).
 
 <a id="r5-15"></a>
 ### R5.15 - the performance suite reports single runs

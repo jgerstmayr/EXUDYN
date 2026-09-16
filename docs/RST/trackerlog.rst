@@ -19,15 +19,33 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.99.dev1, 
++  Exudyn version = 1.11.102.dev1, 
 +  last change =  2026-09-16, 
-+  Number of issues = 2462, 
-+  Number of resolved issues = 2172 (99 in current version), 
++  Number of issues = 2465, 
++  Number of resolved issues = 2175 (102 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.102: :textred:`resolved BUG 2464` : the lest C++ unit tests are compiled nowhere 
+    - issue author: Claude-JG
+    - description:  src/Tests/ is gated on PERFORM_UNIT_TESTS; setup.py added that define for Python 3.7 only, and 3.7 stopped being built long ago (requires-python >=3.10), so the unit tests run in no wheel; no CI job and no local build. The VS Debug configuration does not define it either. revision2026 step R5.3.
+    - **notes:** revision2026 step R5.3: new build switch performUnitTests (command line --unittests; EXUDYN_PERFORM_UNIT_TESTS; [tool.exudyn]); off by default; -DPERFORM_UNIT_TESTS also for unix; PERFORM_UNIT_TESTS in the VS Debug configuration. Verified: the tests compile and all pass.
+    - date resolved: **2026-09-16 19:59**\ , date raised: 2026-09-16 
+    - resolved by: Claude-JG
+ * Version 1.11.101: resolved Issue 2458: runTestSuite.py checks hasattr(exu.solver, RunCppUnitTests) instead of exu.special (fix)
+    - issue author: Claude-JG
+    - description:  found 2026-09-16 while preparing revision2026 step R5.3: the C++ unit tests are gated on hasattr(exu.solver, "RunCppUnitTests"), but the function is bound on exu.special (Pybind_manual_classes.cpp, inside #ifdef PERFORM_UNIT_TESTS); exu.solver is the Python module exudyn.solver and never has that attribute, so the check is always False and the tests are reported as skipped even in a build that contains them. Belongs to revision2026 step R5.3
+    - **notes:** revision2026 step R5.3: runTestSuite.py checked hasattr(exu.solver; RunCppUnitTests) while the binding is on exu.special - the C++ unit tests were reported as skipped even in a build that has them; and the summary called len() on the returned count.
+    - date resolved: **2026-09-16 19:59**\ , date raised: 2026-09-16 
+    - resolved by: Claude-JG
+ * Version 1.11.100: resolved Issue 2462: dev tool dependencies are not declared (extension)
+    - issue author: Claude-JG
+    - description:  pytest and pytest-xdist (revision2026 step R5.1) are installed by hand and appear nowhere in the project metadata; the build dependency group does not match build-system.requires (setuptools>=77; tomli) and does not carry the cibuildwheel version the wheels workflow pins. revision2026 step R5.14.
+    - **notes:** revision2026 step R5.14: new test dependency group (pytest; pytest-xdist); build group matched to build-system.requires (setuptools>=77; tomli) and to the pinned cibuildwheel version; condaEnvironments.md group table updated.
+    - date resolved: **2026-09-16 19:54**\ , date raised: 2026-09-16 
+    - resolved by: Claude-JG
  * Version 1.11.99: resolved Issue 2461: the examples run serially and take six minutes (extension)
     - issue author: Claude-JG
     - description:  runTestExamples.py execs 171 examples one after the other into a single interpreter; 360 seconds on Windows. The examples are an API check - an example has done its job once it has built its model and reached the solver. revision2026 step R5.16: run them in separate interpreters in parallel; give every example its own output directory; and count a timeout as a pass once the solver was reached.
@@ -7322,11 +7340,6 @@ Version 0.1
 Open issues
 ***********
 
- * **open issue 2458:** runTestSuite.py checks hasattr(exu.solver, RunCppUnitTests) instead of exu.special
-    - issue author: Claude-JG
-    - description:  found 2026-09-16 while preparing revision2026 step R5.3: the C++ unit tests are gated on hasattr(exu.solver, "RunCppUnitTests"), but the function is bound on exu.special (Pybind_manual_classes.cpp, inside #ifdef PERFORM_UNIT_TESTS); exu.solver is the Python module exudyn.solver and never has that attribute, so the check is always False and the tests are reported as skipped even in a build that contains them. Belongs to revision2026 step R5.3
-    - date raised: 2026-09-16 
-
  * :textblue:`open issue 2455:` pydoclint reports two violations in exudyn/__init__.py RequireVersion
     - issue author: Claude-JG
     - description:  found 2026-09-16 during revision2026 step R5.13; pre-existing and unrelated to that step: DOC111 (type hints in the docstring arg list while --arg-type-hints-in-docstring is False) and DOC202 (return section without a return statement) in RequireVersion; belongs to revision2026 step R5.5 (ruff and type checking)
@@ -8441,6 +8454,11 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2463:` the two GitHub workflows pin different action versions
+    - issue author: Claude-JG
+    - description:  .github/workflows/wheels.yml uses actions/setup-python@v6, while documentation.yaml still uses actions/checkout@v3 and actions/setup-python@v4. Found in revision2026 step R5.14; assigned to sub-step R5.14.1, which needs maintainer approval because it touches .github/workflows.
+    - date raised: 2026-09-16 
 
  * :textred:`open BUG 2430:` ObjectANCFThinPlate added with its defaults fails inside C++ with an index error
     - issue author: Claude-JG

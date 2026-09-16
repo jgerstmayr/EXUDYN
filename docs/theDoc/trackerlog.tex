@@ -9,15 +9,41 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.99.dev1, 
+  \item Exudyn version = 1.11.102.dev1, 
   \item last change =  2026-09-16, 
-  \item Number of issues = 2462, 
-  \item Number of resolved issues = 2172 (99 in current version), 
+  \item Number of issues = 2465, 
+  \item Number of resolved issues = 2175 (102 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.102}: {\bf \color{warningRed}  resolved BUG 2464}: {\bf the lest C++ unit tests are compiled nowhere}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: src/Tests/ is gated on PERFORM\_UNIT\_TESTS; setup.py added that define for Python 3.7 only, and 3.7 stopped being built long ago (requires-python >=3.10), so the unit tests run in no wheel; no CI job and no local build. The VS Debug configuration does not define it either. revision2026 step R5.3.}
+    \item {\bf notes: revision2026 step R5.3: new build switch performUnitTests (command line --unittests; EXUDYN\_PERFORM\_UNIT\_TESTS; [tool.exudyn]); off by default; -DPERFORM\_UNIT\_TESTS also for unix; PERFORM\_UNIT\_TESTS in the VS Debug configuration. Verified: the tests compile and all pass.}
+    \item   date resolved: {\bf 2026-09-16 19:59},
+date raised: 2026-09-16 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.101}:  resolved Issue 2458: {\bf runTestSuite.py checks hasattr(exu.solver, RunCppUnitTests) instead of exu.special}
+(fix)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: found 2026-09-16 while preparing revision2026 step R5.3: the C++ unit tests are gated on hasattr(exu.solver, "RunCppUnitTests"), but the function is bound on exu.special (Pybind\_manual\_classes.cpp, inside \#ifdef PERFORM\_UNIT\_TESTS); exu.solver is the Python module exudyn.solver and never has that attribute, so the check is always False and the tests are reported as skipped even in a build that contains them. Belongs to revision2026 step R5.3}
+    \item {\bf notes: revision2026 step R5.3: runTestSuite.py checked hasattr(exu.solver; RunCppUnitTests) while the binding is on exu.special - the C++ unit tests were reported as skipped even in a build that has them; and the summary called len() on the returned count.}
+    \item   date resolved: {\bf 2026-09-16 19:59},
+date raised: 2026-09-16 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.100}:  resolved Issue 2462: {\bf dev tool dependencies are not declared}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: pytest and pytest-xdist (revision2026 step R5.1) are installed by hand and appear nowhere in the project metadata; the build dependency group does not match build-system.requires (setuptools>=77; tomli) and does not carry the cibuildwheel version the wheels workflow pins. revision2026 step R5.14.}
+    \item {\bf notes: revision2026 step R5.14: new test dependency group (pytest; pytest-xdist); build group matched to build-system.requires (setuptools>=77; tomli) and to the pinned cibuildwheel version; condaEnvironments.md group table updated.}
+    \item   date resolved: {\bf 2026-09-16 19:54},
+date raised: 2026-09-16 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.99}:  resolved Issue 2461: {\bf the examples run serially and take six minutes}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -13045,6 +13071,12 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 2463}:  {\bf the two GitHub workflows pin different action versions}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: .github/workflows/wheels.yml uses actions/setup-python@v6, while documentation.yaml still uses actions/checkout@v3 and actions/setup-python@v4. Found in revision2026 step R5.14; assigned to sub-step R5.14.1, which needs maintainer approval because it touches .github/workflows.}
+    \item date raised: 2026-09-16 
+  \ei
   \item open {\bf BUG 2430}:  {\bf ObjectANCFThinPlate added with its defaults fails inside C++ with an index error}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

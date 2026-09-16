@@ -548,8 +548,10 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 **R5.2** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-2) — **Fast vs slow as data**: `SlowTests()` and `OptionalPackageTests()` in `runTestSuiteRefSol.py` drive both `runTestSuite.py --fast` and the pytest markers; nightly stays the full set.
 
 <a id="r5-3"></a>
-**R5.3** Wire the `lest` C++ unit tests into the VS `Debug` configuration. They are currently gated on
-    `PERFORM_UNIT_TESTS`, enabled only for Python 3.7, so they never run anywhere.
+**R5.3** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-3) — **The lest C++ unit tests
+    can run again**: a `performUnitTests` build switch (off by default), `PERFORM_UNIT_TESTS` in the
+    VS `Debug` configuration, and the two defects that would have skipped or crashed the suite's
+    report (#2458).
 
 <a id="r5-4"></a>
 **R5.4** **Close the coverage hole the lest suite has in exactly the classes AVX touches.** Measured
@@ -657,14 +659,15 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     which `exudyn.config.outputDirectory` does not reach - these need the path in the model.
 
 <a id="r5-14"></a>
-**R5.14** *(phase R5; maintainer request 2026-09-16)* **Declare the development dependencies in
-    `pyproject.toml`.** The dev tools are installed by hand today and appear nowhere in the project
-    metadata: `pytest` and `pytest-xdist` (step R5.1), `pydoclint` (step R4.8), `ruff` and a type
-    checker (step R5.5), `griffe`, `Jinja2` and whatever the generators and docs build need. Add a
-    `dev` extra - deliberately separate from `tests`, which is what the TestModels need at runtime -
-    so that a new contributor gets a working toolchain with one install, and CI installs the same
-    versions. Check the build-system requires (`setuptools>=77`, `pybind11<3.0`, `tomli`) and the
-    tool versions pinned in `.github/workflows/` against it in the same step.
+**R5.14** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-14) — **Dev tools are declared**:
+    a `test` dependency group (`pytest`, `pytest-xdist`), the `build` group matched to
+    `build-system.requires` and to the cibuildwheel version CI pins.
+
+<a id="r5-14-1"></a>
+**R5.14.1** *(sub-step of R5.14; NEEDS APPROVAL - touches `.github/workflows/`)* **One set of action
+    versions.** `wheels.yml` uses `actions/setup-python@v6`, `documentation.yaml` still
+    `actions/checkout@v3` and `actions/setup-python@v4` (#2463). Raise both to the same version and
+    note in the file why they are pinned at all.
 
 <a id="r5-15"></a>
 **R5.15** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-15) — **Performance suite reports
