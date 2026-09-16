@@ -30,6 +30,28 @@ relevantPackages = ['numpy', 'scipy', 'matplotlib', 'ngsolve', 'h5py',
 
 
 #%%******************************************************************************************************
+def BaseTolerance():
+    """
+    The tolerance a test result is compared against, before the per-test factor of
+    TestExamplesToleranceFactors(). It depends on the platform, because the reference values were
+    computed on 64 bit Windows (revision2026 step R5.1: one definition for the suite and for pytest).
+
+    Returns:
+        float: the base tolerance for this platform
+    """
+    isWindows = (sys.platform == 'win32')
+    isMacOS = (sys.platform == 'darwin')
+    if platform.architecture()[0] == '32bit' and isWindows:
+        #2022-03-17: 2e-12 instead of 2e-13 to complete all tests; the reference values come from
+        #the 64 bit version
+        return 2e-12
+    if isMacOS or not isWindows:
+        #different compilation: heavy top gives an error > 2.2e-11, on linux > 2.5e-11
+        return 3e-11
+    return 5e-14 #windows 64 bit
+
+
+#%%******************************************************************************************************
 def ResolveLogFile(logFileName, allowOverwrite=False, overwriteFlagName='--overwrite-log'):
     """
     Decide where a runner should write its log, and never destroy an existing one by accident.

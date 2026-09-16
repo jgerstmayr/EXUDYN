@@ -96,12 +96,9 @@ TSScope.runCppUnitTests = True
 TSScope.solutionDirectory = 'solution'
 
 TSScope.printTestResults = False #print list, which can be imported for new reference values
-if platform.architecture()[0] == '32bit' and isWindows:
-    TSScope.testTolerance = 2e-12 #2022-03-17: use 2e-12 instead of 2e-13 to complete all tests; larger tolerance, because reference values are computed with 64bit version (WHY?)
-elif isMacOS or not isWindows:
-    TSScope.testTolerance = 3e-11 #use larger tolerance value due to different compilation (heavy top gives error > 2.2e-11) on linux error > 2.5e-11
-else:
-    TSScope.testTolerance = 5e-14 #on windows 64bit
+#the platform-dependent base tolerance lives in testRunnerTools, so that the suite and the
+#pytest collector of revision2026 step R5.1 cannot drift apart
+TSScope.testTolerance = testRunnerTools.BaseTolerance()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #current date and time

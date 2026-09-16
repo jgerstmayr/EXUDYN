@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.95.dev1, 
++  Exudyn version = 1.11.96.dev1, 
 +  last change =  2026-09-16, 
-+  Number of issues = 2457, 
-+  Number of resolved issues = 2168 (95 in current version), 
++  Number of issues = 2458, 
++  Number of resolved issues = 2169 (96 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.96: resolved Issue 2457: test models are not available as pytest cases (add)
+    - issue author: Claude-JG
+    - description:  revision2026 step R5.1: runTestSuite.py was the only way to run the test models, so there was no selection by name, no IDE or CI reporting and no standard parallel runner; added python/TestModels/test_testModels.py with one parametrized case per model and mini example, sharing reference values and tolerances with the suite
+    - **notes:** revision2026 step R5.1: test_testModels.py, 137 cases, shared reference values and tolerances (testRunnerTools.BaseTolerance); found and fixed a masked defect in plotSensorTest.py
+    - date resolved: **2026-09-16 15:04**\ , date raised: 2026-09-16 
+    - resolved by: Claude-JG
  * Version 1.11.95: resolved Issue 2456: runTestSuite.py runs the models serially (change)
     - issue author: Claude-JG
     - description:  revision2026 step R5.8: the 114 test models ran one after the other in a single interpreter (about 22 seconds); with each model writing into its own output directory since step R5.13 they can run in separate processes. Added --parallel[=N]; the models are reported in the order of the reference list; serial stays the default for the commit gate because multithreaded solvers and ARPACK shift the last digits under load

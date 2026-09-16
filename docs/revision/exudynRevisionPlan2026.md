@@ -542,9 +542,7 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 ## R5 — Testing (~3 weeks)  <!-- old Phase 4 -->
 
 <a id="r5-1"></a>
-**R5.1** Wrap the 142 TestModels in pytest: a parametrized collector running each model in a
-    subprocess against per-model reference values with explicit tolerances. Keep
-    `runTestSuite.py` as a compatibility wrapper.
+**R5.1** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-1) — **`python/TestModels/test_testModels.py`**: one pytest case per model and mini example, sharing the reference values and tolerances with `runTestSuite.py`, which stays the gate runner.
 
 <a id="r5-2"></a>
 **R5.2** Mark fast vs slow: ~2-minute PR subset, full nightly.
@@ -657,6 +655,16 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     (`netgenTestMesh2.hdf5/.pkl`, `netgenTestMesh22.npz`), and `geneticOptimizationTest`,
     `pickleCopyMbs` and the FEM tests write `.npz`/`.pkl`/`.h5` files through plain Python calls,
     which `exudyn.config.outputDirectory` does not reach - these need the path in the model.
+
+<a id="r5-14"></a>
+**R5.14** *(phase R5; maintainer request 2026-09-16)* **Declare the development dependencies in
+    `pyproject.toml`.** The dev tools are installed by hand today and appear nowhere in the project
+    metadata: `pytest` and `pytest-xdist` (step R5.1), `pydoclint` (step R4.8), `ruff` and a type
+    checker (step R5.5), `griffe`, `Jinja2` and whatever the generators and docs build need. Add a
+    `dev` extra - deliberately separate from `tests`, which is what the TestModels need at runtime -
+    so that a new contributor gets a working toolchain with one install, and CI installs the same
+    versions. Check the build-system requires (`setuptools>=77`, `pybind11<3.0`, `tomli`) and the
+    tool versions pinned in `.github/workflows/` against it in the same step.
 
 ## R6 — Error handling and UX (ongoing, after R2)  <!-- old Phase 5 -->
 

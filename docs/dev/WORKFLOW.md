@@ -259,6 +259,29 @@ tools/buildAndGenerate/makeUbuntuManyLinuxWheels.bat      # all five, via docker
 Regular CI sets `EXUDYN_NOFAST=1`, which skips the `__FAST_EXUDYN_LINALG` binary and roughly halves
 build time. Ordinary test runs do not exercise that binary. **Release builds must not set it.**
 
+### pytest
+
+`pytest` (from the repository root, configured in `pyproject.toml`) runs
+`python/TestModels/test_testModels.py`: one test case per test model and per mini example, each in
+its own interpreter, judged against the same reference values, tolerance factors and
+sensitive/unresolved lists as `runTestSuite.py` - those have one definition in
+`runTestSuiteRefSol.py` and `testRunnerTools.BaseTolerance()`.
+
+```
+pytest                       all models and mini examples (137 cases, ~65 s)
+pytest -k ANCF               a subset by name
+pytest -n 8                  with pytest-xdist: ~11 s
+pytest -k plotSensorTest -s  one model with its output
+```
+
+`pytest` and `pytest-xdist` are **dev tools**: install them yourself (`pip install pytest
+pytest-xdist`); neither the package nor `runTestSuite.py` needs them. **Do not start pytest with
+`python/` as working directory** - the untracked scratch file `python/pytest.py` would shadow the
+pytest module.
+
+`runTestSuite.py` stays the runner for the commit gate and the release log: it writes the release-
+named log, the coverage report and the overview table, and its exit code is what CI checks.
+
 ### Running the suite in parallel
 
 `runTestSuite.py --parallel` runs every test model in its own interpreter; `--parallel=N` sets the

@@ -4049,6 +4049,41 @@ removed; the constructors now initialise the one member.
 
 ## R5 — Testing
 
+<a id="r5-1"></a>
+### R5.1 - the test models as pytest cases
+
+**DONE 2026-09-16** (#2457).
+
+`python/TestModels/test_testModels.py` turns every test model and every generated mini example into
+one parametrized pytest case: **137 cases**, each running in its own interpreter through
+`testRunnerTools.RunModelInProcess()` from step R5.8. `pyproject.toml` points pytest at the models
+directory, so a plain `pytest` in the repository root runs them.
+
+**One definition of what "passing" means.** The collector reads the reference values, the per-test
+tolerance factors and the sensitive/unresolved lists from `runTestSuiteRefSol.py`, and the
+platform-dependent base tolerance moved out of `runTestSuite.py` into
+`testRunnerTools.BaseTolerance()`, which both runners now call. A model marked sensitive or
+(on Linux) unresolved still runs and must not crash, but its value is not compared - the same rule
+`runTestSuite.py` applies to its exit code.
+
+**Both runners stay.** `runTestSuite.py` remains the commit gate and the release log: it writes the
+release-named log, the coverage report and the overview table, and CI checks its exit code. pytest
+adds selection (`-k contact`), IDE and CI reporting, and `pytest -n 8` through pytest-xdist:
+**65 s serial, 11 s with 8 workers**, the same figures as the suite's own `--parallel`.
+
+**It immediately found a real defect that the suite had been hiding.** `plotSensorTest.py` passes a
+sensor file name as a *string* to `PlotSensor` and deletes the sensor files at the end; with
+step R5.13 those files live in the model's output directory, and under the rule agreed there a
+file name passed by the user is read as given - so both should have failed. In `runTestSuite.py`
+they did not, because **stale files from earlier runs** were still lying in `solution/`. Deleting
+that directory reproduced the failure in both runners. The model now resolves the two paths with
+`OutputFilePath(...)`.
+
+Dev tools: `pytest` and `pytest-xdist` are not dependencies of the package or of the suite; they
+are installed by hand (maintainer approved the install, 2026-09-16). `pytest.py` in `python/` is an
+untracked scratch file that would shadow the pytest module, so pytest must not be started from
+there - noted in `pyproject.toml` and in `WORKFLOW.md`.
+
 <a id="r5-7"></a>
 ### R5.7 — rename `pytest.py` - done differently in step R3.1 (`python/pytestTemplate.py`)
 

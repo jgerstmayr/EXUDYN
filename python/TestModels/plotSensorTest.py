@@ -72,6 +72,7 @@ def UFload(mbs,t,load):
 
 lForce = mbs.AddLoad(LoadForceVector(markerNumber=mPosLast, loadVector=[0,2,0], loadVectorUserFunction=UFload))
 
+from exudyn.basicUtilities import OutputFilePath #resolve exudyn.config.outputDirectory (#2454)
 filedir = 'solution/'
 #these test are really written to files (most other tests use internal storage):
 sLoad = mbs.AddSensor(SensorLoad(loadNumber=lForce, fileName=filedir+'plotSensorLoad.txt'))
@@ -141,14 +142,17 @@ mbs.PlotSensor(sensorNumbers=[sBody]*3+[sMarker]*3, components=[0,1,2,0,1,2],
            colorCodeOffset=3, newFigure=closeAll, fontSize=10, 
            yLabel='Rotation $\\alpha, \\beta, \\gamma$ and\n Position $x,y,z$', closeAll=closeAll)
 mbs.PlotSensor(sensorNumbers=sObject, components=[0,1,2], title='Revolute joint forces', closeAll=closeAll)
-mbs.PlotSensor(sensorNumbers=[sNode]*3+ [filedir+'plotSensorNode.txt']*3, components=[0,1,2]*2, closeAll=closeAll)
+#a sensor given by NUMBER is read from exudyn.config.outputDirectory, a file name given here is
+#read as it is - so the model resolves it itself (#2454)
+mbs.PlotSensor(sensorNumbers=[sNode]*3+ [OutputFilePath(filedir+'plotSensorNode.txt')]*3, components=[0,1,2]*2, closeAll=closeAll)
 
 if closeAll:
     plt.close('all')
 
 import os
 for s in range(mbs.systemData.NumberOfSensors()):
-    fileName=mbs.GetSensor(s)['fileName']
+    #the solver wrote the sensor into exudyn.config.outputDirectory, so delete it there (#2454)
+    fileName=OutputFilePath(mbs.GetSensor(s)['fileName'])
     exu.Print('remove file:', fileName)
     os.remove(fileName)
 

@@ -170,6 +170,7 @@ def NotTestModels():
         'runUnitTests.py',              #driver for the C++ unit tests
         'testRunnerTools.py',           #shared helpers for all of the above
         'modelUnitTests.py',            #the model unit test library and exudynTestGlobals
+        'test_testModels.py',           #the pytest collector (revision2026 step R5.1)
         ])
 
 #%%+++++++++++++++++++++++++++++++++++++++
