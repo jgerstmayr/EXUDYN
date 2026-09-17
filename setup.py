@@ -257,7 +257,19 @@ if sys.platform == 'darwin':
     print("platform == MacOS")
     #platform.architecture() returns '64bit'
     #platform.processor() returns 'arm' in M1 mode and 'i386' under rosetta 2 (Intel mode)
-    config['compileExudynFast'] = False #try to reduce compilation time for MacOS
+    #NO fast module on macOS, and this is the ONE place that decides it (#2499). Two reasons, and
+    #the second is the one that cannot be worked around from here:
+    #  - the wheel is universal2, so every binary is built twice, once per architecture; a second
+    #    module doubles that again for a variant most macOS users never select;
+    #  - a universal2 build compiles every extension with '-arch x86_64 -arch arm64' in ONE pass,
+    #    so a per-architecture module cannot be expressed here: extra_compile_args are APPENDED and
+    #    cannot subtract an -arch the global flags already added. Shipping exudynCPPfast for Apple
+    #    silicon only is possible, but it needs the x86_64 slice removed from that .so after the
+    #    build ('lipo -thin arm64' in a wheel repair step); __init__.py already falls back to the
+    #    regular module when the import fails, so an Intel Mac would simply not get the fast one.
+    #  - and there is little to gain: AVX2 does not exist on ARM, so 'fast' means only the absence
+    #    of range checks there.
+    config['compileExudynFast'] = False
 
 #Exudyn is 64-bit only since revision2026 step R2.6: the Win32 build configurations and the
 #libs/libs32 import libraries are gone, and no 32-bit wheel has been built for years. Fail here
@@ -438,7 +450,9 @@ if config['compileExudynFast']:
 #could differ in the last digits between the two platforms, and a third module exudynCPPnoAVX
 #existed on Windows alone for CPUs without AVX2. Now the default module is the baseline one on
 #every platform and AVX2 is part of what 'fast' means; there is nothing left to fall back to.
-if config['compileExudynFast'] and config['useAVX2'] and not isMacOS:
+#'not isMacOS' was here as well until 2026-09-17 and was dead: compileExudynFast is already False
+#on macOS (see above), so this block cannot be reached there. One place decides, not two (#2499).
+if config['compileExudynFast'] and config['useAVX2']:
     if isLinux:
         if config['useAVX512']:
             vectorExtensionCopts = ['-mavx512f', '-mavx512dq', '-mfma']

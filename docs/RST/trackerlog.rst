@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.158.dev1, 
++  Exudyn version = 1.11.159.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2499, 
-+  Number of resolved issues = 2231 (158 in current version), 
++  Number of issues = 2500, 
++  Number of resolved issues = 2232 (159 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.159: resolved Issue 2499: the platform string does not name the architecture (change)
+    - issue author: Claude-JG
+    - description:  exudyn.config.Version(addDetails=True) reported -Windows-; -MacOS- or -MacOS(ARM)-; so an Intel Mac and an Apple silicon Mac were indistinguishable and 32 vs 64 bit was visible on Windows only; as -(32bit)-. The string is written into the header of every solution file; sensor file; parameter variation and optimization results file; so it is what a user sends with a bug report. It now names the architecture the way the wheel tags and the compilers do: Windows x86_64; MacOS arm64; MacOS x86_64; Linux x86_64; Linux arm64 - and x86 or arm for the 32 bit cases. Also documents why macOS builds no fast module. revision2026 step R2.10.5
+    - **notes:** GetPlatformString() now appends the architecture as the wheel tags and the compilers name it: Windows x86_64; MacOS arm64; MacOS x86_64; Linux x86_64; Linux arm64; and x86 or arm for the 32 bit cases - which also replaces the Windows-only (32bit) marker; since x86_64 and arm64 already say 64 bit. An architecture matching none of them stays unnamed rather than mislabelled. Decided per compile; so each slice of a macOS universal2 binary reports its own. Verified without building Exudyn: the branch selection with the real preprocessor for seven architectures; and the function itself extracted; compiled and run. The change takes effect at the next C++ build. The header text of solution; sensor; parameter variation and optimization files changes with it; the two documented sample headers were updated. Nothing parses the string except the AVX2 and [FAST] checks of the test runner. revision2026 step R2.10.5
+    - date resolved: **2026-09-17 23:28**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.158: :textred:`resolved BUG 2430` : ObjectANCFThinPlate added with its defaults fails inside C++ with an index error 
     - issue author: Claude-JG
     - description:  Found in revision2026 step R4.4.3.4e: mbs.AddObject(ObjectANCFThinPlate()) raises ResizableArray<T>::operator[] i < 0 from C++ even with exudyn.special.exceptions.parameterRangeChecks = False; its default nodeNumbers (four InvalidIndex) are used while the object is added. Every other item class either adds with its defaults or names the parameter that must be given. Expected: a message that names ObjectANCFThinPlate.nodeNumbers - or CheckPreAssembleConsistency catching it - and no index access with invalid node numbers during Add. revision2026 step R10.4.

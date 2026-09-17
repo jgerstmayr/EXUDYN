@@ -147,6 +147,14 @@ promise for no gain.
     enum. `NGsolveCMStest` still cannot leave `NotJudgedOutsideRegularModule()` - its tracked
     `testData/netgenTestMesh.pkl` was written in the old form and has to be regenerated first.
 
+<a id="r2-10-5"></a>
+**R2.10.5** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r2-10-5) — *(sub-step of R2.10;
+    maintainer request 2026-09-17)* **The platform string names the architecture** (#2499):
+    `Windows x86_64`, `MacOS arm64`, `MacOS x86_64`, `Linux arm64` instead of `Windows`, `MacOS`
+    and `MacOS(ARM)`. It goes into the header of every solution, sensor, parameter variation and
+    optimization file, so it is what a user sends with a bug report - and an Intel Mac could not be
+    told from an Apple silicon one. The same step writes down why macOS builds no fast module.
+
 <a id="r2-11"></a>
 **R2.11** **DONE 2026-09-11** — Classifiers now 3.10–3.14, matching the wheels CI actually builds. → [log](exudynRevisionLog2026.md#r2-11)
 

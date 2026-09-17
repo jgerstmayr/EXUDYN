@@ -243,27 +243,34 @@ namespace EXUstd {
 	{
 	};
 
+	//! operating system, architecture, vector extensions and float size, e.g. "Windows x86_64 AVX2 FLOAT64"
 	inline STDstring GetPlatformString()
 	{
 		STDstring s;
 	#if defined(__EXUDYN__WINDOWS__)
 			s += "Windows";
-		#if !defined(_WIN64)
-			s += "(32bit)";
-		#endif
 	#endif
 	#if defined(__EXUDYN__APPLE__)
 		s += "MacOS";
-		#if defined(__EXUDYN__APPLE__ARM__)
-			s += "(ARM)";
-		#endif
 	#endif
 		#if defined(__EXUDYN__LINUX__)
 			s += "Linux";
-		#if defined(__EXUDYN__LINUX__ARM__)
-			s += "(ARM)";
-		#endif
 	#endif
+		//the architecture, named as the wheel tags and the compilers name it (#2499). Until
+		//2026-09-17 this said "(ARM)" on ARM and nothing at all on x86, so an Intel Mac and an
+		//Apple silicon Mac both reported "MacOS" - a bug report could not be told apart - and 32 vs
+		//64 bit was visible on Windows only, as "(32bit)". The architecture term now carries that:
+		//x86_64 and arm64 are 64 bit, x86 and arm are 32 bit. Decided per COMPILE, so each slice of
+		//a macOS universal2 binary reports its own.
+	#if defined(__aarch64__) || defined(__arm64__) || defined(_M_ARM64)
+		s += " arm64";
+	#elif defined(__arm__) || defined(_M_ARM)
+		s += " arm";
+	#elif defined(_WIN64) || defined(__x86_64__) || defined(__amd64__)
+		s += " x86_64";
+	#elif defined(_WIN32) || defined(__i386__) || defined(_M_IX86)
+		s += " x86";
+	#endif //an architecture that is none of these stays unnamed rather than being mislabelled
 	#if defined(use_AVX512)
 		s += " AVX512";
 	#elif defined(use_AVX2)

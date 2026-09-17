@@ -5950,3 +5950,52 @@ working as designed, but it makes a backlog triage a visible event rather than b
 #1085 is the shape of finding that recurs: the bug is not fixed, but it stopped being a suspicion -
 the Windows/Linux differences are recorded per model in `UnresolvedOnLinux()` and no longer set the
 exit code at random, so what remains is one question (*why*) rather than an unreliable suite.
+
+<a id="r2-10-5"></a>
+### R2.10.5 - the platform string names the architecture
+
+**DONE 2026-09-17** (#2499; maintainer request).
+
+`GetPlatformString()` said `Windows`, `MacOS` or `MacOS(ARM)`, with `(32bit)` on Windows only. So
+**an Intel Mac and an Apple silicon Mac both reported "MacOS"** - and this string is not decoration:
+`CSolverBase.cpp:1738` and `:1971` write it into the header of every **solution file** and every
+**sensor file**, and `processing.py` into every **parameter variation and optimization results
+file**. It is what a user sends with a bug report.
+
+| before | after |
+|---|---|
+| `Windows AVX2 FLOAT64[FAST]` | `Windows x86_64 AVX2 FLOAT64[FAST]` |
+| `Windows(32bit) FLOAT64` | `Windows x86 FLOAT64` |
+| `MacOS(ARM) FLOAT64` | `MacOS arm64 FLOAT64` |
+| `MacOS FLOAT64` | `MacOS x86_64 FLOAT64` |
+| `Linux FLOAT64` | `Linux x86_64 FLOAT64` |
+
+The architecture is named as the wheel tags and the compilers name it, and it now carries the word
+length as well: `x86_64`/`arm64` are 64 bit, `x86`/`arm` are 32 bit, so the `(32bit)` special case
+is gone. An architecture that matches none of them stays unnamed rather than being mislabelled.
+The decision is per **compile**, so each slice of a macOS universal2 binary reports its own.
+
+**Verified without building Exudyn**, which would have taken the whole toolchain: the branch
+selection was checked for seven architectures with the real preprocessor (`cl -EP`), and the
+function itself was extracted into a small translation unit, compiled and run - `Windows x86_64
+AVX2 FLOAT64` and `Windows x86_64 FLOAT64`. The non-Windows strings were read out of the
+preprocessed function, because MSVC's own STL cannot be compiled with `_WIN32` undefined:
+`MacOS arm64 FLOAT64`, `MacOS x86_64 FLOAT64`, `Linux x86_64 FLOAT64`, `Linux arm64 FLOAT64`.
+**The change takes effect at the next C++ build**; the installed module still reports the old form.
+
+Nothing parses this string except `testRunnerTools.ModuleUsesAVX2()` (looks for `AVX2`/`AVX512`)
+and `ModuleIsRegular()` (looks for `[FAST]`); both are unaffected. The two places that showed a
+sample header - `gettingStarted.tex` and the `processing.py` docstring - were updated, and with
+them the generated RST and LaTeX.
+
+**Why macOS builds no fast module, written down where it is decided.** The maintainer asked why a
+universal2 wheel could not carry the fast module for the arm64 half. It can - but not from
+`setup.py`: a universal2 build compiles every extension with `-arch x86_64 -arch arm64` in **one**
+pass, and `extra_compile_args` are appended, so an extension cannot *subtract* an architecture the
+global flags added. Shipping it for Apple silicon only needs the x86_64 slice removed from that
+`.so` after the build (`lipo -thin arm64` in a wheel repair step); `__init__.py` already falls back
+to the regular module when the import fails, so an Intel Mac would simply not get it. There is
+little to gain either way: AVX2 does not exist on ARM, so "fast" means only the absence of range
+checks there. It stayed off - which it already was, at `setup.py:260`, for the older reason of
+build time. The `not isMacOS` in the vector-extension condition was **dead code** given that line,
+and is gone: one place decides.

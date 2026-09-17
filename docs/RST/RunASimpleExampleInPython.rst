@@ -41,7 +41,7 @@ The beginning and end of the file should look like:
   #number of written coordinates [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData] = [2,2,2,0,0,0,0]
   #total columns exported  (excl. time) = 6
   #number of time steps (planned) = 100
-  #Exudyn version = 1.2.33.dev1; Python3.9.11; Windows AVX2 FLOAT64
+  #Exudyn version = 1.11.158.dev1; Python3.13.15; Windows x86_64 AVX2 FLOAT64
   #
   0,0,0,0,0,0.0001,0
   0.01,5e-09,0,1e-06,0,0.0001,0

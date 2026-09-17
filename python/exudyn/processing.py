@@ -35,7 +35,7 @@ __all__ = [
 #%%+++++++++++++++++++++++++++++++++++++++++++
 def GetVersionPlatformString():
     """internal function to return Exudyn version string, which allows to identify how results have been obtained
-    writes something like 'Exudyn version = 1.2.33.dev1; Python3.9.11; Windows AVX2 FLOAT64; Windows10 V10.0.19044; AMD64; Intel64 Family 6 Model 142 Stepping 10, GenuineIntel'
+    writes something like 'Exudyn version = 1.11.158.dev1; Python3.13.15; Windows x86_64 AVX2 FLOAT64; Windows10 V10.0.19044; AMD64; Intel64 Family 6 Model 142 Stepping 10, GenuineIntel'
 
     Note:
         If exudyn C++ module is not available, it outputs the Python version
