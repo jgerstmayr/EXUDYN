@@ -17,6 +17,7 @@ from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics #only import if it does not conflict
 import numpy as np
 from exudyn.FEM import *
+import os   #the mesh file is checked for existence, not loaded speculatively (#2469)
 import time
 
 useGraphics = True #without test
@@ -35,7 +36,13 @@ except:
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-fileName = 'testData/netgenTestMesh' #for load/save of FEM data
+#for load/save of FEM data. The tracked file is an .npz of plain numpy arrays since 2026-09-17
+#(#2469): the .pkl it replaces carried exudyn C++ types, so loading it under a second module
+#(exudynCPPfast) raised 'type "Real" is already registered' and the model then regenerated the
+#mesh - changing its own reference value. The .npz was CONVERTED from that .pkl, so the mesh and
+#the reference value are unchanged. (The PKL/HDF5 round trip further below still tests those
+#formats; it writes into the output directory, not here.)
+fileName = 'testData/netgenTestMesh'
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #netgen/meshing part:
@@ -91,19 +98,31 @@ if hasNGsolve:
                                                 meshOrder=meshOrder)
     #if file does not exist, create it - otherwise don't change it!
     #if you want to replace it, delete the old file!
-    try:
-        fem.LoadFromFile(fileName, mode='PKL')
-    except Exception as e:
-        exu.Print(f'\nNGsolveCMStest: LoadFromFile(...) failed; {e}\n')
-        fem.SaveToFile(fileName, mode='PKL')
+    #
+    #DECIDE ON THE FILE, NOT ON AN EXCEPTION (#2469): this used to save whenever the LOAD failed,
+    #and a load fails for reasons that have nothing to do with the file being absent - under a
+    #second C++ module it raises 'type "Real" is already registered', and a new ngsolve version
+    #would do the same. The mesh file is TRACKED and the reference value belongs to it, so an
+    #overwrite silently moved the result by 2.4e-8 and left the working tree dirty.
+    if not os.path.isfile(fileName + '.npz'):
+        exu.Print('\nNGsolveCMStest: ' + fileName + '.npz does not exist; creating it from the '
+                  'mesh just generated\n')
+        fem.SaveToFile(fileName, mode='NPZ')
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #compute Hurty-Craig-Bampton modes
+#the file is the reference: it is never rewritten here, so a failure to load has to be reported
+#with its reason rather than repaired silently (#2469)
+if not os.path.isfile(fileName + '.npz'):
+    raise ValueError('NGsolveCMStest: ' + fileName + '.npz not found and ngsolve is not '
+                     'available to create it')
 try:
-    fem.LoadFromFile(fileName, mode='PKL')
+    fem.LoadFromFile(fileName, mode='NPZ')
 except Exception as e:
     exu.Print(f'\nNGsolveCMStest: LoadFromFile(...) failed; {e}\n')
-    raise ValueError('NGsolveCMStest: mesh file not found!')
+    raise ValueError('NGsolveCMStest: ' + fileName + '.npz exists but cannot be loaded (see the '
+                     'message above); the file is tracked and holds the reference solution, so it '
+                     'is NOT regenerated. Delete it deliberately to have it rebuilt.')
 
     
 pLeft = [0,-a,-b]

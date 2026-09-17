@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.107.dev1, 
++  Exudyn version = 1.11.108.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2471, 
-+  Number of resolved issues = 2180 (107 in current version), 
++  Number of issues = 2472, 
++  Number of resolved issues = 2181 (108 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.108: :textred:`resolved BUG 2469` : NGsolveCMStest reference value follows an untracked mesh cache 
+    - issue author: Claude-JG
+    - description:  NGsolveCMStest.py loads python/TestModels/testData/netgenTestMesh.pkl - a TRACKED file - and silently OVERWRITES it whenever the load fails. That happened during revision2026 step R2.10 and the result moved by 2.4e-8, far outside the 5e-14 tolerance, back to the value recorded before 2025-05-05; restoring the committed file restored the value. A test must not rewrite its own committed input: either treat the mesh as read-only and fail loudly, or generate it deterministically.
+    - **notes:** NGsolveCMStest.py decided on an EXCEPTION: it saved the mesh whenever LoadFromFile failed, and a load fails for reasons unrelated to the file being absent - under a second C++ module it raises 'type "Real" is already registered', a new ngsolve version would do the same. The tracked testData/netgenTestMesh.pkl was then overwritten and the result moved by 2.4e-8, far outside the 5e-14 tolerance, leaving the working tree dirty. It now decides on os.path.isfile: the file is written only when it does not exist, and a file that exists but cannot be loaded raises with the reason and the advice to delete it deliberately. Verified in three states - present (loads, byte-identical afterwards), corrupt (raises, not rewritten), missing (recreated, and the new mesh gives the other value, which is why it must not happen by accident). revision2026 step R2.10.2. ALSO: the tracked mesh was converted from .pkl to .npz (maintainer, 2026-09-17), keeping the mesh and the reference value; .gitignore narrowed so the tracked mesh is not matched. The .npz still cannot be read by a second module - one stored field is a C++ enum - which is #2471.
+    - date resolved: **2026-09-17 08:39**\ , date raised: 2026-09-16 
+    - resolved by: Claude-JG
  * Version 1.11.107: resolved Issue 2470: a second reference set for the AVX2 module, as an update to the baseline (extension)
     - issue author: Claude-JG
     - description:  revision2026 step R2.10.3: since step R2.10 the regular module is baseline ISA and exudynCPPfast carries AVX2, so one set of reference values cannot judge both on Windows. AVX2ReferenceSolutionUpdate() at the end of runTestSuiteRefSol.py holds ONLY the values that move (32 of 136), as an update to the baseline values, and is meant to shrink as the causes are found or the models are re-parameterised to amplify roundoff less.
@@ -8485,10 +8491,10 @@ Open issues
 Known bugs
 **********
 
- * :textred:`open BUG 2469:` NGsolveCMStest reference value follows an untracked mesh cache
+ * :textred:`open BUG 2471:` FEMinterface NPZ files store a C++ enum and cannot be read by a second module
     - issue author: Claude-JG
-    - description:  NGsolveCMStest.py loads python/TestModels/testData/netgenTestMesh.pkl - a TRACKED file - and silently OVERWRITES it whenever the load fails. That happened during revision2026 step R2.10 and the result moved by 2.4e-8, far outside the 5e-14 tolerance, back to the value recorded before 2025-05-05; restoring the committed file restored the value. A test must not rewrite its own committed input: either treat the mesh as read-only and fail loudly, or generate it deterministically.
-    - date raised: 2026-09-16 
+    - description:  FEMinterface.SaveToFile(mode=NPZ) writes postProcessingModes as a dict whose outputVariableType is an exudyn.exudynCPP.OutputVariableType - a pybind type. np.load(allow_pickle=True) therefore imports exudyn.exudynCPP when reading it, and in a process that already loaded exudynCPPfast this raises ImportError: generic_type: type "Real" is already registered. Measured 2026-09-17 on testData/netgenTestMesh.npz: every other field (nodes, elements, massMatrix, stiffnessMatrix, surface, modeBasis, eigenValues, metaData) loads under both modules; only this one fails. An NPZ is meant to hold plain arrays: store the enum by name and convert back on load. Until then NGsolveCMStest stays in NotJudgedOutsideRegularModule(). revision2026 step R2.10.4.
+    - date raised: 2026-09-17 
 
  * :textred:`open BUG 2463:` the two GitHub workflows pin different action versions
     - issue author: Claude-JG

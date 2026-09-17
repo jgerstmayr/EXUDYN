@@ -1222,6 +1222,56 @@ established on Linux (R2.16); on Windows it does not hold, and the maintainer ha
 `useAVX2` should default to off, whether the fast module gets its own values, or whether it is
 judged only on the models that are not chaotic.
 
+<a id="r2-10-2"></a>
+### R2.10.2 - NGsolveCMStest no longer rewrites its own committed input
+
+**DONE 2026-09-17** (#2469).
+
+The model carried the right intention in a comment - *"if file does not exist, create it -
+otherwise don't change it!"* - and did something else:
+
+```python
+try:
+    fem.LoadFromFile(fileName, mode='PKL')
+except Exception as e:
+    exu.Print(f'...LoadFromFile(...) failed; {e}')
+    fem.SaveToFile(fileName, mode='PKL')      #overwrites a TRACKED file
+```
+
+It decided on an **exception**, not on the file. A load fails for reasons that have nothing to do
+with the file being absent: under a second C++ module it raises `type "Real" is already
+registered` (found in step R2.10.3), and a new ngsolve version would do the same. The mesh then
+silently changed, the result moved by **2.4e-8** - six orders outside the 5e-14 tolerance - and the
+working tree was left dirty. During steps R2.10 to R2.10.3 this happened repeatedly and cost
+several confusing test runs.
+
+It now decides on `os.path.isfile`: the file is written only when it does not exist, and a file
+that exists but cannot be loaded raises with the reason plus the advice to delete it deliberately.
+The second failure path, whose message read *"mesh file not found!"*, said the wrong thing in
+exactly this case and was split into the two real cases.
+
+Verified in all three states on 2026-09-17: **present** - loads, result 0.06953224923173146, file
+byte-identical afterwards; **corrupt** - raises `... exists but cannot be loaded ...` and the file
+is left as it was; **missing** - recreated with a message, and the regenerated mesh gives
+**0.06953227339277415**, the other plateau. That last number is the point of the whole step: the
+reference value belongs to the committed mesh, so regenerating it by accident changes the answer.
+
+**The tracked file is now an `.npz`** (maintainer decision, 2026-09-17; the format was a problem
+only with numpy 1.x). It was **converted** from the committed `.pkl` rather than regenerated, so
+the mesh and the reference value are unchanged - the suite gives the same 0.0695322492317342 as
+before. `.gitignore` had to be narrowed: `netgenTestMesh*.pkl` matched the tracked file too, so a
+file the test silently overwrote was also one git would not have mentioned had it not already been
+tracked. The patterns now cover only the round-trip artefacts (`netgenTestMesh2*`), and the model
+still exercises PKL and HDF5 there - into the output directory, not into the tracked data.
+
+**What the switch did NOT fix, measured rather than assumed**: the file still cannot be read by a
+second module. `np.load(allow_pickle=True)` unpickles object fields, and one of them -
+`postProcessingModes['outputVariableType']` - is an `exudyn.exudynCPP.OutputVariableType`, a
+pybind type whose import collides with an already loaded `exudynCPPfast`. Every other field in the
+file (nodes, elements, both matrices, surface, modeBasis, eigenValues, metaData) loads fine under
+both modules. An NPZ is meant to hold plain arrays; storing a C++ enum in one is #2471, step
+R2.10.4, and until it is fixed `NGsolveCMStest` stays in `NotJudgedOutsideRegularModule()`.
+
 <a id="r2-10-3"></a>
 ### R2.10.3 - a second reference set for the AVX2 module
 

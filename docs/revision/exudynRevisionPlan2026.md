@@ -124,11 +124,13 @@ promise for no gain.
     the fast module, which compiles those out, died. The suite now completes under both modules.
 
 <a id="r2-10-2"></a>
-**R2.10.2** *(sub-step of R2.10)* **`NGsolveCMStest` rewrites its own committed input** (#2469):
-    the TRACKED `testData/netgenTestMesh.pkl` is overwritten whenever the load fails, and the result then
-    moves by 2.4e-8 — far outside the 5e-14 tolerance. Restoring the committed file restored the
-    value. Treat the mesh as read-only and fail loudly, or generate it deterministically.
-
+**R2.10.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r2-10-2) — *(sub-step of R2.10)*
+    **`NGsolveCMStest` no longer rewrites its own committed input** (#2469). It saved the tracked
+    `testData/netgenTestMesh.pkl` whenever the LOAD raised - which happens for reasons unrelated to
+    the file being missing - and the result then moved by 2.4e-8. It now decides on
+    `os.path.isfile`: written only when absent, and a file that cannot be loaded raises with the
+    reason instead of being replaced. The tracked mesh is now an **`.npz`**, converted from the
+    `.pkl` so the reference value is unchanged (maintainer, 2026-09-17).
 <a id="r2-10-3"></a>
 **R2.10.3** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r2-10-3) — *(sub-step of R2.10)*
     **A second reference set for the AVX2 module** (#2470), kept as an **update** to the baseline
@@ -137,6 +139,15 @@ promise for no gain.
     suite from one file. **The list is meant to shrink** (maintainer, 2026-09-17): each entry is to
     be removed either by finding the cause of the drift or by choosing model parameters that do not
     amplify roundoff — phase R10. It is ordered by drift, largest first, which is that work list.
+
+<a id="r2-10-4"></a>
+**R2.10.4** *(sub-step of R2.10)* **`FEMinterface` NPZ files cannot be read by a second module**
+    (#2471): `SaveToFile(mode=NPZ)` stores `postProcessingModes['outputVariableType']` as an
+    `exudyn.exudynCPP.OutputVariableType`, so `np.load(allow_pickle=True)` imports that module and
+    a process holding `exudynCPPfast` gets `type "Real" is already registered`. Every other field
+    loads under both modules. Store the enum by name and convert back on load; then
+    `NGsolveCMStest` can leave `NotJudgedOutsideRegularModule()`.
+
 
 <a id="r2-11"></a>
 **R2.11** **DONE 2026-09-11** — Classifiers now 3.10–3.14, matching the wheels CI actually builds. → [log](exudynRevisionLog2026.md#r2-11)
