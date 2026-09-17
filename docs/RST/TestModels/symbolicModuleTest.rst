@@ -504,19 +504,24 @@ You can view and download this file on Github: `symbolicModuleTest.py <https://g
        wrong += Check(str(esym.sqrt(x)) == 'sqrt(x)', 'a function prints its name')
    
        #--- the error paths. A failed operation used to leak its expression nodes, which showed up in
-       #the new/delete balance below; since #2481 it frees them, so nothing has to be compensated here
-       try:
-           esym.Vector([1., 2.]) * esym.Vector([1., 2., 3.])
-           wrong += Check(False, 'a vector product of different sizes must raise')
-       except Exception:
-           pass
+       #the new/delete balance below; since #2481 it frees them, so nothing has to be compensated here.
+       #ONLY the regular module: exudynCPPfast is compiled with __FAST_EXUDYN_LINALG, which removes
+       #exactly these range checks by design, so there the two cases below do NOT raise - that is the
+       #trade the fast module makes, not a defect (found when the suite first ran against it, #2495)
+       hasRangeChecks = '[FAST]' not in exu.config.Version(True)
+       if hasRangeChecks:
+           try:
+               esym.Vector([1., 2.]) * esym.Vector([1., 2., 3.])
+               wrong += Check(False, 'a vector product of different sizes must raise')
+           except Exception:
+               pass
    
-       try:
-           v = esym.Vector([1., 2.])
-           v[5]
-           wrong += Check(False, 'an index beyond the vector must raise')
-       except Exception:
-           pass
+           try:
+               v = esym.Vector([1., 2.])
+               v[5]
+               wrong += Check(False, 'an index beyond the vector must raise')
+           except Exception:
+               pass
    
        return wrong
    

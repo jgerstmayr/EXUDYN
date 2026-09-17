@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.133.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2495, 
++  Number of issues = 2496, 
 +  Number of resolved issues = 2206 (133 in current version), 
 
 ************
@@ -7525,6 +7525,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 2495:** the fast module is never exercised by the test suite
+    - issue author: Claude-JG
+    - description:  Windows release builds ship exudynCPP and exudynCPPfast; but the suite only ever runs whichever one __init__.py selects - the default - so exudynCPPfast ships essentially untested although it is the module used for long simulations and the one whose missing range checks turn a user error into undefined behaviour. The machinery to JUDGE a fast run already exists (ModuleUsesAVX2 and AVX2ReferenceSolutionUpdate from R2.10.3); what is missing is the switch that loads it. revision2026 step R5.11
+    - date raised: 2026-09-17 
 
  * :textblue:`open issue 2455:` pydoclint reports two violations in exudyn/__init__.py RequireVersion
     - issue author: Claude-JG

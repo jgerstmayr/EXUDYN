@@ -451,6 +451,7 @@ def AVX2ReferenceSolutionUpdate():
         'generalContactCylinderTest.py':          12.246626442545603,        #drift 4.2e-05
         'sphereTriangleTest2.py':                 4.356119232231812,         #drift 3.6e-05
         'generalContactImplicit1.py':             0.775815593379039,         #drift 5.3e-08
+        'ANCFbeltDrive.py':                       -0.0011715990134242293,    #drift 1.0e-08; added 2026-09-17 with #2495, the model entered the suite in R5.12
         'contactSphereSphereTest.py':             0.5348463536059522,        #drift 3.3e-09
         'rollingDiscTangentialForces.py':         1.0342017388721547,        #drift 1.6e-09
         'ObjectConnectorRigidBodySpringDamper.py':-0.5349299545315868,       #drift 1.4e-09

@@ -36,6 +36,22 @@ import sys
 __useExudynFast = hasattr(sys, 'exudynFast')
 if __useExudynFast:
     __useExudynFast = sys.exudynFast #could also be False!
+else:
+    #EXUDYN_MODULE=fast selects the same module as sys.exudynFast, but through the environment,
+    #which CHILD PROCESSES INHERIT - that is the point: the test suite runs every model in its own
+    #interpreter (runTestSuite.py --parallel, pytest -n), and a sys attribute does not survive
+    #that while a variable does. Release testing uses it to cover exudynCPPfast, which otherwise
+    #ships untested (revision2026 step R5.11). An explicit sys.exudynFast always wins, including
+    #sys.exudynFast=False; the variable only decides when nothing was said in code.
+    #Read here and not in _ApplyEnvironmentSettings() below: THAT runs after the C++ module has
+    #been imported, which is too late to choose which one.
+    try:
+        import os
+        __useExudynFast = (os.environ.get('EXUDYN_MODULE', '').strip().lower() == 'fast')
+        if __useExudynFast:
+            print('NOTE: EXUDYN_MODULE=fast is set; loading exudynCPPfast (no range checks)')
+    except Exception:
+        __useExudynFast = False #a failed environment read must never stop the import
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #SINCE revision2026 step R2.10 (#2466) there are exactly TWO modules, with the same meaning on

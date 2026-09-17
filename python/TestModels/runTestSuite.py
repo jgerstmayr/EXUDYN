@@ -28,10 +28,26 @@ if platform.processor().find('arm') != -1:
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#--fast-module: run the whole suite against exudynCPPfast instead of the default module, which
+#otherwise ships untested (revision2026 step R5.11). This has to happen HERE, before exudyn is
+#imported below - once the C++ module is loaded the choice is made. The environment variable is
+#what the model WORKERS see: --parallel and pytest run every model in its own interpreter, and a
+#child inherits the variable but not sys.exudynFast.
+#NOTE '--fast' is something else entirely: the pull-request subset (revision2026 step R5.2).
+useFastModule = '--fast-module' in sys.argv
+if useFastModule:
+    import os
+    os.environ['EXUDYN_MODULE'] = 'fast'
+    sys.exudynFast = True
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #include right exudyn module now:
 import numpy as np
 import testRunnerTools
 import exudyn as exu
+
+if useFastModule: #asking is not getting; stop rather than write a log that claims the wrong module
+    testRunnerTools.RequireFastModule('--fast-module')
 from modelUnitTests import RunAllModelUnitTests, TestInterface, ExudynTestStructure, exudynTestGlobals
 import time
 
@@ -76,6 +92,8 @@ if len(sys.argv) > 1:
             useExitCode = True
         elif sys.argv[i+1] == '--fast':
             TSScope.fastSubset = True
+        elif sys.argv[i+1] == '--fast-module':
+            pass #already acted upon, before the exudyn import; listed so it is not "unknown"
         elif sys.argv[i+1].startswith('--parallel'):
             #--parallel runs every model in its own interpreter, the number of workers after '='
             #(revision2026 step R5.8); possible since each model writes into its own directory
@@ -121,15 +139,8 @@ dateStr = str(now.year) + '-' + NumTo2digits(now.month) + '-' + NumTo2digits(now
 #date and time of exudyn library:
 import os #for retrieving file information
 from datetime import datetime #datetime contains .fromtimestamp(...)
-#do NOT import exudyn.exudynCPP here: __init__.py may have selected exudynCPPfast, and naming
-#the default module would load a SECOND C++ binary into the process and then report the wrong
-#one as the module under test. Two candidates since revision2026 step R2.10 (#2466).
-exuCPPfile = ''
-for exuCPPname in ['exudynCPP', 'exudynCPPfast']:
-    exuCPPmodule = sys.modules.get('exudyn.'+exuCPPname, None)
-    if exuCPPmodule is not None:
-        exuCPPfile = exuCPPmodule.__file__
-        break
+(exuCPPname, exuCPPmodule) = testRunnerTools.LoadedCppModule() #never names the module itself (#2466)
+exuCPPfile = exuCPPmodule.__file__ if exuCPPmodule is not None else ''
 
 if exuCPPfile == '': #fallback: the package directory, so the date below is still meaningful
     exuCPPfile = exu.__file__
@@ -165,6 +176,11 @@ pythonVersionMain = str(sys.version_info.major)+'.'+str(sys.version_info.minor)
 #          +sys.platform+'-'+processorString+'-'+platform.architecture()[0]+',Python'\
 #          +pythonVersion+',date:'+dateStr+': '
 platformString = sys.platform+'-'+processorString+'-'+platform.architecture()[0]+'-P'+pythonVersionMain
+#exu.config.Version() is the SAME string for both modules, so without this marker the fast run
+#would collide with the default log and be diverted to tmp/ with a misleading message about
+#another machine. Derived from what was loaded, not from what was asked (revision2026 step R5.11).
+if testRunnerTools.ModuleUsesAVX2():
+    platformString += '_fast'
 localFileName = 'testSuiteLog_V'+exu.config.Version()+'_'+platformString
 
 #logFileName = '../TestSuiteLogs/testSuiteLog_V'+exu.config.Version()+'_'+platformString+'.txt'

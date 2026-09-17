@@ -50,6 +50,52 @@ def ModuleUsesAVX2():
 
 
 #%%******************************************************************************************************
+def LoadedCppModule():
+    """
+    The C++ module that exudyn actually imported, as (name, module).
+
+    Do NOT import exudyn.exudynCPP to find this out: __init__.py may have selected exudynCPPfast,
+    and naming the default module would load a SECOND C++ binary into the process and then report
+    the wrong one as the module under test. Two candidates since revision2026 step R2.10 (#2466).
+
+    Returns:
+        tuple: (name, module), e.g. ('exudynCPPfast', <module>); ('', None) if neither is loaded,
+        which happens when exudyn was imported from a Visual Studio build directory
+    """
+    for moduleName in ['exudynCPP', 'exudynCPPfast']:
+        module = sys.modules.get('exudyn.' + moduleName, None)
+        if module is not None:
+            return (moduleName, module)
+    return ('', None)
+
+
+#%%******************************************************************************************************
+def RequireFastModule(optionName='--fast-module'):
+    """
+    Stop the run if the fast module was asked for but is not what got loaded.
+
+    Asking is not getting: __init__.py declines a fast request when the CPU reports no AVX2 or the
+    import fails, and then prints a line and carries on with the regular module. For a release run
+    that is the worst outcome - the log looks like a fast-module log and is not - so the runners
+    check what they really have (revision2026 step R5.11).
+
+    Args:
+        optionName (str): the option the user passed, for the message
+    """
+    if ModuleUsesAVX2():
+        return
+
+    (moduleName, _) = LoadedCppModule()
+    raise SystemExit(optionName + ' was requested, but the loaded module is "'
+                     + (moduleName if moduleName != '' else 'unknown')
+                     + '" without vector extensions.\n'
+                     '  EXUDYN_MODULE=fast is declined when the CPU reports no AVX2 or when\n'
+                     '  exudynCPPfast is not in the installed package - see the message printed\n'
+                     '  by the exudyn import above. Nothing was run: a log that claims to be a\n'
+                     '  fast-module log but is not would be worse than no log.')
+
+
+#%%******************************************************************************************************
 def ModuleIsRegular():
     """
     True for the regular module exudynCPP, False for exudynCPPfast, which reports '[FAST]' in its
