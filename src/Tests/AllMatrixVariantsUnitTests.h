@@ -329,6 +329,34 @@ const lest::test matrixVariants_specific_test[] =
 		EXPECT(accumulated == accumulatedSparse);
 	},
 
+	CASE("SparseTripletMatrix: the three-argument constructor keeps the size it is given")
+	{
+		//it dropped both arguments until #2476 - and since #2474 the size fields decide how
+		//MultMatrixVector sizes its result, so a 0 x 0 matrix holding triplets is a trap.
+		//This case is also the constructor's first caller: nothing in the code base uses it
+		ResizableArray<EXUmath::Triplet> triplets;
+		triplets.Append(EXUmath::Triplet(0, 0, 2.));
+		triplets.Append(EXUmath::Triplet(1, 0, 0.5));
+		triplets.Append(EXUmath::Triplet(1, 2, -1.5));
+
+		EXUmath::SparseTripletMatrix sparse(2, 3, triplets);
+		EXPECT(sparse.NumberOfRows() == 2);
+		EXPECT(sparse.NumberOfColumns() == 3);
+		EXPECT(sparse.GetTriplets().NumberOfItems() == 3); //and it copied the triplets
+
+		//the product depends on those two numbers: it sizes the result by the rows and checks x
+		//against the columns
+		EXUmath::MatrixContainer container(sparse);
+		EXPECT(!container.UseDenseMatrix());
+		Vector x(3);
+		x[0] = 1.; x[1] = 2.; x[2] = 3.;
+		Vector result;
+		container.MultMatrixVector(x, result);
+		EXPECT(result.NumberOfItems() == 2);
+		EXPECT(result[0] == 2.);                  //2*1
+		EXPECT(result[1] == -4.);                 //0.5*1 + (-1.5)*3
+	},
+
 	CASE("MatrixContainer: SetAllZero and switching the mode")
 	{
 		Matrix dense(2, 2);

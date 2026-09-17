@@ -491,14 +491,8 @@ def ExtendedSymbolicChecks():
     wrong += Check(str(x+x) == '(x + x)', 'a sum prints both operands')
     wrong += Check(str(esym.sqrt(x)) == 'sqrt(x)', 'a function prints its name')
 
-    #--- the error paths. NOTE: a failed operation leaks its expression nodes - the node is built,
-    #evaluated, throws, and no object ever takes ownership (#2481, measured: 1 Real + 2 Vector
-    #nodes per failed product). The counters are therefore restored afterwards, so that this test
-    #keeps measuring what it always measured; the leak itself is pinned by the C++ unit tests of
-    #revision2026 step R5.4.2, which is the right place to notice when it is fixed.
-    counters = [esym.Real.__newCount, esym.Real.__deleteCount,
-                esym.Vector.__newCount, esym.Vector.__deleteCount,
-                esym.Matrix.__newCount, esym.Matrix.__deleteCount]
+    #--- the error paths. A failed operation used to leak its expression nodes, which showed up in
+    #the new/delete balance below; since #2481 it frees them, so nothing has to be compensated here
     try:
         esym.Vector([1., 2.]) * esym.Vector([1., 2., 3.])
         wrong += Check(False, 'a vector product of different sizes must raise')
@@ -511,10 +505,6 @@ def ExtendedSymbolicChecks():
         wrong += Check(False, 'an index beyond the vector must raise')
     except Exception:
         pass
-
-    [esym.Real.__newCount, esym.Real.__deleteCount,
-     esym.Vector.__newCount, esym.Vector.__deleteCount,
-     esym.Matrix.__newCount, esym.Matrix.__deleteCount] = counters
 
     return wrong
 

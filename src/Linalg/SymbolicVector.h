@@ -16,6 +16,11 @@
 
 #include <initializer_list> //for initializer_list in constructor
 
+//this header is built ON Symbolic.h and uses py::list, py::array_t and EPyUtils; it included
+//neither, and compiled only because Symbolic.cpp includes both before it (#2480)
+#include "Linalg/Symbolic.h"
+#include "Pymodules/PybindUtilities.h"
+
 extern bool linalgPrintUsePythonFormat; 
 
 namespace Symbolic

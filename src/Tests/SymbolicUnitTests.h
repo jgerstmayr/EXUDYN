@@ -31,14 +31,7 @@
 #ifndef SYMBOLICUNITTESTS__H
 #define SYMBOLICUNITTESTS__H
 
-//SymbolicVector.h and SymbolicMatrix.h use py::list, py::array_t and EPyUtils WITHOUT including
-//anything for them - they compile only because Symbolic.cpp includes pybind11 first. Any other
-//translation unit has to do the same, in the same order (#2480)
-#include <pybind11/pybind11.h>
-#include <pybind11/numpy.h>
-#include <pybind11/stl.h>
-#include "Pymodules/PybindUtilities.h"
-
+//each of these now includes what it uses, so the order here does not matter any more (#2480)
 #include "Linalg/Symbolic.h"
 #include "Linalg/SymbolicVector.h"
 #include "Linalg/SymbolicMatrix.h"
@@ -309,8 +302,9 @@ const lest::test symbolic_specific_test[] =
 
 			EXPECT_THROWS((void)(two * three));
 		}
-		//NOTE: OpenNodes() is deliberately NOT required to be 0 here - the exception escapes
-		//before any SReal takes ownership of the new node, so the failed product leaks it (#2481)
+		//and the failed product frees what it allocated: until #2481 the exception escaped before
+		//any SReal owned the node, and the whole sub-tree was leaked
+		EXPECT(guard.OpenNodes() == 0);
 	},
 
 	CASE("Symbolic: a matrix answers component by component, without evaluating itself")

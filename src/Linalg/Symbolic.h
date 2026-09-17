@@ -19,6 +19,13 @@
 #ifndef SYMBOLIC__H
 #define SYMBOLIC__H
 
+//this header uses Real, Index, ResizableArray and STDstring, an unordered_map in VariableSet and
+//typeid in SReal; it included none of them and compiled only because Symbolic.cpp includes them
+//first (#2480)
+#include "Linalg/BasicLinalg.h"
+#include <unordered_map>    //VariableSet
+#include <typeinfo>         //typeid, in SetExpressionNamedReal and IsExpressionNamedReal
+
 namespace Symbolic
 {
 class ExpressionNamedReal;
@@ -1029,9 +1036,33 @@ public:
 	SReal() : expr(nullptr), value(0.) {}
 	SReal(const Real& val) : expr(nullptr), value(val) {}
 	SReal(const Index& val) : expr(nullptr), value((Real)val) {}
-	SReal(ExpressionBase* e) : expr(e), value(e ? e->Evaluate() : 0) //needed???
+	//! take ownership of an expression and cache its value; every operator returns through here
+	SReal(ExpressionBase* e) : expr(e), value(0.)
 	{
-		if (e) { e->IncreaseReferenceCounter(); }
+		if (e)
+		{
+			e->IncreaseReferenceCounter();
+			try
+			{
+				value = e->Evaluate();
+			}
+			catch (...)
+			{
+				//Evaluate() may throw - inconsistent vector sizes, an index out of range. This
+				//object then never completes, so ~SReal will NOT run and the tree would be leaked
+				//together with everything it owns (#2481). Release it exactly as the destructor
+				//would, then let the error through
+				expr = nullptr;
+				e->DecreaseReferenceCounter();
+				if (e->ReferenceCounter() == 0)
+				{
+					e->Destroy();
+					delete e;
+					ExpressionBase::deleteCount++;
+				}
+				throw;
+			}
+		}
 	}
 	//! constructor with value and name, gives subexpression
 	//! used for variables

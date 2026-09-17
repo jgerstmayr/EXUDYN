@@ -9,15 +9,42 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.116.dev1, 
+  \item Exudyn version = 1.11.119.dev1, 
   \item last change =  2026-09-17, 
   \item Number of issues = 2485, 
-  \item Number of resolved issues = 2189 (116 in current version), 
+  \item Number of resolved issues = 2192 (119 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.119}:  resolved Issue 2481: {\bf a symbolic vector product with inconsistent sizes leaks its nodes}
+(bug)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Symbolic::operator*(SymbolicRealVector, SymbolicRealVector) allocates the product node and then hands it to SReal(ExpressionBase*), whose constructor evaluates it immediately to cache the value. With inconsistent sizes that evaluation throws - before any SReal owns the node - so the allocation is never freed. Measured from Python: one failed product leaks 1 Real node and 2 Vector nodes (newCount increases, deleteCount does not). Any error path inside Evaluate has the same shape. revision2026 step R5.4.8.}
+    \item {\bf notes: SReal(ExpressionBase*) now takes ownership first and evaluates in the constructor body, with a catch(...) that releases the tree exactly as the destructor would (DecreaseReferenceCounter, then Destroy and delete at zero, counting the delete) and rethrows. One place, because every operator returns through it. Measured: a failed vector product used to leak 1 Real and 2 Vector nodes, now new==delete. The R5.4.2 test case requires OpenNodes()==0 instead of documenting the leak, and symbolicModuleTest.py no longer has to save and restore the counters around its error paths; its reference value is unchanged. Mutation check: the eager member-initializer form produces 1 failure. revision2026 step R5.4.8.}
+    \item   date resolved: {\bf 2026-09-17 16:43},
+date raised: 2026-09-17 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.118}:  resolved Issue 2480: {\bf SymbolicVector.h and SymbolicMatrix.h do not include what they use}
+(bug)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Both headers use py::list, py::array\_t and EPyUtils but include no pybind11 header and not PybindUtilities.h. They compile only because Symbolic.cpp includes pybind11 before them; any other translation unit that includes SymbolicVector.h first fails with a wall of errors about an unknown namespace py (found while writing the R5.4.2 tests, which now have to repeat that include order themselves). Add the includes the headers need. revision2026 step R5.4.7.}
+    \item {\bf notes: Symbolic.h now includes BasicLinalg.h, <unordered\_map> and <typeinfo>; SymbolicVector.h includes Symbolic.h and PybindUtilities.h; SymbolicMatrix.h includes those plus SymbolicVector.h. PybindUtilities.h brings the pybind headers, the py alias and EPyUtils in one line and includes nothing symbolic, so there is no cycle. The proof is a deletion: the four-line include workaround in SymbolicUnitTests.h is gone and the tests compile with the headers in any order. revision2026 step R5.4.7.}
+    \item   date resolved: {\bf 2026-09-17 16:43},
+date raised: 2026-09-17 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.117}:  resolved Issue 2476: {\bf SparseTripletMatrix(rows, columns, triplets) throws its size arguments away}
+(bug)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: The three-argument constructor initialises numberOfRows(0) and numberOfColumns(0) and never assigns numberOfRowsInit or numberOfColumnsInit, so a matrix built with it reports 0 x 0 while holding the triplets. Nothing in the code base calls it - it was found while fixing \#2474, which makes the size fields load-bearing for MultMatrixVector. Either assign them or delete the constructor. revision2026 step R5.4.6.}
+    \item {\bf notes: The three-argument constructor now assigns numberOfRowsInit and numberOfColumnsInit; fixed and kept rather than deleted, on the maintainer decision. It also gets its first caller: a case in AllMatrixVariantsUnitTests.h builds a 2x3 matrix through it and asks a MatrixContainer for a matrix-vector product, which since \#2474 sizes its result from exactly those fields. Mutation check: putting the zeros back produces 1 failure. revision2026 step R5.4.6.}
+    \item   date resolved: {\bf 2026-09-17 16:43},
+date raised: 2026-09-17 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.116}:  resolved Issue 2484: {\bf pythonTests.cpp is dead manual test code}
 (improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

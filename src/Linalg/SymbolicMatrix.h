@@ -14,6 +14,12 @@
 #ifndef SYMBOLICMATRIX__H
 #define SYMBOLICMATRIX__H
 
+//as in SymbolicVector.h: this header uses the scalar and vector expressions, py::array_t, py::list
+//and EPyUtils, and included none of them (#2480)
+#include "Linalg/Symbolic.h"
+#include "Linalg/SymbolicVector.h"
+#include "Pymodules/PybindUtilities.h"
+
 namespace Symbolic
 {
 

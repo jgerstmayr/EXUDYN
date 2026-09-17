@@ -546,23 +546,23 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     now sizes it as well, and both products check their sizes.
 
 <a id="r5-4-6"></a>
-**R5.4.6** *(sub-step of R5.4, from R5.4.5)* **`SparseTripletMatrix(rows, columns, triplets)`
-    throws its size arguments away** (#2476): it initialises both to 0 and never assigns the
-    arguments, so the matrix reports 0 x 0 while holding the triplets. Nothing calls it today, but
-    #2474 made the size fields load-bearing. Assign them or delete the constructor.
+**R5.4.6** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-6) — *(sub-step of R5.4,
+    from R5.4.5)* **`SparseTripletMatrix(rows, columns, triplets)` kept its size arguments**
+    (#2476): it initialised both to 0 and never assigned them. Fixed and kept, per the maintainer,
+    with the R5.4.1 tests as its first caller.
 
 <a id="r5-4-7"></a>
-**R5.4.7** *(sub-step of R5.4, from R5.4.2)* **`SymbolicVector.h` and `SymbolicMatrix.h` do not
-    include what they use** (#2480): both use `py::list`, `py::array_t` and `EPyUtils` while
-    including no pybind11 header. They compile only because `Symbolic.cpp` includes pybind11 first;
-    any other translation unit fails. The R5.4.2 tests have to repeat that include order themselves.
+**R5.4.7** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-7) — *(sub-step of R5.4,
+    from R5.4.2)* **The symbolic headers include what they use** (#2480): `Symbolic.h`,
+    `SymbolicVector.h` and `SymbolicMatrix.h` compiled only because `Symbolic.cpp` included
+    pybind11 and `BasicLinalg.h` before them. Each is now self-sufficient, and the workaround in
+    the R5.4.2 test header is gone - which is the proof.
 
 <a id="r5-4-8"></a>
-**R5.4.8** *(sub-step of R5.4, from R5.4.2)* **A failed symbolic operation leaks its nodes**
-    (#2481): `SReal(ExpressionBase*)` evaluates the node immediately to cache its value, so an
-    error inside `Evaluate()` throws before any object owns the allocation. Measured: one vector
-    product with inconsistent sizes leaks 1 Real and 2 Vector nodes.
-
+**R5.4.8** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-8) — *(sub-step of R5.4,
+    from R5.4.2)* **A failed symbolic operation frees its nodes** (#2481): `SReal(ExpressionBase*)`
+    evaluates eagerly to cache the value, and an error inside `Evaluate()` used to escape before
+    any object owned the allocation. It now releases the tree exactly as the destructor would.
 <a id="r5-4-9"></a>
 **R5.4.9** *(sub-step of R5.4, from R5.4.3)* **The sparse `FactorizeNew` does not return the
     causing row it promises** (#2482): it returns `solver.info() - 1`, an Eigen status code, which

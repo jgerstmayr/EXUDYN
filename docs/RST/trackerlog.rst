@@ -19,15 +19,33 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.116.dev1, 
++  Exudyn version = 1.11.119.dev1, 
 +  last change =  2026-09-17, 
 +  Number of issues = 2485, 
-+  Number of resolved issues = 2189 (116 in current version), 
++  Number of resolved issues = 2192 (119 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.119: resolved Issue 2481: a symbolic vector product with inconsistent sizes leaks its nodes (bug)
+    - issue author: Claude-JG
+    - description:  Symbolic::operator\*(SymbolicRealVector, SymbolicRealVector) allocates the product node and then hands it to SReal(ExpressionBase\*), whose constructor evaluates it immediately to cache the value. With inconsistent sizes that evaluation throws - before any SReal owns the node - so the allocation is never freed. Measured from Python: one failed product leaks 1 Real node and 2 Vector nodes (newCount increases, deleteCount does not). Any error path inside Evaluate has the same shape. revision2026 step R5.4.8.
+    - **notes:** SReal(ExpressionBase\*) now takes ownership first and evaluates in the constructor body, with a catch(...) that releases the tree exactly as the destructor would (DecreaseReferenceCounter, then Destroy and delete at zero, counting the delete) and rethrows. One place, because every operator returns through it. Measured: a failed vector product used to leak 1 Real and 2 Vector nodes, now new==delete. The R5.4.2 test case requires OpenNodes()==0 instead of documenting the leak, and symbolicModuleTest.py no longer has to save and restore the counters around its error paths; its reference value is unchanged. Mutation check: the eager member-initializer form produces 1 failure. revision2026 step R5.4.8.
+    - date resolved: **2026-09-17 16:43**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
+ * Version 1.11.118: resolved Issue 2480: SymbolicVector.h and SymbolicMatrix.h do not include what they use (bug)
+    - issue author: Claude-JG
+    - description:  Both headers use py::list, py::array_t and EPyUtils but include no pybind11 header and not PybindUtilities.h. They compile only because Symbolic.cpp includes pybind11 before them; any other translation unit that includes SymbolicVector.h first fails with a wall of errors about an unknown namespace py (found while writing the R5.4.2 tests, which now have to repeat that include order themselves). Add the includes the headers need. revision2026 step R5.4.7.
+    - **notes:** Symbolic.h now includes BasicLinalg.h, <unordered_map> and <typeinfo>; SymbolicVector.h includes Symbolic.h and PybindUtilities.h; SymbolicMatrix.h includes those plus SymbolicVector.h. PybindUtilities.h brings the pybind headers, the py alias and EPyUtils in one line and includes nothing symbolic, so there is no cycle. The proof is a deletion: the four-line include workaround in SymbolicUnitTests.h is gone and the tests compile with the headers in any order. revision2026 step R5.4.7.
+    - date resolved: **2026-09-17 16:43**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
+ * Version 1.11.117: resolved Issue 2476: SparseTripletMatrix(rows, columns, triplets) throws its size arguments away (bug)
+    - issue author: Claude-JG
+    - description:  The three-argument constructor initialises numberOfRows(0) and numberOfColumns(0) and never assigns numberOfRowsInit or numberOfColumnsInit, so a matrix built with it reports 0 x 0 while holding the triplets. Nothing in the code base calls it - it was found while fixing #2474, which makes the size fields load-bearing for MultMatrixVector. Either assign them or delete the constructor. revision2026 step R5.4.6.
+    - **notes:** The three-argument constructor now assigns numberOfRowsInit and numberOfColumnsInit; fixed and kept rather than deleted, on the maintainer decision. It also gets its first caller: a case in AllMatrixVariantsUnitTests.h builds a 2x3 matrix through it and asks a MatrixContainer for a matrix-vector product, which since #2474 sizes its result from exactly those fields. Mutation check: putting the zeros back produces 1 failure. revision2026 step R5.4.6.
+    - date resolved: **2026-09-17 16:43**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.116: resolved Issue 2484: pythonTests.cpp is dead manual test code (improvement)
     - issue author: Claude-JG
     - description:  src/Pymodules/pythonTests.cpp is 849 lines of which 56 are live code, and the body of PyTest() is commented out ENTIRELY - the function does nothing. It is bound as exu.Test only outside a release build. CreateTestSystem is bound only under _MYDEBUG and builds a model by py::exec of a Python string written against the pre-exudyn API (from itemInterface import \*, mbs.AddObject with a raw dict); it predates exudyn.demos, which does the same job properly. Both are more misleading than helpful (maintainer, 2026-09-17). Remove the file and its header PybindTests.h, the two bindings in PybindModule.cpp and the project entries. revision2026 step R5.4.11.
@@ -7432,21 +7450,6 @@ Open issues
  * **open issue 2482:** the sparse FactorizeNew does not return the causing row it promises
     - issue author: Claude-JG
     - description:  GeneralMatrixEigenSparse::FactorizeNew() takes rv = solver.info() - an Eigen::ComputationInfo, i.e. 0..3 - and then returns rv-1 as if it were a row index (LinearSolver.cpp:528-530), with a comment describing the causing row. In practice a failed factorization gives info()==1 (NumericalIssue), so the caller is told row 0 no matter which row is singular. Either return the real row, or return a documented error code and stop promising a row. The dense EXUdense path does return a real row. revision2026 step R5.4.9.
-    - date raised: 2026-09-17 
-
- * **open issue 2481:** a symbolic vector product with inconsistent sizes leaks its nodes
-    - issue author: Claude-JG
-    - description:  Symbolic::operator\*(SymbolicRealVector, SymbolicRealVector) allocates the product node and then hands it to SReal(ExpressionBase\*), whose constructor evaluates it immediately to cache the value. With inconsistent sizes that evaluation throws - before any SReal owns the node - so the allocation is never freed. Measured from Python: one failed product leaks 1 Real node and 2 Vector nodes (newCount increases, deleteCount does not). Any error path inside Evaluate has the same shape. revision2026 step R5.4.8.
-    - date raised: 2026-09-17 
-
- * **open issue 2480:** SymbolicVector.h and SymbolicMatrix.h do not include what they use
-    - issue author: Claude-JG
-    - description:  Both headers use py::list, py::array_t and EPyUtils but include no pybind11 header and not PybindUtilities.h. They compile only because Symbolic.cpp includes pybind11 before them; any other translation unit that includes SymbolicVector.h first fails with a wall of errors about an unknown namespace py (found while writing the R5.4.2 tests, which now have to repeat that include order themselves). Add the includes the headers need. revision2026 step R5.4.7.
-    - date raised: 2026-09-17 
-
- * **open issue 2476:** SparseTripletMatrix(rows, columns, triplets) throws its size arguments away
-    - issue author: Claude-JG
-    - description:  The three-argument constructor initialises numberOfRows(0) and numberOfColumns(0) and never assigns numberOfRowsInit or numberOfColumnsInit, so a matrix built with it reports 0 x 0 while holding the triplets. Nothing in the code base calls it - it was found while fixing #2474, which makes the size fields load-bearing for MultMatrixVector. Either assign them or delete the constructor. revision2026 step R5.4.6.
     - date raised: 2026-09-17 
 
  * :textblue:`open issue 2455:` pydoclint reports two violations in exudyn/__init__.py RequireVersion

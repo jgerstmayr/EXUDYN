@@ -846,7 +846,10 @@ namespace EXUmath {
 		Index numberOfColumns;
 	public:
 		SparseTripletMatrix() : numberOfRows(0), numberOfColumns(0) {}
-		SparseTripletMatrix(Index numberOfRowsInit, Index numberOfColumnsInit, const ResizableArray<Triplet>& sparseTripletsInit) : numberOfRows(0), numberOfColumns(0)
+		//the sizes are not stored in the triplets, so they MUST be taken from the arguments; they
+		//were dropped here until #2476, and #2474 made them load-bearing for MultMatrixVector
+		SparseTripletMatrix(Index numberOfRowsInit, Index numberOfColumnsInit, const ResizableArray<Triplet>& sparseTripletsInit) :
+			numberOfRows(numberOfRowsInit), numberOfColumns(numberOfColumnsInit)
 		{
 			for (const Triplet& triplet : sparseTripletsInit)
 			{

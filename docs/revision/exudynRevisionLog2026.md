@@ -5030,6 +5030,70 @@ flags themselves and need nothing.
 Verified: 171 examples with the same 5 pre-existing failures, `runTestSuite.py` PASSED,
 `pytest -q -n 8` 136 passed.
 
+<a id="r5-4-6"></a>
+### R5.4.6 - the sparse constructor keeps its size
+
+**DONE 2026-09-17** (#2476).
+
+```cpp
+SparseTripletMatrix(Index numberOfRowsInit, Index numberOfColumnsInit, ...) :
+    numberOfRows(0), numberOfColumns(0)   //the arguments were never assigned
+```
+
+**Fixed and kept**, on the maintainer decision - the alternative was to delete the constructor,
+since nothing called it. Now something does: a case in `AllMatrixVariantsUnitTests.h` builds a
+2x3 matrix through it, hands it to a `MatrixContainer` and asks for a matrix-vector product, which
+since R5.4.5 sizes its result from exactly these two fields. Mutation check: putting the zeros back
+produces **1 failure**.
+
+<a id="r5-4-7"></a>
+### R5.4.7 - the symbolic headers include what they use
+
+**DONE 2026-09-17** (#2480).
+
+`Symbolic.h` used `Real`, `Index`, `ResizableArray`, `STDstring`, an `unordered_map` and `typeid`
+and included none of them; `SymbolicVector.h` and `SymbolicMatrix.h` used `py::list`,
+`py::array_t` and `EPyUtils` on top of that. All three compiled only because `Symbolic.cpp`
+includes `BasicLinalg.h`, pybind11 and `PybindUtilities.h` before them, in that order - so the
+headers were not headers, they were fragments of one translation unit.
+
+Each now includes what it needs (`BasicLinalg.h`, `<unordered_map>`, `<typeinfo>` for the scalar
+one; `Symbolic.h` and `PybindUtilities.h` for the vector; both plus `SymbolicVector.h` for the
+matrix). `PybindUtilities.h` brings the pybind headers, the `py` alias and `EPyUtils` in one line
+and does not include anything symbolic, so there is no cycle.
+
+**The proof is a deletion**: the R5.4.2 test header had to repeat that include order to compile at
+all, and those four lines are gone.
+
+<a id="r5-4-8"></a>
+### R5.4.8 - a failed symbolic operation frees what it allocated
+
+**DONE 2026-09-17** (#2481).
+
+Every symbolic operator ends the same way:
+
+```cpp
+ExpressionBase::NewCount()++;
+return new VectorExpressionOperatorMultVectorVector(...); //implicit SReal(ExpressionBase*)
+```
+
+and that constructor cached the value in its member initializer list: `value(e ? e->Evaluate() : 0)`.
+When `Evaluate()` throws - inconsistent vector sizes, an index out of range - the `SReal` never
+completes, so its destructor never runs, and the node plus everything it had taken a reference to
+was leaked. Measured before the fix: **1 Real node and 2 Vector nodes per failed product**.
+
+The constructor now takes ownership first and evaluates in the body, with a `catch (...)` that
+releases the tree exactly as `~SReal` would - `DecreaseReferenceCounter`, then `Destroy()` and
+`delete` at zero, counting the delete - and rethrows. One place, because every operator returns
+through it.
+
+**Two things got simpler because of it.** The R5.4.2 case for the size mismatch now requires
+`OpenNodes() == 0` instead of documenting a leak; and `symbolicModuleTest.py`, which had to save
+and restore the new/delete counters around its error-path checks, no longer does - the balance
+holds by itself, and its reference value is still `0.9484129575069745`.
+
+Mutation check: restoring the eager member-initializer form produces **1 failure**.
+
 <a id="r5-4-11"></a>
 ### R5.4.11 - pythonTests.cpp removed
 
