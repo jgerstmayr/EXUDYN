@@ -809,7 +809,9 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     the identity rotation - `ExpSO3` of it IS the identity - but it lies outside the principal
     range and exactly on the singularity of the tangent operator: `TExpSO3Inv` there returns
     entries of order 1e15. Found by TEST 2 of `LieGroupIntegrationUnitTests.py`, which compares
-    against Matlab results that give 0.
+    against Matlab results that give 0. Regarding the implementation of the Lie group methods,
+    also check the C++ versions which should be the correct implementations, as they have been 
+    used in the papers and they were verified several times.
 
 <a id="r5-13"></a>
 **R5.13** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-13) — *(phase R5, with R5.8 and R5.9)* **Test-suite output goes to its own directory** (#2418, #2454): `exudyn.config.outputDirectory` and one output directory per model; no model writes next to itself any more.
@@ -1041,9 +1043,7 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 **R7.2** *(after R7.1, when the documentation is Markdown)* **Carry the revision into the documentation.**
     Extract every change recorded in this plan and in `exudynRevisionLog2026.md` - new flags and
     switches (e.g. `exudyn.special.exceptions.parameterRangeChecks`), conversion and error behaviour,
-    definitions and generators, tools and workflow - and update the user and developer
-    documentation accordingly. The plan and log are records, not documentation; afterwards the plan
-    is reduced to an archive.
+    definitions and generators, howto build on each platform (put the simple way also into the main README), tools and workflow - and update the user and developer documentation accordingly. The plan and log are records, not documentation; afterwards the plan is reduced to an archive.
 
 <a id="r7-3"></a>
 **R7.3** Stop committing generated RST and `theDoc.pdf`; build in CI, publish the PDF as a release
