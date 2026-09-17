@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.123.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2487, 
++  Number of issues = 2488, 
 +  Number of resolved issues = 2196 (123 in current version), 
 
 ************
@@ -7465,6 +7465,11 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 2487:** no linter runs over the shipped Python package
+    - issue author: Claude-JG
+    - description:  python/exudyn is 34000 lines and nothing checks it for undefined names; unused imports or bare except: - the only linter in use is pydoclint; which only judges docstrings. ruff is introduced with an explicitly written rule set (F and E4/E7/E9); the findings present at introduction are tolerated through a baseline and a new finding fails the check. revision2026 step R5.5
+    - date raised: 2026-09-17 
 
  * :textblue:`open issue 2455:` pydoclint reports two violations in exudyn/__init__.py RequireVersion
     - issue author: Claude-JG

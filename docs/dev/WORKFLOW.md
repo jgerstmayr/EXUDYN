@@ -413,6 +413,21 @@ imports actually present in the code and fails if something is installed by no e
 A fresh environment is set up with those extras rather than a hand-written package list; see
 [../howTo/condaEnvironments.md](../howTo/condaEnvironments.md).
 
+If your change touched any file under `python/exudyn/`, run the linter:
+
+```bash
+python tools/checkPython.py --check
+```
+
+It runs **ruff** with the rule set fixed in `pyproject.toml` — `F` (pyflakes: undefined names,
+names defined twice, unused imports) and `E4`/`E7`/`E9` (import placement, `== None`, bare
+`except:`, a file that does not parse), and nothing about formatting — and compares the result
+against `tools/ci/ruffBaseline.txt`. The findings that existed when the check was introduced are
+tolerated; a **new** one fails. The baseline is meant to shrink: after fixing findings, regenerate
+it with `python tools/checkPython.py --write`, and the tool tells you when that is due.
+`--all` lists every finding by rule, ignoring the baseline. ruff is in the `lint` dependency group
+(`pip install --group lint`); the check fails rather than passes if it is not installed.
+
 If you **added, removed or renamed a `.cpp` file**, do it in `main/obj/cppsrc.vcxproj` — the
 Visual Studio project is the source of truth for the compile list — and then regenerate the list
 `setup.py` actually builds from:

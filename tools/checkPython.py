@@ -1,0 +1,179 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN maintainer tool
+#
+# Details:  Runs the ruff linter over the shipped Python package and judges the result against a
+#           baseline, so that the findings present when the check was introduced are tolerated
+#           while a NEW finding fails the check. Same idea as the pydoclint baseline of
+#           revision2026 step R4.8 - but ruff has no baseline of its own, so it is implemented here.
+#
+#           The rule set is not ruff's implicit default: it is written down in pyproject.toml as
+#           select = ["E4", "E7", "E9", "F"], because the implicit default is not stable across
+#           ruff versions (with ruff 0.16 the same run reports 2236 findings instead of 565).
+#           Those four families are what is broken or misleading - undefined names, names defined
+#           twice, unused imports, bare 'except:', '== None' - and nothing about formatting.
+#
+#           A finding is recorded WITHOUT its line number, as
+#               <count>  <file>  <code>  <message>
+#           so that editing a file elsewhere does not invalidate the baseline; the count is what
+#           keeps a second occurrence of the same finding in the same file from slipping through.
+#           A baseline entry that no longer occurs is reported, not tolerated silently: the
+#           baseline is meant to shrink, and a stale entry hides the next regression.
+#
+# Usage:    python tools/checkPython.py             report
+#           python tools/checkPython.py --check     the same, but exit non-zero on a new finding (gate, CI)
+#           python tools/checkPython.py --write     regenerate the baseline from the current findings
+#           python tools/checkPython.py --all       report every finding, ignoring the baseline
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-09-17 (created, revision2026 step R5.5)
+# Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import argparse
+import json
+import os
+import subprocess
+import sys
+
+repositoryRoot = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+baselineFile = os.path.join(repositoryRoot, 'tools', 'ci', 'ruffBaseline.txt')
+
+#what is linted; the generated stub files are excluded in pyproject.toml, they are checked
+#against the module itself instead (revision2026 step R5.5, half B)
+checkedPaths = ['python/exudyn']
+
+
+#run ruff and return the findings as a list of (file, code, message); raises SystemExit if ruff
+#is not installed, because a gate that passes when its tool is missing is not a gate
+def RunRuff(paths):
+    command = [sys.executable, '-m', 'ruff', 'check', '--output-format', 'json', '--no-cache'] + paths
+    try:
+        process = subprocess.run(command, cwd=repositoryRoot, capture_output=True, text=True)
+    except OSError as error:
+        raise SystemExit('could not run ruff: ' + str(error))
+
+    if process.stdout.strip() == '':
+        raise SystemExit('ruff produced no output; is it installed?\n'
+                         '  pip install --group lint\n' + process.stderr.strip())
+    try:
+        findings = json.loads(process.stdout)
+    except json.JSONDecodeError:
+        raise SystemExit('could not read the output of ruff:\n' + process.stdout[:2000]
+                         + '\n' + process.stderr[:2000])
+
+    result = []
+    for finding in findings:
+        fileName = os.path.relpath(finding['filename'], repositoryRoot).replace('\\', '/')
+        result.append((fileName, finding['code'], finding['message']))
+    return result
+
+
+#collect findings into {(file, code, message): count}
+def CountFindings(findings):
+    counted = {}
+    for finding in findings:
+        counted[finding] = counted.get(finding, 0) + 1
+    return counted
+
+
+def ReadBaseline():
+    counted = {}
+    if not os.path.exists(baselineFile):
+        return counted
+    with open(baselineFile, 'r', encoding='utf8') as file:
+        for line in file:
+            line = line.rstrip('\n')
+            if line.strip() == '' or line.startswith('#'):
+                continue
+            parts = line.split('\t')
+            if len(parts) != 4:
+                raise SystemExit('malformed line in ' + baselineFile + ':\n  ' + line)
+            counted[(parts[1], parts[2], parts[3])] = int(parts[0])
+    return counted
+
+
+def WriteBaseline(counted):
+    lines = ['#Baseline of tools/checkPython.py - the ruff findings that were present when the check',
+             '#was introduced (revision2026 step R5.5). A NEW finding fails the check; these do not.',
+             '#The list is meant to SHRINK: regenerate with "python tools/checkPython.py --write"',
+             '#after fixing findings. Format: count, file, rule, message - tab separated, no line',
+             '#numbers, so that an edit elsewhere in a file does not invalidate the entry.',
+             '']
+    for key in sorted(counted):
+        lines.append(str(counted[key]) + '\t' + key[0] + '\t' + key[1] + '\t' + key[2])
+    with open(baselineFile, 'w', encoding='utf8', newline='\n') as file:
+        file.write('\n'.join(lines) + '\n')
+
+
+def PrintFindings(title, items):
+    print('')
+    print(title + ':')
+    for key, count in items:
+        countStr = '' if count == 1 else ' (' + str(count) + 'x)'
+        print('    ' + key[0] + '  ' + key[1] + '  ' + key[2] + countStr)
+
+
+def Main():
+    parser = argparse.ArgumentParser(description='run ruff over the shipped package and compare to the baseline')
+    parser.add_argument('--check', action='store_true', help='exit non-zero on a new finding')
+    parser.add_argument('--write', action='store_true', help='regenerate the baseline')
+    parser.add_argument('--all', action='store_true', help='report every finding, ignoring the baseline')
+    args = parser.parse_args()
+
+    current = CountFindings(RunRuff(checkedPaths))
+
+    if args.write:
+        WriteBaseline(current)
+        print('baseline written: ' + str(len(current)) + ' distinct findings, '
+              + str(sum(current.values())) + ' in total.')
+        return 0
+
+    if args.all:
+        byRule = {}
+        for key, count in current.items():
+            byRule[key[1]] = byRule.get(key[1], 0) + count
+        print('ruff findings by rule:')
+        for code in sorted(byRule, key=lambda c: (-byRule[c], c)):
+            print('    ' + str(byRule[code]).rjust(4) + '  ' + code)
+        print('    ' + str(sum(byRule.values())).rjust(4) + '  total')
+        return 0
+
+    baseline = ReadBaseline()
+    newFindings = []
+    fixedFindings = []
+    for key, count in current.items():
+        allowed = baseline.get(key, 0)
+        if count > allowed:
+            newFindings.append((key, count - allowed))
+    for key, count in baseline.items():
+        remaining = current.get(key, 0)
+        if remaining < count:
+            fixedFindings.append((key, count - remaining))
+
+    if newFindings:
+        PrintFindings('NEW ruff findings, not in ' + os.path.relpath(baselineFile, repositoryRoot),
+                      sorted(newFindings))
+        print('')
+        print('Fix them, or - if the finding is intended - silence that one line with a trailing')
+        print('"# noqa: <code>" and a reason. Only if it genuinely belongs to the tolerated debt,')
+        print('add it with "python tools/checkPython.py --write".')
+
+    if fixedFindings:
+        PrintFindings('findings fixed since the baseline was written (thank you)', sorted(fixedFindings))
+        print('')
+        print('Regenerate the baseline so that they cannot come back unnoticed:')
+        print('    python tools/checkPython.py --write')
+
+    if not newFindings:
+        print('OK: ruff reports no finding outside the baseline ('
+              + str(sum(current.values())) + ' tolerated, '
+              + str(sum(baseline.values())) + ' in the baseline).')
+        return 0
+
+    return 1 if args.check else 0
+
+
+#%%******************************************************************************************************
+if __name__ == '__main__':
+    sys.exit(Main())

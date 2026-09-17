@@ -132,6 +132,9 @@ docs = [
     ]
 lint = [
     "pydoclint==0.9.1",     #the baseline tools/ci/pydoclintBaseline.txt holds this version's messages
+    "ruff==0.16.8",         #pinned for the same reason: tools/ci/ruffBaseline.txt holds this
+                            #version's messages, and the rule set of a family can change with a
+                            #ruff release (revision2026 step R5.5)
     ]
 build = [
     "setuptools>=77",       #same floor as build-system.requires: SPDX licence expression (#2372)
@@ -197,6 +200,31 @@ check-class-attributes = false
 should-document-star-arguments = false
 baseline = 'tools/ci/pydoclintBaseline.txt'
 auto-regenerate-baseline = false
+
+#Linter of the Python package (revision2026 step R5.5): 'python tools/checkPython.py --check'.
+#The rule set is written down explicitly rather than relying on "ruff's default", because that
+#default is not stable across ruff versions - with ruff 0.16 an unconfigured run reports 2236
+#findings against the 565 of the four families below.
+#  F        pyflakes: undefined names, names defined twice, unused imports - real defects
+#  E4/E7/E9 the part of pycodestyle that is not whitespace: import placement, '== None',
+#           bare 'except:', a file that does not parse
+#E1/E2/E3 (indentation, blank lines, spaces around operators) stay OFF on purpose: thousands of
+#findings that say nothing about correctness. 'ruff format' is not used at all - it would rewrite
+#every file in the package.
+#Findings that were present when the check was introduced are tolerated through
+#tools/ci/ruffBaseline.txt; a new one fails the check. See tools/checkPython.py.
+[tool.ruff]
+#the generated stub files are not source: they are checked against the module itself instead
+extend-exclude = ["python/exudyn/__init__.pyi", "python/exudyn/symbolic.pyi"]
+target-version = "py310"    #same floor as project.requires-python
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+#E701/E702/E703 are about statements sharing a line - "if verbose: exu.Print(...)", "import x; x.f()".
+#That is the established style of this package (163 occurrences, and the suppression one-liners of
+#revision2026 step R5.17.1 are written that way on purpose), so these are switched off rather than
+#carried in the baseline: a gate that fights the house style is a gate that gets turned off.
+ignore = ["E701", "E702", "E703"]
 
 #cibuildwheel settings that do not depend on the CI matrix (revision2026 step R2.7). cibuildwheel
 #reads this table from the package directory it is pointed at, which since the flatten (revision2026 step R3.1)
