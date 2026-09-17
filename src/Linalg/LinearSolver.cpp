@@ -513,21 +513,22 @@ Index GeneralMatrixEigenSparse::FactorizeNew() //bool ignoreRedundantEquation, I
 
 		if (LinearSolverSuspendWorkers && nThreads > 1) { ExuThreading::TaskManager::ResumeWorkers(); }
 
-		//0: successful factorization
-		//if info = i, and i is
-		//<= A->ncol : U(i, i) is exactly zero.The factorization has been completed, but the factor U is exactly singular, and division by zero will occur if it is used to solve a system of equations.
-		//> A->ncol: number of bytes allocated when memory allocation failure occurred, plus A->ncol.If lwork = -1, it is the estimated amount of space needed, plus A->ncol.
+		//Eigen::ComputationInfo: 0=Success, 1=NumericalIssue, 2=NoConvergence, 3=InvalidInput.
+		//NOTE: this is a STATUS, not a row. The comment that stood here described SuperLU's 'info'
+		//(where a value <= ncol was the column with the zero pivot) and the code returned info-1 as
+		//if it were a causing row - which made the solver report "causing system equation number
+		//= 0" for every singular sparse system, whichever row was actually singular (#2482).
+		//Eigen's SparseLU does not tell which row it was, so say 'unknown' instead of inventing one
 		rv = solver.info();
 		if (!rv)  //success
-		{ 
+		{
 			if (reuseFailed) { analyzedPatternLastNNZ = 0; } //for next iteration, do not repeat once if failed
 			else { analyzedPatternLastNNZ = (Index)matrix.nonZeros(); }
-			SetMatrixIsFactorized(true); 
-			return -1; 
+			SetMatrixIsFactorized(true);
+			return -1;
 		}
 		analyzedPatternLastNNZ = 0;
-		if (rv <= NumberOfRows()) { return rv - 1; } //causing row
-		else { return NumberOfRows(); } //undefined error
+		return NumberOfRows(); //failed, causing row unknown: the caller prints no row for this value
 
 	}
 	else

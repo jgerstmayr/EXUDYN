@@ -213,11 +213,13 @@ const lest::test linearSolver_specific_test[] =
 			EXPECT(dense.IsMatrixIsFactorized());
 		}
 
-		//the sparse path does report the failure, though the index it returns is the Eigen status
-		//code minus one rather than a row number
+		//the sparse path DOES report the failure, and says 'causing row unknown' by returning
+		//NumberOfRows(): Eigen's SparseLU reports a status, not a row. Until #2482 it returned that
+		//status minus one, so the solver printed "causing system equation number = 0" every time
 		GeneralMatrixEigenSparse sparse;
 		const Index sparseReturn = LinearSolverBuildAndFactorize(sparse, values);
 		EXPECT(sparseReturn != -1);
+		EXPECT(sparseReturn == sparse.NumberOfRows()); //the documented 'no row known' answer
 		EXPECT(!sparse.IsMatrixIsFactorized());
 	},
 

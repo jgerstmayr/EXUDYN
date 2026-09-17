@@ -564,20 +564,18 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     evaluates eagerly to cache the value, and an error inside `Evaluate()` used to escape before
     any object owned the allocation. It now releases the tree exactly as the destructor would.
 <a id="r5-4-9"></a>
-**R5.4.9** *(sub-step of R5.4, from R5.4.3)* **The sparse `FactorizeNew` does not return the
-    causing row it promises** (#2482): it returns `solver.info() - 1`, an Eigen status code, which
-    in practice is always 0 - so the caller is told "row 0" whichever row is singular.
+**R5.4.9** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-9) — *(sub-step of R5.4,
+    from R5.4.3)* **The sparse factorization stopped inventing a causing row** (#2482): it returned
+    `solver.info() - 1`, an Eigen status code, so the solver printed "causing system equation
+    number = 0" for every singular sparse system. It now returns `NumberOfRows()`, the documented
+    "row unknown" answer, and the solver prints no row.
 
 <a id="r5-4-10"></a>
-**R5.4.10** *(sub-step of R5.4, from R5.4.3)* **Document that `EigenDense` does not detect a
-    singular matrix** (#2483). The behaviour itself is correct and deliberate: **FullPivLU is the
-    `ignoreSingularJacobian=True` path**, documented as resolving over- and underdetermined systems
-    and redundant constraints, and **PartialPivLU offers no invertibility check at all** - a
-    property of Eigen, not a decision of Exudyn (maintainer, 2026-09-17). What is missing is one
-    sentence in the `LinearSolverType.EigenDense` description: in the default (partial pivot) mode
-    a singular Jacobian is **not** detected and the solver continues with an undefined result,
-    while `EXUdense` and `EigenSparse` do report it.
-
+**R5.4.10** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-10) — *(sub-step of R5.4,
+    from R5.4.3)* **`LinearSolverType.EigenDense` says what it does not detect** (#2483). The
+    behaviour was never a defect - FullPivLU is the `ignoreSingularJacobian=True` least-squares
+    path and PartialPivLU has no invertibility check in Eigen - so the step became one sentence in
+    the enum description.
 <a id="r5-4-11"></a>
 **R5.4.11** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-11) — *(sub-step of R5.4;
     maintainer request 2026-09-17)* **`pythonTests.cpp` removed** (#2484): 849 lines of manual
@@ -585,6 +583,12 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     written before `exudyn.demos` existed - built a model from a `py::exec` string in the
     pre-`exudyn` API. Both were bound only outside a release build. The file, its header
     `PybindTests.h`, the two bindings and the project entries are gone.
+<a id="r5-4-12"></a>
+**R5.4.12** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-12) — *(sub-step of R5.4;
+    maintainer request 2026-09-17)* **The C++ usage demo of the symbolic types became a readable
+    header** (#2485): `PyTest_unused()` - six `if(false)` blocks in one dead function at the end of
+    `Symbolic.cpp` - is now `src/Linalg/symbolicCppDemo.h`, one named function per topic, included
+    by `Symbolic.cpp` so that it keeps compiling, called by nothing.
 <a id="r5-5"></a>
 **R5.5** *(phase R5, tooling)* **A linter and a type check for the Python side.** Two separate
     halves, neither started:

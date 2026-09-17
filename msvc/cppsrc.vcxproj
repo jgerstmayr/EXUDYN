@@ -571,6 +571,7 @@
     <ClInclude Include="..\src\Linalg\SymbolicMatrix.h" />
     <ClInclude Include="..\src\Linalg\SymbolicUtilities.h" />
     <ClInclude Include="..\src\Linalg\SymbolicVector.h" />
+    <ClInclude Include="..\src\Linalg\symbolicCppDemo.h" />
     <ClInclude Include="..\src\Linalg\Use_avx.h" />
     <ClInclude Include="..\src\Linalg\Vector.h" />
     <ClInclude Include="..\src\Main\CData.h" />

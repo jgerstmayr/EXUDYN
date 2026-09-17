@@ -5094,6 +5094,102 @@ holds by itself, and its reference value is still `0.9484129575069745`.
 
 Mutation check: restoring the eager member-initializer form produces **1 failure**.
 
+<a id="r5-4-9"></a>
+### R5.4.9 - the sparse factorization stops inventing a causing row
+
+**DONE 2026-09-17** (#2482).
+
+```cpp
+rv = solver.info();                            //Eigen::ComputationInfo: 0..3, a STATUS
+...
+if (rv <= NumberOfRows()) { return rv - 1; }   //"causing row"
+```
+
+The comment above it described **SuperLU**'s `info` - where a value up to `ncol` really was the
+column with the zero pivot - which is the fingerprint of the port to Eigen. Eigen's `SparseLU`
+returns an enum: `Success=0, NumericalIssue=1, NoConvergence=2, InvalidInput=3`. A failed
+factorization gives 1, so `rv - 1` was **0**, and `CSolverBase::Newton` dutifully printed it.
+
+Measured on a redundantly constrained system with `LinearSolverType.EigenSparse`, before:
+
+```
+System Jacobian seems to be singular / not invertible!
+  causing system equation number (coordinate number) = 0
+The causing system equation 0 belongs to a ODE2 coordinate
+```
+
+and after - the singularity is still reported, the invented row is not:
+
+```
+System Jacobian seems to be singular / not invertible!
+```
+
+The failure now returns `NumberOfRows()`, which is the value the caller already treats as "no row
+known" (`if (factorizeOutput < NumberOfRows())` guards the message). The symmetric branch always
+did this, with the comment *"symmetric solver does not determine causing row"* - the asymmetric one
+now agrees. The R5.4.3 test asserts the exact value.
+
+<a id="r5-4-10"></a>
+### R5.4.10 - EigenDense says what it does not detect
+
+**DONE 2026-09-17** (#2483).
+
+Raised as a defect, and it was not one - the maintainer corrected it and the code agrees:
+
+- **FullPivLU** is reached only through `linearSolverSettings.ignoreSingularJacobian=True`,
+  documented as handling over- and underdetermined systems and resolving redundant constraints by
+  least squares, with its own warning that this MAY LEAD TO ERRONEOUS RESULTS. The source says the
+  same: *"in this case, we could report errors, but we do not want to"*. It even honours
+  `pivotThreshold` through `setThreshold`.
+- **PartialPivLU** has no invertibility check to call: *"according to Eigen's homepage, there is no
+  possibility to check for invertability"*. That is the library, not a decision of Exudyn.
+
+What was missing was one sentence where a user looks: the `LinearSolverType.EigenDense` description
+listed partial pivoting as "faster than EXUdense" and mentioned full pivot only under
+`ignoreSingularJacobian`, and never said that in the DEFAULT mode a singular Jacobian is not
+detected at all, while `EXUdense` and `EigenSparse` report it. That sentence is now in
+`definitions/enumTypes.py`, and from there in the generated enum, the stubs and the documentation.
+
+A reminder to take from this: a test that pins behaviour must not also judge it. The first version
+of the case called this "not as one would wish"; the behaviour was deliberate and documented, and
+the comment now says why.
+
+<a id="r5-4-12"></a>
+### R5.4.12 - the C++ usage demo became a readable header
+
+**DONE 2026-09-17** (#2485; maintainer request).
+
+`PyTest_unused()` sat at the end of `Symbolic.cpp`: 190 lines, six `if (false)` / `if (true)`
+blocks in one function, called from nowhere. It is the **only** record of how
+`Symbolic::SReal`, `SymbolicRealVector` and `SymbolicRealMatrix` are used from C++ - Python users
+have `exudyn.symbolic` and its test models, the C++ side has nothing - so it was kept, and
+reshaped rather than deleted.
+
+`src/Linalg/symbolicCppDemo.h` now has one named function per topic:
+`SymbolicDemoPlainValues`, `SymbolicDemoNamedVariable`, `SymbolicDemoVectors`,
+`SymbolicDemoMatrices`, `SymbolicDemoDiff`, `SymbolicDemoFunctions`, `SymbolicDemoTiming`,
+`SymbolicDemoReferenceCounting`, and `SymbolicDemoAll()` running them in order. The header says in
+its first lines what it is (worked examples, to be READ), what it is not (a test - those are in
+`SymbolicUnitTests.h`), and that nothing calls it.
+
+**It is included by `Symbolic.cpp` on purpose.** A demo that no longer compiles is worse than no
+demo; the functions are `inline` and unused, so they cost nothing in the module. That preserves the
+one property the old code did have.
+
+**Two things were corrected while reshaping.** The original demonstrated a **stack**
+`ExpressionNamedReal` handed to `SReal(&node)` - the heap-corruption trap found in step R5.4.2 -
+and the demo now uses `SReal("x", value)` throughout, with the reason stated before the first
+function. And it was actually **run**: through a temporary binding, every section produced sensible
+output, the new/delete counts balanced, and the timing section is worth reading on its own:
+
+```
+evaluate     :  12.4 ns per evaluation of a recorded tree
+build+eval   : 267.4 ns when the expression is rebuilt every time (recording ON)
+no recording :   2.4 ns for the same line as plain arithmetic
+```
+
+The temporary binding was removed afterwards; nothing in the module refers to the demo.
+
 <a id="r5-4-11"></a>
 ### R5.4.11 - pythonTests.cpp removed
 

@@ -19,15 +19,33 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.119.dev1, 
++  Exudyn version = 1.11.122.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2485, 
-+  Number of resolved issues = 2192 (119 in current version), 
++  Number of issues = 2486, 
++  Number of resolved issues = 2195 (122 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.122: resolved Issue 2485: the C++ usage demo of the symbolic types is a dead function of if(false) blocks (improvement)
+    - issue author: Claude-JG
+    - description:  PyTest_unused() at the end of Symbolic.cpp was six if(false)/if(true) blocks in one function, never called, not compiled into anything meaningful and never run. It is the only documentation of how Symbolic::SReal, SymbolicRealVector and SymbolicRealMatrix are used from C++, which is worth keeping (maintainer, 2026-09-17), but not in that shape - and it demonstrates a stack ExpressionNamedReal, which is exactly the heap corruption trap found in step R5.4.2. Reshape into a header that says what it is, with one named function per topic. revision2026 step R5.4.12.
+    - **notes:** PyTest_unused() is removed from Symbolic.cpp and reshaped into src/Linalg/symbolicCppDemo.h: one named function per topic (plain values, named variable, vectors, matrices, Diff, the scalar functions, timing, reference counting) plus SymbolicDemoAll(). The header states in its first lines that it is worked examples to be read, that it is not a test (those are in SymbolicUnitTests.h), and that nothing calls it. It IS included by Symbolic.cpp so that it keeps compiling - inline and unused, so it costs nothing. Two corrections while reshaping: the demo no longer teaches the stack ExpressionNamedReal that causes heap corruption, and it was actually run through a temporary binding - every section produces sensible output, the new/delete counts balance, and the timing section now documents 12 ns per evaluation of a recorded tree against 267 ns when rebuilding it and 2.4 ns without recording. revision2026 step R5.4.12.
+    - date resolved: **2026-09-17 17:20**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
+ * Version 1.11.121: resolved Issue 2483: document that EigenDense does not detect a singular matrix (improvement)
+    - issue author: Claude-JG
+    - description:  CORRECTED 2026-09-17 after maintainer feedback: the behaviour is NOT a defect. The FullPivLU path is entered only with linearSolverSettings.ignoreSingularJacobian=True, which is documented as handling over- and underdetermined systems and resolving redundant constraints (with a warning that it may lead to erroneous results), and the code says so as well: "in this case, we could report errors, but we do not want to". It also honours pivotThreshold via setThreshold. The PartialPivLU path cannot report invertibility at all - "according to Eigen homepage, there is no possibility to check for invertability" - so it is a property of the library, not a decision of Exudyn. What remains is a documentation gap: LinearSolverType.EigenDense describes partial pivoting as "faster than EXUdense" and mentions full pivot only under ignoreSingularJacobian, but nowhere states that in the DEFAULT EigenDense mode a singular Jacobian is not detected and the solver continues with an undefined result, while EXUdense and EigenSparse do report it. Add one sentence to the enum description. revision2026 step R5.4.10.
+    - **notes:** Documentation only, as corrected by the maintainer: the behaviour is deliberate (FullPivLU is the ignoreSingularJacobian least-squares path; PartialPivLU has no invertibility check in Eigen). The LinearSolverType.EigenDense description in definitions/enumTypes.py now states that in the default partial pivoting mode a singular matrix is NOT detected and the solver continues with an undefined result, and points at EXUdense/EigenSparse if that must be reported or at full pivot if the singular system should be resolved by least squares on purpose. The sentence propagates to EnumTypes.h, the stubs and the documentation. The judging comment in LinearSolverUnitTests.h was corrected as well. revision2026 step R5.4.10.
+    - date resolved: **2026-09-17 17:20**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
+ * Version 1.11.120: resolved Issue 2482: the sparse FactorizeNew does not return the causing row it promises (bug)
+    - issue author: Claude-JG
+    - description:  GeneralMatrixEigenSparse::FactorizeNew() takes rv = solver.info() - an Eigen::ComputationInfo, i.e. 0..3 - and then returns rv-1 as if it were a row index (LinearSolver.cpp:528-530), with a comment describing the causing row. In practice a failed factorization gives info()==1 (NumericalIssue), so the caller is told row 0 no matter which row is singular. Either return the real row, or return a documented error code and stop promising a row. The dense EXUdense path does return a real row. revision2026 step R5.4.9.
+    - **notes:** GeneralMatrixEigenSparse::FactorizeNew() now returns NumberOfRows() on failure - the value the caller already treats as "causing row unknown" - instead of solver.info()-1, which was an Eigen ComputationInfo and therefore always 0. The comment that described SuperLU info semantics is replaced by what Eigen actually returns. Measured on a redundantly constrained system with EigenSparse: before, the solver printed "causing system equation number (coordinate number) = 0" and "The causing system equation 0 belongs to a ODE2 coordinate"; after, the singularity is reported with no row claimed. The symmetric branch always behaved this way. The R5.4.3 unit test asserts the exact return value. revision2026 step R5.4.9.
+    - date resolved: **2026-09-17 17:20**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.119: resolved Issue 2481: a symbolic vector product with inconsistent sizes leaks its nodes (bug)
     - issue author: Claude-JG
     - description:  Symbolic::operator\*(SymbolicRealVector, SymbolicRealVector) allocates the product node and then hands it to SReal(ExpressionBase\*), whose constructor evaluates it immediately to cache the value. With inconsistent sizes that evaluation throws - before any SReal owns the node - so the allocation is never freed. Measured from Python: one failed product leaks 1 Real node and 2 Vector nodes (newCount increases, deleteCount does not). Any error path inside Evaluate has the same shape. revision2026 step R5.4.8.
@@ -7441,16 +7459,6 @@ Version 0.1
 ***********
 Open issues
 ***********
-
- * **open issue 2483:** document that EigenDense does not detect a singular matrix
-    - issue author: Claude-JG
-    - description:  CORRECTED 2026-09-17 after maintainer feedback: the behaviour is NOT a defect. The FullPivLU path is entered only with linearSolverSettings.ignoreSingularJacobian=True, which is documented as handling over- and underdetermined systems and resolving redundant constraints (with a warning that it may lead to erroneous results), and the code says so as well: "in this case, we could report errors, but we do not want to". It also honours pivotThreshold via setThreshold. The PartialPivLU path cannot report invertibility at all - "according to Eigen homepage, there is no possibility to check for invertability" - so it is a property of the library, not a decision of Exudyn. What remains is a documentation gap: LinearSolverType.EigenDense describes partial pivoting as "faster than EXUdense" and mentions full pivot only under ignoreSingularJacobian, but nowhere states that in the DEFAULT EigenDense mode a singular Jacobian is not detected and the solver continues with an undefined result, while EXUdense and EigenSparse do report it. Add one sentence to the enum description. revision2026 step R5.4.10.
-    - date raised: 2026-09-17 
-
- * **open issue 2482:** the sparse FactorizeNew does not return the causing row it promises
-    - issue author: Claude-JG
-    - description:  GeneralMatrixEigenSparse::FactorizeNew() takes rv = solver.info() - an Eigen::ComputationInfo, i.e. 0..3 - and then returns rv-1 as if it were a row index (LinearSolver.cpp:528-530), with a comment describing the causing row. In practice a failed factorization gives info()==1 (NumericalIssue), so the caller is told row 0 no matter which row is singular. Either return the real row, or return a documented error code and stop promising a row. The dense EXUdense path does return a real row. revision2026 step R5.4.9.
-    - date raised: 2026-09-17 
 
  * :textblue:`open issue 2455:` pydoclint reports two violations in exudyn/__init__.py RequireVersion
     - issue author: Claude-JG
