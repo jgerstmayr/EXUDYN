@@ -678,6 +678,59 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     with a short timeout: each example in its own interpreter and its own output directory, a timeout
     after the solver was reached counts as a pass. 360 s → 49 s.
 
+<a id="r5-17"></a>
+**R5.17** *(phase R5, after R5.16)* **A switch that stops Exudyn opening windows**, so that a model
+    or an example run outside the test suite does not pop up the renderer - and so that the runners
+    can stop rewriting the source to prevent it.
+
+    **Where it lives**: a new group `exu.special.userInterface`, next to the existing
+    `special.solver` and `special.exceptions` (`PySpecialSolver`, `PySpecialExceptions` in
+    `src/Main/Experimental.h`). Not for regular users - that is what `special` means.
+
+    **The flags**, all default `False`:
+
+    | flag | effect |
+    |---|---|
+    | `suppressRenderer` | `SC.renderer.Start()` returns at once, `IsActive()` is `False`, `DoIdleTasks()` is a no-op |
+    | `suppressSolutionViewer` | `mbs.SolutionViewer` and `AnimateModes` return immediately |
+    | `suppressPlots` | `PlotSensor` and the other plotting helpers skip `plt.show()`; a figure given a file name is still SAVED |
+    | `suppressDialogs` | `InteractiveDialog` and `GUI.py` return their defaults instead of opening a tk window |
+    | `SuppressAll(True)` | sets the four |
+
+    A suppressed call is a **silent no-op**, except that each kind prints **one** notice the first
+    time it is suppressed - a window-less session must never be a mystery. `IsActive()` returning
+    `False` is the load-bearing detail: it is what lets `while SC.renderer.IsActive():` end instead
+    of spinning, which is the only reason the example runner rewrites that line today.
+
+    Like its two neighbours the group is a C++ class in `Experimental.h`, so the flags are one
+    value read from both sides: the renderer (window and idle loop are C++) and the Python helpers,
+    which read `exu.special.userInterface.*`.
+
+    **Environment**: `python/exudyn/__init__.py` reads `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` (sets the
+    four flags) and `EXUDYN_OUTPUTDIRECTORY` (sets `exu.config.outputDirectory`, which today can
+    only be set from Python). **These would be the first environment variables Exudyn reads at
+    runtime** - `getenv` appears nowhere outside `setup.py` - so the step also documents them as
+    intended for AI tools and CI, not for users, and prints one line on import when either is
+    active. **Both reads are wrapped in `try/except`** and a failure never stops the import
+    (maintainer, 2026-09-17): `os.environ` itself is always present, but applying the value is not
+    free of risk - `config.outputDirectory` rejects some strings, and a frozen or embedded
+    interpreter may hand back something unexpected.
+
+    **How `suppressPlots` reaches scripts that do not use `PlotSensor`** (decided 2026-09-17).
+    `PlotSensor` calls `plt.show()` itself (`plot.py:761`), so the package side follows the flag
+    directly. But **29 examples and 9 test models call `plt.show()` directly**, having imported
+    matplotlib themselves. Those are covered by `matplotlib.use("Agg")`, applied once from the flag
+    rather than by editing 38 scripts: one place, and every script written later is covered too.
+    Figures are still drawn and still saved under Agg; only the window disappears. The limit worth
+    stating: the backend has to be chosen before the first figure is created, so a flag flipped in
+    the middle of a script cannot retro-fit it - which is precisely why the environment variable
+    exists.
+
+    **What this does NOT replace**: of the ~14 source substitutions in
+    `testRunnerTools.ExampleSkipReason`/the example bootstrap, roughly six are window-related and
+    can go; the rest cut WORK (`useGraphics = True` -> `False`, `numberOfGenerations`,
+    `useMultiProcessing`, `verbose`, `showProgress`) and stay. The step states which are removed.
+
 ## R6 — Error handling and UX (ongoing, after R2)  <!-- old Phase 5 -->
 
 <a id="r6-1"></a>
@@ -814,14 +867,62 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     never automatic.
 
 <a id="r8-5"></a>
-**R8.5** *(phase R8, after R8.3)* **Migrate `trackerlog.txt` to one file per issue** under
-    `docs/dev/issues/` — `OPEN-0042-short-name.md`, moved to `issues/closed/` on resolution — with
-    a generated index. This is the intended end state: reviewable diffs, no comma-escaping trap, no
-    single-file merge conflicts. Two things must be carried across, not dropped: the **micro
-    version is derived from the resolved count**, so the migration either preserves that derivation
-    or replaces it with a deliberate alternative; and the resolved-issue rendering already produces
-    what step R7.4 wants from `CHANGELOG.md`, so **one mechanism should produce both** rather than
-    two diverging ones. Sequence 67 after 52, or merge them.
+**R8.5** *(phase R8, after R8.3)* **Migrate `trackerlog.txt` to one file per issue, in JSON.**
+    This is the intended end state: reviewable diffs, no comma-escaping trap (`\;`), no single-file
+    merge conflicts. **JSON, not Markdown**, so that the format cannot drift and import/export stay
+    trivial.
+
+    **Layout**:
+
+    ```
+    docs/dev/issues/
+      open/2475.json            one file per OPEN issue
+      resolved/2473.json        one file per issue resolved since the cutoff
+      archive/2019.json ...     one file per YEAR, frozen once written
+    ```
+
+    The cutoff is 1 January of the previous year (today: before 2025-01-01). Archiving is an
+    explicit maintenance command, not a side effect of `ResolveIssue`, so the move is one
+    reviewable commit. **The migration writes the archives directly**: the 2400 single files must
+    never exist, not even for one commit, or the repository carries them in its history forever.
+    Sharding the archive by year - rather than one file - keeps each one write-once: no rewrite of
+    a large file on every archiving run, and nothing to merge.
+
+    **Fields to add while the format is being defined** (cheap now, painful to retrofit):
+    `schemaVersion`; `status` as an enum including `duplicate` with `duplicateOf`;
+    `resolvedInVersion` - the version the resolution produced, which makes R7.4's `CHANGELOG.md`
+    a pure rendering job instead of a second mechanism; `planStep` as a real field (today
+    "revision2026 step R5.4.5" is prose inside the notes); `component` (solver / linalg / python /
+    build / docs) for filtering; `resolvedCommit`, the hash. And **fix `priority`**: #2388, #2398
+    and #2400 print "priority undefined" on every tracker call today.
+
+    **The one hard coupling**: the micro version is derived from the **count of resolved issues**.
+    With files, that count depends on the working tree being complete - a partial checkout would
+    silently LOWER the version. Each archive file therefore carries its own `resolvedCount`, and
+    the validator checks the total against the files it can see and fails loudly on a mismatch.
+
+    **Validation in the commit gate**: a `--check` in `tools/checkAll.py` - no duplicate ids, valid
+    enum values, required fields present, counts consistent. No new dependency (a small validator,
+    not `jsonschema`).
+
+    **Lossless migration, proven**: export to JSON, regenerate `trackerlog.txt` from the JSON and
+    byte-compare against the current file. When it lands, the old path is **deleted**, not kept in
+    parallel - otherwise the escaping trap survives.
+
+    **Generated artifacts are not committed** (the HTML overview, any generated index), with **one
+    deliberate exception**: the rendered list the documentation shows. `docs/RST/trackerlog.rst`
+    stays committed and stays generated, because that is what ReadTheDocs renders (maintainer,
+    2026-09-17). `docs/theDoc/trackerlog.tex` needs no decision here - it disappears with the
+    LaTeX documentation.
+
+<a id="r8-5-1"></a>
+**R8.5.1** *(sub-step of R8.5)* **A tiny local viewer/editor for the issues**, for maintainers:
+    `python tools/issueTracker/serve.py` opens a local web page - **stdlib `http.server` and one
+    HTML page, no new dependency** (a Qt6 front-end would cost PySide6, against rule 6, and a web
+    page also works over SSH). Features: list by id, search, filter open / resolved / both, and
+    **RaiseIssue, EditIssue, ResolveIssue** writing through the same API the scripts use.
+    **Deleting an issue stays manual and file-based** - it should be rare (a wrongly raised issue)
+    and deliberate.
 
 <a id="r8-6"></a>
 **R8.6** *(phase R8, last step of this plan; maintainer request 2026-09-15)* **Checker for user scripts
