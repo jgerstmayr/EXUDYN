@@ -51,6 +51,8 @@ using namespace EXUmath;
     #include "TemplatedVectorArrayUnitTests.h" 
 	#include "AllBasicLinalgUnitTests.h"
     #include "AVXVectorUnitTests.h"   //revision2026 step R5.4, #2465
+    #include "AllMatrixVariantsUnitTests.h" //revision2026 step R5.4.1, #2472
+    #include "RigidBodyMathUnitTests.h"     //revision2026 step R5.4.1, #2472
 #endif
 
 extern bool linalgPrintUsePythonFormat; //!< true: use python format for output of vectors and matrices; false: use matlab format
@@ -327,6 +329,14 @@ int UnitTestBase::PerformVectorAndArrayTests(int flags)
 	//the vectorized vector classes; every case runs a range of lengths around the AVX packet
 	//boundary and, for the linked one, offset sub-ranges (revision2026 step R5.4, #2465)
 	failCounter += lest::run(avxVector_specific_test, arglist_lest, stringStream);
+
+	//the matrix classes the solver uses - ResizableMatrix, ConstSizeMatrix, LinkedDataMatrix and
+	//MatrixContainer; AllMatrixUnitTests.h above covers only the base class (step R5.4.1, #2472)
+	failCounter += lest::run(matrixVariants_specific_test, arglist_lest, stringStream);
+
+	//rotations, geometry, bounding boxes and the search tree: property tests, and the search tree
+	//is checked against a brute-force scan over the same data (step R5.4.1, #2472)
+	failCounter += lest::run(rigidBodyMath_specific_test, arglist_lest, stringStream);
 
 #endif
     if (failCounter) {

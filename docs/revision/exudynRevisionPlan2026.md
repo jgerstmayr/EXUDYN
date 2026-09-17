@@ -514,15 +514,52 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     — the #2394 case. Verified by mutation. The remaining backfill is R5.4.1.
 
 <a id="r5-4-1"></a>
-**R5.4.1** *(sub-step of R5.4)* **The ordinary backfill**, in this order, none of it AVX-specific:
+**R5.4.1** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-1) — *(sub-step of R5.4)*
+    **The matrix variants and the rigid-body/geometry group have unit tests** (#2472): 20 cases in
+    `AllMatrixVariantsUnitTests.h` and `RigidBodyMathUnitTests.h`, property-based where a property
+    exists, and validated by mutation — one of which the tests initially missed, which is how the
+    weak case was found. Two defects found on the way: #2473 and #2474.
 
-    - `ResizableMatrix.h`, `ConstSizeMatrix.h`, `LinkedDataMatrix.h`, `MatrixContainer.h`
-    - `RigidBodyMath.h`, `KinematicsBasics.h`, `Geometry.h`, `BoundingBox.h`, `SearchTree.h`
-    - `Symbolic.h`, `SymbolicVector.h`, `SymbolicMatrix.h`, `LinearSolver.h`
+<a id="r5-4-2"></a>
+**R5.4.2** *(sub-step of R5.4)* **Symbolic**: `Symbolic.h`, `SymbolicVector.h`, `SymbolicMatrix.h`.
+    ~2500 lines with a Python-level test already in place (`symbolicModuleTest.py`,
+    `symbolicUserFunctionTest.py`), so the C++ tests should aim at what Python cannot reach: the
+    expression tree itself, `Diff`, and evaluation after a variable changes.
+
+<a id="r5-4-3"></a>
+**R5.4.3** *(sub-step of R5.4)* **`LinearSolver.h`**: the dense and the sparse (Eigen) solver
+    behind one interface — the same shape as `MatrixContainer` in R5.4.1, and the same kind of test:
+    both must answer identically for a system that is solvable, and both must fail recognisably for
+    one that is not.
+
+<a id="r5-4-4"></a>
+**R5.4.4** *(sub-step of R5.4, from R5.4.1)* **`LinkedDataMatrix`: the two constructors taking a
+    matrix do not compile** (#2473). They read protected members through a base-class reference
+    (error C2248) and are dead code — the code base links through the pointer constructor. Fix them
+    to use the public accessors, or delete them; a row-range link is useful and today the caller has
+    to do the pointer arithmetic.
+
+<a id="r5-4-5"></a>
+**R5.4.5** *(sub-step of R5.4, from R5.4.1)* **`MatrixContainer::MultMatrixVector` has two
+    preconditions** (#2474): the dense path sizes the result vector, the sparse path does not and
+    then indexes into it — so an unsized result throws in a checked build and writes **out of
+    bounds** in `exudynCPPfast`. Size it in the sparse path too.
 
 <a id="r5-5"></a>
-**R5.5** Add ruff, plus a pyright or mypy pass validating the `.pyi` against the package.
+**R5.5** *(phase R5, tooling)* **A linter and a type check for the Python side.** Two separate
+    halves, neither started:
 
+    - **ruff** over the shipped package `python/exudyn/`. Nothing in the repository configures it
+      today; the only linter in use is `pydoclint`, whose findings are frozen in
+      `tools/ci/pydoclintBaseline.txt`. **To decide**: which rule set (the default E/F, or more),
+      whether the existing findings get a baseline like pydoclint's or are fixed outright, and
+      whether it runs in the commit gate or only in CI.
+    - **a type check whose purpose is the stubs**: `python/exudyn/__init__.pyi` and
+      `python/exudyn/symbolic.pyi` describe the C++ bindings and are merged at build time by
+      `tools/generators/createStubFiles.py`. Nothing verifies that they still match what the module
+      exports, so a renamed binding leaves a stub that lies to every IDE. mypy or pyright can be
+      pointed at exactly this. **To decide**: which checker, and whether the run covers the package
+      as a whole or only stub-vs-module agreement.
 <a id="r5-6"></a>
 **R5.6** Add an ASan/UBSan Linux job. For a C++ library invoking arbitrary user callbacks this catches
     the class of bug users report as "it crashed with no message".

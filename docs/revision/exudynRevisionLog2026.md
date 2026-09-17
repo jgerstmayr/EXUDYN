@@ -4436,6 +4436,58 @@ without AVX, where the two classes are aliases of their scalar base classes.
 
 The ordinary backfill - matrices, rigid body math, symbolic, the linear solver - is step R5.4.1.
 
+<a id="r5-4-1"></a>
+### R5.4.1 - the matrix variants and the rigid-body/geometry group have unit tests
+
+**DONE 2026-09-17** (#2472; found #2473, #2474).
+
+`AllMatrixUnitTests.h` covered the base class `Matrix` in 22 cases. The classes the solver actually
+uses had nothing: `ResizableMatrix`, `ConstSizeMatrix`, `LinkedDataMatrix`, `MatrixContainer`, and
+the whole geometry group `RigidBodyMath`, `Geometry`, `BoundingBox`, `SearchTree`. Two new headers,
+10 cases each.
+
+**Properties, not value tables.** A recorded table of numbers only states what a function returned
+on the day it was written; these cases state what the functions MEAN, so they survive a rewrite:
+
+- `Vector2SkewMatrix(a) * b` equals the cross product written out, and `SkewMatrix2Vector` undoes
+  it; the matrix is skew-symmetric with a zero diagonal.
+- every rotation matrix is checked orthonormal with determinant +1; Euler parameters and RotXYZ
+  round-trip through the matrix; `RotationVector2RotationMatrix` is checked by the two facts that
+  define it - `trace = 1 + 2 cos(angle)` and the axis is fixed - because no inverse exists to
+  round-trip against.
+- `SearchTree` is compared against **brute force**: for 1x1x1, 2x2x2 and 5x5x5 cells and four query
+  boxes, every item whose box really intersects the query must appear in the result. The tree may
+  return extra items (it is a pre-selection) but may never miss one - that is the property which
+  makes it replaceable.
+- `MatrixContainer` is asked every question twice, once dense and once sparse, built from the same
+  values: sizes, the dense matrix it hands out, the matrix-vector product and the accumulating one.
+
+**The mutation check earned its place.** Flipping one sign in `Vector2SkewMatrix` produced **4
+failures**. The second mutation - the sparse product accumulating with `=` instead of `+=` -
+produced **none**: the test matrix had one entry per row, where the two are indistinguishable. The
+case now puts two triplets in one row, and catches it. A test that has never failed has not been
+tested, and this is what that means in practice.
+
+**Behaviour pinned down that was nowhere written**: `RotXYZ2RotationMatrix(x,y,z)` composes as
+`A(x)*A(y)*A(z)` (the z rotation is applied first); `EGeometry::DistanceToPlane` is **unsigned** -
+it returns `fabs(...)`, so it cannot say which side of the plane a point is on, despite the name;
+and `Box3D::Intersect` **rejects** boxes that only touch, although its own comment says the
+comparison was relaxed "in order to simplify problems with points on boundaries". Contact code sits
+exactly on that boundary case.
+
+**Two defects found, raised rather than fixed** (rule 9), both dead or unreachable code that the
+tests were the first to exercise:
+
+- **#2473** (step R5.4.4): `LinkedDataMatrix`'s two constructors that take a matrix read protected
+  members through a base-class reference and **do not compile**. Nothing in the code base uses
+  them - it links through the pointer constructor - so this has sat there unnoticed. The tests use
+  the pointer constructor and do the row offset themselves.
+- **#2474** (step R5.4.5): `MatrixContainer::MultMatrixVector` sizes the result vector in the dense
+  path and not in the sparse one, so the same call has two preconditions: it throws in a checked
+  build and writes **out of bounds** in `exudynCPPfast`.
+
+Symbolic and the linear solver are steps R5.4.2 and R5.4.3.
+
 <a id="r5-7"></a>
 ### R5.7 — rename `pytest.py` - done differently in step R3.1 (`python/pytestTemplate.py`)
 

@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.108.dev1, 
+  \item Exudyn version = 1.11.109.dev1, 
   \item last change =  2026-09-17, 
-  \item Number of issues = 2472, 
-  \item Number of resolved issues = 2181 (108 in current version), 
+  \item Number of issues = 2475, 
+  \item Number of resolved issues = 2182 (109 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.109}:  resolved Issue 2472: {\bf unit tests for the matrix variants and the rigid body / geometry classes}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: revision2026 step R5.4.1: ResizableMatrix, ConstSizeMatrix, LinkedDataMatrix, MatrixContainer, RigidBodyMath, Geometry, BoundingBox and SearchTree had no unit tests; AllMatrixUnitTests.h covered only the base Matrix class. Two new headers, property-based where possible (rotation round trips, skew as cross product, SearchTree against a brute-force scan).}
+    \item {\bf notes: src/Tests/AllMatrixVariantsUnitTests.h (10 cases) and src/Tests/RigidBodyMathUnitTests.h (10 cases), registered in UnitTestBase.cpp and in the VS project. Property-based where a property exists: skew IS the cross product, a rotation matrix is orthonormal with determinant +1, EP and RotXYZ round trip through the matrix, RotationVector2RotationMatrix satisfies trace = 1+2cos(angle) and fixes its own axis, and every SearchTree query is compared against a brute-force scan for 1x1x1, 2x2x2 and 5x5x5 cells. Validated by mutation: a sign flipped in Vector2SkewMatrix gives 4 failures. The second mutation (the sparse product accumulating with = instead of +=) was NOT caught at first - the test matrix had one entry per row - so the test was strengthened to two entries in one row and now catches it. Also pinned down: RotXYZ composes as A(x)*A(y)*A(z), DistanceToPlane is UNSIGNED, and Box3D::Intersect REJECTS touching boxes although its comment claims otherwise. Two defects found and raised rather than fixed: \#2473, \#2474. revision2026 step R5.4.1.}
+    \item   date resolved: {\bf 2026-09-17 10:15},
+date raised: 2026-09-17 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.108}: {\bf \color{warningRed}  resolved BUG 2469}: {\bf NGsolveCMStest reference value follows an untracked mesh cache}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
@@ -13121,6 +13130,18 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 2474}:  {\bf MatrixContainer::MultMatrixVector has two preconditions depending on its mode}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: The dense path calls MultMatrixVectorTemplate, which does result.SetNumberOfItems(rows); the sparse path calls SparseTripletMatrix::MultMatrixVector, which only does solution.SetAll(0.) and then indexes solution[triplet.row()]. So the same call with an unsized result vector works for a dense container and, for a sparse one, throws in a checked build and writes OUT OF BOUNDS in exudynCPPfast. One interface must not have two preconditions: size the vector in the sparse path as well. Found by the unit tests of revision2026 step R5.4.1.}
+    \item date raised: 2026-09-17 
+  \ei
+  \item open {\bf BUG 2473}:  {\bf LinkedDataMatrix: the two constructors taking a matrix do not compile}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: LinkedDataMatrixBase(const MatrixBase<T>\&) and LinkedDataMatrixBase(const MatrixBase<T>\&, Index startRows, Index numberOfRowsLinked) read m.numberOfRows/numberOfColumns/data - protected members of another object - which C++ does not allow through a base-class reference (error C2248), and the const-ness of the data pointer does not match either. Neither is used anywhere: the code base links through the pointer constructor (CMarkerSuperElementPosition.cpp, CMarkerSuperElementRigid.cpp), so this has never been noticed. Found by the unit tests of revision2026 step R5.4.1 being their first users. Either fix them to use the public accessors or delete them; a row-range link is useful and the pointer arithmetic is currently up to the caller.}
+    \item date raised: 2026-09-17 
+  \ei
   \item open {\bf BUG 2471}:  {\bf FEMinterface NPZ files store a C++ enum and cannot be read by a second module}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

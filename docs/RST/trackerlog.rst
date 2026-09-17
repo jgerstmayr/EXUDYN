@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.108.dev1, 
++  Exudyn version = 1.11.109.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2472, 
-+  Number of resolved issues = 2181 (108 in current version), 
++  Number of issues = 2475, 
++  Number of resolved issues = 2182 (109 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.109: resolved Issue 2472: unit tests for the matrix variants and the rigid body / geometry classes (extension)
+    - issue author: Claude-JG
+    - description:  revision2026 step R5.4.1: ResizableMatrix, ConstSizeMatrix, LinkedDataMatrix, MatrixContainer, RigidBodyMath, Geometry, BoundingBox and SearchTree had no unit tests; AllMatrixUnitTests.h covered only the base Matrix class. Two new headers, property-based where possible (rotation round trips, skew as cross product, SearchTree against a brute-force scan).
+    - **notes:** src/Tests/AllMatrixVariantsUnitTests.h (10 cases) and src/Tests/RigidBodyMathUnitTests.h (10 cases), registered in UnitTestBase.cpp and in the VS project. Property-based where a property exists: skew IS the cross product, a rotation matrix is orthonormal with determinant +1, EP and RotXYZ round trip through the matrix, RotationVector2RotationMatrix satisfies trace = 1+2cos(angle) and fixes its own axis, and every SearchTree query is compared against a brute-force scan for 1x1x1, 2x2x2 and 5x5x5 cells. Validated by mutation: a sign flipped in Vector2SkewMatrix gives 4 failures. The second mutation (the sparse product accumulating with = instead of +=) was NOT caught at first - the test matrix had one entry per row - so the test was strengthened to two entries in one row and now catches it. Also pinned down: RotXYZ composes as A(x)\*A(y)\*A(z), DistanceToPlane is UNSIGNED, and Box3D::Intersect REJECTS touching boxes although its comment claims otherwise. Two defects found and raised rather than fixed: #2473, #2474. revision2026 step R5.4.1.
+    - date resolved: **2026-09-17 10:15**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.108: :textred:`resolved BUG 2469` : NGsolveCMStest reference value follows an untracked mesh cache 
     - issue author: Claude-JG
     - description:  NGsolveCMStest.py loads python/TestModels/testData/netgenTestMesh.pkl - a TRACKED file - and silently OVERWRITES it whenever the load fails. That happened during revision2026 step R2.10 and the result moved by 2.4e-8, far outside the 5e-14 tolerance, back to the value recorded before 2025-05-05; restoring the committed file restored the value. A test must not rewrite its own committed input: either treat the mesh as read-only and fail loudly, or generate it deterministically.
@@ -8490,6 +8496,16 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2474:` MatrixContainer::MultMatrixVector has two preconditions depending on its mode
+    - issue author: Claude-JG
+    - description:  The dense path calls MultMatrixVectorTemplate, which does result.SetNumberOfItems(rows); the sparse path calls SparseTripletMatrix::MultMatrixVector, which only does solution.SetAll(0.) and then indexes solution[triplet.row()]. So the same call with an unsized result vector works for a dense container and, for a sparse one, throws in a checked build and writes OUT OF BOUNDS in exudynCPPfast. One interface must not have two preconditions: size the vector in the sparse path as well. Found by the unit tests of revision2026 step R5.4.1.
+    - date raised: 2026-09-17 
+
+ * :textred:`open BUG 2473:` LinkedDataMatrix: the two constructors taking a matrix do not compile
+    - issue author: Claude-JG
+    - description:  LinkedDataMatrixBase(const MatrixBase<T>&) and LinkedDataMatrixBase(const MatrixBase<T>&, Index startRows, Index numberOfRowsLinked) read m.numberOfRows/numberOfColumns/data - protected members of another object - which C++ does not allow through a base-class reference (error C2248), and the const-ness of the data pointer does not match either. Neither is used anywhere: the code base links through the pointer constructor (CMarkerSuperElementPosition.cpp, CMarkerSuperElementRigid.cpp), so this has never been noticed. Found by the unit tests of revision2026 step R5.4.1 being their first users. Either fix them to use the public accessors or delete them; a row-range link is useful and the pointer arithmetic is currently up to the caller.
+    - date raised: 2026-09-17 
 
  * :textred:`open BUG 2471:` FEMinterface NPZ files store a C++ enum and cannot be read by a second module
     - issue author: Claude-JG
