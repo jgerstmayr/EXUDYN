@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.134.dev1, 
++  Exudyn version = 1.11.135.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2496, 
-+  Number of resolved issues = 2207 (134 in current version), 
++  Number of issues = 2497, 
++  Number of resolved issues = 2208 (135 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.135: :textred:`resolved BUG 2496` : --fast-module would reject a fast module built without AVX2 
+    - issue author: Claude-JG
+    - description:  The guard and the log marker added for revision2026 step R5.11 asked ModuleUsesAVX2(); but that is a different question from -is this the fast module-. setup.py always compiles exudynCPPfast with __FAST_EXUDYN_LINALG and adds the vector extensions only when useAVX2 is set AND the platform is not macOS - so on macOS; and in any --no-avx2 build; the fast module is perfectly good and reports no AVX2. The run would then abort with the message that the wrong module was loaded; and its log would have no _fast marker. Both now ask ModuleIsRegular(); the AVX2 reference set keeps asking ModuleUsesAVX2(); which is right because that drift comes from the vector extensions and not from the missing range checks. revision2026 step R5.11.2
+    - **notes:** The guard and the log marker now ask ModuleIsRegular() - is this the fast module - instead of ModuleUsesAVX2() - does it have vector extensions. setup.py always compiles exudynCPPfast with __FAST_EXUDYN_LINALG but adds the vector extensions only when useAVX2 is set AND the platform is not macOS; so on macOS and in any --no-avx2 build the fast module reports no AVX2 and the run would have aborted; with its log written under the regular name. Verified by simulating that build: with ModuleUsesAVX2 forced False the guard accepts the fast module. The AVX2 reference set keeps asking ModuleUsesAVX2(); which is the right question there. revision2026 step R5.11.2
+    - date resolved: **2026-09-17 22:38**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.134: resolved Issue 2495: the fast module is never exercised by the test suite (extension)
     - issue author: Claude-JG
     - description:  Windows release builds ship exudynCPP and exudynCPPfast; but the suite only ever runs whichever one __init__.py selects - the default - so exudynCPPfast ships essentially untested although it is the module used for long simulations and the one whose missing range checks turn a user error into undefined behaviour. The machinery to JUDGE a fast run already exists (ModuleUsesAVX2 and AVX2ReferenceSolutionUpdate from R2.10.3); what is missing is the switch that loads it. revision2026 step R5.11

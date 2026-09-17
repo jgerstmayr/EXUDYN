@@ -79,16 +79,23 @@ def RequireFastModule(optionName='--fast-module'):
     that is the worst outcome - the log looks like a fast-module log and is not - so the runners
     check what they really have (revision2026 step R5.11).
 
+    The question here is "is this the fast module", answered by ModuleIsRegular(), NOT "does it
+    have AVX2". The two are not the same: setup.py compiles exudynCPPfast with
+    __FAST_EXUDYN_LINALG always, but adds the vector extensions only when useAVX2 is set AND the
+    platform is not macOS - so a perfectly good fast module reports no AVX2 on macOS and in any
+    --no-avx2 build (#2496). ModuleUsesAVX2() answers a different question, which reference values
+    to use, and the drift it is about comes from the vector extensions, not from the range checks.
+
     Args:
         optionName (str): the option the user passed, for the message
     """
-    if ModuleUsesAVX2():
+    if not ModuleIsRegular(): #'[FAST]' is in the version string of exudynCPPfast, always
         return
 
     (moduleName, _) = LoadedCppModule()
     raise SystemExit(optionName + ' was requested, but the loaded module is "'
                      + (moduleName if moduleName != '' else 'unknown')
-                     + '" without vector extensions.\n'
+                     + '", which has range checks and is therefore not the fast module.\n'
                      '  EXUDYN_MODULE=fast is declined when the CPU reports no AVX2 or when\n'
                      '  exudynCPPfast is not in the installed package - see the message printed\n'
                      '  by the exudyn import above. Nothing was run: a log that claims to be a\n'

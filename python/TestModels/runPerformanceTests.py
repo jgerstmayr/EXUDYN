@@ -110,8 +110,9 @@ elif not isWindows: #add linux, to distinguish linux tests from windows tests!
 
 #exu.config.Version() is the same string for both modules, so without this marker a --fast-module
 #run would collide with the regular log - and comparing the two is the whole point of measuring
-#them (revision2026 step R5.11). Derived from what was loaded, not from what was asked.
-if testRunnerTools.ModuleUsesAVX2():
+#them (revision2026 step R5.11). Derived from what was loaded, not from what was asked, and from
+#WHICH MODULE it is rather than from its instruction set (#2496).
+if not testRunnerTools.ModuleIsRegular():
     platformString += '_fast'
 
 #performance logs are collected per machine, because timings from a mobile CPU are not

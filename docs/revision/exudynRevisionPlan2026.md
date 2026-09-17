@@ -781,6 +781,13 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     `runPerformanceTests.py` both ways. The newest version is deliberately not the fast-mode
     target: right after a release its packages are the unstable part.
 
+<a id="r5-11-2"></a>
+**R5.11.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-11-2) — *(sub-step of R5.11;
+    found by a maintainer question about the version string)* **"Is this the fast module" is not
+    "does it have AVX2"** (#2496): the guard and the log marker of R5.11 asked the second question,
+    so on macOS and in any `--no-avx2` build - where `exudynCPPfast` is built without vector
+    extensions - `--fast-module` would have aborted, and the log would have carried no marker.
+
 <a id="r5-12"></a>
 **R5.12** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-12) — *(phase R5, small)*
     **Test and example hygiene** (#2368, #2377). `ANCFbeltDrive` was retuned by the maintainer and
@@ -998,6 +1005,30 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     doc2rst, etc.). Further, the autoGenerateHelper.py - which is in a terrible state, probably 
     most terrible in the project - will not require most of its functions, so cleanup is needed.
 
+<a id="r7-1-1"></a>
+**R7.1.1** *(sub-step of R7.1; maintainer question 2026-09-17)* **What happens to the tikz figures.**
+    Measured before answering: `introduction.tex`, `solver.tex` and `theory.tex` contain **13**
+    `tikzpicture` environments, and each already has a twin - the `.tex` sources carry **both**
+    representations side by side:
+
+    ```latex
+    \onlyRST{ .. figure:: docs/theDoc/figures/solversAvailableSolvers.png }
+    \ignoreRST{ \begin{figure} \begin{tikzpicture} ... \end{tikzpicture} \end{figure} }
+    ```
+
+    So the HTML documentation has **never** rendered tikz: it shows a hand-made PNG of it, and the
+    two are kept in step by hand (15 such `figure::` blocks). Markdown therefore loses nothing that
+    Sphinx has today - but it is the moment to end the duplicate, which is exactly what rule 10 of
+    `CLAUDE.md` warns about.
+
+    All 13 are node-and-arrow flowcharts, not geometry. The recommendation is therefore
+    **mermaid**: it is text, so it diffs and reviews like code; MyST renders it natively and so does
+    GitHub; and it removes the second copy. For the PDF, mermaid is pre-rendered to SVG at build
+    time (`mermaid-cli`, dev-only) - or, if the PDF's typography must stay tikz, then tikz becomes
+    the single source and the PNG is **generated** (tikz -> pdf -> svg) instead of hand-made, which
+    costs a LaTeX toolchain in the documentation build. Either way the hand-maintained twin ends.
+    Genuinely geometric figures, if any appear, keep a pre-rendered SVG.
+
 <a id="r7-2"></a>
 **R7.2** *(after R7.1, when the documentation is Markdown)* **Carry the revision into the documentation.**
     Extract every change recorded in this plan and in `exudynRevisionLog2026.md` - new flags and
@@ -1040,6 +1071,21 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     while there: the `NORMAL`-vs-`med` priority mismatch and the stale
     `cd ..\tools\makeWindowsBinaries\` in `execWithPythonVersion.bat`. A web mask can follow later;
     the CLI is the part that unblocks scripting and CI.
+
+<a id="r8-3-1"></a>
+**R8.3.1** *(sub-step of R8.3; maintainer request 2026-09-17)* **An issue can also be closed
+    WITHOUT being resolved.** The tracker knows `RAISED`, `WORK` and `RESOLVED`; there is no way to
+    record "decided against", "no longer applies" or "superseded", so such issues either stay open
+    forever - the 2016-2020 backlog is full of them - or get marked RESOLVED, which is untrue and
+    also **changes the version number**, because the micro version is derived from the count of
+    resolved issues (rule 2). That is the constraint this step has to respect: a closed-not-fixed
+    issue must NOT count as resolved.
+
+    Add one status - suggested `CLOSED`, with a mandatory reason in the notes, rather than the
+    Bugzilla-style pair `WONTFIX`/`OBSOLETE`, because the distinction is prose and every extra
+    status is another branch in the converters. Touches: the status list and `ResolvedIssues2Version`
+    in `issueTracker.py`, the RST/LaTeX/HTML converters, the CLI of R8.3 (`close <n> --reason ...`),
+    and the JSON schema of R8.5. Also check `ChangeIssue` cannot set it silently.
 
 <a id="r8-4"></a>
 **R8.4** *(phase R8)* **Fold minor-version bumps into the tracker.** A 1.11 → 1.12 bump currently means
@@ -1247,20 +1293,29 @@ debt stays visible and each item can be closed on evidence.
     removed with step R3.6.
 
 <a id="r11-2"></a>
-**R11.2** *(before R11.3; maintainer decision 2026-09-16)* **A maintained micro-benchmark for the
-    linear algebra, inside Exudyn** (#2397, from step R2.16). The sweep that would answer "does
-    vectorization pay" is dead code in `PyTest()` (`src/Pymodules/pythonTests.cpp`): it is inside
-    comment blocks and `if (0)`, `exu.Test()` is not even bound in a release build
-    (`EXUDYN_RELEASE`), and it timed hand-written loops rather than the vector code the solver uses.
-    Replace it by a benchmark that is compiled into every build and runs the **real** operations -
+**R11.2** *(before R11.3; maintainer decision 2026-09-16; revised 2026-09-17)* **A maintained
+    micro-benchmark for the linear algebra, inside Exudyn** (#2397, from step R2.16).
+
+    *The starting point named by the original text is gone.* This step used to say "replace the
+    dead sweep in `PyTest()` (`src/Pymodules/pythonTests.cpp`)"; that file was **deleted** in step
+    R5.4.11 (#2484) as outdated and misleading. Nothing is replaced, then - this step **writes** the
+    benchmark. What the deleted code was is still worth knowing, because it says what not to
+    repeat: it sat inside comment blocks and `if (0)`, `exu.Test()` was not even bound in a release
+    build (`EXUDYN_RELEASE`), and it timed hand-written loops rather than the vector code the
+    solver actually runs. It can be read in commit `ad54a93` if anyone wants it.
+
+    Write a benchmark that is compiled into **every** build and runs the **real** operations -
     `Vector`/`ResizableVectorParallel` add, subtract, scale and `MultAdd`, `SlimVector`/`Matrix3D`
     products, `ConstSizeMatrix` and matrix-vector products - over a size sweep that crosses
     `ResizableVectorParallelThreadingLimit`, single- and multithreaded. Exposed as
-    `exudyn.special.RunLinalgBenchmark()` (flags for sizes, repeats, which groups) so the user
+    `exudyn.special.RunLinalgBenchmark()` (flags for sizes, repeats, which groups), so the user
     interface grows by one function; `exu.special` already exists (`PySpecial` in
     `src/Main/Experimental.h`, bound from `definitions/pybindModule.py`). This also lets a user
     measure their own CPU: which build flags and how many threads make sense there. The tool-level
     benchmark `tools/benchmarks/avx2Benchmark.py` stays as the solver-level counterpart.
+
+    The pattern to follow is `src/Linalg/symbolicCppDemo.h` from step R5.4.12: named functions, one
+    topic each, compiled by being included, and a header that says what it is for.
 
 <a id="r11-3"></a>
 **R11.3** *(after R11.2)* **Make the hot linear algebra vectorizable.** Step R2.16 measured that the

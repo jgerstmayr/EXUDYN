@@ -178,8 +178,10 @@ pythonVersionMain = str(sys.version_info.major)+'.'+str(sys.version_info.minor)
 platformString = sys.platform+'-'+processorString+'-'+platform.architecture()[0]+'-P'+pythonVersionMain
 #exu.config.Version() is the SAME string for both modules, so without this marker the fast run
 #would collide with the default log and be diverted to tmp/ with a misleading message about
-#another machine. Derived from what was loaded, not from what was asked (revision2026 step R5.11).
-if testRunnerTools.ModuleUsesAVX2():
+#another machine. Derived from what was loaded, not from what was asked (revision2026 step R5.11);
+#and from WHICH MODULE it is, not from whether it has AVX2 - the fast module carries no vector
+#extensions on macOS or in a --no-avx2 build, and its log still has to be told apart (#2496).
+if not testRunnerTools.ModuleIsRegular():
     platformString += '_fast'
 localFileName = 'testSuiteLog_V'+exu.config.Version()+'_'+platformString
 

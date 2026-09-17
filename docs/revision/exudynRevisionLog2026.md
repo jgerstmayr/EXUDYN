@@ -5162,6 +5162,42 @@ silent when it is.
 and `sys.exudynCPUhasAVX2` - the default module *is* the safe one now - so the option would have
 nothing to select. The step text had predated that change.
 
+<a id="r5-11-2"></a>
+### R5.11.2 - "is this the fast module" is not "does it have AVX2"
+
+**DONE 2026-09-17** (#2496).
+
+The maintainer asked whether `[FAST]` in `exudyn.config.Version(addDetails=True)` always works.
+It does - `Pybind_manual_classes.cpp:82-86` adds it under `#ifdef __FAST_EXUDYN_LINALG`, and
+`setup.py:465` gives `exudynCPPfast` that macro unconditionally - but answering it found a defect
+in the code committed an hour earlier.
+
+```python
+if config['compileExudynFast'] and config['useAVX2'] and not isMacOS:   #setup.py:441
+    ...vector extensions...
+```
+
+The vector extensions are conditional; `__FAST_EXUDYN_LINALG` is not. **On macOS, and in any
+`--no-avx2` build, `exudynCPPfast` is a perfectly good fast module that reports no AVX2**:
+
+```
+... MacOS FLOAT64[FAST]          <- fast, no vector extensions
+... Windows AVX2 FLOAT64[FAST]   <- fast, with them
+```
+
+`RequireFastModule()` and the `_fast` log marker asked `ModuleUsesAVX2()`, so on those builds the
+run would have **aborted** saying the wrong module was loaded, and the log would have gone out
+under the regular name. Both now ask `ModuleIsRegular()`, which tests for `[FAST]` itself.
+
+The AVX2 reference set keeps asking `ModuleUsesAVX2()` - and that is the point of the distinction:
+which reference values to use depends on the **instruction set**, because the drift comes from the
+AVX branches of `Use_avx.h` summing in a different order; whether to accept the module depends on
+**which module it is**. Two questions, two predicates, one of which was being used for both.
+
+Verified by simulating the macOS build - `ModuleUsesAVX2` forced to return False while the fast
+module is loaded - and confirming the guard accepts it; the Windows runs are unchanged, both
+suites still PASSED.
+
 <a id="r5-12"></a>
 ### R5.12 - test and example hygiene
 
