@@ -899,6 +899,13 @@ namespace EXUmath {
 		//! this leads to memory allocation in case that the matrix is built from triplets
 		void MultMatrixVector(const Vector& x, Vector& solution) const
 		{
+			CHECKandTHROW(NumberOfColumns() == x.NumberOfItems(),
+				"SparseTripletMatrix::MultMatrixVector(x,solution): Size mismatch");
+
+			//the same precondition as the dense path, which sizes the result in
+			//EXUmath::MultMatrixVectorTemplate; without it, an unsized solution is indexed out of
+			//bounds below (#2474)
+			solution.SetNumberOfItems(NumberOfRows());
 			solution.SetAll(0.); //! because some values may not be touched, others may be written several times ...
 
 			for (const auto& item : sparseTriplets)
@@ -911,6 +918,13 @@ namespace EXUmath {
 		//! this leads to memory allocation in case that the matrix is built from triplets
 		void MultMatrixVectorAdd(const Vector& x, Vector& solution) const
 		{
+			//solution is only added to, so it must already have the right size - exactly as
+			//EXUmath::MultMatrixVectorAddTemplate demands it in the dense path (#2474)
+			CHECKandTHROW(NumberOfColumns() == x.NumberOfItems(),
+				"SparseTripletMatrix::MultMatrixVectorAdd(x,solution): Size mismatch");
+			CHECKandTHROW(NumberOfRows() == solution.NumberOfItems(),
+				"SparseTripletMatrix::MultMatrixVectorAdd(x,solution): Size mismatch");
+
 			for (const auto& item : sparseTriplets)
 			{
 				solution[item.row()] += x[item.col()] * item.value();

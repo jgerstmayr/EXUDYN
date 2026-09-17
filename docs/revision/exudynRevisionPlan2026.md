@@ -533,18 +533,23 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     one that is not.
 
 <a id="r5-4-4"></a>
-**R5.4.4** *(sub-step of R5.4, from R5.4.1)* **`LinkedDataMatrix`: the two constructors taking a
-    matrix do not compile** (#2473). They read protected members through a base-class reference
-    (error C2248) and are dead code — the code base links through the pointer constructor. Fix them
-    to use the public accessors, or delete them; a row-range link is useful and today the caller has
-    to do the pointer arithmetic.
+**R5.4.4** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-4) — *(sub-step of R5.4,
+    from R5.4.1)* **`LinkedDataMatrix(const MatrixBase&)` did not compile** (#2473): it read the
+    protected members of another object through a base-class reference. It now uses the public
+    accessors, and the row-range constructor next to it has its first caller - the R5.4.1 test,
+    which had to do the pointer arithmetic itself.
 
 <a id="r5-4-5"></a>
-**R5.4.5** *(sub-step of R5.4, from R5.4.1)* **`MatrixContainer::MultMatrixVector` has two
-    preconditions** (#2474): the dense path sizes the result vector, the sparse path does not and
-    then indexes into it — so an unsized result throws in a checked build and writes **out of
-    bounds** in `exudynCPPfast`. Size it in the sparse path too.
+**R5.4.5** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-5) — *(sub-step of R5.4,
+    from R5.4.1)* **`MatrixContainer::MultMatrixVector` had two preconditions** (#2474): the dense
+    path sized the result vector, the sparse path did not and then indexed into it. The sparse path
+    now sizes it as well, and both products check their sizes.
 
+<a id="r5-4-6"></a>
+**R5.4.6** *(sub-step of R5.4, from R5.4.5)* **`SparseTripletMatrix(rows, columns, triplets)`
+    throws its size arguments away** (#2476): it initialises both to 0 and never assigns the
+    arguments, so the matrix reports 0 x 0 while holding the triplets. Nothing calls it today, but
+    #2474 made the size fields load-bearing. Assign them or delete the constructor.
 <a id="r5-5"></a>
 **R5.5** *(phase R5, tooling)* **A linter and a type check for the Python side.** Two separate
     halves, neither started:

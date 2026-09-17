@@ -337,7 +337,7 @@ You can view and download this file on Github: `beltDriveReevingSystem.py <https
            
                sWheelRot += [mbs.AddSensor(SensorNode(nodeNumber=nMass, 
                                                       storeInternal=True,
-                                                      fileName='solutionDelete/wheel'+str(i)+'angVel.txt',
+                                                      fileName='solution/wheel'+str(i)+'angVel.txt',
                                                       outputVariableType=exu.OutputVariableType.AngularVelocity))]
            tdisplacement = 0.05
      
@@ -466,7 +466,7 @@ You can view and download this file on Github: `beltDriveReevingSystem.py <https
    simulationSettings = exu.SimulationSettings() #takes currently set values or default values
    
    simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-   simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution_nosync/testCoords.txt'
+   simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/testCoords.txt'
    
    simulationSettings.solutionSettings.writeSolutionToFile = True
    simulationSettings.solutionSettings.solutionWritePeriod = 0.002
@@ -589,7 +589,7 @@ You can view and download this file on Github: `beltDriveReevingSystem.py <https
        SC.visualizationSettings.general.autoFitScene = False
        SC.visualizationSettings.general.graphicsUpdateInterval=0.02
        
-       sol = LoadSolutionFile(OutputFilePath('solution_nosync/testCoords.txt'), safeMode=True)#, maxRows=100)
+       sol = LoadSolutionFile(OutputFilePath('solution/testCoords.txt'), safeMode=True)#, maxRows=100)
        mbs.SolutionViewer(sol)
    
    
@@ -742,9 +742,9 @@ You can view and download this file on Github: `beltDriveReevingSystem.py <https
    
        #export solution:
        if improvedBelt:
-           np.savetxt('solutionDelete/contactForces'+fstr+'.txt', contactForces[0]+contactForces[1], delimiter=',', 
+           np.savetxt(OutputFilePath('solution/contactForces'+fstr+'.txt'), contactForces[0]+contactForces[1], delimiter=',',
                       header='Exudyn: solution of belt drive, contact forces over belt length\n'+header, encoding=None)
-           np.savetxt('solutionDelete/contactDisp'+fstr+'.txt', contactDisp[0]+contactDisp[1], delimiter=',', 
+           np.savetxt(OutputFilePath('solution/contactDisp'+fstr+'.txt'), contactDisp[0]+contactDisp[1], delimiter=',',
                       header='Exudyn: solution of belt drive, slip and gap over belt length\n'+header, encoding=None)
        
    

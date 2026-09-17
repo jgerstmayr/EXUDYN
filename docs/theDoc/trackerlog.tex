@@ -9,15 +9,31 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.110.dev1, 
+  \item Exudyn version = 1.11.112.dev1, 
   \item last change =  2026-09-17, 
-  \item Number of issues = 2476, 
-  \item Number of resolved issues = 2183 (110 in current version), 
+  \item Number of issues = 2477, 
+  \item Number of resolved issues = 2185 (112 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.112}: {\bf \color{warningRed}  resolved BUG 2474}: {\bf MatrixContainer::MultMatrixVector has two preconditions depending on its mode}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: The dense path calls MultMatrixVectorTemplate, which does result.SetNumberOfItems(rows); the sparse path calls SparseTripletMatrix::MultMatrixVector, which only does solution.SetAll(0.) and then indexes solution[triplet.row()]. So the same call with an unsized result vector works for a dense container and, for a sparse one, throws in a checked build and writes OUT OF BOUNDS in exudynCPPfast. One interface must not have two preconditions: size the vector in the sparse path as well. Found by the unit tests of revision2026 step R5.4.1.}
+    \item {\bf notes: SparseTripletMatrix::MultMatrixVector sizes the result to NumberOfRows() before zeroing it, as the dense path has always done, and both sparse products now check their sizes. The R5.4.1 container test passes UNSIZED result vectors to both modes; commenting the new SetNumberOfItems out produces exactly one failure. Found on the way: \#2476 (step R5.4.6). revision2026 step R5.4.5.}
+    \item   date resolved: {\bf 2026-09-17 11:15},
+date raised: 2026-09-17 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.111}: {\bf \color{warningRed}  resolved BUG 2473}: {\bf LinkedDataMatrix: the two constructors taking a matrix do not compile}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: LinkedDataMatrixBase(const MatrixBase<T>\&) and LinkedDataMatrixBase(const MatrixBase<T>\&, Index startRows, Index numberOfRowsLinked) read m.numberOfRows/numberOfColumns/data - protected members of another object - which C++ does not allow through a base-class reference (error C2248), and the const-ness of the data pointer does not match either. Neither is used anywhere: the code base links through the pointer constructor (CMarkerSuperElementPosition.cpp, CMarkerSuperElementRigid.cpp), so this has never been noticed. Found by the unit tests of revision2026 step R5.4.1 being their first users. Either fix them to use the public accessors or delete them; a row-range link is useful and the pointer arithmetic is currently up to the caller.}
+    \item {\bf notes: LinkedDataMatrixBase(const MatrixBase<T>\&) now uses the public accessors NumberOfRows/NumberOfColumns/GetDataPointer instead of the protected members of another object (C2248). The row-range constructor next to it gets its first caller: the R5.4.1 test no longer does the row-major pointer arithmetic by hand. All C++ unit tests pass. revision2026 step R5.4.4.}
+    \item   date resolved: {\bf 2026-09-17 11:15},
+date raised: 2026-09-17 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.110}:  resolved Issue 2475: {\bf five examples write sensor output next to themselves, it clutters the working tree}
 (improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -13139,18 +13155,6 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
-  \item open {\bf BUG 2474}:  {\bf MatrixContainer::MultMatrixVector has two preconditions depending on its mode}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item issue author: Claude-JG
-    \item {description: The dense path calls MultMatrixVectorTemplate, which does result.SetNumberOfItems(rows); the sparse path calls SparseTripletMatrix::MultMatrixVector, which only does solution.SetAll(0.) and then indexes solution[triplet.row()]. So the same call with an unsized result vector works for a dense container and, for a sparse one, throws in a checked build and writes OUT OF BOUNDS in exudynCPPfast. One interface must not have two preconditions: size the vector in the sparse path as well. Found by the unit tests of revision2026 step R5.4.1.}
-    \item date raised: 2026-09-17 
-  \ei
-  \item open {\bf BUG 2473}:  {\bf LinkedDataMatrix: the two constructors taking a matrix do not compile}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item issue author: Claude-JG
-    \item {description: LinkedDataMatrixBase(const MatrixBase<T>\&) and LinkedDataMatrixBase(const MatrixBase<T>\&, Index startRows, Index numberOfRowsLinked) read m.numberOfRows/numberOfColumns/data - protected members of another object - which C++ does not allow through a base-class reference (error C2248), and the const-ness of the data pointer does not match either. Neither is used anywhere: the code base links through the pointer constructor (CMarkerSuperElementPosition.cpp, CMarkerSuperElementRigid.cpp), so this has never been noticed. Found by the unit tests of revision2026 step R5.4.1 being their first users. Either fix them to use the public accessors or delete them; a row-range link is useful and the pointer arithmetic is currently up to the caller.}
-    \item date raised: 2026-09-17 
-  \ei
   \item open {\bf BUG 2471}:  {\bf FEMinterface NPZ files store a C++ enum and cannot be read by a second module}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

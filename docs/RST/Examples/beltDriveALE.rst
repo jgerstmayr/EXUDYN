@@ -300,7 +300,7 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
            
                sWheelRot += [mbs.AddSensor(SensorNode(nodeNumber=nMass, 
                                                       storeInternal=True,
-                                                      fileName='solutionDelete/wheel'+str(i)+'angVel.txt',
+                                                      fileName='solution/wheel'+str(i)+'angVel.txt',
                                                       outputVariableType=exu.OutputVariableType.AngularVelocity))]
            tdisplacement = 0.05
      
@@ -512,7 +512,7 @@ You can view and download this file on Github: `beltDriveALE.py <https://github.
    
    #%%++++++++++++++++++++++++++++++++++++++++
    if True:
-       solDir = 'solutionDelete/'
+       solDir = OutputFilePath('solution/')
        #shift data depending on axial position by subtracting xOff; put negative x values+shiftValue to end of array
        def ShiftXoff(data, xOff, shiftValue):
            indOff = 0

@@ -47,9 +47,11 @@ public:
 	//! link to existing matrix
 	LinkedDataMatrixBase(const MatrixBase<T>& m)
 	{
-		this->numberOfRows = m.numberOfRows;
-		this->numberOfColumns = m.numberOfColumns;
-		this->data = m.data;
+		//the protected members of ANOTHER object are not accessible through a base-class reference,
+		//so this must go through the public accessors; it did not compile before (#2473)
+		this->numberOfRows = m.NumberOfRows();
+		this->numberOfColumns = m.NumberOfColumns();
+		this->data = const_cast<T*>(m.GetDataPointer()); //as in the pointer constructor below: linking to a const matrix is the purpose of the class
 	}
 
 	//! link to existing const matrix

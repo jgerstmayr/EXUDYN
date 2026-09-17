@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.110.dev1, 
++  Exudyn version = 1.11.112.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2476, 
-+  Number of resolved issues = 2183 (110 in current version), 
++  Number of issues = 2477, 
++  Number of resolved issues = 2185 (112 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.112: :textred:`resolved BUG 2474` : MatrixContainer::MultMatrixVector has two preconditions depending on its mode 
+    - issue author: Claude-JG
+    - description:  The dense path calls MultMatrixVectorTemplate, which does result.SetNumberOfItems(rows); the sparse path calls SparseTripletMatrix::MultMatrixVector, which only does solution.SetAll(0.) and then indexes solution[triplet.row()]. So the same call with an unsized result vector works for a dense container and, for a sparse one, throws in a checked build and writes OUT OF BOUNDS in exudynCPPfast. One interface must not have two preconditions: size the vector in the sparse path as well. Found by the unit tests of revision2026 step R5.4.1.
+    - **notes:** SparseTripletMatrix::MultMatrixVector sizes the result to NumberOfRows() before zeroing it, as the dense path has always done, and both sparse products now check their sizes. The R5.4.1 container test passes UNSIZED result vectors to both modes; commenting the new SetNumberOfItems out produces exactly one failure. Found on the way: #2476 (step R5.4.6). revision2026 step R5.4.5.
+    - date resolved: **2026-09-17 11:15**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
+ * Version 1.11.111: :textred:`resolved BUG 2473` : LinkedDataMatrix: the two constructors taking a matrix do not compile 
+    - issue author: Claude-JG
+    - description:  LinkedDataMatrixBase(const MatrixBase<T>&) and LinkedDataMatrixBase(const MatrixBase<T>&, Index startRows, Index numberOfRowsLinked) read m.numberOfRows/numberOfColumns/data - protected members of another object - which C++ does not allow through a base-class reference (error C2248), and the const-ness of the data pointer does not match either. Neither is used anywhere: the code base links through the pointer constructor (CMarkerSuperElementPosition.cpp, CMarkerSuperElementRigid.cpp), so this has never been noticed. Found by the unit tests of revision2026 step R5.4.1 being their first users. Either fix them to use the public accessors or delete them; a row-range link is useful and the pointer arithmetic is currently up to the caller.
+    - **notes:** LinkedDataMatrixBase(const MatrixBase<T>&) now uses the public accessors NumberOfRows/NumberOfColumns/GetDataPointer instead of the protected members of another object (C2248). The row-range constructor next to it gets its first caller: the R5.4.1 test no longer does the row-major pointer arithmetic by hand. All C++ unit tests pass. revision2026 step R5.4.4.
+    - date resolved: **2026-09-17 11:15**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.110: resolved Issue 2475: five examples write sensor output next to themselves, it clutters the working tree (improvement)
     - issue author: Claude-JG
     - description:  Five examples name their sensor files without the solution/ prefix that every other model and example uses: beltDriveALE and beltDriveReevingSystem write into solutionDelete/, beltDriveReevingSystem also writes its coordinates solution into solution_nosync/, rigidBodyIMUtest into solutionIMU<mode>/, sliderCrank3DwithANCFbeltDrive and sliderCrank3DwithANCFbeltDrive2 into the current directory (Preload_overallS.txt, Pos_Disk0_overallS.txt, Angular_velocity_overallS.txt, angular_velocity_disk0/1.txt, torque.txt, crank_pos.txt) plus a plots/ directory. Only solution/ is in .gitignore, so a direct run of one of these examples leaves untracked and unignored files and directories behind - and the reads (np.loadtxt) do not go through OutputFilePath either, so they ignore exudyn.config.outputDirectory. revision2026 step R5.13.2.
@@ -7388,6 +7400,11 @@ Version 0.1
 Open issues
 ***********
 
+ * **open issue 2476:** SparseTripletMatrix(rows, columns, triplets) throws its size arguments away
+    - issue author: Claude-JG
+    - description:  The three-argument constructor initialises numberOfRows(0) and numberOfColumns(0) and never assigns numberOfRowsInit or numberOfColumnsInit, so a matrix built with it reports 0 x 0 while holding the triplets. Nothing in the code base calls it - it was found while fixing #2474, which makes the size fields load-bearing for MultMatrixVector. Either assign them or delete the constructor. revision2026 step R5.4.6.
+    - date raised: 2026-09-17 
+
  * :textblue:`open issue 2455:` pydoclint reports two violations in exudyn/__init__.py RequireVersion
     - issue author: Claude-JG
     - description:  found 2026-09-16 during revision2026 step R5.13; pre-existing and unrelated to that step: DOC111 (type hints in the docstring arg list while --arg-type-hints-in-docstring is False) and DOC202 (return section without a return statement) in RequireVersion; belongs to revision2026 step R5.5 (ruff and type checking)
@@ -8502,16 +8519,6 @@ Open issues
 **********
 Known bugs
 **********
-
- * :textred:`open BUG 2474:` MatrixContainer::MultMatrixVector has two preconditions depending on its mode
-    - issue author: Claude-JG
-    - description:  The dense path calls MultMatrixVectorTemplate, which does result.SetNumberOfItems(rows); the sparse path calls SparseTripletMatrix::MultMatrixVector, which only does solution.SetAll(0.) and then indexes solution[triplet.row()]. So the same call with an unsized result vector works for a dense container and, for a sparse one, throws in a checked build and writes OUT OF BOUNDS in exudynCPPfast. One interface must not have two preconditions: size the vector in the sparse path as well. Found by the unit tests of revision2026 step R5.4.1.
-    - date raised: 2026-09-17 
-
- * :textred:`open BUG 2473:` LinkedDataMatrix: the two constructors taking a matrix do not compile
-    - issue author: Claude-JG
-    - description:  LinkedDataMatrixBase(const MatrixBase<T>&) and LinkedDataMatrixBase(const MatrixBase<T>&, Index startRows, Index numberOfRowsLinked) read m.numberOfRows/numberOfColumns/data - protected members of another object - which C++ does not allow through a base-class reference (error C2248), and the const-ness of the data pointer does not match either. Neither is used anywhere: the code base links through the pointer constructor (CMarkerSuperElementPosition.cpp, CMarkerSuperElementRigid.cpp), so this has never been noticed. Found by the unit tests of revision2026 step R5.4.1 being their first users. Either fix them to use the public accessors or delete them; a row-range link is useful and the pointer arithmetic is currently up to the caller.
-    - date raised: 2026-09-17 
 
  * :textred:`open BUG 2471:` FEMinterface NPZ files store a C++ enum and cannot be read by a second module
     - issue author: Claude-JG

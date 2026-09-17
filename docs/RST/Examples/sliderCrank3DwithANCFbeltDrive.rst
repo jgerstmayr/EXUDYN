@@ -418,15 +418,15 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive.p
    
    #Sensor for measuring disk0 
    mbs.AddSensor(SensorObject(objectNumber=oTighten, 
-                              fileName='Preload_overallS.txt',
+                              fileName='solution/Preload_overallS.txt',
                               outputVariableType=exu.OutputVariableType.Force))
    mbs.AddSensor(SensorBody(bodyNumber=oDisk0, 
-                            fileName='Pos_Disk0_overallS.txt',
+                            fileName='solution/Pos_Disk0_overallS.txt',
                             outputVariableType=exu.OutputVariableType.Position))
    
    
    mbs.AddSensor(SensorNode(nodeNumber=nCrank_3D, 
-                            fileName='Angular_velocity_overallS.txt',
+                            fileName='solution/Angular_velocity_overallS.txt',
                             outputVariableType=exu.OutputVariableType.AngularVelocity))
    
    
@@ -499,7 +499,7 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive.p
    import matplotlib.ticker as ticker
    
    #Import sensor data
-   data = np.loadtxt('Angular_velocity_overallS.txt', comments='#', delimiter=',')
+   data = np.loadtxt(OutputFilePath('solution/Angular_velocity_overallS.txt'), comments='#', delimiter=',')
    plt.figure(1)
    plt.plot(data[:,0], data[:,3], 'r-', label='controlled sweep')
    
@@ -516,7 +516,7 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive.p
    
    
    #Import sensor data
-   data = np.loadtxt('Preload_overallS.txt', comments='#', delimiter=',')
+   data = np.loadtxt(OutputFilePath('solution/Preload_overallS.txt'), comments='#', delimiter=',')
    plt.figure(2)
    # 1.column = time  2.column = load 
    plt.plot(data[:,0], data[:,1], 'r-', label='Preload')
@@ -536,7 +536,7 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive.p
    
    
    #Import sensor data
-   data = np.loadtxt('Pos_Disk0_overallS.txt', comments='#', delimiter=',')
+   data = np.loadtxt(OutputFilePath('solution/Pos_Disk0_overallS.txt'), comments='#', delimiter=',')
    plt.figure(3)
    # 1.column = time  2.column = x-axis
    plt.plot(data[:,0], data[:,1], 'r-', label='Position X-Axis')

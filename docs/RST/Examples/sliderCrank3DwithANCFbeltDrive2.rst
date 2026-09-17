@@ -62,7 +62,8 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive2.
                               VObjectJointRevolute2D, VObjectRigidBody2D, NodePointGround, MarkerNodePosition, 
                               MarkerNodeCoordinate, Force, SensorBody, NodeRigidBody2D, ObjectRigidBody2D, 
                               MarkerBodyRigid, ObjectJointRevolute2D, SensorLoad)
-   from exudyn.utilities import AddRigidBody, RigidBodyInertia, ObjectConnectorCoordinate, InertiaCuboid
+   from exudyn.utilities import (AddRigidBody, RigidBodyInertia, ObjectConnectorCoordinate, InertiaCuboid,
+                                 OutputFilePath)
    import exudyn.graphics as graphics #only import if it does not conflict
    from exudyn.beams import *
    
@@ -71,7 +72,7 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive2.
    
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
-   PLOTS_PATH = "plots/"
+   PLOTS_PATH = OutputFilePath("solution/plots/")
    fontSize = 20
    
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -86,7 +87,7 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive2.
        plt.legend() #show labels as legend
    
    def plotOmegaDisk0():
-       ang_vel = np.loadtxt("angular_velocity_disk0.txt", comments='#', delimiter=',')
+       ang_vel = np.loadtxt(OutputFilePath("solution/angular_velocity_disk0.txt"), comments='#', delimiter=',')
        
        fig = plt.figure(figsize=[13,5])
        plt.plot(ang_vel[:,0], ang_vel[:,3], 'r-', label='$\\omega_{disk0}$')
@@ -101,7 +102,7 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive2.
        fig.savefig(PLOTS_PATH + 'angular_velocity_disk0.pdf', format='pdf')
    
    def plotOmegaDisk1():
-       ang_vel = np.loadtxt("angular_velocity_disk1.txt", comments='#', delimiter=',')
+       ang_vel = np.loadtxt(OutputFilePath("solution/angular_velocity_disk1.txt"), comments='#', delimiter=',')
        
        fig = plt.figure(figsize=[13,5])
        plt.plot(ang_vel[:,0], ang_vel[:,3], 'r-', label='$\\omega_{disk1}$')
@@ -116,7 +117,7 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive2.
        fig.savefig(PLOTS_PATH + 'angular_velocity_disk1.pdf', format='pdf')
    
    def plotTorque():
-       ang_vel = np.loadtxt("torque.txt", comments='#', delimiter=',')
+       ang_vel = np.loadtxt(OutputFilePath("solution/torque.txt"), comments='#', delimiter=',')
        
        fig = plt.figure(figsize=[13,5])
        plt.plot(ang_vel[:,0], ang_vel[:,3], 'r-', label='$\\tau$')
@@ -131,7 +132,7 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive2.
        fig.savefig(PLOTS_PATH + 'torque.pdf', format='pdf')
    
    def plotCrankPos():
-       ang_vel = np.loadtxt("crank_pos.txt", comments='#', delimiter=',')
+       ang_vel = np.loadtxt(OutputFilePath("solution/crank_pos.txt"), comments='#', delimiter=',')
        
        fig = plt.figure(figsize=[13,5])
        plt.plot(ang_vel[:,0], ang_vel[:,1], 'r-', label='$x_{Pos}$')
@@ -149,8 +150,7 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive2.
    
    def vishelperInit():
        plt.close('all')
-       if not os.path.isdir(PLOTS_PATH):
-           os.mkdir(PLOTS_PATH)
+       os.makedirs(PLOTS_PATH, exist_ok=True) #solution/ may not exist yet (#2475)
        
    def visHelperPlot_all():
        plotOmegaDisk0()
@@ -183,11 +183,10 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive2.
    
    useGraphics = True
    export_images = useGraphics
-   PLOTS_PATH = "plots/"
+   PLOTS_PATH = OutputFilePath("solution/plots/")
    
    if export_images:
-       if not os.path.isdir(PLOTS_PATH):
-           os.mkdir(PLOTS_PATH)
+       os.makedirs(PLOTS_PATH, exist_ok=True) #solution/ may not exist yet (#2475)
    
    # belt-drive-system 
    enable_force = True          # Enable Preload Force in the belt
@@ -480,7 +479,7 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive2.
        # Velocity controller
                    
        s_disk0 = mbs.AddSensor(SensorBody(bodyNumber=oRB2D_disk0, writeToFile=True, 
-                                          fileName="angular_velocity_disk0.txt",
+                                          fileName="solution/angular_velocity_disk0.txt",
                                           outputVariableType=exu.OutputVariableType.AngularVelocity))
        
        def p_controller(mbs, t, loadVector):
@@ -498,10 +497,10 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive2.
            l_Torquedisk0 = mbs.AddLoad(LoadTorqueVector(markerNumber=mNP_disk0,loadVector=[0,0,M]))
        
        s_disk1 = mbs.AddSensor(SensorBody(bodyNumber=oRB2D_disk1, writeToFile=True, 
-                                      fileName="angular_velocity_disk1.txt",
+                                      fileName="solution/angular_velocity_disk1.txt",
                                       outputVariableType=exu.OutputVariableType.AngularVelocity))
        s_load = mbs.AddSensor(SensorLoad(loadNumber=l_Torquedisk0, writeToFile=True, 
-                                      fileName="torque.txt"))
+                                      fileName="solution/torque.txt"))
    
    
    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -745,7 +744,7 @@ You can view and download this file on Github: `sliderCrank3DwithANCFbeltDrive2.
                                                                      velocityLevel=True))
            
        s_crank = mbs.AddSensor(SensorBody(bodyNumber=oRB_crank, writeToFile=True, 
-                                      fileName="crank_pos.txt", localPosition=[0,0,-b_a0],
+                                      fileName="solution/crank_pos.txt", localPosition=[0,0,-b_a0],
                                       outputVariableType=exu.OutputVariableType.Position))
            
       

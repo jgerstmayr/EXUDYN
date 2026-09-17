@@ -4488,6 +4488,56 @@ tests were the first to exercise:
 
 Symbolic and the linear solver are steps R5.4.2 and R5.4.3.
 
+<a id="r5-4-4"></a>
+### R5.4.4 - LinkedDataMatrix can link to a matrix again
+
+**DONE 2026-09-17** (#2473).
+
+```cpp
+LinkedDataMatrixBase(const MatrixBase<T>& m)
+{
+    this->numberOfRows = m.numberOfRows;   //C2248: protected member of ANOTHER object
+    ...
+}
+```
+
+A class may reach the protected members of its own base subobject, not those of a second object
+seen through a base-class reference. The constructor therefore never compiled; it survived because
+nothing instantiated it - the code base links through the pointer constructor
+(`CMarkerSuperElement*.cpp`). It now goes through `NumberOfRows()`, `NumberOfColumns()` and
+`GetDataPointer()`, with the same `const_cast` the pointer constructor documents: linking to a
+const matrix is what the class is for.
+
+The row-range constructor `(matrix, startRows, numberOfRowsLinked)` next to it always compiled, but
+had no caller either. Both now have one: the R5.4.1 tests, which were written against the pointer
+constructor and did the row-major arithmetic by hand, now say `LinkedDataMatrix linked(original,
+startRow, linkedRows)` and check that the link starts where the arithmetic said it would.
+
+<a id="r5-4-5"></a>
+### R5.4.5 - one interface, one precondition
+
+**DONE 2026-09-17** (#2474; raised #2476).
+
+`MatrixContainer::MultMatrixVector(x, solution)` dispatched to two implementations that disagreed
+about who sizes `solution`. The dense path (`EXUmath::MultMatrixVectorTemplate`) calls
+`solution.SetNumberOfItems(matrix.NumberOfRows())`; the sparse path called `SetAll(0.)` on whatever
+it was given and then wrote `solution[item.row()]`. With an unsized result that throws in a checked
+build and writes **out of bounds** in `exudynCPPfast`, which compiles the range checks away - the
+same class of defect as the R2.10.1 segfault, one layer down.
+
+`SparseTripletMatrix::MultMatrixVector` now sizes the result to `NumberOfRows()` before zeroing it,
+and both sparse products check their sizes the way the dense templates do (`MultMatrixVectorAdd`
+only accumulates, so it keeps the dense precondition: the caller sizes it).
+
+**The tests state the fixed contract**: the R5.4.1 container case now passes **unsized** result
+vectors to both modes and expects both to size them. Mutation check: commenting out the new
+`SetNumberOfItems` produced **1 failure**, so the case really tests it.
+
+This made the size fields of `SparseTripletMatrix` load-bearing, which is how **#2476** was found:
+its three-argument constructor initialises `numberOfRows(0), numberOfColumns(0)` and never assigns
+its arguments. Nothing calls it, so nothing breaks today - raised as step R5.4.6 rather than fixed
+here (rule 9).
+
 <a id="r5-7"></a>
 ### R5.7 — rename `pytest.py` - done differently in step R3.1 (`python/pytestTemplate.py`)
 

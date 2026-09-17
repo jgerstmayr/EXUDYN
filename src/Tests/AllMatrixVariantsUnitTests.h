@@ -202,15 +202,12 @@ const lest::test matrixVariants_specific_test[] =
 
 	CASE("LinkedDataMatrix: linked to a whole matrix, writing reaches the original")
 	{
-		//NOTE: this links through the DATA POINTER, not through LinkedDataMatrix(const MatrixBase&).
-		//That constructor, and the (matrix, startRows, numberOfRows) one below it, read the
-		//protected members of another object and do not compile at all; they are dead code and
-		//these tests were their first users (#2473). The pointer constructor is the one the code
-		//base actually uses (CMarkerSuperElement*.cpp).
+		//LinkedDataMatrix(const MatrixBase&) read the protected members of another object and did
+		//not compile at all until #2473; these tests are its first users
 		Matrix original;
 		MatrixVariantsFill(original, 3, 4);
 
-		LinkedDataMatrix linked(original.GetDataPointer(), 3, 4);
+		LinkedDataMatrix linked(original);
 		EXPECT(linked.NumberOfRows() == 3);
 		EXPECT(linked.NumberOfColumns() == 4);
 		EXPECT(MatrixVariantsHoldsValues(linked, 3, 4));
@@ -232,11 +229,10 @@ const lest::test matrixVariants_specific_test[] =
 			MatrixVariantsFill(original, numberOfRows, numberOfColumns);
 
 			const Index linkedRows = 2;
-			//row-major storage: row startRow begins startRow*numberOfColumns items into the data.
-			//(LinkedDataMatrix(matrix, startRows, numberOfRowsLinked) would say this itself, but it
-			//does not compile - #2473)
-			LinkedDataMatrix linked(original.GetDataPointer() + startRow * numberOfColumns,
-									linkedRows, numberOfColumns);
+			//the constructor says this itself since #2473; before that the caller had to do the
+			//row-major pointer arithmetic (row startRow begins startRow*numberOfColumns items in)
+			LinkedDataMatrix linked(original, startRow, linkedRows);
+			EXPECT(linked.GetDataPointer() == original.GetDataPointer() + startRow * numberOfColumns);
 			EXPECT(linked.NumberOfRows() == linkedRows);
 			EXPECT(linked.NumberOfColumns() == numberOfColumns);
 
@@ -308,14 +304,13 @@ const lest::test matrixVariants_specific_test[] =
 		//the dense matrix each container hands out must be the same matrix
 		EXPECT(denseContainer.GetEXUdenseMatrix() == sparseContainer.GetEXUdenseMatrix());
 
-		//and so must a matrix-vector product, which is where the two implementations part ways
-		//NOTE: the result vector is sized by the CALLER here, because the two modes disagree about
-		//that: the dense path calls result.SetNumberOfItems(), the sparse one only SetAll(0.) and
-		//then indexes - so an unsized result throws in this build and writes out of bounds in a
-		//module compiled without range checks (#2474). One interface, two preconditions.
+		//and so must a matrix-vector product, which is where the two implementations part ways.
+		//The result vectors are deliberately left UNSIZED: both modes must size them, which is what
+		//#2474 fixed - the sparse path used to index into whatever the caller passed, throwing in a
+		//checked build and writing out of bounds in a module compiled without range checks
 		Vector x(size);
 		x[0] = 1.; x[1] = 2.; x[2] = 3.;
-		Vector denseResult(size), sparseResult(size);
+		Vector denseResult, sparseResult;
 		denseContainer.MultMatrixVector(x, denseResult);
 		sparseContainer.MultMatrixVector(x, sparseResult);
 		EXPECT(denseResult.NumberOfItems() == size);
@@ -348,10 +343,15 @@ const lest::test matrixVariants_specific_test[] =
 
 		container.SetUseDenseMatrix(false); //a sparse container with no triplets is the zero matrix
 		EXPECT(!container.UseDenseMatrix());
-		Vector x(2), result(2); //sized by the caller, see the note on #2474 above
+		//switching the mode does NOT carry the size over - the sparse matrix has its own, and the
+		//comment on SetUseDenseMatrix warns that the state is undefined until it is given one
+		EXPECT(container.NumberOfRows() == 0);
+		container.GetInternalSparseTripletMatrix().SetNumberOfRowsAndColumns(2, 2);
+
+		Vector x(2), result;
 		x[0] = 1.; x[1] = 1.;
 		container.MultMatrixVector(x, result);
-		EXPECT(result.NumberOfItems() == 2);
+		EXPECT(result.NumberOfItems() == 2); //sized by the product itself since #2474
 		EXPECT(result[0] == 0.);
 		EXPECT(result[1] == 0.);
 	},
