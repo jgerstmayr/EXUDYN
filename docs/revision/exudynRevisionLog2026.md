@@ -5167,6 +5167,41 @@ models under `useGraphics`, and three models write generated meshes into the tra
 directory through plain Python calls, which this setting does not reach. That is step R5.13.1.
 
 
+<a id="r5-13-3"></a>
+### R5.13.3 - generated FEM data leaves the tracked input directory
+
+**DONE 2026-09-17** (#2491; split out of R5.13.1).
+
+`testData/` holds **tracked input**: Abaqus and Ansys matrices, the reference mesh of
+`NGsolveCMStest`. Twelve examples also *wrote* there - `fileName = 'testData/netgenBrick'` and the
+like - so every run of `runTestExamples.py` left `netgenBrick.npz`, `netgenHinge.npz`,
+`netgenFFRF2.npz`, `FMBStest1.npz`, `modalAnalysisFEM.npz` and `test.hdf5` sitting untracked among
+the tracked files. This session alone I had to unstage them from three commits and nearly committed
+them once; that is the actual cost, and it is why this was worth doing before the larger half of
+R5.13.1.
+
+They now go through `OutputFilePath('solution/...', '<model>')`, the idiom the test models already
+use. Two details:
+
+- `SaveDictToHDF5` does **not** create the directory, unlike `FEMinterface.SaveToFile`, so the two
+  HDF5 sites (`testHDF5loadSave`, `NGsolvePistonEngine`) call `os.makedirs` themselves.
+- `NGsolveModalAnalysis` had `'../Examples/testData/modalAnalysisFEM'` with the comment *"use
+  ../Examples for running out of TestModels dir!"*. The output directory makes that unnecessary;
+  the path is now the same as everywhere else.
+
+**Verified by running all 171 examples with the old artifacts moved away first**: the same 5
+pre-existing failures, and afterwards `git status` shows no file in any `testData/` directory. The
+meshes land in the per-example output directory
+(`logsTmp/exampleOutput/objectFFRFreducedOrderNetgen/solution/netgenBrick.npz`). A direct run with
+no output directory set - what a user does - writes into `Examples/solution/`, which is ignored;
+checked with `testHDF5loadSave.py`. Runtime is unchanged at ~46 s, so the loss of mesh sharing
+between examples costs nothing measurable.
+
+**Noticed, not touched** (rule 9): `Examples/testData/netgenBrick.npy` and `netgenHinge.npy` are
+tracked fall-back meshes that nothing can load any more - the default mode is NPZ, and NPY does not
+work under NumPy 2 at all. They are dead weight, but deleting tracked files needs the maintainer.
+`NGsolvePistonEngine` also exports three `.mesh` files into `testData/` inside `if False:` blocks.
+
 <a id="r5-13-2"></a>
 ### R5.13.2 - five examples stop writing next to themselves
 

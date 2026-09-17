@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.128.dev1, 
++  Exudyn version = 1.11.129.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2491, 
-+  Number of resolved issues = 2201 (128 in current version), 
++  Number of issues = 2492, 
++  Number of resolved issues = 2202 (129 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.129: :textred:`resolved BUG 2491` : examples write generated FEM data into the tracked testData/ input directory 
+    - issue author: Claude-JG
+    - description:  Twelve examples save meshes and FEM data under testData/ - the directory that holds the tracked INPUT files - so every run of runTestExamples.py leaves untracked netgenBrick.npz; netgenHinge.npz; netgenFFRF2.npz; FMBStest1.npz; modalAnalysisFEM.npz and test.hdf5 in the working tree; where they are easily committed by accident. Output belongs under solution/; which is ignored; through OutputFilePath as the test models already do. revision2026 step R5.13.1
+    - **notes:** Twelve examples now write their generated FEM data through OutputFilePath into solution/ instead of testData/: ten FEMinterface caches; and the two SaveDictToHDF5 sites which also create the directory themselves because SaveDictToHDF5 - unlike FEMinterface.SaveToFile - does not. Verified by running all 171 examples with the artifacts removed first: the same 5 pre-existing failures; no file left in any testData directory; the meshes land in the per-example output directory. A direct user run without an output directory writes into Examples/solution/; which is ignored. revision2026 step R5.13.3
+    - date resolved: **2026-09-17 20:23**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.128: :textred:`resolved BUG 2471` : FEMinterface NPZ files store a C++ enum and cannot be read by a second module 
     - issue author: Claude-JG
     - description:  FEMinterface.SaveToFile(mode=NPZ) writes postProcessingModes as a dict whose outputVariableType is an exudyn.exudynCPP.OutputVariableType - a pybind type. np.load(allow_pickle=True) therefore imports exudyn.exudynCPP when reading it, and in a process that already loaded exudynCPPfast this raises ImportError: generic_type: type "Real" is already registered. Measured 2026-09-17 on testData/netgenTestMesh.npz: every other field (nodes, elements, massMatrix, stiffnessMatrix, surface, modeBasis, eigenValues, metaData) loads under both modules; only this one fails. An NPZ is meant to hold plain arrays: store the enum by name and convert back on load. Until then NGsolveCMStest stays in NotJudgedOutsideRegularModule(). revision2026 step R2.10.4.

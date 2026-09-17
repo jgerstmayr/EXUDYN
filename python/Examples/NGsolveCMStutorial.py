@@ -27,7 +27,7 @@ import time
 
 
 useGraphics = True
-fileName = 'testData/netgenHinge' #for load/save of FEM data
+fileName = OutputFilePath('solution/netgenHinge', 'NGsolveCMStutorial') #generated output, not input: goes to the ignored solution/ (#2491)
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #netgen/meshing part:

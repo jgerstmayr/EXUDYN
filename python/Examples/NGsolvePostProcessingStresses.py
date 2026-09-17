@@ -36,7 +36,7 @@ import exudyn.utilities as eu
 import numpy as np
 
 useGraphics = True
-fileName = 'testData/netgenBrick' #for load/save of FEM data
+fileName = OutputFilePath('solution/netgenBrick', 'NGsolvePostProcessingStresses') #generated output, not input: goes to the ignored solution/ (#2491)
 
 
 if __name__ == '__main__': #needed to use multiprocessing for mode computation

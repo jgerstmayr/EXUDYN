@@ -688,7 +688,10 @@ if True:
         dictMesh['pistonsRotList'] = pistonsRotList
         dictMesh['pistonsPosList'] = pistonsPosList
 
-        fileName = 'testData/pistonEngineNGmesh.hdf5'
+        import os
+        #generated output, not input: goes to the ignored solution/ (#2491)
+        fileName = OutputFilePath('solution/pistonEngineNGmesh.hdf5', 'NGsolvePistonEngine')
+        os.makedirs(os.path.dirname(fileName), exist_ok=True)
         SaveDictToHDF5(fileName, dictMesh)
 
 

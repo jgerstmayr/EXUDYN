@@ -39,7 +39,7 @@ You can view and download this file on Github: `NGsolveCMStutorial.py <https://g
    
    
    useGraphics = True
-   fileName = 'testData/netgenHinge' #for load/save of FEM data
+   fileName = OutputFilePath('solution/netgenHinge', 'NGsolveCMStutorial') #generated output, not input: goes to the ignored solution/ (#2491)
    
    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
    #netgen/meshing part:

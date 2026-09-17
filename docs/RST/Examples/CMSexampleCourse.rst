@@ -36,7 +36,7 @@ You can view and download this file on Github: `CMSexampleCourse.py <https://git
    computeStresses = False #takes some time
    loadStresses = False #set True only if already computed previously; may lead to severe problems if wrong modes are loaded!!!!
    
-   fileName = 'testData/FMBStest1' #for load/save of FEM data
+   fileName = OutputFilePath('solution/FMBStest1', 'CMSexampleCourse') #generated output, not input: goes to the ignored solution/ (#2491)
    
    
    # # Parameter Definition

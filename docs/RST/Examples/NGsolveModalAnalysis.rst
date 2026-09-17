@@ -38,7 +38,8 @@ You can view and download this file on Github: `NGsolveModalAnalysis.py <https:/
    import numpy as np
    
    useGraphics = True
-   fileName = '../Examples/testData/modalAnalysisFEM' #for load/save of FEM data; use ../Examples for running out of TestModels dir!
+   fileName = OutputFilePath('solution/modalAnalysisFEM', 'NGsolveModalAnalysis') #generated output, not input: goes to the ignored solution/ (#2491)
+   #(the path no longer needs '../Examples' to survive a run out of TestModels)
    
    
    

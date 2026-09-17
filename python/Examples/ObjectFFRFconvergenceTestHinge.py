@@ -35,7 +35,7 @@ import exudyn.utilities as eu
 import numpy as np
 
 useGraphics = True
-fileName = 'testData/netgenHinge' #for load/save of FEM data
+fileName = OutputFilePath('solution/netgenHinge', 'ObjectFFRFconvergenceTestHinge') #generated output, not input: goes to the ignored solution/ (#2491)
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
 #netgen/meshing part:

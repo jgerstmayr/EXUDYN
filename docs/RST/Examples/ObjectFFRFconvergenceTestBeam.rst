@@ -48,7 +48,7 @@ You can view and download this file on Github: `ObjectFFRFconvergenceTestBeam.py
    import numpy as np
    
    useGraphics = True
-   fileName = 'testData/netgenLshape' #for load/save of FEM data
+   fileName = OutputFilePath('solution/netgenLshape', 'ObjectFFRFconvergenceTestBeam') #generated output, not input: goes to the ignored solution/ (#2491)
    
    
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++

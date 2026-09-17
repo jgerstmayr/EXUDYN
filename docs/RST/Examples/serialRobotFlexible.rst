@@ -45,9 +45,10 @@ You can view and download this file on Github: `serialRobotFlexible.py <https://
    
    sensorWriteToFile = True
    
-   fileNames = ['testData/netgenRobotBase',
-                'testData/netgenRobotArm0',
-                'testData/netgenRobotArm1',
+   #generated output, not input: goes to the ignored solution/ (#2491)
+   fileNames = [OutputFilePath('solution/netgenRobotBase', 'serialRobotFlexible'),
+                OutputFilePath('solution/netgenRobotArm0', 'serialRobotFlexible'),
+                OutputFilePath('solution/netgenRobotArm1', 'serialRobotFlexible'),
                 ] #for load/save of FEM data
    
    

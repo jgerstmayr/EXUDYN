@@ -38,7 +38,7 @@ You can view and download this file on Github: `NGsolveFFRF.py <https://github.c
    import numpy as np
    
    useGraphics = True
-   fileName = 'testData/netgenFFRF2' #for load/save of FEM data
+   fileName = OutputFilePath('solution/netgenFFRF2', 'NGsolveFFRF') #generated output, not input: goes to the ignored solution/ (#2491)
    
    
    #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

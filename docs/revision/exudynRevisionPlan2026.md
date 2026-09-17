@@ -830,6 +830,8 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     (`netgenTestMesh2.hdf5/.pkl`, `netgenTestMesh22.npz`), and `geneticOptimizationTest`,
     `pickleCopyMbs` and the FEM tests write `.npz`/`.pkl`/`.h5` files through plain Python calls,
     which `exudyn.config.outputDirectory` does not reach - these need the path in the model.
+    *(the examples half of this became R5.13.3 and is done; what remains here is the writing of
+    solution and sensor files that nothing reads)*
 
 <a id="r5-13-2"></a>
 **R5.13.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-13-2) — *(sub-step of R5.13)*
@@ -839,6 +841,13 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     examples into the current directory plus `plots/`. Only `solution/` is ignored, so each direct
     run left untracked, unignored files behind. All of it now goes through `solution/`, and the
     reads through `OutputFilePath`.
+
+<a id="r5-13-3"></a>
+**R5.13.3** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-13-3) — *(sub-step of R5.13,
+    split out of R5.13.1)* **Generated FEM data leaves the tracked input directory** (#2491): twelve
+    examples wrote meshes and FEM data into `testData/`, so every examples run left untracked
+    `.npz`/`.hdf5` files next to the tracked inputs. They now go through `OutputFilePath` into
+    `solution/`.
 
 <a id="r5-14"></a>
 **R5.14** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-14) — **Dev tools are declared**:
