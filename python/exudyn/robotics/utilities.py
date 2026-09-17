@@ -123,7 +123,8 @@ def GetRoboticsToolboxInternalModel(modelName='', ignoreURDFerrors=True):
         #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++    
         #now try to find the path in the robotFunc (this is a dirty hack, 
         #  but RTB does not deliver the urdf file, nor the paths!!!)    
-        import inspect, re
+        import inspect
+        import re
         functionSourceCode = inspect.getsource(robotFunc)
         
         pattern = r'URDF_read\(\s*"([^"]+)"\s*\)'

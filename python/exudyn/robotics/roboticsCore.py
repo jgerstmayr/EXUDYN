@@ -22,16 +22,13 @@ import numpy as np
 import exudyn
 
 import exudyn.itemInterface as eii
-import exudyn.basicUtilities as ebu
 import exudyn.advancedUtilities as eau
 
 #import exudyn.utilities as eut
 import exudyn.rigidBodyUtilities as erb
-import exudyn.graphicsDataUtilities as egd
 import exudyn.graphics as graphics
 
 from copy import copy, deepcopy
-import time #for timer in InverseKinematicsNumerical
 
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
@@ -159,7 +156,7 @@ class RobotLink:
         self.jointType = jointType
         self.parent = parent
         self.visualization = deepcopy(visualization)
-        if PDcontrol[0] != None:
+        if PDcontrol[0] is not None:
             self.PDcontrol = PDcontrol
 
     def SetPDcontrol(self, Pvalue, Dvalue):
@@ -455,7 +452,7 @@ class Robot:
             exudyn.Print("ERROR: number of homogeneous transformations (HT) greater than number of links")
 
         #link index is usually the last link contained in HT (all subsequent columns in jacobian would be anyway zero):
-        if linkIndex == None:
+        if linkIndex is None:
             linkIndex = n-1
     
         Jomega = np.zeros((3,n))#rotation part of jacobian
@@ -732,7 +729,7 @@ class Robot:
 
         #delete: lastMarker = baseMarker
         lastMarkerRotation = np.identity(3) #base rotation included in marker
-        if rotationMarkerBase != None:
+        if rotationMarkerBase is not None:
             lastMarkerRotation = rotationMarkerBase
             
         qRef = self.referenceConfiguration
@@ -1373,7 +1370,7 @@ class InverseKinematicsNumerical():
         if T.shape != (4,4) or round(np.linalg.det(T[0:3, 0:3]),10) != 1.0:  # check if is homogeneous TF
             raise ValueError('inverse Kinematics only possible for homogeneous transformations, represented by a 4x4 array with structure of [[R, t], [0,0,0,1]].')
         q = None
-        if not(hasattr(q0, '__iter__')) and q0 == None: #replace with: q0 is None
+        if not(hasattr(q0, '__iter__')) and q0 is None: #replace with: q0 is None
             q0 = self.mbsIK.systemData.GetODE2Coordinates() # + (np.random.random(self.nLinks)-0.5)*0.1 # [0]*self.nLinks
         
         #always set q0 as zero-configuration for springs!

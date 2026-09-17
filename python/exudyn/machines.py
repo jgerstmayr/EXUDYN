@@ -312,25 +312,25 @@ def GetBallBearingData(axis, outsideDiameter, boreDiameter, width, nBalls,
     boreRadius = 0.5*boreDiameter
     
     #some default parameters (these are rough approximations!)
-    if radiusBalls==None:
+    if radiusBalls is None:
         radiusBalls = 0.58*(outsideRadius-boreRadius)
-    if radiusCage==None:
+    if radiusCage is None:
         radiusCage = 0.5*(outsideRadius+boreRadius)
-    if innerGrooveRadius==None:
+    if innerGrooveRadius is None:
         innerGrooveRadius = 1.04*radiusBalls
-    if outerGrooveRadius==None:
+    if outerGrooveRadius is None:
         outerGrooveRadius = 1.04*radiusBalls
-    if innerRingShoulderRadius==None:
+    if innerRingShoulderRadius is None:
         innerRingShoulderRadius=radiusCage-0.3*radiusBalls
-    if outerRingShoulderRadius==None:
+    if outerRingShoulderRadius is None:
         outerRingShoulderRadius=radiusCage+0.3*radiusBalls
-    if widthCage==None:
+    if widthCage is None:
         widthCage=2.5*radiusBalls #just for drawing
-    if heightCage==None:
+    if heightCage is None:
         heightCage=(outerRingShoulderRadius-innerRingShoulderRadius)*0.7 #just for drawing
-    if outerEdgeChamfer==None:
+    if outerEdgeChamfer is None:
         outerEdgeChamfer=radiusBalls/8
-    if innerEdgeChamfer==None:
+    if innerEdgeChamfer is None:
         innerEdgeChamfer=radiusBalls/8
     
     lenAxis = np.linalg.norm(axis)

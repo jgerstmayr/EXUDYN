@@ -138,7 +138,7 @@ class OpenAIGymInterfaceEnv(Env):
         """
         import time
 
-        writeToFile = solutionFileName != None
+        writeToFile = solutionFileName is not None
         self.simulationSettings.solutionSettings.writeSolutionToFile = writeToFile
         if writeToFile:
             self.simulationSettings.solutionSettings.coordinatesSolutionFileName = solutionFileName
@@ -150,7 +150,7 @@ class OpenAIGymInterfaceEnv(Env):
     
         ts = -time.time()
         for _ in range(numberOfSteps):
-            if model != None: #use model to predict action (e.g., controller)
+            if model is not None: #use model to predict action (e.g., controller)
                 action, _state = model.predict(observation, deterministic=True)
             else:
                 action = self.action_space.sample()
@@ -319,7 +319,7 @@ class OpenAIGymInterfaceEnv(Env):
     def render(self, mode="human"):
         """openAI gym interface function to render the system
         """
-        if self.rendererRunning==None and self.useRenderer:
+        if self.rendererRunning is None and self.useRenderer:
             self.SC.renderer.Start()
             self.rendererRunning = True
 
@@ -327,7 +327,7 @@ class OpenAIGymInterfaceEnv(Env):
         """openAI gym interface function to close system after learning or simulation
         """
         self.dynamicSolver.FinalizeSolver(self.mbs, self.simulationSettings)
-        if self.rendererRunning==True:
+        if self.rendererRunning:
             # SC.renderer.DoIdleTasks()
             self.SC.renderer.Stop() #safely close rendering window!
 

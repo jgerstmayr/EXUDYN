@@ -630,7 +630,8 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     | E731, F541 | 2 | cosmetic |
     | **total** | **~165** | over 34 000 lines - the package is in good shape |
 
-    *The three decisions, restated as questions with what each answer costs:*
+    *The three decisions, restated as questions with what each answer costs* - **all five (D1-D5)
+    were answered by the maintainer on 2026-09-17 with the recommendation given in each case**:
 
     - **D1 - which rules?** (a) the default F + E4/E7/E9, ~165 findings, all of them about
       correctness; (b) the default plus a small opt-in family such as **B** (flake8-bugbear: mutable
@@ -705,7 +706,7 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
       as their own sub-steps, and let the baseline shrink.
 
     Sub-steps R5.5.1 and R5.5.2 below are defects found while writing this and are independent of
-    every decision above.
+    every decision above. Half A is carried out in R5.5.3, half B in R5.5.4.
 
 <a id="r5-5-1"></a>
 **R5.5.1** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-1) — *(sub-step of R5.5)*
@@ -721,6 +722,20 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     settings classes' `GetDictionary`/`SetDictionary` have no stub entry, so an IDE offers no
     completion and no signature for them. Depends on R5.5.1 (a stub that does not parse cannot be
     checked) and on D4 (stubtest is what would keep it true afterwards).
+
+<a id="r5-5-3"></a>
+**R5.5.3** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-3) — *(sub-step of R5.5,
+    half A; decisions D1-D3)* **ruff runs over `python/exudyn/`** (#2487): rule set written down in
+    `pyproject.toml`, `tools/checkPython.py` judging it against `tools/ci/ruffBaseline.txt`, in the
+    commit gate. 335 findings at introduction, **107 fixed outright**, 228 tolerated and meant to
+    shrink. The measured count was 565, not the ~165 estimated when R5.5 was written.
+
+<a id="r5-5-4"></a>
+**R5.5.4** *(sub-step of R5.5, half B; decisions D4-D5)* **`stubtest` compares the stubs against
+    the module.** `python -m mypy.stubtest exudyn` imports the module and reports every name and
+    signature that the stub and the module disagree about; the first run is frozen as a baseline
+    the same way R5.5.3 does it, and R5.5.2 is then the first entry to work off. Needs R5.5.1
+    (done): a stub that does not parse cannot be checked at all.
 
 <a id="r5-6"></a>
 **R5.6** Add an ASan/UBSan Linux job. For a C++ library invoking arbitrary user callbacks this catches

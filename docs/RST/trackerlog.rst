@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.123.dev1, 
++  Exudyn version = 1.11.124.dev1, 
 +  last change =  2026-09-17, 
 +  Number of issues = 2488, 
-+  Number of resolved issues = 2196 (123 in current version), 
++  Number of resolved issues = 2197 (124 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.124: resolved Issue 2487: no linter runs over the shipped Python package (extension)
+    - issue author: Claude-JG
+    - description:  python/exudyn is 34000 lines and nothing checks it for undefined names; unused imports or bare except: - the only linter in use is pydoclint; which only judges docstrings. ruff is introduced with an explicitly written rule set (F and E4/E7/E9); the findings present at introduction are tolerated through a baseline and a new finding fails the check. revision2026 step R5.5
+    - **notes:** ruff runs over python/exudyn with the rule set written down in pyproject.toml (F and E4/E7/E9; E701/E702/E703 switched off as house style) and tools/checkPython.py judges it against tools/ci/ruffBaseline.txt: the findings present at introduction are tolerated; a new one fails. 335 findings at introduction; 107 of them fixed outright (52 == None; 11 == True/False; 13 not-in/not-is; 21 unused imports and 3 deliberate re-exports marked noqa; one multi-import line; one empty f-string) leaving 228 in the baseline - bare except:; type() comparisons; star imports and unused variables; each of which needs a judgement rather than a rewrite. revision2026 step R5.5
+    - date resolved: **2026-09-17 18:37**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.123: :textred:`resolved BUG 2486` : generated __init__.pyi is not valid Python 
     - issue author: Claude-JG
     - description:  The stub file python/exudyn/__init__.pyi does not parse: one documentation line of the OutputVariableType description starts at column 0; createStubFiles.py takes that as the end of the class block and writes the rest of the class body to the top level. All five generated stub fragments parse - only the merged product does not; indenting that line makes the whole file parse. Nothing in the generator checks that the stub it wrote is valid Python. revision2026 step R5.5.1
@@ -7465,11 +7471,6 @@ Version 0.1
 ***********
 Open issues
 ***********
-
- * **open issue 2487:** no linter runs over the shipped Python package
-    - issue author: Claude-JG
-    - description:  python/exudyn is 34000 lines and nothing checks it for undefined names; unused imports or bare except: - the only linter in use is pydoclint; which only judges docstrings. ruff is introduced with an explicitly written rule set (F and E4/E7/E9); the findings present at introduction are tolerated through a baseline and a new finding fails the check. revision2026 step R5.5
-    - date raised: 2026-09-17 
 
  * :textblue:`open issue 2455:` pydoclint reports two violations in exudyn/__init__.py RequireVersion
     - issue author: Claude-JG

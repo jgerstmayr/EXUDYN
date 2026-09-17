@@ -276,7 +276,7 @@ def FileNameToMode(fileName, mode):
     elif fileName.lower().endswith('.pkl'):
         fileExtension = '.pkl'
     else:
-        if mode == None: #default!
+        if mode is None: #default!
             fileExtension = '.npz'
             mode = 'NPZ'
         else:
@@ -739,7 +739,7 @@ def ReadElementsFromAnsysTxt(fileName, verbose=False):
     if verbose: exu.Print("create element dictionaries...")
     for lineCtr in range(numberOfElements):
         line = fileLines[lineCtr]
-        if not(elementTypeList[lineCtr] in elementsDict):
+        if elementTypeList[lineCtr] not in elementsDict:
             elementsDict[elementTypeList[lineCtr]] = []
         elementsDict[elementTypeList[lineCtr]] += [elementConnectivityList[lineCtr]]
 
@@ -1269,7 +1269,7 @@ class ObjectFFRFreducedOrderInterface:
             roundStiffnessMatrix: use this value to set entries of reduced stiffness matrix to zero which are below the treshold
         """
  
-        if femInterface!=None:
+        if femInterface is not None:
             #self.femInterface = femInterface #2023-04-20: removed in order to consistenly store class
             self.modeBasis = femInterface.modeBasis['matrix']
             nodeArray = femInterface.GetNodePositionsAsArray()
@@ -2114,10 +2114,10 @@ class FEMinterface:
             if mode == 'NPY':
                 with open(fileName+fileExtension, 'rb') as f:
                     fileVersion=forceVersion
-                    if forceVersion==None or forceVersion>0:
+                    if forceVersion is None or forceVersion>0:
                         versionData = np.load(f)
                         #exu.Print('LoadFromFile:file version:', versionData)
-                        if forceVersion == None:
+                        if forceVersion is None:
                             fileVersion = int(versionData[0])
                         
                     self.nodes = np.load(f, allow_pickle=True).all()   #allow_pickle=True for lists or dictionaries; .all() for dictionaries
@@ -2263,7 +2263,7 @@ class FEMinterface:
                 elementTypeName=line.split(',')[1].split('=')[1].strip()
                 if verbose: exu.Print("found *Element in line", lineCnt, 'element type=',elementTypeName)
                 
-                if not (elementTypeName in availableElementTypesNodes):
+                if elementTypeName not in availableElementTypesNodes:
                     raise ValueError("ImportFromAbaqusInputFile: element type '"+elementTypeName+"' can not yet be imported")
                 
             lineCnt += 1
@@ -2272,7 +2272,7 @@ class FEMinterface:
             raise ValueError("ImportFromAbaqusInputFile: did not find keyword *Element ")
     
         elementType= elementTypeConversion[elementTypeName]
-        if not(elementTypeName in elementsDict):
+        if elementTypeName not in elementsDict:
             elementsDict[elementType] = []
     
         #+++++++++++++++++++++++++++++++++++++++++++++
@@ -2417,7 +2417,7 @@ class FEMinterface:
         try:
             ngMesh = mesh.ngmesh
             bcList = mesh.GetBoundaries()
-            if boundaryNamesList == None:
+            if boundaryNamesList is None:
                 boundaryNamesList = []
                 for name in bcList:
                     if name not in boundaryNamesList:
@@ -3240,7 +3240,7 @@ class FEMinterface:
                             testElements = []
                             for nn in actSurface:
                                 for elNum in nodes2elements[nn]:
-                                    if not (elNum in testElements):
+                                    if elNum not in testElements:
                                         testElements += [elNum]
                             
                             #exu.Print("  testElements=",testElements)
@@ -4327,7 +4327,7 @@ class FEMinterface:
 #        xBlock = np.kron(np.eye(nNodes), X) #create big block-diagonal matrix
 #        G=np.dot(xBlock,M)
         
-        if self.NumberOfCoordinates() > 1000 and useSparseSolver == False:
+        if self.NumberOfCoordinates() > 1000 and not useSparseSolver:
             exu.Print('WARNING: ComputeCampbellDiagram(...): system has more than 1000 coordinates, set useSparseSolver=True')
             if self.NumberOfCoordinates() > 5000:
                 raise ValueError('ComputeCampbellDiagram(...): system has more than 5000 coordinates, MUST set useSparseSolver=True')
@@ -4379,7 +4379,7 @@ class FEMinterface:
                 listEigAbs = []
                 for i in range(len(ev)):
                     v=abs(ev[i].imag/(2*np.pi))
-                    if not (v in listEigAbs):
+                    if v not in listEigAbs:
                         listEigAbs += [v]
     
                 listEigAbs = np.sort(listEigAbs)
@@ -4449,7 +4449,7 @@ class FEMinterface:
                 listEigAbs = []
                 for i in range(len(ev)):
                     v=abs(ev[i].imag/(2*np.pi))
-                    if not (v in listEigAbs):
+                    if v not in listEigAbs:
                         listEigAbs += [v]
     
                 listEigAbs = np.sort(listEigAbs)

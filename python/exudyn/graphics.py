@@ -301,7 +301,7 @@ def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
             'normals':np.array(normals), 
             'triangles':np.array(triangles)}
     
-    if type(addEdges) == bool and addEdges == True:
+    if type(addEdges) == bool and addEdges:
         addEdges = 3
 
     if addEdges > 0 and abs(majorAngleMax-majorAngleMin-pi) <= 1e-7 and innerRadius is None:
@@ -2125,7 +2125,7 @@ def BoundingBox(graphicsData):
             [bmin, bmax] = _merge_bbox(bmin, bmax, cmin, cmax)
         return [bmin, bmax]
     else:
-        raise ValueError(f"BoundingBox: graphicsData must be dict or list")
+        raise ValueError("BoundingBox: graphicsData must be dict or list")
 
 
 def FromPointsAndTrigs(points, triangles, color=[0.,0.,0.,1.], normals=None):

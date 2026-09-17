@@ -81,7 +81,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: LoadURDFrobot
 ^^^^^^^^^^^^^^^^^^^^^^^
-`LoadURDFrobot <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/utilities.py\#L165>`__\ (\ ``urdfFilePath``\ , \ ``urdfBasePath``\ , \ ``gripperLinks = None``\ , \ ``manufacturer = ''``\ )
+`LoadURDFrobot <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/utilities.py\#L166>`__\ (\ ``urdfFilePath``\ , \ ``urdfBasePath``\ , \ ``gripperLinks = None``\ , \ ``manufacturer = ''``\ )
 
 - | \ *function description*\ :
   | Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland. Use this function for loading urdf/xacro files.
@@ -103,7 +103,7 @@ Function: LoadURDFrobot
 
 Function: GetURDFrobotData
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`GetURDFrobotData <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/utilities.py\#L211>`__\ (\ ``robot``\ , \ ``urdf = None``\ , \ ``linkColorList = None``\ , \ ``staticJointValues = None``\ , \ ``returnStaticGraphicsList = False``\ , \ ``exportMesh = False``\ , \ ``verbose = 1``\ )
+`GetURDFrobotData <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/utilities.py\#L212>`__\ (\ ``robot``\ , \ ``urdf = None``\ , \ ``linkColorList = None``\ , \ ``staticJointValues = None``\ , \ ``returnStaticGraphicsList = False``\ , \ ``exportMesh = False``\ , \ ``verbose = 1``\ )
 
 - | \ *function description*\ :
   | Interface to roboticstoolbox (RTB) of P. Corke and J. Haviland and Pymeshlab to import robot model and visualization into a struture readable by Exudyn. NOTE that this function is to be seen as a starting point for import, while some models have to be imported differently, in particular for joints that are not revolute or prismatic (in this case, copy function into local file and modify)!

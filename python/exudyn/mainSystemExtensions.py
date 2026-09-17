@@ -26,12 +26,11 @@ from exudyn.basicUtilities import Normalize
 
 from exudyn.rigidBodyUtilities import ComputeOrthonormalBasis, \
     RotationMatrix2EulerParameters, AngularVelocity2EulerParameters_t, RotationMatrix2RotXYZ, AngularVelocity2RotXYZ_t, \
-    RotationMatrix2RotationVector, HT0, HT2translation, HT2rotationMatrix, RotationMatrixZ
+    RotationMatrix2RotationVector, HT2translation, HT2rotationMatrix
 
 import exudyn.itemInterface as eii
 from exudyn.itemInterface import ObjectGround, VObjectGround, SensorUserFunction
-from exudyn.advancedUtilities import RaiseTypeError, IsVector, IsReal, ExpectedType, IsValidObjectIndex, IsValidNodeIndex, \
-                                    IsValidRealInt, IsValidPRealInt, IsValidURealInt, IsIntVector, \
+from exudyn.advancedUtilities import RaiseTypeError, IsVector, ExpectedType, IsValidObjectIndex, IsValidRealInt, IsValidPRealInt, IsValidURealInt, IsIntVector, \
                                     IsValidBool, IsSquareMatrix, IsNone, IsNotNone, IsInteger, IsValidInt
 
 import numpy as np
@@ -3195,7 +3194,7 @@ def __UFsensorDistance(mbs, t, sensorNumbers, factors, configuration):
     gContact = mbs.GetGeneralContact(generalContactIndex)
     data = gContact.ShortestDistanceAlongLine(pStart = p0, direction = dirSensor, 
                                            minDistance=minDistance, maxDistance=maxDistance,
-                                           cylinderRadius=cylinderRadius, asDictionary=(measureVelocity==True),
+                                           cylinderRadius=cylinderRadius, asDictionary=(measureVelocity),
                                            typeIndex=selectedTypeIndex,
                                            )
     if measureVelocity:

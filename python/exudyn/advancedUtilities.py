@@ -160,11 +160,11 @@ def RaiseTypeError(where='', argumentName='', received = None, expectedType = No
         elif t == ExpectedType.Matrix:
             errStr += ' (as list of lists or numpy array)'
         
-        if dim != None:
+        if dim is not None:
             ncols = cols
-            if t == ExpectedType.Matrix and cols == None: 
+            if t == ExpectedType.Matrix and cols is None: 
                 ncols = dim  #square Matrix
-            if ncols != None:
+            if ncols is not None:
                 errStr += ', expected size = (' + str(dim) + ',' + str(ncols) + ')'
             else:
                 errStr += ', expected size = ' + str(dim) 
@@ -256,7 +256,7 @@ def IsVector(v, expectedSize=None):
     if type(v) != list and type(v) != np.ndarray:
         return False
 
-    if expectedSize!=None:
+    if expectedSize is not None:
         if len(v) != expectedSize:
             return False
 
@@ -271,7 +271,7 @@ def IsIntVector(v, expectedSize=None):
     if type(v) != list and type(v) != np.ndarray:
         return False
 
-    if expectedSize!=None:
+    if expectedSize is not None:
         if len(v) != expectedSize:
             return False
 
@@ -287,12 +287,12 @@ def IsSquareMatrix(m, expectedSize=None):
     if type(m) != list and type(m) != np.ndarray:
         return False
 
-    if expectedSize!=None:
+    if expectedSize is not None:
         if len(m) != expectedSize:
             return False
 
     for y in m: #works both in list of lists and np.array (over rows)
-        if expectedSize!=None and len(y) != expectedSize: 
+        if expectedSize is not None and len(y) != expectedSize: 
             return False
         for x in y:
             if not IsValidRealInt(x): return False
@@ -783,9 +783,9 @@ def ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex=None, i
         exudyn.Print("Argument Names:", fnArgs)
 
 
-    if itemTypeName != None:
+    if itemTypeName is not None:
         itemTypeNameCopy = itemTypeName
-        if itemIndex != None: raise ValueError('ConvertFunctionToSymbolic: if itemTypeName is provided, itemIndex must be None')
+        if itemIndex is not None: raise ValueError('ConvertFunctionToSymbolic: if itemTypeName is provided, itemIndex must be None')
     elif itemIndex == -1: #MainSystem or other function
         itemTypeNameCopy = 'MainSystem'
     else:

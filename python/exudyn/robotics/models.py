@@ -16,12 +16,10 @@
 from exudyn.docmeta import docmeta
 import numpy as np
 import exudyn
-import exudyn.graphicsDataUtilities as gdu
 import exudyn.graphics as graphics
 import exudyn.robotics as rob
-from exudyn.rigidBodyUtilities import HT2rotationMatrix, HT2translation, Skew, HTtranslate, InverseHT,\
-                                      HT0, HTrotateY, HTrotateX, RigidBodyInertia
-import scipy.io
+from exudyn.rigidBodyUtilities import HTtranslate, InverseHT,\
+                                      HTrotateY, HTrotateX, RigidBodyInertia
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -584,7 +582,7 @@ def LinkDict2Robot(robotLinkDict, robotClass=None):
     """
     dhMode = robotLinkDict['dhMode']
     
-    if robotClass == None:
+    if robotClass is None:
         gravity = [0,0,0]
         if 'gravity' in robotLinkDict:
             gravity = robotLinkDict['gravity']
@@ -645,7 +643,7 @@ def LinkDictModDHKK2Robot(robotLinkDict, robotClass=None):
     exudyn.Print('WARNING: LinkDictModDHKK2Robot: untested')
     dhMode = robotLinkDict['dhMode']
     
-    if robotClass == None:
+    if robotClass is None:
         gravity = [0,0,0]
         if 'gravity' in robotLinkDict:
             gravity = robotLinkDict['gravity']

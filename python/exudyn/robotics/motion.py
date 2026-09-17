@@ -14,7 +14,7 @@
 #constants and fixed structures:
 import numpy as np
 
-from copy import copy, deepcopy
+from copy import copy
 import exudyn
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
@@ -227,7 +227,7 @@ class ProfilePTP:
             raise ValueError('ProfilePTP: maxVelocities must by > 0')
         if min(list(maxAccelerations)+[1]) <= 0:
             raise ValueError('ProfilePTP: maxAccelerations must by > 0')
-        if syncAccTimes==True:
+        if syncAccTimes:
             raise ValueError('ProfilePTP: syncAccTime must be False; other case yet not implemented')
         
     def GetBasicProfile(self, initialTime, initialCoordinates,

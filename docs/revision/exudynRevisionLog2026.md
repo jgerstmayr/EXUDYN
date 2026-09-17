@@ -4716,6 +4716,57 @@ the stub fragments are merged by indentation; a class docstring line starting at
 Without it, the next unindented documentation line breaks the stub again and nothing says so: the
 file is never imported, never compiled, and only a type checker or an IDE would notice - quietly.
 
+<a id="r5-5-3"></a>
+### R5.5.3 - ruff over the shipped package
+
+**DONE 2026-09-17** (#2487; half A of R5.5, decisions D1-D3).
+
+**The rule set is written down, not inherited.** `pyproject.toml` selects `F` + `E4`/`E7`/`E9`
+explicitly, because "ruff's default" is not a stable contract: with ruff 0.16 an unconfigured run
+over the same 40 files reports **2236** findings, the four families report **565**. A project that
+says "we use the defaults" therefore changes its gate every time the tool is upgraded.
+
+**E701/E702/E703 are switched off rather than baselined.** `if verbose: exu.Print(...)` is the
+established style of this package - 163 occurrences, and the window-suppression one-liners added in
+step R5.17.1 are written that way on purpose. Carrying 163 findings that nobody intends to fix, and
+that every new line in the house style would add to, is how a gate gets turned off. That leaves
+**335** findings, all about correctness.
+
+**The estimate in the R5.5 text was wrong, and the way it was wrong is worth keeping.** It said
+~165, from a stdlib-AST script. The script looked only for the patterns it had been taught; ruff
+found E703 (28), F405 (49), F841 (21), E713/E714 (13), E402, E741 - and **F821 undefined name**,
+which the script could not have found without implementing scope analysis. An estimate of a
+tool's output is an estimate of what one already knows to look for.
+
+**What was fixed outright** (107 findings), each verified by the full suite and the examples run:
+
+| rule | n | change |
+|---|---|---|
+| E711 `== None` | 52 | `is None` / `is not None` |
+| E712 `== True` | 11 | plain truth test, incl. two `np.where(iRoll==True)` |
+| E713/E714 | 13 | `not (x in y)` -> `x not in y` |
+| F401 unused import | 21 | removed from the leaf modules |
+| F401 re-export | 3 | `#noqa: F401` **with the reason** - `exu.SolveDynamic`, `exudyn.demos` and the `JointPreCheckCalcBodyMarkers` import that assigns the MainSystem patches are deliberate |
+| E401, F541 | 2 | split import line, empty f-string |
+
+One of them had been waiting in a comment: `if not(hasattr(q0, '__iter__')) and q0 == None:
+#replace with: q0 is None`.
+
+**What stays in the baseline** (228) is what needs a judgement rather than a rewrite: 59 bare
+`except:` (each hides a different intended exception), 62 `type(x) == y` (switching to `isinstance`
+changes behaviour for subclasses - that is a decision per call site, not a fix), 49+21 star-import
+findings (deliberate re-export inside the package), 21 unused variables, 6 ambiguous names, 5
+imports not at the top, 4 `F821` - and those four are **real bugs**, fixed in R5.5.5.
+
+**The baseline is a tool, not a file.** ruff has none, so `tools/checkPython.py` implements it:
+findings are stored as `count, file, rule, message` **without line numbers**, so editing elsewhere
+in a file does not invalidate an entry, while the count still catches a second occurrence of the
+same finding in the same file. A baseline entry that no longer occurs is **reported** - the
+baseline is meant to shrink, and a stale entry hides the next regression. Verified by mutation: an
+unused import and an `== None` added to `demos.py` are reported by file and rule and `--check`
+exits 1. If ruff is not installed the check fails rather than passes, because a gate that is
+silent when its tool is missing is not a gate.
+
 <a id="r5-7"></a>
 ### R5.7 — rename `pytest.py` - done differently in step R3.1 (`python/pytestTemplate.py`)
 

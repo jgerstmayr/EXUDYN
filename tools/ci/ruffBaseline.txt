@@ -4,82 +4,40 @@
 #after fixing findings. Format: count, file, rule, message - tab separated, no line
 #numbers, so that an edit elsewhere in a file does not invalidate the entry.
 
-4	python/exudyn/FEM.py	E711	Comparison to `None` should be `cond is None`
-1	python/exudyn/FEM.py	E711	Comparison to `None` should be `cond is not None`
-1	python/exudyn/FEM.py	E712	Avoid equality comparisons to `False`; use `not useSparseSolver:` for false checks
-6	python/exudyn/FEM.py	E713	Test for membership should be `not in`
 1	python/exudyn/FEM.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 6	python/exudyn/FEM.py	E722	Do not use bare `except`
-1	python/exudyn/GUI.py	E711	Comparison to `None` should be `cond is None`
-4	python/exudyn/GUI.py	E711	Comparison to `None` should be `cond is not None`
 1	python/exudyn/GUI.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 5	python/exudyn/GUI.py	E722	Do not use bare `except`
 6	python/exudyn/__init__.py	E722	Do not use bare `except`
-1	python/exudyn/__init__.py	F401	`.demos` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
-1	python/exudyn/__init__.py	F401	`mainSystemExtensions.JointPreCheckCalcBodyMarkers` imported but unused
-1	python/exudyn/__init__.py	F401	`solver.ComputeLinearizedSystem` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
-1	python/exudyn/__init__.py	F401	`solver.ComputeODE2Eigenvalues` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
-1	python/exudyn/__init__.py	F401	`solver.ComputeSystemDegreeOfFreedom` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
-1	python/exudyn/__init__.py	F401	`solver.SolveDynamic` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
-1	python/exudyn/__init__.py	F401	`solver.SolveStatic` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
-1	python/exudyn/__init__.py	F401	`solver.SolverSuccess` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
 1	python/exudyn/__init__.py	F403	`from .exudynCPP import *` used; unable to detect undefined names
 1	python/exudyn/__init__.py	F403	`from .exudynCPPfast import *` used; unable to detect undefined names
 1	python/exudyn/__init__.py	F403	`from exudynCPP import *` used; unable to detect undefined names
 4	python/exudyn/__init__.py	F405	`config` may be undefined, or defined from star imports
 1	python/exudyn/__init__.py	F405	`special` may be undefined, or defined from star imports
-1	python/exudyn/advancedUtilities.py	E711	Comparison to `None` should be `cond is None`
-8	python/exudyn/advancedUtilities.py	E711	Comparison to `None` should be `cond is not None`
 9	python/exudyn/advancedUtilities.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 4	python/exudyn/advancedUtilities.py	E722	Do not use bare `except`
 1	python/exudyn/advancedUtilities.py	E731	Do not assign a `lambda` expression, use a `def`
 3	python/exudyn/advancedUtilities.py	E741	Ambiguous variable name: `l`
-1	python/exudyn/artificialIntelligence.py	E711	Comparison to `None` should be `cond is None`
-2	python/exudyn/artificialIntelligence.py	E711	Comparison to `None` should be `cond is not None`
-1	python/exudyn/artificialIntelligence.py	E712	Avoid equality comparisons to `True`; use `self.rendererRunning:` for truth checks
 1	python/exudyn/artificialIntelligence.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 1	python/exudyn/artificialIntelligence.py	E722	Do not use bare `except`
 1	python/exudyn/basicUtilities.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
-4	python/exudyn/beams.py	E714	Test for object identity should be `is not`
-1	python/exudyn/graphics.py	E712	Avoid equality comparisons to `True`; use `addEdges:` for truth checks
 3	python/exudyn/graphics.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 2	python/exudyn/graphics.py	E722	Do not use bare `except`
-1	python/exudyn/graphics.py	F541	f-string without any placeholders
 1	python/exudyn/graphicsDataUtilities.py	F841	Local variable `nVertices` is assigned to but never used
-4	python/exudyn/interactive.py	E711	Comparison to `None` should be `cond is not None`
-1	python/exudyn/interactive.py	E712	Avoid equality comparisons to `True`; use `...:` for truth checks
-2	python/exudyn/interactive.py	E713	Test for membership should be `not in`
 4	python/exudyn/interactive.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 7	python/exudyn/interactive.py	E722	Do not use bare `except`
 2	python/exudyn/lieGroupBasics.py	E741	Ambiguous variable name: `I`
-1	python/exudyn/lieGroupIntegration.py	E712	Avoid equality comparisons to `True`; use `d['activeConnector']:` for truth checks
 3	python/exudyn/lieGroupIntegration.py	F821	Undefined name `exudyn`
-10	python/exudyn/machines.py	E711	Comparison to `None` should be `cond is None`
-1	python/exudyn/mainSystemExtensions.py	E712	Avoid equality comparisons to `True`; use `measureVelocity:` for truth checks
 8	python/exudyn/mainSystemExtensions.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 1	python/exudyn/mainSystemExtensions.py	E722	Do not use bare `except`
-1	python/exudyn/mainSystemExtensions.py	F401	`exudyn.advancedUtilities.IsReal` imported but unused
-1	python/exudyn/mainSystemExtensions.py	F401	`exudyn.advancedUtilities.IsValidNodeIndex` imported but unused
-1	python/exudyn/mainSystemExtensions.py	F401	`exudyn.rigidBodyUtilities.HT0` imported but unused
-1	python/exudyn/mainSystemExtensions.py	F401	`exudyn.rigidBodyUtilities.RotationMatrixZ` imported but unused
-1	python/exudyn/particles.py	E711	Comparison to `None` should be `cond is None`
-2	python/exudyn/plot.py	E711	Comparison to `None` should be `cond is None`
-2	python/exudyn/plot.py	E711	Comparison to `None` should be `cond is not None`
 26	python/exudyn/plot.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 3	python/exudyn/plot.py	E722	Do not use bare `except`
-4	python/exudyn/processing.py	E711	Comparison to `None` should be `cond is None`
-1	python/exudyn/processing.py	E711	Comparison to `None` should be `cond is not None`
 5	python/exudyn/processing.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 8	python/exudyn/processing.py	E722	Do not use bare `except`
 5	python/exudyn/resultsMonitor.py	E402	Module level import not at top of file
 2	python/exudyn/rigidBodyUtilities.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 2	python/exudyn/rigidBodyUtilities.py	E722	Do not use bare `except`
 1	python/exudyn/robotics/__init__.py	F403	`from .roboticsCore import *` used; unable to detect undefined names
-1	python/exudyn/robotics/future.py	E712	Avoid equality comparisons to `True`; use `ikSolutionCorkeRand.success:` for truth checks
-1	python/exudyn/robotics/future.py	E712	Avoid equality comparisons to `True`; use `ikSolutionCorkeZero.success:` for truth checks
-1	python/exudyn/robotics/future.py	F401	`exudyn.rigidBodyUtilities.HT2translation` imported but unused
-1	python/exudyn/robotics/future.py	F401	`exudyn.rigidBodyUtilities.Skew` imported but unused
-1	python/exudyn/robotics/future.py	F401	`spatialmath.SE3` imported but unused
 1	python/exudyn/robotics/future.py	F403	`from exudyn.graphicsDataUtilities import *` used; unable to detect undefined names
 1	python/exudyn/robotics/future.py	F403	`from exudyn.rigidBodyUtilities import *` used; unable to detect undefined names
 1	python/exudyn/robotics/future.py	F403	`from exudyn.robotics import *` used; unable to detect undefined names
@@ -100,9 +58,6 @@
 1	python/exudyn/robotics/future.py	F841	Local variable `d2` is assigned to but never used
 1	python/exudyn/robotics/future.py	F841	Local variable `d3` is assigned to but never used
 1	python/exudyn/robotics/future.py	F841	Local variable `d5` is assigned to but never used
-1	python/exudyn/robotics/mobile.py	E712	Avoid equality comparisons to `True`; use `iRoll:` for truth checks
-1	python/exudyn/robotics/mobile.py	E712	Avoid equality comparisons to `True`; use `iRollTest:` for truth checks
-1	python/exudyn/robotics/mobile.py	E713	Test for membership should be `not in`
 2	python/exudyn/robotics/mobile.py	E722	Do not use bare `except`
 1	python/exudyn/robotics/mobile.py	F403	`from exudyn.graphicsDataUtilities import *` used; unable to detect undefined names
 1	python/exudyn/robotics/mobile.py	F403	`from exudyn.itemInterface import *` used; unable to detect undefined names
@@ -123,13 +78,6 @@
 1	python/exudyn/robotics/mobile.py	F405	`pi` may be undefined, or defined from star imports
 1	python/exudyn/robotics/mobile.py	F841	Local variable `graphRoll` is assigned to but never used
 1	python/exudyn/robotics/mobile.py	F841	Local variable `y_fit` is assigned to but never used
-2	python/exudyn/robotics/models.py	E711	Comparison to `None` should be `cond is None`
-1	python/exudyn/robotics/models.py	F401	`exudyn.graphicsDataUtilities` imported but unused
-1	python/exudyn/robotics/models.py	F401	`exudyn.rigidBodyUtilities.HT0` imported but unused
-1	python/exudyn/robotics/models.py	F401	`exudyn.rigidBodyUtilities.HT2rotationMatrix` imported but unused
-1	python/exudyn/robotics/models.py	F401	`exudyn.rigidBodyUtilities.HT2translation` imported but unused
-1	python/exudyn/robotics/models.py	F401	`exudyn.rigidBodyUtilities.Skew` imported but unused
-1	python/exudyn/robotics/models.py	F401	`scipy.io` imported but unused
 1	python/exudyn/robotics/models.py	F403	`from exudyn.graphicsDataUtilities import *` used; unable to detect undefined names
 1	python/exudyn/robotics/models.py	F403	`from exudyn.rigidBodyUtilities import *` used; unable to detect undefined names
 1	python/exudyn/robotics/models.py	F403	`from exudyn.robotics import *` used; unable to detect undefined names
@@ -141,29 +89,17 @@
 1	python/exudyn/robotics/models.py	F841	Local variable `stdLocalHT` is assigned to but never used
 1	python/exudyn/robotics/models.py	F841	Local variable `stiffness` is assigned to but never used
 1	python/exudyn/robotics/models.py	F841	Local variable `torqueMax` is assigned to but never used
-1	python/exudyn/robotics/motion.py	E712	Avoid equality comparisons to `True`; use `syncAccTimes:` for truth checks
-1	python/exudyn/robotics/motion.py	F401	`copy.deepcopy` imported but unused
-2	python/exudyn/robotics/roboticsCore.py	E711	Comparison to `None` should be `cond is None`
-2	python/exudyn/robotics/roboticsCore.py	E711	Comparison to `None` should be `cond is not None`
 1	python/exudyn/robotics/roboticsCore.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 1	python/exudyn/robotics/roboticsCore.py	E722	Do not use bare `except`
-1	python/exudyn/robotics/roboticsCore.py	F401	`exudyn.basicUtilities` imported but unused
-1	python/exudyn/robotics/roboticsCore.py	F401	`exudyn.graphicsDataUtilities` imported but unused
-1	python/exudyn/robotics/roboticsCore.py	F401	`time` imported but unused
 1	python/exudyn/robotics/roboticsCore.py	F821	Undefined name `SC`
 1	python/exudyn/robotics/roboticsCore.py	F841	Local variable `t12` is assigned to but never used
-1	python/exudyn/robotics/rosInterface.py	F401	`time` imported but unused
 1	python/exudyn/robotics/rosInterface.py	F403	`from exudyn.utilities import *` used; unable to detect undefined names
 1	python/exudyn/robotics/rosInterface.py	F405	`RotXYZ2EulerParameters` may be undefined, or defined from star imports
 1	python/exudyn/robotics/special.py	E722	Do not use bare `except`
 1	python/exudyn/robotics/special.py	E741	Ambiguous variable name: `I`
-1	python/exudyn/robotics/special.py	F401	`exudyn.rigidBodyUtilities.HTtranslate` imported but unused
-1	python/exudyn/robotics/special.py	F401	`exudyn.rigidBodyUtilities.RotationMatrix2RotZYZ` imported but unused
-1	python/exudyn/robotics/special.py	F401	`exudyn.robotics` imported but unused
 1	python/exudyn/robotics/special.py	F403	`from exudyn.graphicsDataUtilities import *` used; unable to detect undefined names
 1	python/exudyn/robotics/special.py	F403	`from exudyn.rigidBodyUtilities import *` used; unable to detect undefined names
 1	python/exudyn/robotics/special.py	F403	`from exudyn.robotics import *` used; unable to detect undefined names
 1	python/exudyn/robotics/special.py	F403	`from exudyn.utilities import *` used; unable to detect undefined names
-1	python/exudyn/robotics/utilities.py	E401	Multiple imports on one line
 5	python/exudyn/robotics/utilities.py	E722	Do not use bare `except`
 5	python/exudyn/solver.py	E722	Do not use bare `except`

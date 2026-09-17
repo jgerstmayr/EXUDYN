@@ -169,7 +169,7 @@ class InteractiveDialog:
         systemScaling = 1
 
         if (self.doTimeIntegration 
-            and self.simulationSettings.solutionSettings.writeInitialValues == True 
+            and self.simulationSettings.solutionSettings.writeInitialValues 
             and mbs.systemData.AEsize() != 0):
             exudyn.Print('WARNING: InteractiveDialog:\nyou should set simulationSettings.solutionSettings.writeInitialValues = False in order to avoid erroneous constraint outputs during time integration periods.\n')
 
@@ -382,7 +382,7 @@ class InteractiveDialog:
         else:
             self.RunButtonText.set('Run')
 
-        if self.userStartSimulation != None:
+        if self.userStartSimulation is not None:
             self.userStartSimulation(self.simulationStopped)
         #self.ProcessWidgetStates() #do this finally, to update states, which may have changed in last step (SolutionViewer!)
         self.ContinuousRunFunction()
@@ -397,10 +397,10 @@ class InteractiveDialog:
                 destinationDict = self.mbs.sys #this is a link!
             else:
                 destinationDict = self.mbs.variables
-            if not var[1] in destinationDict or v != destinationDict[var[1]]:
+            if var[1] not in destinationDict or v != destinationDict[var[1]]:
                 destinationDict[var[1]] = v
                 changed = True
-        if changed and self.userOnChange != None:
+        if changed and self.userOnChange is not None:
             self.userOnChange(self.mbs, self) #this user function is called every time a value has changed, within update period
 
     def ContinuousRunFunction(self, event=None):
@@ -631,7 +631,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
     SC.visualizationSettings.general.showSolverInformation = False
     SC.visualizationSettings.general.renderWindowString = renderWindowText+'mode 0'
     
-    if nodeNumber != None:
+    if nodeNumber is not None:
         coordIndex = mbs.GetNodeODE2Index(nodeNumber)
         nodeCoords = mbs.GetNodeOutput(nodeNumber,exudyn.OutputVariableType.Coordinates,exudyn.ConfigurationType.Reference)
         numberOfModes = len(nodeCoords)
@@ -707,7 +707,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
         selectedMode = int(mbs.sys['modeShapeModeNumber'])
         outputVariable = exudyn.OutputVariableType(int(mbs.sys['modeShapeOutputVariable']))
        
-        if mbs.sys['modeShapeNodeCoordIndex'] != None:
+        if mbs.sys['modeShapeNodeCoordIndex'] is not None:
             ode2Coords = mbs.systemData.GetODE2Coordinates()
             ode2Coords[mbs.sys['modeShapeNodeCoordIndex']+selectedMode] = amplitude * mbs.sys['modeShapeScaleAmplitude']
             mbs.systemData.SetODE2Coordinates(ode2Coords, exudyn.ConfigurationType.Visualization)
@@ -829,7 +829,7 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
     SC = mbs.GetSystemContainer()
 
     if solution is None: #'is' also works for numpy.array
-        if not 'simulationSettings' in mbs.sys:
+        if 'simulationSettings' not in mbs.sys:
             raise ValueError('SolutionViewer: no solution file found (already simulated?)!')
         sims = mbs.sys['simulationSettings']
         if not sims.solutionSettings.writeSolutionToFile:

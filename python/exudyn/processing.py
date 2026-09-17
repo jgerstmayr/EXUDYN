@@ -341,7 +341,7 @@ def ProcessParameterList(parameterFunction, parameterList, useMultiProcessing, c
         if showProgress:
             cluster.print_status()
         
-        if http_server != None:
+        if http_server is not None:
             http_server.shutdown() # this waits until browser gets all updates
         cluster.close()
     elif useMPI:
@@ -420,14 +420,14 @@ def ParameterVariation(parameterFunction, parameters,
     
     if 'multiprocessing' in sys.modules:
         from multiprocessing import cpu_count
-        if numberOfThreads == None:
+        if numberOfThreads is None:
             numberOfThreads = cpu_count() #cpu_count in fact gives number of threads ...
         if debugMode:
             if IsEmptyList(clusterHostNames):
                 exudyn.Print("using", numberOfThreads, "cpus")
             else:
                 exudyn.Print("using cluster")
-    if numberOfThreads == None:
+    if numberOfThreads is None:
         numberOfThreads = 8 #just some default, if no other value available
 
     #generate list of parameters to iterate
@@ -1313,9 +1313,9 @@ def PlotSensitivityResults(valRef, valuesSorted, sensitivity, fVar=None, strYAxi
         return [fig, axs] containing the corresponding handles; creates a subplot for every row in the sensitivity matrix
     """
     import matplotlib.pyplot as plt
-    if strYAxis == None: 
+    if strYAxis is None: 
         strYAxis = ['']*sensitivity.shape[1]
-    if fVar == None: 
+    if fVar is None: 
         fVar = [1e-3] * sensitivity.shape[1]
     if type(fVar) != list: # if one scalar varaible is passed it is assumed it is the same for each parameter
         fVar = [fVar]*sensitivity.shape[1]

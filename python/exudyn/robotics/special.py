@@ -15,8 +15,7 @@
 from exudyn.docmeta import docmeta
 import numpy as np
 import exudyn
-import exudyn.robotics as rob
-from exudyn.rigidBodyUtilities import RotationMatrix2RotZYZ, HT2rotationMatrix, HT2translation, Skew, HTtranslate
+from exudyn.rigidBodyUtilities import HT2rotationMatrix, HT2translation, Skew
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [

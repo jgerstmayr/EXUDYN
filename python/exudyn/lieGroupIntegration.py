@@ -148,7 +148,7 @@ def LieGroupExplicitRKInitialize(mainSys):
                 exudyn.Print('ConnectorCoordinate.factorValue1 must be 1., otherwise connector constraint cannot be resolved!')
             elif d['offset'] != 0.: 
                 exudyn.Print('ConnectorCoordinate.offset must be 0., otherwise connector constraint cannot be resolved!')
-            elif d['activeConnector'] == True: #constrain only if connector is active!
+            elif d['activeConnector']: #constrain only if connector is active!
                 markers = d['markerNumbers']
                 coords=[]
                 for j in markers:

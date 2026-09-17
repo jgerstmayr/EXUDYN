@@ -271,7 +271,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
 
     if xLabel == 'time (s)':
         xLabel = __plotSensorDefaults.xLabel
-    if yLabel == None:
+    if yLabel is None:
         yLabel = __plotSensorDefaults.yLabel
 
     if fontSize == 16:
@@ -383,7 +383,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
     
     # subNx=1
     # subNy=1
-    if fig!=None:
+    if fig is not None:
         if subPlot!=[]:
             if type(subPlot)!=list or len(subPlot)!=3:
                 raise ValueError('PlotSensor: subPlot must have 3 integers [nx, ny, position]')
@@ -508,7 +508,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
         elif checkStr != sensorTypes[i]:
             allVariablesSame = False
 
-    if yLabel == None:
+    if yLabel is None:
         yLabel = ''
         if allVariablesSame:
             yLabel = checkStr
@@ -678,7 +678,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
     #do this finally!!!
     if nSensors > 0:
         handle = plt
-        if fig!=None:
+        if fig is not None:
             handle = fig #better to use fig; plt.tight_layout() gives warning
 
         if legendArgs is None:

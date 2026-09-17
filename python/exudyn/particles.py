@@ -36,7 +36,7 @@ def CreateParticlesInBox(minPointBox, maxPointBox, minRadius, maxRadius=None,
     Returns:
         [(point0, radius0), ...] a list of point-radius tuples containing the information of created particles
     """
-    if maxRadius == None:
+    if maxRadius is None:
         maxRadius = minRadius
     
     calcRadius = maxRadius + offsetRadius

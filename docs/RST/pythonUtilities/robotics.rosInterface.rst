@@ -58,7 +58,7 @@ CLASS ROSInterface (in module robotics.rosInterface)
 
 Class function: InitPublisher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`InitPublisher <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L118>`__\ (\ ``self``\ , \ ``pubTopicName = ''``\ , \ ``pubType = Empty``\ , \ ``queueSize = 10``\ )
+`InitPublisher <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L117>`__\ (\ ``self``\ , \ ``pubTopicName = ''``\ , \ ``pubType = Empty``\ , \ ``queueSize = 10``\ )
 
 - | \ *classFunction*\ :
   | function to create a publisher
@@ -87,7 +87,7 @@ Class function: InitPublisher
 
 Class function: ExuCallbackGeneric
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ExuCallbackGeneric <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L141>`__\ (\ ``self``\ , \ ``subTopicName``\ , \ ``data``\ )
+`ExuCallbackGeneric <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L140>`__\ (\ ``self``\ , \ ``subTopicName``\ , \ ``data``\ )
 
 - | \ *classFunction*\ :
   | function to create a generic callback function for a subscriber
@@ -103,7 +103,7 @@ Class function: ExuCallbackGeneric
 
 Class function: InitSubscriber
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`InitSubscriber <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L152>`__\ (\ ``self``\ , \ ``subTopicNameSpace``\ , \ ``subTopicName``\ , \ ``subType``\ )
+`InitSubscriber <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L151>`__\ (\ ``self``\ , \ ``subTopicNameSpace``\ , \ ``subTopicName``\ , \ ``subType``\ )
 
 - | \ *classFunction*\ :
   | function to create a subscriber
@@ -123,7 +123,7 @@ Class function: InitSubscriber
 
 Class function: CheckROSversion
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CheckROSversion <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L169>`__\ (\ ``self``\ )
+`CheckROSversion <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L168>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | check the current used ROS version
@@ -138,7 +138,7 @@ Class function: CheckROSversion
 
 Class function: PublishPoseUpdate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PublishPoseUpdate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L187>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``tExu``\ , \ ``getData = 'node'``\ )
+`PublishPoseUpdate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L186>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``tExu``\ , \ ``getData = 'node'``\ )
 
 - | \ *classFunction*\ :
   | Example method to be called once per frame/control cycle in Exudyn PreStepUserFunction
@@ -162,7 +162,7 @@ Class function: PublishPoseUpdate
 
 Class function: PublishTwistUpdate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PublishTwistUpdate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L253>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``tExu``\ , \ ``getData = 'node'``\ )
+`PublishTwistUpdate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L252>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``tExu``\ , \ ``getData = 'node'``\ )
 
 - | \ *classFunction*\ :
   | Example method to be called once per frame/control cycle in Exudyn PreStepUserFunction
@@ -181,7 +181,7 @@ Class function: PublishTwistUpdate
 
 Class function: PublishSystemStateUpdate
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`PublishSystemStateUpdate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L300>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``tExu``\ )
+`PublishSystemStateUpdate <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/robotics/rosInterface.py\#L299>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``tExu``\ )
 
 - | \ *classFunction*\ :
   | method to be send system state data once per frame/control cycle in Exudyn PreStepUserFunction

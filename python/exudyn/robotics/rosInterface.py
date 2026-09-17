@@ -43,7 +43,6 @@ from exudyn.docmeta import docmeta
 import numpy as np
 import exudyn as exu
 from exudyn.utilities import *
-import time
 import os
 
 # import needed ROS modules and messages

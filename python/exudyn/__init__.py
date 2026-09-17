@@ -103,11 +103,11 @@ try:
     from .solver import SolveStatic, SolveDynamic, SolverSuccess, ComputeLinearizedSystem, ComputeSystemDegreeOfFreedom, ComputeODE2Eigenvalues
 except:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
-    from solver import SolveStatic, SolveDynamic, SolverSuccess, ComputeLinearizedSystem, ComputeSystemDegreeOfFreedom, ComputeODE2Eigenvalues
+    from solver import SolveStatic, SolveDynamic, SolverSuccess, ComputeLinearizedSystem, ComputeSystemDegreeOfFreedom, ComputeODE2Eigenvalues #noqa: F401 - re-export, available as exu.SolveDynamic etc.
 
 #use exudyn.demos.Demo1() from 1.9.137 onwards!
 try:
-    from . import demos
+    from . import demos #noqa: F401 - re-export, available as exudyn.demos
 except:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
     pass
@@ -117,7 +117,7 @@ try:
     from .mainSystemExtensions import JointPreCheckCalcBodyMarkers #import just some function, will assign MainSystem patches
 except:
     #for run inside Visual Studio (exudynCPP lies in Release or Debug folders):
-    from mainSystemExtensions import JointPreCheckCalcBodyMarkers
+    from mainSystemExtensions import JointPreCheckCalcBodyMarkers #noqa: F401 - importing the module assigns the MainSystem patches
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

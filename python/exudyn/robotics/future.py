@@ -15,7 +15,7 @@
 from exudyn.docmeta import docmeta
 import numpy as np
 import exudyn.robotics as rob
-from exudyn.rigidBodyUtilities import RotationMatrix2RotZYZ, HT2rotationMatrix, HT2translation, Skew, HTtranslate
+from exudyn.rigidBodyUtilities import RotationMatrix2RotZYZ, HT2rotationMatrix, HTtranslate
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #            Interaction with Toolbox by Peter Corke
@@ -52,7 +52,6 @@ def MakeCorkeRobot(robotDic):
     
     try:
         import roboticstoolbox as rtb
-        from spatialmath import SE3
         print('roboticstoolbox and spatialmath module are installed')
 
         nLinks = len(robotDic['links'])
@@ -533,11 +532,11 @@ if __name__ == '__main__':
     # calculate inverse kinematics corke 
 
     ikSolutionCorkeZero = corkeRobot.ikine_LM(HTZeroCorke,q0=qZero)
-    if ikSolutionCorkeZero.success==True:
+    if ikSolutionCorkeZero.success:
         print('corke solution found: \n qSolution=',ikSolutionCorkeZero.q)
        
     ikSolutionCorkeRand = corkeRobot.ikine_LM(HTRandCorke,q0=qRand-0.5)
-    if ikSolutionCorkeRand.success==True:
+    if ikSolutionCorkeRand.success:
         print('corke solution found: \n qSolution=',ikSolutionCorkeRand.q)
     else:
         print('corke no solution found for rand configuratio!')

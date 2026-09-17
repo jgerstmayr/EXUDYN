@@ -63,7 +63,7 @@ def GetRendererSystemContainer():
 def GetTkRootAndNewWindow():
     """get new or current root and new window app; return list of [tkRoot, tkWindow, tkRuns]
     """
-    if tk._default_root == None:
+    if tk._default_root is None:
         root = tk.Tk()
         tkWindow = root
         tkRuns = False
@@ -76,7 +76,7 @@ def GetTkRootAndNewWindow():
 def TkRootExists():
     """this function returns True, if tkinter has already a root window (which is assumed to have already a mainloop running)
     """
-    return (tk._default_root != None)
+    return (tk._default_root is not None)
 
 
 
@@ -146,7 +146,7 @@ def GetComboBoxListsDict(exu = None):
     d=dict()  #as string
     dT=dict() #as type
     
-    if exu != None: #exudyn loaded
+    if exu is not None: #exudyn loaded
         listOfTypes = []
         listOfTypesT = []
         dTypes = exu.OutputVariableType.__members__
@@ -679,7 +679,7 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
     topmost = True
     alphaTransparency = 1 #<1 means transparency
     treeOpen = True
-    if guiSC != None:
+    if guiSC is not None:
         updateOnChange = guiSC.visualizationSettings.dialogs.multiThreadedDialogs
         systemScaling = guiSC.visualizationSettings.dialogs.fontScalingMacOS
         topmost = guiSC.visualizationSettings.dialogs.alwaysTopmost
@@ -944,7 +944,7 @@ def EditDictionary(dictionaryData, dictionaryIsEditable=True, dialogName=''):
     systemScaling = 1.35 #ideal for MacOS 
     topmost = True
     alphaTransparency = 1 #<1 means transparency
-    if guiSC != None:
+    if guiSC is not None:
         systemScaling = guiSC.visualizationSettings.dialogs.fontScalingMacOS
         topmost = guiSC.visualizationSettings.dialogs.alwaysTopmost
         if guiSC.visualizationSettings.dialogs.alphaTransparency <= 1:

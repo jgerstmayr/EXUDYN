@@ -208,9 +208,9 @@ def GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, numberOfElements
         if is2D and (positionOfNode0[2] != 0 or positionOfNode1[2] != 0):
             ValueError('GenerateStraightBeam: positionOfNode0 and positionOfNode1 must have zero z-components for 2D beam elements')
         
-        if not(fixedConstraintsNode0 is None) and len(fixedConstraintsNode0) != nDOFnode:
+        if fixedConstraintsNode0 is not None and len(fixedConstraintsNode0) != nDOFnode:
             ValueError('GenerateStraightBeam: fixedConstraintsNode0 incompatible has incompatible size')
-        if not(fixedConstraintsNode1 is None) and len(fixedConstraintsNode1) != nDOFnode:
+        if fixedConstraintsNode1 is not None and len(fixedConstraintsNode1) != nDOFnode:
             ValueError('GenerateStraightBeam: fixedConstraintsNode1 incompatible has incompatible size')
     else:
         raise ValueError('GenerateStraightBeam: beamTemplate may is invalid')
@@ -285,7 +285,7 @@ def GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, numberOfElements
             loadList+=[lLoadLast]
         
     
-    if not(fixedConstraintsNode0 is None):
+    if fixedConstraintsNode0 is not None:
         # ground "node" at first node:
         nGround = mbs.AddNode(eii.NodePointGround(referenceCoordinates=positionOfNode0)) 
         # add marker to ground "node": 
@@ -298,7 +298,7 @@ def GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, numberOfElements
                 cBoundaryCondition=mbs.AddObject(eii.CoordinateConstraint(markerNumbers=[mGround,mBeamCoordinateConstraint0])) #add constraint
                 beamCoordinateConstraintList+=[cBoundaryCondition]
             
-    if not(fixedConstraintsNode1 is None):
+    if fixedConstraintsNode1 is not None:
         # ground "node" at first node:
         nGround = mbs.AddNode(eii.NodePointGround(referenceCoordinates=positionOfNode1)) 
         # add marker to ground "node": 

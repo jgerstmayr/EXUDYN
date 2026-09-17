@@ -104,7 +104,7 @@ def MobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *a
     oRollingDiscsList = []   
     mAxlesList = []
     oAxlesList =  []
-    if not('linearRegularization' in mobileRobot): 
+    if 'linearRegularization' not in mobileRobot: 
         mobileRobot['linearRegularization'] = True
 
     # wheel parameter
@@ -432,8 +432,8 @@ def Generatrix2Polynomial(param, GeneratrixFunction, tol=1e-14, nFit=101, nTest 
     iRoll = np.array(x > -param['lRoll']/2) & np.array(x < param['lRoll']/2)
     iRollTest = np.array(xTest > -param['lRoll']/2) & np.array(xTest < param['lRoll']/2)
     try: # add one additional index at start and end of the Roll if it exists. 
-        iRoll[np.where(iRoll==True)[0][[0,-1]] + [-1,1]] = True 
-        iRollTest[np.where(iRollTest==True)[0][[0,-1]] + [-1,1]] = True 
+        iRoll[np.where(iRoll)[0][[0,-1]] + [-1,1]] = True 
+        iRollTest[np.where(iRollTest)[0][[0,-1]] + [-1,1]] = True 
     except: 
         pass
     x = x[iRoll]
