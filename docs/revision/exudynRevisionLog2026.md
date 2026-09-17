@@ -6044,3 +6044,97 @@ the run and the single log outside the tree is complete, summary included; witho
 log lands where it always did and is byte-for-byte the same size as before. This is also the answer
 to the original question - `EXUDYN_OUTPUTDIRECTORY=<dir>` now really does keep a run out of the
 working tree.
+
+
+<a id="r5-18"></a>
+### R5.18 - exudev, one driver instead of sixteen batch files
+
+**DONE 2026-09-18** - commits `0b89eb0` (the driver) and the one that retired the directory.
+Issue #2503.
+
+`tools/buildAndGenerate/` held 18 files: 16 `.bat`, a README and `manylinuxBuild.sh`. Five of the
+batch files existed only to find conda and to loop over the Python versions. The concrete cost had
+already been paid twice in this phase: `--fast-module`, added in R5.11, could not be reached from
+`runTestSuite.bat` **at all** until R5.13.5, because a `.bat` cannot pass on an option it does not
+know; and the argument-forwarding loop written there needed a dry run to discover that `SHIFT` also
+shifts `%0`.
+
+**What replaced them**: `python tools/exudev` - a directory with `__main__.py`, so there is no
+package, no `sys.path` surgery and no installation - plus `exudev.bat` in the repository root so
+that `exudev test --fast` can be typed from anywhere. Standard library only, Python 3.8 syntax, and
+**it never imports exudyn**: it is the thing that selects the environment, so it has to start in any
+interpreter. Ten commands, each with its own `--help`: `generate`, `build`, `test`, `examples`,
+`perf`, `docs`, `linux`, `release`, `clean`, `env`.
+
+**Quiet is the default** and `-v/--verbose` turns the tools' output back on (maintainer). One table
+in `runner.QuietFlag()` knows that the test runners spell it `-quiet` with a single dash, the
+maintainer tools `--quiet` with two, `checkAll`/`checkPython` not at all, and that the build is
+quieted through `EXUDYN_QUIET_COMPILE` - which `--verbose` must also flip, or a failed build shows
+pip chatter while the compiler errors sit in `setuppy.output.txt`.
+
+**`-n/--dry-run` is the documentation.** `commands.py` only *builds* `Step` objects and
+`runner.RunSteps()` is the only executor, so the printed line and the executed line are produced by
+the same code and cannot drift. `exudev -n release` prints all 40 steps of a release on one screen.
+
+**`build` is the ~1 minute command**: wheel plus install, no clean, no regeneration, no docs, no
+tests. `build --complete` is the whole path; `release` adds the guards - it refuses a `.dev`
+version, uses `generate --check` so that a release cannot silently regenerate, and builds the linux
+wheels - and follows the R5.11.1 matrix: the default module on every version, the fast module on the
+oldest and the second newest.
+
+Three decisions worth recording:
+
+- **`--fast` is opt-in, which means actively switching the repository default off.**
+  `pyproject.toml` has `compileExudynFast = true`, so a plain `pip wheel .` builds `exudynCPPfast`
+  as well; `exudev build` sets `EXUDYN_COMPILE_EXUDYN_FAST=0` unless asked. Verified by opening the
+  wheels: without `--fast` exactly one `.pyd`, with it two. The driver warns about the two silent
+  gates it cannot remove - on a `.dev` version the fast module is compiled for Python 3.13 only
+  (`setup.py:440-445`), and on macOS not at all (`setup.py:272`).
+- **Build switches travel as environment variables**, the layer `setup.py` reads between
+  `pyproject.toml` and the command line. A setup.py command-line flag would need
+  `--config-settings=--build-option=` for each switch, through pip, for no gain.
+- **The wheel is installed by path**, not with `--find-links=dist`: `clean` keeps `dist/` on
+  purpose and every build appends another wheel with the same `.dev` version, so pip was free to
+  choose an older one. This removes the "I tested yesterday's binary" failure entirely.
+
+**Environment dispatch is `conda run -n <env> --no-capture-output`** - one process, exit code
+propagated, no activate/deactivate dance that can leave a shell in the wrong environment. Measured
+1.8 s overhead. A missing environment is named while the steps are still being *planned*, from a
+single `conda env list` (1.3 s), rather than surfacing as an opaque `CondaError` in the middle of a
+long run. One limit found on the way: **`conda run` refuses any argument containing a newline**, so
+the environment probe could not be a `python -c` string and became `tools/exudev/probe.py` - which
+is the better answer anyway, since it is a file the maintainer can read.
+
+**Two runners have no exit code.** `runTestExamples.py` and `runPerformanceTests.py` always return
+0, so their verdict is read from the summary line of the log they just wrote (`results.py`), with
+**three** verdicts and never two: a missing or truncated log is `unknown`, exit code 2, never
+success. Validated against the 23 committed performance logs - 22 `ok`, and the one that reports
+`unknown` really is truncated mid-line. Raised as #2504 (step R5.18.1): give both runners the
+`--exit-code` flag the suite already has, then delete `results.py`.
+
+**The directory is retired.** The 16 `.bat` and the README moved to `tmp/oldScripts/`, which is
+gitignored, so they left the repository; `manylinuxBuild.sh` moved to `tools/ci/`, next to the
+`buildManylinux.sh` it calls. Two corrections to the plan text, both found by doing the work: it
+said *13* files, and it said `manylinuxBuild.sh` would stay. The dead `addTags.bat` reference in
+`makeAndTestAllBinaries.bat` went with it - that file exists nowhere in the repository.
+`makeDoc.bat` went too: the maintainer reported that `theDoc` has not built for many commits (wrong
+paths, missing files) and R7 replaces it, so no `exudev docs --pdf` was written.
+
+**Two test failures were explained on the way, and they are not the driver's.** The maintainer's
+run of the suite in `venvP313` failed `symbolicModuleTest` and `sliderCrank3Dbenchmark`, in both the
+regular and the fast module. The `exudynCPP.pyd` in `venvP313` and `venvExuP313` have the **same
+md5**; the difference is numpy 2.2.4 against 2.4.6. #2501 (an absolute tolerance of 1e-15 on a value
+of magnitude 9.75, below one ulp) and #2502 (a reference value that moves by 2.7e-10 with the numpy
+version) are steps R5.9.1 and R5.9.2. `exudev env` reprints the whole picture in twelve seconds -
+and showed on its first run that `venvP310`, `venvP311`, `venvP312` and `venvP314` still carry
+exudyn **1.11.0**.
+
+**Verified**: `--help` for the driver and all ten subcommands; dry runs of `build`,
+`build --complete`, `release` with and without the `.dev` guard, `clean`, `linux` and
+`linux --wsl-conda`; the clean action in a sandbox repository (the Windows build directories and
+eggs removed, the linux directory, `exudynBuildFlags.txt` and the wheels kept; `--all` removes the
+other two); `generate --check --all-checks` (six gates, exit 0); `env`; `test` in `venvExuP313`
+PASSED with exit 0 and in `venvP313` FAILED with exit 1; `test --fast` loading `exudynCPPfast`;
+`perf` judged `ok` from the log it wrote; `docs` in 36 s; a real build with and without `--fast`,
+installed and version-checked; `--verbose` flipping all three kinds of quiet; `--env` honoured on
+`test`/`examples`/`perf`/`env` and refused on `build` with the reason.

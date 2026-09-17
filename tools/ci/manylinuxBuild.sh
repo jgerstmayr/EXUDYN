@@ -6,12 +6,13 @@
 # tools/ci/buildManylinux.sh, which takes the Python tag as its argument, so that the GitLab CI
 # matrix and this local docker path run exactly the same code.
 #
-# Usage:  invoked by makeUbuntuManyLinuxWheels.bat, or directly inside the container:
-#           bash /work/tools/buildAndGenerate/manylinuxBuild.sh
-#           bash /work/tools/buildAndGenerate/manylinuxBuild.sh cp312 cp313   # a subset
+# Usage:  invoked by "exudev linux", or directly inside the container:
+#           bash /work/tools/ci/manylinuxBuild.sh
+#           bash /work/tools/ci/manylinuxBuild.sh cp312 cp313   # a subset
 #
 # Author:   Johannes Gerstmayr
-# Date:     2026-09-09 (restructured)
+# Date:     2026-09-09 (restructured); 2026-09-18 moved here from tools/buildAndGenerate/
+#           next to the buildManylinux.sh it calls (revision2026 step R5.18)
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -19,7 +20,7 @@
 set -euo pipefail
 
 scriptDir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-buildOne="$scriptDir/../ci/buildManylinux.sh"
+buildOne="$scriptDir/buildManylinux.sh"
 
 pythonTags=("$@")
 if [ ${#pythonTags[@]} -eq 0 ]; then

@@ -770,6 +770,29 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 <a id="r5-9"></a>
 **R5.9** **DONE 2026-09-11** — Complete and verify the test list. → [log](exudynRevisionLog2026.md#r5-9)
 
+<a id="r5-9-1"></a>
+**R5.9.1** *(sub-step of R5.9; found 2026-09-18)* **`symbolicModuleTest` fails with numpy 2.2**
+    (#2501). The vector/matrix section compares the symbolic result against the numpy result with an
+    **absolute** tolerance, `np.linalg.norm(res[0]-res[1]) > 1e-15`, on a value of magnitude
+    `9.7476` - where one ulp is `1.8e-15`. The tolerance is below the representable resolution, so
+    whether the test passes depends on the last bit of a numpy sum. Measured with the **same exudyn
+    binary** (md5 identical in both environments): numpy 2.4.6 passes, numpy 2.2.4 differs by
+    `1.78e-15`, counted once per recording mode. `cntWrong` is added to the test result since #2479,
+    so the model returns `2.948...` against a reference of `0.948...` and the suite fails with error
+    2.0. The comparison needs a relative tolerance.
+
+<a id="r5-9-2"></a>
+**R5.9.2** *(sub-step of R5.9; found 2026-09-18)* **A reference value depends on the numpy version**
+    (#2502). Same binary, same source, same machine, same Python 3.13: `sliderCrank3Dbenchmark.py`
+    returns `7.256859912845965` under numpy 2.4.6 - exactly the committed reference - and
+    `7.256859914829453` under numpy 2.2.4, relative `2.7e-10` against a tolerance of `5e-14`. numpy
+    enters only through the model **setup**, so a last-bit difference in the input data is amplified
+    by the solver. The same model is already listed in `UnresolvedOnLinux()` at rel. `2.0e-10`, which
+    now looks like this effect rather than a platform difference - so the step also asks **how many
+    other entries of that list are numpy-version effects**, which makes it material for R10.1. Open
+    decisions: pin a minimum numpy for reference comparison, mark the model sensitive, or find the
+    operation that differs.
+
 <a id="r5-10"></a>
 **R5.10** **DONE 2026-09-10** — `testRunnerTools.ResolveLogFile()` decides the log target before the first write. → [log](exudynRevisionLog2026.md#r5-10)
 
@@ -938,9 +961,10 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     and `CLAUDE.md` rule 11 says that a local run of an existing model sets
     `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` and `EXUDYN_OUTPUTDIRECTORY`.
 <a id="r5-18"></a>
-**R5.18** *(phase R5, last step; maintainer request 2026-09-18)* **One driver instead of eighteen
-batch files** (#2503). `tools/buildAndGenerate/` holds 18 files, of which **five exist only to find
-conda and to loop over the Python versions** (`condaActivate.bat`, `execWithPythonVersion.bat`,
+**R5.18** **DONE 2026-09-18** → [log](exudynRevisionLog2026.md#r5-18) — *(phase R5, last step;
+maintainer request 2026-09-18)* **One driver instead of sixteen batch files** (#2503).
+`tools/buildAndGenerate/` held 18 files - **16 `.bat`**, a README and one shell script - of which
+**five existed only to find conda and to loop over the Python versions** (`condaActivate.bat`, `execWithPythonVersion.bat`,
 `execWithAllPythonVersions.bat`, plus the two thin wrappers `makeWindowsBinaries.bat` and
 `buildInstallSingleVersion.bat`). A `.bat` file cannot print a `--help`, cannot validate an option
 and cannot pass an option it does not know about: that is exactly why `--fast-module` - added in
@@ -986,19 +1010,39 @@ output not buffered. This removes `condaActivate.bat` and both `execWith*` scrip
 installation is still located by `EXUDYN_CONDA_ROOT`, then `CONDA_EXE`, then `PATH`, which is the
 logic of `condaActivate.bat` ported to Python.
 
-**Disposition of the 18 files** (tracked files are moved, so this needs the maintainer's word,
-which was given 2026-09-18): 13 `.bat` files move to `tmp/oldScripts/` - note `tmp/` is
-**gitignored**, so this removes them from the repository; `manylinuxBuild.sh` **stays** (it runs
-inside the docker image and must be shell); `tools/buildAndGenerate/README.md` is rewritten as the
-driver's page; `exudev.bat` is new. The dead `addTags.bat` reference in `makeAndTestAllBinaries.bat`
-disappears with it - no such file exists. `src/pythonGenerator/makeAllBinariesScripts.py` (31 lines,
-writes `docs/theDoc/buildDate.tex`) is folded into `exudev release` when that directory is removed.
+**Disposition of the 18 files** (the maintainer approved removing all of them, 2026-09-18).
+The 16 `.bat` files and the README moved to `tmp/oldScripts/` - `tmp/` is **gitignored**, so this
+removes them from the repository. Two corrections to the text above, both found while doing the
+work: it said *13* files, and it said `manylinuxBuild.sh` **stays** in the directory. In fact it
+moved to **`tools/ci/`**, next to the `buildManylinux.sh` it calls and which already lived there,
+and `tools/buildAndGenerate/` is therefore **retired**. `manylinuxBuild.sh` is still shell, because
+it runs inside the docker image. The dead `addTags.bat` reference in `makeAndTestAllBinaries.bat`
+disappeared with it - no such file exists anywhere in the repository.
+`src/pythonGenerator/makeAllBinariesScripts.py` (31 lines, writes `docs/theDoc/buildDate.tex`) is
+folded into `exudev release` when that directory is removed.
+
+**The LaTeX `theDoc` is not wrapped** (maintainer 2026-09-18): it has not built for many commits,
+paths are wrong and files are missing, and R7 replaces it. `makeDoc.bat` went to `tmp/oldScripts/`
+with the rest; no `exudev docs --pdf` was written.
 
 **Deferred on purpose - REMINDER for after the revision**: the **main `README.md`** and the build
 instructions in the user documentation still describe the batch files. They are **not** updated in
 this step, because R7.2 rewrites the per-platform build instructions anyway and the driver's own
 commands may still change; updating both now would mean writing them twice. R7.2 must pick this up,
-and `tools/buildAndGenerate/README.md` is the source it should link to rather than copy (rule 10).
+and [`tools/exudev/README.md`](../../tools/exudev/README.md) is the source it should link to rather
+than copy (rule 10). `docs/dev/WORKFLOW.md`, `docs/dev/README.md` and `CLAUDE.md` **were** updated
+here, because they describe the developer workflow rather than the user documentation.
+
+<a id="r5-18-1"></a>
+**R5.18.1** *(sub-step of R5.18; raised while doing it)* **The two runners without an exit code**
+    (#2504). `runTestSuite.py` returns a real exit code with `--exit-code`; `runTestExamples.py` and
+    `runPerformanceTests.py` **always return 0**, however many tests failed. Anything that calls them
+    - the driver, a CI job, a shell script - therefore cannot see a failure from the exit code, and
+    `tools/exudev/results.py` reads the summary line out of the log instead. That scan cannot tell a
+    run that died before writing its summary from a log it did not find, so it answers `unknown` and
+    maps it to exit code 2 - honest, but weaker than an exit code. Give both runners the same
+    `--exit-code` flag (about 10 lines each; the pattern exists), then **delete `results.py`** and
+    let every step of the driver be judged by its return code.
 
 ## R6 — Error handling and UX (ongoing, after R2)  <!-- old Phase 5 -->
 
@@ -1109,6 +1153,14 @@ and `tools/buildAndGenerate/README.md` is the source it should link to rather th
     the single source and the PNG is **generated** (tikz -> pdf -> svg) instead of hand-made, which
     costs a LaTeX toolchain in the documentation build. Either way the hand-maintained twin ends.
     Genuinely geometric figures, if any appear, keep a pre-rendered SVG.
+
+<a id="r7-1-2"></a>
+**R7.1.2** *(sub-step of R7.1; noticed 2026-09-18)* **A generated page is in no toctree** (#2505).
+    The sphinx build prints `docs/RST/TestModels/sphereTriangleTest.rst: WARNING: document is not
+    included in any toctree` - the page is generated but unreachable, findable only by search. The
+    build is not run with `-W` here, so nothing fails today; the check is whether the generator that
+    writes the TestModels pages also writes their index entry, in which case this is one missing
+    entry rather than one missing page.
 
 <a id="r7-2"></a>
 **R7.2** *(after R7.1, when the documentation is Markdown)* **Carry the revision into the documentation.**

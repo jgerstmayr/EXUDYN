@@ -15,9 +15,10 @@ Python is **not** on `PATH` under a plain shell. Use the named conda environment
 `venvExuP313` covers regeneration, the docs build, the docstring check and the test suite. Its
 packages are the dependency groups in `pyproject.toml` (`pip install --group dev`, pip >= 25.1) plus
 the `[tests]` extra of the locally built wheel; the recipe is in
-[`docs/howTo/condaEnvironments.md`](../howTo/condaEnvironments.md). The batch
-scripts in `tools/buildAndGenerate/` select environments themselves via
-`execWithPythonVersion.bat` and `execWithAllPythonVersions.bat` (P310–P314).
+[`docs/howTo/condaEnvironments.md`](../howTo/condaEnvironments.md). The
+driver `exudev` selects the environment itself – `--py P310`…`P314`, `--py all`, or
+`--env NAME` – so nothing has to be activated by hand; see
+[`tools/exudev/README.md`](../../tools/exudev/README.md).
 
 > **Check before trusting a test run.** `import exudyn; exudyn.__version__` must match
 > `version.txt`. The **base** Anaconda environment carries a stale **1.10.0**, so a
@@ -119,8 +120,10 @@ When the cause is not yet known, prefer `BUG` — it is the safe direction.
   else. `NORMAL` therefore warns.
 - Historical `type` values include typos and variants outside the documented set: `EXTENSON`,
   `CHEKCK`, `Extension`, `TEST`, `OPTIMIZE`.
-- `execWithPythonVersion.bat` ends with `cd ..\tools\makeWindowsBinaries\`, a directory that no
-  longer exists — the folder is now `tools/buildAndGenerate/`.
+- The batch scripts that used to live in `tools/buildAndGenerate/` carried several such
+  leftovers, among them a `cd` into a directory removed years ago. They were replaced by
+  `exudev` in revision2026 step R5.18 and moved out of the repository.
+
 
 ### What next?
 
@@ -239,7 +242,7 @@ at 1.11.0 nothing runs there**. `.gitlab-ci.yml` covers the gap.
 | leg | how it is covered |
 |---|---|
 | **Linux x86_64, cp310–314** | `.gitlab-ci.yml`, on the internal GitLab's shared Docker runners |
-| **Windows x64** | this development machine; `tools/buildAndGenerate/makeAndTestAllBinaries.bat` weekly |
+| **Windows x64** | this development machine; `exudev release` (or `exudev build --complete`) weekly |
 | **macOS** | a real Mac, at milestones |
 | **Linux aarch64** | not covered until GitHub CI resumes — accepted gap |
 | **docs** | `docs` job builds sphinx with `-W`; it does **not** deploy |
@@ -253,7 +256,7 @@ The Linux job runs `tools/ci/buildManylinux.sh <pyTag>` **inside** the manylinux
 also what the local docker path uses, so a CI failure reproduces locally with one command:
 
 ```bash
-tools/buildAndGenerate/makeUbuntuManyLinuxWheels.bat      # all five, via docker + WSL
+exudev linux            # all five, via docker + WSL; exudev -n linux prints the docker command
 ```
 
 Regular CI sets `EXUDYN_NOFAST=1`, which skips the `__FAST_EXUDYN_LINALG` binary and roughly halves
@@ -265,7 +268,7 @@ build time. Ordinary test runs do not exercise that binary. **Release builds mus
 |---|---|---|
 | commit gate / pull request | test models without the slow ones and without optional packages | `runTestSuite.py --fast` (12 s) or `pytest -m "not slow and not optionalPackage"` (9 s with `-n 8`) |
 | full local check | all test models and mini examples | `runTestSuite.py` (22 s) or `pytest` |
-| nightly / release | models, performance tests and all examples | `tools/buildAndGenerate/makeAndTestAllBinaries.bat`, which calls the three runners |
+| nightly / release | models, performance tests and all examples | `exudev build --complete`, or `exudev release`, which calls the three runners |
 | examples | all 171 examples, in parallel, as an API check | `runTestExamples.py` (49 s; `--serial`, `--parallel=N`, `--timeout=S`) |
 | C++ unit tests | the `lest` tests in `src/Tests/` | only in a build with the `performUnitTests` switch, or the VS `Debug` configuration; then `runTestSuite.py` runs them |
 
@@ -366,7 +369,7 @@ Run in this order; stop at the first failure.
 
 Required for any change to C++, `main/setup.py`, or `main/obj/cppsrc.vcxproj`. VS2022
 `Debug|x64` or `Release|x64` from `exudyn.sln` (created by `tools/setupLocalWorkspace.py`), or
-`tools/buildAndGenerate/buildInstallSingleVersion.bat`.
+`exudev build` (add `--fast` for the `exudynCPPfast` module, which is opt-in).
 
 **Stale binaries: nothing to do by hand any more.** A header change rebuilds because the
 `Extension` lists every header in `depends=` (#2427), and a change of compiler OPTIONS is caught by
@@ -569,7 +572,7 @@ workstation are not comparable. Without it, a legacy fallback still routes any 2
 
 `Examples` are **not** run here: they take many minutes and only check that scripts do not crash
 (they time out after a few seconds each, and are not compared for identical results). Run them
-with `tools/buildAndGenerate/runTestExamples.bat` for releases and large steps only.
+with `exudev examples` for releases and large steps only.
 
 ### 4. Docs and plan are updated
 
@@ -605,7 +608,16 @@ Example: `BUG #2107: fix 32-byte alignment of VectorBase under AVX2`
 
 ## 6. Build and release scripts
 
-`tools/buildAndGenerate/` (Windows batch, portable - conda located by `condaActivate.bat`, paths
-relative to the scripts). The table of scripts and their arguments is in
-[`tools/buildAndGenerate/README.md`](../../tools/buildAndGenerate/README.md); the html
-documentation is built with `makeSphinxDoc.bat`, regeneration plus docs with `runPythonScripts.bat`.
+One driver, `exudev` (`exudev.bat` in the repository root; `python tools/exudev` elsewhere). It
+replaced the sixteen batch files of `tools/buildAndGenerate/` in revision2026 step R5.18. Every
+command has a `--help`, quiet is the default and `-v/--verbose` turns the tools' output back on;
+**`exudev -n <command>` prints the command lines it would run and runs nothing**, which is the
+quickest way to see how a step actually works. The commands are listed in
+[`tools/exudev/README.md`](../../tools/exudev/README.md): `generate`, `build`, `test`, `examples`,
+`perf`, `docs`, `linux`, `release`, `clean`, `env`.
+
+Two points that catch people out. **`--fast` is opt-in**: `pyproject.toml` has
+`compileExudynFast = true`, so a plain `pip wheel .` builds `exudynCPPfast` while `exudev build`
+does not unless asked. And **`exudev env`** is the first thing to run when a test fails in one
+environment only - it prints python, exudyn and numpy per environment, which is how the numpy
+dependence of issues #2501 and #2502 was found.

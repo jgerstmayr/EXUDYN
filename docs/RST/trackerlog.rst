@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.160.dev1, 
++  Exudyn version = 1.11.161.dev1, 
 +  last change =  2026-09-18, 
 +  Number of issues = 2506, 
-+  Number of resolved issues = 2233 (160 in current version), 
++  Number of resolved issues = 2234 (161 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.161: resolved Issue 2503: the build and test scripts are 18 batch files without help (extension)
+    - issue author: Claude-JG
+    - description:  tools/buildAndGenerate/ holds 18 files; 5 of which exist only to find conda and to loop over the Python versions. A .bat file cannot print a --help; cannot validate an option and cannot pass an unknown option on: every new runner option has to be threaded through by hand - which is how --fast-module stayed unreachable from runTestSuite.bat until #2500. The scripts are also the place where the maintainer looks up HOW the build works; so they carry a documentation duty that comment headers serve badly. Replace them with one Python driver with subcommands; a --help per subcommand and a --dry-run that prints the commands instead of running them; keeping only the scripts that must stay shell (manylinuxBuild.sh runs inside the docker image). revision2026 step R5.18
+    - **notes:** Resolved by revision2026 step R5.18: tools/exudev/ - a dependency-free Python driver run as "python tools/exudev" or "exudev" from the repository root - replaces the 16 batch files of tools/buildAndGenerate/; which is retired (manylinuxBuild.sh moved to tools/ci/ next to the buildManylinux.sh it calls; the rest moved to the gitignored tmp/oldScripts/). Ten commands with a --help each; quiet by default with -v/--verbose; -n/--dry-run prints the real command lines and is faithful by construction because commands.py only builds Step objects and runner.RunSteps is the only executor. Environment dispatch through "conda run -n <env> --no-capture-output". --fast is opt-in and the driver therefore switches the pyproject default off; it warns about the two gates in setup.py that would silently drop the fast module. Successor for the two runners without an exit code: #2504.
+    - date resolved: **2026-09-18 01:53**\ , date raised: 2026-09-18 
+    - resolved by: Claude-JG
  * Version 1.11.160: :textred:`resolved BUG 2500` : the suite log is split in two when EXUDYN_OUTPUTDIRECTORY is set 
     - issue author: Claude-JG
     - description:  runTestSuite.py opens its log with exu.SetWriteToFile; which the C++ side resolves against exudyn.config.outputDirectory (#2418); so with EXUDYN_OUTPUTDIRECTORY set the log is written outside the working tree - as intended. But after the models the suite resets outputDirectory to the empty string and RE-OPENS the same log by name for the summary; which then lands at the UNREDIRECTED path: the body of the log goes to the output directory and the summary to python/TestSuiteLogs. Measured 2026-09-17: 80 KB outside and a 17 KB summary-only file inside. The -local copy reads the unredirected name as well. The reset should restore the directory the run STARTED with; not the empty string. revision2026 step R5.13.5
@@ -7675,11 +7681,6 @@ Open issues
  * :textorange:`open issue 2504:` runTestExamples and runPerformanceTests have no --exit-code
     - issue author: Claude-JG
     - description:  runTestSuite.py exits non-zero with --exit-code (and 0 without it); the other two runners have no such flag and ALWAYS return 0; however many examples or performance tests failed. Anything calling them - the exudev driver of revision2026 step R5.18; a CI job; a shell script - therefore cannot see a failure from the exit code and has to read the summary line out of the log instead; which is what tools/exudev/results.py does today. That scan cannot distinguish a run that died before writing its summary from a log it did not find; so it reports "unknown". Give both runners the same --exit-code flag runTestSuite.py has (about 10 lines each; the pattern already exists); then delete tools/exudev/results.py and let every step of the driver be judged by its exit code. revision2026 step R5.18.1
-    - date raised: 2026-09-18 
-
- * :textorange:`open issue 2503:` the build and test scripts are 18 batch files without help
-    - issue author: Claude-JG
-    - description:  tools/buildAndGenerate/ holds 18 files; 5 of which exist only to find conda and to loop over the Python versions. A .bat file cannot print a --help; cannot validate an option and cannot pass an unknown option on: every new runner option has to be threaded through by hand - which is how --fast-module stayed unreachable from runTestSuite.bat until #2500. The scripts are also the place where the maintainer looks up HOW the build works; so they carry a documentation duty that comment headers serve badly. Replace them with one Python driver with subcommands; a --help per subcommand and a --dry-run that prints the commands instead of running them; keeping only the scripts that must stay shell (manylinuxBuild.sh runs inside the docker image). revision2026 step R5.18
     - date raised: 2026-09-18 
 
  * :textred:`open issue 2502:` sliderCrank3Dbenchmark result depends on the numpy version

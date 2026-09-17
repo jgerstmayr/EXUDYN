@@ -34,7 +34,7 @@ docs/theDoc/                              LaTeX documentation, version.txt
 docs/RST/                                 Sphinx sources (largely generated)
 docs/howTo/                               loose how-to notes, see below
 tools/issueTracker/                       issue tracker and version source of truth
-tools/buildAndGenerate/                   build, test and release batch scripts
+tools/exudev/                             the dev driver: build, test, docs, release
 ```
 
 ## Building and running
@@ -47,8 +47,8 @@ capability and is protected by design.
   creates and build `Debug|x64` or `Release|x64`. That solution and `python/pytest.py` are
   untracked scratch copies of committed templates, so experiments cannot be committed.
 - **Wheel**: `main/setup.py`, about one minute. Also protected by design.
-- **Scripts**: see the table at the end of [WORKFLOW.md](WORKFLOW.md) for all 15 scripts in
-  `tools/buildAndGenerate/`.
+- **Scripts**: one driver, `exudev` - `exudev --help`, and `exudev -n <command>` to see what a
+  command would run. Its commands are listed in [`tools/exudev/README.md`](../../tools/exudev/README.md).
 - **Tests**: `runTestSuite.py` from `main/pythonDev/TestModels/`, about 20 s. Run it in full.
 
 Entry points worth knowing:
