@@ -41,6 +41,8 @@ import matplotlib.ticker as ticker
 
 
 import exudyn as exu 
+#a local run must not open a plot window when windows are suppressed (#2477)
+if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
 import numpy as np
 from exudyn.itemInterface import (MarkerNodeRotationCoordinate, ObjectConnectorCartesianSpringDamper, 
                            LoadTorqueVector, VObjectJointPrismatic2D, ObjectJointPrismatic2D, Torque, 

@@ -78,6 +78,13 @@ version.txt                               version — an OUTPUT of issueTracker.
 10. **Human collaboration.** Humans shall be able to read the codes and docs, and to edit code and 
    docs. This requires to keep most things at one place (prefer linking or auto-generate vs. manual
    copy). It also means to avoid size growth without feature growth and regular clean up.
+11. **Never let a run of yours open a window on the maintainer's screen.** Running a model or an
+   example directly — to check a change, reproduce a bug, measure something — starts the renderer and
+   shows plots, and then waits for a human who is not looking. Set **both** variables for every such
+   run: `EXUDYN_SUPPRESS_UI_WINDOW_OPEN=1` (no renderer, solution viewer, plot or dialog window) and
+   `EXUDYN_OUTPUTDIRECTORY=<scratchpad>/run` (the model's output files stay out of the working tree).
+   The runners — `runTestSuite.py`, `runTestExamples.py`, `pytest` — set the flags themselves and
+   need nothing. Details in `exudyn.special.userInterface` and revision2026 step R5.17.
    
 
 ## Invariants — preserve these (plan §7)

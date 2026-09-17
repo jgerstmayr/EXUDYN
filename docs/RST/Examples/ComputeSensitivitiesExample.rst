@@ -26,6 +26,8 @@ You can view and download this file on Github: `ComputeSensitivitiesExample.py <
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
+   #a local run must not open a plot window when windows are suppressed (#2477)
+   if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
    from exudyn.itemInterface import *
    import exudyn
    from exudyn.processing import ComputeSensitivities, PlotSensitivityResults

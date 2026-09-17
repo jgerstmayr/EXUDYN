@@ -12,6 +12,8 @@
 
 #%%++++++++++++++++++++++++++++++++++
 import exudyn as exu
+#a local run must not open a plot window when windows are suppressed (#2477)
+if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
 from exudyn.utilities import Point, NodePointGround, MassPoint, MarkerNodeCoordinate,\
                              CoordinateSpringDamper, LoadCoordinate, SensorObject
 #to be sure to have all items and functions imported, just do:

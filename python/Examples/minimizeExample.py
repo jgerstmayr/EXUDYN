@@ -15,6 +15,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
+#a local run must not open a plot window when windows are suppressed (#2477)
+if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
 from exudyn.basicUtilities import OutputFilePath
 from exudyn.itemInterface import *
 from exudyn.processing import Minimize, PlotOptimizationResults2D

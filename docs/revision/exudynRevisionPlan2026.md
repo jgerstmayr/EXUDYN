@@ -731,6 +731,13 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     can go; the rest cut WORK (`useGraphics = True` -> `False`, `numberOfGenerations`,
     `useMultiProcessing`, `verbose`, `showProgress`) and stay. The step states which are removed.
 
+<a id="r5-17-1"></a>
+**R5.17.1** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-17-1) — *(sub-step of R5.17)*
+    **A script that draws its own plots ignored the flag** (#2478): `suppressPlots` reaches every
+    plot the package draws, but not the **36 models and examples** that import matplotlib
+    themselves and call `plt.show()`. Each now carries a two-line guard after its exudyn import,
+    and `CLAUDE.md` rule 11 says that a local run of an existing model sets
+    `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` and `EXUDYN_OUTPUTDIRECTORY`.
 ## R6 — Error handling and UX (ongoing, after R2)  <!-- old Phase 5 -->
 
 <a id="r6-1"></a>

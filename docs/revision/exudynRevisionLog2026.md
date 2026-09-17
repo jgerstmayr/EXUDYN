@@ -4871,6 +4871,42 @@ set, `Start()` is `False`, `IsActive()` is `False`, `DoIdleTasks(-1)` returns in
 forever, `SolutionViewer` and `InteractiveImages2Video` return, and with the environment variable
 set the backend is `Agg` and `config.outputDirectory` is what the variable said.
 
+<a id="r5-17-1"></a>
+### R5.17.1 - the 36 scripts that draw their own plots
+
+**DONE 2026-09-17** (#2478).
+
+R5.17 covers what the PACKAGE draws - `PlotSensor`, `PlotFFT`, `ParameterVariationPlot`, the
+Campbell diagram - because those call `plt.show()` inside Exudyn. It cannot reach a script that
+imports matplotlib itself, and **36 do**: 6 test models and 30 examples. The automated runners were
+never affected (their bootstrap sets the `Agg` backend); the case that was still open is the one
+that matters day to day - **an agent running a model locally to check a change, opening a window on
+the maintainer's screen and then waiting for a human who is not looking.**
+
+Each of the 36 now carries this immediately after `import exudyn as exu`:
+
+```python
+#a local run must not open a plot window when windows are suppressed (#2477)
+if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
+```
+
+Self-contained on purpose: matplotlib is imported only when the flag is set, and `use()` runs
+before the script's own `import matplotlib.pyplot`, which is the order matplotlib wants. Scripts
+whose `plt.show()` sits in a comment were left alone.
+
+**Measured both ways**: with `EXUDYN_SUPPRESS_UI_WINDOW_OPEN=1` the backend is `Agg` and
+`plt.show()` returns at once; without it the backend stays `tkagg` and nothing changes for a human
+running the same script. `springDamperTutorial.py` ran to its end under the variable without
+opening anything.
+
+**`CLAUDE.md` gained hard rule 11**: a local run of a model or an example sets
+`EXUDYN_SUPPRESS_UI_WINDOW_OPEN=1` and `EXUDYN_OUTPUTDIRECTORY=<scratchpad>/run` - the second for
+the same reason as R5.13.2, so that a run leaves no files in the working tree. The runners set the
+flags themselves and need nothing.
+
+Verified: 171 examples with the same 5 pre-existing failures, `runTestSuite.py` PASSED,
+`pytest -q -n 8` 136 passed.
+
 ## R6 — Error handling and UX
 
 <a id="r5-14"></a>

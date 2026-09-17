@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.113.dev1, 
+  \item Exudyn version = 1.11.114.dev1, 
   \item last change =  2026-09-17, 
-  \item Number of issues = 2478, 
-  \item Number of resolved issues = 2186 (113 in current version), 
+  \item Number of issues = 2479, 
+  \item Number of resolved issues = 2187 (114 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.114}:  resolved Issue 2478: {\bf a model run locally still opens plot windows}
+(improvement)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Step R5.17 gave exudyn the suppressPlots flag and it reaches every plot the PACKAGE draws (PlotSensor, PlotFFT, ParameterVariationPlot, the Campbell diagram). It cannot reach a script that imports matplotlib itself and calls plt.show(): 36 models and examples do exactly that, so running one of them locally - to check a change or reproduce a bug - still opens a window on the maintainer screen and waits. The runners are not affected, they set the Agg backend in their bootstrap. Needed: a one-line guard in those 36 scripts that switches to the non-interactive backend when exudyn.special.userInterface.suppressPlots is set, plus a rule in CLAUDE.md that a local run of an existing model sets EXUDYN\_SUPPRESS\_UI\_WINDOW\_OPEN and EXUDYN\_OUTPUTDIRECTORY. revision2026 step R5.17.1.}
+    \item {\bf notes: The 36 models and examples that import matplotlib themselves and call plt.show() now carry a two-line guard right after their exudyn import: it switches to the non-interactive Agg backend when exudyn.special.userInterface.suppressPlots is set. Measured both ways - with EXUDYN\_SUPPRESS\_UI\_WINDOW\_OPEN=1 the backend is Agg and plt.show() returns at once; without it the backend stays tkagg. CLAUDE.md gained hard rule 11: a local run of a model or example sets EXUDYN\_SUPPRESS\_UI\_WINDOW\_OPEN and EXUDYN\_OUTPUTDIRECTORY. 171 examples with the same 5 pre-existing failures; suite PASSED; pytest 136 passed. revision2026 step R5.17.1.}
+    \item   date resolved: {\bf 2026-09-17 15:28},
+date raised: 2026-09-17 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.113}:  resolved Issue 2477: {\bf Exudyn has no way to say do not open windows}
 (improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

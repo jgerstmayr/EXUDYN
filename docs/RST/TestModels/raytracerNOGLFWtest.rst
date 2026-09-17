@@ -24,6 +24,8 @@ You can view and download this file on Github: `raytracerNOGLFWtest.py <https://
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
    import exudyn as exu
+   #a local run must not open a plot window when windows are suppressed (#2477)
+   if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
    from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
    from math import sin, cos
    import exudyn.graphics as graphics #only import if it does not conflict

@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.113.dev1, 
++  Exudyn version = 1.11.114.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2478, 
-+  Number of resolved issues = 2186 (113 in current version), 
++  Number of issues = 2479, 
++  Number of resolved issues = 2187 (114 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.114: resolved Issue 2478: a model run locally still opens plot windows (improvement)
+    - issue author: Claude-JG
+    - description:  Step R5.17 gave exudyn the suppressPlots flag and it reaches every plot the PACKAGE draws (PlotSensor, PlotFFT, ParameterVariationPlot, the Campbell diagram). It cannot reach a script that imports matplotlib itself and calls plt.show(): 36 models and examples do exactly that, so running one of them locally - to check a change or reproduce a bug - still opens a window on the maintainer screen and waits. The runners are not affected, they set the Agg backend in their bootstrap. Needed: a one-line guard in those 36 scripts that switches to the non-interactive backend when exudyn.special.userInterface.suppressPlots is set, plus a rule in CLAUDE.md that a local run of an existing model sets EXUDYN_SUPPRESS_UI_WINDOW_OPEN and EXUDYN_OUTPUTDIRECTORY. revision2026 step R5.17.1.
+    - **notes:** The 36 models and examples that import matplotlib themselves and call plt.show() now carry a two-line guard right after their exudyn import: it switches to the non-interactive Agg backend when exudyn.special.userInterface.suppressPlots is set. Measured both ways - with EXUDYN_SUPPRESS_UI_WINDOW_OPEN=1 the backend is Agg and plt.show() returns at once; without it the backend stays tkagg. CLAUDE.md gained hard rule 11: a local run of a model or example sets EXUDYN_SUPPRESS_UI_WINDOW_OPEN and EXUDYN_OUTPUTDIRECTORY. 171 examples with the same 5 pre-existing failures; suite PASSED; pytest 136 passed. revision2026 step R5.17.1.
+    - date resolved: **2026-09-17 15:28**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.113: resolved Issue 2477: Exudyn has no way to say do not open windows (improvement)
     - issue author: Claude-JG
     - description:  A model or an example run outside the test suite opens the renderer and waits for the human - there is no switch for it. The test runners therefore REWRITE the source before running it (six substitutions in testRunnerTools.PrepareExampleSource neutralise SC.renderer.Start/Stop/DoIdleTasks/IsActive, mbs.SolutionViewer, InteractiveDialog and plt.show), which only works for code the runner controls. Needed: exudyn.special.userInterface with suppressRenderer, suppressSolutionViewer, suppressPlots and suppressDialogs, readable from C++ (the renderer window and idle loop live there) and from the Python helpers, plus the environment variables EXUDYN_SUPPRESS_UI_WINDOW_OPEN and EXUDYN_OUTPUTDIRECTORY for automated runs. revision2026 step R5.17.
