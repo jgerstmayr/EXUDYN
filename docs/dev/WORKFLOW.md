@@ -428,6 +428,24 @@ it with `python tools/checkPython.py --write`, and the tool tells you when that 
 `--all` lists every finding by rule, ignoring the baseline. ruff is in the `lint` dependency group
 (`pip install --group lint`); the check fails rather than passes if it is not installed.
 
+If your change touched the **stub files** or anything that generates them (`definitions/`, the
+emitters), also run:
+
+```bash
+python tools/checkPython.py --stubs --check
+```
+
+It runs **mypy's `stubtest`**, which imports the module and compares it name by name and signature
+by signature against `__init__.pyi` and `symbolic.pyi`. Two allowlists: `tools/ci/stubtestNoise.txt`
+is curated (the dunders pybind11 adds to every class, the typing helpers that exist only in the
+stub) and `tools/ci/stubtestBaseline.txt` is the generated backlog, regenerated with
+`--stubs --write` and meant to shrink.
+
+> **This check reads the INSTALLED package**, as do `runTestSuite.py`, `pytest` and
+> `runTestExamples.py`: they all `import exudyn` from site-packages, never from `python/exudyn/`.
+> A change under `python/exudyn/` therefore proves nothing until the package is installed — a
+> passing gate on an uninstalled change is a gate that tested the previous version.
+
 If you **added, removed or renamed a `.cpp` file**, do it in `main/obj/cppsrc.vcxproj` — the
 Visual Studio project is the source of truth for the compile list — and then regenerate the list
 `setup.py` actually builds from:

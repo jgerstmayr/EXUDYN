@@ -1,0 +1,27 @@
+#Allowlist of tools/checkPython.py --stubs (revision2026 step R5.5.4): findings that are NOISE,
+#not gaps. Entries are regular expressions matched against the whole stubtest error name.
+#Keep this file curated and short; everything that is a real gap belongs in the generated
+#backlog file stubtestBaseline.txt instead, which is meant to shrink.
+
+#pybind11 adds these to every enum and container it binds; no stub declares them by hand and
+#no user calls them by name
+exudyn\..*\.__members__
+exudyn\..*\.__int__
+exudyn\..*\.__index__
+exudyn\..*\.__copy__
+exudyn\..*\.__deepcopy__
+exudyn\..*\.__len__
+exudyn\..*\.__getitem__
+exudyn\..*\.__setitem__
+exudyn\..*\.__init__
+
+#typing helpers that exist only in the stub, by design (stubHeader.pyi)
+exudyn\.Shape
+exudyn\.Shape1D
+exudyn\.Shape2D
+exudyn\.T1
+exudyn\.T2
+
+#the compiled modules themselves have no separate stub; exudyn/__init__.pyi describes them
+exudyn\.exudynCPP
+exudyn\.exudynCPPfast

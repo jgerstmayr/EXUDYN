@@ -9,15 +9,31 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.125.dev1, 
+  \item Exudyn version = 1.11.127.dev1, 
   \item last change =  2026-09-17, 
-  \item Number of issues = 2490, 
-  \item Number of resolved issues = 2198 (125 in current version), 
+  \item Number of issues = 2491, 
+  \item Number of resolved issues = 2200 (127 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.127}: {\bf \color{warningRed}  resolved BUG 2490}: {\bf the stubs miss the deprecated module functions and GetDictionary/SetDictionary}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: addDocu=False suppressed the .pyi entry as well as the documentation; so all 14 deliberately undocumented module-level functions (StartRenderer; StopRenderer; InfoStat; GetVersionString; SolveStatic; SolveDynamic; ...) were missing from python/exudyn/\_\_init\_\_.pyi. GetDictionary and SetDictionary were missing from all 43 settings classes; because structureHeaderEmitter adds them to the pybind class but structureStubEmitter did not mirror them. Both matter as soon as the package ships a PEP 561 py.typed marker: a type checker then reports correct user code as an error. revision2026 steps R5.5.2 and R5.5.4}
+    \item {\bf notes: The stub emission no longer depends on addDocu: a function that is deliberately left out of the documentation still exists in the module and is now described in the .pyi (13 functions); StopRenderer was the only declaration without a returnType and got returnType=None (14). structureStubEmitter now mirrors GetDictionary/SetDictionary under the same condition structureHeaderEmitter uses to add them to the pybind class (43 classes). Measured with mypy on a user script that calls StartRenderer; GetDictionary; SetDictionary; SolveDynamic; SetOutputPrecision and StopRenderer: 9 errors with the old stub; none with the new one. py.typed is shipped from now on. revision2026 steps R5.5.2 and R5.5.4}
+    \item   date resolved: {\bf 2026-09-17 19:52},
+date raised: 2026-09-17 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.126}: {\bf \color{warningRed}  resolved BUG 2489}: {\bf robotics/future.py uses an undefined name graphics}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: MakeCorkeRobot-related code in exudyn/robotics/future.py builds graphicsBaseList from graphics.Brick/graphics.Cylinder/graphics.color but nothing imports graphics; the function does four star imports and none of them provides it (verified: exudyn.utilities and exudyn.graphicsDataUtilities have no attribute graphics). The path raises NameError. ruff reports F405 rather than F821 because of the star imports; mypy found it. revision2026 step R5.5.6}
+    \item {\bf notes: future.py now imports exudyn.graphics as graphics in its \_\_main\_\_ block; none of the four star imports there provides it (verified). Running the block afterwards showed the same pattern as \#2488 one function further: MakeCorkeRobot caught the ImportError of roboticstoolbox; printed and continued; and then returned an undefined robotCorke - it now raises ImportError naming the package to install. revision2026 step R5.5.6}
+    \item   date resolved: {\bf 2026-09-17 19:52},
+date raised: 2026-09-17 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.125}: {\bf \color{warningRed}  resolved BUG 2488}: {\bf four undefined names raise NameError when their code path is reached}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
@@ -13270,12 +13286,6 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
-  \item open {\bf BUG 2489}:  {\bf robotics/future.py uses an undefined name graphics}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item issue author: Claude-JG
-    \item {description: MakeCorkeRobot-related code in exudyn/robotics/future.py builds graphicsBaseList from graphics.Brick/graphics.Cylinder/graphics.color but nothing imports graphics; the function does four star imports and none of them provides it (verified: exudyn.utilities and exudyn.graphicsDataUtilities have no attribute graphics). The path raises NameError. ruff reports F405 rather than F821 because of the star imports; mypy found it. revision2026 step R5.5.6}
-    \item date raised: 2026-09-17 
-  \ei
   \item open {\bf BUG 2471}:  {\bf FEMinterface NPZ files store a C++ enum and cannot be read by a second module}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

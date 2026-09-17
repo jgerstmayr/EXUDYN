@@ -135,6 +135,9 @@ lint = [
     "ruff==0.16.8",         #pinned for the same reason: tools/ci/ruffBaseline.txt holds this
                             #version's messages, and the rule set of a family can change with a
                             #ruff release (revision2026 step R5.5)
+    "mypy==2.3.1",          #only for its stubtest: 'python tools/checkPython.py --stubs' compares
+                            #the .pyi files against the imported module (revision2026 step R5.5.4).
+                            #Pinned as well - tools/ci/stubtestBaseline.txt holds its messages
     ]
 build = [
     "setuptools>=77",       #same floor as build-system.requires: SPDX licence expression (#2372)

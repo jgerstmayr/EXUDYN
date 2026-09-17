@@ -47,7 +47,6 @@
 1	python/exudyn/robotics/future.py	F405	`Robot` may be undefined, or defined from star imports
 1	python/exudyn/robotics/future.py	F405	`VRobotBase` may be undefined, or defined from star imports
 1	python/exudyn/robotics/future.py	F405	`VRobotTool` may be undefined, or defined from star imports
-14	python/exudyn/robotics/future.py	F405	`graphics` may be undefined, or defined from star imports
 1	python/exudyn/robotics/future.py	F841	Local variable `Pz` is assigned to but never used
 1	python/exudyn/robotics/future.py	F841	Local variable `a1` is assigned to but never used
 1	python/exudyn/robotics/future.py	F841	Local variable `a4` is assigned to but never used

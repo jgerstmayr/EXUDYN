@@ -1315,6 +1315,7 @@ class PyLatexRST:
         
         self.sPy += '\n'
 
+        examplePyi = '' #the stub block below runs whether or not the function is documented
         if addDocu:
             self.sLatex += sLadd
             self.sRST += sRadd
@@ -1327,7 +1328,6 @@ class PyLatexRST:
             self.sLatex += ' & ' + description.replace('_','\\_')
             #self.sRST += ': \n' +  RemoveIndentation(description.replace('_','\_'), '  | ') + '\n'
             self.sRST += ': \n' +  RemoveIndentation(LatexString2RST(description), '  | ') + '\n'
-            examplePyi = ''
             if example != '':
                 exampleRST = example
                 example = Str2Latex(example)
@@ -1341,6 +1341,11 @@ class PyLatexRST:
                 self.sRST += '  '+RSTcodeBlock(RemoveIndentation(exampleRST,'   '+'  ', False).replace('\\TAB','  '), 'python') + '\n' #TAB=2 spaces +2 spaces surrounding
             self.sLatex += '\\\\ \\hline \n'
     
+        #the stub describes what the module HAS; addDocu only decides whether the function
+        #is DOCUMENTED. Every deprecated function carries addDocu=False and was therefore
+        #missing from the .pyi, so a type checker reported its use in user code as an error
+        #(#2490). The example text stays with the documentation.
+        if '.' not in pyName: #'special.InfoStat' and friends are not module-level names
             pyiIndent = ''
             if cClass != '': #in case of basic module, stubs are not needed => information 
                 pyiIndent = ' '*4

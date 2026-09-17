@@ -67,6 +67,13 @@ def StructureStub(parseInfo):
                     argSep = ', '
             stubStr += spaces4+'@overload\n'
             stubStr += spaces4+'def '+functionName+'('+argStr.replace('\\_','_')+')'+' -> '+tm.Render(parameter['type'], 'stub', 'structures')+': ...\n'
+
+    #GetDictionary/SetDictionary are not members of the definition: structureHeaderEmitter adds
+    #them to the pybind class under exactly this condition. The stub has to mirror them, otherwise
+    #a type checker reports settings.GetDictionary() in user code as an error (#2490)
+    if ClassHasGetSetDictionary(Header(parseInfo, 'class')):
+        stubStr += spaces4+'def GetDictionary(self) -> dict: ...\n'
+        stubStr += spaces4+'def SetDictionary(self, d: dict) -> None: ...\n'
     return stubStr
 
 

@@ -19,10 +19,19 @@
 #           A baseline entry that no longer occurs is reported, not tolerated silently: the
 #           baseline is meant to shrink, and a stale entry hides the next regression.
 #
+#           The second half (--stubs) compares the generated stub files against the module that is
+#           actually imported, with mypy's stubtest (revision2026 step R5.5.4). Two allowlists:
+#           tools/ci/stubtestNoise.txt is curated (pybind dunders, stub-only typing helpers) and
+#           tools/ci/stubtestBaseline.txt is the generated backlog, which is meant to shrink.
+#           NOTE this checks the INSTALLED package, not python/exudyn/ - install before believing it.
+#
 # Usage:    python tools/checkPython.py             report
 #           python tools/checkPython.py --check     the same, but exit non-zero on a new finding (gate, CI)
 #           python tools/checkPython.py --write     regenerate the baseline from the current findings
 #           python tools/checkPython.py --all       report every finding, ignoring the baseline
+#           python tools/checkPython.py --stubs             compare stubs and module (stubtest)
+#           python tools/checkPython.py --stubs --check     the same, exit non-zero on a new disagreement
+#           python tools/checkPython.py --stubs --write     regenerate the stubtest backlog
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-17 (created, revision2026 step R5.5)
@@ -114,12 +123,79 @@ def PrintFindings(title, items):
         print('    ' + key[0] + '  ' + key[1] + '  ' + key[2] + countStr)
 
 
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#stubtest half: compare python/exudyn/__init__.pyi and symbolic.pyi against the imported module
+stubtestNoiseFile = os.path.join(repositoryRoot, 'tools', 'ci', 'stubtestNoise.txt')
+stubtestBaselineFile = os.path.join(repositoryRoot, 'tools', 'ci', 'stubtestBaseline.txt')
+mypyConfigFile = os.path.join(repositoryRoot, 'tools', 'ci', 'mypyStubtest.ini')
+
+
+def RunStubtest(generate=False):
+    command = [sys.executable, '-m', 'mypy.stubtest', 'exudyn',
+               '--ignore-positional-only',                  #pybind reports every argument as positional
+               '--mypy-config-file', mypyConfigFile,
+               '--allowlist', stubtestNoiseFile]
+    if generate:
+        command.append('--generate-allowlist')
+    else:
+        command += ['--allowlist', stubtestBaselineFile]
+
+    environment = dict(os.environ)
+    environment['EXUDYN_SUPPRESS_UI_WINDOW_OPEN'] = '1'      #stubtest imports the module, #2477
+    try:
+        process = subprocess.run(command, cwd=repositoryRoot, capture_output=True, text=True, env=environment)
+    except OSError as error:
+        raise SystemExit('could not run stubtest: ' + str(error))
+    if 'No module named mypy' in process.stderr:
+        raise SystemExit('mypy is not installed, so the stubs cannot be checked:\n  pip install --group lint')
+    return process
+
+
+def CheckStubs(args):
+    if args.write:
+        process = RunStubtest(generate=True)
+        entries = [line for line in process.stdout.split('\n')
+                   if line.strip() != '' and not line.startswith('note:')]
+        header = ['#Backlog of tools/checkPython.py --stubs (revision2026 step R5.5.4): the stub-vs-module',
+                  '#disagreements that existed when the check was introduced. GENERATED - regenerate with',
+                  "#'python tools/checkPython.py --stubs --write'. A disagreement that is NOT in here fails the",
+                  '#check. This list is meant to SHRINK; curated noise belongs in stubtestNoise.txt instead.',
+                  '#The large groups are: pybind enums reported as metaclass differences, names the stub declares',
+                  '#that the module no longer has, and signatures that differ in their argument names.',
+                  '']
+        with open(stubtestBaselineFile, 'w', encoding='utf8', newline='\n') as file:
+            file.write('\n'.join(header + entries) + '\n')
+        print('stubtest backlog written: ' + str(len(entries)) + ' entries.')
+        return 0
+
+    process = RunStubtest()
+    output = process.stdout.strip()
+    if 'Success: no issues found' in output:
+        print('OK: the stubs and the imported module agree, apart from the curated noise and the')
+        print('    ' + str(sum(1 for line in open(stubtestBaselineFile, encoding='utf8')
+                               if line.strip() and not line.startswith('#'))) + ' entries of the backlog.')
+        return 0
+
+    print(output)
+    print('')
+    print('A name the stub and the module disagree about is either a stub that went stale or a')
+    print('binding that is not described. Note that stubtest checks the INSTALLED package: if you')
+    print('changed python/exudyn/, install it before believing this output. Once a disagreement is')
+    print('understood and cannot be fixed now, add it with:')
+    print('    python tools/checkPython.py --stubs --write')
+    return 1 if args.check else 0
+
+
 def Main():
     parser = argparse.ArgumentParser(description='run ruff over the shipped package and compare to the baseline')
     parser.add_argument('--check', action='store_true', help='exit non-zero on a new finding')
     parser.add_argument('--write', action='store_true', help='regenerate the baseline')
     parser.add_argument('--all', action='store_true', help='report every finding, ignoring the baseline')
+    parser.add_argument('--stubs', action='store_true', help='compare the stub files against the imported module')
     args = parser.parse_args()
+
+    if args.stubs:
+        return CheckStubs(args)
 
     current = CountFindings(RunRuff(checkedPaths))
 

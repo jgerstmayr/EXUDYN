@@ -58,6 +58,8 @@ pb.DefPyFunctionAccess(cClass='', pyName='StopRenderer', cName='PyStopOpenGLRend
                                 description="DEPRECATED; Stop OpenGL rendering engine",
                                 argList=['deprecationWarning'],
                                 defaultArgs=['True'],
+                                returnType='None', #the only declaration that had none, so it was
+                                #the only module function still missing from the stub, #2490
                                 addDocu=False,
                                 )
 

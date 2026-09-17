@@ -67,10 +67,11 @@ def MakeCorkeRobot(robotDic):
         
         robotCorke = rtb.robot.DHRobot ( Links )
         
-    except Exception as e: 
-        
-        print('Error form exception! Check installation of roboticstoolbox from Peter Corke:',e)
-        
+    except Exception as e:
+        #printing and continuing left robotCorke undefined, so the next line raised
+        #UnboundLocalError instead of saying what was wrong, #2489
+        raise ImportError('MakeCorkeRobot: check the installation of roboticstoolbox from Peter '
+                          'Corke ("pip install roboticstoolbox-python"); the original error was: '+str(e)) from e
 
     return robotCorke
 
@@ -468,7 +469,8 @@ if __name__ == '__main__':
     from exudyn.graphicsDataUtilities import *
     from exudyn.robotics import *   # to import  robotics core functions
     import exudyn.robotics.models as models
-    
+    import exudyn.graphics as graphics #none of the star imports above provides it, #2489
+
     # define robot base parameter 
     graphicsBaseList = [graphics.Brick([0,0,-0.15], [0.4,0.4,0.1], graphics.color.grey)]
     graphicsBaseList +=[graphics.Cylinder([0,0,0], [0.5,0,0], 0.0025, graphics.color.red)]

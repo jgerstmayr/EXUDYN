@@ -4716,6 +4716,101 @@ the stub fragments are merged by indentation; a class docstring line starting at
 Without it, the next unindented documentation line breaks the stub again and nothing says so: the
 file is never imported, never compiled, and only a type checker or an IDE would notice - quietly.
 
+<a id="r5-5-2"></a>
+### R5.5.2 - the stubs describe what the module has
+
+**DONE 2026-09-17** (#2490).
+
+Two independent causes, both of them a rule that was right for the documentation and wrong for the
+stub.
+
+**`addDocu=False` suppressed the stub entry as well.** In `DefPyFunctionAccess` everything after
+`if addDocu:` was skipped - the LaTeX, the RST **and** the `.pyi` line. Every deliberately
+undocumented function is a deprecated one, so the result was that exactly the 14 functions a user
+is most likely to still call were the ones missing: `StartRenderer`, `StopRenderer`,
+`IsRendererActive`, `DoRendererIdleTasks`, `InfoStat`, `GetVersionString`, `SetOutputPrecision`,
+`SetWriteToConsole`, `SetPrintDelayMilliSeconds`, `SetLinalgOutputFormatPython`,
+`SuppressWarnings`, `SolveStatic`, `SolveDynamic`, `ComputeODE2Eigenvalues`. The stub block now
+runs regardless of `addDocu` - a name that is not documented still exists - and skips names
+containing a dot (`special.InfoStat` is not a module-level name; the R5.5.1 parse guard would have
+caught that, which is the point of having it).
+
+`StopRenderer` needed one more thing: it was the only declaration in `definitions/pybindModule.py`
+with no `returnType`, and the emitter writes no stub line without one. Its C++ binding returns
+void, so `returnType='None'`.
+
+**`GetDictionary`/`SetDictionary` were never in the definitions.** `structureHeaderEmitter` adds
+them to the pybind class when `ClassHasGetSetDictionary(...)`; `structureStubEmitter` iterated the
+declared members only and therefore never mentioned them - for all 43 settings classes.
+It now mirrors the same condition. Cross-checked against the generated bindings: 46 stub pairs
+against 44 `.def("GetDictionary"...)` lines, and stubtest confirms the two extra classes have the
+methods at runtime as well (they are bound in the manual classes).
+
+**What this is worth, measured.** A user script calling `StartRenderer`, `GetDictionary`,
+`SetDictionary`, `SolveDynamic`, `SetOutputPrecision` and `StopRenderer`, type-checked with mypy:
+
+| stub | result |
+|---|---|
+| before | `Found 9 errors` - "Module has no attribute ..." for correct code |
+| after | `Success: no issues found` |
+
+That is the whole reason this step came before shipping `py.typed` in R5.5.4.
+
+<a id="r5-5-4"></a>
+### R5.5.4 - stubtest, and the marker that makes stubs count
+
+**DONE 2026-09-17** (#2490; half B of R5.5, decisions D4-D5).
+
+**Three obstacles, in the order they appeared.**
+
+1. stubtest compiles the package with mypy before comparing, and refuses to compare while that
+   fails - the untyped source produces **649** mypy errors. `tools/ci/mypyStubtest.ini` sets
+   `ignore_errors = True`; it is used by this check and says nothing about how anyone else should
+   type-check.
+2. mypy ignores inline `.pyi` files unless the package ships a PEP 561 **`py.typed`** marker.
+   Without it every module reports "failed to find stubs" and nothing is compared at all - so the
+   stubs were being read by some IDEs and by no type checker. Placing them in a separate
+   `exudyn-stubs` directory on `MYPYPATH` was tried and does not work: the installed package wins.
+3. Shipping that marker is user-visible, and with the stubs as they were it would have **created**
+   errors in correct user code. The maintainer chose to close R5.5.2 first; `py.typed` is now in
+   `package_data` (together with `symbolic.pyi`, which was shipped by accident rather than by
+   declaration), and the measurement in R5.5.2 shows the difference.
+
+**The result**: 439 findings before R5.5.2, **353** after the module functions were added, **296**
+after `GetDictionary`/`SetDictionary`. Of those, a curated noise list absorbs the dunders pybind11
+adds to every bound class and the typing helpers that exist only in the stub, and the remaining
+**271** are the generated backlog. `python tools/checkPython.py --stubs --check` then reports
+`Success: no issues found in 43 modules`.
+
+**Two things learned about stubtest.** An *unused* allowlist entry counts as an error, so the
+curated list may not carry patterns "just in case" - eleven speculative ones were removed. And an
+allowlist entry is matched against the error's **object name**, not its message: a pattern written
+to silence the "metaclass differs" noise (`exudyn\.[A-Za-z0-9_]+`) silently swallowed every
+top-level finding as well. It was removed; those 81 sit in the backlog instead, where they are
+visible. A filter that hides more than it says is worse than no filter.
+
+<a id="r5-5-6"></a>
+### R5.5.6 - future.py, and the same pattern one function further
+
+**DONE 2026-09-17** (#2489).
+
+The `__main__` block of `robotics/future.py` builds its graphics from `graphics.Brick`,
+`graphics.Cylinder` and `graphics.color` and nothing imports `graphics`; none of the four star
+imports in that block provides it (verified: neither `exudyn.utilities` nor
+`exudyn.graphicsDataUtilities` has the attribute). Running the file raised `NameError` at the
+first line that used it. `import exudyn.graphics as graphics` added.
+
+**ruff cannot find this one**, which is the argument for leaving F405 in the baseline rather than
+dismissing it as style: with a star import in scope, pyflakes downgrades an unknown name from F821
+"undefined name" to F405 "may be undefined, or defined from star imports". mypy has the whole
+picture and says it plainly.
+
+Running the repaired block then reproduced R5.5.5 exactly, one function further: `MakeCorkeRobot`
+catches the `ImportError` of the optional `roboticstoolbox`, prints, continues - and returns an
+undefined `robotCorke`, so the caller sees `UnboundLocalError` instead of a missing package. It now
+raises `ImportError` naming the package to install. Both instances of this pattern were found the
+same way: by actually running the path that was being fixed.
+
 <a id="r5-5-3"></a>
 ### R5.5.3 - ruff over the shipped package
 

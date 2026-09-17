@@ -716,12 +716,11 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     `createStubFiles.py` now `ast.parse()`s both stub files and refuses to write an invalid one.
 
 <a id="r5-5-2"></a>
-**R5.5.2** *(sub-step of R5.5; found 2026-09-17 while writing R5.5)* **The stubs describe classes
-    but not module-level functions.** `StartRenderer`, `StopRenderer`, `InfoStat`,
-    `GetVersionString`, `SetOutputPrecision`, `SetWriteToConsole`, `SuppressWarnings` and the
-    settings classes' `GetDictionary`/`SetDictionary` have no stub entry, so an IDE offers no
-    completion and no signature for them. Depends on R5.5.1 (a stub that does not parse cannot be
-    checked) and on D4 (stubtest is what would keep it true afterwards).
+**R5.5.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-2) — *(sub-step of R5.5)*
+    **The stubs describe the module-level functions and the settings dictionaries** (#2490). The
+    cause was `addDocu=False`, which suppressed the `.pyi` entry together with the documentation,
+    and a `GetDictionary`/`SetDictionary` pair that the C++ emitter adds but the stub emitter did
+    not mirror. 14 functions and 43 class pairs.
 
 <a id="r5-5-3"></a>
 **R5.5.3** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-3) — *(sub-step of R5.5,
@@ -731,27 +730,11 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     shrink. The measured count was 565, not the ~165 estimated when R5.5 was written.
 
 <a id="r5-5-4"></a>
-**R5.5.4** *(sub-step of R5.5, half B; decisions D4-D5)* **`stubtest` compares the stubs against the
-    module.** Measured 2026-09-17, and the measurement changed what the step has to decide:
-
-    - `python -m mypy.stubtest exudyn` reports **432 findings** once it can run - mostly
-      "not present in stub" (the missing module-level functions and
-      `GetDictionary`/`SetDictionary` of R5.5.2) plus dunder noise from the pybind enums
-      (`__index__`, `__int__`, `__members__`), which an allowlist has to absorb.
-    - **Two obstacles had to be cleared to get that number.** First, stubtest compiles the package
-      with mypy and refuses to compare while that fails - the untyped source produces **649**
-      mypy errors, so the run needs a mypy configuration with `ignore_errors = True`. Second, and
-      this is the open question: mypy ignores a package's inline `.pyi` files unless the package
-      ships a **PEP 561 `py.typed` marker**, which Exudyn does not. Without it every module reports
-      "failed to find stubs" and nothing is compared. Placing the stubs in a separate
-      `exudyn-stubs` directory on `MYPYPATH` was tried and does not work either - the installed
-      package wins.
-    - **The decision this needs** (it was not visible when D4 was answered): shipping `py.typed`
-      is user-visible. It tells every user's mypy and pyright to type-check their scripts against
-      these stubs - and the stubs are incomplete (R5.5.2), so `exu.StartRenderer(...)` would start
-      being reported as an error in user code. Either close R5.5.2 first and then ship the marker,
-      or let the maintainer tool create the marker in the *installed* package for the duration of
-      its own run and ship nothing.
+**R5.5.4** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-4) — *(sub-step of R5.5,
+    half B; decisions D4-D5, and the `py.typed` question answered with option (a))* **`stubtest`
+    compares the stubs against the module**: `tools/checkPython.py --stubs`, two allowlists
+    (curated noise, generated backlog of 271), and the PEP 561 marker is shipped - **after** R5.5.2
+    closed the gaps that would have turned correct user code into reported errors.
 
 <a id="r5-5-5"></a>
 **R5.5.5** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-5) — *(sub-step of R5.5;
@@ -761,12 +744,9 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     Running the first path then showed a second defect behind it.
 
 <a id="r5-5-6"></a>
-**R5.5.6** *(sub-step of R5.5; found 2026-09-17 by the mypy run of R5.5.4)* **`robotics/future.py`
-    uses an undefined name `graphics`** (#2489): the graphics list is built from `graphics.Brick`,
-    `graphics.Cylinder` and `graphics.color`, and none of the four star imports in that function
-    provides it - verified, `exudyn.utilities` and `exudyn.graphicsDataUtilities` have no such
-    attribute. The path raises `NameError`. **ruff cannot find this one**: the star imports turn it
-    into F405 "may be undefined", which is why F405 sits in the baseline.
+**R5.5.6** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-6) — *(sub-step of R5.5)*
+    **`robotics/future.py` imports `graphics`** (#2489), and its `MakeCorkeRobot` raises instead of
+    returning an undefined name - the same pattern as R5.5.5, one function further.
 
 <a id="r5-6"></a>
 **R5.6** Add an ASan/UBSan Linux job. For a C++ library invoking arbitrary user callbacks this catches

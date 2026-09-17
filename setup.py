@@ -270,7 +270,12 @@ if platform.architecture()[0] != '64bit':
 
 addLibrary_dirs = []
 
-addPackageData = {'':['__init__.pyi']}
+#py.typed is the PEP 561 marker: without it, mypy and pyright ignore the .pyi files next to the
+#modules entirely - the stubs are then read by some IDEs and by no type checker. It is shipped
+#since revision2026 step R5.5.4, after the stubs stopped missing the module-level functions and
+#the settings classes' GetDictionary/SetDictionary (#2490) - shipping it before that would have
+#turned correct user code into reported errors.
+addPackageData = {'':['__init__.pyi', 'symbolic.pyi', 'py.typed']}
 
 if isWindows:
     if config['useOpenVR']:

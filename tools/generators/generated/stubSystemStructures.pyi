@@ -14,6 +14,8 @@ class BeamSection:
     """[SI:kg/m] mass per unit length of the beam."""
     stiffnessMatrix: ArrayLike
     r"""[SI:Nm:math:`^2`, Nm and N (mixed)] sectional stiffness matrix related to :math:`\vp{{}^{c}{\nv}}{{}^{c}{\mv}} = {}^{c}{\Cm} \vp{{}^{c}{\teps}}{{}^{c}{\tkappa}}` with sectional normal force :math:`{}^{c}{\nv}`, torque :math:`{}^{c}{\mv}`, strain :math:`{}^{c}{\teps}` and curvature :math:`{}^{c}{\tkappa}`, all quantities expressed in the cross section frame :math:`c`. Set with list of lists or numpy array."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for BeamSectionGeometry
 class BeamSectionGeometry:
@@ -26,6 +28,8 @@ class BeamSectionGeometry:
     """Type of cross section: Polygon, Circular, etc."""
     polygonalPoints: Vector2DList
     """[SI: (m,m) ] list of polygonal (:math:`Y,Z`) points in local beam cross section coordinates, defined in positive rotation direction."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for SolutionSettings
 class SolutionSettings:
@@ -84,6 +88,8 @@ class SolutionSettings:
     """flag (true/false), which determines if restart file is written regularly, see restartFileName for details."""
     writeSolutionToFile: bool
     """flag (true/false), which determines if (global) solution vector is written to the solution file (coordinatesSolutionFile); standard quantities that are written are: solution is written as displacements and coordinatesODE1; for additional coordinates in the solution file, see the options below."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for NumericalDifferentiationSettings
 class NumericalDifferentiationSettings:
@@ -104,6 +110,8 @@ class NumericalDifferentiationSettings:
     """minimum size of coordinates in relative differentiation parameter."""
     relativeEpsilon: float
     r"""relative differentiation parameter epsilon; the numerical differentiation parameter :math:`\varepsilon` follows from the formula (:math:`\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, |q_i + [q^{Ref}_i]|)`, with :math:`\varepsilon_\mathrm{relative}`=relativeEpsilon, :math:`q_{min} = `minimumCoordinateSize, :math:`q_i` is the current coordinate which is differentiated, and :math:`qRef_i` is the reference coordinate of the current coordinate."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for DiscontinuousSettings
 class DiscontinuousSettings:
@@ -116,6 +124,8 @@ class DiscontinuousSettings:
     """maximum number of discontinuous (post Newton) iterations."""
     useRecommendedStepSize: bool
     """some objects (contact-related) provide a recommendedStepSize; if True, this recommendation is used, but may lead to very small step sizes and solver could fail if restrictions are too hard; set to False to ignore this recommendation."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for NewtonSettings
 class NewtonSettings:
@@ -148,6 +158,8 @@ class NewtonSettings:
     """flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution."""
     weightTolerancePerCoordinate: bool
     """flag (true/false); false = compute error as L2-Norm of residual; true = compute error as (L2-Norm of residual) / (sqrt(number of coordinates)), which can help to use common tolerance independent of system size."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for GeneralizedAlphaSettings
 class GeneralizedAlphaSettings:
@@ -172,6 +184,8 @@ class GeneralizedAlphaSettings:
     """set useIndex2Constraints = true in order to use index2 (velocity level constraints) formulation."""
     useNewmark: bool
     """if true, use Newmark method with beta and gamma instead of generalized-Alpha."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for ExplicitIntegrationSettings
 class ExplicitIntegrationSettings:
@@ -186,6 +200,8 @@ class ExplicitIntegrationSettings:
     """True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!"""
     useLieGroupIntegration: bool
     """True: use Lie group integration for rigid body nodes; must be turned on for Lie group nodes (without data coordinates) to work properly; does not work for nodes with data coordinates!"""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for TimeIntegrationSettings
 class TimeIntegrationSettings:
@@ -244,6 +260,8 @@ class TimeIntegrationSettings:
     """0 ... no output, 1 ... show short step information every 2 seconds (every 30 seconds after 1 hour CPU time), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)."""
     verboseModeFile: int
     """same behaviour as verboseMode, but outputs all solver information to file."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for StaticSolverSettings
 class StaticSolverSettings:
@@ -288,6 +306,8 @@ class StaticSolverSettings:
     """0 ... no output, 1 ... show errors and load steps, 2 ... show short Newton step information (error), 3 ... show also solution vector, 4 ... show also jacobian, 5 ... show also Jacobian inverse."""
     verboseModeFile: int
     """same behaviour as verboseMode, but outputs all solver information to file."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for LinearSolverSettings
 class LinearSolverSettings:
@@ -300,6 +320,8 @@ class LinearSolverSettings:
     """[ONLY available for sparse matrices] True: the Eigen SparseLU solver offers the possibility to reuse an analyzed pattern of a previous factorization; this may reduce total factorization time by a factor of 2 or 3, depending on the matrix type; however, if the matrix patterns heavily change between computations, this may even slow down performance; this flag is set for SparseMatrices in InitializeSolverData(...) and should be handled with care!"""
     showCausingItems: bool
     """False: no output, if solver fails; True: if redundant equations appear, they are resolved such that according solution variables are set to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!"""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for Parallel
 class Parallel:
@@ -320,6 +342,8 @@ class Parallel:
     """this is the number of subtasks that every thread receives; minimum is 1, the maximum should not be larger than 100; this factor is 1 as long as the taskSplitMinItems is not reached; flag is copied into MainSystem internal flag at InitializeSolverData(...)."""
     useLoadBalancing: bool
     """if True, parallel computation uses load balancing, which may give better performance in case of non-equilibrated loads; (mobile) Intel CPUs may perform better without load balancing; this flag is coupled to exudyn.special.solver.multiThreadingLoadBalancing (overwritten when solver starts with multithreading)."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for SimulationSettings
 class SimulationSettings:
@@ -348,6 +372,8 @@ class SimulationSettings:
     """precision for floating point numbers written to console; e.g. values written by solver."""
     pauseAfterEachStep: bool
     """pause after every time step or static load step(user press SPACE)."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsGeneral
 class VSettingsGeneral:
@@ -418,6 +444,8 @@ class VSettingsGeneral:
     """the Windows display scaling (monitor scaling; content scaling) factor is used for increased visibility of texts on high resolution displays; based on GLFW glfwGetWindowContentScale; deactivated on linux compilation as it leads to crashes (adjust textSize manually!)."""
     zoomAllUseBoundingBox: bool
     """if true, use exact scene bounding box (but not including texts) for zoom; does not include perspective effects!"""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsContourAdvanced
 class VSettingsContourAdvanced:
@@ -442,6 +470,8 @@ class VSettingsContourAdvanced:
     """RGBA color if relative value in contour plot is smaller than 0 (if automaticRange=False); alpha is ignored."""
     showColorBar: bool
     """show the colour bar with minimum and maximum values for the contour plot."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsContour
 class VSettingsContour:
@@ -466,6 +496,8 @@ class VSettingsContour:
     """if true, the contour plot value range is also reduced; better for static computation; in dynamic computation set this option to false, it can reduce visualization artifacts; you should also set minVal to max(float) and maxVal to min(float)."""
     rigidBodiesColored: bool
     """if true, the contour color is also applied to triangular faces of rigid bodies and mass points, otherwise the rigid body drawing are not influenced by contour settings; for general rigid bodies (except for ObjectGround), Position, Displacement, DisplacementLocal(=0), Velocity, VelocityLocal, AngularVelocity, and AngularVelocityLocal are available; may slow down visualization!"""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsNodes
 class VSettingsNodes:
@@ -488,6 +520,8 @@ class VSettingsNodes:
     """flag to decide, whether the node number is shown."""
     tiling: int
     """tiling for node if drawn as sphere; used to lower the amount of triangles to draw each node; if drawn as circle, this value is multiplied with 4."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsBeams
 class VSettingsBeams:
@@ -512,6 +546,8 @@ class VSettingsBeams:
     """show values at vertical lines; note that these numbers are interpolated values and may be different from values evaluated directly at this point!"""
     reducedAxialInterploation: bool
     """if True, the interpolation along the beam axis may be lower than the beam element order; this may, however, show more consistent values than a full interpolation, e.g. for strains or forces."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsShells
 class VSettingsShells:
@@ -520,6 +556,8 @@ class VSettingsShells:
     """if true: to draw plates/shells as 3D objects; false: only the element surface is drawn; equivalent to crossSectionFilled in beams."""
     thicknessFactor: float
     """a factor multiplied with the thickness of shells/plates only for visualization (e.g. to make some effects more visible)."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsKinematicTree
 class VSettingsKinematicTree:
@@ -532,6 +570,8 @@ class VSettingsKinematicTree:
     """if True, numbers are drawn for joint frames (O[i]J[j]) and COM frames (O[i]COM[j]) for object [i] and local joint [j]."""
     showJointFrames: bool
     """if True, a frame is attached to the origin of every joint frame."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsBodies
 class VSettingsBodies:
@@ -552,6 +592,8 @@ class VSettingsBodies:
     """flag to decide, whether the bodies are shown."""
     showNumbers: bool
     """flag to decide, whether the body(=object) number is shown."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsConnectors
 class VSettingsConnectors:
@@ -576,6 +618,8 @@ class VSettingsConnectors:
     """flag to decide, whether the connector(=object) number is shown."""
     springNumberOfWindings: int
     """number of windings for springs drawn as helical spring."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsMarkers
 class VSettingsMarkers:
@@ -590,6 +634,8 @@ class VSettingsMarkers:
     """flag to decide, whether the markers are shown."""
     showNumbers: bool
     """flag to decide, whether the marker numbers are shown."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsLoads
 class VSettingsLoads:
@@ -612,6 +658,8 @@ class VSettingsLoads:
     """flag to decide, whether the loads are shown."""
     showNumbers: bool
     """flag to decide, whether the load numbers are shown."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsTraces
 class VSettingsTraces:
@@ -652,6 +700,8 @@ class VSettingsTraces:
     """scaling of vector quantities; if, e.g., loads, this factor has to be adjusted significantly."""
     vectorsShowEvery: int
     """integer value i; out of available sensor data, show every i-th vector."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsSensors
 class VSettingsSensors:
@@ -668,6 +718,8 @@ class VSettingsSensors:
     """flag to decide, whether the sensors are shown."""
     showNumbers: bool
     """flag to decide, whether the sensor numbers are shown."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsContact
 class VSettingsContact:
@@ -706,6 +758,8 @@ class VSettingsContact:
     """tiling for nonlinear/polynomial curves; higher values give smoother curves."""
     tilingSpheres: int
     """tiling for spheres; higher values give smoother spheres, but may lead to lower frame rates."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsCamera
 class VSettingsCamera:
@@ -732,6 +786,8 @@ class VSettingsCamera:
     """choose which coordinates or marker are tracked (x,y,z)."""
     useRaytracer: bool
     """True: use (software) raytracer for this view; False: use standard OpenGL renderer."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsScene
 class VSettingsScene:
@@ -754,6 +810,8 @@ class VSettingsScene:
     """True: show faces of finite elements; independent of showFaces."""
     worldBasisSize: float
     """size of world basis coordinate system."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsWindow
 class VSettingsWindow:
@@ -776,6 +834,8 @@ class VSettingsWindow:
     """True: show renderer.state infos regarding zoom, offset and rotation in renderer status message; switched on/off with 'CTRL-F3'."""
     showWindow: bool
     """True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically)."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsView
 class VSettingsView:
@@ -786,10 +846,14 @@ class VSettingsView:
     """settings which change scene representation, showing edges, faces or world basis."""
     window: VSettingsWindow
     """visualization settings for window that are individual to each view."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsWindowDeprecated
 class VSettingsWindowDeprecated:
     """OpenGL Window and interaction settings for visualization; handle changes with care, as they might lead to unexpected results or crashes."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsDialogs
 class VSettingsDialogs:
@@ -804,6 +868,8 @@ class VSettingsDialogs:
     """True: During dialogs, the OpenGL render windows will still get updates of changes in dialogs, etc., which may cause problems on some platforms or for some (complicated) models; False: changes of dialogs will take effect when dialogs are closed."""
     openTreeView: bool
     """True: all sub-trees of the visusalization dialog are opened when opening the dialog; False: only some sub-trees are opened."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsMaterial
 class VSettingsMaterial:
@@ -824,6 +890,8 @@ class VSettingsMaterial:
     """controls shininess of specular component of lights; values < 5 is not very shiny, while > 50 is very shiny."""
     specular: Tuple[float,float,float]
     """RGB specular material color."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsRaytracerAdvanced
 class VSettingsRaytracerAdvanced:
@@ -842,6 +910,8 @@ class VSettingsRaytracerAdvanced:
     """Total number of sub-tiles per thread, used to evenly distribute rendering load to threads."""
     zBiasLines: float
     """offset for lines to draw in front of faces; relative to scene radius."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsRaytracer
 class VSettingsRaytracer:
@@ -888,6 +958,8 @@ class VSettingsRaytracer:
     """Number of CPU-threads (max: 256) used for software rendering (should be approx. the number of available threads)."""
     verbose: int
     """1: print out some debug information on rendering, in particular rendering timings and counter; 2 and higher: advanced debug information."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsOpenGLAdvanced
 class VSettingsOpenGLAdvanced:
@@ -928,6 +1000,8 @@ class VSettingsOpenGLAdvanced:
     """width of lines used for representation of text."""
     vertexNormalsColor: Tuple[float,float,float,float]
     """global RGBA color for vertex normals."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsLight
 class VSettingsLight:
@@ -952,6 +1026,8 @@ class VSettingsLight:
     """specular value of GL_LIGHT[0,1,2,3]."""
     useCameraFrame: bool
     """set False to set light positions and directions relative to model frame; True: lights are in camera frame, not following the visual transformations; this was True up to Exudyn 1.9.174."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsOpenGL
 class VSettingsOpenGL:
@@ -988,6 +1064,8 @@ class VSettingsOpenGL:
     """NOTE: this parameter must be set before starting renderer; later changes are not affecting visualization; multi sampling turned off (<=1) or turned on to given values (2, 3, 4, 8 or 16); increases the graphics buffers and might crash due to graphics card memory limitations; only works if supported by hardware; if it does not work, try to change 3D graphics hardware settings!"""
     zMaxSceneFactor: float
     """factor multiplied with maxSceneSize to avoid clipping of modelview; larger values reduce clipping of near or far objects, but may lead to artifacts (so-called Z-fighting)."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsExportImages
 class VSettingsExportImages:
@@ -1014,6 +1092,8 @@ class VSettingsExportImages:
     """timeout in milliseconds for saving a frame as image to disk; this is the amount of time waited for redrawing; increase for very complex scenes."""
     widthAlignment: int
     """alignment of exported image width; using a value of 4 helps to reduce problems with video conversion (additional vertical lines are lost)."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsOpenVR
 class VSettingsOpenVR:
@@ -1026,6 +1106,8 @@ class VSettingsOpenVR:
     """integer value setting log level of openVR: -1 (no output), 0 (error), 1 (warning), 2 (info), 3 (debug); increase log level to get more output."""
     showCompanionWindow: bool
     """True: openVR will show companion window containing left and right eye view."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsInteractiveAdvanced
 class VSettingsInteractiveAdvanced:
@@ -1058,6 +1140,8 @@ class VSettingsInteractiveAdvanced:
     """True: right mouse click on items also shows GraphicsData information for inspectation (may sometimes be very large and may not fit into dialog for large graphics objects!)."""
     zoomStepFactor: float
     """change of zoom per keypress (keypad +/-) or mouse wheel increment."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VSettingsInteractive
 class VSettingsInteractive:
@@ -1084,6 +1168,8 @@ class VSettingsInteractive:
     """True: if showMouseCoordinates=True, also log mouse coordinates (transformed to model coordinates); only works for axis-aligned ortho-projections and shows the coordinates of the current plane."""
     useJoystickInput: bool
     """True: read joystick input (use 6-axis joystick with lowest ID found when starting renderer window) and interpret as (x,y,z) position and (rotx, roty, rotz) rotation: as available from 3Dconnexion space mouse and maybe others as well; set to False, if external joystick makes problems ..."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for VisualizationSettings
 class VisualizationSettings:
@@ -1124,6 +1210,8 @@ class VisualizationSettings:
     """Settings for sub-view 2."""
     view3: VSettingsView
     """Settings for sub-view 3."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
 
 #information for CSolverTimer
 class CSolverTimer:

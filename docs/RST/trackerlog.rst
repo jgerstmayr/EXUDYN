@@ -19,15 +19,27 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.125.dev1, 
++  Exudyn version = 1.11.127.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2490, 
-+  Number of resolved issues = 2198 (125 in current version), 
++  Number of issues = 2491, 
++  Number of resolved issues = 2200 (127 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.127: :textred:`resolved BUG 2490` : the stubs miss the deprecated module functions and GetDictionary/SetDictionary 
+    - issue author: Claude-JG
+    - description:  addDocu=False suppressed the .pyi entry as well as the documentation; so all 14 deliberately undocumented module-level functions (StartRenderer; StopRenderer; InfoStat; GetVersionString; SolveStatic; SolveDynamic; ...) were missing from python/exudyn/__init__.pyi. GetDictionary and SetDictionary were missing from all 43 settings classes; because structureHeaderEmitter adds them to the pybind class but structureStubEmitter did not mirror them. Both matter as soon as the package ships a PEP 561 py.typed marker: a type checker then reports correct user code as an error. revision2026 steps R5.5.2 and R5.5.4
+    - **notes:** The stub emission no longer depends on addDocu: a function that is deliberately left out of the documentation still exists in the module and is now described in the .pyi (13 functions); StopRenderer was the only declaration without a returnType and got returnType=None (14). structureStubEmitter now mirrors GetDictionary/SetDictionary under the same condition structureHeaderEmitter uses to add them to the pybind class (43 classes). Measured with mypy on a user script that calls StartRenderer; GetDictionary; SetDictionary; SolveDynamic; SetOutputPrecision and StopRenderer: 9 errors with the old stub; none with the new one. py.typed is shipped from now on. revision2026 steps R5.5.2 and R5.5.4
+    - date resolved: **2026-09-17 19:52**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
+ * Version 1.11.126: :textred:`resolved BUG 2489` : robotics/future.py uses an undefined name graphics 
+    - issue author: Claude-JG
+    - description:  MakeCorkeRobot-related code in exudyn/robotics/future.py builds graphicsBaseList from graphics.Brick/graphics.Cylinder/graphics.color but nothing imports graphics; the function does four star imports and none of them provides it (verified: exudyn.utilities and exudyn.graphicsDataUtilities have no attribute graphics). The path raises NameError. ruff reports F405 rather than F821 because of the star imports; mypy found it. revision2026 step R5.5.6
+    - **notes:** future.py now imports exudyn.graphics as graphics in its __main__ block; none of the four star imports there provides it (verified). Running the block afterwards showed the same pattern as #2488 one function further: MakeCorkeRobot caught the ImportError of roboticstoolbox; printed and continued; and then returned an undefined robotCorke - it now raises ImportError naming the package to install. revision2026 step R5.5.6
+    - date resolved: **2026-09-17 19:52**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.125: :textred:`resolved BUG 2488` : four undefined names raise NameError when their code path is reached 
     - issue author: Claude-JG
     - description:  ruff F821 found four names that do not exist where they are used: lieGroupIntegration.py calls exudyn.Print(...) three times although the module imports exudyn as exu; and robotics/roboticsCore.py line 1392 calls SC.renderer.Start() although the class member is self.SC - so InverseKinematicsNumerical with useRenderer=True raises NameError instead of showing the renderer. All four are in error or option paths that no test reaches. revision2026 step R5.5.5
@@ -8592,11 +8604,6 @@ Open issues
 **********
 Known bugs
 **********
-
- * :textred:`open BUG 2489:` robotics/future.py uses an undefined name graphics
-    - issue author: Claude-JG
-    - description:  MakeCorkeRobot-related code in exudyn/robotics/future.py builds graphicsBaseList from graphics.Brick/graphics.Cylinder/graphics.color but nothing imports graphics; the function does four star imports and none of them provides it (verified: exudyn.utilities and exudyn.graphicsDataUtilities have no attribute graphics). The path raises NameError. ruff reports F405 rather than F821 because of the star imports; mypy found it. revision2026 step R5.5.6
-    - date raised: 2026-09-17 
 
  * :textred:`open BUG 2471:` FEMinterface NPZ files store a C++ enum and cannot be read by a second module
     - issue author: Claude-JG

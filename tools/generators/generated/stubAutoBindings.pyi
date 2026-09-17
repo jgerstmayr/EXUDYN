@@ -538,6 +538,10 @@ class MainSystem:
         """Return the systemContainer where the mainSystem (mbs) was created."""
         ...
     @overload
+    def WaitForUserToContinue(self, printMessage=True, deprecationWarning=True) -> None: 
+        """Interrupt further computation until user input --> 'pause' function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as SC.WaitForRenderEngineStopFlag()."""
+        ...
+    @overload
     def SendRedrawSignal(self) -> None: 
         """This function is used to send a signal to the renderer that the scene shall be redrawn because the visualization state has been updated."""
         ...
@@ -1241,6 +1245,42 @@ class SystemContainer:
     def SetDictionary(self, systemDict: dict) -> None: 
         """[UNDER DEVELOPMENT]: set system container data from given dictionary; used for pickling."""
         ...
+    @overload
+    def GetRenderState(self) -> dict: 
+        """DEPRECATED; Get dictionary with current render state (openGL zoom, modelview, etc.); will have no effect if GLFW_GRAPHICS is deactivated."""
+        ...
+    @overload
+    def SetRenderState(self, renderState: dict, waitForRendererFullStartup: bool=True) -> None: 
+        """DEPRECATED; Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState; waitForRendererFullStartup is used to wait at startup for the first frame to be drawn (and zoom all to be set), but be be set False in case of performance issues; will have no effect if GLFW_GRAPHICS is deactivated."""
+        ...
+    @overload
+    def RedrawAndSaveImage(self) -> None: 
+        """DEPRECATED; Redraw openGL scene and save image (command waits until process is finished)."""
+        ...
+    @overload
+    def WaitForRenderEngineStopFlag(self) -> bool: 
+        """DEPRECTED; Wait for user to stop render engine (Press 'Q' or Escape-key); this command is used to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as mbs.WaitForUserToContinue()."""
+        ...
+    @overload
+    def RenderEngineZoomAll(self) -> None: 
+        """DEPRECATED; Send zoom all signal, which will perform zoom all at next redraw request."""
+        ...
+    @overload
+    def AttachToRenderEngine(self) -> bool: 
+        """DEPRECATED; Links the SystemContainer to the render engine, such that the changes in the graphics structure drawn upon updates, etc.; done automatically on creation of SystemContainer; return False, if no renderer exists (e.g., compiled without GLFW) or cannot be linked (if other SystemContainer already linked)."""
+        ...
+    @overload
+    def DetachFromRenderEngine(self) -> bool: 
+        """DEPRECATED; Releases the SystemContainer from the render engine; return True if successfully released, False if no GLFW available or detaching failed."""
+        ...
+    @overload
+    def SendRedrawSignal(self) -> None: 
+        """DEPRECATED; This function is used to send a signal to the renderer that all MainSystems (mbs) shall be redrawn."""
+        ...
+    @overload
+    def GetCurrentMouseCoordinates(self, useOpenGLcoordinates: bool=False) -> [float,float]: 
+        """DEPRECATED; Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(useOpenGLcoordinates=True) to obtain OpenGLcoordinates of projected plane."""
+        ...
     renderer:Renderer
     """The substructure in SystemContainer responsible for rendering (except visualizationSettings)."""
     visualizationSettings:VisualizationSettings
@@ -1250,6 +1290,34 @@ class SystemContainer:
 @overload
 def Help() -> None: 
     """Show basic help information."""
+    ...
+@overload
+def StartRenderer(verbose=0, deprecationWarning=True) -> bool: 
+    """DEPRECATED; Start OpenGL rendering engine (in separate thread) for visualization of rigid or flexible multibody system; use verbose=1 to output information during OpenGL window creation; verbose=2 produces more output and verbose=3 gives a debug level; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of e.g., Spyder."""
+    ...
+@overload
+def StopRenderer(deprecationWarning=True) -> None: 
+    """DEPRECATED; Stop OpenGL rendering engine."""
+    ...
+@overload
+def IsRendererActive(deprecationWarning=True) -> bool: 
+    """DEPRECATED; returns True if GLFW renderer is available and running; otherwise False."""
+    ...
+@overload
+def DoRendererIdleTasks(waitSeconds=0, deprecationWarning=True) -> None: 
+    """DEPRECATED; Call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g., waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 (default) to wait until window is closed."""
+    ...
+@overload
+def SolveStatic(mbs: MainSystem, simulationSettings: SimulationSettings=exudyn.SimulationSettings(), updateInitialValues=False, storeSolver=True) -> bool: 
+    r"""DEPRECATED; Static solver function, mapped from module \texttt{solver}, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see \refSection{sec:mainsystemextensions:SolveStatic}; for background on solvers, see \refSection{sec:solvers}."""
+    ...
+@overload
+def SolveDynamic(mbs: MainSystem, simulationSettings: SimulationSettings=exudyn.SimulationSettings(), solverType: DynamicSolverType=exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues=False, storeSolver=True) -> bool: 
+    r"""DEPRECATED; Dynamic solver function, mapped from module \texttt{solver}, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see \refSection{sec:mainsystemextensions:SolveDynamic}; for background on solvers, see \refSection{sec:solvers}."""
+    ...
+@overload
+def ComputeODE2Eigenvalues(mbs: MainSystem, simulationSettings: SimulationSettings=exudyn.SimulationSettings(), useSparseSolver=False, numberOfEigenvalues=-1, setInitialValues=True, convert2Frequencies=False) -> bool: 
+    r"""DEPRECATED; Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module \texttt{solver}; for details on the Python interface see \refSection{sec:mainsystemextensions:ComputeODE2Eigenvalues}."""
     ...
 @overload
 def RequireVersion(requiredVersionString: str) -> None: 
@@ -1275,6 +1343,34 @@ def SetWriteToFile(filename: str, flagWriteToFile=True, flagAppend=False, flagFl
 @overload
 def Print() -> None: 
     """This allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: exu.Print('test=',42,sep=' ',end='',flush=True); allows to redirect all output to file given by SetWriteToFile(...); does not print to console in case that exudyn.config.printToConsole eis set to False."""
+    ...
+@overload
+def SetOutputPrecision(numberOfDigits: int) -> None: 
+    """DEPRECATED; use set exudyn.config.precision instead."""
+    ...
+@overload
+def SetLinalgOutputFormatPython(flagPythonFormat: bool) -> None: 
+    """DEPRECATED; True: use Python format for output of vectors and matrices; False: use Matlab format."""
+    ...
+@overload
+def GetVersionString(addDetails=False) -> str: 
+    """DEPRECATED; Get Exudyn built version as string (if addDetails=True, adds more information on compilation Python version, platform, etc.; the Python micro version may differ from that you are working with; AVX2 shows that you are running a AVX2 compiled version)."""
+    ...
+@overload
+def SetPrintDelayMilliSeconds(delayMilliSeconds: int) -> None: 
+    """DEPRECATED; add some delay (in milliSeconds) to printing to console, in order to let Spyder process the output; default = 0."""
+    ...
+@overload
+def SuppressWarnings(flag: bool) -> None: 
+    """DEPRECATED; set flag to suppress (=True) or enable (=False) warnings."""
+    ...
+@overload
+def InfoStat(writeOutput=True) -> List[int]: 
+    """DEPRECATED; Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag."""
+    ...
+@overload
+def SetWriteToConsole(flag: bool) -> None: 
+    """DEPRECATED; set flag to write (True) or not write to console; default = True."""
     ...
 @overload
 def InvalidIndex() -> int: 
