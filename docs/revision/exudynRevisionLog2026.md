@@ -5569,6 +5569,52 @@ reason to stay either, but removing it was not part of this request (rule 9).
 
 ## R6 — Error handling and UX
 
+<a id="r5-13-4"></a>
+### R5.13.4 - every writer creates its own output directory
+
+**DONE 2026-09-17** (#2493; maintainer request).
+
+Step R5.13.3 had to add `os.makedirs` to two examples, because `SaveDictToHDF5` - unlike
+`FEMinterface.SaveToFile` - does not create the directory it writes into. The maintainer's answer
+was the right one: the **library** should do that, through one Exudyn function. There was none;
+instead the same four lines were copied five times:
+
+```python
+try:
+    os.makedirs(os.path.dirname(fileName), exist_ok=True)
+except:
+    pass #makedirs may fail on some systems, but we keep going
+```
+
+in `FEM.py` (twice), `plot.py` (twice, for `PlotSensor` and `PlotImage`) and `processing.py`.
+
+`basicUtilities.CreateDirectoryForFile(fileName)` now holds it once, and **returns the file name**,
+so it can wrap the name at the point of use:
+
+```python
+with h5py.File(CreateDirectoryForFile(fileName), 'w') as h5file:
+```
+
+Two decisions inside it, both deliberate and written into the docstring:
+
+- **failure is ignored**, as in the original copies: creating a directory can fail for reasons that
+  do not stop the write (a read-only parent on a network share, a race with another process
+  creating it first), and the write itself then reports the real problem with a better message.
+- a name with **no directory part** is returned untouched rather than passed to `os.makedirs('')`,
+  which raises.
+
+Removing the five copies made `import os` unused in all three modules; ruff (R5.5.3) reported
+exactly that, and the baseline dropped from 210 to 205.
+
+**Verified**: `testHDF5loadSave.py` writes into a `solution/` directory that does not exist yet,
+with no `makedirs` anywhere in the example - the two lines added in R5.13.3 are gone again. Full
+suite PASSED, pytest passed, 171 examples with the same 5 pre-existing failures.
+
+**Deleted** (maintainer approval): `python/Examples/testData/netgenBrick.npy` and
+`netgenHinge.npy`, 3.4 MB of tracked fall-back meshes that nothing could load any more - the
+default file mode is NPZ, and NPY does not work under NumPy 2 at all. The `.gitignore` header
+listed them under "committed reference meshes"; that line is gone with them.
+
 <a id="r5-14"></a>
 ### R5.14 - the development tools are declared
 

@@ -57,11 +57,8 @@ test = {
     'h': [gChecker,gSphere],
 }
 
-import os
-#generated output, not input: goes to the ignored solution/ (#2491). SaveDictToHDF5
-#does not create the directory itself, unlike FEMinterface.SaveToFile
+#generated output, not input: goes to the ignored solution/ (#2491)
 fileName = OutputFilePath('solution/test.hdf5', 'testHDF5loadSave')
-os.makedirs(os.path.dirname(fileName), exist_ok=True)
 SaveDictToHDF5(fileName, test)
 test2 = LoadDictFromHDF5(fileName)
 

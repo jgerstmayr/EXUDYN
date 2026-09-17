@@ -842,6 +842,14 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     `.npz`/`.hdf5` files next to the tracked inputs. They now go through `OutputFilePath` into
     `solution/`.
 
+<a id="r5-13-4"></a>
+**R5.13.4** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-13-4) — *(sub-step of R5.13;
+    maintainer request 2026-09-17)* **Every writer creates its own output directory** (#2493):
+    `SaveDictToHDF5` raised `FileNotFoundError` instead, while four other writers each carried
+    their own copy of the same `try/except os.makedirs` block. One function,
+    `basicUtilities.CreateDirectoryForFile`. The two tracked `.npy` reference meshes, which nothing
+    could load any more, are deleted (maintainer approval 2026-09-17).
+
 <a id="r5-14"></a>
 **R5.14** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-14) — **Dev tools are declared**:
     a `test` dependency group (`pytest`, `pytest-xdist`), the `build` group matched to

@@ -16,6 +16,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import math #always available in Python
+import os   #for the output file paths
 import numpy as np
 import exudyn
 from exudyn.itemInterface import MarkerBodyRigid, VMarkerBodyRigid, SensorUserFunction
@@ -26,9 +27,9 @@ __all__ = [
     'gaussIntegrationPoints', 'gaussIntegrationWeights', 'GaussIntegrate',
     'lobattoIntegrationPoints', 'lobattoIntegrationWeights', 'LobattoIntegrate', 'GetOtherMarker',
     'GetJointArgs', 'ShowOnlyObjects', 'HighlightItem', 'UFsensorRecord', 'AddSensorRecorder',
-    'UIWindowSuppressed', 'OutputFilePath', 'LoadSolutionFile', 'NumpyInt8ArrayToString',
-    'BinaryReadIndex', 'BinaryReadReal', 'BinaryReadString', 'BinaryReadArrayIndex',
-    'BinaryReadRealVector', 'LoadBinarySolutionFile', 'RecoverSolutionFile',
+    'UIWindowSuppressed', 'OutputFilePath', 'CreateDirectoryForFile', 'LoadSolutionFile',
+    'NumpyInt8ArrayToString', 'BinaryReadIndex', 'BinaryReadReal', 'BinaryReadString',
+    'BinaryReadArrayIndex', 'BinaryReadRealVector', 'LoadBinarySolutionFile', 'RecoverSolutionFile',
     'InitializeFromRestartFile', 'SetSolutionState', 'AnimateSolution',
     ]
 
@@ -513,6 +514,33 @@ def OutputFilePath(fileName, callerInfo=''):
     if outputDirectory[-1] in '/\\':
         return outputDirectory + fileName
     return outputDirectory + '/' + fileName
+
+
+def CreateDirectoryForFile(fileName):
+    """create the directory a file is going to be written into, if it does not exist yet
+
+    Note:
+        Every Exudyn function that writes a file calls this first, so that a path such as
+        'solution/sensor.txt' - or anything under exudyn.config.outputDirectory - works without the
+        caller having to create the directory. Failure is deliberately ignored: creating a
+        directory can fail for reasons that do not stop the write (a read-only parent on a network
+        share, a race with another process that just created it), and the write itself reports the
+        real problem with a better message (#2493).
+
+    Args:
+        fileName: file name including its path; a name without any path is left alone
+
+    Returns:
+        fileName unchanged, so that the call can wrap the file name at the point of use
+    """
+    directoryName = os.path.dirname(fileName)
+    if directoryName != '':
+        try:
+            os.makedirs(directoryName, exist_ok=True)
+        except Exception:
+            pass #see the note above: the write reports what actually went wrong
+
+    return fileName
 
 
 def LoadSolutionFile(fileName, safeMode=False, maxRows=-1, verbose=True, hasHeader=True):

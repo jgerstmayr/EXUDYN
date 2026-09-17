@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.130.dev1, 
++  Exudyn version = 1.11.131.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2493, 
-+  Number of resolved issues = 2203 (130 in current version), 
++  Number of issues = 2494, 
++  Number of resolved issues = 2204 (131 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.131: :textred:`resolved BUG 2493` : every Exudyn writer should create its output directory itself 
+    - issue author: Claude-JG
+    - description:  SaveDictToHDF5 fails with FileNotFoundError if the directory does not exist; while FEMinterface.SaveToFile; PlotSensor; PlotImage and the parameter variation results file each carry their own copy of the same try/except os.makedirs block - five copies of four lines. One function CreateDirectoryForFile in basicUtilities replaces them; and SaveDictToHDF5 gets the behaviour it was missing. revision2026 step R5.13.4
+    - **notes:** basicUtilities.CreateDirectoryForFile(fileName) creates the directory of a file that is about to be written and returns the name unchanged; failure is ignored on purpose - creating a directory can fail for reasons that do not stop the write; and the write reports the real problem better. SaveDictToHDF5 now calls it - the behaviour it was missing - and the five hand-written copies in FEM.py (2); plot.py (2) and processing.py now call it instead. Verified: testHDF5loadSave.py writes into a solution/ directory that does not exist yet; without any makedirs in the example. The two examples that needed an os.makedirs line one commit ago no longer do. revision2026 step R5.13.4
+    - date resolved: **2026-09-17 20:42**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.130: :textred:`resolved BUG 2492` : test models write solution files that nothing reads 
     - issue author: Claude-JG
     - description:  Fifteen test models set solutionSettings.writeSolutionToFile=True unconditionally; the coordinates solution file is then written on every suite run although it is read back only under useGraphics by the SolutionViewer - and compareFullModifiedNewton is the designated test of the writing itself. Four models already had the right form (writeSolutionToFile=False; True only if useGraphics). revision2026 step R5.13.1

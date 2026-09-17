@@ -17,9 +17,9 @@ import exudyn #for sensor index
 from exudyn.extensionRegistry import extends
 from exudyn.advancedUtilities import PlotLineCode, IsListOrArray, IsEmptyList
 from exudyn.basicUtilities import OutputFilePath #merge with exudyn.config.outputDirectory (#2454)
+from exudyn.basicUtilities import CreateDirectoryForFile #every writer creates its directory (#2493)
 from exudyn.basicUtilities import UIWindowSuppressed #exudyn.special.userInterface (#2477)
 import copy
-import os
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
@@ -694,10 +694,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel='time (s)', yLabel=No
         
         fileName = OutputFilePath(fileName, 'PlotSensor') #saved figure is an output too (#2454)
         if fileName != '':
-            try:
-                os.makedirs(os.path.dirname(fileName), exist_ok=True)
-            except:
-                pass #makedirs may fail on some systems, but we keep going
+            CreateDirectoryForFile(fileName) #(#2493)
 
             handle.savefig(fileName)
     
@@ -1049,10 +1046,7 @@ def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidth
         plt.show()
     
     if fileName != '':
-        try:
-            os.makedirs(os.path.dirname(fileName), exist_ok=True)
-        except:
-            pass #makedirs may fail on some systems, but we keep going
+        CreateDirectoryForFile(fileName) #(#2493)
         plt.savefig(fileName)
 
 

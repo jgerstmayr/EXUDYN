@@ -5,7 +5,7 @@
 #numbers, so that an edit elsewhere in a file does not invalidate the entry.
 
 1	python/exudyn/FEM.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
-6	python/exudyn/FEM.py	E722	Do not use bare `except`
+4	python/exudyn/FEM.py	E722	Do not use bare `except`
 1	python/exudyn/GUI.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 5	python/exudyn/GUI.py	E722	Do not use bare `except`
 6	python/exudyn/__init__.py	E722	Do not use bare `except`
@@ -30,9 +30,9 @@
 8	python/exudyn/mainSystemExtensions.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 1	python/exudyn/mainSystemExtensions.py	E722	Do not use bare `except`
 26	python/exudyn/plot.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
-3	python/exudyn/plot.py	E722	Do not use bare `except`
+1	python/exudyn/plot.py	E722	Do not use bare `except`
 5	python/exudyn/processing.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
-8	python/exudyn/processing.py	E722	Do not use bare `except`
+7	python/exudyn/processing.py	E722	Do not use bare `except`
 5	python/exudyn/resultsMonitor.py	E402	Module level import not at top of file
 2	python/exudyn/rigidBodyUtilities.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 2	python/exudyn/rigidBodyUtilities.py	E722	Do not use bare `except`

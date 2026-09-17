@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.130.dev1, 
+  \item Exudyn version = 1.11.131.dev1, 
   \item last change =  2026-09-17, 
-  \item Number of issues = 2493, 
-  \item Number of resolved issues = 2203 (130 in current version), 
+  \item Number of issues = 2494, 
+  \item Number of resolved issues = 2204 (131 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.131}: {\bf \color{warningRed}  resolved BUG 2493}: {\bf every Exudyn writer should create its output directory itself}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: SaveDictToHDF5 fails with FileNotFoundError if the directory does not exist; while FEMinterface.SaveToFile; PlotSensor; PlotImage and the parameter variation results file each carry their own copy of the same try/except os.makedirs block - five copies of four lines. One function CreateDirectoryForFile in basicUtilities replaces them; and SaveDictToHDF5 gets the behaviour it was missing. revision2026 step R5.13.4}
+    \item {\bf notes: basicUtilities.CreateDirectoryForFile(fileName) creates the directory of a file that is about to be written and returns the name unchanged; failure is ignored on purpose - creating a directory can fail for reasons that do not stop the write; and the write reports the real problem better. SaveDictToHDF5 now calls it - the behaviour it was missing - and the five hand-written copies in FEM.py (2); plot.py (2) and processing.py now call it instead. Verified: testHDF5loadSave.py writes into a solution/ directory that does not exist yet; without any makedirs in the example. The two examples that needed an os.makedirs line one commit ago no longer do. revision2026 step R5.13.4}
+    \item   date resolved: {\bf 2026-09-17 20:42},
+date raised: 2026-09-17 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.130}: {\bf \color{warningRed}  resolved BUG 2492}: {\bf test models write solution files that nothing reads}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

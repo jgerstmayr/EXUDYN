@@ -632,7 +632,8 @@ def SaveDictToHDF5(fileName, dataDict):
             else:
                 raise ValueError(f"SaveDictToHDF5: unsupported type: {item}")
 
-    with h5py.File(fileName, 'w') as h5file:
+    from exudyn.basicUtilities import CreateDirectoryForFile
+    with h5py.File(CreateDirectoryForFile(fileName), 'w') as h5file:   #(#2493)
         RecursivelySaveDictToHDF5(h5file, dataDict)
 
 

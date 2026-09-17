@@ -15,12 +15,12 @@
 
 from exudyn.docmeta import docmeta
 from exudyn.basicUtilities import OutputFilePath #exudyn.config.outputDirectory (#2454)
+from exudyn.basicUtilities import CreateDirectoryForFile #every writer creates its directory (#2493)
 from exudyn.basicUtilities import UIWindowSuppressed #exudyn.special.userInterface (#2477)
 import numpy as np
 import sys
 import time
 from copy import deepcopy #, copy 
-import os
 
 import exudyn
 from exudyn.advancedUtilities import IsInteger, IsEmptyList
@@ -97,11 +97,8 @@ def WriteToFile(resultsFile, parameters, currentGeneration, values, globalCnt, w
     if resultsFile != '':
 
         if writeHeader:
-            try:
-                #check only added in case of writeHeader to reduce overheads; may fail, if no header is written (but why...?)
-                os.makedirs(os.path.dirname(resultsFile), exist_ok=True)
-            except:
-                pass #makedirs may fail on some systems, but we keep going
+            #only done when a header is written, to reduce overheads
+            CreateDirectoryForFile(resultsFile) #(#2493)
 
             file = open(resultsFile, 'w')
             file.write('#EXUDYN '+fileType+' results file:'+resultsFile+'\n')

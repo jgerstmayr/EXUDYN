@@ -4,7 +4,6 @@
 #   python/PerformanceLogs/   per-release performance records
 #   python/TestSuiteLogs/     per-release test suite records (retention policy: plan D7)
 #   python/TestExamplesLogs/  per-release example-run records
-#   python/*/testData/*.npy   committed reference meshes
 #   msvc/cppsrc.vcxproj           the live VS project and de-facto source list
 # Add new entries with a comment saying what produces the file.
 

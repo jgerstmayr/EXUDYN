@@ -15,6 +15,7 @@
 #constants and fixed structures:
 from exudyn.docmeta import docmeta
 import exudyn as exu
+from exudyn.basicUtilities import CreateDirectoryForFile #every writer creates its directory (#2493)
 import exudyn.itemInterface as eii
 #from exudyn.utilities import 
 from exudyn.advancedUtilities import IsListOrArray, RoundMatrix, PlotLineCode, IsValidURealInt
@@ -26,7 +27,6 @@ from exudyn.graphicsDataUtilities import ComputeTriangleArea
 
 import numpy as np #LoadSolutionFile
 from enum import Enum #for class HCBstaticModeSelection
-import os
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
@@ -1426,10 +1426,7 @@ class ObjectFFRFreducedOrderInterface:
 
         [fileName, fileExtension, mode] = FileNameToMode(fileName, None)
 
-        try:
-            os.makedirs(os.path.dirname(fileName+fileExtension), exist_ok=True)
-        except:
-            pass #makedirs may fail on some systems, but we keep going
+        CreateDirectoryForFile(fileName+fileExtension) #(#2493)
 
         if mode == 'NPY':
             with open(fileName+fileExtension, 'wb') as f:
@@ -2082,10 +2079,7 @@ class FEMinterface:
         """
         [fileName, fileExtension, mode] = FileNameToMode(fileName, mode)
 
-        try:
-            os.makedirs(os.path.dirname(fileName+fileExtension), exist_ok=True)
-        except:
-            pass #makedirs may fail on some systems, but we keep going
+        CreateDirectoryForFile(fileName+fileExtension) #(#2493)
 
         if mode == 'NPY': #only for numpy version < 2.0
             with open(fileName+fileExtension, 'wb') as f:
