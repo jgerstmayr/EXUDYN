@@ -141,13 +141,11 @@ promise for no gain.
     amplify roundoff — phase R10. It is ordered by drift, largest first, which is that work list.
 
 <a id="r2-10-4"></a>
-**R2.10.4** *(sub-step of R2.10)* **`FEMinterface` NPZ files cannot be read by a second module**
-    (#2471): `SaveToFile(mode=NPZ)` stores `postProcessingModes['outputVariableType']` as an
-    `exudyn.exudynCPP.OutputVariableType`, so `np.load(allow_pickle=True)` imports that module and
-    a process holding `exudynCPPfast` gets `type "Real" is already registered`. Every other field
-    loads under both modules. Store the enum by name and convert back on load; then
-    `NGsolveCMStest` can leave `NotJudgedOutsideRegularModule()`.
-
+**R2.10.4** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r2-10-4) — *(sub-step of R2.10)*
+    **`FEMinterface` files can be read by any module** (#2471): `postProcessingModes` stores the
+    `outputVariableType` by name, so reading a file no longer imports `exudynCPP` to unpickle an
+    enum. `NGsolveCMStest` still cannot leave `NotJudgedOutsideRegularModule()` - its tracked
+    `testData/netgenTestMesh.pkl` was written in the old form and has to be regenerated first.
 
 <a id="r2-11"></a>
 **R2.11** **DONE 2026-09-11** — Classifiers now 3.10–3.14, matching the wheels CI actually builds. → [log](exudynRevisionLog2026.md#r2-11)
@@ -590,9 +588,12 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     `Symbolic.cpp` - is now `src/Linalg/symbolicCppDemo.h`, one named function per topic, included
     by `Symbolic.cpp` so that it keeps compiling, called by nothing.
 <a id="r5-5"></a>
-**R5.5** *(phase R5, tooling)* **A linter and a type check for the Python side.** Two halves that
-    share nothing but the word "checking"; neither started. Written out in full on 2026-09-17,
-    because the decisions were stated in a shorthand that assumed knowledge of the tools.
+**R5.5** **DONE 2026-09-17** — *(phase R5, tooling; decisions D1-D5 answered by the maintainer on
+    2026-09-17)* **A linter and a type check for the Python side.** Half A is R5.5.3 (ruff), half B
+    is R5.5.4 (stubtest and the PEP 561 marker); R5.5.1, R5.5.2, R5.5.5 and R5.5.6 are the defects
+    the two halves uncovered. The text below is kept because it records what the decisions meant;
+    it was written earlier the same day, when neither half had been started, because the decisions
+    had been stated in a shorthand that assumed knowledge of the tools.
 
     **Half A - ruff over the shipped package `python/exudyn/`**
 

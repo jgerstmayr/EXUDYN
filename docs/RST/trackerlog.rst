@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.127.dev1, 
++  Exudyn version = 1.11.128.dev1, 
 +  last change =  2026-09-17, 
 +  Number of issues = 2491, 
-+  Number of resolved issues = 2200 (127 in current version), 
++  Number of resolved issues = 2201 (128 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.128: :textred:`resolved BUG 2471` : FEMinterface NPZ files store a C++ enum and cannot be read by a second module 
+    - issue author: Claude-JG
+    - description:  FEMinterface.SaveToFile(mode=NPZ) writes postProcessingModes as a dict whose outputVariableType is an exudyn.exudynCPP.OutputVariableType - a pybind type. np.load(allow_pickle=True) therefore imports exudyn.exudynCPP when reading it, and in a process that already loaded exudynCPPfast this raises ImportError: generic_type: type "Real" is already registered. Measured 2026-09-17 on testData/netgenTestMesh.npz: every other field (nodes, elements, massMatrix, stiffnessMatrix, surface, modeBasis, eigenValues, metaData) loads under both modules; only this one fails. An NPZ is meant to hold plain arrays: store the enum by name and convert back on load. Until then NGsolveCMStest stays in NotJudgedOutsideRegularModule(). revision2026 step R2.10.4.
+    - **notes:** FEMinterface.SaveToFile now stores postProcessingModes[outputVariableType] by NAME - on a copy; so the object in memory keeps its enum - and SetWithDictionary converts the name back on load; files written before this still carry the enum and are loaded as before. Verified across modules: a file written under the regular module is read under exudynCPPfast in both NPZ and PKL form and the enum comes back; writing the enum object directly still reproduces the original ImportError generic_type: type Real is already registered. NGsolveCMStest cannot leave NotJudgedOutsideRegularModule() yet: its tracked testData/netgenTestMesh.pkl was written in the old form and has to be regenerated first. revision2026 step R2.10.4
+    - date resolved: **2026-09-17 20:06**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.127: :textred:`resolved BUG 2490` : the stubs miss the deprecated module functions and GetDictionary/SetDictionary 
     - issue author: Claude-JG
     - description:  addDocu=False suppressed the .pyi entry as well as the documentation; so all 14 deliberately undocumented module-level functions (StartRenderer; StopRenderer; InfoStat; GetVersionString; SolveStatic; SolveDynamic; ...) were missing from python/exudyn/__init__.pyi. GetDictionary and SetDictionary were missing from all 43 settings classes; because structureHeaderEmitter adds them to the pybind class but structureStubEmitter did not mirror them. Both matter as soon as the package ships a PEP 561 py.typed marker: a type checker then reports correct user code as an error. revision2026 steps R5.5.2 and R5.5.4
@@ -8604,11 +8610,6 @@ Open issues
 **********
 Known bugs
 **********
-
- * :textred:`open BUG 2471:` FEMinterface NPZ files store a C++ enum and cannot be read by a second module
-    - issue author: Claude-JG
-    - description:  FEMinterface.SaveToFile(mode=NPZ) writes postProcessingModes as a dict whose outputVariableType is an exudyn.exudynCPP.OutputVariableType - a pybind type. np.load(allow_pickle=True) therefore imports exudyn.exudynCPP when reading it, and in a process that already loaded exudynCPPfast this raises ImportError: generic_type: type "Real" is already registered. Measured 2026-09-17 on testData/netgenTestMesh.npz: every other field (nodes, elements, massMatrix, stiffnessMatrix, surface, modeBasis, eigenValues, metaData) loads under both modules; only this one fails. An NPZ is meant to hold plain arrays: store the enum by name and convert back on load. Until then NGsolveCMStest stays in NotJudgedOutsideRegularModule(). revision2026 step R2.10.4.
-    - date raised: 2026-09-17 
 
  * :textred:`open BUG 2463:` the two GitHub workflows pin different action versions
     - issue author: Claude-JG

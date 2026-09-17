@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.127.dev1, 
+  \item Exudyn version = 1.11.128.dev1, 
   \item last change =  2026-09-17, 
   \item Number of issues = 2491, 
-  \item Number of resolved issues = 2200 (127 in current version), 
+  \item Number of resolved issues = 2201 (128 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.128}: {\bf \color{warningRed}  resolved BUG 2471}: {\bf FEMinterface NPZ files store a C++ enum and cannot be read by a second module}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: FEMinterface.SaveToFile(mode=NPZ) writes postProcessingModes as a dict whose outputVariableType is an exudyn.exudynCPP.OutputVariableType - a pybind type. np.load(allow\_pickle=True) therefore imports exudyn.exudynCPP when reading it, and in a process that already loaded exudynCPPfast this raises ImportError: generic\_type: type "Real" is already registered. Measured 2026-09-17 on testData/netgenTestMesh.npz: every other field (nodes, elements, massMatrix, stiffnessMatrix, surface, modeBasis, eigenValues, metaData) loads under both modules; only this one fails. An NPZ is meant to hold plain arrays: store the enum by name and convert back on load. Until then NGsolveCMStest stays in NotJudgedOutsideRegularModule(). revision2026 step R2.10.4.}
+    \item {\bf notes: FEMinterface.SaveToFile now stores postProcessingModes[outputVariableType] by NAME - on a copy; so the object in memory keeps its enum - and SetWithDictionary converts the name back on load; files written before this still carry the enum and are loaded as before. Verified across modules: a file written under the regular module is read under exudynCPPfast in both NPZ and PKL form and the enum comes back; writing the enum object directly still reproduces the original ImportError generic\_type: type Real is already registered. NGsolveCMStest cannot leave NotJudgedOutsideRegularModule() yet: its tracked testData/netgenTestMesh.pkl was written in the old form and has to be regenerated first. revision2026 step R2.10.4}
+    \item   date resolved: {\bf 2026-09-17 20:06},
+date raised: 2026-09-17 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.127}: {\bf \color{warningRed}  resolved BUG 2490}: {\bf the stubs miss the deprecated module functions and GetDictionary/SetDictionary}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
@@ -13286,12 +13294,6 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
-  \item open {\bf BUG 2471}:  {\bf FEMinterface NPZ files store a C++ enum and cannot be read by a second module}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item issue author: Claude-JG
-    \item {description: FEMinterface.SaveToFile(mode=NPZ) writes postProcessingModes as a dict whose outputVariableType is an exudyn.exudynCPP.OutputVariableType - a pybind type. np.load(allow\_pickle=True) therefore imports exudyn.exudynCPP when reading it, and in a process that already loaded exudynCPPfast this raises ImportError: generic\_type: type "Real" is already registered. Measured 2026-09-17 on testData/netgenTestMesh.npz: every other field (nodes, elements, massMatrix, stiffnessMatrix, surface, modeBasis, eigenValues, metaData) loads under both modules; only this one fails. An NPZ is meant to hold plain arrays: store the enum by name and convert back on load. Until then NGsolveCMStest stays in NotJudgedOutsideRegularModule(). revision2026 step R2.10.4.}
-    \item date raised: 2026-09-17 
-  \ei
   \item open {\bf BUG 2463}:  {\bf the two GitHub workflows pin different action versions}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

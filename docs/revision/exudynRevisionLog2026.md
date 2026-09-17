@@ -4716,6 +4716,47 @@ the stub fragments are merged by indentation; a class docstring line starting at
 Without it, the next unindented documentation line breaks the stub again and nothing says so: the
 file is never imported, never compiled, and only a type checker or an IDE would notice - quietly.
 
+<a id="r2-10-4"></a>
+### R2.10.4 - FEM files that any module can read
+
+**DONE 2026-09-17** (#2471).
+
+`FEMinterface.SaveToFile` wrote `postProcessingModes` with the `outputVariableType` as what it is
+in memory: an `exudyn.exudynCPP.OutputVariableType`. Reading the file therefore **unpickles an
+exudyn type**, which imports `exudynCPP` - and a process that already holds `exudynCPPfast` cannot
+have both:
+
+```
+ImportError: generic_type: type "Real" is already registered!
+```
+
+The file now stores the **name**, and the name is turned back into the enum on load. Two details
+matter:
+
+- the conversion is made on a **copy** (`dict(postProcessingModes)`), so the object in memory keeps
+  its enum and nothing that reads `fem.postProcessingModes` after a save sees a string;
+- a file written before this carries the enum and is left alone on load, so old files behave
+  exactly as they did - which also means they still cannot be read by a second module. That is not
+  fixable from the reading side: the failure happens inside `np.load`, before any Exudyn code runs.
+
+**Verified across modules**, which is the only way this can be verified: a file written under the
+regular module and read in a fresh process that sets `sys.exudynFast = True` - confirmed to hold
+`exudyn.exudynCPPfast` and no `exudyn.exudynCPP`:
+
+```
+NPZ -> loaded OK; OutputVariableType = OutputVariableType.StressLocal | is enum: True
+PKL -> loaded OK; OutputVariableType = OutputVariableType.StressLocal | is enum: True
+```
+
+and writing the enum object directly still reproduces the original `ImportError`, so the test is
+not vacuous.
+
+**What is NOT done**: `NGsolveCMStest.py` stays in `NotJudgedOutsideRegularModule()`. It loads the
+**tracked** `testData/netgenTestMesh.pkl`, which was written in the old form; the fix applies to
+files written from now on, so that file has to be regenerated before the model can be judged under
+a second module. Regenerating a tracked test data file needs the maintainer's decision (it belongs
+with step R5.13.1, which is about generated meshes in tracked directories).
+
 <a id="r5-5-2"></a>
 ### R5.5.2 - the stubs describe what the module has
 

@@ -41,7 +41,8 @@ __all__ = [
     'ReadMatrixFromAnsysMMF', 'ReadMatrixDOFmappingVectorFromAnsysTxt',
     'ReadNodalCoordinatesFromAnsysTxt', 'ReadElementsFromAnsysTxt', 'MaterialBaseClass',
     'KirchhoffMaterial', 'FiniteElement', 'Tet4', 'ObjectFFRFinterface', 'CMSObjectComputeNorm',
-    'ObjectFFRFreducedOrderInterface', 'HCBstaticModeSelection', 'FEMinterface',
+    'ObjectFFRFreducedOrderInterface', 'HCBstaticModeSelection', 'PostProcessingModesToStorage',
+    'PostProcessingModesFromStorage', 'FEMinterface',
     ]
 
 #switch to old format for compatibility:
@@ -1905,6 +1906,35 @@ class HCBstaticModeSelection(Enum):
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++   FEMinterface - finite element interface class   ++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#postProcessingModes carries an exudyn OutputVariableType. Stored as the enum object, reading the
+#file unpickles it and therefore IMPORTS exudyn.exudynCPP - and a process that already holds
+#exudynCPPfast then fails with 'type "Real" is already registered', so the data cannot be read at
+#all by a second module. The file stores the NAME instead, and the value is converted back on
+#load, so nothing changes for the object in memory (#2471).
+def PostProcessingModesToStorage(postProcessingModes):
+    """replace the outputVariableType enum by its name, on a COPY; used before writing a file"""
+    if not isinstance(postProcessingModes, dict) or 'outputVariableType' not in postProcessingModes:
+        return postProcessingModes
+    storedModes = dict(postProcessingModes) #the live object keeps its enum
+    storedModes['outputVariableType'] = str(storedModes['outputVariableType'])
+    return storedModes
+
+def PostProcessingModesFromStorage(postProcessingModes):
+    """turn the outputVariableType name back into the enum; files written before #2471 hold the
+    enum itself and are left as they are"""
+    if not isinstance(postProcessingModes, dict) or 'outputVariableType' not in postProcessingModes:
+        return postProcessingModes
+    outputVariableType = postProcessingModes['outputVariableType']
+    if isinstance(outputVariableType, str):
+        typeName = outputVariableType.replace('OutputVariableType.','')
+        if not hasattr(exu.OutputVariableType, typeName):
+            raise ValueError('FEMinterface: unknown outputVariableType in postProcessingModes: '
+                             + outputVariableType)
+        postProcessingModes['outputVariableType'] = getattr(exu.OutputVariableType, typeName)
+    return postProcessingModes
+
+
 class FEMinterface:
     """general interface to different FEM / mesh imports and export to EXUDYN functions
     use this class to import meshes from different meshing or FEM programs (NETGEN/NGsolve [NGsolve2022], ABAQUS, ANSYS, ..) and store it in a unique format
@@ -2029,6 +2059,9 @@ class FEMinterface:
             elif warn and item != 'metaData':
                 exu.Print('WARNING: FEMinterface.SetDictionary: key '+item+' not found in dictionary')
         
+        #the file stores the outputVariableType by name since #2471; older files hold the enum
+        self.postProcessingModes = PostProcessingModesFromStorage(self.postProcessingModes)
+
         self.ConvertElementsLists2Numpy() #if loading old format
         self.ConvertSurfaceLists2Numpy()  #if loading old format
         
@@ -2082,6 +2115,8 @@ class FEMinterface:
             data = self.GetDictionary()
             data['fileVersion'] = fileVersion
             data['type']  = 'FEMinterface'
+            #by NAME, so that the file can be read by any exudyn module, #2471
+            data['postProcessingModes'] = PostProcessingModesToStorage(self.postProcessingModes)
 
             if mode == 'NPZ':
                 np.savez(fileName + fileExtension, **data)
