@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.109.dev1, 
+  \item Exudyn version = 1.11.110.dev1, 
   \item last change =  2026-09-17, 
-  \item Number of issues = 2475, 
-  \item Number of resolved issues = 2182 (109 in current version), 
+  \item Number of issues = 2476, 
+  \item Number of resolved issues = 2183 (110 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.110}:  resolved Issue 2475: {\bf five examples write sensor output next to themselves, it clutters the working tree}
+(improvement)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Five examples name their sensor files without the solution/ prefix that every other model and example uses: beltDriveALE and beltDriveReevingSystem write into solutionDelete/, beltDriveReevingSystem also writes its coordinates solution into solution\_nosync/, rigidBodyIMUtest into solutionIMU<mode>/, sliderCrank3DwithANCFbeltDrive and sliderCrank3DwithANCFbeltDrive2 into the current directory (Preload\_overallS.txt, Pos\_Disk0\_overallS.txt, Angular\_velocity\_overallS.txt, angular\_velocity\_disk0/1.txt, torque.txt, crank\_pos.txt) plus a plots/ directory. Only solution/ is in .gitignore, so a direct run of one of these examples leaves untracked and unignored files and directories behind - and the reads (np.loadtxt) do not go through OutputFilePath either, so they ignore exudyn.config.outputDirectory. revision2026 step R5.13.2.}
+    \item {\bf notes: All five examples now write through solution/ and read through OutputFilePath: beltDriveALE and beltDriveReevingSystem (solutionDelete/ and solution\_nosync/ are gone), rigidBodyIMUtest (solution/IMU<mode>/), and the two sliderCrank3DwithANCFbeltDrive examples (bare names and plots/ -> solution/ and solution/plots/). Verified by running all five from python/Examples with no output directory set: one solution/ directory appears and nothing else. revision2026 step R5.13.2.}
+    \item   date resolved: {\bf 2026-09-17 11:04},
+date raised: 2026-09-17 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.109}:  resolved Issue 2472: {\bf unit tests for the matrix variants and the rigid body / geometry classes}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

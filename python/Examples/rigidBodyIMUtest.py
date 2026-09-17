@@ -161,23 +161,23 @@ mbs.AddLoad(Force(markerNumber = mCenterRB,
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #sensors
 #all sensors placed at localPosition=[0,0,0]
-sOmegaLocal = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solutionIMU'+mStr+'/angularVelocityLocal.txt',
+sOmegaLocal = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solution/IMU'+mStr+'/angularVelocityLocal.txt',
                           outputVariableType=exu.OutputVariableType.AngularVelocityLocal))
-sRotation = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solutionIMU'+mStr+'/rotation.txt',
+sRotation = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solution/IMU'+mStr+'/rotation.txt',
                           outputVariableType=exu.OutputVariableType.Rotation))
-sOmega = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solutionIMU'+mStr+'/angularVelocityGlobal.txt',
+sOmega = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solution/IMU'+mStr+'/angularVelocityGlobal.txt',
                           outputVariableType=exu.OutputVariableType.AngularVelocity))
 
-sPos = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solutionIMU'+mStr+'/displacementGlobal.txt',
+sPos = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solution/IMU'+mStr+'/displacementGlobal.txt',
                                 localPosition = localPosition,
                           outputVariableType=exu.OutputVariableType.Displacement))
-sVel = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solutionIMU'+mStr+'/velocityGlobal.txt',
+sVel = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solution/IMU'+mStr+'/velocityGlobal.txt',
                                 localPosition = localPosition,
                           outputVariableType=exu.OutputVariableType.Velocity))
-sAcc = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solutionIMU'+mStr+'/accelerationGlobal.txt',
+sAcc = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solution/IMU'+mStr+'/accelerationGlobal.txt',
                                 localPosition = localPosition,
                           outputVariableType=exu.OutputVariableType.Acceleration))
-sRot = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solutionIMU'+mStr+'/rotationMatrix.txt',
+sRot = mbs.AddSensor(SensorBody(bodyNumber=oGyro, fileName='solution/IMU'+mStr+'/rotationMatrix.txt',
                           outputVariableType=exu.OutputVariableType.RotationMatrix))
 
 mbs.Assemble()
@@ -236,10 +236,10 @@ if True:
     plt.close("all")
     ax=plt.gca() # get current axes
 
-    dataRot = np.loadtxt(OutputFilePath('solutionIMU'+mStr+'/rotationMatrix.txt'), comments='#', delimiter=',')
-    dataAcc = np.loadtxt(OutputFilePath('solutionIMU'+mStr+'/accelerationGlobal.txt'), comments='#', delimiter=',')
-    dataVel = np.loadtxt(OutputFilePath('solutionIMU'+mStr+'/velocityGlobal.txt'), comments='#', delimiter=',')
-    dataPos = np.loadtxt(OutputFilePath('solutionIMU'+mStr+'/displacementGlobal.txt'), comments='#', delimiter=',')
+    dataRot = np.loadtxt(OutputFilePath('solution/IMU'+mStr+'/rotationMatrix.txt'), comments='#', delimiter=',')
+    dataAcc = np.loadtxt(OutputFilePath('solution/IMU'+mStr+'/accelerationGlobal.txt'), comments='#', delimiter=',')
+    dataVel = np.loadtxt(OutputFilePath('solution/IMU'+mStr+'/velocityGlobal.txt'), comments='#', delimiter=',')
+    dataPos = np.loadtxt(OutputFilePath('solution/IMU'+mStr+'/displacementGlobal.txt'), comments='#', delimiter=',')
 
     n = len(dataAcc)
     accLocal = np.zeros((n,4))

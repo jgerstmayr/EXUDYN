@@ -642,6 +642,15 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     `pickleCopyMbs` and the FEM tests write `.npz`/`.pkl`/`.h5` files through plain Python calls,
     which `exudyn.config.outputDirectory` does not reach - these need the path in the model.
 
+<a id="r5-13-2"></a>
+**R5.13.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-13-2) — *(sub-step of R5.13)*
+    **Five examples wrote sensor output next to themselves** (#2475): `beltDriveALE` and
+    `beltDriveReevingSystem` into `solutionDelete/`, the latter also `solution_nosync/`,
+    `rigidBodyIMUtest` into `solutionIMU<mode>/`, and the two `sliderCrank3DwithANCFbeltDrive`
+    examples into the current directory plus `plots/`. Only `solution/` is ignored, so each direct
+    run left untracked, unignored files behind. All of it now goes through `solution/`, and the
+    reads through `OutputFilePath`.
+
 <a id="r5-14"></a>
 **R5.14** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-14) — **Dev tools are declared**:
     a `test` dependency group (`pytest`, `pytest-xdist`), the `build` group matched to

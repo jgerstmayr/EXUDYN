@@ -4721,6 +4721,45 @@ models under `useGraphics`, and three models write generated meshes into the tra
 directory through plain Python calls, which this setting does not reach. That is step R5.13.1.
 
 
+<a id="r5-13-2"></a>
+### R5.13.2 - five examples stop writing next to themselves
+
+**DONE 2026-09-17** (#2475).
+
+The stray directories `solutionDelete/`, `solution_nosync/`, `solutionIMU100Hz132Xrot/` and
+`plots/`, and loose files such as `Preload_overallS.txt` and `crank_pos.txt`, kept appearing in the
+working tree. They are not reference data and nothing reads them back across runs: they are what
+**five examples** write when they are run directly, which is how a user runs an example. Step R5.13
+gave the test suite its own output directory, but `exudyn.config.outputDirectory` is empty in a
+direct run, so the name written in the model is the name on disk - and only `solution/` is in
+`.gitignore`.
+
+| example | wrote | now |
+|---|---|---|
+| `beltDriveALE` | `solutionDelete/wheel*angVel.txt`, `solDir` for its saved contact data | `solution/` |
+| `beltDriveReevingSystem` | `solutionDelete/`, plus `solution_nosync/testCoords.txt` | `solution/` |
+| `rigidBodyIMUtest` | `solutionIMU<mode>/` (7 sensors) | `solution/IMU<mode>/` |
+| `sliderCrank3DwithANCFbeltDrive` | 3 bare `*.txt` in the current directory | `solution/` |
+| `sliderCrank3DwithANCFbeltDrive2` | 4 bare `*.txt` and `plots/` | `solution/`, `solution/plots/` |
+
+The **reads** were the other half: `np.loadtxt('Angular_velocity_overallS.txt')` and the three in
+`sliderCrank3DwithANCFbeltDrive2` took the bare name, so they ignored
+`exudyn.config.outputDirectory` and would have read the wrong run under the suite. They now go
+through `OutputFilePath`, the rule stated in its docstring (#2454). `OutputFilePath` had to be
+imported by name in `sliderCrank3DwithANCFbeltDrive2`, the only one of the five with explicit
+imports, and its `os.mkdir(PLOTS_PATH)` became `os.makedirs(..., exist_ok=True)` because
+`solution/` may not exist yet.
+
+**Verified** by running all five the way a user does - from `python/Examples`, no output directory
+set - and listing what appeared: one `solution/` directory and nothing else. Four now run to the
+end; `beltDriveALE` still stops in its plotting section, which reads a `contactForces...ALE1.txt`
+produced by a parameter study that is not in the repository - unchanged by this step, and never
+reached under `runTestExamples`, where the solver timeout ends the example first.
+
+The remaining offenders are in `python/Examples/publications/`, which the suite does not run, and
+the generated meshes of step R5.13.1. `coordinatesSolution.txt` from a local run stays where it is
+by decision: it is the one output a user expects next to the model.
+
 ## R6 — Error handling and UX
 
 <a id="r5-14"></a>

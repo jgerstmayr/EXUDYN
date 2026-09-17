@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.109.dev1, 
++  Exudyn version = 1.11.110.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2475, 
-+  Number of resolved issues = 2182 (109 in current version), 
++  Number of issues = 2476, 
++  Number of resolved issues = 2183 (110 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.110: resolved Issue 2475: five examples write sensor output next to themselves, it clutters the working tree (improvement)
+    - issue author: Claude-JG
+    - description:  Five examples name their sensor files without the solution/ prefix that every other model and example uses: beltDriveALE and beltDriveReevingSystem write into solutionDelete/, beltDriveReevingSystem also writes its coordinates solution into solution_nosync/, rigidBodyIMUtest into solutionIMU<mode>/, sliderCrank3DwithANCFbeltDrive and sliderCrank3DwithANCFbeltDrive2 into the current directory (Preload_overallS.txt, Pos_Disk0_overallS.txt, Angular_velocity_overallS.txt, angular_velocity_disk0/1.txt, torque.txt, crank_pos.txt) plus a plots/ directory. Only solution/ is in .gitignore, so a direct run of one of these examples leaves untracked and unignored files and directories behind - and the reads (np.loadtxt) do not go through OutputFilePath either, so they ignore exudyn.config.outputDirectory. revision2026 step R5.13.2.
+    - **notes:** All five examples now write through solution/ and read through OutputFilePath: beltDriveALE and beltDriveReevingSystem (solutionDelete/ and solution_nosync/ are gone), rigidBodyIMUtest (solution/IMU<mode>/), and the two sliderCrank3DwithANCFbeltDrive examples (bare names and plots/ -> solution/ and solution/plots/). Verified by running all five from python/Examples with no output directory set: one solution/ directory appears and nothing else. revision2026 step R5.13.2.
+    - date resolved: **2026-09-17 11:04**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.109: resolved Issue 2472: unit tests for the matrix variants and the rigid body / geometry classes (extension)
     - issue author: Claude-JG
     - description:  revision2026 step R5.4.1: ResizableMatrix, ConstSizeMatrix, LinkedDataMatrix, MatrixContainer, RigidBodyMath, Geometry, BoundingBox and SearchTree had no unit tests; AllMatrixUnitTests.h covered only the base Matrix class. Two new headers, property-based where possible (rotation round trips, skew as cross product, SearchTree against a brute-force scan).
