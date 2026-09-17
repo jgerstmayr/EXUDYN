@@ -708,14 +708,11 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     every decision above.
 
 <a id="r5-5-1"></a>
-**R5.5.1** *(sub-step of R5.5; found 2026-09-17 while writing R5.5)* **The generated
-    `__init__.pyi` does not parse, and the generator does not notice** (#2486). Two
-    parts, and both are needed: indent the offending documentation line so that the merge produces
-    valid Python, **and** make `createStubFiles.py` `ast.parse()` what it wrote and fail loudly if
-    it does not - the same guard that `gen_sources.py` and `checkAll.py` already apply to their
-    outputs. Without the guard the next unindented documentation line silently breaks the stub
-    again. A better merge (collect class blocks by indentation instead of by the first column-0
-    line) is worth considering in the same step.
+**R5.5.1** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-1) — *(sub-step of R5.5)*
+    **The generated `__init__.pyi` parses again, and the generator now checks** (#2486). The cause
+    was not the documentation text but the emitter: a docstring *summary* was written without
+    indentation, and a summary ends at the first ". " - which may come after a line break.
+    `createStubFiles.py` now `ast.parse()`s both stub files and refuses to write an invalid one.
 
 <a id="r5-5-2"></a>
 **R5.5.2** *(sub-step of R5.5; found 2026-09-17 while writing R5.5)* **The stubs describe classes

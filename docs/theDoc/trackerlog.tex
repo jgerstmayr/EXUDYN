@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.122.dev1, 
+  \item Exudyn version = 1.11.123.dev1, 
   \item last change =  2026-09-17, 
   \item Number of issues = 2487, 
-  \item Number of resolved issues = 2195 (122 in current version), 
+  \item Number of resolved issues = 2196 (123 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.123}: {\bf \color{warningRed}  resolved BUG 2486}: {\bf generated \_\_init\_\_.pyi is not valid Python}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: The stub file python/exudyn/\_\_init\_\_.pyi does not parse: one documentation line of the OutputVariableType description starts at column 0; createStubFiles.py takes that as the end of the class block and writes the rest of the class body to the top level. All five generated stub fragments parse - only the merged product does not; indenting that line makes the whole file parse. Nothing in the generator checks that the stub it wrote is valid Python. revision2026 step R5.5.1}
+    \item {\bf notes: Fixed at the emitter: DocStringGoogleFromPlainText wrote the summary part of a docstring without indentation; a summary ends at the first period-space and therefore may contain line breaks - here the OutputVariableType description. Its continued lines now get the docstring indentation. In addition createStubFiles.py parses both stub files with ast.parse before writing them and refuses to write an invalid stub - verified by mutation: with the emitter fix reverted the generator fails with the file and line. revision2026 step R5.5.1}
+    \item   date resolved: {\bf 2026-09-17 18:28},
+date raised: 2026-09-17 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.122}:  resolved Issue 2485: {\bf the C++ usage demo of the symbolic types is a dead function of if(false) blocks}
 (improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
@@ -13245,12 +13253,6 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
-  \item open {\bf BUG 2486}:  {\bf generated \_\_init\_\_.pyi is not valid Python}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item issue author: Claude-JG
-    \item {description: The stub file python/exudyn/\_\_init\_\_.pyi does not parse: one documentation line of the OutputVariableType description starts at column 0; createStubFiles.py takes that as the end of the class block and writes the rest of the class body to the top level. All five generated stub fragments parse - only the merged product does not; indenting that line makes the whole file parse. Nothing in the generator checks that the stub it wrote is valid Python. revision2026 step R5.5.1}
-    \item date raised: 2026-09-17 
-  \ei
   \item open {\bf BUG 2471}:  {\bf FEMinterface NPZ files store a C++ enum and cannot be read by a second module}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

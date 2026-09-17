@@ -52,7 +52,53 @@ from exudyn import (ObjectIndex, NodeIndex, MarkerIndex, LoadIndex, SensorIndex,
 
 
 
-Available output variables and the interpreation of the output variable can be found at the object definitions.
+
+
+@overload
+def Help() -> None: 
+    """Show basic help information."""
+    ...
+@overload
+def RequireVersion(requiredVersionString: str) -> None: 
+    r"""Checks if the installed version is according to the required version.
+    
+    Major, micro and minor version must agree the required level. This function is defined in the \texttt{__init__.py} file
+    
+    Examples:
+        exu.RequireVersion("1.0.31")
+    """
+    ...
+@overload
+def SetWriteToFile(filename: str, flagWriteToFile=True, flagAppend=False, flagFlushAlways=False) -> None: 
+    r"""Set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write \texttt{exu.SetWriteToFile('', False)} to close the output file; in case of flagFlushAlways=True, file will be finalized immediately in every print command, but may be slower; the filename is relative to exudyn.config.outputDirectory, which is prepended when the file is opened; an absolute filename together with a non-empty outputDirectory raises an error;.
+    
+    Examples:
+        exudyn.config.printToConsole = False #no output to console
+        exu.SetWriteToFile(filename='testOutput.log', flagWriteToFile=True, flagAppend=False, flagFlushAlways=False)
+        exu.Print('print this to file')
+        exu.SetWriteToFile('', False) #terminate writing to file which closes the file
+    """
+    ...
+@overload
+def Print() -> None: 
+    """This allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: exu.Print('test=',42,sep=' ',end='',flush=True); allows to redirect all output to file given by SetWriteToFile(...); does not print to console in case that exudyn.config.printToConsole eis set to False."""
+    ...
+@overload
+def InvalidIndex() -> int: 
+    """This function provides the invalid index, which may depend on the kind of 32-bit, 64-bit signed or unsigned integer; e.g., node index or item index in list; currently, the InvalidIndex() gives -1, but it may be changed in future versions, therefore you should use this function."""
+    ...
+__version__:str
+"""contains the current version of the Exudyn package."""
+variables:dict
+"""this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables['myvar'] = 42; can be used in particular to exchange data between different mbs or between packages by importing exudyn.variables wherever needed."""
+sys:dict
+"""this dictionary is used and reserved by the system, e.g., for testsuite, graphics or system function to store module-wide data in order to avoid global Python variables; the variable exu.sys['renderState'] contains the last render state after SC.renderer.Stop() and can be used for subsequent simulations."""
+
+
+class OutputVariableType(Enum):
+    """The enumeration type  OutputVariableType is used for selecting output values, e.g., for GetObjectOutput(...) or for selecting variables for contour plot.
+
+    Available output variables and the interpreation of the output variable can be found at the object definitions.
 
     The OutputVariableType does not provide information about the size of the output variable, which can be either scalar or a list (vector)
     For vector output quantities, the contour plot option offers an additional parameter for selection of the component of the OutputVariableType
@@ -125,52 +171,6 @@ Available output variables and the interpreation of the output variable can be f
     """measure kinetic energy of a body, position independent"""
     PotentialEnergy = int
     """measure potential (=elastic) energy of a body or connector, position independent"""
-
-
-
-@overload
-def Help() -> None: 
-    """Show basic help information."""
-    ...
-@overload
-def RequireVersion(requiredVersionString: str) -> None: 
-    r"""Checks if the installed version is according to the required version.
-    
-    Major, micro and minor version must agree the required level. This function is defined in the \texttt{__init__.py} file
-    
-    Examples:
-        exu.RequireVersion("1.0.31")
-    """
-    ...
-@overload
-def SetWriteToFile(filename: str, flagWriteToFile=True, flagAppend=False, flagFlushAlways=False) -> None: 
-    r"""Set flag to write (True) or not write to console; default value of flagWriteToFile = False; flagAppend appends output to file, if set True; in order to finalize the file, write \texttt{exu.SetWriteToFile('', False)} to close the output file; in case of flagFlushAlways=True, file will be finalized immediately in every print command, but may be slower; the filename is relative to exudyn.config.outputDirectory, which is prepended when the file is opened; an absolute filename together with a non-empty outputDirectory raises an error;.
-    
-    Examples:
-        exudyn.config.printToConsole = False #no output to console
-        exu.SetWriteToFile(filename='testOutput.log', flagWriteToFile=True, flagAppend=False, flagFlushAlways=False)
-        exu.Print('print this to file')
-        exu.SetWriteToFile('', False) #terminate writing to file which closes the file
-    """
-    ...
-@overload
-def Print() -> None: 
-    """This allows printing via exudyn with similar syntax as in Python print(args) except for keyword arguments: exu.Print('test=',42,sep=' ',end='',flush=True); allows to redirect all output to file given by SetWriteToFile(...); does not print to console in case that exudyn.config.printToConsole eis set to False."""
-    ...
-@overload
-def InvalidIndex() -> int: 
-    """This function provides the invalid index, which may depend on the kind of 32-bit, 64-bit signed or unsigned integer; e.g., node index or item index in list; currently, the InvalidIndex() gives -1, but it may be changed in future versions, therefore you should use this function."""
-    ...
-__version__:str
-"""contains the current version of the Exudyn package."""
-variables:dict
-"""this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables['myvar'] = 42; can be used in particular to exchange data between different mbs or between packages by importing exudyn.variables wherever needed."""
-sys:dict
-"""this dictionary is used and reserved by the system, e.g., for testsuite, graphics or system function to store module-wide data in order to avoid global Python variables; the variable exu.sys['renderState'] contains the last render state after SC.renderer.Stop() and can be used for subsequent simulations."""
-
-
-class OutputVariableType(Enum):
-    """The enumeration type  OutputVariableType is used for selecting output values, e.g., for GetObjectOutput(...) or for selecting variables for contour plot.
 
 
 class ConfigurationType(Enum):

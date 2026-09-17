@@ -15,6 +15,20 @@
 
 import copy #for deep copies
 import io   #for utf-8 encoding
+import ast  #to verify that the written stub is valid Python
+
+#stub files are merged from fragments line by line; a fragment that indents differently
+#than expected silently produces a file that no longer parses, and then no IDE and no type
+#checker can read it - therefore every written stub is parsed before it is accepted, #2486
+def CheckStubIsValidPython(fileName, text):
+    try:
+        ast.parse(text, filename=fileName)
+    except SyntaxError as e:
+        raise SyntaxError('createStubFiles.py produced an invalid stub file "'+fileName+
+                          '", line '+str(e.lineno)+': '+str(e.msg)+
+                          '\n  '+str(e.text).rstrip()+
+                          '\nthe stub fragments are merged by indentation; a class docstring '
+                          'line starting at column 0 ends the class block, see issue #2486') from None
 
 rstFolder = 'docs/RST/' #folder where generated .rst files are stored
 
@@ -71,7 +85,8 @@ for key, value in classData.items():
 # for line in mergedFileLines:
 #     mergedFile += line
 
-if True: 
+if True:
+    CheckStubIsValidPython(destFile, mergedFile) #raises before anything is written, #2486
     file=io.open(destFile,'w',encoding='utf8')
     file.write(mergedFile)
     file.close()
@@ -90,6 +105,7 @@ if True:
     mergedText += file.read()
     file.close()
 
+    CheckStubIsValidPython(destFile2, mergedText) #raises before anything is written, #2486
     file=io.open(destFile2,'w',encoding='utf8')
     file.write(mergedText)
     file.close()

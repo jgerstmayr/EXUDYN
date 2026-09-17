@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.122.dev1, 
++  Exudyn version = 1.11.123.dev1, 
 +  last change =  2026-09-17, 
 +  Number of issues = 2487, 
-+  Number of resolved issues = 2195 (122 in current version), 
++  Number of resolved issues = 2196 (123 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.123: :textred:`resolved BUG 2486` : generated __init__.pyi is not valid Python 
+    - issue author: Claude-JG
+    - description:  The stub file python/exudyn/__init__.pyi does not parse: one documentation line of the OutputVariableType description starts at column 0; createStubFiles.py takes that as the end of the class block and writes the rest of the class body to the top level. All five generated stub fragments parse - only the merged product does not; indenting that line makes the whole file parse. Nothing in the generator checks that the stub it wrote is valid Python. revision2026 step R5.5.1
+    - **notes:** Fixed at the emitter: DocStringGoogleFromPlainText wrote the summary part of a docstring without indentation; a summary ends at the first period-space and therefore may contain line breaks - here the OutputVariableType description. Its continued lines now get the docstring indentation. In addition createStubFiles.py parses both stub files with ast.parse before writing them and refuses to write an invalid stub - verified by mutation: with the emitter fix reverted the generator fails with the file and line. revision2026 step R5.5.1
+    - date resolved: **2026-09-17 18:28**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.122: resolved Issue 2485: the C++ usage demo of the symbolic types is a dead function of if(false) blocks (improvement)
     - issue author: Claude-JG
     - description:  PyTest_unused() at the end of Symbolic.cpp was six if(false)/if(true) blocks in one function, never called, not compiled into anything meaningful and never run. It is the only documentation of how Symbolic::SReal, SymbolicRealVector and SymbolicRealMatrix are used from C++, which is worth keeping (maintainer, 2026-09-17), but not in that shape - and it demonstrates a stack ExpressionNamedReal, which is exactly the heap corruption trap found in step R5.4.2. Reshape into a header that says what it is, with one named function per topic. revision2026 step R5.4.12.
@@ -8574,11 +8580,6 @@ Open issues
 **********
 Known bugs
 **********
-
- * :textred:`open BUG 2486:` generated __init__.pyi is not valid Python
-    - issue author: Claude-JG
-    - description:  The stub file python/exudyn/__init__.pyi does not parse: one documentation line of the OutputVariableType description starts at column 0; createStubFiles.py takes that as the end of the class block and writes the rest of the class body to the top level. All five generated stub fragments parse - only the merged product does not; indenting that line makes the whole file parse. Nothing in the generator checks that the stub it wrote is valid Python. revision2026 step R5.5.1
-    - date raised: 2026-09-17 
 
  * :textred:`open BUG 2471:` FEMinterface NPZ files store a C++ enum and cannot be read by a second module
     - issue author: Claude-JG

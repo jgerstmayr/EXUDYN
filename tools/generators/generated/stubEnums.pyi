@@ -2,7 +2,7 @@
 class OutputVariableType(Enum):
     """The enumeration type  OutputVariableType is used for selecting output values, e.g., for GetObjectOutput(...) or for selecting variables for contour plot.
 
-Available output variables and the interpreation of the output variable can be found at the object definitions.
+    Available output variables and the interpreation of the output variable can be found at the object definitions.
 
     The OutputVariableType does not provide information about the size of the output variable, which can be either scalar or a list (vector)
     For vector output quantities, the contour plot option offers an additional parameter for selection of the component of the OutputVariableType

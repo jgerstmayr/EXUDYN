@@ -169,6 +169,15 @@ def DocStringGoogleFromPlainText(text, addSpaces='    ',
     if multiline and description!='':
         finalText += addSpaces+addR+'"""'
         if splitSummaryDescription:
+            #the summary may itself contain line breaks (it ends at the first ". ", which
+            #may come after a newline); every continued line needs the docstring indentation,
+            #otherwise createStubFiles.py takes the column-0 line for the end of the class
+            #block and the merged .pyi does not parse any more, see issue #2486
+            summary = RemoveIndentation(summary, addSpaces = addSpaces,
+                                        removeAllSpaces = False,
+                                        removeIndentation = True).lstrip(' ') #first line follows """
+            summary = '\n'.join([line if line.strip()!='' else ''
+                                 for line in summary.split('\n')]) #no trailing spaces on empty lines
             finalText += summary+"\n"
             text = description
 
