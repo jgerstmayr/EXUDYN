@@ -937,6 +937,69 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     themselves and call `plt.show()`. Each now carries a two-line guard after its exudyn import,
     and `CLAUDE.md` rule 11 says that a local run of an existing model sets
     `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` and `EXUDYN_OUTPUTDIRECTORY`.
+<a id="r5-18"></a>
+**R5.18** *(phase R5, last step; maintainer request 2026-09-18)* **One driver instead of eighteen
+batch files** (#2503). `tools/buildAndGenerate/` holds 18 files, of which **five exist only to find
+conda and to loop over the Python versions** (`condaActivate.bat`, `execWithPythonVersion.bat`,
+`execWithAllPythonVersions.bat`, plus the two thin wrappers `makeWindowsBinaries.bat` and
+`buildInstallSingleVersion.bat`). A `.bat` file cannot print a `--help`, cannot validate an option
+and cannot pass an option it does not know about: that is exactly why `--fast-module` - added in
+step R5.11 - could not be reached from `runTestSuite.bat` at all until step R5.13.5, and why the
+argument-forwarding loop added there needed a dry run to catch that `SHIFT` also shifts `%0`.
+The scripts are additionally **where the maintainer looks up how the build works**, a documentation
+duty that `REM` headers serve badly.
+
+**The replacement**: one dependency-free Python driver, `python tools/exudev` (a directory with
+`__main__.py`, so no `sys.path` manipulation and no installation), with a `.bat` one-liner
+`tools/buildAndGenerate/exudev.bat` so that `exudev test --fast` works from any shell. It imports
+only `argparse` and `subprocess`, **never `exudyn`**, so it runs under any interpreter - including
+the conda base - and can therefore be the thing that *selects* the environment.
+
+| command | what it does | replaces |
+|---|---|---|
+| `exudev generate [--docs]` | `tools/regenerate.py`, optionally the sphinx build | `runPythonScripts.bat` |
+| `exudev build [--py P313] [--fast] [--no-install] [--clean]` | wheel + reinstall for one version or `--py all` | `makeInstallBinaries`, `makeWindowsBinaries`, `buildInstallSingleVersion` |
+| `exudev test [--py] [--fast] [--parallel] [--exit-code]` | `runTestSuite.py` | `runTestSuite.bat` |
+| `exudev examples [--py]` | `runTestExamples.py` | `runTestExamples.bat` |
+| `exudev perf [--py] [--fast]` | `runPerformanceTests.py` | `runPerformanceTests.bat` |
+| `exudev docs [--pdf]` | sphinx html; `--pdf` the LaTeX `theDoc` while it still exists | `makeSphinxDoc.bat`, `makeDoc.bat` |
+| `exudev linux [--manylinux\|--wsl] [--no-fast]` | the linux wheels through WSL | `makeUbuntuManyLinuxWheels`, `makeUbuntuWheels` |
+| `exudev release [--fast] [--no-docs] [--no-tests] [--no-linux]` | the whole path: clean, generate, all wheels, all tests, docs, linux | `makeAndTestAllBinaries.bat` |
+| `exudev clean` | build directories and eggs | `removeBuildsAndEggs.bat` |
+| `exudev env` | which `venvP3xx` exist and which exudyn version each has | the README warning about stale installs |
+
+**Conventions**, all of them free from `argparse`: `--help` on the driver **and on every
+subcommand**; `-q/--quiet`; `--fast` is always **opt-in**; `--docs/--no-docs` and
+`--tests/--no-tests` come as a pair from `BooleanOptionalAction`; `--py` takes `P310`...`P314` or
+`all`; `--env NAME` overrides the environment (default `venvExuP313` for generation and docs,
+`venvP3xx` for the version matrix); **unknown options are forwarded** to the underlying runner, so
+a new runner option is usable the day it exists. An unknown *command* is an error with the list of
+commands - a `.bat` silently does nothing.
+
+**`-n/--dry-run` is the documentation feature**: it prints the exact command lines it would run and
+exits. That answers "how does this actually work" better than the `REM` headers ever did, and it is
+how the step is tested.
+
+**Environment selection uses `conda run -n <env> --no-capture-output`** instead of the
+activate/deactivate dance. Measured 2026-09-18: 1.8 s overhead per call, exit code propagated,
+output not buffered. This removes `condaActivate.bat` and both `execWith*` scripts; the base
+installation is still located by `EXUDYN_CONDA_ROOT`, then `CONDA_EXE`, then `PATH`, which is the
+logic of `condaActivate.bat` ported to Python.
+
+**Disposition of the 18 files** (tracked files are moved, so this needs the maintainer's word,
+which was given 2026-09-18): 13 `.bat` files move to `tmp/oldScripts/` - note `tmp/` is
+**gitignored**, so this removes them from the repository; `manylinuxBuild.sh` **stays** (it runs
+inside the docker image and must be shell); `tools/buildAndGenerate/README.md` is rewritten as the
+driver's page; `exudev.bat` is new. The dead `addTags.bat` reference in `makeAndTestAllBinaries.bat`
+disappears with it - no such file exists. `src/pythonGenerator/makeAllBinariesScripts.py` (31 lines,
+writes `docs/theDoc/buildDate.tex`) is folded into `exudev release` when that directory is removed.
+
+**Deferred on purpose - REMINDER for after the revision**: the **main `README.md`** and the build
+instructions in the user documentation still describe the batch files. They are **not** updated in
+this step, because R7.2 rewrites the per-platform build instructions anyway and the driver's own
+commands may still change; updating both now would mean writing them twice. R7.2 must pick this up,
+and `tools/buildAndGenerate/README.md` is the source it should link to rather than copy (rule 10).
+
 ## R6 — Error handling and UX (ongoing, after R2)  <!-- old Phase 5 -->
 
 <a id="r6-1"></a>

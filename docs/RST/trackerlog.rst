@@ -20,8 +20,8 @@ BUG numbers refer to the according issue numbers.
 General information on current version:
  
 +  Exudyn version = 1.11.160.dev1, 
-+  last change =  2026-09-17, 
-+  Number of issues = 2501, 
++  last change =  2026-09-18, 
++  Number of issues = 2504, 
 +  Number of resolved issues = 2233 (160 in current version), 
 
 ************
@@ -7666,6 +7666,21 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * :textorange:`open issue 2503:` the build and test scripts are 18 batch files without help
+    - issue author: Claude-JG
+    - description:  tools/buildAndGenerate/ holds 18 files; 5 of which exist only to find conda and to loop over the Python versions. A .bat file cannot print a --help; cannot validate an option and cannot pass an unknown option on: every new runner option has to be threaded through by hand - which is how --fast-module stayed unreachable from runTestSuite.bat until #2500. The scripts are also the place where the maintainer looks up HOW the build works; so they carry a documentation duty that comment headers serve badly. Replace them with one Python driver with subcommands; a --help per subcommand and a --dry-run that prints the commands instead of running them; keeping only the scripts that must stay shell (manylinuxBuild.sh runs inside the docker image). revision2026 step R5.18
+    - date raised: 2026-09-18 
+
+ * :textred:`open issue 2502:` sliderCrank3Dbenchmark result depends on the numpy version
+    - issue author: Claude-JG
+    - description:  Measured 2026-09-18: with the SAME exudyn binary (exudynCPP.cp313-win_amd64.pyd md5 identical in both environments); the same source; the same machine and the same Python 3.13.15; the model returns 7.256859912845965 under numpy 2.4.6 - exactly the committed reference - and 7.256859914829453 under numpy 2.2.4; relative 2.7e-10. The suite tolerance is 5e-14; so the test FAILS wherever numpy is older; which is what the maintainer sees in venvP313. numpy enters through the model setup only; so a last-bit difference in the input data is amplified by the solver to 2.7e-10. The same model is already listed in UnresolvedOnLinux() with rel. 2.0e-10; which now looks like the same effect rather than a platform difference. Open questions: which numpy operation in the setup differs; whether other entries of UnresolvedOnLinux() are really numpy-version effects; and whether the suite should pin a minimum numpy for reference comparison or mark the model sensitive. revision2026 phase R10.
+    - date raised: 2026-09-18 
+
+ * :textred:`open issue 2501:` symbolicModuleTest counts 2 wrong results with numpy 2.2
+    - issue author: Claude-JG
+    - description:  The vector/matrix section compares the symbolic result against the numpy result with an ABSOLUTE tolerance: np.linalg.norm(res[0]-res[1]) > 1e-15. One of the compared values has magnitude 9.7476; where 1 ulp is 1.8e-15; so the tolerance is below the representable resolution. Measured 2026-09-18 on one machine with the SAME exudyn binary (md5 identical in both environments) and the same source: numpy 2.4.6 gives 9.7476 on both sides and the test passes; numpy 2.2.4 gives 9.747600000000002 on the numpy side; a difference of 1.78e-15; counted once per recording mode. cntWrong is added to the test result since #2479; so the model reports 2.948412957506974 against a reference of 0.9484129575069745 and the suite FAILS with error 2.0. The comparison needs a relative tolerance.
+    - date raised: 2026-09-18 
 
  * :textblue:`open issue 2498:` no test checks the member functions an item type must provide
     - issue author: Claude-JG
