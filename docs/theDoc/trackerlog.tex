@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.124.dev1, 
+  \item Exudyn version = 1.11.125.dev1, 
   \item last change =  2026-09-17, 
-  \item Number of issues = 2488, 
-  \item Number of resolved issues = 2197 (124 in current version), 
+  \item Number of issues = 2489, 
+  \item Number of resolved issues = 2198 (125 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.125}: {\bf \color{warningRed}  resolved BUG 2488}: {\bf four undefined names raise NameError when their code path is reached}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: ruff F821 found four names that do not exist where they are used: lieGroupIntegration.py calls exudyn.Print(...) three times although the module imports exudyn as exu; and robotics/roboticsCore.py line 1392 calls SC.renderer.Start() although the class member is self.SC - so InverseKinematicsNumerical with useRenderer=True raises NameError instead of showing the renderer. All four are in error or option paths that no test reaches. revision2026 step R5.5.5}
+    \item {\bf notes: lieGroupIntegration.py used exudyn.Print three times although the module imports exudyn as exu; and roboticsCore.py called SC.renderer.Start() where the member is self.SC - so InverseKinematicsNumerical(useRenderer=True) raised NameError instead of showing the renderer. Both fixed. Running the first path afterwards showed a second defect at the same place: after printing the message the function continued and raised UnboundLocalError on ComputeStep; the unknown-solver case now raises ValueError naming the accepted values. revision2026 step R5.5.5}
+    \item   date resolved: {\bf 2026-09-17 18:43},
+date raised: 2026-09-17 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.124}:  resolved Issue 2487: {\bf no linter runs over the shipped Python package}
 (extension)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

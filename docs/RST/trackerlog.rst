@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.124.dev1, 
++  Exudyn version = 1.11.125.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2488, 
-+  Number of resolved issues = 2197 (124 in current version), 
++  Number of issues = 2489, 
++  Number of resolved issues = 2198 (125 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.125: :textred:`resolved BUG 2488` : four undefined names raise NameError when their code path is reached 
+    - issue author: Claude-JG
+    - description:  ruff F821 found four names that do not exist where they are used: lieGroupIntegration.py calls exudyn.Print(...) three times although the module imports exudyn as exu; and robotics/roboticsCore.py line 1392 calls SC.renderer.Start() although the class member is self.SC - so InverseKinematicsNumerical with useRenderer=True raises NameError instead of showing the renderer. All four are in error or option paths that no test reaches. revision2026 step R5.5.5
+    - **notes:** lieGroupIntegration.py used exudyn.Print three times although the module imports exudyn as exu; and roboticsCore.py called SC.renderer.Start() where the member is self.SC - so InverseKinematicsNumerical(useRenderer=True) raised NameError instead of showing the renderer. Both fixed. Running the first path afterwards showed a second defect at the same place: after printing the message the function continued and raised UnboundLocalError on ComputeStep; the unknown-solver case now raises ValueError naming the accepted values. revision2026 step R5.5.5
+    - date resolved: **2026-09-17 18:43**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.124: resolved Issue 2487: no linter runs over the shipped Python package (extension)
     - issue author: Claude-JG
     - description:  python/exudyn is 34000 lines and nothing checks it for undefined names; unused imports or bare except: - the only linter in use is pydoclint; which only judges docstrings. ruff is introduced with an explicitly written rule set (F and E4/E7/E9); the findings present at introduction are tolerated through a baseline and a new finding fails the check. revision2026 step R5.5

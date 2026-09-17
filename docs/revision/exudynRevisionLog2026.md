@@ -4767,6 +4767,37 @@ unused import and an `== None` added to `demos.py` are reported by file and rule
 exits 1. If ruff is not installed the check fails rather than passes, because a gate that is
 silent when its tool is missing is not a gate.
 
+<a id="r5-5-5"></a>
+### R5.5.5 - four undefined names, and what was behind one of them
+
+**DONE 2026-09-17** (#2488; found by the linter introduced in R5.5.3).
+
+`F821` is the rule that justifies a linter on its own: a name that does not exist raises only when
+that line is finally reached, and these four are in error and option paths that no test enters.
+
+- `lieGroupIntegration.py` calls `exudyn.Print(...)` three times, but imports the module as `exu`.
+- `robotics/roboticsCore.py:1392` calls `SC.renderer.Start()`; the member is `self.SC`, as the same
+  class writes correctly forty lines further down. `InverseKinematicsNumerical` with
+  `useRenderer=True` therefore raised `NameError` instead of showing the renderer.
+
+**Fixing the first one exposed a second defect at the same place.** With `exu.Print` in place the
+unknown-solver branch printed its message and carried on - and the next lines raised
+`UnboundLocalError: cannot access local variable 'ComputeStep'`, because the branch defines no
+`ComputeStep`. The message was correct and the program still died two lines later with an
+unrelated-looking error. The branch now raises:
+
+```python
+raise ValueError('RK_SolveEulersEOMWithProposedApproach: solver must be "RK1" or "RK4", received: '+str(solver))
+```
+
+**A method note worth keeping.** The gates for the previous commit passed while testing the *wrong
+code*: `runTestSuite.py`, `pytest` and `runTestExamples.py` import `exudyn` from **site-packages**,
+not from `python/exudyn/`, so a change to the shipped package is not exercised until it is
+installed. It was noticed only because verifying this fix by running the repaired path failed to
+import the source tree at all. The 22 changed files were copied into the installed package and all
+three runs repeated - suite PASSED, pytest passed, examples with the same 5 pre-existing failures.
+**Any step that edits `python/exudyn/` must install the package before its gates mean anything.**
+
 <a id="r5-7"></a>
 ### R5.7 — rename `pytest.py` - done differently in step R3.1 (`python/pytestTemplate.py`)
 

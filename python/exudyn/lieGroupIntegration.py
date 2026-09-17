@@ -80,7 +80,9 @@ def RK_SolveEulersEOMWithProposedApproach(ODE2RHS, v0, w0, tEnd, numberOfSteps, 
         def ComputeStep(ODE2RHS, v0, w0, h):
             return ComputeStepWithRK4(ODE2RHS, v0, w0, h)    
     else:
-        exudyn.Print('requested solver is not available!!')
+        #printing and continuing left ComputeStep undefined, so the next lines raised
+        #UnboundLocalError instead of saying what was wrong, #2488
+        raise ValueError('RK_SolveEulersEOMWithProposedApproach: solver must be "RK1" or "RK4", received: '+str(solver))
         
     # compute time step size
     h = tEnd/numberOfSteps
@@ -145,9 +147,9 @@ def LieGroupExplicitRKInitialize(mainSys):
         d = mainSys.GetObject(i)
         if d['objectType'] == 'ConnectorCoordinate':
             if d['factorValue1'] != 1.: 
-                exudyn.Print('ConnectorCoordinate.factorValue1 must be 1., otherwise connector constraint cannot be resolved!')
+                exu.Print('ConnectorCoordinate.factorValue1 must be 1., otherwise connector constraint cannot be resolved!') #2488
             elif d['offset'] != 0.: 
-                exudyn.Print('ConnectorCoordinate.offset must be 0., otherwise connector constraint cannot be resolved!')
+                exu.Print('ConnectorCoordinate.offset must be 0., otherwise connector constraint cannot be resolved!') #2488
             elif d['activeConnector']: #constrain only if connector is active!
                 markers = d['markerNumbers']
                 coords=[]

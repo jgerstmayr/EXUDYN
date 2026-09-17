@@ -737,6 +737,13 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     the same way R5.5.3 does it, and R5.5.2 is then the first entry to work off. Needs R5.5.1
     (done): a stub that does not parse cannot be checked at all.
 
+<a id="r5-5-5"></a>
+**R5.5.5** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-5) — *(sub-step of R5.5;
+    found by the linter of R5.5.3)* **Four undefined names that raise `NameError` when their code
+    path is reached** (#2488): three `exudyn.Print` in `lieGroupIntegration.py`, which imports the
+    module as `exu`, and `SC.renderer.Start()` in `roboticsCore.py`, where the member is `self.SC`.
+    Running the first path then showed a second defect behind it.
+
 <a id="r5-6"></a>
 **R5.6** Add an ASan/UBSan Linux job. For a C++ library invoking arbitrary user callbacks this catches
     the class of bug users report as "it crashed with no message".

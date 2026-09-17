@@ -27,7 +27,6 @@
 4	python/exudyn/interactive.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 7	python/exudyn/interactive.py	E722	Do not use bare `except`
 2	python/exudyn/lieGroupBasics.py	E741	Ambiguous variable name: `I`
-3	python/exudyn/lieGroupIntegration.py	F821	Undefined name `exudyn`
 8	python/exudyn/mainSystemExtensions.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 1	python/exudyn/mainSystemExtensions.py	E722	Do not use bare `except`
 26	python/exudyn/plot.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
@@ -91,7 +90,6 @@
 1	python/exudyn/robotics/models.py	F841	Local variable `torqueMax` is assigned to but never used
 1	python/exudyn/robotics/roboticsCore.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 1	python/exudyn/robotics/roboticsCore.py	E722	Do not use bare `except`
-1	python/exudyn/robotics/roboticsCore.py	F821	Undefined name `SC`
 1	python/exudyn/robotics/roboticsCore.py	F841	Local variable `t12` is assigned to but never used
 1	python/exudyn/robotics/rosInterface.py	F403	`from exudyn.utilities import *` used; unable to detect undefined names
 1	python/exudyn/robotics/rosInterface.py	F405	`RotXYZ2EulerParameters` may be undefined, or defined from star imports
