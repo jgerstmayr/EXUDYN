@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.115.dev1, 
+  \item Exudyn version = 1.11.116.dev1, 
   \item last change =  2026-09-17, 
-  \item Number of issues = 2484, 
-  \item Number of resolved issues = 2188 (115 in current version), 
+  \item Number of issues = 2485, 
+  \item Number of resolved issues = 2189 (116 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.116}:  resolved Issue 2484: {\bf pythonTests.cpp is dead manual test code}
+(improvement)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: src/Pymodules/pythonTests.cpp is 849 lines of which 56 are live code, and the body of PyTest() is commented out ENTIRELY - the function does nothing. It is bound as exu.Test only outside a release build. CreateTestSystem is bound only under \_MYDEBUG and builds a model by py::exec of a Python string written against the pre-exudyn API (from itemInterface import *, mbs.AddObject with a raw dict); it predates exudyn.demos, which does the same job properly. Both are more misleading than helpful (maintainer, 2026-09-17). Remove the file and its header PybindTests.h, the two bindings in PybindModule.cpp and the project entries. revision2026 step R5.4.11.}
+    \item {\bf notes: Removed: src/Pymodules/pythonTests.cpp and src/Pymodules/PybindTests.h, the include and the two m.def bindings in PybindModule.cpp, the ClCompile/ClInclude entries in cppsrc.vcxproj and .filters, and the pythonTests.cpp entry in the hand-maintained minimal list of sources.json. The compile list is now 132 sources, 53 minimal. A comment in tools/benchmarks/avx2Benchmark.py that pointed at the removed sweep was rewritten. Verified: the module builds, exu.Test and exu.CreateTestSystem are gone, gen\_sources.py agrees, suite PASSED, pytest passed. revision2026 step R5.4.11.}
+    \item   date resolved: {\bf 2026-09-17 16:27},
+date raised: 2026-09-17 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.115}:  resolved Issue 2479: {\bf Symbolic and LinearSolver have no C++ unit tests}
 (improvement)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

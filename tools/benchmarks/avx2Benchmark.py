@@ -9,9 +9,8 @@
 #           dense implicit system - and prints the result of each run with 17 digits, so that
 #           two builds can be compared for speed AND for FMA rounding differences (#2396).
 #
-#           The C++ sweep in PyTest() (src/Pymodules/pythonTests.cpp) cannot do this: exu.Test()
-#           is not bound in a release build (EXUDYN_RELEASE), and the sweep timed hand-written
-#           loops, not the vector code the solver uses.
+#           A C++ sweep inside the module cannot do this: it measures one build at a time, and it
+#           would time hand-written loops rather than the vector code the solver actually uses.
 #
 # Usage:    python tools/benchmarks/avx2Benchmark.py [--output FILE] [--repeat N] [--quick]
 #           python tools/benchmarks/avx2Benchmark.py --compare FILE1 FILE2 [FILE3 ...]

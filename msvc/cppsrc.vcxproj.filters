@@ -312,9 +312,6 @@
     <ClCompile Include="..\src\Objects\CMarkerNodeODE1Coordinate.cpp">
       <Filter>CPPitems</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Pymodules\pythonTests.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Main\rendererPythonInterface.cpp">
       <Filter>CPPvisualization</Filter>
     </ClCompile>
@@ -516,9 +513,6 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\System\MainMaterial.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Pymodules\PybindTests.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Linalg\ConstSizeMatrix.h">

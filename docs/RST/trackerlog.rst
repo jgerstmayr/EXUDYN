@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.115.dev1, 
++  Exudyn version = 1.11.116.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2484, 
-+  Number of resolved issues = 2188 (115 in current version), 
++  Number of issues = 2485, 
++  Number of resolved issues = 2189 (116 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.116: resolved Issue 2484: pythonTests.cpp is dead manual test code (improvement)
+    - issue author: Claude-JG
+    - description:  src/Pymodules/pythonTests.cpp is 849 lines of which 56 are live code, and the body of PyTest() is commented out ENTIRELY - the function does nothing. It is bound as exu.Test only outside a release build. CreateTestSystem is bound only under _MYDEBUG and builds a model by py::exec of a Python string written against the pre-exudyn API (from itemInterface import \*, mbs.AddObject with a raw dict); it predates exudyn.demos, which does the same job properly. Both are more misleading than helpful (maintainer, 2026-09-17). Remove the file and its header PybindTests.h, the two bindings in PybindModule.cpp and the project entries. revision2026 step R5.4.11.
+    - **notes:** Removed: src/Pymodules/pythonTests.cpp and src/Pymodules/PybindTests.h, the include and the two m.def bindings in PybindModule.cpp, the ClCompile/ClInclude entries in cppsrc.vcxproj and .filters, and the pythonTests.cpp entry in the hand-maintained minimal list of sources.json. The compile list is now 132 sources, 53 minimal. A comment in tools/benchmarks/avx2Benchmark.py that pointed at the removed sweep was rewritten. Verified: the module builds, exu.Test and exu.CreateTestSystem are gone, gen_sources.py agrees, suite PASSED, pytest passed. revision2026 step R5.4.11.
+    - date resolved: **2026-09-17 16:27**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.115: resolved Issue 2479: Symbolic and LinearSolver have no C++ unit tests (improvement)
     - issue author: Claude-JG
     - description:  src/Tests/ covers the vectors, the arrays, the matrix classes and the geometry group, but neither the symbolic expression system (Symbolic.h, SymbolicVector.h, SymbolicMatrix.h; ~4000 lines) nor LinearSolver.h (the dense and the sparse system matrix behind one GeneralMatrix interface). symbolicModuleTest.py compares the NUMBERS from Python, so the C++ tests aim at the expression TREE - Diff, the value accessors, the non-recording path, the reference counting - and the solver tests solve one system with all four variants and pin down where the variants deliberately differ. revision2026 steps R5.4.2 and R5.4.3.
@@ -7418,9 +7424,9 @@ Version 0.1
 Open issues
 ***********
 
- * **open issue 2483:** the Eigen dense solvers cannot report a singular matrix
+ * **open issue 2483:** document that EigenDense does not detect a singular matrix
     - issue author: Claude-JG
-    - description:  For useEigenSolverType 1 (PartialPivLU) and 2 (FullPivLU) GeneralMatrixEXUdense::FactorizeNew() sets rv = -1 unconditionally and the invertibility check is commented out (LinearSolver.cpp:40 and 58-76) - a singular system reports SUCCESS and Solve returns a least-squares or undefined answer instead of an error. Only the own EXUdense Gauss-Jordan path and the sparse path report the failure. The code comment says this is deliberate, but it means the solver silently continues on a singular Jacobian whenever a user selects an Eigen dense solver. Decide: report it, or state the behaviour in the documentation of LinearSolverType. Pinned by a unit test in revision2026 step R5.4.3. revision2026 step R5.4.10.
+    - description:  CORRECTED 2026-09-17 after maintainer feedback: the behaviour is NOT a defect. The FullPivLU path is entered only with linearSolverSettings.ignoreSingularJacobian=True, which is documented as handling over- and underdetermined systems and resolving redundant constraints (with a warning that it may lead to erroneous results), and the code says so as well: "in this case, we could report errors, but we do not want to". It also honours pivotThreshold via setThreshold. The PartialPivLU path cannot report invertibility at all - "according to Eigen homepage, there is no possibility to check for invertability" - so it is a property of the library, not a decision of Exudyn. What remains is a documentation gap: LinearSolverType.EigenDense describes partial pivoting as "faster than EXUdense" and mentions full pivot only under ignoreSingularJacobian, but nowhere states that in the DEFAULT EigenDense mode a singular Jacobian is not detected and the solver continues with an undefined result, while EXUdense and EigenSparse do report it. Add one sentence to the enum description. revision2026 step R5.4.10.
     - date raised: 2026-09-17 
 
  * **open issue 2482:** the sparse FactorizeNew does not return the causing row it promises

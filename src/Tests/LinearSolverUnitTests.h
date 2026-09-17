@@ -7,10 +7,10 @@
 *				  system is solved by all FOUR variants - EXUdense, Eigen PartialPivLU, Eigen
 *				  FullPivLU and EigenSparse - and they must agree. The check is the property
 *				  A*x == rhs, not a recorded solution vector, so it survives a rewrite.
-*				- where they do NOT agree is at least as important, and the cases state the truth
-*				  rather than the wish: only EXUdense reports a singular matrix by its causing row,
-*				  the two Eigen dense paths report success and return a least-squares answer, and
-*				  EXUdense overwrites its own matrix with the INVERSE while factorizing.
+*				- where they do NOT agree is at least as important: only EXUdense reports a singular
+*				  matrix by its causing row, the two Eigen dense paths report success and return a
+*				  least-squares answer - which is what ignoreSingularJacobian is FOR, see the case -
+*				  and EXUdense overwrites its own matrix with the INVERSE while factorizing.
 *				- negative tests use the throwing paths only. Misusing the dense matrix produces a
 *				  SysError, which prints, continues and sets the process-global
 *				  globalPyRuntimeErrorFlag - a unit test must not leave that behind.
@@ -197,11 +197,11 @@ const lest::test linearSolver_specific_test[] =
 
 	CASE("LinearSolver: the two Eigen DENSE paths cannot report a singular matrix at all")
 	{
-		//pinned as it is, not as one would wish: LinearSolver.cpp sets rv=-1 unconditionally for
-		//useEigenSolverType 1 and 2, with the invertibility check commented out. The caller gets
-		//'success' and a least-squares answer for a system that has no solution. Whether that is
-		//acceptable is a question for the solver, not for this test - but it must not change
-		//silently, which is what this case is for
+		//this is DELIBERATE, and the case exists so that it cannot change silently: FullPivLU is the
+		//linearSolverSettings.ignoreSingularJacobian=True path, whose documented purpose is to
+		//resolve over- and underdetermined systems and redundant constraints by least squares
+		//("in this case, we could report errors, but we do not want to"), and PartialPivLU offers no
+		//invertibility check at all - a property of Eigen, not a decision of Exudyn
 		Matrix values = LinearSolverTestMatrix();
 		for (Index j = 0; j < values.NumberOfColumns(); j++) { values(2, j) = 0.; }
 

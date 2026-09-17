@@ -221,9 +221,6 @@
     <ClCompile Include="..\src\Pymodules\Pybind_manual_classes.cpp" />
     <ClCompile Include="..\src\Pymodules\Pybind_modules.cpp" />
     <ClCompile Include="..\src\Pymodules\PyMatrixContainer.cpp" />
-    <ClCompile Include="..\src\Pymodules\pythonTests.cpp">
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Default</BasicRuntimeChecks>
-    </ClCompile>
     <ClCompile Include="..\src\Solver\CSolver.cpp" />
     <ClCompile Include="..\src\Solver\CSolverBase.cpp" />
     <ClCompile Include="..\src\Solver\CSolverExplicit.cpp" />
@@ -595,7 +592,6 @@
     <ClInclude Include="..\src\Main\TemporaryComputationData.h" />
     <ClInclude Include="..\src\Main\WriteBinary.h" />
     <ClInclude Include="..\src\Objects\CObjectANCFCable2DBase.h" />
-    <ClInclude Include="..\src\Pymodules\PybindTests.h" />
     <ClInclude Include="..\src\Pymodules\PybindUtilities.h" />
     <ClInclude Include="..\src\Pymodules\PyGeneralContact.h" />
     <ClInclude Include="..\src\Pymodules\PyMatrixContainer.h" />

@@ -569,12 +569,22 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     in practice is always 0 - so the caller is told "row 0" whichever row is singular.
 
 <a id="r5-4-10"></a>
-**R5.4.10** *(sub-step of R5.4, from R5.4.3)* **The Eigen dense solvers cannot report a singular
-    matrix** (#2483): for `useEigenSolverType` 1 and 2 the return value is set to -1
-    unconditionally and the invertibility check is commented out, so a singular system reports
-    success and `Solve` returns a least-squares answer. Deliberate according to the code comment;
-    decide whether to report it or to document it.
+**R5.4.10** *(sub-step of R5.4, from R5.4.3)* **Document that `EigenDense` does not detect a
+    singular matrix** (#2483). The behaviour itself is correct and deliberate: **FullPivLU is the
+    `ignoreSingularJacobian=True` path**, documented as resolving over- and underdetermined systems
+    and redundant constraints, and **PartialPivLU offers no invertibility check at all** - a
+    property of Eigen, not a decision of Exudyn (maintainer, 2026-09-17). What is missing is one
+    sentence in the `LinearSolverType.EigenDense` description: in the default (partial pivot) mode
+    a singular Jacobian is **not** detected and the solver continues with an undefined result,
+    while `EXUdense` and `EigenSparse` do report it.
 
+<a id="r5-4-11"></a>
+**R5.4.11** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-11) — *(sub-step of R5.4;
+    maintainer request 2026-09-17)* **`pythonTests.cpp` removed** (#2484): 849 lines of manual
+    development tests, of which `PyTest()` was commented out entirely and `CreateTestSystem` -
+    written before `exudyn.demos` existed - built a model from a `py::exec` string in the
+    pre-`exudyn` API. Both were bound only outside a release build. The file, its header
+    `PybindTests.h`, the two bindings and the project entries are gone.
 <a id="r5-5"></a>
 **R5.5** *(phase R5, tooling)* **A linter and a type check for the Python side.** Two separate
     halves, neither started:

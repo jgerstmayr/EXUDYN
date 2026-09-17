@@ -4650,10 +4650,13 @@ behind, so that path is deliberately not exercised.
 - **#2482** (step R5.4.9): the sparse `FactorizeNew` returns `solver.info() - 1` as if it were a
   row index. A failed factorization gives `info() == 1`, so the caller is told "row 0" whichever
   row is singular, while its own comment promises the causing row.
-- **#2483** (step R5.4.10): the two Eigen dense paths set the return value to -1 unconditionally,
-  with the invertibility check commented out. A singular system reports success and `Solve` returns
-  a least-squares answer. The code comment says this is deliberate; it still means the solver
-  continues silently on a singular Jacobian whenever an Eigen dense solver is selected.
+- **#2483** (step R5.4.10): the two Eigen dense paths report success for a singular matrix. NOTE,
+  corrected after maintainer feedback on 2026-09-17: **this is not a defect.** FullPivLU is the
+  `ignoreSingularJacobian=True` path, documented as resolving over- and underdetermined systems and
+  redundant constraints, and PartialPivLU offers no invertibility check at all - a property of
+  Eigen. What remains is a documentation gap, and the issue was rewritten to that: the
+  `LinearSolverType.EigenDense` description never says that the default partial-pivot mode does not
+  detect a singular Jacobian, while `EXUdense` and `EigenSparse` do.
 
 **Mutation check**: making the dense factorization claim success whatever `InvertSpecial` returned
 produced **1 failure**; restoring it, 0.
@@ -5026,6 +5029,32 @@ flags themselves and need nothing.
 
 Verified: 171 examples with the same 5 pre-existing failures, `runTestSuite.py` PASSED,
 `pytest -q -n 8` 136 passed.
+
+<a id="r5-4-11"></a>
+### R5.4.11 - pythonTests.cpp removed
+
+**DONE 2026-09-17** (#2484; maintainer request).
+
+`src/Pymodules/pythonTests.cpp` was 849 lines carrying **56 lines of live code**, and the body of
+`PyTest()` was commented out from the first line to the last - the function did nothing at all. It
+was bound as `exu.Test` only outside a release build, so it never reached a shipped wheel.
+`CreateTestSystem`, bound only under `_MYDEBUG`, built a model by `py::exec` of a Python string
+written in the pre-`exudyn` API (`from itemInterface import *`, `mbs.AddObject` with a raw dict).
+It predates `exudyn.demos`, which does that job properly and is tested.
+
+Removed together: the file, its header `PybindTests.h`, the `#include` and the two `m.def` lines in
+`PybindModule.cpp`, the `ClCompile`/`ClInclude` entries in `cppsrc.vcxproj` and `.filters`, and the
+`pythonTests.cpp` line in the hand-maintained `minimal` list of `sources.json`. The compile list is
+now **132 sources, 53 minimal**. One comment in `tools/benchmarks/avx2Benchmark.py` pointed at the
+removed sweep and was rewritten to say why a C++ sweep cannot do what the benchmark does.
+
+Verified: the module builds, `exu.Test` and `exu.CreateTestSystem` are gone, `gen_sources.py`
+agrees, the suite PASSED and `pytest -q -n 8` passed.
+
+Still standing, and of the same kind: `PyTest_unused()` in `Symbolic.cpp` (lines 796-986), never
+called from anywhere. It was useful once - it is the only record of how the symbolic types are used
+from C++, and the R5.4.2 tests were written with it open. Now that those tests exist it has no
+reason to stay either, but removing it was not part of this request (rule 9).
 
 ## R6 — Error handling and UX
 
