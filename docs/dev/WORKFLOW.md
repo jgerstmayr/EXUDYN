@@ -525,6 +525,43 @@ tolerance and runtime, for both TestModels and MiniExamples, with sensitive test
 table is how `SensitiveTests()` gets populated: diff two of them from different machines and the
 non-reproducible tests stand out.
 
+**Which compiled module is under test.** A release ships two: `exudynCPP`, built for the baseline
+instruction set, and `exudynCPPfast`, without range checks and with AVX2. By default every runner
+uses the first. To run against the second:
+
+```bash
+python runTestSuite.py --fast-module          # also works with --parallel
+python runPerformanceTests.py --fast-module
+EXUDYN_MODULE=fast python -m pytest -q -n 8   # pytest has no flag; the variable is the mechanism
+```
+
+`--fast-module` sets `EXUDYN_MODULE=fast`, which is read by `exudyn/__init__.py` *before* the C++
+module is imported. It is an environment variable rather than a flag precisely because **child
+processes inherit it**: `--parallel` and `pytest -n` run each model in its own interpreter. An
+explicit `sys.exudynFast` in a script still wins over it. Note `--fast` is a different option
+entirely — the pull-request subset.
+
+Two things follow automatically. The suite applies `AVX2ReferenceSolutionUpdate()` (a second set of
+reference values for the models whose results move under AVX2) and says so in the log; and the log
+file gets a `_fast` suffix, so the two runs do not overwrite each other. If the fast module cannot
+be loaded — no AVX2 on this CPU, or it is not in the installed package — the run **stops** rather
+than quietly testing the regular module under a fast-module log name.
+
+### Release testing matrix
+
+Decided 2026-09-16, adjusted to the two variants of step R2.10:
+
+| what | against which Python versions |
+|---|---|
+| full `runTestSuite.py`, default module | every supported version |
+| full `runTestSuite.py --fast-module` | the **oldest** and the **second newest** (today 3.10 and 3.13) |
+| examples | one version, default module |
+| `runPerformanceTests.py` | `--fast-module`, plus one default-module run to compare against |
+
+The newest version is deliberately not the fast-mode target: right after a release its packages are
+the unstable part, so a failure there would almost never be about the module. **Keep every log** —
+the `_fast` suffix is what makes that possible.
+
 **Performance logs are per machine.** Set `EXUDYN_MACHINE_ID` once per machine (e.g. `i7-1370P`)
 and `runPerformanceTests.py` files its logs in that subfolder, since timings from a laptop and a
 workstation are not comparable. Without it, a legacy fallback still routes any 20-core machine to

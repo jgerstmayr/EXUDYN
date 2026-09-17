@@ -24,20 +24,25 @@ isWindows = (sys.platform == 'win32')
 #include right exudyn module now:
 import numpy as np
 import testRunnerTools
-if (sys.version_info.major == 3 and 
-    #(sys.version_info.minor == 7 or sys.version_info.minor == 10)): #for these versions, we use exudynFast; since 2022-12-19/exudynV1.4.53: 3.7 and 3.10 in performance tests
-    (sys.version_info.minor == 10)): #for these versions, we use exudynFast; since 2022-12-19/exudynV1.4.53: 3.7 and 3.10 in performance tests
+#--fast-module measures exudynCPPfast; without it, the regular module. Until revision2026 step
+#R5.11 this was decided by the INTERPRETER - the fast module was used if and only if Python was
+#3.10 - which silently coupled "which module" to "which version" and made the two logs of a
+#release impossible to ask for on purpose. The release procedure now runs both deliberately; see
+#docs/dev/WORKFLOW.md. Must happen before 'import exudyn' below (#2495).
+useFastModule = '--fast-module' in sys.argv
+if useFastModule:
+    import os
+    os.environ['EXUDYN_MODULE'] = 'fast'
     sys.exudynFast = True
-    print('trying to use exudynFast')
 else:
     sys.exudynFast = False
 
 import exudyn as exu
 
-if sys.exudynFast:
-    import exudyn.exudynCPPfast as exuCPP #this is the cpp file, 
-else:
-    import exudyn.exudynCPP as exuCPP #this is the cpp file, 
+if useFastModule: #asking is not getting - a declined request would mismeasure the wrong module
+    testRunnerTools.RequireFastModule('--fast-module')
+
+(exuCPPname, exuCPP) = testRunnerTools.LoadedCppModule() #never names the module itself (#2466)
 
 from modelUnitTests import RunAllModelUnitTests, TestInterface, ExudynTestStructure, exudynTestGlobals
 import time
@@ -67,6 +72,8 @@ if len(sys.argv) > 1:
             writeToConsole = False
         elif sys.argv[i+1] == '--overwrite-log':
             overwriteLog = True
+        elif sys.argv[i+1] == '--fast-module':
+            pass #already acted upon, before the exudyn import; listed so it is not "unknown"
         # elif sys.argv[i+1] == '-copylog': #not needed any more
         #     copyLog = True
         else:
@@ -100,6 +107,12 @@ if isMacOS:
     platformString += 'MacOSX'
 elif not isWindows: #add linux, to distinguish linux tests from windows tests!
     platformString += sys.platform
+
+#exu.config.Version() is the same string for both modules, so without this marker a --fast-module
+#run would collide with the regular log - and comparing the two is the whole point of measuring
+#them (revision2026 step R5.11). Derived from what was loaded, not from what was asked.
+if testRunnerTools.ModuleUsesAVX2():
+    platformString += '_fast'
 
 #performance logs are collected per machine, because timings from a mobile CPU are not
 #comparable with a workstation. Set EXUDYN_MACHINE_ID once per machine (e.g. 'i7-1370P') and

@@ -766,47 +766,20 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 **R5.10** **DONE 2026-09-10** — `testRunnerTools.ResolveLogFile()` decides the log target before the first write. → [log](exudynRevisionLog2026.md#r5-10)
 
 <a id="r5-11"></a>
-**R5.11** *(phase R5, release testing)* **Cover every compiled variant in the release tests.** Windows
-    release builds produce **three** modules — `exudynCPP`, `exudynCPPfast`
-    (`__FAST_EXUDYN_LINALG`) and `exudynCPPnoAVX` — and the suite exercises only whichever one
-    `__init__.py` selects. The fast and noAVX binaries therefore ship essentially untested, which
-    matters more after step R2.10 consolidates to two shipped variants selected by a CPUID check.
-
-    Selection is already scriptable: `__init__.py:35-42` reads `sys.exudynFast` and
-    `sys.exudynCPUhasAVX2` *before* the C++ module is imported, and `runTestSuite.py` imports `sys`
-    at line 15 but `exudyn` only at line 33 — so `-fast` / `-noavx` options can set them. Verified
-    2026-09-09 that this loads exactly one binary: with `sys.exudynFast=True`, `sys.modules` holds
-    `exudyn.exudynCPPfast` and no `exudyn.exudynCPP`.
-
-    The blocking obstacle is already removed: `runTestSuite.py` used to `import exudyn.exudynCPP`
-    unconditionally just to report the binary path and build date, which would have pulled the
-    default binary into the process alongside the intended one and then reported the wrong module
-    as the one under test. It now resolves whichever module `sys.modules` actually holds.
-
-    What remains: the `-fast` / `-noavx` options themselves, and a release procedure that runs all
-    three and keeps all three logs. Sequence after step R6.2 (rewriting binary selection) if that
-    lands first — the two touch the same logic. After step R2.10 there are **two** variants, not
-    three, and `-noavx` is gone with the module it selected.
+**R5.11** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-11) — *(phase R5, release
+    testing)* **Every compiled variant is covered by the release tests** (#2495): `EXUDYN_MODULE=fast`
+    and `--fast-module` run the suite and the performance tests against `exudynCPPfast`, which had
+    never been tested. The `-noavx` half of the original step is **dropped**: step R2.10 removed
+    that module, so there are two variants, not three.
 
 <a id="r5-11-1"></a>
-**R5.11.1** *(sub-step of R5.11; maintainer decision 2026-09-16)* **How much of the matrix the fast
-    variant needs.** The fast module is the same source compiled with two macros, so what can break
-    in it is compiling, loading and the numerical effect of AVX2 — not Python-version behaviour.
-    Therefore:
-
-    | what | against which Python versions |
-    |---|---|
-    | full `runTestSuite.py`, default module | every supported version (unchanged) |
-    | full `runTestSuite.py`, fast module | the **oldest** and the **second newest**, today 3.10 and 3.13 |
-    | examples | one version (unchanged) |
-    | `runPerformanceTests.py` | fast module, plus one default-module run for comparison |
-
-    The newest version (today 3.14) is deliberately **not** the fast-mode target: right after a
-    release its packages are the unstable part, so a failure there would almost never be about the
-    fast module. Today `exudynCPPfast` is built only for Python 3.10 in development versions
-    (`setup.py`) and only `runPerformanceTests.py` ever sets `sys.exudynFast`, so the fast binary
-    ships untested — this sub-step is what makes the second variant of step R2.10 affordable
-    *and* covered.
+**R5.11.1** **DONE 2026-09-17** — *(sub-step of R5.11; maintainer decision 2026-09-16)* **How much
+    of the matrix the fast variant needs.** The decision stands as made and is now written where it
+    is used, in `docs/dev/WORKFLOW.md` under "Release testing matrix", with `-noavx` removed: full
+    suite on the default module for every supported Python version, full suite `--fast-module` on
+    the oldest and the second newest (today 3.10 and 3.13), examples on one version, and
+    `runPerformanceTests.py` both ways. The newest version is deliberately not the fast-mode
+    target: right after a release its packages are the unstable part.
 
 <a id="r5-12"></a>
 **R5.12** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-12) — *(phase R5, small)*

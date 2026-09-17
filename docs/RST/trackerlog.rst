@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.133.dev1, 
++  Exudyn version = 1.11.134.dev1, 
 +  last change =  2026-09-17, 
 +  Number of issues = 2496, 
-+  Number of resolved issues = 2206 (133 in current version), 
++  Number of resolved issues = 2207 (134 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.134: resolved Issue 2495: the fast module is never exercised by the test suite (extension)
+    - issue author: Claude-JG
+    - description:  Windows release builds ship exudynCPP and exudynCPPfast; but the suite only ever runs whichever one __init__.py selects - the default - so exudynCPPfast ships essentially untested although it is the module used for long simulations and the one whose missing range checks turn a user error into undefined behaviour. The machinery to JUDGE a fast run already exists (ModuleUsesAVX2 and AVX2ReferenceSolutionUpdate from R2.10.3); what is missing is the switch that loads it. revision2026 step R5.11
+    - **notes:** EXUDYN_MODULE=fast is read by __init__.py before the C++ module is imported; and runTestSuite.py and runPerformanceTests.py take --fast-module; which sets it. An environment variable and not a flag because child processes inherit it: --parallel and pytest -n run every model in its own interpreter. The suite then applies the existing AVX2 reference set automatically and writes its log with a _fast suffix; a declined fast request stops the run instead of producing a log that claims the wrong module. Two adaptations were needed and are the value of the step: symbolicModuleTest checked two range-check error paths that exudynCPPfast deliberately does not have; and ANCFbeltDrive needed its AVX2 reference value. runPerformanceTests lost its heuristic of using the fast module iff Python is 3.10. Measured: suite PASSED on both modules (the first fast pass); --parallel --fast-module PASSED; performance 42.13s regular against 33.54s fast. The -noavx part of the step is dropped: step R2.10 removed that module. revision2026 steps R5.11 and R5.11.1
+    - date resolved: **2026-09-17 22:19**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.133: :textred:`resolved BUG 2377` : three imports refer to modules that exist nowhere 
     - issue author: Claude-JG
     - description:  found by tools/checkExtras.py (revision2026 step R2.12). Examples/FurtherExamples/spotReinforcementLearning.py does "import RL_Spot" and no such file is in the repository; TestModels/LieGroupIntegrationUnitTests.py does "from timeIntegrationOfRotationVectorFormulas import \*" and no such file is in the repository; Examples/ROSMassPoint.py imports rosInterface by bare name although the module is exudyn/robotics/rosInterface.py; so it only works if that directory happens to be on sys.path. All three are currently listed in knownMissingLocalModules in checkExtras.py so the checker reports them as broken imports rather than as packaging gaps
@@ -7525,11 +7531,6 @@ Version 0.1
 ***********
 Open issues
 ***********
-
- * **open issue 2495:** the fast module is never exercised by the test suite
-    - issue author: Claude-JG
-    - description:  Windows release builds ship exudynCPP and exudynCPPfast; but the suite only ever runs whichever one __init__.py selects - the default - so exudynCPPfast ships essentially untested although it is the module used for long simulations and the one whose missing range checks turn a user error into undefined behaviour. The machinery to JUDGE a fast run already exists (ModuleUsesAVX2 and AVX2ReferenceSolutionUpdate from R2.10.3); what is missing is the switch that loads it. revision2026 step R5.11
-    - date raised: 2026-09-17 
 
  * :textblue:`open issue 2455:` pydoclint reports two violations in exudyn/__init__.py RequireVersion
     - issue author: Claude-JG

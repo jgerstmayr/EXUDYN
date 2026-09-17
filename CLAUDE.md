@@ -85,6 +85,11 @@ version.txt                               version — an OUTPUT of issueTracker.
    `EXUDYN_OUTPUTDIRECTORY=<scratchpad>/run` (the model's output files stay out of the working tree).
    The runners — `runTestSuite.py`, `runTestExamples.py`, `pytest` — set the flags themselves and
    need nothing. Details in `exudyn.special.userInterface` and revision2026 step R5.17.
+   A third variable exists but is **not** for routine use: `EXUDYN_MODULE=fast` loads
+   `exudynCPPfast` (no range checks, AVX2) instead of the default module. It belongs to release
+   testing — `runTestSuite.py --fast-module`, revision2026 step R5.11 — so set it only when the
+   question is specifically about that module, and never while chasing an ordinary bug: without
+   range checks a wrong index is undefined behaviour instead of an exception.
    
 
 ## Invariants — preserve these (plan §7)

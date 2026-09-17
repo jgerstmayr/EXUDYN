@@ -5095,6 +5095,73 @@ Folded in, since they touch the same log and the same code:
     in the header, and a per-test overview table. → [log](exudynRevisionLog2026.md#r5-10)
 
 
+<a id="r5-11"></a>
+### R5.11 - the fast module is tested
+
+**DONE 2026-09-17** (#2495; R5.11.1 folded in).
+
+A release ships two C++ modules, and the suite only ever ran the one `__init__.py` selects. So
+**`exudynCPPfast` shipped essentially untested** - the module used for long simulations, and the
+one whose missing range checks turn a user error into undefined behaviour rather than a message.
+
+**Most of the work was already done, by step R2.10.3.** `ModuleUsesAVX2()`,
+`AVX2ReferenceSolutionUpdate()` and their application in both the suite and pytest already existed:
+the suite has been able to *judge* a fast run correctly for a while. Missing was only the switch
+that *loads* it. Checking that before starting turned a large step into a small one.
+
+**The mechanism is an environment variable, not a flag**, because child processes inherit it:
+
+```
+EXUDYN_MODULE=fast            read in __init__.py, next to sys.exudynFast
+runTestSuite.py --fast-module        sets it, then sets sys.exudynFast too
+runPerformanceTests.py --fast-module
+```
+
+`--parallel` and `pytest -n` run every model in its own interpreter, where a `sys` attribute does
+not survive but a variable does. It is read at the **top** of `__init__.py` and not in
+`_ApplyEnvironmentSettings()`, which runs after the C++ import and would be too late. An explicit
+`sys.exudynFast` still wins, `False` included. The option could not be called `--fast`: that is the
+pull-request subset of step R5.2.
+
+**Three things the first fast run found**, which is the whole point:
+
+1. `symbolicModuleTest` failed by **exactly 2.0** - the `cntWrong` counter of step R5.4.2, not
+   roundoff. Two of its checks require an operation to raise (a vector product of mismatched sizes,
+   an index past the end); `exudynCPPfast` is compiled with `__FAST_EXUDYN_LINALG`, which removes
+   exactly those range checks. That is the trade the module makes, not a defect, so the two checks
+   now run only where the checks exist. Written as `'[FAST]' not in exu.config.Version(True)`.
+2. `ANCFbeltDrive`, which had entered the suite an hour earlier in step R5.12, drifts **1.0e-08**
+   under AVX2 and needed its own entry in `AVX2ReferenceSolutionUpdate()` - verified reproducible
+   under the fast module before being recorded. The set is now 33 values.
+3. **Asking is not getting.** `__init__.py` declines a fast request when the CPU reports no AVX2 or
+   the import fails: it prints a line and carries on with the regular module. For a release run
+   that is the worst possible outcome - a log that looks like a fast-module log and is not.
+   `testRunnerTools.RequireFastModule()` stops the run instead, and the log name carries a `_fast`
+   marker taken from what was actually **loaded**, not from what was asked. That marker is
+   necessary: `exu.config.Version()` returns the *same* string for both modules, so the second run
+   would otherwise collide with the first log and be diverted to `tmp/`.
+
+**The performance runner lost a heuristic**: it used the fast module *if and only if* the
+interpreter was Python 3.10, which silently coupled "which module" to "which version" and made the
+two logs of a release impossible to ask for deliberately. Now measured on purpose, and for the
+first time side by side:
+
+| module | total performance test time |
+|---|---|
+| `exudynCPP` | 42.13 s |
+| `exudynCPPfast` | 33.54 s (-20.4%) |
+
+**Verified**: default suite PASSED and unchanged; `--fast-module` PASSED with 33 AVX2 references
+applied - *the first time the fast module has passed the suite*; `--fast-module --parallel` PASSED,
+which is the proof that workers inherit the variable, since a worker on the default module would
+fail the 33 drifting models against AVX2 references; `pytest -n 8` passed with and without the
+variable; the guard fires with its message when the fast module is not the one loaded, and stays
+silent when it is.
+
+**The `-noavx` half of the step is dropped, not implemented.** Step R2.10 removed `exudynCPPnoAVX`
+and `sys.exudynCPUhasAVX2` - the default module *is* the safe one now - so the option would have
+nothing to select. The step text had predated that change.
+
 <a id="r5-12"></a>
 ### R5.12 - test and example hygiene
 
