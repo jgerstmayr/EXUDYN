@@ -19,15 +19,132 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.135.dev1, 
++  Exudyn version = 1.11.158.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2497, 
-+  Number of resolved issues = 2208 (135 in current version), 
++  Number of issues = 2499, 
++  Number of resolved issues = 2231 (158 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.158: :textred:`resolved BUG 2430` : ObjectANCFThinPlate added with its defaults fails inside C++ with an index error 
+    - issue author: Claude-JG
+    - description:  Found in revision2026 step R4.4.3.4e: mbs.AddObject(ObjectANCFThinPlate()) raises ResizableArray<T>::operator[] i < 0 from C++ even with exudyn.special.exceptions.parameterRangeChecks = False; its default nodeNumbers (four InvalidIndex) are used while the object is added. Every other item class either adds with its defaults or names the parameter that must be given. Expected: a message that names ObjectANCFThinPlate.nodeNumbers - or CheckPreAssembleConsistency catching it - and no index access with invalid node numbers during Add. revision2026 step R10.4.
+    - **notes:** Verified 2026-09-17 on 1.11.135.dev1: mbs.AddObject(ObjectANCFThinPlate()) no longer raises from C++; it adds with its defaults exactly as ObjectMassPoint and ObjectANCFCable2D do; which is the "expected" behaviour this issue names. Fixed on the way by the item-interface work of revision2026 step R4.4.3.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2026-09-15 
+    - resolved by: Claude-JG
+ * Version 1.11.157: resolved Issue 2412: Google style docstrings are mandatory project wide (docu)
+    - issue author: Claude-JG
+    - description:  The convention is nowhere stated; the revision plan even said NumPy style. Decision: Google style docstrings MUST be used throughout for consistency. The rule has to be written into docs/dev/CODING_STYLE.md; CONTRIBUTING.md and CLAUDE.md; and mentioned early in the user documentation so contributors meet it before writing code. griffe and pydoclint both parse Google style; so the planned docstring toolchain (revision2026 steps R4.6-R4.9) is unaffected apart from a parser argument.
+    - **notes:** Resolved by revision2026 step R4.6: docs/dev/CODING_STYLE.md states Google style as the convention for python/exudyn - summary; then Args:; Returns:; Note:; Example: - and pydoclint checks it in CI against tools/ci/pydoclintBaseline.txt. The #\*\* doc-comment convention it replaced is marked as removed in the same table.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2026-09-13 
+    - resolved by: Claude-JG
+ * Version 1.11.156: resolved Issue 2344: itemInterface (extension)
+    - description:  add automated test for all items and parameters with dummy class type which always fails. Use objectDefinition database to independently check if all parameters raise exceptions with according strings in it
+    - **notes:** Resolved by revision2026 step R4.4.3.1: parameterConversionTest.py walks the definitions database and writes a fixed set of probe values into every parameter of every item and of the simulation and visualization settings; through each access path; recording the exception type or the type; shape and value that reads back. That is the independent check this issue asked for; it currently pins 89 rejected-input outcomes.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2026-04-17 
+    - resolved by: Claude-JG
+ * Version 1.11.155: resolved Issue 2343: itemInterface (extension)
+    - description:  add safe parameter conversion for all data types in item initialization; add parameter checks like UReal, PInt, etc. into C++ code; exception shall always return causing ItemClass name and parameter name
+    - **notes:** Largely resolved by revision2026 step R4.4.3 and its sub-steps: the item interface converts and checks parameters of every type; a rejected value names the item class and the parameter - for instance "ObjectGenericODE2: invalid node number detected" - and the whole behaviour is recorded by parameterConversionTest.py against a committed reference. What is NOT uniform yet is the exception TYPE per kind of error; which is #2432 and revision2026 step R6.7.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2026-04-17 
+    - resolved by: Claude-JG
+ * Version 1.11.154: resolved Issue 2333: itemInterface (check)
+    - description:  consider advanced checks, in particular for int / float-convertable types in checks like CheckForValidUReal
+    - **notes:** Same as #2332: the int/float-convertible cases of CheckForValidUReal and its siblings are probed by parameterConversionTest.py (revision2026 step R4.4.3.1) and their outcome is recorded; the open decision about which exception type each path should raise is #2432 and revision2026 step R6.7.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2026-04-02 
+    - resolved by: Claude-JG
+ * Version 1.11.153: resolved Issue 2332: SetNumpyMatrixSafely (check)
+    - description:  SetNumpyMatrixSafely and SetNumpyVectorSafely: add type checks and check exceptions printed when initialized with wrong types; consider more advanced checks for standard types in itemInterface
+    - **notes:** The behaviour asked about is now pinned rather than guessed: parameterConversionTest.py (revision2026 step R4.4.3.1) writes wrong types into every parameter through every access path - the SetNumpyMatrixSafely and SetNumpyVectorSafely paths included - and compares the exception type or the value that reads back against a committed reference; so a change in these checks cannot pass unnoticed. What to do about the inconsistent exception TYPES is #2432.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2026-04-02 
+    - resolved by: Claude-JG
+ * Version 1.11.152: resolved Issue 2298: testing checklist (testing)
+    - description:  Add testing checklist and guidelines
+    - **notes:** Resolved by revision2026 phase R5 and docs/dev/WORKFLOW.md: the commit tiers and the four gates of section 4 are the checklist this issue asked for - build; regeneration clean; the full test suite; docs and plan updated - together with which tests run when; the pytest collector; the parallel run; and the difference between reproducible and sensitive tests.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2026-02-14 
+    - resolved by: Claude-JG
+ * Version 1.11.151: resolved Issue 2240: systemStructures.py (change)
+    - description:  add functions for type conversions C++ - Python (Vector3D, etc.)
+    - **notes:** Resolved by revision2026 step R4.3: the type conversions asked for here are tools/generators/typeModel.py; which renders one type declaration into its C++; stub; documentation and Python forms from a single definition; instead of each emitter spelling out Vector3D and friends for itself.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2026-01-31 
+    - resolved by: Claude-JG
+ * Version 1.11.150: resolved Issue 2239: systemStructures.py (change)
+    - description:  transfor into more suitable Python native format
+    - **notes:** Resolved by revision2026 step R4.3: src/pythonGenerator/systemStructures.py is gone; the structures are defined in definitions/structureDefs\*.py as plain Python data and the emitters in tools/generators/ produce the C++; the stubs and the documentation from them.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2026-01-31 
+    - resolved by: Claude-JG
+ * Version 1.11.149: resolved Issue 2227: build wheels (extension)
+    - description:  add flag to setupPyConfig.json to turn on/off AVX2 and AVX512 compile in windows and linux builds
+    - **notes:** Resolved by revision2026 steps R2.14 and R2.10: the build switches live in [tool.exudyn] of pyproject.toml - useAVX2 and useAVX512 among them - read by setup.py with an environment and a command-line override. setupPyConfig.json; which this issue named; no longer exists: it was tracked AND mutable; so a CI build rewrote it with sed and a failed build left the tree dirty.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2026-01-16 
+    - resolved by: Claude-JG
+ * Version 1.11.148: resolved Issue 1996: MainSystemExtensions (change)
+    - description:  expose MainSystem as MainSystemBase into python; derive Python class MainSystem from MainSystemBase in MainSystemExtensions; this should increase visibility of Python code!
+    - **notes:** Resolved differently and the goal is met: instead of exposing MainSystemBase and deriving a Python MainSystem from it; a function is marked where it is defined with @extends(exudyn.MainSystem) and exudyn.extensionRegistry.install() attaches it to the C++ class (revision2026 phase R4). Python-side MainSystem code is therefore visible in the class; in the stub file and in the documentation; without a second class in the hierarchy.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2025-05-06 
+    - resolved by: Claude-JG
+ * Version 1.11.147: resolved Issue 1988: exceptions (extension)
+    - description:  change 'except:' to 'except Exception as e:' as this passes through the keyboard interrupts, which is better for parameter variation and other long-running codes
+    - **notes:** Superseded by #2497: the change was never made; but every one of the 59 bare "except:" in the shipped package is now listed with file and message in tools/ci/ruffBaseline.txt (revision2026 step R5.5.3) and a new one fails the check. See the successor issue.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2025-04-10 
+    - resolved by: Claude-JG
+ * Version 1.11.146: resolved Issue 1861: exceptions and ValueError (extension)
+    - description:  check all ValueError exceptions and change to appropriate error handling, like importerror, runtime error or value error!
+    - **notes:** Superseded by #2432; which records the same problem with measurements: parameterConversionTest.py shows that a wrong parameter raises RuntimeError; TypeError or ValueError depending on which path rejected it. The taxonomy itself is revision2026 steps R6.3; R6.4 and R6.7. Individual cases found on the way were fixed with the right type - for instance ValueError for an unknown solver in lieGroupIntegration.py and ImportError for a missing roboticstoolbox (#2488; #2489).
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2024-09-19 
+    - resolved by: Claude-JG
+ * Version 1.11.145: resolved Issue 1142: item functions checker (extension)
+    - description:  add automatic tests for all necessary functions in items, such as nodes, objects, etc.; run tests similar to LEST test suite
+    - **notes:** Partially resolved and the remainder is #2498: the parameters of every item are now probed systematically by parameterConversionTest.py (revision2026 step R4.4.3.1) and the linear algebra classes by the lest unit tests of src/Tests/ (step R5.4); what is still untested per item type is its member FUNCTIONS. See the successor issue.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2022-06-12 
+    - resolved by: Claude-JG
+ * Version 1.11.144: :textred:`resolved BUG 1085` : GeneralContact 
+    - description:  generalContactFrictionTests.py gives considerably different results after t=0.05 seconds between Windows and linux compiled version; may be caused by some initialization problems (bugs...); needs further tests
+    - **notes:** Superseded by the measurement and the machinery of revision2026 steps R2.10.3 and R5.9: the Windows/Linux differences of the contact and friction models are now recorded per model in UnresolvedOnLinux() and SensitiveTests() in runTestSuiteRefSol.py rather than being an open suspicion; and a failure there no longer sets the exit code at random. The remaining question - WHY these models differ - is revision2026 step R10.1; which is the open work.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2022-05-11 
+    - resolved by: Claude-JG
+ * Version 1.11.143: resolved Issue 0862: Vector alignment (extension)
+    - description:  add 32 or 64 byte memory + length alignment to allocation of vectors in order to be able to always use AVX and/or loop unrolling for copying or manipulating vectors; use _mm_malloc / _mm_free and separate flags to turn on/off memory and length alignment, memory alignment turned off in case that AVX is not available
+    - **notes:** Resolved: src/Linalg/Vector.h allocates through _aligned_malloc on Windows and posix_memalign elsewhere; so vector data is aligned for the AVX paths; and AlignedFree in src/Utilities/BasicDefinitions.h frees it. Revision2026 step R2.10 settled which module carries the vector extensions (only exudynCPPfast) and step R2.10.3 recorded what they change.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2022-01-13 
+    - resolved by: Claude-JG
+ * Version 1.11.142: resolved Issue 0452: AVX objects (extension)
+    - description:  test AVX objects
+    - **notes:** Same coverage as #451: the AVX code paths are tested by src/Tests/AVXVectorUnitTests.h and their numerical effect is pinned by the second reference set of revision2026 step R2.10.3. A micro-benchmark of the real linear algebra operations is planned as revision2026 step R11.2.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2020-09-16 
+    - resolved by: Claude-JG
+ * Version 1.11.141: resolved Issue 0451: AVX integration (extension)
+    - description:  test AVX in vector.cpp and dense solver
+    - **notes:** Resolved by src/Tests/AVXVectorUnitTests.h (7 cases covering the AVX paths of the vector classes) together with the measurements of revision2026 steps R2.16 and R2.10.3: the effect of the vector extensions on results is now recorded model by model in AVX2ReferenceSolutionUpdate(); and tools/benchmarks/avx2Benchmark.py measures the solver-level effect.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2020-09-16 
+    - resolved by: Claude-JG
+ * Version 1.11.140: :textred:`resolved BUG 0448` : ObjectGenericODE2 bug 
+    - description:  ObjectGenericODE2 crashes without message when initialized with invalid node numbers
+    - **notes:** Verified 2026-09-17 to be fixed by the later item-interface work: mbs.AddObject(ObjectGenericODE2(nodeNumbers=[-1,-2])) now prints "ObjectGenericODE2: invalid node number detected; all nodes used in ObjectGenericODE2 must already exist" and raises; instead of crashing without a message. The message names the item class; which is what the issue asked for.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2020-09-09 
+    - resolved by: Claude-JG
+ * Version 1.11.139: resolved Issue 0323: invalid index test (check)
+    - description:  add test which checks that invalidIndex in python (-1) converts to invalidIndex in exudyn (use simple object with node number and check node number after setting object
+    - **notes:** Resolved by revision2026 step R4.4.3.1: parameterConversionTest.py writes a fixed set of probe values - which includes -1 - into every parameter of every item through each access path and compares type; shape and value that read back against a committed reference; index parameters included. The InvalidIndex cases are called out explicitly in that file (#2426).
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2020-01-24 
+    - resolved by: Claude-JG
+ * Version 1.11.138: resolved Issue 0126: Linalg tests (check)
+    - description:  Add unit tests for new ConstSizeMatrix and ResizableMatrix
+    - **notes:** Resolved by revision2026 step R5.4.1: src/Tests/AllMatrixVariantsUnitTests.h tests ConstSizeMatrix and ResizableMatrix - the two classes this issue named - including the SparseTripletMatrix constructor fixed in step R5.4.6 (#2476).
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2019-05-13 
+    - resolved by: Claude-JG
+ * Version 1.11.137: resolved Issue 0005: finish (new feature)
+    - description:  finish tests for all matrix classes    
+    - **notes:** Resolved by the later unit-test work of revision2026 step R5.4: src/Tests/AllMatrixUnitTests.h and AllMatrixVariantsUnitTests.h cover Matrix; ResizableMatrix; ConstSizeMatrix and the linked-data variants; step R5.4.1 completed the variants that had none.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2019-04-01 
+    - resolved by: Claude-JG
+ * Version 1.11.136: resolved Issue 0002: finish (new feature)
+    - description:  finish tests for all vector classes    
+    - **notes:** Resolved by the later unit-test work of revision2026 step R5.4: src/Tests/AllVectorUnitTests.h; TemplatedVectorArrayUnitTests.h; AllBasicLinalgUnitTests.h and AVXVectorUnitTests.h cover Vector; ResizableVector; SlimVector; ConstSizeVector and LinkedDataVector; run by exu.special.RunCppUnitTests() in every build with EXUDYN_PERFORM_UNIT_TESTS and by the test suite.
+    - date resolved: **2026-09-17 22:43**\ , date raised: 2019-04-01 
+    - resolved by: Claude-JG
  * Version 1.11.135: :textred:`resolved BUG 2496` : --fast-module would reject a fast module built without AVX2 
     - issue author: Claude-JG
     - description:  The guard and the log marker added for revision2026 step R5.11 asked ModuleUsesAVX2(); but that is a different question from -is this the fast module-. setup.py always compiles exudynCPPfast with __FAST_EXUDYN_LINALG and adds the vector extensions only when useAVX2 is set AND the platform is not macOS - so on macOS; and in any --no-avx2 build; the fast module is perfectly good and reports no AVX2. The run would then abort with the message that the wrong module was loaded; and its log would have no _fast marker. Both now ask ModuleIsRegular(); the AVX2 reference set keeps asking ModuleUsesAVX2(); which is right because that drift comes from the vector extensions and not from the missing range checks. revision2026 step R5.11.2
@@ -7538,6 +7655,16 @@ Version 0.1
 Open issues
 ***********
 
+ * :textblue:`open issue 2498:` no test checks the member functions an item type must provide
+    - issue author: Claude-JG
+    - description:  Successor of #1142. What that issue asked for is now covered for PARAMETERS - parameterConversionTest.py writes a fixed set of probe values into every parameter of every item and compares the outcome with a reference (revision2026 step R4.4.3.1) - and for the linear algebra classes by the lest unit tests of src/Tests/ (step R5.4). What is still not tested per item type is its FUNCTIONS: that every object implements what its type requires (ComputeODE2LHS; GetOutputVariable; GetAccessFunctionTypes; ...) and that the output variables it advertises can actually be read. That needs the definitions database as its source of truth; like the parameter test does.
+    - date raised: 2026-09-17 
+
+ * :textblue:`open issue 2497:` 59 bare except: remain in the shipped package
+    - issue author: Claude-JG
+    - description:  Successor of #1988; which asked to change "except:" into "except Exception as e:" so that a KeyboardInterrupt passes through a long parameter variation. The change was never made; but it is no longer invisible: ruff E722 lists every one of the 59 with file and message in tools/ci/ruffBaseline.txt since revision2026 step R5.5.3; and a NEW one fails the check. Each needs a decision on which exception was actually meant; which is why they were baselined rather than rewritten. revision2026 step R6.1
+    - date raised: 2026-09-17 
+
  * :textblue:`open issue 2455:` pydoclint reports two violations in exudyn/__init__.py RequireVersion
     - issue author: Claude-JG
     - description:  found 2026-09-16 during revision2026 step R5.13; pre-existing and unrelated to that step: DOC111 (type hints in the docstring arg list while --arg-type-hints-in-docstring is False) and DOC202 (return section without a return statement) in RequireVersion; belongs to revision2026 step R5.5 (ruff and type checking)
@@ -7558,11 +7685,6 @@ Open issues
     - description:  pContact is the currently computed contact point; written by the computation and read by the visualization (src/Objects/VisuNodePoint.cpp:2756 via GetPContact()). It lives in the parameter structure; so it is neither part of the system state nor kept per configuration and no history exists. It should be a data variable; which would also make the value available in the visualization configuration rather than whatever the last computation left behind. Found while removing the inert V flag from this member (revision2026 step R4.1.2).
     - date raised: 2026-09-13 
 
- * **open issue 2412:** Google style docstrings are mandatory project wide
-    - issue author: Claude-JG
-    - description:  The convention is nowhere stated; the revision plan even said NumPy style. Decision: Google style docstrings MUST be used throughout for consistency. The rule has to be written into docs/dev/CODING_STYLE.md; CONTRIBUTING.md and CLAUDE.md; and mentioned early in the user documentation so contributors meet it before writing code. griffe and pydoclint both parse Google style; so the planned docstring toolchain (revision2026 steps R4.6-R4.9) is unaffected apart from a parser argument.
-    - date raised: 2026-09-13 
-
  * **open issue 2400:** computeMassMatrixInversePerBody does not reduce cost unless a sparse solver is also selected
     - issue author: Claude-JG
     - description:  the flag is documented as computing the inverse of the mass matrix per body so that explicit integration does not need a global solve; and it is the intended answer to the O(N^2) cost of issue 2398 (it cannot be the default; because it gives wrong results when bodies share nodes - a beam or an FEM body - as its own documentation and the maintainer both state). Measured 2026-09-12 on a chain of independent point masses; with the flag value read back from the settings to confirm it was applied: with the DEFAULT DENSE solver the flag changes nothing. At nMasses=1000 and 200 steps: ExplicitEuler 8.43 s off against 8.57 s on, RK44 20.5 against 20.4, DOPRI5 33.0 against 32.7 - all within noise. Selecting EigenSparse is what removes the cost (0.070 s); and only then is the flag worth a further 10 to 15 percent (0.058 s). So on its own the flag does not do what it promises; the user still has to know to change the linear solver. Either the flag should bypass the solver path; or its documentation should say that it must be combined with a sparse solver. Found while building the large system performance test for revision2026 step R2.10
@@ -7581,14 +7703,6 @@ Open issues
     - description:  adjust comments to fit to internal exudyn format
     - date raised: 2026-08-05 
 
- * **open issue 2344:** itemInterface       
-    - description:  add automated test for all items and parameters with dummy class type which always fails. Use objectDefinition database to independently check if all parameters raise exceptions with according strings in it
-    - date raised: 2026-04-17 
-
- * **open issue 2343:** itemInterface       
-    - description:  add safe parameter conversion for all data types in item initialization; add parameter checks like UReal, PInt, etc. into C++ code; exception shall always return causing ItemClass name and parameter name
-    - date raised: 2026-04-17 
-
  * **open issue 2342:** itemInterface       
     - description:  replace CopyDictLevel1 with function that takes visualization and VItemClass in all self.visualization inits and either call VItemClass(\*\*visualization) if visualization is a dict, or store VItemClass object; this would enable to accept visualization as dict with only non-default values set; add try-except for dict-based call
     - date raised: 2026-04-17 
@@ -7596,14 +7710,6 @@ Open issues
  * **open issue 2337:** CreateCoordinateConstraint
     - description:  change bodyNumbers to itemNumbers allowing both bodies and nodes to be constrained
     - date raised: 2026-04-06 
-
- * **open issue 2333:** itemInterface       
-    - description:  consider advanced checks, in particular for int / float-convertable types in checks like CheckForValidUReal
-    - date raised: 2026-04-02 
-
- * **open issue 2332:** SetNumpyMatrixSafely
-    - description:  SetNumpyMatrixSafely and SetNumpyVectorSafely: add type checks and check exceptions printed when initialized with wrong types; consider more advanced checks for standard types in itemInterface
-    - date raised: 2026-04-02 
 
  * **open issue 2328:** ANCFCable           
     - description:  add documentation
@@ -7657,10 +7763,6 @@ Open issues
     - description:  add hints (object type, etc.) to PyWriteBodyGraphicsDataList in VisualizationSystemContainer to simplify error localisation
     - date raised: 2026-02-15 
 
- * **open issue 2298:** testing checklist   
-    - description:  Add testing checklist and guidelines
-    - date raised: 2026-02-14 
-
  * **open issue 2281:** graphics            
     - description:  add functionality to make consistent triangles with same orientation (all computed normals are outbound or inbound); used to heal imported geometries
     - date raised: 2026-02-11 
@@ -7687,14 +7789,6 @@ Open issues
 
  * **open issue 2244:** GLFWClient          
     - description:  add ruler to renderer, only for case where axes are parallel to x, y and z (i.e. 90 degree rotations)
-    - date raised: 2026-01-31 
-
- * **open issue 2240:** systemStructures.py 
-    - description:  add functions for type conversions C++ - Python (Vector3D, etc.)
-    - date raised: 2026-01-31 
-
- * **open issue 2239:** systemStructures.py 
-    - description:  transfor into more suitable Python native format
     - date raised: 2026-01-31 
 
  * **open issue 2238:** explicit solver     
@@ -7728,10 +7822,6 @@ Open issues
  * **open issue 2228:** Symmetric basis     
     - description:  add a function to compute a basis for two given non-parallel vectors; the average of the two vectors is computed from averaging normalized vectors (=mid axis) and according projections; used for NodeSlope12
     - date raised: 2026-01-18 
-
- * **open issue 2227:** build wheels        
-    - description:  add flag to setupPyConfig.json to turn on/off AVX2 and AVX512 compile in windows and linux builds
-    - date raised: 2026-01-16 
 
  * **open issue 2226:** ANCFThinPlate       
     - description:  compute optimal slopes scaling in ShellMesh functionality
@@ -7853,17 +7943,9 @@ Open issues
     - description:  add special timer for Python user functions, as solver timer for python does not include user functions
     - date raised: 2025-05-10 
 
- * **open issue 1996:** MainSystemExtensions
-    - description:  expose MainSystem as MainSystemBase into python; derive Python class MainSystem from MainSystemBase in MainSystemExtensions; this should increase visibility of Python code!
-    - date raised: 2025-05-06 
-
  * **open issue 1989:** Body force sensor   
     - description:  add force sensor option for single-noded bodies and bodies which do not share nodes (mass points, rigid bodies, ffrf); for rigid bodies, obtains force and torque; for FFRF, it is generalized force; implement in a way that the contributions of loads are computed like in GeneralContact - based on a flag -, as soon as a BodySensor measures a force or torque
     - date raised: 2025-04-15 
-
- * **open issue 1988:** exceptions          
-    - description:  change 'except:' to 'except Exception as e:' as this passes through the keyboard interrupts, which is better for parameter variation and other long-running codes
-    - date raised: 2025-04-10 
 
  * **open issue 1977:** solver              
     - description:  check if solver can raise full solver error message in exception, in order to alleviate tracing during automated code evaluation in SolveStatic and SolveDynamic
@@ -7956,10 +8038,6 @@ Open issues
  * **open issue 1863:** MatrixContainer     
     - description:  consider functionality to link to sparse CSR scipy matrix rather than using the current CSR format - as a minimal solution do copying on C++ level; Problem: scipy CSR uses other format than Exudyns Triplets
     - date raised: 2024-10-02 
-
- * **open issue 1861:** exceptions and ValueError
-    - description:  check all ValueError exceptions and change to appropriate error handling, like importerror, runtime error or value error!
-    - date raised: 2024-09-19 
 
  * **open issue 1848:** GeneralContact      
     - description:  Test and improve implicit SPHERE-TRIG contact
@@ -8205,10 +8283,6 @@ Open issues
     - description:  check https://pybind11.readthedocs.io/en/stable/advanced/cast/functional.html regarding stateless functions and test performance with C++ functions for simple spring-damper
     - date raised: 2022-06-29 
 
- * **open issue 1142:** item functions checker
-    - description:  add automatic tests for all necessary functions in items, such as nodes, objects, etc.; run tests similar to LEST test suite
-    - date raised: 2022-06-12 
-
  * :textorange:`open issue 1140:` c++ user elements   
     - description:  add auto registration for C++ user items
     - date raised: 2022-06-12 
@@ -8356,10 +8430,6 @@ Open issues
  * **open issue 0867:** GeneralContact      
     - description:  change deltaV terms in ANCFCable and TrigSphere contact to fit signs used in docu
     - date raised: 2022-01-17 
-
- * **open issue 0862:** Vector alignment    
-    - description:  add 32 or 64 byte memory + length alignment to allocation of vectors in order to be able to always use AVX and/or loop unrolling for copying or manipulating vectors; use _mm_malloc / _mm_free and separate flags to turn on/off memory and length alignment, memory alignment turned off in case that AVX is not available
-    - date raised: 2022-01-13 
 
  * **open issue 0859:** GeneralContact      
     - description:  split searchtree into regions, proportional to number of threads (FinalizeContact); use 2 splits in x, 2 splits in y, etc. until uneven number left; add class Box3Dindexed:Box3D, which adds index for region in searchtree; add access in GeneralContact for adding bounding box, creating the index; index is -1, if overlapping, filled in serially
@@ -8517,14 +8587,6 @@ Open issues
     - description:  add special textures for item numbers
     - date raised: 2020-12-22 
 
- * **open issue 0452:** AVX objects         
-    - description:  test AVX objects
-    - date raised: 2020-09-16 
-
- * **open issue 0451:** AVX integration     
-    - description:  test AVX in vector.cpp and dense solver
-    - date raised: 2020-09-16 
-
  * **open issue 0436:** virtual functions   
     - description:  make virtual functions consistent for some system classes like MainSystem, etc. which have no derived classes
     - date raised: 2020-07-21 
@@ -8556,10 +8618,6 @@ Open issues
  * **open issue 0332:** getobject/nodeparameter
     - description:  extend getobjectparameter/node/.. with default function from MainObject / MainNode/ ... which returns basic information, e.g., NodeType 
     - date raised: 2020-02-04 
-
- * **open issue 0323:** invalid index test  
-    - description:  add test which checks that invalidIndex in python (-1) converts to invalidIndex in exudyn (use simple object with node number and check node number after setting object
-    - date raised: 2020-01-24 
 
  * **open issue 0314:** Add user marker     
     - description:  add user marker
@@ -8617,10 +8675,6 @@ Open issues
     - description:  check Vector operator[], and ConstVector performance regarding inlining
     - date raised: 2019-05-21 
 
- * **open issue 0126:** Linalg tests        
-    - description:  Add unit tests for new ConstSizeMatrix and ResizableMatrix
-    - date raised: 2019-05-13 
-
  * **open issue 0124:** ConstSizeVector     
     - description:  check if begin/end() overriding of Vector:: function is needed?
     - date raised: 2019-05-13 
@@ -8641,14 +8695,6 @@ Open issues
     - description:  use dependencies for every computational member function; node: 		NodeData: LinkedDataVector displacement, velocity, acceleration;; object(singlenoded): 	ObjectData: LinkedDataVector displacement, velocity, acceleration;; object(multinoded): 	ObjectData: ResizableArray<LinkedDataVector> displacements, velocities, accelerations;; constraint(Lagr.):	FunctionResults1, FunctionResults2 (e.g. RotMatrix1, Position1, ...); marker:		only transforms data (load/constraint); load:			only provides load information    
     - date raised: 2019-04-01 
 
- * :textblue:`open issue 0005:` finish              
-    - description:  finish tests for all matrix classes    
-    - date raised: 2019-04-01 
-
- * :textblue:`open issue 0002:` finish              
-    - description:  finish tests for all vector classes    
-    - date raised: 2019-04-01 
-
 **********
 Known bugs
 **********
@@ -8662,11 +8708,6 @@ Known bugs
     - issue author: Claude-JG
     - description:  .github/workflows/wheels.yml uses actions/setup-python@v6, while documentation.yaml still uses actions/checkout@v3 and actions/setup-python@v4. Found in revision2026 step R5.14; assigned to sub-step R5.14.1, which needs maintainer approval because it touches .github/workflows.
     - date raised: 2026-09-16 
-
- * :textred:`open BUG 2430:` ObjectANCFThinPlate added with its defaults fails inside C++ with an index error
-    - issue author: Claude-JG
-    - description:  Found in revision2026 step R4.4.3.4e: mbs.AddObject(ObjectANCFThinPlate()) raises ResizableArray<T>::operator[] i < 0 from C++ even with exudyn.special.exceptions.parameterRangeChecks = False; its default nodeNumbers (four InvalidIndex) are used while the object is added. Every other item class either adds with its defaults or names the parameter that must be given. Expected: a message that names ObjectANCFThinPlate.nodeNumbers - or CheckPreAssembleConsistency catching it - and no index access with invalid node numbers during Add. revision2026 step R10.4.
-    - date raised: 2026-09-15 
 
  * :textred:`open BUG 2398:` explicit integration costs O(N^2) per step with the default dense linear solver
     - issue author: Claude-JG
@@ -8689,10 +8730,6 @@ Known bugs
     - description:  repeated call to mbs.SolveDynamic gives divergence; attributed to FFRFreducedOrder model; workaround uses repeated build of model before calling solver again; may be related to FFRF or MarkerSuperElement-internal variables
     - date raised: 2023-07-10 
 
- * :textred:`open BUG 1085:` GeneralContact      
-    - description:  generalContactFrictionTests.py gives considerably different results after t=0.05 seconds between Windows and linux compiled version; may be caused by some initialization problems (bugs...); needs further tests
-    - date raised: 2022-05-11 
-
  * :textred:`open BUG 1048:` sse2neon.h          
     - description:  on Apple, sse2neon.h is missing (include from github) and compilation fails; check if this only happens on M1 and change include modes of sse2neon.h; add this file to python setup.py for other cases
     - date raised: 2022-04-25 
@@ -8704,9 +8741,5 @@ Known bugs
  * :textred:`open BUG 0738:` ObjectContactCoordinate
     - description:  modified Newton does not work, no Jacobian update computed when switching
     - date raised: 2021-08-13 
-
- * :textred:`open BUG 0448:` ObjectGenericODE2 bug
-    - description:  ObjectGenericODE2 crashes without message when initialized with invalid node numbers
-    - date raised: 2020-09-09 
 
 

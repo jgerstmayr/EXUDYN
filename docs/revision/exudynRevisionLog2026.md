@@ -5903,3 +5903,50 @@ debugging a single example.
     path the range check, including `Set<Kind>Parameter`, which was unchecked until now, so the
     switch has to exist from the same commit. One flag covers items and structures.
 
+
+<a id="r8-3-2"></a>
+### R8.3.2 - the old backlog, checked against what the revision did
+
+**DONE 2026-09-17** (maintainer request).
+
+The revision resolved a lot of old issues without saying so. The maintainer named 29 candidates -
+6 "pretty sure", 23 "maybe partially" - and each was **verified** rather than assumed. Three were
+checked by running the case, not by reading code:
+
+| issue | check | outcome |
+|---|---|---|
+| #2430 `ObjectANCFThinPlate` crashes on Add | ran `mbs.AddObject(ObjectANCFThinPlate())` next to `ObjectMassPoint` and `ObjectANCFCable2D` | all three add with their defaults; the C++ index error is gone |
+| #448 `ObjectGenericODE2` crashes without message | ran it with `nodeNumbers=[-1,-2]` | prints *"ObjectGenericODE2: invalid node number detected; all nodes used in ObjectGenericODE2 must already exist"* - named, as the issue asked |
+| #323 InvalidIndex conversion untested | read the probe list of `parameterConversionTest.py` | `('neg', -1)` is written into every parameter of every item, `InvalidIndex()` cases called out explicitly |
+
+**23 resolved**, each with a note naming what covered it: #2, #5, #126 (the `src/Tests/` unit-test
+series of step R5.4), #323, #2343, #2344, #2332, #2333 (`parameterConversionTest.py`, step
+R4.4.3.1), #448, #2430 (the item-interface work), #451, #452, #862 (the AVX tests, the second
+reference set of R2.10.3, and the aligned allocation in `Vector.h`), #1996 (solved *differently* -
+`@extends(exudyn.MainSystem)` instead of a `MainSystemBase` to derive from, same goal), #2227
+(`[tool.exudyn]` in `pyproject.toml`; the `setupPyConfig.json` it named no longer exists), #2239,
+#2240 (`definitions/structureDefs*.py` and `typeModel.py`, step R4.3), #2298 (the commit tiers and
+four gates in `WORKFLOW.md`), #2412 (Google style in `CODING_STYLE.md`, step R4.6), #1085, #1142,
+#1861, #1988 (superseded - see below).
+
+**2 successors raised** for what was only partly covered:
+
+- **#2497** from #1988: the bare `except:` were never rewritten, but all **59** are now listed with
+  file and message in `ruffBaseline.txt` and a new one fails the check. Each needs a decision about
+  which exception was meant, which is why they were baselined rather than rewritten (step R6.1).
+- **#2498** from #1142: item *parameters* are probed systematically now, and the linear algebra
+  classes have unit tests - but no test checks that an item implements the *functions* its type
+  requires. That needs the definitions database as its source of truth, like the parameter test.
+
+**6 stay open**, because nothing was done about them and saying otherwise would be false: #792
+(Pardiso), #1450 (threads in the solution file header), #1722 (`exudyn.Parameter`), #2203
+(`MainSystem.Inspect`), #2398 (explicit integration is O(N^2), step R10.3), #2432 (inconsistent
+exception types, step R6.7 - and the successor that #1861, #2332, #2333 and #2343 now point at for
+their remaining part).
+
+**Two things worth keeping from this.** Resolving 23 issues moved the version by 23 micro steps
+(1.11.135 -> 1.11.158) because the micro version *is* the count of resolved issues - the rule
+working as designed, but it makes a backlog triage a visible event rather than bookkeeping. And
+#1085 is the shape of finding that recurs: the bug is not fixed, but it stopped being a suspicion -
+the Windows/Linux differences are recorded per model in `UnresolvedOnLinux()` and no longer set the
+exit code at random, so what remains is one question (*why*) rather than an unreliable suite.

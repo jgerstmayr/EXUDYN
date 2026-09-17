@@ -9,15 +9,198 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.135.dev1, 
+  \item Exudyn version = 1.11.158.dev1, 
   \item last change =  2026-09-17, 
-  \item Number of issues = 2497, 
-  \item Number of resolved issues = 2208 (135 in current version), 
+  \item Number of issues = 2499, 
+  \item Number of resolved issues = 2231 (158 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.158}: {\bf \color{warningRed}  resolved BUG 2430}: {\bf ObjectANCFThinPlate added with its defaults fails inside C++ with an index error}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: Found in revision2026 step R4.4.3.4e: mbs.AddObject(ObjectANCFThinPlate()) raises ResizableArray<T>::operator[] i < 0 from C++ even with exudyn.special.exceptions.parameterRangeChecks = False; its default nodeNumbers (four InvalidIndex) are used while the object is added. Every other item class either adds with its defaults or names the parameter that must be given. Expected: a message that names ObjectANCFThinPlate.nodeNumbers - or CheckPreAssembleConsistency catching it - and no index access with invalid node numbers during Add. revision2026 step R10.4.}
+    \item {\bf notes: Verified 2026-09-17 on 1.11.135.dev1: mbs.AddObject(ObjectANCFThinPlate()) no longer raises from C++; it adds with its defaults exactly as ObjectMassPoint and ObjectANCFCable2D do; which is the "expected" behaviour this issue names. Fixed on the way by the item-interface work of revision2026 step R4.4.3.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2026-09-15 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.157}:  resolved Issue 2412: {\bf Google style docstrings are mandatory project wide}
+(docu)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: The convention is nowhere stated; the revision plan even said NumPy style. Decision: Google style docstrings MUST be used throughout for consistency. The rule has to be written into docs/dev/CODING\_STYLE.md; CONTRIBUTING.md and CLAUDE.md; and mentioned early in the user documentation so contributors meet it before writing code. griffe and pydoclint both parse Google style; so the planned docstring toolchain (revision2026 steps R4.6-R4.9) is unaffected apart from a parser argument.}
+    \item {\bf notes: Resolved by revision2026 step R4.6: docs/dev/CODING\_STYLE.md states Google style as the convention for python/exudyn - summary; then Args:; Returns:; Note:; Example: - and pydoclint checks it in CI against tools/ci/pydoclintBaseline.txt. The \#** doc-comment convention it replaced is marked as removed in the same table.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2026-09-13 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.156}:  resolved Issue 2344: {\bf itemInterface}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add automated test for all items and parameters with dummy class type which always fails. Use objectDefinition database to independently check if all parameters raise exceptions with according strings in it}
+    \item {\bf notes: Resolved by revision2026 step R4.4.3.1: parameterConversionTest.py walks the definitions database and writes a fixed set of probe values into every parameter of every item and of the simulation and visualization settings; through each access path; recording the exception type or the type; shape and value that reads back. That is the independent check this issue asked for; it currently pins 89 rejected-input outcomes.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2026-04-17 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.155}:  resolved Issue 2343: {\bf itemInterface}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add safe parameter conversion for all data types in item initialization; add parameter checks like UReal, PInt, etc. into C++ code; exception shall always return causing ItemClass name and parameter name}
+    \item {\bf notes: Largely resolved by revision2026 step R4.4.3 and its sub-steps: the item interface converts and checks parameters of every type; a rejected value names the item class and the parameter - for instance "ObjectGenericODE2: invalid node number detected" - and the whole behaviour is recorded by parameterConversionTest.py against a committed reference. What is NOT uniform yet is the exception TYPE per kind of error; which is \#2432 and revision2026 step R6.7.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2026-04-17 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.154}:  resolved Issue 2333: {\bf itemInterface}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: consider advanced checks, in particular for int / float-convertable types in checks like CheckForValidUReal}
+    \item {\bf notes: Same as \#2332: the int/float-convertible cases of CheckForValidUReal and its siblings are probed by parameterConversionTest.py (revision2026 step R4.4.3.1) and their outcome is recorded; the open decision about which exception type each path should raise is \#2432 and revision2026 step R6.7.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2026-04-02 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.153}:  resolved Issue 2332: {\bf SetNumpyMatrixSafely}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: SetNumpyMatrixSafely and SetNumpyVectorSafely: add type checks and check exceptions printed when initialized with wrong types; consider more advanced checks for standard types in itemInterface}
+    \item {\bf notes: The behaviour asked about is now pinned rather than guessed: parameterConversionTest.py (revision2026 step R4.4.3.1) writes wrong types into every parameter through every access path - the SetNumpyMatrixSafely and SetNumpyVectorSafely paths included - and compares the exception type or the value that reads back against a committed reference; so a change in these checks cannot pass unnoticed. What to do about the inconsistent exception TYPES is \#2432.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2026-04-02 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.152}:  resolved Issue 2298: {\bf testing checklist}
+(testing)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: Add testing checklist and guidelines}
+    \item {\bf notes: Resolved by revision2026 phase R5 and docs/dev/WORKFLOW.md: the commit tiers and the four gates of section 4 are the checklist this issue asked for - build; regeneration clean; the full test suite; docs and plan updated - together with which tests run when; the pytest collector; the parallel run; and the difference between reproducible and sensitive tests.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2026-02-14 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.151}:  resolved Issue 2240: {\bf systemStructures.py}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add functions for type conversions C++ - Python (Vector3D, etc.)}
+    \item {\bf notes: Resolved by revision2026 step R4.3: the type conversions asked for here are tools/generators/typeModel.py; which renders one type declaration into its C++; stub; documentation and Python forms from a single definition; instead of each emitter spelling out Vector3D and friends for itself.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2026-01-31 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.150}:  resolved Issue 2239: {\bf systemStructures.py}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: transfor into more suitable Python native format}
+    \item {\bf notes: Resolved by revision2026 step R4.3: src/pythonGenerator/systemStructures.py is gone; the structures are defined in definitions/structureDefs*.py as plain Python data and the emitters in tools/generators/ produce the C++; the stubs and the documentation from them.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2026-01-31 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.149}:  resolved Issue 2227: {\bf build wheels}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add flag to setupPyConfig.json to turn on/off AVX2 and AVX512 compile in windows and linux builds}
+    \item {\bf notes: Resolved by revision2026 steps R2.14 and R2.10: the build switches live in [tool.exudyn] of pyproject.toml - useAVX2 and useAVX512 among them - read by setup.py with an environment and a command-line override. setupPyConfig.json; which this issue named; no longer exists: it was tracked AND mutable; so a CI build rewrote it with sed and a failed build left the tree dirty.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2026-01-16 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.148}:  resolved Issue 1996: {\bf MainSystemExtensions}
+(change)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: expose MainSystem as MainSystemBase into python; derive Python class MainSystem from MainSystemBase in MainSystemExtensions; this should increase visibility of Python code!}
+    \item {\bf notes: Resolved differently and the goal is met: instead of exposing MainSystemBase and deriving a Python MainSystem from it; a function is marked where it is defined with @extends(exudyn.MainSystem) and exudyn.extensionRegistry.install() attaches it to the C++ class (revision2026 phase R4). Python-side MainSystem code is therefore visible in the class; in the stub file and in the documentation; without a second class in the hierarchy.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2025-05-06 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.147}:  resolved Issue 1988: {\bf exceptions}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: change 'except:' to 'except Exception as e:' as this passes through the keyboard interrupts, which is better for parameter variation and other long-running codes}
+    \item {\bf notes: Superseded by \#2497: the change was never made; but every one of the 59 bare "except:" in the shipped package is now listed with file and message in tools/ci/ruffBaseline.txt (revision2026 step R5.5.3) and a new one fails the check. See the successor issue.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2025-04-10 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.146}:  resolved Issue 1861: {\bf exceptions and ValueError}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: check all ValueError exceptions and change to appropriate error handling, like importerror, runtime error or value error!}
+    \item {\bf notes: Superseded by \#2432; which records the same problem with measurements: parameterConversionTest.py shows that a wrong parameter raises RuntimeError; TypeError or ValueError depending on which path rejected it. The taxonomy itself is revision2026 steps R6.3; R6.4 and R6.7. Individual cases found on the way were fixed with the right type - for instance ValueError for an unknown solver in lieGroupIntegration.py and ImportError for a missing roboticstoolbox (\#2488; \#2489).}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2024-09-19 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.145}:  resolved Issue 1142: {\bf item functions checker}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add automatic tests for all necessary functions in items, such as nodes, objects, etc.; run tests similar to LEST test suite}
+    \item {\bf notes: Partially resolved and the remainder is \#2498: the parameters of every item are now probed systematically by parameterConversionTest.py (revision2026 step R4.4.3.1) and the linear algebra classes by the lest unit tests of src/Tests/ (step R5.4); what is still untested per item type is its member FUNCTIONS. See the successor issue.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2022-06-12 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.144}: {\bf \color{warningRed}  resolved BUG 1085}: {\bf GeneralContact}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: generalContactFrictionTests.py gives considerably different results after t=0.05 seconds between Windows and linux compiled version; may be caused by some initialization problems (bugs...); needs further tests}
+    \item {\bf notes: Superseded by the measurement and the machinery of revision2026 steps R2.10.3 and R5.9: the Windows/Linux differences of the contact and friction models are now recorded per model in UnresolvedOnLinux() and SensitiveTests() in runTestSuiteRefSol.py rather than being an open suspicion; and a failure there no longer sets the exit code at random. The remaining question - WHY these models differ - is revision2026 step R10.1; which is the open work.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2022-05-11 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.143}:  resolved Issue 0862: {\bf Vector alignment}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add 32 or 64 byte memory + length alignment to allocation of vectors in order to be able to always use AVX and/or loop unrolling for copying or manipulating vectors; use \_mm\_malloc / \_mm\_free and separate flags to turn on/off memory and length alignment, memory alignment turned off in case that AVX is not available}
+    \item {\bf notes: Resolved: src/Linalg/Vector.h allocates through \_aligned\_malloc on Windows and posix\_memalign elsewhere; so vector data is aligned for the AVX paths; and AlignedFree in src/Utilities/BasicDefinitions.h frees it. Revision2026 step R2.10 settled which module carries the vector extensions (only exudynCPPfast) and step R2.10.3 recorded what they change.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2022-01-13 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.142}:  resolved Issue 0452: {\bf AVX objects}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: test AVX objects}
+    \item {\bf notes: Same coverage as \#451: the AVX code paths are tested by src/Tests/AVXVectorUnitTests.h and their numerical effect is pinned by the second reference set of revision2026 step R2.10.3. A micro-benchmark of the real linear algebra operations is planned as revision2026 step R11.2.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2020-09-16 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.141}:  resolved Issue 0451: {\bf AVX integration}
+(extension)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: test AVX in vector.cpp and dense solver}
+    \item {\bf notes: Resolved by src/Tests/AVXVectorUnitTests.h (7 cases covering the AVX paths of the vector classes) together with the measurements of revision2026 steps R2.16 and R2.10.3: the effect of the vector extensions on results is now recorded model by model in AVX2ReferenceSolutionUpdate(); and tools/benchmarks/avx2Benchmark.py measures the solver-level effect.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2020-09-16 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.140}: {\bf \color{warningRed}  resolved BUG 0448}: {\bf ObjectGenericODE2 bug}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: ObjectGenericODE2 crashes without message when initialized with invalid node numbers}
+    \item {\bf notes: Verified 2026-09-17 to be fixed by the later item-interface work: mbs.AddObject(ObjectGenericODE2(nodeNumbers=[-1,-2])) now prints "ObjectGenericODE2: invalid node number detected; all nodes used in ObjectGenericODE2 must already exist" and raises; instead of crashing without a message. The message names the item class; which is what the issue asked for.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2020-09-09 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.139}:  resolved Issue 0323: {\bf invalid index test}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: add test which checks that invalidIndex in python (-1) converts to invalidIndex in exudyn (use simple object with node number and check node number after setting object}
+    \item {\bf notes: Resolved by revision2026 step R4.4.3.1: parameterConversionTest.py writes a fixed set of probe values - which includes -1 - into every parameter of every item through each access path and compares type; shape and value that read back against a committed reference; index parameters included. The InvalidIndex cases are called out explicitly in that file (\#2426).}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2020-01-24 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.138}:  resolved Issue 0126: {\bf Linalg tests}
+(check)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: Add unit tests for new ConstSizeMatrix and ResizableMatrix}
+    \item {\bf notes: Resolved by revision2026 step R5.4.1: src/Tests/AllMatrixVariantsUnitTests.h tests ConstSizeMatrix and ResizableMatrix - the two classes this issue named - including the SparseTripletMatrix constructor fixed in step R5.4.6 (\#2476).}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2019-05-13 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.137}:  resolved Issue 0005: {\bf finish}
+(new feature)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: finish tests for all matrix classes    }
+    \item {\bf notes: Resolved by the later unit-test work of revision2026 step R5.4: src/Tests/AllMatrixUnitTests.h and AllMatrixVariantsUnitTests.h cover Matrix; ResizableMatrix; ConstSizeMatrix and the linked-data variants; step R5.4.1 completed the variants that had none.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2019-04-01 (resolved by: Claude-JG)
+  \ei
+  \item[] {\bf Version 1.11.136}:  resolved Issue 0002: {\bf finish}
+(new feature)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item {description: finish tests for all vector classes    }
+    \item {\bf notes: Resolved by the later unit-test work of revision2026 step R5.4: src/Tests/AllVectorUnitTests.h; TemplatedVectorArrayUnitTests.h; AllBasicLinalgUnitTests.h and AVXVectorUnitTests.h cover Vector; ResizableVector; SlimVector; ConstSizeVector and LinkedDataVector; run by exu.special.RunCppUnitTests() in every build with EXUDYN\_PERFORM\_UNIT\_TESTS and by the test suite.}
+    \item   date resolved: {\bf 2026-09-17 22:43},
+date raised: 2019-04-01 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.135}: {\bf \color{warningRed}  resolved BUG 2496}: {\bf --fast-module would reject a fast module built without AVX2}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
@@ -13363,12 +13546,6 @@ date raised: 2020-07-20
     \item {description: .github/workflows/wheels.yml uses actions/setup-python@v6, while documentation.yaml still uses actions/checkout@v3 and actions/setup-python@v4. Found in revision2026 step R5.14; assigned to sub-step R5.14.1, which needs maintainer approval because it touches .github/workflows.}
     \item date raised: 2026-09-16 
   \ei
-  \item open {\bf BUG 2430}:  {\bf ObjectANCFThinPlate added with its defaults fails inside C++ with an index error}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item issue author: Claude-JG
-    \item {description: Found in revision2026 step R4.4.3.4e: mbs.AddObject(ObjectANCFThinPlate()) raises ResizableArray<T>::operator[] i < 0 from C++ even with exudyn.special.exceptions.parameterRangeChecks = False; its default nodeNumbers (four InvalidIndex) are used while the object is added. Every other item class either adds with its defaults or names the parameter that must be given. Expected: a message that names ObjectANCFThinPlate.nodeNumbers - or CheckPreAssembleConsistency catching it - and no index access with invalid node numbers during Add. revision2026 step R10.4.}
-    \item date raised: 2026-09-15 
-  \ei
   \item open {\bf BUG 2398}:  {\bf explicit integration costs O(N^2) per step with the default dense linear solver}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
@@ -13395,11 +13572,6 @@ date raised: 2020-07-20
     \item {description: repeated call to mbs.SolveDynamic gives divergence; attributed to FFRFreducedOrder model; workaround uses repeated build of model before calling solver again; may be related to FFRF or MarkerSuperElement-internal variables}
     \item date raised: 2023-07-10 
   \ei
-  \item open {\bf BUG 1085}:  {\bf GeneralContact}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: generalContactFrictionTests.py gives considerably different results after t=0.05 seconds between Windows and linux compiled version; may be caused by some initialization problems (bugs...); needs further tests}
-    \item date raised: 2022-05-11 
-  \ei
   \item open {\bf BUG 1048}:  {\bf sse2neon.h}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: on Apple, sse2neon.h is missing (include from github) and compilation fails; check if this only happens on M1 and change include modes of sse2neon.h; add this file to python setup.py for other cases}
@@ -13414,11 +13586,6 @@ date raised: 2020-07-20
   \begin{itemize} \setlength\itemsep{-1pt}
     \item {description: modified Newton does not work, no Jacobian update computed when switching}
     \item date raised: 2021-08-13 
-  \ei
-  \item open {\bf BUG 0448}:  {\bf ObjectGenericODE2 bug}
-  \begin{itemize} \setlength\itemsep{-1pt}
-    \item {description: ObjectGenericODE2 crashes without message when initialized with invalid node numbers}
-    \item date raised: 2020-09-09 
   \ei
 \ei
 %end of file

@@ -1087,6 +1087,13 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     in `issueTracker.py`, the RST/LaTeX/HTML converters, the CLI of R8.3 (`close <n> --reason ...`),
     and the JSON schema of R8.5. Also check `ChangeIssue` cannot set it silently.
 
+<a id="r8-3-2"></a>
+**R8.3.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r8-3-2) — *(sub-step of R8.3;
+    maintainer request 2026-09-17)* **The old backlog was checked against what the revision actually
+    did.** 29 issues from 2016-2026 were read and verified one by one; 23 are resolved by later
+    work, 2 were partially covered and got successors (#2497, #2498), 6 stay open because nothing
+    has been done about them.
+
 <a id="r8-4"></a>
 **R8.4** *(phase R8)* **Fold minor-version bumps into the tracker.** A 1.11 → 1.12 bump currently means
     hand-editing the `versionResolved` list and `versionNames` dict inside `issueTracker.py`. Make
@@ -1274,12 +1281,11 @@ debt stays visible and each item can be closed on evidence.
     in explicit integration where the flag makes it unnecessary.
 
 <a id="r10-4"></a>
-**R10.4** *(phase R10 candidate)* **`ObjectANCFThinPlate` added with its defaults fails inside C++**
-    (#2430). `mbs.AddObject(ObjectANCFThinPlate())` raises `ResizableArray<T>::operator[], i < 0`
-    even with range checks off: the four `InvalidIndex` node numbers are used while the object is
-    added. Every other item class either adds with its defaults or names the parameter that must be
-    given (R4.4.3.4e. Expected: a message naming `ObjectANCFThinPlate.nodeNumbers`, or
-    `CheckPreAssembleConsistency` catching it, with no index access during Add.
+**R10.4** **DONE 2026-09-17** (verified, not worked on) — *(phase R10 candidate)*
+    **`ObjectANCFThinPlate` added with its defaults fails inside C++** (#2430). It does not any
+    more: checked on 1.11.135.dev1, `mbs.AddObject(ObjectANCFThinPlate())` adds with its defaults
+    exactly as `ObjectMassPoint` and `ObjectANCFCable2D` do - which is what the issue named as the
+    expected behaviour. Fixed on the way by the item-interface work of step R4.4.3.
 
 ## R11 — Misc (came up during the revision)
 
