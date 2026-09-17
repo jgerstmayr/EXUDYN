@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.114.dev1, 
++  Exudyn version = 1.11.115.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2479, 
-+  Number of resolved issues = 2187 (114 in current version), 
++  Number of issues = 2484, 
++  Number of resolved issues = 2188 (115 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.115: resolved Issue 2479: Symbolic and LinearSolver have no C++ unit tests (improvement)
+    - issue author: Claude-JG
+    - description:  src/Tests/ covers the vectors, the arrays, the matrix classes and the geometry group, but neither the symbolic expression system (Symbolic.h, SymbolicVector.h, SymbolicMatrix.h; ~4000 lines) nor LinearSolver.h (the dense and the sparse system matrix behind one GeneralMatrix interface). symbolicModuleTest.py compares the NUMBERS from Python, so the C++ tests aim at the expression TREE - Diff, the value accessors, the non-recording path, the reference counting - and the solver tests solve one system with all four variants and pin down where the variants deliberately differ. revision2026 steps R5.4.2 and R5.4.3.
+    - **notes:** Two new headers, 21 cases. SymbolicUnitTests.h (11) goes at the expression TREE, which symbolicModuleTest.py cannot reach: Diff by pointer identity, the chain rule, what Diff throws for and what it answers with NaN, exact ToString output, the non-recording branch as a second implementation, the value-accessor contracts, SetSRealVector and EvaluateComponent (both unbound in Python), and the reference counting - each case under a guard that restores recordExpressions and the new/delete counters, because symbolicModuleTest.py measures those. LinearSolverUnitTests.h (10) solves one 4x4 system with all four variants and pins down where they differ: only EXUdense reports the causing row, the Eigen dense paths report success for a singular matrix, EXUdense overwrites its matrix with the inverse while factorizing, and SetMatrix does not size the sparse matrix. symbolicModuleTest.py was extended (Diff, VariableSet, recording off, __str__, error paths) with its reference value unchanged at 0.9484129575069745. Mutation-checked: a dropped term in the product rule gives 2 failures, a dense factorization that always claims success gives 1. Found on the way: #2480, #2481, #2482, #2483. revision2026 steps R5.4.2 and R5.4.3.
+    - date resolved: **2026-09-17 16:05**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.114: resolved Issue 2478: a model run locally still opens plot windows (improvement)
     - issue author: Claude-JG
     - description:  Step R5.17 gave exudyn the suppressPlots flag and it reaches every plot the PACKAGE draws (PlotSensor, PlotFFT, ParameterVariationPlot, the Campbell diagram). It cannot reach a script that imports matplotlib itself and calls plt.show(): 36 models and examples do exactly that, so running one of them locally - to check a change or reproduce a bug - still opens a window on the maintainer screen and waits. The runners are not affected, they set the Agg backend in their bootstrap. Needed: a one-line guard in those 36 scripts that switches to the non-interactive backend when exudyn.special.userInterface.suppressPlots is set, plus a rule in CLAUDE.md that a local run of an existing model sets EXUDYN_SUPPRESS_UI_WINDOW_OPEN and EXUDYN_OUTPUTDIRECTORY. revision2026 step R5.17.1.
@@ -7411,6 +7417,26 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * **open issue 2483:** the Eigen dense solvers cannot report a singular matrix
+    - issue author: Claude-JG
+    - description:  For useEigenSolverType 1 (PartialPivLU) and 2 (FullPivLU) GeneralMatrixEXUdense::FactorizeNew() sets rv = -1 unconditionally and the invertibility check is commented out (LinearSolver.cpp:40 and 58-76) - a singular system reports SUCCESS and Solve returns a least-squares or undefined answer instead of an error. Only the own EXUdense Gauss-Jordan path and the sparse path report the failure. The code comment says this is deliberate, but it means the solver silently continues on a singular Jacobian whenever a user selects an Eigen dense solver. Decide: report it, or state the behaviour in the documentation of LinearSolverType. Pinned by a unit test in revision2026 step R5.4.3. revision2026 step R5.4.10.
+    - date raised: 2026-09-17 
+
+ * **open issue 2482:** the sparse FactorizeNew does not return the causing row it promises
+    - issue author: Claude-JG
+    - description:  GeneralMatrixEigenSparse::FactorizeNew() takes rv = solver.info() - an Eigen::ComputationInfo, i.e. 0..3 - and then returns rv-1 as if it were a row index (LinearSolver.cpp:528-530), with a comment describing the causing row. In practice a failed factorization gives info()==1 (NumericalIssue), so the caller is told row 0 no matter which row is singular. Either return the real row, or return a documented error code and stop promising a row. The dense EXUdense path does return a real row. revision2026 step R5.4.9.
+    - date raised: 2026-09-17 
+
+ * **open issue 2481:** a symbolic vector product with inconsistent sizes leaks its nodes
+    - issue author: Claude-JG
+    - description:  Symbolic::operator\*(SymbolicRealVector, SymbolicRealVector) allocates the product node and then hands it to SReal(ExpressionBase\*), whose constructor evaluates it immediately to cache the value. With inconsistent sizes that evaluation throws - before any SReal owns the node - so the allocation is never freed. Measured from Python: one failed product leaks 1 Real node and 2 Vector nodes (newCount increases, deleteCount does not). Any error path inside Evaluate has the same shape. revision2026 step R5.4.8.
+    - date raised: 2026-09-17 
+
+ * **open issue 2480:** SymbolicVector.h and SymbolicMatrix.h do not include what they use
+    - issue author: Claude-JG
+    - description:  Both headers use py::list, py::array_t and EPyUtils but include no pybind11 header and not PybindUtilities.h. They compile only because Symbolic.cpp includes pybind11 before them; any other translation unit that includes SymbolicVector.h first fails with a wall of errors about an unknown namespace py (found while writing the R5.4.2 tests, which now have to repeat that include order themselves). Add the includes the headers need. revision2026 step R5.4.7.
+    - date raised: 2026-09-17 
 
  * **open issue 2476:** SparseTripletMatrix(rows, columns, triplets) throws its size arguments away
     - issue author: Claude-JG

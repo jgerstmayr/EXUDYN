@@ -430,6 +430,109 @@ You can view and download this file on Github: `symbolicModuleTest.py <https://g
                    exu.Print('. res sym:\n',res[0], ',\n  res Py:\n', res[1], s)
    
    #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   #checks added 2026-09-17 (revision2026 step R5.4.2, #2479): everything above compares NUMBERS
+   #against Python's math module. These check what nothing checked at all - Diff, the VariableSet,
+   #named variables without recording, __str__ and the error paths. They are written as a FUNCTION so
+   #that every symbolic object they create is released on return, which keeps the new/delete balance
+   #below intact; and they only count into cntWrong, so that the test result stays what it was.
+   def ExtendedSymbolicChecks():
+       wrong = 0
+   
+       def Check(condition, info):
+           if not condition:
+               exu.Print('*** wrong: ' + info)
+           return 0 if condition else 1
+   
+       #--- Diff: compared against a central difference of the same expression
+       esym.SetRecording(True)
+       for value in [0.3, 1.7, -0.8]:
+           x = SymReal('x', value)
+           cases = [(x*x*x, 3*value**2),
+                    (esym.sin(x)*esym.cos(x), math.cos(2*value)),
+                    (esym.exp(x)/x, math.exp(value)/value - math.exp(value)/value**2),
+                    (esym.sqrt(x*x+1), value/math.sqrt(value**2+1)),
+                    ]
+           for (f, analytic) in cases:
+               wrong += Check(abs(f.Diff(x) - analytic) < 1e-12, 'Diff value ' + str(value))
+   
+           #pow is differentiated as exp(exponent*log(base)), so its derivative is NaN for base<=0 -
+           #a deliberate answer, not a failure, and nothing said so before
+           f = esym.pow(x, 4)
+           if value > 0:
+               wrong += Check(abs(f.Diff(x) - 4*value**3) < 1e-12, 'Diff pow value ' + str(value))
+           else:
+               wrong += Check(math.isnan(f.Diff(x)), 'Diff pow of a negative base is NaN')
+   
+           #the derivative follows the variable, just as the value does
+           f = esym.sin(x*x)
+           x.SetValue(0.5)
+           wrong += Check(abs(f.Diff(x) - math.cos(0.25)*1.) < 1e-12, 'Diff after SetValue')
+   
+           #a variable the expression does not contain contributes nothing
+           y = SymReal('y', value)
+           wrong += Check(f.Diff(y) == 0., 'Diff of an unrelated variable')
+   
+       #--- the VariableSet, which no test touched so far
+       variables = esym.VariableSet()
+       wrong += Check(variables.NumberOfItems() == 0, 'VariableSet starts empty')
+       variables.Add('alpha', 1.25)
+       variables.Add('beta', -2.)
+       wrong += Check(variables.NumberOfItems() == 2, 'VariableSet counts its variables')
+       wrong += Check(variables.Exists('alpha'), 'VariableSet knows alpha')
+       wrong += Check(not variables.Exists('gamma'), 'VariableSet does not invent gamma')
+       wrong += Check(variables.Get('alpha').Evaluate() == 1.25, 'VariableSet returns the value')
+       variables.Set('alpha', 3.5)
+       wrong += Check(variables.Get('alpha').Evaluate() == 3.5, 'VariableSet overwrites a value')
+       wrong += Check(sorted(variables.GetNames()) == ['alpha', 'beta'], 'VariableSet lists its names')
+       variables.Reset()
+       wrong += Check(variables.NumberOfItems() == 0, 'VariableSet is empty after Reset')
+   
+       #--- with recording OFF a named variable is a plain number: no tree, and no link
+       esym.SetRecording(False)
+       x = SymReal('x', 2.)
+       f = x*x
+       wrong += Check(f.Evaluate() == 4., 'unrecorded expression is evaluated immediately')
+       x.SetValue(5.)
+       wrong += Check(f.Evaluate() == 4., 'an unrecorded expression does NOT follow its variable')
+       wrong += Check(float(str(f)) == 4., 'an unrecorded expression prints its value')
+       esym.SetRecording(True)
+   
+       #--- __str__ prints the expression tree
+       x = SymReal('x', 2.)
+       wrong += Check(str(x) == 'x', 'a named variable prints its name')
+       wrong += Check(str(x+x) == '(x + x)', 'a sum prints both operands')
+       wrong += Check(str(esym.sqrt(x)) == 'sqrt(x)', 'a function prints its name')
+   
+       #--- the error paths. NOTE: a failed operation leaks its expression nodes - the node is built,
+       #evaluated, throws, and no object ever takes ownership (#2481, measured: 1 Real + 2 Vector
+       #nodes per failed product). The counters are therefore restored afterwards, so that this test
+       #keeps measuring what it always measured; the leak itself is pinned by the C++ unit tests of
+       #revision2026 step R5.4.2, which is the right place to notice when it is fixed.
+       counters = [esym.Real.__newCount, esym.Real.__deleteCount,
+                   esym.Vector.__newCount, esym.Vector.__deleteCount,
+                   esym.Matrix.__newCount, esym.Matrix.__deleteCount]
+       try:
+           esym.Vector([1., 2.]) * esym.Vector([1., 2., 3.])
+           wrong += Check(False, 'a vector product of different sizes must raise')
+       except Exception:
+           pass
+   
+       try:
+           v = esym.Vector([1., 2.])
+           v[5]
+           wrong += Check(False, 'an index beyond the vector must raise')
+       except Exception:
+           pass
+   
+       [esym.Real.__newCount, esym.Real.__deleteCount,
+        esym.Vector.__newCount, esym.Vector.__deleteCount,
+        esym.Matrix.__newCount, esym.Matrix.__deleteCount] = counters
+   
+       return wrong
+   
+   cntWrong += ExtendedSymbolicChecks()
+   
+   #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    #cleanup and check new/delete
    if True:
        del a,b,c,d,f
@@ -462,8 +565,9 @@ You can view and download this file on Github: `symbolicModuleTest.py <https://g
    exu.Print('\nfinished',cntTests,'tests')
    exu.Print('WRONG results (after vectorTests):',cntWrong,'\n') 
    
-   #
-   u = sumResults/1000
+   #a wrong comparison used to move the 14th digit and pass; counting it into the result makes
+   #the test fail instead. cntWrong is 0 in a passing run, so the reference is unchanged (#2479)
+   u = sumResults/1000 + cntWrong
    exu.Print('u=',u)
    exu.Print('solution of symbolicModuleTest=',u)
    

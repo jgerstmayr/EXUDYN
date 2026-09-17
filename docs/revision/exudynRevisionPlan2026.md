@@ -521,17 +521,17 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     weak case was found. Two defects found on the way: #2473 and #2474.
 
 <a id="r5-4-2"></a>
-**R5.4.2** *(sub-step of R5.4)* **Symbolic**: `Symbolic.h`, `SymbolicVector.h`, `SymbolicMatrix.h`.
-    ~2500 lines with a Python-level test already in place (`symbolicModuleTest.py`,
-    `symbolicUserFunctionTest.py`), so the C++ tests should aim at what Python cannot reach: the
-    expression tree itself, `Diff`, and evaluation after a variable changes.
+**R5.4.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-2) — *(sub-step of R5.4)*
+    **Symbolic has unit tests** (#2479): 11 cases in `SymbolicUnitTests.h` aimed at the expression
+    TREE, which is what Python cannot reach - `Diff` by pointer identity, the value accessors, the
+    non-recording path and the reference counting - plus an extension of `symbolicModuleTest.py`
+    that keeps its reference value byte-identical. Defects found: #2480 and #2481.
 
 <a id="r5-4-3"></a>
-**R5.4.3** *(sub-step of R5.4)* **`LinearSolver.h`**: the dense and the sparse (Eigen) solver
-    behind one interface — the same shape as `MatrixContainer` in R5.4.1, and the same kind of test:
-    both must answer identically for a system that is solvable, and both must fail recognisably for
-    one that is not.
-
+**R5.4.3** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-3) — *(sub-step of R5.4)*
+    **`LinearSolver.h` has unit tests** (#2479): 10 cases in `LinearSolverUnitTests.h`; one system
+    solved by all four variants (EXUdense, Eigen PartialPivLU, Eigen FullPivLU, EigenSparse), and
+    the places where they deliberately differ pinned down. Defects found: #2482 and #2483.
 <a id="r5-4-4"></a>
 **R5.4.4** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-4-4) — *(sub-step of R5.4,
     from R5.4.1)* **`LinkedDataMatrix(const MatrixBase&)` did not compile** (#2473): it read the
@@ -550,6 +550,31 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     throws its size arguments away** (#2476): it initialises both to 0 and never assigns the
     arguments, so the matrix reports 0 x 0 while holding the triplets. Nothing calls it today, but
     #2474 made the size fields load-bearing. Assign them or delete the constructor.
+
+<a id="r5-4-7"></a>
+**R5.4.7** *(sub-step of R5.4, from R5.4.2)* **`SymbolicVector.h` and `SymbolicMatrix.h` do not
+    include what they use** (#2480): both use `py::list`, `py::array_t` and `EPyUtils` while
+    including no pybind11 header. They compile only because `Symbolic.cpp` includes pybind11 first;
+    any other translation unit fails. The R5.4.2 tests have to repeat that include order themselves.
+
+<a id="r5-4-8"></a>
+**R5.4.8** *(sub-step of R5.4, from R5.4.2)* **A failed symbolic operation leaks its nodes**
+    (#2481): `SReal(ExpressionBase*)` evaluates the node immediately to cache its value, so an
+    error inside `Evaluate()` throws before any object owns the allocation. Measured: one vector
+    product with inconsistent sizes leaks 1 Real and 2 Vector nodes.
+
+<a id="r5-4-9"></a>
+**R5.4.9** *(sub-step of R5.4, from R5.4.3)* **The sparse `FactorizeNew` does not return the
+    causing row it promises** (#2482): it returns `solver.info() - 1`, an Eigen status code, which
+    in practice is always 0 - so the caller is told "row 0" whichever row is singular.
+
+<a id="r5-4-10"></a>
+**R5.4.10** *(sub-step of R5.4, from R5.4.3)* **The Eigen dense solvers cannot report a singular
+    matrix** (#2483): for `useEigenSolverType` 1 and 2 the return value is set to -1
+    unconditionally and the invertibility check is commented out, so a singular system reports
+    success and `Solve` returns a least-squares answer. Deliberate according to the code comment;
+    decide whether to report it or to document it.
+
 <a id="r5-5"></a>
 **R5.5** *(phase R5, tooling)* **A linter and a type check for the Python side.** Two separate
     halves, neither started:

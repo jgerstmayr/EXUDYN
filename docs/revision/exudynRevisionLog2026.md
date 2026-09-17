@@ -4538,6 +4538,126 @@ its three-argument constructor initialises `numberOfRows(0), numberOfColumns(0)`
 its arguments. Nothing calls it, so nothing breaks today - raised as step R5.4.6 rather than fixed
 here (rule 9).
 
+<a id="r5-4-2"></a>
+### R5.4.2 - the symbolic expression tree has unit tests
+
+**DONE 2026-09-17** (#2479; found #2480, #2481).
+
+`symbolicModuleTest.py` compares the NUMBERS - every operator and function, recording on and off,
+against the Python `math` module. Repeating that in C++ would add nothing, so the 11 cases in
+`SymbolicUnitTests.h` go where Python cannot: the **tree**.
+
+- **an expression follows its variable**: `f = x*x + 3`, then `x.SetExpressionNamedReal(5)` and the
+  same `f` answers 28. A value copy would still say 7.
+- **`Diff` identifies the variable by POINTER, not by name**. Two variables both called `x` are
+  different variables, and `f.DiffSReal(other)` is 0. Python cannot build that pair.
+- **the chain rule** through `sin(x*x)`, `exp(x)/x`, `pow(x,3)`, against hand-derived values, and
+  the derivative follows the variable like the value does.
+- **two different answers to "not differentiable here"**: `round`, `floor`, `mod`, `min`, `max` and
+  the comparisons THROW; `abs` at 0, `sqrt` at 0 and the other singular points return **NaN**;
+  `sign` returns 0 everywhere. None of that was written down anywhere.
+- **`ToString()` exactly**, including that unary plus prints NOTHING and that a comparison is an
+  expression returning 0.0 or 1.0, not a bool.
+- **recording off is a second implementation** of every operator - a completely separate branch -
+  so one block runs under both settings and the numbers must be identical.
+- **the value accessors** `GetValue`/`SetValue`/`SetSymbolicValue` throw as soon as an expression is
+  present, except through a named variable. Untested from Python.
+- **`SetSRealVector({...})`**, C++-only because the pybind equivalent is deliberately not bound,
+  and **`MatrixExpressionBase::EvaluateComponent`**, not bound at all.
+- **the reference counting**: a copy shares the tree, and the last owner frees it.
+
+**The globals are the trap.** `recordExpressions` and the new/delete counters are process-wide, and
+`symbolicModuleTest.py` asserts `new - delete == 0`; in serial mode the models and
+`RunCppUnitTests()` share one interpreter. Every case therefore runs under a guard that restores
+all three, and asserts that it leaked no node of its own.
+
+**A heap corruption, found the hard way.** The first version built its named variables as stack
+`ExpressionNamedReal` objects, the way the dead `PyTest_unused()` in `Symbolic.cpp` does. An
+operator node OWNS its operands and deletes them when their reference counter reaches zero, so the
+first destroyed expression freed a stack object: `0xC0000374`, heap corruption, no output at all.
+Named variables are now always `Symbolic::SReal(name, value)`, which allocates. The reason is
+written into the header, because the next person will reach for the stack node too.
+
+**Two defects found, raised rather than fixed** (rule 9):
+
+- **#2480** (step R5.4.7): `SymbolicVector.h` and `SymbolicMatrix.h` use `py::list`, `py::array_t`
+  and `EPyUtils` without including anything for them. They compile only because `Symbolic.cpp`
+  includes pybind11 first - the test header has to repeat that include order to compile at all.
+- **#2481** (step R5.4.8): a failed operation **leaks its nodes**. `SReal(ExpressionBase*)`
+  evaluates immediately to cache the value, so an error inside `Evaluate()` throws before any
+  object owns the allocation. Measured from Python: one vector product with inconsistent sizes
+  leaks 1 Real and 2 Vector nodes.
+
+That second one also corrected an assumption in the test itself: a size mismatch is reported while
+the expression is **built**, not at a later `Evaluate()`, precisely because the constructor
+evaluates.
+
+**symbolicModuleTest.py was extended**, at the maintainer request, without moving its reference
+value. New self-checking blocks cover `Diff` (never called from Python before), the `VariableSet`
+(bound but never exercised), named variables with recording off, `__str__`, and the two error
+paths. They are written as a FUNCTION so their objects are released on return, and they count only
+into `cntWrong`. `u = sumResults/1000` became `u = sumResults/1000 + cntWrong`: in a passing run
+`cntWrong` is 0, so the reference `0.9484129575069745` is unchanged - but a wrong comparison now
+FAILS the suite instead of moving the 14th digit, which is what it did before. Around the two error
+paths the counters are saved and restored, since #2481 would otherwise show up as a leak in the
+model own new/delete balance.
+
+Two things the extension measured on the way: `pow` is differentiated as `exp(exponent*log(base))`,
+so its derivative is **NaN for a negative base** - a deliberate answer that nothing stated; and an
+unrecorded expression prints its value, not its tree.
+
+**Mutation check**: dropping one term from the product rule in `ExpressionOperatorMul::Diff`
+produced **2 failures**; restoring it, 0.
+
+<a id="r5-4-3"></a>
+### R5.4.3 - one system, four solvers, and where they disagree
+
+**DONE 2026-09-17** (#2479; found #2482, #2483).
+
+`LinearSolver.h` had no test at all. The 10 cases in `LinearSolverUnitTests.h` have the shape of the
+`MatrixContainer` cases of R5.4.1: the same question asked of every variant. There are **four**,
+not two - `GeneralMatrixEXUdense` carries three of them in `UseEigenSolverType()` (its own
+Gauss-Jordan inversion, Eigen PartialPivLU, Eigen FullPivLU) and `GeneralMatrixEigenSparse` is the
+fourth.
+
+- **all four solve the same 4x4 system**, and the check is the property `A*x == rhs` computed with
+  plain loops, not a recorded solution vector; then the four answers are compared with each other.
+- **the identity solves to the right-hand side**, which catches a transposed or shifted index.
+- **dense and sparse hold the same matrix**: built with `AddSubmatrixWithFactor`, both hand out the
+  same dense matrix, and adding twice adds twice in both.
+- **the products agree**: `MultMatrixVector` sizes the result in both modes, `MultMatrixVectorAdd`
+  accumulates into a result the caller sized - the same contract R5.4.5 gave `MatrixContainer`.
+
+**Where they part, the test states the truth rather than the wish:**
+
+- only `EXUdense` reports a singular matrix by its **causing row**. Its pivot threshold defaults to
+  0., so `fabs(pivot) <= 0.` catches an exactly singular matrix and nothing weaker.
+- the **two Eigen dense paths report SUCCESS** for the same matrix (#2483).
+- `EXUdense` **overwrites its own matrix with the INVERSE** while factorizing, because
+  `InvertSpecial` writes into the same storage - so `GetEXUdenseMatrix()` after a factorization is
+  the inverse, not the matrix. The Eigen paths keep it. The case verifies this by checking
+  `A * A^-1 == I`.
+- `SetMatrix` sizes the dense matrix but **not** the sparse one, which keeps the size it was given
+  by `SetNumberOfRowsAndColumns`.
+
+**Negative tests use the throwing paths only.** The sparse matrix raises when asked to solve before
+it is factorized, or to factorize before it is built; the dense one only prints a `SysError`,
+continues, and sets the process-global `globalPyRuntimeErrorFlag` - a unit test must not leave that
+behind, so that path is deliberately not exercised.
+
+**Two defects found, raised rather than fixed** (rule 9):
+
+- **#2482** (step R5.4.9): the sparse `FactorizeNew` returns `solver.info() - 1` as if it were a
+  row index. A failed factorization gives `info() == 1`, so the caller is told "row 0" whichever
+  row is singular, while its own comment promises the causing row.
+- **#2483** (step R5.4.10): the two Eigen dense paths set the return value to -1 unconditionally,
+  with the invertibility check commented out. A singular system reports success and `Solve` returns
+  a least-squares answer. The code comment says this is deliberate; it still means the solver
+  continues silently on a singular Jacobian whenever an Eigen dense solver is selected.
+
+**Mutation check**: making the dense factorization claim success whatever `InvertSpecial` returned
+produced **1 failure**; restoring it, 0.
+
 <a id="r5-7"></a>
 ### R5.7 — rename `pytest.py` - done differently in step R3.1 (`python/pytestTemplate.py`)
 

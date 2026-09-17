@@ -53,6 +53,8 @@ using namespace EXUmath;
     #include "AVXVectorUnitTests.h"   //revision2026 step R5.4, #2465
     #include "AllMatrixVariantsUnitTests.h" //revision2026 step R5.4.1, #2472
     #include "RigidBodyMathUnitTests.h"     //revision2026 step R5.4.1, #2472
+    #include "SymbolicUnitTests.h"          //revision2026 step R5.4.2, #2479
+    #include "LinearSolverUnitTests.h"      //revision2026 step R5.4.3, #2479
 #endif
 
 extern bool linalgPrintUsePythonFormat; //!< true: use python format for output of vectors and matrices; false: use matlab format
@@ -337,6 +339,14 @@ int UnitTestBase::PerformVectorAndArrayTests(int flags)
 	//rotations, geometry, bounding boxes and the search tree: property tests, and the search tree
 	//is checked against a brute-force scan over the same data (step R5.4.1, #2472)
 	failCounter += lest::run(rigidBodyMath_specific_test, arglist_lest, stringStream);
+
+	//the symbolic expression TREE - what symbolicModuleTest.py cannot reach: Diff, the value
+	//accessors, the non-recording path and the reference counting (step R5.4.2, #2479)
+	failCounter += lest::run(symbolic_specific_test, arglist_lest, stringStream);
+
+	//the dense and the sparse system matrix behind one interface: one system solved by all four
+	//variants, and the places where they deliberately differ (step R5.4.3, #2479)
+	failCounter += lest::run(linearSolver_specific_test, arglist_lest, stringStream);
 
 #endif
     if (failCounter) {

@@ -476,6 +476,12 @@
     <ClInclude Include="..\src\Tests\RigidBodyMathUnitTests.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Tests\SymbolicUnitTests.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Tests\LinearSolverUnitTests.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Tests\TemplatedVectorArrayUnitTests.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
