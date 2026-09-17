@@ -5202,6 +5202,49 @@ tracked fall-back meshes that nothing can load any more - the default mode is NP
 work under NumPy 2 at all. They are dead weight, but deleting tracked files needs the maintainer.
 `NGsolvePistonEngine` also exports three `.mesh` files into `testData/` inside `if False:` blocks.
 
+<a id="r5-13-1"></a>
+### R5.13.1 - stop writing what nothing reads
+
+**DONE 2026-09-17** (#2492).
+
+**The solution files.** Fifteen models set `solutionSettings.writeSolutionToFile = True`
+unconditionally. The file is read back only by the SolutionViewer under `useGraphics`, and the
+writing itself is covered by `compareFullModifiedNewton`, the designated test for it - so under the
+suite every one of those writes went nowhere. Four models already had the right form, and it is now
+used everywhere:
+
+```python
+simulationSettings.solutionSettings.writeSolutionToFile = useGraphics
+```
+
+Two models are the exception and are set to `False` instead: `ACFtest` defines `useGraphics` only
+*after* the line in question (its `LoadSolutionFile` sits in an `if False:` block), and
+`doublePendulum2DControl` has no `useGraphics` at all. `modelUnitTests` keeps its `True` - it sets
+the flag deliberately as part of a test.
+
+**The sensors.** Three sensors still wrote to a file: two in `ANCFbeltDrive`, one in `ACFtest`. All
+three now use `storeInternal=True`. `ANCFbeltDrive` plots them under `useGraphics` with
+`mbs.PlotSensor(sensorNumbers=...)`, which reads the internal data just as well; the `ACFtest`
+sensor is never read at all.
+
+**Measured**, with `python/TestModels/solution` deleted before each run so that the numbers are one
+run and not an accumulation:
+
+| | files | size |
+|---|---|---|
+| before | 74 coordinates solution files | 11 MB |
+| after | 64 | 8.0 MB |
+
+**The step text was out of date, and that is worth recording.** It said *"32 write sensor files"*;
+the measurement says otherwise - **74** test models already use `storeInternal`, 255 times, and
+almost every sensor `fileName` in `TestModels/` is commented out. That half had been done by R5.13
+and R5.13.2 without the step text being updated. Checking the claim before working from it took one
+grep and saved converting 32 models that were already converted.
+
+**Noticed, not touched** (rule 9): `ACFtest.py` writes `useGraphics=True` without spaces, so the
+runner substitution `('useGraphics = True', 'useGraphics = False')` does not match it. Since step
+R5.17 no window opens either way, but the flag is not what the runner thinks it is.
+
 <a id="r5-13-2"></a>
 ### R5.13.2 - five examples stop writing next to themselves
 

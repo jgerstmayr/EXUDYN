@@ -230,7 +230,7 @@ if useContact:
                                                  offset=-fRoll/kRoll,
                                                  visualization=VCoordinateSpringDamper(show=False)))
             sMeasureRoll = mbs.AddSensor(SensorNode(nodeNumber=nMass, 
-                                                    fileName='solution/wheel'+str(i)+'pos.txt',
+                                                    storeInternal=True, #read by PlotSensor, not from a file (#2492)
                                                     outputVariableType=exu.OutputVariableType.Displacement))
         
         if i == 0:
@@ -250,7 +250,7 @@ if useContact:
         gContact.AddSphereWithMarker(mNode, radius=r, contactStiffness=contactStiffness, 
                                      contactDamping=contactDamping, frictionMaterialIndex=frictionMaterialIndex)
         
-        sAngVel += [mbs.AddSensor(SensorNode(nodeNumber=nMass, fileName='solution/wheel'+str(i)+'angVel.txt',
+        sAngVel += [mbs.AddSensor(SensorNode(nodeNumber=nMass, storeInternal=True, #(#2492)
                                   outputVariableType=exu.OutputVariableType.AngularVelocity))]
 
     allCables = []
@@ -278,7 +278,7 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 
 simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/coordinatesSolution.txt'
-simulationSettings.solutionSettings.writeSolutionToFile = True
+simulationSettings.solutionSettings.writeSolutionToFile = useGraphics #only the SolutionViewer reads it (#2492)
 simulationSettings.solutionSettings.solutionWritePeriod = 0.005
 simulationSettings.solutionSettings.sensorsWritePeriod = 0.001
 #simulationSettings.displayComputationTime = True

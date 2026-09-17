@@ -61,7 +61,7 @@ simulationSettings.timeIntegration.numberOfSteps = int(1*f)
 simulationSettings.timeIntegration.endTime = 0.02*f #make small steps to see something during simulation
 simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/5000
 
-simulationSettings.solutionSettings.writeSolutionToFile = True
+simulationSettings.solutionSettings.writeSolutionToFile = useGraphics #only the SolutionViewer reads it (#2492)
 simulationSettings.displayComputationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 #simulationSettings.timeIntegration.verboseModeFile = 0

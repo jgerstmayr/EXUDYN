@@ -148,7 +148,7 @@ mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-simulationSettings.solutionSettings.writeSolutionToFile = True
+simulationSettings.solutionSettings.writeSolutionToFile = useGraphics #only the SolutionViewer reads it (#2492)
 #simulationSettings.solutionSettings.outputPrecision = 4
 simulationSettings.displayComputationTime = False
 

@@ -103,7 +103,7 @@ You can view and download this file on Github: `fourBarMechanismTest.py <https:/
    f = 2000
    simulationSettings.timeIntegration.numberOfSteps = 1*f
    simulationSettings.timeIntegration.endTime = 0.001*f
-   simulationSettings.solutionSettings.writeSolutionToFile = True
+   simulationSettings.solutionSettings.writeSolutionToFile = useGraphics #only the SolutionViewer reads it (#2492)
    simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/500
    simulationSettings.displayComputationTime = False
    simulationSettings.displayStatistics = False

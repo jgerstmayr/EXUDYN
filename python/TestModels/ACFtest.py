@@ -298,7 +298,7 @@ def UFgraphics(mbs, objectNum):
 fileDir = 'solution/'
 
 nodeEnd = fem.GetNodeAtPoint(point=[L,wy, wz])
-sTip = mbs.AddSensor(SensorNode(nodeNumber=femToMbsNodeList[nodeEnd], fileName=fileDir+'tipNode_'+mode+'.txt',
+sTip = mbs.AddSensor(SensorNode(nodeNumber=femToMbsNodeList[nodeEnd], storeInternal=True, #nothing reads the file (#2492)
                          outputVariableType=exu.OutputVariableType.Displacement))
 
 
@@ -344,7 +344,7 @@ tEnd = 5
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.writeSolutionToFile = True
+simulationSettings.solutionSettings.writeSolutionToFile = False #nothing reads it (#2492)
 simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/coordinatesSolution.txt'
 # simulationSettings.solutionSettings.binarySolutionFile = True
 simulationSettings.timeIntegration.verboseMode = 1

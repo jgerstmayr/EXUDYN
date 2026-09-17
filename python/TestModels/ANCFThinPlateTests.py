@@ -191,7 +191,7 @@ for testCase, nFact in testCases.items():
     simulationSettings.timeIntegration.verboseMode = useGraphics
     simulationSettings.staticSolver.verboseMode = useGraphics
     simulationSettings.solutionSettings.solutionWritePeriod = 0.02
-    simulationSettings.solutionSettings.writeSolutionToFile = True
+    simulationSettings.solutionSettings.writeSolutionToFile = useGraphics #only the SolutionViewer reads it (#2492)
     # simulationSettings.displayComputationTime = True
 
     simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse

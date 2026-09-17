@@ -155,7 +155,7 @@ stepSize = 4e-3
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile=True
+simulationSettings.solutionSettings.writeSolutionToFile=useGraphics #only the SolutionViewer reads it (#2492)
 simulationSettings.solutionSettings.solutionWritePeriod=0.004
 simulationSettings.timeIntegration.numberOfSteps = tEnd/stepSize
 simulationSettings.timeIntegration.endTime = tEnd

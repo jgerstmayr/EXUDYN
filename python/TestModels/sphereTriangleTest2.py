@@ -161,7 +161,7 @@ for solverNum, solver in enumerate(solverList):
     mbs.Assemble()
     
     simulationSettings = exu.SimulationSettings()
-    simulationSettings.solutionSettings.writeSolutionToFile = True
+    simulationSettings.solutionSettings.writeSolutionToFile = useGraphics #only the SolutionViewer reads it (#2492)
     simulationSettings.solutionSettings.solutionWritePeriod = 0.005
     simulationSettings.solutionSettings.sensorsWritePeriod = 0.001  #output interval
 

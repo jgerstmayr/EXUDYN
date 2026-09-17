@@ -115,7 +115,7 @@ simulationSettings.timeIntegration.endTime = 5
 simulationSettings.timeIntegration.computeLoadsJacobian = 2
 # simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-simulationSettings.solutionSettings.writeSolutionToFile = True
+simulationSettings.solutionSettings.writeSolutionToFile = False #nothing reads it (#2492)
 simulationSettings.solutionSettings.solutionWritePeriod = 0.01
 
 simulationSettings.timeIntegration.verboseMode = 1

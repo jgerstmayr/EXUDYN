@@ -166,7 +166,7 @@ You can view and download this file on Github: `ANCFcontactFrictionTest.py <http
    fact = 300
    simulationSettings.timeIntegration.numberOfSteps = fact
    simulationSettings.timeIntegration.endTime = 0.0005*fact
-   simulationSettings.solutionSettings.writeSolutionToFile = True
+   simulationSettings.solutionSettings.writeSolutionToFile = useGraphics #only the SolutionViewer reads it (#2492)
    simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact
    #simulationSettings.solutionSettings.outputPrecision = 4
    #simulationSettings.displayComputationTime = True

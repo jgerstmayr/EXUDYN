@@ -820,18 +820,11 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
 **R5.13** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-13) — *(phase R5, with R5.8 and R5.9)* **Test-suite output goes to its own directory** (#2418, #2454): `exudyn.config.outputDirectory` and one output directory per model; no model writes next to itself any more.
 
 <a id="r5-13-1"></a>
-**R5.13.1** *(sub-step of R5.13)* **Stop writing what nothing reads.** Step R5.13 removed the
-    collisions; the writing itself is still there: 24 models set `writeSolutionToFile=True` and
-    32 write sensor files, although the values are read back only by `compareFullModifiedNewton`
-    (the designated writing test) and, under `useGraphics`, by 11 models that plot from the files.
-    Convert those to `storeInternal=True` with `mbs.PlotSensor`, and set `writeSolutionToFile=False`
-    where the file is never read. Also: `NGsolveCMStest`, `abaqusImportTest` and `pickleCopyMbs`
-    write generated meshes into the **tracked** `testData/` input directory
-    (`netgenTestMesh2.hdf5/.pkl`, `netgenTestMesh22.npz`), and `geneticOptimizationTest`,
-    `pickleCopyMbs` and the FEM tests write `.npz`/`.pkl`/`.h5` files through plain Python calls,
-    which `exudyn.config.outputDirectory` does not reach - these need the path in the model.
-    *(the examples half of this became R5.13.3 and is done; what remains here is the writing of
-    solution and sensor files that nothing reads)*
+**R5.13.1** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-13-1) — *(sub-step of R5.13)*
+    **Stop writing what nothing reads** (#2492): fifteen models wrote the coordinates solution file
+    on every run although only the SolutionViewer reads it, and three sensors still wrote to files.
+    74 → 64 solution files and 11 MB → 8.0 MB per suite run. The sensor half of the original step
+    text turned out to be done already, by R5.13 and R5.13.2; the examples half became R5.13.3.
 
 <a id="r5-13-2"></a>
 **R5.13.2** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-13-2) — *(sub-step of R5.13)*

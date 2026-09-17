@@ -189,7 +189,7 @@ You can view and download this file on Github: `ballBearingTest.py <https://gith
    stepSize = 1e-4
    
    simulationSettings = exu.SimulationSettings()
-   simulationSettings.solutionSettings.writeSolutionToFile = True
+   simulationSettings.solutionSettings.writeSolutionToFile = useGraphics #only the SolutionViewer reads it (#2492)
    simulationSettings.solutionSettings.solutionWritePeriod = 0.004
    simulationSettings.solutionSettings.sensorsWritePeriod = stepSize  #output interval
    simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)

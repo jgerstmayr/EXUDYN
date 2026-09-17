@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.129.dev1, 
++  Exudyn version = 1.11.130.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2492, 
-+  Number of resolved issues = 2202 (129 in current version), 
++  Number of issues = 2493, 
++  Number of resolved issues = 2203 (130 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.130: :textred:`resolved BUG 2492` : test models write solution files that nothing reads 
+    - issue author: Claude-JG
+    - description:  Fifteen test models set solutionSettings.writeSolutionToFile=True unconditionally; the coordinates solution file is then written on every suite run although it is read back only under useGraphics by the SolutionViewer - and compareFullModifiedNewton is the designated test of the writing itself. Four models already had the right form (writeSolutionToFile=False; True only if useGraphics). revision2026 step R5.13.1
+    - **notes:** Fifteen test models now write the solution file only when it is read: thirteen use writeSolutionToFile=useGraphics - the form four models already had - and ACFtest and doublePendulum2DControl set False; neither has useGraphics in scope at that point and nothing reads the file. The three remaining sensors that still wrote to a file (ANCFbeltDrive twice; ACFtest once) use storeInternal=True; PlotSensor reads the internal data. Measured over a full suite run with the output directory emptied first: 74 -> 64 coordinates solution files and 11 MB -> 8.0 MB. The sensor half of the plan step was already done by R5.13 and R5.13.2: 74 models use storeInternal and almost every sensor fileName in the test models is commented out. revision2026 step R5.13.1
+    - date resolved: **2026-09-17 20:29**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.129: :textred:`resolved BUG 2491` : examples write generated FEM data into the tracked testData/ input directory 
     - issue author: Claude-JG
     - description:  Twelve examples save meshes and FEM data under testData/ - the directory that holds the tracked INPUT files - so every run of runTestExamples.py leaves untracked netgenBrick.npz; netgenHinge.npz; netgenFFRF2.npz; FMBStest1.npz; modalAnalysisFEM.npz and test.hdf5 in the working tree; where they are easily committed by accident. Output belongs under solution/; which is ignored; through OutputFilePath as the test models already do. revision2026 step R5.13.1
