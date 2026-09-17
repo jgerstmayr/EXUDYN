@@ -4495,7 +4495,9 @@ class FEMinterface:
             plt.ylabel("eigen frequency (Hz)")
             plt.tight_layout()
             plt.legend()
-            plt.show() 
+            from exudyn.basicUtilities import UIWindowSuppressed #exudyn.special.userInterface (#2477)
+            if not UIWindowSuppressed('Plots', 'ComputeCampbellDiagram'):
+                plt.show()
 
         return [listFrequencies, campbellFrequencies]
 

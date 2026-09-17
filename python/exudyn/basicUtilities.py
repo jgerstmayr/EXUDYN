@@ -26,10 +26,10 @@ __all__ = [
     'gaussIntegrationPoints', 'gaussIntegrationWeights', 'GaussIntegrate',
     'lobattoIntegrationPoints', 'lobattoIntegrationWeights', 'LobattoIntegrate', 'GetOtherMarker',
     'GetJointArgs', 'ShowOnlyObjects', 'HighlightItem', 'UFsensorRecord', 'AddSensorRecorder',
-    'OutputFilePath', 'LoadSolutionFile', 'NumpyInt8ArrayToString', 'BinaryReadIndex',
-    'BinaryReadReal', 'BinaryReadString', 'BinaryReadArrayIndex', 'BinaryReadRealVector',
-    'LoadBinarySolutionFile', 'RecoverSolutionFile', 'InitializeFromRestartFile',
-    'SetSolutionState', 'AnimateSolution',
+    'UIWindowSuppressed', 'OutputFilePath', 'LoadSolutionFile', 'NumpyInt8ArrayToString',
+    'BinaryReadIndex', 'BinaryReadReal', 'BinaryReadString', 'BinaryReadArrayIndex',
+    'BinaryReadRealVector', 'LoadBinarySolutionFile', 'RecoverSolutionFile',
+    'InitializeFromRestartFile', 'SetSolutionState', 'AnimateSolution',
     ]
 
 #define some constants which would require external libraries
@@ -440,6 +440,37 @@ def AddSensorRecorder(mbs, sensorNumber, endTime, sensorsWritePeriod, sensorOutp
                                                    sensorUserFunction=UFsensorRecord))
     
     return sUserRecord
+
+
+#remembers which kinds already said it, so that the notice is printed ONCE per kind (#2477)
+_uiWindowNoticePrinted = set()
+
+def UIWindowSuppressed(kind, callerInfo=''):
+    """ask exudyn.special.userInterface whether this kind of window must not open (#2477)
+
+    Note:
+        The flags are set for automated runs - test runners, CI, AI-assisted development - where a
+        window that waits for a human stops everything. A suppressed call is a silent no-op, except
+        that the FIRST suppression of each kind prints one line, so that a window-less session is
+        never a mystery.
+
+    Args:
+        kind: one of 'Renderer', 'SolutionViewer', 'Plots', 'Dialogs'; the name of the flag without
+              the 'suppress' prefix
+        callerInfo: name of the calling function, shown in the notice
+
+    Returns:
+        True if the window must not be opened
+
+    Example:
+        if UIWindowSuppressed('Plots', 'PlotSensor'): return plt
+    """
+    suppressed = bool(getattr(exudyn.special.userInterface, 'suppress' + kind))
+    if suppressed and kind not in _uiWindowNoticePrinted:
+        _uiWindowNoticePrinted.add(kind)
+        print('NOTE: ' + (callerInfo + ' ' if callerInfo != '' else '')
+              + 'opens no window, because exudyn.special.userInterface.suppress' + kind + '=True')
+    return suppressed
 
 
 def OutputFilePath(fileName, callerInfo=''):

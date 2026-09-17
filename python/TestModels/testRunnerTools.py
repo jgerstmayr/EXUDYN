@@ -412,26 +412,20 @@ def PrepareExampleSource(fileString, quietMode=True):
     if fPlot != -1:
         fileString = fileString[:fPlot]+'pass\n'
 
+    #NOTE: the six substitutions that used to neutralise the renderer, the solution viewer, the
+    #dialogs and plt.show() are gone: exudyn.special.userInterface, set once in the bootstrap, does
+    #that from inside Exudyn now (revision2026 step R5.17, #2477). What is left here cuts WORK or
+    #output, which no flag can do.
     for old, new in [
-        ('mbs.SolutionViewer(', 'pass #mbs.SolutionViewer('),
-        ('SC.renderer.Start(', 'pass #SC.renderer.Start('),
-        ('SC.renderer.Stop(', 'pass #SC.renderer.Stop('),
-        ('SC.renderer.DoIdleTasks()', 'pass'),
         ('useRenderer=True', 'useRenderer=False'),
         ('useGraphics = True', 'useGraphics = False'),
         ('netgen.Redraw()', ''),
         ('import netgen.gui ', 'pass #'),
-        ('while SC.renderer.IsActive():', 'while False:'),
-        ('plt.show()', ''),
         ('plt.tight_layout()', ''),
         ('ClearWorkspace()', ''),
         ('(verbose=True)', '(verbose=False)'),     #ComputeSystemDegreeOfFreedom
         ('sys.exit()', 'pass'),
-        #massSpringFrictionInteractive.py: leave the dialog after a tenth of a second
-        ('def SimulationUF(mbs, dialog):',
-         'def SimulationUF(mbs, dialog):\n    if mbs.systemData.GetTime() > 0.1: dialog.OnQuit()'),
-        ('InteractiveDialog(', 'if False: InteractiveDialog('),
-        ('AnimateModes(', 'import sys;sys.exit();AnimateModes('),
+        ('AnimateModes(', 'import sys;sys.exit();AnimateModes('), #builds the modes before the dialog
         ('print(', 'exu.Print('),                  #may fail ...
         ]:
         fileString = fileString.replace(old, new)
@@ -466,6 +460,9 @@ sys.argv = [{exampleFileName!r}]
 import matplotlib
 matplotlib.use('Agg')  #a worker must never open a window
 import exudyn as exu
+#no renderer, no solution viewer, no dialog: a window that waits for a human would hang the worker
+#(revision2026 step R5.17). This replaces six source substitutions that did the same by rewriting.
+exu.special.userInterface.SuppressAll(True)
 #the serial runner exec'd all examples into ONE namespace, so an example could use a name that an
 #earlier one had star-imported; several do. The worker provides the same namespace explicitly,
 #so that this rework does not turn those into failures - it is the API check that matters here.
@@ -624,6 +621,7 @@ sys.argv = [{fileName!r}]
 import matplotlib
 matplotlib.use('Agg')  #a worker must never open a window
 import exudyn as exu
+exu.special.userInterface.SuppressAll(True)  #revision2026 step R5.17
 exu.config.outputDirectory = {outputDirectory!r}
 from modelUnitTests import exudynTestGlobals
 exudynTestGlobals.useGraphics = False

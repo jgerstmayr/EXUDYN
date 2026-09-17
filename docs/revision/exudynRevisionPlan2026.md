@@ -679,7 +679,7 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     after the solver was reached counts as a pass. 360 s → 49 s.
 
 <a id="r5-17"></a>
-**R5.17** *(phase R5, after R5.16)* **A switch that stops Exudyn opening windows**, so that a model
+**R5.17** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-17) — *(phase R5, after R5.16)* **A switch that stops Exudyn opening windows**, so that a model
     or an example run outside the test suite does not pop up the renderer - and so that the runners
     can stop rewriting the source to prevent it.
 

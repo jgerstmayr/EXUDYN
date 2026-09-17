@@ -487,12 +487,30 @@ void Init_Pybind_manual_classes(py::module& m) {
 			}, "return the string representation of SpecialExceptions class")
 		;
 
+	//Python version of SpecialUserInterface class
+	py::class_<PySpecialUserInterface>(m, "SpecialUserInterface", "SpecialUserInterface flags, to be handled with care")
+		.def(py::init<>())
+		//+++++++++++++++++++++++++++++++++++++++++++
+		.def_readwrite("suppressRenderer", &PySpecialUserInterface::suppressRenderer)
+		.def_readwrite("suppressSolutionViewer", &PySpecialUserInterface::suppressSolutionViewer)
+		.def_readwrite("suppressPlots", &PySpecialUserInterface::suppressPlots)
+		.def_readwrite("suppressDialogs", &PySpecialUserInterface::suppressDialogs)
+		.def("SuppressAll", &PySpecialUserInterface::SuppressAll, "set all four suppress flags at once; a run either wants windows or does not",
+			py::arg("flag") = true)
+
+		//representation:
+		.def("__repr__", [](const PySpecialUserInterface& item) {
+		return STDstring(EXUstd::ToString(item));
+			}, "return the string representation of SpecialUserInterface class")
+		;
+
 	//Python version of Special class
 	py::class_<PySpecial>(m, "Special", "Special features, to be handled with care")
 		.def(py::init<>())
 		//+++++++++++++++++++++++++++++++++++++++++++
 		.def_readwrite("solver", &PySpecial::solver)
 		.def_readwrite("exceptions", &PySpecial::exceptions)
+		.def_readwrite("userInterface", &PySpecial::userInterface)
 		.def_static("InfoStat", &PythonInfoStat, "Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag", py::arg("writeOutput") = true)
 
 #ifdef PERFORM_UNIT_TESTS

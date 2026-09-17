@@ -290,11 +290,42 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 ----
 
 
+.. _sec-basicutilities-uiwindowsuppressed:
+
+Function: UIWindowSuppressed
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`UIWindowSuppressed <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L448>`__\ (\ ``kind``\ , \ ``callerInfo = ''``\ )
+
+- | \ *function description*\ :
+  | ask exudyn.special.userInterface whether this kind of window must not open (#2477)
+- | \ *input*\ :
+  | \ ``kind``\ : one of 'Renderer', 'SolutionViewer', 'Plots', 'Dialogs'; the name of the flag without
+  | the 'suppress' prefix
+  | \ ``callerInfo``\ : name of the calling function, shown in the notice
+- | \ *output*\ :
+  | True if the window must not be opened
+- | \ *notes*\ :
+  | The flags are set for automated runs - test runners, CI, AI-assisted development - where a
+  | window that waits for a human stops everything. A suppressed call is a silent no-op, except
+  | that the FIRST suppression of each kind prints one line, so that a window-less session is
+  | never a mystery.
+- | \ *example*\ :
+
+.. code-block:: python
+
+  if UIWindowSuppressed('Plots', 'PlotSensor'): return plt
+
+
+
+
+----
+
+
 .. _sec-basicutilities-outputfilepath:
 
 Function: OutputFilePath
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`OutputFilePath <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L445>`__\ (\ ``fileName``\ , \ ``callerInfo = ''``\ )
+`OutputFilePath <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L476>`__\ (\ ``fileName``\ , \ ``callerInfo = ''``\ )
 
 - | \ *function description*\ :
   | merge a local file name with the global exudyn.config.outputDirectory, exactly as the solver
@@ -333,7 +364,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: LoadSolutionFile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`LoadSolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L487>`__\ (\ ``fileName``\ , \ ``safeMode = False``\ , \ ``maxRows = -1``\ , \ ``verbose = True``\ , \ ``hasHeader = True``\ )
+`LoadSolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L518>`__\ (\ ``fileName``\ , \ ``safeMode = False``\ , \ ``maxRows = -1``\ , \ ``verbose = True``\ , \ ``hasHeader = True``\ )
 
 - | \ *function description*\ :
   | read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary:
@@ -359,7 +390,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: NumpyInt8ArrayToString
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`NumpyInt8ArrayToString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L625>`__\ (\ ``npArray``\ )
+`NumpyInt8ArrayToString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L656>`__\ (\ ``npArray``\ )
 
 - | \ *function description*\ :
   | simple conversion of int8 arrays into strings (not highly efficient, so use only for short strings)
@@ -373,7 +404,7 @@ Function: NumpyInt8ArrayToString
 
 Function: BinaryReadIndex
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`BinaryReadIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L634>`__\ (\ ``file``\ , \ ``intType``\ )
+`BinaryReadIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L665>`__\ (\ ``file``\ , \ ``intType``\ )
 
 - | \ *function description*\ :
   | read single Index from current file position in binary solution file
@@ -387,7 +418,7 @@ Function: BinaryReadIndex
 
 Function: BinaryReadReal
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`BinaryReadReal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L642>`__\ (\ ``file``\ , \ ``realType``\ )
+`BinaryReadReal <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L673>`__\ (\ ``file``\ , \ ``realType``\ )
 
 - | \ *function description*\ :
   | read single Real from current file position in binary solution file
@@ -401,7 +432,7 @@ Function: BinaryReadReal
 
 Function: BinaryReadString
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`BinaryReadString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L650>`__\ (\ ``file``\ , \ ``intType``\ )
+`BinaryReadString <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L681>`__\ (\ ``file``\ , \ ``intType``\ )
 
 - | \ *function description*\ :
   | read string from current file position in binary solution file
@@ -415,7 +446,7 @@ Function: BinaryReadString
 
 Function: BinaryReadArrayIndex
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`BinaryReadArrayIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L658>`__\ (\ ``file``\ , \ ``intType``\ )
+`BinaryReadArrayIndex <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L689>`__\ (\ ``file``\ , \ ``intType``\ )
 
 - | \ *function description*\ :
   | read Index array from current file position in binary solution file
@@ -429,7 +460,7 @@ Function: BinaryReadArrayIndex
 
 Function: BinaryReadRealVector
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`BinaryReadRealVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L666>`__\ (\ ``file``\ , \ ``intType``\ , \ ``realType``\ )
+`BinaryReadRealVector <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L697>`__\ (\ ``file``\ , \ ``intType``\ , \ ``realType``\ )
 
 - | \ *function description*\ :
   | read Real vector from current file position in binary solution file
@@ -445,7 +476,7 @@ Function: BinaryReadRealVector
 
 Function: LoadBinarySolutionFile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`LoadBinarySolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L680>`__\ (\ ``fileName``\ , \ ``maxRows = -1``\ , \ ``verbose = True``\ )
+`LoadBinarySolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L711>`__\ (\ ``fileName``\ , \ ``maxRows = -1``\ , \ ``verbose = True``\ )
 
 - | \ *function description*\ :
   | read BINARY coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary
@@ -465,7 +496,7 @@ Function: LoadBinarySolutionFile
 
 Function: RecoverSolutionFile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RecoverSolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L866>`__\ (\ ``fileName``\ , \ ``newFileName``\ , \ ``verbose = 0``\ )
+`RecoverSolutionFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L897>`__\ (\ ``fileName``\ , \ ``newFileName``\ , \ ``verbose = 0``\ )
 
 - | \ *function description*\ :
   | recover solution file with last row not completely written (e.g., if crashed, interrupted or no flush file option set)
@@ -485,7 +516,7 @@ Function: RecoverSolutionFile
 
 Function: InitializeFromRestartFile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`InitializeFromRestartFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L925>`__\ (\ ``mbs``\ , \ ``simulationSettings``\ , \ ``restartFileName``\ , \ ``verbose = True``\ )
+`InitializeFromRestartFile <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L956>`__\ (\ ``mbs``\ , \ ``simulationSettings``\ , \ ``restartFileName``\ , \ ``verbose = True``\ )
 
 - | \ *function description*\ :
   | recover initial coordinates, time, etc. from given restart file
@@ -506,7 +537,7 @@ Function: InitializeFromRestartFile
 
 Function: SetSolutionState
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-`SetSolutionState <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L1001>`__\ (\ ``mbs``\ , \ ``solution``\ , \ ``row``\ , \ ``configuration = exudyn.ConfigurationType.Current``\ , \ ``sendRedrawSignal = True``\ )
+`SetSolutionState <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L1032>`__\ (\ ``mbs``\ , \ ``solution``\ , \ ``row``\ , \ ``configuration = exudyn.ConfigurationType.Current``\ , \ ``sendRedrawSignal = True``\ )
 
 - | \ *function description*\ :
   | load selected row of solution dictionary (previously loaded with LoadSolutionFile) into specific state; flag sendRedrawSignal is only used if configuration = exudyn.ConfigurationType.Visualization
@@ -520,7 +551,7 @@ Function: SetSolutionState
 
 Function: AnimateSolution
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-`AnimateSolution <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L1027>`__\ (\ ``mbs``\ , \ ``solution``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``createImages = False``\ , \ ``runLoop = False``\ )
+`AnimateSolution <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/basicUtilities.py\#L1058>`__\ (\ ``mbs``\ , \ ``solution``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``createImages = False``\ , \ ``runLoop = False``\ )
 
 - | \ *function description*\ :
   | This function is not further maintaned and should only be used if you do not have tkinter (like on some MacOS versions); use exudyn.interactive.SolutionViewer() instead! AnimateSolution consecutively load the rows of a solution file and visualize the result

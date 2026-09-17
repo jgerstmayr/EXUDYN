@@ -9,15 +9,24 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.112.dev1, 
+  \item Exudyn version = 1.11.113.dev1, 
   \item last change =  2026-09-17, 
-  \item Number of issues = 2477, 
-  \item Number of resolved issues = 2185 (112 in current version), 
+  \item Number of issues = 2478, 
+  \item Number of resolved issues = 2186 (113 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.113}:  resolved Issue 2477: {\bf Exudyn has no way to say do not open windows}
+(improvement)
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: A model or an example run outside the test suite opens the renderer and waits for the human - there is no switch for it. The test runners therefore REWRITE the source before running it (six substitutions in testRunnerTools.PrepareExampleSource neutralise SC.renderer.Start/Stop/DoIdleTasks/IsActive, mbs.SolutionViewer, InteractiveDialog and plt.show), which only works for code the runner controls. Needed: exudyn.special.userInterface with suppressRenderer, suppressSolutionViewer, suppressPlots and suppressDialogs, readable from C++ (the renderer window and idle loop live there) and from the Python helpers, plus the environment variables EXUDYN\_SUPPRESS\_UI\_WINDOW\_OPEN and EXUDYN\_OUTPUTDIRECTORY for automated runs. revision2026 step R5.17.}
+    \item {\bf notes: New group exu.special.userInterface (PySpecialUserInterface next to PySpecialSolver and PySpecialExceptions) with suppressRenderer, suppressSolutionViewer, suppressPlots, suppressDialogs and SuppressAll(). The renderer honours them in C++ (Start returns False, IsActive is False so a while-IsActive loop ends at once, DoIdleTasks returns), the Python helpers through basicUtilities.UIWindowSuppressed, which also prints ONE notice per kind. \_\_init\_\_.py reads EXUDYN\_SUPPRESS\_UI\_WINDOW\_OPEN and EXUDYN\_OUTPUTDIRECTORY once, each in try/except and each announced; the first also switches matplotlib to Agg, which is the only thing that reaches the 29 examples and 9 models calling plt.show() themselves. Six source substitutions deleted from the test runners. Verified: 171 examples with the same 5 pre-existing failures, suite PASSED, pytest 136 passed. revision2026 step R5.17.}
+    \item   date resolved: {\bf 2026-09-17 13:01},
+date raised: 2026-09-17 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.112}: {\bf \color{warningRed}  resolved BUG 2474}: {\bf MatrixContainer::MultMatrixVector has two preconditions depending on its mode}
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

@@ -88,6 +88,16 @@ These are the access functions to the Exudyn module. General usage is explained 
   | special flags for exceptions and checks; not intended for regular users; for available features, see the C++ code class PySpecialExceptions
 * | **special.exceptions.parameterRangeChecks**:
   | if True (=default), writing an item or settings parameter outside its range (e.g. a negative mass or a non-positive number of steps) raises an error, on every write path (item classes, dictionaries, SetObjectParameter, ...); set False to accept any value, e.g. if a range limit turns out to be wrong
+* | **special.userInterface**:
+  | flags that stop Exudyn from opening windows; meant for automated runs (test runners, CI, AI-assisted development), where a window that waits for a human stops everything; not intended for regular users; for available features, see the C++ code class PySpecialUserInterface
+* | **special.userInterface.suppressRenderer**:
+  | if True, SC.renderer.Start() returns immediately without opening a window, IsActive() is False - so that a "while SC.renderer.IsActive()" loop ends at once - and DoIdleTasks() does nothing; default=False
+* | **special.userInterface.suppressSolutionViewer**:
+  | if True, mbs.SolutionViewer(...) and AnimateModes(...) return immediately instead of opening the viewer; default=False
+* | **special.userInterface.suppressPlots**:
+  | if True, PlotSensor and the other plotting helpers do not show a plot window; figures are still drawn and a figure given a file name is still saved; setting the environment variable EXUDYN_SUPPRESS_UI_WINDOW_OPEN additionally switches matplotlib to the non-interactive Agg backend, which also silences a plt.show() written in a script; default=False
+* | **special.userInterface.suppressDialogs**:
+  | if True, InteractiveDialog and the other tkinter dialogs return their defaults instead of opening a window; default=False
 * | **variables**:
   | this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables["myvar"] = 42; can be used in particular to exchange data between different mbs or between packages by importing exudyn.variables wherever needed.
 * | **sys**:

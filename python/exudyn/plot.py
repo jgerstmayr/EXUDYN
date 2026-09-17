@@ -17,6 +17,7 @@ import exudyn #for sensor index
 from exudyn.extensionRegistry import extends
 from exudyn.advancedUtilities import PlotLineCode, IsListOrArray, IsEmptyList
 from exudyn.basicUtilities import OutputFilePath #merge with exudyn.config.outputDirectory (#2454)
+from exudyn.basicUtilities import UIWindowSuppressed #exudyn.special.userInterface (#2477)
 import copy
 import os
 
@@ -758,7 +759,8 @@ def PlotFFT(frequency, data,
     ax.minorticks_on()
 
     plt.tight_layout()
-    plt.show() 
+    if not UIWindowSuppressed('Plots', 'PlotFFT'):
+        plt.show()
 
     return plt
 
@@ -1042,8 +1044,9 @@ def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidth
     # plt.margins(0.1)
 
     plt.tight_layout() #not needed
-    if matplotlib.get_backend() != 'agg': #this is used to avoid showing the figures, if they are just saved
-        plt.show() 
+    #'agg' is the non-interactive backend, used when the figures are only saved (#2477)
+    if matplotlib.get_backend() != 'agg' and not UIWindowSuppressed('Plots', 'PlotSensor'):
+        plt.show()
     
     if fileName != '':
         try:

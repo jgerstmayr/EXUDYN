@@ -353,21 +353,36 @@ void MainSystemContainer::SendRedrawSignal()
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //MainRenderer
 
+//! say ONCE that windows are suppressed; a window-less session must never be a mystery (#2477)
+void PrintRendererSuppressedNotice()
+{
+	if (!pySpecial.userInterface.rendererNoticePrinted)
+	{
+		pySpecial.userInterface.rendererNoticePrinted = true;
+		pout << "NOTE: the renderer is suppressed by exudyn.special.userInterface.suppressRenderer; "
+			<< "no window is opened\n";
+	}
+}
+
 //! start render engine
 bool MainRenderer::Start(Index verbose)
 {
+	if (pySpecial.userInterface.suppressRenderer) { PrintRendererSuppressedNotice(); return false; }
 	return PyStartOpenGLRenderer(verbose, false); //false=no deprecation warning
 }
 
 //! stop render engine
 void MainRenderer::Stop()
 {
+	if (pySpecial.userInterface.suppressRenderer) { return; } //nothing was started (#2477)
 	PyStopOpenGLRenderer(false);
 }
 
 //! check if render engine is activated
 bool MainRenderer::IsActive() const
 {
+	//False also ends a 'while SC.renderer.IsActive():' loop at once, which is the whole point (#2477)
+	if (pySpecial.userInterface.suppressRenderer) { return false; }
 	return PyIsRendererActive(false);
 }
 
@@ -387,6 +402,9 @@ bool MainRenderer::Detach()
 //! if -1, it waits for continue/stop; otherwise wait milliseconds (0=no wait)
 bool MainRenderer::DoIdleTasks(Real waitSeconds, bool printPauseMessage)
 {
+	//without a window there is nothing to idle for, and waitSeconds=-1 would wait forever (#2477)
+	if (pySpecial.userInterface.suppressRenderer) { PrintRendererSuppressedNotice(); return true; }
+
 	VisualizationSystemContainer& VSC = mainSystemContainer->GetVisualizationSystemContainer();
 	if (!IsActive()) { VSC.InitializeRenderState(true, true); } //if first call to inactive renderer->initialize RenderState
 

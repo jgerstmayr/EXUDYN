@@ -1456,7 +1456,7 @@ Class function: ComputeCampbellDiagram
 
 Class function: CheckConsistency
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`CheckConsistency <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L4502>`__\ (\ ``self``\ )
+`CheckConsistency <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L4504>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | perform some consistency checks
@@ -1467,7 +1467,7 @@ Class function: CheckConsistency
 
 Class function: ReadMassMatrixFromAnsys
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ReadMassMatrixFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L4524>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``dofMappingVectorFile``\ , \ ``sparse = True``\ , \ ``verbose = False``\ )
+`ReadMassMatrixFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L4526>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``dofMappingVectorFile``\ , \ ``sparse = True``\ , \ ``verbose = False``\ )
 
 - | \ *classFunction*\ :
   | read mass matrix from CSV format (exported from Ansys)
@@ -1478,7 +1478,7 @@ Class function: ReadMassMatrixFromAnsys
 
 Class function: ReadStiffnessMatrixFromAnsys
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ReadStiffnessMatrixFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L4541>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``dofMappingVectorFile``\ , \ ``sparse = True``\ , \ ``verbose = False``\ )
+`ReadStiffnessMatrixFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L4543>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``dofMappingVectorFile``\ , \ ``sparse = True``\ , \ ``verbose = False``\ )
 
 - | \ *classFunction*\ :
   | read stiffness matrix from CSV format (exported from Ansys)
@@ -1489,7 +1489,7 @@ Class function: ReadStiffnessMatrixFromAnsys
 
 Class function: ReadNodalCoordinatesFromAnsys
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ReadNodalCoordinatesFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L4558>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``verbose = False``\ )
+`ReadNodalCoordinatesFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L4560>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``verbose = False``\ )
 
 - | \ *classFunction*\ :
   | read nodal coordinates (exported from Ansys as .txt-File)
@@ -1500,7 +1500,7 @@ Class function: ReadNodalCoordinatesFromAnsys
 
 Class function: ReadElementsFromAnsys
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ReadElementsFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L4565>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``verbose = False``\ )
+`ReadElementsFromAnsys <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/FEM.py\#L4567>`__\ (\ ``self``\ , \ ``fileName``\ , \ ``verbose = False``\ )
 
 - | \ *classFunction*\ :
   | read elements (exported from Ansys as .txt-File)

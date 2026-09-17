@@ -15,6 +15,7 @@
 
 from exudyn.docmeta import docmeta
 from exudyn.basicUtilities import OutputFilePath #exudyn.config.outputDirectory (#2454)
+from exudyn.basicUtilities import UIWindowSuppressed #exudyn.special.userInterface (#2477)
 import numpy as np
 import sys
 import time
@@ -1289,7 +1290,8 @@ def PlotOptimizationResults2D(parameterList, valueList, xLogScale=False, yLogSca
         plt.tight_layout()
         plt.legend()
 
-    plt.show() 
+    if not UIWindowSuppressed('Plots', 'ParameterVariationPlot'):
+        plt.show()
     return [figList, axList]
 
 

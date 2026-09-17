@@ -4810,6 +4810,67 @@ The remaining offenders are in `python/Examples/publications/`, which the suite 
 the generated meshes of step R5.13.1. `coordinatesSolution.txt` from a local run stays where it is
 by decision: it is the one output a user expects next to the model.
 
+<a id="r5-17"></a>
+### R5.17 - Exudyn can be told not to open windows
+
+**DONE 2026-09-17** (#2477).
+
+A model run outside the test suite opened the renderer and waited for a human. There was no switch
+for it, so the runners **rewrote the source** before running it: six of the substitutions in
+`PrepareExampleSource` existed only to neutralise `SC.renderer.Start/Stop/DoIdleTasks`, the
+`while SC.renderer.IsActive():` loop, `mbs.SolutionViewer`, `InteractiveDialog` and `plt.show()`.
+That works for code the runner controls and for nothing else.
+
+**`exu.special.userInterface`** now holds four flags, all default `False`, next to the existing
+`special.solver` and `special.exceptions`:
+
+| flag | effect |
+|---|---|
+| `suppressRenderer` | `Start()` returns `False` without a window, `IsActive()` is `False`, `DoIdleTasks()` does nothing |
+| `suppressSolutionViewer` | `SolutionViewer` and `AnimateModes` return immediately |
+| `suppressPlots` | `PlotSensor`, `PlotFFT`, `ParameterVariationPlot` and the Campbell diagram skip `plt.show()`; figures are still drawn and saved |
+| `suppressDialogs` | `InteractiveDialog` builds nothing and `InteractiveImages2Video` returns |
+
+`SuppressAll(True)` sets all four. `PySpecialUserInterface` is a C++ class like its two
+neighbours, so the renderer (C++) and the Python helpers read **one** value.
+
+**`IsActive()` returning False is the load-bearing detail**: it is what makes
+`while SC.renderer.IsActive():` end at once instead of spinning, and it is why that substitution
+could be deleted rather than replaced.
+
+**One notice per kind, not per call.** A suppressed call is silent except for the first one, which
+says which flag suppressed it - a window-less session must never be a mystery. The C++ side
+remembers this in a flag not exposed to Python, the Python side in
+`basicUtilities.UIWindowSuppressed(kind, callerInfo)`, the one helper every Python site calls.
+
+**Two environment variables, read once in `__init__.py`** (the first Exudyn reads at runtime -
+`getenv` appeared nowhere outside `setup.py`): `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` sets the four
+flags, `EXUDYN_OUTPUTDIRECTORY` sets `exu.config.outputDirectory`, which could only be set from
+Python before. Both **announce themselves on import** and both are wrapped in `try/except` - an
+environment that cannot be applied must never stop `import exudyn`. They are documented as being
+for test runners, CI and AI-assisted development, not for users: a setting that lives outside the
+script makes a run behave differently than it reads.
+
+**What the flag cannot reach, and what does.** `PlotSensor` calls `plt.show()` itself, so the
+package side follows the flag. But **29 examples and 9 test models call `plt.show()` directly**,
+having imported matplotlib themselves. Nothing inside Exudyn can intercept those, so setting the
+environment variable also switches matplotlib to the non-interactive **Agg** backend - one place
+instead of 38 edited scripts, and every script written later is covered too. Figures are still
+drawn and saved under Agg; only the window disappears.
+
+**The runners got smaller**: six substitutions deleted (renderer, viewer, dialog, `plt.show`),
+including the `massSpringFrictionInteractive` hack that injected a `dialog.OnQuit()` into a user
+function. Both bootstraps now say `exu.special.userInterface.SuppressAll(True)` instead. What
+remains rewrites WORK, not windows: `useGraphics = True`, `useRenderer=True`, `netgen.gui`,
+`ClearWorkspace()`, `verbose`, `showProgress`, `numberOfGenerations`, `useMultiProcessing`.
+
+**Verified**: 171 examples run, **the same 5 failures as before the change** (`humanRobotInteraction`,
+`NGsolveGeometry`, `pymeshlabFileImport`, `rendererNOGLFWexample`, `stlFileImport` - all
+pre-existing); `runTestSuite.py` PASSED; `pytest -q -n 8` 136 passed; and by hand: with the flags
+set, `Start()` is `False`, `IsActive()` is `False`, `DoIdleTasks(-1)` returns instead of waiting
+forever, `SolutionViewer` and `InteractiveImages2Video` return, and with the environment variable
+set the backend is `Agg` and `config.outputDirectory` is what the variable said.
+
 ## R6 — Error handling and UX
 
 <a id="r5-14"></a>

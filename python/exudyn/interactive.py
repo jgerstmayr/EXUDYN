@@ -16,6 +16,7 @@ from math import sin, pi #for animation
 #import time        
 import copy           #copy numpy objects
 import exudyn
+from exudyn.basicUtilities import UIWindowSuppressed #exudyn.special.userInterface (#2477)
 from exudyn.extensionRegistry import extends
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -113,6 +114,11 @@ class InteractiveDialog:
         Note:
             detailed description of dialogItems and plots list/dictionary is given in commented the example below
         """
+        #an automated run must not open a dialog that waits for a human (#2477); the object is
+        #created but does nothing, so that a caller holding on to it does not fail
+        self.suppressed = UIWindowSuppressed('Dialogs', 'InteractiveDialog')
+        if self.suppressed: return
+
         try:
             import tkinter
             import tkinter.font as tkFont
@@ -642,6 +648,8 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
             if type(vec) != list or len(vec) < mbs.systemData.ODE2Size():
                 raise ValueError('AnimateModes: in case that nodeNumber=None, systemEigenVectors must at least have ODE2 size components')
 
+    if UIWindowSuppressed('SolutionViewer', 'AnimateModes'): return
+
     if (runMode < 0 or runMode > 3):
         raise ValueError('AnimateModes: illegal run mode:', runMode)
     
@@ -813,6 +821,8 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
         sol = LoadSolutionFile('coordinatesSolution.txt') #load solution: adjust to your file name
         mbs.SolutionViewer(sol) #call via MainSystem
     """
+    if UIWindowSuppressed('SolutionViewer', 'SolutionViewer'): return
+
     from exudyn.basicUtilities import SetSolutionState, LoadSolutionFile, OutputFilePath
     
     mbs = mainSystem
@@ -1023,6 +1033,8 @@ def ConvertImages2Video(workingDir='images',
 def InteractiveImages2Video(closeAfterCreation=False,fontSize=11):
     """interactive dialog to convert generated images to videos using ffmpeg library; see also ConvertImages2Video() for meaning of values; requires ffmpeg-python to be installed
     """
+    if UIWindowSuppressed('Dialogs', 'InteractiveImages2Video'): return
+
     try:
         import tkinter
         import tkinter.font as tkFont

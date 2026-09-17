@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.112.dev1, 
++  Exudyn version = 1.11.113.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2477, 
-+  Number of resolved issues = 2185 (112 in current version), 
++  Number of issues = 2478, 
++  Number of resolved issues = 2186 (113 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.113: resolved Issue 2477: Exudyn has no way to say do not open windows (improvement)
+    - issue author: Claude-JG
+    - description:  A model or an example run outside the test suite opens the renderer and waits for the human - there is no switch for it. The test runners therefore REWRITE the source before running it (six substitutions in testRunnerTools.PrepareExampleSource neutralise SC.renderer.Start/Stop/DoIdleTasks/IsActive, mbs.SolutionViewer, InteractiveDialog and plt.show), which only works for code the runner controls. Needed: exudyn.special.userInterface with suppressRenderer, suppressSolutionViewer, suppressPlots and suppressDialogs, readable from C++ (the renderer window and idle loop live there) and from the Python helpers, plus the environment variables EXUDYN_SUPPRESS_UI_WINDOW_OPEN and EXUDYN_OUTPUTDIRECTORY for automated runs. revision2026 step R5.17.
+    - **notes:** New group exu.special.userInterface (PySpecialUserInterface next to PySpecialSolver and PySpecialExceptions) with suppressRenderer, suppressSolutionViewer, suppressPlots, suppressDialogs and SuppressAll(). The renderer honours them in C++ (Start returns False, IsActive is False so a while-IsActive loop ends at once, DoIdleTasks returns), the Python helpers through basicUtilities.UIWindowSuppressed, which also prints ONE notice per kind. __init__.py reads EXUDYN_SUPPRESS_UI_WINDOW_OPEN and EXUDYN_OUTPUTDIRECTORY once, each in try/except and each announced; the first also switches matplotlib to Agg, which is the only thing that reaches the 29 examples and 9 models calling plt.show() themselves. Six source substitutions deleted from the test runners. Verified: 171 examples with the same 5 pre-existing failures, suite PASSED, pytest 136 passed. revision2026 step R5.17.
+    - date resolved: **2026-09-17 13:01**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.112: :textred:`resolved BUG 2474` : MatrixContainer::MultMatrixVector has two preconditions depending on its mode 
     - issue author: Claude-JG
     - description:  The dense path calls MultMatrixVectorTemplate, which does result.SetNumberOfItems(rows); the sparse path calls SparseTripletMatrix::MultMatrixVector, which only does solution.SetAll(0.) and then indexes solution[triplet.row()]. So the same call with an unsized result vector works for a dense container and, for a sparse one, throws in a checked build and writes OUT OF BOUNDS in exudynCPPfast. One interface must not have two preconditions: size the vector in the sparse path as well. Found by the unit tests of revision2026 step R5.4.1.

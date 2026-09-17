@@ -14,7 +14,7 @@ Utilities for interactive simulation and results monitoring; NOTE: does not work
 
 Function: AnimateModes
 ^^^^^^^^^^^^^^^^^^^^^^
-`AnimateModes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L592>`__\ (\ ``systemContainer``\ , \ ``mainSystem``\ , \ ``nodeNumber``\ , \ ``period = 0.04``\ , \ ``stepsPerPeriod = 30``\ , \ ``showTime = True``\ , \ ``renderWindowText = ''``\ , \ ``runOnStart = False``\ , \ ``runMode = 0``\ , \ ``scaleAmplitude = 1``\ , \ ``title = ''``\ , \ ``fontSize = 12``\ , \ ``checkRenderEngineStopFlag = True``\ , \ ``systemEigenVectors = None``\ )
+`AnimateModes <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L598>`__\ (\ ``systemContainer``\ , \ ``mainSystem``\ , \ ``nodeNumber``\ , \ ``period = 0.04``\ , \ ``stepsPerPeriod = 30``\ , \ ``showTime = True``\ , \ ``renderWindowText = ''``\ , \ ``runOnStart = False``\ , \ ``runMode = 0``\ , \ ``scaleAmplitude = 1``\ , \ ``title = ''``\ , \ ``fontSize = 12``\ , \ ``checkRenderEngineStopFlag = True``\ , \ ``systemEigenVectors = None``\ )
 
 - | \ *function description*\ :
   | animate modes of ObjectFFRFreducedOrder, of nodal coordinates (changes periodically one nodal coordinate) or of a list of system modes provided as list of lists; for creating snapshots, press 'Static' and 'Record frames' and press 'Run' to save one figure in the image subfolder; for creating animations for one mode, use the same procedure but use 'One Cycle'. Modes may be inverted by pressing according '+' and '-' buttons next to Amplitude.
@@ -49,7 +49,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
 Function: SolutionViewer
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`SolutionViewer <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L790>`__\ (\ ``mainSystem``\ , \ ``solution = None``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``runOnStart = True``\ , \ ``runMode = 2``\ , \ ``fontSize = 12``\ , \ ``title = ''``\ , \ ``checkRenderEngineStopFlag = True``\ )
+`SolutionViewer <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L798>`__\ (\ ``mainSystem``\ , \ ``solution = None``\ , \ ``rowIncrement = 1``\ , \ ``timeout = 0.04``\ , \ ``runOnStart = True``\ , \ ``runMode = 2``\ , \ ``fontSize = 12``\ , \ ``title = ''``\ , \ ``checkRenderEngineStopFlag = True``\ )
 
 
 - | **NOTE**\ : this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolutionViewer(...). For description of the interface, see the MainSystem Python extensions,  :ref:`sec-mainsystemextensions-solutionviewer`\ 
@@ -63,7 +63,7 @@ Function: SolutionViewer
 
 Function: ConvertImages2Video
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ConvertImages2Video <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L965>`__\ (\ ``workingDir = 'images'``\ , \ ``inputPattern = 'frame%05d.png'``\ , \ ``outputFile = 'animation.mp4'``\ , \ ``inputFrameRate = 25``\ , \ ``outputFrameRate = 25``\ , \ ``compressionCRF = 28``\ , \ ``startNumber = 0``\ , \ ``totalFrames = None``\ )
+`ConvertImages2Video <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L975>`__\ (\ ``workingDir = 'images'``\ , \ ``inputPattern = 'frame%05d.png'``\ , \ ``outputFile = 'animation.mp4'``\ , \ ``inputFrameRate = 25``\ , \ ``outputFrameRate = 25``\ , \ ``compressionCRF = 28``\ , \ ``startNumber = 0``\ , \ ``totalFrames = None``\ )
 
 - | \ *function description*\ :
   | function to call ffmpeg in the background and convert images to video; requires ffmpeg-python to be installed
@@ -97,7 +97,7 @@ Function: ConvertImages2Video
 
 Function: InteractiveImages2Video
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`InteractiveImages2Video <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L1023>`__\ (\ ``closeAfterCreation = False``\ , \ ``fontSize = 11``\ )
+`InteractiveImages2Video <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L1033>`__\ (\ ``closeAfterCreation = False``\ , \ ``fontSize = 11``\ )
 
 - | \ *function description*\ :
   | interactive dialog to convert generated images to videos using ffmpeg library; see also ConvertImages2Video() for meaning of values; requires ffmpeg-python to be installed
@@ -172,7 +172,7 @@ CLASS InteractiveDialog (in module interactive)
 
 Class function: __init__
 ^^^^^^^^^^^^^^^^^^^^^^^^
-`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L84>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``simulationSettings``\ , \ ``simulationFunction``\ , \ ``dialogItems``\ , \ ``plots = None``\ , \ ``period = 0.04``\ , \ ``realtimeFactor = 1``\ , \ ``userStartSimulation = None``\ , \ ``title = ''``\ , \ ``showTime = False``\ , \ ``fontSize = 12``\ , \ ``doTimeIntegration = True``\ , \ ``runOnStart = False``\ , \ ``addLabelStringVariables = False``\ , \ ``addSliderVariables = False``\ , \ ``checkRenderEngineStopFlag = True``\ , \ ``userOnChange = None``\ , \ ``useSysVariables = False``\ )
+`__init__ <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L85>`__\ (\ ``self``\ , \ ``mbs``\ , \ ``simulationSettings``\ , \ ``simulationFunction``\ , \ ``dialogItems``\ , \ ``plots = None``\ , \ ``period = 0.04``\ , \ ``realtimeFactor = 1``\ , \ ``userStartSimulation = None``\ , \ ``title = ''``\ , \ ``showTime = False``\ , \ ``fontSize = 12``\ , \ ``doTimeIntegration = True``\ , \ ``runOnStart = False``\ , \ ``addLabelStringVariables = False``\ , \ ``addSliderVariables = False``\ , \ ``checkRenderEngineStopFlag = True``\ , \ ``userOnChange = None``\ , \ ``useSysVariables = False``\ )
 
 - | \ *classFunction*\ :
   | initialize an InteractiveDialog
@@ -204,7 +204,7 @@ Class function: __init__
 
 Class function: OnQuit
 ^^^^^^^^^^^^^^^^^^^^^^
-`OnQuit <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L360>`__\ (\ ``self``\ , \ ``event = None``\ )
+`OnQuit <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L366>`__\ (\ ``self``\ , \ ``event = None``\ )
 
 - | \ *classFunction*\ :
   | function called when pressing escape or closing dialog
@@ -215,7 +215,7 @@ Class function: OnQuit
 
 Class function: StartSimulation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`StartSimulation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L370>`__\ (\ ``self``\ , \ ``event = None``\ )
+`StartSimulation <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L376>`__\ (\ ``self``\ , \ ``event = None``\ )
 
 - | \ *classFunction*\ :
   | function called on button 'Run'
@@ -226,7 +226,7 @@ Class function: StartSimulation
 
 Class function: ProcessWidgetStates
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ProcessWidgetStates <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L384>`__\ (\ ``self``\ )
+`ProcessWidgetStates <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L390>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | assign current values of radio buttons and sliders to mbs.variables or mbs.sys
@@ -237,7 +237,7 @@ Class function: ProcessWidgetStates
 
 Class function: ContinuousRunFunction
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`ContinuousRunFunction <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L400>`__\ (\ ``self``\ , \ ``event = None``\ )
+`ContinuousRunFunction <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L406>`__\ (\ ``self``\ , \ ``event = None``\ )
 
 - | \ *classFunction*\ :
   | function which is repeatedly called when button 'Run' is pressed
@@ -248,7 +248,7 @@ Class function: ContinuousRunFunction
 
 Class function: InitializePlots
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`InitializePlots <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L419>`__\ (\ ``self``\ )
+`InitializePlots <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L425>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | initialize figure and subplots for plots structure
@@ -259,7 +259,7 @@ Class function: InitializePlots
 
 Class function: UpdatePlots
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`UpdatePlots <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L467>`__\ (\ ``self``\ )
+`UpdatePlots <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L473>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | update all subplots with current sensor values
@@ -270,7 +270,7 @@ Class function: UpdatePlots
 
 Class function: InitializeSolver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`InitializeSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L524>`__\ (\ ``self``\ )
+`InitializeSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L530>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | function to initialize solver for repeated calls
@@ -281,7 +281,7 @@ Class function: InitializeSolver
 
 Class function: FinalizeSolver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`FinalizeSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L531>`__\ (\ ``self``\ )
+`FinalizeSolver <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L537>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | stop solver (finalize correctly)
@@ -292,12 +292,12 @@ Class function: FinalizeSolver
 
 Class function: RunSimulationPeriod
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-`RunSimulationPeriod <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L538>`__\ (\ ``self``\ )
+`RunSimulationPeriod <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/exudyn/interactive.py\#L544>`__\ (\ ``self``\ )
 
 - | \ *classFunction*\ :
   | function which performs short simulation for given period
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github:
 
-    \ `massSpringFrictionInteractive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py>`_\  (Ex), \ `nMassOscillatorInteractive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py>`_\  (Ex), \ `serialRobotInteractiveLimits.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInteractiveLimits.py>`_\  (Ex), \ `simulateInteractively.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simulateInteractively.py>`_\  (Ex), \ `testRunnerTools.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/TestModels/testRunnerTools.py>`_\  (TM)
+    \ `massSpringFrictionInteractive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/massSpringFrictionInteractive.py>`_\  (Ex), \ `nMassOscillatorInteractive.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/nMassOscillatorInteractive.py>`_\  (Ex), \ `serialRobotInteractiveLimits.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/serialRobotInteractiveLimits.py>`_\  (Ex), \ `simulateInteractively.py <https://github.com/jgerstmayr/EXUDYN/blob/master/main/pythonDev/Examples/simulateInteractively.py>`_\  (Ex)
 

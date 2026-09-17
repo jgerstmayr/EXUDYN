@@ -138,6 +138,62 @@ public:
 
 };
 
+//!flags that stop Exudyn from opening windows: the renderer, the solution viewer, plot windows and
+//!dialogs. Meant for automated runs (test runners, CI, AI-assisted development), where a window
+//!that waits for a human stops everything (#2477)
+class PySpecialUserInterface
+{
+public:
+    bool suppressRenderer;                  //!< Start() returns at once, IsActive() is false, DoIdleTasks() does nothing
+    bool suppressSolutionViewer;            //!< SolutionViewer and AnimateModes return immediately
+    bool suppressPlots;                     //!< plot windows are not shown; figures are still drawn and saved
+    bool suppressDialogs;                   //!< tkinter dialogs return their defaults instead of opening
+
+    //!a suppressed call is silent except for ONE notice per kind, so that a window-less session is
+    //!never a mystery; these are not exposed to Python, they only remember what was said already
+    mutable bool rendererNoticePrinted;
+
+    PySpecialUserInterface()
+    {
+        Initialize();
+    }
+
+    void Initialize()
+    {
+        suppressRenderer = false;
+        suppressSolutionViewer = false;
+        suppressPlots = false;
+        suppressDialogs = false;
+        rendererNoticePrinted = false;
+    }
+
+    //! set all four flags at once; the usual case, as a run either wants windows or does not
+    void SuppressAll(bool flag = true)
+    {
+        suppressRenderer = flag;
+        suppressSolutionViewer = flag;
+        suppressPlots = flag;
+        suppressDialogs = flag;
+    }
+
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    virtual void Print(std::ostream& os) const
+    {
+        os << "  suppressRenderer = " << suppressRenderer << "\n";
+        os << "  suppressSolutionViewer = " << suppressSolutionViewer << "\n";
+        os << "  suppressPlots = " << suppressPlots << "\n";
+        os << "  suppressDialogs = " << suppressDialogs << "\n";
+        os << "\n";
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const PySpecialUserInterface& item)
+    {
+        item.Print(os);
+        return os;
+    }
+
+};
+
 //!class with according structure in PybindModule.cpp which can be accessed from Python and inside C++
 //!used for special features and global settings
 class PySpecial
@@ -145,6 +201,7 @@ class PySpecial
 public:
     PySpecialSolver solver;
     PySpecialExceptions exceptions;
+    PySpecialUserInterface userInterface;
 
     PySpecial()
     {
@@ -155,6 +212,7 @@ public:
     {
         solver.Initialize();
         exceptions.Initialize();
+        userInterface.Initialize();
     }
 
     //! put RunCppUnitTests into special class
@@ -175,6 +233,7 @@ public:
     {
         os << "solver:\n" << solver;
         os << "exceptions:\n" << exceptions;
+        os << "userInterface:\n" << userInterface;
         //os << "  InfoStat() = " << InfoStat(false) << "\n";
         os << "\n";
     }

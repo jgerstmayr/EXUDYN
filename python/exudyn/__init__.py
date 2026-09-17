@@ -120,6 +120,38 @@ except:
     from mainSystemExtensions import JointPreCheckCalcBodyMarkers
 
 
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#two environment variables, read ONCE at import (#2477). They exist for automated runs - test
+#runners, CI, AI-assisted development - where a window that waits for a human stops everything and
+#output written next to the model clutters the working tree. NOT recommended for users: a setting
+#that lives outside the script makes a run behave differently than it reads, which is why both are
+#announced on import. A failure here never stops the import.
+def _ApplyEnvironmentSettings():
+    import os
+
+    outputDirectory = os.environ.get('EXUDYN_OUTPUTDIRECTORY', '')
+    if outputDirectory != '':
+        config.outputDirectory = outputDirectory
+        print('NOTE: EXUDYN_OUTPUTDIRECTORY is set; exudyn.config.outputDirectory="'
+              + outputDirectory + '"')
+
+    if os.environ.get('EXUDYN_SUPPRESS_UI_WINDOW_OPEN', '') not in ['', '0', 'False', 'false']:
+        special.userInterface.SuppressAll(True)
+        print('NOTE: EXUDYN_SUPPRESS_UI_WINDOW_OPEN is set; Exudyn opens no renderer, solution '
+              'viewer, plot or dialog window')
+        try: #a script may call plt.show() itself, which no flag inside Exudyn can intercept; the
+             #non-interactive backend is the only thing that reaches those (see revision2026 R5.17)
+            import matplotlib
+            matplotlib.use('Agg')
+        except Exception: #matplotlib is optional, and a backend may be fixed already
+            pass
+
+try:
+    _ApplyEnvironmentSettings()
+except Exception as e: #an environment that cannot be read must never stop 'import exudyn'
+    print('WARNING: exudyn could not apply its environment settings: ' + str(e))
+
+
 __version__ = config.Version() #add __version__ to exudyn module ...
 
 
