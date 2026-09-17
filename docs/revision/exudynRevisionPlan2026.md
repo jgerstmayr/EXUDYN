@@ -731,11 +731,27 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     shrink. The measured count was 565, not the ~165 estimated when R5.5 was written.
 
 <a id="r5-5-4"></a>
-**R5.5.4** *(sub-step of R5.5, half B; decisions D4-D5)* **`stubtest` compares the stubs against
-    the module.** `python -m mypy.stubtest exudyn` imports the module and reports every name and
-    signature that the stub and the module disagree about; the first run is frozen as a baseline
-    the same way R5.5.3 does it, and R5.5.2 is then the first entry to work off. Needs R5.5.1
-    (done): a stub that does not parse cannot be checked at all.
+**R5.5.4** *(sub-step of R5.5, half B; decisions D4-D5)* **`stubtest` compares the stubs against the
+    module.** Measured 2026-09-17, and the measurement changed what the step has to decide:
+
+    - `python -m mypy.stubtest exudyn` reports **432 findings** once it can run - mostly
+      "not present in stub" (the missing module-level functions and
+      `GetDictionary`/`SetDictionary` of R5.5.2) plus dunder noise from the pybind enums
+      (`__index__`, `__int__`, `__members__`), which an allowlist has to absorb.
+    - **Two obstacles had to be cleared to get that number.** First, stubtest compiles the package
+      with mypy and refuses to compare while that fails - the untyped source produces **649**
+      mypy errors, so the run needs a mypy configuration with `ignore_errors = True`. Second, and
+      this is the open question: mypy ignores a package's inline `.pyi` files unless the package
+      ships a **PEP 561 `py.typed` marker**, which Exudyn does not. Without it every module reports
+      "failed to find stubs" and nothing is compared. Placing the stubs in a separate
+      `exudyn-stubs` directory on `MYPYPATH` was tried and does not work either - the installed
+      package wins.
+    - **The decision this needs** (it was not visible when D4 was answered): shipping `py.typed`
+      is user-visible. It tells every user's mypy and pyright to type-check their scripts against
+      these stubs - and the stubs are incomplete (R5.5.2), so `exu.StartRenderer(...)` would start
+      being reported as an error in user code. Either close R5.5.2 first and then ship the marker,
+      or let the maintainer tool create the marker in the *installed* package for the duration of
+      its own run and ship nothing.
 
 <a id="r5-5-5"></a>
 **R5.5.5** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-5-5) — *(sub-step of R5.5;
@@ -743,6 +759,14 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     path is reached** (#2488): three `exudyn.Print` in `lieGroupIntegration.py`, which imports the
     module as `exu`, and `SC.renderer.Start()` in `roboticsCore.py`, where the member is `self.SC`.
     Running the first path then showed a second defect behind it.
+
+<a id="r5-5-6"></a>
+**R5.5.6** *(sub-step of R5.5; found 2026-09-17 by the mypy run of R5.5.4)* **`robotics/future.py`
+    uses an undefined name `graphics`** (#2489): the graphics list is built from `graphics.Brick`,
+    `graphics.Cylinder` and `graphics.color`, and none of the four star imports in that function
+    provides it - verified, `exudyn.utilities` and `exudyn.graphicsDataUtilities` have no such
+    attribute. The path raises `NameError`. **ruff cannot find this one**: the star imports turn it
+    into F405 "may be undefined", which is why F405 sits in the baseline.
 
 <a id="r5-6"></a>
 **R5.6** Add an ASan/UBSan Linux job. For a C++ library invoking arbitrary user callbacks this catches

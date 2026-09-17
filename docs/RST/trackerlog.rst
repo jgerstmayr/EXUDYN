@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.125.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2489, 
++  Number of issues = 2490, 
 +  Number of resolved issues = 2198 (125 in current version), 
 
 ************
@@ -8592,6 +8592,11 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2489:` robotics/future.py uses an undefined name graphics
+    - issue author: Claude-JG
+    - description:  MakeCorkeRobot-related code in exudyn/robotics/future.py builds graphicsBaseList from graphics.Brick/graphics.Cylinder/graphics.color but nothing imports graphics; the function does four star imports and none of them provides it (verified: exudyn.utilities and exudyn.graphicsDataUtilities have no attribute graphics). The path raises NameError. ruff reports F405 rather than F821 because of the star imports; mypy found it. revision2026 step R5.5.6
+    - date raised: 2026-09-17 
 
  * :textred:`open BUG 2471:` FEMinterface NPZ files store a C++ enum and cannot be read by a second module
     - issue author: Claude-JG

@@ -11,7 +11,7 @@ BUG numbers refer to the according issue numbers.
 \bi 
   \item Exudyn version = 1.11.125.dev1, 
   \item last change =  2026-09-17, 
-  \item Number of issues = 2489, 
+  \item Number of issues = 2490, 
   \item Number of resolved issues = 2198 (125 in current version), 
 \ei
 
@@ -13270,6 +13270,12 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 2489}:  {\bf robotics/future.py uses an undefined name graphics}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: MakeCorkeRobot-related code in exudyn/robotics/future.py builds graphicsBaseList from graphics.Brick/graphics.Cylinder/graphics.color but nothing imports graphics; the function does four star imports and none of them provides it (verified: exudyn.utilities and exudyn.graphicsDataUtilities have no attribute graphics). The path raises NameError. ruff reports F405 rather than F821 because of the star imports; mypy found it. revision2026 step R5.5.6}
+    \item date raised: 2026-09-17 
+  \ei
   \item open {\bf BUG 2471}:  {\bf FEMinterface NPZ files store a C++ enum and cannot be read by a second module}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG
