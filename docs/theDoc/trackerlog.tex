@@ -11,7 +11,7 @@ BUG numbers refer to the according issue numbers.
 \bi 
   \item Exudyn version = 1.11.122.dev1, 
   \item last change =  2026-09-17, 
-  \item Number of issues = 2486, 
+  \item Number of issues = 2487, 
   \item Number of resolved issues = 2195 (122 in current version), 
 \ei
 
@@ -13245,6 +13245,12 @@ date raised: 2020-07-20
 \ei
 \mysubsection{Known open bugs}
 \bi \footnotesize 
+  \item open {\bf BUG 2486}:  {\bf generated \_\_init\_\_.pyi is not valid Python}
+  \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: The stub file python/exudyn/\_\_init\_\_.pyi does not parse: one documentation line of the OutputVariableType description starts at column 0; createStubFiles.py takes that as the end of the class block and writes the rest of the class body to the top level. All five generated stub fragments parse - only the merged product does not; indenting that line makes the whole file parse. Nothing in the generator checks that the stub it wrote is valid Python. revision2026 step R5.5.1}
+    \item date raised: 2026-09-17 
+  \ei
   \item open {\bf BUG 2471}:  {\bf FEMinterface NPZ files store a C++ enum and cannot be read by a second module}
   \begin{itemize} \setlength\itemsep{-1pt}
     \item issue author: Claude-JG

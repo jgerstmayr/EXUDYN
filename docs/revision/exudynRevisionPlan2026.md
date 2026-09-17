@@ -590,20 +590,141 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     `Symbolic.cpp` - is now `src/Linalg/symbolicCppDemo.h`, one named function per topic, included
     by `Symbolic.cpp` so that it keeps compiling, called by nothing.
 <a id="r5-5"></a>
-**R5.5** *(phase R5, tooling)* **A linter and a type check for the Python side.** Two separate
-    halves, neither started:
+**R5.5** *(phase R5, tooling)* **A linter and a type check for the Python side.** Two halves that
+    share nothing but the word "checking"; neither started. Written out in full on 2026-09-17,
+    because the decisions were stated in a shorthand that assumed knowledge of the tools.
 
-    - **ruff** over the shipped package `python/exudyn/`. Nothing in the repository configures it
-      today; the only linter in use is `pydoclint`, whose findings are frozen in
-      `tools/ci/pydoclintBaseline.txt`. **To decide**: which rule set (the default E/F, or more),
-      whether the existing findings get a baseline like pydoclint's or are fixed outright, and
-      whether it runs in the commit gate or only in CI.
-    - **a type check whose purpose is the stubs**: `python/exudyn/__init__.pyi` and
-      `python/exudyn/symbolic.pyi` describe the C++ bindings and are merged at build time by
-      `tools/generators/createStubFiles.py`. Nothing verifies that they still match what the module
-      exports, so a renamed binding leaves a stub that lies to every IDE. mypy or pyright can be
-      pointed at exactly this. **To decide**: which checker, and whether the run covers the package
-      as a whole or only stub-vs-module agreement.
+    **Half A - ruff over the shipped package `python/exudyn/`**
+
+    *What ruff is.* One program that reads Python source and reports suspicious lines. It replaces
+    what used to be three separate tools - pyflakes (real mistakes), pycodestyle (layout) and isort
+    (import order) - by re-implementing their rules in Rust, fast enough to check all 34 000 lines
+    in well under a second. It **changes nothing**: `ruff check` only reports. (`ruff format` is a
+    separate, opt-in code formatter and is explicitly **not** part of this step - it would rewrite
+    every file in the package.) It is configured by a few lines in `pyproject.toml`, and a single
+    finding on a single line is silenced by a trailing `# noqa: F401`.
+
+    *What "the default E/F rule set" means.* Every rule has a letter prefix naming the tool it comes
+    from, plus a number:
+
+    | prefix | what it is | examples |
+    |---|---|---|
+    | **F** | pyflakes - *real defects* | **F821** an undefined name (a typo that only raises when that line is finally reached); **F811** a name defined twice, the second silently winning; **F401** imported and never used |
+    | **E4, E7, E9** | the part of pycodestyle that is not about whitespace | **E402** import not at the top of the file; **E711** `x == None` instead of `x is None`; **E722** a bare `except:`, which also swallows Ctrl+C and MemoryError; **E999** the file does not parse at all |
+    | E1, E2, E3 | pycodestyle layout: indentation, blank lines, spaces around operators | **off by default and they must stay off** - thousands of findings that say nothing about correctness |
+    | B, UP, I, N, ... | optional families: bugbear, pyupgrade, isort, naming, ... | opt-in; none active by default |
+
+    So **"the default" = F + E4 + E7 + E9**: what is broken or misleading, nothing about formatting.
+    That is what ruff checks when a project configures no rules at all.
+
+    *What it would find here.* ruff is not installed in `venvExuP313`, so this was estimated on
+    2026-09-17 with a stdlib-AST script over the 40 files of `python/exudyn/` (ruff's own count will
+    differ, mainly because it also finds F811/F821/E402, which the script does not look for):
+
+    | rule | count | character |
+    |---|---|---|
+    | E722 bare `except:` | 60 | **not mechanical** - each one needs a decision on which exception was meant |
+    | E711 / E712 `== None`, `== True` | 63 | mechanical and safe |
+    | F403 `from module import *` | 26 | mostly deliberate re-export inside the package |
+    | F401 unused import | 14 | mechanical |
+    | E731, F541 | 2 | cosmetic |
+    | **total** | **~165** | over 34 000 lines - the package is in good shape |
+
+    *The three decisions, restated as questions with what each answer costs:*
+
+    - **D1 - which rules?** (a) the default F + E4/E7/E9, ~165 findings, all of them about
+      correctness; (b) the default plus a small opt-in family such as **B** (flake8-bugbear: mutable
+      default arguments, `except` order, loop-variable capture - real bug patterns, maybe 20-50 more
+      findings); (c) more than that. *Recommendation: (a) now, (b) as a later sub-step once the
+      default set is clean and stays clean.*
+    - **D2 - fix or freeze?** A *baseline* is the pattern already used for `pydoclint`: the current
+      findings are written to `tools/ci/pydoclintBaseline.txt` and the check fails only on findings
+      that are **not** in that file, so old debt is tolerated and new debt is blocked. The
+      alternative is to fix everything once and have no baseline file at all. *Recommendation:
+      split by character - fix the ~79 mechanical ones (E711/E712/F401) outright in one reviewable
+      commit, baseline the 60 bare `except:` and the 26 star-imports, and work the baseline down in
+      later steps.* A baseline that is never reduced is just a list of things nobody will fix.
+    - **D3 - where does it run?** (a) in the commit gate next to `checkAll.py --check`, so nothing
+      is committed that fails it; (b) in CI only; (c) both. The check takes well under a second, so
+      cost is not the argument - the argument is that a gate stops work, and a CI job does not.
+      *Recommendation: (a) - `tools/checkPython.py --check`, alongside the existing checkers, and
+      the same script in CI.*
+
+    **Half B - a type check whose purpose is the stubs**
+
+    *How the stubs are made today.* `python/exudyn/__init__.pyi` (249 KB) and
+    `python/exudyn/symbolic.pyi` (13 KB) are the files an IDE reads to know what the C++ module
+    offers. Five fragments feed them: the hand-written `tools/generators/stubHeader.pyi`, and four
+    generated from `definitions/` by `pybindEmitter.py` (`stubAutoBindings.pyi`, `stubEnums.pyi`,
+    `stubSymbolic.pyi`), `structureStubEmitter.py` (`stubSystemStructures.pyi`) and
+    `mainSystemExtensionDocsEmitter.py` (`stubAutoBindingsExt.pyi`).
+    `tools/generators/createStubFiles.py` (97 lines) then merges them **by string concatenation**:
+    a line-based state machine that starts collecting when a line begins with `class `, and decides
+    the class has ended as soon as it sees a non-empty line that does not start with four spaces.
+    Nothing parses the result.
+
+    *Measured 2026-09-17 - the merged stub is not valid Python.* All five fragments parse; the
+    merged `python/exudyn/__init__.pyi` does **not**:
+
+    ```
+    File "python/exudyn/__init__.pyi", line 67
+        """measure 3D position, e.g., of node or body"""
+                   ^ SyntaxError: invalid decimal literal
+    ```
+
+    The cause is one line of documentation text. The class docstring of `OutputVariableType` has a
+    continuation line starting at column 0 ("Available output variables and the interpreation ..."),
+    which inside a triple-quoted string is harmless - but the merger's rule sees a column-0 line and
+    concludes the class ended. The remaining class body is written to the top level, the class block
+    is closed mid-docstring, and the halves land in the merged file out of order. Indenting that
+    single line by four spaces makes the whole 249 KB file parse (verified by re-running the merge
+    in memory). `symbolic.pyi`, which is a plain two-file concatenation, is fine.
+
+    *Measured the same day - what the stubs do not describe.* Comparing the merged stub against the
+    imported module: classes are covered well (76 of them), **module-level functions are largely
+    absent** - `StartRenderer`, `StopRenderer`, `InfoStat`, `GetVersionString`,
+    `SetOutputPrecision`, `SetWriteToConsole`, `SuppressWarnings` and others appear nowhere in the
+    stub - the settings classes are missing `GetDictionary`/`SetDictionary` throughout, and
+    `exudyn.symbolic` is missing `atan2`, `variables`, `Matrix.Get` and `UserFunction.Evaluate`.
+
+    *The right tool is named.* `mypy` ships **`stubtest`** (`python -m mypy.stubtest exudyn`), whose
+    single purpose is to import a module and compare it against its stub, reporting names present in
+    one and not the other and signatures that disagree. That is exactly the job described here.
+    `pyright` is a different job: it type-checks *source*, which would mean type-checking the whole
+    utility package - valuable, but a much larger and noisier undertaking.
+
+    *The two decisions:*
+
+    - **D4 - which checker, and how much?** (a) `stubtest` only, i.e. stub-vs-module agreement, the
+      question the stubs exist to answer; (b) `pyright`/`mypy` over `python/exudyn/` as source as
+      well. *Recommendation: (a). (b) is a separate later step, because the utility package is
+      untyped and a source type check on untyped code mostly reports the absence of annotations.*
+    - **D5 - baseline again?** stubtest will report a few hundred names on the first run. Same
+      answer as D2: freeze the first run as a baseline, fix the classes of finding that are
+      systematic (the missing module-level functions, the missing `GetDictionary`/`SetDictionary`)
+      as their own sub-steps, and let the baseline shrink.
+
+    Sub-steps R5.5.1 and R5.5.2 below are defects found while writing this and are independent of
+    every decision above.
+
+<a id="r5-5-1"></a>
+**R5.5.1** *(sub-step of R5.5; found 2026-09-17 while writing R5.5)* **The generated
+    `__init__.pyi` does not parse, and the generator does not notice** (#2486). Two
+    parts, and both are needed: indent the offending documentation line so that the merge produces
+    valid Python, **and** make `createStubFiles.py` `ast.parse()` what it wrote and fail loudly if
+    it does not - the same guard that `gen_sources.py` and `checkAll.py` already apply to their
+    outputs. Without the guard the next unindented documentation line silently breaks the stub
+    again. A better merge (collect class blocks by indentation instead of by the first column-0
+    line) is worth considering in the same step.
+
+<a id="r5-5-2"></a>
+**R5.5.2** *(sub-step of R5.5; found 2026-09-17 while writing R5.5)* **The stubs describe classes
+    but not module-level functions.** `StartRenderer`, `StopRenderer`, `InfoStat`,
+    `GetVersionString`, `SetOutputPrecision`, `SetWriteToConsole`, `SuppressWarnings` and the
+    settings classes' `GetDictionary`/`SetDictionary` have no stub entry, so an IDE offers no
+    completion and no signature for them. Depends on R5.5.1 (a stub that does not parse cannot be
+    checked) and on D4 (stubtest is what would keep it true afterwards).
+
 <a id="r5-6"></a>
 **R5.6** Add an ASan/UBSan Linux job. For a C++ library invoking arbitrary user callbacks this catches
     the class of bug users report as "it crashed with no message".

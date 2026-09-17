@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.122.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2486, 
++  Number of issues = 2487, 
 +  Number of resolved issues = 2195 (122 in current version), 
 
 ************
@@ -8574,6 +8574,11 @@ Open issues
 **********
 Known bugs
 **********
+
+ * :textred:`open BUG 2486:` generated __init__.pyi is not valid Python
+    - issue author: Claude-JG
+    - description:  The stub file python/exudyn/__init__.pyi does not parse: one documentation line of the OutputVariableType description starts at column 0; createStubFiles.py takes that as the end of the class block and writes the rest of the class body to the top level. All five generated stub fragments parse - only the merged product does not; indenting that line makes the whole file parse. Nothing in the generator checks that the stub it wrote is valid Python. revision2026 step R5.5.1
+    - date raised: 2026-09-17 
 
  * :textred:`open BUG 2471:` FEMinterface NPZ files store a C++ enum and cannot be read by a second module
     - issue author: Claude-JG
