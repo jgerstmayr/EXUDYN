@@ -234,6 +234,16 @@ if TSScope.runTestExamples:
                                     NotTestModels, DeliberatelyNotRun,
                                     PerformanceTestsReferenceSolution)
     TSScope.examplesTestRefSol = TestExamplesReferenceSolution()
+    #the values above belong to the BASELINE module; a module with vector extensions gets the
+    #second set on top of them, which holds only the models that actually move (#2470)
+    if testRunnerTools.ModuleUsesAVX2():
+        from runTestSuiteRefSol import AVX2ReferenceSolutionUpdate
+        TSScope.avx2Update = AVX2ReferenceSolutionUpdate()
+        TSScope.examplesTestRefSol.update({name: value for name, value
+                                           in TSScope.avx2Update.items()
+                                           if name in TSScope.examplesTestRefSol})
+        exu.Print('module has vector extensions: ' + str(len(TSScope.avx2Update))
+                  + ' AVX2 reference values applied (revision2026 step R2.10.3)')
     TSScope.testTolFactors = TestExamplesToleranceFactors()
     TSScope.sensitiveTests = SensitiveTests()
     #known Windows/Linux differences are excluded from the exit code ON LINUX ONLY: the
@@ -265,6 +275,15 @@ if TSScope.runTestExamples:
     TSScope.testFileList=[] #automatically create list from reference solution ...
     for key in TSScope.examplesTestRefSol.keys():
         TSScope.testFileList+=[key]
+
+    #a few models mean something different outside the regular module, so they are not run there at
+    #all - one of them would even overwrite its own tracked input file (#2470)
+    if not testRunnerTools.ModuleIsRegular():
+        from runTestSuiteRefSol import NotJudgedOutsideRegularModule
+        for name, reason in NotJudgedOutsideRegularModule().items():
+            if name in TSScope.testFileList:
+                TSScope.testFileList.remove(name)
+                exu.Print('not the regular module: ' + name + ' skipped - ' + reason)
 
     if TSScope.fastSubset: #revision2026 step R5.2
         from runTestSuiteRefSol import SlowTests, OptionalPackageTests
@@ -383,6 +402,11 @@ if TSScope.runMiniExamples:
     from runTestSuiteRefSol import MiniExamplesReferenceSolution
 
     miniExamplesRefSol = MiniExamplesReferenceSolution()
+    if testRunnerTools.ModuleUsesAVX2(): #the same second reference set as above (#2470)
+        from runTestSuiteRefSol import AVX2ReferenceSolutionUpdate
+        miniExamplesRefSol.update({name: value for name, value
+                                   in AVX2ReferenceSolutionUpdate().items()
+                                   if name in miniExamplesRefSol})
     testExamplesCnt = 0
     miniExamplesTestSolList={}
     miniExamplesTestErrorList={}

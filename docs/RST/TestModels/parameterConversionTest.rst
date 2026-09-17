@@ -18,7 +18,7 @@ You can view and download this file on Github: `parameterConversionTest.py <http
    #           simulation and visualization settings, through each access path, and the outcome is
    #           compared with parameterConversionTestReference.txt. An outcome is the exception type
    #           or the type, shape and value that reads back; the error messages are not recorded.
-   #           Set recordReference = False to rewrite the reference after an intended change.
+   #           Set recordReference = True to rewrite the reference after an intended change.
    #
    # Author:   Johannes Gerstmayr, Claude-JG
    # Date:     2026-09-14
@@ -35,7 +35,7 @@ You can view and download this file on Github: `parameterConversionTest.py <http
    import io
    import os
    
-   recordReference = True #True: write the reference file instead of comparing
+   recordReference = False #True: write the reference file instead of comparing
    
    useGraphics = True #without test
    #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

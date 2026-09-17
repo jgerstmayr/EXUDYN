@@ -424,3 +424,78 @@ def PerformanceTestsReferenceSolution():
 
 
 #%%+++++++++++++++++++++++++++++++++++++++
+
+#%%+++++++++++++++++++++++++++++++++++++++
+#the SECOND reference set: what changes when the module carries the AVX2 vector extensions
+#(revision2026 step R2.10.3, #2470).
+#
+#Since step R2.10 the regular module exudynCPP is compiled for the baseline instruction set and
+#the values above are ITS values; exudynCPPfast additionally carries AVX2, and the AVX branches of
+#Use_avx.h sum in a different order, which moves results. This dict is an UPDATE to the values
+#above, not a copy of them: only the models that move by more than their tolerance appear here, so
+#the two sets cannot drift apart for the other 80+ models.
+#
+#THIS LIST IS MEANT TO SHRINK. Most entries are last-digit rounding; the large ones are models
+#which amplify it (stick-slip, rolling contact). Each entry is either explained and removed by a
+#fix, or removed by choosing model parameters that do not amplify roundoff - see phase R10.
+#Ordered by drift, largest first, so the worst offenders are the work list.
+#
+#Recorded 2026-09-17 on Windows cp313 with exudynCPPfast (AVX2). The module reports its vector
+#extensions in exudyn.config.Version(True); testRunnerTools.ModuleUsesAVX2() reads that.
+def AVX2ReferenceSolutionUpdate():
+
+    refSolAVX2 = {
+        'generalContactFrictionTests.py':         12.030182715125177,        #drift 7.5e-03
+        'generalContactCylinderTest.py':          12.246626442545603,        #drift 4.2e-05
+        'sphereTriangleTest2.py':                 4.356119232231812,         #drift 3.6e-05
+        'generalContactImplicit1.py':             0.775815593379039,         #drift 5.3e-08
+        'contactSphereSphereTest.py':             0.5348463536059522,        #drift 3.3e-09
+        'rollingDiscTangentialForces.py':         1.0342017388721547,        #drift 1.6e-09
+        'ObjectConnectorRigidBodySpringDamper.py':-0.5349299545315868,       #drift 1.4e-09
+        'coordinateSpringDamperExt.py':           17.084935539925155,        #drift 5.8e-10
+        'sliderCrank3Dbenchmark.py':              7.256859913349651,         #drift 5.0e-10
+        'rigidBodySpringDamperIntrinsic.py':      0.5472368463500469,        #drift 5.2e-11
+        'createSphereTriangleContact.py':         4.8409602192504355,        #drift 3.9e-11
+        'fourBarMechanismIftomm.py':              0.1721665271840173,        #drift 6.2e-12
+        'ballBearingTest.py':                     0.037852414023965573,      #drift 5.5e-12
+        'solverExplicitODE1ODE2test.py':          3.3767933275970896,        #drift 5.2e-12
+        'connectorRigidBodySpringDamperTest.py':  0.1827622474318292,        #drift 3.7e-12
+        'ANCFgeneralContactCircle.py':            -0.5816542531620952,       #drift 3.7e-12
+        'createSphereQuadContact.py':             1.124377662163088,         #drift 2.6e-12
+        'rollingCoinPenaltyTest.py':              0.03489603106689881,       #drift 9.7e-13
+        'bricardMechanism.py':                    4.172189649307425,         #drift 9.2e-13
+        'mainSystemExtensionsTests.py':           57.64639446941554,         #drift 8.7e-13
+        'rollingCoinTest.py':                     1.063438118935288,         #drift 8.3e-13
+        'revoluteJointPrismaticJointTest.py':     1.2538806799249347,        #drift 7.6e-13
+        'generalContactSpheresTest.py':           -1.1138547720263723,       #drift 6.3e-13
+        'heavyTop.py':                            33.42312575174431,         #drift 5.0e-13
+        'createKinematicTreeTest.py':             3.340830142730491,         #drift 2.4e-13
+        'ConvexContactTest.py':                   0.011770267410694153,      #drift 2.0e-13
+        'scissorPrismaticRevolute2D.py':          27.20255648904422,         #drift 1.6e-13
+        'createSphereQuadContact2.py':            0.15616582432927872,       #drift 1.6e-13
+        'genericODE2test.py':                     0.036045463499024655,      #drift 8.0e-14
+        'ANCFcable2DuserFunction.py':             0.6015588367721263,        #drift 7.1e-14
+        'sphericalJointTest.py':                  4.409080446575089,         #drift 6.5e-14
+        'generalContactCylinderTrigsTest.py':     5.486908430912642,         #drift 6.2e-14
+        }
+
+    return refSolAVX2
+
+#%%+++++++++++++++++++++++++++++++++++++++
+#models which only the REGULAR module exudynCPP can judge, name -> reason. This is not about
+#accuracy: under exudynCPPfast the value such a model produces means something different, so it is
+#not run there at all (#2470). Both entries were measured on 2026-09-17.
+def NotJudgedOutsideRegularModule():
+
+    return {
+        'parameterConversionTest.py':
+            'its result is the number of parameter outcomes differing from the recorded behaviour, '
+            'and a module without range checks legitimately reports different outcomes for invalid '
+            'input - 89 of them; it records behaviour, so only the regular module can judge it',
+        'NGsolveCMStest.py':
+            'it loads FEM data from the tracked testData/netgenTestMesh.pkl, which carries exudyn '
+            'C++ types; under a second module the load raises \'type "Real" is already registered\', '
+            'the model then REGENERATES the mesh - overwriting the tracked file - and its result '
+            'moves by 2.4e-8 (#2469)',
+        }
+

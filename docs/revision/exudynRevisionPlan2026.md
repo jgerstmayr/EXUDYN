@@ -123,22 +123,20 @@ promise for no gain.
     slope scaling from `GetCNodes()[-1]`. The regular module was saved by the array range check;
     the fast module, which compiles those out, died. The suite now completes under both modules.
 
-<a id="r2-10-3"></a>
-**R2.10.3** *(sub-step of R2.10)* **Which reference values judge `exudynCPPfast`?** With the crash
-    gone the suite runs under the fast module and reports **33 failures** — precisely the AVX2
-    differences of R2.10, because the fast module has AVX2 and the reference values are now
-    baseline. The plan assumed one set of values holds for both modules; R2.16 established that for
-    **Linux** (where `-ffp-contract=off` makes the failing sets equal), but on Windows AVX2 itself
-    moves results, so it does not hold here. Three ways out, a **maintainer decision**: default
-    `useAVX2` to off (fast = checks-off only, identical numbers, and AVX2 stays a measurement
-    switch); give the fast module its own reference set; or judge it only on the models that are
-    not chaotic. Note the measured context: AVX2 bought ~0.1 % on the performance suite (fact 27).
-
 <a id="r2-10-2"></a>
 **R2.10.2** *(sub-step of R2.10)* **`NGsolveCMStest` rewrites its own committed input** (#2469):
     the TRACKED `testData/netgenTestMesh.pkl` is overwritten whenever the load fails, and the result then
     moves by 2.4e-8 — far outside the 5e-14 tolerance. Restoring the committed file restored the
     value. Treat the mesh as read-only and fail loudly, or generate it deterministically.
+
+<a id="r2-10-3"></a>
+**R2.10.3** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r2-10-3) — *(sub-step of R2.10)*
+    **A second reference set for the AVX2 module** (#2470), kept as an **update** to the baseline
+    values: `AVX2ReferenceSolutionUpdate()` at the end of `runTestSuiteRefSol.py` holds only the 32
+    values that actually move, so the other 100+ stay single-sourced. Both modules now pass the
+    suite from one file. **The list is meant to shrink** (maintainer, 2026-09-17): each entry is to
+    be removed either by finding the cause of the drift or by choosing model parameters that do not
+    amplify roundoff — phase R10. It is ordered by drift, largest first, which is that work list.
 
 <a id="r2-11"></a>
 **R2.11** **DONE 2026-09-11** — Classifiers now 3.10–3.14, matching the wheels CI actually builds. → [log](exudynRevisionLog2026.md#r2-11)

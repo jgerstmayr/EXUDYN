@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.106.dev1, 
++  Exudyn version = 1.11.107.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2470, 
-+  Number of resolved issues = 2179 (106 in current version), 
++  Number of issues = 2471, 
++  Number of resolved issues = 2180 (107 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.107: resolved Issue 2470: a second reference set for the AVX2 module, as an update to the baseline (extension)
+    - issue author: Claude-JG
+    - description:  revision2026 step R2.10.3: since step R2.10 the regular module is baseline ISA and exudynCPPfast carries AVX2, so one set of reference values cannot judge both on Windows. AVX2ReferenceSolutionUpdate() at the end of runTestSuiteRefSol.py holds ONLY the values that move (32 of 136), as an update to the baseline values, and is meant to shrink as the causes are found or the models are re-parameterised to amplify roundoff less.
+    - **notes:** AVX2ReferenceSolutionUpdate() holds the 32 values (31 models + 1 mini example) that move on an AVX2 module, ordered by drift so the worst are the work list; everything else stays single-sourced in the baseline values. testRunnerTools.ModuleUsesAVX2() asks the module (the platform string already reports AVX2/AVX512), so a --no-avx2 fast build is judged by the baseline values. NotJudgedOutsideRegularModule() skips two models under exudynCPPfast: parameterConversionTest (its result counts rejected inputs) and NGsolveCMStest (its pickled FEM data carries the C++ types of one module; loading under a second raises 'type Real is already registered' and the model then overwrites its own tracked input, #2469). Both runTestSuite.py and the pytest collector apply this. Verified: both modules pass the suite from one reference file. revision2026 step R2.10.3.
+    - date resolved: **2026-09-17 00:32**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.106: :textred:`resolved BUG 2467` : exudynCPPfast crashes in the test suite (segmentation fault) 
     - issue author: Claude-JG
     - description:  Running runTestSuite.py against exudynCPPfast segfaults reproducibly: with AVX2 after TestModel 74 (objectFFRFTest.py), without AVX2 after 75 (objectFFRFTest2.py). Both models pass standalone under the same module, so this is accumulated corruption, and the shifting crash point shows it is __FAST_EXUDYN_LINALG (no range checks), not the vector extensions. Found in revision2026 step R2.10; the fast module was built for one Python version only and the suite had apparently never been run against it.

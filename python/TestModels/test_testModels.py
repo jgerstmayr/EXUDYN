@@ -37,7 +37,9 @@ import testRunnerTools                                                          
 from runTestSuiteRefSol import (TestExamplesReferenceSolution,                  # noqa: E402
                                 TestExamplesToleranceFactors, SensitiveTests,
                                 UnresolvedOnLinux, MiniExamplesReferenceSolution,
-                                SlowTests, OptionalPackageTests)
+                                SlowTests, OptionalPackageTests,
+                                AVX2ReferenceSolutionUpdate,
+                                NotJudgedOutsideRegularModule)
 
 invalidResult = 1234567890123456    #the value that says 'the model set no result'
 solutionDirectory = 'solution'      #each model writes into solutionDirectory/<model> (#2418)
@@ -50,6 +52,14 @@ isMacOS = (sys.platform == 'darwin')
 #Linux only. This is the rule runTestSuite.py applies to its exit code; here such a model still
 #runs and must not crash, but its value is not judged.
 notJudged = SensitiveTests() | (UnresolvedOnLinux() if (not isWindows and not isMacOS) else set())
+
+#a module without range checks cannot judge a model whose result counts rejected inputs (#2470)
+onlyRegularModule = (set() if testRunnerTools.ModuleIsRegular()
+                     else set(NotJudgedOutsideRegularModule().keys()))
+
+#the reference values are the BASELINE module's; a module with vector extensions is judged by the
+#second set, which holds only the models that move (revision2026 step R2.10.3)
+referenceUpdate = AVX2ReferenceSolutionUpdate() if testRunnerTools.ModuleUsesAVX2() else {}
 
 
 #markers come from the data in runTestSuiteRefSol.py, not from decorators in 137 model files
@@ -104,7 +114,9 @@ def CheckRun(fileName, run, referenceValue, tolerance, judgeValue=True):
 
 def test_testModel(modelName):
     """one test model against its reference value in runTestSuiteRefSol.py"""
-    referenceValue = TestExamplesReferenceSolution()[modelName]
+    if modelName in onlyRegularModule:
+        pytest.skip(modelName + ' can only be judged by the regular exudynCPP module')
+    referenceValue = referenceUpdate.get(modelName, TestExamplesReferenceSolution()[modelName])
     if referenceValue == invalidResult:
         pytest.skip(modelName + ' has no reference value in runTestSuiteRefSol.py')
 
@@ -116,5 +128,6 @@ def test_testModel(modelName):
 def test_miniExample(miniExampleName):
     """one generated mini example against its reference value"""
     fileName = 'MiniExamples/' + miniExampleName
-    CheckRun(fileName, RunModel(fileName), MiniExamplesReferenceSolution()[miniExampleName],
+    referenceValue = referenceUpdate.get(miniExampleName, MiniExamplesReferenceSolution()[miniExampleName])
+    CheckRun(fileName, RunModel(fileName), referenceValue,
              testRunnerTools.BaseTolerance())

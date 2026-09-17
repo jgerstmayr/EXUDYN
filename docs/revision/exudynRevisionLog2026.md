@@ -1222,6 +1222,52 @@ established on Linux (R2.16); on Windows it does not hold, and the maintainer ha
 `useAVX2` should default to off, whether the fast module gets its own values, or whether it is
 judged only on the models that are not chaotic.
 
+<a id="r2-10-3"></a>
+### R2.10.3 - a second reference set for the AVX2 module
+
+**DONE 2026-09-17** (#2470).
+
+Step R2.10 made the regular module baseline ISA and left the vector extensions to
+`exudynCPPfast`, and step R2.10.1 made the suite reach the end under that module. It then failed
+33 models - the AVX2 differences, judged against baseline values. The plan had assumed one set of
+reference values could hold for both modules; that was established on Linux (step R2.16, where
+`-ffp-contract=off` equalises the failing sets), but on Windows AVX2 itself moves results, so it
+could not hold here.
+
+**The maintainer's decision (2026-09-17)**: keep both flags, because both matter in future, and
+record a second reference set - but as an **update**, not a copy. `AVX2ReferenceSolutionUpdate()`
+sits at the end of `runTestSuiteRefSol.py` and holds **32 values** (31 models and one mini
+example): exactly those that move by more than their tolerance. The other 100+ values exist once,
+so the two sets cannot drift apart where there is nothing to disagree about. The list is ordered
+by drift, largest first, because **it is meant to shrink**: every entry is to be removed either by
+explaining the drift or by re-parameterising the model so it stops amplifying roundoff (phase
+R10). The largest are the chaotic ones - `generalContactFrictionTests` 7.5e-03,
+`generalContactCylinderTest` 4.2e-05, `sphereTriangleTest2` 3.6e-05 - and the smallest are last-bit
+(`sphericalJointTest` 6.5e-14).
+
+**The suite asks the module, not its name.** `testRunnerTools.ModuleUsesAVX2()` reads
+`exudyn.config.Version(True)`, whose platform string already reported `AVX2`/`AVX512` - a marker
+that was there all along (an added one was written and then reverted as redundant). So a build with
+`--no-avx2` has a fast module WITHOUT vector extensions and is correctly judged by the baseline
+values, and an `--avx512` build is recognised too.
+
+**Two models are not run outside the regular module** (`NotJudgedOutsideRegularModule()`), each
+with the measured reason:
+
+- `parameterConversionTest.py`: its result is the NUMBER of parameter outcomes that differ from the
+  recorded behaviour, and a module without range checks legitimately reports different outcomes for
+  invalid input - 89 of them. It records behaviour, so only the regular module can judge it.
+- `NGsolveCMStest.py`: it loads FEM data from the **tracked** `testData/netgenTestMesh.pkl`, which
+  carries exudyn C++ types. Under a second module the load raises `type "Real" is already
+  registered`, and the model then regenerates the mesh - **overwriting the tracked file** - after
+  which its result moves by 2.4e-8. That is the mechanism behind #2469, found here: the file was
+  being rewritten by every run under `exudynCPPfast`. Skipping the model under that module also
+  stops the damage; the defect itself stays open as step R2.10.2.
+
+Verified 2026-09-17 on Windows cp313: `runTestSuite.py` PASSES under the regular module (113
+models) and under `exudynCPPfast` (111 models plus the two skipped), from the same reference file,
+and the tracked mesh is left untouched. The pytest collector applies the same two rules.
+
 <a id="r2-11"></a>
 ### R2.11 — metadata drift
 

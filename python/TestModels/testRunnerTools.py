@@ -30,6 +30,44 @@ relevantPackages = ['numpy', 'scipy', 'matplotlib', 'ngsolve', 'h5py',
 
 
 #%%******************************************************************************************************
+def ModuleUsesAVX2():
+    """
+    True if the loaded C++ module carries the AVX2 (or AVX-512) vector extensions, which move
+    results in the last digits and therefore need their own reference values
+    (AVX2ReferenceSolutionUpdate(), revision2026 step R2.10.3). Since step R2.10 only
+    exudynCPPfast is built with them, but ASK THE MODULE rather than its name: a build with
+    --no-avx2 has a fast module without them, and one with --avx512 reports AVX512.
+
+    Returns:
+        bool: the module was compiled with vector extensions
+    """
+    import exudyn as exu
+    try:
+        platformText = exu.config.Version(True) #e.g. '1.11.106.dev1; Python3.13.15; Windows AVX2 FLOAT64[FAST]'
+    except Exception:
+        return False
+    return ('AVX2' in platformText) or ('AVX512' in platformText)
+
+
+#%%******************************************************************************************************
+def ModuleIsRegular():
+    """
+    True for the regular module exudynCPP, False for exudynCPPfast, which reports '[FAST]' in its
+    version string. A few models can only be judged by the regular module - see
+    NotJudgedOutsideRegularModule() - either because their result counts rejected inputs, or
+    because they load pickled data carrying the C++ types of one specific module.
+
+    Returns:
+        bool: the loaded module is the regular one
+    """
+    import exudyn as exu
+    try:
+        return '[FAST]' not in exu.config.Version(True)
+    except Exception:
+        return True
+
+
+#%%******************************************************************************************************
 def BaseTolerance():
     """
     The tolerance a test result is compared against, before the per-test factor of
