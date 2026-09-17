@@ -21,7 +21,7 @@ General information on current version:
  
 +  Exudyn version = 1.11.160.dev1, 
 +  last change =  2026-09-18, 
-+  Number of issues = 2504, 
++  Number of issues = 2506, 
 +  Number of resolved issues = 2233 (160 in current version), 
 
 ************
@@ -7666,6 +7666,16 @@ Version 0.1
 ***********
 Open issues
 ***********
+
+ * :textblue:`open issue 2505:` a test model page is in no toctree
+    - issue author: Claude-JG
+    - description:  The sphinx build prints "docs/RST/TestModels/sphereTriangleTest.rst: WARNING: document is not included in any toctree". The page is generated but unreachable from the documentation; a reader can only find it by searching. Noticed 2026-09-18 while running the documentation through the new exudev driver (revision2026 step R5.18); the build itself is not run with -W; so this does not fail anything today. Belongs to revision2026 phase R7.
+    - date raised: 2026-09-18 
+
+ * :textorange:`open issue 2504:` runTestExamples and runPerformanceTests have no --exit-code
+    - issue author: Claude-JG
+    - description:  runTestSuite.py exits non-zero with --exit-code (and 0 without it); the other two runners have no such flag and ALWAYS return 0; however many examples or performance tests failed. Anything calling them - the exudev driver of revision2026 step R5.18; a CI job; a shell script - therefore cannot see a failure from the exit code and has to read the summary line out of the log instead; which is what tools/exudev/results.py does today. That scan cannot distinguish a run that died before writing its summary from a log it did not find; so it reports "unknown". Give both runners the same --exit-code flag runTestSuite.py has (about 10 lines each; the pattern already exists); then delete tools/exudev/results.py and let every step of the driver be judged by its exit code. revision2026 step R5.18.1
+    - date raised: 2026-09-18 
 
  * :textorange:`open issue 2503:` the build and test scripts are 18 batch files without help
     - issue author: Claude-JG

@@ -1,0 +1,613 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN maintainer tool - part of the exudev driver, see tools/exudev/README.md
+#
+# Details:  One function per subcommand. Each RETURNS a list of runner.Step objects and runs
+#           nothing itself - runner.RunSteps() is the only executor. That is what makes --dry-run
+#           faithful: there is exactly one description of each command (issue #2503).
+#
+#           Read this file to find out what a command actually does; it is meant to be read.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-09-18 (created; revision2026 step R5.18)
+# Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import glob
+import os
+import shutil
+import sys
+
+import results
+import runner
+
+from runner import Step
+
+
+#%%******************************************************************************************************
+def ModelsDirectory():
+    return os.path.join(runner.RepositoryRoot(), 'python', 'TestModels')
+
+
+#%%******************************************************************************************************
+def SelectedVersions(options, default):
+    """The Python versions a command works on: --py, else the command's default."""
+    if getattr(options, 'py', None):
+        return runner.NormalizePythonVersions(options.py)
+
+    return runner.NormalizePythonVersions(default)
+
+
+#%%******************************************************************************************************
+def TargetEnvironments(options, default):
+    """The (pythonTag, environment) pairs a command works on. '--env NAME' names one environment
+    directly - for a test run that is all that is needed, and the tag is then unknown (None)."""
+    if getattr(options, 'env', None):
+        return [(None, options.env)]
+
+    return [(tag, runner.EnvironmentName(tag)) for tag in SelectedVersions(options, default)]
+
+
+#%%******************************************************************************************************
+def ExtraArguments(options):
+    """Everything after '--'. Echoed even in quiet mode: the runners only PRINT an error for an
+    option they do not know and then carry on, so a typo must be visible in the terminal where it
+    happened rather than hidden inside a run that reports success."""
+    extra = list(getattr(options, 'extra', None) or [])
+    if extra and extra[0] == '--':
+        extra = extra[1:]
+
+    if extra:
+        print('exudev: forwarding ' + str(len(extra)) + ' extra argument(s) verbatim: '
+              + ' '.join(extra))
+
+    return extra
+
+
+#%%******************************************************************************************************
+def WarnAboutFastModule(pythonTags):
+    """The two ways a requested fast module silently does not appear. Both are decisions in setup.py,
+    not failures, but without a word here the wheel simply lacks exudynCPPfast."""
+    if sys.platform == 'darwin':
+        print('exudev: NOTE --fast has no effect on macOS; setup.py:272 disables the fast module '
+              'there (universal2 compiles both architectures in one pass and AVX2 does not exist '
+              'on ARM)')
+        return
+
+    if runner.IsDevelopmentVersion():
+        others = [tag for tag in pythonTags if tag != 'P313']
+        if others:
+            print('exudev: NOTE version.txt is ' + runner.RepositoryVersion() + ' (a development '
+                  'version); setup.py:440-445 then builds the fast module for Python 3.13 ONLY, so '
+                  'the wheel(s) for ' + ', '.join(others) + ' will NOT contain exudynCPPfast')
+
+
+#%%******************************************************************************************************
+def BuildEnvironment(options):
+    """The setup.py switches as environment variables. setup.py reads them between pyproject.toml
+    and the command line (setup.py:126-150), which is the layer the driver can reach through pip -
+    a setup.py command-line flag would need --config-settings=--build-option=... for every switch.
+
+    Note EXUDYN_COMPILE_EXUDYN_FAST=0: pyproject.toml has compileExudynFast = true, so a plain
+    'pip wheel .' DOES build the fast module. --fast is opt-in here (maintainer 2026-09-18), so a
+    build without it has to switch the default off actively."""
+    environment = {
+        'EXUDYN_QUIET_COMPILE':       '0' if options.verbose else '1',
+        'EXUDYN_COMPILE_PARALLEL':    '0' if options.no_parallel else '1',
+        'EXUDYN_COMPILE_EXUDYN_FAST': '1' if options.fast else '0',
+        }
+
+    if options.unittests:
+        environment['EXUDYN_PERFORM_UNIT_TESTS'] = '1'
+    if options.minimal:
+        environment['EXUDYN_MINIMAL_CPP_FILES'] = '1'
+    if options.no_glfw:
+        environment['EXUDYN_USE_GLFW'] = '0'
+
+    return environment
+
+
+#%%******************************************************************************************************
+def WheelForVersion(pythonTag):
+    """The wheel of this build, newest first. Looked up at run time because the file does not exist
+    while the steps are being planned."""
+    tag = 'cp' + pythonTag[1:]
+    pattern = os.path.join(runner.RepositoryRoot(), 'dist', 'exudyn-*-' + tag + '-' + tag + '-*.whl')
+    candidates = sorted(glob.glob(pattern), key=os.path.getmtime, reverse=True)
+
+    return candidates[0] if candidates else None
+
+
+#%%******************************************************************************************************
+def ProbeScript():
+    return os.path.join(runner.RepositoryRoot(), 'tools', 'exudev', 'probe.py')
+
+
+#%%******************************************************************************************************
+def VersionCheckStep(environment, options):
+    """Two seconds that catch the failure mode the old README warned about in prose: an environment
+    whose installed exudyn is not the one just built. EXUDYN_SUPPRESS_UI_WINDOW_OPEN is set because
+    probe.py imports exudyn (CLAUDE.md rule 11)."""
+    return Step('check the install in ' + environment,
+                argv=runner.InEnvironment(environment,
+                                          ['python', ProbeScript(), runner.RepositoryVersion()],
+                                          options),
+                cwd=runner.RepositoryRoot(),
+                env={'EXUDYN_SUPPRESS_UI_WINDOW_OPEN': '1'})
+
+
+#%%******************************************************************************************************
+def Generate(options):
+    """Regenerate everything that is generated, and optionally run the checking tools."""
+    root = runner.RepositoryRoot()
+    environment = options.env or runner.generatorEnvironment
+
+    argv = ['python', 'tools/regenerate.py']
+    if options.check:
+        argv += ['--check']
+    if options.no_run:
+        argv += ['--no-run']
+    argv += runner.QuietFlag('regenerate.py', options.verbose)
+
+    steps = [Step('regenerate (' + environment + ')',
+                  argv=runner.InEnvironment(environment, argv, options), cwd=root)]
+
+    if options.all_checks:
+        checks = [(['python', 'tools/checkAll.py', '--check'],                'checkAll'),
+                  (['python', 'tools/checkExtras.py', '--check'],             'checkExtras'),
+                  (['python', 'tools/checkPython.py', '--check'],             'checkPython (ruff)'),
+                  (['python', 'tools/checkPython.py', '--stubs', '--check'],  'checkPython (stubs)'),
+                  (['python', 'tools/gen_sources.py', '--check'],             'gen_sources'),
+                  ]
+        for (argv, label) in checks:
+            argv = argv + runner.QuietFlag(os.path.basename(argv[1]), options.verbose)
+            steps += [Step(label, argv=runner.InEnvironment(environment, argv, options), cwd=root)]
+
+    return steps
+
+
+#%%******************************************************************************************************
+def Build(options):
+    """Build the wheel and install it. By default: no clean, no regeneration, no docs, no tests -
+    the ~1 minute command (maintainer 2026-09-18). 'build --complete' is the whole path, see
+    Complete()."""
+    if options.complete:
+        return Complete(options)
+
+    root = runner.RepositoryRoot()
+    versions = SelectedVersions(options, 'P313')
+
+    #a build needs the version TAG as well as the environment: the wheel it installs is selected by
+    #its cp3xx tag, and an arbitrary --env name does not say which one that is
+    if getattr(options, 'env', None):
+        raise SystemExit('exudev: "build --env ' + options.env + '" cannot work out which wheel '
+                         'belongs to that environment. Name the version as well, for instance '
+                         '"exudev build --py P313", or use --env only for test, examples, perf '
+                         'and env.')
+
+    if options.fast:
+        WarnAboutFastModule(versions)
+
+    steps = []
+    if options.clean:
+        steps += Clean(OptionsWith(options, dist=False, linux=False, all=False))
+
+    buildEnvironment = BuildEnvironment(options)
+
+    for pythonTag in versions:
+        environment = runner.EnvironmentName(pythonTag)
+
+        wheelArgv = ['python', '-m', 'pip', 'wheel', '.', '-w', 'dist', '--no-deps']
+        if options.verbose:
+            wheelArgv += ['-v']
+
+        steps += [Step('build the wheel for ' + environment,
+                       argv=runner.InEnvironment(environment, wheelArgv, options),
+                       cwd=root, env=buildEnvironment)]
+
+        if not options.no_install:
+            #installed BY PATH, not with --find-links=dist: 'clean' keeps dist/ on purpose and every
+            #build appends another wheel with the same .dev version, so pip would be free to pick an
+            #older one. This removes the whole "I tested yesterday's binary" class of failure.
+            def MakeInstall(tag=pythonTag, environmentName=environment):
+                def Resolve():
+                    wheel = WheelForVersion(tag)
+                    if wheel is None:
+                        print('exudev: no wheel for ' + tag + ' found in dist/')
+                        return None
+                    return runner.InEnvironment(environmentName,
+                                                ['python', '-m', 'pip', 'install',
+                                                 '--force-reinstall', '--no-deps', wheel], options)
+                return Resolve
+
+            steps += [Step('install the wheel into ' + environment,
+                           resolve=MakeInstall(), cwd=root,
+                           note=('install the newest dist/exudyn-*-cp' + pythonTag[1:] + '-*.whl '
+                                 'into ' + environment + ' with '
+                                 '"python -m pip install --force-reinstall --no-deps <that wheel>"'))]
+
+            steps += [VersionCheckStep(environment, options)]
+
+    return steps
+
+
+#%%******************************************************************************************************
+def Complete(options):
+    """'build --complete': clean, regenerate, docs, every wheel, every test. Subtract parts with
+    --no-clean, --no-docs, --no-tests, --no-install."""
+    versions = SelectedVersions(options, 'all')
+    steps = []
+
+    if not options.no_clean:
+        steps += Clean(OptionsWith(options, dist=False, linux=False, all=False))
+
+    #a release must not silently regenerate, so there it is 'generate --check'; an ordinary
+    #--complete is allowed to update the generated files
+    generateOptions = OptionsWith(options, check=getattr(options, 'release_checks', False),
+                                  no_run=False, all_checks=True, env=None)
+    steps += Generate(generateOptions)
+
+    if not options.no_docs:
+        steps += Docs(OptionsWith(options, env=None, keep_cache=False, open=False))
+
+    buildOptions = OptionsWith(options, complete=False, clean=False, py=','.join(versions))
+    steps += Build(buildOptions)
+
+    if not options.no_tests:
+        #the DEFAULT module is what every wheel contains, so it is tested everywhere
+        for pythonTag in versions:
+            steps += Test(OptionsWith(options, py=pythonTag, fast=False, subset=False,
+                                      parallel=None, overwrite_log=True, local=False, extra=[]))
+        for pythonTag in versions:
+            steps += Performance(OptionsWith(options, py=pythonTag, fast=False,
+                                             overwrite_log=True, machine_id=None, extra=[]))
+
+        #and the fast module on the versions the release matrix names - the oldest and the second
+        #newest - plus one fast performance run for comparison (revision2026 step R5.11.1,
+        #docs/dev/WORKFLOW.md). Running it everywhere would double the time for no new information.
+        if options.fast:
+            for pythonTag in FastModuleVersions(versions):
+                steps += Test(OptionsWith(options, py=pythonTag, fast=True, subset=False,
+                                          parallel=None, overwrite_log=True, local=False, extra=[]))
+            steps += Performance(OptionsWith(options, py=versions[-2] if len(versions) > 1
+                                             else versions[0], fast=True, overwrite_log=True,
+                                             machine_id=None, extra=[]))
+
+        steps += Examples(OptionsWith(options, py=None, serial=False, parallel=None,
+                                      timeout=None, overwrite_log=True, extra=[]))
+
+    return steps
+
+
+#%%******************************************************************************************************
+def FastModuleVersions(versions):
+    """Which versions get a fast-module test run: the oldest and the second newest, as decided for
+    the release matrix in revision2026 step R5.11.1."""
+    if len(versions) < 2:
+        return list(versions)
+
+    selected = [versions[0]]
+    if versions[-2] not in selected:
+        selected += [versions[-2]]
+
+    return selected
+
+
+#%%******************************************************************************************************
+def Release(options):
+    """The release path: 'build --complete' over all versions, with the guards a release needs and
+    the linux wheels afterwards - the old makeAndTestAllBinaries.bat, minus the separate windows."""
+    if runner.IsDevelopmentVersion() and not options.dev:
+        raise SystemExit('exudev: version.txt is ' + runner.RepositoryVersion() + ', a development '
+                         'version. A release built from it differs from a real release (the fast '
+                         'module is compiled for Python 3.13 only, setup.py:440-445). Use '
+                         '"exudev release --dev" to do it anyway, or "exudev build --complete".')
+
+    completeOptions = OptionsWith(options, complete=True, release_checks=True,
+                                  no_clean=False, no_tests=False,
+                                  fast=True, no_parallel=False, no_install=False,
+                                  unittests=False, minimal=False, no_glfw=False, clean=False)
+    steps = Complete(completeOptions)
+
+    if not options.no_linux:
+        steps += Linux(OptionsWith(options, manylinux=True, wsl_conda=False, fast=True))
+
+    steps += [Step('release checklist',
+                   action=PrintReleaseChecklist,
+                   note='print the post-release checklist (tags, upload)')]
+
+    return steps
+
+
+#%%******************************************************************************************************
+def PrintReleaseChecklist():
+    print('')
+    print('  after the release build, by hand:')
+    print('    - check every log under python/TestSuiteLogs, python/PerformanceLogs and '
+          'python/TestExamplesLogs')
+    print('    - commit, then tag the release')
+    print('    - upload the wheels from dist/ and dist/manylinux/')
+
+    return 0
+
+
+#%%******************************************************************************************************
+def Test(options):
+    """The test suite. '--exit-code' is ALWAYS added: without it runTestSuite.py returns 0 whatever
+    happened, and a driver that cannot see a failure is worse than no driver."""
+    extra = ExtraArguments(options)
+    steps = []
+
+    for (pythonTag, environment) in TargetEnvironments(options, 'P313'):
+        argv = ['python', 'runTestSuite.py'] + runner.QuietFlag('runTestSuite.py', options.verbose)
+        argv += ['--exit-code']
+        if options.fast:
+            argv += ['--fast-module']
+        if options.subset:
+            argv += ['--fast']           #runTestSuite.py calls the pull-request subset '--fast'
+        if options.parallel is not None:
+            argv += ['--parallel'] if options.parallel == 0 else ['--parallel=' + str(options.parallel)]
+        if options.overwrite_log:
+            argv += ['--overwrite-log']
+        if options.local:
+            argv += ['-local']
+        argv += extra
+
+        steps += [Step('test suite in ' + environment + (' [fast module]' if options.fast else ''),
+                       argv=runner.InEnvironment(environment, argv, options),
+                       cwd=ModelsDirectory())]
+
+    return steps
+
+
+#%%******************************************************************************************************
+def Examples(options):
+    """The Examples set. It has no exit code, so the verdict comes from its log - see results.py."""
+    extra = ExtraArguments(options)
+    steps = []
+
+    #P312 as in the batch script this replaces
+    for (pythonTag, environment) in TargetEnvironments(options, 'P312'):
+        argv = ['python', 'runTestExamples.py'] + runner.QuietFlag('runTestExamples.py', options.verbose)
+        if options.serial:
+            argv += ['--serial']
+        if options.parallel is not None:
+            argv += ['--parallel'] if options.parallel == 0 else ['--parallel=' + str(options.parallel)]
+        if options.timeout is not None:
+            argv += ['--timeout=' + str(options.timeout)]
+        if options.overwrite_log:
+            argv += ['--overwrite-log']
+        argv += extra
+
+        (before, verdict) = results.MakeLogVerdict(runner.RepositoryRoot(), 'runTestExamples.py')
+        step = Step('examples in ' + environment,
+                    argv=runner.InEnvironment(environment, argv, options),
+                    cwd=ModelsDirectory(), verdict=verdict, check=False)
+        step.before = before
+        steps += [step]
+
+    return steps
+
+
+#%%******************************************************************************************************
+def Performance(options):
+    """The performance tests. No exit code either; judged from the log."""
+    extra = ExtraArguments(options)
+    steps = []
+
+    for (pythonTag, environment) in TargetEnvironments(options, 'P313'):
+        argv = ['python', 'runPerformanceTests.py']
+        argv += runner.QuietFlag('runPerformanceTests.py', options.verbose)
+        if options.fast:
+            argv += ['--fast-module']
+        if options.overwrite_log:
+            argv += ['--overwrite-log']
+        argv += extra
+
+        stepEnvironment = {}
+        if options.machine_id:
+            stepEnvironment['EXUDYN_MACHINE_ID'] = options.machine_id
+
+        (before, verdict) = results.MakeLogVerdict(runner.RepositoryRoot(), 'runPerformanceTests.py')
+        step = Step('performance tests in ' + environment
+                    + (' [fast module]' if options.fast else ''),
+                    argv=runner.InEnvironment(environment, argv, options),
+                    cwd=ModelsDirectory(), env=stepEnvironment, verdict=verdict, check=False)
+        step.before = before
+        steps += [step]
+
+    return steps
+
+
+#%%******************************************************************************************************
+def Docs(options):
+    """The html documentation: sphinx reads conf.py and index.rst in the repository root."""
+    root = runner.RepositoryRoot()
+    environment = options.env or runner.generatorEnvironment
+
+    argv = ['python', '-m', 'sphinx', '-b', 'html', '.', '_build']
+    if not options.keep_cache:
+        argv += ['-E']                   #read all files; no stale pages from the environment cache
+    argv += runner.QuietFlag('sphinx-build', options.verbose)
+
+    steps = [Step('html documentation (' + environment + ')',
+                  argv=runner.InEnvironment(environment, argv, options), cwd=root)]
+
+    if options.open:
+        indexFile = os.path.join(root, '_build', 'index.html')
+        opener = ['cmd', '/c', 'start', '', indexFile] if runner.onWindows else ['xdg-open', indexFile]
+        steps += [Step('open the documentation', argv=opener, cwd=root, check=False)]
+
+    return steps
+
+
+#%%******************************************************************************************************
+def WslRepositoryRoot():
+    """The repository as WSL sees it, e.g. /mnt/c/DATA/cpp/EXUDYN_git."""
+    import subprocess
+    completed = subprocess.run(['wsl', 'wslpath', '-a', runner.RepositoryRoot()],
+                               stdout=subprocess.PIPE)
+    if completed.returncode != 0:
+        raise SystemExit('exudev: could not ask WSL for the repository path')
+
+    return completed.stdout.decode('utf-8', 'replace').strip()
+
+
+#%%******************************************************************************************************
+def Linux(options):
+    """The linux wheels, through WSL. The commands are quoted for two shells (cmd and bash) and are
+    therefore built as ONE opaque string, exactly as makeUbuntuManyLinuxWheels.bat had them."""
+    if options.wsl_conda:
+        return LinuxWslConda(options)
+
+    #driver --fast means "with the fast module"; the container variable is the negation
+    noFast = '' if options.fast else '-e EXUDYN_NOFAST=1 '
+
+    def ResolveClean():
+        return ['wsl', '-e', 'bash', '-lc',
+                "cd '" + WslRepositoryRoot() + "' && rm -rf build/*linux* dist/manylinux/*linux*.whl"]
+
+    def ResolveBuild():
+        return ['wsl', '-e', 'bash', '-lc',
+                "docker run --rm -e PLAT=manylinux_2_28_x86_64 " + noFast
+                + "-v '" + WslRepositoryRoot() + ":/work' -w /work "
+                + "quay.io/pypa/manylinux_2_28_x86_64 bash /work/tools/ci/manylinuxBuild.sh"]
+
+    return [Step('remove previous linux build output',
+                 resolve=ResolveClean,
+                 note=("wsl -e bash -lc \"cd '<wsl path of the repository>' && "
+                       "rm -rf build/*linux* dist/manylinux/*linux*.whl\"\n"
+                       "the wsl path is asked from 'wsl wslpath -a' at run time")),
+            Step('manylinux wheels in docker'
+                 + ('' if options.fast else ' (without the fast module)'),
+                 resolve=ResolveBuild,
+                 note=('wsl -e bash -lc "docker run --rm -e PLAT=manylinux_2_28_x86_64 ' + noFast
+                       + "-v '<wsl path of the repository>:/work' -w /work "
+                       + 'quay.io/pypa/manylinux_2_28_x86_64 bash /work/tools/ci/manylinuxBuild.sh"'))]
+
+
+#%%******************************************************************************************************
+def LinuxWslConda(options):
+    """The non-manylinux path: build in the WSL conda environments directly, repair with auditwheel
+    and run the test suite. The release wheels come from the manylinux path, not from this one."""
+    versions = SelectedVersions(options, 'all')
+    version = runner.RepositoryVersion()
+    steps = []
+
+    for pythonTag in versions:
+        tag = 'cp' + pythonTag[1:]
+        environment = runner.EnvironmentName(pythonTag)
+
+        wheel = 'dist/exudyn-' + version + '-' + tag + '-' + tag + '-linux_x86_64.whl'
+        script = (' && '.join([
+            "cd '<root>'",
+            'conda activate ' + environment,
+            'python3 -m pip wheel . -w dist --no-deps',
+            'python3 -m pip uninstall exudyn -y',
+            'auditwheel repair ' + wheel + ' -w ./dist',
+            'python3 -m pip install --no-index --pre --find-links=dist exudyn',
+            "cd python/TestModels && python3 runTestSuite.py -quiet"]))
+
+        def MakeResolve(commandScript=script):
+            def Resolve():
+                return ['wsl', '-e', 'bash', '-ic',
+                        commandScript.replace('<root>', WslRepositoryRoot())]
+            return Resolve
+
+        steps += [Step('linux wheel and test suite for ' + environment + ' (WSL conda)',
+                       resolve=MakeResolve(),
+                       note=('wsl -e bash -ic "'
+                             + script.replace('<root>', '<wsl path of the repository>') + '"'))]
+
+    return steps
+
+
+#%%******************************************************************************************************
+def Clean(options):
+    """Exactly what removeBuildsAndEggs.bat removed. dist/ and the linux build directories are KEPT
+    unless asked for: removing the linux directories used to break the linux build."""
+    root = runner.RepositoryRoot()
+
+    patterns = ['build/lib.win-amd64-*', 'build/temp.win-amd64-*',
+                'build/bdist.win32', 'build/bdist.win-amd64',
+                '.eggs', 'exudyn.egg-info', 'python/exudyn.egg-info']
+    filePatterns = ['dist/*.egg']
+
+    if options.linux or options.all:
+        patterns += ['build/*linux*']
+    if options.dist or options.all:
+        filePatterns += ['dist/*.whl']
+
+    def Targets():
+        directories = []
+        files = []
+        for pattern in patterns:
+            directories += [path for path in glob.glob(os.path.join(root, pattern))
+                            if os.path.isdir(path)]
+        for pattern in filePatterns:
+            files += [path for path in glob.glob(os.path.join(root, pattern))
+                      if os.path.isfile(path)]
+        return (directories, files)
+
+    def Action():
+        (directories, files) = Targets()
+        for path in directories:
+            print('  remove directory ' + os.path.relpath(path, root))
+            shutil.rmtree(path, ignore_errors=True)
+        for path in files:
+            print('  remove file      ' + os.path.relpath(path, root))
+            try:
+                os.remove(path)
+            except OSError as error:
+                print('  *** ' + str(error))
+        if not directories and not files:
+            print('  nothing to remove')
+        return 0
+
+    (directories, files) = Targets()
+    listing = ['remove ' + os.path.relpath(path, root) for path in directories + files]
+    if not listing:
+        listing = ['nothing matches the clean patterns at the moment']
+
+    return [Step('clean build directories and eggs', action=Action, note='\n'.join(listing))]
+
+
+#%%******************************************************************************************************
+def Environments(options):
+    """Which environment has which python, exudyn and numpy. This is the diagnostic for 'the test
+    suite fails in one environment and passes in another' - the two numpy versions behind #2501 and
+    #2502 show up here immediately."""
+    root = runner.RepositoryRoot()
+    environments = [environment for (tag, environment) in TargetEnvironments(options, 'all')]
+
+    #the generator environment is part of the picture unless one environment was named explicitly
+    if not getattr(options, 'env', None) and runner.generatorEnvironment not in environments:
+        environments += [runner.generatorEnvironment]
+
+    steps = []
+    for environment in environments:
+        steps += [Step(environment,
+                       argv=runner.InEnvironment(environment, ['python', ProbeScript()], options),
+                       cwd=root, check=False,
+                       env={'EXUDYN_SUPPRESS_UI_WINDOW_OPEN': '1'})]
+
+    return steps
+
+
+#%%******************************************************************************************************
+class OptionsWith:
+    """A copy of the parsed options with a few values replaced, so that one command can reuse
+    another without the caller having to know every attribute the other one reads."""
+
+    def __init__(self, options, **replacements):
+        for name in dir(options):
+            if not name.startswith('_'):
+                setattr(self, name, getattr(options, name))
+        for (name, value) in replacements.items():
+            setattr(self, name, value)
+
+    def __getattr__(self, name):
+        if name.startswith('__'):
+            raise AttributeError(name)   #do not pretend to have dunder attributes
+
+        return None                      #an option a reused command does not have is simply off
