@@ -847,6 +847,14 @@ The core investment. Every step is validated byte-for-byte by step R0.2.
     `basicUtilities.CreateDirectoryForFile`. The two tracked `.npy` reference meshes, which nothing
     could load any more, are deleted (maintainer approval 2026-09-17).
 
+<a id="r5-13-5"></a>
+**R5.13.5** **DONE 2026-09-17** → [log](exudynRevisionLog2026.md#r5-13-5) — *(sub-step of R5.13;
+    found while answering a maintainer question)* **The suite log is one file again when
+    `EXUDYN_OUTPUTDIRECTORY` is set** (#2500): the body went to the output directory and the summary
+    to `python/TestSuiteLogs`, because the suite cleared `outputDirectory` before re-opening the log.
+    In the same step the three runner `.bat` files pass their extra arguments on, so `--fast-module`
+    and `--parallel` can be reached from them at all.
+
 <a id="r5-14"></a>
 **R5.14** **DONE 2026-09-16** → [log](exudynRevisionLog2026.md#r5-14) — **Dev tools are declared**:
     a `test` dependency group (`pytest`, `pytest-xdist`), the `build` group matched to

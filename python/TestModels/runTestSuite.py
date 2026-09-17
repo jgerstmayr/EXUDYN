@@ -187,6 +187,12 @@ localFileName = 'testSuiteLog_V'+exu.config.Version()+'_'+platformString
 
 #logFileName = '../TestSuiteLogs/testSuiteLog_V'+exu.config.Version()+'_'+platformString+'.txt'
 logFileName = '../TestSuiteLogs/'+localFileName+'.txt'
+#the directory the run STARTED with, usually from EXUDYN_OUTPUTDIRECTORY. The models below
+#overwrite exudyn.config.outputDirectory one by one, and it has to be put BACK to this - not
+#to the empty string - or the summary is written to a different file than the rest of the
+#log, because the C++ writer resolves the name against it at every open (#2500)
+initialOutputDirectory = exu.config.outputDirectory
+
 #never truncate an existing (committed) log by accident: SetWriteToFile below wipes the target
 #immediately, before any test runs, so an interrupted run would leave it half-written
 logFileName = testRunnerTools.ResolveLogFile(logFileName, allowOverwrite=overwriteLog)
@@ -481,7 +487,8 @@ if TSScope.runCppUnitTests:
     else:
         TSScope.runCppUnitTests = False #will display that they were skipped 
 TSScope.timeStart += time.time()
-exu.config.outputDirectory = '' #the setting is global and would otherwise outlive the run (#2418)
+exu.config.outputDirectory = initialOutputDirectory #back to where the log is written (#2500);
+#cleared for good after the log file is closed, so that it does not outlive the run (#2418)
         
         
 exu.Print('\n')
@@ -593,12 +600,15 @@ if TSScope.runMiniExamples:
 localFileName = localFileName+'.txt'
 
 exu.SetWriteToFile(filename='', flagWriteToFile=False, flagAppend=False) #stop writing to file, close file
+exu.config.outputDirectory = '' #global setting, must not outlive the run (#2418)
 
 #write summary for github actions
 if outputLocal:
     # testSummaryFileName = 'test-exudyn.txt'
     allText = ''
-    with open(logFileName, 'r') as f:
+    #the same resolution the C++ writer applied when it opened the file (#2500)
+    from exudyn.basicUtilities import OutputFilePath
+    with open(OutputFilePath(logFileName, 'runTestSuite'), 'r') as f:
         allText = f.read()
         
     with open(localFileName, 'w') as f:

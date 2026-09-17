@@ -9,15 +9,23 @@ BUG numbers refer to the according issue numbers.
 
 \noindent General information on current version:
 \bi 
-  \item Exudyn version = 1.11.159.dev1, 
+  \item Exudyn version = 1.11.160.dev1, 
   \item last change =  2026-09-17, 
-  \item Number of issues = 2500, 
-  \item Number of resolved issues = 2232 (159 in current version), 
+  \item Number of issues = 2501, 
+  \item Number of resolved issues = 2233 (160 in current version), 
 \ei
 
 \mysubsection{Resolved issues and resolved bugs}
 \par \noindent The following list contains the issues which have been {\bf RESOLVED} in the according version:
 \bi \setlength\itemsep{-4pt} \scriptsize 
+  \item[] {\bf Version 1.11.160}: {\bf \color{warningRed}  resolved BUG 2500}: {\bf the suite log is split in two when EXUDYN\_OUTPUTDIRECTORY is set}
+\vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}
+    \item issue author: Claude-JG
+    \item {description: runTestSuite.py opens its log with exu.SetWriteToFile; which the C++ side resolves against exudyn.config.outputDirectory (\#2418); so with EXUDYN\_OUTPUTDIRECTORY set the log is written outside the working tree - as intended. But after the models the suite resets outputDirectory to the empty string and RE-OPENS the same log by name for the summary; which then lands at the UNREDIRECTED path: the body of the log goes to the output directory and the summary to python/TestSuiteLogs. Measured 2026-09-17: 80 KB outside and a 17 KB summary-only file inside. The -local copy reads the unredirected name as well. The reset should restore the directory the run STARTED with; not the empty string. revision2026 step R5.13.5}
+    \item {\bf notes: runTestSuite.py remembers the output directory the run started with and puts it BACK after the models instead of clearing it; so both opens of the log resolve to the same file; the -local copy reads through the same resolution; and the directory is cleared only after the file is closed - which is what the original reset was for. Verified 2026-09-17 with EXUDYN\_OUTPUTDIRECTORY set: nothing is written into python/TestSuiteLogs (43 files before and after) and the one log outside the tree is complete including the summary; a run without the variable behaves exactly as before. revision2026 step R5.13.5}
+    \item   date resolved: {\bf 2026-09-17 23:49},
+date raised: 2026-09-17 (resolved by: Claude-JG)
+  \ei
   \item[] {\bf Version 1.11.159}:  resolved Issue 2499: {\bf the platform string does not name the architecture}
 (change)
 \vspace{-6pt}   \begin{itemize} \setlength\itemsep{-1pt}

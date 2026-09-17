@@ -5999,3 +5999,48 @@ little to gain either way: AVX2 does not exist on ARM, so "fast" means only the 
 checks there. It stayed off - which it already was, at `setup.py:260`, for the older reason of
 build time. The `not isMacOS` in the vector-extension condition was **dead code** given that line,
 and is gone: one place decides.
+
+<a id="r5-13-5"></a>
+### R5.13.5 - one log again, and the batch files can reach the new options
+
+**DONE 2026-09-17** (#2500).
+
+The maintainer asked whether the `.bat` runners had been adapted, so that the suite could be run
+without writing into the tracked directories. Two answers came out of checking.
+
+**No, they had not**: `runTestSuite.bat`, `runPerformanceTests.bat` and `runTestExamples.bat`
+passed exactly `-quiet` and nothing else, so `--fast-module` - added hours earlier in step R5.11 -
+could not be reached from them at all. They now forward everything after the version:
+
+```
+runTestSuite.bat P313 --fast-module --exit-code
+```
+
+One trap, found by testing rather than by reading: **`shift` also shifts `%0`**, so after the
+argument-collecting loop `%~dp0` is the *current* directory and not the script's. The path is saved
+into `scriptDir` before the loop; a dry run printed the resolved command line for three argument
+combinations to confirm it.
+
+**And the redirection was only half working.** With `EXUDYN_OUTPUTDIRECTORY` set, the log came out
+in two pieces:
+
+| file | size | content |
+|---|---|---|
+| `<output dir>/../TestSuiteLogs/...txt` | 80 KB | everything up to the models |
+| `python/TestSuiteLogs/...txt` | 17 KB | the summary only |
+
+The C++ writer resolves the file name against `exudyn.config.outputDirectory` **at every open**
+(step R5.13, #2418). The suite opens the log once at the start, and again with append for the
+summary - and in between it set `outputDirectory = ''`, so the second open resolved somewhere else.
+The `-local` copy then read the unredirected name as well.
+
+The fix is to reset to what the run **started** with rather than to the empty string
+(`initialOutputDirectory`, captured before the first open), to read the `-local` copy through the
+same `OutputFilePath()` resolution, and to clear the setting only after the file is closed - which
+is what the original reset was for.
+
+**Verified**: with the variable set, `python/TestSuiteLogs` has the same 43 files before and after
+the run and the single log outside the tree is complete, summary included; without the variable the
+log lands where it always did and is byte-for-byte the same size as before. This is also the answer
+to the original question - `EXUDYN_OUTPUTDIRECTORY=<dir>` now really does keep a run out of the
+working tree.

@@ -19,15 +19,21 @@ BUG numbers refer to the according issue numbers.
 
 General information on current version:
  
-+  Exudyn version = 1.11.159.dev1, 
++  Exudyn version = 1.11.160.dev1, 
 +  last change =  2026-09-17, 
-+  Number of issues = 2500, 
-+  Number of resolved issues = 2232 (159 in current version), 
++  Number of issues = 2501, 
++  Number of resolved issues = 2233 (160 in current version), 
 
 ************
 Version 1.11
 ************
 
+ * Version 1.11.160: :textred:`resolved BUG 2500` : the suite log is split in two when EXUDYN_OUTPUTDIRECTORY is set 
+    - issue author: Claude-JG
+    - description:  runTestSuite.py opens its log with exu.SetWriteToFile; which the C++ side resolves against exudyn.config.outputDirectory (#2418); so with EXUDYN_OUTPUTDIRECTORY set the log is written outside the working tree - as intended. But after the models the suite resets outputDirectory to the empty string and RE-OPENS the same log by name for the summary; which then lands at the UNREDIRECTED path: the body of the log goes to the output directory and the summary to python/TestSuiteLogs. Measured 2026-09-17: 80 KB outside and a 17 KB summary-only file inside. The -local copy reads the unredirected name as well. The reset should restore the directory the run STARTED with; not the empty string. revision2026 step R5.13.5
+    - **notes:** runTestSuite.py remembers the output directory the run started with and puts it BACK after the models instead of clearing it; so both opens of the log resolve to the same file; the -local copy reads through the same resolution; and the directory is cleared only after the file is closed - which is what the original reset was for. Verified 2026-09-17 with EXUDYN_OUTPUTDIRECTORY set: nothing is written into python/TestSuiteLogs (43 files before and after) and the one log outside the tree is complete including the summary; a run without the variable behaves exactly as before. revision2026 step R5.13.5
+    - date resolved: **2026-09-17 23:49**\ , date raised: 2026-09-17 
+    - resolved by: Claude-JG
  * Version 1.11.159: resolved Issue 2499: the platform string does not name the architecture (change)
     - issue author: Claude-JG
     - description:  exudyn.config.Version(addDetails=True) reported -Windows-; -MacOS- or -MacOS(ARM)-; so an Intel Mac and an Apple silicon Mac were indistinguishable and 32 vs 64 bit was visible on Windows only; as -(32bit)-. The string is written into the header of every solution file; sensor file; parameter variation and optimization results file; so it is what a user sends with a bug report. It now names the architecture the way the wheel tags and the compilers do: Windows x86_64; MacOS arm64; MacOS x86_64; Linux x86_64; Linux arm64 - and x86 or arm for the 32 bit cases. Also documents why macOS builds no fast module. revision2026 step R2.10.5
